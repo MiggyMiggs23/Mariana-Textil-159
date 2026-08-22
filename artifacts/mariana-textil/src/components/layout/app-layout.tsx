@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { useLocationScope } from "@/lib/location-scope";
 
@@ -273,8 +274,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-[100dvh] flex bg-background">
       {/* Sidebar for Desktop */}
       <aside className="hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
-        <div className="h-16 flex items-center px-6 border-b border-sidebar-border flex-shrink-0">
-          <span className="font-bold text-xl tracking-tight text-white">Mariana Textil</span>
+        <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
+          <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
+          <span className="font-bold text-lg tracking-tight text-white">Mariana Textil</span>
         </div>
         
         <nav className="flex-1 overflow-y-auto custom-scrollbar">
@@ -304,7 +306,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="md:hidden sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-white shadow-sm">
           <div className="h-16 flex items-center justify-between px-4">
-            <span className="font-bold text-lg">Mariana Textil</span>
+            <div className="flex items-center gap-2.5">
+              <BrandLogo variant="mark" className="h-9 w-9" />
+              <span className="font-bold text-lg">Mariana Textil</span>
+            </div>
             <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
               <Menu className="w-6 h-6" />
             </Button>
@@ -333,7 +338,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
             <div className="relative w-[280px] bg-sidebar text-sidebar-foreground h-full flex flex-col animate-in slide-in-from-left duration-200">
               <div className="h-16 flex items-center justify-between px-6 border-b border-sidebar-border flex-shrink-0">
-                <span className="font-bold text-xl text-white">Menú</span>
+                <div className="flex items-center gap-2.5">
+                  <BrandLogo variant="mark" className="h-9 w-9" />
+                  <span className="font-bold text-lg text-white">Mariana Textil</span>
+                </div>
                 <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(false)}>
                   <X className="w-5 h-5" />
                 </Button>

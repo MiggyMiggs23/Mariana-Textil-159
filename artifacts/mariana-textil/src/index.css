@@ -51,34 +51,34 @@
 
 :root {
   --background: 210 20% 98%; /* Light gray bg */
-  --foreground: 221 46% 15%; /* Dark text */
+  --foreground: 228 51% 15%; /* Mariana navy */
   --card: 0 0% 100%;
-  --card-foreground: 221 46% 15%;
-  --card-border: 220 13% 91%;
+  --card-foreground: 228 51% 15%;
+  --card-border: 228 22% 90%;
   --popover: 0 0% 100%;
-  --popover-foreground: 221 46% 15%;
-  --popover-border: 220 13% 91%;
-  --primary: 228 69% 55%; /* Accent #3B5BDB */
+  --popover-foreground: 228 51% 15%;
+  --popover-border: 228 22% 90%;
+  --primary: 226 72% 47%; /* Mariana royal blue */
   --primary-foreground: 0 0% 100%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
+  --secondary: 230 56% 95%;
+  --secondary-foreground: 226 58% 30%;
+  --muted: 228 33% 96%;
   --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 232 54% 93%;
+  --accent-foreground: 226 58% 30%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 228 69% 55%;
-  --sidebar: 221 46% 20%; /* Deep Navy #1B2A4A */
+  --ring: 226 72% 47%;
+  --sidebar: 228 51% 15%; /* Mariana navy */
   --sidebar-foreground: 210 40% 98%;
-  --sidebar-border: 221 46% 15%;
-  --sidebar-primary: 228 69% 55%;
+  --sidebar-border: 229 52% 10%;
+  --sidebar-primary: 226 72% 47%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 221 46% 25%;
+  --sidebar-accent: 228 43% 24%;
   --sidebar-accent-foreground: 210 40% 98%;
-  --sidebar-ring: 228 69% 55%;
+  --sidebar-ring: 232 68% 75%;
 
   --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --radius: 0.375rem; /* Firm, slightly rounded */

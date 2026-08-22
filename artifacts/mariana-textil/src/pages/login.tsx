@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Building2 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 
 const loginSchema = z.object({
   usuario: z.string().min(1, "El usuario es requerido"),
@@ -61,8 +61,8 @@ export default function Login() {
 
   if (isChecking) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-muted/30">
-        <div className="animate-pulse w-12 h-12 rounded-full bg-sidebar/20" />
+      <div className="min-h-[100dvh] flex items-center justify-center bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_45%)]">
+        <BrandLogo variant="mark" className="h-16 w-16 animate-pulse drop-shadow-sm" />
       </div>
     );
   }
@@ -70,14 +70,12 @@ export default function Login() {
   if (user) return null;
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-muted/30 p-4">
-      <Card className="w-full max-w-sm border-0 shadow-lg shadow-sidebar/5">
-        <CardHeader className="space-y-4 items-center text-center pb-8">
-          <div className="w-16 h-16 bg-sidebar rounded-2xl flex items-center justify-center">
-            <Building2 className="w-8 h-8 text-white" />
-          </div>
-          <div className="space-y-2">
-            <CardTitle className="text-2xl font-bold tracking-tight text-sidebar">Mariana Textil</CardTitle>
+    <div className="min-h-[100dvh] flex items-center justify-center bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_45%)] p-4">
+      <Card className="w-full max-w-sm border border-primary/10 border-t-4 border-t-primary shadow-xl shadow-sidebar/10">
+        <CardHeader className="space-y-4 items-center text-center pb-7">
+          <BrandLogo className="h-44 w-auto max-w-[230px] drop-shadow-sm" />
+          <div className="space-y-1">
+            <CardTitle className="sr-only">Mariana Textil</CardTitle>
             <CardDescription className="text-base">Sistema de Gestión Interna</CardDescription>
           </div>
         </CardHeader>
