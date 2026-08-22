@@ -1,0 +1,168 @@
+# PROMPT 2 — Catálogo de productos y proveedores
+### Mariana Textil · Sistema Integral de Tiendas y Bodegas
+
+> Pegar completo en Replit. Haz commit en Git antes de pegarlo.
+
+---
+
+Continuamos con el sistema de Mariana Textil. El login, la barra lateral, usuarios y ubicaciones ya funcionan. Ahora construimos el catálogo de productos y el de proveedores.
+
+**Nota sobre el stack:** este proyecto usa React + Vite con servidor Express, TypeScript, Tailwind, PostgreSQL y Drizzle. Respeta la estructura existente. No la migres a Next.js ni cambies de framework.
+
+Respeta también todas las reglas de arquitectura ya establecidas: el kardex será la fuente de verdad del inventario, nada se borra, auditoría en cada cambio, DECIMAL para cantidades y dinero, filtro de ubicación aplicado en el servidor.
+
+## Concepto fundamental del negocio
+
+Lee esto con atención antes de escribir código, porque define toda la estructura:
+
+- Un **producto** es una combinación de tela y color. "Tafeta Rojo" es un producto; "Tafeta Azul" es otro producto distinto, con su propio SKU y su propio inventario.
+- Cada producto se vende en **una sola unidad**: metro o kilo. Nunca las dos.
+- Un **rollo** es una pieza física concreta de un producto. Cada rollo tiene su propia cantidad y esa cantidad **varía entre rollos del mismo producto**. Un rollo de tafeta roja puede traer 47.3 m y otro 52.1 m.
+- La venta normal es de **rollo completo**. Se negocia el precio por metro o por kilo, y el importe es ese precio multiplicado por la cantidad de ese rollo específico.
+- El inventario debe poder responder siempre: por cada tela y color, **cuántos rollos hay y cuántos metros o kilos suman**.
+
+En este prompt NO creamos rollos todavía. Solo el catálogo. Pero diseña las tablas contemplando lo anterior.
+
+## Tablas nuevas
+
+**productos**
+- id (serial, PK)
+- sku (text, único) — generado por el sistema, ver reglas abajo
+- tela (text) — ejemplo: "Tafeta"
+- color (text) — ejemplo: "Rojo"
+- unidad (enum: METRO, KILO) — obligatorio. No se puede cambiar una vez que el producto tenga rollos
+- precio_sugerido (decimal 12,2) — precio por metro o por kilo. Es solo referencia; el precio real se negocia en cada venta
+- notas (text, nullable)
+- activo (boolean, default true)
+- created_at, updated_at (timestamptz)
+- Índice en (tela, color) y en sku
+- Restricción única sobre la combinación (tela, color)
+
+**proveedores**
+- id (serial, PK)
+- nombre (text)
+- tipo (enum: NACIONAL, IMPORTACION)
+- moneda_default (enum: MXN, USD)
+- contacto_nombre (text, nullable)
+- telefono (text, nullable)
+- correo (text, nullable)
+- pais (text, nullable)
+- notas (text, nullable)
+- activo (boolean, default true)
+- created_at (timestamptz)
+
+**series_consecutivo** (tabla de control interno)
+- sku (text, PK)
+- ultimo_numero (int, default 0)
+
+Sirve para generar los números de serie de los rollos sin colisiones. Se usará en el prompt siguiente. Créala ahora, vacía.
+
+## Generación de SKU
+
+El SKU se genera automáticamente al crear el producto:
+
+```
+[3 letras de la tela]-[3 letras del color]
+```
+
+Ejemplos: Tafeta Rojo → `TAF-ROJ` · Gabardina Azul Marino → `GAB-AZU` · Popelina Blanco → `POP-BLA`
+
+Reglas:
+- Sin acentos, todo en mayúsculas, sin caracteres especiales ni espacios.
+- Si el SKU generado ya existe (por ejemplo "Azul" y "Azufre" darían ambos AZU), agrega un dígito: `GAB-AZU2`, `GAB-AZU3`.
+- El administrador puede editar el SKU manualmente al momento de crear el producto.
+- **Una vez que el producto tenga rollos asociados, el SKU queda bloqueado permanentemente.** Los números de serie ya impresos en etiquetas físicas dependen de él.
+- Muestra el SKU en vivo mientras el usuario escribe tela y color, antes de guardar.
+
+## Módulo Productos — vista principal
+
+Activa "Productos" en la barra lateral (quita la etiqueta "Próximamente").
+
+**La vista es un árbol expandible agrupado por tela.** Esta es la parte más importante de la interfaz de este módulo:
+
+- El listado muestra una fila por **tela**, no por producto individual.
+- Cada fila de tela tiene una **flecha del lado izquierdo** (›). Al tocarla, la flecha rota hacia abajo (⌄) y se despliegan debajo, indentados, todos los colores de esa tela.
+- Cada fila de color es un producto y muestra: color, SKU, unidad, precio sugerido, rollos en existencia, cantidad total en existencia, estado.
+- La fila de tela muestra: nombre de la tela, cuántos colores tiene, y los totales sumados de todos sus colores (rollos y cantidad).
+- Tocar la fila de la tela expande o colapsa. Tocar una fila de color abre el detalle de ese producto.
+- Botones "Expandir todo" y "Colapsar todo" arriba del listado.
+- El estado de expansión se conserva mientras el usuario navega dentro de la sesión, para que no tenga que volver a abrir las mismas telas.
+- Al buscar, las telas que contienen resultados se expanden automáticamente y se resalta el texto coincidente.
+
+Ejemplo visual:
+
+```
+› Gabardina                      4 colores    0 rollos    0.000
+⌄ Tafeta                         3 colores    0 rollos    0.000
+     Rojo          TAF-ROJ       metro    $85.00    0 rollos   0.000 m
+     Azul          TAF-AZU       metro    $85.00    0 rollos   0.000 m
+     Blanco        TAF-BLA       metro    $82.00    0 rollos   0.000 m
+› Popelina                       6 colores    0 rollos    0.000
+```
+
+Por ahora las columnas de existencia van en cero. Deja los componentes listos para recibir datos reales en el prompt siguiente.
+
+**Controles adicionales:**
+- Buscador que filtra mientras se escribe, por SKU, tela o color.
+- Filtros por unidad (metro / kilo) y por estado (activo / inactivo).
+- Botón "Nuevo producto", visible solo para ADMIN.
+- En móvil, el mismo árbol pero con filas más altas y área de toque amplia sobre la flecha.
+
+## Módulo Productos — alta y edición
+
+- Campos: tela, color, unidad, precio sugerido, notas.
+- El campo **tela** es un autocompletado que sugiere telas ya existentes, para evitar que se capture "Tafeta" y "tafeta" como dos telas distintas. Lo mismo con **color**.
+- Normaliza automáticamente al guardar: primera letra en mayúscula, resto en minúsculas, sin espacios sobrantes.
+- Validación: no permitir dos productos con la misma combinación de tela y color. Si el usuario intenta duplicar, muestra un mensaje claro indicando que ese producto ya existe y ofrece abrirlo.
+- Agrega un botón **"Agregar color a esta tela"** dentro de la fila de tela expandida. Abre el formulario con la tela ya prellenada. Esta es la forma más rápida de dar de alta variantes.
+- Solo ADMIN puede crear y editar. Los demás roles ven el árbol en modo lectura.
+- Los productos no se eliminan, se desactivan. Un producto desactivado no aparece en el POS ni en recepciones, pero conserva todo su historial.
+
+## Módulo Productos — vista de detalle
+
+- Encabezado: SKU, tela, color, unidad y precio sugerido.
+- Tabla de existencia por ubicación: las 7 ubicaciones con columnas Rollos y Cantidad total. En cero por ahora.
+- Espacio reservado, claramente marcado, para la lista de rollos y el kardex. Llegan en el prompt siguiente.
+- Botón para regresar al árbol conservando la tela expandida.
+
+## Módulo Proveedores
+
+Activa "Proveedores" en la barra lateral.
+
+- Lista con: nombre, tipo, moneda, país, contacto, teléfono, estado.
+- Filtro por tipo (nacional / importación) y buscador por nombre.
+- Alta, edición y desactivación. No se eliminan.
+- ADMIN puede crear, editar y desactivar. INVENTARIOS y BODEGA pueden consultar y crear, pero no desactivar.
+- El campo `moneda_default` importa: los proveedores de importación normalmente facturan en dólares y los nacionales en pesos. Se usará como sugerencia al registrar una compra, pero será modificable en cada operación.
+- Vista de detalle con los datos del proveedor y espacio reservado para su historial de compras.
+
+## Importación de catálogo desde Excel
+
+En Productos, agrega un botón "Importar desde Excel" visible solo para ADMIN:
+
+- Acepta archivo `.xlsx` o `.csv` con columnas: tela, color, unidad, precio sugerido.
+- Muestra una vista previa antes de confirmar, marcando por color: filas nuevas, filas que ya existen (se omiten), y filas con error (unidad inválida, precio no numérico, campos vacíos).
+- Genera los SKU automáticamente y muéstralos en la vista previa.
+- Nada se guarda hasta que el usuario confirma.
+- Al terminar, registra en `auditoria` cuántos productos se crearon y muestra un resumen.
+
+Esto sirve para cargar el catálogo inicial desde los Excel que ya usa la empresa.
+
+## Lo que NO debes hacer en este prompt
+
+- No crees la tabla de rollos ni la de movimientos. Vienen en el prompt siguiente con un diseño específico.
+- No implementes generación de etiquetas, recepciones ni contenedores.
+- No agregues campos de costo al producto. El costo vive en el rollo, no en el producto.
+- No crees un campo "existencia" en la tabla productos. La existencia se calculará desde los rollos.
+- No instales librerías de UI pesadas. Tailwind es suficiente para el árbol expandible.
+
+## Entregable
+
+Confirma que puedo:
+1. Crear un producto y ver su SKU generarse automáticamente mientras escribo
+2. Ver el listado agrupado por tela y expandir cada una con la flecha izquierda
+3. Agregar un color nuevo directamente desde una tela expandida
+4. Buscar y que las telas con coincidencias se expandan solas
+5. Importar un catálogo desde Excel
+6. Crear proveedores nacionales y de importación
+7. Que un usuario de rol CAJA vea los productos pero no pueda editarlos
