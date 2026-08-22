@@ -232,3 +232,276 @@ export const UpdateUserResponse = zod.object({
 })
 
 
+/**
+ * @summary Lista productos del catálogo
+ */
+export const ListProductosResponseItem = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "precioSugerido": zod.string(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "rollos": zod.number(),
+  "cantidad": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListProductosResponse = zod.array(ListProductosResponseItem)
+
+
+/**
+ * @summary Crea un producto en el catálogo
+ */
+export const createProductoBodyTelaMax = 200;
+
+export const createProductoBodyColorMax = 100;
+
+
+
+export const CreateProductoBody = zod.object({
+  "sku": zod.string().optional().describe('SKU personalizado; se genera automáticamente si se omite'),
+  "tela": zod.string().min(1).max(createProductoBodyTelaMax),
+  "color": zod.string().min(1).max(createProductoBodyColorMax),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "precioSugerido": zod.string(),
+  "notas": zod.string().nullish()
+})
+
+export const CreateProductoResponse = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "precioSugerido": zod.string(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "rollos": zod.number(),
+  "cantidad": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Obtiene el detalle de un producto
+ */
+export const GetProductoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetProductoResponse = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "precioSugerido": zod.string(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "rollos": zod.number(),
+  "cantidad": zod.string(),
+  "skuBloqueado": zod.boolean(),
+  "unidadBloqueada": zod.boolean(),
+  "inventarioPorUbicacion": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "nombre": zod.string(),
+  "rollos": zod.number(),
+  "cantidad": zod.string()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Actualiza un producto del catálogo
+ */
+export const UpdateProductoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const updateProductoBodyTelaMax = 200;
+
+export const updateProductoBodyColorMax = 100;
+
+
+
+export const UpdateProductoBody = zod.object({
+  "sku": zod.string().optional().describe('SKU personalizado; sólo permitido cuando skuBloqueado es false'),
+  "tela": zod.string().min(1).max(updateProductoBodyTelaMax).optional(),
+  "color": zod.string().min(1).max(updateProductoBodyColorMax).optional(),
+  "unidad": zod.enum(['METRO', 'KILO']).optional(),
+  "precioSugerido": zod.string().optional(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean().optional()
+})
+
+export const UpdateProductoResponse = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "precioSugerido": zod.string(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "rollos": zod.number(),
+  "cantidad": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Vista previa de importación de catálogo
+ */
+export const PreviewImportProductosBody = zod.object({
+  "fileName": zod.string(),
+  "content": zod.string().describe('Contenido del archivo en base64')
+})
+
+export const PreviewImportProductosResponseItem = zod.object({
+  "rowIndex": zod.number(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.string(),
+  "precioSugerido": zod.string(),
+  "notas": zod.string().nullable(),
+  "sku": zod.string(),
+  "estado": zod.enum(['NUEVO', 'DUPLICADO', 'ERROR']),
+  "error": zod.string().nullish()
+})
+export const PreviewImportProductosResponse = zod.array(PreviewImportProductosResponseItem)
+
+
+/**
+ * @summary Confirma importación de filas del catálogo
+ */
+export const ConfirmImportProductosBody = zod.object({
+  "fileName": zod.string(),
+  "content": zod.string().describe('Contenido del archivo en base64 (re-analizado en el servidor)')
+})
+
+export const ConfirmImportProductosResponse = zod.object({
+  "insertados": zod.number(),
+  "duplicados": zod.number(),
+  "errores": zod.number()
+})
+
+
+/**
+ * @summary Lista proveedores
+ */
+export const ListProveedoresResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
+  "monedaDefault": zod.enum(['MXN', 'USD']),
+  "contactoNombre": zod.string().nullable(),
+  "telefono": zod.string().nullable(),
+  "correo": zod.string().nullable(),
+  "pais": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+export const ListProveedoresResponse = zod.array(ListProveedoresResponseItem)
+
+
+/**
+ * @summary Crea un proveedor
+ */
+export const createProveedorBodyNombreMax = 200;
+
+
+
+export const CreateProveedorBody = zod.object({
+  "nombre": zod.string().min(1).max(createProveedorBodyNombreMax),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
+  "monedaDefault": zod.enum(['MXN', 'USD']).optional(),
+  "contactoNombre": zod.string().nullish(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "pais": zod.string().nullish(),
+  "notas": zod.string().nullish()
+})
+
+export const CreateProveedorResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
+  "monedaDefault": zod.enum(['MXN', 'USD']),
+  "contactoNombre": zod.string().nullable(),
+  "telefono": zod.string().nullable(),
+  "correo": zod.string().nullable(),
+  "pais": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Obtiene el detalle de un proveedor
+ */
+export const GetProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetProveedorResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
+  "monedaDefault": zod.enum(['MXN', 'USD']),
+  "contactoNombre": zod.string().nullable(),
+  "telefono": zod.string().nullable(),
+  "correo": zod.string().nullable(),
+  "pais": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Actualiza un proveedor
+ */
+export const UpdateProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const updateProveedorBodyNombreMax = 200;
+
+
+
+export const UpdateProveedorBody = zod.object({
+  "nombre": zod.string().min(1).max(updateProveedorBodyNombreMax).optional(),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']).optional(),
+  "monedaDefault": zod.enum(['MXN', 'USD']).optional(),
+  "contactoNombre": zod.string().nullish(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "pais": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean().optional()
+})
+
+export const UpdateProveedorResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
+  "monedaDefault": zod.enum(['MXN', 'USD']),
+  "contactoNombre": zod.string().nullable(),
+  "telefono": zod.string().nullable(),
+  "correo": zod.string().nullable(),
+  "pais": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+

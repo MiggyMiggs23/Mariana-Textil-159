@@ -17,6 +17,10 @@ tags:
     description: Administración de ubicaciones
   - name: users
     description: Administración de usuarios
+  - name: productos
+    description: Catálogo de productos/telas
+  - name: proveedores
+    description: Administración de proveedores
 paths:
   /healthz:
     get:
@@ -208,6 +212,228 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /productos:
+    get:
+      operationId: listProductos
+      tags: [productos]
+      summary: Lista productos del catálogo
+      responses:
+        "200":
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Producto"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      operationId: createProducto
+      tags: [productos]
+      summary: Crea un producto en el catálogo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductoInput"
+      responses:
+        "201":
+          description: Producto creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /productos/{id}:
+    get:
+      operationId: getProducto
+      tags: [productos]
+      summary: Obtiene el detalle de un producto
+      parameters:
+        - $ref: "#/components/parameters/ProductoId"
+      responses:
+        "200":
+          description: Detalle del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductoDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateProducto
+      tags: [productos]
+      summary: Actualiza un producto del catálogo
+      parameters:
+        - $ref: "#/components/parameters/ProductoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductoUpdate"
+      responses:
+        "200":
+          description: Producto actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /productos/import/preview:
+    post:
+      operationId: previewImportProductos
+      tags: [productos]
+      summary: Vista previa de importación de catálogo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImportFileInput"
+      responses:
+        "200":
+          description: Filas con estado NUEVO, DUPLICADO o ERROR
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ImportPreviewRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /productos/import/confirm:
+    post:
+      operationId: confirmImportProductos
+      tags: [productos]
+      summary: Confirma importación de filas del catálogo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImportConfirmInput"
+      responses:
+        "200":
+          description: Resultado de la importación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResult"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /proveedores:
+    get:
+      operationId: listProveedores
+      tags: [proveedores]
+      summary: Lista proveedores
+      responses:
+        "200":
+          description: Lista de proveedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Proveedor"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      operationId: createProveedor
+      tags: [proveedores]
+      summary: Crea un proveedor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProveedorInput"
+      responses:
+        "201":
+          description: Proveedor creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proveedor"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /proveedores/{id}:
+    get:
+      operationId: getProveedor
+      tags: [proveedores]
+      summary: Obtiene el detalle de un proveedor
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+      responses:
+        "200":
+          description: Detalle del proveedor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proveedor"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateProveedor
+      tags: [proveedores]
+      summary: Actualiza un proveedor
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProveedorUpdate"
+      responses:
+        "200":
+          description: Proveedor actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proveedor"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 components:
   parameters:
     LocationId:
@@ -217,6 +443,18 @@ components:
       schema:
         type: number
     UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    ProductoId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    ProveedorId:
       name: id
       in: path
       required: true
@@ -363,3 +601,190 @@ components:
               metros: { type: string, example: "0.000" }
               kilos: { type: string, example: "0.000" }
               rollos: { type: string, example: "0.000" }
+    UnidadProducto:
+      type: string
+      enum: [METRO, KILO]
+    TipoProveedor:
+      type: string
+      enum: [NACIONAL, IMPORTACION]
+    Moneda:
+      type: string
+      enum: [MXN, USD]
+    ProductoInventarioUbicacion:
+      type: object
+      required: [ubicacionId, nombre, rollos, cantidad]
+      properties:
+        ubicacionId: { type: number }
+        nombre: { type: string }
+        rollos: { type: number }
+        cantidad: { type: string }
+    Producto:
+      type: object
+      required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        precioSugerido: { type: string }
+        notas:
+          type: ["string", "null"]
+        activo: { type: boolean }
+        rollos: { type: number }
+        cantidad: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ProductoDetail:
+      type: object
+      required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, skuBloqueado, unidadBloqueada, inventarioPorUbicacion, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        precioSugerido: { type: string }
+        notas:
+          type: ["string", "null"]
+        activo: { type: boolean }
+        rollos: { type: number }
+        cantidad: { type: string }
+        skuBloqueado: { type: boolean }
+        unidadBloqueada: { type: boolean }
+        inventarioPorUbicacion:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductoInventarioUbicacion"
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ProductoInput:
+      type: object
+      required: [tela, color, unidad, precioSugerido]
+      properties:
+        sku:
+          type: string
+          description: SKU personalizado; se genera automáticamente si se omite
+        tela: { type: string, minLength: 1, maxLength: 200 }
+        color: { type: string, minLength: 1, maxLength: 100 }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        precioSugerido: { type: string }
+        notas:
+          type: ["string", "null"]
+    ProductoUpdate:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: SKU personalizado; sólo permitido cuando skuBloqueado es false
+        tela: { type: string, minLength: 1, maxLength: 200 }
+        color: { type: string, minLength: 1, maxLength: 100 }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        precioSugerido: { type: string }
+        notas:
+          type: ["string", "null"]
+        activo: { type: boolean }
+    ImportFileInput:
+      type: object
+      required: [fileName, content]
+      properties:
+        fileName: { type: string }
+        content:
+          type: string
+          description: Contenido del archivo en base64
+    ImportPreviewRow:
+      type: object
+      required: [rowIndex, tela, color, unidad, precioSugerido, notas, sku, estado]
+      properties:
+        rowIndex: { type: number }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string }
+        precioSugerido: { type: string }
+        notas:
+          type: ["string", "null"]
+        sku: { type: string }
+        estado:
+          type: string
+          enum: [NUEVO, DUPLICADO, ERROR]
+        error:
+          type: ["string", "null"]
+    ImportConfirmInput:
+      type: object
+      required: [fileName, content]
+      properties:
+        fileName: { type: string }
+        content:
+          type: string
+          description: Contenido del archivo en base64 (re-analizado en el servidor)
+    ImportResult:
+      type: object
+      required: [insertados, duplicados, errores]
+      properties:
+        insertados: { type: number }
+        duplicados: { type: number }
+        errores: { type: number }
+    Proveedor:
+      type: object
+      required: [id, nombre, tipo, monedaDefault, contactoNombre, telefono, correo, pais, notas, activo, createdAt]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        tipo:
+          $ref: "#/components/schemas/TipoProveedor"
+        monedaDefault:
+          $ref: "#/components/schemas/Moneda"
+        contactoNombre:
+          type: ["string", "null"]
+        telefono:
+          type: ["string", "null"]
+        correo:
+          type: ["string", "null"]
+        pais:
+          type: ["string", "null"]
+        notas:
+          type: ["string", "null"]
+        activo: { type: boolean }
+        createdAt: { type: string, format: date-time }
+    ProveedorInput:
+      type: object
+      required: [nombre, tipo]
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 200 }
+        tipo:
+          $ref: "#/components/schemas/TipoProveedor"
+        monedaDefault:
+          $ref: "#/components/schemas/Moneda"
+        contactoNombre:
+          type: ["string", "null"]
+        telefono:
+          type: ["string", "null"]
+        correo:
+          type: ["string", "null"]
+        pais:
+          type: ["string", "null"]
+        notas:
+          type: ["string", "null"]
+    ProveedorUpdate:
+      type: object
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 200 }
+        tipo:
+          $ref: "#/components/schemas/TipoProveedor"
+        monedaDefault:
+          $ref: "#/components/schemas/Moneda"
+        contactoNombre:
+          type: ["string", "null"]
+        telefono:
+          type: ["string", "null"]
+        correo:
+          type: ["string", "null"]
+        pais:
+          type: ["string", "null"]
+        notas:
+          type: ["string", "null"]
+        activo: { type: boolean }

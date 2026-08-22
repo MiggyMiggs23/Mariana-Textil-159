@@ -10,7 +10,8 @@
   },
   "private": true,
   "dependencies": {
-    "@replit/connectors-sdk": "^0.4.1"
+    "@replit/connectors-sdk": "^0.4.1",
+    "exceljs": "^4.4.0"
   },
   "devDependencies": {
     "prettier": "^3.9.6",

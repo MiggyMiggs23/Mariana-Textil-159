@@ -37,7 +37,8 @@ export const RolePermissions: Record<Role, Module[]> = {
     Modules.CAJA_RESUMEN,
     Modules.CAJA_CORTES,
     Modules.CAJA_COBROS,
-    Modules.REPORTES
+    Modules.REPORTES,
+    Modules.PRODUCTOS
   ],
   [Role.INVENTARIOS]: [
     Modules.DASHBOARD,
@@ -45,7 +46,8 @@ export const RolePermissions: Record<Role, Module[]> = {
     Modules.PRODUCTOS,
     Modules.MOVIMIENTOS,
     Modules.TRANSFERENCIAS,
-    Modules.REPORTES
+    Modules.REPORTES,
+    Modules.PROVEEDORES
   ],
   [Role.BODEGA]: [
     Modules.DASHBOARD,
@@ -54,7 +56,9 @@ export const RolePermissions: Record<Role, Module[]> = {
     Modules.TRANSFERENCIAS,
     Modules.MOVIMIENTOS,
     Modules.INVENTARIO,
-    Modules.CONTENEDORES
+    Modules.CONTENEDORES,
+    Modules.PRODUCTOS,
+    Modules.PROVEEDORES
   ]
 };
 

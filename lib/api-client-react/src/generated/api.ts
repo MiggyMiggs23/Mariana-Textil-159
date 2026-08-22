@@ -25,10 +25,21 @@ import type {
   ForbiddenResponse,
   GetDashboardParams,
   HealthStatus,
+  ImportConfirmInput,
+  ImportFileInput,
+  ImportPreviewRow,
+  ImportResult,
   Location,
   LocationUpdate,
   LoginInput,
   NotFoundResponse,
+  Producto,
+  ProductoDetail,
+  ProductoInput,
+  ProductoUpdate,
+  Proveedor,
+  ProveedorInput,
+  ProveedorUpdate,
   RateLimitedResponse,
   UnauthorizedResponse,
   User,
@@ -811,5 +822,741 @@ export const useUpdateUser = <TError = ErrorType<ValidationErrorResponse | Unaut
         TContext
       > => {
       return useMutation(getUpdateUserMutationOptions(options));
+    }
+
+export const getListProductosUrl = () => {
+
+
+
+
+  return `/api/productos`
+}
+
+/**
+ * @summary Lista productos del catálogo
+ */
+export const listProductos = async ( options?: Parameters<typeof customFetch>[1]): Promise<Producto[]> => {
+
+  return customFetch<Producto[]>(getListProductosUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListProductosQueryKey = () => {
+    return [
+    `/api/productos`
+    ] as const;
+    }
+
+
+export const getListProductosQueryOptions = <TData = Awaited<ReturnType<typeof listProductos>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListProductosQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProductos>>> = ({ signal }) => listProductos({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListProductosQueryResult = NonNullable<Awaited<ReturnType<typeof listProductos>>>
+export type ListProductosQueryError = ErrorType<UnauthorizedResponse>
+
+
+/**
+ * @summary Lista productos del catálogo
+ */
+
+export function useListProductos<TData = Awaited<ReturnType<typeof listProductos>>, TError = ErrorType<UnauthorizedResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListProductosQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateProductoUrl = () => {
+
+
+
+
+  return `/api/productos`
+}
+
+/**
+ * @summary Crea un producto en el catálogo
+ */
+export const createProducto = async (productoInput: ProductoInput, options?: Parameters<typeof customFetch>[1]): Promise<Producto> => {
+
+  return customFetch<Producto>(getCreateProductoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(productoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateProductoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProducto>>, TError,{data: BodyType<ProductoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createProducto>>, TError,{data: BodyType<ProductoInput>}, TContext> => {
+
+const mutationKey = ['createProducto'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProducto>>, {data: BodyType<ProductoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createProducto(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateProductoMutationResult = NonNullable<Awaited<ReturnType<typeof createProducto>>>
+    export type CreateProductoMutationBody = BodyType<ProductoInput>
+    export type CreateProductoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Crea un producto en el catálogo
+ */
+export const useCreateProducto = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProducto>>, TError,{data: BodyType<ProductoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createProducto>>,
+        TError,
+        {data: BodyType<ProductoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateProductoMutationOptions(options));
+    }
+
+export const getGetProductoUrl = (id: number,) => {
+
+
+
+
+  return `/api/productos/${id}`
+}
+
+/**
+ * @summary Obtiene el detalle de un producto
+ */
+export const getProducto = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ProductoDetail> => {
+
+  return customFetch<ProductoDetail>(getGetProductoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetProductoQueryKey = (id: number,) => {
+    return [
+    `/api/productos/${id}`
+    ] as const;
+    }
+
+
+export const getGetProductoQueryOptions = <TData = Awaited<ReturnType<typeof getProducto>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProducto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProducto>>> = ({ signal }) => getProducto(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProducto>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetProductoQueryResult = NonNullable<Awaited<ReturnType<typeof getProducto>>>
+export type GetProductoQueryError = ErrorType<UnauthorizedResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el detalle de un producto
+ */
+
+export function useGetProducto<TData = Awaited<ReturnType<typeof getProducto>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProducto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetProductoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateProductoUrl = (id: number,) => {
+
+
+
+
+  return `/api/productos/${id}`
+}
+
+/**
+ * @summary Actualiza un producto del catálogo
+ */
+export const updateProducto = async (id: number,
+    productoUpdate: ProductoUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Producto> => {
+
+  return customFetch<Producto>(getUpdateProductoUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(productoUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateProductoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProducto>>, TError,{id: number;data: BodyType<ProductoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProducto>>, TError,{id: number;data: BodyType<ProductoUpdate>}, TContext> => {
+
+const mutationKey = ['updateProducto'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProducto>>, {id: number;data: BodyType<ProductoUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateProducto(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateProductoMutationResult = NonNullable<Awaited<ReturnType<typeof updateProducto>>>
+    export type UpdateProductoMutationBody = BodyType<ProductoUpdate>
+    export type UpdateProductoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Actualiza un producto del catálogo
+ */
+export const useUpdateProducto = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProducto>>, TError,{id: number;data: BodyType<ProductoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateProducto>>,
+        TError,
+        {id: number;data: BodyType<ProductoUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateProductoMutationOptions(options));
+    }
+
+export const getPreviewImportProductosUrl = () => {
+
+
+
+
+  return `/api/productos/import/preview`
+}
+
+/**
+ * @summary Vista previa de importación de catálogo
+ */
+export const previewImportProductos = async (importFileInput: ImportFileInput, options?: Parameters<typeof customFetch>[1]): Promise<ImportPreviewRow[]> => {
+
+  return customFetch<ImportPreviewRow[]>(getPreviewImportProductosUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(importFileInput)
+  }
+);}
+
+
+
+
+
+export const getPreviewImportProductosMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewImportProductos>>, TError,{data: BodyType<ImportFileInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewImportProductos>>, TError,{data: BodyType<ImportFileInput>}, TContext> => {
+
+const mutationKey = ['previewImportProductos'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewImportProductos>>, {data: BodyType<ImportFileInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  previewImportProductos(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewImportProductosMutationResult = NonNullable<Awaited<ReturnType<typeof previewImportProductos>>>
+    export type PreviewImportProductosMutationBody = BodyType<ImportFileInput>
+    export type PreviewImportProductosMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Vista previa de importación de catálogo
+ */
+export const usePreviewImportProductos = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewImportProductos>>, TError,{data: BodyType<ImportFileInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewImportProductos>>,
+        TError,
+        {data: BodyType<ImportFileInput>},
+        TContext
+      > => {
+      return useMutation(getPreviewImportProductosMutationOptions(options));
+    }
+
+export const getConfirmImportProductosUrl = () => {
+
+
+
+
+  return `/api/productos/import/confirm`
+}
+
+/**
+ * @summary Confirma importación de filas del catálogo
+ */
+export const confirmImportProductos = async (importConfirmInput: ImportConfirmInput, options?: Parameters<typeof customFetch>[1]): Promise<ImportResult> => {
+
+  return customFetch<ImportResult>(getConfirmImportProductosUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(importConfirmInput)
+  }
+);}
+
+
+
+
+
+export const getConfirmImportProductosMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmImportProductos>>, TError,{data: BodyType<ImportConfirmInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmImportProductos>>, TError,{data: BodyType<ImportConfirmInput>}, TContext> => {
+
+const mutationKey = ['confirmImportProductos'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmImportProductos>>, {data: BodyType<ImportConfirmInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  confirmImportProductos(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmImportProductosMutationResult = NonNullable<Awaited<ReturnType<typeof confirmImportProductos>>>
+    export type ConfirmImportProductosMutationBody = BodyType<ImportConfirmInput>
+    export type ConfirmImportProductosMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Confirma importación de filas del catálogo
+ */
+export const useConfirmImportProductos = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmImportProductos>>, TError,{data: BodyType<ImportConfirmInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmImportProductos>>,
+        TError,
+        {data: BodyType<ImportConfirmInput>},
+        TContext
+      > => {
+      return useMutation(getConfirmImportProductosMutationOptions(options));
+    }
+
+export const getListProveedoresUrl = () => {
+
+
+
+
+  return `/api/proveedores`
+}
+
+/**
+ * @summary Lista proveedores
+ */
+export const listProveedores = async ( options?: Parameters<typeof customFetch>[1]): Promise<Proveedor[]> => {
+
+  return customFetch<Proveedor[]>(getListProveedoresUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListProveedoresQueryKey = () => {
+    return [
+    `/api/proveedores`
+    ] as const;
+    }
+
+
+export const getListProveedoresQueryOptions = <TData = Awaited<ReturnType<typeof listProveedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProveedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListProveedoresQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProveedores>>> = ({ signal }) => listProveedores({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProveedores>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListProveedoresQueryResult = NonNullable<Awaited<ReturnType<typeof listProveedores>>>
+export type ListProveedoresQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista proveedores
+ */
+
+export function useListProveedores<TData = Awaited<ReturnType<typeof listProveedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProveedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListProveedoresQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateProveedorUrl = () => {
+
+
+
+
+  return `/api/proveedores`
+}
+
+/**
+ * @summary Crea un proveedor
+ */
+export const createProveedor = async (proveedorInput: ProveedorInput, options?: Parameters<typeof customFetch>[1]): Promise<Proveedor> => {
+
+  return customFetch<Proveedor>(getCreateProveedorUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(proveedorInput)
+  }
+);}
+
+
+
+
+
+export const getCreateProveedorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProveedor>>, TError,{data: BodyType<ProveedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createProveedor>>, TError,{data: BodyType<ProveedorInput>}, TContext> => {
+
+const mutationKey = ['createProveedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProveedor>>, {data: BodyType<ProveedorInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createProveedor(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateProveedorMutationResult = NonNullable<Awaited<ReturnType<typeof createProveedor>>>
+    export type CreateProveedorMutationBody = BodyType<ProveedorInput>
+    export type CreateProveedorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Crea un proveedor
+ */
+export const useCreateProveedor = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProveedor>>, TError,{data: BodyType<ProveedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createProveedor>>,
+        TError,
+        {data: BodyType<ProveedorInput>},
+        TContext
+      > => {
+      return useMutation(getCreateProveedorMutationOptions(options));
+    }
+
+export const getGetProveedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}`
+}
+
+/**
+ * @summary Obtiene el detalle de un proveedor
+ */
+export const getProveedor = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Proveedor> => {
+
+  return customFetch<Proveedor>(getGetProveedorUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetProveedorQueryKey = (id: number,) => {
+    return [
+    `/api/proveedores/${id}`
+    ] as const;
+    }
+
+
+export const getGetProveedorQueryOptions = <TData = Awaited<ReturnType<typeof getProveedor>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedor>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProveedorQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProveedor>>> = ({ signal }) => getProveedor(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProveedor>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetProveedorQueryResult = NonNullable<Awaited<ReturnType<typeof getProveedor>>>
+export type GetProveedorQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el detalle de un proveedor
+ */
+
+export function useGetProveedor<TData = Awaited<ReturnType<typeof getProveedor>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedor>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetProveedorQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateProveedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}`
+}
+
+/**
+ * @summary Actualiza un proveedor
+ */
+export const updateProveedor = async (id: number,
+    proveedorUpdate: ProveedorUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Proveedor> => {
+
+  return customFetch<Proveedor>(getUpdateProveedorUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(proveedorUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateProveedorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProveedor>>, TError,{id: number;data: BodyType<ProveedorUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProveedor>>, TError,{id: number;data: BodyType<ProveedorUpdate>}, TContext> => {
+
+const mutationKey = ['updateProveedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProveedor>>, {id: number;data: BodyType<ProveedorUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateProveedor(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateProveedorMutationResult = NonNullable<Awaited<ReturnType<typeof updateProveedor>>>
+    export type UpdateProveedorMutationBody = BodyType<ProveedorUpdate>
+    export type UpdateProveedorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Actualiza un proveedor
+ */
+export const useUpdateProveedor = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProveedor>>, TError,{id: number;data: BodyType<ProveedorUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateProveedor>>,
+        TError,
+        {id: number;data: BodyType<ProveedorUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateProveedorMutationOptions(options));
     }
 

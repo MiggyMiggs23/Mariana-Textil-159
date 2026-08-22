@@ -140,6 +140,212 @@ export interface Dashboard {
   inventarioPorUbicacion: DashboardInventarioPorUbicacionItem[];
 }
 
+export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
+
+
+export const UnidadProducto = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export type TipoProveedor = typeof TipoProveedor[keyof typeof TipoProveedor];
+
+
+export const TipoProveedor = {
+  NACIONAL: 'NACIONAL',
+  IMPORTACION: 'IMPORTACION',
+} as const;
+
+export type Moneda = typeof Moneda[keyof typeof Moneda];
+
+
+export const Moneda = {
+  MXN: 'MXN',
+  USD: 'USD',
+} as const;
+
+export interface ProductoInventarioUbicacion {
+  ubicacionId: number;
+  nombre: string;
+  rollos: number;
+  cantidad: string;
+}
+
+export interface Producto {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  precioSugerido: string;
+  /** @nullable */
+  notas: string | null;
+  activo: boolean;
+  rollos: number;
+  cantidad: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductoDetail {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  precioSugerido: string;
+  /** @nullable */
+  notas: string | null;
+  activo: boolean;
+  rollos: number;
+  cantidad: string;
+  skuBloqueado: boolean;
+  unidadBloqueada: boolean;
+  inventarioPorUbicacion: ProductoInventarioUbicacion[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductoInput {
+  /** SKU personalizado; se genera automáticamente si se omite */
+  sku?: string;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  tela: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  color: string;
+  unidad: UnidadProducto;
+  precioSugerido: string;
+  /** @nullable */
+  notas?: string | null;
+}
+
+export interface ProductoUpdate {
+  /** SKU personalizado; sólo permitido cuando skuBloqueado es false */
+  sku?: string;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  tela?: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  color?: string;
+  unidad?: UnidadProducto;
+  precioSugerido?: string;
+  /** @nullable */
+  notas?: string | null;
+  activo?: boolean;
+}
+
+export interface ImportFileInput {
+  fileName: string;
+  /** Contenido del archivo en base64 */
+  content: string;
+}
+
+export type ImportPreviewRowEstado = typeof ImportPreviewRowEstado[keyof typeof ImportPreviewRowEstado];
+
+
+export const ImportPreviewRowEstado = {
+  NUEVO: 'NUEVO',
+  DUPLICADO: 'DUPLICADO',
+  ERROR: 'ERROR',
+} as const;
+
+export interface ImportPreviewRow {
+  rowIndex: number;
+  tela: string;
+  color: string;
+  unidad: string;
+  precioSugerido: string;
+  /** @nullable */
+  notas: string | null;
+  sku: string;
+  estado: ImportPreviewRowEstado;
+  /** @nullable */
+  error?: string | null;
+}
+
+export interface ImportConfirmInput {
+  fileName: string;
+  /** Contenido del archivo en base64 (re-analizado en el servidor) */
+  content: string;
+}
+
+export interface ImportResult {
+  insertados: number;
+  duplicados: number;
+  errores: number;
+}
+
+export interface Proveedor {
+  id: number;
+  nombre: string;
+  tipo: TipoProveedor;
+  monedaDefault: Moneda;
+  /** @nullable */
+  contactoNombre: string | null;
+  /** @nullable */
+  telefono: string | null;
+  /** @nullable */
+  correo: string | null;
+  /** @nullable */
+  pais: string | null;
+  /** @nullable */
+  notas: string | null;
+  activo: boolean;
+  createdAt: string;
+}
+
+export interface ProveedorInput {
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  nombre: string;
+  tipo: TipoProveedor;
+  monedaDefault?: Moneda;
+  /** @nullable */
+  contactoNombre?: string | null;
+  /** @nullable */
+  telefono?: string | null;
+  /** @nullable */
+  correo?: string | null;
+  /** @nullable */
+  pais?: string | null;
+  /** @nullable */
+  notas?: string | null;
+}
+
+export interface ProveedorUpdate {
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  nombre?: string;
+  tipo?: TipoProveedor;
+  monedaDefault?: Moneda;
+  /** @nullable */
+  contactoNombre?: string | null;
+  /** @nullable */
+  telefono?: string | null;
+  /** @nullable */
+  correo?: string | null;
+  /** @nullable */
+  pais?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  activo?: boolean;
+}
+
 /**
  * Sesión no válida
  */

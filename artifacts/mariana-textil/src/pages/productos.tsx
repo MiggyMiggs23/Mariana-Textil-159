@@ -1,0 +1,750 @@
+import { useState, useMemo, useEffect, useRef } from "react";
+import { AppLayout } from "@/components/layout/app-layout";
+import { useLocation } from "wouter";
+import {
+  useListProductos,
+  useCreateProducto,
+  useGetCurrentUser,
+  usePreviewImportProductos,
+  useConfirmImportProductos,
+  getListProductosQueryKey,
+  getGetCurrentUserQueryKey,
+  Producto,
+  Role,
+  UnidadProducto,
+  ImportPreviewRow,
+  ImportPreviewRowEstado
+} from "@workspace/api-client-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { ChevronRight, ChevronDown, Plus, Upload, Search, Package, CheckCircle2, AlertCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+
+function getErrorMessage(error: unknown): string {
+  if (typeof error !== "object" || error === null) return "Error desconocido";
+  const apiError = error as { data?: unknown; message?: unknown };
+  if (
+    typeof apiError.data === "object" &&
+    apiError.data !== null &&
+    "error" in apiError.data &&
+    typeof (apiError.data as { error?: unknown }).error === "string"
+  ) {
+    return (apiError.data as { error: string }).error;
+  }
+  return typeof apiError.message === "string" ? apiError.message : "Error desconocido";
+}
+
+export function generateSKU(tela: string, color: string) {
+  if (!tela || !color) return "";
+  const normalize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+  const telaWords = normalize(tela).trim().split(/\s+/).slice(0, 3);
+  let telaPart = telaWords.map(w => {
+    if (/^\d+$/.test(w)) return w;
+    return w.replace(/[^A-Z0-9]/g, "").substring(0, 3);
+  }).join("");
+  telaPart = telaPart.substring(0, 12);
+  const colorPart = normalize(color).trim().replace(/[^A-Z0-9]/g, "").substring(0, 3);
+  return `${telaPart}-${colorPart}`;
+}
+
+// Substring matching highlighter
+function HighlightMatch({ text, search }: { text: string; search: string }) {
+  if (!search.trim()) return <>{text}</>;
+  
+  // Escape search term for regex
+  const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${safeSearch})`, "gi");
+  const parts = text.split(regex);
+  
+  return (
+    <>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-300/80 dark:bg-yellow-600/50 rounded-sm text-foreground px-0.5">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+}
+
+export default function Productos() {
+  const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
+  
+  const { data: user } = useGetCurrentUser({
+    query: { queryKey: getGetCurrentUserQueryKey() }
+  });
+  
+  const { data: productos, isLoading } = useListProductos({
+    query: { queryKey: getListProductosQueryKey() }
+  });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterUnidad, setFilterUnidad] = useState("ALL");
+  const [filterEstado, setFilterEstado] = useState("ACTIVE");
+
+  const [expandedTelas, setExpandedTelas] = useState<Set<string>>(() => {
+    try {
+      const stored = sessionStorage.getItem("expandedTelas");
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("expandedTelas", JSON.stringify(Array.from(expandedTelas)));
+  }, [expandedTelas]);
+
+  const filteredProducts = useMemo(() => {
+    if (!productos) return [];
+    return productos.filter((p) => {
+      const search = searchTerm.toLowerCase();
+      const matchSearch = !search || 
+        p.tela.toLowerCase().includes(search) || 
+        p.color.toLowerCase().includes(search) || 
+        p.sku.toLowerCase().includes(search);
+      const matchUnidad = filterUnidad === "ALL" || p.unidad === filterUnidad;
+      const matchEstado = filterEstado === "ALL" || (filterEstado === "ACTIVE" ? p.activo : !p.activo);
+      return matchSearch && matchUnidad && matchEstado;
+    });
+  }, [productos, searchTerm, filterUnidad, filterEstado]);
+
+  const grouped = useMemo(() => {
+    const groups: Record<string, Producto[]> = {};
+    filteredProducts.forEach(p => {
+      if (!groups[p.tela]) groups[p.tela] = [];
+      groups[p.tela].push(p);
+    });
+    return Object.entries(groups).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filteredProducts]);
+
+  const toggleGroup = (tela: string) => {
+    setExpandedTelas(prev => {
+      const next = new Set(prev);
+      if (next.has(tela)) next.delete(tela);
+      else next.add(tela);
+      return next;
+    });
+  };
+
+  const handleExpandAll = () => setExpandedTelas(new Set(grouped.map(g => g[0])));
+  const handleCollapseAll = () => setExpandedTelas(new Set());
+
+  // Search auto-expand
+  useEffect(() => {
+    if (searchTerm.length >= 2) {
+      setExpandedTelas(prev => {
+        const next = new Set(prev);
+        grouped.forEach(([tela]) => next.add(tela));
+        return next;
+      });
+    }
+  }, [searchTerm, grouped]);
+
+  // Modals
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [createTelaPreFill, setCreateTelaPreFill] = useState("");
+  const [isImportOpen, setIsImportOpen] = useState(false);
+
+  const openCreate = (tela?: string) => {
+    setCreateTelaPreFill(tela || "");
+    setIsCreateOpen(true);
+  };
+
+  const isAdmin = user?.rol === Role.ADMIN;
+
+  return (
+    <AppLayout>
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-sidebar">Catálogo de Productos</h1>
+            <p className="text-muted-foreground mt-2">
+              Gestión de telas, colores, SKUs e inventario general.
+            </p>
+          </div>
+          {isAdmin && (
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Button variant="outline" onClick={() => setIsImportOpen(true)} className="flex-1 sm:flex-none" data-testid="button-import">
+                <Upload className="w-4 h-4 mr-2" />
+                Importar
+              </Button>
+              <Button onClick={() => openCreate()} className="flex-1 sm:flex-none" data-testid="button-create-product">
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Producto
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <Card>
+          <div className="p-4 border-b flex flex-col md:flex-row gap-4 items-center bg-muted/20">
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por tela, color o SKU..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 w-full bg-background"
+                data-testid="input-search-product"
+              />
+            </div>
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              <Select value={filterUnidad} onValueChange={setFilterUnidad}>
+                <SelectTrigger className="w-[140px] bg-background">
+                  <SelectValue placeholder="Unidad" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Todas las unid.</SelectItem>
+                  <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
+                  <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={filterEstado} onValueChange={setFilterEstado}>
+                <SelectTrigger className="w-[140px] bg-background">
+                  <SelectValue placeholder="Estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Todos</SelectItem>
+                  <SelectItem value="ACTIVE">Activos</SelectItem>
+                  <SelectItem value="INACTIVE">Inactivos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="p-8 text-center animate-pulse">
+                <div className="h-8 bg-muted rounded w-1/3 mx-auto mb-4"></div>
+                <div className="h-64 bg-muted rounded w-full"></div>
+              </div>
+            ) : grouped.length === 0 ? (
+              <div className="p-12 text-center text-muted-foreground flex flex-col items-center">
+                <Package className="w-12 h-12 mb-4 opacity-20" />
+                <p>No se encontraron productos que coincidan con la búsqueda.</p>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/10 text-sm">
+                  <span className="text-muted-foreground font-medium">{filteredProducts.length} productos en {grouped.length} telas</span>
+                  <div className="space-x-4">
+                    <button onClick={handleExpandAll} className="text-primary hover:underline font-medium" data-testid="button-expand-all">Expandir todo</button>
+                    <button onClick={handleCollapseAll} className="text-primary hover:underline font-medium" data-testid="button-collapse-all">Colapsar todo</button>
+                  </div>
+                </div>
+                
+                <div className="w-full">
+                  {grouped.map(([tela, groupProducts]) => {
+                    const isExpanded = expandedTelas.has(tela);
+                    const totalRollos = groupProducts.reduce((acc, p) => acc + (p.rollos || 0), 0);
+                    const totalCantidad = groupProducts.reduce((acc, p) => acc + parseFloat(p.cantidad || "0"), 0);
+
+                    return (
+                      <div key={tela} className="border-b last:border-0">
+                        <div 
+                          className="flex items-center justify-between p-3 hover:bg-muted/50 cursor-pointer select-none transition-colors"
+                          onClick={() => toggleGroup(tela)}
+                          data-testid={`row-tela-group-${tela}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
+                            <span className="font-bold text-foreground text-lg">
+                              <HighlightMatch text={tela} search={searchTerm} />
+                            </span>
+                            <Badge variant="secondary" className="ml-2">{groupProducts.length} colores</Badge>
+                          </div>
+                          <div className="flex items-center gap-6 text-sm">
+                            <div className="text-right hidden sm:block">
+                              <span className="text-muted-foreground">Rollos: </span>
+                              <span className="font-semibold text-sidebar">{totalRollos}</span>
+                            </div>
+                            <div className="text-right hidden sm:block w-24">
+                              <span className="text-muted-foreground">Total: </span>
+                              <span className="font-semibold text-sidebar">{totalCantidad.toFixed(2)}</span>
+                            </div>
+                            {isAdmin && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 px-2 z-10 hidden md:flex" 
+                                onClick={(e) => { e.stopPropagation(); openCreate(tela); }}
+                              >
+                                <Plus className="w-4 h-4 mr-1" /> Color
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {isExpanded && (
+                          <div className="bg-muted/5 p-0">
+                            <Table>
+                              <TableHeader className="bg-transparent">
+                                <TableRow className="hover:bg-transparent border-b-muted">
+                                  <TableHead className="w-[100px]">Color</TableHead>
+                                  <TableHead>SKU</TableHead>
+                                  <TableHead>Unidad</TableHead>
+                                  <TableHead className="text-right">Precio</TableHead>
+                                  <TableHead className="text-right">Rollos</TableHead>
+                                  <TableHead className="text-right">Cantidad</TableHead>
+                                  <TableHead className="text-right">Estado</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {groupProducts.map(p => (
+                                  <TableRow 
+                                    key={p.id} 
+                                    className="cursor-pointer hover:bg-muted/40 transition-colors"
+                                    onClick={() => setLocation(`/productos/${p.id}`)}
+                                    data-testid={`row-product-${p.id}`}
+                                  >
+                                    <TableCell className="font-semibold text-sidebar">
+                                      <HighlightMatch text={p.color} search={searchTerm} />
+                                    </TableCell>
+                                    <TableCell className="font-mono text-xs text-muted-foreground">
+                                      <HighlightMatch text={p.sku} search={searchTerm} />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Badge variant="outline" className="text-[10px]">{p.unidad}</Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">${parseFloat(p.precioSugerido).toFixed(2)}</TableCell>
+                                    <TableCell className="text-right font-medium">{p.rollos}</TableCell>
+                                    <TableCell className="text-right font-medium">{parseFloat(p.cantidad).toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">
+                                      <Badge variant={p.activo ? "default" : "secondary"} className={p.activo ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20" : ""}>
+                                        {p.activo ? "Activo" : "Inactivo"}
+                                      </Badge>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                                {isAdmin && (
+                                  <TableRow>
+                                    <TableCell colSpan={7} className="p-2">
+                                      <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-primary h-8" onClick={() => openCreate(tela)}>
+                                        <Plus className="w-4 h-4 mr-2" /> Agregar color a {tela}
+                                      </Button>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {productos && (
+        <CreateProductDialog 
+          open={isCreateOpen} 
+          onClose={() => setIsCreateOpen(false)} 
+          initialTela={createTelaPreFill}
+          existingProducts={productos}
+        />
+      )}
+      
+      <ImportProductsDialog
+        open={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+      />
+    </AppLayout>
+  );
+}
+
+function CreateProductDialog({ open, onClose, initialTela, existingProducts }: { open: boolean, onClose: () => void, initialTela: string, existingProducts: Producto[] }) {
+  const createProducto = useCreateProducto();
+  const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState<{
+    sku: string;
+    isCustomSku: boolean;
+    tela: string;
+    color: string;
+    unidad: UnidadProducto;
+    precioSugerido: string;
+    notas: string;
+  }>({
+    sku: "",
+    isCustomSku: false,
+    tela: initialTela || "",
+    color: "",
+    unidad: UnidadProducto.METRO,
+    precioSugerido: "0.00",
+    notas: ""
+  });
+
+  useEffect(() => {
+    if (open) {
+      setFormData({
+        sku: "",
+        isCustomSku: false,
+        tela: initialTela || "",
+        color: "",
+        unidad: UnidadProducto.METRO,
+        precioSugerido: "0.00",
+        notas: ""
+      });
+    }
+  }, [open, initialTela]);
+
+  const uniqueTelas = useMemo(() => Array.from(new Set(existingProducts.map(p => p.tela))), [existingProducts]);
+  const uniqueColors = useMemo(() => Array.from(new Set(existingProducts.map(p => p.color))), [existingProducts]);
+
+  const autoSku = useMemo(() => generateSKU(formData.tela, formData.color), [formData.tela, formData.color]);
+  const displaySku = formData.isCustomSku ? formData.sku : autoSku;
+
+  const handleSubmit = () => {
+    if (!formData.tela.trim() || !formData.color.trim()) {
+      toast.error("Datos incompletos", { description: "La tela y el color son obligatorios." });
+      return;
+    }
+    
+    createProducto.mutate({
+      data: {
+        tela: formData.tela.trim(),
+        color: formData.color.trim(),
+        unidad: formData.unidad,
+        precioSugerido: formData.precioSugerido,
+        notas: formData.notas.trim() || null,
+        sku: formData.isCustomSku && formData.sku.trim() ? formData.sku.trim() : undefined
+      }
+    }, {
+      onSuccess: () => {
+        toast.success("Producto creado exitosamente");
+        queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
+        onClose();
+      },
+      onError: (err: any) => {
+        toast.error("Error al crear producto", { description: getErrorMessage(err) });
+      }
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Nuevo Producto</DialogTitle>
+          <DialogDescription>
+            Agrega una nueva combinación de tela y color al catálogo.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Tela</Label>
+              <Input 
+                list="telas-list"
+                value={formData.tela}
+                onChange={e => setFormData({ ...formData, tela: e.target.value.toUpperCase() })}
+                placeholder="Ej. GABARDINA"
+                data-testid="input-product-tela"
+              />
+              <datalist id="telas-list">
+                {uniqueTelas.map(t => <option key={t} value={t} />)}
+              </datalist>
+            </div>
+            <div className="space-y-2">
+              <Label>Color</Label>
+              <Input 
+                list="colors-list"
+                value={formData.color}
+                onChange={e => setFormData({ ...formData, color: e.target.value.toUpperCase() })}
+                placeholder="Ej. AZUL MARINO"
+                data-testid="input-product-color"
+              />
+              <datalist id="colors-list">
+                {uniqueColors.map(c => <option key={c} value={c} />)}
+              </datalist>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Unidad de Medida</Label>
+              <Select value={formData.unidad} onValueChange={(v: UnidadProducto) => setFormData({ ...formData, unidad: v })}>
+                <SelectTrigger data-testid="select-product-unidad">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
+                  <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Precio Sugerido</Label>
+              <Input 
+                type="number" 
+                step="0.01"
+                min="0"
+                value={formData.precioSugerido}
+                onChange={e => setFormData({ ...formData, precioSugerido: e.target.value })}
+                data-testid="input-product-precio"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 p-3 bg-muted/30 border rounded-md">
+            <div className="flex items-center justify-between">
+              <Label>SKU del Producto</Label>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="custom-sku" 
+                  checked={formData.isCustomSku}
+                  onCheckedChange={(c) => setFormData({ ...formData, isCustomSku: c === true, sku: c === true ? autoSku : "" })}
+                  data-testid="checkbox-custom-sku"
+                />
+                <Label htmlFor="custom-sku" className="text-xs cursor-pointer font-normal">Personalizar</Label>
+              </div>
+            </div>
+            {formData.isCustomSku ? (
+              <Input 
+                value={formData.sku} 
+                onChange={e => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
+                placeholder={autoSku}
+                className="font-mono text-sm uppercase"
+                data-testid="input-custom-sku"
+              />
+            ) : (
+              <div className="h-9 px-3 flex items-center bg-muted/50 rounded-md border border-dashed font-mono text-sm text-sidebar font-semibold">
+                {displaySku || <span className="text-muted-foreground/50 font-normal">Esperando tela y color...</span>}
+              </div>
+            )}
+            <p className="text-[10px] text-muted-foreground">
+              El SKU se genera automáticamente usando los primeros caracteres de la tela y el color.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Notas (Opcional)</Label>
+            <Input 
+              value={formData.notas}
+              onChange={e => setFormData({ ...formData, notas: e.target.value })}
+              placeholder="Información adicional del producto..."
+              data-testid="input-product-notas"
+            />
+          </div>
+        </div>
+        
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button onClick={handleSubmit} disabled={createProducto.isPending} data-testid="button-save-product">
+            {createProducto.isPending ? "Guardando..." : "Guardar Producto"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ImportProductsDialog({ open, onClose }: { open: boolean, onClose: () => void }) {
+  const queryClient = useQueryClient();
+  const previewImport = usePreviewImportProductos();
+  const confirmImport = useConfirmImportProductos();
+  
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedContent, setSelectedContent] = useState("");
+  const [previewData, setPreviewData] = useState<ImportPreviewRow[] | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      setSelectedFile(null);
+      setSelectedContent("");
+      setPreviewData(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }, [open]);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSelectedFile(file);
+    setPreviewData(null);
+    
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const base64 = evt.target?.result?.toString().split(',')[1];
+      if (base64) {
+        setSelectedContent(base64);
+        previewImport.mutate({
+          data: { fileName: file.name, content: base64 }
+        }, {
+          onSuccess: (data) => setPreviewData(data),
+          onError: (err: any) => {
+            toast.error("Error al procesar archivo", { description: getErrorMessage(err) || "Formato inválido" });
+            setSelectedFile(null);
+            setSelectedContent("");
+            if (fileInputRef.current) fileInputRef.current.value = "";
+          }
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleConfirm = () => {
+    if (!previewData || !selectedFile || !selectedContent) return;
+    confirmImport.mutate({
+      data: { fileName: selectedFile.name, content: selectedContent }
+    }, {
+      onSuccess: (res) => {
+        toast.success("Importación completada", { 
+          description: `${res.insertados} insertados, ${res.duplicados} omitidos, ${res.errores} errores.` 
+        });
+        queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
+        onClose();
+      },
+      onError: (err: any) => {
+        toast.error("Error en la importación", { description: getErrorMessage(err) });
+      }
+    });
+  };
+
+  const hasErrors = previewData?.some(r => r.estado === ImportPreviewRowEstado.ERROR) || false;
+  const isPending = previewImport.isPending || confirmImport.isPending;
+
+  return (
+    <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>Importar Productos (Excel/CSV)</DialogTitle>
+          <DialogDescription>
+            Columnas requeridas: <strong>tela</strong>, <strong>color</strong>, <strong>unidad</strong>, <strong>precio_sugerido</strong>. <br/>
+            <span className="text-xs text-muted-foreground">(Opcional: notas, sku)</span>
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex-1 overflow-y-auto py-4 space-y-4">
+          {!previewData && (
+            <div 
+              className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-12 text-center flex flex-col items-center justify-center bg-muted/10 hover:bg-muted/30 transition-colors cursor-pointer" 
+              onClick={() => fileInputRef.current?.click()}
+              data-testid="input-file-dropzone"
+            >
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                onChange={handleFileUpload}
+              />
+              {previewImport.isPending ? (
+                <div className="animate-pulse flex flex-col items-center">
+                  <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                  <p className="text-sm font-medium">Analizando archivo...</p>
+                </div>
+              ) : (
+                <>
+                  <Upload className="w-10 h-10 text-muted-foreground mb-4" />
+                  <p className="text-sm font-medium text-foreground mb-1">Haz clic o arrastra un archivo aquí</p>
+                  <p className="text-xs text-muted-foreground">Soporta .xlsx y .csv</p>
+                </>
+              )}
+            </div>
+          )}
+
+          {previewData && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-muted rounded-md text-sm">
+                <div className="flex items-center gap-2 font-medium">
+                  <Package className="w-4 h-4 text-sidebar" />
+                  <span>{selectedFile?.name}</span>
+                </div>
+                <div className="flex items-center gap-4 text-xs font-semibold">
+                  <span className="text-emerald-600">{previewData.filter(r => r.estado === ImportPreviewRowEstado.NUEVO).length} Nuevos</span>
+                  <span className="text-amber-600">{previewData.filter(r => r.estado === ImportPreviewRowEstado.DUPLICADO).length} Duplicados</span>
+                  <span className="text-destructive">{previewData.filter(r => r.estado === ImportPreviewRowEstado.ERROR).length} Errores</span>
+                </div>
+              </div>
+
+              <div className="border rounded-md overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-muted/50">
+                    <TableRow>
+                      <TableHead className="w-12 text-center">Fila</TableHead>
+                      <TableHead>Producto</TableHead>
+                      <TableHead>SKU</TableHead>
+                      <TableHead>Estado</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {previewData.slice(0, 100).map((row, i) => (
+                      <TableRow key={i} className={
+                        row.estado === ImportPreviewRowEstado.ERROR ? "bg-destructive/5" :
+                        row.estado === ImportPreviewRowEstado.DUPLICADO ? "bg-amber-500/5 text-amber-900" :
+                        "bg-emerald-500/5"
+                      }>
+                        <TableCell className="text-center text-xs text-muted-foreground">{row.rowIndex}</TableCell>
+                        <TableCell>
+                          <div className="font-semibold text-sm">{row.tela} - {row.color}</div>
+                          <div className="text-[10px] text-muted-foreground">{row.unidad} | ${row.precioSugerido}</div>
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">{row.sku || "Auto"}</TableCell>
+                        <TableCell>
+                          {row.estado === ImportPreviewRowEstado.ERROR ? (
+                            <div className="flex items-center text-destructive text-xs font-medium">
+                              <AlertCircle className="w-3 h-3 mr-1" />
+                              {row.error}
+                            </div>
+                          ) : row.estado === ImportPreviewRowEstado.DUPLICADO ? (
+                            <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-100">Duplicado</Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-emerald-700 border-emerald-300 bg-emerald-100">
+                              <CheckCircle2 className="w-3 h-3 mr-1" /> Nuevo
+                            </Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              {previewData.length > 100 && (
+                <p className="text-center text-xs text-muted-foreground">Mostrando primeras 100 filas de {previewData.length}</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <DialogFooter className="mt-auto">
+          <Button variant="outline" onClick={() => {
+            if (previewData) {
+              setPreviewData(null);
+              setSelectedFile(null);
+              setSelectedContent("");
+            } else {
+              onClose();
+            }
+          }} disabled={isPending}>
+            {previewData ? "Descartar y subir otro" : "Cancelar"}
+          </Button>
+          <Button onClick={handleConfirm} disabled={!previewData || hasErrors || isPending} data-testid="button-confirm-import">
+            {confirmImport.isPending ? "Importando..." : "Confirmar Importación"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

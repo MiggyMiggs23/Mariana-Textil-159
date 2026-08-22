@@ -16,6 +16,10 @@ import Login from '@/pages/login';
 import Dashboard from '@/pages/dashboard';
 import Ubicaciones from '@/pages/ubicaciones';
 import Usuarios from '@/pages/usuarios';
+import Productos from '@/pages/productos';
+import ProductoDetail from '@/pages/producto-detail';
+import Proveedores from '@/pages/proveedores';
+import ProveedorDetail from '@/pages/proveedor-detail';
 import { LocationScopeProvider } from '@/lib/location-scope';
 
 const queryClient = new QueryClient({
@@ -45,7 +49,7 @@ function NotFound() {
   );
 }
 
-function ProtectedRoute({ component: Component, adminOnly = false }: { component: React.ComponentType, adminOnly?: boolean }) {
+function ProtectedRoute({ component: Component, allowedRoles }: { component: React.ComponentType, allowedRoles?: import('@workspace/api-client-react').Role[] }) {
   const [, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
@@ -67,7 +71,7 @@ function ProtectedRoute({ component: Component, adminOnly = false }: { component
 
   if (!user) return null;
 
-  if (adminOnly && user.rol !== 'ADMIN') {
+  if (allowedRoles && !allowedRoles.includes(user.rol)) {
     return <NotFound />;
   }
 
@@ -80,8 +84,15 @@ function Router() {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
-        <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} adminOnly />} />
-        <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} adminOnly />} />
+        <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} allowedRoles={["ADMIN"]} />} />
+        <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedRoles={["ADMIN"]} />} />
+        
+        <Route path="/productos" component={() => <ProtectedRoute component={Productos} />} />
+        <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} />} />
+        
+        <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>

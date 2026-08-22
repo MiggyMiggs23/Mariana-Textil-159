@@ -72,14 +72,14 @@ const NAV_GROUPS: NavGroup[] = [
     title: "INVENTARIO",
     items: [
       { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: false },
-      { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: false },
+      { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
     ]
   },
   {
     title: "ADMINISTRACIÓN",
     items: [
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: false },
-      { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: false },
+      { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
       { name: "Ubicaciones", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
       { name: "Próx. Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
