@@ -20,14 +20,15 @@ import { proveedoresTable } from "./proveedores";
 import { usuariosTable } from "./users";
 
 // ── Rollos ───────────────────────────────────────────────────────────────────
-// Each rollo is a physical roll of fabric with a unique per-SKU series code.
-// Series format: {SKU}-{######}  (6 zero-padded digits, e.g. TLC001-000042)
+// Each rollo is a physical roll of fabric with a globally unique numeric series.
+// serie stores only the numeric string (e.g. "1000042"); the QR payload
+// (SKU-SERIE) is composed in the frontend.
 
 export const rollosTable = pgTable(
   "rollos",
   {
     id: serial("id").primaryKey(),
-    /** Globally unique series code e.g. "TLC001-000042" */
+    /** Globally unique numeric series string e.g. "1000042" */
     serie: text("serie").notNull().unique(),
     productoId: integer("producto_id")
       .notNull()

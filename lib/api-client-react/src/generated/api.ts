@@ -22,11 +22,12 @@ import type {
 import type {
   ActivarRolloInput,
   AjusteRolloInput,
-  AltaLoteInput,
-  AltaLoteResult,
   ConciliacionRow,
   CurrentUser,
   Dashboard,
+  EntradaDetail,
+  EntradaInput,
+  EntradaListResult,
   ExistenciaRow,
   ForbiddenResponse,
   GetConciliacionParams,
@@ -39,6 +40,7 @@ import type {
   ImportPreviewRow,
   ImportResult,
   KardexResult,
+  ListEntradasParams,
   ListRollosParams,
   Location,
   LocationUpdate,
@@ -1580,7 +1582,7 @@ export const useUpdateProveedor = <TError = ErrorType<ValidationErrorResponse | 
       return useMutation(getUpdateProveedorMutationOptions(options));
     }
 
-export const getAltaLoteUrl = () => {
+export const getCrearEntradaUrl = () => {
 
 
 
@@ -1589,16 +1591,16 @@ export const getAltaLoteUrl = () => {
 }
 
 /**
- * @summary Alta manual de lote de rollos DISPONIBLES en una sola transacción
+ * @summary Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
  */
-export const altaLote = async (altaLoteInput: AltaLoteInput, options?: Parameters<typeof customFetch>[1]): Promise<AltaLoteResult> => {
+export const crearEntrada = async (entradaInput: EntradaInput, options?: Parameters<typeof customFetch>[1]): Promise<EntradaDetail> => {
 
-  return customFetch<AltaLoteResult>(getAltaLoteUrl(),
+  return customFetch<EntradaDetail>(getCrearEntradaUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(altaLoteInput)
+    body: JSON.stringify(entradaInput)
   }
 );}
 
@@ -1606,11 +1608,11 @@ export const altaLote = async (altaLoteInput: AltaLoteInput, options?: Parameter
 
 
 
-export const getAltaLoteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof altaLote>>, TError,{data: BodyType<AltaLoteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof altaLote>>, TError,{data: BodyType<AltaLoteInput>}, TContext> => {
+export const getCrearEntradaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearEntrada>>, TError,{data: BodyType<EntradaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof crearEntrada>>, TError,{data: BodyType<EntradaInput>}, TContext> => {
 
-const mutationKey = ['altaLote'];
+const mutationKey = ['crearEntrada'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1620,10 +1622,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof altaLote>>, {data: BodyType<AltaLoteInput>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearEntrada>>, {data: BodyType<EntradaInput>}> = (props) => {
           const {data} = props ?? {};
 
-          return  altaLote(data,requestOptions)
+          return  crearEntrada(data,requestOptions)
         }
 
 
@@ -1633,23 +1635,184 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AltaLoteMutationResult = NonNullable<Awaited<ReturnType<typeof altaLote>>>
-    export type AltaLoteMutationBody = BodyType<AltaLoteInput>
-    export type AltaLoteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+    export type CrearEntradaMutationResult = NonNullable<Awaited<ReturnType<typeof crearEntrada>>>
+    export type CrearEntradaMutationBody = BodyType<EntradaInput>
+    export type CrearEntradaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
 
     /**
- * @summary Alta manual de lote de rollos DISPONIBLES en una sola transacción
+ * @summary Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
  */
-export const useAltaLote = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof altaLote>>, TError,{data: BodyType<AltaLoteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const useCrearEntrada = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearEntrada>>, TError,{data: BodyType<EntradaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
-        Awaited<ReturnType<typeof altaLote>>,
+        Awaited<ReturnType<typeof crearEntrada>>,
         TError,
-        {data: BodyType<AltaLoteInput>},
+        {data: BodyType<EntradaInput>},
         TContext
       > => {
-      return useMutation(getAltaLoteMutationOptions(options));
+      return useMutation(getCrearEntradaMutationOptions(options));
     }
+
+export const getListEntradasUrl = (params?: ListEntradasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/entradas?${stringifiedParams}` : `/api/inventario/entradas`
+}
+
+/**
+ * @summary Lista entradas con filtros para búsqueda y reimpresión
+ */
+export const listEntradas = async (params?: ListEntradasParams, options?: Parameters<typeof customFetch>[1]): Promise<EntradaListResult> => {
+
+  return customFetch<EntradaListResult>(getListEntradasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEntradasQueryKey = (params?: ListEntradasParams,) => {
+    return [
+    `/api/inventario/entradas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListEntradasQueryOptions = <TData = Awaited<ReturnType<typeof listEntradas>>, TError = ErrorType<UnauthorizedResponse>>(params?: ListEntradasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEntradas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEntradasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEntradas>>> = ({ signal }) => listEntradas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEntradas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEntradasQueryResult = NonNullable<Awaited<ReturnType<typeof listEntradas>>>
+export type ListEntradasQueryError = ErrorType<UnauthorizedResponse>
+
+
+/**
+ * @summary Lista entradas con filtros para búsqueda y reimpresión
+ */
+
+export function useListEntradas<TData = Awaited<ReturnType<typeof listEntradas>>, TError = ErrorType<UnauthorizedResponse>>(
+ params?: ListEntradasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEntradas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEntradasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetEntradaUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/entradas/${id}`
+}
+
+/**
+ * @summary Obtiene el detalle completo de una entrada
+ */
+export const getEntrada = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<EntradaDetail> => {
+
+  return customFetch<EntradaDetail>(getGetEntradaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetEntradaQueryKey = (id: number,) => {
+    return [
+    `/api/inventario/entradas/${id}`
+    ] as const;
+    }
+
+
+export const getGetEntradaQueryOptions = <TData = Awaited<ReturnType<typeof getEntrada>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEntrada>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEntradaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEntrada>>> = ({ signal }) => getEntrada(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEntrada>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEntradaQueryResult = NonNullable<Awaited<ReturnType<typeof getEntrada>>>
+export type GetEntradaQueryError = ErrorType<UnauthorizedResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el detalle completo de una entrada
+ */
+
+export function useGetEntrada<TData = Awaited<ReturnType<typeof getEntrada>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEntrada>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetEntradaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getActivarRolloUrl = (id: number,) => {
 

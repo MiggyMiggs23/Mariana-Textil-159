@@ -21,8 +21,12 @@ import ProductoDetail from '@/pages/producto-detail';
 import Proveedores from '@/pages/proveedores';
 import ProveedorDetail from '@/pages/proveedor-detail';
 import Entradas from '@/pages/entradas';
+import EntradaDocumento from '@/pages/entrada-documento';
+import EntradaEtiquetas from '@/pages/entrada-etiquetas';
+import Movimientos from '@/pages/movimientos';
 import Inventario from '@/pages/inventario';
 import RolloDetail from '@/pages/rollo-detail';
+import RolloEtiqueta from '@/pages/rollo-etiqueta';
 import Ajustes from '@/pages/ajustes';
 import Conciliacion from '@/pages/conciliacion';
 import { LocationScopeProvider } from '@/lib/location-scope';
@@ -93,8 +97,14 @@ function Router() {
         <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedRoles={["ADMIN"]} />} />
         
         <Route path="/entradas" component={() => <ProtectedRoute component={Entradas} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        
+        <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        
         <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} />} />
         <Route path="/inventario/rollos/:id" component={() => <ProtectedRoute component={RolloDetail} />} />
+        <Route path="/inventario/rollos/:id/etiqueta" component={() => <ProtectedRoute component={RolloEtiqueta} />} />
         <Route path="/inventario/ajustes" component={() => <ProtectedRoute component={Ajustes} allowedRoles={["ADMIN", "INVENTARIOS"]} />} />
         
         <Route path="/productos" component={() => <ProtectedRoute component={Productos} />} />

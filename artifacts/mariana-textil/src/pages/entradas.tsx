@@ -1,82 +1,328 @@
-import { useState } from "react";
-import { useLocation } from "wouter";
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { 
   useListProductos, 
   useListLocations, 
   useListProveedores, 
-  useAltaLote,
+  useCrearEntrada,
+  useGetCurrentUser,
   getListProductosQueryKey,
   getListLocationsQueryKey,
   getListProveedoresQueryKey,
+  getGetCurrentUserQueryKey,
+  getListEntradasQueryKey,
+  getGetDashboardQueryKey,
+  getListRollosQueryKey,
+  getGetExistenciasQueryKey,
   Role,
-  AltaLoteResultRollosItem
+  EntradaDetail
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X } from "lucide-react";
+import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+
+type DraftLinea = {
+  id: string;
+  productoId: string;
+  productoName: string;
+  productoSKU: string;
+  productoUnidad: string;
+  costoUnitario: string;
+  declaredCount: number;
+  cantidades: string[];
+};
 
 export default function Entradas() {
   const queryClient = useQueryClient();
-  const [, setLocation] = useLocation();
 
-  const { data: productos } = useListProductos();
-  const { data: ubicaciones } = useListLocations();
-  const { data: proveedores } = useListProveedores();
-  const altaLote = useAltaLote();
+  const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
+  const { data: productos } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
+  const { data: ubicaciones } = useListLocations({ 
+    query: { 
+      enabled: user?.rol === Role.ADMIN,
+      queryKey: getListLocationsQueryKey() 
+    } 
+  });
+  const { data: proveedores } = useListProveedores({ query: { queryKey: getListProveedoresQueryKey() } });
+  
+  const crearEntrada = useCrearEntrada();
 
+  // General data (draft wide)
+  const [uuidCliente, setUuidCliente] = useState(() => crypto.randomUUID());
+  
+  // Detalle del artículo state (form state)
   const [productoId, setProductoId] = useState<string>("");
+  const [costoUnitario, setCostoUnitario] = useState<string>("");
+  const [declaredCount, setDeclaredCount] = useState<string>("");
   const [ubicacionId, setUbicacionId] = useState<string>("");
   const [proveedorId, setProveedorId] = useState<string>("none");
-  const [costoUnitario, setCostoUnitario] = useState<string>("");
-  const [notas, setNotas] = useState<string>("");
+  const [fecha, setFecha] = useState<string>(format(new Date(), "yyyy-MM-dd"));
+  const [observaciones, setObservaciones] = useState<string>("");
 
-  const [cantidades, setCantidades] = useState<string[]>([]);
-  const [currentQty, setCurrentQty] = useState<string>("");
+  const [lineas, setLineas] = useState<DraftLinea[]>([]);
+  const [selectedLines, setSelectedLines] = useState<Set<string>>(new Set());
+  const [expandedLines, setExpandedLines] = useState<Set<string>>(new Set());
+  const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  
+  // Printing preferences
+  const [autoPrintDoc, setAutoPrintDoc] = useState(true);
+  const [autoPrintLabels, setAutoPrintLabels] = useState(true);
 
-  const [result, setResult] = useState<AltaLoteResultRollosItem[] | null>(null);
+  // Modals state
+  const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
+  const [isConfirmCancelOpen, setIsConfirmCancelOpen] = useState(false);
+  
+  // Capture state
+  const [capDraftId, setCapDraftId] = useState("");
+  const [capCantidades, setCapCantidades] = useState<string[]>([]);
+  const [capCurrentQty, setCapCurrentQty] = useState("");
+  const [editingQtyIndex, setEditingQtyIndex] = useState<number | null>(null);
+  const [editingQtyValue, setEditingQtyValue] = useState("");
+  const [isEditingLine, setIsEditingLine] = useState(false);
+  
+  const qtyInputRef = useRef<HTMLInputElement>(null);
+
+  const [resultado, setResult] = useState<EntradaDetail | null>(null);
+
+  const selectedProduct = productos?.find(p => p.id.toString() === productoId);
+
+  // Set default location for non-admin
+  useEffect(() => {
+    if (user && user.rol !== Role.ADMIN && user.ubicacion) {
+      setUbicacionId(user.ubicacion.id.toString());
+    }
+  }, [user]);
+
+  // Focus input when capture modal opens
+  useEffect(() => {
+    if (isCaptureModalOpen) {
+      setTimeout(() => qtyInputRef.current?.focus(), 100);
+    }
+  }, [isCaptureModalOpen]);
+
+  const handleStartCapture = () => {
+    if (!productoId || !costoUnitario || !declaredCount || Number(declaredCount) <= 0 || !ubicacionId || !fecha) {
+      toast.error("Por favor completa todos los campos obligatorios (*)");
+      return;
+    }
+    
+    setCapDraftId(crypto.randomUUID());
+    setCapCantidades([]);
+    setCapCurrentQty("");
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    setIsEditingLine(false);
+    setIsCaptureModalOpen(true);
+  };
+
+  const handleEditLine = (linea: DraftLinea) => {
+    setProductoId(linea.productoId);
+    setCostoUnitario(linea.costoUnitario);
+    setDeclaredCount(linea.declaredCount.toString());
+    setCapDraftId(linea.id);
+    setCapCantidades([...linea.cantidades]);
+    setCapCurrentQty("");
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    setIsEditingLine(true);
+    setIsCaptureModalOpen(true);
+  };
 
   const handleAddQty = (e?: React.FormEvent) => {
     e?.preventDefault();
-    const val = parseFloat(currentQty);
+    const val = parseFloat(capCurrentQty);
     if (!isNaN(val) && val > 0) {
-      setCantidades([...cantidades, currentQty]);
-      setCurrentQty("");
+      setCapCantidades([...capCantidades, capCurrentQty]);
+      setCapCurrentQty("");
+      qtyInputRef.current?.focus();
     }
   };
 
-  const handleRemoveLast = () => {
-    setCantidades(prev => prev.slice(0, -1));
+  const handleKeypadPress = (val: string) => {
+    if (val === 'DEL') {
+      setCapCurrentQty(prev => prev.slice(0, -1));
+    } else if (val === 'ENTER') {
+      handleAddQty();
+    } else {
+      setCapCurrentQty(prev => prev + val);
+    }
+    qtyInputRef.current?.focus();
   };
 
-  const handleRemoveIndex = (idx: number) => {
-    setCantidades(prev => prev.filter((_, i) => i !== idx));
+  const handleRemoveCapturedQty = (idx: number) => {
+    setCapCantidades(prev => prev.filter((_, i) => i !== idx));
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    qtyInputRef.current?.focus();
   };
 
-  const isFormValid = productoId && ubicacionId && costoUnitario && cantidades.length > 0;
+  const handleStartEditCapturedQty = (idx: number) => {
+    setEditingQtyIndex(idx);
+    setEditingQtyValue(capCantidades[idx] ?? "");
+  };
+
+  const handleSaveCapturedQty = () => {
+    if (editingQtyIndex === null) return;
+    const parsed = Number(editingQtyValue);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      toast.error("La cantidad debe ser mayor que cero");
+      return;
+    }
+    setCapCantidades(prev =>
+      prev.map((qty, idx) => idx === editingQtyIndex ? editingQtyValue : qty),
+    );
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    qtyInputRef.current?.focus();
+  };
+
+  const attemptCancelCapture = () => {
+    if (capCantidades.length > 0 && !isEditingLine) {
+      setIsConfirmCancelOpen(true);
+    } else {
+      setIsCaptureModalOpen(false);
+    }
+  };
+
+  const handleConfirmCapture = (forceReduce = false) => {
+    const declared = Number(declaredCount);
+    if (!forceReduce && capCantidades.length < declared) {
+      toast.error(`Faltan capturar ${declared - capCantidades.length} rollos`);
+      return;
+    }
+    if (capCantidades.length > declared) {
+      toast.error(`Has capturado más rollos de los declarados (${declared})`);
+      return;
+    }
+
+    if (!selectedProduct) return;
+
+    const newLineData: DraftLinea = {
+      id: capDraftId,
+      productoId: productoId,
+      productoName: `${selectedProduct.tela} - ${selectedProduct.color}`,
+      productoSKU: selectedProduct.sku,
+      productoUnidad: selectedProduct.unidad,
+      costoUnitario: costoUnitario,
+      declaredCount: forceReduce ? capCantidades.length : declared,
+      cantidades: capCantidades
+    };
+
+    if (isEditingLine) {
+      setLineas(prev => prev.map(l => l.id === capDraftId ? newLineData : l));
+      toast.success("Línea actualizada");
+    } else {
+      setLineas(prev => [...prev, newLineData]);
+      toast.success("Línea agregada a la lista");
+      // Reset only line specific fields, keep location/provider/date/notes
+      setProductoId("");
+      setCostoUnitario("");
+      setDeclaredCount("");
+    }
+    
+    setIsCaptureModalOpen(false);
+  };
+
+  const handleRemoveLinea = (id: string) => {
+    if (window.confirm("¿Seguro que deseas eliminar esta línea de la entrada?")) {
+      setLineas(prev => prev.filter(l => l.id !== id));
+      setSelectedLines(prev => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+  };
+
+  const toggleSelectLine = (id: string) => {
+    setSelectedLines(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedLines.size === lineas.length) {
+      setSelectedLines(new Set());
+    } else {
+      setSelectedLines(new Set(lineas.map(l => l.id)));
+    }
+  };
+
+  const toggleExpandLine = (id: string) => {
+    setExpandedLines(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const discardWholeDraft = () => {
+    if (lineas.length === 0 || window.confirm("¿Seguro que deseas cancelar toda la entrada? Se perderá todo lo capturado.")) {
+      setLineas([]);
+      setProductoId("");
+      setCostoUnitario("");
+      setDeclaredCount("");
+      setUuidCliente(crypto.randomUUID());
+    }
+  };
+
+  const totalRollos = lineas.reduce((acc, l) => acc + l.cantidades.length, 0);
+  const totalQtyGeneral = lineas.reduce((acc, l) => acc + l.cantidades.reduce((a, b) => a + parseFloat(b), 0), 0);
+  const totalCostoGeneral = lineas.reduce((acc, l) => {
+    const qtySum = l.cantidades.reduce((qAcc, q) => qAcc + parseFloat(q), 0);
+    return acc + (qtySum * parseFloat(l.costoUnitario));
+  }, 0);
+
+  const isFormValid = ubicacionId && lineas.length > 0 && fecha;
 
   const handleSubmit = () => {
     if (!isFormValid) return;
-    altaLote.mutate({
+
+    crearEntrada.mutate({
       data: {
-        productoId: Number(productoId),
         ubicacionId: Number(ubicacionId),
         proveedorId: proveedorId === "none" ? undefined : Number(proveedorId),
-        costoUnitario,
-        notas: notas || null,
-        cantidades
+        fecha: fecha || undefined,
+        observaciones: observaciones || null,
+        uuidCliente,
+        lineas: lineas.map(l => ({
+          productoId: Number(l.productoId),
+          costoUnitario: l.costoUnitario,
+          cantidades: l.cantidades
+        }))
       }
     }, {
       onSuccess: (data) => {
-        toast.success("Lote ingresado correctamente");
-        setResult(data.rollos);
+        toast.success("Entrada registrada correctamente");
+        setResult(data);
+        
+        queryClient.invalidateQueries({ queryKey: getListEntradasQueryKey() });
         queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
-        // Don't invalidate locations/proveedores as they don't change
+        queryClient.invalidateQueries({ queryKey: getGetDashboardQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getGetExistenciasQueryKey() });
+        
+        const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+        if (autoPrintDoc) {
+          window.open(`${baseUrl}/entradas/${data.id}/documento`, '_blank');
+        }
+        if (autoPrintLabels) {
+          window.open(`${baseUrl}/entradas/${data.id}/etiquetas`, '_blank');
+        }
       },
       onError: (err: any) => {
         const msg = err?.data?.error || err?.message || "Error al procesar la entrada";
@@ -85,19 +331,8 @@ export default function Entradas() {
     });
   };
 
-  const resetForm = () => {
-    setProductoId("");
-    setUbicacionId("");
-    setProveedorId("none");
-    setCostoUnitario("");
-    setNotas("");
-    setCantidades([]);
-    setResult(null);
-  };
-
-  const totalQty = cantidades.reduce((sum, q) => sum + parseFloat(q), 0);
-
-  if (result) {
+  if (resultado) {
+    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     return (
       <AppLayout>
         <div className="max-w-3xl mx-auto space-y-6">
@@ -105,26 +340,36 @@ export default function Entradas() {
             <CardHeader className="text-center pb-4">
               <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
               <CardTitle className="text-2xl text-emerald-700 dark:text-emerald-400">Entrada Completada</CardTitle>
-              <CardDescription>Se generaron {result.length} rollos exitosamente.</CardDescription>
+              <CardDescription>Folio #{resultado.folio.toString().padStart(6, '0')}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="bg-background rounded-md border p-4 max-h-[400px] overflow-y-auto">
-                <div className="space-y-2">
-                  {result.map((r, i) => (
-                    <div key={r.id} className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs text-muted-foreground w-6">{i+1}.</span>
-                        <div className="font-bold text-foreground tracking-tight">{r.serie}</div>
-                      </div>
-                      <div className="font-medium">{r.cantidadInicial}</div>
-                    </div>
-                  ))}
+              <div className="bg-background rounded-md border p-6 flex justify-around items-center text-center">
+                <div>
+                  <div className="text-sm text-muted-foreground">Total Rollos</div>
+                  <div className="text-2xl font-bold">{resultado.totalRollos}</div>
+                </div>
+                <div className="w-px h-12 bg-border"></div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Costo Total</div>
+                  <div className="text-2xl font-bold text-emerald-600">${parseFloat(resultado.totalCosto).toFixed(2)}</div>
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="flex justify-center gap-4 pt-4">
-              <Button variant="outline" onClick={resetForm}>Nueva Entrada</Button>
-              <Button onClick={() => setLocation("/inventario")}>Ver Inventario</Button>
+            <CardFooter className="flex flex-wrap justify-center gap-4 pt-4">
+              <Button variant="outline" onClick={() => window.open(`${baseUrl}/entradas/${resultado.id}/documento`, '_blank')}>
+                <FileText className="w-4 h-4 mr-2" /> Documento
+              </Button>
+              <Button variant="outline" onClick={() => window.open(`${baseUrl}/entradas/${resultado.id}/etiquetas`, '_blank')}>
+                <Printer className="w-4 h-4 mr-2" /> Etiquetas
+              </Button>
+              <Button onClick={() => {
+                setResult(null);
+                setLineas([]);
+                setProductoId("");
+                setCostoUnitario("");
+                setDeclaredCount("");
+                setUuidCliente(crypto.randomUUID());
+              }}>Nueva Entrada</Button>
             </CardFooter>
           </Card>
         </div>
@@ -134,51 +379,91 @@ export default function Entradas() {
 
   return (
     <AppLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6 pb-32">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Ingreso de Lote</h1>
-          <p className="text-muted-foreground mt-2">Registra múltiples rollos en una sola operación.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADA</h1>
+          <p className="text-muted-foreground mt-1">Registra la mercancía que llega a una ubicación. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ArrowDownToLine className="w-5 h-5" /> Datos del Lote
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="border-t-4 border-t-primary shadow-sm">
+          <CardHeader className="bg-muted/10 border-b">
+            <CardTitle className="text-lg">Detalle del artículo</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                
                 <div className="space-y-2">
-                  <Label>Producto</Label>
+                  <Label>Producto <span className="text-destructive">*</span></Label>
                   <Select value={productoId} onValueChange={setProductoId}>
                     <SelectTrigger data-testid="select-producto">
-                      <SelectValue placeholder="Selecciona un producto..." />
+                      <SelectValue placeholder="Busca producto por SKU o nombre..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {productos?.map(p => (
-                        <SelectItem key={p.id} value={p.id.toString()}>{p.tela} - {p.color}</SelectItem>
+                      {productos?.filter(p => p.activo).map(p => (
+                        <SelectItem key={p.id} value={p.id.toString()}>{p.sku} - {p.tela} {p.color}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
+
                 <div className="space-y-2">
-                  <Label>Ubicación Destino</Label>
-                  <Select value={ubicacionId} onValueChange={setUbicacionId}>
-                    <SelectTrigger data-testid="select-ubicacion">
-                      <SelectValue placeholder="Selecciona ubicación..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ubicaciones?.filter(u => u.activa).map(u => (
-                        <SelectItem key={u.id} value={u.id.toString()}>{u.nombre}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label>SKU</Label>
+                  <Input value={selectedProduct?.sku || ""} readOnly className="bg-muted text-muted-foreground" />
                 </div>
+
                 <div className="space-y-2">
-                  <Label>Proveedor (Opcional)</Label>
+                  <Label>Cantidad de rollos <span className="text-destructive">*</span></Label>
+                  <Input 
+                    type="number" 
+                    min="1"
+                    value={declaredCount} 
+                    onChange={e => setDeclaredCount(e.target.value)} 
+                    data-testid="input-declared"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Costo por unidad <span className="text-destructive">*</span></Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <Input 
+                      type="number" 
+                      step="0.01" 
+                      className="pl-7" 
+                      value={costoUnitario} 
+                      onChange={e => setCostoUnitario(e.target.value)} 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Fecha de entrada <span className="text-destructive">*</span></Label>
+                  <Input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Ubicación <span className="text-destructive">*</span></Label>
+                  {user?.rol === Role.ADMIN ? (
+                    <Select value={ubicacionId} onValueChange={setUbicacionId}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ubicaciones?.filter(u => u.activa).map(u => (
+                          <SelectItem key={u.id} value={u.id.toString()}>{u.nombre}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input value={user?.ubicacion?.nombre || ""} readOnly className="bg-muted text-muted-foreground" />
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Proveedor</Label>
                   <Select value={proveedorId} onValueChange={setProveedorId}>
-                    <SelectTrigger data-testid="select-proveedor">
+                    <SelectTrigger>
                       <SelectValue placeholder="Sin proveedor" />
                     </SelectTrigger>
                     <SelectContent>
@@ -189,117 +474,420 @@ export default function Entradas() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>Costo Unitario</Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                    <Input 
-                      type="number" 
-                      step="0.01" 
-                      className="pl-7" 
-                      value={costoUnitario} 
-                      onChange={e => setCostoUnitario(e.target.value)} 
-                      data-testid="input-costo"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Notas del lote (Opcional)</Label>
-                <Input 
-                  placeholder="Referencia de factura, pedimento, etc." 
-                  value={notas}
-                  onChange={e => setNotas(e.target.value)}
-                  data-testid="input-notas"
-                />
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card className="flex flex-col">
-            <CardHeader className="border-b bg-muted/10 pb-4">
-              <CardTitle className="flex justify-between items-center text-lg">
-                <span className="flex items-center gap-2"><Box className="w-5 h-5" /> Rollos</span>
-                <span className="text-sm font-normal bg-primary/10 text-primary px-2 py-1 rounded-md">
-                  {cantidades.length} items
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 p-0 flex flex-col">
-              <div className="p-4 border-b bg-background">
-                <form onSubmit={handleAddQty} className="flex gap-2">
-                  <Input 
-                    type="number" 
-                    step="0.01" 
-                    placeholder="Cantidad" 
-                    value={currentQty}
-                    onChange={e => setCurrentQty(e.target.value)}
-                    className="font-medium"
-                    data-testid="input-qty"
-                    autoFocus
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Notas</Label>
+                  <textarea 
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Referencia de factura, pedimento, etc."
+                    value={observaciones}
+                    onChange={e => setObservaciones(e.target.value)}
                   />
-                  <Button type="submit" size="icon" disabled={!currentQty} data-testid="button-add-qty">
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </form>
+                </div>
               </div>
-              
-              <div className="flex-1 overflow-y-auto max-h-[300px] p-2 space-y-1 bg-muted/5 custom-scrollbar">
-                {cantidades.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-muted-foreground py-8">
-                    <Box className="w-8 h-8 opacity-20 mb-2" />
-                    <span className="text-sm">Agrega cantidades arriba</span>
-                  </div>
-                ) : (
-                  cantidades.map((qty, idx) => (
-                    <div key={idx} className="flex items-center justify-between group p-2 rounded-md hover:bg-muted/50 border border-transparent hover:border-border transition-colors">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground font-mono w-4">{idx+1}.</span>
-                        <span className="font-bold">{qty}</span>
-                      </div>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-7 w-7 opacity-0 group-hover:opacity-100 text-destructive hover:bg-destructive/10"
-                        onClick={() => handleRemoveIndex(idx)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+
+              {/* Readonly preview container */}
+              <div className="bg-muted/30 border rounded-md flex flex-col h-[400px]">
+                <div className="p-3 border-b bg-muted/50 font-semibold text-sm">
+                  Cantidad por rollo (Previsualización)
+                </div>
+                <div className="flex-1 overflow-y-auto p-2 custom-scrollbar space-y-1">
+                  {declaredCount && Number(declaredCount) > 0 ? (
+                     Array.from({ length: Number(declaredCount) }).map((_, i) => (
+                       <div key={i} className="flex justify-between items-center p-2 text-sm border rounded bg-background shadow-sm opacity-50">
+                         <span className="font-mono text-xs w-6">{i+1}.</span>
+                         <span>Pendiente</span>
+                         <span className="text-xs text-muted-foreground italic">Serie por asignar</span>
+                       </div>
+                     ))
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-muted-foreground text-sm p-4 text-center">
+                      Ingresa la cantidad de rollos para ver la previsualización.
                     </div>
-                  ))
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </CardContent>
+          <CardFooter className="bg-muted/10 border-t p-4 flex justify-end">
+            <Button onClick={handleStartCapture} data-testid="btn-add-line">
+              <Plus className="w-4 h-4 mr-2" /> Agregar a la lista
+            </Button>
+          </CardFooter>
+        </Card>
+
+        {/* Master Table */}
+        <div className="border rounded-md shadow-sm overflow-hidden bg-white">
+          <div className="p-4 bg-white flex justify-between items-center border-b">
+            <h2 className="font-bold text-lg">Lista de Entrada</h2>
+            <Button variant="outline" size="sm" onClick={() => setMostrarFiltros(!mostrarFiltros)}>
+              Mostrar filtros
+            </Button>
+          </div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#1e3a8a] hover:bg-[#1e3a8a]">
+                  <TableHead className="w-12 text-white">
+                    <Checkbox 
+                      checked={lineas.length > 0 && selectedLines.size === lineas.length} 
+                      onCheckedChange={toggleSelectAll} 
+                      className="border-white data-[state=checked]:bg-white data-[state=checked]:text-[#1e3a8a]"
+                    />
+                  </TableHead>
+                  <TableHead className="text-white">Producto</TableHead>
+                  <TableHead className="text-white">SKU</TableHead>
+                  <TableHead className="text-white">Ubicación</TableHead>
+                  <TableHead className="text-right text-white">Rollos</TableHead>
+                  <TableHead className="text-white">Unidad</TableHead>
+                  <TableHead className="text-right text-white">Cantidad total</TableHead>
+                  <TableHead className="text-right text-white">Costo unitario</TableHead>
+                  <TableHead className="text-right text-white">Costo total</TableHead>
+                  <TableHead className="text-center text-white">Detalle</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {lineas.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className="h-32 text-center text-muted-foreground">
+                      Aún no has agregado productos a esta entrada.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  lineas.map((linea) => {
+                    const isExpanded = expandedLines.has(linea.id);
+                    const qtySum = linea.cantidades.reduce((a, b) => a + parseFloat(b), 0);
+                    const costSum = qtySum * parseFloat(linea.costoUnitario);
+                    const isSelected = selectedLines.has(linea.id);
+                    const ubiName = ubicaciones?.find(u => u.id.toString() === ubicacionId)?.nombre || user?.ubicacion?.nombre || "";
+
+                    return (
+                      <React.Fragment key={linea.id}>
+                        <TableRow className={isSelected ? "bg-primary/5" : ""}>
+                          <TableCell>
+                            <Checkbox 
+                              checked={isSelected} 
+                              onCheckedChange={() => toggleSelectLine(linea.id)} 
+                            />
+                          </TableCell>
+                          <TableCell className="font-bold">{linea.productoName}</TableCell>
+                          <TableCell className="font-mono text-xs">{linea.productoSKU}</TableCell>
+                          <TableCell>{ubiName}</TableCell>
+                          <TableCell className="text-right font-bold">{linea.cantidades.length}</TableCell>
+                          <TableCell>{linea.productoUnidad}</TableCell>
+                          <TableCell className="text-right font-medium">{qtySum.toFixed(2)}</TableCell>
+                          <TableCell className="text-right">${parseFloat(linea.costoUnitario).toFixed(2)}</TableCell>
+                          <TableCell className="text-right font-bold text-emerald-600">${costSum.toFixed(2)}</TableCell>
+                          <TableCell className="text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-primary" onClick={() => handleEditLine(linea)}>
+                                <Edit2 className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleRemoveLinea(linea.id)}>
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toggleExpandLine(linea.id)}>
+                                {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                        {isExpanded && (
+                          <TableRow className="bg-muted/20 hover:bg-muted/20">
+                            <TableCell colSpan={10} className="p-0 border-b">
+                              <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-sm bg-muted/10 inset-shadow-sm">
+                                {linea.cantidades.map((q, idx) => (
+                                  <div key={idx} className="flex justify-between items-center bg-white p-2 border rounded shadow-sm">
+                                    <span className="font-mono text-xs font-bold text-muted-foreground w-6">{idx+1}.</span>
+                                    <span className="font-bold">{q} {linea.productoUnidad}</span>
+                                    <span className="text-[10px] text-muted-foreground uppercase">Serie por asignar</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
+                    );
+                  })
                 )}
-              </div>
-              
-              <div className="p-4 border-t bg-muted/10 mt-auto">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm font-medium text-muted-foreground">Total acumulado</span>
-                  <span className="text-xl font-bold">{totalQty.toFixed(2)}</span>
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    className="flex-1" 
-                    disabled={cantidades.length === 0}
-                    onClick={handleRemoveLast}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Deshacer
-                  </Button>
-                  <Button 
-                    className="flex-1" 
-                    disabled={!isFormValid || altaLote.isPending}
-                    onClick={handleSubmit}
-                    data-testid="button-submit-lote"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Guardar
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                
+                {lineas.length > 0 && (
+                  <TableRow className="bg-muted/30 font-bold">
+                    <TableCell colSpan={4} className="text-right text-lg">TOTAL GENERAL:</TableCell>
+                    <TableCell className="text-right text-lg">{totalRollos}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-right text-lg">{totalQtyGeneral.toFixed(2)}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-right text-lg text-emerald-700">${totalCostoGeneral.toFixed(2)}</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Fixed Footer Bar */}
+        <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-30 md:pl-64 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center space-x-2">
+              <Checkbox id="printDoc" checked={autoPrintDoc} onCheckedChange={(c) => setAutoPrintDoc(c as boolean)} />
+              <label htmlFor="printDoc" className="font-medium cursor-pointer">Imprimir Documento</label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="printLabels" checked={autoPrintLabels} onCheckedChange={(c) => setAutoPrintLabels(c as boolean)} />
+              <label htmlFor="printLabels" className="font-medium cursor-pointer">Imprimir Etiquetas</label>
+            </div>
+          </div>
+          <div className="flex w-full sm:w-auto gap-3">
+            <Button variant="outline" className="flex-1 sm:flex-none" onClick={discardWholeDraft}>
+              Cancelar
+            </Button>
+            <Button 
+              className="flex-1 sm:flex-none bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white shadow-md" 
+              disabled={!isFormValid || crearEntrada.isPending}
+              onClick={handleSubmit}
+              data-testid="btn-save-entrada"
+            >
+              {crearEntrada.isPending ? "Guardando..." : "Guardar entrada"}
+            </Button>
+          </div>
         </div>
       </div>
+
+      {/* CAPTURE MODAL */}
+      <Dialog open={isCaptureModalOpen} onOpenChange={(open) => {
+        if (!open) attemptCancelCapture();
+      }}>
+        <DialogContent className="sm:max-w-xl p-0 overflow-hidden flex flex-col h-[90vh] sm:h-[650px] shadow-2xl" onInteractOutside={(e) => {
+          e.preventDefault();
+          attemptCancelCapture();
+        }}>
+          <DialogHeader className="p-5 border-b bg-muted/20 shrink-0">
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-xl font-bold uppercase">{selectedProduct?.tela} - {selectedProduct?.color}</DialogTitle>
+                <DialogDescription className="mt-1 font-mono text-sm text-foreground/80">{selectedProduct?.sku}</DialogDescription>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
+                  <span className="font-semibold text-foreground/70">UBICACIÓN:</span> 
+                  {ubicaciones?.find(u => u.id.toString() === ubicacionId)?.nombre || user?.ubicacion?.nombre}
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-black text-primary tracking-tighter">
+                  Rollo {Math.min(capCantidades.length + 1, Math.max(1, Number(declaredCount) || 1))} de {declaredCount}
+                </div>
+                <div className="text-[10px] uppercase font-bold text-muted-foreground">
+                  {capCantidades.length} capturados
+                </div>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <div className="flex-1 flex flex-col overflow-hidden bg-background">
+            {/* Input area */}
+            <div className="p-5 shrink-0 shadow-sm z-10 bg-background border-b">
+              <form onSubmit={handleAddQty} className="flex gap-3">
+                <div className="relative flex-1">
+                  <Input 
+                    ref={qtyInputRef}
+                    type="number" 
+                    step="0.01" 
+                    placeholder="0.00" 
+                    value={capCurrentQty}
+                    onChange={e => setCapCurrentQty(e.target.value)}
+                    className="text-4xl h-20 font-black text-center pr-16"
+                    data-testid="input-capture-qty"
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground text-xl">
+                    {selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}
+                  </div>
+                </div>
+                <Button 
+                  type="submit" 
+                  className="h-20 px-8 bg-primary hover:bg-primary/90" 
+                  disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Siguiente rollo
+                </Button>
+              </form>
+            </div>
+
+            {/* List area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/5 custom-scrollbar">
+              {capCantidades.length === 0 ? (
+                <div className="h-full flex items-center justify-center text-muted-foreground flex-col">
+                  <Calculator className="w-16 h-16 opacity-10 mb-4" />
+                  <p className="text-lg font-medium">Ingresa la cantidad del primer rollo</p>
+                </div>
+              ) : (
+                capCantidades.map((qty, idx) => (
+                  <div key={idx} className="flex items-center justify-between bg-white p-3 rounded-lg border shadow-sm group hover:border-primary/50 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <span className="w-8 h-8 rounded bg-muted/50 flex items-center justify-center text-xs font-mono font-bold text-muted-foreground border">
+                        {idx+1}
+                      </span>
+                      {editingQtyIndex === idx ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+                            value={editingQtyValue}
+                            onChange={(event) => setEditingQtyValue(event.target.value)}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter") {
+                                event.preventDefault();
+                                handleSaveCapturedQty();
+                              }
+                            }}
+                            className="h-10 w-32 text-lg font-bold"
+                            autoFocus
+                            data-testid={`input-edit-roll-${idx}`}
+                          />
+                          <span className="text-sm font-bold text-muted-foreground">
+                            {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-2xl font-black tabular-nums">
+                          {qty} <span className="text-sm font-bold text-muted-foreground">{selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}</span>
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase bg-muted px-2 py-1 rounded">Serie por asignar #{idx+1}</span>
+                      <div className="flex gap-1">
+                        {editingQtyIndex === idx ? (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8"
+                              onClick={handleSaveCapturedQty}
+                              data-testid={`btn-save-roll-${idx}`}
+                            >
+                              Guardar
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8"
+                              onClick={() => {
+                                setEditingQtyIndex(null);
+                                setEditingQtyValue("");
+                              }}
+                            >
+                              Cancelar
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-primary opacity-60 group-hover:opacity-100 hover:bg-primary/10 transition-opacity"
+                            onClick={() => handleStartEditCapturedQty(idx)}
+                            aria-label={`Editar cantidad del rollo ${idx + 1}`}
+                            data-testid={`btn-edit-roll-${idx}`}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-destructive opacity-50 group-hover:opacity-100 hover:bg-destructive/10 transition-opacity"
+                          onClick={() => handleRemoveCapturedQty(idx)}
+                          aria-label={`Eliminar rollo ${idx + 1}`}
+                          data-testid={`btn-delete-roll-${idx}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Live Totals Row */}
+            <div className="p-3 bg-primary/5 border-t shrink-0 flex justify-between items-center">
+              <div className="text-sm font-bold text-primary">Subtotales al momento:</div>
+              <div className="flex gap-6 text-sm font-bold">
+                <div>Qty: {capCantidades.reduce((a, b) => a + parseFloat(b), 0).toFixed(2)}</div>
+                <div>$: {(capCantidades.reduce((a, b) => a + parseFloat(b), 0) * parseFloat(costoUnitario || "0")).toFixed(2)}</div>
+              </div>
+            </div>
+
+            {/* Mobile Keypad */}
+            <div className="sm:hidden grid grid-cols-3 gap-[1px] bg-border shrink-0">
+              {['1','2','3','4','5','6','7','8','9','.','0','DEL'].map(k => (
+                <Button 
+                  key={k} 
+                  variant="ghost"
+                  className={`h-16 text-2xl font-black rounded-none bg-background hover:bg-muted ${k === 'DEL' ? 'text-destructive' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleKeypadPress(k);
+                  }}
+                  disabled={capCantidades.length >= Number(declaredCount) && k !== 'DEL'}
+                >
+                  {k}
+                </Button>
+              ))}
+              <Button 
+                className="col-span-3 h-16 text-xl font-black rounded-none bg-primary hover:bg-primary/90 text-white"
+                onClick={handleAddQty}
+                disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}
+              >
+                SIGUIENTE ROLLO (ENTER)
+              </Button>
+            </div>
+          </div>
+
+          <DialogFooter className="p-4 border-t bg-background shrink-0 flex-row justify-between gap-4">
+            <Button variant="outline" onClick={attemptCancelCapture} className="w-1/3">
+              Descartar
+            </Button>
+            {capCantidades.length > 0 && capCantidades.length < Number(declaredCount) ? (
+              <Button variant="secondary" className="w-2/3" onClick={() => handleConfirmCapture(true)}>
+                Terminar Incompleto ({capCantidades.length})
+              </Button>
+            ) : (
+              <Button className="w-2/3 bg-[#1e3a8a] text-white hover:bg-[#1e3a8a]/90 font-bold" onClick={() => handleConfirmCapture(false)} disabled={capCantidades.length !== Number(declaredCount)}>
+                {isEditingLine ? "Guardar Cambios" : "Confirmar Línea"}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* CONFIRM CANCEL CAPTURE MODAL */}
+      <Dialog open={isConfirmCancelOpen} onOpenChange={setIsConfirmCancelOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>¿Cancelar captura?</DialogTitle>
+            <DialogDescription>
+              Tienes rollos capturados que no se han guardado. Si cierras ahora, perderás el progreso de esta línea.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setIsConfirmCancelOpen(false)}>
+              Continuar capturando
+            </Button>
+            <Button variant="destructive" onClick={() => {
+              setIsConfirmCancelOpen(false);
+              setIsCaptureModalOpen(false);
+            }}>
+              Sí, descartar línea
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </AppLayout>
   );
 }

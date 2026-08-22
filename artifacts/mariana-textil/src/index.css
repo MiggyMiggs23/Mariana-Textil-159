@@ -124,3 +124,40 @@
     @apply font-sans antialiased bg-background text-foreground text-base;
   }
 }
+
+@media print {
+  @page label {
+    size: 100mm 60mm;
+    margin: 0;
+  }
+  @page document {
+    size: letter landscape;
+    margin: 10mm;
+  }
+  
+  body.printing-labels {
+    background: transparent;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .label-page {
+    page: label;
+    page-break-after: always;
+    width: 100mm;
+    height: 60mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .document-page {
+    page: document;
+  }
+}

@@ -4,41 +4,11 @@ import { useGetRollo, getGetRolloQueryKey } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity } from "lucide-react";
+import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
-// A very simple deterministic barcode pattern generator
-function generateBarcodeLines(text: string) {
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = ((hash << 5) - hash) + text.charCodeAt(i);
-    hash |= 0;
-  }
-  const lines = [];
-  let current = Math.abs(hash);
-  for (let i = 0; i < 40; i++) {
-    const width = (current % 4) + 1;
-    const space = ((current >> 2) % 3) + 1;
-    lines.push({ width, space });
-    current = (current * 31) + 17;
-  }
-  return lines;
-}
-
-function PseudoBarcode({ value }: { value: string }) {
-  const lines = generateBarcodeLines(value);
-  return (
-    <div className="flex flex-col items-center bg-white p-4 rounded-xl shadow-sm border">
-      <div className="flex items-end h-16 space-x-[2px] opacity-90">
-        {lines.map((l, i) => (
-          <div key={i} className="bg-black rounded-sm" style={{ width: `${l.width * 1.5}px`, height: '100%', marginRight: `${l.space}px` }} />
-        ))}
-      </div>
-      <div className="mt-3 font-mono text-xl tracking-[0.3em] font-bold text-black">{value}</div>
-    </div>
-  );
-}
+import { QRCodeSVG } from "qrcode.react";
+import { Button } from "@/components/ui/button";
 
 export default function RolloDetail() {
   const { id } = useParams();
@@ -141,7 +111,27 @@ export default function RolloDetail() {
           </Card>
 
           <div className="space-y-6">
-            <PseudoBarcode value={rollo.serie} />
+            <Card className="flex flex-col items-center bg-white p-6 shadow-sm">
+              <div className="bg-white border rounded-xl overflow-hidden p-2 shadow-sm mb-4">
+                <QRCodeSVG 
+                  value={`${rollo.skuProducto}-${rollo.serie}`} 
+                  size={140} 
+                  level="Q" 
+                  includeMargin={true} 
+                  fgColor="#000000"
+                  bgColor="#ffffff"
+                />
+              </div>
+              <div className="font-mono text-xl tracking-widest font-bold text-black mb-4">
+                {rollo.serie}
+              </div>
+              <Button asChild className="w-full" variant="outline">
+                <Link href={`/inventario/rollos/${rollo.id}/etiqueta`}>
+                  <Printer className="w-4 h-4 mr-2" />
+                  Reimprimir Etiqueta
+                </Link>
+              </Button>
+            </Card>
             
             <Card className="bg-muted/10 border-dashed">
               <CardContent className="p-6 text-center space-y-2">

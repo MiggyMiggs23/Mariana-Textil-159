@@ -573,6 +573,93 @@ export interface RecalcularInput {
   ubicacionId: number;
 }
 
+export interface EntradaLineaInput {
+  productoId: number;
+  costoUnitario: string;
+  /** @minItems 1 */
+  cantidades: string[];
+}
+
+export interface EntradaInput {
+  ubicacionId: number;
+  /** @nullable */
+  proveedorId?: number | null;
+  /** @nullable */
+  observaciones?: string | null;
+  /** @nullable */
+  fecha?: string | null;
+  uuidCliente: string;
+  /** @minItems 1 */
+  lineas: EntradaLineaInput[];
+}
+
+export interface EntradaRollo {
+  id: number;
+  serie: string;
+  productoId: number;
+  cantidadInicial: string;
+  costoUnitario: string;
+  costoTotal: string;
+}
+
+export interface EntradaLinea {
+  productoId: number;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: string;
+  costoUnitario: string;
+  rollosCount: number;
+  cantidadTotal: string;
+  costoTotal: string;
+}
+
+export interface EntradaDetail {
+  id: number;
+  folio: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  /** @nullable */
+  proveedorId: number | null;
+  /** @nullable */
+  nombreProveedor: string | null;
+  usuarioId: number;
+  nombreUsuario: string;
+  fecha: string;
+  /** @nullable */
+  observaciones: string | null;
+  totalRollos: number;
+  totalCosto: string;
+  uuidCliente: string;
+  createdAt: string;
+  lineas: EntradaLinea[];
+  rollos: EntradaRollo[];
+}
+
+export interface EntradaSummary {
+  id: number;
+  folio: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  /** @nullable */
+  proveedorId: number | null;
+  /** @nullable */
+  nombreProveedor: string | null;
+  usuarioId: number;
+  nombreUsuario: string;
+  fecha: string;
+  totalRollos: number;
+  totalCosto: string;
+  createdAt: string;
+}
+
+export interface EntradaListResult {
+  items: EntradaSummary[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 /**
  * Sesión no válida
  */
@@ -603,6 +690,16 @@ export type GetDashboardParams = {
  * Filtro opcional disponible únicamente para ADMIN
  */
 ubicacionId?: number;
+};
+
+export type ListEntradasParams = {
+folio?: number;
+proveedorId?: number;
+ubicacionId?: number;
+fechaDesde?: string;
+fechaHasta?: string;
+page?: number;
+pageSize?: number;
 };
 
 export type ListRollosParams = {

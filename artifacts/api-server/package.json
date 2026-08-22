@@ -8,7 +8,8 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:inventario": "tsx src/lib/inventario.test.ts"
+    "test:inventario": "tsx src/lib/inventario.test.ts",
+    "test:entradas": "tsx src/lib/entradas.test.ts"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",

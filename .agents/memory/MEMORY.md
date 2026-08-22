@@ -1,0 +1,1 @@
+- [Verificación de captura por rollo](entry-capture-verification.md) — probar edición y eliminación reales antes de guardar; la presencia visual del botón no basta.

@@ -18,12 +18,18 @@
 
 import { and, eq, sql, desc, count, gte, lte } from "drizzle-orm";
 import {
+  auditoriaTable,
   db,
+  entradasTable,
+  entradaFolioTable,
   existenciasTable,
   movimientosTable,
   productosTable,
+  proveedoresTable,
   rollosTable,
   seriesConsecutivoTable,
+  ubicacionesTable,
+  usuariosTable,
   type EstadoRollo,
   type TipoMovimiento,
 } from "@workspace/db";
@@ -45,39 +51,72 @@ export class InventarioError extends Error {
 
 // ── Series allocation ─────────────────────────────────────────────────────────
 
-/** Advisory lock key for series allocation (ASCII "SER" = 0x534552) */
-const SERIES_LOCK_KEY = 0x534552;
+/** Single-row control table id for the global series counter. */
+const SERIES_ROW_ID = 1;
+/** Single-row control table id for the global folio counter. */
+const FOLIO_ROW_ID = 1;
 
 /**
- * Atomically reserve the next series number for a SKU.
- * Acquires a transaction-scoped advisory lock so concurrent transactions
- * serialize on the same SKU counter. Must be called inside a tx.
+ * Atomically reserve the next N global series numbers.
+ * Locks the single control row FOR UPDATE so concurrent transactions serialize,
+ * guaranteeing globally consecutive numbers that are never reused. The counter
+ * is seeded with 1000000 so the first series is 1000001. Must be called inside
+ * a tx. Returns the numeric strings in allocation order.
  */
-async function nextSeriesNumber(tx: Tx, sku: string): Promise<number> {
-  await tx.execute(sql`SELECT pg_advisory_xact_lock(${SERIES_LOCK_KEY})`);
-
+async function reserveSeries(tx: Tx, quantity: number): Promise<string[]> {
   const [row] = await tx
     .select()
     .from(seriesConsecutivoTable)
-    .where(eq(seriesConsecutivoTable.sku, sku))
+    .where(eq(seriesConsecutivoTable.id, SERIES_ROW_ID))
     .for("update");
 
+  const start = row?.ultimoNumero ?? 1000000;
+  const next = start + quantity;
+
   if (row) {
-    const next = row.ultimoNumero + 1;
     await tx
       .update(seriesConsecutivoTable)
       .set({ ultimoNumero: next })
-      .where(eq(seriesConsecutivoTable.sku, sku));
-    return next;
+      .where(eq(seriesConsecutivoTable.id, SERIES_ROW_ID));
+  } else {
+    await tx
+      .insert(seriesConsecutivoTable)
+      .values({ id: SERIES_ROW_ID, ultimoNumero: next });
   }
 
-  await tx.insert(seriesConsecutivoTable).values({ sku, ultimoNumero: 1 });
-  return 1;
+  const series: string[] = [];
+  for (let i = 1; i <= quantity; i++) {
+    series.push(String(start + i));
+  }
+  return series;
 }
 
-/** Build series string: {SKU}-{number zero-padded to 6 digits} */
-function buildSerie(sku: string, num: number): string {
-  return `${sku}-${String(num).padStart(6, "0")}`;
+/**
+ * Atomically reserve the next global entry folio.
+ * Locks the single control row FOR UPDATE. The counter is seeded with 99 so the
+ * first folio is 100. Rollback-safe: an aborted transaction never burns a folio.
+ */
+async function reserveFolio(tx: Tx): Promise<number> {
+  const [row] = await tx
+    .select()
+    .from(entradaFolioTable)
+    .where(eq(entradaFolioTable.id, FOLIO_ROW_ID))
+    .for("update");
+
+  const next = (row?.ultimoFolio ?? 99) + 1;
+
+  if (row) {
+    await tx
+      .update(entradaFolioTable)
+      .set({ ultimoFolio: next })
+      .where(eq(entradaFolioTable.id, FOLIO_ROW_ID));
+  } else {
+    await tx
+      .insert(entradaFolioTable)
+      .values({ id: FOLIO_ROW_ID, ultimoFolio: next });
+  }
+
+  return next;
 }
 
 // ── Cache helpers ─────────────────────────────────────────────────────────────
@@ -300,8 +339,7 @@ export async function crearRollo(
     throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
   }
 
-  const num = await nextSeriesNumber(tx, producto.sku);
-  const serie = buildSerie(producto.sku, num);
+  const [serie] = await reserveSeries(tx, 1);
   const estado: EstadoRollo = input.estado ?? "PROGRAMADO";
 
   const costoTotal = (
@@ -311,7 +349,7 @@ export async function crearRollo(
   const [rollo] = await tx
     .insert(rollosTable)
     .values({
-      serie,
+      serie: serie!,
       productoId: input.productoId,
       ubicacionId: input.ubicacionId,
       proveedorId: input.proveedorId ?? null,
@@ -340,6 +378,354 @@ export async function crearRollo(
   }
 
   return { rollo: rollo!, movimiento };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ENTRADA (whole entry) — high-level engine operation
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type CrearEntradaLineaInput = {
+  productoId: number;
+  costoUnitario: string;
+  cantidades: string[];
+};
+
+export type CrearEntradaInput = {
+  ubicacionId: number;
+  proveedorId?: number | null;
+  observaciones?: string | null;
+  fecha: Date;
+  usuarioId: number;
+  ip?: string | null;
+  uuidCliente: string;
+  lineas: CrearEntradaLineaInput[];
+};
+
+export type EntradaRolloResult = {
+  id: number;
+  serie: string;
+  productoId: number;
+  cantidadInicial: string;
+  costoUnitario: string;
+  costoTotal: string;
+};
+
+export type EntradaLineaResult = {
+  productoId: number;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: string;
+  costoUnitario: string;
+  rollosCount: number;
+  cantidadTotal: string;
+  costoTotal: string;
+};
+
+export type EntradaResult = {
+  id: number;
+  folio: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  proveedorId: number | null;
+  nombreProveedor: string | null;
+  usuarioId: number;
+  nombreUsuario: string;
+  fecha: string;
+  observaciones: string | null;
+  totalRollos: number;
+  totalCosto: string;
+  uuidCliente: string;
+  createdAt: string;
+  lineas: EntradaLineaResult[];
+  rollos: EntradaRolloResult[];
+};
+
+/**
+ * Create an entire entry (recepción) atomically.
+ *
+ * Accepts an active transaction as the first argument. In one all-or-nothing
+ * unit it:
+ *   1. allocates a rollback-safe global folio,
+ *   2. inserts the immutable entrada header,
+ *   3. reserves all global series in one locked range,
+ *   4. inserts every DISPONIBLE roll linked by recepcion_id,
+ *   5. writes one RECEPCION movement per roll,
+ *   6. refreshes the existence cache per (producto, ubicacion) pair,
+ *   7. writes the audit trail.
+ *
+ * Idempotent by uuid_cliente: a repeated uuid returns the existing entry
+ * without creating anything new.
+ *
+ * Business validation (products exist/active, provider active, location type,
+ * positive quantities/costs, duplicate lines) is performed by the caller/route.
+ */
+export async function crearEntrada(
+  tx: Tx,
+  input: CrearEntradaInput,
+): Promise<EntradaResult> {
+  // Idempotency by entry uuid_cliente
+  const [dup] = await tx
+    .select()
+    .from(entradasTable)
+    .where(eq(entradasTable.uuidCliente, input.uuidCliente))
+    .limit(1);
+  if (dup) {
+    return buildEntradaResult(tx, dup.id);
+  }
+
+  if (input.lineas.length === 0) {
+    throw new InventarioError(
+      "La entrada debe incluir al menos una línea.",
+      "EMPTY_ENTRY",
+    );
+  }
+
+  const totalRollos = input.lineas.reduce(
+    (acc, l) => acc + l.cantidades.length,
+    0,
+  );
+  if (totalRollos === 0) {
+    throw new InventarioError(
+      "La entrada debe incluir al menos un rollo.",
+      "EMPTY_ENTRY",
+    );
+  }
+
+  // Compute total cost across all lines/rolls
+  let totalCosto = 0;
+  for (const l of input.lineas) {
+    for (const c of l.cantidades) {
+      totalCosto += parseFloat(c) * parseFloat(l.costoUnitario);
+    }
+  }
+  const totalCostoStr = totalCosto.toFixed(2);
+
+  // 1) Rollback-safe folio
+  const folio = await reserveFolio(tx);
+
+  // 2) Immutable header
+  const [entrada] = await tx
+    .insert(entradasTable)
+    .values({
+      folio,
+      ubicacionId: input.ubicacionId,
+      proveedorId: input.proveedorId ?? null,
+      usuarioId: input.usuarioId,
+      fecha: input.fecha,
+      observaciones: input.observaciones ?? null,
+      totalRollos,
+      totalCosto: totalCostoStr,
+      uuidCliente: input.uuidCliente,
+    })
+    .returning();
+
+  // 3) Reserve all series in one locked range
+  const series = await reserveSeries(tx, totalRollos);
+  let serieIdx = 0;
+
+  // 4 & 5) Create DISPONIBLE rolls + RECEPCION movements
+  for (const linea of input.lineas) {
+    for (const cantidad of linea.cantidades) {
+      const costoTotal = (
+        parseFloat(cantidad) * parseFloat(linea.costoUnitario)
+      ).toFixed(2);
+
+      const [rollo] = await tx
+        .insert(rollosTable)
+        .values({
+          serie: series[serieIdx++]!,
+          productoId: linea.productoId,
+          ubicacionId: input.ubicacionId,
+          proveedorId: input.proveedorId ?? null,
+          recepcionId: entrada!.id,
+          estado: "DISPONIBLE",
+          cantidadInicial: cantidad,
+          cantidadActual: cantidad,
+          costoUnitario: linea.costoUnitario,
+          costoTotal,
+        })
+        .returning();
+
+      await insertMovimiento(tx, {
+        rolloId: rollo!.id,
+        productoId: linea.productoId,
+        ubicacionId: input.ubicacionId,
+        tipo: "RECEPCION",
+        cantidad,
+        usuarioId: input.usuarioId,
+        documentoTipo: "ENTRADA",
+        documentoId: String(entrada!.folio),
+      });
+    }
+  }
+
+  // 6) Refresh existence cache per distinct producto at this location
+  const productoIds = Array.from(
+    new Set(input.lineas.map((l) => l.productoId)),
+  );
+  for (const productoId of productoIds) {
+    await refreshCache(tx, productoId, input.ubicacionId);
+  }
+
+  // 7) Audit trail
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    accion: "CREAR",
+    entidad: "entradas",
+    entidadId: String(entrada!.id),
+    datosDespues: {
+      folio: entrada!.folio,
+      ubicacionId: input.ubicacionId,
+      proveedorId: input.proveedorId ?? null,
+      totalRollos,
+      totalCosto: totalCostoStr,
+    } as Record<string, unknown>,
+    ip: input.ip ?? "desconocida",
+  });
+
+  return buildEntradaResult(tx, entrada!.id);
+}
+
+/**
+ * Build the full entry response/detail: header + names, lines grouped by
+ * product, and all rolls with final series/quantities. Reads via the passed tx.
+ */
+export async function buildEntradaResult(
+  tx: Tx,
+  entradaId: number,
+): Promise<EntradaResult> {
+  const [entrada] = await tx
+    .select({
+      id: entradasTable.id,
+      folio: entradasTable.folio,
+      ubicacionId: entradasTable.ubicacionId,
+      nombreUbicacion: ubicacionesTable.nombre,
+      proveedorId: entradasTable.proveedorId,
+      usuarioId: entradasTable.usuarioId,
+      fecha: entradasTable.fecha,
+      observaciones: entradasTable.observaciones,
+      totalRollos: entradasTable.totalRollos,
+      totalCosto: entradasTable.totalCosto,
+      uuidCliente: entradasTable.uuidCliente,
+      createdAt: entradasTable.createdAt,
+    })
+    .from(entradasTable)
+    .innerJoin(
+      ubicacionesTable,
+      eq(entradasTable.ubicacionId, ubicacionesTable.id),
+    )
+    .where(eq(entradasTable.id, entradaId))
+    .limit(1);
+
+  if (!entrada) {
+    throw new InventarioError("Entrada no encontrada.", "ENTRADA_NOT_FOUND");
+  }
+
+  const [usuario] = await tx
+    .select({ nombre: usuariosTable.nombre })
+    .from(usuariosTable)
+    .where(eq(usuariosTable.id, entrada.usuarioId))
+    .limit(1);
+
+  let nombreProveedor: string | null = null;
+  if (entrada.proveedorId != null) {
+    const [prov] = await tx
+      .select({ nombre: proveedoresTable.nombre })
+      .from(proveedoresTable)
+      .where(eq(proveedoresTable.id, entrada.proveedorId))
+      .limit(1);
+    nombreProveedor = prov?.nombre ?? null;
+  }
+
+  const rolloRows = await tx
+    .select({
+      id: rollosTable.id,
+      serie: rollosTable.serie,
+      productoId: rollosTable.productoId,
+      sku: productosTable.sku,
+      tela: productosTable.tela,
+      color: productosTable.color,
+      unidad: productosTable.unidad,
+      cantidadInicial: rollosTable.cantidadInicial,
+      costoUnitario: rollosTable.costoUnitario,
+      costoTotal: rollosTable.costoTotal,
+    })
+    .from(rollosTable)
+    .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+    .where(eq(rollosTable.recepcionId, entradaId))
+    .orderBy(rollosTable.id);
+
+  const rollos: EntradaRolloResult[] = rolloRows.map((r) => ({
+    id: r.id,
+    serie: r.serie,
+    productoId: r.productoId,
+    cantidadInicial: r.cantidadInicial,
+    costoUnitario: r.costoUnitario,
+    costoTotal: r.costoTotal,
+  }));
+
+  // Group lines by product
+  type Group = {
+    productoId: number;
+    skuProducto: string;
+    telaProducto: string;
+    colorProducto: string;
+    unidadProducto: string;
+    costoUnitario: string;
+    rollosCount: number;
+    cantidadTotal: number;
+    costoTotal: number;
+  };
+  const groups = new Map<number, Group>();
+  for (const r of rolloRows) {
+    const g = groups.get(r.productoId) ?? {
+      productoId: r.productoId,
+      skuProducto: r.sku,
+      telaProducto: r.tela,
+      colorProducto: r.color,
+      unidadProducto: r.unidad,
+      costoUnitario: r.costoUnitario,
+      rollosCount: 0,
+      cantidadTotal: 0,
+      costoTotal: 0,
+    };
+    g.rollosCount += 1;
+    g.cantidadTotal += parseFloat(r.cantidadInicial);
+    g.costoTotal += parseFloat(r.costoTotal);
+    groups.set(r.productoId, g);
+  }
+
+  const lineas: EntradaLineaResult[] = Array.from(groups.values()).map((g) => ({
+    productoId: g.productoId,
+    skuProducto: g.skuProducto,
+    telaProducto: g.telaProducto,
+    colorProducto: g.colorProducto,
+    unidadProducto: g.unidadProducto,
+    costoUnitario: g.costoUnitario,
+    rollosCount: g.rollosCount,
+    cantidadTotal: g.cantidadTotal.toFixed(3),
+    costoTotal: g.costoTotal.toFixed(2),
+  }));
+
+  return {
+    id: entrada.id,
+    folio: entrada.folio,
+    ubicacionId: entrada.ubicacionId,
+    nombreUbicacion: entrada.nombreUbicacion,
+    proveedorId: entrada.proveedorId ?? null,
+    nombreProveedor,
+    usuarioId: entrada.usuarioId,
+    nombreUsuario: usuario?.nombre ?? "",
+    fecha: entrada.fecha.toISOString(),
+    observaciones: entrada.observaciones ?? null,
+    totalRollos: entrada.totalRollos,
+    totalCosto: entrada.totalCosto,
+    uuidCliente: entrada.uuidCliente,
+    createdAt: entrada.createdAt.toISOString(),
+    lineas,
+    rollos,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

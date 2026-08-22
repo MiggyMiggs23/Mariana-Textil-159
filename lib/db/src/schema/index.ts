@@ -1,4 +1,5 @@
 export * from "./audit";
+export * from "./entradas";
 export * from "./enums";
 export * from "./locations";
 export * from "./productos";

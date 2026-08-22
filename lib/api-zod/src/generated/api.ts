@@ -506,25 +506,136 @@ export const UpdateProveedorResponse = zod.object({
 
 
 /**
- * @summary Alta manual de lote de rollos DISPONIBLES en una sola transacción
+ * @summary Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
  */
 
 
 
-export const AltaLoteBody = zod.object({
-  "productoId": zod.number(),
+
+export const CrearEntradaBody = zod.object({
   "ubicacionId": zod.number(),
   "proveedorId": zod.number().nullish(),
+  "observaciones": zod.string().nullish(),
+  "fecha": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
   "costoUnitario": zod.string(),
-  "notas": zod.string().nullish(),
   "cantidades": zod.array(zod.string()).min(1)
+})).min(1)
 })
 
-export const AltaLoteResponse = zod.object({
+export const CrearEntradaResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "nombreProveedor": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "fecha": zod.coerce.date(),
+  "observaciones": zod.string().nullable(),
+  "totalRollos": zod.number(),
+  "totalCosto": zod.string(),
+  "uuidCliente": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "costoUnitario": zod.string(),
+  "rollosCount": zod.number(),
+  "cantidadTotal": zod.string(),
+  "costoTotal": zod.string()
+})),
   "rollos": zod.array(zod.object({
   "id": zod.number(),
   "serie": zod.string(),
-  "cantidadInicial": zod.string()
+  "productoId": zod.number(),
+  "cantidadInicial": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string()
+}))
+})
+
+
+/**
+ * @summary Lista entradas con filtros para búsqueda y reimpresión
+ */
+export const ListEntradasQueryParams = zod.object({
+  "folio": zod.coerce.number().optional(),
+  "proveedorId": zod.coerce.number().optional(),
+  "ubicacionId": zod.coerce.number().optional(),
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional()
+})
+
+export const ListEntradasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "nombreProveedor": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "fecha": zod.coerce.date(),
+  "totalRollos": zod.number(),
+  "totalCosto": zod.string(),
+  "createdAt": zod.coerce.date()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Obtiene el detalle completo de una entrada
+ */
+export const GetEntradaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetEntradaResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "nombreProveedor": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "fecha": zod.coerce.date(),
+  "observaciones": zod.string().nullable(),
+  "totalRollos": zod.number(),
+  "totalCosto": zod.string(),
+  "uuidCliente": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "costoUnitario": zod.string(),
+  "rollosCount": zod.number(),
+  "cantidadTotal": zod.string(),
+  "costoTotal": zod.string()
+})),
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "cantidadInicial": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string()
 }))
 })
 

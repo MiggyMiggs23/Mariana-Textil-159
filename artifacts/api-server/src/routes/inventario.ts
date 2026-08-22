@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { and, count, desc, eq, gte, ilike, lte } from "drizzle-orm";
+import { and, count, desc, eq, gte, ilike, inArray, lte } from "drizzle-orm";
 import {
-  AltaLoteBody,
-  AltaLoteResponse,
+  CrearEntradaBody,
+  CrearEntradaResponse,
+  ListEntradasQueryParams,
+  ListEntradasResponse,
+  GetEntradaParams,
+  GetEntradaResponse,
   ActivarRolloParams,
   ActivarRolloBody,
   ActivarRolloResponse,
@@ -42,16 +46,21 @@ import {
 } from "@workspace/api-zod";
 import {
   db,
+  entradasTable,
   existenciasTable,
   movimientosTable,
   productosTable,
+  proveedoresTable,
   rollosTable,
   ubicacionesTable,
+  usuariosTable,
   type EstadoRollo,
 } from "@workspace/db";
 import { requireRole, requireSession } from "../middlewares/auth";
+import { getRequestIp } from "../lib/request";
 import {
-  crearRollo,
+  crearEntrada,
+  buildEntradaResult,
   activarRollo,
   moverRollo,
   recibirTransferencia,
@@ -172,7 +181,7 @@ async function getRolloDetail(rolloId: number) {
   };
 }
 
-// ── Alta de lote ──────────────────────────────────────────────────────────────
+// ── Crear entrada (entrada completa en una transacción) ───────────────────────
 
 inventarioRouter.post(
   "/entradas",
@@ -180,32 +189,131 @@ inventarioRouter.post(
   requireRole("ADMIN", "INVENTARIOS", "BODEGA"),
   async (req, res, next) => {
     try {
-      const body = AltaLoteBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const body = CrearEntradaBody.parse(req.body);
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
 
-      const rollos = await db.transaction(async (tx) => {
-        const results = [];
-        for (const cantidad of body.cantidades) {
-          const { rollo } = await crearRollo(tx, {
-            productoId: body.productoId,
-            ubicacionId: body.ubicacionId,
-            proveedorId: body.proveedorId ?? null,
-            cantidadInicial: cantidad,
-            costoUnitario: body.costoUnitario,
-            notas: body.notas ?? null,
-            usuarioId,
-            estado: "DISPONIBLE",
-          });
-          results.push({
-            id: rollo.id,
-            serie: rollo.serie,
-            cantidadInicial: rollo.cantidadInicial,
-          });
+      // Non-ADMIN users are constrained to their assigned location.
+      let ubicacionId = body.ubicacionId;
+      if (auth.user.rol !== "ADMIN") {
+        if (auth.user.ubicacionId == null) {
+          res
+            .status(403)
+            .json({ error: "No tienes una ubicación asignada." });
+          return;
         }
-        return results;
-      });
+        ubicacionId = auth.user.ubicacionId;
+      }
 
-      const response = AltaLoteResponse.parse({ rollos });
+      // ── Business validation ──────────────────────────────────────────────
+      if (body.lineas.length === 0) {
+        res.status(400).json({ error: "La entrada debe incluir al menos una línea." });
+        return;
+      }
+
+      // Duplicate product lines
+      const productoIds = body.lineas.map((l) => l.productoId);
+      if (new Set(productoIds).size !== productoIds.length) {
+        res
+          .status(400)
+          .json({ error: "No se permiten líneas de producto duplicadas." });
+        return;
+      }
+
+      // Quantities and costs must be positive
+      for (const linea of body.lineas) {
+        if (linea.cantidades.length === 0) {
+          res
+            .status(400)
+            .json({ error: "Cada línea debe incluir al menos una cantidad." });
+          return;
+        }
+        if (parseFloat(linea.costoUnitario) <= 0) {
+          res
+            .status(400)
+            .json({ error: "El costo unitario debe ser mayor a cero." });
+          return;
+        }
+        for (const c of linea.cantidades) {
+          if (parseFloat(c) <= 0) {
+            res
+              .status(400)
+              .json({ error: "Las cantidades deben ser mayores a cero." });
+            return;
+          }
+        }
+      }
+
+      // Location must exist, be active, and not TRANSITO/EXTERNO
+      const [ubicacion] = await db
+        .select()
+        .from(ubicacionesTable)
+        .where(eq(ubicacionesTable.id, ubicacionId))
+        .limit(1);
+      if (!ubicacion || !ubicacion.activa) {
+        res.status(400).json({ error: "Ubicación inválida o inactiva." });
+        return;
+      }
+      if (ubicacion.tipo === "TRANSITO" || ubicacion.tipo === "EXTERNO") {
+        res.status(400).json({
+          error: "No se pueden dar entradas en ubicaciones de tránsito o externas.",
+        });
+        return;
+      }
+
+      // Products must exist and be active
+      const productos = await db
+        .select({ id: productosTable.id, activo: productosTable.activo })
+        .from(productosTable)
+        .where(inArray(productosTable.id, productoIds));
+      const productoMap = new Map(productos.map((p) => [p.id, p]));
+      for (const id of productoIds) {
+        const p = productoMap.get(id);
+        if (!p) {
+          res.status(400).json({ error: `Producto ${id} no encontrado.` });
+          return;
+        }
+        if (!p.activo) {
+          res.status(400).json({ error: `Producto ${id} está inactivo.` });
+          return;
+        }
+      }
+
+      // Provider (optional) must exist and be active
+      if (body.proveedorId != null) {
+        const [prov] = await db
+          .select({ id: proveedoresTable.id, activo: proveedoresTable.activo })
+          .from(proveedoresTable)
+          .where(eq(proveedoresTable.id, body.proveedorId))
+          .limit(1);
+        if (!prov) {
+          res.status(400).json({ error: "Proveedor no encontrado." });
+          return;
+        }
+        if (!prov.activo) {
+          res.status(400).json({ error: "El proveedor está inactivo." });
+          return;
+        }
+      }
+
+      const result = await db.transaction(async (tx) =>
+        crearEntrada(tx, {
+          ubicacionId,
+          proveedorId: body.proveedorId ?? null,
+          observaciones: body.observaciones ?? null,
+          fecha: body.fecha ?? new Date(),
+          usuarioId,
+          ip: getRequestIp(req),
+          uuidCliente: body.uuidCliente,
+          lineas: body.lineas.map((l) => ({
+            productoId: l.productoId,
+            costoUnitario: l.costoUnitario,
+            cantidades: l.cantidades,
+          })),
+        }),
+      );
+
+      const response = CrearEntradaResponse.parse(result);
       res.status(201).json(response);
     } catch (e) {
       if (e instanceof InventarioError) {
@@ -216,6 +324,147 @@ inventarioRouter.post(
     }
   },
 );
+
+// ── Listar entradas ───────────────────────────────────────────────────────────
+
+inventarioRouter.get("/entradas", requireSession, async (req, res, next) => {
+  try {
+    const q = ListEntradasQueryParams.parse(req.query);
+    const page = q.page ?? 1;
+    const pageSize = q.pageSize ?? 20;
+    const offset = (page - 1) * pageSize;
+
+    const conditions = [];
+    if (q.folio) conditions.push(eq(entradasTable.folio, q.folio));
+    if (q.proveedorId)
+      conditions.push(eq(entradasTable.proveedorId, q.proveedorId));
+
+    // Non-ADMIN users see only their assigned location.
+    if (req.auth!.user.rol !== "ADMIN") {
+      if (req.auth!.user.ubicacionId != null) {
+        conditions.push(eq(entradasTable.ubicacionId, req.auth!.user.ubicacionId));
+      }
+    } else if (q.ubicacionId) {
+      conditions.push(eq(entradasTable.ubicacionId, q.ubicacionId));
+    }
+
+    const desde =
+      typeof req.query.fechaDesde === "string" ? req.query.fechaDesde : null;
+    const hasta =
+      typeof req.query.fechaHasta === "string" ? req.query.fechaHasta : null;
+    if (desde) conditions.push(gte(entradasTable.fecha, new Date(desde)));
+    if (hasta) {
+      const hastaDate = new Date(hasta);
+      hastaDate.setDate(hastaDate.getDate() + 1);
+      conditions.push(lte(entradasTable.fecha, hastaDate));
+    }
+
+    const where = conditions.length ? and(...conditions) : undefined;
+
+    const [totalRow] = await db
+      .select({ cnt: count() })
+      .from(entradasTable)
+      .where(where);
+
+    const rows = await db
+      .select({
+        id: entradasTable.id,
+        folio: entradasTable.folio,
+        ubicacionId: entradasTable.ubicacionId,
+        nombreUbicacion: ubicacionesTable.nombre,
+        proveedorId: entradasTable.proveedorId,
+        nombreProveedor: proveedoresTable.nombre,
+        usuarioId: entradasTable.usuarioId,
+        nombreUsuario: usuariosTable.nombre,
+        fecha: entradasTable.fecha,
+        totalRollos: entradasTable.totalRollos,
+        totalCosto: entradasTable.totalCosto,
+        createdAt: entradasTable.createdAt,
+      })
+      .from(entradasTable)
+      .innerJoin(
+        ubicacionesTable,
+        eq(entradasTable.ubicacionId, ubicacionesTable.id),
+      )
+      .innerJoin(usuariosTable, eq(entradasTable.usuarioId, usuariosTable.id))
+      .leftJoin(
+        proveedoresTable,
+        eq(entradasTable.proveedorId, proveedoresTable.id),
+      )
+      .where(where)
+      .orderBy(desc(entradasTable.folio))
+      .limit(pageSize)
+      .offset(offset);
+
+    const items = rows.map((r) => ({
+      id: r.id,
+      folio: r.folio,
+      ubicacionId: r.ubicacionId,
+      nombreUbicacion: r.nombreUbicacion,
+      proveedorId: r.proveedorId ?? null,
+      nombreProveedor: r.nombreProveedor ?? null,
+      usuarioId: r.usuarioId,
+      nombreUsuario: r.nombreUsuario,
+      fecha: r.fecha.toISOString(),
+      totalRollos: r.totalRollos,
+      totalCosto: r.totalCosto,
+      createdAt: r.createdAt.toISOString(),
+    }));
+
+    const response = ListEntradasResponse.parse({
+      items,
+      total: totalRow?.cnt ?? 0,
+      page,
+      pageSize,
+    });
+    res.json(response);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// ── Detalle de entrada ─────────────────────────────────────────────────────────
+
+inventarioRouter.get("/entradas/:id", requireSession, async (req, res, next) => {
+  try {
+    const { id } = GetEntradaParams.parse(req.params);
+
+    const [entrada] = await db
+      .select({
+        ubicacionId: entradasTable.ubicacionId,
+      })
+      .from(entradasTable)
+      .where(eq(entradasTable.id, id))
+      .limit(1);
+
+    if (!entrada) {
+      res.status(404).json({ error: "Entrada no encontrada" });
+      return;
+    }
+
+    // Non-ADMIN users can only view entries at their assigned location.
+    if (
+      req.auth!.user.rol !== "ADMIN" &&
+      req.auth!.user.ubicacionId != null &&
+      entrada.ubicacionId !== req.auth!.user.ubicacionId
+    ) {
+      res.status(404).json({ error: "Entrada no encontrada" });
+      return;
+    }
+
+    const detail = await db.transaction(async (tx) =>
+      buildEntradaResult(tx, id),
+    );
+    const response = GetEntradaResponse.parse(detail);
+    res.json(response);
+  } catch (e) {
+    if (e instanceof InventarioError) {
+      res.status(e.code === "ENTRADA_NOT_FOUND" ? 404 : 400).json({ error: e.message });
+      return;
+    }
+    next(e);
+  }
+});
 
 // ── Activar rollo (PROGRAMADO → DISPONIBLE) ───────────────────────────────────
 

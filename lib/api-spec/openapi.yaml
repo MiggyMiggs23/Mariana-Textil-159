@@ -438,28 +438,81 @@ paths:
           $ref: "#/components/responses/NotFound"
   /inventario/entradas:
     post:
-      operationId: altaLote
+      operationId: crearEntrada
       tags: [inventario]
-      summary: Alta manual de lote de rollos DISPONIBLES en una sola transacción
+      summary: Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AltaLoteInput"
+              $ref: "#/components/schemas/EntradaInput"
       responses:
         "201":
-          description: Lote creado
+          description: Entrada creada
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AltaLoteResult"
+                $ref: "#/components/schemas/EntradaDetail"
         "400":
           $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+    get:
+      operationId: listEntradas
+      tags: [inventario]
+      summary: Lista entradas con filtros para búsqueda y reimpresión
+      parameters:
+        - in: query
+          name: folio
+          schema: { type: number }
+        - in: query
+          name: proveedorId
+          schema: { type: number }
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: fechaDesde
+          schema: { type: string, format: date }
+        - in: query
+          name: fechaHasta
+          schema: { type: string, format: date }
+        - in: query
+          name: page
+          schema: { type: number }
+        - in: query
+          name: pageSize
+          schema: { type: number }
+      responses:
+        "200":
+          description: Lista paginada de entradas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradaListResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /inventario/entradas/{id}:
+    get:
+      operationId: getEntrada
+      tags: [inventario]
+      summary: Obtiene el detalle completo de una entrada
+      parameters:
+        - $ref: "#/components/parameters/EntradaId"
+      responses:
+        "200":
+          description: Detalle de la entrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradaDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /inventario/rollos/{id}/activar:
     post:
       operationId: activarRollo
@@ -899,6 +952,12 @@ components:
       schema:
         type: number
     MovimientoId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    EntradaId:
       name: id
       in: path
       required: true
@@ -1437,3 +1496,146 @@ components:
       properties:
         productoId: { type: number }
         ubicacionId: { type: number }
+    EntradaLineaInput:
+      type: object
+      required: [productoId, costoUnitario, cantidades]
+      properties:
+        productoId: { type: number }
+        costoUnitario: { type: string }
+        cantidades:
+          type: array
+          items: { type: string }
+          minItems: 1
+    EntradaInput:
+      type: object
+      required: [ubicacionId, uuidCliente, lineas]
+      properties:
+        ubicacionId: { type: number }
+        proveedorId: { type: ["number", "null"] }
+        observaciones: { type: ["string", "null"] }
+        fecha: { type: ["string", "null"], format: date-time }
+        uuidCliente: { type: string }
+        lineas:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntradaLineaInput"
+          minItems: 1
+    EntradaRollo:
+      type: object
+      required: [id, serie, productoId, cantidadInicial, costoUnitario, costoTotal]
+      properties:
+        id: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        cantidadInicial: { type: string }
+        costoUnitario: { type: string }
+        costoTotal: { type: string }
+    EntradaLinea:
+      type: object
+      required:
+        [
+          productoId,
+          skuProducto,
+          telaProducto,
+          colorProducto,
+          unidadProducto,
+          costoUnitario,
+          rollosCount,
+          cantidadTotal,
+          costoTotal,
+        ]
+      properties:
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+        costoUnitario: { type: string }
+        rollosCount: { type: number }
+        cantidadTotal: { type: string }
+        costoTotal: { type: string }
+    EntradaDetail:
+      type: object
+      required:
+        [
+          id,
+          folio,
+          ubicacionId,
+          nombreUbicacion,
+          proveedorId,
+          nombreProveedor,
+          usuarioId,
+          nombreUsuario,
+          fecha,
+          observaciones,
+          totalRollos,
+          totalCosto,
+          uuidCliente,
+          createdAt,
+          lineas,
+          rollos,
+        ]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        proveedorId: { type: ["number", "null"] }
+        nombreProveedor: { type: ["string", "null"] }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        fecha: { type: string, format: date-time }
+        observaciones: { type: ["string", "null"] }
+        totalRollos: { type: number }
+        totalCosto: { type: string }
+        uuidCliente: { type: string }
+        createdAt: { type: string, format: date-time }
+        lineas:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntradaLinea"
+        rollos:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntradaRollo"
+    EntradaSummary:
+      type: object
+      required:
+        [
+          id,
+          folio,
+          ubicacionId,
+          nombreUbicacion,
+          proveedorId,
+          nombreProveedor,
+          usuarioId,
+          nombreUsuario,
+          fecha,
+          totalRollos,
+          totalCosto,
+          createdAt,
+        ]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        proveedorId: { type: ["number", "null"] }
+        nombreProveedor: { type: ["string", "null"] }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        fecha: { type: string, format: date-time }
+        totalRollos: { type: number }
+        totalCosto: { type: string }
+        createdAt: { type: string, format: date-time }
+    EntradaListResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntradaSummary"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }

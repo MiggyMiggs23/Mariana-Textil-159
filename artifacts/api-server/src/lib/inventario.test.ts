@@ -19,7 +19,6 @@ import {
   movimientosTable,
   productosTable,
   rollosTable,
-  seriesConsecutivoTable,
   ubicacionesTable,
 } from "@workspace/db";
 import {
@@ -427,19 +426,21 @@ await test("T-06: Operaciones concurrentes en mismo rollo → una gana, otra fal
 });
 
 // =============================================================================
-// T-07: Concurrent series creation → all series are distinct
+// T-07: Concurrent series creation → global distinct consecutive numbers
 // =============================================================================
 
-await test("T-07: Series concurrentes → todas distintas", async () => {
-  const { id: productoId, sku } = await mkProducto();
+await test("T-07: Series concurrentes → números globales distintos y consecutivos", async () => {
+  // Use TWO distinct products to prove the counter is GLOBAL, not per-SKU.
+  const { id: productoA } = await mkProducto();
+  const { id: productoB } = await mkProducto();
   const ubicacionId = await mkUbicacion();
   const USUARIO = 1;
-  const N = 10;
+  const N = 12;
 
-  const promises = Array.from({ length: N }, () =>
+  const promises = Array.from({ length: N }, (_, i) =>
     db.transaction(async (tx) =>
       crearRollo(tx, {
-        productoId,
+        productoId: i % 2 === 0 ? productoA : productoB,
         ubicacionId,
         cantidadInicial: "1.000",
         costoUnitario: "1.00",
@@ -453,13 +454,35 @@ await test("T-07: Series concurrentes → todas distintas", async () => {
   const series = results.map((r) => r.rollo.serie);
   for (const s of series) trackRollo(s);
 
-  const unique = new Set(series);
-  assert.equal(unique.size, N, `All ${N} series must be unique, got ${unique.size}: ${series.join(", ")}`);
-
-  // All should match format SKU-######
+  // All series are numeric-only strings (no SKU prefix)
   for (const s of series) {
-    assert.match(s, new RegExp(`^${sku.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}-\\d{6}$`), `Series format: ${s}`);
+    assert.match(s, /^\d+$/, `Series must be numeric only: ${s}`);
   }
+
+  // All distinct globally (across both products)
+  const nums = series.map((s) => Number(s));
+  const unique = new Set(nums);
+  assert.equal(
+    unique.size,
+    N,
+    `All ${N} series must be globally distinct, got ${unique.size}: ${series.join(", ")}`,
+  );
+
+  // Consecutive: sorted numbers form a run with no gaps
+  const sorted = [...nums].sort((a, b) => a - b);
+  for (let i = 1; i < sorted.length; i++) {
+    assert.equal(
+      sorted[i]! - sorted[i - 1]!,
+      1,
+      `Series must be consecutive with no gaps: ${sorted.join(", ")}`,
+    );
+  }
+
+  // First allocated series must be >= 1000001 (counter starts at 1000001)
+  assert.ok(
+    sorted[0]! >= 1000001,
+    `Series must start at or after 1000001, got ${sorted[0]}`,
+  );
 });
 
 // =============================================================================
@@ -773,19 +796,6 @@ try {
       await tx
         .delete(existenciasTable)
         .where(inArray(existenciasTable.productoId, createdProductoIds));
-    }
-
-    // Delete series_consecutivo entries for test SKUs
-    if (createdProductoIds.length > 0) {
-      const prods = await tx
-        .select({ sku: productosTable.sku })
-        .from(productosTable)
-        .where(inArray(productosTable.id, createdProductoIds));
-      if (prods.length > 0) {
-        await tx
-          .delete(seriesConsecutivoTable)
-          .where(inArray(seriesConsecutivoTable.sku, prods.map((p) => p.sku)));
-      }
     }
 
     // Delete test products
