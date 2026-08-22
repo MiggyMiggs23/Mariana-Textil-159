@@ -1,0 +1,188 @@
+# PROMPT 1 — Fundación: login y barra lateral
+### Mariana Textil · Sistema Integral de Tiendas y Bodegas
+
+> Pegar completo en un proyecto NUEVO de Replit. No pegar los siguientes prompts hasta probar este.
+
+---
+
+Vas a construir un sistema web interno para Mariana Textil, una empresa mexicana de comercialización de textiles con 7 ubicaciones. Es un sistema operativo de inventarios, ventas y transferencias. NO es un sistema contable ni fiscal.
+
+En este primer paso construimos ÚNICAMENTE la base: autenticación, estructura de navegación y el esqueleto de la aplicación. Los módulos de operación vienen después. No los construyas todavía.
+
+## Stack obligatorio
+
+No lo cambies ni propongas alternativas:
+
+- Next.js 14+ con App Router y TypeScript
+- PostgreSQL externo (Neon). Configura la conexión por variable de entorno `DATABASE_URL`
+- Drizzle ORM para el esquema y las migraciones
+- Tailwind CSS
+- Autenticación propia por sesión con cookies httpOnly. Sin NextAuth ni librerías de terceros
+- Zona horaria de toda la aplicación: America/Mexico_City
+
+## Reglas permanentes de arquitectura
+
+Estas reglas aplican a TODO el código que escribas en este proyecto, ahora y en los siguientes prompts:
+
+1. **El kardex será la fuente de verdad del inventario.** Toda alteración de inventario se hará insertando filas en una tabla `movimientos` con cantidades firmadas. Nunca habrá un UPDATE directo a un saldo sin su movimiento correspondiente.
+2. **Nada se borra.** No hay DELETE en tablas operativas. Las correcciones son registros inversos que referencian al original.
+3. **Toda operación que modifique datos escribe en la tabla `auditoria`** con usuario, entidad, valores antes y después.
+4. **Cantidades:** `DECIMAL(10,3)`. Nunca float.
+5. **Dinero:** `DECIMAL(12,2)`. Nunca float.
+6. **Toda operación sobre inventario irá dentro de una transacción SQL con bloqueo de fila.**
+7. **Idempotencia:** las operaciones vendrán con un UUID generado por el cliente para evitar duplicados por doble clic o reintento de red.
+
+No implementes nada de inventario todavía. Solo respeta estas reglas cuando lleguemos ahí.
+
+## Base de datos para este paso
+
+Crea únicamente estas tablas:
+
+**ubicaciones**
+- id (serial, PK)
+- nombre (text, único)
+- tipo (enum: TIENDA, BODEGA, TRANSITO, EXTERNO)
+- activa (boolean, default true)
+- created_at (timestamptz)
+
+Precarga estas 9 filas:
+- Tiendas: Mariana, Cruces, Coco
+- Bodegas: Tomás, Don Nacho, Lucas Alamán, Bodega Cruces
+- TRANSITO: "En tránsito" (ubicación virtual del sistema, no editable, no aparece en listados normales)
+- EXTERNO: "Externo" (proveedores y clientes finales, no editable, no aparece en listados normales)
+
+**usuarios**
+- id (serial, PK)
+- nombre (text)
+- usuario (text, único)
+- password_hash (text)
+- rol (enum: ADMIN, CAJA, INVENTARIOS, BODEGA)
+- ubicacion_id (int, FK a ubicaciones, nullable — null significa acceso a todas)
+- activo (boolean, default true)
+- ultimo_acceso (timestamptz, nullable)
+- created_at (timestamptz)
+
+**sesiones**
+- id (uuid, PK)
+- usuario_id (int, FK)
+- expira_at (timestamptz)
+- ip (text)
+- user_agent (text)
+- created_at (timestamptz)
+
+**auditoria**
+- id (bigserial, PK)
+- usuario_id (int, FK, nullable)
+- accion (text)
+- entidad (text)
+- entidad_id (text, nullable)
+- datos_antes (jsonb, nullable)
+- datos_despues (jsonb, nullable)
+- ip (text)
+- created_at (timestamptz)
+- Índice en (entidad, entidad_id) y en (usuario_id, created_at)
+
+Genera un seed con un usuario ADMIN inicial (usuario: `admin`, contraseña: `Mariana2026*`, sin ubicación asignada) y muestra en consola la advertencia de cambiar esa contraseña.
+
+## Autenticación
+
+1. Pantalla de login en `/login`: campo de usuario, campo de contraseña, botón entrar. Nada más. Sin registro público, sin recuperación de contraseña por ahora.
+2. Contraseñas con **argon2** o bcrypt con costo 12.
+3. Al autenticar: crear fila en `sesiones`, guardar el id de sesión en cookie httpOnly, secure, sameSite lax, duración 12 horas.
+4. Middleware que protege TODAS las rutas excepto `/login`. Sin sesión válida, redirige a login.
+5. Cierre de sesión automático tras **30 minutos de inactividad**. Renueva el contador con cada petición.
+6. Bloqueo tras 5 intentos fallidos del mismo usuario durante 15 minutos. Registrar los intentos en `auditoria`.
+7. Botón de cerrar sesión que elimina la fila de `sesiones`.
+
+## Permisos por rol
+
+Crea el archivo `lib/permisos.ts` con un mapa explícito de rol a módulos visibles. Este archivo será la única fuente de verdad de permisos en todo el sistema:
+
+- **ADMIN** — todos los módulos, todas las ubicaciones.
+- **CAJA** — Dashboard, Ventas/POS, Entradas, Transferencias, Inventario, Productos (solo lectura), Clientes, Resumen de Caja, Cortes, Cobros/Pagos, Reportes. Solo su ubicación.
+- **INVENTARIOS** — Dashboard, Entradas, Salidas, Transferencias, Movimientos, Inventario, Productos (solo lectura), Proveedores, Reportes. Solo su ubicación. Sin acceso a caja ni a precios de venta.
+- **BODEGA** — Dashboard, Entradas, Salidas, Transferencias, Movimientos, Inventario, Productos (solo lectura), Proveedores. Solo su ubicación. Sin acceso a caja, ventas, clientes ni precios de venta.
+
+**Crítico:** el filtro por ubicación se aplica en el servidor, dentro de cada consulta a la base de datos. No basta con ocultar botones en la interfaz. Un usuario de Tienda Coco no debe poder ver datos de Mariana ni cambiando la URL manualmente.
+
+## Interfaz — barra lateral
+
+Esta es la estructura de navegación definitiva. Constrúyela completa. Los módulos que aún no existen se muestran con una etiqueta gris "Próximamente" y no son clicables.
+
+```
+MARIANA TEXTIL
+Sistema interno
+
+INICIO
+  Dashboard
+
+OPERACIÓN
+  Ventas / POS          [Próximamente]
+  Entradas              [Próximamente]
+  Salidas               [Próximamente]
+  Transferencias        [Próximamente]
+  Movimientos           [Próximamente]
+
+INVENTARIO
+  Inventario            [Próximamente]
+  Productos             [Próximamente]
+
+ADMINISTRACIÓN
+  Clientes              [Próximamente]
+  Proveedores           [Próximamente]
+  Ubicaciones           ← ACTIVO en este prompt
+  Usuarios              ← ACTIVO en este prompt
+  Próximos Contenedores [Próximamente]
+
+CAJA OPERATIVA
+  Resumen de Caja       [Próximamente]
+  Cortes                [Próximamente]
+  Cobros / Pagos        [Próximamente]
+
+REPORTES
+  Reportes              [Próximamente]
+```
+
+Al pie de la barra lateral: avatar con inicial, nombre del usuario, su rol y su ubicación asignada, y botón de cerrar sesión.
+
+**Comportamiento:** cada rol ve solo los módulos que le corresponden según `lib/permisos.ts`. Un usuario de rol BODEGA no debe ver siquiera los encabezados de las secciones a las que no tiene acceso.
+
+## Interfaz — encabezado
+
+Barra superior con:
+- A la izquierda: etiqueta "UBICACIÓN ACTUAL" y debajo el nombre de la ubicación del usuario. Para ADMIN dice "Vista global" y ofrece un selector para filtrar por ubicación específica.
+- A la derecha: nombre del usuario, su rol, botón de cerrar sesión.
+
+## Módulos activos en este prompt
+
+**Ubicaciones** (solo ADMIN): tabla con las 7 ubicaciones reales, su tipo y si están activas. Permite editar el nombre y activar/desactivar. Las ubicaciones de sistema (En tránsito, Externo) no se muestran ni se pueden editar.
+
+**Usuarios** (solo ADMIN): tabla con nombre, usuario, rol, ubicación asignada, estado y último acceso. Permite crear usuario, editar, cambiar contraseña, activar/desactivar. No permite eliminar. Al crear un usuario con rol distinto de ADMIN, la ubicación es obligatoria.
+
+**Dashboard**: por ahora solo tarjetas de conteo, sin datos de inventario todavía:
+- Tiendas activas · Bodegas activas · Usuarios activos
+- Una tabla "Inventario por ubicación" con las 7 ubicaciones y columnas Metros / Kilos / Rollos, todas en cero por ahora. Deja el componente listo para recibir datos reales después.
+
+## Diseño visual
+
+- Paleta: azul marino profundo (#1B2A4A) para la barra lateral y encabezados, blanco y grises muy claros para el contenido, azul medio (#3B5BDB) para acentos y estados activos.
+- Tipografía sans-serif limpia, tamaño base 16px. En pantallas de operación después usaremos tamaños mayores.
+- Alto contraste, sin animaciones decorativas, sin sombras exageradas.
+- Responsive: en escritorio la barra lateral es fija; en móvil se convierte en menú desplegable con botón hamburguesa.
+- Todo el texto de la interfaz en español de México.
+
+## Lo que NO debes hacer en este prompt
+
+- No crees las tablas de productos, rollos, movimientos, ventas ni transferencias. Vienen después con un diseño específico.
+- No inventes módulos ni campos que no estén en este documento.
+- No uses datos de ejemplo falsos en el dashboard más allá de los ceros indicados.
+- No instales librerías de UI pesadas. Tailwind es suficiente.
+
+## Entregable
+
+Cuando termines, dime:
+1. Cómo configurar la variable `DATABASE_URL`
+2. Cómo correr las migraciones y el seed
+3. Con qué credenciales entro por primera vez
+
+Y confirma que puedo iniciar sesión, ver la barra lateral completa según mi rol, y crear un usuario nuevo.

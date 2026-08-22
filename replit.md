@@ -1,45 +1,59 @@
-# [Project name]
+# Mariana Textil
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Sistema interno de inventarios, ventas y transferencias para las tiendas y
+bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/api-server run dev` — API en `/api`
+- `pnpm --filter @workspace/mariana-textil run dev` — aplicación web
+- `pnpm run typecheck` — verificación completa de TypeScript
+- `pnpm --filter @workspace/api-spec run codegen` — regenera cliente y Zod desde OpenAPI
+- `pnpm --filter @workspace/db run push` — aplica el esquema Drizzle en desarrollo
+- `pnpm --filter @workspace/db run seed` — precarga ubicaciones y el ADMIN inicial
+- Requiere `DATABASE_URL` con una conexión PostgreSQL
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- pnpm workspaces, Node.js, TypeScript
+- React + Vite + Tailwind CSS
+- Express 5
+- PostgreSQL + Drizzle ORM
+- Contrato OpenAPI con cliente React Query y validadores Zod generados
+- Sesiones propias mediante cookies httpOnly
+- Zona horaria funcional: `America/Mexico_City`
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — contrato de la API
+- `lib/db/src/schema/` — esquema Drizzle
+- `lib/db/src/seed.mjs` — datos iniciales
+- `artifacts/api-server/src/routes/` — endpoints
+- `artifacts/api-server/src/middlewares/auth.ts` — sesión e inactividad
+- `artifacts/mariana-textil/src/lib/permisos.ts` — única fuente de verdad para módulos visibles por rol
+- `artifacts/mariana-textil/src/` — interfaz web
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- El kardex será la fuente de verdad del inventario: toda alteración futura inserta movimientos con cantidades firmadas.
+- Las tablas operativas no usan DELETE; las correcciones son movimientos inversos que referencian el original.
+- Toda operación que modifica datos debe registrar usuario, entidad y valores antes/después en `auditoria`.
+- Cantidades usan `DECIMAL(10,3)` y dinero `DECIMAL(12,2)`; nunca float.
+- Toda operación futura de inventario debe usar una transacción SQL con bloqueo de fila.
+- Las operaciones futuras reciben un UUID del cliente para garantizar idempotencia.
+- El filtrado por ubicación siempre se aplica en consultas del servidor, no solo en la interfaz.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
-
-## User preferences
-
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Login sin registro público ni recuperación de contraseña
+- Sesiones de 12 horas con vencimiento por 30 minutos de inactividad
+- Bloqueo temporal después de cinco intentos fallidos
+- Dashboard con conteos iniciales e inventario en cero por ubicación
+- Administración sin borrado de ubicaciones y usuarios
+- Navegación completa filtrada por rol; módulos futuros aparecen como “Próximamente”
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Ejecuta `codegen` después de cada cambio en OpenAPI.
+- Ejecuta `push` y luego `seed` al preparar una base de datos nueva.
+- Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.

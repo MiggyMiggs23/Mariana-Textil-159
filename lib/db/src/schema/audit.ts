@@ -1,0 +1,44 @@
+import {
+  bigserial,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod/v4";
+import { usuariosTable } from "./users";
+
+export const auditoriaTable = pgTable(
+  "auditoria",
+  {
+    id: bigserial("id", { mode: "bigint" }).primaryKey(),
+    usuarioId: integer("usuario_id").references(() => usuariosTable.id),
+    accion: text("accion").notNull(),
+    entidad: text("entidad").notNull(),
+    entidadId: text("entidad_id"),
+    datosAntes: jsonb("datos_antes").$type<Record<string, unknown> | null>(),
+    datosDespues: jsonb("datos_despues").$type<Record<string, unknown> | null>(),
+    ip: text("ip").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("auditoria_entidad_idx").on(table.entidad, table.entidadId),
+    index("auditoria_usuario_created_idx").on(
+      table.usuarioId,
+      table.createdAt,
+    ),
+  ],
+);
+
+export const insertAuditoriaSchema = createInsertSchema(auditoriaTable).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertAuditoria = z.infer<typeof insertAuditoriaSchema>;
+export type Auditoria = typeof auditoriaTable.$inferSelect;

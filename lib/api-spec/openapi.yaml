@@ -1,22 +1,28 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: API para el sistema interno de Mariana Textil.
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Sesión y acceso
+  - name: dashboard
+    description: Datos del tablero inicial
+  - name: locations
+    description: Administración de ubicaciones
+  - name: users
+    description: Administración de usuarios
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +30,329 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Inicia sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Sesión creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Cierra la sesión actual
+      responses:
+        "204":
+          description: Sesión cerrada
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Obtiene la sesión actual
+      responses:
+        "200":
+          description: Usuario autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [dashboard]
+      summary: Obtiene conteos e inventario inicial por ubicación
+      responses:
+        "200":
+          description: Resumen del tablero
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dashboard"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /locations:
+    get:
+      operationId: listLocations
+      tags: [locations]
+      summary: Lista ubicaciones reales para administración
+      responses:
+        "200":
+          description: Lista de ubicaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Location"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /locations/{id}:
+    patch:
+      operationId: updateLocation
+      tags: [locations]
+      summary: Edita el nombre o estado de una ubicación
+      parameters:
+        - $ref: "#/components/parameters/LocationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocationUpdate"
+      responses:
+        "200":
+          description: Ubicación actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: Lista usuarios
+      responses:
+        "200":
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Crea un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /users/{id}:
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Edita datos, estado, ubicación o contraseña de un usuario
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 components:
+  parameters:
+    LocationId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+  responses:
+    Unauthorized:
+      description: Sesión no válida
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Sin permisos
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ValidationError:
+      description: Datos inválidos
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RateLimited:
+      description: Demasiados intentos
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
-
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+    Role:
+      type: string
+      enum: [ADMIN, CAJA, INVENTARIOS, BODEGA]
+    LocationType:
+      type: string
+      enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]
+    Location:
+      type: object
+      required: [id, nombre, tipo, activa, esSistema]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        tipo:
+          $ref: "#/components/schemas/LocationType"
+        activa: { type: boolean }
+        esSistema: { type: boolean }
+    LocationUpdate:
+      type: object
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 120 }
+        activa: { type: boolean }
+    CurrentUser:
+      type: object
+      required: [id, nombre, usuario, rol, ubicacion]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        usuario: { type: string }
+        rol:
+          $ref: "#/components/schemas/Role"
+        ubicacion:
+          oneOf:
+            - $ref: "#/components/schemas/Location"
+            - type: "null"
+    User:
+      type: object
+      required: [id, nombre, usuario, rol, ubicacion, activo, ultimoAcceso]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        usuario: { type: string }
+        rol:
+          $ref: "#/components/schemas/Role"
+        ubicacion:
+          oneOf:
+            - $ref: "#/components/schemas/Location"
+            - type: "null"
+        activo: { type: boolean }
+        ultimoAcceso:
+          type: ["string", "null"]
+          format: date-time
+    UserInput:
+      type: object
+      required: [nombre, usuario, password, rol]
+      properties:
+        nombre: { type: string, minLength: 2, maxLength: 120 }
+        usuario: { type: string, minLength: 3, maxLength: 64 }
+        password: { type: string, minLength: 10, maxLength: 128 }
+        rol:
+          $ref: "#/components/schemas/Role"
+        ubicacionId:
+          type: ["number", "null"]
+    UserUpdate:
+      type: object
+      properties:
+        nombre: { type: string, minLength: 2, maxLength: 120 }
+        usuario: { type: string, minLength: 3, maxLength: 64 }
+        rol:
+          $ref: "#/components/schemas/Role"
+        ubicacionId:
+          type: ["number", "null"]
+        activo: { type: boolean }
+        password: { type: string, minLength: 10, maxLength: 128 }
+    LoginInput:
+      type: object
+      required: [usuario, password]
+      properties:
+        usuario: { type: string, minLength: 1, maxLength: 64 }
+        password: { type: string, minLength: 1, maxLength: 128 }
+    Dashboard:
+      type: object
+      required: [tiendasActivas, bodegasActivas, usuariosActivos, inventarioPorUbicacion]
+      properties:
+        tiendasActivas: { type: number }
+        bodegasActivas: { type: number }
+        usuariosActivos: { type: number }
+        inventarioPorUbicacion:
+          type: array
+          items:
+            type: object
+            required: [ubicacionId, nombre, metros, kilos, rollos]
+            properties:
+              ubicacionId: { type: number }
+              nombre: { type: string }
+              metros: { type: string, example: "0.000" }
+              kilos: { type: string, example: "0.000" }
+              rollos: { type: string, example: "0.000" }
