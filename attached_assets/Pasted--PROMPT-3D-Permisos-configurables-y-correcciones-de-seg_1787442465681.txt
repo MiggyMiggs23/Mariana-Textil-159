@@ -1,0 +1,321 @@
+# PROMPT 3D — Permisos configurables y correcciones de seguridad
+### Mariana Textil · Único archivo. Ignora versiones anteriores del 3D.
+
+> Haz commit en Git antes de empezar.
+> Este prompt debe completarse **antes** de construir el POS.
+
+---
+
+Una revisión del código encontró tres problemas. El motor de inventario está bien construido en lo general —bloqueos de fila correctos, ninguna escritura fuera del motor, caché recalculado desde el kardex, sin DELETE en tablas operativas— pero hay tres huecos que deben cerrarse.
+
+**Stack:** React + Vite con servidor Express, TypeScript, Tailwind, PostgreSQL, Drizzle. Respeta la arquitectura existente.
+
+---
+
+# PROBLEMA 1 — Los permisos de módulo son cosméticos
+
+## Diagnóstico
+
+`artifacts/mariana-textil/src/lib/permisos.ts` es la única fuente de verdad de qué módulos ve cada rol, y **vive en el frontend**. Solo esconde elementos de la interfaz. El servidor no valida nada: cualquier usuario autenticado que conozca la ruta o llame la API directamente accede a módulos que no le corresponden.
+
+Además, la matriz está escrita a mano en el código. El administrador no puede cambiarla sin tocar el código.
+
+## Los módulos del sistema
+
+Usa exactamente estos identificadores:
+
+`dashboard`, `pos`, `entradas`, `salidas`, `transferencias`, `movimientos`, `inventario`, `productos`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`
+
+**Clientes y Proveedores están divididos a propósito.** Mezclan información operativa (a quién le vendo, cómo se llama) con información financiera y analítica (saldos, notas vencidas, historial de compras, qué telas compra, volúmenes). Un solo permiso abriría las dos. Qué contiene cada uno:
+
+| Módulo | Contenido |
+|---|---|
+| `clientes` | Catálogo operativo: buscar, seleccionar, dar de alta, editar contacto y notas. Sin información financiera. |
+| `clientes_credito` | Semáforo de crédito: límite, saldo actual, crédito disponible, si puede comprar a crédito. Un dato puntual, sin desglose ni historial. |
+| `clientes_precios` | Historial de precios negociados por producto: última compra de ese producto, a qué precio, y promedio de las últimas tres. **Solo precios unitarios**, sin importes totales ni cantidades. |
+| `clientes_finanzas` | Estado de cuenta, antigüedad de saldos, notas vencidas, pagos, historial completo de compras y toda la analítica. |
+| `proveedores` | Catálogo operativo: buscar, dar de alta, editar contacto, tipo y notas. Sin información financiera. |
+| `proveedores_finanzas` | Saldos, pagos, estado de cuenta, historial de compras, costos, variación de costo unitario y analítica. |
+
+## Tablas nuevas
+
+**`permisos_rol`**
+- id (serial, PK)
+- rol (enum: ADMIN, CAJA, INVENTARIOS, BODEGA)
+- modulo (text)
+- puede_ver (boolean)
+- puede_crear (boolean)
+- puede_editar (boolean)
+- puede_autorizar (boolean) — acciones sensibles: cancelar, ajustar, reversar, autorizar descuentos, registrar pagos
+- updated_at (timestamptz), updated_por (int, FK usuarios)
+- Única sobre (rol, modulo)
+
+**`permisos_usuario`** — excepciones individuales que sobrescriben las del rol
+- id (serial, PK)
+- usuario_id (int, FK)
+- modulo (text)
+- puede_ver, puede_crear, puede_editar, puede_autorizar (boolean, **nullable** — null significa "hereda del rol")
+- updated_at, updated_por
+- Única sobre (usuario_id, modulo)
+
+## Matriz por defecto
+
+Precárgala. El administrador podrá cambiarla desde la interfaz.
+
+| Módulo | ADMIN | CAJA | INVENTARIOS | BODEGA |
+|---|---|---|---|---|
+| dashboard | total | ver | ver | ver |
+| pos | total | ver/crear/editar | — | — |
+| entradas | total | ver/crear | ver/crear/editar | ver/crear/editar |
+| salidas | total | ver | ver/crear/editar | ver/crear/editar |
+| transferencias | total | ver/crear | ver/crear/editar | ver/crear/editar |
+| movimientos | total | ver | ver | ver |
+| inventario | total | ver | ver | ver |
+| productos | total | ver | ver | ver |
+| ajustes | total | — | ver/crear | ver/crear |
+| clientes | total | ver/crear/editar | — | — |
+| clientes_credito | total | ver | — | — |
+| clientes_precios | total | ver | — | — |
+| clientes_finanzas | total | — | — | — |
+| proveedores | total | — | ver | ver |
+| proveedores_finanzas | total | — | — | — |
+| contenedores | total | — | ver | ver |
+| ubicaciones | total | — | — | — |
+| usuarios | total | — | — | — |
+| permisos | total | — | — | — |
+| resumen_caja | total | ver | — | — |
+| cortes | total | ver/crear | — | — |
+| cobros_pagos | total | ver/crear | — | — |
+| reportes | total | ver | ver | ver |
+| conciliacion | total | — | — | — |
+| auditoria | total | — | — | — |
+
+"total" = las cuatro banderas encendidas. "—" = las cuatro apagadas. `puede_autorizar` solo para ADMIN por defecto.
+
+## Validación en el servidor
+
+Crea un middleware `requierePermiso(modulo, accion)` donde acción es `ver`, `crear`, `editar` o `autorizar`.
+
+**Aplícalo a TODOS los endpoints, sin excepción.** Recorre el archivo de rutas completo. Si un endpoint queda sin middleware de permiso, es un hueco.
+
+Resolución del permiso, en orden:
+1. Fila en `permisos_usuario` para ese usuario y módulo con valor no nulo → gana esa
+2. Si no, la fila de `permisos_rol` para su rol y módulo
+3. Si no existe ninguna → **denegar**. Nunca permitir por omisión.
+
+Sin permiso, responde **403** con mensaje claro.
+
+**Asignación por endpoint de clientes y proveedores** — los endpoints financieros **no pueden quedar bajo el permiso operativo**:
+
+| Endpoint | Módulo requerido |
+|---|---|
+| `GET /clientes`, `GET /clientes/:id`, `POST /clientes`, `PATCH /clientes/:id` | `clientes` |
+| `GET /clientes/:id/credito` | `clientes_credito` |
+| `GET /clientes/:id/precios` (el que consulta el POS) | `clientes_precios` |
+| `GET /clientes/:id/estado-cuenta`, `/compras`, `/estadisticas`, `/pagos` | `clientes_finanzas` |
+| `POST /clientes/:id/pagos` | `clientes_finanzas` + `puede_crear` |
+| `GET /clientes/resumen` (cartera, vencidos) | `clientes_finanzas` |
+| `GET /proveedores`, `GET /proveedores/:id`, `POST`, `PATCH` | `proveedores` |
+| `GET /proveedores/:id/compras`, `/pagos`, `/estadisticas`, `/estado-cuenta` | `proveedores_finanzas` |
+| `POST /proveedores/:id/pagos` | `proveedores_finanzas` + `puede_crear` |
+| `GET /proveedores/resumen` | `proveedores_finanzas` |
+
+**Crítico — omitir campos, no esconderlos:** el listado de proveedores debe **omitir los campos financieros de la respuesta JSON** cuando el usuario no tiene `proveedores_finanzas.puede_ver`. No basta con no dibujar la columna: si el dato viaja en la respuesta, está expuesto a cualquiera que abra las herramientas del navegador. Lo mismo con clientes. Aplica el mismo criterio en los reportes.
+
+**Protecciones que no se pueden apagar:**
+- El rol ADMIN siempre conserva `permisos` y `usuarios` en total. La interfaz no debe permitir quitárselos.
+- Un usuario no puede modificar sus propios permisos, ni siendo ADMIN.
+- Debe existir siempre al menos un ADMIN activo con acceso total.
+
+## Frontend
+
+`permisos.ts` deja de ser fuente de verdad. Pasa a ser un **caché de lo que el servidor devuelve** al iniciar sesión.
+
+- Al autenticarse, el servidor devuelve la matriz efectiva del usuario
+- La barra lateral se arma con esa matriz, no con una tabla en el código
+- Los botones de crear, editar y autorizar se muestran según sus banderas
+- Sin permiso para una ruta, pantalla de "Sin acceso", no un error crudo
+
+**Los módulos financieros no aparecen como entradas sueltas en la barra lateral.** Se manifiestan como pestañas dentro del perfil correspondiente.
+
+**Perfil del cliente**, pestañas según permiso:
+- **Datos** — `clientes.puede_ver`
+- **Crédito** — `clientes_credito.puede_ver`. Solo límite, saldo actual, disponible, e indicador visual de si puede comprar a crédito
+- **Estado de cuenta** — `clientes_finanzas.puede_ver`
+- **Compras y analítica** — `clientes_finanzas.puede_ver`
+
+Si un usuario solo tiene `clientes` y `clientes_credito`, ve dos pestañas. Las otras no existen para él, ni deshabilitadas.
+
+**Perfil del proveedor:**
+- **Datos** — `proveedores.puede_ver`
+- **Compras**, **Pagos**, **Estadísticas** — `proveedores_finanzas.puede_ver`
+
+**Listados:**
+- La columna de saldo y el panel de resumen de clientes solo con `clientes_finanzas.puede_ver`. Sin ese permiso, el listado muestra nombre, teléfono y estado, nada más.
+- Las columnas de saldo, total comprado y última compra de proveedores, y el panel de deuda total, solo con `proveedores_finanzas.puede_ver`
+
+**Preparación para el POS** (no lo construyas todavía, solo deja los endpoints listos):
+- Con `clientes_credito.puede_ver`, al seleccionar cliente se mostrará un bloque compacto con crédito disponible e indicador de color. Sin ese permiso, el bloque no aparece y el sistema rechaza la venta a crédito que exceda el límite con un mensaje de "requiere autorización", sin revelar cifras.
+- Con `clientes_precios.puede_ver`, al agregar un producto se mostrará bajo el campo de precio una línea de referencia: "Última compra: $8.50 el 12 jul · Promedio últimas 3: $8.35". Solo precios unitarios. Nunca importes totales, cantidades ni qué otros productos compra.
+
+## Pantalla de administración de permisos
+
+Módulo **Permisos**, dentro de Administración, visible solo con `permisos.puede_ver`.
+
+**Pestaña "Por rol"**
+- Módulos en las filas, los cuatro roles en las columnas
+- En cada cruce, cuatro casillas: Ver, Crear, Editar, Autorizar
+- Desmarcar "Ver" desmarca automáticamente las otras tres
+- Botón "Guardar cambios" con confirmación
+- Cada cambio se registra en `auditoria` con valor anterior y nuevo
+
+**Pestaña "Por usuario"**
+- Selector de usuario
+- Muestra en gris lo que hereda de su rol
+- Permite marcar excepciones individuales, resaltadas en color
+- Botón "Regresar a los permisos de su rol" que borra sus excepciones
+
+**Pestaña "Vista previa"**
+- Selector de usuario y vista de cómo le queda la barra lateral con sus permisos efectivos
+
+---
+
+# PROBLEMA 2 — El alcance por ubicación no se aplica en el servidor
+
+## Diagnóstico
+
+`GET /rollos`, `GET /rollos/:id`, `GET /existencias` y `GET /kardex` filtran por el `ubicacionId` que **manda el cliente en la query string**, sin compararlo contra la ubicación asignada al usuario. Un usuario de Tienda Coco puede pedir `/api/existencias?ubicacionId=1` y recibir el inventario de Mariana.
+
+`GET /entradas` sí lo hace bien. Los otros cuatro se quedaron sin esa protección.
+
+## El modelo correcto
+
+**Consultar y operar son cosas distintas.**
+
+**Consultar:** una tienda necesita ver el inventario de todas las ubicaciones, porque cuando un cliente pregunta por una tela que no hay en piso, el vendedor debe poder decirle si está en otra tienda o en bodega. Una bodega solo necesita ver lo suyo.
+
+**Operar:** nadie da entrada, salida, ajuste, venta ni transferencia sobre una ubicación que no sea la suya. Solo ADMIN opera en cualquiera.
+
+## Implementación
+
+**Agrega a `usuarios`:** `alcance_consulta` (enum: `PROPIA`, `TODAS`)
+
+Por defecto al crear usuario: ADMIN `TODAS`, CAJA `TODAS`, INVENTARIOS `TODAS`, BODEGA `PROPIA`. Editable por el ADMIN desde Usuarios, con nota que aclare que consultar es solo lectura y que operar sigue restringido a su ubicación.
+
+**Helper `resolverAlcanceConsulta(auth, ubicacionIdSolicitada)`:**
+- Alcance `TODAS`: respeta el `ubicacionId` pedido, o devuelve todas si no manda ninguno
+- Alcance `PROPIA`: **ignora** lo que mande el cliente y fuerza su ubicación asignada
+- Sin ubicación asignada y alcance `PROPIA`: no devuelve nada
+
+**Helper `assertPuedeOperarEn(auth, ubicacionId)`:**
+- ADMIN en cualquiera; los demás solo en la suya
+- Si no coincide, **403** con mensaje claro, no 404 ni lista vacía
+
+**Aplícalos endpoint por endpoint, revisando el archivo completo:**
+
+Lectura → `resolverAlcanceConsulta`: `GET /rollos`, `GET /rollos/:id`, `GET /existencias`, `GET /kardex`, `GET /entradas`, `GET /entradas/:id`, `GET /dashboard`, `GET /conciliacion`, y cualquier otro que devuelva datos con ubicación.
+
+Escritura → `assertPuedeOperarEn`: `POST /entradas`, `POST /rollos/:id/activar`, `/mover`, `/recibir`, `/salida-mostrador`, `/vender`, `/ajustar`, `/revertir`, `POST /conciliacion/recalcular`.
+
+**En la interfaz:** cuando alguien consulta una ubicación que no es la suya, aviso discreto de "Solo consulta" y botones de operación deshabilitados. El selector de ubicación en Inventario está disponible para quien tenga alcance `TODAS`.
+
+---
+
+# PROBLEMA 3 — El reverso brinca la máquina de estados
+
+## Diagnóstico
+
+`revertirMovimiento` actualiza el estado del rollo con un UPDATE directo, **sin llamar a `assertTransition`**. La función `estadoAntesDe` decide el destino por su cuenta y devuelve `DISPONIBLE` al revertir un `SALIDA_MOSTRADOR`. Eso regresa al inventario un rollo abierto, contradiciendo la regla del negocio. En `VALID_TRANSITIONS`, `ABIERTO` está marcado terminal, pero el reverso lo esquiva.
+
+La prueba T-03 pasa, pero solo verifica que no se pueda sacar dos veces el mismo rollo. No ejerce el camino del reverso.
+
+## Corrección
+
+1. `revertirMovimiento` debe llamar a `assertTransition` antes de cambiar el estado. **Ninguna función puede cambiar el estado de un rollo sin pasar por la guardia.**
+
+2. Agrega a `VALID_TRANSITIONS` las transiciones de reverso que faltan:
+   - `VENDIDO → DISPONIBLE` — cancelar venta o registrar devolución. El POS la necesita.
+   - `BAJA → DISPONIBLE` — reversar un ajuste equivocado.
+   - `PROGRAMADO → BAJA` — cancelar un rollo del packing list que nunca llegó.
+
+3. **`ABIERTO` se queda terminal, sin excepciones.** Revertir un `SALIDA_MOSTRADOR` debe fallar con error claro: el rollo ya salió a piso y no regresa. Corrige `estadoAntesDe` para que no devuelva `DISPONIBLE` en ese caso. Una salida equivocada se corrige con un ajuste que deja rastro.
+
+4. Busca en todo el motor si **alguna otra función** cambia `rollos.estado` sin pasar por `assertTransition` y repórtame qué encontraste.
+
+---
+
+# CORRECCIÓN MENOR
+
+En `inventario.test.ts`, el comentario de T-03 dice "remaining 101.4/2" pero el valor correcto, y el que la prueba verifica, es **101.9** (52.1 + 49.8). Corrige el comentario.
+
+---
+
+# ACTUALIZA `replit.md`
+
+Está desactualizado: describe el proyecto como quedó después del primer prompt, en tiempo futuro ("el kardex *será* la fuente de verdad", "inventario en cero por ubicación"). Actualízalo con el estado real —motor de inventario, catálogo de 154 productos, rollos, movimientos, existencias, entradas, pagos a proveedores, series globales, etiquetas QR, compras, y el nuevo sistema de permisos— y mantenlo al día al cerrar cada tarea.
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+Todas **llamando a la API directamente**, no a través de la interfaz. Ese es el punto: la interfaz ya escondía los botones y aun así los huecos existían.
+
+**Permisos de módulo:**
+1. Usuario BODEGA: endpoints de POS responden **403**
+2. Usuario BODEGA: endpoints de clientes responden **403**
+3. Usuario CAJA: `GET /proveedores` responde **403**
+4. Usuario CAJA: endpoints de POS responden **200**
+5. Al apagar `pos.puede_ver` para CAJA desde la matriz, ese endpoint pasa a **403** sin reiniciar el servidor
+6. Una excepción en `permisos_usuario` sobrescribe lo del rol
+7. Un módulo sin fila en ninguna tabla **deniega**
+8. No se puede quitar a ADMIN el acceso a `permisos` ni a `usuarios`
+9. Un usuario no puede modificar sus propios permisos
+
+**Separación de módulos sensibles:**
+10. CAJA: `GET /clientes` responde **200** y la respuesta **no incluye** campos de saldo
+11. CAJA: `GET /clientes/:id/credito` responde **200** con límite, saldo y disponible
+12. CAJA: `GET /clientes/:id/estado-cuenta` responde **403**
+13. CAJA: `GET /clientes/:id/estadisticas` responde **403**
+14. CAJA: `GET /clientes/:id/precios` responde **200** con solo precios unitarios, sin importes ni cantidades
+15. BODEGA: `GET /proveedores` responde **200** y **no incluye** saldo ni total comprado
+16. BODEGA: `GET /proveedores/:id/estadisticas` responde **403**
+17. BODEGA: `GET /proveedores/:id/pagos` responde **403**
+
+**Alcance por ubicación:**
+18. CAJA de Coco con alcance TODAS: `GET /existencias?ubicacionId=<Mariana>` devuelve datos
+19. BODEGA de Tomás con alcance PROPIA: el mismo llamado devuelve **solo Tomás**
+20. BODEGA con alcance PROPIA: `GET /existencias` sin parámetro devuelve solo su ubicación
+21. BODEGA de Tomás: `GET /rollos/:id` de un rollo de Mariana responde **403 o 404**
+22. CAJA de Coco: `POST /entradas` con ubicación Mariana responde **403**
+23. ADMIN consulta y opera en cualquier ubicación
+
+**Máquina de estados:**
+24. Revertir un `SALIDA_MOSTRADOR` **falla**, y el rollo sigue ABIERTO
+25. Revertir una `VENTA` devuelve el rollo a DISPONIBLE y restaura la existencia exacta
+26. Revertir un ajuste de BAJA devuelve el rollo a DISPONIBLE con su cantidad correcta
+27. Después de cada reverso, la suma del kardex sigue igualando el caché
+
+Y las 12 pruebas originales del motor deben seguir pasando.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No dejes ningún endpoint sin middleware de permiso
+- No permitas por omisión cuando falte una fila de permisos
+- No mandes campos financieros en la respuesta esperando que la interfaz los esconda
+- No confíes en la interfaz para aplicar permisos
+- No relajes la regla de que ABIERTO es terminal
+- No cambies el motor más allá de lo indicado
+- No implementes todavía el POS
+
+# ENTREGABLE
+
+1. Lista de archivos creados y modificados
+2. La lista **completa** de endpoints con el módulo y la acción asignados a cada uno
+3. Qué campos se omiten de `GET /clientes` y `GET /proveedores` sin el permiso financiero
+4. Confirmación de que ningún endpoint financiero quedó bajo el permiso operativo
+5. Qué encontraste al buscar cambios de `rollos.estado` fuera de `assertTransition`
+6. Salida completa de la corrida de pruebas, incluyendo las 27 nuevas
+7. Confirmación de que las 12 pruebas originales siguen pasando
+8. Cómo llego a la pantalla de Permisos y qué puedo configurar ahí
