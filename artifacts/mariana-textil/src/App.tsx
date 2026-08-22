@@ -20,6 +20,11 @@ import Productos from '@/pages/productos';
 import ProductoDetail from '@/pages/producto-detail';
 import Proveedores from '@/pages/proveedores';
 import ProveedorDetail from '@/pages/proveedor-detail';
+import Entradas from '@/pages/entradas';
+import Inventario from '@/pages/inventario';
+import RolloDetail from '@/pages/rollo-detail';
+import Ajustes from '@/pages/ajustes';
+import Conciliacion from '@/pages/conciliacion';
 import { LocationScopeProvider } from '@/lib/location-scope';
 
 const queryClient = new QueryClient({
@@ -87,11 +92,18 @@ function Router() {
         <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} allowedRoles={["ADMIN"]} />} />
         <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedRoles={["ADMIN"]} />} />
         
+        <Route path="/entradas" component={() => <ProtectedRoute component={Entradas} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} />} />
+        <Route path="/inventario/rollos/:id" component={() => <ProtectedRoute component={RolloDetail} />} />
+        <Route path="/inventario/ajustes" component={() => <ProtectedRoute component={Ajustes} allowedRoles={["ADMIN", "INVENTARIOS"]} />} />
+        
         <Route path="/productos" component={() => <ProtectedRoute component={Productos} />} />
         <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} />} />
         
         <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
         <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        
+        <Route path="/administracion/conciliacion" component={() => <ProtectedRoute component={Conciliacion} allowedRoles={["ADMIN"]} />} />
         
         <Route component={NotFound} />
       </Switch>

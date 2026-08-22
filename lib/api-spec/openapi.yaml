@@ -21,6 +21,8 @@ tags:
     description: Catálogo de productos/telas
   - name: proveedores
     description: Administración de proveedores
+  - name: inventario
+    description: Inventario de rollos, kardex, ajustes y conciliación
 paths:
   /healthz:
     get:
@@ -434,6 +436,436 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /inventario/entradas:
+    post:
+      operationId: altaLote
+      tags: [inventario]
+      summary: Alta manual de lote de rollos DISPONIBLES en una sola transacción
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AltaLoteInput"
+      responses:
+        "201":
+          description: Lote creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AltaLoteResult"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/rollos/{id}/activar:
+    post:
+      operationId: activarRollo
+      tags: [inventario]
+      summary: Activa un rollo PROGRAMADO (PROGRAMADO → DISPONIBLE), registra RECEPCION
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivarRolloInput"
+      responses:
+        "200":
+          description: Rollo activado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}/mover:
+    post:
+      operationId: moverRollo
+      tags: [inventario]
+      summary: Inicia traslado DISPONIBLE → EN_TRANSITO (fase 1)
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoverRolloInput"
+      responses:
+        "200":
+          description: Rollo en tránsito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}/recibir:
+    post:
+      operationId: recibirTransferencia
+      tags: [inventario]
+      summary: Recibe rollo en destino EN_TRANSITO → DISPONIBLE (fase 2)
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecibirTransferenciaInput"
+      responses:
+        "200":
+          description: Rollo recibido en destino
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}/salida-mostrador:
+    post:
+      operationId: salidaMostrador
+      tags: [inventario]
+      summary: Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalidaMostradorInput"
+      responses:
+        "200":
+          description: Rollo abierto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}/vender:
+    post:
+      operationId: venderRollo
+      tags: [inventario]
+      summary: Venta directa DISPONIBLE → VENDIDO (VENTA negativo)
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VenderRolloInput"
+      responses:
+        "200":
+          description: Rollo vendido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}/ajustar:
+    post:
+      operationId: ajustarRollo
+      tags: [inventario]
+      summary: Ajuste de cantidad o BAJA, justificación ≥10 caracteres, revisado=false
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AjusteRolloInput"
+      responses:
+        "200":
+          description: Ajuste aplicado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}/revertir:
+    post:
+      operationId: revertirMovimiento
+      tags: [inventario]
+      summary: Revierte un movimiento del rollo (crea CANCELACION, nada se borra)
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RevertirMovimientoInput"
+      responses:
+        "200":
+          description: Movimiento revertido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos/{id}:
+    get:
+      operationId: getRollo
+      tags: [inventario]
+      summary: Obtiene el detalle de un rollo con su historial completo
+      parameters:
+        - $ref: "#/components/parameters/RolloId"
+      responses:
+        "200":
+          description: Detalle del rollo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/rollos:
+    get:
+      operationId: listRollos
+      tags: [inventario]
+      summary: Lista rollos con filtros opcionales
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: estado
+          schema:
+            type: string
+            enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, ABIERTO, VENDIDO, BAJA]
+        - in: query
+          name: serie
+          schema: { type: string }
+        - in: query
+          name: soloAbiertos
+          schema: { type: boolean }
+        - in: query
+          name: page
+          schema: { type: number }
+        - in: query
+          name: pageSize
+          schema: { type: number }
+      responses:
+        "200":
+          description: Lista paginada de rollos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloListResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /inventario/existencias:
+    get:
+      operationId: getExistencias
+      tags: [inventario]
+      summary: Existencias por ubicación (con scope de rol)
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: consolidado
+          schema: { type: boolean }
+          description: Solo ADMIN; agrega todas las ubicaciones
+      responses:
+        "200":
+          description: Existencias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExistenciaRow"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /inventario/kardex:
+    get:
+      operationId: getKardex
+      tags: [inventario]
+      summary: Kardex de un producto, filtrable y paginado (100 filas default)
+      parameters:
+        - in: query
+          name: productoId
+          required: true
+          schema: { type: number }
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+        - in: query
+          name: page
+          schema: { type: number }
+        - in: query
+          name: pageSize
+          schema: { type: number }
+      responses:
+        "200":
+          description: Movimientos del kardex
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KardexResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/ajustes/pendientes:
+    get:
+      operationId: listAjustesPendientes
+      tags: [inventario]
+      summary: Lista de ajustes pendientes de revisión (revisado=false, ADMIN)
+      responses:
+        "200":
+          description: Ajustes pendientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MovimientoRow"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/ajustes/{id}/revisar:
+    post:
+      operationId: revisarAjuste
+      tags: [inventario]
+      summary: Marca un ajuste como revisado (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/MovimientoId"
+      responses:
+        "200":
+          description: Ajuste revisado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovimientoRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/conciliacion:
+    get:
+      operationId: getConciliacion
+      tags: [inventario]
+      summary: Conciliación movimientos vs cache (incluye pares con cache faltante, ADMIN)
+      parameters:
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+      responses:
+        "200":
+          description: Resultados de conciliación
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ConciliacionRow"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/conciliacion/recalcular:
+    post:
+      operationId: recalcularExistencias
+      tags: [inventario]
+      summary: Recalcula cache de existencias para un par (producto, ubicacion) (ADMIN)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecalcularInput"
+      responses:
+        "200":
+          description: Recálculo completado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConciliacionRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 components:
   parameters:
     LocationId:
@@ -455,6 +887,18 @@ components:
       schema:
         type: number
     ProveedorId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    RolloId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    MovimientoId:
       name: id
       in: path
       required: true
@@ -788,3 +1232,208 @@ components:
         notas:
           type: ["string", "null"]
         activo: { type: boolean }
+    EstadoRollo:
+      type: string
+      enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, ABIERTO, VENDIDO, BAJA]
+    TipoMovimiento:
+      type: string
+      enum: [ALTA, RECEPCION, VENTA, DEVOLUCION, TRANSFERENCIA_SALIDA, TRANSFERENCIA_ENTRADA, SALIDA_MOSTRADOR, AJUSTE_POSITIVO, AJUSTE_NEGATIVO, CANCELACION]
+    RolloSummary:
+      type: object
+      required: [id, serie, productoId, ubicacionId, estado, cantidadInicial, cantidadActual, costoUnitario, costoTotal, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        proveedorId: { type: ["number", "null"] }
+        estado:
+          $ref: "#/components/schemas/EstadoRollo"
+        cantidadInicial: { type: string }
+        cantidadActual: { type: string }
+        costoUnitario: { type: string }
+        costoTotal: { type: string }
+        notas: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    MovimientoRow:
+      type: object
+      required: [id, rolloId, productoId, ubicacionId, tipo, cantidad, saldoPosterior, usuarioId, revisado, createdAt]
+      properties:
+        id: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        skuProducto: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        tipo:
+          $ref: "#/components/schemas/TipoMovimiento"
+        cantidad: { type: string }
+        saldoPosterior: { type: string }
+        documentoTipo: { type: ["string", "null"] }
+        documentoId: { type: ["string", "null"] }
+        movimientoOrigenId: { type: ["number", "null"] }
+        usuarioId: { type: number }
+        justificacion: { type: ["string", "null"] }
+        revisado: { type: boolean }
+        revisadoPor: { type: ["number", "null"] }
+        revisadoAt: { type: ["string", "null"], format: date-time }
+        uuidCliente: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+    RolloDetail:
+      type: object
+      required: [id, serie, productoId, ubicacionId, estado, cantidadInicial, cantidadActual, costoUnitario, costoTotal, historial, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        proveedorId: { type: ["number", "null"] }
+        estado:
+          $ref: "#/components/schemas/EstadoRollo"
+        cantidadInicial: { type: string }
+        cantidadActual: { type: string }
+        costoUnitario: { type: string }
+        costoTotal: { type: string }
+        notas: { type: ["string", "null"] }
+        historial:
+          type: array
+          items:
+            $ref: "#/components/schemas/MovimientoRow"
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    RolloListResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RolloSummary"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+    ExistenciaRow:
+      type: object
+      required: [productoId, ubicacionId, rollosCount, cantidadTotal]
+      properties:
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        rollosCount: { type: number }
+        cantidadTotal: { type: string }
+    KardexResult:
+      type: object
+      required: [productoId, movimientos, total, page, pageSize]
+      properties:
+        productoId: { type: number }
+        movimientos:
+          type: array
+          items:
+            $ref: "#/components/schemas/MovimientoRow"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+    ConciliacionRow:
+      type: object
+      required: [productoId, ubicacionId, cantidadMovimientos, cantidadCache, rollosMovimientos, rollosCache, discrepancia]
+      properties:
+        productoId: { type: number }
+        ubicacionId: { type: number }
+        cantidadMovimientos: { type: string }
+        cantidadCache: { type: string }
+        rollosMovimientos: { type: number }
+        rollosCache: { type: number }
+        discrepancia: { type: boolean }
+    AltaLoteInput:
+      type: object
+      required: [productoId, ubicacionId, costoUnitario, cantidades]
+      properties:
+        productoId: { type: number }
+        ubicacionId: { type: number }
+        proveedorId: { type: ["number", "null"] }
+        costoUnitario: { type: string }
+        notas: { type: ["string", "null"] }
+        cantidades:
+          type: array
+          items: { type: string }
+          minItems: 1
+    AltaLoteResult:
+      type: object
+      required: [rollos]
+      properties:
+        rollos:
+          type: array
+          items:
+            type: object
+            required: [id, serie, cantidadInicial]
+            properties:
+              id: { type: number }
+              serie: { type: string }
+              cantidadInicial: { type: string }
+    ActivarRolloInput:
+      type: object
+      required: [cantidadReal]
+      properties:
+        cantidadReal: { type: string }
+        notas: { type: ["string", "null"] }
+        uuidCliente: { type: ["string", "null"] }
+    MoverRolloInput:
+      type: object
+      required: [ubicacionOrigenId, ubicacionTransitoId]
+      properties:
+        ubicacionOrigenId: { type: number }
+        ubicacionTransitoId: { type: number }
+        justificacion: { type: ["string", "null"] }
+        uuidCliente: { type: ["string", "null"] }
+    RecibirTransferenciaInput:
+      type: object
+      required: [ubicacionDestinoId]
+      properties:
+        ubicacionDestinoId: { type: number }
+        justificacion: { type: ["string", "null"] }
+        uuidCliente: { type: ["string", "null"] }
+    SalidaMostradorInput:
+      type: object
+      properties:
+        justificacion: { type: ["string", "null"] }
+        uuidCliente: { type: ["string", "null"] }
+    VenderRolloInput:
+      type: object
+      properties:
+        justificacion: { type: ["string", "null"] }
+        uuidCliente: { type: ["string", "null"] }
+    AjusteRolloInput:
+      type: object
+      required: [justificacion]
+      properties:
+        cantidadNueva: { type: ["string", "null"], description: "null o omitido = BAJA" }
+        justificacion: { type: string, minLength: 10 }
+        uuidCliente: { type: ["string", "null"] }
+    RevertirMovimientoInput:
+      type: object
+      required: [movimientoOrigenId]
+      properties:
+        movimientoOrigenId: { type: number }
+        justificacion: { type: ["string", "null"] }
+        uuidCliente: { type: ["string", "null"] }
+    RecalcularInput:
+      type: object
+      required: [productoId, ubicacionId]
+      properties:
+        productoId: { type: number }
+        ubicacionId: { type: number }

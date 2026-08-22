@@ -6,7 +6,9 @@ import {
   Role,
   getGetCurrentUserQueryKey,
   useListLocations,
-  getListLocationsQueryKey
+  getListLocationsQueryKey,
+  useListAjustesPendientes,
+  getListAjustesPendientesQueryKey
 } from "@workspace/api-client-react";
 import { hasPermission, Modules, Module } from "@/lib/permisos";
 import { useQueryClient } from "@tanstack/react-query";
@@ -62,7 +64,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "OPERACIÓN",
     items: [
       { name: "Ventas / POS", path: "/ventas", icon: ShoppingCart, module: Modules.VENTAS_POS, isClickable: false },
-      { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: false },
+      { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: false },
       { name: "Transferencias", path: "/transferencias", icon: ArrowRightLeft, module: Modules.TRANSFERENCIAS, isClickable: false },
       { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: false },
@@ -71,7 +73,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "INVENTARIO",
     items: [
-      { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: false },
+      { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
+      { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.MOVIMIENTOS, isClickable: true },
       { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
     ]
   },
@@ -82,6 +85,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
       { name: "Ubicaciones", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
+      { name: "Conciliación", path: "/administracion/conciliacion", icon: Activity, module: Modules.INVENTARIO, isClickable: true },
       { name: "Próx. Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
     ]
   },
@@ -108,6 +112,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     query: {
       retry: false,
       queryKey: getGetCurrentUserQueryKey()
+    }
+  });
+  
+  const { data: ajustesPendientes } = useListAjustesPendientes({ page: 1, pageSize: 1 }, {
+    query: {
+      enabled: user?.rol === Role.ADMIN,
+      queryKey: getListAjustesPendientesQueryKey()
     }
   });
   
@@ -236,7 +247,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   href={item.path}
                   onClick={onItemClick}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                    "flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative",
                     isActive 
                       ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold" 
                       : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 font-medium"
@@ -244,6 +255,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
                   <span className="text-sm">{item.name}</span>
+                  {item.path === "/inventario/ajustes" && ajustesPendientes?.total && ajustesPendientes.total > 0 ? (
+                    <span className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
+                      {ajustesPendientes.total}
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}

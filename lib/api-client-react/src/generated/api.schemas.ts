@@ -346,6 +346,233 @@ export interface ProveedorUpdate {
   activo?: boolean;
 }
 
+export type EstadoRollo = typeof EstadoRollo[keyof typeof EstadoRollo];
+
+
+export const EstadoRollo = {
+  PROGRAMADO: 'PROGRAMADO',
+  DISPONIBLE: 'DISPONIBLE',
+  EN_TRANSITO: 'EN_TRANSITO',
+  ABIERTO: 'ABIERTO',
+  VENDIDO: 'VENDIDO',
+  BAJA: 'BAJA',
+} as const;
+
+export type TipoMovimiento = typeof TipoMovimiento[keyof typeof TipoMovimiento];
+
+
+export const TipoMovimiento = {
+  ALTA: 'ALTA',
+  RECEPCION: 'RECEPCION',
+  VENTA: 'VENTA',
+  DEVOLUCION: 'DEVOLUCION',
+  TRANSFERENCIA_SALIDA: 'TRANSFERENCIA_SALIDA',
+  TRANSFERENCIA_ENTRADA: 'TRANSFERENCIA_ENTRADA',
+  SALIDA_MOSTRADOR: 'SALIDA_MOSTRADOR',
+  AJUSTE_POSITIVO: 'AJUSTE_POSITIVO',
+  AJUSTE_NEGATIVO: 'AJUSTE_NEGATIVO',
+  CANCELACION: 'CANCELACION',
+} as const;
+
+export interface RolloSummary {
+  id: number;
+  serie: string;
+  productoId: number;
+  skuProducto?: string;
+  telaProducto?: string;
+  colorProducto?: string;
+  ubicacionId: number;
+  nombreUbicacion?: string;
+  /** @nullable */
+  proveedorId?: number | null;
+  estado: EstadoRollo;
+  cantidadInicial: string;
+  cantidadActual: string;
+  costoUnitario: string;
+  costoTotal: string;
+  /** @nullable */
+  notas?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MovimientoRow {
+  id: number;
+  rolloId: number;
+  serie?: string;
+  productoId: number;
+  skuProducto?: string;
+  ubicacionId: number;
+  nombreUbicacion?: string;
+  tipo: TipoMovimiento;
+  cantidad: string;
+  saldoPosterior: string;
+  /** @nullable */
+  documentoTipo?: string | null;
+  /** @nullable */
+  documentoId?: string | null;
+  /** @nullable */
+  movimientoOrigenId?: number | null;
+  usuarioId: number;
+  /** @nullable */
+  justificacion?: string | null;
+  revisado: boolean;
+  /** @nullable */
+  revisadoPor?: number | null;
+  /** @nullable */
+  revisadoAt?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+  createdAt: string;
+}
+
+export interface RolloDetail {
+  id: number;
+  serie: string;
+  productoId: number;
+  skuProducto?: string;
+  telaProducto?: string;
+  colorProducto?: string;
+  unidadProducto?: string;
+  ubicacionId: number;
+  nombreUbicacion?: string;
+  /** @nullable */
+  proveedorId?: number | null;
+  estado: EstadoRollo;
+  cantidadInicial: string;
+  cantidadActual: string;
+  costoUnitario: string;
+  costoTotal: string;
+  /** @nullable */
+  notas?: string | null;
+  historial: MovimientoRow[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RolloListResult {
+  items: RolloSummary[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ExistenciaRow {
+  productoId: number;
+  skuProducto?: string;
+  telaProducto?: string;
+  colorProducto?: string;
+  unidadProducto?: string;
+  ubicacionId: number;
+  nombreUbicacion?: string;
+  rollosCount: number;
+  cantidadTotal: string;
+}
+
+export interface KardexResult {
+  productoId: number;
+  movimientos: MovimientoRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ConciliacionRow {
+  productoId: number;
+  ubicacionId: number;
+  cantidadMovimientos: string;
+  cantidadCache: string;
+  rollosMovimientos: number;
+  rollosCache: number;
+  discrepancia: boolean;
+}
+
+export interface AltaLoteInput {
+  productoId: number;
+  ubicacionId: number;
+  /** @nullable */
+  proveedorId?: number | null;
+  costoUnitario: string;
+  /** @nullable */
+  notas?: string | null;
+  /** @minItems 1 */
+  cantidades: string[];
+}
+
+export type AltaLoteResultRollosItem = {
+  id: number;
+  serie: string;
+  cantidadInicial: string;
+};
+
+export interface AltaLoteResult {
+  rollos: AltaLoteResultRollosItem[];
+}
+
+export interface ActivarRolloInput {
+  cantidadReal: string;
+  /** @nullable */
+  notas?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface MoverRolloInput {
+  ubicacionOrigenId: number;
+  ubicacionTransitoId: number;
+  /** @nullable */
+  justificacion?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface RecibirTransferenciaInput {
+  ubicacionDestinoId: number;
+  /** @nullable */
+  justificacion?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface SalidaMostradorInput {
+  /** @nullable */
+  justificacion?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface VenderRolloInput {
+  /** @nullable */
+  justificacion?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface AjusteRolloInput {
+  /**
+     * null o omitido = BAJA
+     * @nullable
+     */
+  cantidadNueva?: string | null;
+  /** @minLength 10 */
+  justificacion: string;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface RevertirMovimientoInput {
+  movimientoOrigenId: number;
+  /** @nullable */
+  justificacion?: string | null;
+  /** @nullable */
+  uuidCliente?: string | null;
+}
+
+export interface RecalcularInput {
+  productoId: number;
+  ubicacionId: number;
+}
+
 /**
  * Sesión no válida
  */
@@ -375,6 +602,51 @@ export type GetDashboardParams = {
 /**
  * Filtro opcional disponible únicamente para ADMIN
  */
+ubicacionId?: number;
+};
+
+export type ListRollosParams = {
+ubicacionId?: number;
+productoId?: number;
+estado?: ListRollosEstado;
+serie?: string;
+soloAbiertos?: boolean;
+page?: number;
+pageSize?: number;
+};
+
+export type ListRollosEstado = typeof ListRollosEstado[keyof typeof ListRollosEstado];
+
+
+export const ListRollosEstado = {
+  PROGRAMADO: 'PROGRAMADO',
+  DISPONIBLE: 'DISPONIBLE',
+  EN_TRANSITO: 'EN_TRANSITO',
+  ABIERTO: 'ABIERTO',
+  VENDIDO: 'VENDIDO',
+  BAJA: 'BAJA',
+} as const;
+
+export type GetExistenciasParams = {
+ubicacionId?: number;
+productoId?: number;
+/**
+ * Solo ADMIN; agrega todas las ubicaciones
+ */
+consolidado?: boolean;
+};
+
+export type GetKardexParams = {
+productoId: number;
+ubicacionId?: number;
+desde?: string;
+hasta?: string;
+page?: number;
+pageSize?: number;
+};
+
+export type GetConciliacionParams = {
+productoId?: number;
 ubicacionId?: number;
 };
 

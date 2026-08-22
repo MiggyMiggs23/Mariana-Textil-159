@@ -6,6 +6,7 @@ import locationsRouter from "./locations";
 import usersRouter from "./users";
 import productosRouter from "./productos";
 import proveedoresRouter from "./proveedores";
+import { inventarioRouter } from "./inventario";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(locationsRouter);
 router.use(usersRouter);
 router.use(productosRouter);
 router.use(proveedoresRouter);
+router.use("/inventario", inventarioRouter);
 
 export default router;

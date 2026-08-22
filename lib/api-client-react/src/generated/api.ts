@@ -20,18 +20,31 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ActivarRolloInput,
+  AjusteRolloInput,
+  AltaLoteInput,
+  AltaLoteResult,
+  ConciliacionRow,
   CurrentUser,
   Dashboard,
+  ExistenciaRow,
   ForbiddenResponse,
+  GetConciliacionParams,
   GetDashboardParams,
+  GetExistenciasParams,
+  GetKardexParams,
   HealthStatus,
   ImportConfirmInput,
   ImportFileInput,
   ImportPreviewRow,
   ImportResult,
+  KardexResult,
+  ListRollosParams,
   Location,
   LocationUpdate,
   LoginInput,
+  MoverRolloInput,
+  MovimientoRow,
   NotFoundResponse,
   Producto,
   ProductoDetail,
@@ -41,11 +54,18 @@ import type {
   ProveedorInput,
   ProveedorUpdate,
   RateLimitedResponse,
+  RecalcularInput,
+  RecibirTransferenciaInput,
+  RevertirMovimientoInput,
+  RolloDetail,
+  RolloListResult,
+  SalidaMostradorInput,
   UnauthorizedResponse,
   User,
   UserInput,
   UserUpdate,
-  ValidationErrorResponse
+  ValidationErrorResponse,
+  VenderRolloInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -1558,5 +1578,1212 @@ export const useUpdateProveedor = <TError = ErrorType<ValidationErrorResponse | 
         TContext
       > => {
       return useMutation(getUpdateProveedorMutationOptions(options));
+    }
+
+export const getAltaLoteUrl = () => {
+
+
+
+
+  return `/api/inventario/entradas`
+}
+
+/**
+ * @summary Alta manual de lote de rollos DISPONIBLES en una sola transacción
+ */
+export const altaLote = async (altaLoteInput: AltaLoteInput, options?: Parameters<typeof customFetch>[1]): Promise<AltaLoteResult> => {
+
+  return customFetch<AltaLoteResult>(getAltaLoteUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(altaLoteInput)
+  }
+);}
+
+
+
+
+
+export const getAltaLoteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof altaLote>>, TError,{data: BodyType<AltaLoteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof altaLote>>, TError,{data: BodyType<AltaLoteInput>}, TContext> => {
+
+const mutationKey = ['altaLote'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof altaLote>>, {data: BodyType<AltaLoteInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  altaLote(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AltaLoteMutationResult = NonNullable<Awaited<ReturnType<typeof altaLote>>>
+    export type AltaLoteMutationBody = BodyType<AltaLoteInput>
+    export type AltaLoteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Alta manual de lote de rollos DISPONIBLES en una sola transacción
+ */
+export const useAltaLote = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof altaLote>>, TError,{data: BodyType<AltaLoteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof altaLote>>,
+        TError,
+        {data: BodyType<AltaLoteInput>},
+        TContext
+      > => {
+      return useMutation(getAltaLoteMutationOptions(options));
+    }
+
+export const getActivarRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/activar`
+}
+
+/**
+ * @summary Activa un rollo PROGRAMADO (PROGRAMADO → DISPONIBLE), registra RECEPCION
+ */
+export const activarRollo = async (id: number,
+    activarRolloInput: ActivarRolloInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getActivarRolloUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(activarRolloInput)
+  }
+);}
+
+
+
+
+
+export const getActivarRolloMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activarRollo>>, TError,{id: number;data: BodyType<ActivarRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof activarRollo>>, TError,{id: number;data: BodyType<ActivarRolloInput>}, TContext> => {
+
+const mutationKey = ['activarRollo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof activarRollo>>, {id: number;data: BodyType<ActivarRolloInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  activarRollo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ActivarRolloMutationResult = NonNullable<Awaited<ReturnType<typeof activarRollo>>>
+    export type ActivarRolloMutationBody = BodyType<ActivarRolloInput>
+    export type ActivarRolloMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Activa un rollo PROGRAMADO (PROGRAMADO → DISPONIBLE), registra RECEPCION
+ */
+export const useActivarRollo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activarRollo>>, TError,{id: number;data: BodyType<ActivarRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof activarRollo>>,
+        TError,
+        {id: number;data: BodyType<ActivarRolloInput>},
+        TContext
+      > => {
+      return useMutation(getActivarRolloMutationOptions(options));
+    }
+
+export const getMoverRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/mover`
+}
+
+/**
+ * @summary Inicia traslado DISPONIBLE → EN_TRANSITO (fase 1)
+ */
+export const moverRollo = async (id: number,
+    moverRolloInput: MoverRolloInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getMoverRolloUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(moverRolloInput)
+  }
+);}
+
+
+
+
+
+export const getMoverRolloMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moverRollo>>, TError,{id: number;data: BodyType<MoverRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof moverRollo>>, TError,{id: number;data: BodyType<MoverRolloInput>}, TContext> => {
+
+const mutationKey = ['moverRollo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moverRollo>>, {id: number;data: BodyType<MoverRolloInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  moverRollo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoverRolloMutationResult = NonNullable<Awaited<ReturnType<typeof moverRollo>>>
+    export type MoverRolloMutationBody = BodyType<MoverRolloInput>
+    export type MoverRolloMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Inicia traslado DISPONIBLE → EN_TRANSITO (fase 1)
+ */
+export const useMoverRollo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moverRollo>>, TError,{id: number;data: BodyType<MoverRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof moverRollo>>,
+        TError,
+        {id: number;data: BodyType<MoverRolloInput>},
+        TContext
+      > => {
+      return useMutation(getMoverRolloMutationOptions(options));
+    }
+
+export const getRecibirTransferenciaUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/recibir`
+}
+
+/**
+ * @summary Recibe rollo en destino EN_TRANSITO → DISPONIBLE (fase 2)
+ */
+export const recibirTransferencia = async (id: number,
+    recibirTransferenciaInput: RecibirTransferenciaInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getRecibirTransferenciaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(recibirTransferenciaInput)
+  }
+);}
+
+
+
+
+
+export const getRecibirTransferenciaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirTransferencia>>, TError,{id: number;data: BodyType<RecibirTransferenciaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recibirTransferencia>>, TError,{id: number;data: BodyType<RecibirTransferenciaInput>}, TContext> => {
+
+const mutationKey = ['recibirTransferencia'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recibirTransferencia>>, {id: number;data: BodyType<RecibirTransferenciaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  recibirTransferencia(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecibirTransferenciaMutationResult = NonNullable<Awaited<ReturnType<typeof recibirTransferencia>>>
+    export type RecibirTransferenciaMutationBody = BodyType<RecibirTransferenciaInput>
+    export type RecibirTransferenciaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Recibe rollo en destino EN_TRANSITO → DISPONIBLE (fase 2)
+ */
+export const useRecibirTransferencia = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirTransferencia>>, TError,{id: number;data: BodyType<RecibirTransferenciaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recibirTransferencia>>,
+        TError,
+        {id: number;data: BodyType<RecibirTransferenciaInput>},
+        TContext
+      > => {
+      return useMutation(getRecibirTransferenciaMutationOptions(options));
+    }
+
+export const getSalidaMostradorUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/salida-mostrador`
+}
+
+/**
+ * @summary Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+ */
+export const salidaMostrador = async (id: number,
+    salidaMostradorInput: SalidaMostradorInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getSalidaMostradorUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(salidaMostradorInput)
+  }
+);}
+
+
+
+
+
+export const getSalidaMostradorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext> => {
+
+const mutationKey = ['salidaMostrador'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salidaMostrador>>, {id: number;data: BodyType<SalidaMostradorInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  salidaMostrador(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalidaMostradorMutationResult = NonNullable<Awaited<ReturnType<typeof salidaMostrador>>>
+    export type SalidaMostradorMutationBody = BodyType<SalidaMostradorInput>
+    export type SalidaMostradorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+ */
+export const useSalidaMostrador = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof salidaMostrador>>,
+        TError,
+        {id: number;data: BodyType<SalidaMostradorInput>},
+        TContext
+      > => {
+      return useMutation(getSalidaMostradorMutationOptions(options));
+    }
+
+export const getVenderRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/vender`
+}
+
+/**
+ * @summary Venta directa DISPONIBLE → VENDIDO (VENTA negativo)
+ */
+export const venderRollo = async (id: number,
+    venderRolloInput: VenderRolloInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getVenderRolloUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(venderRolloInput)
+  }
+);}
+
+
+
+
+
+export const getVenderRolloMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venderRollo>>, TError,{id: number;data: BodyType<VenderRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof venderRollo>>, TError,{id: number;data: BodyType<VenderRolloInput>}, TContext> => {
+
+const mutationKey = ['venderRollo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof venderRollo>>, {id: number;data: BodyType<VenderRolloInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  venderRollo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VenderRolloMutationResult = NonNullable<Awaited<ReturnType<typeof venderRollo>>>
+    export type VenderRolloMutationBody = BodyType<VenderRolloInput>
+    export type VenderRolloMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Venta directa DISPONIBLE → VENDIDO (VENTA negativo)
+ */
+export const useVenderRollo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof venderRollo>>, TError,{id: number;data: BodyType<VenderRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof venderRollo>>,
+        TError,
+        {id: number;data: BodyType<VenderRolloInput>},
+        TContext
+      > => {
+      return useMutation(getVenderRolloMutationOptions(options));
+    }
+
+export const getAjustarRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/ajustar`
+}
+
+/**
+ * @summary Ajuste de cantidad o BAJA, justificación ≥10 caracteres, revisado=false
+ */
+export const ajustarRollo = async (id: number,
+    ajusteRolloInput: AjusteRolloInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getAjustarRolloUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(ajusteRolloInput)
+  }
+);}
+
+
+
+
+
+export const getAjustarRolloMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ajustarRollo>>, TError,{id: number;data: BodyType<AjusteRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof ajustarRollo>>, TError,{id: number;data: BodyType<AjusteRolloInput>}, TContext> => {
+
+const mutationKey = ['ajustarRollo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ajustarRollo>>, {id: number;data: BodyType<AjusteRolloInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  ajustarRollo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AjustarRolloMutationResult = NonNullable<Awaited<ReturnType<typeof ajustarRollo>>>
+    export type AjustarRolloMutationBody = BodyType<AjusteRolloInput>
+    export type AjustarRolloMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Ajuste de cantidad o BAJA, justificación ≥10 caracteres, revisado=false
+ */
+export const useAjustarRollo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ajustarRollo>>, TError,{id: number;data: BodyType<AjusteRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof ajustarRollo>>,
+        TError,
+        {id: number;data: BodyType<AjusteRolloInput>},
+        TContext
+      > => {
+      return useMutation(getAjustarRolloMutationOptions(options));
+    }
+
+export const getRevertirMovimientoUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/revertir`
+}
+
+/**
+ * @summary Revierte un movimiento del rollo (crea CANCELACION, nada se borra)
+ */
+export const revertirMovimiento = async (id: number,
+    revertirMovimientoInput: RevertirMovimientoInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getRevertirMovimientoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(revertirMovimientoInput)
+  }
+);}
+
+
+
+
+
+export const getRevertirMovimientoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revertirMovimiento>>, TError,{id: number;data: BodyType<RevertirMovimientoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof revertirMovimiento>>, TError,{id: number;data: BodyType<RevertirMovimientoInput>}, TContext> => {
+
+const mutationKey = ['revertirMovimiento'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof revertirMovimiento>>, {id: number;data: BodyType<RevertirMovimientoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  revertirMovimiento(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RevertirMovimientoMutationResult = NonNullable<Awaited<ReturnType<typeof revertirMovimiento>>>
+    export type RevertirMovimientoMutationBody = BodyType<RevertirMovimientoInput>
+    export type RevertirMovimientoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Revierte un movimiento del rollo (crea CANCELACION, nada se borra)
+ */
+export const useRevertirMovimiento = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revertirMovimiento>>, TError,{id: number;data: BodyType<RevertirMovimientoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof revertirMovimiento>>,
+        TError,
+        {id: number;data: BodyType<RevertirMovimientoInput>},
+        TContext
+      > => {
+      return useMutation(getRevertirMovimientoMutationOptions(options));
+    }
+
+export const getGetRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}`
+}
+
+/**
+ * @summary Obtiene el detalle de un rollo con su historial completo
+ */
+export const getRollo = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getGetRolloUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetRolloQueryKey = (id: number,) => {
+    return [
+    `/api/inventario/rollos/${id}`
+    ] as const;
+    }
+
+
+export const getGetRolloQueryOptions = <TData = Awaited<ReturnType<typeof getRollo>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRollo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetRolloQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRollo>>> = ({ signal }) => getRollo(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRollo>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetRolloQueryResult = NonNullable<Awaited<ReturnType<typeof getRollo>>>
+export type GetRolloQueryError = ErrorType<UnauthorizedResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el detalle de un rollo con su historial completo
+ */
+
+export function useGetRollo<TData = Awaited<ReturnType<typeof getRollo>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRollo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetRolloQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListRollosUrl = (params?: ListRollosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/rollos?${stringifiedParams}` : `/api/inventario/rollos`
+}
+
+/**
+ * @summary Lista rollos con filtros opcionales
+ */
+export const listRollos = async (params?: ListRollosParams, options?: Parameters<typeof customFetch>[1]): Promise<RolloListResult> => {
+
+  return customFetch<RolloListResult>(getListRollosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListRollosQueryKey = (params?: ListRollosParams,) => {
+    return [
+    `/api/inventario/rollos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListRollosQueryOptions = <TData = Awaited<ReturnType<typeof listRollos>>, TError = ErrorType<UnauthorizedResponse>>(params?: ListRollosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listRollos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListRollosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listRollos>>> = ({ signal }) => listRollos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listRollos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListRollosQueryResult = NonNullable<Awaited<ReturnType<typeof listRollos>>>
+export type ListRollosQueryError = ErrorType<UnauthorizedResponse>
+
+
+/**
+ * @summary Lista rollos con filtros opcionales
+ */
+
+export function useListRollos<TData = Awaited<ReturnType<typeof listRollos>>, TError = ErrorType<UnauthorizedResponse>>(
+ params?: ListRollosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listRollos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListRollosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetExistenciasUrl = (params?: GetExistenciasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/existencias?${stringifiedParams}` : `/api/inventario/existencias`
+}
+
+/**
+ * @summary Existencias por ubicación (con scope de rol)
+ */
+export const getExistencias = async (params?: GetExistenciasParams, options?: Parameters<typeof customFetch>[1]): Promise<ExistenciaRow[]> => {
+
+  return customFetch<ExistenciaRow[]>(getGetExistenciasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetExistenciasQueryKey = (params?: GetExistenciasParams,) => {
+    return [
+    `/api/inventario/existencias`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetExistenciasQueryOptions = <TData = Awaited<ReturnType<typeof getExistencias>>, TError = ErrorType<UnauthorizedResponse>>(params?: GetExistenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetExistenciasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getExistencias>>> = ({ signal }) => getExistencias(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getExistencias>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetExistenciasQueryResult = NonNullable<Awaited<ReturnType<typeof getExistencias>>>
+export type GetExistenciasQueryError = ErrorType<UnauthorizedResponse>
+
+
+/**
+ * @summary Existencias por ubicación (con scope de rol)
+ */
+
+export function useGetExistencias<TData = Awaited<ReturnType<typeof getExistencias>>, TError = ErrorType<UnauthorizedResponse>>(
+ params?: GetExistenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetExistenciasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetKardexUrl = (params: GetKardexParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/kardex?${stringifiedParams}` : `/api/inventario/kardex`
+}
+
+/**
+ * @summary Kardex de un producto, filtrable y paginado (100 filas default)
+ */
+export const getKardex = async (params: GetKardexParams, options?: Parameters<typeof customFetch>[1]): Promise<KardexResult> => {
+
+  return customFetch<KardexResult>(getGetKardexUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetKardexQueryKey = (params?: GetKardexParams,) => {
+    return [
+    `/api/inventario/kardex`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetKardexQueryOptions = <TData = Awaited<ReturnType<typeof getKardex>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(params: GetKardexParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetKardexQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getKardex>>> = ({ signal }) => getKardex(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetKardexQueryResult = NonNullable<Awaited<ReturnType<typeof getKardex>>>
+export type GetKardexQueryError = ErrorType<UnauthorizedResponse | NotFoundResponse>
+
+
+/**
+ * @summary Kardex de un producto, filtrable y paginado (100 filas default)
+ */
+
+export function useGetKardex<TData = Awaited<ReturnType<typeof getKardex>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(
+ params: GetKardexParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetKardexQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListAjustesPendientesUrl = () => {
+
+
+
+
+  return `/api/inventario/ajustes/pendientes`
+}
+
+/**
+ * @summary Lista de ajustes pendientes de revisión (revisado=false, ADMIN)
+ */
+export const listAjustesPendientes = async ( options?: Parameters<typeof customFetch>[1]): Promise<MovimientoRow[]> => {
+
+  return customFetch<MovimientoRow[]>(getListAjustesPendientesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAjustesPendientesQueryKey = () => {
+    return [
+    `/api/inventario/ajustes/pendientes`
+    ] as const;
+    }
+
+
+export const getListAjustesPendientesQueryOptions = <TData = Awaited<ReturnType<typeof listAjustesPendientes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAjustesPendientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAjustesPendientesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAjustesPendientes>>> = ({ signal }) => listAjustesPendientes({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAjustesPendientes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAjustesPendientesQueryResult = NonNullable<Awaited<ReturnType<typeof listAjustesPendientes>>>
+export type ListAjustesPendientesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista de ajustes pendientes de revisión (revisado=false, ADMIN)
+ */
+
+export function useListAjustesPendientes<TData = Awaited<ReturnType<typeof listAjustesPendientes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAjustesPendientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAjustesPendientesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRevisarAjusteUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/ajustes/${id}/revisar`
+}
+
+/**
+ * @summary Marca un ajuste como revisado (ADMIN)
+ */
+export const revisarAjuste = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<MovimientoRow> => {
+
+  return customFetch<MovimientoRow>(getRevisarAjusteUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getRevisarAjusteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revisarAjuste>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof revisarAjuste>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['revisarAjuste'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof revisarAjuste>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  revisarAjuste(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RevisarAjusteMutationResult = NonNullable<Awaited<ReturnType<typeof revisarAjuste>>>
+
+    export type RevisarAjusteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Marca un ajuste como revisado (ADMIN)
+ */
+export const useRevisarAjuste = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revisarAjuste>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof revisarAjuste>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getRevisarAjusteMutationOptions(options));
+    }
+
+export const getGetConciliacionUrl = (params?: GetConciliacionParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/conciliacion?${stringifiedParams}` : `/api/inventario/conciliacion`
+}
+
+/**
+ * @summary Conciliación movimientos vs cache (incluye pares con cache faltante, ADMIN)
+ */
+export const getConciliacion = async (params?: GetConciliacionParams, options?: Parameters<typeof customFetch>[1]): Promise<ConciliacionRow[]> => {
+
+  return customFetch<ConciliacionRow[]>(getGetConciliacionUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetConciliacionQueryKey = (params?: GetConciliacionParams,) => {
+    return [
+    `/api/inventario/conciliacion`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetConciliacionQueryOptions = <TData = Awaited<ReturnType<typeof getConciliacion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetConciliacionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getConciliacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetConciliacionQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getConciliacion>>> = ({ signal }) => getConciliacion(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getConciliacion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetConciliacionQueryResult = NonNullable<Awaited<ReturnType<typeof getConciliacion>>>
+export type GetConciliacionQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Conciliación movimientos vs cache (incluye pares con cache faltante, ADMIN)
+ */
+
+export function useGetConciliacion<TData = Awaited<ReturnType<typeof getConciliacion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetConciliacionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getConciliacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetConciliacionQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRecalcularExistenciasUrl = () => {
+
+
+
+
+  return `/api/inventario/conciliacion/recalcular`
+}
+
+/**
+ * @summary Recalcula cache de existencias para un par (producto, ubicacion) (ADMIN)
+ */
+export const recalcularExistencias = async (recalcularInput: RecalcularInput, options?: Parameters<typeof customFetch>[1]): Promise<ConciliacionRow> => {
+
+  return customFetch<ConciliacionRow>(getRecalcularExistenciasUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(recalcularInput)
+  }
+);}
+
+
+
+
+
+export const getRecalcularExistenciasMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recalcularExistencias>>, TError,{data: BodyType<RecalcularInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recalcularExistencias>>, TError,{data: BodyType<RecalcularInput>}, TContext> => {
+
+const mutationKey = ['recalcularExistencias'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recalcularExistencias>>, {data: BodyType<RecalcularInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recalcularExistencias(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecalcularExistenciasMutationResult = NonNullable<Awaited<ReturnType<typeof recalcularExistencias>>>
+    export type RecalcularExistenciasMutationBody = BodyType<RecalcularInput>
+    export type RecalcularExistenciasMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Recalcula cache de existencias para un par (producto, ubicacion) (ADMIN)
+ */
+export const useRecalcularExistencias = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recalcularExistencias>>, TError,{data: BodyType<RecalcularInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recalcularExistencias>>,
+        TError,
+        {data: BodyType<RecalcularInput>},
+        TContext
+      > => {
+      return useMutation(getRecalcularExistenciasMutationOptions(options));
     }
 

@@ -3,6 +3,7 @@ import { and, count, eq, inArray } from "drizzle-orm";
 import { GetDashboardResponse } from "@workspace/api-zod";
 import { db, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
+import { getInventarioPorUbicacion } from "../lib/inventario";
 
 const router: IRouter = Router();
 
@@ -84,18 +85,28 @@ router.get("/dashboard", requireSession, async (req, res): Promise<void> => {
         : eq(usuariosTable.activo, true),
     );
 
+  const inventarioData = await getInventarioPorUbicacion(
+    visibleLocationIds ?? undefined,
+  );
+  const inventarioMap = new Map(
+    inventarioData.map((d) => [d.ubicacionId, d]),
+  );
+
   res.json(
     GetDashboardResponse.parse({
       tiendasActivas: Number(stores?.value ?? 0),
       bodegasActivas: Number(warehouses?.value ?? 0),
       usuariosActivos: Number(activeUsers?.value ?? 0),
-      inventarioPorUbicacion: realLocations.map((location) => ({
-        ubicacionId: location.id,
-        nombre: location.nombre,
-        metros: "0.000",
-        kilos: "0.000",
-        rollos: "0.000",
-      })),
+      inventarioPorUbicacion: realLocations.map((location) => {
+        const inv = inventarioMap.get(location.id);
+        return {
+          ubicacionId: location.id,
+          nombre: location.nombre,
+          metros: inv?.metros ?? "0.000",
+          kilos: inv?.kilos ?? "0.000",
+          rollos: String(inv?.rollos ?? 0),
+        };
+      }),
     }),
   );
 });

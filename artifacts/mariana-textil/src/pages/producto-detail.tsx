@@ -1,27 +1,32 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { 
   useGetProducto, 
   useUpdateProducto,
+  useGetKardex,
   getGetProductoQueryKey,
   getListProductosQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
+  useListLocations,
   Role,
   UnidadProducto
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock } from "lucide-react";
+import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock, Download, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { generateSKU } from "./productos";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -52,6 +57,44 @@ export default function ProductoDetail() {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [kardexUbicacionId, setKardexUbicacionId] = useState<string>("all");
+  const [kardexDesde, setKardexDesde] = useState<string>("");
+  const [kardexHasta, setKardexHasta] = useState<string>("");
+  const [kardexPage, setKardexPage] = useState(1);
+
+  const { data: ubicaciones } = useListLocations();
+  const { data: kardexRes, isLoading: loadingKardex } = useGetKardex({
+    productoId: Number(id),
+    ubicacionId: kardexUbicacionId !== "all" ? Number(kardexUbicacionId) : undefined,
+    desde: kardexDesde || undefined,
+    hasta: kardexHasta || undefined,
+    page: kardexPage,
+    pageSize: 100
+  }, { query: { enabled: !!id } });
+
+  const handleExportCsv = () => {
+    if (!kardexRes || kardexRes.movimientos.length === 0) return;
+    const header = ["Fecha", "Rollo", "Tipo", "Ubicacion", "Cantidad", "Saldo Posterior", "Referencia"];
+    const rows = kardexRes.movimientos.map(m => [
+      format(new Date(m.createdAt), "dd/MM/yyyy HH:mm"),
+      m.serie || "",
+      m.tipo,
+      m.nombreUbicacion || "",
+      m.cantidad,
+      m.saldoPosterior,
+      (m.justificacion || m.documentoId || "").replace(/,/g, " ")
+    ]);
+    const csvContent = [header.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `kardex_${product?.sku || id}_${format(new Date(), "yyyyMMdd")}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const [formData, setFormData] = useState<{
     tela: string;
     color: string;
@@ -324,20 +367,126 @@ export default function ProductoDetail() {
           </div>
         </div>
 
-        {/* Kardex Placeholder */}
-        <Card className="mt-8 border-dashed border-2">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2 text-muted-foreground">
-              <CheckCircle2 className="w-5 h-5" />
-              Kardex de Movimientos
-            </CardTitle>
+        {/* Kardex Section */}
+        <Card className="mt-8 border-t-4 border-t-secondary">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 space-y-4 sm:space-y-0 border-b">
+            <div>
+              <CardTitle className="text-xl flex items-center gap-2 text-sidebar">
+                <CheckCircle2 className="w-5 h-5 text-primary" />
+                Kardex de Movimientos
+              </CardTitle>
+              <CardDescription>
+                Historial detallado de todas las operaciones de este producto.
+              </CardDescription>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleExportCsv} disabled={!kardexRes || kardexRes.movimientos.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Exportar a Excel
+              </Button>
+            </div>
           </CardHeader>
-          <CardContent className="py-12 flex flex-col items-center justify-center text-center text-muted-foreground">
-            <Package className="w-12 h-12 opacity-20 mb-4" />
-            <p className="font-medium">El historial de movimientos estará disponible próximamente.</p>
-            <p className="text-sm max-w-sm mt-2 opacity-70">
-              Aquí se registrarán todas las entradas, salidas y transferencias de este producto, incluyendo el detalle rollo por rollo.
-            </p>
+          <CardContent className="p-0">
+            <div className="bg-muted/10 p-4 border-b flex flex-wrap gap-4 items-end">
+              <div className="space-y-1.5 flex-1 min-w-[200px]">
+                <Label className="text-xs flex items-center gap-1"><MapPin className="w-3 h-3"/> Ubicación</Label>
+                <Select value={kardexUbicacionId} onValueChange={(v) => { setKardexUbicacionId(v); setKardexPage(1); }}>
+                  <SelectTrigger className="h-8 bg-background">
+                    <SelectValue placeholder="Todas las ubicaciones" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas las ubicaciones</SelectItem>
+                    {ubicaciones?.filter(u => u.activa).map(u => (
+                      <SelectItem key={u.id} value={u.id.toString()}>{u.nombre}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5 w-32">
+                <Label className="text-xs">Desde</Label>
+                <Input type="date" className="h-8 bg-background" value={kardexDesde} onChange={e => { setKardexDesde(e.target.value); setKardexPage(1); }} />
+              </div>
+              <div className="space-y-1.5 w-32">
+                <Label className="text-xs">Hasta</Label>
+                <Input type="date" className="h-8 bg-background" value={kardexHasta} onChange={e => { setKardexHasta(e.target.value); setKardexPage(1); }} />
+              </div>
+            </div>
+
+            {loadingKardex ? (
+              <div className="p-12 text-center text-muted-foreground animate-pulse">Cargando kardex...</div>
+            ) : !kardexRes || kardexRes.movimientos.length === 0 ? (
+              <div className="p-12 text-center text-muted-foreground flex flex-col items-center">
+                <Package className="w-12 h-12 opacity-20 mb-4" />
+                <p className="font-medium">No se encontraron movimientos.</p>
+                <p className="text-sm mt-2 opacity-70">Ajusta los filtros para ver más resultados.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="whitespace-nowrap">Fecha</TableHead>
+                      <TableHead>Rollo</TableHead>
+                      <TableHead>Tipo</TableHead>
+                      <TableHead>Ubicación</TableHead>
+                      <TableHead className="text-right">Cantidad</TableHead>
+                      <TableHead className="text-right">Saldo</TableHead>
+                      <TableHead>Referencia</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {kardexRes.movimientos.map((mov) => {
+                      const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO'].includes(mov.tipo);
+                      const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'BAJA'].includes(mov.tipo);
+                      return (
+                        <TableRow key={mov.id}>
+                          <TableCell className="whitespace-nowrap text-xs text-muted-foreground">
+                            {format(new Date(mov.createdAt), "dd/MM/yy HH:mm")}
+                          </TableCell>
+                          <TableCell>
+                            <Link href={`/inventario/rollos/${mov.rolloId}`} className="font-mono font-medium hover:underline text-primary">
+                              {mov.serie}
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={isPositive ? "default" : isNegative ? "destructive" : "secondary"} className="text-[10px]">
+                              {mov.tipo.replace('_', ' ')}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm">{mov.nombreUbicacion}</TableCell>
+                          <TableCell className={`text-right font-medium tabular-nums ${isPositive ? 'text-emerald-600 dark:text-emerald-400' : isNegative ? 'text-red-600 dark:text-red-400' : ''}`}>
+                            {isPositive ? '+' : isNegative ? '-' : ''}{parseFloat(mov.cantidad).toFixed(2)}
+                          </TableCell>
+                          <TableCell className="text-right font-bold tabular-nums">
+                            {parseFloat(mov.saldoPosterior).toFixed(2)}
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate" title={mov.justificacion || mov.documentoId || ''}>
+                            {mov.documentoTipo && `${mov.documentoTipo} ${mov.documentoId || ''} `}
+                            {mov.justificacion}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+                
+                {kardexRes.total > kardexRes.pageSize && (
+                  <div className="p-4 border-t flex items-center justify-between bg-muted/10">
+                    <div className="text-sm text-muted-foreground">
+                      Mostrando {((kardexPage - 1) * kardexRes.pageSize) + 1} a {Math.min(kardexPage * kardexRes.pageSize, kardexRes.total)} de {kardexRes.total}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setKardexPage(p => Math.max(1, p - 1))} disabled={kardexPage === 1}>
+                        <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setKardexPage(p => p + 1)} disabled={kardexPage * kardexRes.pageSize >= kardexRes.total}>
+                        Siguiente <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

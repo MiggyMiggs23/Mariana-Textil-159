@@ -505,3 +505,682 @@ export const UpdateProveedorResponse = zod.object({
 })
 
 
+/**
+ * @summary Alta manual de lote de rollos DISPONIBLES en una sola transacción
+ */
+
+
+
+export const AltaLoteBody = zod.object({
+  "productoId": zod.number(),
+  "ubicacionId": zod.number(),
+  "proveedorId": zod.number().nullish(),
+  "costoUnitario": zod.string(),
+  "notas": zod.string().nullish(),
+  "cantidades": zod.array(zod.string()).min(1)
+})
+
+export const AltaLoteResponse = zod.object({
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "cantidadInicial": zod.string()
+}))
+})
+
+
+/**
+ * @summary Activa un rollo PROGRAMADO (PROGRAMADO → DISPONIBLE), registra RECEPCION
+ */
+export const ActivarRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ActivarRolloBody = zod.object({
+  "cantidadReal": zod.string(),
+  "notas": zod.string().nullish(),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const ActivarRolloResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Inicia traslado DISPONIBLE → EN_TRANSITO (fase 1)
+ */
+export const MoverRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const MoverRolloBody = zod.object({
+  "ubicacionOrigenId": zod.number(),
+  "ubicacionTransitoId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const MoverRolloResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Recibe rollo en destino EN_TRANSITO → DISPONIBLE (fase 2)
+ */
+export const RecibirTransferenciaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const RecibirTransferenciaBody = zod.object({
+  "ubicacionDestinoId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const RecibirTransferenciaResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+ */
+export const SalidaMostradorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const SalidaMostradorBody = zod.object({
+  "justificacion": zod.string().nullish(),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const SalidaMostradorResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Venta directa DISPONIBLE → VENDIDO (VENTA negativo)
+ */
+export const VenderRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const VenderRolloBody = zod.object({
+  "justificacion": zod.string().nullish(),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const VenderRolloResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Ajuste de cantidad o BAJA, justificación ≥10 caracteres, revisado=false
+ */
+export const AjustarRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ajustarRolloBodyJustificacionMin = 10;
+
+
+
+export const AjustarRolloBody = zod.object({
+  "cantidadNueva": zod.string().nullish().describe('null o omitido = BAJA'),
+  "justificacion": zod.string().min(ajustarRolloBodyJustificacionMin),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const AjustarRolloResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Revierte un movimiento del rollo (crea CANCELACION, nada se borra)
+ */
+export const RevertirMovimientoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const RevertirMovimientoBody = zod.object({
+  "movimientoOrigenId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "uuidCliente": zod.string().nullish()
+})
+
+export const RevertirMovimientoResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Obtiene el detalle de un rollo con su historial completo
+ */
+export const GetRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetRolloResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Lista rollos con filtros opcionales
+ */
+export const ListRollosQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']).optional(),
+  "serie": zod.coerce.string().optional(),
+  "soloAbiertos": zod.coerce.boolean().optional(),
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional()
+})
+
+export const ListRollosResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string(),
+  "costoTotal": zod.string(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Existencias por ubicación (con scope de rol)
+ */
+export const GetExistenciasQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional(),
+  "consolidado": zod.coerce.boolean().optional().describe('Solo ADMIN; agrega todas las ubicaciones')
+})
+
+export const GetExistenciasResponseItem = zod.object({
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "rollosCount": zod.number(),
+  "cantidadTotal": zod.string()
+})
+export const GetExistenciasResponse = zod.array(GetExistenciasResponseItem)
+
+
+/**
+ * @summary Kardex de un producto, filtrable y paginado (100 filas default)
+ */
+export const GetKardexQueryParams = zod.object({
+  "productoId": zod.coerce.number(),
+  "ubicacionId": zod.coerce.number().optional(),
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional(),
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional()
+})
+
+export const GetKardexResponse = zod.object({
+  "productoId": zod.number(),
+  "movimientos": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Lista de ajustes pendientes de revisión (revisado=false, ADMIN)
+ */
+export const ListAjustesPendientesResponseItem = zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAjustesPendientesResponse = zod.array(ListAjustesPendientesResponseItem)
+
+
+/**
+ * @summary Marca un ajuste como revisado (ADMIN)
+ */
+export const RevisarAjusteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const RevisarAjusteResponse = zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Conciliación movimientos vs cache (incluye pares con cache faltante, ADMIN)
+ */
+export const GetConciliacionQueryParams = zod.object({
+  "productoId": zod.coerce.number().optional(),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const GetConciliacionResponseItem = zod.object({
+  "productoId": zod.number(),
+  "ubicacionId": zod.number(),
+  "cantidadMovimientos": zod.string(),
+  "cantidadCache": zod.string(),
+  "rollosMovimientos": zod.number(),
+  "rollosCache": zod.number(),
+  "discrepancia": zod.boolean()
+})
+export const GetConciliacionResponse = zod.array(GetConciliacionResponseItem)
+
+
+/**
+ * @summary Recalcula cache de existencias para un par (producto, ubicacion) (ADMIN)
+ */
+export const RecalcularExistenciasBody = zod.object({
+  "productoId": zod.number(),
+  "ubicacionId": zod.number()
+})
+
+export const RecalcularExistenciasResponse = zod.object({
+  "productoId": zod.number(),
+  "ubicacionId": zod.number(),
+  "cantidadMovimientos": zod.string(),
+  "cantidadCache": zod.string(),
+  "rollosMovimientos": zod.number(),
+  "rollosCache": zod.number(),
+  "discrepancia": zod.boolean()
+})
+
+
