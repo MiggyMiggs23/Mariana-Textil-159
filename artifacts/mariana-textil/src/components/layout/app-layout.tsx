@@ -115,7 +115,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }
   });
   
-  const { data: ajustesPendientes } = useListAjustesPendientes({ page: 1, pageSize: 1 }, {
+  const { data: ajustesPendientes } = useListAjustesPendientes({
     query: {
       enabled: user?.rol === Role.ADMIN,
       queryKey: getListAjustesPendientesQueryKey()
@@ -255,9 +255,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
                   <span className="text-sm">{item.name}</span>
-                  {item.path === "/inventario/ajustes" && ajustesPendientes?.total && ajustesPendientes.total > 0 ? (
+                  {item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
                     <span className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
-                      {ajustesPendientes.total}
+                      {ajustesPendientes.length}
                     </span>
                   ) : null}
                 </Link>

@@ -5,11 +5,13 @@ import {
   useAjustarRollo, 
   useListAjustesPendientes, 
   useRevisarAjuste, 
+  useRevertirMovimiento,
   useListRollos,
   useGetCurrentUser,
   Role,
   getListAjustesPendientesQueryKey,
-  getListRollosQueryKey
+  getListRollosQueryKey,
+  MovimientoRow
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -42,7 +44,10 @@ export default function Ajustes() {
     page: 1,
     pageSize: 5
   }, {
-    query: { enabled: debouncedSearch.length >= 3 }
+    query: { 
+      enabled: debouncedSearch.length >= 3,
+      queryKey: getListRollosQueryKey({ serie: debouncedSearch, page: 1, pageSize: 5 })
+    }
   });
 
   const [selectedRollo, setSelectedRollo] = useState<any | null>(null);
@@ -54,12 +59,13 @@ export default function Ajustes() {
 
   const ajustarRollo = useAjustarRollo();
   const revisarAjuste = useRevisarAjuste();
+  const revertirMovimiento = useRevertirMovimiento();
   
   const { data: pendientesRes, isLoading: loadingPendientes } = useListAjustesPendientes({
-    page: 1,
-    pageSize: 100
-  }, {
-    query: { enabled: isAdmin }
+    query: { 
+      enabled: isAdmin,
+      queryKey: getListAjustesPendientesQueryKey()
+    }
   });
 
   const handleSelectRollo = (rollo: any) => {
@@ -97,21 +103,37 @@ export default function Ajustes() {
     });
   };
 
-  const handleRevisar = (movimientoId: number, aprobado: boolean) => {
-    revisarAjuste.mutate({
-      id: movimientoId,
-      data: { aprobado }
-    }, {
-      onSuccess: () => {
-        toast.success(aprobado ? "Ajuste aprobado" : "Ajuste rechazado y revertido");
-        queryClient.invalidateQueries({ queryKey: getListAjustesPendientesQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
-      },
-      onError: (err: any) => {
-        const msg = err?.data?.error || err?.message || "Error al procesar la revisión";
-        toast.error("Error", { description: msg });
-      }
-    });
+  const handleRevisar = (rolloId: number, movimientoId: number, aprobado: boolean) => {
+    if (aprobado) {
+      revisarAjuste.mutate({
+        id: movimientoId
+      }, {
+        onSuccess: () => {
+          toast.success("Ajuste aprobado");
+          queryClient.invalidateQueries({ queryKey: getListAjustesPendientesQueryKey() });
+          queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
+        },
+        onError: (err: any) => {
+          const msg = err?.data?.error || err?.message || "Error al procesar la revisión";
+          toast.error("Error", { description: msg });
+        }
+      });
+    } else {
+      revertirMovimiento.mutate({
+        id: rolloId,
+        data: { movimientoOrigenId: movimientoId, justificacion: "Rechazado por administrador" }
+      }, {
+        onSuccess: () => {
+          toast.success("Ajuste rechazado y revertido");
+          queryClient.invalidateQueries({ queryKey: getListAjustesPendientesQueryKey() });
+          queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
+        },
+        onError: (err: any) => {
+          const msg = err?.data?.error || err?.message || "Error al rechazar";
+          toast.error("Error", { description: msg });
+        }
+      });
+    }
   };
 
   return (
@@ -128,8 +150,8 @@ export default function Ajustes() {
             {isAdmin && (
               <TabsTrigger value="pendientes" className="h-10 px-6 flex items-center gap-2">
                 Revisión Pendiente
-                {pendientesRes && pendientesRes.total > 0 && (
-                  <Badge variant="destructive" className="h-5 px-1.5 ml-1">{pendientesRes.total}</Badge>
+                {pendientesRes && pendientesRes.length > 0 && (
+                  <Badge variant="destructive" className="h-5 px-1.5 ml-1">{pendientesRes.length}</Badge>
                 )}
               </TabsTrigger>
             )}
@@ -329,14 +351,14 @@ export default function Ajustes() {
                             Cargando pendientes...
                           </TableCell>
                         </TableRow>
-                      ) : pendientesRes?.items.length === 0 ? (
+                      ) : pendientesRes?.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
                             No hay ajustes pendientes de revisión.
                           </TableCell>
                         </TableRow>
                       ) : (
-                        pendientesRes?.items.map(mov => (
+                        pendientesRes?.map((mov: MovimientoRow) => (
                           <TableRow key={mov.id}>
                             <TableCell className="text-sm">
                               {format(new Date(mov.createdAt), "dd/MM/yy HH:mm")}
@@ -346,7 +368,7 @@ export default function Ajustes() {
                               <div className="text-xs text-muted-foreground truncate w-32" title={mov.skuProducto}>{mov.skuProducto}</div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={mov.tipo === 'BAJA' ? "destructive" : "secondary"}>
+                              <Badge variant={mov.tipo === 'AJUSTE_NEGATIVO' ? "destructive" : "secondary"}>
                                 {mov.tipo}
                               </Badge>
                             </TableCell>
@@ -366,8 +388,8 @@ export default function Ajustes() {
                                   variant="outline" 
                                   size="sm" 
                                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                  onClick={() => handleRevisar(mov.id, false)}
-                                  disabled={revisarAjuste.isPending}
+                                  onClick={() => handleRevisar(mov.rolloId, mov.id, false)}
+                                  disabled={revisarAjuste.isPending || revertirMovimiento.isPending}
                                 >
                                   <X className="w-4 h-4 mr-1" /> Rechazar
                                 </Button>
@@ -375,8 +397,8 @@ export default function Ajustes() {
                                   variant="default" 
                                   size="sm"
                                   className="bg-emerald-600 hover:bg-emerald-700"
-                                  onClick={() => handleRevisar(mov.id, true)}
-                                  disabled={revisarAjuste.isPending}
+                                  onClick={() => handleRevisar(mov.rolloId, mov.id, true)}
+                                  disabled={revisarAjuste.isPending || revertirMovimiento.isPending}
                                 >
                                   <Check className="w-4 h-4 mr-1" /> Aprobar
                                 </Button>

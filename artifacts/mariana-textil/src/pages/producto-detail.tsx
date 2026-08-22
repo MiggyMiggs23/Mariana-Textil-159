@@ -7,6 +7,7 @@ import {
   useGetKardex,
   getGetProductoQueryKey,
   getListProductosQueryKey,
+  getGetKardexQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
   useListLocations,
@@ -63,14 +64,20 @@ export default function ProductoDetail() {
   const [kardexPage, setKardexPage] = useState(1);
 
   const { data: ubicaciones } = useListLocations();
-  const { data: kardexRes, isLoading: loadingKardex } = useGetKardex({
+  const kardexParams = {
     productoId: Number(id),
     ubicacionId: kardexUbicacionId !== "all" ? Number(kardexUbicacionId) : undefined,
     desde: kardexDesde || undefined,
     hasta: kardexHasta || undefined,
     page: kardexPage,
     pageSize: 100
-  }, { query: { enabled: !!id } });
+  };
+  const { data: kardexRes, isLoading: loadingKardex } = useGetKardex(kardexParams, { 
+    query: { 
+      enabled: !!id,
+      queryKey: getGetKardexQueryKey(kardexParams)
+    } 
+  });
 
   const handleExportCsv = () => {
     if (!kardexRes || kardexRes.movimientos.length === 0) return;
@@ -437,7 +444,7 @@ export default function ProductoDetail() {
                   <TableBody>
                     {kardexRes.movimientos.map((mov) => {
                       const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO'].includes(mov.tipo);
-                      const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'BAJA'].includes(mov.tipo);
+                      const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'CANCELACION'].includes(mov.tipo);
                       return (
                         <TableRow key={mov.id}>
                           <TableCell className="whitespace-nowrap text-xs text-muted-foreground">

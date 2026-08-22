@@ -183,7 +183,7 @@ export default function RolloDetail() {
                 <TableBody>
                   {rollo.historial.map((mov) => {
                     const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO'].includes(mov.tipo);
-                    const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'BAJA'].includes(mov.tipo);
+                    const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'CANCELACION'].includes(mov.tipo);
                     return (
                       <TableRow key={mov.id}>
                         <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
