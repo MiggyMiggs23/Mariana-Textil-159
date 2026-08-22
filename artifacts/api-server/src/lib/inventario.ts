@@ -24,6 +24,7 @@ import {
   entradaFolioTable,
   existenciasTable,
   movimientosTable,
+  pagosProveedorTable,
   productosTable,
   proveedoresTable,
   rollosTable,
@@ -394,7 +395,6 @@ export type CrearEntradaInput = {
   ubicacionId: number;
   proveedorId?: number | null;
   observaciones?: string | null;
-  fecha: Date;
   usuarioId: number;
   ip?: string | null;
   uuidCliente: string;
@@ -501,6 +501,9 @@ export async function crearEntrada(
   }
   const totalCostoStr = totalCosto.toFixed(2);
 
+  // Server-side date — never from the client
+  const fechaServidor = new Date();
+
   // 1) Rollback-safe folio
   const folio = await reserveFolio(tx);
 
@@ -512,7 +515,7 @@ export async function crearEntrada(
       ubicacionId: input.ubicacionId,
       proveedorId: input.proveedorId ?? null,
       usuarioId: input.usuarioId,
-      fecha: input.fecha,
+      fecha: fechaServidor,
       observaciones: input.observaciones ?? null,
       totalRollos,
       totalCosto: totalCostoStr,
@@ -583,6 +586,21 @@ export async function crearEntrada(
     } as Record<string, unknown>,
     ip: input.ip ?? "desconocida",
   });
+
+  // 8) Register COMPRA in pagos_proveedor (idempotent via partial unique index)
+  if (input.proveedorId != null) {
+    await tx
+      .insert(pagosProveedorTable)
+      .values({
+        proveedorId: input.proveedorId,
+        entradaId: entrada!.id,
+        importe: totalCostoStr,
+        tipo: "COMPRA",
+        fecha: fechaServidor,
+        usuarioId: input.usuarioId,
+      })
+      .onConflictDoNothing();
+  }
 
   return buildEntradaResult(tx, entrada!.id);
 }

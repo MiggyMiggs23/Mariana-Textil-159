@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
+import { ProductCombobox } from "@/components/product-combobox";
 import { 
   useListProductos, 
   useListLocations, 
@@ -15,6 +15,8 @@ import {
   getGetDashboardQueryKey,
   getListRollosQueryKey,
   getGetExistenciasQueryKey,
+  useGetFechaServidor,
+  getGetFechaServidorQueryKey,
   Role,
   EntradaDetail
 } from "@workspace/api-client-react";
@@ -29,7 +31,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { toast } from "sonner";
 import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
 
 type DraftLinea = {
   id: string;
@@ -54,6 +55,12 @@ export default function Entradas() {
     } 
   });
   const { data: proveedores } = useListProveedores({ query: { queryKey: getListProveedoresQueryKey() } });
+  const { data: serverTime } = useGetFechaServidor({
+    query: {
+      queryKey: getGetFechaServidorQueryKey(),
+      refetchInterval: 60_000,
+    },
+  });
   
   const crearEntrada = useCrearEntrada();
 
@@ -66,7 +73,6 @@ export default function Entradas() {
   const [declaredCount, setDeclaredCount] = useState<string>("");
   const [ubicacionId, setUbicacionId] = useState<string>("");
   const [proveedorId, setProveedorId] = useState<string>("none");
-  const [fecha, setFecha] = useState<string>(format(new Date(), "yyyy-MM-dd"));
   const [observaciones, setObservaciones] = useState<string>("");
 
   const [lineas, setLineas] = useState<DraftLinea[]>([]);
@@ -89,12 +95,21 @@ export default function Entradas() {
   const [editingQtyIndex, setEditingQtyIndex] = useState<number | null>(null);
   const [editingQtyValue, setEditingQtyValue] = useState("");
   const [isEditingLine, setIsEditingLine] = useState(false);
+  const [uniformQty, setUniformQty] = useState("");
+  const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);
   
   const qtyInputRef = useRef<HTMLInputElement>(null);
 
   const [resultado, setResult] = useState<EntradaDetail | null>(null);
 
   const selectedProduct = productos?.find(p => p.id.toString() === productoId);
+  const serverDateLabel = serverTime
+    ? new Intl.DateTimeFormat("es-MX", {
+        dateStyle: "long",
+        timeStyle: "medium",
+        timeZone: serverTime.zonaHoraria,
+      }).format(new Date(serverTime.fecha))
+    : "Consultando hora del servidor…";
 
   // Set default location for non-admin
   useEffect(() => {
@@ -111,7 +126,7 @@ export default function Entradas() {
   }, [isCaptureModalOpen]);
 
   const handleStartCapture = () => {
-    if (!productoId || !costoUnitario || !declaredCount || Number(declaredCount) <= 0 || !ubicacionId || !fecha) {
+    if (!productoId || !costoUnitario || !declaredCount || Number(declaredCount) <= 0 || !ubicacionId) {
       toast.error("Por favor completa todos los campos obligatorios (*)");
       return;
     }
@@ -122,6 +137,8 @@ export default function Entradas() {
     setEditingQtyIndex(null);
     setEditingQtyValue("");
     setIsEditingLine(false);
+    setUniformQty("");
+    setUniformBaseline(null);
     setIsCaptureModalOpen(true);
   };
 
@@ -135,7 +152,36 @@ export default function Entradas() {
     setEditingQtyIndex(null);
     setEditingQtyValue("");
     setIsEditingLine(true);
+    setUniformQty("");
+    setUniformBaseline(null);
     setIsCaptureModalOpen(true);
+  };
+
+  const handleApplyUniformQty = () => {
+    const parsed = Number(uniformQty);
+    const declared = Number(declaredCount);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      toast.error("La cantidad uniforme debe ser mayor que cero");
+      return;
+    }
+    if (!Number.isInteger(declared) || declared <= 0) {
+      toast.error("Indica primero una cantidad válida de rollos");
+      return;
+    }
+    if (
+      capCantidades.length > 0 &&
+      !window.confirm(
+        "Ya hay rollos capturados. Aplicar el valor uniforme sobrescribirá esas cantidades. ¿Deseas continuar?",
+      )
+    ) {
+      return;
+    }
+
+    setCapCantidades(Array.from({ length: declared }, () => uniformQty));
+    setUniformBaseline(uniformQty);
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    toast.success(`Se aplicó ${uniformQty} a ${declared} rollos`);
   };
 
   const handleAddQty = (e?: React.FormEvent) => {
@@ -287,7 +333,7 @@ export default function Entradas() {
     return acc + (qtySum * parseFloat(l.costoUnitario));
   }, 0);
 
-  const isFormValid = ubicacionId && lineas.length > 0 && fecha;
+  const isFormValid = ubicacionId && lineas.length > 0;
 
   const handleSubmit = () => {
     if (!isFormValid) return;
@@ -296,7 +342,6 @@ export default function Entradas() {
       data: {
         ubicacionId: Number(ubicacionId),
         proveedorId: proveedorId === "none" ? undefined : Number(proveedorId),
-        fecha: fecha || undefined,
         observaciones: observaciones || null,
         uuidCliente,
         lineas: lineas.map(l => ({
@@ -395,16 +440,16 @@ export default function Entradas() {
                 
                 <div className="space-y-2">
                   <Label>Producto <span className="text-destructive">*</span></Label>
-                  <Select value={productoId} onValueChange={setProductoId}>
-                    <SelectTrigger data-testid="select-producto">
-                      <SelectValue placeholder="Busca producto por SKU o nombre..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {productos?.filter(p => p.activo).map(p => (
-                        <SelectItem key={p.id} value={p.id.toString()}>{p.sku} - {p.tela} {p.color}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ProductCombobox
+                    products={productos ?? []}
+                    value={productoId}
+                    onValueChange={setProductoId}
+                    placeholder="Escribe tela, color o SKU..."
+                    testId="input-entrada-producto"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Busca al instante; usa ↑ ↓ y Enter para seleccionar.
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -432,21 +477,30 @@ export default function Entradas() {
                       step="0.01" 
                       className="pl-7" 
                       value={costoUnitario} 
-                      onChange={e => setCostoUnitario(e.target.value)} 
+                      onChange={e => setCostoUnitario(e.target.value)}
+                      data-testid="input-costo-unitario"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Fecha de entrada <span className="text-destructive">*</span></Label>
-                  <Input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
+                  <Label>Fecha y hora de entrada</Label>
+                  <Input
+                    value={serverDateLabel}
+                    readOnly
+                    className="bg-muted text-muted-foreground"
+                    data-testid="input-fecha-servidor"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Fijada por el servidor · America/Mexico_City
+                  </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Ubicación <span className="text-destructive">*</span></Label>
                   {user?.rol === Role.ADMIN ? (
                     <Select value={ubicacionId} onValueChange={setUbicacionId}>
-                      <SelectTrigger>
+                      <SelectTrigger data-testid="select-entrada-ubicacion">
                         <SelectValue placeholder="Selecciona..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -463,12 +517,12 @@ export default function Entradas() {
                 <div className="space-y-2">
                   <Label>Proveedor</Label>
                   <Select value={proveedorId} onValueChange={setProveedorId}>
-                    <SelectTrigger>
+                    <SelectTrigger data-testid="select-entrada-proveedor">
                       <SelectValue placeholder="Sin proveedor" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">Sin proveedor</SelectItem>
-                      {proveedores?.filter(p => p.activo).map(p => (
+                      {proveedores?.items.filter(p => p.activo).map(p => (
                         <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
                       ))}
                     </SelectContent>
@@ -661,7 +715,7 @@ export default function Entradas() {
       <Dialog open={isCaptureModalOpen} onOpenChange={(open) => {
         if (!open) attemptCancelCapture();
       }}>
-        <DialogContent className="sm:max-w-xl p-0 overflow-hidden flex flex-col h-[90vh] sm:h-[650px] shadow-2xl" onInteractOutside={(e) => {
+        <DialogContent className="sm:max-w-2xl p-0 overflow-hidden flex flex-col h-[94vh] sm:h-[760px] shadow-2xl" onInteractOutside={(e) => {
           e.preventDefault();
           attemptCancelCapture();
         }}>
@@ -688,7 +742,44 @@ export default function Entradas() {
 
           <div className="flex-1 flex flex-col overflow-hidden bg-background">
             {/* Input area */}
-            <div className="p-5 shrink-0 shadow-sm z-10 bg-background border-b">
+            <div className="p-5 shrink-0 shadow-sm z-10 bg-background border-b space-y-4">
+              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                <div className="mb-3">
+                  <div className="font-bold text-sm">
+                    Todos los rollos con el mismo {selectedProduct?.unidad === "KILO" ? "peso" : "metraje"}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Llena los {declaredCount || "—"} rollos de una vez y después corrige únicamente las excepciones.
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <div className="relative flex-1">
+                    <Input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value={uniformQty}
+                      onChange={(event) => setUniformQty(event.target.value)}
+                      placeholder="0.00"
+                      className="bg-background pr-14 text-lg font-bold"
+                      data-testid="input-uniform-qty"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
+                      {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleApplyUniformQty}
+                    disabled={!uniformQty}
+                    data-testid="button-apply-uniform"
+                  >
+                    Aplicar a todos
+                  </Button>
+                </div>
+              </div>
+
               <form onSubmit={handleAddQty} className="flex gap-3">
                 <div className="relative flex-1">
                   <Input 
@@ -709,6 +800,7 @@ export default function Entradas() {
                   type="submit" 
                   className="h-20 px-8 bg-primary hover:bg-primary/90" 
                   disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}
+                  data-testid="button-add-captured-roll"
                 >
                   <Plus className="w-5 h-5 mr-2" />
                   Siguiente rollo
@@ -725,7 +817,15 @@ export default function Entradas() {
                 </div>
               ) : (
                 capCantidades.map((qty, idx) => (
-                  <div key={idx} className="flex items-center justify-between bg-white p-3 rounded-lg border shadow-sm group hover:border-primary/50 transition-colors">
+                  <div
+                    key={idx}
+                    className={`flex items-center justify-between bg-white p-3 rounded-lg border shadow-sm group transition-colors ${
+                      uniformBaseline != null && Number(qty) !== Number(uniformBaseline)
+                        ? "border-amber-400 bg-amber-50/60"
+                        : "hover:border-primary/50"
+                    }`}
+                    data-testid={`row-captured-roll-${idx}`}
+                  >
                     <div className="flex items-center gap-4">
                       <span className="w-8 h-8 rounded bg-muted/50 flex items-center justify-center text-xs font-mono font-bold text-muted-foreground border">
                         {idx+1}
@@ -759,6 +859,17 @@ export default function Entradas() {
                       )}
                     </div>
                     <div className="flex items-center gap-4">
+                      {uniformBaseline != null && (
+                        <span
+                          className={`rounded px-2 py-1 text-[10px] font-black uppercase ${
+                            Number(qty) === Number(uniformBaseline)
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
+                          {Number(qty) === Number(uniformBaseline) ? "Uniforme" : "Ajustado"}
+                        </span>
+                      )}
                       <span className="text-[10px] font-bold text-muted-foreground uppercase bg-muted px-2 py-1 rounded">Serie por asignar #{idx+1}</span>
                       <div className="flex gap-1">
                         {editingQtyIndex === idx ? (
@@ -816,7 +927,17 @@ export default function Entradas() {
             {/* Live Totals Row */}
             <div className="p-3 bg-primary/5 border-t shrink-0 flex justify-between items-center">
               <div className="text-sm font-bold text-primary">Subtotales al momento:</div>
-              <div className="flex gap-6 text-sm font-bold">
+              <div className="flex flex-wrap justify-end gap-x-6 gap-y-1 text-sm font-bold">
+                {uniformBaseline != null && (
+                  <>
+                    <div className="text-emerald-700">
+                      Uniformes: {capCantidades.filter((qty) => Number(qty) === Number(uniformBaseline)).length}
+                    </div>
+                    <div className="text-amber-700">
+                      Ajustados: {capCantidades.filter((qty) => Number(qty) !== Number(uniformBaseline)).length}
+                    </div>
+                  </>
+                )}
                 <div>Qty: {capCantidades.reduce((a, b) => a + parseFloat(b), 0).toFixed(2)}</div>
                 <div>$: {(capCantidades.reduce((a, b) => a + parseFloat(b), 0) * parseFloat(costoUnitario || "0")).toFixed(2)}</div>
               </div>
@@ -857,7 +978,12 @@ export default function Entradas() {
                 Terminar Incompleto ({capCantidades.length})
               </Button>
             ) : (
-              <Button className="w-2/3 bg-[#1e3a8a] text-white hover:bg-[#1e3a8a]/90 font-bold" onClick={() => handleConfirmCapture(false)} disabled={capCantidades.length !== Number(declaredCount)}>
+              <Button
+                className="w-2/3 bg-[#1e3a8a] text-white hover:bg-[#1e3a8a]/90 font-bold"
+                onClick={() => handleConfirmCapture(false)}
+                disabled={capCantidades.length !== Number(declaredCount)}
+                data-testid="button-confirm-line"
+              >
                 {isEditingLine ? "Guardar Cambios" : "Confirmar Línea"}
               </Button>
             )}

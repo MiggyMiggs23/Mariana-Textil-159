@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
+import { ProductCombobox } from "@/components/product-combobox";
 import { 
   useGetConciliacion, 
   useRecalcularExistencias,
@@ -63,17 +64,14 @@ export default function Conciliacion() {
               <label className="text-sm font-medium flex items-center gap-2">
                 <Filter className="w-4 h-4 text-muted-foreground" /> Producto
               </label>
-              <Select value={productoId} onValueChange={setProductoId}>
-                <SelectTrigger className="bg-background">
-                  <SelectValue placeholder="Todos los productos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los productos</SelectItem>
-                  {productos?.map(p => (
-                    <SelectItem key={p.id} value={p.id.toString()}>{p.tela} - {p.color}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ProductCombobox
+                products={productos ?? []}
+                value={productoId === "all" ? "" : productoId}
+                onValueChange={(next) => setProductoId(next || "all")}
+                placeholder="Todos los productos; escribe para filtrar..."
+                testId="input-conciliacion-producto"
+                activeOnly={false}
+              />
             </div>
             
             <div className="space-y-2 flex-1">

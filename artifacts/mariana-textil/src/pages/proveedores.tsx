@@ -23,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Search, Plus, Truck, Building2, Globe2 } from "lucide-react";
 
+
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -38,29 +39,61 @@ function getErrorMessage(error: unknown): string {
   return typeof apiError.message === "string" ? apiError.message : "Error desconocido";
 }
 
+function formatCurrency(value: string | number): string {
+  const num = typeof value === "string" ? parseFloat(value) : value;
+  if (isNaN(num)) return "$0.00";
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(num);
+}
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return "-";
+  try {
+    return new Intl.DateTimeFormat("es-MX", {
+      timeZone: "America/Mexico_City",
+      year: "numeric",
+      month: "short",
+      day: "2-digit"
+    }).format(new Date(dateStr));
+  } catch (e) {
+    return "-";
+  }
+}
+
 export default function Proveedores() {
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser({
     query: { queryKey: getGetCurrentUserQueryKey() }
   });
-  
+
   const { data: proveedores, isLoading } = useListProveedores({
     query: { queryKey: getListProveedoresQueryKey() }
   });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTipo, setFilterTipo] = useState("ALL");
+  const [filterEstado, setFilterEstado] = useState("ALL");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const filteredProveedores = useMemo(() => {
-    if (!proveedores) return [];
-    return proveedores.filter(p => {
-      const matchSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    if (!proveedores?.items) return [];
+    return proveedores.items.filter(p => {
+      const matchSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           (p.contactoNombre || "").toLowerCase().includes(searchTerm.toLowerCase());
       const matchTipo = filterTipo === "ALL" || p.tipo === filterTipo;
-      return matchSearch && matchTipo;
+      const matchEstado = filterEstado === "ALL" ||
+                          (filterEstado === "ACTIVE" ? p.activo : !p.activo);
+      return matchSearch && matchTipo && matchEstado;
     });
-  }, [proveedores, searchTerm, filterTipo]);
+  }, [proveedores, searchTerm, filterTipo, filterEstado]);
+
+  // Sort by pending balance desc
+  const sortedProveedores = useMemo(() => {
+    return [...filteredProveedores].sort((a, b) => {
+      const saldoA = parseFloat(a.saldoPendiente) || 0;
+      const saldoB = parseFloat(b.saldoPendiente) || 0;
+      return saldoB - saldoA;
+    });
+  }, [filteredProveedores]);
 
   const canEdit = user?.rol === Role.ADMIN || user?.rol === Role.INVENTARIOS || user?.rol === Role.BODEGA;
 
@@ -82,6 +115,33 @@ export default function Proveedores() {
           )}
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4 flex flex-col gap-1">
+              <span className="text-sm font-medium text-muted-foreground">Total Deuda</span>
+              <span className="text-2xl font-bold">{proveedores ? formatCurrency(proveedores.totalDeuda) : "$0.00"}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 flex flex-col gap-1">
+              <span className="text-sm font-medium text-muted-foreground">Compras del Mes</span>
+              <span className="text-2xl font-bold">{proveedores ? formatCurrency(proveedores.comprasMes) : "$0.00"}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 flex flex-col gap-1">
+              <span className="text-sm font-medium text-muted-foreground">Proveedores con Saldo</span>
+              <span className="text-2xl font-bold">{proveedores?.proveedoresConSaldo || 0}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 flex flex-col gap-1">
+              <span className="text-sm font-medium text-muted-foreground">Total Proveedores</span>
+              <span className="text-2xl font-bold">{proveedores?.totalProveedores || 0}</span>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card>
           <div className="p-4 border-b flex flex-col sm:flex-row gap-4 items-center bg-muted/20">
             <div className="relative flex-1 w-full">
@@ -95,89 +155,99 @@ export default function Proveedores() {
               />
             </div>
             <Select value={filterTipo} onValueChange={setFilterTipo}>
-              <SelectTrigger className="w-full sm:w-[200px] bg-background" data-testid="select-filter-supplier-tipo">
+              <SelectTrigger className="w-full sm:w-[150px] bg-background" data-testid="select-filter-supplier-tipo">
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Todos los tipos</SelectItem>
+                <SelectItem value="ALL">Todos (Tipo)</SelectItem>
                 <SelectItem value={TipoProveedor.NACIONAL}>Nacional</SelectItem>
                 <SelectItem value={TipoProveedor.IMPORTACION}>Importación</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={filterEstado} onValueChange={setFilterEstado}>
+              <SelectTrigger className="w-full sm:w-[150px] bg-background" data-testid="select-filter-supplier-estado">
+                <SelectValue placeholder="Estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">Todos (Estado)</SelectItem>
+                <SelectItem value="ACTIVE">Activos</SelectItem>
+                <SelectItem value="INACTIVE">Inactivos</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/10 hover:bg-muted/10">
-                  <TableHead>Nombre</TableHead>
-                  <TableHead>Tipo y Moneda</TableHead>
-                  <TableHead>Contacto</TableHead>
-                  <TableHead>País</TableHead>
-                  <TableHead className="text-right">Estado</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center">
-                      <div className="animate-pulse flex flex-col items-center">
-                        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-                        Cargando proveedores...
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/10 hover:bg-muted/10">
+                    <TableHead>Proveedor / Contacto</TableHead>
+                    <TableHead>Tipo</TableHead>
+                    <TableHead className="text-right">Saldo</TableHead>
+                    <TableHead className="text-right">Comprado (12m)</TableHead>
+                    <TableHead>Última Compra</TableHead>
+                    <TableHead className="text-right">Estado</TableHead>
                   </TableRow>
-                ) : filteredProveedores.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
-                      No se encontraron proveedores.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredProveedores.map(p => (
-                    <TableRow 
-                      key={p.id} 
-                      className="cursor-pointer hover:bg-muted/40 transition-colors"
-                      data-testid={`row-supplier-${p.id}`}
-                    >
-                      <TableCell>
-                        <Link href={`/proveedores/${p.id}`} className="block h-full w-full py-2">
-                          <div className="font-bold text-foreground text-base" data-testid={`display-supplier-name-${p.id}`}>{p.nombre}</div>
-                          {p.notas && <div className="text-xs text-muted-foreground truncate max-w-[250px]">{p.notas}</div>}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className={p.tipo === TipoProveedor.NACIONAL ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-blue-200 bg-blue-50 text-blue-700"}>
-                            {p.tipo === TipoProveedor.NACIONAL ? <Building2 className="w-3 h-3 mr-1" /> : <Globe2 className="w-3 h-3 mr-1" />}
-                            {p.tipo}
-                          </Badge>
-                          <Badge variant="secondary" className="font-mono text-[10px]">{p.monedaDefault}</Badge>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-32 text-center">
+                        <div className="animate-pulse flex flex-col items-center">
+                          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                          Cargando proveedores...
                         </div>
                       </TableCell>
-                      <TableCell>
-                        {p.contactoNombre ? (
-                          <>
-                            <div className="font-medium text-sm">{p.contactoNombre}</div>
-                            <div className="text-xs text-muted-foreground">{p.telefono || "Sin teléfono"}</div>
-                          </>
-                        ) : (
-                          <span className="text-muted-foreground italic text-xs">Sin contacto</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">{p.pais || "-"}</div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Badge variant={p.activo ? "default" : "secondary"}>
-                          {p.activo ? "Activo" : "Inactivo"}
-                        </Badge>
+                    </TableRow>
+                  ) : sortedProveedores.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                        No se encontraron proveedores.
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    sortedProveedores.map(p => (
+                      <TableRow
+                        key={p.id}
+                        className="cursor-pointer hover:bg-muted/40 transition-colors"
+                        data-testid={`row-supplier-${p.id}`}
+                      >
+                        <TableCell>
+                          <Link href={`/proveedores/${p.id}`} className="block h-full w-full py-2">
+                            <div className="font-bold text-foreground text-base" data-testid={`display-supplier-name-${p.id}`}>{p.nombre}</div>
+                            {p.contactoNombre && <div className="text-xs text-muted-foreground">{p.contactoNombre}</div>}
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className={p.tipo === TipoProveedor.NACIONAL ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-blue-200 bg-blue-50 text-blue-700"}>
+                              {p.tipo === TipoProveedor.NACIONAL ? <Building2 className="w-3 h-3 mr-1" /> : <Globe2 className="w-3 h-3 mr-1" />}
+                              {p.tipo}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className={`font-semibold ${parseFloat(p.saldoPendiente) > 0 ? "text-destructive" : ""}`}>
+                            {formatCurrency(p.saldoPendiente)}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="text-sm font-medium">{formatCurrency(p.totalComprado12Meses)}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{formatDate(p.ultimaCompra)}</div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge variant={p.activo ? "default" : "secondary"}>
+                            {p.activo ? "Activo" : "Inactivo"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -190,7 +260,7 @@ export default function Proveedores() {
 function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () => void }) {
   const createProveedor = useCreateProveedor();
   const queryClient = useQueryClient();
-  
+
   const [formData, setFormData] = useState<{
     nombre: string;
     tipo: TipoProveedor;
@@ -216,7 +286,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
       toast.error("Datos incompletos", { description: "El nombre del proveedor es obligatorio." });
       return;
     }
-    
+
     createProveedor.mutate({
       data: {
         nombre: formData.nombre.trim(),
@@ -250,18 +320,18 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
           <DialogTitle>Nuevo Proveedor</DialogTitle>
           <DialogDescription>Registra un nuevo socio comercial en el sistema.</DialogDescription>
         </DialogHeader>
-        
+
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label>Razón Social / Nombre Comercial *</Label>
-            <Input 
+            <Input
               value={formData.nombre}
               onChange={e => setFormData({...formData, nombre: e.target.value.toUpperCase()})}
               placeholder="TEXTILES DE MÉXICO S.A. DE C.V."
               data-testid="input-create-supplier-nombre"
             />
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Tipo de Proveedor</Label>
@@ -284,7 +354,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
               </Select>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 border-t pt-4 mt-2">
             <div className="space-y-2">
               <Label>Nombre de Contacto</Label>
@@ -295,7 +365,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
               <Input value={formData.pais} onChange={e => setFormData({...formData, pais: e.target.value.toUpperCase()})} placeholder="Ej. MÉXICO, CHINA" data-testid="input-create-supplier-pais" />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Teléfono</Label>
@@ -312,7 +382,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
             <Input value={formData.notas} onChange={e => setFormData({...formData, notas: e.target.value})} placeholder="Condiciones de crédito, tiempos de entrega, etc." data-testid="input-create-supplier-notas" />
           </div>
         </div>
-        
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={createProveedor.isPending} data-testid="button-save-supplier-create">

@@ -9,6 +9,23 @@ export interface HealthStatus {
   status: string;
 }
 
+/**
+ * Zona horaria operativa del negocio
+ */
+export type ServerTimeZonaHoraria = typeof ServerTimeZonaHoraria[keyof typeof ServerTimeZonaHoraria];
+
+
+export const ServerTimeZonaHoraria = {
+  'America/Mexico_City': 'America/Mexico_City',
+} as const;
+
+export interface ServerTime {
+  /** Fecha y hora ISO 8601 del servidor en UTC */
+  fecha: string;
+  /** Zona horaria operativa del negocio */
+  zonaHoraria: ServerTimeZonaHoraria;
+}
+
 export interface Error {
   error: string;
 }
@@ -586,8 +603,6 @@ export interface EntradaInput {
   proveedorId?: number | null;
   /** @nullable */
   observaciones?: string | null;
-  /** @nullable */
-  fecha?: string | null;
   uuidCliente: string;
   /** @minItems 1 */
   lineas: EntradaLineaInput[];
@@ -660,6 +675,249 @@ export interface EntradaListResult {
   pageSize: number;
 }
 
+export type TipoPagoProveedor = typeof TipoPagoProveedor[keyof typeof TipoPagoProveedor];
+
+
+export const TipoPagoProveedor = {
+  COMPRA: 'COMPRA',
+  PAGO: 'PAGO',
+  AJUSTE: 'AJUSTE',
+} as const;
+
+export type FormaPagoProveedor = typeof FormaPagoProveedor[keyof typeof FormaPagoProveedor];
+
+
+export const FormaPagoProveedor = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CHEQUE: 'CHEQUE',
+  OTRO: 'OTRO',
+} as const;
+
+export interface PagoProveedorRow {
+  id: number;
+  proveedorId: number;
+  /** @nullable */
+  entradaId?: number | null;
+  importe: string;
+  tipo: TipoPagoProveedor;
+  formaPago?: FormaPagoProveedor | null;
+  /** @nullable */
+  referencia?: string | null;
+  fecha: string;
+  usuarioId: number;
+  /** @nullable */
+  notas?: string | null;
+  createdAt: string;
+}
+
+export interface PagoProveedorInput {
+  /**
+     * Importe positivo; se guarda como negativo internamente
+     * @minimum 0.01
+     */
+  importe: number;
+  formaPago: FormaPagoProveedor;
+  /** Fecha del pago; por defecto ahora si se omite */
+  fecha?: string;
+  /** @nullable */
+  referencia?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  /**
+     * Opcional: liga el pago a una compra específica
+     * @nullable
+     */
+  entradaId?: number | null;
+}
+
+export interface AjusteProveedorInput {
+  /** Signed: positivo aumenta deuda, negativo la reduce */
+  importe: number;
+  /**
+     * Justificación mínimo 10 caracteres
+     * @minLength 10
+     */
+  notas: string;
+}
+
+export interface ProveedorMetricas {
+  id: number;
+  nombre: string;
+  tipo: TipoProveedor;
+  monedaDefault: Moneda;
+  /** @nullable */
+  contactoNombre: string | null;
+  /** @nullable */
+  telefono: string | null;
+  /** @nullable */
+  correo: string | null;
+  /** @nullable */
+  pais: string | null;
+  /** @nullable */
+  notas: string | null;
+  activo: boolean;
+  createdAt: string;
+  /** Total histórico de compras (suma de todos los COMPRAs) */
+  totalCompras: string;
+  /** Total comprado en los últimos 12 meses */
+  totalComprado12Meses: string;
+  /** Total comprado en el mes calendario actual */
+  comprasMes: string;
+  totalPagado: string;
+  saldoPendiente: string;
+  /** @nullable */
+  ultimaCompra: string | null;
+  comprasCount: number;
+}
+
+export interface ProveedoresResumen {
+  totalProveedores: number;
+  proveedoresConSaldo: number;
+  totalDeuda: string;
+  totalPagado: string;
+  /** Total comprado al conjunto de proveedores en el mes actual */
+  comprasMes: string;
+  items: ProveedorMetricas[];
+}
+
+export interface ProveedoresListResult {
+  totalProveedores: number;
+  proveedoresConSaldo: number;
+  totalDeuda: string;
+  totalPagado: string;
+  /** Total comprado al conjunto de proveedores en el mes actual */
+  comprasMes: string;
+  items: ProveedorMetricas[];
+}
+
+export type CompraConEstadoEstado = typeof CompraConEstadoEstado[keyof typeof CompraConEstadoEstado];
+
+
+export const CompraConEstadoEstado = {
+  Pagada: 'Pagada',
+  Parcial: 'Parcial',
+  Pendiente: 'Pendiente',
+} as const;
+
+export interface CompraConEstado {
+  entradaId: number;
+  folio: number;
+  fecha: string;
+  totalCosto: string;
+  abonado: string;
+  saldoPendiente: string;
+  estado: CompraConEstadoEstado;
+  /** Nombre de la ubicación/bodega de recepción */
+  nombreUbicacion: string;
+  /** Número de rollos recibidos en esta entrada */
+  totalRollos: number;
+  /** Suma de cantidades de todos los rollos (en la unidad del producto) */
+  cantidadTotal: string;
+}
+
+export interface ProveedorComprasResult {
+  items: CompraConEstado[];
+  total: number;
+  /** Suma de compras que cumplen los filtros antes de paginar */
+  totalCostoPeriodo: string;
+  page: number;
+  pageSize: number;
+}
+
+export interface MovimientoLedger {
+  id: number;
+  tipo: TipoPagoProveedor;
+  importe: string;
+  saldoAcumulado: string;
+  fecha: string;
+  /** @nullable */
+  entradaId?: number | null;
+  /** @nullable */
+  folio?: number | null;
+  /** @nullable */
+  formaPago?: string | null;
+  /** @nullable */
+  referencia?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  usuarioId: number;
+  createdAt: string;
+}
+
+export interface ProveedorEstadoCuenta {
+  movimientos: MovimientoLedger[];
+  saldoActual: string;
+}
+
+export interface EstadisticasPorMes {
+  mes: string;
+  total: string;
+  count: number;
+}
+
+export interface EstadisticasPorProducto {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: string;
+  totalCosto: string;
+  totalRollos: number;
+  /** Suma de cantidades de todos los rollos del producto */
+  cantidadTotal: string;
+  /** Costo promedio por rollo en el periodo actual */
+  costoPromedio: string;
+  /**
+     * Costo promedio por rollo en el periodo anterior (misma duración)
+     * @nullable
+     */
+  costoPromedioAnterior?: string | null;
+  /**
+     * Variación % del costo promedio vs periodo anterior
+     * @nullable
+     */
+  variacionCostoPct?: string | null;
+}
+
+export interface EstadisticasPorTela {
+  tela: string;
+  totalCosto: string;
+  rollosCount: number;
+}
+
+export interface EstadisticasPorColor {
+  color: string;
+  totalCosto: string;
+  rollosCount: number;
+}
+
+export interface ProveedorEstadisticas {
+  desde: string;
+  hasta: string;
+  totalCompras: string;
+  comprasCount: number;
+  /** Total de rollos recibidos en el periodo */
+  totalRollos: number;
+  /** Costo promedio por compra (entrada) */
+  costoPromedio: string;
+  /** Costo promedio por rollo en el periodo */
+  ticketPromedio: string;
+  /**
+     * Días desde la última compra hasta hoy; null si no hay compras
+     * @nullable
+     */
+  diasDesdeUltimaCompra?: number | null;
+  /** @nullable */
+  variacionVsPeriodoAnterior?: string | null;
+  /** @nullable */
+  ultimaCompra?: string | null;
+  porMes: EstadisticasPorMes[];
+  porProducto: EstadisticasPorProducto[];
+  porTela: EstadisticasPorTela[];
+  porColor: EstadisticasPorColor[];
+}
+
 /**
  * Sesión no válida
  */
@@ -690,6 +948,72 @@ export type GetDashboardParams = {
  * Filtro opcional disponible únicamente para ADMIN
  */
 ubicacionId?: number;
+};
+
+export type ListComprasProveedorParams = {
+/**
+ * Fecha inicio (inclusive), formato YYYY-MM-DD
+ */
+desde?: string;
+/**
+ * Fecha fin (inclusive), formato YYYY-MM-DD
+ */
+hasta?: string;
+/**
+ * Filtrar por estado de pago
+ */
+estado?: ListComprasProveedorEstado;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 200
+ */
+pageSize?: number;
+};
+
+export type ListComprasProveedorEstado = typeof ListComprasProveedorEstado[keyof typeof ListComprasProveedorEstado];
+
+
+export const ListComprasProveedorEstado = {
+  Pagada: 'Pagada',
+  Parcial: 'Parcial',
+  Pendiente: 'Pendiente',
+} as const;
+
+export type EstadoCuentaProveedorParams = {
+/**
+ * Fecha inicio (inclusive), formato YYYY-MM-DD
+ */
+desde?: string;
+/**
+ * Fecha fin (inclusive), formato YYYY-MM-DD
+ */
+hasta?: string;
+};
+
+export type EstadisticasProveedorParams = {
+/**
+ * Fecha inicio del periodo, formato YYYY-MM-DD
+ */
+desde: string;
+/**
+ * Fecha fin del periodo, formato YYYY-MM-DD
+ */
+hasta: string;
+};
+
+export type ExportarProveedorXlsxParams = {
+/**
+ * Fecha inicio, formato YYYY-MM-DD
+ */
+desde?: string;
+/**
+ * Fecha fin, formato YYYY-MM-DD
+ */
+hasta?: string;
 };
 
 export type ListEntradasParams = {

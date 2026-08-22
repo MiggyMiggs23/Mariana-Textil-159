@@ -13,8 +13,6 @@ export interface EntradaInput {
   proveedorId?: number | null;
   /** @nullable */
   observaciones?: string | null;
-  /** @nullable */
-  fecha?: Date | null;
   uuidCliente: string;
   /** @minItems 1 */
   lineas: EntradaLineaInput[];

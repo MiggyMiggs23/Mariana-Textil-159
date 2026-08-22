@@ -1,2 +1,105 @@
+// Auto-patched by fix-api-zod-barrel.mjs after orval codegen.
+// Exports Zod schemas from api.ts first (path-param Params schemas live here).
+// Then exports TS types from types/ selectively, skipping the four query-param
+// Params types that share names with Zod schemas (TS2308 collision).
+// Those four are re-exported under a QueryParams suffix alias.
 export * from "./generated/api";
-export * from "./generated/types";
+
+// ── Non-colliding types ───────────────────────────────────────────────────
+export * from "./generated/types/activarRolloInput";
+export * from "./generated/types/ajusteProveedorInput";
+export * from "./generated/types/ajusteRolloInput";
+export * from "./generated/types/altaLoteInput";
+export * from "./generated/types/altaLoteResult";
+export * from "./generated/types/altaLoteResultRollosItem";
+export * from "./generated/types/compraConEstado";
+export * from "./generated/types/compraConEstadoEstado";
+export * from "./generated/types/conciliacionRow";
+export * from "./generated/types/currentUser";
+export * from "./generated/types/dashboard";
+export * from "./generated/types/dashboardInventarioPorUbicacionItem";
+export * from "./generated/types/entradaDetail";
+export * from "./generated/types/entradaInput";
+export * from "./generated/types/entradaLinea";
+export * from "./generated/types/entradaLineaInput";
+export * from "./generated/types/entradaListResult";
+export * from "./generated/types/entradaRollo";
+export * from "./generated/types/entradaSummary";
+export * from "./generated/types/error";
+export * from "./generated/types/estadisticasPorColor";
+export * from "./generated/types/estadisticasPorMes";
+export * from "./generated/types/estadisticasPorProducto";
+export * from "./generated/types/estadisticasPorTela";
+export * from "./generated/types/estadoRollo";
+export * from "./generated/types/existenciaRow";
+export * from "./generated/types/forbiddenResponse";
+export * from "./generated/types/formaPagoProveedor";
+export * from "./generated/types/getConciliacionParams";
+export * from "./generated/types/getDashboardParams";
+export * from "./generated/types/getExistenciasParams";
+export * from "./generated/types/getKardexParams";
+export * from "./generated/types/healthStatus";
+export * from "./generated/types/importConfirmInput";
+export * from "./generated/types/importFileInput";
+export * from "./generated/types/importPreviewRow";
+export * from "./generated/types/importPreviewRowEstado";
+export * from "./generated/types/importResult";
+export * from "./generated/types/kardexResult";
+export * from "./generated/types/listComprasProveedorEstado";
+export * from "./generated/types/listEntradasParams";
+export * from "./generated/types/listRollosEstado";
+export * from "./generated/types/listRollosParams";
+export * from "./generated/types/location";
+export * from "./generated/types/locationType";
+export * from "./generated/types/locationUpdate";
+export * from "./generated/types/loginInput";
+export * from "./generated/types/moneda";
+export * from "./generated/types/moverRolloInput";
+export * from "./generated/types/movimientoLedger";
+export * from "./generated/types/movimientoRow";
+export * from "./generated/types/notFoundResponse";
+export * from "./generated/types/pagoProveedorInput";
+export * from "./generated/types/pagoProveedorRow";
+export * from "./generated/types/producto";
+export * from "./generated/types/productoDetail";
+export * from "./generated/types/productoInput";
+export * from "./generated/types/productoInventarioUbicacion";
+export * from "./generated/types/productoUpdate";
+export * from "./generated/types/proveedor";
+export * from "./generated/types/proveedorComprasResult";
+export * from "./generated/types/proveedorEstadisticas";
+export * from "./generated/types/proveedorEstadoCuenta";
+export * from "./generated/types/proveedorInput";
+export * from "./generated/types/proveedorMetricas";
+export * from "./generated/types/proveedorUpdate";
+export * from "./generated/types/proveedoresListResult";
+export * from "./generated/types/proveedoresResumen";
+export * from "./generated/types/rateLimitedResponse";
+export * from "./generated/types/recalcularInput";
+export * from "./generated/types/recibirTransferenciaInput";
+export * from "./generated/types/revertirMovimientoInput";
+export * from "./generated/types/role";
+export * from "./generated/types/rolloDetail";
+export * from "./generated/types/rolloListResult";
+export * from "./generated/types/rolloSummary";
+export * from "./generated/types/salidaMostradorInput";
+export * from "./generated/types/serverTime";
+export * from "./generated/types/serverTimeZonaHoraria";
+export * from "./generated/types/tipoMovimiento";
+export * from "./generated/types/tipoPagoProveedor";
+export * from "./generated/types/tipoProveedor";
+export * from "./generated/types/unauthorizedResponse";
+export * from "./generated/types/unidadProducto";
+export * from "./generated/types/user";
+export * from "./generated/types/userInput";
+export * from "./generated/types/userUpdate";
+export * from "./generated/types/validationErrorResponse";
+export * from "./generated/types/venderRolloInput";
+
+// ── Colliding Params types re-exported under QueryParams alias ───────────
+// (server uses the Zod versions from api.ts; these TS interfaces are for
+//  the frontend – api-client-react generates its own hooks independently)
+export type { EstadisticasProveedorParams as EstadisticasProveedorQueryParams } from "./generated/types/estadisticasProveedorParams";
+export type { EstadoCuentaProveedorParams as EstadoCuentaProveedorQueryParams } from "./generated/types/estadoCuentaProveedorParams";
+export type { ExportarProveedorXlsxParams as ExportarProveedorXlsxQueryParams } from "./generated/types/exportarProveedorXlsxParams";
+export type { ListComprasProveedorParams as ListComprasProveedorQueryParams } from "./generated/types/listComprasProveedorParams";

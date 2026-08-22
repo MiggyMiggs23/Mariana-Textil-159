@@ -348,20 +348,34 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /proveedores/resumen:
+    get:
+      operationId: getProveedoresResumen
+      tags: [proveedores]
+      summary: Resumen agregado de todos los proveedores con saldos
+      responses:
+        "200":
+          description: Resumen general de proveedores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedoresResumen"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /proveedores:
     get:
       operationId: listProveedores
       tags: [proveedores]
-      summary: Lista proveedores
+      summary: Lista proveedores con métricas de compras
       responses:
         "200":
-          description: Lista de proveedores
+          description: Objeto con resumen y lista de proveedores con métricas
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Proveedor"
+                $ref: "#/components/schemas/ProveedoresListResult"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -430,6 +444,191 @@ paths:
                 $ref: "#/components/schemas/Proveedor"
         "400":
           $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/compras:
+    get:
+      operationId: listComprasProveedor
+      tags: [proveedores]
+      summary: Lista compras de un proveedor con estado Pagada/Parcial/Pendiente
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+          description: Fecha inicio (inclusive), formato YYYY-MM-DD
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+          description: Fecha fin (inclusive), formato YYYY-MM-DD
+        - in: query
+          name: estado
+          schema:
+            type: string
+            enum: [Pagada, Parcial, Pendiente]
+          description: Filtrar por estado de pago
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: Lista paginada de compras del proveedor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedorComprasResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/estado-cuenta:
+    get:
+      operationId: estadoCuentaProveedor
+      tags: [proveedores]
+      summary: Estado de cuenta cronológico con saldo corrido del proveedor
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+          description: Fecha inicio (inclusive), formato YYYY-MM-DD
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+          description: Fecha fin (inclusive), formato YYYY-MM-DD
+      responses:
+        "200":
+          description: Estado de cuenta con saldo corrido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedorEstadoCuenta"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/pagos:
+    post:
+      operationId: registrarPagoProveedor
+      tags: [proveedores]
+      summary: Registra un pago a proveedor (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PagoProveedorInput"
+      responses:
+        "201":
+          description: Pago registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagoProveedorRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/ajustes:
+    post:
+      operationId: registrarAjusteProveedor
+      tags: [proveedores]
+      summary: Registra un ajuste de saldo para un proveedor (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AjusteProveedorInput"
+      responses:
+        "201":
+          description: Ajuste registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagoProveedorRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/estadisticas:
+    get:
+      operationId: estadisticasProveedor
+      tags: [proveedores]
+      summary: Estadísticas por periodo (desde y hasta requeridos)
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: query
+          name: desde
+          required: true
+          schema: { type: string, format: date }
+          description: Fecha inicio del periodo, formato YYYY-MM-DD
+        - in: query
+          name: hasta
+          required: true
+          schema: { type: string, format: date }
+          description: Fecha fin del periodo, formato YYYY-MM-DD
+      responses:
+        "200":
+          description: Estadísticas del periodo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedorEstadisticas"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/exportar:
+    get:
+      operationId: exportarProveedorXlsx
+      tags: [proveedores]
+      summary: Exporta estado de cuenta del proveedor en XLSX
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+          description: Fecha inicio, formato YYYY-MM-DD
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+          description: Fecha fin, formato YYYY-MM-DD
+      responses:
+        "200":
+          description: Archivo XLSX del estado de cuenta
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -893,6 +1092,19 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /inventario/fecha-servidor:
+    get:
+      operationId: getFechaServidor
+      tags: [inventario]
+      summary: Devuelve la fecha/hora actual del servidor (solo lectura, sin input de cliente)
+      security: []
+      responses:
+        "200":
+          description: Fecha y hora del servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerTime"
   /inventario/conciliacion/recalcular:
     post:
       operationId: recalcularExistencias
@@ -1001,6 +1213,18 @@ components:
       properties:
         status:
           type: string
+    ServerTime:
+      type: object
+      required: [fecha, zonaHoraria]
+      properties:
+        fecha:
+          type: string
+          format: date-time
+          description: Fecha y hora ISO 8601 del servidor en UTC
+        zonaHoraria:
+          type: string
+          enum: [America/Mexico_City]
+          description: Zona horaria operativa del negocio
     Error:
       type: object
       required: [error]
@@ -1513,7 +1737,6 @@ components:
         ubicacionId: { type: number }
         proveedorId: { type: ["number", "null"] }
         observaciones: { type: ["string", "null"] }
-        fecha: { type: ["string", "null"], format: date-time }
         uuidCliente: { type: string }
         lineas:
           type: array
@@ -1639,3 +1862,215 @@ components:
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }
+    TipoPagoProveedor:
+      type: string
+      enum: [COMPRA, PAGO, AJUSTE]
+    FormaPagoProveedor:
+      type: string
+      enum: [EFECTIVO, TRANSFERENCIA, CHEQUE, OTRO]
+    PagoProveedorRow:
+      type: object
+      required: [id, proveedorId, importe, tipo, fecha, usuarioId, createdAt]
+      properties:
+        id: { type: number }
+        proveedorId: { type: number }
+        entradaId: { type: ["number", "null"] }
+        importe: { type: string }
+        tipo:
+          $ref: "#/components/schemas/TipoPagoProveedor"
+        formaPago:
+          oneOf:
+            - $ref: "#/components/schemas/FormaPagoProveedor"
+            - type: "null"
+        referencia: { type: ["string", "null"] }
+        fecha: { type: string, format: date-time }
+        usuarioId: { type: number }
+        notas: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+    PagoProveedorInput:
+      type: object
+      required: [importe, formaPago]
+      properties:
+        importe: { type: number, minimum: 0.01, description: "Importe positivo; se guarda como negativo internamente" }
+        formaPago:
+          $ref: "#/components/schemas/FormaPagoProveedor"
+        fecha: { type: string, format: date-time, description: "Fecha del pago; por defecto ahora si se omite" }
+        referencia: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        entradaId: { type: ["number", "null"], description: "Opcional: liga el pago a una compra específica" }
+    AjusteProveedorInput:
+      type: object
+      required: [importe, notas]
+      properties:
+        importe: { type: number, description: "Signed: positivo aumenta deuda, negativo la reduce" }
+        notas: { type: string, minLength: 10, description: "Justificación mínimo 10 caracteres" }
+    ProveedorMetricas:
+      type: object
+      required: [id, nombre, tipo, monedaDefault, contactoNombre, telefono, correo, pais, notas, activo, createdAt, totalCompras, totalComprado12Meses, comprasMes, totalPagado, saldoPendiente, ultimaCompra, comprasCount]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        tipo:
+          $ref: "#/components/schemas/TipoProveedor"
+        monedaDefault:
+          $ref: "#/components/schemas/Moneda"
+        contactoNombre: { type: ["string", "null"] }
+        telefono: { type: ["string", "null"] }
+        correo: { type: ["string", "null"] }
+        pais: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        activo: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        totalCompras: { type: string, description: "Total histórico de compras (suma de todos los COMPRAs)" }
+        totalComprado12Meses: { type: string, description: "Total comprado en los últimos 12 meses" }
+        comprasMes: { type: string, description: "Total comprado en el mes calendario actual" }
+        totalPagado: { type: string }
+        saldoPendiente: { type: string }
+        ultimaCompra: { type: ["string", "null"], format: date-time }
+        comprasCount: { type: number }
+    ProveedoresResumen:
+      type: object
+      required: [totalProveedores, proveedoresConSaldo, totalDeuda, totalPagado, comprasMes, items]
+      properties:
+        totalProveedores: { type: number }
+        proveedoresConSaldo: { type: number }
+        totalDeuda: { type: string }
+        totalPagado: { type: string }
+        comprasMes: { type: string, description: "Total comprado al conjunto de proveedores en el mes actual" }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProveedorMetricas"
+    ProveedoresListResult:
+      type: object
+      required: [totalProveedores, proveedoresConSaldo, totalDeuda, totalPagado, comprasMes, items]
+      properties:
+        totalProveedores: { type: number }
+        proveedoresConSaldo: { type: number }
+        totalDeuda: { type: string }
+        totalPagado: { type: string }
+        comprasMes: { type: string, description: "Total comprado al conjunto de proveedores en el mes actual" }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProveedorMetricas"
+    CompraConEstado:
+      type: object
+      required: [entradaId, folio, fecha, totalCosto, abonado, saldoPendiente, estado, nombreUbicacion, totalRollos, cantidadTotal]
+      properties:
+        entradaId: { type: number }
+        folio: { type: number }
+        fecha: { type: string, format: date-time }
+        totalCosto: { type: string }
+        abonado: { type: string }
+        saldoPendiente: { type: string }
+        estado:
+          type: string
+          enum: [Pagada, Parcial, Pendiente]
+        nombreUbicacion: { type: string, description: "Nombre de la ubicación/bodega de recepción" }
+        totalRollos: { type: number, description: "Número de rollos recibidos en esta entrada" }
+        cantidadTotal: { type: string, description: "Suma de cantidades de todos los rollos (en la unidad del producto)" }
+    ProveedorComprasResult:
+      type: object
+      required: [items, total, totalCostoPeriodo, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompraConEstado"
+        total: { type: number }
+        totalCostoPeriodo: { type: string, description: "Suma de compras que cumplen los filtros antes de paginar" }
+        page: { type: number }
+        pageSize: { type: number }
+    MovimientoLedger:
+      type: object
+      required: [id, tipo, importe, saldoAcumulado, fecha, usuarioId, createdAt]
+      properties:
+        id: { type: number }
+        tipo:
+          $ref: "#/components/schemas/TipoPagoProveedor"
+        importe: { type: string }
+        saldoAcumulado: { type: string }
+        fecha: { type: string, format: date-time }
+        entradaId: { type: ["number", "null"] }
+        folio: { type: ["number", "null"] }
+        formaPago: { type: ["string", "null"] }
+        referencia: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        usuarioId: { type: number }
+        createdAt: { type: string, format: date-time }
+    ProveedorEstadoCuenta:
+      type: object
+      required: [movimientos, saldoActual]
+      properties:
+        movimientos:
+          type: array
+          items:
+            $ref: "#/components/schemas/MovimientoLedger"
+        saldoActual: { type: string }
+    EstadisticasPorMes:
+      type: object
+      required: [mes, total, count]
+      properties:
+        mes: { type: string }
+        total: { type: string }
+        count: { type: number }
+    EstadisticasPorProducto:
+      type: object
+      required: [productoId, sku, tela, color, unidad, totalCosto, totalRollos, cantidadTotal, costoPromedio]
+      properties:
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string }
+        totalCosto: { type: string }
+        totalRollos: { type: number }
+        cantidadTotal: { type: string, description: "Suma de cantidades de todos los rollos del producto" }
+        costoPromedio: { type: string, description: "Costo promedio por rollo en el periodo actual" }
+        costoPromedioAnterior: { type: ["string", "null"], description: "Costo promedio por rollo en el periodo anterior (misma duración)" }
+        variacionCostoPct: { type: ["string", "null"], description: "Variación % del costo promedio vs periodo anterior" }
+    EstadisticasPorTela:
+      type: object
+      required: [tela, totalCosto, rollosCount]
+      properties:
+        tela: { type: string }
+        totalCosto: { type: string }
+        rollosCount: { type: number }
+    EstadisticasPorColor:
+      type: object
+      required: [color, totalCosto, rollosCount]
+      properties:
+        color: { type: string }
+        totalCosto: { type: string }
+        rollosCount: { type: number }
+    ProveedorEstadisticas:
+      type: object
+      required: [desde, hasta, totalCompras, comprasCount, totalRollos, costoPromedio, ticketPromedio, porMes, porProducto, porTela, porColor]
+      properties:
+        desde: { type: string, format: date-time }
+        hasta: { type: string, format: date-time }
+        totalCompras: { type: string }
+        comprasCount: { type: number }
+        totalRollos: { type: number, description: "Total de rollos recibidos en el periodo" }
+        costoPromedio: { type: string, description: "Costo promedio por compra (entrada)" }
+        ticketPromedio: { type: string, description: "Costo promedio por rollo en el periodo" }
+        diasDesdeUltimaCompra: { type: ["number", "null"], description: "Días desde la última compra hasta hoy; null si no hay compras" }
+        variacionVsPeriodoAnterior: { type: ["string", "null"] }
+        ultimaCompra: { type: ["string", "null"], format: date-time }
+        porMes:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstadisticasPorMes"
+        porProducto:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstadisticasPorProducto"
+        porTela:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstadisticasPorTela"
+        porColor:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstadisticasPorColor"

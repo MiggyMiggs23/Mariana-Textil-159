@@ -125,6 +125,10 @@
   }
 }
 
+.print-only {
+  display: none;
+}
+
 @media print {
   @page label {
     size: 100mm 60mm;
@@ -159,5 +163,53 @@
   
   .document-page {
     page: document;
+  }
+
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-account-statement {
+    page: document;
+    color: #111827;
+    font-size: 10pt;
+  }
+
+  .print-account-statement h2 {
+    font-size: 18pt;
+    margin: 0 0 2mm;
+  }
+
+  .print-account-statement h3 {
+    font-size: 12pt;
+    margin: 7mm 0 2mm;
+  }
+
+  .print-account-statement table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-account-statement th,
+  .print-account-statement td {
+    border: 1px solid #d1d5db;
+    padding: 2mm;
+    vertical-align: top;
+  }
+
+  .print-account-statement th {
+    background: #f3f4f6 !important;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .print-account-statement tr {
+    break-inside: avoid;
+  }
+
+  .print-account-statement .amount {
+    text-align: right;
+    white-space: nowrap;
   }
 }

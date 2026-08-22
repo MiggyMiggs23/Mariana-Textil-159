@@ -19,7 +19,9 @@ import {
   entradasTable,
   existenciasTable,
   movimientosTable,
+  pagosProveedorTable,
   productosTable,
+  proveedoresTable,
   rollosTable,
   seriesConsecutivoTable,
   ubicacionesTable,
@@ -35,6 +37,7 @@ let failed = 0;
 const createdProductoIds: number[] = [];
 const createdUbicacionIds: number[] = [];
 const createdEntradaIds: number[] = [];
+const createdProveedorIds: number[] = [];
 
 async function test(name: string, fn: () => Promise<void>): Promise<void> {
   try {
@@ -76,6 +79,16 @@ async function mkUbicacion(): Promise<number> {
   return row!.id;
 }
 
+async function mkProveedor(): Promise<number> {
+  const tag = `${RUN}-${++seq}`;
+  const [row] = await db
+    .insert(proveedoresTable)
+    .values({ nombre: `Prov ${tag}`.slice(0, 200), tipo: "NACIONAL" as const })
+    .returning();
+  createdProveedorIds.push(row!.id);
+  return row!.id;
+}
+
 async function readExistencia(
   productoId: number,
   ubicacionId: number,
@@ -102,18 +115,19 @@ async function readExistencia(
 // =============================================================================
 
 await test(
-  "E-01: Entrada multi-producto → totales, enlace recepcion_id, RECEPCION y existencias",
+  "E-01: Entrada multi-producto → totales, enlace recepcion_id, RECEPCION, existencias y COMPRA proveedor",
   async () => {
     const { id: prodA } = await mkProducto();
     const { id: prodB } = await mkProducto();
     const ubicacionId = await mkUbicacion();
+    const proveedorId = await mkProveedor();
     const USUARIO = 1;
 
     const result = await db.transaction(async (tx) =>
       crearEntrada(tx, {
         ubicacionId,
+        proveedorId,
         usuarioId: USUARIO,
-        fecha: new Date("2024-01-15T10:00:00.000Z"),
         uuidCliente: randomUUID(),
         lineas: [
           { productoId: prodA, costoUnitario: "50.00", cantidades: ["10.0", "20.0"] },
@@ -168,6 +182,20 @@ await test(
     assert.equal(exA!.rollosCount, 2, "Existencia A rollosCount = 2");
     assert.equal(exB!.cantidadTotal, 5.0, "Existencia B = 5");
     assert.equal(exB!.rollosCount, 1, "Existencia B rollosCount = 1");
+
+    // COMPRA row inserted in pagos_proveedor (idempotente)
+    const compras = await db
+      .select()
+      .from(pagosProveedorTable)
+      .where(
+        and(
+          eq(pagosProveedorTable.entradaId, result.id),
+          eq(pagosProveedorTable.tipo, "COMPRA"),
+        ),
+      );
+    assert.equal(compras.length, 1, "Debe existir exactamente 1 COMPRA en pagos_proveedor");
+    assert.equal(compras[0]!.importe, "1650.00", "COMPRA importe = 1650.00");
+    assert.equal(compras[0]!.proveedorId, proveedorId, "COMPRA proveedor_id correcto");
   },
 );
 
@@ -185,7 +213,6 @@ await test("E-02: uuid_cliente repetido → no duplica, retorna entrada original
     crearEntrada(tx, {
       ubicacionId,
       usuarioId: USUARIO,
-      fecha: new Date("2024-02-01T00:00:00.000Z"),
       uuidCliente: uuid,
       lineas: [{ productoId: prod, costoUnitario: "10.00", cantidades: ["7.0", "8.0"] }],
     }),
@@ -196,7 +223,6 @@ await test("E-02: uuid_cliente repetido → no duplica, retorna entrada original
     crearEntrada(tx, {
       ubicacionId,
       usuarioId: USUARIO,
-      fecha: new Date("2024-02-01T00:00:00.000Z"),
       uuidCliente: uuid,
       lineas: [{ productoId: prod, costoUnitario: "10.00", cantidades: ["7.0", "8.0"] }],
     }),
@@ -251,7 +277,6 @@ await test("E-03: Rollback → no quema series ni deja filas", async () => {
         await crearEntrada(tx, {
           ubicacionId,
           usuarioId: USUARIO,
-          fecha: new Date("2024-03-01T00:00:00.000Z"),
           uuidCliente: uuid,
           lineas: [{ productoId: prod, costoUnitario: "10.00", cantidades: ["5.0"] }],
         });
@@ -298,7 +323,6 @@ await test("E-03: Rollback → no quema series ni deja filas", async () => {
     crearEntrada(tx, {
       ubicacionId,
       usuarioId: USUARIO,
-      fecha: new Date("2024-03-02T00:00:00.000Z"),
       uuidCliente: randomUUID(),
       lineas: [{ productoId: prod, costoUnitario: "10.00", cantidades: ["5.0"] }],
     }),
@@ -323,7 +347,6 @@ await test("E-04: Entrada sin rollos → InventarioError", async () => {
         crearEntrada(tx, {
           ubicacionId,
           usuarioId: 1,
-          fecha: new Date(),
           uuidCliente: randomUUID(),
           lineas: [],
         }),
@@ -345,6 +368,18 @@ process.stdout.write(`Results: ${passed} passed, ${failed} failed\n`);
 
 try {
   await db.transaction(async (tx) => {
+    // Delete pagos_proveedor first (FK to entradas)
+    if (createdEntradaIds.length > 0) {
+      await tx
+        .delete(pagosProveedorTable)
+        .where(inArray(pagosProveedorTable.entradaId, createdEntradaIds));
+    }
+    if (createdProveedorIds.length > 0) {
+      await tx
+        .delete(pagosProveedorTable)
+        .where(inArray(pagosProveedorTable.proveedorId, createdProveedorIds));
+    }
+
     if (createdEntradaIds.length > 0) {
       const rollos = await tx
         .select({ id: rollosTable.id })
@@ -387,6 +422,12 @@ try {
       await tx
         .delete(ubicacionesTable)
         .where(inArray(ubicacionesTable.id, createdUbicacionIds));
+    }
+
+    if (createdProveedorIds.length > 0) {
+      await tx
+        .delete(proveedoresTable)
+        .where(inArray(proveedoresTable.id, createdProveedorIds));
     }
   });
   process.stdout.write(`Cleanup: OK\n`);

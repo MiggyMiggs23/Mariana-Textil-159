@@ -1,5 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { backfillCompras } from "./lib/compras-proveedor";
 
 const rawPort = process.env["PORT"];
 
@@ -22,4 +23,11 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
+  void backfillCompras()
+    .then((inserted) => {
+      logger.info({ inserted }, "Backfill de compras por proveedor completado");
+    })
+    .catch((err: unknown) => {
+      logger.error({ err }, "No se pudo completar el backfill de compras");
+    });
 });

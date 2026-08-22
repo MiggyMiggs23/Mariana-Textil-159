@@ -2,6 +2,7 @@ export * from "./audit";
 export * from "./entradas";
 export * from "./enums";
 export * from "./locations";
+export * from "./pagos-proveedor";
 export * from "./productos";
 export * from "./proveedores";
 export * from "./rollos";

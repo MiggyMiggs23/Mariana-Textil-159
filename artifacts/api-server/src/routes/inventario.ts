@@ -43,6 +43,7 @@ import {
   GetConciliacionResponse,
   RecalcularExistenciasBody,
   RecalcularExistenciasResponse,
+  GetFechaServidorResponse,
 } from "@workspace/api-zod";
 import {
   db,
@@ -75,6 +76,20 @@ import {
 } from "../lib/inventario";
 
 export const inventarioRouter = Router();
+
+// ── Fecha del servidor ────────────────────────────────────────────────────────
+// Unauthenticated — returns the server clock so the UI can display the real
+// server date/time before the user submits a form. Accepts no client input.
+
+inventarioRouter.get("/fecha-servidor", (_req, res): void => {
+  const now = new Date();
+  res.json(
+    GetFechaServidorResponse.parse({
+      fecha: now.toISOString(),
+      zonaHoraria: "America/Mexico_City",
+    }),
+  );
+});
 
 // ── Helper types ──────────────────────────────────────────────────────────────
 
@@ -301,7 +316,6 @@ inventarioRouter.post(
           ubicacionId,
           proveedorId: body.proveedorId ?? null,
           observaciones: body.observaciones ?? null,
-          fecha: body.fecha ?? new Date(),
           usuarioId,
           ip: getRequestIp(req),
           uuidCliente: body.uuidCliente,

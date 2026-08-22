@@ -9,7 +9,8 @@
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:inventario": "tsx src/lib/inventario.test.ts",
-    "test:entradas": "tsx src/lib/entradas.test.ts"
+    "test:entradas": "tsx src/lib/entradas.test.ts",
+    "test:proveedores": "tsx src/lib/compras-proveedor.test.ts"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",

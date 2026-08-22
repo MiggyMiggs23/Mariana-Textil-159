@@ -96,7 +96,7 @@ export default function Movimientos() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos</SelectItem>
-                    {proveedores?.map(p => (
+                    {proveedores?.items.map(p => (
                       <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
                     ))}
                   </SelectContent>

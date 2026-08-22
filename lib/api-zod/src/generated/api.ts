@@ -394,9 +394,15 @@ export const ConfirmImportProductosResponse = zod.object({
 
 
 /**
- * @summary Lista proveedores
+ * @summary Resumen agregado de todos los proveedores con saldos
  */
-export const ListProveedoresResponseItem = zod.object({
+export const GetProveedoresResumenResponse = zod.object({
+  "totalProveedores": zod.number(),
+  "proveedoresConSaldo": zod.number(),
+  "totalDeuda": zod.string(),
+  "totalPagado": zod.string(),
+  "comprasMes": zod.string().describe('Total comprado al conjunto de proveedores en el mes actual'),
+  "items": zod.array(zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
@@ -407,9 +413,48 @@ export const ListProveedoresResponseItem = zod.object({
   "pais": zod.string().nullable(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "totalCompras": zod.string().describe('Total histórico de compras (suma de todos los COMPRAs)'),
+  "totalComprado12Meses": zod.string().describe('Total comprado en los últimos 12 meses'),
+  "comprasMes": zod.string().describe('Total comprado en el mes calendario actual'),
+  "totalPagado": zod.string(),
+  "saldoPendiente": zod.string(),
+  "ultimaCompra": zod.coerce.date().nullable(),
+  "comprasCount": zod.number()
+}))
 })
-export const ListProveedoresResponse = zod.array(ListProveedoresResponseItem)
+
+
+/**
+ * @summary Lista proveedores con métricas de compras
+ */
+export const ListProveedoresResponse = zod.object({
+  "totalProveedores": zod.number(),
+  "proveedoresConSaldo": zod.number(),
+  "totalDeuda": zod.string(),
+  "totalPagado": zod.string(),
+  "comprasMes": zod.string().describe('Total comprado al conjunto de proveedores en el mes actual'),
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
+  "monedaDefault": zod.enum(['MXN', 'USD']),
+  "contactoNombre": zod.string().nullable(),
+  "telefono": zod.string().nullable(),
+  "correo": zod.string().nullable(),
+  "pais": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "totalCompras": zod.string().describe('Total histórico de compras (suma de todos los COMPRAs)'),
+  "totalComprado12Meses": zod.string().describe('Total comprado en los últimos 12 meses'),
+  "comprasMes": zod.string().describe('Total comprado en el mes calendario actual'),
+  "totalPagado": zod.string(),
+  "saldoPendiente": zod.string(),
+  "ultimaCompra": zod.coerce.date().nullable(),
+  "comprasCount": zod.number()
+}))
+})
 
 
 /**
@@ -506,6 +551,214 @@ export const UpdateProveedorResponse = zod.object({
 
 
 /**
+ * @summary Lista compras de un proveedor con estado Pagada/Parcial/Pendiente
+ */
+export const ListComprasProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const listComprasProveedorQueryPageDefault = 1;
+
+export const listComprasProveedorQueryPageSizeDefault = 20;
+export const listComprasProveedorQueryPageSizeMax = 200;
+
+
+
+export const ListComprasProveedorQueryParams = zod.object({
+  "desde": zod.date().optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
+  "hasta": zod.date().optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD'),
+  "estado": zod.enum(['Pagada', 'Parcial', 'Pendiente']).optional().describe('Filtrar por estado de pago'),
+  "page": zod.coerce.number().int().min(1).default(listComprasProveedorQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(listComprasProveedorQueryPageSizeMax).default(listComprasProveedorQueryPageSizeDefault)
+})
+
+export const ListComprasProveedorResponse = zod.object({
+  "items": zod.array(zod.object({
+  "entradaId": zod.number(),
+  "folio": zod.number(),
+  "fecha": zod.coerce.date(),
+  "totalCosto": zod.string(),
+  "abonado": zod.string(),
+  "saldoPendiente": zod.string(),
+  "estado": zod.enum(['Pagada', 'Parcial', 'Pendiente']),
+  "nombreUbicacion": zod.string().describe('Nombre de la ubicación\/bodega de recepción'),
+  "totalRollos": zod.number().describe('Número de rollos recibidos en esta entrada'),
+  "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos (en la unidad del producto)')
+})),
+  "total": zod.number(),
+  "totalCostoPeriodo": zod.string().describe('Suma de compras que cumplen los filtros antes de paginar'),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Estado de cuenta cronológico con saldo corrido del proveedor
+ */
+export const EstadoCuentaProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const EstadoCuentaProveedorQueryParams = zod.object({
+  "desde": zod.date().optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
+  "hasta": zod.date().optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD')
+})
+
+export const EstadoCuentaProveedorResponse = zod.object({
+  "movimientos": zod.array(zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "importe": zod.string(),
+  "saldoAcumulado": zod.string(),
+  "fecha": zod.coerce.date(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "formaPago": zod.string().nullish(),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "saldoActual": zod.string()
+})
+
+
+/**
+ * @summary Registra un pago a proveedor (ADMIN)
+ */
+export const RegistrarPagoProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const registrarPagoProveedorBodyImporteMin = 0.01;
+
+
+
+export const RegistrarPagoProveedorBody = zod.object({
+  "importe": zod.number().min(registrarPagoProveedorBodyImporteMin).describe('Importe positivo; se guarda como negativo internamente'),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),
+  "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "entradaId": zod.number().nullish().describe('Opcional: liga el pago a una compra específica')
+})
+
+export const RegistrarPagoProveedorResponse = zod.object({
+  "id": zod.number(),
+  "proveedorId": zod.number(),
+  "entradaId": zod.number().nullish(),
+  "importe": zod.string(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "referencia": zod.string().nullish(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Registra un ajuste de saldo para un proveedor (ADMIN)
+ */
+export const RegistrarAjusteProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const registrarAjusteProveedorBodyNotasMin = 10;
+
+
+
+export const RegistrarAjusteProveedorBody = zod.object({
+  "importe": zod.number().describe('Signed: positivo aumenta deuda, negativo la reduce'),
+  "notas": zod.string().min(registrarAjusteProveedorBodyNotasMin).describe('Justificación mínimo 10 caracteres')
+})
+
+export const RegistrarAjusteProveedorResponse = zod.object({
+  "id": zod.number(),
+  "proveedorId": zod.number(),
+  "entradaId": zod.number().nullish(),
+  "importe": zod.string(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "referencia": zod.string().nullish(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Estadísticas por periodo (desde y hasta requeridos)
+ */
+export const EstadisticasProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const EstadisticasProveedorQueryParams = zod.object({
+  "desde": zod.date().describe('Fecha inicio del periodo, formato YYYY-MM-DD'),
+  "hasta": zod.date().describe('Fecha fin del periodo, formato YYYY-MM-DD')
+})
+
+export const EstadisticasProveedorResponse = zod.object({
+  "desde": zod.coerce.date(),
+  "hasta": zod.coerce.date(),
+  "totalCompras": zod.string(),
+  "comprasCount": zod.number(),
+  "totalRollos": zod.number().describe('Total de rollos recibidos en el periodo'),
+  "costoPromedio": zod.string().describe('Costo promedio por compra (entrada)'),
+  "ticketPromedio": zod.string().describe('Costo promedio por rollo en el periodo'),
+  "diasDesdeUltimaCompra": zod.number().nullish().describe('Días desde la última compra hasta hoy; null si no hay compras'),
+  "variacionVsPeriodoAnterior": zod.string().nullish(),
+  "ultimaCompra": zod.coerce.date().nullish(),
+  "porMes": zod.array(zod.object({
+  "mes": zod.string(),
+  "total": zod.string(),
+  "count": zod.number()
+})),
+  "porProducto": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.string(),
+  "totalCosto": zod.string(),
+  "totalRollos": zod.number(),
+  "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos del producto'),
+  "costoPromedio": zod.string().describe('Costo promedio por rollo en el periodo actual'),
+  "costoPromedioAnterior": zod.string().nullish().describe('Costo promedio por rollo en el periodo anterior (misma duración)'),
+  "variacionCostoPct": zod.string().nullish().describe('Variación % del costo promedio vs periodo anterior')
+})),
+  "porTela": zod.array(zod.object({
+  "tela": zod.string(),
+  "totalCosto": zod.string(),
+  "rollosCount": zod.number()
+})),
+  "porColor": zod.array(zod.object({
+  "color": zod.string(),
+  "totalCosto": zod.string(),
+  "rollosCount": zod.number()
+}))
+})
+
+
+/**
+ * @summary Exporta estado de cuenta del proveedor en XLSX
+ */
+export const ExportarProveedorXlsxParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ExportarProveedorXlsxQueryParams = zod.object({
+  "desde": zod.date().optional().describe('Fecha inicio, formato YYYY-MM-DD'),
+  "hasta": zod.date().optional().describe('Fecha fin, formato YYYY-MM-DD')
+})
+
+export const ExportarProveedorXlsxResponse = zod.unknown()
+
+
+/**
  * @summary Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
  */
 
@@ -516,7 +769,6 @@ export const CrearEntradaBody = zod.object({
   "ubicacionId": zod.number(),
   "proveedorId": zod.number().nullish(),
   "observaciones": zod.string().nullish(),
-  "fecha": zod.coerce.date().nullish(),
   "uuidCliente": zod.string(),
   "lineas": zod.array(zod.object({
   "productoId": zod.number(),
@@ -1274,6 +1526,15 @@ export const GetConciliacionResponseItem = zod.object({
   "discrepancia": zod.boolean()
 })
 export const GetConciliacionResponse = zod.array(GetConciliacionResponseItem)
+
+
+/**
+ * @summary Devuelve la fecha/hora actual del servidor (solo lectura, sin input de cliente)
+ */
+export const GetFechaServidorResponse = zod.object({
+  "fecha": zod.coerce.date().describe('Fecha y hora ISO 8601 del servidor en UTC'),
+  "zonaHoraria": zod.enum(['America/Mexico_City']).describe('Zona horaria operativa del negocio')
+})
 
 
 /**

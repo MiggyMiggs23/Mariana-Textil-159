@@ -273,7 +273,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-[100dvh] flex bg-background">
       {/* Sidebar for Desktop */}
-      <aside className="hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
+      <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
         <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
           <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
           <span className="font-bold text-lg tracking-tight text-white">Mariana Textil</span>
@@ -304,7 +304,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Header & Menu */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-white shadow-sm">
+        <header className="no-print md:hidden sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-white shadow-sm">
           <div className="h-16 flex items-center justify-between px-4">
             <div className="flex items-center gap-2.5">
               <BrandLogo variant="mark" className="h-9 w-9" />
@@ -319,7 +319,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <header className="hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
+        <header className="no-print hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
           {renderLocationControl()}
           <div className="h-8 w-px bg-border" />
           <div className="flex items-center gap-3">
@@ -334,7 +334,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 flex md:hidden">
+          <div className="no-print fixed inset-0 z-50 flex md:hidden">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
             <div className="relative w-[280px] bg-sidebar text-sidebar-foreground h-full flex flex-col animate-in slide-in-from-left duration-200">
               <div className="h-16 flex items-center justify-between px-6 border-b border-sidebar-border flex-shrink-0">
