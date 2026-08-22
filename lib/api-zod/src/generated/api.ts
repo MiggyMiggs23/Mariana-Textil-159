@@ -72,6 +72,10 @@ export const GetCurrentUserResponse = zod.object({
 /**
  * @summary Obtiene conteos e inventario inicial por ubicación
  */
+export const GetDashboardQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional().describe('Filtro opcional disponible únicamente para ADMIN')
+})
+
 export const GetDashboardResponse = zod.object({
   "tiendasActivas": zod.number(),
   "bodegasActivas": zod.number(),

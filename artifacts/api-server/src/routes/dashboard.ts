@@ -8,10 +8,23 @@ const router: IRouter = Router();
 
 router.get("/dashboard", requireSession, async (req, res): Promise<void> => {
   const user = req.auth!.user;
+  const requestedLocationId =
+    typeof req.query.ubicacionId === "string"
+      ? Number(req.query.ubicacionId)
+      : null;
+  const adminLocationId =
+    user.rol === "ADMIN" &&
+    requestedLocationId !== null &&
+    Number.isInteger(requestedLocationId) &&
+    requestedLocationId > 0
+      ? requestedLocationId
+      : null;
   const visibleLocationIds =
-    user.rol === "ADMIN" || user.ubicacionId === null
-      ? null
-      : [user.ubicacionId];
+    adminLocationId !== null
+      ? [adminLocationId]
+      : user.rol === "ADMIN" || user.ubicacionId === null
+        ? null
+        : [user.ubicacionId];
 
   const locationScope = visibleLocationIds
     ? inArray(ubicacionesTable.id, visibleLocationIds)
@@ -63,12 +76,12 @@ router.get("/dashboard", requireSession, async (req, res): Promise<void> => {
     .select({ value: count() })
     .from(usuariosTable)
     .where(
-      user.rol === "ADMIN" || user.ubicacionId === null
-        ? eq(usuariosTable.activo, true)
-        : and(
+      locationScope
+        ? and(
             eq(usuariosTable.activo, true),
-            eq(usuariosTable.ubicacionId, user.ubicacionId),
-          ),
+            inArray(usuariosTable.ubicacionId, visibleLocationIds!),
+          )
+        : eq(usuariosTable.activo, true),
     );
 
   res.json(

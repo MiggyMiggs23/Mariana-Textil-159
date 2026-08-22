@@ -3,10 +3,17 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Users, Warehouse } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useLocationScope } from "@/lib/location-scope";
 
 export default function Dashboard() {
   const { data: user } = useGetCurrentUser();
-  const { data: dashboard, isLoading, error } = useGetDashboard();
+  const { selectedLocationId } = useLocationScope();
+  const isAdmin = user?.rol === Role.ADMIN;
+  const { data: dashboard, isLoading, error } = useGetDashboard(
+    isAdmin && selectedLocationId !== null
+      ? { ubicacionId: selectedLocationId }
+      : undefined,
+  );
 
   if (isLoading) {
     return (
@@ -34,19 +41,18 @@ export default function Dashboard() {
     );
   }
 
-  const isAdmin = user?.rol === Role.ADMIN;
-  
-  // Filtrar si no es admin
-  const inventario = isAdmin 
-    ? dashboard.inventarioPorUbicacion 
-    : dashboard.inventarioPorUbicacion.filter(i => i.ubicacionId === user?.ubicacion?.id);
+  const inventario = dashboard.inventarioPorUbicacion;
+  const selectedLocationName =
+    selectedLocationId === null ? null : inventario[0]?.nombre;
 
   return (
     <AppLayout>
       <div className="max-w-6xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-sidebar">
-            {isAdmin ? "Vista Global" : `Dashboard - ${user?.ubicacion?.nombre || 'General'}`}
+            {isAdmin
+              ? selectedLocationName ?? "Vista Global"
+              : `Dashboard - ${user?.ubicacion?.nombre || "General"}`}
           </h1>
           <p className="text-muted-foreground mt-2">
             Resumen de la operación al momento.

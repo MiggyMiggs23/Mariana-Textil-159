@@ -36,6 +36,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useLocationScope } from "@/lib/location-scope";
 
 type NavItem = {
   name: string;
@@ -110,8 +111,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }
   });
   
-  // Use a local state for the ADMIN location selector
-  const [selectedLocation, setSelectedLocation] = useState<string>("global");
+  const { selectedLocationId, setSelectedLocationId } = useLocationScope();
   const { data: locations } = useListLocations({
     query: {
       enabled: user?.rol === Role.ADMIN,
@@ -149,6 +149,60 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       }
     });
   };
+
+  const renderLocationControl = (compact = false) =>
+    user.rol === Role.ADMIN ? (
+      <div className={cn("space-y-1", compact ? "w-full" : "w-64")}>
+        {!compact && (
+          <span className="text-xs font-medium text-muted-foreground">
+            Ubicación
+          </span>
+        )}
+        <Select
+          value={
+            selectedLocationId === null
+              ? "global"
+              : String(selectedLocationId)
+          }
+          onValueChange={(value) =>
+            setSelectedLocationId(
+              value === "global" ? null : Number(value),
+            )
+          }
+        >
+          <SelectTrigger
+            className={cn(
+              "bg-background text-foreground",
+              compact ? "h-9 border-white/20 bg-white/10 text-white" : "h-9",
+            )}
+          >
+            <SelectValue placeholder="Vista Global" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="global">Vista Global</SelectItem>
+            {locations?.map((item) => (
+              <SelectItem key={item.id} value={String(item.id)}>
+                {item.nombre}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    ) : (
+      <div
+        className={cn(
+          "flex items-center gap-2 rounded-md border px-3 py-2 text-sm",
+          compact
+            ? "w-full border-white/20 bg-white/10 text-white"
+            : "border-border bg-muted/40 text-foreground",
+        )}
+      >
+        <MapPin className="h-4 w-4 shrink-0" />
+        <span className="truncate">
+          {user.ubicacion?.nombre ?? "Sin ubicación"}
+        </span>
+      </div>
+    );
 
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
@@ -217,25 +271,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="font-medium text-sm text-white truncate">{user.nombre}</span>
               <span className="text-xs text-sidebar-foreground/70 font-mono tracking-tight">{user.rol}</span>
             </div>
-            
-            {user.rol === Role.ADMIN ? (
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="h-8 text-xs bg-sidebar-accent border-sidebar-border text-sidebar-foreground">
-                  <SelectValue placeholder="Vista Global" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="global">Vista Global</SelectItem>
-                  {locations?.map(loc => (
-                    <SelectItem key={loc.id} value={String(loc.id)}>{loc.nombre}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <div className="flex items-center gap-1.5 text-xs text-sidebar-foreground/80 bg-sidebar-accent/30 px-2 py-1.5 rounded border border-sidebar-border">
-                <MapPin className="w-3 h-3" />
-                <span className="truncate">{user.ubicacion ? user.ubicacion.nombre : 'Sin ubicación'}</span>
-              </div>
-            )}
           </div>
           <Button 
             variant="ghost" 
@@ -251,11 +286,30 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Header & Menu */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden h-16 flex items-center justify-between px-4 bg-sidebar text-white sticky top-0 z-40 border-b border-sidebar-border shadow-sm">
-          <span className="font-bold text-lg">Mariana Textil</span>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
-            <Menu className="w-6 h-6" />
-          </Button>
+        <header className="md:hidden sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-white shadow-sm">
+          <div className="h-16 flex items-center justify-between px-4">
+            <span className="font-bold text-lg">Mariana Textil</span>
+            <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </Button>
+          </div>
+          <div className="border-t border-white/10 px-4 pb-3 pt-2">
+            {renderLocationControl(true)}
+          </div>
+        </header>
+
+        <header className="hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
+          {renderLocationControl()}
+          <div className="h-8 w-px bg-border" />
+          <div className="flex items-center gap-3">
+            <div className="grid h-9 w-9 place-items-center rounded-full bg-sidebar text-sm font-bold text-white">
+              {user.nombre.charAt(0).toUpperCase()}
+            </div>
+            <div className="text-right leading-tight">
+              <p className="text-sm font-semibold">{user.nombre}</p>
+              <p className="text-xs text-muted-foreground">{user.rol}</p>
+            </div>
+          </div>
         </header>
 
         {mobileMenuOpen && (
@@ -279,25 +333,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     <span className="font-medium text-sm text-white truncate">{user.nombre}</span>
                     <span className="text-xs text-sidebar-foreground/70 font-mono">{user.rol}</span>
                   </div>
-                  
-                  {user.rol === Role.ADMIN ? (
-                    <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                      <SelectTrigger className="h-8 text-xs bg-sidebar-accent border-sidebar-border text-sidebar-foreground">
-                        <SelectValue placeholder="Vista Global" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="global">Vista Global</SelectItem>
-                        {locations?.map(loc => (
-                          <SelectItem key={loc.id} value={String(loc.id)}>{loc.nombre}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-xs text-sidebar-foreground/80 bg-sidebar-accent/30 px-2 py-1.5 rounded border border-sidebar-border">
-                      <MapPin className="w-3 h-3" />
-                      <span className="truncate">{user.ubicacion ? user.ubicacion.nombre : 'Sin ubicación'}</span>
-                    </div>
-                  )}
                 </div>
                 <Button 
                   variant="ghost" 

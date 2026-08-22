@@ -91,7 +91,12 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Usuario</FormLabel>
                     <FormControl>
-                      <Input placeholder="usuario.tienda" {...field} autoFocus />
+                      <Input
+                        placeholder="usuario.tienda"
+                        autoComplete="username"
+                        {...field}
+                        autoFocus
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,7 +109,12 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Contraseña</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

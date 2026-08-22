@@ -11,6 +11,7 @@ export * from './dashboard';
 export * from './dashboardInventarioPorUbicacionItem';
 export * from './error';
 export * from './forbiddenResponse';
+export * from './getDashboardParams';
 export * from './healthStatus';
 export * from './location';
 export * from './locationType';

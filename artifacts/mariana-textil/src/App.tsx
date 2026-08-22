@@ -16,6 +16,7 @@ import Login from '@/pages/login';
 import Dashboard from '@/pages/dashboard';
 import Ubicaciones from '@/pages/ubicaciones';
 import Usuarios from '@/pages/usuarios';
+import { LocationScopeProvider } from '@/lib/location-scope';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -97,7 +98,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-          <Router />
+          <LocationScopeProvider>
+            <Router />
+          </LocationScopeProvider>
         </WouterRouter>
         <Toaster />
       </TooltipProvider>

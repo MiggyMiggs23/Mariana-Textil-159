@@ -79,6 +79,13 @@ paths:
       operationId: getDashboard
       tags: [dashboard]
       summary: Obtiene conteos e inventario inicial por ubicación
+      parameters:
+        - in: query
+          name: ubicacionId
+          required: false
+          schema:
+            type: number
+          description: Filtro opcional disponible únicamente para ADMIN
       responses:
         "200":
           description: Resumen del tablero

@@ -165,3 +165,10 @@ export type ValidationErrorResponse = Error;
  */
 export type RateLimitedResponse = Error;
 
+export type GetDashboardParams = {
+/**
+ * Filtro opcional disponible únicamente para ADMIN
+ */
+ubicacionId?: number;
+};
+
