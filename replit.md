@@ -11,7 +11,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - `pnpm --filter @workspace/api-spec run codegen` — regenera cliente y Zod desde OpenAPI
 - `pnpm --filter @workspace/db run push` — aplica el esquema Drizzle en desarrollo
 - `pnpm --filter @workspace/db run seed` — precarga ubicaciones y el ADMIN inicial
-- Requiere `DATABASE_URL` con una conexión PostgreSQL
+- En Replit usa `NEON_DATABASE_URL` para la conexión externa de Neon; fuera de Replit también acepta `DATABASE_URL`
 
 ## Stack
 
