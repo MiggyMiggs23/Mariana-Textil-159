@@ -1,0 +1,273 @@
+# PROMPT 3 — Rollos, motor de movimientos e inventario
+### Mariana Textil · Sistema Integral de Tiendas y Bodegas
+
+> Este es el prompt más importante del proyecto. Todo lo demás se construye encima.
+> Haz commit en Git antes de pegarlo.
+> Trabaja con calma y no avances a la siguiente sección hasta que la anterior esté probada.
+
+---
+
+El catálogo de productos y proveedores ya funciona. Ahora construimos la parte central del sistema: los rollos físicos, el motor que registra cada movimiento, y el inventario.
+
+**Stack:** React + Vite con servidor Express, TypeScript, Tailwind, PostgreSQL, Drizzle. Respeta la arquitectura existente.
+
+## Por qué esto importa
+
+Este módulo no es una pantalla de inventario. Es el registro contable de la mercancía. Si un metro entra o sale sin dejar rastro, el sistema miente y nadie se entera hasta que se hace un conteo físico.
+
+La regla que gobierna todo el código de este prompt:
+
+> **El kardex es la fuente de verdad. La existencia es un caché derivado.**
+
+Nunca existe un `UPDATE existencias SET cantidad = X` sin su fila correspondiente en `movimientos`, insertada dentro de la misma transacción de base de datos.
+
+## Concepto: el rollo
+
+- Un **rollo** es una pieza física concreta de un producto. Tiene su propia cantidad, y esa cantidad varía entre rollos del mismo producto: uno puede traer 47.3 m y otro 52.1 m.
+- Cada rollo tiene un **número de serie único** generado por el sistema, que va impreso en su etiqueta física junto con el código de barras.
+- El rollo se vende **completo**. No se fracciona en el sistema.
+- Cada rollo carga su **costo de compra congelado**. Ese número no cambia nunca, aunque el proveedor suba precios después.
+- La venta por metro existe pero es minoritaria: el rollo sale del inventario como "abierto en mostrador" y a partir de ahí ya no se rastrea. **Un rollo abierto nunca regresa al inventario.**
+
+## Tablas nuevas
+
+**rollos**
+- id (serial, PK)
+- serie (text, único) — generado por el sistema, formato `SKU-######`
+- producto_id (int, FK a productos)
+- ubicacion_id (int, FK a ubicaciones)
+- cantidad_inicial (decimal 10,3) — metros o kilos según la unidad del producto
+- cantidad_actual (decimal 10,3) — igual a la inicial mientras esté disponible
+- estado (enum: PROGRAMADO, DISPONIBLE, EN_TRANSITO, ABIERTO, VENDIDO, BAJA)
+- costo_unitario (decimal 12,2) — costo por metro o kilo, congelado al recibir
+- costo_total (decimal 12,2) — costo_unitario × cantidad_inicial, calculado y congelado
+- proveedor_id (int, FK a proveedores, nullable)
+- recepcion_id (int, nullable) — se usará en el prompt siguiente
+- rollo_origen_id (int, FK a rollos, nullable) — para devoluciones, apunta al rollo original
+- notas (text, nullable)
+- created_at, updated_at (timestamptz)
+- Índices en (producto_id, ubicacion_id, estado), en serie, y en estado
+
+**movimientos** (el kardex)
+- id (bigserial, PK)
+- rollo_id (int, FK a rollos)
+- producto_id (int, FK a productos) — redundante a propósito, para consultas rápidas
+- ubicacion_id (int, FK a ubicaciones)
+- tipo (enum: ALTA, RECEPCION, VENTA, DEVOLUCION, TRANSFERENCIA_SALIDA, TRANSFERENCIA_ENTRADA, SALIDA_MOSTRADOR, AJUSTE_POSITIVO, AJUSTE_NEGATIVO, CANCELACION)
+- cantidad (decimal 10,3) **CON SIGNO** — positivo entra, negativo sale
+- saldo_posterior (decimal 10,3) — existencia del producto en esa ubicación después de este movimiento
+- documento_tipo (text, nullable) — 'recepcion', 'venta', 'transferencia', 'ajuste'
+- documento_id (text, nullable)
+- movimiento_origen_id (bigint, FK a movimientos, nullable) — para reversos
+- usuario_id (int, FK a usuarios)
+- justificacion (text, nullable) — obligatorio para ajustes
+- revisado (boolean, default true) — los ajustes entran como false
+- revisado_por (int, FK a usuarios, nullable)
+- revisado_at (timestamptz, nullable)
+- uuid_cliente (uuid, único, nullable) — idempotencia
+- created_at (timestamptz)
+- Índices en (producto_id, ubicacion_id, created_at), en (documento_tipo, documento_id), en (revisado) filtrado por false
+
+**existencias** (caché derivado)
+- producto_id (int)
+- ubicacion_id (int)
+- cantidad_total (decimal 10,3)
+- rollos_count (int)
+- updated_at (timestamptz)
+- Clave primaria compuesta (producto_id, ubicacion_id)
+
+## Reglas de estado del rollo
+
+| Estado | Cuenta en existencias | Descripción |
+|---|---|---|
+| PROGRAMADO | No | Rollo creado desde un packing list, aún no llega físicamente. Permite imprimir su etiqueta por anticipado. |
+| DISPONIBLE | Sí | En inventario, listo para vender o transferir |
+| EN_TRANSITO | Sí, en la ubicación "En tránsito" | Salió de una ubicación y aún no llega a la otra |
+| ABIERTO | No | Salió a mostrador para venta por metro. Ya no se rastrea. |
+| VENDIDO | No | Vendido completo |
+| BAJA | No | Dado de baja por ajuste, merma o pérdida |
+
+**Transiciones permitidas** (cualquier otra debe rechazarse):
+```
+PROGRAMADO  → DISPONIBLE | BAJA
+DISPONIBLE  → EN_TRANSITO | ABIERTO | VENDIDO | BAJA
+EN_TRANSITO → DISPONIBLE | BAJA
+ABIERTO     → (ninguna, es terminal)
+VENDIDO     → DISPONIBLE (solo por devolución o cancelación de venta)
+BAJA        → DISPONIBLE (solo por reverso de ajuste)
+```
+
+## Generación del número de serie
+
+Formato: `[SKU del producto]-[consecutivo de 6 dígitos]`
+
+Ejemplos: `TAF-ROJ-000147` · `GABMET-BAS-000012` · `FRACILBAB-BLA-000003`
+
+- El consecutivo es **por SKU**, no global. Usa la tabla `series_consecutivo` que ya existe.
+- El incremento debe ser atómico dentro de la transacción, con bloqueo de fila, para que dos usuarios creando rollos al mismo tiempo no obtengan la misma serie.
+- La serie **nunca se modifica ni se reutiliza**, aunque el rollo se dé de baja. Está impresa en una etiqueta física.
+- El código de barras del rollo codifica la serie completa.
+
+## El motor de inventario
+
+Crea `server/lib/inventario.ts`. **Ninguna otra parte del código puede tocar las tablas `rollos`, `movimientos` o `existencias` directamente.** Todo pasa por estas funciones.
+
+Todas reciben una transacción activa y usan `SELECT ... FOR UPDATE` sobre el rollo y sobre la fila de existencias afectada.
+
+```
+crearRollo(tx, { productoId, ubicacionId, cantidad, costoUnitario,
+                 proveedorId, estado, usuarioId, uuidCliente })
+```
+Genera la serie, inserta el rollo, calcula costo_total. Si el estado es DISPONIBLE, registra un movimiento tipo ALTA y actualiza existencias. Si es PROGRAMADO, no registra movimiento ni toca existencias.
+
+```
+activarRollo(tx, { rolloId, cantidadReal, usuarioId })
+```
+Pasa un rollo de PROGRAMADO a DISPONIBLE. Si `cantidadReal` difiere de `cantidad_inicial`, actualiza ambas cantidades y deja constancia de la diferencia en las notas del rollo. Registra movimiento tipo RECEPCION.
+
+```
+moverRollo(tx, { rolloId, destinoId, tipoSalida, tipoEntrada, documentoTipo, documentoId, usuarioId })
+```
+Genera **dos** movimientos: uno negativo en el origen y uno positivo en el destino. Actualiza `ubicacion_id` del rollo. Se usa para transferencias.
+
+```
+salidaMostrador(tx, { rolloId, usuarioId, nota })
+```
+Pasa el rollo a ABIERTO, registra movimiento SALIDA_MOSTRADOR negativo, saca la cantidad de existencias. **El rollo no puede volver.** Rechaza la operación si el rollo no está DISPONIBLE.
+
+```
+venderRollo(tx, { rolloId, ventaId, usuarioId })
+```
+Pasa el rollo a VENDIDO, registra movimiento VENTA negativo. Se usará en el prompt del POS; constrúyela ahora.
+
+```
+ajustarRollo(tx, { rolloId, tipo, cantidadNueva, justificacion, usuarioId })
+```
+Ajusta la cantidad de un rollo o lo da de baja. **La justificación es obligatoria**; rechaza la operación si viene vacía o con menos de 10 caracteres. El movimiento se inserta con `revisado = false`.
+
+```
+revertirMovimiento(tx, { movimientoId, motivo, usuarioId })
+```
+Genera el movimiento inverso referenciando el original en `movimiento_origen_id`, y restaura el estado anterior del rollo. Nada se borra.
+
+```
+obtenerKardex({ productoId, ubicacionId, desde, hasta, limit, offset })
+```
+Devuelve los movimientos ordenados cronológicamente con su saldo corrido.
+
+```
+recalcularExistencias(productoId, ubicacionId)
+```
+Recalcula desde `movimientos` y corrige el caché. Función de mantenimiento, no se llama en operación normal.
+
+```
+conciliarTodo()
+```
+Recorre todas las combinaciones producto-ubicación, compara el caché contra la suma del kardex, y devuelve la lista de discrepancias sin corregirlas.
+
+## Validaciones obligatorias del motor
+
+- No permitir cantidad negativa en un rollo bajo ninguna circunstancia.
+- No permitir una transición de estado que no esté en la tabla de transiciones.
+- No permitir mover, vender ni abrir un rollo que no esté DISPONIBLE.
+- Rechazar cualquier operación con `uuid_cliente` repetido, devolviendo el resultado de la primera.
+- `saldo_posterior` debe calcularse dentro de la transacción, después de aplicar el movimiento.
+
+## Pruebas automatizadas — no avances sin esto
+
+Escribe pruebas que verifiquen:
+
+1. Crear un rollo de 47.3 m deja existencia en 47.3 con 1 rollo.
+2. Crear 3 rollos del mismo producto en la misma ubicación (47.3, 52.1, 49.8) deja existencia en 149.2 con 3 rollos.
+3. Sacar uno a mostrador deja existencia en 101.4 con 2 rollos, y el rollo abierto no puede regresar.
+4. Transferir un rollo a otra ubicación: el origen baja, la ubicación "En tránsito" sube, y **el total consolidado no cambia en ningún momento**.
+5. Al recibir la transferencia: "En tránsito" baja a cero y el destino sube. Total consolidado igual.
+6. Dos operaciones simultáneas sobre el mismo rollo: una gana, la otra falla limpiamente. Nunca queda inventario inconsistente.
+7. Dos usuarios creando rollos del mismo producto al mismo tiempo obtienen series distintas.
+8. Reversar un movimiento deja la existencia exactamente como estaba antes.
+9. Un ajuste sin justificación es rechazado.
+10. Para cualquier producto y ubicación, la suma de `movimientos.cantidad` siempre iguala `existencias.cantidad_total`.
+11. Un `uuid_cliente` repetido no crea un segundo movimiento.
+12. Un rollo PROGRAMADO no aparece en existencias; al activarlo, sí.
+
+## Pantallas
+
+### Alta manual de rollos
+
+Provisional, hasta que exista el módulo de recepciones. Ruta dentro de Entradas.
+
+- Seleccionar producto (buscador por SKU, tela o color), ubicación y proveedor.
+- Capturar el costo unitario **una sola vez** para todo el lote.
+- Capturar los metrajes o pesos de cada rollo, uno por uno, con entrada numérica grande y botón "Agregar rollo".
+- Mostrar en vivo: rollos capturados, cantidad acumulada, costo total del lote.
+- Poder eliminar el último rollo capturado antes de guardar.
+- Al guardar, crear todos los rollos en una sola transacción y mostrar la lista de series generadas.
+- Permisos: ADMIN, INVENTARIOS, BODEGA.
+
+### Inventario
+
+Activa el módulo "Inventario" en la barra lateral.
+
+- **Vista por ubicación:** selector de ubicación (para ADMIN; los demás ven la suya fija). Árbol expandible por tela igual que en Productos, mostrando por producto: rollos, cantidad total y unidad.
+- **Vista consolidada:** solo ADMIN. Por producto, una columna por ubicación más el total.
+- **Rollos abiertos:** lista aparte con los rollos en estado ABIERTO — producto, serie, ubicación, cantidad con la que salió, quién y cuándo. Es solo informativa.
+- Buscador por SKU, tela, color o serie de rollo.
+- Escanear la serie de un rollo debe llevar directo a su detalle.
+
+### Detalle del rollo
+
+- Serie, producto, ubicación, estado, cantidad, costo unitario y total, proveedor, fecha de alta.
+- Historial completo de movimientos de ese rollo.
+- Código de barras visible con la serie.
+
+### Kardex del producto
+
+Dentro del detalle del producto, una pestaña "Kardex":
+- Filtros de ubicación y rango de fechas.
+- Tabla: fecha y hora, tipo de movimiento, serie del rollo, cantidad con signo, saldo corrido, usuario, documento, justificación.
+- Exportable a Excel.
+- Paginado, 100 filas por página.
+
+### Ajustes
+
+- Formulario: seleccionar rollo (por serie o desde el inventario), tipo de ajuste, cantidad nueva o baja, y justificación obligatoria de mínimo 10 caracteres.
+- Permisos: **ADMIN e INVENTARIOS pueden crear ajustes.** El ajuste se aplica de inmediato, pero queda marcado como pendiente de revisión.
+- **Bandeja de revisión (solo ADMIN):** lista de ajustes pendientes con producto, rollo, cantidad, quién lo hizo, cuándo y su justificación. El ADMIN puede marcarlo como revisado o reversarlo.
+- Badge con el número de ajustes pendientes en la barra lateral, visible solo para ADMIN.
+
+### Conciliación
+
+Pantalla solo para ADMIN, dentro de Administración:
+- Botón "Verificar integridad" que corre `conciliarTodo()` y muestra las discrepancias entre el caché y el kardex.
+- Por cada discrepancia, botón para recalcular ese producto y ubicación.
+- Si no hay discrepancias, mensaje claro de que todo cuadra.
+
+### Dashboard
+
+Agrega a la tabla "Inventario por Ubicación" una **fila de totales** al final, en negritas y con fondo distinto, que sume las 7 ubicaciones reales:
+- Total de rollos
+- Total de metros (solo productos en unidad METRO)
+- Total de kilos (solo productos en unidad KILO)
+
+Agrega también tres tarjetas arriba: **Rollos en inventario**, **Metros totales**, **Kilos totales**.
+
+No mezcles metros con kilos en una sola suma. Son unidades distintas y sumarlas no significa nada.
+
+Si hay rollos en tránsito, muéstralos como una fila aparte debajo de las 7 ubicaciones, claramente marcada, para que se vea que el consolidado los incluye.
+
+## Lo que NO debes hacer
+
+- No implementes el POS, las recepciones con packing list, las transferencias completas ni los contenedores. Eso viene después. Solo el motor y el alta manual.
+- No permitas fraccionar rollos. La venta por metro se resuelve con SALIDA_MOSTRADOR, no descontando metros.
+- No permitas que un rollo ABIERTO regrese al inventario, por ninguna vía.
+- No inventes datos de prueba en producción. Si necesitas datos para las pruebas automatizadas, úsalos solo en el entorno de pruebas.
+- No cambies la arquitectura ni el framework.
+
+## Entregable
+
+Reporta al terminar:
+1. Que las 12 pruebas automatizadas pasan, con la salida de la corrida
+2. Cómo doy de alta rollos manualmente
+3. Cómo consulto el kardex de un producto
+4. Cómo se ve la bandeja de ajustes pendientes
+5. Qué muestra la pantalla de conciliación con la base actual
