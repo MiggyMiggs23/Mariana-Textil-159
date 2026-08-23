@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRoute, Link } from "wouter";
 import {
   useObtenerTicket,
@@ -43,10 +43,31 @@ export default function TicketDetailPage() {
   });
 
   const cancelarTicket = useCancelarTicket();
+  const autoPrintStarted = useRef(false);
   const returnPath = user?.rol === Role.CAJA ? "/cobros" : "/pos";
   const canCancel =
     user?.rol === Role.ADMIN ||
     (user != null && hasPermission(user, Modules.POS, "crear"));
+
+  useEffect(() => {
+    if (
+      !ticket ||
+      autoPrintStarted.current ||
+      new URLSearchParams(window.location.search).get("print") !== "3"
+    ) return;
+    autoPrintStarted.current = true;
+    document.body.classList.add("print-80mm");
+    const timers = [250, 900, 1550].map((delay) =>
+      window.setTimeout(() => window.print(), delay),
+    );
+    timers.push(
+      window.setTimeout(() => {
+        document.body.classList.remove("print-80mm");
+        window.history.replaceState({}, "", `/tickets/${ticket.id}`);
+      }, 2200),
+    );
+    return () => timers.forEach(window.clearTimeout);
+  }, [ticket]);
 
   const handlePrint80mm = () => {
     // Usamos window.print() pero con una clase especial en el body si se requiere.
@@ -165,6 +186,12 @@ export default function TicketDetailPage() {
                 <th className="px-4 py-3 font-semibold text-right">Cant.</th>
                 <th className="px-4 py-3 font-semibold text-right">Precio Unit.</th>
                 <th className="px-4 py-3 font-semibold text-right">Importe</th>
+                {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
+                  <>
+                    <th className="px-4 py-3 font-semibold text-right">Costo</th>
+                    <th className="px-4 py-3 font-semibold text-right">Margen</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -184,6 +211,12 @@ export default function TicketDetailPage() {
                   <td className="px-4 py-3 text-right font-mono">{Number(linea.cantidad)} {linea.unidadProducto}</td>
                   <td className="px-4 py-3 text-right">{Number(linea.precioUnitario).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
                   <td className="px-4 py-3 text-right font-semibold">{Number(linea.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                  {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
+                    <>
+                      <td className="px-4 py-3 text-right">{linea.costoTotalCongelado == null ? "—" : Number(linea.costoTotalCongelado).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                      <td className="px-4 py-3 text-right">{linea.margen == null ? "—" : Number(linea.margen).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>

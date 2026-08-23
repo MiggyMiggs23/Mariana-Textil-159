@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -35,12 +35,14 @@ function CartLineItem({
   item, 
   onRemove, 
   isMetreado,
-  onChangeQuantity 
+  onChangeQuantity,
+  onChangePrice,
 }: { 
   item: any, 
   onRemove: () => void, 
   isMetreado: boolean,
-  onChangeQuantity?: (qty: number) => void 
+  onChangeQuantity?: (qty: number) => void,
+  onChangePrice: (price: number) => void,
 }) {
   return (
     <div className="flex items-center justify-between py-3 border-b last:border-0">
@@ -53,12 +55,21 @@ function CartLineItem({
             </span>
           )}
         </div>
-        <div className="text-xs text-muted-foreground mt-0.5">
-          {item.producto.sku} • {item.precioUnitario.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}/{item.producto.unidad}
-        </div>
+        <div className="text-xs text-muted-foreground mt-0.5">{item.producto.sku}</div>
       </div>
       
       <div className="flex items-center gap-3">
+        <div className="w-24">
+          <Label className="text-[10px] text-muted-foreground">Precio / {item.producto.unidad}</Label>
+          <Input
+            type="number"
+            min="0.01"
+            step="0.01"
+            value={item.precioUnitario}
+            onChange={(event) => onChangePrice(Number(event.target.value) || 0)}
+            className="h-8 text-right font-mono"
+          />
+        </div>
         {isMetreado ? (
           <div className="w-20">
             <Input 
@@ -163,6 +174,12 @@ export default function PosPage() {
     setCart(newCart);
   };
 
+  const updateCartPrice = (index: number, price: number) => {
+    const newCart = [...cart];
+    newCart[index].precioUnitario = price;
+    setCart(newCart);
+  };
+
   const removeFromCart = (index: number) => {
     const newCart = [...cart];
     newCart.splice(index, 1);
@@ -179,8 +196,8 @@ export default function PosPage() {
     
     if (cart.length === 0) return;
     
-    if (cart.some(item => isNaN(item.cantidad) || item.cantidad <= 0)) {
-      toast({ title: "Revisa las cantidades", description: "Las cantidades deben ser mayores a 0.", variant: "destructive" });
+    if (cart.some(item => isNaN(item.cantidad) || item.cantidad <= 0 || isNaN(item.precioUnitario) || item.precioUnitario <= 0)) {
+      toast({ title: "Revisa cantidades y precios", description: "Todos deben ser mayores a 0.", variant: "destructive" });
       return;
     }
 
@@ -207,7 +224,7 @@ export default function PosPage() {
         setCart([]);
         setSearch("");
         setFacturar(false);
-        setLocation(`/tickets/${ticket.id}`);
+        setLocation(`/tickets/${ticket.id}?print=3`);
       },
       onError: (err: any) => {
         toast({ 
@@ -240,12 +257,6 @@ export default function PosPage() {
             <h1 className="text-2xl font-bold tracking-tight text-sidebar">Terminal POS</h1>
             <p className="text-muted-foreground text-sm">Escanea o busca artículos para la venta.</p>
           </div>
-          <Link href="/tickets">
-            <Button variant="outline" size="sm">
-              <Receipt className="mr-2 h-4 w-4" />
-              Tickets Recientes
-            </Button>
-          </Link>
         </div>
 
         <Tabs 
@@ -363,6 +374,7 @@ export default function PosPage() {
                     onRemove={() => removeFromCart(idx)} 
                     isMetreado={tipoTicket === TipoTicket.METREADO}
                     onChangeQuantity={(qty) => updateCartQuantity(idx, qty)}
+                    onChangePrice={(price) => updateCartPrice(idx, price)}
                   />
                 ))}
               </div>

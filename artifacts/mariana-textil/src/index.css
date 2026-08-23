@@ -151,12 +151,35 @@
     background: white;
   }
 
+  body.print-corte {
+    background: white;
+  }
+
   body.print-80mm .print-80mm-only {
     display: block !important;
   }
   
   body.print-carta .print-carta-only {
     display: block !important;
+  }
+
+  body.print-corte * {
+    visibility: hidden;
+  }
+
+  body.print-corte .corte-print,
+  body.print-corte .corte-print * {
+    visibility: visible;
+  }
+
+  body.print-corte .corte-print {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    border: 0;
+    box-shadow: none;
   }
 
   .print-ticket-container {

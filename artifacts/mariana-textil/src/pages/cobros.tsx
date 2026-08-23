@@ -319,6 +319,7 @@ function CobroPanel({ ticket, onCobrado }: { ticket: TicketResumen, onCobrado: (
 }
 
 export default function CobrosPage() {
+  const [, setLocation] = useLocation();
   const { selectedLocationId } = useLocationScope();
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
@@ -364,6 +365,12 @@ export default function CobrosPage() {
   });
 
   const cerrarCaja = useCerrarSesionCaja();
+
+  const handlePrintCorte = () => {
+    document.body.classList.add("print-corte");
+    window.print();
+    window.setTimeout(() => document.body.classList.remove("print-corte"), 500);
+  };
 
   const handleCerrarCaja = () => {
     if (!sesionData?.sesion) return;
@@ -463,6 +470,17 @@ export default function CobrosPage() {
                           {Number(t.total).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">{t.lineasCount || 0} líneas</div>
+                         <Button
+                           variant="link"
+                           size="sm"
+                           className="h-7 px-0 text-xs"
+                           onClick={(event) => {
+                             event.stopPropagation();
+                             setLocation(`/tickets/${t.id}`);
+                           }}
+                         >
+                           Ver detalle y márgenes
+                         </Button>
                       </div>
                     </div>
                   </div>
@@ -494,7 +512,7 @@ export default function CobrosPage() {
       </div>
 
       <Dialog open={cierreOpen} onOpenChange={setCierreOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Corte y Cierre de Caja</DialogTitle>
           </DialogHeader>
@@ -523,6 +541,45 @@ export default function CobrosPage() {
                   <p className="text-xs text-muted-foreground">Incluye fondo inicial + cobros en efectivo.</p>
                 </div>
 
+                <div className="grid gap-4 md:grid-cols-2">
+                  <CorteSection title="Formas de pago">
+                    {corteData.formasPago.map((row) => (
+                      <CorteRow key={row.formaPago} label={`${row.formaPago} (${row.ticketsCount} tickets)`} value={row.importe} />
+                    ))}
+                  </CorteSection>
+                  <CorteSection title="Cuentas destino">
+                    {corteData.cuentasDestino.map((row) => (
+                      <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={row.cuentaDestino} value={row.importe} />
+                    ))}
+                  </CorteSection>
+                  <CorteSection title="Facturación">
+                    {corteData.facturacion.map((row) => (
+                      <CorteRow key={String(row.facturado)} label={row.facturado ? "Facturado" : "No facturado"} value={row.importe} />
+                    ))}
+                  </CorteSection>
+                  <CorteSection title="Normal / Metreado">
+                    {corteData.metreado.map((row) => (
+                      <CorteRow key={row.tipo} label={`${row.tipo} · ${row.cantidad}`} value={row.importe} />
+                    ))}
+                  </CorteSection>
+                </div>
+
+                <CorteSection title="Productos vendidos">
+                  {corteData.productos.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>
+                  ) : corteData.productos.map((row) => (
+                    <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${row.cantidad} ${row.unidad}`} value={row.importe} />
+                  ))}
+                </CorteSection>
+
+                <CorteSection title={`Tickets pendientes (${corteData.pendientes.length})`}>
+                  {corteData.pendientes.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>
+                  ) : corteData.pendientes.map((row) => (
+                    <CorteRow key={row.ticketId} label={`Folio ${row.folio} · ${row.nombreCliente || "Mostrador"}`} value={row.total} />
+                  ))}
+                </CorteSection>
+
                 <div className="space-y-2">
                   <Label>Efectivo Físico Contado</Label>
                   <div className="relative">
@@ -544,6 +601,7 @@ export default function CobrosPage() {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setCierreOpen(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={handlePrintCorte} disabled={!corteData}>Imprimir Corte</Button>
             <Button onClick={handleCerrarCaja} disabled={cerrarCaja.isPending || !efectivoContado}>
               {cerrarCaja.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirmar Cierre
@@ -551,6 +609,24 @@ export default function CobrosPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function CorteSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-md border bg-white p-3">
+      <h3 className="mb-2 text-sm font-semibold">{title}</h3>
+      <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function CorteRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between gap-4 text-xs">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-mono font-semibold">{Number(value).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
     </div>
   );
 }
