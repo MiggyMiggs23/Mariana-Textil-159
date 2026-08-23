@@ -1,5 +1,5 @@
 import app from "./app";
-import { ensureTicketIvaSchema, pool } from "@workspace/db";
+import { ensureSalidasSchema, ensureTicketIvaSchema, pool } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
 
@@ -20,6 +20,8 @@ if (Number.isNaN(port) || port <= 0) {
 async function startServer() {
   await ensureTicketIvaSchema(pool);
   logger.info("Esquema de IVA de tickets verificado");
+  await ensureSalidasSchema(pool);
+  logger.info("Esquema de Salidas verificado");
 
   const server = app.listen(port);
   server.on("error", (err) => {
@@ -39,6 +41,6 @@ async function startServer() {
 }
 
 void startServer().catch((err: unknown) => {
-  logger.error({ err }, "No se pudo verificar el esquema de IVA de tickets");
+  logger.error({ err }, "No se pudieron verificar los esquemas de la aplicación");
   process.exit(1);
 });

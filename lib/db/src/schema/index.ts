@@ -9,6 +9,7 @@ export * from "./permisos";
 export * from "./productos";
 export * from "./proveedores";
 export * from "./rollos";
+export * from "./salidas";
 export * from "./series";
 export * from "./sessions";
 export * from "./users";

@@ -855,6 +855,18 @@ export interface RecibirTransferenciaInput {
   uuidCliente?: string | null;
 }
 
+export type RetiredTransferResponseCode = typeof RetiredTransferResponseCode[keyof typeof RetiredTransferResponseCode];
+
+
+export const RetiredTransferResponseCode = {
+  SALIDAS_FLOW_REQUIRED: 'SALIDAS_FLOW_REQUIRED',
+} as const;
+
+export interface RetiredTransferResponse {
+  error: string;
+  code: RetiredTransferResponseCode;
+}
+
 export interface SalidaMostradorInput {
   /** @nullable */
   justificacion?: string | null;
@@ -978,6 +990,209 @@ export interface EntradaListResult {
   page: number;
   pageSize: number;
 }
+
+export type EstadoSalida = typeof EstadoSalida[keyof typeof EstadoSalida];
+
+
+export const EstadoSalida = {
+  SOLICITADA: 'SOLICITADA',
+  ACEPTADA: 'ACEPTADA',
+  RECHAZADA: 'RECHAZADA',
+  PREPARADA: 'PREPARADA',
+  ENVIADA: 'ENVIADA',
+  RECIBIDA: 'RECIBIDA',
+  CERRADA: 'CERRADA',
+  CANCELADA: 'CANCELADA',
+} as const;
+
+export interface SalidaLineaInput {
+  productoId: number;
+  /**
+     * Cantidad decimal positiva
+     * @pattern ^(?:0\.(?:0*[1-9]\d*)|[1-9]\d*(?:\.\d+)?)$
+     */
+  cantidadSolicitada: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  rollosSolicitados?: number | null;
+  /** @nullable */
+  nota?: string | null;
+}
+
+export interface SalidaInput {
+  uuidCliente: string;
+  origenId: number;
+  destinoId: number;
+  /** @nullable */
+  notaSolicitud?: string | null;
+  /** @minItems 1 */
+  lineas: SalidaLineaInput[];
+}
+
+export interface MotivoSalidaInput {
+  /** @minLength 10 */
+  motivo: string;
+}
+
+export interface PrepararSalidaLineaInput {
+  lineaId: number;
+  rolloIds: number[];
+}
+
+export interface PrepararSalidaInput {
+  /** @minItems 1 */
+  lineas: PrepararSalidaLineaInput[];
+}
+
+export interface EnviarSalidaInput {
+  /** @minLength 1 */
+  transportista: string;
+  /** @nullable */
+  notaEnvio?: string | null;
+}
+
+export interface RecibirSalidaRolloInput {
+  rolloId: number;
+  recibido: boolean;
+  /** @nullable */
+  cantidadRecibida?: string | null;
+  /** @nullable */
+  notaDiferencia?: string | null;
+}
+
+export interface RecibirSalidaInput {
+  /** @nullable */
+  notaRecepcion?: string | null;
+  rollos?: RecibirSalidaRolloInput[];
+}
+
+export interface SalidaResumen {
+  id: number;
+  folio: number;
+  estado: EstadoSalida;
+  origenId: number;
+  nombreOrigen: string;
+  destinoId: number;
+  nombreDestino: string;
+  solicitadoPorId: number;
+  nombreSolicitadoPor: string;
+  fechaSolicitud: string;
+  totalProductos: number;
+  totalCantidadSolicitada: string;
+  totalCantidadEnviada: string;
+  totalCantidadRecibida: string;
+  diferenciasPendientes: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SalidaListResult {
+  items: SalidaResumen[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PendientesCount {
+  count: number;
+}
+
+export interface SalidaLinea {
+  id: number;
+  productoId: number;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: string;
+  cantidadSolicitada: string;
+  cantidadEnviada: string;
+  cantidadRecibida: string;
+  /** @nullable */
+  rollosSolicitados: number | null;
+  rollosEnviados: number;
+  rollosRecibidos: number;
+  /** @nullable */
+  nota?: string | null;
+}
+
+export interface SalidaRollo {
+  id: number;
+  lineaId: number;
+  rolloId: number;
+  serie: string;
+  estado: EstadoRollo;
+  cantidadEnviada: string;
+  /** @nullable */
+  cantidadRecibida?: string | null;
+  /** @nullable */
+  recibido: boolean | null;
+  /** @nullable */
+  diferencia: string | null;
+  /** @nullable */
+  notaDiferencia?: string | null;
+}
+
+export type SalidaDetail = SalidaResumen & ({
+  uuidCliente: string;
+  /** @nullable */
+  notaSolicitud: string | null;
+  /** @nullable */
+  aceptadoPorId: number | null;
+  /** @nullable */
+  nombreAceptadoPor: string | null;
+  /** @nullable */
+  fechaAceptacion: string | null;
+  /** @nullable */
+  rechazadoPorId: number | null;
+  /** @nullable */
+  nombreRechazadoPor: string | null;
+  /** @nullable */
+  fechaRechazo: string | null;
+  /** @nullable */
+  motivoRechazo: string | null;
+  /** @nullable */
+  preparadoPorId: number | null;
+  /** @nullable */
+  nombrePreparadoPor: string | null;
+  /** @nullable */
+  fechaPreparacion: string | null;
+  /** @nullable */
+  enviadoPorId: number | null;
+  /** @nullable */
+  nombreEnviadoPor: string | null;
+  /** @nullable */
+  fechaEnvio: string | null;
+  /** @nullable */
+  transportista: string | null;
+  /** @nullable */
+  notaEnvio: string | null;
+  /** @nullable */
+  recibidoPorId: number | null;
+  /** @nullable */
+  nombreRecibidoPor: string | null;
+  /** @nullable */
+  fechaRecepcion: string | null;
+  /** @nullable */
+  notaRecepcion: string | null;
+  /** @nullable */
+  cerradoPorId: number | null;
+  /** @nullable */
+  nombreCerradoPor: string | null;
+  /** @nullable */
+  fechaCierre: string | null;
+  /** @nullable */
+  canceladoPorId: number | null;
+  /** @nullable */
+  nombreCanceladoPor: string | null;
+  /** @nullable */
+  fechaCancelacion: string | null;
+  /** @nullable */
+  motivoCancelacion: string | null;
+  lineas: SalidaLinea[];
+  rollos: SalidaRollo[];
+});
 
 export type FormaPagoProveedor = typeof FormaPagoProveedor[keyof typeof FormaPagoProveedor];
 
@@ -1575,6 +1790,11 @@ export interface CorteCaja {
 }
 
 /**
+ * Estado actualizado de la salida
+ */
+export type SalidaDetailResponseResponse = SalidaDetail;
+
+/**
  * Sesión no válida
  */
 export type UnauthorizedResponse = Error;
@@ -1766,5 +1986,20 @@ ubicacionId?: number;
 
 export type ObtenerSesionCajaActualParams = {
 ubicacionId?: number;
+};
+
+export type ListSalidasParams = {
+/**
+ * Estados separados por comas
+ */
+estados?: string;
+folio?: number;
+origenId?: number;
+destinoId?: number;
+productoId?: number;
+fechaDesde?: string;
+fechaHasta?: string;
+page?: number;
+pageSize?: number;
 };
 

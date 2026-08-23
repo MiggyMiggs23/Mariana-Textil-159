@@ -10,6 +10,7 @@ import clientesRouter from "./clientes";
 import permisosRouter from "./permisos";
 import { inventarioRouter } from "./inventario";
 import posRouter from "./pos";
+import salidasRouter from "./salidas";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(clientesRouter);
 router.use(permisosRouter);
 router.use("/inventario", inventarioRouter);
 router.use(posRouter);
+router.use(salidasRouter);
 
 export default router;

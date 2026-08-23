@@ -5,7 +5,6 @@ export const Modules = {
   POS: 'pos',
   ENTRADAS: 'entradas',
   SALIDAS: 'salidas',
-  TRANSFERENCIAS: 'transferencias',
   MOVIMIENTOS: 'movimientos',
   INVENTARIO: 'inventario',
   PRODUCTOS: 'productos',

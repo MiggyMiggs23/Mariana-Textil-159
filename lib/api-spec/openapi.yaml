@@ -31,6 +31,8 @@ tags:
     description: Punto de venta y búsqueda para terminal
   - name: caja
     description: Apertura, cobro y corte de caja
+  - name: salidas
+    description: Solicitud, preparación y recepción de salidas entre ubicaciones
 paths:
   /healthz:
     get:
@@ -776,8 +778,10 @@ paths:
   /inventario/rollos/{id}/mover:
     post:
       operationId: moverRollo
+      deprecated: true
       tags: [inventario]
-      summary: Inicia traslado DISPONIBLE → EN_TRANSITO (fase 1)
+      summary: Retirado; use el flujo documentado de Salidas
+      description: Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
       parameters:
         - $ref: "#/components/parameters/RolloId"
       requestBody:
@@ -787,25 +791,19 @@ paths:
             schema:
               $ref: "#/components/schemas/MoverRolloInput"
       responses:
-        "200":
-          description: Rollo en tránsito
+        "410":
+          description: La operación directa fue reemplazada por Salidas
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RolloDetail"
-        "400":
-          $ref: "#/components/responses/ValidationError"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: "#/components/schemas/RetiredTransferResponse"
   /inventario/rollos/{id}/recibir:
     post:
       operationId: recibirTransferencia
+      deprecated: true
       tags: [inventario]
-      summary: Recibe rollo en destino EN_TRANSITO → DISPONIBLE (fase 2)
+      summary: Retirado; use el flujo documentado de Salidas
+      description: Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
       parameters:
         - $ref: "#/components/parameters/RolloId"
       requestBody:
@@ -815,20 +813,12 @@ paths:
             schema:
               $ref: "#/components/schemas/RecibirTransferenciaInput"
       responses:
-        "200":
-          description: Rollo recibido en destino
+        "410":
+          description: La operación directa fue reemplazada por Salidas
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RolloDetail"
-        "400":
-          $ref: "#/components/responses/ValidationError"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: "#/components/schemas/RetiredTransferResponse"
   /inventario/rollos/{id}/salida-mostrador:
     post:
       operationId: salidaMostrador
@@ -1905,6 +1895,274 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /salidas:
+    get:
+      operationId: listSalidas
+      tags: [salidas]
+      summary: Lista salidas con filtros opcionales
+      parameters:
+        - in: query
+          name: estados
+          description: Estados separados por comas
+          schema: { type: string }
+        - in: query
+          name: folio
+          schema: { type: number }
+        - in: query
+          name: origenId
+          schema: { type: number }
+        - in: query
+          name: destinoId
+          schema: { type: number }
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: fechaDesde
+          schema: { type: string, format: date }
+        - in: query
+          name: fechaHasta
+          schema: { type: string, format: date }
+        - in: query
+          name: page
+          schema: { type: number }
+        - in: query
+          name: pageSize
+          schema: { type: number }
+      responses:
+        "200":
+          description: Lista paginada de salidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaListResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      operationId: crearSalida
+      tags: [salidas]
+      summary: Crea una solicitud de salida
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalidaInput"
+      responses:
+        "201":
+          description: Salida creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /salidas/pendientes-count:
+    get:
+      operationId: getSalidasPendientesCount
+      tags: [salidas]
+      summary: Obtiene el total de salidas pendientes
+      responses:
+        "200":
+          description: Total de salidas pendientes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PendientesCount"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /salidas/{id}:
+    get:
+      operationId: getSalida
+      tags: [salidas]
+      summary: Obtiene el detalle completo de una salida
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      responses:
+        "200":
+          description: Detalle de la salida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /salidas/{id}/aceptar:
+    post:
+      operationId: aceptarSalida
+      tags: [salidas]
+      summary: Acepta una solicitud de salida
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/rechazar:
+    post:
+      operationId: rechazarSalida
+      tags: [salidas]
+      summary: Rechaza una solicitud de salida
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MotivoSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/preparar:
+    post:
+      operationId: prepararSalida
+      tags: [salidas]
+      summary: Asigna rollos y prepara una salida aceptada
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrepararSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/enviar:
+    post:
+      operationId: enviarSalida
+      tags: [salidas]
+      summary: Envía una salida preparada
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnviarSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/recibir:
+    post:
+      operationId: recibirSalida
+      tags: [salidas]
+      summary: Recibe una salida enviada en la ubicación destino
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecibirSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/cerrar:
+    post:
+      operationId: cerrarSalida
+      tags: [salidas]
+      summary: Cierra una salida recibida
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/cancelar:
+    post:
+      operationId: cancelarSalida
+      tags: [salidas]
+      summary: Cancela una salida
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MotivoSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
 components:
   parameters:
     LocationId:
@@ -1949,6 +2207,12 @@ components:
       required: true
       schema:
         type: number
+    SalidaId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
     ClienteId:
       name: id
       in: path
@@ -1968,6 +2232,12 @@ components:
       schema:
         type: number
   responses:
+    SalidaDetailResponse:
+      description: Estado actualizado de la salida
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalidaDetail"
     Unauthorized:
       description: Sesión no válida
       content:
@@ -2923,6 +3193,12 @@ components:
         ubicacionDestinoId: { type: number }
         justificacion: { type: ["string", "null"] }
         uuidCliente: { type: ["string", "null"] }
+    RetiredTransferResponse:
+      type: object
+      required: [error, code]
+      properties:
+        error: { type: string }
+        code: { type: string, enum: [SALIDAS_FLOW_REQUIRED] }
     SalidaMostradorInput:
       type: object
       properties:
@@ -3097,6 +3373,192 @@ components:
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }
+    EstadoSalida:
+      type: string
+      enum: [SOLICITADA, ACEPTADA, RECHAZADA, PREPARADA, ENVIADA, RECIBIDA, CERRADA, CANCELADA]
+    SalidaLineaInput:
+      type: object
+      required: [productoId, cantidadSolicitada]
+      properties:
+        productoId: { type: number }
+        cantidadSolicitada:
+          type: string
+          pattern: "^(?:0\\.(?:0*[1-9]\\d*)|[1-9]\\d*(?:\\.\\d+)?)$"
+          description: Cantidad decimal positiva
+        rollosSolicitados: { type: ["number", "null"], minimum: 1 }
+        nota: { type: ["string", "null"] }
+    SalidaInput:
+      type: object
+      required: [uuidCliente, origenId, destinoId, lineas]
+      properties:
+        uuidCliente: { type: string }
+        origenId: { type: number }
+        destinoId: { type: number }
+        notaSolicitud: { type: ["string", "null"] }
+        lineas:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/SalidaLineaInput"
+    MotivoSalidaInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 10 }
+    PrepararSalidaLineaInput:
+      type: object
+      required: [lineaId, rolloIds]
+      properties:
+        lineaId: { type: number }
+        rolloIds:
+          type: array
+          items: { type: number }
+    PrepararSalidaInput:
+      type: object
+      required: [lineas]
+      properties:
+        lineas:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/PrepararSalidaLineaInput"
+    EnviarSalidaInput:
+      type: object
+      required: [transportista]
+      properties:
+        transportista: { type: string, minLength: 1 }
+        notaEnvio: { type: ["string", "null"] }
+    RecibirSalidaRolloInput:
+      type: object
+      required: [rolloId, recibido]
+      properties:
+        rolloId: { type: number }
+        recibido: { type: boolean }
+        cantidadRecibida: { type: ["string", "null"] }
+        notaDiferencia: { type: ["string", "null"] }
+    RecibirSalidaInput:
+      type: object
+      properties:
+        notaRecepcion: { type: ["string", "null"] }
+        rollos:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecibirSalidaRolloInput"
+    SalidaResumen:
+      type: object
+      required:
+        [id, folio, estado, origenId, nombreOrigen, destinoId, nombreDestino, solicitadoPorId, nombreSolicitadoPor, fechaSolicitud, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        estado:
+          $ref: "#/components/schemas/EstadoSalida"
+        origenId: { type: number }
+        nombreOrigen: { type: string }
+        destinoId: { type: number }
+        nombreDestino: { type: string }
+        solicitadoPorId: { type: number }
+        nombreSolicitadoPor: { type: string }
+        fechaSolicitud: { type: string, format: date-time }
+        totalProductos: { type: number }
+        totalCantidadSolicitada: { type: string }
+        totalCantidadEnviada: { type: string }
+        totalCantidadRecibida: { type: string }
+        diferenciasPendientes: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    SalidaListResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalidaResumen"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+    PendientesCount:
+      type: object
+      required: [count]
+      properties:
+        count: { type: number }
+    SalidaLinea:
+      type: object
+      required:
+        [id, productoId, skuProducto, telaProducto, colorProducto, unidadProducto, cantidadSolicitada, cantidadEnviada, cantidadRecibida, rollosSolicitados, rollosEnviados, rollosRecibidos]
+      properties:
+        id: { type: number }
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+        cantidadSolicitada: { type: string }
+        cantidadEnviada: { type: string }
+        cantidadRecibida: { type: string }
+        rollosSolicitados: { type: ["number", "null"] }
+        rollosEnviados: { type: number }
+        rollosRecibidos: { type: number }
+        nota: { type: ["string", "null"] }
+    SalidaRollo:
+      type: object
+      required: [id, lineaId, rolloId, serie, estado, cantidadEnviada, recibido, diferencia]
+      properties:
+        id: { type: number }
+        lineaId: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        estado:
+          $ref: "#/components/schemas/EstadoRollo"
+        cantidadEnviada: { type: string }
+        cantidadRecibida: { type: ["string", "null"] }
+        recibido: { type: ["boolean", "null"] }
+        diferencia: { type: ["string", "null"] }
+        notaDiferencia: { type: ["string", "null"] }
+    SalidaDetail:
+      allOf:
+        - $ref: "#/components/schemas/SalidaResumen"
+        - type: object
+          required:
+            [uuidCliente, notaSolicitud, aceptadoPorId, nombreAceptadoPor, fechaAceptacion, rechazadoPorId, nombreRechazadoPor, fechaRechazo, motivoRechazo, preparadoPorId, nombrePreparadoPor, fechaPreparacion, enviadoPorId, nombreEnviadoPor, fechaEnvio, transportista, notaEnvio, recibidoPorId, nombreRecibidoPor, fechaRecepcion, notaRecepcion, cerradoPorId, nombreCerradoPor, fechaCierre, canceladoPorId, nombreCanceladoPor, fechaCancelacion, motivoCancelacion, lineas, rollos]
+          properties:
+            uuidCliente: { type: string }
+            notaSolicitud: { type: ["string", "null"] }
+            aceptadoPorId: { type: ["number", "null"] }
+            nombreAceptadoPor: { type: ["string", "null"] }
+            fechaAceptacion: { type: ["string", "null"], format: date-time }
+            rechazadoPorId: { type: ["number", "null"] }
+            nombreRechazadoPor: { type: ["string", "null"] }
+            fechaRechazo: { type: ["string", "null"], format: date-time }
+            motivoRechazo: { type: ["string", "null"] }
+            preparadoPorId: { type: ["number", "null"] }
+            nombrePreparadoPor: { type: ["string", "null"] }
+            fechaPreparacion: { type: ["string", "null"], format: date-time }
+            enviadoPorId: { type: ["number", "null"] }
+            nombreEnviadoPor: { type: ["string", "null"] }
+            fechaEnvio: { type: ["string", "null"], format: date-time }
+            transportista: { type: ["string", "null"] }
+            notaEnvio: { type: ["string", "null"] }
+            recibidoPorId: { type: ["number", "null"] }
+            nombreRecibidoPor: { type: ["string", "null"] }
+            fechaRecepcion: { type: ["string", "null"], format: date-time }
+            notaRecepcion: { type: ["string", "null"] }
+            cerradoPorId: { type: ["number", "null"] }
+            nombreCerradoPor: { type: ["string", "null"] }
+            fechaCierre: { type: ["string", "null"], format: date-time }
+            canceladoPorId: { type: ["number", "null"] }
+            nombreCanceladoPor: { type: ["string", "null"] }
+            fechaCancelacion: { type: ["string", "null"], format: date-time }
+            motivoCancelacion: { type: ["string", "null"] }
+            lineas:
+              type: array
+              items:
+                $ref: "#/components/schemas/SalidaLinea"
+            rollos:
+              type: array
+              items:
+                $ref: "#/components/schemas/SalidaRollo"
     TipoPagoProveedor:
       type: string
       enum: [COMPRA, PAGO, AJUSTE]

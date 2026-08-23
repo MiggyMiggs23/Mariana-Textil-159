@@ -150,8 +150,16 @@ Inventory routes enforce the following effective permissions on the server:
 | `GET /api/inventario/entradas` | `entradas` | `ver` |
 | `GET /api/inventario/entradas/:id` | `entradas` | `ver` |
 | `POST /api/inventario/rollos/:id/activar` | `entradas` | `editar` |
-| `POST /api/inventario/rollos/:id/mover` | `transferencias` | `crear` |
-| `POST /api/inventario/rollos/:id/recibir` | `transferencias` | `editar` |
+| `POST /api/inventario/rollos/:id/mover` | — | Retirada: responde 410; usar `/api/salidas` |
+| `POST /api/inventario/rollos/:id/recibir` | — | Retirada: responde 410; usar `/api/salidas/:id/recibir` |
+| `POST /api/salidas` | `salidas` | `crear` |
+| `POST /api/salidas/:id/aceptar` | `salidas` | `editar` + ubicación origen |
+| `POST /api/salidas/:id/rechazar` | `salidas` | `editar` + ubicación origen |
+| `POST /api/salidas/:id/preparar` | `salidas` | `editar` + ubicación origen |
+| `POST /api/salidas/:id/enviar` | `salidas` | `editar` + ubicación origen |
+| `POST /api/salidas/:id/recibir` | `salidas` | `editar` + ubicación destino |
+| `POST /api/salidas/:id/cerrar` | `salidas` | `autorizar` + ubicación destino |
+| `POST /api/salidas/:id/cancelar` | `salidas` | `autorizar` + ubicación relacionada |
 | `POST /api/inventario/rollos/:id/salida-mostrador` | `salidas` | `crear` |
 | `POST /api/inventario/rollos/:id/vender` | `pos` | `crear` |
 | `POST /api/inventario/rollos/:id/ajustar` | `ajustes` | `crear` |
@@ -172,8 +180,7 @@ Inventory routes enforce the following effective permissions on the server:
 | dashboard | total | ver | ver | ver |
 | pos | total | ver/crear/editar | — | — |
 | entradas | total | ver/crear | ver/crear/editar | ver/crear/editar |
-| salidas | total | ver | ver/crear/editar | ver/crear/editar |
-| transferencias | total | ver/crear | ver/crear/editar | ver/crear/editar |
+| salidas | total | ver | ver/crear/editar | ver/editar |
 | movimientos | total | ver | ver | ver |
 | inventario | total | ver | ver | ver |
 | productos | total | ver | ver | ver |

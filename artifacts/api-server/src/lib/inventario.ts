@@ -843,6 +843,8 @@ export type MoverRolloInput = {
   ubicacionTransitoId: number;
   usuarioId: number;
   justificacion?: string | null;
+  documentoTipo?: string | null;
+  documentoId?: string | null;
   uuidCliente?: string | null;
 };
 
@@ -911,6 +913,8 @@ export async function moverRollo(
     cantidad: `-${rollo.cantidadActual}`,
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
     uuidCliente: input.uuidCliente ? `${input.uuidCliente}:salida` : null,
   });
 
@@ -923,6 +927,8 @@ export async function moverRollo(
     cantidad: rollo.cantidadActual,
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
     uuidCliente: input.uuidCliente ? `${input.uuidCliente}:entrada_transito` : null,
   });
 
@@ -945,6 +951,8 @@ export type RecibirTransferenciaInput = {
   ubicacionDestinoId: number;
   usuarioId: number;
   justificacion?: string | null;
+  documentoTipo?: string | null;
+  documentoId?: string | null;
   uuidCliente?: string | null;
 };
 
@@ -1014,6 +1022,8 @@ export async function recibirTransferencia(
     cantidad: `-${rollo.cantidadActual}`,
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
     uuidCliente: input.uuidCliente ? `${input.uuidCliente}:salida_transito` : null,
   });
 
@@ -1026,6 +1036,8 @@ export async function recibirTransferencia(
     cantidad: rollo.cantidadActual,
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
     uuidCliente: input.uuidCliente ? `${input.uuidCliente}:entrada_destino` : null,
   });
 
@@ -1190,6 +1202,10 @@ export type AjustarRolloInput = {
   cantidadNueva?: string | null; // null or omitted = BAJA
   justificacion: string; // minimum 10 chars
   usuarioId: number;
+  /** Salidas documenta diferencias sin abrir un movimiento administrativo pendiente. */
+  revisado?: boolean;
+  documentoTipo?: string | null;
+  documentoId?: string | null;
   uuidCliente?: string | null;
 };
 
@@ -1294,7 +1310,9 @@ export async function ajustarRollo(
     cantidad: diff.toFixed(3),
     usuarioId: input.usuarioId,
     justificacion,
-    revisado: false,
+    revisado: input.revisado ?? false,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
     uuidCliente: input.uuidCliente ?? null,
   });
 

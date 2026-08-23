@@ -10,12 +10,6 @@ import {
   ActivarRolloParams,
   ActivarRolloBody,
   ActivarRolloResponse,
-  MoverRolloParams,
-  MoverRolloBody,
-  MoverRolloResponse,
-  RecibirTransferenciaParams,
-  RecibirTransferenciaBody,
-  RecibirTransferenciaResponse,
   SalidaMostradorParams,
   SalidaMostradorBody,
   SalidaMostradorResponse,
@@ -66,8 +60,6 @@ import {
   crearEntrada,
   buildEntradaResult,
   activarRollo,
-  moverRollo,
-  recibirTransferencia,
   salidaMostrador,
   venderRollo,
   ajustarRollo,
@@ -651,114 +643,21 @@ inventarioRouter.post(
   },
 );
 
-// ── Mover rollo (DISPONIBLE → EN_TRANSITO) ────────────────────────────────────
-// Module: transferencias / crear — scope: origin location must be operational
+// Compatibility tombstones for clients built before the documented Salidas
+// lifecycle. They intentionally never mutate inventory.
+inventarioRouter.post("/rollos/:id/mover", requireSession, (_req, res) => {
+  res.status(410).json({
+    error: "Esta operación fue reemplazada por el flujo documentado de Salidas.",
+    code: "SALIDAS_FLOW_REQUIRED",
+  });
+});
 
-inventarioRouter.post(
-  "/rollos/:id/mover",
-  requireSession,
-  requierePermiso("transferencias", "crear"),
-  async (req, res, next) => {
-    try {
-      const { id } = MoverRolloParams.parse(req.params);
-      const body = MoverRolloBody.parse(req.body);
-      const auth = req.auth!;
-      const usuarioId = auth.user.id;
-
-      // Verify rollo exists and is at the claimed origin
-      const [rolloCheck] = await db
-        .select({ ubicacionId: rollosTable.ubicacionId })
-        .from(rollosTable)
-        .where(eq(rollosTable.id, id))
-        .limit(1);
-
-      if (!rolloCheck) {
-        res.status(404).json({ error: "Rollo no encontrado" });
-        return;
-      }
-
-      // Scope check: non-ADMIN must operate from their own location (origin)
-      const scopeErr = checkOperationalScope(auth, [body.ubicacionOrigenId]);
-      if (scopeErr) {
-        res.status(403).json({ error: scopeErr });
-        return;
-      }
-
-      const result = await db.transaction(async (tx) =>
-        moverRollo(tx, {
-          rolloId: id,
-          ubicacionOrigenId: body.ubicacionOrigenId,
-          ubicacionTransitoId: body.ubicacionTransitoId,
-          usuarioId,
-          justificacion: body.justificacion ?? null,
-          uuidCliente: body.uuidCliente ?? null,
-        }),
-      );
-
-      const detail = await getRolloDetail(result.rollo.id);
-      if (!detail) {
-        res.status(404).json({ error: "Rollo no encontrado" });
-        return;
-      }
-      const response = MoverRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
-    } catch (e) {
-      if (e instanceof InventarioError) {
-        res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
-        return;
-      }
-      next(e);
-    }
-  },
-);
-
-// ── Recibir transferencia (EN_TRANSITO → DISPONIBLE) ─────────────────────────
-// Module: transferencias / editar — scope: destination location must be operational
-
-inventarioRouter.post(
-  "/rollos/:id/recibir",
-  requireSession,
-  requierePermiso("transferencias", "editar"),
-  async (req, res, next) => {
-    try {
-      const { id } = RecibirTransferenciaParams.parse(req.params);
-      const body = RecibirTransferenciaBody.parse(req.body);
-      const auth = req.auth!;
-      const usuarioId = auth.user.id;
-
-      // Scope check: non-ADMIN must receive into their own location (destination)
-      const scopeErr = checkOperationalScope(auth, [body.ubicacionDestinoId]);
-      if (scopeErr) {
-        res.status(403).json({ error: scopeErr });
-        return;
-      }
-
-      const result = await db.transaction(async (tx) =>
-        recibirTransferencia(tx, {
-          rolloId: id,
-          ubicacionDestinoId: body.ubicacionDestinoId,
-          usuarioId,
-          justificacion: body.justificacion ?? null,
-          uuidCliente: body.uuidCliente ?? null,
-        }),
-      );
-
-      const detail = await getRolloDetail(result.rollo.id);
-      if (!detail) {
-        res.status(404).json({ error: "Rollo no encontrado" });
-        return;
-      }
-      const response = RecibirTransferenciaResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
-    } catch (e) {
-      if (e instanceof InventarioError) {
-        res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
-        return;
-      }
-      next(e);
-    }
-  },
-);
+inventarioRouter.post("/rollos/:id/recibir", requireSession, (_req, res) => {
+  res.status(410).json({
+    error: "Esta operación fue reemplazada por el flujo documentado de Salidas.",
+    code: "SALIDAS_FLOW_REQUIRED",
+  });
+});
 
 // ── Salida mostrador (DISPONIBLE → ABIERTO) ───────────────────────────────────
 // Module: salidas / crear — scope: rollo's current location

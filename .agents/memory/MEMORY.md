@@ -2,3 +2,4 @@
 - [Verificación de impresión](print-verification.md) — validar media print con estilos computados y geometría; el texto oculto que permanece en el DOM puede dar falsos positivos.
 - [Costos de compra por unidad](purchase-unit-costs.md) — nunca usar promedio por rollo; mostrar costo ponderado con unidad explícita por metro o por kilo.
 - [Ramas temporales de Neon](temporary-neon-test-branches.md) — preparar esquema y seed aislados antes de ejecutar pruebas de base de datos.
+- [Bases limpias en ramas Neon](neon-clean-test-databases.md) — si la rama hereda una base parcial, crear una base vacía dentro de ella y aplicar esquema/seed.

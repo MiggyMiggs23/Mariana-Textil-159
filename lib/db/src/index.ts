@@ -2,6 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
 export { ensureTicketIvaSchema } from "./lib/ticket-iva-schema";
+export { ensureSalidasSchema } from "./lib/salidas-schema";
 
 const { Pool } = pg;
 

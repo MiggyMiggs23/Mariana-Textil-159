@@ -1,6 +1,6 @@
 # Mariana Textil
 
-Sistema interno de inventarios, ventas y transferencias para las tiendas y
+Sistema interno de inventarios, ventas y salidas entre ubicaciones para las tiendas y
 bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 ## Run & Operate
@@ -48,13 +48,13 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** ADMIN tiene acceso total a los 25 módulos sin consultar tablas. Para CAJA, INVENTARIOS y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
+- **Permisos:** ADMIN tiene acceso total a los 24 módulos sin consultar tablas. Para CAJA, INVENTARIOS y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 
-## Permission modules (25 total)
+## Permission modules (24 total)
 
-`dashboard`, `pos`, `entradas`, `salidas`, `transferencias`, `movimientos`, `inventario`, `productos`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`
+`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `inventario`, `productos`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`
 
 ## Product
 

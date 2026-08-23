@@ -14,7 +14,7 @@
  *
  * Scenarios:
  *   S-01  All four roles log in → 200 + permisos matrix present
- *   S-02  ADMIN /auth/me → effective matrix has 25 modules, all full
+ *   S-02  ADMIN /auth/me → effective matrix has 24 modules, all full
  *   S-03  CAJA /auth/me  → pos.puedeVer=true, proveedores.puedeVer=false
  *   S-03A Caja tickets route is location-scoped and denied to BODEGA
  *   S-04  BODEGA denied POS  (GET /inventario/rollos → module=inventario OK, but POST vender → 403)
@@ -330,8 +330,8 @@ await test("S-01: All four roles login → 200 + permisos array present", async 
   }
 });
 
-// S-02: ADMIN /auth/me → matrix has 25 modules, all full access
-await test("S-02: ADMIN /auth/me effective matrix — 25 modules, all full access", async () => {
+// S-02: ADMIN /auth/me → matrix has 24 modules, all full access
+await test("S-02: ADMIN /auth/me effective matrix — 24 modules, all full access", async () => {
   const login_r = await login(testAdmin.usuario, testAdmin.password);
   assert.equal(login_r.status, 200);
   const me = await api("GET", "/auth/me", undefined, login_r.cookie);
@@ -339,7 +339,7 @@ await test("S-02: ADMIN /auth/me effective matrix — 25 modules, all full acces
   const body = me.body as Record<string, unknown>;
   const permisos = body.permisos as unknown[];
   assert.ok(Array.isArray(permisos), "permisos should be array");
-  assert.equal(permisos.length, 25, `Expected 25 modules, got ${permisos.length}`);
+  assert.equal(permisos.length, 24, `Expected 24 modules, got ${permisos.length}`);
   for (const p of permisos as Array<Record<string, unknown>>) {
     assert.equal(p.puedeVer, true, `ADMIN ${p.modulo}: puedeVer must be true`);
     assert.equal(p.puedeCrear, true, `ADMIN ${p.modulo}: puedeCrear must be true`);

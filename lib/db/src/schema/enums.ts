@@ -86,6 +86,18 @@ export const estadoSesionCajaEnum = pgEnum("estado_sesion_caja", [
   "CERRADA",
 ]);
 
+/** Workflow states for an inter-location inventory exit. */
+export const estadoSalidaEnum = pgEnum("estado_salida", [
+  "SOLICITADA",
+  "ACEPTADA",
+  "RECHAZADA",
+  "PREPARADA",
+  "ENVIADA",
+  "RECIBIDA",
+  "CERRADA",
+  "CANCELADA",
+]);
+
 export const tipoMovimientoCreditoEnum = pgEnum("tipo_movimiento_credito", [
   "VENTA_CREDITO",
   "ABONO",
@@ -111,5 +123,6 @@ export type FormaPagoTicket =
   (typeof formaPagoTicketEnum.enumValues)[number];
 export type EstadoSesionCaja =
   (typeof estadoSesionCajaEnum.enumValues)[number];
+export type EstadoSalida = (typeof estadoSalidaEnum.enumValues)[number];
 export type TipoMovimientoCredito =
   (typeof tipoMovimientoCreditoEnum.enumValues)[number];

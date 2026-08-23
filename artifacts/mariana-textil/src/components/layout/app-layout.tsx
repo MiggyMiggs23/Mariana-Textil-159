@@ -25,7 +25,6 @@ import {
   ShoppingCart,
   ArrowDownToLine,
   ArrowUpFromLine,
-  ArrowRightLeft,
   Activity,
   Package,
   UserSquare2,
@@ -68,7 +67,6 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Ventas / POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: false },
-      { name: "Transferencias", path: "/transferencias", icon: ArrowRightLeft, module: Modules.TRANSFERENCIAS, isClickable: false },
       { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
     ]
   },
