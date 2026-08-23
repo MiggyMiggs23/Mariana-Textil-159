@@ -1406,45 +1406,115 @@ export const GetExistenciasResponse = zod.array(GetExistenciasResponseItem)
 
 
 /**
- * @summary Kardex de un producto, filtrable y paginado (100 filas default)
+ * @summary Historial completo de movimientos, filtrable y paginado
  */
+export const getKardexQueryIncluirUbicacionesInactivasDefault = false;
+export const getKardexQueryPageDefault = 1;
+
+export const getKardexQueryPageSizeDefault = 100;
+export const getKardexQueryPageSizeMax = 100;
+
+
+
 export const GetKardexQueryParams = zod.object({
-  "productoId": zod.coerce.number(),
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
+  "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
   "desde": zod.date().optional(),
   "hasta": zod.date().optional(),
-  "page": zod.coerce.number().optional(),
-  "pageSize": zod.coerce.number().optional()
+  "buscar": zod.coerce.string().optional(),
+  "incluirUbicacionesInactivas": zod.coerce.boolean().default(getKardexQueryIncluirUbicacionesInactivasDefault),
+  "page": zod.coerce.number().int().min(1).default(getKardexQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(getKardexQueryPageSizeMax).default(getKardexQueryPageSizeDefault)
 })
 
 export const GetKardexResponse = zod.object({
-  "productoId": zod.number(),
   "movimientos": zod.array(zod.object({
   "id": zod.number(),
-  "rolloId": zod.number(),
-  "serie": zod.string().optional(),
-  "productoId": zod.number(),
-  "skuProducto": zod.string().optional(),
-  "ubicacionId": zod.number(),
-  "nombreUbicacion": zod.string().optional(),
+  "createdAt": zod.coerce.date(),
   "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
-  "documentoTipo": zod.string().nullish(),
-  "documentoId": zod.string().nullish(),
-  "movimientoOrigenId": zod.number().nullish(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "ubicacionActiva": zod.boolean(),
   "usuarioId": zod.number(),
-  "justificacion": zod.string().nullish(),
+  "nombreUsuario": zod.string(),
+  "username": zod.string(),
+  "documentoTipo": zod.string().nullable(),
+  "documentoId": zod.string().nullable(),
+  "documentoEtiqueta": zod.string().nullable(),
+  "documentoRuta": zod.string().nullable(),
+  "referenciaRolloRuta": zod.string(),
+  "movimientoOrigenId": zod.number().nullable(),
+  "justificacion": zod.string().nullable(),
   "revisado": zod.boolean(),
-  "revisadoPor": zod.number().nullish(),
-  "revisadoAt": zod.coerce.date().nullish(),
-  "uuidCliente": zod.string().nullish(),
-  "createdAt": zod.coerce.date()
+  "revisadoPor": zod.number().nullable(),
+  "revisadoAt": zod.coerce.date().nullable()
 })),
   "total": zod.number(),
   "page": zod.number(),
-  "pageSize": zod.number()
+  "pageSize": zod.number(),
+  "totalPages": zod.number()
 })
+
+
+/**
+ * @summary Metadatos de filtros disponibles para el historial
+ */
+export const listKardexFiltersQueryIncluirUbicacionesInactivasDefault = false;
+
+export const ListKardexFiltersQueryParams = zod.object({
+  "incluirUbicacionesInactivas": zod.coerce.boolean().default(listKardexFiltersQueryIncluirUbicacionesInactivasDefault)
+})
+
+export const ListKardexFiltersResponse = zod.object({
+  "productos": zod.array(zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.string()
+})),
+  "usuarios": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "username": zod.string()
+})),
+  "ubicaciones": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "activa": zod.boolean()
+})),
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']))
+})
+
+
+/**
+ * @summary Exporta el historial filtrado como XLSX
+ */
+export const exportKardexXlsxQueryIncluirUbicacionesInactivasDefault = false;
+
+export const ExportKardexXlsxQueryParams = zod.object({
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
+  "productoId": zod.coerce.number().optional(),
+  "ubicacionId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional(),
+  "buscar": zod.coerce.string().optional(),
+  "incluirUbicacionesInactivas": zod.coerce.boolean().default(exportKardexXlsxQueryIncluirUbicacionesInactivasDefault)
+})
+
+export const ExportKardexXlsxResponse = zod.unknown()
 
 
 /**

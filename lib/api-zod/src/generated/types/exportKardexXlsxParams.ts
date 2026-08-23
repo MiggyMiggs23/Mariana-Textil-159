@@ -7,7 +7,7 @@
  */
 import type { TipoMovimiento } from './tipoMovimiento';
 
-export type GetKardexParams = {
+export type ExportKardexXlsxParams = {
 tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
@@ -16,13 +16,4 @@ desde?: Date;
 hasta?: Date;
 buscar?: string;
 incluirUbicacionesInactivas?: boolean;
-/**
- * @minimum 1
- */
-page?: number;
-/**
- * @minimum 1
- * @maximum 100
- */
-pageSize?: number;
 };

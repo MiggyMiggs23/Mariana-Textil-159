@@ -16,6 +16,7 @@
     "test:salidas-schema": "tsx src/lib/salidas-schema.test.ts",
     "test:salidas": "tsx src/lib/salidas.test.ts",
     "test:salidas-api": "tsx --test src/salidas-api.test.ts",
+    "test:kardex-api": "NODE_ENV=test tsx --test src/kardex-api.test.ts",
     "test:admin-bypass-empty": "tsx src/admin-bypass-empty-permissions.test.ts",
     "test:security-api": "tsx src/security-api.test.ts"
   },

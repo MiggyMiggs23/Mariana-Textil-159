@@ -788,12 +788,78 @@ export interface ExistenciaRow {
   cantidadTotal: string;
 }
 
-export interface KardexResult {
+export interface KardexHistoryRow {
+  id: number;
+  createdAt: string;
+  tipo: TipoMovimiento;
+  cantidad: string;
+  saldoPosterior: string;
   productoId: number;
-  movimientos: MovimientoRow[];
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: string;
+  rolloId: number;
+  serie: string;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  ubicacionActiva: boolean;
+  usuarioId: number;
+  nombreUsuario: string;
+  username: string;
+  /** @nullable */
+  documentoTipo: string | null;
+  /** @nullable */
+  documentoId: string | null;
+  /** @nullable */
+  documentoEtiqueta: string | null;
+  /** @nullable */
+  documentoRuta: string | null;
+  referenciaRolloRuta: string;
+  /** @nullable */
+  movimientoOrigenId: number | null;
+  /** @nullable */
+  justificacion: string | null;
+  revisado: boolean;
+  /** @nullable */
+  revisadoPor: number | null;
+  /** @nullable */
+  revisadoAt: string | null;
+}
+
+export interface KardexResult {
+  movimientos: KardexHistoryRow[];
   total: number;
   page: number;
   pageSize: number;
+  totalPages: number;
+}
+
+export interface KardexFilterProduct {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: string;
+}
+
+export interface KardexFilterUser {
+  id: number;
+  nombre: string;
+  username: string;
+}
+
+export interface KardexFilterLocation {
+  id: number;
+  nombre: string;
+  activa: boolean;
+}
+
+export interface KardexFilters {
+  productos: KardexFilterProduct[];
+  usuarios: KardexFilterUser[];
+  ubicaciones: KardexFilterLocation[];
+  tipos: TipoMovimiento[];
 }
 
 export interface ConciliacionRow {
@@ -1944,12 +2010,38 @@ consolidado?: boolean;
 };
 
 export type GetKardexParams = {
-productoId: number;
+tipos?: TipoMovimiento[];
+productoId?: number;
 ubicacionId?: number;
+usuarioId?: number;
 desde?: string;
 hasta?: string;
+buscar?: string;
+incluirUbicacionesInactivas?: boolean;
+/**
+ * @minimum 1
+ */
 page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
 pageSize?: number;
+};
+
+export type ListKardexFiltersParams = {
+incluirUbicacionesInactivas?: boolean;
+};
+
+export type ExportKardexXlsxParams = {
+tipos?: TipoMovimiento[];
+productoId?: number;
+ubicacionId?: number;
+usuarioId?: number;
+desde?: string;
+hasta?: string;
+buscar?: string;
+incluirUbicacionesInactivas?: boolean;
 };
 
 export type GetConciliacionParams = {

@@ -1018,14 +1018,24 @@ paths:
     get:
       operationId: getKardex
       tags: [inventario]
-      summary: Kardex de un producto, filtrable y paginado (100 filas default)
+      summary: Historial completo de movimientos, filtrable y paginado
       parameters:
         - in: query
+          name: tipos
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/TipoMovimiento"
+        - in: query
           name: productoId
-          required: true
           schema: { type: number }
         - in: query
           name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: usuarioId
           schema: { type: number }
         - in: query
           name: desde
@@ -1034,11 +1044,17 @@ paths:
           name: hasta
           schema: { type: string, format: date }
         - in: query
+          name: buscar
+          schema: { type: string }
+        - in: query
+          name: incluirUbicacionesInactivas
+          schema: { type: boolean, default: false }
+        - in: query
           name: page
-          schema: { type: number }
+          schema: { type: integer, minimum: 1, default: 1 }
         - in: query
           name: pageSize
-          schema: { type: number }
+          schema: { type: integer, minimum: 1, maximum: 100, default: 100 }
       responses:
         "200":
           description: Movimientos del kardex
@@ -1048,8 +1064,75 @@ paths:
                 $ref: "#/components/schemas/KardexResult"
         "401":
           $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/kardex/filtros:
+    get:
+      operationId: listKardexFilters
+      tags: [inventario]
+      summary: Metadatos de filtros disponibles para el historial
+      parameters:
+        - in: query
+          name: incluirUbicacionesInactivas
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Productos, usuarios, ubicaciones y tipos con movimientos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KardexFilters"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/kardex/exportar:
+    get:
+      operationId: exportKardexXlsx
+      tags: [inventario]
+      summary: Exporta el historial filtrado como XLSX
+      parameters:
+        - in: query
+          name: tipos
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/TipoMovimiento"
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: usuarioId
+          schema: { type: number }
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+        - in: query
+          name: buscar
+          schema: { type: string }
+        - in: query
+          name: incluirUbicacionesInactivas
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Archivo XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /inventario/ajustes/pendientes:
     get:
       operationId: listAjustesPendientes
@@ -3111,16 +3194,100 @@ components:
         cantidadTotal: { type: string }
     KardexResult:
       type: object
-      required: [productoId, movimientos, total, page, pageSize]
+      required: [movimientos, total, page, pageSize, totalPages]
       properties:
-        productoId: { type: number }
         movimientos:
           type: array
           items:
-            $ref: "#/components/schemas/MovimientoRow"
+            $ref: "#/components/schemas/KardexHistoryRow"
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }
+        totalPages: { type: number }
+    KardexHistoryRow:
+      type: object
+      required:
+        [
+          id, createdAt, tipo, cantidad, saldoPosterior, productoId, skuProducto,
+          telaProducto, colorProducto, unidadProducto, rolloId, serie,
+          ubicacionId, nombreUbicacion, ubicacionActiva, usuarioId,
+          nombreUsuario, username, documentoTipo, documentoId,
+          documentoEtiqueta, documentoRuta, referenciaRolloRuta,
+          movimientoOrigenId, justificacion, revisado, revisadoPor, revisadoAt
+        ]
+      properties:
+        id: { type: number }
+        createdAt: { type: string, format: date-time }
+        tipo:
+          $ref: "#/components/schemas/TipoMovimiento"
+        cantidad: { type: string }
+        saldoPosterior: { type: string }
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+        rolloId: { type: number }
+        serie: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        ubicacionActiva: { type: boolean }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        username: { type: string }
+        documentoTipo: { type: ["string", "null"] }
+        documentoId: { type: ["string", "null"] }
+        documentoEtiqueta: { type: ["string", "null"] }
+        documentoRuta: { type: ["string", "null"] }
+        referenciaRolloRuta: { type: string }
+        movimientoOrigenId: { type: ["number", "null"] }
+        justificacion: { type: ["string", "null"] }
+        revisado: { type: boolean }
+        revisadoPor: { type: ["number", "null"] }
+        revisadoAt: { type: ["string", "null"], format: date-time }
+    KardexFilterProduct:
+      type: object
+      required: [id, sku, tela, color, unidad]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string }
+    KardexFilterUser:
+      type: object
+      required: [id, nombre, username]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        username: { type: string }
+    KardexFilterLocation:
+      type: object
+      required: [id, nombre, activa]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        activa: { type: boolean }
+    KardexFilters:
+      type: object
+      required: [productos, usuarios, ubicaciones, tipos]
+      properties:
+        productos:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexFilterProduct"
+        usuarios:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexFilterUser"
+        ubicaciones:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexFilterLocation"
+        tipos:
+          type: array
+          items:
+            $ref: "#/components/schemas/TipoMovimiento"
     ConciliacionRow:
       type: object
       required:

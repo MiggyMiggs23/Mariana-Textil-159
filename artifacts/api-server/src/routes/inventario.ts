@@ -1,4 +1,5 @@
 import { Router } from "express";
+import ExcelJS from "exceljs";
 import { and, count, desc, eq, gte, ilike, inArray, lte } from "drizzle-orm";
 import {
   CrearEntradaBody,
@@ -30,6 +31,9 @@ import {
   GetExistenciasResponse,
   GetKardexQueryParams,
   GetKardexResponse,
+  ListKardexFiltersQueryParams,
+  ListKardexFiltersResponse,
+  ExportKardexXlsxQueryParams,
   ListAjustesPendientesResponse,
   RevisarAjusteParams,
   RevisarAjusteResponse,
@@ -54,6 +58,7 @@ import {
 import { requireSession } from "../middlewares/auth";
 import type { AuthContext } from "../middlewares/auth";
 import { getRequestIp } from "../lib/request";
+import { parseMexicoDateQuery } from "../lib/mexico-date";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 import { requierePermiso } from "../lib/permisos";
 import {
@@ -69,6 +74,11 @@ import {
   revisarAjuste,
   InventarioError,
 } from "../lib/inventario";
+import {
+  getKardex as queryKardex,
+  listKardexFilters as queryKardexFilters,
+  type KardexFiltersInput,
+} from "../lib/kardex";
 
 export const inventarioRouter = Router();
 
@@ -1135,19 +1145,58 @@ inventarioRouter.get(
 // ── Kardex ────────────────────────────────────────────────────────────────────
 // Module: movimientos / ver — read scope applied via ubicacionId filter
 
+function normalizeKardexQuery(query: Record<string, unknown>) {
+  const normalized = { ...query };
+  if (typeof normalized.tipos === "string") {
+    normalized.tipos = [normalized.tipos];
+  }
+  for (const key of ["desde", "hasta"] as const) {
+    if (normalized[key] !== undefined) {
+      normalized[key] = parseMexicoDateQuery(
+        normalized[key],
+        key === "desde" ? "start" : "end",
+      );
+    }
+  }
+  if (typeof normalized.incluirUbicacionesInactivas === "string") {
+    normalized.incluirUbicacionesInactivas =
+      normalized.incluirUbicacionesInactivas === "true";
+  }
+  return normalized;
+}
+
+function kardexFilters(
+  query: {
+    tipos?: KardexFiltersInput["tipos"];
+    desde?: Date;
+    hasta?: Date;
+    productoId?: number;
+    usuarioId?: number;
+    buscar?: string;
+    incluirUbicacionesInactivas: boolean;
+  },
+  ubicacionId: number | null | undefined,
+): KardexFiltersInput {
+  return {
+    tipos: query.tipos,
+    desde: query.desde,
+    hasta: query.hasta,
+    productoId: query.productoId,
+    usuarioId: query.usuarioId,
+    buscar: query.buscar,
+    ubicacionId: ubicacionId ?? undefined,
+    incluirUbicacionesInactivas: query.incluirUbicacionesInactivas,
+  };
+}
+
 inventarioRouter.get(
   "/kardex",
   requireSession,
   requierePermiso("movimientos", "ver"),
   async (req, res, next) => {
     try {
-      const q = GetKardexQueryParams.parse(req.query);
-      const page = q.page ?? 1;
-      const pageSize = q.pageSize ?? 100;
-      const offset = (page - 1) * pageSize;
+      const q = GetKardexQueryParams.parse(normalizeKardexQuery(req.query));
       const auth = req.auth!;
-
-      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
       const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
         auth,
         q.ubicacionId,
@@ -1156,50 +1205,145 @@ inventarioRouter.get(
         res.status(403).json({ error: scopeError });
         return;
       }
-
-      const conditions = [eq(movimientosTable.productoId, q.productoId)];
-      // Apply resolved location scope (overrides q.ubicacionId for PROPIA)
-      if (scopedUbicacionId != null) {
-        conditions.push(eq(movimientosTable.ubicacionId, scopedUbicacionId));
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
       }
-      if (q.desde)
-        conditions.push(gte(movimientosTable.createdAt, new Date(q.desde)));
-      if (q.hasta) {
-        const hastaDate = new Date(q.hasta);
-        hastaDate.setDate(hastaDate.getDate() + 1);
-        conditions.push(lte(movimientosTable.createdAt, hastaDate));
-      }
-
-      const where = and(...conditions);
-
-      const [totalRow] = await db
-        .select({ cnt: count() })
-        .from(movimientosTable)
-        .where(where);
-
-      const rows = await db
-        .select()
-        .from(movimientosTable)
-        .where(where)
-        .orderBy(desc(movimientosTable.id))
-        .limit(pageSize)
-        .offset(offset);
-
-      const movimientos = await Promise.all(rows.map(enrichMovimiento));
-
-      const response = GetKardexResponse.parse({
-        productoId: q.productoId,
-        movimientos,
-        total: totalRow?.cnt ?? 0,
-        page,
-        pageSize,
-      });
-      res.json(
-        omitTerminalSensitiveFields(
-          response,
-          auth.user.rol === "TERMINAL",
-        ),
+      const result = await queryKardex(
+        kardexFilters(q, scopedUbicacionId),
+        { page: q.page, pageSize: q.pageSize },
       );
+      const response = GetKardexResponse.parse({
+        ...result,
+        page: q.page,
+        pageSize: q.pageSize,
+        totalPages: Math.ceil(result.total / q.pageSize),
+      });
+      res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/kardex/filtros",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ListKardexFiltersQueryParams.parse(
+        normalizeKardexQuery(req.query),
+      );
+      const auth = req.auth!;
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const { ubicacionId, scopeError } = resolveReadScope(auth);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      const result = await queryKardexFilters({
+        ubicacionId: ubicacionId ?? undefined,
+        incluirUbicacionesInactivas: q.incluirUbicacionesInactivas,
+      });
+      res.json(ListKardexFiltersResponse.parse(result));
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/kardex/exportar",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ExportKardexXlsxQueryParams.parse(
+        normalizeKardexQuery(req.query),
+      );
+      const auth = req.auth!;
+      const { ubicacionId, scopeError } = resolveReadScope(auth, q.ubicacionId);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const { movimientos } = await queryKardex(
+        kardexFilters(q, ubicacionId),
+      );
+      const workbook = new ExcelJS.Workbook();
+      workbook.creator = "Mariana Textil";
+      workbook.created = new Date();
+      const sheet = workbook.addWorksheet("Kardex");
+      sheet.columns = [
+        { header: "Fecha", key: "fecha", width: 14 },
+        { header: "Hora", key: "hora", width: 12 },
+        { header: "Tipo", key: "tipo", width: 25 },
+        { header: "SKU", key: "sku", width: 18 },
+        { header: "Producto", key: "producto", width: 30 },
+        { header: "Serie", key: "serie", width: 18 },
+        { header: "Ubicación", key: "ubicacion", width: 24 },
+        { header: "Cantidad", key: "cantidad", width: 14 },
+        { header: "Unidad", key: "unidad", width: 12 },
+        { header: "Usuario", key: "usuario", width: 24 },
+        { header: "Documento", key: "documento", width: 28 },
+        { header: "Justificación", key: "justificacion", width: 40 },
+      ];
+      const dateFormatter = new Intl.DateTimeFormat("es-MX", {
+        timeZone: "America/Mexico_City",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      const timeFormatter = new Intl.DateTimeFormat("es-MX", {
+        timeZone: "America/Mexico_City",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+      for (const movement of movimientos) {
+        const createdAt = new Date(movement.createdAt);
+        sheet.addRow({
+          fecha: dateFormatter.format(createdAt),
+          hora: timeFormatter.format(createdAt),
+          tipo: movement.tipo,
+          sku: movement.skuProducto,
+          producto: `${movement.telaProducto} - ${movement.colorProducto}`,
+          serie: movement.serie,
+          ubicacion: movement.nombreUbicacion,
+          cantidad: Number(movement.cantidad),
+          unidad: movement.unidadProducto,
+          usuario: movement.nombreUsuario,
+          documento: movement.documentoEtiqueta ?? "",
+          justificacion: movement.justificacion ?? "",
+        });
+      }
+      sheet.getRow(1).font = { bold: true };
+      sheet.autoFilter = { from: "A1", to: "L1" };
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="kardex.xlsx"',
+      );
+      await workbook.xlsx.write(res);
+      res.end();
     } catch (e) {
       next(e);
     }

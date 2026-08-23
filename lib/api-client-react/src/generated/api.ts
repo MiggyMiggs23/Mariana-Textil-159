@@ -48,6 +48,7 @@ import type {
   EstadisticasProveedorParams,
   EstadoCuentaProveedorParams,
   ExistenciaRow,
+  ExportKardexXlsxParams,
   ExportarProveedorXlsxParams,
   ForbiddenResponse,
   GetConciliacionParams,
@@ -59,9 +60,11 @@ import type {
   ImportFileInput,
   ImportPreviewRow,
   ImportResult,
+  KardexFilters,
   KardexResult,
   ListComprasProveedorParams,
   ListEntradasParams,
+  ListKardexFiltersParams,
   ListProveedorPagosParams,
   ListRollosParams,
   ListSalidasParams,
@@ -3300,10 +3303,18 @@ export function useGetExistencias<TData = Awaited<ReturnType<typeof getExistenci
 
 
 
-export const getGetKardexUrl = (params: GetKardexParams,) => {
+export const getGetKardexUrl = (params?: GetKardexParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["tipos"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : String(v));
+      });
+      return;
+    }
 
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : String(value))
@@ -3316,9 +3327,9 @@ export const getGetKardexUrl = (params: GetKardexParams,) => {
 }
 
 /**
- * @summary Kardex de un producto, filtrable y paginado (100 filas default)
+ * @summary Historial completo de movimientos, filtrable y paginado
  */
-export const getKardex = async (params: GetKardexParams, options?: Parameters<typeof customFetch>[1]): Promise<KardexResult> => {
+export const getKardex = async (params?: GetKardexParams, options?: Parameters<typeof customFetch>[1]): Promise<KardexResult> => {
 
   return customFetch<KardexResult>(getGetKardexUrl(params),
   {
@@ -3340,7 +3351,7 @@ export const getGetKardexQueryKey = (params?: GetKardexParams,) => {
     }
 
 
-export const getGetKardexQueryOptions = <TData = Awaited<ReturnType<typeof getKardex>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(params: GetKardexParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetKardexQueryOptions = <TData = Awaited<ReturnType<typeof getKardex>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetKardexParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -3359,19 +3370,195 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetKardexQueryResult = NonNullable<Awaited<ReturnType<typeof getKardex>>>
-export type GetKardexQueryError = ErrorType<UnauthorizedResponse | NotFoundResponse>
+export type GetKardexQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
 
 
 /**
- * @summary Kardex de un producto, filtrable y paginado (100 filas default)
+ * @summary Historial completo de movimientos, filtrable y paginado
  */
 
-export function useGetKardex<TData = Awaited<ReturnType<typeof getKardex>>, TError = ErrorType<UnauthorizedResponse | NotFoundResponse>>(
- params: GetKardexParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export function useGetKardex<TData = Awaited<ReturnType<typeof getKardex>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetKardexParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardex>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetKardexQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListKardexFiltersUrl = (params?: ListKardexFiltersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/kardex/filtros?${stringifiedParams}` : `/api/inventario/kardex/filtros`
+}
+
+/**
+ * @summary Metadatos de filtros disponibles para el historial
+ */
+export const listKardexFilters = async (params?: ListKardexFiltersParams, options?: Parameters<typeof customFetch>[1]): Promise<KardexFilters> => {
+
+  return customFetch<KardexFilters>(getListKardexFiltersUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListKardexFiltersQueryKey = (params?: ListKardexFiltersParams,) => {
+    return [
+    `/api/inventario/kardex/filtros`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListKardexFiltersQueryOptions = <TData = Awaited<ReturnType<typeof listKardexFilters>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListKardexFiltersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listKardexFilters>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListKardexFiltersQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listKardexFilters>>> = ({ signal }) => listKardexFilters(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listKardexFilters>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListKardexFiltersQueryResult = NonNullable<Awaited<ReturnType<typeof listKardexFilters>>>
+export type ListKardexFiltersQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Metadatos de filtros disponibles para el historial
+ */
+
+export function useListKardexFilters<TData = Awaited<ReturnType<typeof listKardexFilters>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListKardexFiltersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listKardexFilters>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListKardexFiltersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportKardexXlsxUrl = (params?: ExportKardexXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["tipos"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : String(v));
+      });
+      return;
+    }
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/kardex/exportar?${stringifiedParams}` : `/api/inventario/kardex/exportar`
+}
+
+/**
+ * @summary Exporta el historial filtrado como XLSX
+ */
+export const exportKardexXlsx = async (params?: ExportKardexXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportKardexXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportKardexXlsxQueryKey = (params?: ExportKardexXlsxParams,) => {
+    return [
+    `/api/inventario/kardex/exportar`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportKardexXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportKardexXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ExportKardexXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportKardexXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportKardexXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportKardexXlsx>>> = ({ signal }) => exportKardexXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportKardexXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportKardexXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportKardexXlsx>>>
+export type ExportKardexXlsxQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta el historial filtrado como XLSX
+ */
+
+export function useExportKardexXlsx<TData = Awaited<ReturnType<typeof exportKardexXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportKardexXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportKardexXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportKardexXlsxQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
