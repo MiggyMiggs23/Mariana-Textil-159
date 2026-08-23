@@ -4,8 +4,12 @@ import { omitTerminalSensitiveFields } from "./sensitive-data";
 const payload = {
   costoUnitario: "10.00",
   costo_total: "20.00",
+  costo_unitario_congelado: "10.00",
+  costo_total_congelado: "20.00",
   totalCosto: "20.00",
+  margen: "5.00",
   margenBruto: "5.00",
+  utilidad: "3.00",
   utilidad_neta: "3.00",
   nested: [{ costo_unitario: "10.00", visible: true }],
   visible: "ok",
@@ -15,8 +19,12 @@ const terminal = omitTerminalSensitiveFields(payload, true) as Record<string, un
 for (const key of [
   "costoUnitario",
   "costo_total",
+  "costo_unitario_congelado",
+  "costo_total_congelado",
   "totalCosto",
+  "margen",
   "margenBruto",
+  "utilidad",
   "utilidad_neta",
 ]) {
   assert.ok(!(key in terminal), `TERMINAL payload must omit ${key}`);

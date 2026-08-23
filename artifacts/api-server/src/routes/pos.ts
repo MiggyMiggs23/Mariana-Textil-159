@@ -43,6 +43,7 @@ import {
   type ModuloId,
 } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 import {
   abrirSesionCaja,
   buildCorteCaja,
@@ -191,6 +192,16 @@ function omitTerminalPaymentState(
   return safe;
 }
 
+function omitTerminalTicketSensitiveFields(
+  value: Record<string, unknown>,
+  terminal: boolean,
+): Record<string, unknown> {
+  return omitTerminalSensitiveFields(
+    omitTerminalPaymentState(value, terminal),
+    terminal,
+  );
+}
+
 async function getSesion(sesionId: number) {
   const [sesion] = await db
     .select({
@@ -265,7 +276,7 @@ router.post(
       res
         .status(201)
         .json(
-          omitTerminalPaymentState(
+          omitTerminalTicketSensitiveFields(
             parsed as unknown as Record<string, unknown>,
             req.auth!.user.rol === "TERMINAL",
           ),
@@ -358,7 +369,7 @@ router.get(
       res.json(
         terminal
           ? response.map((ticket) =>
-              omitTerminalPaymentState(
+              omitTerminalTicketSensitiveFields(
                 ticket as unknown as Record<string, unknown>,
                 true,
               ),
@@ -389,7 +400,7 @@ router.get(
       assertOperationalLocation(req, ticket.ubicacionId);
       const parsed = ObtenerTicketResponse.parse(ticket);
       res.json(
-        omitTerminalPaymentState(
+        omitTerminalTicketSensitiveFields(
           parsed as unknown as Record<string, unknown>,
           terminal,
         ),
@@ -441,7 +452,7 @@ router.post(
       );
       const parsed = CancelarTicketResponse.parse(result);
       res.json(
-        omitTerminalPaymentState(
+        omitTerminalTicketSensitiveFields(
           parsed as unknown as Record<string, unknown>,
           terminal,
         ),

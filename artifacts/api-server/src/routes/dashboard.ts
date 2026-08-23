@@ -5,6 +5,7 @@ import { db, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getInventarioPorUbicacion } from "../lib/inventario";
+import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 
 const router: IRouter = Router();
 
@@ -111,8 +112,7 @@ router.get(
       inventarioData.map((d) => [d.ubicacionId, d]),
     );
 
-    res.json(
-      GetDashboardResponse.parse({
+    const response = GetDashboardResponse.parse({
         tiendasActivas: Number(stores?.value ?? 0),
         bodegasActivas: Number(warehouses?.value ?? 0),
         usuariosActivos: Number(activeUsers?.value ?? 0),
@@ -126,7 +126,12 @@ router.get(
             rollos: String(inv?.rollos ?? 0),
           };
         }),
-      }),
+      });
+    res.json(
+      omitTerminalSensitiveFields(
+        response,
+        user.rol === "TERMINAL",
+      ),
     );
   },
 );

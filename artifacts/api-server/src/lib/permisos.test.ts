@@ -59,6 +59,7 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
 // ── Setup: create test users ──────────────────────────────────────────────────
 
 let adminUserId = 0;
+let terminalUserId = 0;
 let cajaUserId = 0;
 let inventariosUserId = 0;
 let bodegaUserId = 0;
@@ -87,6 +88,19 @@ const [admin] = await db
   .returning({ id: usuariosTable.id });
 adminUserId = admin.id;
 createdUserIds.push(adminUserId);
+
+const [terminal] = await db
+  .insert(usuariosTable)
+  .values({
+    nombre: "Test Terminal Permisos",
+    usuario: `test_terminal_perms_${Date.now()}`,
+    passwordHash: "hash",
+    rol: "TERMINAL" as RolUsuario,
+    ubicacionId: tienda.id,
+  })
+  .returning({ id: usuariosTable.id });
+terminalUserId = terminal.id;
+createdUserIds.push(terminalUserId);
 
 const [caja] = await db
   .insert(usuariosTable)
@@ -169,6 +183,35 @@ await test("P-06: CAJA puede ver cobros_pagos pero no POS", async () => {
   assert.ok(p);
   assert.equal(p.puedeVer, true);
   assert.equal((await resolvePermiso(cajaUserId, "CAJA", "pos"))?.puedeVer, false);
+});
+
+await test("P-06B: TERMINAL tiene únicamente la matriz operativa de POS", async () => {
+  const matrix = await buildPermissionMatrix(terminalUserId, "TERMINAL");
+  const expected: Record<
+    string,
+    { ver: boolean; crear: boolean; editar: boolean }
+  > = {
+    dashboard: { ver: true, crear: false, editar: false },
+    pos: { ver: true, crear: true, editar: false },
+    inventario: { ver: true, crear: false, editar: false },
+    productos: { ver: true, crear: false, editar: false },
+    clientes: { ver: true, crear: true, editar: true },
+    clientes_credito: { ver: true, crear: false, editar: false },
+    clientes_precios: { ver: true, crear: false, editar: false },
+  };
+
+  for (const modulo of MODULOS) {
+    const permission = matrix[modulo];
+    const wanted = expected[modulo] ?? {
+      ver: false,
+      crear: false,
+      editar: false,
+    };
+    assert.equal(permission.puedeVer, wanted.ver, `${modulo}.ver`);
+    assert.equal(permission.puedeCrear, wanted.crear, `${modulo}.crear`);
+    assert.equal(permission.puedeEditar, wanted.editar, `${modulo}.editar`);
+    assert.equal(permission.puedeAutorizar, false, `${modulo}.autorizar`);
+  }
 });
 
 await test("P-07: módulo sin fila en ninguna tabla → denegar (null)", async () => {

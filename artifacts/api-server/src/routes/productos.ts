@@ -25,6 +25,7 @@ import { generateBaseSku, generateSku } from "@workspace/db/sku";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 import {
   parseFileBase64,
   buildPreview,
@@ -130,12 +131,18 @@ function presentProductoDetail(
 
 // ── list ───────────────────────────────────────────────────────────────────
 
-router.get("/productos", requierePermiso("productos", "ver"), async (_req, res): Promise<void> => {
+router.get("/productos", requierePermiso("productos", "ver"), async (req, res): Promise<void> => {
   const rows = await db
     .select()
     .from(productosTable)
     .orderBy(productosTable.tela, productosTable.color);
-  res.json(ListProductosResponse.parse(rows.map(presentProducto)));
+  const response = ListProductosResponse.parse(rows.map(presentProducto));
+  res.json(
+    omitTerminalSensitiveFields(
+      response,
+      req.auth!.user.rol === "TERMINAL",
+    ),
+  );
 });
 
 // ── create (ADMIN only) ────────────────────────────────────────────────────
@@ -427,7 +434,15 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
   }
 
   const locations = await getRealLocations();
-  res.json(GetProductoResponse.parse(presentProductoDetail(producto, locations)));
+  const response = GetProductoResponse.parse(
+    presentProductoDetail(producto, locations),
+  );
+  res.json(
+    omitTerminalSensitiveFields(
+      response,
+      req.auth!.user.rol === "TERMINAL",
+    ),
+  );
 });
 
 // ── update (ADMIN only) ────────────────────────────────────────────────────

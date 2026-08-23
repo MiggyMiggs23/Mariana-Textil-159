@@ -273,6 +273,7 @@ export default function Usuarios() {
                   </SelectTrigger>
                   <SelectContent>
                     {isAdmin && <SelectItem value={Role.ADMIN}>Administrador</SelectItem>}
+                    <SelectItem value={Role.TERMINAL}>Terminal</SelectItem>
                     <SelectItem value={Role.CAJA}>Caja</SelectItem>
                     <SelectItem value={Role.INVENTARIOS}>Inventarios</SelectItem>
                     <SelectItem value={Role.BODEGA}>Bodega</SelectItem>

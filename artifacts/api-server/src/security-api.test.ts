@@ -168,6 +168,36 @@ async function login(usuario: string, password: string): Promise<FetchResult> {
   return api("POST", "/auth/login", { usuario, password });
 }
 
+function assertNoTerminalSensitiveKeys(
+  value: unknown,
+  path = "response",
+): void {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) =>
+      assertNoTerminalSensitiveKeys(item, `${path}[${index}]`),
+    );
+    return;
+  }
+  if (value === null || typeof value !== "object") return;
+
+  for (const [key, nested] of Object.entries(
+    value as Record<string, unknown>,
+  )) {
+    const normalized = key
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+    assert.ok(
+      !normalized.includes("costo") &&
+        !normalized.includes("margen") &&
+        !normalized.includes("utilidad"),
+      `TERMINAL response must omit sensitive key ${path}.${key}`,
+    );
+    assertNoTerminalSensitiveKeys(nested, `${path}.${key}`);
+  }
+}
+
 // ─── DB setup helpers ──────────────────────────────────────────────────────────
 
 let userSeq = 0;
@@ -332,6 +362,32 @@ await test("S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores 
   assert.equal(posEntry.puedeVer, false, "CAJA must not use terminal POS");
   assert.equal(cobrosEntry?.puedeVer, true, "CAJA should see cobros_pagos");
   assert.equal(provEntry.puedeVer, false, "CAJA must not see proveedores");
+});
+
+await test("S-03B: TERMINAL API responses omit costs, margins and profits", async () => {
+  const loginR = await login(testTerminal.usuario, testTerminal.password);
+  assert.equal(loginR.status, 200);
+
+  const paths = [
+    "/inventario/rollos",
+    `/inventario/rollos/${sharedRolloId}`,
+    "/inventario/existencias",
+    "/productos",
+    `/productos/${sharedProductoId}`,
+    "/inventario/entradas",
+    "/inventario/kardex",
+    "/dashboard",
+    "/tickets",
+  ];
+
+  for (const path of paths) {
+    const response = await api("GET", path, undefined, loginR.cookie);
+    assert.ok(
+      response.status === 200 || response.status === 403,
+      `${path} returned ${response.status}: ${JSON.stringify(response.body)}`,
+    );
+    assertNoTerminalSensitiveKeys(response.body, path);
+  }
 });
 
 // S-04: BODEGA denied POS sale (vender) but can read inventario

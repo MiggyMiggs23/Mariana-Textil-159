@@ -527,7 +527,12 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(response);
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol === "TERMINAL",
+        ),
+      );
     } catch (e) {
       next(e);
     }
@@ -1216,7 +1221,12 @@ inventarioRouter.get(
       }));
 
       const response = GetExistenciasResponse.parse(items);
-      res.json(response);
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol === "TERMINAL",
+        ),
+      );
     } catch (e) {
       next(e);
     }
@@ -1285,7 +1295,12 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(response);
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol === "TERMINAL",
+        ),
+      );
     } catch (e) {
       next(e);
     }
