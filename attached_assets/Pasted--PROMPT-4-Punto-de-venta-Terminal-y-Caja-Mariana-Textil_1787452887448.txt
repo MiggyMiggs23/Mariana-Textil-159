@@ -1,0 +1,518 @@
+# PROMPT 4 — Punto de venta: Terminal y Caja
+### Mariana Textil · Versión definitiva
+
+> Haz commit en Git antes de empezar.
+> Requisito previo: el prompt 3D (permisos, alcance por ubicación, máquina de estados) está terminado y validado.
+
+---
+
+# CÓMO TRABAJAR CON ESTE PROMPT
+
+**Trabaja de forma autónoma hasta terminar.** No te detengas a pedir aprobación entre tareas. Divide el trabajo como consideres, pero ejecútalo completo.
+
+**Si encuentras una ambigüedad:** toma la decisión más conservadora, sigue adelante, y anótala en el reporte final bajo "Decisiones que tomé". No te detengas a preguntar.
+
+**Si algo falla y no puedes resolverlo:** documéntalo con precisión, deja el resto funcionando, y repórtalo. No dejes el sistema sin compilar ni la aplicación caída.
+
+**Reglas que no se rompen bajo ninguna circunstancia:**
+- No borres datos existentes. El catálogo de 154 productos, los proveedores, los rollos y las entradas se conservan.
+- No hagas rollback ni descartes trabajo previo.
+- No modifiques el motor de inventario más allá de lo que este documento indica.
+- Haz commit al terminar cada bloque grande, con mensaje descriptivo.
+- Al final, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+**Respeta el motor.** Toda operación sobre rollos pasa por `server/lib/inventario.ts`. El POS no escribe directo en `rollos`, `movimientos` ni `existencias`.
+
+**Respeta el diseño existente.** Mismo azul marino, misma tipografía, mismos componentes. No introduzcas un estilo nuevo.
+
+**Stack:** React + Vite con servidor Express, TypeScript, Tailwind, PostgreSQL, Drizzle.
+
+---
+
+# PARTE 0 — Corrección pendiente
+
+En `resolveReadScope` de `artifacts/api-server/src/routes/inventario.ts`, la condición para el administrador es:
+
+```
+if (auth.user.rol === "ADMIN" && alcance === "TODAS")
+```
+
+Cámbiala a que dependa **solo del rol**:
+
+```
+if (auth.user.rol === "ADMIN")
+```
+
+El alcance de consulta del administrador no debe depender de un campo configurable. Si alguien pusiera su `alcance_consulta` en `PROPIA`, quedaría limitado a una ubicación, y eso contradice el principio de acceso incondicional.
+
+Busca cualquier otra condición del mismo tipo en el proyecto y aplícale el mismo criterio.
+
+---
+
+# CÓMO FUNCIONA EL NEGOCIO
+
+Lee esto completo antes de escribir código. El flujo tiene dos estaciones físicas separadas y esa separación gobierna todo el diseño.
+
+**Estación 1 — Terminal.** Una persona arma el ticket: escanea o busca rollos, negocia el precio, confirma la venta. Al confirmar, **el inventario se descuenta de inmediato** y se imprimen tres copias del ticket: cliente, caja y administración.
+
+**Estación 2 — Caja.** El cliente lleva su ticket a una caja física separada y paga ahí. El cajero cobra, pone un sello físico de "pagado" en el papel, y **marca el ticket como cobrado en el sistema**, capturando cómo se pagó.
+
+**Control de salida.** Un guardia en la puerta revisa que el ticket traiga el sello original. Ese es el control físico de que se pagó; el sistema no lo duplica.
+
+**Consecuencia de diseño clave:** el ticket lleva **dos estados independientes**.
+
+- **Vendido** — la terminal confirmó. El inventario ya se descontó. Los rollos están VENDIDO.
+- **Cobrado** — caja registró el pago y con qué forma.
+
+**El inventario no depende del segundo estado.** Si caja no alcanza a marcar un ticket, el inventario sigue siendo correcto y el ticket aparece en la lista de pendientes de cobro. **Nunca bloquees ni retrases el descuento de inventario esperando el cobro.** No crees un estado de "reservado" ni de "pendiente de pago" que retenga mercancía.
+
+**Una sola terminal por tienda.** No hay dos personas vendiendo simultáneamente en la misma ubicación.
+
+---
+
+# PARTE 1 — Roles
+
+## Rol nuevo: TERMINAL
+
+Quien arma los tickets. **No maneja dinero.**
+
+| Módulo | Permisos |
+|---|---|
+| pos | ver, crear |
+| inventario | ver |
+| productos | ver |
+| clientes | ver, crear, editar |
+| clientes_credito | ver |
+| clientes_precios | ver |
+| dashboard | ver |
+| todo lo demás | — |
+
+**TERMINAL nunca ve costos ni margen.** Ni en inventario, ni en productos, ni en el detalle de rollo, ni en el POS, ni en ningún reporte. Ver Parte 7.
+
+## Rol CAJA: cambia de función
+
+El rol `CAJA` ya existe pero **pasa de ser "el que vende" a ser "el que cobra"**. Reasigna por completo sus permisos:
+
+| Módulo | Permisos |
+|---|---|
+| cobros_pagos | ver, crear |
+| resumen_caja | ver |
+| cortes | ver, crear |
+| inventario | ver |
+| productos | ver |
+| movimientos | ver |
+| clientes | ver |
+| clientes_credito | ver |
+| clientes_finanzas | ver |
+| reportes | ver |
+| pos | — |
+| todo lo demás | — |
+
+**CAJA sí ve costos y margen.** Es una posición de confianza y le sirve para detectar ventas fuera de lo normal.
+
+**Migración de usuarios existentes:** si hay usuarios con rol CAJA creados antes de este cambio, consérvalos con ese rol. Sus permisos cambiarán automáticamente al actualizar la matriz. Reporta cuántos usuarios quedaron en esa situación para que el administrador los revise y decida si alguno debe pasar a TERMINAL.
+
+## ADMIN
+
+Sigue con acceso incondicional a todo, por el bypass del prompt 3D. **No lo toques.** Debe poder entrar tanto al POS como a la pantalla de cobros.
+
+Agrega las filas de `permisos_rol` para TERMINAL con la matriz de arriba, y actualiza las de CAJA. **No crees filas para ADMIN.**
+
+---
+
+# PARTE 2 — Tablas nuevas
+
+**`tickets`**
+- id (serial, PK)
+- folio (int, único) — consecutivo global, iniciando en 1000, con la misma mecánica de bloqueo de fila que usan las series y los folios de entrada
+- ubicacion_id (int, FK)
+- usuario_terminal_id (int, FK) — quién armó el ticket
+- cliente_id (int, FK, nullable) — null = venta al público
+- tipo (enum: `NORMAL`, `METREADO`)
+- subtotal (decimal 12,2)
+- total (decimal 12,2)
+- estado (enum: `VENDIDO`, `CANCELADO`)
+- cobrado (boolean, default false)
+- cobrado_at (timestamptz, nullable)
+- usuario_caja_id (int, FK, nullable)
+- facturado (boolean, default false)
+- sesion_caja_id (int, FK a sesiones_caja, nullable)
+- uuid_cliente (uuid, único) — idempotencia
+- created_at (timestamptz)
+- cancelado_at (timestamptz, nullable), cancelado_por (int, FK, nullable), motivo_cancelacion (text, nullable), autorizado_por (int, FK, nullable)
+- Índices en (ubicacion_id, created_at), (cobrado), (estado), (folio)
+
+**`ticket_lineas`**
+- id (serial, PK)
+- ticket_id (int, FK)
+- rollo_id (int, FK, nullable) — obligatorio si el ticket es NORMAL; nullable si es METREADO
+- producto_id (int, FK)
+- cantidad (decimal 10,3) — metros o kilos según la unidad del producto
+- precio_unitario (decimal 12,2) — el negociado, por metro o kilo
+- precio_sugerido (decimal 12,2) — el de lista al momento de la venta, para comparar después
+- importe (decimal 12,2) — cantidad × precio_unitario
+- costo_unitario_congelado (decimal 12,2) — copiado del rollo al vender
+- costo_total_congelado (decimal 12,2)
+
+El costo se congela en la línea para que el margen histórico sea exacto aunque el rollo se dé de baja después.
+
+**`ticket_pagos`**
+- id (serial, PK)
+- ticket_id (int, FK)
+- forma_pago (enum: `EFECTIVO`, `TRANSFERENCIA`, `CREDITO`)
+- importe (decimal 12,2)
+- referencia (text, nullable) — folio de transferencia
+- created_at (timestamptz), usuario_id (int, FK)
+
+Un ticket puede tener varias filas. **La suma debe igualar exactamente el total del ticket**; valídalo en el servidor.
+
+**`sesiones_caja`**
+- id (serial, PK)
+- ubicacion_id (int, FK)
+- usuario_id (int, FK)
+- abierta_at (timestamptz)
+- cerrada_at (timestamptz, nullable)
+- fondo_inicial (decimal 12,2)
+- efectivo_contado (decimal 12,2, nullable) — capturado al cerrar
+- estado (enum: `ABIERTA`, `CERRADA`)
+- Índice en (ubicacion_id, estado)
+
+Solo puede haber una sesión ABIERTA por ubicación a la vez.
+
+---
+
+# PARTE 3 — Modelo de formas de pago
+
+**Facturado NO es una forma de pago. Es una marca del ticket.**
+
+Una venta facturada se paga igualmente con efectivo, transferencia o crédito. Lo fiscal y lo monetario son ejes independientes.
+
+- **Forma de pago:** efectivo, transferencia, crédito. Un ticket puede combinarlas (pago mixto).
+- **Facturado:** sí o no, marca del ticket.
+- **Cuenta destino**, derivada de los dos anteriores:
+
+| Forma de pago | Facturado | Cuenta destino |
+|---|---|---|
+| Efectivo | cualquiera | Caja física |
+| Transferencia | sí | Cuenta fiscal |
+| Transferencia | no | Cuenta no fiscal |
+| Crédito | cualquiera | Cuentas por cobrar |
+
+El corte debe poder responder cuánto entró a cada cuenta, y también cuánto de lo facturado se pagó por transferencia.
+
+---
+
+# PARTE 4 — Pantalla TERMINAL
+
+Ruta `/pos`. **Es la pantalla de inicio para el rol TERMINAL**: al entrar, cae directo aquí sin pasar por dashboard.
+
+## Flujo de venta
+
+1. **Campo de búsqueda siempre enfocado.** Acepta escaneo de QR (el lector actúa como teclado y termina en Enter) o texto libre. Busca por serie de rollo, SKU, tela o color. Después de cada acción, el foco regresa solo a este campo.
+
+2. **Al escanear una serie de rollo**, se agrega directo al ticket con su cantidad completa. Es el caso más rápido y el más frecuente. Si el rollo no está DISPONIBLE, o pertenece a otra ubicación, rechaza con mensaje claro.
+
+3. **Al buscar por producto**, muestra los rollos DISPONIBLES de ese producto **en esta ubicación**, con su serie y cantidad. El vendedor elige cuál.
+
+4. **Precio.** Aparece el precio sugerido del producto multiplicado por la cantidad del rollo. El vendedor puede editar **el precio por metro o por kilo**, y el sistema recalcula el importe en vivo.
+
+5. **Piso de precio.** Si el precio unitario capturado queda **por debajo del costo unitario de ese rollo**, rechaza la línea con este mensaje:
+
+   > *"El precio de [Producto] serie [XXXXXXX] está por debajo del mínimo permitido."*
+
+   **No reveles la cifra del costo, ni el margen, ni el mínimo.** Identifica siempre **qué línea específica** es la que no pasa: el costo varía entre rollos del mismo producto y sin esa referencia el vendedor no sabe cuál corregir.
+
+   La validación se hace **en el servidor**, no solo en el navegador.
+
+6. **Varias líneas por ticket.** Sin límite práctico.
+
+7. **Cliente.** Opcional. Por defecto la venta es **AL PÚBLICO**. El botón dice "Asignar cliente" y es secundario, no estorba el flujo rápido. Si se selecciona uno, se guarda para historial y estadísticas.
+
+   Con `clientes_credito.puede_ver`, al seleccionar cliente se muestra un bloque compacto: límite, saldo actual, crédito disponible, e indicador de color (verde con margen, amarillo cerca del límite, rojo excedido).
+
+8. **Referencia de precio.** Con `clientes_precios.puede_ver` y un cliente seleccionado, bajo el campo de precio se muestra: *"Última compra: $8.50 el 12 jul · Promedio últimas 3: $8.35"*. **Solo precios unitarios.** Nunca importes totales, cantidades ni qué otros productos compra.
+
+9. **Facturado.** Casilla en el ticket. Solo una marca; no afecta el cálculo ni el flujo.
+
+10. **Confirmar venta.** En **una sola transacción**:
+    - Se reserva el folio y se crea el ticket con estado `VENDIDO` y `cobrado = false`
+    - Cada rollo pasa a VENDIDO **a través del motor**
+    - Se copia el costo del rollo a la línea, congelado
+    - Se descuenta el inventario y se registran los movimientos tipo VENTA
+    - Se registra en auditoría
+
+    Si algo falla, **nada se guarda** y no se quema el folio.
+
+11. **Impresión automática** al confirmar: tres copias, ver Parte 6.
+
+12. Tras confirmar, la pantalla se limpia y queda lista para el siguiente ticket, con el foco en el buscador.
+
+## Venta metreada
+
+Segundo tipo de ticket, para mercancía que ya salió a mostrador.
+
+Contexto: cuando un rollo sale a piso con SALIDA_MOSTRADOR queda en estado ABIERTO y deja de rastrearse. Lo que se vende de ahí por metro entra a caja, pero **no genera movimiento de inventario** porque el rollo ya se descontó al salir.
+
+- Ticket de tipo `METREADO`. Un ticket es NORMAL o METREADO, **nunca mezcla ambos**.
+- **No toca inventario.** No genera movimientos ni cambia estados de rollo.
+- Se captura: producto, cantidad en metros o kilos, precio unitario, importe.
+- **Opcionalmente se liga a un rollo ABIERTO** de ese producto en esta ubicación, guardando su `rollo_id` en la línea. No es obligatorio. Si se liga, después se puede comparar lo recuperado contra el costo de ese rollo.
+- **Solo permite efectivo.** Al llegar a caja, únicamente se puede marcar como pagado en efectivo. Rechaza crédito y transferencia con mensaje claro.
+- **Nunca facturado.** La casilla queda deshabilitada.
+- No aplica el piso de precio por costo, porque puede no haber rollo ligado.
+- Aparece como renglón propio en el corte.
+
+## Cancelación
+
+- **TERMINAL puede cancelar, pero requiere autorización de un ADMIN**: modal que pide usuario y contraseña de administrador. Se guarda quién autorizó en `autorizado_por`.
+- **ADMIN cancela directamente**, sin modal.
+- **Motivo obligatorio**, mínimo 10 caracteres.
+- Al cancelar un ticket NORMAL: se generan los movimientos inversos **por el motor**, y los rollos regresan a **DISPONIBLE**. La existencia queda exactamente como antes de la venta.
+- Al cancelar un ticket METREADO: no hay movimientos que revertir, solo cambia el estado del ticket.
+- **Un ticket ya cobrado se puede cancelar**, pero muestra una advertencia visible de que ya se registró un cobro y que hay que devolver el dinero. El cobro queda registrado en el histórico; no se borra.
+- Nada se elimina. La cancelación deja rastro completo en auditoría.
+
+## Lo que TERMINAL no ve, en ninguna pantalla
+
+- Costos, margen, utilidad
+- Formas de pago (no cobra, no elige forma de pago)
+- Estado de cobro de los tickets
+- Reportes financieros
+- Saldos de clientes más allá del crédito disponible
+
+---
+
+# PARTE 5 — Pantalla CAJA
+
+Ruta `/cobros`. **Es la pantalla de inicio del rol CAJA.** Al entrar ve los tickets, sin pasar por dashboard. Para llegar a inventario, productos o reportes usa la barra lateral.
+
+## Apertura de sesión
+
+Al entrar, si no hay sesión ABIERTA para esa ubicación, pedir el **fondo inicial** y abrirla. Todos los cobros del turno se ligan a esa sesión. No se puede cobrar sin sesión abierta.
+
+## Lista de tickets
+
+Lo principal de la pantalla. Ordenada por hora, los más recientes arriba, con actualización automática cada pocos segundos.
+
+Cada renglón: **folio** grande, hora, número de líneas, **total** destacado, cliente o "Público", marca de facturado, marca de metreado, y **estado de cobro**.
+
+- Los **pendientes de cobro** se destacan visualmente y aparecen primero
+- Los **cobrados** se ven atenuados, con la forma de pago y la hora del cobro
+- Los **cancelados** aparecen tachados, con su motivo al pasar el cursor
+- Un ticket pendiente **más de 30 minutos** se resalta en color de alerta: la mercancía salió del inventario y el dinero no ha entrado
+
+Arriba, resumen del turno: tickets pendientes, tickets cobrados, total cobrado, y desglose por forma de pago.
+
+Buscador por folio y filtros por estado.
+
+## Cobrar un ticket
+
+Al tocar un ticket pendiente se abre el detalle:
+
+- Líneas con producto, serie, cantidad, precio unitario e importe
+- **Costo y margen visibles** — CAJA sí los ve
+- Total a cobrar, grande
+
+**Captura de pago:**
+
+- Botones grandes: **Efectivo**, **Transferencia**, **Crédito**
+- Al elegir uno, se asigna el total completo a esa forma por defecto. **Para el caso común basta con dos toques: el ticket y la forma de pago.**
+- **Pago mixto:** botón "Dividir pago" que permite agregar varias formas con su importe. Muestra en vivo cuánto falta por asignar y **no permite confirmar hasta que la suma iguale exactamente el total**. Valídalo también en el servidor.
+- **Transferencia:** campo de referencia, opcional
+- **Crédito:** requiere cliente. Si el ticket se hizo al público, caja debe poder asignar el cliente en ese momento. Genera el movimiento en `movimientos_credito` con importe positivo. Si excede el límite del cliente, requiere autorización de ADMIN con usuario y contraseña.
+- **Tickets metreados:** solo efectivo. Los otros botones aparecen deshabilitados con una nota explicativa.
+
+Al confirmar, en **una sola transacción**: se marca `cobrado = true`, la hora, el usuario de caja y la sesión; se insertan las filas de `ticket_pagos`; y si hubo crédito, se genera el movimiento del cliente.
+
+**Un ticket cobrado no se puede volver a cobrar.** Valídalo en el servidor.
+
+## Corte de caja
+
+Al cerrar la sesión:
+
+- Fecha, tienda, cajero, hora de apertura y cierre, fondo inicial
+- Tickets cobrados, tickets cancelados, tickets pendientes al cierre
+- **Desglose por forma de pago:** efectivo, transferencia, crédito
+- **Desglose por cuenta destino:** caja física, cuenta fiscal, cuenta no fiscal, cuentas por cobrar
+- **Facturado vs no facturado**, cada uno con su desglose de forma de pago
+- **Ventas metreadas** en renglón propio, con número de tickets e importe
+- Desglose por producto: nombre, color, cantidad vendida, importe
+- **Lista de tickets pendientes de cobro al cierre**, con folio y total. Es la información más importante del corte: mercancía que salió sin cobrarse.
+- **Efectivo esperado** = fondo inicial + ventas en efectivo
+- Campo para capturar el **efectivo contado real**
+- **Diferencia** calculada, resaltada si no es cero
+- Total del turno
+
+Imprimible en formato de ticket y en hoja normal. Exportable a PDF y Excel.
+
+Al cerrar, la sesión **no se puede reabrir**. Los cortes históricos son consultables por ADMIN de todas las tiendas.
+
+---
+
+# PARTE 6 — Impresión del ticket
+
+**Nota sobre el hardware:** una impresora térmica imprime una hoja a la vez, en negro, sobre papel térmico blanco. **No puede producir tres copias de colores distintos en una sola pasada.** Las notas autocopiantes de tres colores requieren impresora **matricial de impacto**.
+
+Implementa **dos formatos**, seleccionables desde configuración, para que el sistema funcione con cualquiera de los dos equipos:
+
+- **80 mm** para impresora térmica, con opción de imprimir tres veces seguidas
+- **Media carta** para impresora matricial
+
+En ambos, cada copia va rotulada al pie: *Original – Cliente*, *Copia – Caja*, *Copia – Administración*.
+
+**Contenido del ticket:**
+- Logo de Mariana Textil y "Mariana Textil S.A. de C.V."
+- Nombre de la tienda
+- **Folio grande y legible** — es el dato que caja busca
+- Fecha y hora
+- Usuario que atendió
+- Cliente, o **"VENTA AL PÚBLICO"**
+- Líneas: producto, serie del rollo, cantidad con unidad, precio unitario, importe
+- **Total en grande**
+- Si es facturado, la leyenda **FACTURADO**
+- Si es metreado, el sello **METREADO — mercancía ya descontada del inventario**
+- Espacio en blanco visible para el sello físico de pagado
+- Al pie, el rótulo de qué copia es
+
+**El ticket no muestra la forma de pago**, porque se imprime antes de que el cliente pague.
+
+Reimprimible desde el detalle del ticket, en cualquier momento.
+
+---
+
+# PARTE 7 — Costos ocultos para TERMINAL
+
+Esto se implementa **en el servidor**, omitiendo campos de la respuesta JSON. No basta con esconderlos en la interfaz: si el dato viaja en la respuesta, está expuesto a cualquiera que abra las herramientas del navegador.
+
+Para usuarios con rol TERMINAL, **omite** `costo_unitario`, `costo_total`, `costo_unitario_congelado`, `costo_total_congelado`, margen y utilidad en:
+
+- `GET /rollos` y `GET /rollos/:id`
+- `GET /existencias`
+- `GET /productos` y `GET /productos/:id`
+- `GET /tickets` y `GET /tickets/:id`
+- `GET /entradas` y `GET /entradas/:id`
+- `GET /kardex`
+- `GET /dashboard`
+- Cualquier reporte accesible para ese rol
+
+El campo `costo_unitario_congelado` **sí se guarda** en la base, para que el margen histórico se calcule en reportes. Solo no se devuelve a TERMINAL.
+
+La validación del piso de precio ocurre en el servidor **sin devolver la cifra**: el endpoint responde con el error y la identificación de la línea, nunca con el costo.
+
+Revisa el proyecto completo buscando cualquier otro endpoint que exponga costos y aplícale el mismo criterio. Repórtame la lista.
+
+---
+
+# PARTE 8 — Consultas para reportes
+
+Deja listas las consultas que usarán los reportes del prompt siguiente. **No construyas las pantallas todavía.**
+
+- Margen por ticket, por producto, por vendedor, por ubicación, por día
+- Comparativo de precio negociado contra precio sugerido, para medir cuánto se descuenta en la práctica
+- Ventas metreadas, y cuando se ligaron a un rollo, cuánto se recuperó contra su costo
+- Ventas por forma de pago y por cuenta destino
+- Ventas facturadas vs no facturadas
+- Tickets cancelados con motivo, quién canceló y quién autorizó
+- Tickets pendientes de cobro por día
+- Tiempo promedio entre venta y cobro
+
+Documéntalas para que el prompt de reportes las use.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No crees un estado de "reservado" ni "pendiente de pago" que retenga inventario
+- No bloquees el descuento de inventario esperando el cobro
+- No permitas que TERMINAL vea costos ni margen, por ninguna vía
+- No permitas que CAJA arme tickets
+- No permitas cancelar sin autorización de ADMIN y sin motivo
+- No permitas ventas metreadas a crédito, por transferencia, ni facturadas
+- No permitas cobrar dos veces el mismo ticket
+- No permitas que el desglose de pago mixto difiera del total
+- No escribas directo en `rollos`, `movimientos` ni `existencias`
+- No borres datos existentes
+- No modifiques el bypass de ADMIN
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+Todas automatizadas. Las de permisos, **llamando a la API directamente**.
+
+**Flujo básico:**
+1. TERMINAL arma un ticket de 2 rollos, confirma, y el inventario baja exactamente esa cantidad
+2. Los rollos quedan en estado VENDIDO
+3. El ticket aparece en la lista de CAJA como pendiente
+4. CAJA lo marca como cobrado en efectivo; el ticket pasa a cobrado **sin tocar el inventario**
+5. La suma del kardex sigue igualando el caché de existencias
+6. Un ticket ya cobrado no se puede volver a cobrar
+
+**Precio:**
+7. TERMINAL captura un precio por debajo del costo del rollo: **se rechaza**, y el mensaje **no revela** el costo
+8. El mensaje identifica correctamente qué línea es la que no pasa
+9. Con dos rollos del mismo producto y costos distintos, se identifica la línea correcta
+10. Un precio por encima del costo se acepta
+11. La validación ocurre en el servidor: una llamada directa a la API con precio bajo también se rechaza
+
+**Permisos:**
+12. TERMINAL: `GET /rollos/:id` responde 200 y la respuesta **no incluye** `costo_unitario` ni `costo_total`
+13. TERMINAL: `GET /tickets/:id` responde 200 sin costos ni margen
+14. TERMINAL: endpoints de cobros responden **403**
+15. CAJA: endpoints de POS responden **403**
+16. CAJA: `GET /rollos/:id` responde 200 **con** los costos
+17. ADMIN accede a POS y a cobros, ambos 200
+
+**Pago mixto:**
+18. Un ticket de $1,000 cobrado con $600 efectivo y $400 transferencia genera dos filas de `ticket_pagos` y queda cobrado
+19. Un desglose que suma $900 sobre un ticket de $1,000: **se rechaza**
+20. Un desglose que suma $1,100: **se rechaza**
+
+**Crédito:**
+21. CAJA marca un ticket como crédito, genera el saldo del cliente y aparece en su estado de cuenta
+22. Un ticket al público marcado como crédito exige seleccionar cliente
+23. Un crédito que excede el límite requiere autorización
+
+**Cancelación:**
+24. TERMINAL intenta cancelar sin autorización: **se rechaza**
+25. Con autorización de ADMIN: se cancela, los rollos regresan a DISPONIBLE, y la existencia queda **exactamente** como antes de la venta
+26. Cancelar con motivo de menos de 10 caracteres: **se rechaza**
+27. Cancelar un ticket ya cobrado: se permite, con advertencia, y el registro del cobro se conserva
+
+**Metreado:**
+28. Una venta metreada **no genera movimientos de inventario**
+29. Intentar marcarla como crédito, transferencia o facturada: **se rechaza**
+30. Aparece como renglón propio en el corte
+
+**Corte:**
+31. El corte suma correctamente por forma de pago y por cuenta destino
+32. Una transferencia facturada va a cuenta fiscal; una sin factura, a cuenta no fiscal
+33. Los tickets pendientes de cobro aparecen listados al cierre
+34. La diferencia entre efectivo esperado y contado se calcula bien
+35. Una sesión cerrada no se puede reabrir
+
+**Concurrencia e idempotencia:**
+36. Dos confirmaciones con el mismo `uuid_cliente` crean **un solo** ticket
+37. Dos tickets simultáneos obtienen folios distintos
+38. Intentar vender un rollo ya vendido: **se rechaza**
+
+**Regresión:**
+39. Las 12 pruebas originales del motor siguen pasando
+40. Las pruebas del prompt 3D siguen pasando, incluida la de vaciar las tablas de permisos y confirmar que ADMIN conserva los 25 módulos
+
+---
+
+# ENTREGABLE
+
+Al terminar, repórtame en este orden:
+
+1. **Estado general:** ¿la aplicación compila, arranca y permite iniciar sesión?
+2. **Decisiones que tomé** — cualquier ambigüedad que resolviste por tu cuenta
+3. **Problemas sin resolver**, si los hubo, con el detalle preciso
+4. Lista de archivos creados y modificados
+5. Lista de endpoints nuevos con su módulo y acción de permiso
+6. Lista de endpoints donde se omiten costos para TERMINAL
+7. Cuántos usuarios con rol CAJA existían antes, para que yo decida si alguno pasa a TERMINAL
+8. Salida completa de la corrida de pruebas
+9. Confirmación de que las pruebas del motor y del 3D siguen pasando
+10. Cómo entro como TERMINAL y como CAJA para probar cada pantalla
