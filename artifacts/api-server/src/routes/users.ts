@@ -11,6 +11,7 @@ import {
 import {
   auditoriaTable,
   db,
+  permisosUsuarioTable,
   ubicacionesTable,
   usuariosTable,
   type AlcanceConsulta,
@@ -254,6 +255,13 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
         .set(updates)
         .where(eq(usuariosTable.id, params.data.id))
         .returning();
+
+      if (finalRole === "ADMIN") {
+        await tx
+          .delete(permisosUsuarioTable)
+          .where(eq(permisosUsuarioTable.usuarioId, user.id));
+      }
+
       await tx.insert(auditoriaTable).values({
         usuarioId: req.auth!.user.id,
         accion: "ACTUALIZAR",

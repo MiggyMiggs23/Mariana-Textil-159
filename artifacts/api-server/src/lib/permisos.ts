@@ -1,10 +1,11 @@
 /**
  * Central permission service for Mariana Textil.
  *
- * Resolution order (first non-null wins):
- *  1. permisos_usuario row for (usuario_id, modulo) with a non-null value
- *  2. permisos_rol row for (rol, modulo)
- *  3. Deny (no row = deny by default)
+ * Resolution order:
+ *  1. ADMIN receives full access without reading permission tables.
+ *  2. permisos_usuario row for (usuario_id, modulo) with a non-null value
+ *  3. permisos_rol row for (rol, modulo)
+ *  4. Deny (no row = deny by default)
  */
 
 import type { NextFunction, Request, Response } from "express";
@@ -29,6 +30,8 @@ export interface ModulePermission {
 export interface PermissionMatrix {
   [modulo: string]: ModulePermission;
 }
+
+type PermissionReader = Pick<typeof db, "select">;
 
 /** All 25 module identifiers */
 export const MODULOS = [
@@ -61,17 +64,12 @@ export const MODULOS = [
 
 export type ModuloId = (typeof MODULOS)[number];
 
-const ADMIN_PROTECTED_MODULES = new Set<string>(["usuarios", "permisos"]);
 const FULL_ACCESS = {
   puedeVer: true,
   puedeCrear: true,
   puedeEditar: true,
   puedeAutorizar: true,
 } as const;
-
-function isProtectedAdminModule(rol: RolUsuario, modulo: string): boolean {
-  return rol === "ADMIN" && ADMIN_PROTECTED_MODULES.has(modulo);
-}
 
 /**
  * Resolve the effective permission for a single (userId, rol, modulo).
@@ -81,15 +79,14 @@ export async function resolvePermiso(
   userId: number,
   rol: RolUsuario,
   modulo: string,
+  database: PermissionReader = db,
 ): Promise<ModulePermission | null> {
-  // Recovery invariant: even missing/corrupted rows cannot lock every ADMIN
-  // out of the two modules required to repair users and permissions.
-  if (isProtectedAdminModule(rol, modulo)) {
+  if (rol === "ADMIN") {
     return { modulo, ...FULL_ACCESS };
   }
 
   // Check per-user override first
-  const [userRow] = await db
+  const [userRow] = await database
     .select()
     .from(permisosUsuarioTable)
     .where(
@@ -101,7 +98,7 @@ export async function resolvePermiso(
     .limit(1);
 
   // Get role row
-  const [rolRow] = await db
+  const [rolRow] = await database
     .select()
     .from(permisosRolTable)
     .where(
@@ -151,15 +148,22 @@ export async function resolvePermiso(
 export async function buildPermissionMatrix(
   userId: number,
   rol: RolUsuario,
+  database: PermissionReader = db,
 ): Promise<PermissionMatrix> {
+  if (rol === "ADMIN") {
+    return Object.fromEntries(
+      MODULOS.map((modulo) => [modulo, { modulo, ...FULL_ACCESS }]),
+    );
+  }
+
   // Fetch all role permissions
-  const rolRows = await db
+  const rolRows = await database
     .select()
     .from(permisosRolTable)
     .where(eq(permisosRolTable.rol, rol));
 
   // Fetch all user overrides
-  const userRows = await db
+  const userRows = await database
     .select()
     .from(permisosUsuarioTable)
     .where(eq(permisosUsuarioTable.usuarioId, userId));
@@ -170,11 +174,6 @@ export async function buildPermissionMatrix(
   const matrix: PermissionMatrix = {};
 
   for (const modulo of MODULOS) {
-    if (isProtectedAdminModule(rol, modulo)) {
-      matrix[modulo] = { modulo, ...FULL_ACCESS };
-      continue;
-    }
-
     const rolRow = rolMap.get(modulo);
     const userRow = userMap.get(modulo);
 
@@ -256,23 +255,15 @@ export function requierePermiso(modulo: string, accion: AccionPermiso) {
 }
 
 /**
- * Validate ADMIN invariants before saving permission changes.
- * ADMIN must always retain full access to 'usuarios' and 'permisos'.
+ * ADMIN is not configurable through either permission table.
  */
 export function validateAdminInvariants(
   rol: string,
-  modulo: string,
-  updates: { puedeVer?: boolean; puedeCrear?: boolean; puedeEditar?: boolean; puedeAutorizar?: boolean },
+  _modulo: string,
+  _updates: { puedeVer?: boolean; puedeCrear?: boolean; puedeEditar?: boolean; puedeAutorizar?: boolean },
 ): string | null {
-  if (rol === "ADMIN" && (modulo === "usuarios" || modulo === "permisos")) {
-    if (
-      updates.puedeVer === false ||
-      updates.puedeCrear === false ||
-      updates.puedeEditar === false ||
-      updates.puedeAutorizar === false
-    ) {
-      return `El rol ADMIN no puede perder acceso total al módulo '${modulo}'.`;
-    }
+  if (rol === "ADMIN") {
+    return "El administrador tiene acceso total a todos los módulos y no puede ser restringido.";
   }
   return null;
 }

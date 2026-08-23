@@ -220,7 +220,7 @@ await test("P-09: null override means inherit from role", async () => {
   assert.equal(p.puedeVer, false, "Null override should inherit role value");
 });
 
-await test("P-10: validateAdminInvariants rejects removing ADMIN access to 'usuarios'", async () => {
+await test("P-10: ADMIN cannot be configured in permisos_rol", async () => {
   const err = validateAdminInvariants("ADMIN", "usuarios", {
     puedeVer: false,
     puedeCrear: true,
@@ -228,10 +228,10 @@ await test("P-10: validateAdminInvariants rejects removing ADMIN access to 'usua
     puedeAutorizar: true,
   });
   assert.ok(err, "Should return an error message");
-  assert.ok(err.includes("usuarios"), "Error should mention the module");
+  assert.ok(err.includes("acceso total"), "Error should explain ADMIN full access");
 });
 
-await test("P-11: validateAdminInvariants rejects removing ADMIN access to 'permisos'", async () => {
+await test("P-11: ADMIN rejects partial permission updates", async () => {
   const err = validateAdminInvariants("ADMIN", "permisos", {
     puedeVer: true,
     puedeCrear: false,
@@ -239,27 +239,27 @@ await test("P-11: validateAdminInvariants rejects removing ADMIN access to 'perm
     puedeAutorizar: true,
   });
   assert.ok(err, "Should return an error message");
-  assert.ok(err.includes("permisos"), "Error should mention the module");
+  assert.ok(err.includes("no puede ser restringido"));
 });
 
-await test("P-12: validateAdminInvariants allows full ADMIN access to 'usuarios'", async () => {
+await test("P-12: ADMIN rejects even redundant full-access rows", async () => {
   const err = validateAdminInvariants("ADMIN", "usuarios", {
     puedeVer: true,
     puedeCrear: true,
     puedeEditar: true,
     puedeAutorizar: true,
   });
-  assert.equal(err, null, "No error for full access");
+  assert.ok(err, "ADMIN must not have matrix rows");
 });
 
-await test("P-13: validateAdminInvariants allows modifying non-protected modules for ADMIN", async () => {
+await test("P-13: ADMIN cannot be configured for any module", async () => {
   const err = validateAdminInvariants("ADMIN", "dashboard", {
     puedeVer: false,
     puedeCrear: false,
     puedeEditar: false,
     puedeAutorizar: false,
   });
-  assert.equal(err, null, "Non-protected modules can be changed");
+  assert.ok(err, "Every ADMIN module must bypass the matrix");
 });
 
 await test("P-14: validateAdminInvariants allows any value for non-ADMIN roles", async () => {
@@ -405,34 +405,14 @@ await test("P-25: user override with explicit true overrides role false", async 
   assert.equal(overridePerm?.puedeVer, true, "Explicit true override should grant");
 });
 
-await test("P-26: protected ADMIN modules survive missing rows and false overrides", async () => {
-  const [original] = await db
-    .select()
-    .from(permisosRolTable)
-    .where(
-      and(
-        eq(permisosRolTable.rol, "ADMIN"),
-        eq(permisosRolTable.modulo, "usuarios"),
-      ),
-    )
-    .limit(1);
-  assert.ok(original, "ADMIN/usuarios should exist in seed");
-
+await test("P-26: ADMIN ignores a false override on an ordinary module", async () => {
   let overrideId: number | null = null;
   try {
-    await db
-      .delete(permisosRolTable)
-      .where(
-        and(
-          eq(permisosRolTable.rol, "ADMIN"),
-          eq(permisosRolTable.modulo, "usuarios"),
-        ),
-      );
     const [override] = await db
       .insert(permisosUsuarioTable)
       .values({
         usuarioId: adminUserId,
-        modulo: "usuarios",
+        modulo: "dashboard",
         puedeVer: false,
         puedeCrear: false,
         puedeEditar: false,
@@ -441,36 +421,25 @@ await test("P-26: protected ADMIN modules survive missing rows and false overrid
       .returning({ id: permisosUsuarioTable.id });
     overrideId = override.id;
 
-    const effective = await resolvePermiso(adminUserId, "ADMIN", "usuarios");
+    const effective = await resolvePermiso(adminUserId, "ADMIN", "dashboard");
     assert.deepEqual(effective, {
-      modulo: "usuarios",
+      modulo: "dashboard",
       puedeVer: true,
       puedeCrear: true,
       puedeEditar: true,
       puedeAutorizar: true,
     });
     const matrix = await buildPermissionMatrix(adminUserId, "ADMIN");
-    assert.equal(matrix.usuarios.puedeVer, true);
-    assert.equal(matrix.usuarios.puedeCrear, true);
-    assert.equal(matrix.usuarios.puedeEditar, true);
-    assert.equal(matrix.usuarios.puedeAutorizar, true);
+    assert.equal(matrix.dashboard.puedeVer, true);
+    assert.equal(matrix.dashboard.puedeCrear, true);
+    assert.equal(matrix.dashboard.puedeEditar, true);
+    assert.equal(matrix.dashboard.puedeAutorizar, true);
   } finally {
     if (overrideId != null) {
       await db
         .delete(permisosUsuarioTable)
         .where(eq(permisosUsuarioTable.id, overrideId));
     }
-    await db
-      .insert(permisosRolTable)
-      .values({
-        rol: original.rol,
-        modulo: original.modulo,
-        puedeVer: original.puedeVer,
-        puedeCrear: original.puedeCrear,
-        puedeEditar: original.puedeEditar,
-        puedeAutorizar: original.puedeAutorizar,
-      })
-      .onConflictDoNothing();
   }
 });
 

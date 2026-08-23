@@ -34,7 +34,7 @@ export default function Permisos() {
   const { data: user } = useGetCurrentUser();
   const queryClient = useQueryClient();
 
-  const [selectedRole, setSelectedRole] = useState<Role>(Role.ADMIN);
+  const [selectedRole, setSelectedRole] = useState<Role>(Role.CAJA);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
 
   const { data: rolesData, isLoading: isLoadingRoles } = useListPermisosRoles();
@@ -161,7 +161,6 @@ export default function Permisos() {
                       <SelectValue placeholder="Seleccionar Rol" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={Role.ADMIN}>Administrador</SelectItem>
                       <SelectItem value={Role.CAJA}>Caja</SelectItem>
                       <SelectItem value={Role.INVENTARIOS}>Inventarios</SelectItem>
                       <SelectItem value={Role.BODEGA}>Bodega</SelectItem>
@@ -170,15 +169,13 @@ export default function Permisos() {
                 </div>
               </CardHeader>
               <CardContent>
-                {selectedRole === Role.ADMIN && (
-                  <Alert className="mb-6 bg-blue-50 text-blue-900 border-blue-200">
-                    <Shield className="h-4 w-4" color="currentColor" />
-                    <AlertTitle>Nota de Sistema</AlertTitle>
-                    <AlertDescription>
-                      El rol ADMIN siempre tiene acceso total por defecto. Modificar esta matriz es opcional y generalmente innecesario para ADMIN. Los módulos 'usuarios' y 'permisos' requieren este rol para ser funcionales.
-                    </AlertDescription>
-                  </Alert>
-                )}
+                <Alert className="mb-6 bg-blue-50 text-blue-900 border-blue-200">
+                  <Shield className="h-4 w-4" color="currentColor" />
+                  <AlertTitle>Administrador</AlertTitle>
+                  <AlertDescription>
+                    El administrador tiene acceso total a todos los módulos y no puede ser restringido.
+                  </AlertDescription>
+                </Alert>
 
                 <div className="rounded-md border overflow-x-auto">
                   <table className="w-full text-sm">
@@ -199,37 +196,30 @@ export default function Permisos() {
                       ) : (
                         ALL_MODULES.map(modulo => {
                           const current = rolesData?.find(r => r.rol === selectedRole && r.modulo === modulo);
-                          const protectedAdminModule =
-                            selectedRole === Role.ADMIN &&
-                            (modulo === Modules.USUARIOS || modulo === Modules.PERMISOS);
                           return (
                             <tr key={modulo} className="hover:bg-muted/10 transition-colors">
                               <td className="p-4 font-medium font-mono text-xs">{modulo}</td>
                               <td className="p-4 text-center">
                                 <Checkbox 
-                                  checked={protectedAdminModule || (current?.puedeVer ?? false)}
-                                   disabled={protectedAdminModule}
+                                  checked={current?.puedeVer ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeVer', c === true)}
                                 />
                               </td>
                               <td className="p-4 text-center">
                                 <Checkbox 
-                                  checked={protectedAdminModule || (current?.puedeCrear ?? false)}
-                                   disabled={protectedAdminModule}
+                                  checked={current?.puedeCrear ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeCrear', c === true)}
                                 />
                               </td>
                               <td className="p-4 text-center">
                                 <Checkbox 
-                                  checked={protectedAdminModule || (current?.puedeEditar ?? false)}
-                                   disabled={protectedAdminModule}
+                                  checked={current?.puedeEditar ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeEditar', c === true)}
                                 />
                               </td>
                               <td className="p-4 text-center">
                                 <Checkbox 
-                                  checked={protectedAdminModule || (current?.puedeAutorizar ?? false)}
-                                   disabled={protectedAdminModule}
+                                  checked={current?.puedeAutorizar ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeAutorizar', c === true)}
                                 />
                               </td>
@@ -260,7 +250,7 @@ export default function Permisos() {
                       <SelectValue placeholder="Seleccionar Usuario" />
                     </SelectTrigger>
                     <SelectContent>
-                      {usersData?.map(u => (
+                      {usersData?.filter(u => u.rol !== Role.ADMIN).map(u => (
                         <SelectItem key={u.id} value={String(u.id)}>
                           {u.nombre} ({u.usuario}) - {u.rol}
                         </SelectItem>

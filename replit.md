@@ -11,7 +11,8 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - `pnpm --filter @workspace/api-spec run codegen` — regenera cliente y Zod desde OpenAPI
 - `pnpm run db:verify` — muestra la identidad segura de la base canónica y valida el esquema mínimo
 - `pnpm --filter @workspace/db run push` — aplica el esquema Drizzle en desarrollo
-- `pnpm --filter @workspace/db run seed` — precarga ubicaciones y el ADMIN inicial
+- `NODE_ENV=development pnpm --filter @workspace/db run seed` — precarga ubicaciones y el ADMIN inicial en desarrollo
+- `ADMIN_SEED_PASSWORD` — contraseña inicial del ADMIN; obligatoria fuera de desarrollo
 - La API, Drizzle, migraciones, pruebas y seed usan exclusivamente el `DATABASE_URL` administrado por Replit.
 - El proyecto externo visible en el MCP de Neon no es la base de esta aplicación y no debe usarse para consultar ni modificar sus datos.
 
@@ -47,9 +48,9 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** el servidor valida permisos en cada endpoint. La resolución es: override de usuario (non-null) > permiso de rol > denegar. Sin fila = denegar siempre.
+- **Permisos:** ADMIN tiene acceso total a los 25 módulos sin consultar tablas. Para CAJA, INVENTARIOS y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
-- **Invariantes ADMIN:** ADMIN nunca puede perder acceso a `usuarios` y `permisos`. Un usuario no puede modificar sus propios permisos.
+- **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 
 ## Permission modules (25 total)
 
@@ -70,6 +71,6 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 ## Gotchas
 
 - Ejecuta `codegen` después de cada cambio en OpenAPI.
-- Ejecuta `push` y luego `seed` al preparar una base de datos nueva.
+- Ejecuta `push` y luego `NODE_ENV=development pnpm --filter @workspace/db run seed` al preparar la base de desarrollo.
 - Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
 - Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.

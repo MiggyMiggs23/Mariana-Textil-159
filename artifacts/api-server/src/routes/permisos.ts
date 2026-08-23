@@ -9,7 +9,7 @@
  */
 
 import { Router, type IRouter } from "express";
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, ne } from "drizzle-orm";
 import {
   auditoriaTable,
   db,
@@ -33,6 +33,7 @@ router.get("/permisos/roles", async (_req, res, next): Promise<void> => {
     const rows = await db
       .select()
       .from(permisosRolTable)
+      .where(ne(permisosRolTable.rol, "ADMIN"))
       .orderBy(permisosRolTable.rol, permisosRolTable.modulo);
 
     res.json(rows);
@@ -52,7 +53,14 @@ router.put(
       const rol = (Array.isArray(raw.rol) ? raw.rol[0] : raw.rol) ?? "";
       const modulo = (Array.isArray(raw.modulo) ? raw.modulo[0] : raw.modulo) ?? "";
 
-      const validRoles: RolUsuario[] = ["ADMIN", "CAJA", "INVENTARIOS", "BODEGA"];
+      if (rol === "ADMIN") {
+        res.status(403).json({
+          error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
+        });
+        return;
+      }
+
+      const validRoles: RolUsuario[] = ["CAJA", "INVENTARIOS", "BODEGA"];
       if (!validRoles.includes(rol as RolUsuario)) {
         res.status(400).json({ error: "Rol inválido." });
         return;
@@ -185,6 +193,13 @@ router.get(
         return;
       }
 
+      if (user.rol === "ADMIN") {
+        res.status(403).json({
+          error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
+        });
+        return;
+      }
+
       const overrides = await db
         .select()
         .from(permisosUsuarioTable)
@@ -237,6 +252,13 @@ router.put(
         return;
       }
 
+      if (user.rol === "ADMIN") {
+        res.status(403).json({
+          error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
+        });
+        return;
+      }
+
       const body = req.body as Record<string, unknown>;
       const puedeVer = body.puedeVer === null ? null : (body.puedeVer as boolean | null | undefined);
       const puedeCrear = body.puedeCrear === null ? null : (body.puedeCrear as boolean | null | undefined);
@@ -247,20 +269,6 @@ router.put(
       for (const [key, val] of Object.entries({ puedeVer, puedeCrear, puedeEditar, puedeAutorizar })) {
         if (val !== null && val !== undefined && typeof val !== "boolean") {
           res.status(400).json({ error: `${key} debe ser boolean o null.` });
-          return;
-        }
-      }
-
-      // Validate admin invariants for user overrides too
-      if (user.rol === "ADMIN") {
-        const invariantError = validateAdminInvariants(user.rol, modulo, {
-          puedeVer: puedeVer ?? undefined,
-          puedeCrear: puedeCrear ?? undefined,
-          puedeEditar: puedeEditar ?? undefined,
-          puedeAutorizar: puedeAutorizar ?? undefined,
-        });
-        if (invariantError) {
-          res.status(403).json({ error: invariantError });
           return;
         }
       }
@@ -353,6 +361,24 @@ router.delete(
       if (req.auth!.user.id === id) {
         res.status(403).json({
           error: "No puedes modificar tus propios permisos.",
+        });
+        return;
+      }
+
+      const [user] = await db
+        .select({ id: usuariosTable.id, rol: usuariosTable.rol })
+        .from(usuariosTable)
+        .where(eq(usuariosTable.id, id))
+        .limit(1);
+
+      if (!user) {
+        res.status(404).json({ error: "Usuario no encontrado." });
+        return;
+      }
+
+      if (user.rol === "ADMIN") {
+        res.status(403).json({
+          error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
         });
         return;
       }

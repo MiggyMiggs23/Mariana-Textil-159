@@ -1,5 +1,5 @@
 /**
- * HTTP/API Security Integration Tests — 27 named scenarios.
+ * HTTP/API Security Integration Tests — 29 named scenarios.
  *
  * Spins up the real Express app on an ephemeral port, exercises every
  * scenario through actual HTTP (native fetch), and tears down the server
@@ -28,8 +28,8 @@
  *   S-13  User override (true) beats role (false): BODEGA clientes 403 → override → 200
  *   S-14  DELETE override → BODEGA clientes reverts to 403
  *   S-15  Deny-by-default: remove BODEGA reportes rol row → 403; restore → 200
- *   S-16  ADMIN role matrix: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403
- *   S-17  ADMIN role matrix: PUT /permisos/roles/ADMIN/permisos with puedeCrear=false → 403
+ *   S-16  ADMIN cannot be added to the role matrix; access remains full without rows
+ *   S-17  ADMIN ignores an inconsistent false override
  *   S-18  Self-modification blocked: admin tries PUT /permisos/usuarios/:ownId → 403
  *   S-19  Last active ADMIN: PATCH /users/:id activo=false → 409
  *   S-20  BODEGA PROPIA: GET /inventario/rollos?ubicacionId=other → returns only own
@@ -40,12 +40,14 @@
  *   S-25  GET /clientes/:id — no limiteCredito / saldoCredito in response
  *   S-26  /clientes/:id/credito gated by clientes_credito; /precios by clientes_precios
  *   S-27  SALIDA_MOSTRADOR reversal fails (ABIERTO stays); VENTA+BAJA revert + kardex/cache reconcile
+ *   S-28  Non-ADMIN with delegated usuarios permissions cannot escalate to ADMIN
+ *   S-29  Promotion to ADMIN removes overrides and override endpoints reject ADMIN targets
  */
 
 import assert from "node:assert/strict";
 import { createServer, type Server } from "node:http";
 import { randomUUID } from "node:crypto";
-import { and, eq, sql } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import {
   db,
   existenciasTable,
@@ -579,7 +581,7 @@ await test("S-15: Deny-by-default — BODEGA reportes 200; after row removal →
   assert.equal(reportesRestored?.puedeVer, true, "After restore, reportes should be puedeVer=true");
 });
 
-// S-16: ADMIN role cannot lose 'usuarios' access
+// S-16: ADMIN is absent from the role matrix and still has full access
 await test("S-16: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
   const r = await api(
@@ -594,44 +596,22 @@ await test("S-16: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403
     "Error should mention ADMIN",
   );
 
-  const [originalRow] = await db
+  const adminRoleRows = await db
     .select()
     .from(permisosRolTable)
-    .where(
-      and(
-        eq(permisosRolTable.rol, "ADMIN"),
-        eq(permisosRolTable.modulo, "usuarios"),
-      ),
-    )
-    .limit(1);
-  assert.ok(originalRow, "ADMIN/usuarios role row must exist");
-  deletedRolRows.push({
-    rol: "ADMIN",
-    modulo: "usuarios",
-    puedeVer: originalRow.puedeVer,
-    puedeCrear: originalRow.puedeCrear,
-    puedeEditar: originalRow.puedeEditar,
-    puedeAutorizar: originalRow.puedeAutorizar,
-  });
-  await db
-    .delete(permisosRolTable)
-    .where(
-      and(
-        eq(permisosRolTable.rol, "ADMIN"),
-        eq(permisosRolTable.modulo, "usuarios"),
-      ),
-    );
+    .where(eq(permisosRolTable.rol, "ADMIN"));
+  assert.equal(adminRoleRows.length, 0, "ADMIN must not have role matrix rows");
 
-  const usersWithoutRow = await api(
+  const usersWithoutRows = await api(
     "GET",
     "/users",
     undefined,
     adminLogin.cookie,
   );
   assert.equal(
-    usersWithoutRow.status,
+    usersWithoutRows.status,
     200,
-    "ADMIN must retain usuarios access even when its role row is missing",
+    "ADMIN must retain usuarios access without role rows",
   );
   const meWithoutRow = await api(
     "GET",
@@ -659,15 +639,6 @@ await test("S-16: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403
     },
   );
 
-  await db.insert(permisosRolTable).values({
-    rol: "ADMIN",
-    modulo: "usuarios",
-    puedeVer: originalRow.puedeVer,
-    puedeCrear: originalRow.puedeCrear,
-    puedeEditar: originalRow.puedeEditar,
-    puedeAutorizar: originalRow.puedeAutorizar,
-  });
-  deletedRolRows.pop();
 });
 
 // S-17: ADMIN role cannot lose 'permisos' access (partial: puedeCrear=false)
@@ -1263,6 +1234,65 @@ await test("S-28: Non-ADMIN with usuarios permissions cannot escalate to ADMIN",
     createdPermisosUsuarioIds.indexOf(override.id),
     1,
   );
+});
+
+await test("S-29: promotion to ADMIN removes overrides and ADMIN override routes → 403", async () => {
+  const candidate = await mkUser("CAJA", seedTienda.id);
+  await db.insert(permisosUsuarioTable).values({
+    usuarioId: candidate.id,
+    modulo: "dashboard",
+    puedeVer: false,
+    puedeCrear: false,
+    puedeEditar: false,
+    puedeAutorizar: false,
+  });
+
+  const adminLogin = await login(testAdmin.usuario, testAdmin.password);
+  const promoted = await api(
+    "PATCH",
+    `/users/${candidate.id}`,
+    { rol: "ADMIN", ubicacionId: null, alcanceConsulta: "TODAS" },
+    adminLogin.cookie,
+  );
+  assert.equal(
+    promoted.status,
+    200,
+    `ADMIN promotion failed: ${JSON.stringify(promoted.body)}`,
+  );
+
+  const [{ value: remainingOverrides }] = await db
+    .select({ value: count() })
+    .from(permisosUsuarioTable)
+    .where(eq(permisosUsuarioTable.usuarioId, candidate.id));
+  assert.equal(
+    remainingOverrides,
+    0,
+    "Promoting a user to ADMIN must remove every existing override",
+  );
+
+  const readOverrides = await api(
+    "GET",
+    `/permisos/usuarios/${candidate.id}`,
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(readOverrides.status, 403);
+
+  const writeOverride = await api(
+    "PUT",
+    `/permisos/usuarios/${candidate.id}/dashboard`,
+    { puedeVer: false, puedeCrear: false, puedeEditar: false, puedeAutorizar: false },
+    adminLogin.cookie,
+  );
+  assert.equal(writeOverride.status, 403);
+
+  const deleteOverride = await api(
+    "DELETE",
+    `/permisos/usuarios/${candidate.id}/dashboard`,
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(deleteOverride.status, 403);
 });
 
 // ─── Cleanup ──────────────────────────────────────────────────────────────────

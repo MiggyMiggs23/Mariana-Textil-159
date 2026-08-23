@@ -31,7 +31,9 @@ export const Modules = {
 export type Module = typeof Modules[keyof typeof Modules];
 
 export function hasPermission(user: CurrentUser | null | undefined, module: string, action: 'ver' | 'crear' | 'editar' | 'autorizar' = 'ver'): boolean {
-  if (!user || !user.permisos) return false;
+  if (!user) return false;
+  if (user.rol === "ADMIN") return true;
+  if (!user.permisos) return false;
   const perm = user.permisos.find((p) => p.modulo === module);
   if (!perm) return false;
 
