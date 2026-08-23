@@ -31,6 +31,17 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     SET puede_autorizar = false
     WHERE rol = 'INVENTARIOS' AND modulo = 'salidas'
   `);
+  await pool.query(`
+    UPDATE permisos_rol
+    SET puede_ver = false, puede_crear = false, puede_editar = false, puede_autorizar = false,
+        updated_por = NULL
+    WHERE rol = 'TERMINAL' AND modulo = 'salidas';
+
+    UPDATE permisos_rol
+    SET puede_ver = true, puede_crear = true, puede_editar = false, puede_autorizar = false,
+        updated_por = (SELECT id FROM usuarios WHERE rol = 'ADMIN' ORDER BY id LIMIT 1)
+    WHERE rol = 'CAJA' AND modulo = 'salidas';
+  `);
   await ensureSalidasSchema(pool);
 
   const permission = await pool.query<{
@@ -71,6 +82,35 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     puede_editar: true,
     puede_autorizar: false,
   }]);
+
+  const upgradedRoleDefaults = await pool.query<{
+    rol: string;
+    puede_ver: boolean;
+    puede_crear: boolean;
+    puede_editar: boolean;
+    puede_autorizar: boolean;
+  }>(`
+    SELECT rol, puede_ver, puede_crear, puede_editar, puede_autorizar
+    FROM permisos_rol
+    WHERE rol IN ('TERMINAL', 'CAJA') AND modulo = 'salidas'
+    ORDER BY rol::text;
+  `);
+  assert.deepEqual(upgradedRoleDefaults.rows, [
+    {
+      rol: "CAJA",
+      puede_ver: true,
+      puede_crear: true,
+      puede_editar: false,
+      puede_autorizar: false,
+    },
+    {
+      rol: "TERMINAL",
+      puede_ver: true,
+      puede_crear: false,
+      puede_editar: false,
+      puede_autorizar: false,
+    },
+  ]);
 
   const schema = await pool.query<{ table_name: string }>(`
     SELECT table_name

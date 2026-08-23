@@ -193,6 +193,17 @@ test("aplica permisos de Salidas por rol, ubicación y etapa", async () => {
   const deniedCreate = await api("POST", "/salidas", terminalCookie, createBody(randomUUID()));
   assert.equal(deniedCreate.status, 403);
 
+  const salidasLocations = await api("GET", "/locations", destinationCookie);
+  assert.equal(salidasLocations.status, 200, JSON.stringify(salidasLocations.body));
+  assert.ok(
+    salidasLocations.body.some((location: { id: number }) => location.id === originId),
+    "Un usuario de Salidas debe poder consultar ubicaciones de origen.",
+  );
+  assert.ok(
+    salidasLocations.body.some((location: { id: number }) => location.id === destinationId),
+    "Un usuario de Salidas debe poder consultar su ubicación destino.",
+  );
+
   const created = await api("POST", "/salidas", destinationCookie, {
     ...createBody(randomUUID()),
     destinoId: otherId,

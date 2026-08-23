@@ -118,7 +118,12 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             ('CAJA', 'salidas', true, false, false, false),
             ('INVENTARIOS', 'salidas', true, true, true, false),
             ('BODEGA', 'salidas', true, false, true, false)
-          ON CONFLICT (rol, modulo) DO NOTHING;
+          ON CONFLICT (rol, modulo) DO UPDATE SET
+            puede_ver = EXCLUDED.puede_ver,
+            puede_crear = EXCLUDED.puede_crear,
+            puede_editar = EXCLUDED.puede_editar,
+            puede_autorizar = EXCLUDED.puede_autorizar
+          WHERE permisos_rol.updated_por IS NULL;
         END IF;
 
         IF to_regclass('public.permisos_usuario') IS NOT NULL THEN

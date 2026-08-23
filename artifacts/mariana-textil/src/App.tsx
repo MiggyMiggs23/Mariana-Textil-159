@@ -23,6 +23,9 @@ import ProveedorDetail from '@/pages/proveedor-detail';
 import Entradas from '@/pages/entradas';
 import EntradaDocumento from '@/pages/entrada-documento';
 import EntradaEtiquetas from '@/pages/entrada-etiquetas';
+import Salidas from '@/pages/salidas';
+import SalidaDetail from '@/pages/salida-detail';
+import SalidaDocumento from '@/pages/salida-documento';
 import Movimientos from '@/pages/movimientos';
 import Inventario from '@/pages/inventario';
 import RolloDetail from '@/pages/rollo-detail';
@@ -135,6 +138,10 @@ function Router() {
         <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
         
+        <Route path="/salidas" component={() => <ProtectedRoute component={Salidas} allowedModule={Modules.SALIDAS} />} />
+        <Route path="/salidas/:id/documento/:tipo" component={() => <ProtectedRoute component={SalidaDocumento} allowedModule={Modules.SALIDAS} />} />
+        <Route path="/salidas/:id" component={() => <ProtectedRoute component={SalidaDetail} allowedModule={Modules.SALIDAS} />} />
+
         <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedModule={Modules.MOVIMIENTOS} />} />
         
         <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} allowedModule={Modules.INVENTARIO} />} />

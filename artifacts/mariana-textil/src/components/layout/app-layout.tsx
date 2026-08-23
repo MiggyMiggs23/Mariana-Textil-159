@@ -8,7 +8,9 @@ import {
   useListLocations,
   getListLocationsQueryKey,
   useListAjustesPendientes,
-  getListAjustesPendientesQueryKey
+  getListAjustesPendientesQueryKey,
+  useGetSalidasPendientesCount,
+  getGetSalidasPendientesCountQueryKey
 } from "@workspace/api-client-react";
 import { hasPermission, Modules, Module } from "@/lib/permisos";
 import { useQueryClient } from "@tanstack/react-query";
@@ -66,7 +68,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { name: "Ventas / POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
-      { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: false },
+      { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: true },
       { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
     ]
   },
@@ -120,6 +122,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     query: {
       enabled: hasPermission(user, Modules.AJUSTES, "autorizar"),
       queryKey: getListAjustesPendientesQueryKey()
+    }
+  });
+
+  const { data: salidasPendientes } = useGetSalidasPendientesCount({
+    query: {
+      enabled: hasPermission(user, Modules.SALIDAS, "ver"),
+      queryKey: getGetSalidasPendientesCountQueryKey()
     }
   });
   
@@ -239,7 +248,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               {group.title}
             </h4>
             {allowedItems.map((item) => {
-              const isActive = location === item.path;
+              const isActive =
+                location === item.path ||
+                (item.path !== "/" && location.startsWith(`${item.path}/`));
               if (!item.isClickable) {
                 return (
                   <div key={item.path} className="flex items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground/50 cursor-not-allowed group relative">
@@ -257,6 +268,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   key={item.path}
                   href={item.path}
                   onClick={onItemClick}
+                  data-testid={`nav-item-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative",
                     isActive 
@@ -267,8 +279,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <item.icon className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
                   <span className="text-sm">{item.name}</span>
                   {item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
-                    <span className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
+                    <span data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
                       {ajustesPendientes.length}
+                    </span>
+                  ) : null}
+                  {item.path === "/salidas" && salidasPendientes && salidasPendientes.count > 0 ? (
+                    <span data-testid={`badge-salidas`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
+                      {salidasPendientes.count}
                     </span>
                   ) : null}
                 </Link>
