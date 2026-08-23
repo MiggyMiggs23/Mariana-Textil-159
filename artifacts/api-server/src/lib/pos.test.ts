@@ -537,6 +537,11 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     ledger.map((movement) => movement.tipo).sort(),
     ["REVERSO", "VENTA_CREDITO"],
   );
+  const corte = await buildCorteCaja(db, session.id);
+  assert.equal(corte?.ticketsCancelados, 1);
+  assert.equal(corte?.ticketsCobrados, 0);
+  assert.equal(corte?.totalCobrado, "0.00");
+  assert.equal(corte?.efectivoEsperado, "0.00");
 });
 
 await test("POS-08 costos se omiten por completo para TERMINAL", async () => {

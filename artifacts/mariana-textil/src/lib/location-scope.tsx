@@ -24,7 +24,12 @@ export function LocationScopeProvider({ children }: { children: ReactNode }) {
   const [selectedLocationIdState, setSelectedLocationId] = useState<number | null>(null);
 
   const selectedLocationId = useMemo(() => {
-    if (user && user.alcanceConsulta === "PROPIA") {
+    if (
+      user &&
+      (user.alcanceConsulta === "PROPIA" ||
+        user.rol === "TERMINAL" ||
+        user.rol === "CAJA")
+    ) {
       return user.ubicacion?.id ?? null;
     }
     return selectedLocationIdState;

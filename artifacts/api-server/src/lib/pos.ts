@@ -925,7 +925,12 @@ export async function buildCorteCaja(
       productosTable,
       eq(ticketLineasTable.productoId, productosTable.id),
     )
-    .where(eq(ticketsTable.sesionCajaId, sesion.id))
+    .where(
+      and(
+        eq(ticketsTable.sesionCajaId, sesion.id),
+        eq(ticketsTable.estado, "VENDIDO"),
+      ),
+    )
     .groupBy(
       ticketLineasTable.productoId,
       productosTable.sku,
@@ -947,7 +952,12 @@ export async function buildCorteCaja(
       ticketLineasTable,
       eq(ticketLineasTable.ticketId, ticketsTable.id),
     )
-    .where(eq(ticketsTable.sesionCajaId, sesion.id))
+    .where(
+      and(
+        eq(ticketsTable.sesionCajaId, sesion.id),
+        eq(ticketsTable.estado, "VENDIDO"),
+      ),
+    )
     .groupBy(ticketsTable.tipo);
 
   const formas = { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 };
@@ -973,6 +983,7 @@ export async function buildCorteCaja(
   const facturadoTickets = new Set<number>();
   const noFacturadoTickets = new Set<number>();
   for (const pago of pagos) {
+    if (pago.estado === "CANCELADO") continue;
     const cents = money(pago.importe);
     formas[pago.formaPago] += cents;
     ticketIds.add(pago.ticketId);
