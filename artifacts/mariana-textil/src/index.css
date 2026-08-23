@@ -138,9 +138,64 @@
     size: letter landscape;
     margin: 10mm;
   }
-  
+
   body.printing-labels {
     background: transparent;
+  }
+
+  body.print-80mm {
+    background: white;
+  }
+
+  body.print-carta {
+    background: white;
+  }
+
+  body.print-80mm .print-80mm-only {
+    display: block !important;
+  }
+  
+  body.print-carta .print-carta-only {
+    display: block !important;
+  }
+
+  .print-ticket-container {
+    width: 80mm;
+    margin: 0 auto;
+    font-family: monospace;
+    color: black;
+  }
+
+  .print-document-container {
+    width: 100%;
+    max-width: 210mm;
+    margin: 0 auto;
+    background: white;
+    color: black;
+  }
+
+  body.print-80mm * {
+    visibility: hidden;
+  }
+  body.print-80mm .print-80mm-only, body.print-80mm .print-80mm-only * {
+    visibility: visible;
+  }
+  body.print-80mm .print-80mm-only {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  body.print-carta * {
+    visibility: hidden;
+  }
+  body.print-carta .print-carta-only, body.print-carta .print-carta-only * {
+    visibility: visible;
+  }
+  body.print-carta .print-carta-only {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
   
   .print-only {

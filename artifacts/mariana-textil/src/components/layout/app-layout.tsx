@@ -65,7 +65,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "OPERACIÓN",
     items: [
-      { name: "Ventas / POS", path: "/ventas", icon: ShoppingCart, module: Modules.POS, isClickable: false },
+      { name: "Ventas / POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: false },
       { name: "Transferencias", path: "/transferencias", icon: ArrowRightLeft, module: Modules.TRANSFERENCIAS, isClickable: false },
@@ -97,7 +97,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { name: "Resumen de Caja", path: "/caja/resumen", icon: Wallet, module: Modules.RESUMEN_CAJA, isClickable: false },
       { name: "Cortes", path: "/caja/cortes", icon: Receipt, module: Modules.CORTES, isClickable: false },
-      { name: "Cobros y Pagos", path: "/caja/cobros-pagos", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: false },
+      { name: "Cobros y Pagos", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
     ]
   },
   {

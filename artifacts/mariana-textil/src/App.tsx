@@ -27,6 +27,9 @@ import Movimientos from '@/pages/movimientos';
 import Inventario from '@/pages/inventario';
 import RolloDetail from '@/pages/rollo-detail';
 import RolloEtiqueta from '@/pages/rollo-etiqueta';
+import Pos from '@/pages/pos';
+import Cobros from '@/pages/cobros';
+import TicketDetail from '@/pages/ticket-detail';
 import Ajustes from '@/pages/ajustes';
 import Conciliacion from '@/pages/conciliacion';
 import Permisos from '@/pages/permisos';
@@ -61,7 +64,7 @@ function NotFound() {
 }
 
 function ProtectedRoute({ component: Component, allowedModule }: { component: React.ComponentType, allowedModule?: string }) {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
   });
@@ -71,6 +74,22 @@ function ProtectedRoute({ component: Component, allowedModule }: { component: Re
       setLocation('/login');
     }
   }, [error, setLocation]);
+
+  useEffect(() => {
+    if (user && location === "/") {
+      if (user.rol === "TERMINAL") {
+        setLocation("/pos");
+      } else if (user.rol === "CAJA") {
+        setLocation("/cobros");
+      } else if (!hasPermission(user, Modules.DASHBOARD, 'ver')) {
+        if (hasPermission(user, Modules.POS, 'ver')) {
+          setLocation("/pos");
+        } else if (hasPermission(user, Modules.COBROS_PAGOS, 'ver')) {
+          setLocation("/cobros");
+        }
+      }
+    }
+  }, [user, location, setLocation]);
 
   if (isLoading) {
     return (
@@ -111,7 +130,7 @@ function Router() {
         <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} allowedModule={Modules.UBICACIONES} />} />
         <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedModule={Modules.USUARIOS} />} />
         <Route path="/permisos" component={() => <ProtectedRoute component={Permisos} allowedModule={Modules.PERMISOS} />} />
-        
+
         <Route path="/entradas" component={() => <ProtectedRoute component={Entradas} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
@@ -125,6 +144,10 @@ function Router() {
         
         <Route path="/productos" component={() => <ProtectedRoute component={Productos} allowedModule={Modules.PRODUCTOS} />} />
         <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} allowedModule={Modules.PRODUCTOS} />} />
+        
+        <Route path="/pos" component={() => <ProtectedRoute component={Pos} allowedModule={Modules.POS} />} />
+        <Route path="/cobros" component={() => <ProtectedRoute component={Cobros} allowedModule={Modules.COBROS_PAGOS} />} />
+        <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} />} />
         
         <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedModule={Modules.PROVEEDORES} />} />
         <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedModule={Modules.PROVEEDORES} />} />
