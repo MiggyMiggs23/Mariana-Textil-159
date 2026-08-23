@@ -34,7 +34,7 @@ export const LoginResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -66,7 +66,7 @@ export const GetCurrentUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -151,7 +151,7 @@ export const ListUsersResponseItem = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -184,7 +184,7 @@ export const CreateUserBody = zod.object({
   "nombre": zod.string().min(createUserBodyNombreMin).max(createUserBodyNombreMax),
   "usuario": zod.string().min(createUserBodyUsuarioMin).max(createUserBodyUsuarioMax),
   "password": zod.string().min(createUserBodyPasswordMin).max(createUserBodyPasswordMax),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "ubicacionId": zod.number().nullish(),
   "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional()
 })
@@ -193,7 +193,7 @@ export const CreateUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -228,7 +228,7 @@ export const updateUserBodyPasswordMax = 128;
 export const UpdateUserBody = zod.object({
   "nombre": zod.string().min(updateUserBodyNombreMin).max(updateUserBodyNombreMax).optional(),
   "usuario": zod.string().min(updateUserBodyUsuarioMin).max(updateUserBodyUsuarioMax).optional(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']).optional(),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']).optional(),
   "ubicacionId": zod.number().nullish(),
   "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional(),
   "activo": zod.boolean().optional(),
@@ -239,7 +239,7 @@ export const UpdateUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -1857,7 +1857,7 @@ export const CreateClientePagoResponse = zod.object({
  */
 export const ListPermisosRolesResponseItem = zod.object({
   "id": zod.number(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "modulo": zod.string(),
   "puedeVer": zod.boolean(),
   "puedeCrear": zod.boolean(),
@@ -1873,7 +1873,7 @@ export const ListPermisosRolesResponse = zod.array(ListPermisosRolesResponseItem
  * @summary Actualiza la entrada de un rol/módulo en la matriz
  */
 export const UpdatePermisosRolParams = zod.object({
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "modulo": zod.coerce.string()
 })
 
@@ -1886,7 +1886,7 @@ export const UpdatePermisosRolBody = zod.object({
 
 export const UpdatePermisosRolResponse = zod.object({
   "id": zod.number(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "modulo": zod.string(),
   "puedeVer": zod.boolean(),
   "puedeCrear": zod.boolean(),
@@ -1906,7 +1906,7 @@ export const GetPermisosUsuarioParams = zod.object({
 
 export const GetPermisosUsuarioResponse = zod.object({
   "usuarioId": zod.number(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "overrides": zod.array(zod.object({
   "id": zod.number(),
   "usuarioId": zod.number(),
@@ -1970,7 +1970,7 @@ export const GetPermisosPreviewParams = zod.object({
 export const GetPermisosPreviewResponse = zod.object({
   "usuarioId": zod.number(),
   "nombre": zod.string(),
-  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'INVENTARIOS', 'BODEGA']),
   "permisos": zod.array(zod.object({
   "modulo": zod.string(),
   "puedeVer": zod.boolean(),

@@ -11,6 +11,7 @@ export type Role = typeof Role[keyof typeof Role];
 
 export const Role = {
   ADMIN: 'ADMIN',
+  TERMINAL: 'TERMINAL',
   CAJA: 'CAJA',
   INVENTARIOS: 'INVENTARIOS',
   BODEGA: 'BODEGA',

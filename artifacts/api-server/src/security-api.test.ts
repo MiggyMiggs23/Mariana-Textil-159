@@ -269,6 +269,7 @@ if (!seedAdminRow) throw new Error("Usuario admin no encontrado. Ejecuta el seed
 
 // Create test-specific admin (so we can do mutations without touching seed admin)
 const testAdmin = await mkUser("ADMIN", null);
+const testTerminal = await mkUser("TERMINAL", seedTienda.id);
 const testCaja = await mkUser("CAJA", seedTienda.id);
 const testInventarios = await mkUser("INVENTARIOS", seedTienda.id);
 const testBodega = await mkUser("BODEGA", seedTienda.id, { alcanceConsulta: "PROPIA" });
@@ -289,7 +290,7 @@ await startServer();
 
 // S-01: All four roles can log in; response has permisos matrix
 await test("S-01: All four roles login → 200 + permisos array present", async () => {
-  for (const { usuario, password } of [testAdmin, testCaja, testInventarios, testBodega]) {
+  for (const { usuario, password } of [testAdmin, testTerminal, testCaja, testInventarios, testBodega]) {
     const r = await login(usuario, password);
     assert.equal(r.status, 200, `login failed for ${usuario}: ${JSON.stringify(r.body)}`);
     const body = r.body as Record<string, unknown>;
@@ -316,18 +317,20 @@ await test("S-02: ADMIN /auth/me effective matrix — 25 modules, all full acces
   }
 });
 
-// S-03: CAJA /auth/me → pos.puedeVer=true, proveedores.puedeVer=false
-await test("S-03: CAJA /auth/me effective matrix — pos OK, proveedores denied", async () => {
+// S-03: CAJA /auth/me → cobros_pagos=true, pos/proveedores=false
+await test("S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores denied", async () => {
   const login_r = await login(testCaja.usuario, testCaja.password);
   assert.equal(login_r.status, 200);
   const me = await api("GET", "/auth/me", undefined, login_r.cookie);
   assert.equal(me.status, 200);
   const permisos = (me.body as Record<string, unknown>).permisos as Array<Record<string, unknown>>;
   const posEntry = permisos.find((p) => p.modulo === "pos");
+  const cobrosEntry = permisos.find((p) => p.modulo === "cobros_pagos");
   const provEntry = permisos.find((p) => p.modulo === "proveedores");
   assert.ok(posEntry, "pos module missing");
   assert.ok(provEntry, "proveedores module missing");
-  assert.equal(posEntry.puedeVer, true, "CAJA should see pos");
+  assert.equal(posEntry.puedeVer, false, "CAJA must not use terminal POS");
+  assert.equal(cobrosEntry?.puedeVer, true, "CAJA should see cobros_pagos");
   assert.equal(provEntry.puedeVer, false, "CAJA must not see proveedores");
 });
 
@@ -352,8 +355,8 @@ await test("S-05: BODEGA GET /clientes → 403", async () => {
   assert.equal(r.status, 403, `Expected 403, got ${r.status}: ${JSON.stringify(r.body)}`);
 });
 
-// S-06: CAJA can perform a POS sale on a rollo in own location
-await test("S-06: CAJA POST /inventario/rollos/:id/vender on own-location rollo → 200", async () => {
+// S-06: CAJA cannot bypass ticketing through the legacy inventory sale endpoint
+await test("S-06: CAJA direct inventory sale is denied; ticketing is mandatory", async () => {
   // Create a fresh DISPONIBLE rollo at seedTienda for CAJA
   const productoId = await mkProducto();
   const rolloId = await mkRolloDisponible(seedTienda.id, productoId, testAdmin.id);
@@ -365,9 +368,7 @@ await test("S-06: CAJA POST /inventario/rollos/:id/vender on own-location rollo 
     justificacion: "venta test S06",
     uuidCliente: randomUUID(),
   }, login_r.cookie);
-  assert.equal(r.status, 200, `Expected 200, got ${r.status}: ${JSON.stringify(r.body)}`);
-  const body = r.body as Record<string, unknown>;
-  assert.equal(body.estado, "VENDIDO", "Rollo should be VENDIDO");
+  assert.equal(r.status, 403, `Expected 403, got ${r.status}: ${JSON.stringify(r.body)}`);
 });
 
 // S-07: CAJA denied GET /proveedores
@@ -877,8 +878,8 @@ await test("S-24: Non-ADMIN mutation on other-location → 403; ADMIN same → s
 
 // S-25: GET /clientes/:id — response does NOT include limiteCredito or saldoCredito
 await test("S-25: GET /clientes/:id — no limiteCredito / saldoCredito in response", async () => {
-  // Create a cliente via CAJA
-  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  // Create a cliente via TERMINAL
+  const cajaLogin = await login(testTerminal.usuario, testTerminal.password);
   const createR = await api("POST", "/clientes", {
     nombre: `Cliente SAT ${RUN}`,
     telefono: "5551234567",
@@ -923,13 +924,17 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   const creditoCaja = await api("GET", `/clientes/${clienteId}/credito`, undefined, cajaLogin.cookie);
   assert.equal(creditoCaja.status, 200, `CAJA should access credito: ${JSON.stringify(creditoCaja.body)}`);
 
-  // CAJA has clientes_precios.ver → 200
+  // CAJA does not receive terminal price history
   const preciosCaja = await api("GET", `/clientes/${clienteId}/precios`, undefined, cajaLogin.cookie);
-  assert.equal(preciosCaja.status, 200, `CAJA should access precios: ${JSON.stringify(preciosCaja.body)}`);
+  assert.equal(preciosCaja.status, 403, `CAJA must not access precios: ${JSON.stringify(preciosCaja.body)}`);
 
-  // CAJA denied clientes_finanzas.ver → 403
+  // CAJA has clientes_finanzas.ver → 200
   const estadoCaja = await api("GET", `/clientes/${clienteId}/estado-cuenta`, undefined, cajaLogin.cookie);
-  assert.equal(estadoCaja.status, 403, `CAJA must be denied estado-cuenta (clientes_finanzas): ${JSON.stringify(estadoCaja.body)}`);
+  assert.equal(estadoCaja.status, 200, `CAJA should access estado-cuenta: ${JSON.stringify(estadoCaja.body)}`);
+
+  const terminalLogin = await login(testTerminal.usuario, testTerminal.password);
+  const preciosTerminal = await api("GET", `/clientes/${clienteId}/precios`, undefined, terminalLogin.cookie);
+  assert.equal(preciosTerminal.status, 200, `TERMINAL should access precios: ${JSON.stringify(preciosTerminal.body)}`);
 
   // BODEGA: denied all (no clientes access at all by default)
   // First check bodega is denied clientes

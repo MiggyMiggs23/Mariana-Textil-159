@@ -527,7 +527,7 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(response);
     } catch (e) {
       next(e);
     }
@@ -826,6 +826,13 @@ inventarioRouter.post(
       const body = VenderRolloBody.parse(req.body);
       const auth = req.auth!;
       const usuarioId = auth.user.id;
+      if (auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error:
+            "Las ventas operativas deben registrarse mediante un ticket de Punto de venta.",
+        });
+        return;
+      }
 
       // Fetch rollo location before mutating
       const [rolloCheck] = await db
@@ -860,7 +867,7 @@ inventarioRouter.post(
         return;
       }
       const response = VenderRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(response);
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });

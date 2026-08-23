@@ -138,10 +138,10 @@ await test("P-01: ADMIN tiene acceso total a dashboard", async () => {
   assert.equal(p.puedeAutorizar, true);
 });
 
-await test("P-02: CAJA puede ver dashboard pero no autorizar", async () => {
+await test("P-02: CAJA no usa dashboard administrativo", async () => {
   const p = await resolvePermiso(cajaUserId, "CAJA", "dashboard");
   assert.ok(p, "Debe existir permiso");
-  assert.equal(p.puedeVer, true);
+  assert.equal(p.puedeVer, false);
   assert.equal(p.puedeAutorizar, false);
 });
 
@@ -164,10 +164,11 @@ await test("P-05: CAJA no puede ver proveedores", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-06: CAJA puede ver POS", async () => {
-  const p = await resolvePermiso(cajaUserId, "CAJA", "pos");
+await test("P-06: CAJA puede ver cobros_pagos pero no POS", async () => {
+  const p = await resolvePermiso(cajaUserId, "CAJA", "cobros_pagos");
   assert.ok(p);
   assert.equal(p.puedeVer, true);
+  assert.equal((await resolvePermiso(cajaUserId, "CAJA", "pos"))?.puedeVer, false);
 });
 
 await test("P-07: módulo sin fila en ninguna tabla → denegar (null)", async () => {
@@ -177,8 +178,8 @@ await test("P-07: módulo sin fila en ninguna tabla → denegar (null)", async (
 });
 
 await test("P-08: usuario override sobrescribe permiso del rol", async () => {
-  // CAJA normally can see POS
-  const before = await resolvePermiso(cajaUserId, "CAJA", "pos");
+  // CAJA normally can see cobros_pagos
+  const before = await resolvePermiso(cajaUserId, "CAJA", "cobros_pagos");
   assert.equal(before?.puedeVer, true);
 
   // Add user override that denies
@@ -186,7 +187,7 @@ await test("P-08: usuario override sobrescribe permiso del rol", async () => {
     .insert(permisosUsuarioTable)
     .values({
       usuarioId: cajaUserId,
-      modulo: "pos",
+      modulo: "cobros_pagos",
       puedeVer: false,
       puedeCrear: false,
       puedeEditar: false,
@@ -195,7 +196,7 @@ await test("P-08: usuario override sobrescribe permiso del rol", async () => {
     .returning({ id: permisosUsuarioTable.id });
   createdPermisosUsuarioIds.push(override.id);
 
-  const after = await resolvePermiso(cajaUserId, "CAJA", "pos");
+  const after = await resolvePermiso(cajaUserId, "CAJA", "cobros_pagos");
   assert.equal(after?.puedeVer, false, "Override should deny");
 });
 
@@ -298,11 +299,11 @@ await test("P-17: CAJA has no access to proveedores_finanzas", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-18: CAJA has no access to clientes_finanzas", async () => {
+await test("P-18: CAJA can access clientes_finanzas", async () => {
   const matrix = await buildPermissionMatrix(cajaUserId, "CAJA");
   const p = matrix["clientes_finanzas"];
   assert.ok(p);
-  assert.equal(p.puedeVer, false);
+  assert.equal(p.puedeVer, true);
 });
 
 await test("P-19: CAJA can see clientes_credito", async () => {
@@ -370,16 +371,16 @@ await test("P-22: BODEGA can see proveedores (operativo)", async () => {
   assert.equal(p.puedeVer, true);
 });
 
-await test("P-23: CAJA can see clientes_precios", async () => {
+await test("P-23: CAJA cannot see clientes_precios", async () => {
   const p = await resolvePermiso(cajaUserId, "CAJA", "clientes_precios");
   assert.ok(p);
-  assert.equal(p.puedeVer, true);
+  assert.equal(p.puedeVer, false);
 });
 
-await test("P-24: CAJA cannot see clientes_finanzas", async () => {
+await test("P-24: CAJA can see clientes_finanzas", async () => {
   const p = await resolvePermiso(cajaUserId, "CAJA", "clientes_finanzas");
   assert.ok(p);
-  assert.equal(p.puedeVer, false);
+  assert.equal(p.puedeVer, true);
 });
 
 await test("P-25: user override with explicit true overrides role false", async () => {

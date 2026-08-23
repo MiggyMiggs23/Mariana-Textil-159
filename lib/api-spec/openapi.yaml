@@ -1955,7 +1955,7 @@ components:
           type: string
     Role:
       type: string
-      enum: [ADMIN, CAJA, INVENTARIOS, BODEGA]
+      enum: [ADMIN, TERMINAL, CAJA, INVENTARIOS, BODEGA]
     LocationType:
       type: string
       enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]
