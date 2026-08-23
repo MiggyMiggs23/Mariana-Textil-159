@@ -26,6 +26,7 @@ import {
   cerrarSesionCaja,
   cobrarTicket,
   crearTicket,
+  listarTicketsPendientesCaja,
   PosError,
   validarPrecioPos,
 } from "./pos";
@@ -543,6 +544,67 @@ await test("POS-05B cobro exige sesión abierta y cliente para crédito", async 
       ),
     (error: unknown) =>
       error instanceof PosError && error.code === "CLIENT_REQUIRED",
+  );
+});
+
+await test("POS-05C lista y corte comparten todos los pendientes de la ubicación", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rolloAnterior = await makeRollo(productoId, ubicacionId, "2", "20");
+  const anterior = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rolloAnterior.id,
+    cantidad: "2",
+    precio: "50",
+  });
+  await db
+    .update(ticketsTable)
+    .set({ createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000) })
+    .where(eq(ticketsTable.id, anterior.id));
+
+  const session = await db.transaction((tx) =>
+    abrirSesionCaja(tx, {
+      ubicacionId,
+      usuarioId: USER_ID,
+      fondoInicial: "0",
+      ip: "127.0.0.1",
+    }),
+  );
+  createdSessionIds.push(session.id);
+
+  const rolloActual = await makeRollo(productoId, ubicacionId, "3", "20");
+  const actual = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rolloActual.id,
+    cantidad: "3",
+    precio: "50",
+  });
+  const rolloCobrado = await makeRollo(productoId, ubicacionId, "1", "20");
+  const cobrado = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rolloCobrado.id,
+    cantidad: "1",
+    precio: "50",
+  });
+  await db
+    .update(ticketsTable)
+    .set({ cobrado: true, sesionCajaId: session.id })
+    .where(eq(ticketsTable.id, cobrado.id));
+
+  const lista = await listarTicketsPendientesCaja(db, ubicacionId);
+  const corte = await buildCorteCaja(db, session.id);
+  const esperados = [anterior.id, actual.id];
+
+  assert.deepEqual(
+    lista.map((ticket) => ticket.id),
+    esperados,
+  );
+  assert.deepEqual(
+    corte?.pendientes.map((ticket) => ticket.ticketId),
+    esperados,
   );
 });
 

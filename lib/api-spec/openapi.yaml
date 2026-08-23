@@ -1679,6 +1679,30 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /tickets/pendientes:
+    get:
+      operationId: listarTicketsPendientes
+      tags: [pos]
+      summary: Lista tickets vendidos y no cobrados de una ubicación
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+      responses:
+        "200":
+          description: Tickets pendientes de cobro
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TicketResumen"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /tickets/{id}:
     get:
       operationId: obtenerTicket

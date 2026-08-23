@@ -17,6 +17,8 @@ import {
   CobrarTicketResponse,
   CrearTicketBody,
   CrearTicketResponse,
+  ListarTicketsPendientesQueryParams,
+  ListarTicketsPendientesResponse,
   ListarTicketsQueryParams,
   ListarTicketsResponse,
   ObtenerCorteCajaParams,
@@ -56,6 +58,7 @@ import {
   cobrarTicket,
   crearTicket,
   isInventoryError,
+  listarTicketsPendientesCaja,
   PosError,
   validarPrecioPos,
 } from "../lib/pos";
@@ -101,6 +104,12 @@ function scopedLocation(req: Request, requested?: number): number {
     );
   }
   return req.auth!.user.ubicacionId;
+}
+
+function normalizeBooleanQueryParam(value: unknown): unknown {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return value;
 }
 
 function assertOperationalLocation(req: Request, ubicacionId: number): void {
@@ -319,7 +328,10 @@ router.get(
   ]),
   async (req, res, next): Promise<void> => {
     try {
-      const query = ListarTicketsQueryParams.parse(req.query);
+      const query = ListarTicketsQueryParams.parse({
+        ...req.query,
+        cobrado: normalizeBooleanQueryParam(req.query.cobrado),
+      });
       const ubicacionId = scopedLocation(req, query.ubicacionId);
       const conditions = [eq(ticketsTable.ubicacionId, ubicacionId)];
       if (query.cobrado != null) {
@@ -382,6 +394,42 @@ router.get(
         .orderBy(asc(ticketsTable.cobrado), desc(ticketsTable.createdAt))
         .limit(200);
       const response = ListarTicketsResponse.parse(
+        rows.map((row) => ({
+          ...row,
+          nombreUsuarioCaja: null,
+          nombreUsuarioCancelacion: null,
+          nombreUsuarioAutorizacion: null,
+        })),
+      );
+      const terminal = req.auth!.user.rol === "TERMINAL";
+      res.json(
+        terminal
+          ? response.map((ticket) =>
+              omitTerminalTicketSensitiveFields(
+                ticket as unknown as Record<string, unknown>,
+                true,
+              ),
+            )
+          : response,
+      );
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
+router.get(
+  "/tickets/pendientes",
+  requiereAlguno([
+    { modulo: "pos", accion: "ver" },
+    { modulo: "cobros_pagos", accion: "ver" },
+  ]),
+  async (req, res, next): Promise<void> => {
+    try {
+      const query = ListarTicketsPendientesQueryParams.parse(req.query);
+      const ubicacionId = scopedLocation(req, query.ubicacionId);
+      const rows = await listarTicketsPendientesCaja(db, ubicacionId);
+      const response = ListarTicketsPendientesResponse.parse(
         rows.map((row) => ({
           ...row,
           nombreUsuarioCaja: null,

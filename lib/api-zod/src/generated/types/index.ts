@@ -79,6 +79,7 @@ export * from './importPreviewRowEstado';
 export * from './importResult';
 export * from './kardexResult';
 export * from './listarTicketsParams';
+export * from './listarTicketsPendientesParams';
 export * from './listComprasProveedorEstado';
 export * from './listComprasProveedorParams';
 export * from './listEntradasParams';

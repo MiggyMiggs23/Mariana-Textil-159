@@ -80,6 +80,7 @@ export * from "./generated/types/listEntradasParams";
 export * from "./generated/types/listRollosEstado";
 export * from "./generated/types/listRollosParams";
 export * from "./generated/types/listarTicketsParams";
+export * from "./generated/types/listarTicketsPendientesParams";
 export * from "./generated/types/location";
 export * from "./generated/types/locationType";
 export * from "./generated/types/locationUpdate";

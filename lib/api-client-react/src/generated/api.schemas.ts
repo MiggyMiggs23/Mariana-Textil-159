@@ -1733,6 +1733,10 @@ estado?: EstadoTicket;
 folio?: number;
 };
 
+export type ListarTicketsPendientesParams = {
+ubicacionId?: number;
+};
+
 export type ObtenerSesionCajaActualParams = {
 ubicacionId?: number;
 };

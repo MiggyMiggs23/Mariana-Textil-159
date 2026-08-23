@@ -2195,6 +2195,45 @@ export const ListarTicketsResponse = zod.array(ListarTicketsResponseItem)
 
 
 /**
+ * @summary Lista tickets vendidos y no cobrados de una ubicación
+ */
+export const ListarTicketsPendientesQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const ListarTicketsPendientesResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "subtotal": zod.string(),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+})
+export const ListarTicketsPendientesResponse = zod.array(ListarTicketsPendientesResponseItem)
+
+
+/**
  * @summary Obtiene el detalle completo de un ticket
  */
 export const ObtenerTicketParams = zod.object({

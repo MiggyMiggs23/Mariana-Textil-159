@@ -5,12 +5,11 @@ import {
   useAbrirSesionCaja,
   useObtenerCorteCaja,
   useCerrarSesionCaja,
-  useListarTickets,
+  useListarTicketsPendientes,
   useCobrarTicket,
   getObtenerSesionCajaActualQueryKey,
-  getListarTicketsQueryKey,
+  getListarTicketsPendientesQueryKey,
   getObtenerCorteCajaQueryKey,
-  EstadoTicket,
   FormaPagoTicket,
   TicketCobroInput,
   TicketPagoInput,
@@ -359,17 +358,13 @@ export default function CobrosPage() {
     isError: ticketsFailed,
     error: ticketsError,
     refetch: retryTickets,
-  } = useListarTickets({
+  } = useListarTicketsPendientes({
     ubicacionId: selectedLocationId || 0,
-    cobrado: false,
-    estado: EstadoTicket.VENDIDO
   }, {
     query: {
       enabled: !!selectedLocationId && !!sesionData?.sesion,
-      queryKey: getListarTicketsQueryKey({
+      queryKey: getListarTicketsPendientesQueryKey({
         ubicacionId: selectedLocationId || 0,
-        cobrado: false,
-        estado: EstadoTicket.VENDIDO
       }),
       refetchInterval: 10000 // auto-refresh every 10s for new tickets
     }
@@ -475,6 +470,7 @@ export default function CobrosPage() {
       />
     );
   }
+  const sesionId = sesionData.sesion.id;
 
   return (
     <div className="flex flex-col h-full max-w-[1600px] mx-auto gap-6">
@@ -498,7 +494,7 @@ export default function CobrosPage() {
         <Card className="flex-1 flex flex-col shadow-sm border-sidebar-border/10 min-w-[300px]">
           <CardHeader className="p-4 border-b bg-muted/20 flex flex-row items-center justify-between pb-4">
             <CardTitle className="text-lg">Tickets por Cobrar</CardTitle>
-            <Button variant="ghost" size="icon" onClick={() => queryClient.invalidateQueries({ queryKey: getListarTicketsQueryKey({ ubicacionId: selectedLocationId || 0, cobrado: false, estado: EstadoTicket.VENDIDO }) })}>
+            <Button variant="ghost" size="icon" onClick={() => queryClient.invalidateQueries({ queryKey: getListarTicketsPendientesQueryKey({ ubicacionId: selectedLocationId || 0 }) })}>
               <RefreshCw className={`h-4 w-4 ${fetchingTickets ? "animate-spin" : ""}`} />
             </Button>
           </CardHeader>
@@ -564,7 +560,8 @@ export default function CobrosPage() {
               ticket={selectedTicket} 
               onCobrado={() => {
                 setSelectedTicketId(null);
-                queryClient.invalidateQueries({ queryKey: getListarTicketsQueryKey({ ubicacionId: selectedLocationId || 0, cobrado: false, estado: EstadoTicket.VENDIDO }) });
+                queryClient.invalidateQueries({ queryKey: getListarTicketsPendientesQueryKey({ ubicacionId: selectedLocationId || 0 }) });
+                queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
               }} 
             />
           ) : (

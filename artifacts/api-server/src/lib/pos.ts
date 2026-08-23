@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, lte, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   auditoriaTable,
   clientesTable,
@@ -934,6 +934,67 @@ export async function cobrarTicket(
   return buildTicketDetail(tx, ticket.id, includeCosts);
 }
 
+export async function listarTicketsPendientesCaja(
+  database: Reader,
+  ubicacionId: number,
+) {
+  return database
+    .select({
+      id: ticketsTable.id,
+      folio: ticketsTable.folio,
+      ubicacionId: ticketsTable.ubicacionId,
+      nombreUbicacion: ubicacionesTable.nombre,
+      usuarioTerminalId: ticketsTable.usuarioTerminalId,
+      nombreUsuarioTerminal: usuariosTable.nombre,
+      clienteId: ticketsTable.clienteId,
+      nombreCliente: clientesTable.nombre,
+      tipo: ticketsTable.tipo,
+      subtotal: ticketsTable.subtotal,
+      total: ticketsTable.total,
+      estado: ticketsTable.estado,
+      cobrado: ticketsTable.cobrado,
+      cobradoAt: ticketsTable.cobradoAt,
+      usuarioCajaId: ticketsTable.usuarioCajaId,
+      facturado: ticketsTable.facturado,
+      sesionCajaId: ticketsTable.sesionCajaId,
+      uuidCliente: ticketsTable.uuidCliente,
+      createdAt: ticketsTable.createdAt,
+      canceladoAt: ticketsTable.canceladoAt,
+      canceladoPor: ticketsTable.canceladoPor,
+      motivoCancelacion: ticketsTable.motivoCancelacion,
+      autorizadoPor: ticketsTable.autorizadoPor,
+      lineasCount: count(ticketLineasTable.id),
+    })
+    .from(ticketsTable)
+    .innerJoin(
+      ubicacionesTable,
+      eq(ticketsTable.ubicacionId, ubicacionesTable.id),
+    )
+    .innerJoin(
+      usuariosTable,
+      eq(ticketsTable.usuarioTerminalId, usuariosTable.id),
+    )
+    .leftJoin(clientesTable, eq(ticketsTable.clienteId, clientesTable.id))
+    .leftJoin(
+      ticketLineasTable,
+      eq(ticketLineasTable.ticketId, ticketsTable.id),
+    )
+    .where(
+      and(
+        eq(ticketsTable.ubicacionId, ubicacionId),
+        eq(ticketsTable.estado, "VENDIDO"),
+        eq(ticketsTable.cobrado, false),
+      ),
+    )
+    .groupBy(
+      ticketsTable.id,
+      ubicacionesTable.nombre,
+      usuariosTable.nombre,
+      clientesTable.nombre,
+    )
+    .orderBy(asc(ticketsTable.createdAt));
+}
+
 export async function buildCorteCaja(
   database: Reader,
   sesionId: number,
@@ -975,26 +1036,16 @@ export async function buildCorteCaja(
     .innerJoin(ticketsTable, eq(ticketPagosTable.ticketId, ticketsTable.id))
     .where(eq(ticketsTable.sesionCajaId, sesion.id));
 
-  const corteAt = sesion.cerradaAt ?? new Date();
-  const pendientes = await database
-    .select({
-      ticketId: ticketsTable.id,
-      folio: ticketsTable.folio,
-      total: ticketsTable.total,
-      nombreCliente: clientesTable.nombre,
-      createdAt: ticketsTable.createdAt,
-    })
-    .from(ticketsTable)
-    .leftJoin(clientesTable, eq(ticketsTable.clienteId, clientesTable.id))
-    .where(
-      and(
-        eq(ticketsTable.ubicacionId, sesion.ubicacionId),
-        eq(ticketsTable.estado, "VENDIDO"),
-        eq(ticketsTable.cobrado, false),
-        lte(ticketsTable.createdAt, corteAt),
-      ),
-    )
-    .orderBy(asc(ticketsTable.createdAt));
+  const pendientes = (await listarTicketsPendientesCaja(
+    database,
+    sesion.ubicacionId,
+  )).map((ticket) => ({
+    ticketId: ticket.id,
+    folio: ticket.folio,
+    total: ticket.total,
+    nombreCliente: ticket.nombreCliente,
+    createdAt: ticket.createdAt,
+  }));
 
   const productos = await database
     .select({
@@ -1045,7 +1096,8 @@ export async function buildCorteCaja(
         eq(ticketsTable.estado, "VENDIDO"),
       ),
     )
-    .groupBy(ticketsTable.tipo);
+    .groupBy(ticketsTable.tipo)
+    .orderBy(ticketsTable.tipo);
 
   const formas = { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 };
   const cuentas = {

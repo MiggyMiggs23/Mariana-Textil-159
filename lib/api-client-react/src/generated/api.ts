@@ -64,6 +64,7 @@ import type {
   ListProveedorPagosParams,
   ListRollosParams,
   ListarTicketsParams,
+  ListarTicketsPendientesParams,
   Location,
   LocationUpdate,
   LoginInput,
@@ -5402,6 +5403,90 @@ export function useListarTickets<TData = Awaited<ReturnType<typeof listarTickets
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListarTicketsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListarTicketsPendientesUrl = (params?: ListarTicketsPendientesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/tickets/pendientes?${stringifiedParams}` : `/api/tickets/pendientes`
+}
+
+/**
+ * @summary Lista tickets vendidos y no cobrados de una ubicación
+ */
+export const listarTicketsPendientes = async (params?: ListarTicketsPendientesParams, options?: Parameters<typeof customFetch>[1]): Promise<TicketResumen[]> => {
+
+  return customFetch<TicketResumen[]>(getListarTicketsPendientesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarTicketsPendientesQueryKey = (params?: ListarTicketsPendientesParams,) => {
+    return [
+    `/api/tickets/pendientes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListarTicketsPendientesQueryOptions = <TData = Awaited<ReturnType<typeof listarTicketsPendientes>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListarTicketsPendientesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarTicketsPendientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarTicketsPendientesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarTicketsPendientes>>> = ({ signal }) => listarTicketsPendientes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarTicketsPendientes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarTicketsPendientesQueryResult = NonNullable<Awaited<ReturnType<typeof listarTicketsPendientes>>>
+export type ListarTicketsPendientesQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista tickets vendidos y no cobrados de una ubicación
+ */
+
+export function useListarTicketsPendientes<TData = Awaited<ReturnType<typeof listarTicketsPendientes>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListarTicketsPendientesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarTicketsPendientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarTicketsPendientesQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
