@@ -767,6 +767,8 @@ export interface KardexResult {
 export interface ConciliacionRow {
   productoId: number;
   ubicacionId: number;
+  ubicacionNombre: string;
+  ubicacionActiva: boolean;
   cantidadMovimientos: string;
   cantidadCache: string;
   rollosMovimientos: number;

@@ -52,9 +52,13 @@ router.get(
         locationScope
           ? and(
               inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+              eq(ubicacionesTable.activa, true),
               locationScope,
             )
-          : inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+          : and(
+              inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+              eq(ubicacionesTable.activa, true),
+            ),
       )
       .orderBy(ubicacionesTable.id);
 

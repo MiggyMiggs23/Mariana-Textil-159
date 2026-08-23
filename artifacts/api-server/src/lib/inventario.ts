@@ -1472,6 +1472,8 @@ function estadoAntesDe(tipo: TipoMovimiento, estadoActual: EstadoRollo): EstadoR
 export type ConciliacionFila = {
   productoId: number;
   ubicacionId: number;
+  ubicacionNombre: string;
+  ubicacionActiva: boolean;
   cantidadMovimientos: string;
   cantidadCache: string;
   rollosMovimientos: number;
@@ -1544,9 +1546,28 @@ export async function conciliarTodo(
       });
     }
 
+    const ubicacionIds = Array.from(
+      new Set(Array.from(keyMap.keys()).map((key) => Number(key.split(":")[1]))),
+    );
+    const ubicaciones =
+      ubicacionIds.length > 0
+        ? await tx
+            .select({
+              id: ubicacionesTable.id,
+              nombre: ubicacionesTable.nombre,
+              activa: ubicacionesTable.activa,
+            })
+            .from(ubicacionesTable)
+            .where(inArray(ubicacionesTable.id, ubicacionIds))
+        : [];
+    const ubicacionesMap = new Map(
+      ubicaciones.map((ubicacion) => [ubicacion.id, ubicacion]),
+    );
+
     const results: ConciliacionFila[] = [];
     for (const [key, v] of keyMap) {
       const [pId, uId] = key.split(":").map(Number) as [number, number];
+      const ubicacion = ubicacionesMap.get(uId);
       const movTotalF = parseFloat(v.movTotal).toFixed(3);
       const cacheTotalF = parseFloat(v.cacheTotal).toFixed(3);
 
@@ -1565,6 +1586,8 @@ export async function conciliarTodo(
       results.push({
         productoId: pId,
         ubicacionId: uId,
+        ubicacionNombre: ubicacion?.nombre ?? `Ubicación ${uId}`,
+        ubicacionActiva: ubicacion?.activa ?? false,
         cantidadMovimientos: movTotalF,
         cantidadCache: cacheTotalF,
         rollosMovimientos: cntRow?.cnt ?? 0,

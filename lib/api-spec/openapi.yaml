@@ -2594,10 +2594,12 @@ components:
         pageSize: { type: number }
     ConciliacionRow:
       type: object
-      required: [productoId, ubicacionId, cantidadMovimientos, cantidadCache, rollosMovimientos, rollosCache, discrepancia]
+      required: [productoId, ubicacionId, ubicacionNombre, ubicacionActiva, cantidadMovimientos, cantidadCache, rollosMovimientos, rollosCache, discrepancia]
       properties:
         productoId: { type: number }
         ubicacionId: { type: number }
+        ubicacionNombre: { type: string }
+        ubicacionActiva: { type: boolean }
         cantidadMovimientos: { type: string }
         cantidadCache: { type: string }
         rollosMovimientos: { type: number }

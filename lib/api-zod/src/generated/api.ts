@@ -1571,6 +1571,8 @@ export const GetConciliacionQueryParams = zod.object({
 export const GetConciliacionResponseItem = zod.object({
   "productoId": zod.number(),
   "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "ubicacionActiva": zod.boolean(),
   "cantidadMovimientos": zod.string(),
   "cantidadCache": zod.string(),
   "rollosMovimientos": zod.number(),
@@ -1600,6 +1602,8 @@ export const RecalcularExistenciasBody = zod.object({
 export const RecalcularExistenciasResponse = zod.object({
   "productoId": zod.number(),
   "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "ubicacionActiva": zod.boolean(),
   "cantidadMovimientos": zod.string(),
   "cantidadCache": zod.string(),
   "rollosMovimientos": zod.number(),

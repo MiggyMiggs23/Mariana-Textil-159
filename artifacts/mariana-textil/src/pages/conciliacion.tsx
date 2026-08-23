@@ -55,7 +55,9 @@ export default function Conciliacion() {
       <div className="max-w-6xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-sidebar">Conciliación de Inventario</h1>
-          <p className="text-muted-foreground mt-1">Verifica la integridad de las existencias contra el kardex de movimientos.</p>
+          <p className="text-muted-foreground mt-1">
+            Verifica la integridad de las existencias contra el kardex de movimientos. La consulta global incluye ubicaciones inactivas con historial o existencias.
+          </p>
         </div>
 
         <Card className="bg-muted/10">
@@ -126,7 +128,7 @@ export default function Conciliacion() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Producto ID</TableHead>
-                    <TableHead>Ubicación ID</TableHead>
+                    <TableHead>Ubicación</TableHead>
                     <TableHead className="text-right">Movimientos (Real)</TableHead>
                     <TableHead className="text-right">Caché (Actual)</TableHead>
                     <TableHead className="text-right">Rollos (Mov/Caché)</TableHead>
@@ -143,7 +145,17 @@ export default function Conciliacion() {
                     return (
                       <TableRow key={idx} className="bg-destructive/5">
                         <TableCell className="font-mono font-medium">{row.productoId}</TableCell>
-                        <TableCell className="font-mono">{row.ubicacionId}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{row.ubicacionNombre}</span>
+                            {!row.ubicacionActiva && (
+                              <Badge variant="secondary">Inactiva</Badge>
+                            )}
+                          </div>
+                          <span className="font-mono text-xs text-muted-foreground">
+                            ID {row.ubicacionId}
+                          </span>
+                        </TableCell>
                         <TableCell className={`text-right tabular-nums ${cantDiff ? 'font-bold' : ''}`}>
                           {cantMov.toFixed(2)}
                         </TableCell>
