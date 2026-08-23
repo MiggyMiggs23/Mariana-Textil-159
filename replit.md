@@ -9,9 +9,11 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - `pnpm --filter @workspace/mariana-textil run dev` — aplicación web
 - `pnpm run typecheck` — verificación completa de TypeScript
 - `pnpm --filter @workspace/api-spec run codegen` — regenera cliente y Zod desde OpenAPI
+- `pnpm run db:verify` — muestra la identidad segura de la base canónica y valida el esquema mínimo
 - `pnpm --filter @workspace/db run push` — aplica el esquema Drizzle en desarrollo
 - `pnpm --filter @workspace/db run seed` — precarga ubicaciones y el ADMIN inicial
-- En Replit usa `NEON_DATABASE_URL` para la conexión externa de Neon; fuera de Replit también acepta `DATABASE_URL`
+- La API, Drizzle, migraciones, pruebas y seed usan exclusivamente el `DATABASE_URL` administrado por Replit.
+- El proyecto externo visible en el MCP de Neon no es la base de esta aplicación y no debe usarse para consultar ni modificar sus datos.
 
 ## Stack
 
@@ -69,4 +71,5 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 - Ejecuta `codegen` después de cada cambio en OpenAPI.
 - Ejecuta `push` y luego `seed` al preparar una base de datos nueva.
+- Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
 - Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.

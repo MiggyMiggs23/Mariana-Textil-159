@@ -1,3 +1,2 @@
 - [Verificación de captura por rollo](entry-capture-verification.md) — probar edición y eliminación reales antes de guardar; la presencia visual del botón no basta.
 - [Verificación de impresión](print-verification.md) — validar media print con estilos computados y geometría; el texto oculto que permanece en el DOM puede dar falsos positivos.
-- [Recuperación de acceso administrativo](admin-access-recovery.md) — usar la conexión efectiva de la API y validar el login; la rama predeterminada de Neon puede diferir.
