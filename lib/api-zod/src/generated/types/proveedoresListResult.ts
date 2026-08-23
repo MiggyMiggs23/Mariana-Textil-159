@@ -9,10 +9,10 @@ import type { ProveedorMetricas } from './proveedorMetricas';
 
 export interface ProveedoresListResult {
   totalProveedores: number;
-  proveedoresConSaldo: number;
-  totalDeuda: string;
-  totalPagado: string;
+  proveedoresConSaldo?: number;
+  totalDeuda?: string;
+  totalPagado?: string;
   /** Total comprado al conjunto de proveedores en el mes actual */
-  comprasMes: string;
+  comprasMes?: string;
   items: ProveedorMetricas[];
 }

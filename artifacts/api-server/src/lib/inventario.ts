@@ -16,7 +16,7 @@
  *  which is called at the end of every mutating operation.
  */
 
-import { and, eq, sql, desc, count, gte, lte } from "drizzle-orm";
+import { and, eq, sql, desc, count, gte, inArray, lte } from "drizzle-orm";
 import {
   auditoriaTable,
   db,
@@ -243,12 +243,12 @@ async function insertMovimiento(
 // ── State transition guard ────────────────────────────────────────────────────
 
 const VALID_TRANSITIONS: Partial<Record<EstadoRollo, EstadoRollo[]>> = {
-  PROGRAMADO: ["DISPONIBLE"],
-  DISPONIBLE: ["EN_TRANSITO", "ABIERTO", "VENDIDO", "BAJA"],
+  PROGRAMADO: ["DISPONIBLE", "BAJA"],
+  DISPONIBLE: ["EN_TRANSITO", "ABIERTO", "VENDIDO", "BAJA", "PROGRAMADO"],
   EN_TRANSITO: ["DISPONIBLE", "BAJA"],
-  ABIERTO: [], // terminal – cannot transition back
-  VENDIDO: [], // terminal
-  BAJA: [], // terminal
+  ABIERTO: [], // terminal – cannot transition back, not even by reversal
+  VENDIDO: ["DISPONIBLE"], // reversal: cancel sale / register return
+  BAJA: ["DISPONIBLE"], // reversal: undo erroneous write-off
 };
 
 function assertTransition(from: EstadoRollo, to: EstadoRollo): void {
@@ -1272,6 +1272,11 @@ export async function ajustarRollo(
     cantidadNueva = nueva.toFixed(3);
   }
 
+  // Guard state change through the transition machine (only applies when BAJA)
+  if (estadoNuevo !== rollo.estado) {
+    assertTransition(rollo.estado, estadoNuevo);
+  }
+
   await tx
     .update(rollosTable)
     .set({ cantidadActual: cantidadNueva, estado: estadoNuevo })
@@ -1370,15 +1375,27 @@ export async function revertirMovimiento(
   // Determine restoration: CANCELACION records the inverse signed quantity
   const inversaCantidad = (parseFloat(orig.cantidad) * -1).toFixed(3);
 
-  // Restore roll state where sensible
-  // Movements that change state: ALTA/RECEPCION→PROGRAMADO, AJUSTE→restore qty,
-  // TRANSFERENCIA_SALIDA→restore origin state, etc.
-  // For simplicity: if the movement increased quantity, decrease back; vice-versa.
-  // State restoration:
+  // Restore roll state where sensible.
+  // estadoAntesDe throws for SALIDA_MOSTRADOR (ABIERTO is terminal).
   const estadoAnterior = estadoAntesDe(orig.tipo, rollo.estado);
-  const cantidadRestore = (
-    parseFloat(rollo.cantidadActual) + parseFloat(inversaCantidad)
-  ).toFixed(3);
+
+  // Guard: every state change must pass through the transition machine.
+  if (estadoAnterior !== rollo.estado) {
+    assertTransition(rollo.estado, estadoAnterior);
+  }
+
+  // Only restore cantidadActual when the original movement actually mutated it.
+  // VENTA, SALIDA_MOSTRADOR, TRANSFERENCIA_SALIDA/ENTRADA leave cantidadActual
+  // untouched in the roll row; adding the inverse would corrupt the quantity.
+  const movsThatChangeCantidad: TipoMovimiento[] = [
+    "ALTA",
+    "RECEPCION",
+    "AJUSTE_POSITIVO",
+    "AJUSTE_NEGATIVO",
+  ];
+  const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo)
+    ? (parseFloat(rollo.cantidadActual) + parseFloat(inversaCantidad)).toFixed(3)
+    : rollo.cantidadActual;
 
   await tx
     .update(rollosTable)
@@ -1414,6 +1431,10 @@ export async function revertirMovimiento(
 /**
  * Infer what state the roll should return to when cancelling a given
  * movement type from the current state.
+ *
+ * SALIDA_MOSTRADOR is intentionally not handled: ABIERTO is terminal and
+ * reverting it is forbidden. Callers must check for this case before calling
+ * assertTransition so the error is explicit.
  */
 function estadoAntesDe(tipo: TipoMovimiento, estadoActual: EstadoRollo): EstadoRollo {
   switch (tipo) {
@@ -1423,7 +1444,13 @@ function estadoAntesDe(tipo: TipoMovimiento, estadoActual: EstadoRollo): EstadoR
     case "VENTA":
       return "DISPONIBLE";
     case "SALIDA_MOSTRADOR":
-      return "DISPONIBLE";
+      // ABIERTO is terminal — reverting a SALIDA_MOSTRADOR is not allowed.
+      // Throw now so assertTransition never gets a chance to bypass the rule.
+      throw new InventarioError(
+        "No se puede revertir una SALIDA_MOSTRADOR: el rollo ya salió a piso (ABIERTO es terminal). " +
+          "Registra un ajuste para dejar rastro.",
+        "ABIERTO_TERMINAL",
+      );
     case "TRANSFERENCIA_SALIDA":
       return "DISPONIBLE";
     case "TRANSFERENCIA_ENTRADA":
@@ -1579,10 +1606,7 @@ export async function getInventarioPorUbicacion(
     ubicacionIds && ubicacionIds.length > 0
       ? and(
           sql`${rollosTable.estado} IN ('DISPONIBLE','EN_TRANSITO')`,
-          sql`${rollosTable.ubicacionId} = ANY(ARRAY[${sql.join(
-            ubicacionIds.map((id) => sql`${id}`),
-            sql`,`,
-          )}])`,
+          inArray(rollosTable.ubicacionId, ubicacionIds),
         )
       : sql`${rollosTable.estado} IN ('DISPONIBLE','EN_TRANSITO')`;
 

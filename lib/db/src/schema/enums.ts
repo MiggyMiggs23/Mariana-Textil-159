@@ -67,8 +67,14 @@ export const tipoMovimientoEnum = pgEnum("tipo_movimiento", [
   "CANCELACION",
 ]);
 
+export const alcanceConsultaEnum = pgEnum("alcance_consulta", [
+  "PROPIA",
+  "TODAS",
+]);
+
 export type TipoUbicacion = (typeof tipoUbicacionEnum.enumValues)[number];
 export type RolUsuario = (typeof rolUsuarioEnum.enumValues)[number];
+export type AlcanceConsulta = (typeof alcanceConsultaEnum.enumValues)[number];
 export type UnidadProducto = (typeof unidadProductoEnum.enumValues)[number];
 export type TipoProveedor = (typeof tipoProveedorEnum.enumValues)[number];
 export type Moneda = (typeof monedaEnum.enumValues)[number];

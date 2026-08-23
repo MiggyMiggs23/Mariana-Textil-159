@@ -19,6 +19,7 @@ import {
   setSessionCookie,
 } from "../middlewares/auth";
 import { presentUser } from "../lib/presenters";
+import { buildPermissionMatrix } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 
 const router: IRouter = Router();
@@ -110,20 +111,23 @@ router.post("/auth/login", async (req, res): Promise<void> => {
     });
   });
 
+  const permisos = await buildPermissionMatrix(row.user.id, row.user.rol);
+
   setSessionCookie(res, sessionId);
   res.json(
     LoginResponse.parse(
-      presentUser({ ...row.user, ultimoAcceso: now }, row.location),
+      presentUser({ ...row.user, ultimoAcceso: now }, row.location, permisos),
     ),
   );
 });
 
 router.use(requireSession);
 
-router.get("/auth/me", (req, res): void => {
+router.get("/auth/me", async (req, res): Promise<void> => {
+  const permisos = await buildPermissionMatrix(req.auth!.user.id, req.auth!.user.rol);
   res.json(
     GetCurrentUserResponse.parse(
-      presentUser(req.auth!.user, req.auth!.location),
+      presentUser(req.auth!.user, req.auth!.location, permisos),
     ),
   );
 });

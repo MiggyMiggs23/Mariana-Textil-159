@@ -29,7 +29,9 @@ import RolloDetail from '@/pages/rollo-detail';
 import RolloEtiqueta from '@/pages/rollo-etiqueta';
 import Ajustes from '@/pages/ajustes';
 import Conciliacion from '@/pages/conciliacion';
+import Permisos from '@/pages/permisos';
 import { LocationScopeProvider } from '@/lib/location-scope';
+import { Modules, hasPermission } from '@/lib/permisos';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,7 +60,7 @@ function NotFound() {
   );
 }
 
-function ProtectedRoute({ component: Component, allowedRoles }: { component: React.ComponentType, allowedRoles?: import('@workspace/api-client-react').Role[] }) {
+function ProtectedRoute({ component: Component, allowedModule }: { component: React.ComponentType, allowedModule?: string }) {
   const [, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
@@ -80,8 +82,21 @@ function ProtectedRoute({ component: Component, allowedRoles }: { component: Rea
 
   if (!user) return null;
 
-  if (allowedRoles && !allowedRoles.includes(user.rol)) {
-    return <NotFound />;
+  if (allowedModule && !hasPermission(user, allowedModule, 'ver')) {
+    return (
+      <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold text-destructive">Sin acceso</h1>
+          <p className="text-muted-foreground">No tienes permisos para ver este módulo ({allowedModule}).</p>
+          <button
+            onClick={() => setLocation('/')}
+            className="text-primary hover:underline font-medium"
+          >
+            Volver al inicio
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return <Component />;
@@ -92,28 +107,29 @@ function Router() {
     <RoutedErrorBoundary>
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
-        <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} allowedRoles={["ADMIN"]} />} />
-        <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedRoles={["ADMIN"]} />} />
+        <Route path="/" component={() => <ProtectedRoute component={Dashboard} allowedModule={Modules.DASHBOARD} />} />
+        <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} allowedModule={Modules.UBICACIONES} />} />
+        <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedModule={Modules.USUARIOS} />} />
+        <Route path="/permisos" component={() => <ProtectedRoute component={Permisos} allowedModule={Modules.PERMISOS} />} />
         
-        <Route path="/entradas" component={() => <ProtectedRoute component={Entradas} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
-        <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
-        <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/entradas" component={() => <ProtectedRoute component={Entradas} allowedModule={Modules.ENTRADAS} />} />
+        <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedModule={Modules.ENTRADAS} />} />
+        <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
         
-        <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedModule={Modules.MOVIMIENTOS} />} />
         
-        <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} />} />
-        <Route path="/inventario/rollos/:id" component={() => <ProtectedRoute component={RolloDetail} />} />
-        <Route path="/inventario/rollos/:id/etiqueta" component={() => <ProtectedRoute component={RolloEtiqueta} />} />
-        <Route path="/inventario/ajustes" component={() => <ProtectedRoute component={Ajustes} allowedRoles={["ADMIN", "INVENTARIOS"]} />} />
+        <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} allowedModule={Modules.INVENTARIO} />} />
+        <Route path="/inventario/rollos/:id" component={() => <ProtectedRoute component={RolloDetail} allowedModule={Modules.INVENTARIO} />} />
+        <Route path="/inventario/rollos/:id/etiqueta" component={() => <ProtectedRoute component={RolloEtiqueta} allowedModule={Modules.INVENTARIO} />} />
+        <Route path="/inventario/ajustes" component={() => <ProtectedRoute component={Ajustes} allowedModule={Modules.AJUSTES} />} />
         
-        <Route path="/productos" component={() => <ProtectedRoute component={Productos} />} />
-        <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} />} />
+        <Route path="/productos" component={() => <ProtectedRoute component={Productos} allowedModule={Modules.PRODUCTOS} />} />
+        <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} allowedModule={Modules.PRODUCTOS} />} />
         
-        <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
-        <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedRoles={["ADMIN", "INVENTARIOS", "BODEGA"]} />} />
+        <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedModule={Modules.PROVEEDORES} />} />
+        <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedModule={Modules.PROVEEDORES} />} />
         
-        <Route path="/administracion/conciliacion" component={() => <ProtectedRoute component={Conciliacion} allowedRoles={["ADMIN"]} />} />
+        <Route path="/administracion/conciliacion" component={() => <ProtectedRoute component={Conciliacion} allowedModule={Modules.CONCILIACION} />} />
         
         <Route component={NotFound} />
       </Switch>

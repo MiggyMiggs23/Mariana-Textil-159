@@ -57,8 +57,10 @@ import {
   usuariosTable,
   type EstadoRollo,
 } from "@workspace/db";
-import { requireRole, requireSession } from "../middlewares/auth";
+import { requireSession } from "../middlewares/auth";
+import type { AuthContext } from "../middlewares/auth";
 import { getRequestIp } from "../lib/request";
+import { requierePermiso } from "../lib/permisos";
 import {
   crearEntrada,
   buildEntradaResult,
@@ -76,6 +78,82 @@ import {
 } from "../lib/inventario";
 
 export const inventarioRouter = Router();
+
+// ── Scope helpers ─────────────────────────────────────────────────────────────
+//
+// Read scope (alcanceConsulta):
+//   TODAS  — user may see data for any location; if they pass a ubicacionId
+//             filter we honor it, otherwise no location filter is applied.
+//   PROPIA — user may only see data for their own assigned location; any
+//             requested ubicacionId is ignored and overridden by the assigned one.
+//
+// Operational scope (mutations):
+//   ADMIN  — may operate on any location without restriction.
+//   others — may only touch their own assigned ubicacionId. Attempting to
+//             operate on a different location returns 403 before engine call.
+
+/**
+ * Returns the `ubicacionId` that should be used to filter a read query.
+ *
+ * - ADMIN with alcanceConsulta TODAS: use requestedUbicacionId (may be undefined = all).
+ * - Non-ADMIN or alcanceConsulta PROPIA: always use assigned ubicacionId.
+ * - If the user has no assigned location and scope is PROPIA, returns null
+ *   (caller should return an empty set or 400).
+ */
+function resolveReadScope(
+  auth: AuthContext,
+  requestedUbicacionId?: number,
+): { ubicacionId: number | null | undefined; scopeError: string | null } {
+  const alcance = auth.user.alcanceConsulta;
+  const assigned = auth.user.ubicacionId;
+
+  // ADMIN with TODAS scope: unrestricted
+  if (auth.user.rol === "ADMIN" && alcance === "TODAS") {
+    return { ubicacionId: requestedUbicacionId, scopeError: null };
+  }
+
+  // alcanceConsulta TODAS (non-ADMIN): honor the requested filter
+  if (alcance === "TODAS") {
+    return { ubicacionId: requestedUbicacionId, scopeError: null };
+  }
+
+  // alcanceConsulta PROPIA: force assigned location regardless of request
+  if (assigned == null) {
+    return {
+      ubicacionId: null,
+      scopeError: "No tienes una ubicación asignada.",
+    };
+  }
+  return { ubicacionId: assigned, scopeError: null };
+}
+
+/**
+ * For mutations: verifies that all implicated ubicacionIds are within the
+ * user's operational scope.
+ *
+ * ADMIN may operate any location (returns null = no error).
+ * Non-ADMIN must have all provided ubicacionIds equal to their assigned one.
+ *
+ * Returns an error message string if the check fails, or null if allowed.
+ */
+function checkOperationalScope(
+  auth: AuthContext,
+  ubicacionIds: number[],
+): string | null {
+  if (auth.user.rol === "ADMIN") return null;
+
+  const assigned = auth.user.ubicacionId;
+  if (assigned == null) {
+    return "No tienes una ubicación asignada.";
+  }
+
+  for (const id of ubicacionIds) {
+    if (id !== assigned) {
+      return "No tienes permiso para operar en esa ubicación.";
+    }
+  }
+  return null;
+}
 
 // ── Fecha del servidor ────────────────────────────────────────────────────────
 // Unauthenticated — returns the server clock so the UI can display the real
@@ -201,22 +279,24 @@ async function getRolloDetail(rolloId: number) {
 inventarioRouter.post(
   "/entradas",
   requireSession,
-  requireRole("ADMIN", "INVENTARIOS", "BODEGA"),
+  requierePermiso("entradas", "crear"),
   async (req, res, next) => {
     try {
       const body = CrearEntradaBody.parse(req.body);
       const auth = req.auth!;
       const usuarioId = auth.user.id;
 
-      // Non-ADMIN users are constrained to their assigned location.
+      // Determine target location: ADMIN uses body value; non-ADMIN is forced
+      // to their assigned location (operational scope check).
       let ubicacionId = body.ubicacionId;
-      if (auth.user.rol !== "ADMIN") {
-        if (auth.user.ubicacionId == null) {
-          res
-            .status(403)
-            .json({ error: "No tienes una ubicación asignada." });
-          return;
-        }
+      const scopeErr = checkOperationalScope(auth, [ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+      // For non-ADMIN, override with their assigned location to be safe even if
+      // checkOperationalScope passed (assigned === body.ubicacionId).
+      if (auth.user.rol !== "ADMIN" && auth.user.ubicacionId != null) {
         ubicacionId = auth.user.ubicacionId;
       }
 
@@ -341,156 +421,199 @@ inventarioRouter.post(
 
 // ── Listar entradas ───────────────────────────────────────────────────────────
 
-inventarioRouter.get("/entradas", requireSession, async (req, res, next) => {
-  try {
-    const q = ListEntradasQueryParams.parse(req.query);
-    const page = q.page ?? 1;
-    const pageSize = q.pageSize ?? 20;
-    const offset = (page - 1) * pageSize;
+inventarioRouter.get(
+  "/entradas",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ListEntradasQueryParams.parse(req.query);
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 20;
+      const offset = (page - 1) * pageSize;
 
-    const conditions = [];
-    if (q.folio) conditions.push(eq(entradasTable.folio, q.folio));
-    if (q.proveedorId)
-      conditions.push(eq(entradasTable.proveedorId, q.proveedorId));
+      const auth = req.auth!;
 
-    // Non-ADMIN users see only their assigned location.
-    if (req.auth!.user.rol !== "ADMIN") {
-      if (req.auth!.user.ubicacionId != null) {
-        conditions.push(eq(entradasTable.ubicacionId, req.auth!.user.ubicacionId));
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
       }
-    } else if (q.ubicacionId) {
-      conditions.push(eq(entradasTable.ubicacionId, q.ubicacionId));
+
+      const conditions = [];
+      if (q.folio) conditions.push(eq(entradasTable.folio, q.folio));
+      if (q.proveedorId)
+        conditions.push(eq(entradasTable.proveedorId, q.proveedorId));
+
+      // Apply resolved location scope
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(entradasTable.ubicacionId, scopedUbicacionId));
+      }
+
+      const desde =
+        typeof req.query.fechaDesde === "string" ? req.query.fechaDesde : null;
+      const hasta =
+        typeof req.query.fechaHasta === "string" ? req.query.fechaHasta : null;
+      if (desde) conditions.push(gte(entradasTable.fecha, new Date(desde)));
+      if (hasta) {
+        const hastaDate = new Date(hasta);
+        hastaDate.setDate(hastaDate.getDate() + 1);
+        conditions.push(lte(entradasTable.fecha, hastaDate));
+      }
+
+      const where = conditions.length ? and(...conditions) : undefined;
+
+      const [totalRow] = await db
+        .select({ cnt: count() })
+        .from(entradasTable)
+        .where(where);
+
+      const rows = await db
+        .select({
+          id: entradasTable.id,
+          folio: entradasTable.folio,
+          ubicacionId: entradasTable.ubicacionId,
+          nombreUbicacion: ubicacionesTable.nombre,
+          proveedorId: entradasTable.proveedorId,
+          nombreProveedor: proveedoresTable.nombre,
+          usuarioId: entradasTable.usuarioId,
+          nombreUsuario: usuariosTable.nombre,
+          fecha: entradasTable.fecha,
+          totalRollos: entradasTable.totalRollos,
+          totalCosto: entradasTable.totalCosto,
+          createdAt: entradasTable.createdAt,
+        })
+        .from(entradasTable)
+        .innerJoin(
+          ubicacionesTable,
+          eq(entradasTable.ubicacionId, ubicacionesTable.id),
+        )
+        .innerJoin(usuariosTable, eq(entradasTable.usuarioId, usuariosTable.id))
+        .leftJoin(
+          proveedoresTable,
+          eq(entradasTable.proveedorId, proveedoresTable.id),
+        )
+        .where(where)
+        .orderBy(desc(entradasTable.folio))
+        .limit(pageSize)
+        .offset(offset);
+
+      const items = rows.map((r) => ({
+        id: r.id,
+        folio: r.folio,
+        ubicacionId: r.ubicacionId,
+        nombreUbicacion: r.nombreUbicacion,
+        proveedorId: r.proveedorId ?? null,
+        nombreProveedor: r.nombreProveedor ?? null,
+        usuarioId: r.usuarioId,
+        nombreUsuario: r.nombreUsuario,
+        fecha: r.fecha.toISOString(),
+        totalRollos: r.totalRollos,
+        totalCosto: r.totalCosto,
+        createdAt: r.createdAt.toISOString(),
+      }));
+
+      const response = ListEntradasResponse.parse({
+        items,
+        total: totalRow?.cnt ?? 0,
+        page,
+        pageSize,
+      });
+      res.json(response);
+    } catch (e) {
+      next(e);
     }
-
-    const desde =
-      typeof req.query.fechaDesde === "string" ? req.query.fechaDesde : null;
-    const hasta =
-      typeof req.query.fechaHasta === "string" ? req.query.fechaHasta : null;
-    if (desde) conditions.push(gte(entradasTable.fecha, new Date(desde)));
-    if (hasta) {
-      const hastaDate = new Date(hasta);
-      hastaDate.setDate(hastaDate.getDate() + 1);
-      conditions.push(lte(entradasTable.fecha, hastaDate));
-    }
-
-    const where = conditions.length ? and(...conditions) : undefined;
-
-    const [totalRow] = await db
-      .select({ cnt: count() })
-      .from(entradasTable)
-      .where(where);
-
-    const rows = await db
-      .select({
-        id: entradasTable.id,
-        folio: entradasTable.folio,
-        ubicacionId: entradasTable.ubicacionId,
-        nombreUbicacion: ubicacionesTable.nombre,
-        proveedorId: entradasTable.proveedorId,
-        nombreProveedor: proveedoresTable.nombre,
-        usuarioId: entradasTable.usuarioId,
-        nombreUsuario: usuariosTable.nombre,
-        fecha: entradasTable.fecha,
-        totalRollos: entradasTable.totalRollos,
-        totalCosto: entradasTable.totalCosto,
-        createdAt: entradasTable.createdAt,
-      })
-      .from(entradasTable)
-      .innerJoin(
-        ubicacionesTable,
-        eq(entradasTable.ubicacionId, ubicacionesTable.id),
-      )
-      .innerJoin(usuariosTable, eq(entradasTable.usuarioId, usuariosTable.id))
-      .leftJoin(
-        proveedoresTable,
-        eq(entradasTable.proveedorId, proveedoresTable.id),
-      )
-      .where(where)
-      .orderBy(desc(entradasTable.folio))
-      .limit(pageSize)
-      .offset(offset);
-
-    const items = rows.map((r) => ({
-      id: r.id,
-      folio: r.folio,
-      ubicacionId: r.ubicacionId,
-      nombreUbicacion: r.nombreUbicacion,
-      proveedorId: r.proveedorId ?? null,
-      nombreProveedor: r.nombreProveedor ?? null,
-      usuarioId: r.usuarioId,
-      nombreUsuario: r.nombreUsuario,
-      fecha: r.fecha.toISOString(),
-      totalRollos: r.totalRollos,
-      totalCosto: r.totalCosto,
-      createdAt: r.createdAt.toISOString(),
-    }));
-
-    const response = ListEntradasResponse.parse({
-      items,
-      total: totalRow?.cnt ?? 0,
-      page,
-      pageSize,
-    });
-    res.json(response);
-  } catch (e) {
-    next(e);
-  }
-});
+  },
+);
 
 // ── Detalle de entrada ─────────────────────────────────────────────────────────
 
-inventarioRouter.get("/entradas/:id", requireSession, async (req, res, next) => {
-  try {
-    const { id } = GetEntradaParams.parse(req.params);
+inventarioRouter.get(
+  "/entradas/:id",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetEntradaParams.parse(req.params);
+      const auth = req.auth!;
 
-    const [entrada] = await db
-      .select({
-        ubicacionId: entradasTable.ubicacionId,
-      })
-      .from(entradasTable)
-      .where(eq(entradasTable.id, id))
-      .limit(1);
+      const [entrada] = await db
+        .select({
+          ubicacionId: entradasTable.ubicacionId,
+        })
+        .from(entradasTable)
+        .where(eq(entradasTable.id, id))
+        .limit(1);
 
-    if (!entrada) {
-      res.status(404).json({ error: "Entrada no encontrada" });
-      return;
+      if (!entrada) {
+        res.status(404).json({ error: "Entrada no encontrada" });
+        return;
+      }
+
+      // Read scope check: PROPIA users can only see entries at their location
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(auth);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (
+        scopedUbicacionId != null &&
+        entrada.ubicacionId !== scopedUbicacionId
+      ) {
+        res.status(404).json({ error: "Entrada no encontrada" });
+        return;
+      }
+
+      const detail = await db.transaction(async (tx) =>
+        buildEntradaResult(tx, id),
+      );
+      const response = GetEntradaResponse.parse(detail);
+      res.json(response);
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res.status(e.code === "ENTRADA_NOT_FOUND" ? 404 : 400).json({ error: e.message });
+        return;
+      }
+      next(e);
     }
-
-    // Non-ADMIN users can only view entries at their assigned location.
-    if (
-      req.auth!.user.rol !== "ADMIN" &&
-      req.auth!.user.ubicacionId != null &&
-      entrada.ubicacionId !== req.auth!.user.ubicacionId
-    ) {
-      res.status(404).json({ error: "Entrada no encontrada" });
-      return;
-    }
-
-    const detail = await db.transaction(async (tx) =>
-      buildEntradaResult(tx, id),
-    );
-    const response = GetEntradaResponse.parse(detail);
-    res.json(response);
-  } catch (e) {
-    if (e instanceof InventarioError) {
-      res.status(e.code === "ENTRADA_NOT_FOUND" ? 404 : 400).json({ error: e.message });
-      return;
-    }
-    next(e);
-  }
-});
+  },
+);
 
 // ── Activar rollo (PROGRAMADO → DISPONIBLE) ───────────────────────────────────
+// Module: entradas / editar — rollo location is the relevant operational scope
 
 inventarioRouter.post(
   "/rollos/:id/activar",
   requireSession,
-  requireRole("ADMIN", "INVENTARIOS", "BODEGA"),
+  requierePermiso("entradas", "editar"),
   async (req, res, next) => {
     try {
       const { id } = ActivarRolloParams.parse(req.params);
       const body = ActivarRolloBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch rollo location before mutating so we can check operational scope
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         activarRollo(tx, {
@@ -520,16 +643,37 @@ inventarioRouter.post(
 );
 
 // ── Mover rollo (DISPONIBLE → EN_TRANSITO) ────────────────────────────────────
+// Module: transferencias / crear — scope: origin location must be operational
 
 inventarioRouter.post(
   "/rollos/:id/mover",
   requireSession,
-  requireRole("ADMIN", "INVENTARIOS", "BODEGA"),
+  requierePermiso("transferencias", "crear"),
   async (req, res, next) => {
     try {
       const { id } = MoverRolloParams.parse(req.params);
       const body = MoverRolloBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Verify rollo exists and is at the claimed origin
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      // Scope check: non-ADMIN must operate from their own location (origin)
+      const scopeErr = checkOperationalScope(auth, [body.ubicacionOrigenId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         moverRollo(tx, {
@@ -560,16 +704,25 @@ inventarioRouter.post(
 );
 
 // ── Recibir transferencia (EN_TRANSITO → DISPONIBLE) ─────────────────────────
+// Module: transferencias / editar — scope: destination location must be operational
 
 inventarioRouter.post(
   "/rollos/:id/recibir",
   requireSession,
-  requireRole("ADMIN", "INVENTARIOS", "BODEGA"),
+  requierePermiso("transferencias", "editar"),
   async (req, res, next) => {
     try {
       const { id } = RecibirTransferenciaParams.parse(req.params);
       const body = RecibirTransferenciaBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Scope check: non-ADMIN must receive into their own location (destination)
+      const scopeErr = checkOperationalScope(auth, [body.ubicacionDestinoId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         recibirTransferencia(tx, {
@@ -599,16 +752,36 @@ inventarioRouter.post(
 );
 
 // ── Salida mostrador (DISPONIBLE → ABIERTO) ───────────────────────────────────
+// Module: salidas / crear — scope: rollo's current location
 
 inventarioRouter.post(
   "/rollos/:id/salida-mostrador",
   requireSession,
-  requireRole("ADMIN", "CAJA", "INVENTARIOS"),
+  requierePermiso("salidas", "crear"),
   async (req, res, next) => {
     try {
       const { id } = SalidaMostradorParams.parse(req.params);
       const body = SalidaMostradorBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch rollo location before mutating
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         salidaMostrador(tx, {
@@ -637,16 +810,36 @@ inventarioRouter.post(
 );
 
 // ── Vender rollo (DISPONIBLE → VENDIDO) ──────────────────────────────────────
+// Module: pos / crear — scope: rollo's current location
 
 inventarioRouter.post(
   "/rollos/:id/vender",
   requireSession,
-  requireRole("ADMIN", "CAJA", "INVENTARIOS"),
+  requierePermiso("pos", "crear"),
   async (req, res, next) => {
     try {
       const { id } = VenderRolloParams.parse(req.params);
       const body = VenderRolloBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch rollo location before mutating
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         venderRollo(tx, {
@@ -675,16 +868,36 @@ inventarioRouter.post(
 );
 
 // ── Ajustar rollo ─────────────────────────────────────────────────────────────
+// Module: ajustes / crear — scope: rollo's current location
 
 inventarioRouter.post(
   "/rollos/:id/ajustar",
   requireSession,
-  requireRole("ADMIN", "INVENTARIOS"),
+  requierePermiso("ajustes", "crear"),
   async (req, res, next) => {
     try {
       const { id } = AjustarRolloParams.parse(req.params);
       const body = AjustarRolloBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch rollo location before mutating
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         ajustarRollo(tx, {
@@ -714,17 +927,40 @@ inventarioRouter.post(
 );
 
 // ── Revertir movimiento ───────────────────────────────────────────────────────
+// Module: ajustes / autorizar — scope: rollo's current location (ADMIN-centric)
 
 inventarioRouter.post(
   "/rollos/:id/revertir",
   requireSession,
-  requireRole("ADMIN"),
+  requierePermiso("ajustes", "autorizar"),
   async (req, res, next) => {
     try {
       // id in path is rolloId, but reversal targets movimientoOrigenId from body
       RevertirMovimientoParams.parse(req.params);
       const body = RevertirMovimientoBody.parse(req.body);
-      const usuarioId = req.auth!.user.id;
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch the origin movement to determine rollo's location for scope check
+      const [movCheck] = await db
+        .select({
+          ubicacionId: movimientosTable.ubicacionId,
+          rolloId: movimientosTable.rolloId,
+        })
+        .from(movimientosTable)
+        .where(eq(movimientosTable.id, body.movimientoOrigenId))
+        .limit(1);
+
+      if (!movCheck) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [movCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
 
       const result = await db.transaction(async (tx) =>
         revertirMovimiento(tx, {
@@ -757,124 +993,178 @@ inventarioRouter.post(
 );
 
 // ── Get rollo detail ──────────────────────────────────────────────────────────
+// Module: inventario / ver — read scope applied to detail
 
-inventarioRouter.get("/rollos/:id", requireSession, async (req, res, next) => {
-  try {
-    const { id } = GetRolloParams.parse(req.params);
-    const detail = await getRolloDetail(id);
-    if (!detail) {
-      res.status(404).json({ error: "Rollo no encontrado" });
-      return;
+inventarioRouter.get(
+  "/rollos/:id",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetRolloParams.parse(req.params);
+      const auth = req.auth!;
+
+      const detail = await getRolloDetail(id);
+      if (!detail) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      // Read scope: PROPIA users can only view rollos in their assigned location
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(auth);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (scopedUbicacionId != null && detail.ubicacionId !== scopedUbicacionId) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const response = GetRolloResponse.parse(detail);
+      res.json(response);
+    } catch (e) {
+      next(e);
     }
-    const response = GetRolloResponse.parse(detail);
-    res.json(response);
-  } catch (e) {
-    next(e);
-  }
-});
+  },
+);
 
 // ── List rollos ───────────────────────────────────────────────────────────────
+// Module: inventario / ver — read scope applied to list
 
-inventarioRouter.get("/rollos", requireSession, async (req, res, next) => {
-  try {
-    const q = ListRollosQueryParams.parse(req.query);
-    const page = q.page ?? 1;
-    const pageSize = q.pageSize ?? 20;
-    const offset = (page - 1) * pageSize;
+inventarioRouter.get(
+  "/rollos",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ListRollosQueryParams.parse(req.query);
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 20;
+      const offset = (page - 1) * pageSize;
+      const auth = req.auth!;
 
-    const conditions = [];
-    if (q.ubicacionId)
-      conditions.push(eq(rollosTable.ubicacionId, q.ubicacionId));
-    if (q.productoId)
-      conditions.push(eq(rollosTable.productoId, q.productoId));
-    if (q.estado)
-      conditions.push(eq(rollosTable.estado, q.estado as EstadoRollo));
-    if (q.serie) conditions.push(ilike(rollosTable.serie, `%${q.serie}%`));
-    if (q.soloAbiertos) conditions.push(eq(rollosTable.estado, "ABIERTO"));
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
 
-    const where = conditions.length ? and(...conditions) : undefined;
+      const conditions = [];
+      // Apply resolved location scope (overrides any q.ubicacionId for PROPIA users)
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(rollosTable.ubicacionId, scopedUbicacionId));
+      }
+      if (q.productoId)
+        conditions.push(eq(rollosTable.productoId, q.productoId));
+      if (q.estado)
+        conditions.push(eq(rollosTable.estado, q.estado as EstadoRollo));
+      if (q.serie) conditions.push(ilike(rollosTable.serie, `%${q.serie}%`));
+      if (q.soloAbiertos) conditions.push(eq(rollosTable.estado, "ABIERTO"));
 
-    const [totalRow] = await db
-      .select({ cnt: count() })
-      .from(rollosTable)
-      .where(where);
+      const where = conditions.length ? and(...conditions) : undefined;
 
-    const rows = await db
-      .select({
-        id: rollosTable.id,
-        serie: rollosTable.serie,
-        productoId: rollosTable.productoId,
-        sku: productosTable.sku,
-        tela: productosTable.tela,
-        color: productosTable.color,
-        unidad: productosTable.unidad,
-        ubicacionId: rollosTable.ubicacionId,
-        nombreUbicacion: ubicacionesTable.nombre,
-        proveedorId: rollosTable.proveedorId,
-        estado: rollosTable.estado,
-        cantidadInicial: rollosTable.cantidadInicial,
-        cantidadActual: rollosTable.cantidadActual,
-        costoUnitario: rollosTable.costoUnitario,
-        costoTotal: rollosTable.costoTotal,
-        notas: rollosTable.notas,
-        createdAt: rollosTable.createdAt,
-        updatedAt: rollosTable.updatedAt,
-      })
-      .from(rollosTable)
-      .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
-      .innerJoin(
-        ubicacionesTable,
-        eq(rollosTable.ubicacionId, ubicacionesTable.id),
-      )
-      .where(where)
-      .orderBy(desc(rollosTable.createdAt))
-      .limit(pageSize)
-      .offset(offset);
+      const [totalRow] = await db
+        .select({ cnt: count() })
+        .from(rollosTable)
+        .where(where);
 
-    const items = rows.map((r) => ({
-      id: r.id,
-      serie: r.serie,
-      productoId: r.productoId,
-      skuProducto: r.sku,
-      telaProducto: r.tela,
-      colorProducto: r.color,
-      ubicacionId: r.ubicacionId,
-      nombreUbicacion: r.nombreUbicacion,
-      proveedorId: r.proveedorId ?? null,
-      estado: r.estado,
-      cantidadInicial: r.cantidadInicial,
-      cantidadActual: r.cantidadActual,
-      costoUnitario: r.costoUnitario,
-      costoTotal: r.costoTotal,
-      notas: r.notas ?? null,
-      createdAt: r.createdAt.toISOString(),
-      updatedAt: r.updatedAt.toISOString(),
-    }));
+      const rows = await db
+        .select({
+          id: rollosTable.id,
+          serie: rollosTable.serie,
+          productoId: rollosTable.productoId,
+          sku: productosTable.sku,
+          tela: productosTable.tela,
+          color: productosTable.color,
+          unidad: productosTable.unidad,
+          ubicacionId: rollosTable.ubicacionId,
+          nombreUbicacion: ubicacionesTable.nombre,
+          proveedorId: rollosTable.proveedorId,
+          estado: rollosTable.estado,
+          cantidadInicial: rollosTable.cantidadInicial,
+          cantidadActual: rollosTable.cantidadActual,
+          costoUnitario: rollosTable.costoUnitario,
+          costoTotal: rollosTable.costoTotal,
+          notas: rollosTable.notas,
+          createdAt: rollosTable.createdAt,
+          updatedAt: rollosTable.updatedAt,
+        })
+        .from(rollosTable)
+        .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+        .innerJoin(
+          ubicacionesTable,
+          eq(rollosTable.ubicacionId, ubicacionesTable.id),
+        )
+        .where(where)
+        .orderBy(desc(rollosTable.createdAt))
+        .limit(pageSize)
+        .offset(offset);
 
-    const response = ListRollosResponse.parse({
-      items,
-      total: totalRow?.cnt ?? 0,
-      page,
-      pageSize,
-    });
-    res.json(response);
-  } catch (e) {
-    next(e);
-  }
-});
+      const items = rows.map((r) => ({
+        id: r.id,
+        serie: r.serie,
+        productoId: r.productoId,
+        skuProducto: r.sku,
+        telaProducto: r.tela,
+        colorProducto: r.color,
+        ubicacionId: r.ubicacionId,
+        nombreUbicacion: r.nombreUbicacion,
+        proveedorId: r.proveedorId ?? null,
+        estado: r.estado,
+        cantidadInicial: r.cantidadInicial,
+        cantidadActual: r.cantidadActual,
+        costoUnitario: r.costoUnitario,
+        costoTotal: r.costoTotal,
+        notas: r.notas ?? null,
+        createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
+      }));
+
+      const response = ListRollosResponse.parse({
+        items,
+        total: totalRow?.cnt ?? 0,
+        page,
+        pageSize,
+      });
+      res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 // ── Existencias ───────────────────────────────────────────────────────────────
+// Module: inventario / ver — read scope applied
 
 inventarioRouter.get(
   "/existencias",
   requireSession,
+  requierePermiso("inventario", "ver"),
   async (req, res, next) => {
     try {
       const q = GetExistenciasQueryParams.parse(req.query);
+      const auth = req.auth!;
+
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
 
       const conditions = [];
-      if (q.ubicacionId)
-        conditions.push(eq(existenciasTable.ubicacionId, q.ubicacionId));
+      // Apply resolved location scope
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(existenciasTable.ubicacionId, scopedUbicacionId));
+      }
       if (q.productoId)
         conditions.push(eq(existenciasTable.productoId, q.productoId));
 
@@ -923,67 +1213,102 @@ inventarioRouter.get(
 );
 
 // ── Kardex ────────────────────────────────────────────────────────────────────
+// Module: movimientos / ver — read scope applied via ubicacionId filter
 
-inventarioRouter.get("/kardex", requireSession, async (req, res, next) => {
-  try {
-    const q = GetKardexQueryParams.parse(req.query);
-    const page = q.page ?? 1;
-    const pageSize = q.pageSize ?? 100;
-    const offset = (page - 1) * pageSize;
+inventarioRouter.get(
+  "/kardex",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetKardexQueryParams.parse(req.query);
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 100;
+      const offset = (page - 1) * pageSize;
+      const auth = req.auth!;
 
-    const conditions = [eq(movimientosTable.productoId, q.productoId)];
-    if (q.ubicacionId)
-      conditions.push(eq(movimientosTable.ubicacionId, q.ubicacionId));
-    if (q.desde)
-      conditions.push(gte(movimientosTable.createdAt, new Date(q.desde)));
-    if (q.hasta) {
-      const hastaDate = new Date(q.hasta);
-      hastaDate.setDate(hastaDate.getDate() + 1);
-      conditions.push(lte(movimientosTable.createdAt, hastaDate));
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const conditions = [eq(movimientosTable.productoId, q.productoId)];
+      // Apply resolved location scope (overrides q.ubicacionId for PROPIA)
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(movimientosTable.ubicacionId, scopedUbicacionId));
+      }
+      if (q.desde)
+        conditions.push(gte(movimientosTable.createdAt, new Date(q.desde)));
+      if (q.hasta) {
+        const hastaDate = new Date(q.hasta);
+        hastaDate.setDate(hastaDate.getDate() + 1);
+        conditions.push(lte(movimientosTable.createdAt, hastaDate));
+      }
+
+      const where = and(...conditions);
+
+      const [totalRow] = await db
+        .select({ cnt: count() })
+        .from(movimientosTable)
+        .where(where);
+
+      const rows = await db
+        .select()
+        .from(movimientosTable)
+        .where(where)
+        .orderBy(desc(movimientosTable.id))
+        .limit(pageSize)
+        .offset(offset);
+
+      const movimientos = await Promise.all(rows.map(enrichMovimiento));
+
+      const response = GetKardexResponse.parse({
+        productoId: q.productoId,
+        movimientos,
+        total: totalRow?.cnt ?? 0,
+        page,
+        pageSize,
+      });
+      res.json(response);
+    } catch (e) {
+      next(e);
     }
-
-    const where = and(...conditions);
-
-    const [totalRow] = await db
-      .select({ cnt: count() })
-      .from(movimientosTable)
-      .where(where);
-
-    const rows = await db
-      .select()
-      .from(movimientosTable)
-      .where(where)
-      .orderBy(desc(movimientosTable.id))
-      .limit(pageSize)
-      .offset(offset);
-
-    const movimientos = await Promise.all(rows.map(enrichMovimiento));
-
-    const response = GetKardexResponse.parse({
-      productoId: q.productoId,
-      movimientos,
-      total: totalRow?.cnt ?? 0,
-      page,
-      pageSize,
-    });
-    res.json(response);
-  } catch (e) {
-    next(e);
-  }
-});
+  },
+);
 
 // ── Ajustes pendientes ────────────────────────────────────────────────────────
+// Module: ajustes / autorizar (review pending adjustments — admin-level)
 
 inventarioRouter.get(
   "/ajustes/pendientes",
   requireSession,
-  requireRole("ADMIN"),
+  requierePermiso("ajustes", "autorizar"),
   async (req, res, next) => {
     try {
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        req.auth!,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
       const rows = await db
         .select()
         .from(movimientosTable)
-        .where(eq(movimientosTable.revisado, false))
+        .where(
+          scopedUbicacionId == null
+            ? eq(movimientosTable.revisado, false)
+            : and(
+                eq(movimientosTable.revisado, false),
+                eq(movimientosTable.ubicacionId, scopedUbicacionId),
+              ),
+        )
         .orderBy(desc(movimientosTable.createdAt));
 
       const items = await Promise.all(rows.map(enrichMovimiento));
@@ -996,18 +1321,15 @@ inventarioRouter.get(
 );
 
 // ── Revisar ajuste ────────────────────────────────────────────────────────────
+// Module: ajustes / autorizar
 
 inventarioRouter.post(
   "/ajustes/:id/revisar",
   requireSession,
-  requireRole("ADMIN"),
+  requierePermiso("ajustes", "autorizar"),
   async (req, res, next) => {
     try {
       const { id } = RevisarAjusteParams.parse(req.params);
-      const usuarioId = req.auth!.user.id;
-
-      await revisarAjuste(id, usuarioId);
-
       const [mov] = await db
         .select()
         .from(movimientosTable)
@@ -1018,7 +1340,28 @@ inventarioRouter.post(
         res.status(404).json({ error: "Movimiento no encontrado" });
         return;
       }
-      const response = RevisarAjusteResponse.parse(await enrichMovimiento(mov));
+
+      const scopeError = checkOperationalScope(req.auth!, [mov.ubicacionId]);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const usuarioId = req.auth!.user.id;
+      await revisarAjuste(id, usuarioId);
+
+      const [updated] = await db
+        .select()
+        .from(movimientosTable)
+        .where(eq(movimientosTable.id, id))
+        .limit(1);
+      if (!updated) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      const response = RevisarAjusteResponse.parse(
+        await enrichMovimiento(updated),
+      );
       res.json(response);
     } catch (e) {
       if (e instanceof InventarioError) {
@@ -1033,15 +1376,28 @@ inventarioRouter.post(
 );
 
 // ── Conciliación ──────────────────────────────────────────────────────────────
+// Module: conciliacion / ver — read scope applied
 
 inventarioRouter.get(
   "/conciliacion",
   requireSession,
-  requireRole("ADMIN"),
+  requierePermiso("conciliacion", "ver"),
   async (req, res, next) => {
     try {
       const q = GetConciliacionQueryParams.parse(req.query);
-      const rows = await conciliarTodo(q.productoId, q.ubicacionId);
+      const auth = req.auth!;
+
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const rows = await conciliarTodo(q.productoId, scopedUbicacionId ?? undefined);
       const response = GetConciliacionResponse.parse(rows);
       res.json(response);
     } catch (e) {
@@ -1051,14 +1407,25 @@ inventarioRouter.get(
 );
 
 // ── Recalcular existencias ────────────────────────────────────────────────────
+// Module: conciliacion / autorizar
 
 inventarioRouter.post(
   "/conciliacion/recalcular",
   requireSession,
-  requireRole("ADMIN"),
+  requierePermiso("conciliacion", "autorizar"),
   async (req, res, next) => {
     try {
       const body = RecalcularExistenciasBody.parse(req.body);
+      const auth = req.auth!;
+
+      // The contract requires a concrete pair. Non-ADMIN users may only
+      // recalculate the pair in their assigned operational location.
+      const scopeErr = checkOperationalScope(auth, [body.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+
       await recalcularExistencias(body.productoId, body.ubicacionId);
 
       const rows = await conciliarTodo(body.productoId, body.ubicacionId);

@@ -41,7 +41,15 @@ export const LoginResponse = zod.object({
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
-}),zod.null()])
+}),zod.null()]),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']),
+  "permisos": zod.array(zod.object({
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean(),
+  "puedeCrear": zod.boolean(),
+  "puedeEditar": zod.boolean(),
+  "puedeAutorizar": zod.boolean()
+})).describe('Lista de permisos efectivos del usuario (uno por módulo)')
 })
 
 
@@ -65,7 +73,15 @@ export const GetCurrentUserResponse = zod.object({
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
-}),zod.null()])
+}),zod.null()]),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']),
+  "permisos": zod.array(zod.object({
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean(),
+  "puedeCrear": zod.boolean(),
+  "puedeEditar": zod.boolean(),
+  "puedeAutorizar": zod.boolean()
+})).describe('Lista de permisos efectivos del usuario (uno por módulo)')
 })
 
 
@@ -143,6 +159,7 @@ export const ListUsersResponseItem = zod.object({
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
 }),zod.null()]),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']),
   "activo": zod.boolean(),
   "ultimoAcceso": zod.coerce.date().nullable()
 })
@@ -168,7 +185,8 @@ export const CreateUserBody = zod.object({
   "usuario": zod.string().min(createUserBodyUsuarioMin).max(createUserBodyUsuarioMax),
   "password": zod.string().min(createUserBodyPasswordMin).max(createUserBodyPasswordMax),
   "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
-  "ubicacionId": zod.number().nullish()
+  "ubicacionId": zod.number().nullish(),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional()
 })
 
 export const CreateUserResponse = zod.object({
@@ -183,6 +201,7 @@ export const CreateUserResponse = zod.object({
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
 }),zod.null()]),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']),
   "activo": zod.boolean(),
   "ultimoAcceso": zod.coerce.date().nullable()
 })
@@ -211,6 +230,7 @@ export const UpdateUserBody = zod.object({
   "usuario": zod.string().min(updateUserBodyUsuarioMin).max(updateUserBodyUsuarioMax).optional(),
   "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']).optional(),
   "ubicacionId": zod.number().nullish(),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional(),
   "activo": zod.boolean().optional(),
   "password": zod.string().min(updateUserBodyPasswordMin).max(updateUserBodyPasswordMax).optional()
 })
@@ -227,6 +247,7 @@ export const UpdateUserResponse = zod.object({
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
 }),zod.null()]),
+  "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']),
   "activo": zod.boolean(),
   "ultimoAcceso": zod.coerce.date().nullable()
 })
@@ -414,14 +435,14 @@ export const GetProveedoresResumenResponse = zod.object({
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
-  "totalCompras": zod.string().describe('Total histórico de compras (suma de todos los COMPRAs)'),
-  "totalComprado12Meses": zod.string().describe('Total comprado en los últimos 12 meses'),
-  "comprasMes": zod.string().describe('Total comprado en el mes calendario actual'),
-  "totalPagado": zod.string(),
-  "saldoPendiente": zod.string(),
-  "ultimaCompra": zod.coerce.date().nullable(),
-  "comprasCount": zod.number()
-}))
+  "totalCompras": zod.string().optional().describe('Total histórico de compras (suma de todos los COMPRAs)'),
+  "totalComprado12Meses": zod.string().optional().describe('Total comprado en los últimos 12 meses'),
+  "comprasMes": zod.string().optional().describe('Total comprado en el mes calendario actual'),
+  "totalPagado": zod.string().optional(),
+  "saldoPendiente": zod.string().optional(),
+  "ultimaCompra": zod.coerce.date().nullish(),
+  "comprasCount": zod.number().optional()
+}).describe('Datos operativos del proveedor; las métricas financieras solo se incluyen con proveedores_finanzas.ver.'))
 })
 
 
@@ -430,10 +451,10 @@ export const GetProveedoresResumenResponse = zod.object({
  */
 export const ListProveedoresResponse = zod.object({
   "totalProveedores": zod.number(),
-  "proveedoresConSaldo": zod.number(),
-  "totalDeuda": zod.string(),
-  "totalPagado": zod.string(),
-  "comprasMes": zod.string().describe('Total comprado al conjunto de proveedores en el mes actual'),
+  "proveedoresConSaldo": zod.number().optional(),
+  "totalDeuda": zod.string().optional(),
+  "totalPagado": zod.string().optional(),
+  "comprasMes": zod.string().optional().describe('Total comprado al conjunto de proveedores en el mes actual'),
   "items": zod.array(zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -446,14 +467,14 @@ export const ListProveedoresResponse = zod.object({
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
-  "totalCompras": zod.string().describe('Total histórico de compras (suma de todos los COMPRAs)'),
-  "totalComprado12Meses": zod.string().describe('Total comprado en los últimos 12 meses'),
-  "comprasMes": zod.string().describe('Total comprado en el mes calendario actual'),
-  "totalPagado": zod.string(),
-  "saldoPendiente": zod.string(),
-  "ultimaCompra": zod.coerce.date().nullable(),
-  "comprasCount": zod.number()
-}))
+  "totalCompras": zod.string().optional().describe('Total histórico de compras (suma de todos los COMPRAs)'),
+  "totalComprado12Meses": zod.string().optional().describe('Total comprado en los últimos 12 meses'),
+  "comprasMes": zod.string().optional().describe('Total comprado en el mes calendario actual'),
+  "totalPagado": zod.string().optional(),
+  "saldoPendiente": zod.string().optional(),
+  "ultimaCompra": zod.coerce.date().nullish(),
+  "comprasCount": zod.number().optional()
+}).describe('Datos operativos del proveedor; las métricas financieras solo se incluyen con proveedores_finanzas.ver.'))
 })
 
 
@@ -624,7 +645,38 @@ export const EstadoCuentaProveedorResponse = zod.object({
 
 
 /**
- * @summary Registra un pago a proveedor (ADMIN)
+ * @summary Lista pagos de un proveedor (proveedores_finanzas requerido)
+ */
+export const ListProveedorPagosParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListProveedorPagosQueryParams = zod.object({
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional()
+})
+
+export const ListProveedorPagosResponse = zod.object({
+  "proveedorId": zod.number(),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "importe": zod.string(),
+  "saldoAcumulado": zod.string(),
+  "fecha": zod.coerce.date(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "formaPago": zod.string().nullish(),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date()
+}))
+})
+
+
+/**
+ * @summary Registra un pago a proveedor (proveedores_finanzas + crear requerido)
  */
 export const RegistrarPagoProveedorParams = zod.object({
   "id": zod.coerce.number()
@@ -1553,6 +1605,379 @@ export const RecalcularExistenciasResponse = zod.object({
   "rollosMovimientos": zod.number(),
   "rollosCache": zod.number(),
   "discrepancia": zod.boolean()
+})
+
+
+/**
+ * @summary Resumen de cartera (clientes_finanzas requerido)
+ */
+export const GetClientesResumenResponse = zod.object({
+  "totalClientes": zod.number(),
+  "clientesConSaldo": zod.number(),
+  "totalCartera": zod.string(),
+  "totalVencido": zod.string()
+})
+
+
+/**
+ * @summary Lista el catálogo operativo de clientes (sin datos financieros)
+ */
+export const ListClientesResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListClientesResponse = zod.array(ListClientesResponseItem)
+
+
+/**
+ * @summary Da de alta un cliente
+ */
+export const createClienteBodyNombreMax = 200;
+
+
+
+export const CreateClienteBody = zod.object({
+  "nombre": zod.string().min(1).max(createClienteBodyNombreMax),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish()
+})
+
+export const CreateClienteResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Obtiene detalle operativo de un cliente
+ */
+export const GetClienteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClienteResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Actualiza datos operativos de un cliente
+ */
+export const UpdateClienteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const updateClienteBodyNombreMax = 200;
+
+
+
+export const UpdateClienteBody = zod.object({
+  "nombre": zod.string().min(1).max(updateClienteBodyNombreMax).optional(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean().optional()
+})
+
+export const UpdateClienteResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Semáforo de crédito del cliente (clientes_credito requerido)
+ */
+export const GetClienteCreditoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClienteCreditoResponse = zod.object({
+  "clienteId": zod.number(),
+  "limiteCredito": zod.string(),
+  "saldoActual": zod.string(),
+  "creditoDisponible": zod.string(),
+  "puedeComprarCredito": zod.boolean()
+})
+
+
+/**
+ * @summary Precios unitarios negociados por producto (clientes_precios requerido)
+ */
+export const GetClientePreciosParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClientePreciosResponse = zod.object({
+  "clienteId": zod.number(),
+  "precios": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "precioUnitario": zod.string(),
+  "fecha": zod.coerce.date(),
+  "promedio3": zod.string().describe('Promedio de las últimas 3 compras de ese producto')
+})),
+  "nota": zod.string().nullish()
+})
+
+
+/**
+ * @summary Estado de cuenta del cliente (clientes_finanzas requerido)
+ */
+export const GetClienteEstadoCuentaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClienteEstadoCuentaResponse = zod.object({
+  "clienteId": zod.number(),
+  "movimientos": zod.array(zod.object({
+  "tipo": zod.string().optional(),
+  "importe": zod.string().optional(),
+  "fecha": zod.coerce.date().optional(),
+  "notas": zod.string().nullish()
+})),
+  "saldoActual": zod.string()
+})
+
+
+/**
+ * @summary Historial de compras del cliente (clientes_finanzas requerido)
+ */
+export const GetClienteComprasParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClienteComprasResponse = zod.object({
+  "clienteId": zod.number(),
+  "compras": zod.array(zod.object({
+  "id": zod.number().optional(),
+  "fecha": zod.coerce.date().optional(),
+  "total": zod.string().optional()
+})),
+  "total": zod.number()
+})
+
+
+/**
+ * @summary Estadísticas analíticas del cliente (clientes_finanzas requerido)
+ */
+export const GetClienteEstadisticasParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClienteEstadisticasResponse = zod.object({
+  "clienteId": zod.number(),
+  "totalCompras": zod.string().nullish(),
+  "comprasCount": zod.number().nullish()
+})
+
+
+/**
+ * @summary Pagos del cliente (clientes_finanzas requerido)
+ */
+export const GetClientePagosParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClientePagosResponse = zod.object({
+  "clienteId": zod.number(),
+  "pagos": zod.array(zod.object({
+  "id": zod.number().optional(),
+  "importe": zod.string().optional(),
+  "fecha": zod.coerce.date().optional(),
+  "formaPago": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary Registra un pago de cliente (clientes_finanzas + crear requerido)
+ */
+export const CreateClientePagoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const createClientePagoBodyImporteMin = 0.01;
+
+
+
+export const CreateClientePagoBody = zod.object({
+  "importe": zod.number().min(createClientePagoBodyImporteMin),
+  "formaPago": zod.string(),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish()
+})
+
+export const CreateClientePagoResponse = zod.object({
+  "id": zod.number(),
+  "clienteId": zod.number()
+})
+
+
+/**
+ * @summary Lista la matriz de permisos por rol
+ */
+export const ListPermisosRolesResponseItem = zod.object({
+  "id": zod.number(),
+  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean(),
+  "puedeCrear": zod.boolean(),
+  "puedeEditar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "updatedAt": zod.coerce.date(),
+  "updatedPor": zod.number().nullish()
+})
+export const ListPermisosRolesResponse = zod.array(ListPermisosRolesResponseItem)
+
+
+/**
+ * @summary Actualiza la entrada de un rol/módulo en la matriz
+ */
+export const UpdatePermisosRolParams = zod.object({
+  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "modulo": zod.coerce.string()
+})
+
+export const UpdatePermisosRolBody = zod.object({
+  "puedeVer": zod.boolean(),
+  "puedeCrear": zod.boolean(),
+  "puedeEditar": zod.boolean(),
+  "puedeAutorizar": zod.boolean()
+})
+
+export const UpdatePermisosRolResponse = zod.object({
+  "id": zod.number(),
+  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean(),
+  "puedeCrear": zod.boolean(),
+  "puedeEditar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "updatedAt": zod.coerce.date(),
+  "updatedPor": zod.number().nullish()
+})
+
+
+/**
+ * @summary Lista las excepciones de permisos para un usuario
+ */
+export const GetPermisosUsuarioParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetPermisosUsuarioResponse = zod.object({
+  "usuarioId": zod.number(),
+  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "overrides": zod.array(zod.object({
+  "id": zod.number(),
+  "usuarioId": zod.number(),
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean().nullish(),
+  "puedeCrear": zod.boolean().nullish(),
+  "puedeEditar": zod.boolean().nullish(),
+  "puedeAutorizar": zod.boolean().nullish(),
+  "updatedAt": zod.coerce.date(),
+  "updatedPor": zod.number().nullish()
+}))
+})
+
+
+/**
+ * @summary Crea o actualiza una excepción de permiso para un usuario
+ */
+export const UpdatePermisosUsuarioParams = zod.object({
+  "id": zod.coerce.number(),
+  "modulo": zod.coerce.string()
+})
+
+export const UpdatePermisosUsuarioBody = zod.object({
+  "puedeVer": zod.boolean().nullish(),
+  "puedeCrear": zod.boolean().nullish(),
+  "puedeEditar": zod.boolean().nullish(),
+  "puedeAutorizar": zod.boolean().nullish()
+})
+
+export const UpdatePermisosUsuarioResponse = zod.object({
+  "id": zod.number(),
+  "usuarioId": zod.number(),
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean().nullish(),
+  "puedeCrear": zod.boolean().nullish(),
+  "puedeEditar": zod.boolean().nullish(),
+  "puedeAutorizar": zod.boolean().nullish(),
+  "updatedAt": zod.coerce.date(),
+  "updatedPor": zod.number().nullish()
+})
+
+
+/**
+ * @summary Elimina la excepción de un módulo para un usuario (hereda del rol)
+ */
+export const ResetPermisosUsuarioParams = zod.object({
+  "id": zod.coerce.number(),
+  "modulo": zod.coerce.string()
+})
+
+export const ResetPermisosUsuarioResponse = zod.void()
+
+
+/**
+ * @summary Vista previa de los permisos efectivos de un usuario
+ */
+export const GetPermisosPreviewParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetPermisosPreviewResponse = zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "rol": zod.enum(['ADMIN', 'CAJA', 'INVENTARIOS', 'BODEGA']),
+  "permisos": zod.array(zod.object({
+  "modulo": zod.string(),
+  "puedeVer": zod.boolean(),
+  "puedeCrear": zod.boolean(),
+  "puedeEditar": zod.boolean(),
+  "puedeAutorizar": zod.boolean()
+}))
 })
 
 

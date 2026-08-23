@@ -196,7 +196,7 @@ await test("T-02: Crear 3 rollos en 1 tx → total 149.2, rollos_count 3", async
 });
 
 // =============================================================================
-// T-03: salidaMostrador → remaining 101.4/2; roll stays ABIERTO (terminal)
+// T-03: salidaMostrador → remaining 101.9; roll stays ABIERTO (terminal)
 // =============================================================================
 
 await test("T-03: salidaMostrador → ABIERTO terminal, existencias decrements", async () => {
@@ -756,6 +756,287 @@ await test("T-12: Rollo PROGRAMADO ausente de existencias; tras activación pres
     `cantidadTotal debe ser 30.0, got ${exAfter.cantidadTotal}`,
   );
   assert.equal(exAfter.rollosCount, 1, `rollosCount debe ser 1, got ${exAfter.rollosCount}`);
+});
+
+// =============================================================================
+// T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece ABIERTO
+// =============================================================================
+
+await test("T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece ABIERTO", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const USUARIO = 1;
+
+  const { rollo } = await db.transaction(async (tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "30.0",
+      costoUnitario: "50.00",
+      usuarioId: USUARIO,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+
+  const { movimiento: salidaMov } = await db.transaction(async (tx) =>
+    salidaMostrador(tx, { rolloId: rollo.id, usuarioId: USUARIO }),
+  );
+
+  // Attempt to reverse the SALIDA_MOSTRADOR — must fail with a clear error
+  await assert.rejects(
+    () =>
+      db.transaction(async (tx) =>
+        revertirMovimiento(tx, {
+          movimientoOrigenId: Number(salidaMov.id),
+          usuarioId: USUARIO,
+          justificacion: "Test reversal T-13",
+        }),
+      ),
+    (err: Error) => {
+      assert.ok(
+        err instanceof InventarioError,
+        `Expected InventarioError, got ${err.constructor.name}: ${err.message}`,
+      );
+      assert.equal(
+        (err as InventarioError).code,
+        "ABIERTO_TERMINAL",
+        `Expected ABIERTO_TERMINAL, got ${(err as InventarioError).code}`,
+      );
+      return true;
+    },
+    "Reverting SALIDA_MOSTRADOR must throw InventarioError with ABIERTO_TERMINAL",
+  );
+
+  // Roll must still be ABIERTO
+  const [r] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id))
+    .limit(1);
+  assert.equal(r!.estado, "ABIERTO", "Roll must remain ABIERTO after failed reversal");
+});
+
+// =============================================================================
+// T-14: Revertir VENTA → rollo regresa a DISPONIBLE con existencia exacta
+// =============================================================================
+
+await test("T-14: Revertir VENTA → rollo DISPONIBLE, existencia restaurada", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const USUARIO = 1;
+  const CANTIDAD = "22.5";
+
+  const { rollo } = await db.transaction(async (tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: CANTIDAD,
+      costoUnitario: "50.00",
+      usuarioId: USUARIO,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+
+  const exBefore = await readExistencia(productoId, ubicacionId);
+  assert.ok(exBefore, "existencia must exist before venta");
+  assert.equal(exBefore.cantidadTotal, 22.5, "cantidadTotal before venta must be 22.5");
+
+  const { movimiento: ventaMov } = await db.transaction(async (tx) =>
+    venderRollo(tx, { rolloId: rollo.id, usuarioId: USUARIO }),
+  );
+
+  const exAfterVenta = await readExistencia(productoId, ubicacionId);
+  assert.equal(
+    exAfterVenta?.cantidadTotal ?? 0,
+    0,
+    "existencia must be 0 after venta",
+  );
+
+  // Reverse the VENTA
+  await db.transaction(async (tx) =>
+    revertirMovimiento(tx, {
+      movimientoOrigenId: Number(ventaMov.id),
+      usuarioId: USUARIO,
+      justificacion: "Test reversal T-14",
+    }),
+  );
+
+  // Roll must be DISPONIBLE again
+  const [r] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id))
+    .limit(1);
+  assert.equal(r!.estado, "DISPONIBLE", "Roll must be DISPONIBLE after reversing VENTA");
+  assert.equal(
+    parseFloat(r!.cantidadActual),
+    22.5,
+    `cantidadActual must be restored to ${CANTIDAD}, got ${r!.cantidadActual}`,
+  );
+
+  // Existencia must be restored to exact original quantity
+  const exAfterRevert = await readExistencia(productoId, ubicacionId);
+  assert.ok(exAfterRevert, "existencia must exist after revert");
+  assert.equal(
+    exAfterRevert.cantidadTotal,
+    22.5,
+    `existencia must be restored to ${CANTIDAD}, got ${exAfterRevert.cantidadTotal}`,
+  );
+});
+
+// =============================================================================
+// T-15: Revertir ajuste BAJA → rollo DISPONIBLE con cantidad exacta
+// =============================================================================
+
+await test("T-15: Revertir ajuste BAJA → rollo DISPONIBLE, cantidad restaurada", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const USUARIO = 1;
+  const CANTIDAD = "18.0";
+
+  const { rollo } = await db.transaction(async (tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: CANTIDAD,
+      costoUnitario: "50.00",
+      usuarioId: USUARIO,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+
+  // Write the roll off (BAJA)
+  const { movimiento: bajaMov } = await db.transaction(async (tx) =>
+    ajustarRollo(tx, {
+      rolloId: rollo.id,
+      cantidadNueva: null, // BAJA
+      justificacion: "Merma detectada en almacén",
+      usuarioId: USUARIO,
+    }),
+  );
+
+  const [afterBaja] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id))
+    .limit(1);
+  assert.equal(afterBaja!.estado, "BAJA", "Roll must be BAJA after adjustment");
+
+  // Reverse the BAJA-producing adjustment
+  await db.transaction(async (tx) =>
+    revertirMovimiento(tx, {
+      movimientoOrigenId: Number(bajaMov.id),
+      usuarioId: USUARIO,
+      justificacion: "Reversal T-15 baja equivocada",
+    }),
+  );
+
+  const [r] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id))
+    .limit(1);
+  assert.equal(r!.estado, "DISPONIBLE", "Roll must be DISPONIBLE after reverting BAJA adjustment");
+  assert.equal(
+    parseFloat(r!.cantidadActual),
+    parseFloat(CANTIDAD),
+    `cantidadActual must be restored to ${CANTIDAD}, got ${r!.cantidadActual}`,
+  );
+
+  const ex = await readExistencia(productoId, ubicacionId);
+  assert.ok(ex, "existencia must exist after revert");
+  assert.equal(
+    ex.cantidadTotal,
+    parseFloat(CANTIDAD),
+    `existencia must equal ${CANTIDAD}, got ${ex.cantidadTotal}`,
+  );
+});
+
+// =============================================================================
+// T-16: Después de cada reverso, suma kardex = caché (invariante)
+// =============================================================================
+
+await test("T-16: Tras reversos, SUM(movimientos) = caché para todo par", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const USUARIO = 1;
+
+  // Create two rolls
+  const { rollo: r1 } = await db.transaction(async (tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "10.0",
+      costoUnitario: "50.00",
+      usuarioId: USUARIO,
+      estado: "DISPONIBLE",
+    }),
+  );
+  const { rollo: r2 } = await db.transaction(async (tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "15.0",
+      costoUnitario: "50.00",
+      usuarioId: USUARIO,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(r1.serie);
+  trackRollo(r2.serie);
+
+  // Sell r1
+  const { movimiento: ventaMov } = await db.transaction(async (tx) =>
+    venderRollo(tx, { rolloId: r1.id, usuarioId: USUARIO }),
+  );
+
+  // Write off r2 (BAJA)
+  const { movimiento: bajaMov } = await db.transaction(async (tx) =>
+    ajustarRollo(tx, {
+      rolloId: r2.id,
+      cantidadNueva: null,
+      justificacion: "Merma por ajuste T-16 test",
+      usuarioId: USUARIO,
+    }),
+  );
+
+  // Reverse both
+  await db.transaction(async (tx) =>
+    revertirMovimiento(tx, {
+      movimientoOrigenId: Number(ventaMov.id),
+      usuarioId: USUARIO,
+      justificacion: "Reversal venta T-16",
+    }),
+  );
+  await db.transaction(async (tx) =>
+    revertirMovimiento(tx, {
+      movimientoOrigenId: Number(bajaMov.id),
+      usuarioId: USUARIO,
+      justificacion: "Reversal baja T-16 test data",
+    }),
+  );
+
+  // Invariant: SUM(movimientos) must equal cache
+  const movSum = await sumMovimientos(productoId, ubicacionId);
+  const ex = await readExistencia(productoId, ubicacionId);
+  assert.ok(ex, "existencia must exist");
+  assert.equal(
+    parseFloat(movSum.toFixed(3)),
+    parseFloat(ex.cantidadTotal.toFixed(3)),
+    `SUM movimientos (${movSum}) must equal cache (${ex.cantidadTotal})`,
+  );
+
+  // Verify conciliarTodo finds no discrepancies for this product
+  const conciliacion = await conciliarTodo(productoId, ubicacionId);
+  for (const row of conciliacion) {
+    assert.ok(
+      !row.discrepancia,
+      `Discrepancy after reversals: movimientos=${row.cantidadMovimientos} vs cache=${row.cantidadCache}`,
+    );
+  }
 });
 
 // =============================================================================

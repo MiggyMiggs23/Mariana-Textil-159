@@ -8,6 +8,9 @@
 import type { Moneda } from './moneda';
 import type { TipoProveedor } from './tipoProveedor';
 
+/**
+ * Datos operativos del proveedor; las métricas financieras solo se incluyen con proveedores_finanzas.ver.
+ */
 export interface ProveedorMetricas {
   id: number;
   nombre: string;
@@ -26,14 +29,14 @@ export interface ProveedorMetricas {
   activo: boolean;
   createdAt: Date;
   /** Total histórico de compras (suma de todos los COMPRAs) */
-  totalCompras: string;
+  totalCompras?: string;
   /** Total comprado en los últimos 12 meses */
-  totalComprado12Meses: string;
+  totalComprado12Meses?: string;
   /** Total comprado en el mes calendario actual */
-  comprasMes: string;
-  totalPagado: string;
-  saldoPendiente: string;
+  comprasMes?: string;
+  totalPagado?: string;
+  saldoPendiente?: string;
   /** @nullable */
-  ultimaCompra: Date | null;
-  comprasCount: number;
+  ultimaCompra?: Date | null;
+  comprasCount?: number;
 }

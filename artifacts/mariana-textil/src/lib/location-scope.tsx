@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useGetCurrentUser, getGetCurrentUserQueryKey } from "@workspace/api-client-react";
 
 type LocationScopeContextValue = {
   selectedLocationId: number | null;
@@ -16,9 +17,19 @@ const LocationScopeContext = createContext<LocationScopeContextValue | null>(
 );
 
 export function LocationScopeProvider({ children }: { children: ReactNode }) {
-  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
-    null,
-  );
+  const { data: user } = useGetCurrentUser({
+    query: { queryKey: getGetCurrentUserQueryKey() }
+  });
+
+  const [selectedLocationIdState, setSelectedLocationId] = useState<number | null>(null);
+
+  const selectedLocationId = useMemo(() => {
+    if (user && user.alcanceConsulta === "PROPIA") {
+      return user.ubicacion?.id ?? null;
+    }
+    return selectedLocationIdState;
+  }, [user, selectedLocationIdState]);
+
   const value = useMemo(
     () => ({ selectedLocationId, setSelectedLocationId }),
     [selectedLocationId],

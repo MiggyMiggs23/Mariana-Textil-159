@@ -11,13 +11,14 @@ import {
   db,
   ubicacionesTable,
 } from "@workspace/db";
-import { requireRole, requireSession } from "../middlewares/auth";
+import { requireSession } from "../middlewares/auth";
+import { requierePermiso } from "../lib/permisos";
 import { presentLocation } from "../lib/presenters";
 import { getRequestIp } from "../lib/request";
 
 const router: IRouter = Router();
 
-router.use("/locations", requireSession, requireRole("ADMIN"));
+router.use("/locations", requireSession, requierePermiso("ubicaciones", "ver"));
 
 router.get("/locations", async (_req, res): Promise<void> => {
   const locations = await db
@@ -28,7 +29,7 @@ router.get("/locations", async (_req, res): Promise<void> => {
   res.json(ListLocationsResponse.parse(locations.map(presentLocation)));
 });
 
-router.patch("/locations/:id", async (req, res): Promise<void> => {
+router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (req, res): Promise<void> => {
   const params = UpdateLocationParams.safeParse(req.params);
   const body = UpdateLocationBody.safeParse(req.body);
   if (!params.success || !body.success || Object.keys(body.data).length === 0) {

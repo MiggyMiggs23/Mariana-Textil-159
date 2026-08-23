@@ -22,7 +22,8 @@ import {
   type UnidadProducto,
 } from "@workspace/db";
 import { generateBaseSku, generateSku } from "@workspace/db/sku";
-import { requireRole, requireSession } from "../middlewares/auth";
+import { requireSession } from "../middlewares/auth";
+import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import {
   parseFileBase64,
@@ -129,7 +130,7 @@ function presentProductoDetail(
 
 // ── list ───────────────────────────────────────────────────────────────────
 
-router.get("/productos", async (_req, res): Promise<void> => {
+router.get("/productos", requierePermiso("productos", "ver"), async (_req, res): Promise<void> => {
   const rows = await db
     .select()
     .from(productosTable)
@@ -141,7 +142,7 @@ router.get("/productos", async (_req, res): Promise<void> => {
 
 router.post(
   "/productos",
-  requireRole("ADMIN"),
+  requierePermiso("productos", "crear"),
   async (req, res): Promise<void> => {
     const parsed = CreateProductoBody.safeParse(req.body);
     if (!parsed.success) {
@@ -224,7 +225,7 @@ router.post(
 
 router.post(
   "/productos/import/preview",
-  requireRole("ADMIN"),
+  requierePermiso("productos", "crear"),
   async (req, res): Promise<void> => {
     const parsed = PreviewImportProductosBody.safeParse(req.body);
     if (!parsed.success) {
@@ -281,7 +282,7 @@ router.post(
 
 router.post(
   "/productos/import/confirm",
-  requireRole("ADMIN"),
+  requierePermiso("productos", "crear"),
   async (req, res): Promise<void> => {
     const parsed = ConfirmImportProductosBody.safeParse(req.body);
     if (!parsed.success) {
@@ -407,7 +408,7 @@ router.post(
 
 // ── get detail ─────────────────────────────────────────────────────────────
 
-router.get("/productos/:id", async (req, res): Promise<void> => {
+router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, res): Promise<void> => {
   const params = GetProductoParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: "ID inválido." });
@@ -433,7 +434,7 @@ router.get("/productos/:id", async (req, res): Promise<void> => {
 
 router.patch(
   "/productos/:id",
-  requireRole("ADMIN"),
+  requierePermiso("productos", "editar"),
   async (req, res): Promise<void> => {
     const params = UpdateProductoParams.safeParse(req.params);
     const body = UpdateProductoBody.safeParse(req.body);

@@ -21,6 +21,10 @@ tags:
     description: Catálogo de productos/telas
   - name: proveedores
     description: Administración de proveedores
+  - name: clientes
+    description: Catálogo operativo de clientes
+  - name: permisos
+    description: Administración de permisos por rol y por usuario
   - name: inventario
     description: Inventario de rollos, kardex, ajustes y conciliación
 paths:
@@ -519,10 +523,35 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
   /proveedores/{id}/pagos:
+    get:
+      operationId: listProveedorPagos
+      tags: [proveedores]
+      summary: Lista pagos de un proveedor (proveedores_finanzas requerido)
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Pagos del proveedor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedorPagosResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
     post:
       operationId: registrarPagoProveedor
       tags: [proveedores]
-      summary: Registra un pago a proveedor (ADMIN)
+      summary: Registra un pago a proveedor (proveedores_finanzas + crear requerido)
       parameters:
         - $ref: "#/components/parameters/ProveedorId"
       requestBody:
@@ -1131,6 +1160,403 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/resumen:
+    get:
+      operationId: getClientesResumen
+      tags: [clientes]
+      summary: Resumen de cartera (clientes_finanzas requerido)
+      responses:
+        "200":
+          description: Resumen de cartera
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientesResumen"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /clientes:
+    get:
+      operationId: listClientes
+      tags: [clientes]
+      summary: Lista el catálogo operativo de clientes (sin datos financieros)
+      responses:
+        "200":
+          description: Lista de clientes operativos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cliente"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      operationId: createCliente
+      tags: [clientes]
+      summary: Da de alta un cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClienteInput"
+      responses:
+        "201":
+          description: Cliente creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /clientes/{id}:
+    get:
+      operationId: getCliente
+      tags: [clientes]
+      summary: Obtiene detalle operativo de un cliente
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Detalle del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateCliente
+      tags: [clientes]
+      summary: Actualiza datos operativos de un cliente
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClienteUpdate"
+      responses:
+        "200":
+          description: Cliente actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/credito:
+    get:
+      operationId: getClienteCredito
+      tags: [clientes]
+      summary: Semáforo de crédito del cliente (clientes_credito requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Datos de crédito del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteCredito"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/precios:
+    get:
+      operationId: getClientePrecios
+      tags: [clientes]
+      summary: Precios unitarios negociados por producto (clientes_precios requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Historial de precios unitarios
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientePrecios"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/estado-cuenta:
+    get:
+      operationId: getClienteEstadoCuenta
+      tags: [clientes]
+      summary: Estado de cuenta del cliente (clientes_finanzas requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Estado de cuenta
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteEstadoCuenta"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/compras:
+    get:
+      operationId: getClienteCompras
+      tags: [clientes]
+      summary: Historial de compras del cliente (clientes_finanzas requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Compras del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteCompras"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/estadisticas:
+    get:
+      operationId: getClienteEstadisticas
+      tags: [clientes]
+      summary: Estadísticas analíticas del cliente (clientes_finanzas requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Estadísticas del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteEstadisticas"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/pagos:
+    get:
+      operationId: getClientePagos
+      tags: [clientes]
+      summary: Pagos del cliente (clientes_finanzas requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Pagos del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientePagos"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      operationId: createClientePago
+      tags: [clientes]
+      summary: Registra un pago de cliente (clientes_finanzas + crear requerido)
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientePagoInput"
+      responses:
+        "201":
+          description: Pago registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientePago"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /permisos/roles:
+    get:
+      operationId: listPermisosRoles
+      tags: [permisos]
+      summary: Lista la matriz de permisos por rol
+      responses:
+        "200":
+          description: Matriz de permisos por rol
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PermisosRolRow"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /permisos/roles/{rol}/{modulo}:
+    put:
+      operationId: updatePermisosRol
+      tags: [permisos]
+      summary: Actualiza la entrada de un rol/módulo en la matriz
+      parameters:
+        - name: rol
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Role"
+        - name: modulo
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionFlags"
+      responses:
+        "200":
+          description: Permiso actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermisosRolRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /permisos/usuarios/{id}:
+    get:
+      operationId: getPermisosUsuario
+      tags: [permisos]
+      summary: Lista las excepciones de permisos para un usuario
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: Excepciones del usuario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermisosUsuarioResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /permisos/usuarios/{id}/{modulo}:
+    put:
+      operationId: updatePermisosUsuario
+      tags: [permisos]
+      summary: Crea o actualiza una excepción de permiso para un usuario
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - name: modulo
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionFlagsNullable"
+      responses:
+        "200":
+          description: Excepción actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermisosUsuarioRow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      operationId: resetPermisosUsuario
+      tags: [permisos]
+      summary: Elimina la excepción de un módulo para un usuario (hereda del rol)
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - name: modulo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Excepción eliminada
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /permisos/preview/{id}:
+    get:
+      operationId: getPermisosPreview
+      tags: [permisos]
+      summary: Vista previa de los permisos efectivos de un usuario
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: Permisos efectivos del usuario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermisosPreview"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 components:
   parameters:
     LocationId:
@@ -1170,6 +1596,12 @@ components:
       schema:
         type: number
     EntradaId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    ClienteId:
       name: id
       in: path
       required: true
@@ -1252,9 +1684,238 @@ components:
       properties:
         nombre: { type: string, minLength: 1, maxLength: 120 }
         activa: { type: boolean }
+    AlcanceConsulta:
+      type: string
+      enum: [PROPIA, TODAS]
+    ModulePermission:
+      type: object
+      required: [modulo, puedeVer, puedeCrear, puedeEditar, puedeAutorizar]
+      properties:
+        modulo: { type: string }
+        puedeVer: { type: boolean }
+        puedeCrear: { type: boolean }
+        puedeEditar: { type: boolean }
+        puedeAutorizar: { type: boolean }
+    PermissionFlags:
+      type: object
+      required: [puedeVer, puedeCrear, puedeEditar, puedeAutorizar]
+      properties:
+        puedeVer: { type: boolean }
+        puedeCrear: { type: boolean }
+        puedeEditar: { type: boolean }
+        puedeAutorizar: { type: boolean }
+    PermissionFlagsNullable:
+      type: object
+      properties:
+        puedeVer: { type: ["boolean", "null"] }
+        puedeCrear: { type: ["boolean", "null"] }
+        puedeEditar: { type: ["boolean", "null"] }
+        puedeAutorizar: { type: ["boolean", "null"] }
+    PermisosRolRow:
+      type: object
+      required: [id, rol, modulo, puedeVer, puedeCrear, puedeEditar, puedeAutorizar, updatedAt]
+      properties:
+        id: { type: number }
+        rol:
+          $ref: "#/components/schemas/Role"
+        modulo: { type: string }
+        puedeVer: { type: boolean }
+        puedeCrear: { type: boolean }
+        puedeEditar: { type: boolean }
+        puedeAutorizar: { type: boolean }
+        updatedAt: { type: string, format: date-time }
+        updatedPor: { type: ["number", "null"] }
+    PermisosUsuarioRow:
+      type: object
+      required: [id, usuarioId, modulo, updatedAt]
+      properties:
+        id: { type: number }
+        usuarioId: { type: number }
+        modulo: { type: string }
+        puedeVer: { type: ["boolean", "null"] }
+        puedeCrear: { type: ["boolean", "null"] }
+        puedeEditar: { type: ["boolean", "null"] }
+        puedeAutorizar: { type: ["boolean", "null"] }
+        updatedAt: { type: string, format: date-time }
+        updatedPor: { type: ["number", "null"] }
+    PermisosUsuarioResult:
+      type: object
+      required: [usuarioId, rol, overrides]
+      properties:
+        usuarioId: { type: number }
+        rol:
+          $ref: "#/components/schemas/Role"
+        overrides:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermisosUsuarioRow"
+    PermisosPreview:
+      type: object
+      required: [usuarioId, nombre, rol, permisos]
+      properties:
+        usuarioId: { type: number }
+        nombre: { type: string }
+        rol:
+          $ref: "#/components/schemas/Role"
+        permisos:
+          type: array
+          items:
+            $ref: "#/components/schemas/ModulePermission"
+    PermissionMatrix:
+      type: array
+      description: Lista de permisos efectivos del usuario (uno por módulo)
+      items:
+        $ref: "#/components/schemas/ModulePermission"
+    Cliente:
+      type: object
+      required: [id, nombre, activo, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        telefono: { type: ["string", "null"] }
+        correo: { type: ["string", "null"] }
+        direccion: { type: ["string", "null"] }
+        rfc: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        activo: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ClienteInput:
+      type: object
+      required: [nombre]
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 200 }
+        telefono: { type: ["string", "null"] }
+        correo: { type: ["string", "null"] }
+        direccion: { type: ["string", "null"] }
+        rfc: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+    ClienteUpdate:
+      type: object
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 200 }
+        telefono: { type: ["string", "null"] }
+        correo: { type: ["string", "null"] }
+        direccion: { type: ["string", "null"] }
+        rfc: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        activo: { type: boolean }
+    ClienteCredito:
+      type: object
+      required: [clienteId, limiteCredito, saldoActual, creditoDisponible, puedeComprarCredito]
+      properties:
+        clienteId: { type: number }
+        limiteCredito: { type: string }
+        saldoActual: { type: string }
+        creditoDisponible: { type: string }
+        puedeComprarCredito: { type: boolean }
+    ClientePrecios:
+      type: object
+      required: [clienteId, precios]
+      properties:
+        clienteId: { type: number }
+        precios:
+          type: array
+          items:
+            type: object
+            required: [productoId, sku, precioUnitario, fecha, promedio3]
+            properties:
+              productoId: { type: number }
+              sku: { type: string }
+              precioUnitario: { type: string }
+              fecha: { type: string, format: date }
+              promedio3: { type: string, description: "Promedio de las últimas 3 compras de ese producto" }
+        nota: { type: ["string", "null"] }
+    ClienteMovimiento:
+      type: object
+      properties:
+        tipo: { type: string }
+        importe: { type: string }
+        fecha: { type: string, format: date-time }
+        notas: { type: ["string", "null"] }
+    ClienteEstadoCuenta:
+      type: object
+      required: [clienteId, movimientos, saldoActual]
+      properties:
+        clienteId: { type: number }
+        movimientos:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClienteMovimiento"
+        saldoActual: { type: string }
+    ClienteCompraItem:
+      type: object
+      properties:
+        id: { type: number }
+        fecha: { type: string, format: date-time }
+        total: { type: string }
+    ClienteCompras:
+      type: object
+      required: [clienteId, compras, total]
+      properties:
+        clienteId: { type: number }
+        compras:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClienteCompraItem"
+        total: { type: number }
+    ClienteEstadisticas:
+      type: object
+      required: [clienteId]
+      properties:
+        clienteId: { type: number }
+        totalCompras: { type: ["string", "null"] }
+        comprasCount: { type: ["number", "null"] }
+    ClientePagoItem:
+      type: object
+      properties:
+        id: { type: number }
+        importe: { type: string }
+        fecha: { type: string, format: date-time }
+        formaPago: { type: ["string", "null"] }
+    ClientePagos:
+      type: object
+      required: [clienteId, pagos]
+      properties:
+        clienteId: { type: number }
+        pagos:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClientePagoItem"
+    ClientePago:
+      type: object
+      required: [id, clienteId]
+      properties:
+        id: { type: number }
+        clienteId: { type: number }
+    ClientePagoInput:
+      type: object
+      required: [importe, formaPago]
+      properties:
+        importe: { type: number, minimum: 0.01 }
+        formaPago: { type: string }
+        referencia: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+    ClientesResumen:
+      type: object
+      required: [totalClientes, clientesConSaldo, totalCartera, totalVencido]
+      properties:
+        totalClientes: { type: number }
+        clientesConSaldo: { type: number }
+        totalCartera: { type: string }
+        totalVencido: { type: string }
+    ProveedorPagosResult:
+      type: object
+      required: [proveedorId, pagos]
+      properties:
+        proveedorId: { type: number }
+        pagos:
+          type: array
+          items:
+            $ref: "#/components/schemas/MovimientoLedger"
     CurrentUser:
       type: object
-      required: [id, nombre, usuario, rol, ubicacion]
+      required: [id, nombre, usuario, rol, ubicacion, alcanceConsulta, permisos]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -1265,9 +1926,13 @@ components:
           oneOf:
             - $ref: "#/components/schemas/Location"
             - type: "null"
+        alcanceConsulta:
+          $ref: "#/components/schemas/AlcanceConsulta"
+        permisos:
+          $ref: "#/components/schemas/PermissionMatrix"
     User:
       type: object
-      required: [id, nombre, usuario, rol, ubicacion, activo, ultimoAcceso]
+      required: [id, nombre, usuario, rol, ubicacion, alcanceConsulta, activo, ultimoAcceso]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -1278,6 +1943,8 @@ components:
           oneOf:
             - $ref: "#/components/schemas/Location"
             - type: "null"
+        alcanceConsulta:
+          $ref: "#/components/schemas/AlcanceConsulta"
         activo: { type: boolean }
         ultimoAcceso:
           type: ["string", "null"]
@@ -1293,6 +1960,8 @@ components:
           $ref: "#/components/schemas/Role"
         ubicacionId:
           type: ["number", "null"]
+        alcanceConsulta:
+          $ref: "#/components/schemas/AlcanceConsulta"
     UserUpdate:
       type: object
       properties:
@@ -1302,6 +1971,8 @@ components:
           $ref: "#/components/schemas/Role"
         ubicacionId:
           type: ["number", "null"]
+        alcanceConsulta:
+          $ref: "#/components/schemas/AlcanceConsulta"
         activo: { type: boolean }
         password: { type: string, minLength: 10, maxLength: 128 }
     LoginInput:
@@ -1906,7 +2577,8 @@ components:
         notas: { type: string, minLength: 10, description: "Justificación mínimo 10 caracteres" }
     ProveedorMetricas:
       type: object
-      required: [id, nombre, tipo, monedaDefault, contactoNombre, telefono, correo, pais, notas, activo, createdAt, totalCompras, totalComprado12Meses, comprasMes, totalPagado, saldoPendiente, ultimaCompra, comprasCount]
+      description: Datos operativos del proveedor; las métricas financieras solo se incluyen con proveedores_finanzas.ver.
+      required: [id, nombre, tipo, monedaDefault, contactoNombre, telefono, correo, pais, notas, activo, createdAt]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -1943,7 +2615,7 @@ components:
             $ref: "#/components/schemas/ProveedorMetricas"
     ProveedoresListResult:
       type: object
-      required: [totalProveedores, proveedoresConSaldo, totalDeuda, totalPagado, comprasMes, items]
+      required: [totalProveedores, items]
       properties:
         totalProveedores: { type: number }
         proveedoresConSaldo: { type: number }

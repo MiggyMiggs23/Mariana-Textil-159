@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { AlcanceConsulta } from './alcanceConsulta';
 import type { Role } from './role';
 
 export interface UserUpdate {
@@ -21,6 +22,7 @@ export interface UserUpdate {
   rol?: Role;
   /** @nullable */
   ubicacionId?: number | null;
+  alcanceConsulta?: AlcanceConsulta;
   activo?: boolean;
   /**
      * @minLength 10

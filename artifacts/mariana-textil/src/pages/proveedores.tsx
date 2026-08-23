@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Search, Plus, Truck, Building2, Globe2 } from "lucide-react";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 
 // Helper for generic API errors
@@ -73,6 +74,8 @@ export default function Proveedores() {
   const [filterTipo, setFilterTipo] = useState("ALL");
   const [filterEstado, setFilterEstado] = useState("ALL");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
+  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver');
 
   const filteredProveedores = useMemo(() => {
     if (!proveedores?.items) return [];
@@ -88,14 +91,13 @@ export default function Proveedores() {
 
   // Sort by pending balance desc
   const sortedProveedores = useMemo(() => {
+    if (!canViewFinanzas) return filteredProveedores;
     return [...filteredProveedores].sort((a, b) => {
-      const saldoA = parseFloat(a.saldoPendiente) || 0;
-      const saldoB = parseFloat(b.saldoPendiente) || 0;
+      const saldoA = parseFloat(a.saldoPendiente ?? "0") || 0;
+      const saldoB = parseFloat(b.saldoPendiente ?? "0") || 0;
       return saldoB - saldoA;
     });
-  }, [filteredProveedores]);
-
-  const canEdit = user?.rol === Role.ADMIN || user?.rol === Role.INVENTARIOS || user?.rol === Role.BODEGA;
+  }, [canViewFinanzas, filteredProveedores]);
 
   return (
     <AppLayout>
@@ -116,24 +118,28 @@ export default function Proveedores() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4 flex flex-col gap-1">
-              <span className="text-sm font-medium text-muted-foreground">Total Deuda</span>
-              <span className="text-2xl font-bold">{proveedores ? formatCurrency(proveedores.totalDeuda) : "$0.00"}</span>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex flex-col gap-1">
-              <span className="text-sm font-medium text-muted-foreground">Compras del Mes</span>
-              <span className="text-2xl font-bold">{proveedores ? formatCurrency(proveedores.comprasMes) : "$0.00"}</span>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex flex-col gap-1">
-              <span className="text-sm font-medium text-muted-foreground">Proveedores con Saldo</span>
-              <span className="text-2xl font-bold">{proveedores?.proveedoresConSaldo || 0}</span>
-            </CardContent>
-          </Card>
+          {canViewFinanzas && (
+            <>
+              <Card>
+                <CardContent className="p-4 flex flex-col gap-1">
+                  <span className="text-sm font-medium text-muted-foreground">Total Deuda</span>
+                  <span className="text-2xl font-bold">{formatCurrency(proveedores?.totalDeuda ?? "0")}</span>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 flex flex-col gap-1">
+                  <span className="text-sm font-medium text-muted-foreground">Compras del Mes</span>
+                  <span className="text-2xl font-bold">{formatCurrency(proveedores?.comprasMes ?? "0")}</span>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 flex flex-col gap-1">
+                  <span className="text-sm font-medium text-muted-foreground">Proveedores con Saldo</span>
+                  <span className="text-2xl font-bold">{proveedores?.proveedoresConSaldo || 0}</span>
+                </CardContent>
+              </Card>
+            </>
+          )}
           <Card>
             <CardContent className="p-4 flex flex-col gap-1">
               <span className="text-sm font-medium text-muted-foreground">Total Proveedores</span>
@@ -183,16 +189,20 @@ export default function Proveedores() {
                   <TableRow className="bg-muted/10 hover:bg-muted/10">
                     <TableHead>Proveedor / Contacto</TableHead>
                     <TableHead>Tipo</TableHead>
-                    <TableHead className="text-right">Saldo</TableHead>
-                    <TableHead className="text-right">Comprado (12m)</TableHead>
-                    <TableHead>Última Compra</TableHead>
+                    {canViewFinanzas && (
+                      <>
+                        <TableHead className="text-right">Saldo</TableHead>
+                        <TableHead className="text-right">Comprado (12m)</TableHead>
+                      </>
+                    )}
+                    {canViewFinanzas && <TableHead>Última Compra</TableHead>}
                     <TableHead className="text-right">Estado</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-32 text-center">
+                      <TableCell colSpan={canViewFinanzas ? 6 : 4} className="h-32 text-center">
                         <div className="animate-pulse flex flex-col items-center">
                           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
                           Cargando proveedores...
@@ -201,7 +211,7 @@ export default function Proveedores() {
                     </TableRow>
                   ) : sortedProveedores.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                      <TableCell colSpan={canViewFinanzas ? 6 : 4} className="h-32 text-center text-muted-foreground">
                         No se encontraron proveedores.
                       </TableCell>
                     </TableRow>
@@ -226,17 +236,23 @@ export default function Proveedores() {
                             </Badge>
                           </div>
                         </TableCell>
-                        <TableCell className="text-right">
-                          <div className={`font-semibold ${parseFloat(p.saldoPendiente) > 0 ? "text-destructive" : ""}`}>
-                            {formatCurrency(p.saldoPendiente)}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="text-sm font-medium">{formatCurrency(p.totalComprado12Meses)}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm">{formatDate(p.ultimaCompra)}</div>
-                        </TableCell>
+                        {canViewFinanzas && (
+                          <>
+                            <TableCell className="text-right">
+                              <div className={`font-semibold ${parseFloat(p.saldoPendiente ?? "0") > 0 ? "text-destructive" : ""}`}>
+                                {formatCurrency(p.saldoPendiente ?? "0")}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="text-sm font-medium">{formatCurrency(p.totalComprado12Meses ?? "0")}</div>
+                            </TableCell>
+                          </>
+                        )}
+                        {canViewFinanzas && (
+                          <TableCell>
+                            <div className="text-sm">{formatDate(p.ultimaCompra ?? null)}</div>
+                          </TableCell>
+                        )}
                         <TableCell className="text-right">
                           <Badge variant={p.activo ? "default" : "secondary"}>
                             {p.activo ? "Activo" : "Inactivo"}

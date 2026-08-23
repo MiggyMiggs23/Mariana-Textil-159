@@ -23,6 +23,18 @@ import type {
   ActivarRolloInput,
   AjusteProveedorInput,
   AjusteRolloInput,
+  Cliente,
+  ClienteCompras,
+  ClienteCredito,
+  ClienteEstadisticas,
+  ClienteEstadoCuenta,
+  ClienteInput,
+  ClientePago,
+  ClientePagoInput,
+  ClientePagos,
+  ClientePrecios,
+  ClienteUpdate,
+  ClientesResumen,
   ConciliacionRow,
   CurrentUser,
   Dashboard,
@@ -46,6 +58,7 @@ import type {
   KardexResult,
   ListComprasProveedorParams,
   ListEntradasParams,
+  ListProveedorPagosParams,
   ListRollosParams,
   Location,
   LocationUpdate,
@@ -55,6 +68,12 @@ import type {
   NotFoundResponse,
   PagoProveedorInput,
   PagoProveedorRow,
+  PermisosPreview,
+  PermisosRolRow,
+  PermisosUsuarioResult,
+  PermisosUsuarioRow,
+  PermissionFlags,
+  PermissionFlagsNullable,
   Producto,
   ProductoDetail,
   ProductoInput,
@@ -64,6 +83,7 @@ import type {
   ProveedorEstadisticas,
   ProveedorEstadoCuenta,
   ProveedorInput,
+  ProveedorPagosResult,
   ProveedorUpdate,
   ProveedoresListResult,
   ProveedoresResumen,
@@ -71,6 +91,7 @@ import type {
   RecalcularInput,
   RecibirTransferenciaInput,
   RevertirMovimientoInput,
+  Role,
   RolloDetail,
   RolloListResult,
   SalidaMostradorInput,
@@ -1850,6 +1871,95 @@ export function useEstadoCuentaProveedor<TData = Awaited<ReturnType<typeof estad
 
 
 
+export const getListProveedorPagosUrl = (id: number,
+    params?: ListProveedorPagosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/proveedores/${id}/pagos?${stringifiedParams}` : `/api/proveedores/${id}/pagos`
+}
+
+/**
+ * @summary Lista pagos de un proveedor (proveedores_finanzas requerido)
+ */
+export const listProveedorPagos = async (id: number,
+    params?: ListProveedorPagosParams, options?: Parameters<typeof customFetch>[1]): Promise<ProveedorPagosResult> => {
+
+  return customFetch<ProveedorPagosResult>(getListProveedorPagosUrl(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListProveedorPagosQueryKey = (id: number,
+    params?: ListProveedorPagosParams,) => {
+    return [
+    `/api/proveedores/${id}/pagos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListProveedorPagosQueryOptions = <TData = Awaited<ReturnType<typeof listProveedorPagos>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    params?: ListProveedorPagosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProveedorPagos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListProveedorPagosQueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProveedorPagos>>> = ({ signal }) => listProveedorPagos(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProveedorPagos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListProveedorPagosQueryResult = NonNullable<Awaited<ReturnType<typeof listProveedorPagos>>>
+export type ListProveedorPagosQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Lista pagos de un proveedor (proveedores_finanzas requerido)
+ */
+
+export function useListProveedorPagos<TData = Awaited<ReturnType<typeof listProveedorPagos>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number,
+    params?: ListProveedorPagosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProveedorPagos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListProveedorPagosQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getRegistrarPagoProveedorUrl = (id: number,) => {
 
 
@@ -1859,7 +1969,7 @@ export const getRegistrarPagoProveedorUrl = (id: number,) => {
 }
 
 /**
- * @summary Registra un pago a proveedor (ADMIN)
+ * @summary Registra un pago a proveedor (proveedores_finanzas + crear requerido)
  */
 export const registrarPagoProveedor = async (id: number,
     pagoProveedorInput: PagoProveedorInput, options?: Parameters<typeof customFetch>[1]): Promise<PagoProveedorRow> => {
@@ -1909,7 +2019,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type RegistrarPagoProveedorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Registra un pago a proveedor (ADMIN)
+ * @summary Registra un pago a proveedor (proveedores_finanzas + crear requerido)
  */
 export const useRegistrarPagoProveedor = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registrarPagoProveedor>>, TError,{id: number;data: BodyType<PagoProveedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -3616,4 +3726,1364 @@ export const useRecalcularExistencias = <TError = ErrorType<ValidationErrorRespo
       > => {
       return useMutation(getRecalcularExistenciasMutationOptions(options));
     }
+
+export const getGetClientesResumenUrl = () => {
+
+
+
+
+  return `/api/clientes/resumen`
+}
+
+/**
+ * @summary Resumen de cartera (clientes_finanzas requerido)
+ */
+export const getClientesResumen = async ( options?: Parameters<typeof customFetch>[1]): Promise<ClientesResumen> => {
+
+  return customFetch<ClientesResumen>(getGetClientesResumenUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClientesResumenQueryKey = () => {
+    return [
+    `/api/clientes/resumen`
+    ] as const;
+    }
+
+
+export const getGetClientesResumenQueryOptions = <TData = Awaited<ReturnType<typeof getClientesResumen>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientesResumen>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClientesResumenQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClientesResumen>>> = ({ signal }) => getClientesResumen({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClientesResumen>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClientesResumenQueryResult = NonNullable<Awaited<ReturnType<typeof getClientesResumen>>>
+export type GetClientesResumenQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Resumen de cartera (clientes_finanzas requerido)
+ */
+
+export function useGetClientesResumen<TData = Awaited<ReturnType<typeof getClientesResumen>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientesResumen>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClientesResumenQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListClientesUrl = () => {
+
+
+
+
+  return `/api/clientes`
+}
+
+/**
+ * @summary Lista el catálogo operativo de clientes (sin datos financieros)
+ */
+export const listClientes = async ( options?: Parameters<typeof customFetch>[1]): Promise<Cliente[]> => {
+
+  return customFetch<Cliente[]>(getListClientesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListClientesQueryKey = () => {
+    return [
+    `/api/clientes`
+    ] as const;
+    }
+
+
+export const getListClientesQueryOptions = <TData = Awaited<ReturnType<typeof listClientes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListClientesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listClientes>>> = ({ signal }) => listClientes({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listClientes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListClientesQueryResult = NonNullable<Awaited<ReturnType<typeof listClientes>>>
+export type ListClientesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista el catálogo operativo de clientes (sin datos financieros)
+ */
+
+export function useListClientes<TData = Awaited<ReturnType<typeof listClientes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListClientesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateClienteUrl = () => {
+
+
+
+
+  return `/api/clientes`
+}
+
+/**
+ * @summary Da de alta un cliente
+ */
+export const createCliente = async (clienteInput: ClienteInput, options?: Parameters<typeof customFetch>[1]): Promise<Cliente> => {
+
+  return customFetch<Cliente>(getCreateClienteUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(clienteInput)
+  }
+);}
+
+
+
+
+
+export const getCreateClienteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCliente>>, TError,{data: BodyType<ClienteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCliente>>, TError,{data: BodyType<ClienteInput>}, TContext> => {
+
+const mutationKey = ['createCliente'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCliente>>, {data: BodyType<ClienteInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCliente(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateClienteMutationResult = NonNullable<Awaited<ReturnType<typeof createCliente>>>
+    export type CreateClienteMutationBody = BodyType<ClienteInput>
+    export type CreateClienteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Da de alta un cliente
+ */
+export const useCreateCliente = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCliente>>, TError,{data: BodyType<ClienteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createCliente>>,
+        TError,
+        {data: BodyType<ClienteInput>},
+        TContext
+      > => {
+      return useMutation(getCreateClienteMutationOptions(options));
+    }
+
+export const getGetClienteUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}`
+}
+
+/**
+ * @summary Obtiene detalle operativo de un cliente
+ */
+export const getCliente = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Cliente> => {
+
+  return customFetch<Cliente>(getGetClienteUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}`
+    ] as const;
+    }
+
+
+export const getGetClienteQueryOptions = <TData = Awaited<ReturnType<typeof getCliente>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCliente>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCliente>>> = ({ signal }) => getCliente(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCliente>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteQueryResult = NonNullable<Awaited<ReturnType<typeof getCliente>>>
+export type GetClienteQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene detalle operativo de un cliente
+ */
+
+export function useGetCliente<TData = Awaited<ReturnType<typeof getCliente>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCliente>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateClienteUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}`
+}
+
+/**
+ * @summary Actualiza datos operativos de un cliente
+ */
+export const updateCliente = async (id: number,
+    clienteUpdate: ClienteUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Cliente> => {
+
+  return customFetch<Cliente>(getUpdateClienteUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(clienteUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateClienteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCliente>>, TError,{id: number;data: BodyType<ClienteUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateCliente>>, TError,{id: number;data: BodyType<ClienteUpdate>}, TContext> => {
+
+const mutationKey = ['updateCliente'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCliente>>, {id: number;data: BodyType<ClienteUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateCliente(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateClienteMutationResult = NonNullable<Awaited<ReturnType<typeof updateCliente>>>
+    export type UpdateClienteMutationBody = BodyType<ClienteUpdate>
+    export type UpdateClienteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Actualiza datos operativos de un cliente
+ */
+export const useUpdateCliente = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCliente>>, TError,{id: number;data: BodyType<ClienteUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateCliente>>,
+        TError,
+        {id: number;data: BodyType<ClienteUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateClienteMutationOptions(options));
+    }
+
+export const getGetClienteCreditoUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/credito`
+}
+
+/**
+ * @summary Semáforo de crédito del cliente (clientes_credito requerido)
+ */
+export const getClienteCredito = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteCredito> => {
+
+  return customFetch<ClienteCredito>(getGetClienteCreditoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteCreditoQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/credito`
+    ] as const;
+    }
+
+
+export const getGetClienteCreditoQueryOptions = <TData = Awaited<ReturnType<typeof getClienteCredito>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCredito>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteCreditoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteCredito>>> = ({ signal }) => getClienteCredito(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteCredito>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteCreditoQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteCredito>>>
+export type GetClienteCreditoQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Semáforo de crédito del cliente (clientes_credito requerido)
+ */
+
+export function useGetClienteCredito<TData = Awaited<ReturnType<typeof getClienteCredito>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCredito>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteCreditoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClientePreciosUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/precios`
+}
+
+/**
+ * @summary Precios unitarios negociados por producto (clientes_precios requerido)
+ */
+export const getClientePrecios = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClientePrecios> => {
+
+  return customFetch<ClientePrecios>(getGetClientePreciosUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClientePreciosQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/precios`
+    ] as const;
+    }
+
+
+export const getGetClientePreciosQueryOptions = <TData = Awaited<ReturnType<typeof getClientePrecios>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientePrecios>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClientePreciosQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClientePrecios>>> = ({ signal }) => getClientePrecios(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClientePrecios>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClientePreciosQueryResult = NonNullable<Awaited<ReturnType<typeof getClientePrecios>>>
+export type GetClientePreciosQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Precios unitarios negociados por producto (clientes_precios requerido)
+ */
+
+export function useGetClientePrecios<TData = Awaited<ReturnType<typeof getClientePrecios>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientePrecios>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClientePreciosQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClienteEstadoCuentaUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/estado-cuenta`
+}
+
+/**
+ * @summary Estado de cuenta del cliente (clientes_finanzas requerido)
+ */
+export const getClienteEstadoCuenta = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteEstadoCuenta> => {
+
+  return customFetch<ClienteEstadoCuenta>(getGetClienteEstadoCuentaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteEstadoCuentaQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/estado-cuenta`
+    ] as const;
+    }
+
+
+export const getGetClienteEstadoCuentaQueryOptions = <TData = Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteEstadoCuentaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteEstadoCuenta>>> = ({ signal }) => getClienteEstadoCuenta(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteEstadoCuentaQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteEstadoCuenta>>>
+export type GetClienteEstadoCuentaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Estado de cuenta del cliente (clientes_finanzas requerido)
+ */
+
+export function useGetClienteEstadoCuenta<TData = Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteEstadoCuentaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClienteComprasUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/compras`
+}
+
+/**
+ * @summary Historial de compras del cliente (clientes_finanzas requerido)
+ */
+export const getClienteCompras = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteCompras> => {
+
+  return customFetch<ClienteCompras>(getGetClienteComprasUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteComprasQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/compras`
+    ] as const;
+    }
+
+
+export const getGetClienteComprasQueryOptions = <TData = Awaited<ReturnType<typeof getClienteCompras>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteComprasQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteCompras>>> = ({ signal }) => getClienteCompras(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteComprasQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteCompras>>>
+export type GetClienteComprasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Historial de compras del cliente (clientes_finanzas requerido)
+ */
+
+export function useGetClienteCompras<TData = Awaited<ReturnType<typeof getClienteCompras>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteComprasQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClienteEstadisticasUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/estadisticas`
+}
+
+/**
+ * @summary Estadísticas analíticas del cliente (clientes_finanzas requerido)
+ */
+export const getClienteEstadisticas = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteEstadisticas> => {
+
+  return customFetch<ClienteEstadisticas>(getGetClienteEstadisticasUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteEstadisticasQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/estadisticas`
+    ] as const;
+    }
+
+
+export const getGetClienteEstadisticasQueryOptions = <TData = Awaited<ReturnType<typeof getClienteEstadisticas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadisticas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteEstadisticasQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteEstadisticas>>> = ({ signal }) => getClienteEstadisticas(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadisticas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteEstadisticasQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteEstadisticas>>>
+export type GetClienteEstadisticasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Estadísticas analíticas del cliente (clientes_finanzas requerido)
+ */
+
+export function useGetClienteEstadisticas<TData = Awaited<ReturnType<typeof getClienteEstadisticas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadisticas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteEstadisticasQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClientePagosUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/pagos`
+}
+
+/**
+ * @summary Pagos del cliente (clientes_finanzas requerido)
+ */
+export const getClientePagos = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClientePagos> => {
+
+  return customFetch<ClientePagos>(getGetClientePagosUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClientePagosQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/pagos`
+    ] as const;
+    }
+
+
+export const getGetClientePagosQueryOptions = <TData = Awaited<ReturnType<typeof getClientePagos>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientePagos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClientePagosQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClientePagos>>> = ({ signal }) => getClientePagos(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClientePagos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClientePagosQueryResult = NonNullable<Awaited<ReturnType<typeof getClientePagos>>>
+export type GetClientePagosQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Pagos del cliente (clientes_finanzas requerido)
+ */
+
+export function useGetClientePagos<TData = Awaited<ReturnType<typeof getClientePagos>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientePagos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClientePagosQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateClientePagoUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/pagos`
+}
+
+/**
+ * @summary Registra un pago de cliente (clientes_finanzas + crear requerido)
+ */
+export const createClientePago = async (id: number,
+    clientePagoInput: ClientePagoInput, options?: Parameters<typeof customFetch>[1]): Promise<ClientePago> => {
+
+  return customFetch<ClientePago>(getCreateClientePagoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(clientePagoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateClientePagoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClientePago>>, TError,{id: number;data: BodyType<ClientePagoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createClientePago>>, TError,{id: number;data: BodyType<ClientePagoInput>}, TContext> => {
+
+const mutationKey = ['createClientePago'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createClientePago>>, {id: number;data: BodyType<ClientePagoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createClientePago(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateClientePagoMutationResult = NonNullable<Awaited<ReturnType<typeof createClientePago>>>
+    export type CreateClientePagoMutationBody = BodyType<ClientePagoInput>
+    export type CreateClientePagoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Registra un pago de cliente (clientes_finanzas + crear requerido)
+ */
+export const useCreateClientePago = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClientePago>>, TError,{id: number;data: BodyType<ClientePagoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createClientePago>>,
+        TError,
+        {id: number;data: BodyType<ClientePagoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateClientePagoMutationOptions(options));
+    }
+
+export const getListPermisosRolesUrl = () => {
+
+
+
+
+  return `/api/permisos/roles`
+}
+
+/**
+ * @summary Lista la matriz de permisos por rol
+ */
+export const listPermisosRoles = async ( options?: Parameters<typeof customFetch>[1]): Promise<PermisosRolRow[]> => {
+
+  return customFetch<PermisosRolRow[]>(getListPermisosRolesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPermisosRolesQueryKey = () => {
+    return [
+    `/api/permisos/roles`
+    ] as const;
+    }
+
+
+export const getListPermisosRolesQueryOptions = <TData = Awaited<ReturnType<typeof listPermisosRoles>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPermisosRoles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPermisosRolesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPermisosRoles>>> = ({ signal }) => listPermisosRoles({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPermisosRoles>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPermisosRolesQueryResult = NonNullable<Awaited<ReturnType<typeof listPermisosRoles>>>
+export type ListPermisosRolesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista la matriz de permisos por rol
+ */
+
+export function useListPermisosRoles<TData = Awaited<ReturnType<typeof listPermisosRoles>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPermisosRoles>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPermisosRolesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdatePermisosRolUrl = (rol: Role,
+    modulo: string,) => {
+
+
+
+
+  return `/api/permisos/roles/${rol}/${modulo}`
+}
+
+/**
+ * @summary Actualiza la entrada de un rol/módulo en la matriz
+ */
+export const updatePermisosRol = async (rol: Role,
+    modulo: string,
+    permissionFlags: PermissionFlags, options?: Parameters<typeof customFetch>[1]): Promise<PermisosRolRow> => {
+
+  return customFetch<PermisosRolRow>(getUpdatePermisosRolUrl(rol,modulo),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(permissionFlags)
+  }
+);}
+
+
+
+
+
+export const getUpdatePermisosRolMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePermisosRol>>, TError,{rol: Role;modulo: string;data: BodyType<PermissionFlags>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePermisosRol>>, TError,{rol: Role;modulo: string;data: BodyType<PermissionFlags>}, TContext> => {
+
+const mutationKey = ['updatePermisosRol'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePermisosRol>>, {rol: Role;modulo: string;data: BodyType<PermissionFlags>}> = (props) => {
+          const {rol,modulo,data} = props ?? {};
+
+          return  updatePermisosRol(rol,modulo,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePermisosRolMutationResult = NonNullable<Awaited<ReturnType<typeof updatePermisosRol>>>
+    export type UpdatePermisosRolMutationBody = BodyType<PermissionFlags>
+    export type UpdatePermisosRolMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Actualiza la entrada de un rol/módulo en la matriz
+ */
+export const useUpdatePermisosRol = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePermisosRol>>, TError,{rol: Role;modulo: string;data: BodyType<PermissionFlags>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePermisosRol>>,
+        TError,
+        {rol: Role;modulo: string;data: BodyType<PermissionFlags>},
+        TContext
+      > => {
+      return useMutation(getUpdatePermisosRolMutationOptions(options));
+    }
+
+export const getGetPermisosUsuarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/permisos/usuarios/${id}`
+}
+
+/**
+ * @summary Lista las excepciones de permisos para un usuario
+ */
+export const getPermisosUsuario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<PermisosUsuarioResult> => {
+
+  return customFetch<PermisosUsuarioResult>(getGetPermisosUsuarioUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPermisosUsuarioQueryKey = (id: number,) => {
+    return [
+    `/api/permisos/usuarios/${id}`
+    ] as const;
+    }
+
+
+export const getGetPermisosUsuarioQueryOptions = <TData = Awaited<ReturnType<typeof getPermisosUsuario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPermisosUsuario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPermisosUsuarioQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPermisosUsuario>>> = ({ signal }) => getPermisosUsuario(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPermisosUsuario>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPermisosUsuarioQueryResult = NonNullable<Awaited<ReturnType<typeof getPermisosUsuario>>>
+export type GetPermisosUsuarioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Lista las excepciones de permisos para un usuario
+ */
+
+export function useGetPermisosUsuario<TData = Awaited<ReturnType<typeof getPermisosUsuario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPermisosUsuario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPermisosUsuarioQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdatePermisosUsuarioUrl = (id: number,
+    modulo: string,) => {
+
+
+
+
+  return `/api/permisos/usuarios/${id}/${modulo}`
+}
+
+/**
+ * @summary Crea o actualiza una excepción de permiso para un usuario
+ */
+export const updatePermisosUsuario = async (id: number,
+    modulo: string,
+    permissionFlagsNullable: PermissionFlagsNullable, options?: Parameters<typeof customFetch>[1]): Promise<PermisosUsuarioRow> => {
+
+  return customFetch<PermisosUsuarioRow>(getUpdatePermisosUsuarioUrl(id,modulo),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(permissionFlagsNullable)
+  }
+);}
+
+
+
+
+
+export const getUpdatePermisosUsuarioMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePermisosUsuario>>, TError,{id: number;modulo: string;data: BodyType<PermissionFlagsNullable>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePermisosUsuario>>, TError,{id: number;modulo: string;data: BodyType<PermissionFlagsNullable>}, TContext> => {
+
+const mutationKey = ['updatePermisosUsuario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePermisosUsuario>>, {id: number;modulo: string;data: BodyType<PermissionFlagsNullable>}> = (props) => {
+          const {id,modulo,data} = props ?? {};
+
+          return  updatePermisosUsuario(id,modulo,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePermisosUsuarioMutationResult = NonNullable<Awaited<ReturnType<typeof updatePermisosUsuario>>>
+    export type UpdatePermisosUsuarioMutationBody = BodyType<PermissionFlagsNullable>
+    export type UpdatePermisosUsuarioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Crea o actualiza una excepción de permiso para un usuario
+ */
+export const useUpdatePermisosUsuario = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePermisosUsuario>>, TError,{id: number;modulo: string;data: BodyType<PermissionFlagsNullable>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePermisosUsuario>>,
+        TError,
+        {id: number;modulo: string;data: BodyType<PermissionFlagsNullable>},
+        TContext
+      > => {
+      return useMutation(getUpdatePermisosUsuarioMutationOptions(options));
+    }
+
+export const getResetPermisosUsuarioUrl = (id: number,
+    modulo: string,) => {
+
+
+
+
+  return `/api/permisos/usuarios/${id}/${modulo}`
+}
+
+/**
+ * @summary Elimina la excepción de un módulo para un usuario (hereda del rol)
+ */
+export const resetPermisosUsuario = async (id: number,
+    modulo: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getResetPermisosUsuarioUrl(id,modulo),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getResetPermisosUsuarioMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetPermisosUsuario>>, TError,{id: number;modulo: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetPermisosUsuario>>, TError,{id: number;modulo: string}, TContext> => {
+
+const mutationKey = ['resetPermisosUsuario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetPermisosUsuario>>, {id: number;modulo: string}> = (props) => {
+          const {id,modulo} = props ?? {};
+
+          return  resetPermisosUsuario(id,modulo,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetPermisosUsuarioMutationResult = NonNullable<Awaited<ReturnType<typeof resetPermisosUsuario>>>
+
+    export type ResetPermisosUsuarioMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Elimina la excepción de un módulo para un usuario (hereda del rol)
+ */
+export const useResetPermisosUsuario = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetPermisosUsuario>>, TError,{id: number;modulo: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetPermisosUsuario>>,
+        TError,
+        {id: number;modulo: string},
+        TContext
+      > => {
+      return useMutation(getResetPermisosUsuarioMutationOptions(options));
+    }
+
+export const getGetPermisosPreviewUrl = (id: number,) => {
+
+
+
+
+  return `/api/permisos/preview/${id}`
+}
+
+/**
+ * @summary Vista previa de los permisos efectivos de un usuario
+ */
+export const getPermisosPreview = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<PermisosPreview> => {
+
+  return customFetch<PermisosPreview>(getGetPermisosPreviewUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPermisosPreviewQueryKey = (id: number,) => {
+    return [
+    `/api/permisos/preview/${id}`
+    ] as const;
+    }
+
+
+export const getGetPermisosPreviewQueryOptions = <TData = Awaited<ReturnType<typeof getPermisosPreview>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPermisosPreview>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPermisosPreviewQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPermisosPreview>>> = ({ signal }) => getPermisosPreview(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPermisosPreview>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPermisosPreviewQueryResult = NonNullable<Awaited<ReturnType<typeof getPermisosPreview>>>
+export type GetPermisosPreviewQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Vista previa de los permisos efectivos de un usuario
+ */
+
+export function useGetPermisosPreview<TData = Awaited<ReturnType<typeof getPermisosPreview>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPermisosPreview>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPermisosPreviewQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 

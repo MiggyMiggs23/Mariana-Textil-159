@@ -67,12 +67,278 @@ export interface LocationUpdate {
   activa?: boolean;
 }
 
+export type AlcanceConsulta = typeof AlcanceConsulta[keyof typeof AlcanceConsulta];
+
+
+export const AlcanceConsulta = {
+  PROPIA: 'PROPIA',
+  TODAS: 'TODAS',
+} as const;
+
+export interface ModulePermission {
+  modulo: string;
+  puedeVer: boolean;
+  puedeCrear: boolean;
+  puedeEditar: boolean;
+  puedeAutorizar: boolean;
+}
+
+export interface PermissionFlags {
+  puedeVer: boolean;
+  puedeCrear: boolean;
+  puedeEditar: boolean;
+  puedeAutorizar: boolean;
+}
+
+export interface PermissionFlagsNullable {
+  /** @nullable */
+  puedeVer?: boolean | null;
+  /** @nullable */
+  puedeCrear?: boolean | null;
+  /** @nullable */
+  puedeEditar?: boolean | null;
+  /** @nullable */
+  puedeAutorizar?: boolean | null;
+}
+
+export interface PermisosRolRow {
+  id: number;
+  rol: Role;
+  modulo: string;
+  puedeVer: boolean;
+  puedeCrear: boolean;
+  puedeEditar: boolean;
+  puedeAutorizar: boolean;
+  updatedAt: string;
+  /** @nullable */
+  updatedPor?: number | null;
+}
+
+export interface PermisosUsuarioRow {
+  id: number;
+  usuarioId: number;
+  modulo: string;
+  /** @nullable */
+  puedeVer?: boolean | null;
+  /** @nullable */
+  puedeCrear?: boolean | null;
+  /** @nullable */
+  puedeEditar?: boolean | null;
+  /** @nullable */
+  puedeAutorizar?: boolean | null;
+  updatedAt: string;
+  /** @nullable */
+  updatedPor?: number | null;
+}
+
+export interface PermisosUsuarioResult {
+  usuarioId: number;
+  rol: Role;
+  overrides: PermisosUsuarioRow[];
+}
+
+export interface PermisosPreview {
+  usuarioId: number;
+  nombre: string;
+  rol: Role;
+  permisos: ModulePermission[];
+}
+
+/**
+ * Lista de permisos efectivos del usuario (uno por módulo)
+ */
+export type PermissionMatrix = ModulePermission[];
+
+export interface Cliente {
+  id: number;
+  nombre: string;
+  /** @nullable */
+  telefono?: string | null;
+  /** @nullable */
+  correo?: string | null;
+  /** @nullable */
+  direccion?: string | null;
+  /** @nullable */
+  rfc?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  activo: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ClienteInput {
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  nombre: string;
+  /** @nullable */
+  telefono?: string | null;
+  /** @nullable */
+  correo?: string | null;
+  /** @nullable */
+  direccion?: string | null;
+  /** @nullable */
+  rfc?: string | null;
+  /** @nullable */
+  notas?: string | null;
+}
+
+export interface ClienteUpdate {
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  nombre?: string;
+  /** @nullable */
+  telefono?: string | null;
+  /** @nullable */
+  correo?: string | null;
+  /** @nullable */
+  direccion?: string | null;
+  /** @nullable */
+  rfc?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  activo?: boolean;
+}
+
+export interface ClienteCredito {
+  clienteId: number;
+  limiteCredito: string;
+  saldoActual: string;
+  creditoDisponible: string;
+  puedeComprarCredito: boolean;
+}
+
+export type ClientePreciosPreciosItem = {
+  productoId: number;
+  sku: string;
+  precioUnitario: string;
+  fecha: string;
+  /** Promedio de las últimas 3 compras de ese producto */
+  promedio3: string;
+};
+
+export interface ClientePrecios {
+  clienteId: number;
+  precios: ClientePreciosPreciosItem[];
+  /** @nullable */
+  nota?: string | null;
+}
+
+export interface ClienteMovimiento {
+  tipo?: string;
+  importe?: string;
+  fecha?: string;
+  /** @nullable */
+  notas?: string | null;
+}
+
+export interface ClienteEstadoCuenta {
+  clienteId: number;
+  movimientos: ClienteMovimiento[];
+  saldoActual: string;
+}
+
+export interface ClienteCompraItem {
+  id?: number;
+  fecha?: string;
+  total?: string;
+}
+
+export interface ClienteCompras {
+  clienteId: number;
+  compras: ClienteCompraItem[];
+  total: number;
+}
+
+export interface ClienteEstadisticas {
+  clienteId: number;
+  /** @nullable */
+  totalCompras?: string | null;
+  /** @nullable */
+  comprasCount?: number | null;
+}
+
+export interface ClientePagoItem {
+  id?: number;
+  importe?: string;
+  fecha?: string;
+  /** @nullable */
+  formaPago?: string | null;
+}
+
+export interface ClientePagos {
+  clienteId: number;
+  pagos: ClientePagoItem[];
+}
+
+export interface ClientePago {
+  id: number;
+  clienteId: number;
+}
+
+export interface ClientePagoInput {
+  /** @minimum 0.01 */
+  importe: number;
+  formaPago: string;
+  /** @nullable */
+  referencia?: string | null;
+  /** @nullable */
+  notas?: string | null;
+}
+
+export interface ClientesResumen {
+  totalClientes: number;
+  clientesConSaldo: number;
+  totalCartera: string;
+  totalVencido: string;
+}
+
+export type TipoPagoProveedor = typeof TipoPagoProveedor[keyof typeof TipoPagoProveedor];
+
+
+export const TipoPagoProveedor = {
+  COMPRA: 'COMPRA',
+  PAGO: 'PAGO',
+  AJUSTE: 'AJUSTE',
+} as const;
+
+export interface MovimientoLedger {
+  id: number;
+  tipo: TipoPagoProveedor;
+  importe: string;
+  saldoAcumulado: string;
+  fecha: string;
+  /** @nullable */
+  entradaId?: number | null;
+  /** @nullable */
+  folio?: number | null;
+  /** @nullable */
+  formaPago?: string | null;
+  /** @nullable */
+  referencia?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  usuarioId: number;
+  createdAt: string;
+}
+
+export interface ProveedorPagosResult {
+  proveedorId: number;
+  pagos: MovimientoLedger[];
+}
+
 export interface CurrentUser {
   id: number;
   nombre: string;
   usuario: string;
   rol: Role;
   ubicacion: Location | null;
+  alcanceConsulta: AlcanceConsulta;
+  permisos: PermissionMatrix;
 }
 
 export interface User {
@@ -81,6 +347,7 @@ export interface User {
   usuario: string;
   rol: Role;
   ubicacion: Location | null;
+  alcanceConsulta: AlcanceConsulta;
   activo: boolean;
   /** @nullable */
   ultimoAcceso: string | null;
@@ -105,6 +372,7 @@ export interface UserInput {
   rol: Role;
   /** @nullable */
   ubicacionId?: number | null;
+  alcanceConsulta?: AlcanceConsulta;
 }
 
 export interface UserUpdate {
@@ -121,6 +389,7 @@ export interface UserUpdate {
   rol?: Role;
   /** @nullable */
   ubicacionId?: number | null;
+  alcanceConsulta?: AlcanceConsulta;
   activo?: boolean;
   /**
      * @minLength 10
@@ -675,15 +944,6 @@ export interface EntradaListResult {
   pageSize: number;
 }
 
-export type TipoPagoProveedor = typeof TipoPagoProveedor[keyof typeof TipoPagoProveedor];
-
-
-export const TipoPagoProveedor = {
-  COMPRA: 'COMPRA',
-  PAGO: 'PAGO',
-  AJUSTE: 'AJUSTE',
-} as const;
-
 export type FormaPagoProveedor = typeof FormaPagoProveedor[keyof typeof FormaPagoProveedor];
 
 
@@ -741,6 +1001,9 @@ export interface AjusteProveedorInput {
   notas: string;
 }
 
+/**
+ * Datos operativos del proveedor; las métricas financieras solo se incluyen con proveedores_finanzas.ver.
+ */
 export interface ProveedorMetricas {
   id: number;
   nombre: string;
@@ -759,16 +1022,16 @@ export interface ProveedorMetricas {
   activo: boolean;
   createdAt: string;
   /** Total histórico de compras (suma de todos los COMPRAs) */
-  totalCompras: string;
+  totalCompras?: string;
   /** Total comprado en los últimos 12 meses */
-  totalComprado12Meses: string;
+  totalComprado12Meses?: string;
   /** Total comprado en el mes calendario actual */
-  comprasMes: string;
-  totalPagado: string;
-  saldoPendiente: string;
+  comprasMes?: string;
+  totalPagado?: string;
+  saldoPendiente?: string;
   /** @nullable */
-  ultimaCompra: string | null;
-  comprasCount: number;
+  ultimaCompra?: string | null;
+  comprasCount?: number;
 }
 
 export interface ProveedoresResumen {
@@ -783,11 +1046,11 @@ export interface ProveedoresResumen {
 
 export interface ProveedoresListResult {
   totalProveedores: number;
-  proveedoresConSaldo: number;
-  totalDeuda: string;
-  totalPagado: string;
+  proveedoresConSaldo?: number;
+  totalDeuda?: string;
+  totalPagado?: string;
   /** Total comprado al conjunto de proveedores en el mes actual */
-  comprasMes: string;
+  comprasMes?: string;
   items: ProveedorMetricas[];
 }
 
@@ -823,26 +1086,6 @@ export interface ProveedorComprasResult {
   totalCostoPeriodo: string;
   page: number;
   pageSize: number;
-}
-
-export interface MovimientoLedger {
-  id: number;
-  tipo: TipoPagoProveedor;
-  importe: string;
-  saldoAcumulado: string;
-  fecha: string;
-  /** @nullable */
-  entradaId?: number | null;
-  /** @nullable */
-  folio?: number | null;
-  /** @nullable */
-  formaPago?: string | null;
-  /** @nullable */
-  referencia?: string | null;
-  /** @nullable */
-  notas?: string | null;
-  usuarioId: number;
-  createdAt: string;
 }
 
 export interface ProveedorEstadoCuenta {
@@ -991,6 +1234,11 @@ desde?: string;
 /**
  * Fecha fin (inclusive), formato YYYY-MM-DD
  */
+hasta?: string;
+};
+
+export type ListProveedorPagosParams = {
+desde?: string;
 hasta?: string;
 };
 

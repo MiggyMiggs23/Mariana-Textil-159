@@ -1,4 +1,5 @@
 import type { Ubicacion, Usuario } from "@workspace/db";
+import type { PermissionMatrix } from "./permisos";
 
 export function presentLocation(location: Ubicacion) {
   return {
@@ -14,6 +15,7 @@ export function presentLocation(location: Ubicacion) {
 export function presentUser(
   user: Usuario,
   location: Ubicacion | null,
+  permisos?: PermissionMatrix,
 ) {
   return {
     id: user.id,
@@ -21,8 +23,10 @@ export function presentUser(
     usuario: user.usuario,
     rol: user.rol,
     ubicacion: location ? presentLocation(location) : null,
+    alcanceConsulta: user.alcanceConsulta,
     activo: user.activo,
     ultimoAcceso: user.ultimoAcceso,
+    permisos: permisos ? Object.values(permisos) : undefined,
   };
 }
 
@@ -33,6 +37,7 @@ export function sanitizeUserForAudit(user: Usuario) {
     usuario: user.usuario,
     rol: user.rol,
     ubicacionId: user.ubicacionId,
+    alcanceConsulta: user.alcanceConsulta,
     activo: user.activo,
     ultimoAcceso: user.ultimoAcceso?.toISOString() ?? null,
     createdAt: user.createdAt.toISOString(),

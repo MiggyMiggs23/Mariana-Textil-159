@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
-import { rolUsuarioEnum } from "./enums";
+import { alcanceConsultaEnum, rolUsuarioEnum } from "./enums";
 import { ubicacionesTable } from "./locations";
 
 export const usuariosTable = pgTable("usuarios", {
@@ -19,6 +19,9 @@ export const usuariosTable = pgTable("usuarios", {
   rol: rolUsuarioEnum("rol").notNull(),
   ubicacionId: integer("ubicacion_id").references(() => ubicacionesTable.id),
   activo: boolean("activo").notNull().default(true),
+  alcanceConsulta: alcanceConsultaEnum("alcance_consulta")
+    .notNull()
+    .default("TODAS"),
   ultimoAcceso: timestamp("ultimo_acceso", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

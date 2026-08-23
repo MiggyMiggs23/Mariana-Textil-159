@@ -36,8 +36,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink } from "lucide-react";
+import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -131,9 +132,10 @@ export default function ProveedorDetail() {
     }
   }, [proveedor]);
 
-  const canEdit = user?.rol === Role.ADMIN || user?.rol === Role.INVENTARIOS || user?.rol === Role.BODEGA;
-  const canToggleActive = user?.rol === Role.ADMIN;
+  const canEdit = hasPermission(user, Modules.PROVEEDORES, 'editar');
+  const canToggleActive = user?.rol === Role.ADMIN; // Admins only for active status? Or keep based on rule
   const isAdmin = user?.rol === Role.ADMIN;
+  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver');
 
   const handleSave = () => {
     if (!proveedor) return;
@@ -181,12 +183,12 @@ export default function ProveedorDetail() {
 
   const { data: comprasData, isLoading: isComprasLoading } = useListComprasProveedor(provId,
     comprasQuery,
-    { query: { enabled: !!provId, queryKey: getListComprasProveedorQueryKey(provId, comprasQuery) } }
+    { query: { enabled: !!provId && canViewFinanzas, queryKey: getListComprasProveedorQueryKey(provId, comprasQuery) } }
   );
 
   // ----- PAGOS TAB -----
   const { data: estadoCuenta, isLoading: isEstadoCuentaLoading } = useEstadoCuentaProveedor(provId, {}, {
-    query: { enabled: !!provId, queryKey: getEstadoCuentaProveedorQueryKey(provId, {}) }
+    query: { enabled: !!provId && canViewFinanzas, queryKey: getEstadoCuentaProveedorQueryKey(provId, {}) }
   });
 
   const [isPagoOpen, setIsPagoOpen] = useState(false);
@@ -202,7 +204,7 @@ export default function ProveedorDetail() {
 
   const { data: estadisticas, isLoading: isEstadisticasLoading } = useEstadisticasProveedor(provId,
     { desde: estDesde, hasta: estHasta },
-    { query: { enabled: !!provId && !!estDesde && !!estHasta, queryKey: getEstadisticasProveedorQueryKey(provId, { desde: estDesde, hasta: estHasta }) } }
+    { query: { enabled: !!provId && !!estDesde && !!estHasta && canViewFinanzas, queryKey: getEstadisticasProveedorQueryKey(provId, { desde: estDesde, hasta: estHasta }) } }
   );
 
   // EXPORT
@@ -274,14 +276,18 @@ export default function ProveedorDetail() {
             Volver a proveedores
           </Link>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={isExporting} data-testid="button-export-excel">
-              <Download className="w-4 h-4 mr-2" />
-              {isExporting ? "Exportando..." : "Exportar Excel"}
-            </Button>
-            <Button variant="outline" onClick={handlePrint} data-testid="button-print">
-              <Printer className="w-4 h-4 mr-2" />
-              Imprimir PDF
-            </Button>
+            {canViewFinanzas && (
+              <>
+                <Button variant="outline" onClick={handleExport} disabled={isExporting} data-testid="button-export-excel">
+                  <Download className="w-4 h-4 mr-2" />
+                  {isExporting ? "Exportando..." : "Exportar Excel"}
+                </Button>
+                <Button variant="outline" onClick={handlePrint} data-testid="button-print">
+                  <Printer className="w-4 h-4 mr-2" />
+                  Imprimir PDF
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
@@ -310,17 +316,19 @@ export default function ProveedorDetail() {
                 </div>
               </div>
 
-              <div className="bg-muted/30 p-4 rounded-xl border border-border min-w-[200px] flex flex-col justify-center items-end">
-                <span className="text-sm font-medium text-muted-foreground">Saldo Actual</span>
-                <span className={`text-3xl font-bold tracking-tight ${(estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0) ? "text-destructive" : ""}`}>
-                  {formatCurrency(estadoCuenta?.saldoActual || "0")}
-                </span>
-                {estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0 && isAdmin && (
-                  <Button size="sm" className="mt-3 w-full" onClick={() => { setPagoPreselectedEntrada(null); setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
-                    Abonar a cuenta
-                  </Button>
-                )}
-              </div>
+              {canViewFinanzas && (
+                <div className="bg-muted/30 p-4 rounded-xl border border-border min-w-[200px] flex flex-col justify-center items-end">
+                  <span className="text-sm font-medium text-muted-foreground">Saldo Actual</span>
+                  <span className={`text-3xl font-bold tracking-tight ${(estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0) ? "text-destructive" : ""}`}>
+                    {formatCurrency(estadoCuenta?.saldoActual || "0")}
+                  </span>
+                  {estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
+                    <Button size="sm" className="mt-3 w-full" onClick={() => { setPagoPreselectedEntrada(null); setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
+                      Abonar a cuenta
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 pt-6 border-t print-only">
@@ -342,11 +350,15 @@ export default function ProveedorDetail() {
 
         {/* TABS */}
         <Tabs defaultValue="datos" className="no-print">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
-            <TabsTrigger value="datos" data-testid="tab-datos">Datos Generales</TabsTrigger>
-            <TabsTrigger value="compras" data-testid="tab-compras">Compras</TabsTrigger>
-            <TabsTrigger value="pagos" data-testid="tab-pagos">Estado de Cuenta</TabsTrigger>
-            <TabsTrigger value="estadisticas" data-testid="tab-estadisticas">Estadísticas</TabsTrigger>
+          <TabsList className="flex flex-wrap w-full md:w-auto h-auto">
+            <TabsTrigger value="datos" data-testid="tab-datos" className="flex-1 min-w-[120px]">Datos Generales</TabsTrigger>
+            {canViewFinanzas && (
+              <>
+                <TabsTrigger value="compras" data-testid="tab-compras" className="flex-1 min-w-[120px]">Compras</TabsTrigger>
+                <TabsTrigger value="pagos" data-testid="tab-pagos" className="flex-1 min-w-[120px]">Estado de Cuenta</TabsTrigger>
+                <TabsTrigger value="estadisticas" data-testid="tab-estadisticas" className="flex-1 min-w-[120px]">Estadísticas</TabsTrigger>
+              </>
+            )}
           </TabsList>
 
           <TabsContent value="datos" className="mt-6">
@@ -492,14 +504,14 @@ export default function ProveedorDetail() {
                       <TableHead className="text-right">Abonado</TableHead>
                       <TableHead className="text-right">Saldo</TableHead>
                       <TableHead>Estado</TableHead>
-                      {isAdmin && <TableHead className="w-[100px]"></TableHead>}
+                      {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && <TableHead className="w-[100px]"></TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {isComprasLoading ? (
-                      <TableRow><TableCell colSpan={isAdmin ? 9 : 8} className="text-center h-24">Cargando compras...</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className="text-center h-24">Cargando compras...</TableCell></TableRow>
                     ) : comprasData?.items.length === 0 ? (
-                      <TableRow><TableCell colSpan={isAdmin ? 9 : 8} className="text-center h-24 text-muted-foreground">No hay compras registradas para este estado.</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className="text-center h-24 text-muted-foreground">No hay compras registradas para este estado.</TableCell></TableRow>
                     ) : (
                       comprasData?.items.map(compra => (
                         <TableRow
@@ -537,7 +549,7 @@ export default function ProveedorDetail() {
                               {compra.estado}
                             </Badge>
                           </TableCell>
-                          {isAdmin && (
+                          {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
                             <TableCell>
                               {compra.estado !== CompraConEstadoEstado.Pagada && (
                                 <Button size="sm" variant="ghost" className="h-8 w-full text-xs" onClick={(event) => {
@@ -562,7 +574,7 @@ export default function ProveedorDetail() {
                       <TableCell className="text-right font-bold">
                         {formatCurrency(comprasData?.totalCostoPeriodo ?? "0")}
                       </TableCell>
-                      <TableCell colSpan={isAdmin ? 4 : 3} className="text-right text-xs text-muted-foreground">
+                      <TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 4 : 3} className="text-right text-xs text-muted-foreground">
                         Total antes de paginar
                       </TableCell>
                     </TableRow>
@@ -574,7 +586,7 @@ export default function ProveedorDetail() {
 
           <TabsContent value="pagos" className="mt-6 space-y-4">
             <div className="flex justify-end gap-2 mb-4">
-              {isAdmin && (
+              {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
                 <>
                   <Button variant="outline" onClick={() => setIsAjusteOpen(true)} className="text-muted-foreground" data-testid="button-registrar-ajuste">
                     Registrar Ajuste

@@ -5,6 +5,7 @@ import {
   useCreateUser,
   useUpdateUser,
   useListLocations,
+  useGetCurrentUser,
   User, 
   Role,
   getListUsersQueryKey
@@ -21,13 +22,18 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Modules, hasPermission } from "@/lib/permisos";
 
 export default function Usuarios() {
+  const { data: currentUser } = useGetCurrentUser();
   const { data: users, isLoading } = useListUsers();
   const { data: locations } = useListLocations();
   const createUser = useCreateUser();
   const updateUser = useUpdateUser();
   const queryClient = useQueryClient();
+  const canCreate = hasPermission(currentUser, Modules.USUARIOS, "crear");
+  const canEdit = hasPermission(currentUser, Modules.USUARIOS, "editar");
+  const isAdmin = currentUser?.rol === Role.ADMIN;
   
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -39,6 +45,7 @@ export default function Usuarios() {
     password: "",
     rol: Role.CAJA as Role,
     ubicacionId: "null",
+    alcanceConsulta: "PROPIA" as "PROPIA" | "TODAS",
     activo: true
   });
 
@@ -49,6 +56,7 @@ export default function Usuarios() {
       password: "",
       rol: Role.CAJA as Role,
       ubicacionId: "null",
+      alcanceConsulta: "PROPIA",
       activo: true
     });
   };
@@ -65,6 +73,7 @@ export default function Usuarios() {
       password: "", // Empty so it's not updated unless typed
       rol: user.rol,
       ubicacionId: user.ubicacion?.id ? String(user.ubicacion.id) : "null",
+      alcanceConsulta: user.alcanceConsulta || "PROPIA",
       activo: user.activo
     });
     setEditingUser(user);
@@ -85,6 +94,7 @@ export default function Usuarios() {
       nombre: formData.nombre,
       usuario: formData.usuario,
       rol: formData.rol,
+      alcanceConsulta: formData.alcanceConsulta,
       ubicacionId: formData.ubicacionId === "null" ? null : Number(formData.ubicacionId)
     };
 
@@ -153,10 +163,12 @@ export default function Usuarios() {
               Gestión de personal, accesos y asignación de ubicaciones.
             </p>
           </div>
-          <Button onClick={openCreate} className="w-full sm:w-auto">
-            <Plus className="w-4 h-4 mr-2" />
-            Nuevo Usuario
-          </Button>
+          {canCreate && (
+            <Button onClick={openCreate} className="w-full sm:w-auto">
+              <Plus className="w-4 h-4 mr-2" />
+              Nuevo Usuario
+            </Button>
+          )}
         </div>
 
         <Card>
@@ -166,6 +178,7 @@ export default function Usuarios() {
                 <TableRow>
                   <TableHead>Nombre / Usuario</TableHead>
                   <TableHead>Rol</TableHead>
+                  <TableHead>Alcance</TableHead>
                   <TableHead>Ubicación</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead className="text-right">Acciones</TableHead>
@@ -184,6 +197,11 @@ export default function Usuarios() {
                       </Badge>
                     </TableCell>
                     <TableCell>
+                      <Badge variant="secondary" className="font-mono text-[10px]">
+                        {user.alcanceConsulta}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
                       {user.ubicacion ? user.ubicacion.nombre : <span className="text-muted-foreground italic text-sm">Global</span>}
                     </TableCell>
                     <TableCell>
@@ -192,10 +210,12 @@ export default function Usuarios() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => openEdit(user)}>
-                        <Pencil className="w-4 h-4 mr-2" />
-                        Editar
-                      </Button>
+                      {canEdit && (isAdmin || user.rol !== Role.ADMIN) && (
+                        <Button variant="ghost" size="sm" onClick={() => openEdit(user)}>
+                          <Pencil className="w-4 h-4 mr-2" />
+                          Editar
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -243,12 +263,16 @@ export default function Usuarios() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Rol</Label>
-                <Select value={formData.rol} onValueChange={(val) => setFormData({...formData, rol: val as Role})}>
+                <Select
+                  value={formData.rol}
+                  disabled={!!editingUser && editingUser.id === currentUser?.id}
+                  onValueChange={(val) => setFormData({...formData, rol: val as Role})}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona un rol" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={Role.ADMIN}>Administrador</SelectItem>
+                    {isAdmin && <SelectItem value={Role.ADMIN}>Administrador</SelectItem>}
                     <SelectItem value={Role.CAJA}>Caja</SelectItem>
                     <SelectItem value={Role.INVENTARIOS}>Inventarios</SelectItem>
                     <SelectItem value={Role.BODEGA}>Bodega</SelectItem>
@@ -256,21 +280,34 @@ export default function Usuarios() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Ubicación</Label>
-                <Select value={formData.ubicacionId} onValueChange={(val) => setFormData({...formData, ubicacionId: val})}>
+                <Label>Alcance de Consulta</Label>
+                <Select value={formData.alcanceConsulta} onValueChange={(val) => setFormData({...formData, alcanceConsulta: val as "PROPIA" | "TODAS"})}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Global (Sin ubicación)" />
+                    <SelectValue placeholder="PROPIA" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="null">Global (Sin ubicación)</SelectItem>
-                    {locations?.map(loc => (
-                      <SelectItem key={loc.id} value={String(loc.id)}>
-                        {loc.nombre}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="PROPIA">PROPIA (Sólo ubicación asignada)</SelectItem>
+                    <SelectItem value="TODAS">TODAS (Vista global)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Ubicación</Label>
+              <Select value={formData.ubicacionId} onValueChange={(val) => setFormData({...formData, ubicacionId: val})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Global (Sin ubicación)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="null">Global (Sin ubicación)</SelectItem>
+                  {locations?.map(loc => (
+                    <SelectItem key={loc.id} value={String(loc.id)}>
+                      {loc.nombre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2 mt-2">

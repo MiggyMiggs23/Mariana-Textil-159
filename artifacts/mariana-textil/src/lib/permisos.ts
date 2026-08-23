@@ -1,67 +1,45 @@
-import { Role } from "@workspace/api-client-react";
+import { CurrentUser } from "@workspace/api-client-react";
 
 export const Modules = {
-  // INICIO
   DASHBOARD: 'dashboard',
-  // OPERACIÓN
-  VENTAS_POS: 'ventas_pos',
+  POS: 'pos',
   ENTRADAS: 'entradas',
   SALIDAS: 'salidas',
   TRANSFERENCIAS: 'transferencias',
   MOVIMIENTOS: 'movimientos',
-  // INVENTARIO
   INVENTARIO: 'inventario',
   PRODUCTOS: 'productos',
-  // ADMINISTRACIÓN
+  AJUSTES: 'ajustes',
   CLIENTES: 'clientes',
+  CLIENTES_CREDITO: 'clientes_credito',
+  CLIENTES_PRECIOS: 'clientes_precios',
+  CLIENTES_FINANZAS: 'clientes_finanzas',
   PROVEEDORES: 'proveedores',
+  PROVEEDORES_FINANZAS: 'proveedores_finanzas',
+  CONTENEDORES: 'contenedores',
   UBICACIONES: 'ubicaciones',
   USUARIOS: 'usuarios',
-  CONTENEDORES: 'contenedores',
-  // CAJA OPERATIVA
-  CAJA_RESUMEN: 'caja_resumen',
-  CAJA_CORTES: 'caja_cortes',
-  CAJA_COBROS: 'caja_cobros',
-  // REPORTES
-  REPORTES: 'reportes'
+  PERMISOS: 'permisos',
+  RESUMEN_CAJA: 'resumen_caja',
+  CORTES: 'cortes',
+  COBROS_PAGOS: 'cobros_pagos',
+  REPORTES: 'reportes',
+  CONCILIACION: 'conciliacion',
+  AUDITORIA: 'auditoria',
 } as const;
 
 export type Module = typeof Modules[keyof typeof Modules];
 
-export const RolePermissions: Record<Role, Module[]> = {
-  [Role.ADMIN]: Object.values(Modules),
-  [Role.CAJA]: [
-    Modules.DASHBOARD,
-    Modules.VENTAS_POS,
-    Modules.CLIENTES,
-    Modules.CAJA_RESUMEN,
-    Modules.CAJA_CORTES,
-    Modules.CAJA_COBROS,
-    Modules.REPORTES,
-    Modules.PRODUCTOS
-  ],
-  [Role.INVENTARIOS]: [
-    Modules.DASHBOARD,
-    Modules.INVENTARIO,
-    Modules.PRODUCTOS,
-    Modules.MOVIMIENTOS,
-    Modules.TRANSFERENCIAS,
-    Modules.REPORTES,
-    Modules.PROVEEDORES
-  ],
-  [Role.BODEGA]: [
-    Modules.DASHBOARD,
-    Modules.ENTRADAS,
-    Modules.SALIDAS,
-    Modules.TRANSFERENCIAS,
-    Modules.MOVIMIENTOS,
-    Modules.INVENTARIO,
-    Modules.CONTENEDORES,
-    Modules.PRODUCTOS,
-    Modules.PROVEEDORES
-  ]
-};
+export function hasPermission(user: CurrentUser | null | undefined, module: string, action: 'ver' | 'crear' | 'editar' | 'autorizar' = 'ver'): boolean {
+  if (!user || !user.permisos) return false;
+  const perm = user.permisos.find((p) => p.modulo === module);
+  if (!perm) return false;
 
-export function hasPermission(role: Role, module: Module): boolean {
-  return RolePermissions[role]?.includes(module) ?? false;
+  switch (action) {
+    case 'ver': return perm.puedeVer;
+    case 'crear': return perm.puedeCrear;
+    case 'editar': return perm.puedeEditar;
+    case 'autorizar': return perm.puedeAutorizar;
+    default: return false;
+  }
 }

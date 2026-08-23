@@ -33,7 +33,8 @@ import {
   Ship,
   Banknote,
   Receipt,
-  FileBarChart
+  FileBarChart,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -64,7 +65,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "OPERACIÓN",
     items: [
-      { name: "Ventas / POS", path: "/ventas", icon: ShoppingCart, module: Modules.VENTAS_POS, isClickable: false },
+      { name: "Ventas / POS", path: "/ventas", icon: ShoppingCart, module: Modules.POS, isClickable: false },
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: false },
       { name: "Transferencias", path: "/transferencias", icon: ArrowRightLeft, module: Modules.TRANSFERENCIAS, isClickable: false },
@@ -75,7 +76,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "INVENTARIO",
     items: [
       { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
-      { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.MOVIMIENTOS, isClickable: true },
+      { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
       { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
     ]
   },
@@ -86,16 +87,17 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
       { name: "Ubicaciones", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
-      { name: "Conciliación", path: "/administracion/conciliacion", icon: Activity, module: Modules.INVENTARIO, isClickable: true },
+      { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
+      { name: "Conciliación", path: "/administracion/conciliacion", icon: Activity, module: Modules.CONCILIACION, isClickable: true },
       { name: "Próx. Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
     ]
   },
   {
     title: "CAJA OPERATIVA",
     items: [
-      { name: "Resumen de Caja", path: "/caja/resumen", icon: Wallet, module: Modules.CAJA_RESUMEN, isClickable: false },
-      { name: "Cortes", path: "/caja/cortes", icon: Receipt, module: Modules.CAJA_CORTES, isClickable: false },
-      { name: "Cobros y Pagos", path: "/caja/cobros-pagos", icon: Banknote, module: Modules.CAJA_COBROS, isClickable: false },
+      { name: "Resumen de Caja", path: "/caja/resumen", icon: Wallet, module: Modules.RESUMEN_CAJA, isClickable: false },
+      { name: "Cortes", path: "/caja/cortes", icon: Receipt, module: Modules.CORTES, isClickable: false },
+      { name: "Cobros y Pagos", path: "/caja/cobros-pagos", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: false },
     ]
   },
   {
@@ -118,7 +120,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   
   const { data: ajustesPendientes } = useListAjustesPendientes({
     query: {
-      enabled: user?.rol === Role.ADMIN,
+      enabled: hasPermission(user, Modules.AJUSTES, "autorizar"),
       queryKey: getListAjustesPendientesQueryKey()
     }
   });
@@ -162,8 +164,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const renderLocationControl = (compact = false) =>
-    user.rol === Role.ADMIN ? (
+  const renderLocationControl = (compact = false) => {
+    const isTodas = user.alcanceConsulta === "TODAS";
+
+    return isTodas ? (
       <div className={cn("space-y-1", compact ? "w-full" : "w-64")}>
         {!compact && (
           <span className="text-xs font-medium text-muted-foreground">
@@ -201,25 +205,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </Select>
       </div>
     ) : (
-      <div
-        className={cn(
-          "flex items-center gap-2 rounded-md border px-3 py-2 text-sm",
-          compact
-            ? "w-full border-white/20 bg-white/10 text-white"
-            : "border-border bg-muted/40 text-foreground",
+      <div className={cn("space-y-1", compact ? "w-full" : "w-64")}>
+        {!compact && (
+          <span className="text-xs font-medium text-muted-foreground">
+            Ubicación (Sólo lectura)
+          </span>
         )}
-      >
-        <MapPin className="h-4 w-4 shrink-0" />
-        <span className="truncate">
-          {user.ubicacion?.nombre ?? "Sin ubicación"}
-        </span>
+        <div
+          className={cn(
+            "flex items-center gap-2 rounded-md border px-3 py-2 text-sm",
+            compact
+              ? "border-white/20 bg-white/10 text-white h-9"
+              : "border-border bg-muted/40 text-foreground h-9",
+          )}
+        >
+          <MapPin className="h-4 w-4 shrink-0" />
+          <span className="truncate">
+            {user.ubicacion?.nombre ?? "Sin ubicación"}
+          </span>
+        </div>
       </div>
     );
+  };
 
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
       {NAV_GROUPS.map((group) => {
-        const allowedItems = group.items.filter(item => hasPermission(user.rol as Role, item.module));
+        const allowedItems = group.items.filter(item => hasPermission(user, item.module, 'ver'));
         
         if (allowedItems.length === 0) return null;
 
