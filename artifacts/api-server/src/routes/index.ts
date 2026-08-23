@@ -9,6 +9,7 @@ import proveedoresRouter from "./proveedores";
 import clientesRouter from "./clientes";
 import permisosRouter from "./permisos";
 import { inventarioRouter } from "./inventario";
+import posRouter from "./pos";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(proveedoresRouter);
 router.use(clientesRouter);
 router.use(permisosRouter);
 router.use("/inventario", inventarioRouter);
+router.use(posRouter);
 
 export default router;

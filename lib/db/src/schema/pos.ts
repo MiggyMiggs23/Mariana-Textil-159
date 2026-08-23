@@ -175,9 +175,7 @@ export const movimientosCreditoTable = pgTable(
     clienteId: integer("cliente_id")
       .notNull()
       .references(() => clientesTable.id),
-    ticketId: integer("ticket_id")
-      .notNull()
-      .references(() => ticketsTable.id),
+    ticketId: integer("ticket_id").references(() => ticketsTable.id),
     tipo: tipoMovimientoCreditoEnum("tipo").notNull(),
     importe: numeric("importe", { precision: 12, scale: 2 }).notNull(),
     usuarioId: integer("usuario_id")

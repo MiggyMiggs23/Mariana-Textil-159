@@ -1117,6 +1117,8 @@ export type VenderRolloInput = {
   usuarioId: number;
   justificacion?: string | null;
   uuidCliente?: string | null;
+  documentoTipo?: string | null;
+  documentoId?: string | null;
 };
 
 /**
@@ -1165,6 +1167,8 @@ export async function venderRollo(
     cantidad: `-${rollo.cantidadActual}`,
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
     uuidCliente: input.uuidCliente ?? null,
   });
 

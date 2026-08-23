@@ -1,9 +1,17 @@
 import { Router, type IRouter } from "express";
-import { eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
+import {
+  CreateClientePagoBody,
+  CreateClientePagoResponse,
+} from "@workspace/api-zod";
 import {
   auditoriaTable,
   clientesTable,
   db,
+  movimientosCreditoTable,
+  productosTable,
+  ticketLineasTable,
+  ticketsTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
@@ -40,11 +48,18 @@ router.get(
   requierePermiso("clientes_finanzas", "ver"),
   async (_req, res, next): Promise<void> => {
     try {
-      // POS not yet built — return empty structure
+      const [row] = await db
+        .select({
+          totalClientes: sql<number>`COUNT(*)::int`,
+          clientesConSaldo: sql<number>`COUNT(*) FILTER (WHERE ${clientesTable.saldoCredito} > 0)::int`,
+          totalCartera: sql<string>`COALESCE(SUM(${clientesTable.saldoCredito}), 0)::text`,
+        })
+        .from(clientesTable)
+        .where(eq(clientesTable.activo, true));
       res.json({
-        totalClientes: 0,
-        clientesConSaldo: 0,
-        totalCartera: "0.00",
+        totalClientes: row?.totalClientes ?? 0,
+        clientesConSaldo: row?.clientesConSaldo ?? 0,
+        totalCartera: row?.totalCartera ?? "0.00",
         totalVencido: "0.00",
       });
     } catch (e) {
@@ -295,11 +310,52 @@ router.get(
         return;
       }
 
-      // POS not yet built — return empty structure with only unit prices shape
+      const rows = await db
+        .select({
+          productoId: ticketLineasTable.productoId,
+          sku: productosTable.sku,
+          precioUnitario: ticketLineasTable.precioUnitario,
+          fecha: ticketsTable.createdAt,
+        })
+        .from(ticketLineasTable)
+        .innerJoin(
+          ticketsTable,
+          eq(ticketLineasTable.ticketId, ticketsTable.id),
+        )
+        .innerJoin(
+          productosTable,
+          eq(ticketLineasTable.productoId, productosTable.id),
+        )
+        .where(
+          and(
+            eq(ticketsTable.clienteId, id),
+            eq(ticketsTable.estado, "VENDIDO"),
+          ),
+        )
+        .orderBy(desc(ticketsTable.createdAt))
+        .limit(200);
+      const latestByProduct = new Map<number, string[]>();
+      for (const item of rows) {
+        const list = latestByProduct.get(item.productoId) ?? [];
+        if (list.length < 3) list.push(item.precioUnitario);
+        latestByProduct.set(item.productoId, list);
+      }
       res.json({
         clienteId: id,
-        precios: [],
-        nota: "Historial de precios disponible cuando el POS esté activo.",
+        precios: rows.map((item) => {
+          const recent = latestByProduct.get(item.productoId) ?? [];
+          const promedio =
+            recent.reduce((sum, value) => sum + Number(value), 0) /
+            Math.max(recent.length, 1);
+          return {
+            productoId: item.productoId,
+            sku: item.sku,
+            precioUnitario: item.precioUnitario,
+            fecha: item.fecha.toISOString().slice(0, 10),
+            promedio3: promedio.toFixed(2),
+          };
+        }),
+        nota: null,
       });
     } catch (e) {
       next(e);
@@ -325,7 +381,10 @@ router.get(
       }
 
       const [row] = await db
-        .select({ id: clientesTable.id })
+        .select({
+          id: clientesTable.id,
+          saldoCredito: clientesTable.saldoCredito,
+        })
         .from(clientesTable)
         .where(eq(clientesTable.id, id))
         .limit(1);
@@ -335,8 +394,21 @@ router.get(
         return;
       }
 
-      // POS not yet built — return empty structure
-      res.json({ clienteId: id, movimientos: [], saldoActual: "0.00" });
+      const movements = await db
+        .select({
+          tipo: movimientosCreditoTable.tipo,
+          importe: movimientosCreditoTable.importe,
+          fecha: movimientosCreditoTable.createdAt,
+          notas: movimientosCreditoTable.notas,
+        })
+        .from(movimientosCreditoTable)
+        .where(eq(movimientosCreditoTable.clienteId, id))
+        .orderBy(desc(movimientosCreditoTable.createdAt));
+      res.json({
+        clienteId: id,
+        movimientos: movements,
+        saldoActual: row.saldoCredito,
+      });
     } catch (e) {
       next(e);
     }
@@ -360,7 +432,25 @@ router.get(
         return;
       }
 
-      res.json({ clienteId: id, compras: [], total: 0 });
+      const rows = await db
+        .select({
+          id: ticketsTable.id,
+          fecha: ticketsTable.createdAt,
+          total: ticketsTable.total,
+        })
+        .from(ticketsTable)
+        .where(
+          and(
+            eq(ticketsTable.clienteId, id),
+            eq(ticketsTable.estado, "VENDIDO"),
+          ),
+        )
+        .orderBy(desc(ticketsTable.createdAt));
+      res.json({
+        clienteId: id,
+        compras: rows,
+        total: rows.length,
+      });
     } catch (e) {
       next(e);
     }
@@ -384,7 +474,23 @@ router.get(
         return;
       }
 
-      res.json({ clienteId: id, estadisticas: {} });
+      const [summary] = await db
+        .select({
+          totalCompras: sql<string>`COALESCE(SUM(${ticketsTable.total}), 0)::text`,
+          comprasCount: sql<number>`COUNT(*)::int`,
+        })
+        .from(ticketsTable)
+        .where(
+          and(
+            eq(ticketsTable.clienteId, id),
+            eq(ticketsTable.estado, "VENDIDO"),
+          ),
+        );
+      res.json({
+        clienteId: id,
+        totalCompras: summary?.totalCompras ?? "0.00",
+        comprasCount: summary?.comprasCount ?? 0,
+      });
     } catch (e) {
       next(e);
     }
@@ -408,7 +514,24 @@ router.get(
         return;
       }
 
-      res.json({ clienteId: id, pagos: [] });
+      const rows = await db
+        .select({
+          id: movimientosCreditoTable.id,
+          importe: movimientosCreditoTable.importe,
+          fecha: movimientosCreditoTable.createdAt,
+        })
+        .from(movimientosCreditoTable)
+        .where(
+          and(
+            eq(movimientosCreditoTable.clienteId, id),
+            eq(movimientosCreditoTable.tipo, "ABONO"),
+          ),
+        )
+        .orderBy(desc(movimientosCreditoTable.createdAt));
+      res.json({
+        clienteId: id,
+        pagos: rows.map((row) => ({ ...row, formaPago: null })),
+      });
     } catch (e) {
       next(e);
     }
@@ -432,11 +555,72 @@ router.post(
         return;
       }
 
-      // POS not yet built
-      res
-        .status(501)
-        .json({ error: "Pagos de clientes pendiente de implementar con el POS." });
+      const body = CreateClientePagoBody.parse(req.body);
+      const result = await db.transaction(async (tx) => {
+        const [client] = await tx
+          .select()
+          .from(clientesTable)
+          .where(eq(clientesTable.id, id))
+          .for("update")
+          .limit(1);
+        if (!client) return null;
+        const importe = body.importe.toFixed(2);
+        if (Number(importe) > Number(client.saldoCredito)) {
+          throw new Error("PAYMENT_EXCEEDS_BALANCE");
+        }
+        const [created] = await tx
+          .insert(movimientosCreditoTable)
+          .values({
+            clienteId: id,
+            tipo: "ABONO",
+            importe: `-${importe}`,
+            usuarioId: req.auth!.user.id,
+            notas: [
+              `Forma: ${body.formaPago}`,
+              body.referencia ? `Referencia: ${body.referencia}` : null,
+              body.notas ?? null,
+            ]
+              .filter(Boolean)
+              .join(" · "),
+          })
+          .returning();
+        await tx
+          .update(clientesTable)
+          .set({
+            saldoCredito: sql`${clientesTable.saldoCredito} - ${importe}::numeric`,
+          })
+          .where(eq(clientesTable.id, id));
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id,
+          accion: "PAGO_CLIENTE",
+          entidad: "clientes",
+          entidadId: String(id),
+          datosDespues: {
+            movimientoCreditoId: created!.id,
+            importe,
+            formaPago: body.formaPago,
+          },
+          ip: getRequestIp(req),
+        });
+        return created!;
+      });
+      if (!result) {
+        res.status(404).json({ error: "Cliente no encontrado." });
+        return;
+      }
+      res.status(201).json(
+        CreateClientePagoResponse.parse({
+          id: result.id,
+          clienteId: id,
+        }),
+      );
     } catch (e) {
+      if (e instanceof Error && e.message === "PAYMENT_EXCEEDS_BALANCE") {
+        res.status(400).json({
+          error: "El pago no puede exceder el saldo actual.",
+        });
+        return;
+      }
       next(e);
     }
   },
