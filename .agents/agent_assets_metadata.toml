@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "-Te3Pwse1ds6hEX2WZZfr"
+uri = "file://reports/prompt-3d-validation-2026-08-22.md"
+type = "text"
+title = "Salida completa de pruebas — Prompt 3D"
+description = "Reporte íntegro de typecheck y 84 pruebas de permisos, inventario, entradas, proveedores y seguridad API."
+logical_id = "20299ef2-0c1f-4b9f-b056-c346b46896c0"
+content_hash = "sha256:6ce0f4a6f159dc43776fe8ffc071686d8b44c770040c20e253a26140a8925b2e"
+size = 34691
+mtime_ms = 1787450711398
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/20299ef2-0c1f-4b9f-b056-c346b46896c0/0ba981a6-be30-4ac4-a7f2-4849e34ca03e"
+storage_version_token = "1787450711872239"
+content_type = "text/markdown"
