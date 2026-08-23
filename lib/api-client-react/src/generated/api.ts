@@ -23,6 +23,7 @@ import type {
   ActivarRolloInput,
   AjusteProveedorInput,
   AjusteRolloInput,
+  BuscarPosParams,
   Cliente,
   ClienteCompras,
   ClienteCredito,
@@ -36,6 +37,8 @@ import type {
   ClienteUpdate,
   ClientesResumen,
   ConciliacionRow,
+  ConflictResponse,
+  CorteCaja,
   CurrentUser,
   Dashboard,
   EntradaDetail,
@@ -60,12 +63,14 @@ import type {
   ListEntradasParams,
   ListProveedorPagosParams,
   ListRollosParams,
+  ListarTicketsParams,
   Location,
   LocationUpdate,
   LoginInput,
   MoverRolloInput,
   MovimientoRow,
   NotFoundResponse,
+  ObtenerSesionCajaActualParams,
   PagoProveedorInput,
   PagoProveedorRow,
   PermisosPreview,
@@ -74,6 +79,7 @@ import type {
   PermisosUsuarioRow,
   PermissionFlags,
   PermissionFlagsNullable,
+  PosBusquedaResult,
   Producto,
   ProductoDetail,
   ProductoInput,
@@ -96,6 +102,15 @@ import type {
   RolloListResult,
   SalidaMostradorInput,
   ServerTime,
+  SesionCaja,
+  SesionCajaActual,
+  SesionCajaAperturaInput,
+  SesionCajaCierreInput,
+  TicketCancelacionInput,
+  TicketCobroInput,
+  TicketDetalle,
+  TicketInput,
+  TicketResumen,
   UnauthorizedResponse,
   User,
   UserInput,
@@ -5086,4 +5101,768 @@ export function useGetPermisosPreview<TData = Awaited<ReturnType<typeof getPermi
 
 
 
+
+export const getBuscarPosUrl = (params: BuscarPosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pos/buscar?${stringifiedParams}` : `/api/pos/buscar`
+}
+
+/**
+ * @summary Busca rollos disponibles y productos para venta
+ */
+export const buscarPos = async (params: BuscarPosParams, options?: Parameters<typeof customFetch>[1]): Promise<PosBusquedaResult> => {
+
+  return customFetch<PosBusquedaResult>(getBuscarPosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getBuscarPosQueryKey = (params?: BuscarPosParams,) => {
+    return [
+    `/api/pos/buscar`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getBuscarPosQueryOptions = <TData = Awaited<ReturnType<typeof buscarPos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: BuscarPosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof buscarPos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getBuscarPosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof buscarPos>>> = ({ signal }) => buscarPos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof buscarPos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type BuscarPosQueryResult = NonNullable<Awaited<ReturnType<typeof buscarPos>>>
+export type BuscarPosQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Busca rollos disponibles y productos para venta
+ */
+
+export function useBuscarPos<TData = Awaited<ReturnType<typeof buscarPos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: BuscarPosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof buscarPos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getBuscarPosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCrearTicketUrl = () => {
+
+
+
+
+  return `/api/tickets`
+}
+
+/**
+ * @summary Crea un ticket normal o de venta metreada sin cobrarlo
+ */
+export const crearTicket = async (ticketInput: TicketInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+
+  return customFetch<TicketDetalle>(getCrearTicketUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(ticketInput)
+  }
+);}
+
+
+
+
+
+export const getCrearTicketMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearTicket>>, TError,{data: BodyType<TicketInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof crearTicket>>, TError,{data: BodyType<TicketInput>}, TContext> => {
+
+const mutationKey = ['crearTicket'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearTicket>>, {data: BodyType<TicketInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  crearTicket(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrearTicketMutationResult = NonNullable<Awaited<ReturnType<typeof crearTicket>>>
+    export type CrearTicketMutationBody = BodyType<TicketInput>
+    export type CrearTicketMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Crea un ticket normal o de venta metreada sin cobrarlo
+ */
+export const useCrearTicket = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearTicket>>, TError,{data: BodyType<TicketInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof crearTicket>>,
+        TError,
+        {data: BodyType<TicketInput>},
+        TContext
+      > => {
+      return useMutation(getCrearTicketMutationOptions(options));
+    }
+
+export const getListarTicketsUrl = (params?: ListarTicketsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/tickets?${stringifiedParams}` : `/api/tickets`
+}
+
+/**
+ * @summary Lista tickets de la ubicación con filtros operativos
+ */
+export const listarTickets = async (params?: ListarTicketsParams, options?: Parameters<typeof customFetch>[1]): Promise<TicketResumen[]> => {
+
+  return customFetch<TicketResumen[]>(getListarTicketsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarTicketsQueryKey = (params?: ListarTicketsParams,) => {
+    return [
+    `/api/tickets`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListarTicketsQueryOptions = <TData = Awaited<ReturnType<typeof listarTickets>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListarTicketsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarTickets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarTicketsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarTickets>>> = ({ signal }) => listarTickets(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarTickets>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarTicketsQueryResult = NonNullable<Awaited<ReturnType<typeof listarTickets>>>
+export type ListarTicketsQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista tickets de la ubicación con filtros operativos
+ */
+
+export function useListarTickets<TData = Awaited<ReturnType<typeof listarTickets>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListarTicketsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarTickets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarTicketsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getObtenerTicketUrl = (id: number,) => {
+
+
+
+
+  return `/api/tickets/${id}`
+}
+
+/**
+ * @summary Obtiene el detalle completo de un ticket
+ */
+export const obtenerTicket = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+
+  return customFetch<TicketDetalle>(getObtenerTicketUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerTicketQueryKey = (id: number,) => {
+    return [
+    `/api/tickets/${id}`
+    ] as const;
+    }
+
+
+export const getObtenerTicketQueryOptions = <TData = Awaited<ReturnType<typeof obtenerTicket>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerTicket>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerTicketQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerTicket>>> = ({ signal }) => obtenerTicket(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerTicket>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerTicketQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerTicket>>>
+export type ObtenerTicketQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el detalle completo de un ticket
+ */
+
+export function useObtenerTicket<TData = Awaited<ReturnType<typeof obtenerTicket>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerTicket>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerTicketQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCancelarTicketUrl = (id: number,) => {
+
+
+
+
+  return `/api/tickets/${id}/cancelar`
+}
+
+/**
+ * @summary Cancela un ticket y revierte sus movimientos
+ */
+export const cancelarTicket = async (id: number,
+    ticketCancelacionInput: TicketCancelacionInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+
+  return customFetch<TicketDetalle>(getCancelarTicketUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(ticketCancelacionInput)
+  }
+);}
+
+
+
+
+
+export const getCancelarTicketMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelarTicket>>, TError,{id: number;data: BodyType<TicketCancelacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cancelarTicket>>, TError,{id: number;data: BodyType<TicketCancelacionInput>}, TContext> => {
+
+const mutationKey = ['cancelarTicket'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelarTicket>>, {id: number;data: BodyType<TicketCancelacionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  cancelarTicket(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CancelarTicketMutationResult = NonNullable<Awaited<ReturnType<typeof cancelarTicket>>>
+    export type CancelarTicketMutationBody = BodyType<TicketCancelacionInput>
+    export type CancelarTicketMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Cancela un ticket y revierte sus movimientos
+ */
+export const useCancelarTicket = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelarTicket>>, TError,{id: number;data: BodyType<TicketCancelacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cancelarTicket>>,
+        TError,
+        {id: number;data: BodyType<TicketCancelacionInput>},
+        TContext
+      > => {
+      return useMutation(getCancelarTicketMutationOptions(options));
+    }
+
+export const getCobrarTicketUrl = (id: number,) => {
+
+
+
+
+  return `/api/tickets/${id}/cobrar`
+}
+
+/**
+ * @summary Cobra un ticket con uno o varios pagos
+ */
+export const cobrarTicket = async (id: number,
+    ticketCobroInput: TicketCobroInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+
+  return customFetch<TicketDetalle>(getCobrarTicketUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(ticketCobroInput)
+  }
+);}
+
+
+
+
+
+export const getCobrarTicketMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cobrarTicket>>, TError,{id: number;data: BodyType<TicketCobroInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cobrarTicket>>, TError,{id: number;data: BodyType<TicketCobroInput>}, TContext> => {
+
+const mutationKey = ['cobrarTicket'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cobrarTicket>>, {id: number;data: BodyType<TicketCobroInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  cobrarTicket(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CobrarTicketMutationResult = NonNullable<Awaited<ReturnType<typeof cobrarTicket>>>
+    export type CobrarTicketMutationBody = BodyType<TicketCobroInput>
+    export type CobrarTicketMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Cobra un ticket con uno o varios pagos
+ */
+export const useCobrarTicket = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cobrarTicket>>, TError,{id: number;data: BodyType<TicketCobroInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cobrarTicket>>,
+        TError,
+        {id: number;data: BodyType<TicketCobroInput>},
+        TContext
+      > => {
+      return useMutation(getCobrarTicketMutationOptions(options));
+    }
+
+export const getObtenerSesionCajaActualUrl = (params?: ObtenerSesionCajaActualParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/sesiones-caja/actual?${stringifiedParams}` : `/api/sesiones-caja/actual`
+}
+
+/**
+ * @summary Obtiene la sesión abierta actual de la ubicación
+ */
+export const obtenerSesionCajaActual = async (params?: ObtenerSesionCajaActualParams, options?: Parameters<typeof customFetch>[1]): Promise<SesionCajaActual> => {
+
+  return customFetch<SesionCajaActual>(getObtenerSesionCajaActualUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerSesionCajaActualQueryKey = (params?: ObtenerSesionCajaActualParams,) => {
+    return [
+    `/api/sesiones-caja/actual`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getObtenerSesionCajaActualQueryOptions = <TData = Awaited<ReturnType<typeof obtenerSesionCajaActual>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ObtenerSesionCajaActualParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerSesionCajaActual>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerSesionCajaActualQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerSesionCajaActual>>> = ({ signal }) => obtenerSesionCajaActual(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerSesionCajaActual>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerSesionCajaActualQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerSesionCajaActual>>>
+export type ObtenerSesionCajaActualQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Obtiene la sesión abierta actual de la ubicación
+ */
+
+export function useObtenerSesionCajaActual<TData = Awaited<ReturnType<typeof obtenerSesionCajaActual>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ObtenerSesionCajaActualParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerSesionCajaActual>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerSesionCajaActualQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getAbrirSesionCajaUrl = () => {
+
+
+
+
+  return `/api/sesiones-caja/abrir`
+}
+
+/**
+ * @summary Abre un turno de caja para una ubicación
+ */
+export const abrirSesionCaja = async (sesionCajaAperturaInput: SesionCajaAperturaInput, options?: Parameters<typeof customFetch>[1]): Promise<SesionCaja> => {
+
+  return customFetch<SesionCaja>(getAbrirSesionCajaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(sesionCajaAperturaInput)
+  }
+);}
+
+
+
+
+
+export const getAbrirSesionCajaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abrirSesionCaja>>, TError,{data: BodyType<SesionCajaAperturaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof abrirSesionCaja>>, TError,{data: BodyType<SesionCajaAperturaInput>}, TContext> => {
+
+const mutationKey = ['abrirSesionCaja'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof abrirSesionCaja>>, {data: BodyType<SesionCajaAperturaInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  abrirSesionCaja(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AbrirSesionCajaMutationResult = NonNullable<Awaited<ReturnType<typeof abrirSesionCaja>>>
+    export type AbrirSesionCajaMutationBody = BodyType<SesionCajaAperturaInput>
+    export type AbrirSesionCajaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Abre un turno de caja para una ubicación
+ */
+export const useAbrirSesionCaja = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abrirSesionCaja>>, TError,{data: BodyType<SesionCajaAperturaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof abrirSesionCaja>>,
+        TError,
+        {data: BodyType<SesionCajaAperturaInput>},
+        TContext
+      > => {
+      return useMutation(getAbrirSesionCajaMutationOptions(options));
+    }
+
+export const getObtenerCorteCajaUrl = (id: number,) => {
+
+
+
+
+  return `/api/sesiones-caja/${id}/corte`
+}
+
+/**
+ * @summary Obtiene el corte completo y sus desgloses
+ */
+export const obtenerCorteCaja = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<CorteCaja> => {
+
+  return customFetch<CorteCaja>(getObtenerCorteCajaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerCorteCajaQueryKey = (id: number,) => {
+    return [
+    `/api/sesiones-caja/${id}/corte`
+    ] as const;
+    }
+
+
+export const getObtenerCorteCajaQueryOptions = <TData = Awaited<ReturnType<typeof obtenerCorteCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerCorteCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerCorteCajaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerCorteCaja>>> = ({ signal }) => obtenerCorteCaja(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerCorteCaja>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerCorteCajaQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerCorteCaja>>>
+export type ObtenerCorteCajaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el corte completo y sus desgloses
+ */
+
+export function useObtenerCorteCaja<TData = Awaited<ReturnType<typeof obtenerCorteCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerCorteCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerCorteCajaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCerrarSesionCajaUrl = (id: number,) => {
+
+
+
+
+  return `/api/sesiones-caja/${id}/cerrar`
+}
+
+/**
+ * @summary Cierra un turno y registra el efectivo contado
+ */
+export const cerrarSesionCaja = async (id: number,
+    sesionCajaCierreInput: SesionCajaCierreInput, options?: Parameters<typeof customFetch>[1]): Promise<CorteCaja> => {
+
+  return customFetch<CorteCaja>(getCerrarSesionCajaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(sesionCajaCierreInput)
+  }
+);}
+
+
+
+
+
+export const getCerrarSesionCajaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cerrarSesionCaja>>, TError,{id: number;data: BodyType<SesionCajaCierreInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cerrarSesionCaja>>, TError,{id: number;data: BodyType<SesionCajaCierreInput>}, TContext> => {
+
+const mutationKey = ['cerrarSesionCaja'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cerrarSesionCaja>>, {id: number;data: BodyType<SesionCajaCierreInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  cerrarSesionCaja(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CerrarSesionCajaMutationResult = NonNullable<Awaited<ReturnType<typeof cerrarSesionCaja>>>
+    export type CerrarSesionCajaMutationBody = BodyType<SesionCajaCierreInput>
+    export type CerrarSesionCajaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Cierra un turno y registra el efectivo contado
+ */
+export const useCerrarSesionCaja = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cerrarSesionCaja>>, TError,{id: number;data: BodyType<SesionCajaCierreInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cerrarSesionCaja>>,
+        TError,
+        {id: number;data: BodyType<SesionCajaCierreInput>},
+        TContext
+      > => {
+      return useMutation(getCerrarSesionCajaMutationOptions(options));
+    }
 

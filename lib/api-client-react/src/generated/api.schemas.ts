@@ -1161,6 +1161,325 @@ export interface ProveedorEstadisticas {
   porColor: EstadisticasPorColor[];
 }
 
+export type TipoTicket = typeof TipoTicket[keyof typeof TipoTicket];
+
+
+export const TipoTicket = {
+  NORMAL: 'NORMAL',
+  METREADO: 'METREADO',
+} as const;
+
+export type EstadoTicket = typeof EstadoTicket[keyof typeof EstadoTicket];
+
+
+export const EstadoTicket = {
+  VENDIDO: 'VENDIDO',
+  CANCELADO: 'CANCELADO',
+} as const;
+
+export type FormaPagoTicket = typeof FormaPagoTicket[keyof typeof FormaPagoTicket];
+
+
+export const FormaPagoTicket = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CREDITO: 'CREDITO',
+} as const;
+
+export type EstadoSesionCaja = typeof EstadoSesionCaja[keyof typeof EstadoSesionCaja];
+
+
+export const EstadoSesionCaja = {
+  ABIERTA: 'ABIERTA',
+  CERRADA: 'CERRADA',
+} as const;
+
+export interface CredencialesAdmin {
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  usuario: string;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  password: string;
+}
+
+export interface PosRolloDisponible {
+  id: number;
+  serie: string;
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  cantidadActual: string;
+  precioSugerido: string;
+}
+
+export interface PosProducto {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  precioSugerido: string;
+  activo: boolean;
+}
+
+export interface PosBusquedaResult {
+  /** Solo rollos con estado DISPONIBLE */
+  rollos: PosRolloDisponible[];
+  productos: PosProducto[];
+}
+
+export interface TicketLineaInput {
+  /** @nullable */
+  rolloId: number | null;
+  productoId: number;
+  /** @exclusiveMinimum 0 */
+  cantidad: number;
+  /** @minimum 0 */
+  precioUnitario: number;
+}
+
+export interface TicketInput {
+  /** Identificador UUID generado por la terminal */
+  uuidCliente: string;
+  ubicacionId: number;
+  /** @nullable */
+  clienteId: number | null;
+  tipo: TipoTicket;
+  facturado: boolean;
+  /** @minItems 1 */
+  lineas: TicketLineaInput[];
+}
+
+export interface TicketPagoInput {
+  formaPago: FormaPagoTicket;
+  /** @exclusiveMinimum 0 */
+  importe: number;
+  /** @nullable */
+  referencia?: string | null;
+}
+
+export interface TicketCobroInput {
+  /** @minItems 1 */
+  pagos: TicketPagoInput[];
+  /** @nullable */
+  clienteId?: number | null;
+  credencialesAdmin?: CredencialesAdmin | null;
+}
+
+export interface TicketCancelacionInput {
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  motivo: string;
+  credencialesAdmin?: CredencialesAdmin | null;
+}
+
+export interface TicketPago {
+  id: number;
+  ticketId: number;
+  formaPago: FormaPagoTicket;
+  importe: string;
+  /** @nullable */
+  referencia: string | null;
+  createdAt: string;
+  usuarioId: number;
+  nombreUsuario: string;
+}
+
+export interface TicketLinea {
+  id: number;
+  ticketId: number;
+  /** @nullable */
+  rolloId: number | null;
+  productoId: number;
+  cantidad: string;
+  precioUnitario: string;
+  precioSugerido: string;
+  importe: string;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: UnidadProducto;
+  /** @nullable */
+  serieRollo: string | null;
+  nombreUbicacion: string;
+  /**
+     * Dato administrativo; puede omitirse para TERMINAL
+     * @nullable
+     */
+  costoUnitarioCongelado?: string | null;
+  /**
+     * Dato administrativo; puede omitirse para TERMINAL
+     * @nullable
+     */
+  costoTotalCongelado?: string | null;
+  /**
+     * Dato administrativo calculado; puede omitirse para TERMINAL
+     * @nullable
+     */
+  margen?: string | null;
+}
+
+export interface TicketResumen {
+  id: number;
+  folio: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  usuarioTerminalId: number;
+  nombreUsuarioTerminal: string;
+  /** @nullable */
+  clienteId: number | null;
+  /** @nullable */
+  nombreCliente: string | null;
+  tipo: TipoTicket;
+  subtotal: string;
+  total: string;
+  estado: EstadoTicket;
+  lineasCount?: number;
+  cobrado?: boolean;
+  /** @nullable */
+  cobradoAt?: string | null;
+  /** @nullable */
+  usuarioCajaId?: number | null;
+  /** @nullable */
+  nombreUsuarioCaja?: string | null;
+  facturado: boolean;
+  /** @nullable */
+  sesionCajaId?: number | null;
+  /** Identificador UUID generado por la terminal */
+  uuidCliente: string;
+  createdAt: string;
+  /** @nullable */
+  canceladoAt: string | null;
+  /** @nullable */
+  canceladoPor: number | null;
+  /** @nullable */
+  nombreUsuarioCancelacion: string | null;
+  /** @nullable */
+  motivoCancelacion: string | null;
+  /** @nullable */
+  autorizadoPor: number | null;
+  /** @nullable */
+  nombreUsuarioAutorizacion: string | null;
+}
+
+export type TicketDetalle = TicketResumen & {
+  lineas: TicketLinea[];
+  pagos?: TicketPago[];
+};
+
+export interface SesionCajaAperturaInput {
+  /** @minimum 0 */
+  fondoInicial: number;
+  ubicacionId: number;
+}
+
+export interface SesionCajaCierreInput {
+  /** @minimum 0 */
+  efectivoContado: number;
+}
+
+export interface SesionCajaResumen {
+  ticketsCobrados: number;
+  ticketsPendientes: number;
+  totalCobrado: string;
+  efectivoEsperado: string;
+}
+
+export interface SesionCaja {
+  id: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  usuarioId: number;
+  nombreUsuario: string;
+  abiertaAt: string;
+  /** @nullable */
+  cerradaAt: string | null;
+  fondoInicial: string;
+  /** @nullable */
+  efectivoContado: string | null;
+  estado: EstadoSesionCaja;
+}
+
+export interface SesionCajaActual {
+  sesion: SesionCaja | null;
+  resumen: SesionCajaResumen | null;
+}
+
+export interface CorteFormaPago {
+  formaPago: FormaPagoTicket;
+  importe: string;
+  pagosCount: number;
+  ticketsCount: number;
+}
+
+export interface CorteCuentaDestino {
+  formaPago: FormaPagoTicket;
+  cuentaDestino: string;
+  importe: string;
+}
+
+export interface CorteFacturacion {
+  facturado: boolean;
+  ticketsCount: number;
+  importe: string;
+}
+
+export interface CorteMetreado {
+  tipo: TipoTicket;
+  ticketsCount: number;
+  cantidad: string;
+  importe: string;
+}
+
+export interface CorteProducto {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  cantidad: string;
+  importe: string;
+}
+
+export interface CortePendiente {
+  ticketId: number;
+  folio: number;
+  total: string;
+  /** @nullable */
+  nombreCliente: string | null;
+  createdAt: string;
+}
+
+export interface CorteCaja {
+  sesion: SesionCaja;
+  formasPago: CorteFormaPago[];
+  cuentasDestino: CorteCuentaDestino[];
+  /** Desglose facturado y no facturado */
+  facturacion: CorteFacturacion[];
+  /** Desglose NORMAL y METREADO */
+  metreado: CorteMetreado[];
+  productos: CorteProducto[];
+  pendientes: CortePendiente[];
+  fondoInicial: string;
+  totalCobrado: string;
+  efectivoEsperado: string;
+  /** @nullable */
+  efectivoContado: string | null;
+  /** @nullable */
+  diferencia: string | null;
+}
+
 /**
  * Sesión no válida
  */
@@ -1180,6 +1499,11 @@ export type NotFoundResponse = Error;
  * Datos inválidos
  */
 export type ValidationErrorResponse = Error;
+
+/**
+ * Conflicto con el estado actual del recurso
+ */
+export type ConflictResponse = Error;
 
 /**
  * Demasiados intentos
@@ -1316,6 +1640,29 @@ pageSize?: number;
 
 export type GetConciliacionParams = {
 productoId?: number;
+ubicacionId?: number;
+};
+
+export type BuscarPosParams = {
+/**
+ * Texto a buscar por serie, SKU, tela o color
+ * @minLength 1
+ */
+q: string;
+/**
+ * Ubicación donde el rollo debe estar DISPONIBLE
+ */
+ubicacionId?: number;
+};
+
+export type ListarTicketsParams = {
+ubicacionId?: number;
+cobrado?: boolean;
+estado?: EstadoTicket;
+folio?: number;
+};
+
+export type ObtenerSesionCajaActualParams = {
 ubicacionId?: number;
 };
 

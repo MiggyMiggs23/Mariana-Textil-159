@@ -27,6 +27,10 @@ tags:
     description: Administración de permisos por rol y por usuario
   - name: inventario
     description: Inventario de rollos, kardex, ajustes y conciliación
+  - name: pos
+    description: Punto de venta y búsqueda para terminal
+  - name: caja
+    description: Apertura, cobro y corte de caja
 paths:
   /healthz:
     get:
@@ -1557,6 +1561,274 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /pos/buscar:
+    get:
+      operationId: buscarPos
+      tags: [pos]
+      summary: Busca rollos disponibles y productos para venta
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema: { type: string, minLength: 1 }
+          description: Texto a buscar por serie, SKU, tela o color
+        - in: query
+          name: ubicacionId
+          required: false
+          schema: { type: number }
+          description: Ubicación donde el rollo debe estar DISPONIBLE
+      responses:
+        "200":
+          description: Resultados disponibles para la terminal, sin costos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PosBusquedaResult"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /tickets:
+    post:
+      operationId: crearTicket
+      tags: [pos]
+      summary: Crea un ticket normal o de venta metreada sin cobrarlo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketInput"
+      responses:
+        "201":
+          description: Ticket creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDetalle"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+    get:
+      operationId: listarTickets
+      tags: [pos]
+      summary: Lista tickets de la ubicación con filtros operativos
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: cobrado
+          schema: { type: boolean }
+        - in: query
+          name: estado
+          schema:
+            $ref: "#/components/schemas/EstadoTicket"
+        - in: query
+          name: folio
+          schema: { type: number }
+      responses:
+        "200":
+          description: Tickets encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TicketResumen"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /tickets/{id}:
+    get:
+      operationId: obtenerTicket
+      tags: [pos]
+      summary: Obtiene el detalle completo de un ticket
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+      responses:
+        "200":
+          description: Detalle del ticket
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDetalle"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /tickets/{id}/cancelar:
+    post:
+      operationId: cancelarTicket
+      tags: [pos]
+      summary: Cancela un ticket y revierte sus movimientos
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketCancelacionInput"
+      responses:
+        "200":
+          description: Ticket cancelado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDetalle"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /tickets/{id}/cobrar:
+    post:
+      operationId: cobrarTicket
+      tags: [caja]
+      summary: Cobra un ticket con uno o varios pagos
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketCobroInput"
+      responses:
+        "200":
+          description: Ticket cobrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDetalle"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /sesiones-caja/actual:
+    get:
+      operationId: obtenerSesionCajaActual
+      tags: [caja]
+      summary: Obtiene la sesión abierta actual de la ubicación
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+      responses:
+        "200":
+          description: Sesión abierta o null si no hay turno
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SesionCajaActual"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /sesiones-caja/abrir:
+    post:
+      operationId: abrirSesionCaja
+      tags: [caja]
+      summary: Abre un turno de caja para una ubicación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SesionCajaAperturaInput"
+      responses:
+        "201":
+          description: Sesión de caja abierta
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SesionCaja"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /sesiones-caja/{id}/corte:
+    get:
+      operationId: obtenerCorteCaja
+      tags: [caja]
+      summary: Obtiene el corte completo y sus desgloses
+      parameters:
+        - $ref: "#/components/parameters/SesionCajaId"
+      responses:
+        "200":
+          description: Corte de caja completo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorteCaja"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /sesiones-caja/{id}/cerrar:
+    post:
+      operationId: cerrarSesionCaja
+      tags: [caja]
+      summary: Cierra un turno y registra el efectivo contado
+      parameters:
+        - $ref: "#/components/parameters/SesionCajaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SesionCajaCierreInput"
+      responses:
+        "200":
+          description: Corte final de la sesión cerrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorteCaja"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
 components:
   parameters:
     LocationId:
@@ -1607,6 +1879,18 @@ components:
       required: true
       schema:
         type: number
+    TicketId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+    SesionCajaId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
   responses:
     Unauthorized:
       description: Sesión no válida
@@ -1628,6 +1912,12 @@ components:
             $ref: "#/components/schemas/Error"
     ValidationError:
       description: Datos inválidos
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Conflict:
+      description: Conflicto con el estado actual del recurso
       content:
         application/json:
           schema:
@@ -2746,3 +3036,341 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/EstadisticasPorColor"
+    TipoTicket:
+      type: string
+      enum: [NORMAL, METREADO]
+    EstadoTicket:
+      type: string
+      enum: [VENDIDO, CANCELADO]
+    FormaPagoTicket:
+      type: string
+      enum: [EFECTIVO, TRANSFERENCIA, CREDITO]
+    EstadoSesionCaja:
+      type: string
+      enum: [ABIERTA, CERRADA]
+    CredencialesAdmin:
+      type: object
+      required: [usuario, password]
+      properties:
+        usuario: { type: string, minLength: 1, maxLength: 64 }
+        password: { type: string, minLength: 1, maxLength: 128 }
+    PosRolloDisponible:
+      type: object
+      required: [id, serie, productoId, sku, tela, color, unidad, ubicacionId, nombreUbicacion, cantidadActual, precioSugerido]
+      properties:
+        id: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        cantidadActual: { type: string }
+        precioSugerido: { type: string }
+    PosProducto:
+      type: object
+      required: [id, sku, tela, color, unidad, precioSugerido, activo]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        precioSugerido: { type: string }
+        activo: { type: boolean }
+    PosBusquedaResult:
+      type: object
+      required: [rollos, productos]
+      properties:
+        rollos:
+          type: array
+          description: Solo rollos con estado DISPONIBLE
+          items:
+            $ref: "#/components/schemas/PosRolloDisponible"
+        productos:
+          type: array
+          items:
+            $ref: "#/components/schemas/PosProducto"
+    TicketLineaInput:
+      type: object
+      required: [rolloId, productoId, cantidad, precioUnitario]
+      properties:
+        rolloId: { type: ["number", "null"] }
+        productoId: { type: number }
+        cantidad: { type: number, exclusiveMinimum: 0 }
+        precioUnitario: { type: number, minimum: 0 }
+    TicketInput:
+      type: object
+      required: [uuidCliente, ubicacionId, clienteId, tipo, facturado, lineas]
+      properties:
+        uuidCliente: { type: string, description: Identificador UUID generado por la terminal }
+        ubicacionId: { type: number }
+        clienteId: { type: ["number", "null"] }
+        tipo:
+          $ref: "#/components/schemas/TipoTicket"
+        facturado: { type: boolean }
+        lineas:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/TicketLineaInput"
+    TicketPagoInput:
+      type: object
+      required: [formaPago, importe]
+      properties:
+        formaPago:
+          $ref: "#/components/schemas/FormaPagoTicket"
+        importe: { type: number, exclusiveMinimum: 0 }
+        referencia: { type: ["string", "null"] }
+    TicketCobroInput:
+      type: object
+      required: [pagos]
+      properties:
+        pagos:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/TicketPagoInput"
+        clienteId: { type: ["number", "null"] }
+        credencialesAdmin:
+          oneOf:
+            - $ref: "#/components/schemas/CredencialesAdmin"
+            - type: "null"
+    TicketCancelacionInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 1, maxLength: 1000 }
+        credencialesAdmin:
+          oneOf:
+            - $ref: "#/components/schemas/CredencialesAdmin"
+            - type: "null"
+    TicketPago:
+      type: object
+      required: [id, ticketId, formaPago, importe, referencia, createdAt, usuarioId, nombreUsuario]
+      properties:
+        id: { type: number }
+        ticketId: { type: number }
+        formaPago:
+          $ref: "#/components/schemas/FormaPagoTicket"
+        importe: { type: string }
+        referencia: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+    TicketLinea:
+      type: object
+      required: [id, ticketId, rolloId, productoId, cantidad, precioUnitario, precioSugerido, importe, skuProducto, telaProducto, colorProducto, unidadProducto, serieRollo, nombreUbicacion]
+      properties:
+        id: { type: number }
+        ticketId: { type: number }
+        rolloId: { type: ["number", "null"] }
+        productoId: { type: number }
+        cantidad: { type: string }
+        precioUnitario: { type: string }
+        precioSugerido: { type: string }
+        importe: { type: string }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto:
+          $ref: "#/components/schemas/UnidadProducto"
+        serieRollo: { type: ["string", "null"] }
+        nombreUbicacion: { type: string }
+        costoUnitarioCongelado:
+          type: ["string", "null"]
+          description: Dato administrativo; puede omitirse para TERMINAL
+        costoTotalCongelado:
+          type: ["string", "null"]
+          description: Dato administrativo; puede omitirse para TERMINAL
+        margen:
+          type: ["string", "null"]
+          description: Dato administrativo calculado; puede omitirse para TERMINAL
+    TicketResumen:
+      type: object
+      required: [id, folio, ubicacionId, nombreUbicacion, usuarioTerminalId, nombreUsuarioTerminal, clienteId, nombreCliente, tipo, subtotal, total, estado, facturado, uuidCliente, createdAt, canceladoAt, canceladoPor, nombreUsuarioCancelacion, motivoCancelacion, autorizadoPor, nombreUsuarioAutorizacion]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        usuarioTerminalId: { type: number }
+        nombreUsuarioTerminal: { type: string }
+        clienteId: { type: ["number", "null"] }
+        nombreCliente: { type: ["string", "null"] }
+        tipo:
+          $ref: "#/components/schemas/TipoTicket"
+        subtotal: { type: string }
+        total: { type: string }
+        estado:
+          $ref: "#/components/schemas/EstadoTicket"
+        lineasCount: { type: number }
+        cobrado: { type: boolean }
+        cobradoAt: { type: ["string", "null"], format: date-time }
+        usuarioCajaId: { type: ["number", "null"] }
+        nombreUsuarioCaja: { type: ["string", "null"] }
+        facturado: { type: boolean }
+        sesionCajaId: { type: ["number", "null"] }
+        uuidCliente: { type: string, description: Identificador UUID generado por la terminal }
+        createdAt: { type: string, format: date-time }
+        canceladoAt: { type: ["string", "null"], format: date-time }
+        canceladoPor: { type: ["number", "null"] }
+        nombreUsuarioCancelacion: { type: ["string", "null"] }
+        motivoCancelacion: { type: ["string", "null"] }
+        autorizadoPor: { type: ["number", "null"] }
+        nombreUsuarioAutorizacion: { type: ["string", "null"] }
+    TicketDetalle:
+      allOf:
+        - $ref: "#/components/schemas/TicketResumen"
+        - type: object
+          required: [lineas]
+          properties:
+            lineas:
+              type: array
+              items:
+                $ref: "#/components/schemas/TicketLinea"
+            pagos:
+              type: array
+              items:
+                $ref: "#/components/schemas/TicketPago"
+    SesionCajaAperturaInput:
+      type: object
+      required: [fondoInicial, ubicacionId]
+      properties:
+        fondoInicial: { type: number, minimum: 0 }
+        ubicacionId: { type: number }
+    SesionCajaCierreInput:
+      type: object
+      required: [efectivoContado]
+      properties:
+        efectivoContado: { type: number, minimum: 0 }
+    SesionCajaResumen:
+      type: object
+      required: [ticketsCobrados, ticketsPendientes, totalCobrado, efectivoEsperado]
+      properties:
+        ticketsCobrados: { type: number }
+        ticketsPendientes: { type: number }
+        totalCobrado: { type: string }
+        efectivoEsperado: { type: string }
+    SesionCaja:
+      type: object
+      required: [id, ubicacionId, nombreUbicacion, usuarioId, nombreUsuario, abiertaAt, cerradaAt, fondoInicial, efectivoContado, estado]
+      properties:
+        id: { type: number }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        abiertaAt: { type: string, format: date-time }
+        cerradaAt: { type: ["string", "null"], format: date-time }
+        fondoInicial: { type: string }
+        efectivoContado: { type: ["string", "null"] }
+        estado:
+          $ref: "#/components/schemas/EstadoSesionCaja"
+    SesionCajaActual:
+      type: object
+      required: [sesion, resumen]
+      properties:
+        sesion:
+          oneOf:
+            - $ref: "#/components/schemas/SesionCaja"
+            - type: "null"
+        resumen:
+          oneOf:
+            - $ref: "#/components/schemas/SesionCajaResumen"
+            - type: "null"
+    CorteFormaPago:
+      type: object
+      required: [formaPago, importe, pagosCount, ticketsCount]
+      properties:
+        formaPago:
+          $ref: "#/components/schemas/FormaPagoTicket"
+        importe: { type: string }
+        pagosCount: { type: number }
+        ticketsCount: { type: number }
+    CorteCuentaDestino:
+      type: object
+      required: [formaPago, cuentaDestino, importe]
+      properties:
+        formaPago:
+          $ref: "#/components/schemas/FormaPagoTicket"
+        cuentaDestino: { type: string }
+        importe: { type: string }
+    CorteFacturacion:
+      type: object
+      required: [facturado, ticketsCount, importe]
+      properties:
+        facturado: { type: boolean }
+        ticketsCount: { type: number }
+        importe: { type: string }
+    CorteMetreado:
+      type: object
+      required: [tipo, ticketsCount, cantidad, importe]
+      properties:
+        tipo:
+          $ref: "#/components/schemas/TipoTicket"
+        ticketsCount: { type: number }
+        cantidad: { type: string }
+        importe: { type: string }
+    CorteProducto:
+      type: object
+      required: [productoId, sku, tela, color, unidad, cantidad, importe]
+      properties:
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        cantidad: { type: string }
+        importe: { type: string }
+    CortePendiente:
+      type: object
+      required: [ticketId, folio, total, nombreCliente, createdAt]
+      properties:
+        ticketId: { type: number }
+        folio: { type: number }
+        total: { type: string }
+        nombreCliente: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+    CorteCaja:
+      type: object
+      required: [sesion, formasPago, cuentasDestino, facturacion, metreado, productos, pendientes, fondoInicial, totalCobrado, efectivoEsperado, efectivoContado, diferencia]
+      properties:
+        sesion:
+          $ref: "#/components/schemas/SesionCaja"
+        formasPago:
+          type: array
+          items:
+            $ref: "#/components/schemas/CorteFormaPago"
+        cuentasDestino:
+          type: array
+          items:
+            $ref: "#/components/schemas/CorteCuentaDestino"
+        facturacion:
+          type: array
+          description: Desglose facturado y no facturado
+          items:
+            $ref: "#/components/schemas/CorteFacturacion"
+        metreado:
+          type: array
+          description: Desglose NORMAL y METREADO
+          items:
+            $ref: "#/components/schemas/CorteMetreado"
+        productos:
+          type: array
+          items:
+            $ref: "#/components/schemas/CorteProducto"
+        pendientes:
+          type: array
+          items:
+            $ref: "#/components/schemas/CortePendiente"
+        fondoInicial: { type: string }
+        totalCobrado: { type: string }
+        efectivoEsperado: { type: string }
+        efectivoContado: { type: ["string", "null"] }
+        diferencia: { type: ["string", "null"] }

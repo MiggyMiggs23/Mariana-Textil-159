@@ -1981,3 +1981,604 @@ export const GetPermisosPreviewResponse = zod.object({
 })
 
 
+/**
+ * @summary Busca rollos disponibles y productos para venta
+ */
+
+
+
+export const BuscarPosQueryParams = zod.object({
+  "q": zod.coerce.string().min(1).describe('Texto a buscar por serie, SKU, tela o color'),
+  "ubicacionId": zod.coerce.number().optional().describe('Ubicación donde el rollo debe estar DISPONIBLE')
+})
+
+export const BuscarPosResponse = zod.object({
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "cantidadActual": zod.string(),
+  "precioSugerido": zod.string()
+})).describe('Solo rollos con estado DISPONIBLE'),
+  "productos": zod.array(zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "precioSugerido": zod.string(),
+  "activo": zod.boolean()
+}))
+})
+
+
+/**
+ * @summary Crea un ticket normal o de venta metreada sin cobrarlo
+ */
+export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
+
+export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
+
+
+
+
+export const CrearTicketBody = zod.object({
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "ubicacionId": zod.number(),
+  "clienteId": zod.number().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "facturado": zod.boolean(),
+  "lineas": zod.array(zod.object({
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "cantidad": zod.number().gt(crearTicketBodyLineasItemCantidadExclusiveMin),
+  "precioUnitario": zod.number().min(crearTicketBodyLineasItemPrecioUnitarioMin)
+})).min(1)
+})
+
+export const CrearTicketResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "subtotal": zod.string(),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+}).and(zod.object({
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "cantidad": zod.string(),
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO']),
+  "serieRollo": zod.string().nullable(),
+  "nombreUbicacion": zod.string(),
+  "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
+})),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "referencia": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string()
+})).optional()
+}))
+
+
+/**
+ * @summary Lista tickets de la ubicación con filtros operativos
+ */
+export const ListarTicketsQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional(),
+  "cobrado": zod.coerce.boolean().optional(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']).optional(),
+  "folio": zod.coerce.number().optional()
+})
+
+export const ListarTicketsResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "subtotal": zod.string(),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+})
+export const ListarTicketsResponse = zod.array(ListarTicketsResponseItem)
+
+
+/**
+ * @summary Obtiene el detalle completo de un ticket
+ */
+export const ObtenerTicketParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ObtenerTicketResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "subtotal": zod.string(),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+}).and(zod.object({
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "cantidad": zod.string(),
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO']),
+  "serieRollo": zod.string().nullable(),
+  "nombreUbicacion": zod.string(),
+  "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
+})),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "referencia": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string()
+})).optional()
+}))
+
+
+/**
+ * @summary Cancela un ticket y revierte sus movimientos
+ */
+export const CancelarTicketParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const cancelarTicketBodyMotivoMax = 1000;
+
+export const cancelarTicketBodyCredencialesAdminOneUsuarioMax = 64;
+
+export const cancelarTicketBodyCredencialesAdminOnePasswordMax = 128;
+
+
+
+export const CancelarTicketBody = zod.object({
+  "motivo": zod.string().min(1).max(cancelarTicketBodyMotivoMax),
+  "credencialesAdmin": zod.union([zod.object({
+  "usuario": zod.string().min(1).max(cancelarTicketBodyCredencialesAdminOneUsuarioMax),
+  "password": zod.string().min(1).max(cancelarTicketBodyCredencialesAdminOnePasswordMax)
+}),zod.null()]).optional()
+})
+
+export const CancelarTicketResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "subtotal": zod.string(),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+}).and(zod.object({
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "cantidad": zod.string(),
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO']),
+  "serieRollo": zod.string().nullable(),
+  "nombreUbicacion": zod.string(),
+  "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
+})),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "referencia": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string()
+})).optional()
+}))
+
+
+/**
+ * @summary Cobra un ticket con uno o varios pagos
+ */
+export const CobrarTicketParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const cobrarTicketBodyPagosItemImporteExclusiveMin = 0;
+
+
+export const cobrarTicketBodyCredencialesAdminOneUsuarioMax = 64;
+
+export const cobrarTicketBodyCredencialesAdminOnePasswordMax = 128;
+
+
+
+export const CobrarTicketBody = zod.object({
+  "pagos": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.number().gt(cobrarTicketBodyPagosItemImporteExclusiveMin),
+  "referencia": zod.string().nullish()
+})).min(1),
+  "clienteId": zod.number().nullish(),
+  "credencialesAdmin": zod.union([zod.object({
+  "usuario": zod.string().min(1).max(cobrarTicketBodyCredencialesAdminOneUsuarioMax),
+  "password": zod.string().min(1).max(cobrarTicketBodyCredencialesAdminOnePasswordMax)
+}),zod.null()]).optional()
+})
+
+export const CobrarTicketResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "subtotal": zod.string(),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+}).and(zod.object({
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "cantidad": zod.string(),
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO']),
+  "serieRollo": zod.string().nullable(),
+  "nombreUbicacion": zod.string(),
+  "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
+})),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "referencia": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string()
+})).optional()
+}))
+
+
+/**
+ * @summary Obtiene la sesión abierta actual de la ubicación
+ */
+export const ObtenerSesionCajaActualQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const ObtenerSesionCajaActualResponse = zod.object({
+  "sesion": zod.union([zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "fondoInicial": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA'])
+}),zod.null()]),
+  "resumen": zod.union([zod.object({
+  "ticketsCobrados": zod.number(),
+  "ticketsPendientes": zod.number(),
+  "totalCobrado": zod.string(),
+  "efectivoEsperado": zod.string()
+}),zod.null()])
+})
+
+
+/**
+ * @summary Abre un turno de caja para una ubicación
+ */
+export const abrirSesionCajaBodyFondoInicialMin = 0;
+
+
+
+export const AbrirSesionCajaBody = zod.object({
+  "fondoInicial": zod.number().min(abrirSesionCajaBodyFondoInicialMin),
+  "ubicacionId": zod.number()
+})
+
+export const AbrirSesionCajaResponse = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "fondoInicial": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA'])
+})
+
+
+/**
+ * @summary Obtiene el corte completo y sus desgloses
+ */
+export const ObtenerCorteCajaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ObtenerCorteCajaResponse = zod.object({
+  "sesion": zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "fondoInicial": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA'])
+}),
+  "formasPago": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "pagosCount": zod.number(),
+  "ticketsCount": zod.number()
+})),
+  "cuentasDestino": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "cuentaDestino": zod.string(),
+  "importe": zod.string()
+})),
+  "facturacion": zod.array(zod.object({
+  "facturado": zod.boolean(),
+  "ticketsCount": zod.number(),
+  "importe": zod.string()
+})).describe('Desglose facturado y no facturado'),
+  "metreado": zod.array(zod.object({
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "ticketsCount": zod.number(),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})).describe('Desglose NORMAL y METREADO'),
+  "productos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})),
+  "pendientes": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "total": zod.string(),
+  "nombreCliente": zod.string().nullable(),
+  "createdAt": zod.coerce.date()
+})),
+  "fondoInicial": zod.string(),
+  "totalCobrado": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "diferencia": zod.string().nullable()
+})
+
+
+/**
+ * @summary Cierra un turno y registra el efectivo contado
+ */
+export const CerrarSesionCajaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const cerrarSesionCajaBodyEfectivoContadoMin = 0;
+
+
+
+export const CerrarSesionCajaBody = zod.object({
+  "efectivoContado": zod.number().min(cerrarSesionCajaBodyEfectivoContadoMin)
+})
+
+export const CerrarSesionCajaResponse = zod.object({
+  "sesion": zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "fondoInicial": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA'])
+}),
+  "formasPago": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "pagosCount": zod.number(),
+  "ticketsCount": zod.number()
+})),
+  "cuentasDestino": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "cuentaDestino": zod.string(),
+  "importe": zod.string()
+})),
+  "facturacion": zod.array(zod.object({
+  "facturado": zod.boolean(),
+  "ticketsCount": zod.number(),
+  "importe": zod.string()
+})).describe('Desglose facturado y no facturado'),
+  "metreado": zod.array(zod.object({
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "ticketsCount": zod.number(),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})).describe('Desglose NORMAL y METREADO'),
+  "productos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})),
+  "pendientes": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "total": zod.string(),
+  "nombreCliente": zod.string().nullable(),
+  "createdAt": zod.coerce.date()
+})),
+  "fondoInicial": zod.string(),
+  "totalCobrado": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "diferencia": zod.string().nullable()
+})
+
+
