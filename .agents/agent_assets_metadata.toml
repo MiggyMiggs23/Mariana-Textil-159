@@ -14,3 +14,17 @@ mtime_ms = 1787450711398
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/20299ef2-0c1f-4b9f-b056-c346b46896c0/0ba981a6-be30-4ac4-a7f2-4849e34ca03e"
 storage_version_token = "1787450711872239"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "HLQu2w0P4X7XjsIc4WzI1"
+uri = "file://reports/auditoria-datos-prueba-2026-08-23.md"
+type = "text"
+title = "Auditoría completa de datos de prueba"
+description = "Lista de solo lectura con las 19 ubicaciones y 117 usuarios candidatos, incluyendo sus referencias operativas."
+logical_id = "e0b7de5d-2252-4d0e-b82a-4fde2eaf5625"
+content_hash = "sha256:731162a44e6720b483ffc6510af8b789e4ce200f48dca7fb1d6fad8827ec4549"
+size = 15863
+mtime_ms = 1787479857229
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e0b7de5d-2252-4d0e-b82a-4fde2eaf5625/0a842ddb-7f08-462a-a216-fa6216fe452b"
+storage_version_token = "1787479857669120"
+content_type = "text/markdown"

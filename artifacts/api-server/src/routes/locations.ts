@@ -24,7 +24,12 @@ router.get("/locations", async (_req, res): Promise<void> => {
   const locations = await db
     .select()
     .from(ubicacionesTable)
-    .where(inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]))
+    .where(
+      and(
+        inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+        eq(ubicacionesTable.activa, true),
+      ),
+    )
     .orderBy(ubicacionesTable.id);
   res.json(ListLocationsResponse.parse(locations.map(presentLocation)));
 });

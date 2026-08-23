@@ -9,7 +9,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   useBuscarPos,
   useCrearTicket,
+  useGetCurrentUser,
+  useListLocations,
   useListarTickets,
+  getGetCurrentUserQueryKey,
+  getListLocationsQueryKey,
   getListarTicketsQueryKey,
   getBuscarPosQueryKey,
   TipoTicket,
@@ -17,6 +21,7 @@ import {
   PosProducto,
   TicketLineaInput,
   TicketInput
+  ,Role
 } from "@workspace/api-client-react";
 
 import { useLocationScope } from "@/lib/location-scope";
@@ -100,8 +105,22 @@ function CartLineItem({
 export default function PosPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { selectedLocationId } = useLocationScope();
+  const { selectedLocationId, setSelectedLocationId } = useLocationScope();
   const queryClient = useQueryClient();
+  const { data: currentUser } = useGetCurrentUser({
+    query: { queryKey: getGetCurrentUserQueryKey() },
+  });
+  const canChooseLocation = currentUser?.rol === Role.ADMIN;
+  const {
+    data: availableLocations,
+    isLoading: loadingLocations,
+    isError: locationsFailed,
+  } = useListLocations({
+    query: {
+      enabled: canChooseLocation && !selectedLocationId,
+      queryKey: getListLocationsQueryKey(),
+    },
+  });
 
   const [tipoTicket, setTipoTicket] = useState<TipoTicket>(TipoTicket.NORMAL);
   const [search, setSearch] = useState("");
@@ -239,10 +258,36 @@ export default function PosPage() {
   if (!selectedLocationId) {
     return (
       <div className="flex h-[calc(100dvh-8rem)] items-center justify-center">
-        <div className="text-center text-muted-foreground">
+        <div className="w-full max-w-md text-center text-muted-foreground">
           <HelpCircle className="mx-auto h-12 w-12 mb-4 opacity-20" />
           <h2 className="text-xl font-semibold text-foreground">Selecciona una ubicación</h2>
-          <p>Debes estar en una ubicación específica para operar la terminal POS.</p>
+          <p className="mb-5">Debes estar en una ubicación específica para operar la terminal POS.</p>
+          {canChooseLocation ? (
+            <Select onValueChange={(value) => setSelectedLocationId(Number(value))}>
+              <SelectTrigger className="bg-background text-left">
+                <SelectValue placeholder={loadingLocations ? "Cargando ubicaciones..." : "Seleccionar tienda o bodega"} />
+              </SelectTrigger>
+              <SelectContent>
+                {availableLocations?.map((location) => (
+                  <SelectItem key={location.id} value={String(location.id)}>
+                    {location.nombre}
+                  </SelectItem>
+                ))}
+                {!loadingLocations && availableLocations?.length === 0 && (
+                  <SelectItem value="none" disabled>No hay ubicaciones operativas activas</SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          ) : (
+            <p className="rounded-md border bg-muted/30 p-3 text-sm">
+              Tu usuario no tiene una ubicación asignada. Pide a un ADMIN que la configure.
+            </p>
+          )}
+          {locationsFailed && (
+            <p className="mt-3 text-sm text-destructive">
+              No se pudieron cargar las ubicaciones. Recarga la página o vuelve a iniciar sesión.
+            </p>
+          )}
         </div>
       </div>
     );
