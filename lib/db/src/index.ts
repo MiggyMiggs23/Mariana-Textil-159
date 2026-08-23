@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
+export { ensureTicketIvaSchema } from "./lib/ticket-iva-schema";
 
 const { Pool } = pg;
 

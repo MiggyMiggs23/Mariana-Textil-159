@@ -12,6 +12,7 @@
     "test:entradas": "tsx src/lib/entradas.test.ts",
     "test:proveedores": "tsx src/lib/compras-proveedor.test.ts",
     "test:pos": "tsx src/lib/pos.test.ts",
+    "test:ticket-iva-schema": "tsx src/lib/ticket-iva-schema.test.ts",
     "test:admin-bypass-empty": "tsx src/admin-bypass-empty-permissions.test.ts",
     "test:security-api": "tsx src/security-api.test.ts"
   },
