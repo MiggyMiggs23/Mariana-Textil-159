@@ -1,0 +1,207 @@
+# PROMPT 4B — Correcciones del POS
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. No te detengas a pedir aprobación entre problemas.
+> Al final la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+Pruebas manuales del POS encontraron cuatro problemas. El primero es de seguridad del margen y es el más urgente.
+
+**Respeta el motor.** Toda operación sobre rollos pasa por `server/lib/inventario.ts`.
+**No borres datos.** El catálogo, los rollos, las entradas y los movimientos se conservan.
+
+---
+
+# PROBLEMA 1 — El piso de precio no se está aplicando (URGENTE)
+
+## Síntoma
+
+En el POS, como usuario TERMINAL, se puede capturar un precio unitario **por debajo del costo del rollo** y la venta se confirma sin ningún rechazo, alerta ni advertencia.
+
+Esto significa que se puede vender con pérdida sin que nadie se entere. La validación existía en el diseño pero no está funcionando en la práctica.
+
+## Qué debe pasar
+
+Al intentar agregar una línea al ticket, o al confirmar la venta, si el **precio unitario** capturado (por metro o por kilo) es **menor que el `costo_unitario` de ese rollo específico**, la operación se rechaza con este mensaje:
+
+> *"El precio de [Nombre del producto] serie [XXXXXXX] está por debajo del mínimo permitido."*
+
+**No reveles nunca la cifra del costo, el margen, ni el mínimo.** El mensaje solo identifica qué línea falla.
+
+**Identifica siempre la línea específica.** El costo varía entre rollos del mismo producto: un rollo de tafeta comprado en mayo puede costar $4.10 y otro de agosto $4.35. Sin decirle cuál línea, el vendedor no sabe qué corregir.
+
+## Cómo corregirlo
+
+1. **Diagnostica primero y repórtame qué encontraste.** ¿La validación no existe en el código, existe solo en el navegador, existe en el servidor pero no se llama, o se llama pero la comparación está mal? Dime la causa exacta antes de corregir.
+
+2. **La validación debe estar en el servidor**, en el endpoint que crea el ticket, dentro de la misma transacción. Una validación solo en el navegador no sirve: cualquiera que llame la API directamente la salta.
+
+3. **Compara contra el `costo_unitario` del rollo específico** de esa línea, no contra el precio sugerido del producto ni contra un promedio.
+
+4. **Valida cada línea del ticket por separado.** Si un ticket trae tres rollos y dos pasan pero uno no, el ticket completo se rechaza y el mensaje identifica cuál falló.
+
+5. **Agrega también la validación en el navegador**, para que el vendedor vea el rechazo antes de confirmar. Pero la del servidor es la que manda.
+
+6. **Excepción:** los tickets de tipo METREADO no aplican este piso, porque pueden no tener rollo ligado.
+
+## Pruebas obligatorias
+
+- Un precio por debajo del costo del rollo **se rechaza**, tanto desde la interfaz como llamando la API directamente
+- El mensaje de error **no contiene** el costo, el margen ni el mínimo, en ningún campo de la respuesta
+- El mensaje identifica correctamente la serie y el producto de la línea que falla
+- Con tres líneas donde solo una está por debajo, se identifica esa y no otra
+- Con dos rollos del mismo producto y costos distintos, se valida cada uno contra el suyo
+- Un precio exactamente igual al costo se acepta
+- Un precio por encima se acepta
+
+---
+
+# PROBLEMA 2 — Costo promedio por rollo en vez de por metro
+
+## Síntoma
+
+En el historial de compras del proveedor, el costo promedio se muestra **por rollo**. Eso no sirve para comparar: los rollos tienen metrajes distintos, así que un promedio por rollo mezcla peras con manzanas.
+
+## Qué debe pasar
+
+**El costo promedio por unidad (metro o kilo) es obligatorio y es el dato principal.** El costo por rollo puede mostrarse como dato secundario, pero nunca solo.
+
+En todas las pantallas donde aparezca costo promedio:
+
+- **Costo promedio por unidad** = suma de costos totales ÷ suma de cantidades. Etiquetado claramente como "por metro" o "por kilo" según la unidad del producto.
+- **Costo promedio por rollo** como dato secundario, más chico o en segunda línea.
+
+**Nunca mezcles unidades en un mismo promedio.** Si un proveedor te vende productos por metro y por kilo, se calculan y muestran por separado. Un promedio que suma metros con kilos no significa nada.
+
+## Dónde aplica
+
+- Historial de compras del proveedor
+- Estadísticas del proveedor
+- Variación de costo unitario contra el periodo anterior
+- Detalle del producto
+- Cualquier reporte o pantalla donde hoy aparezca un costo promedio
+
+Revisa el proyecto completo y repórtame la lista de lugares donde lo corregiste.
+
+## Ejemplo
+
+Si compraste 3 rollos de tafeta: 100 m a $4.00, 50 m a $4.00 y 250 m a $4.20:
+
+- Costo total: $400 + $200 + $1,050 = **$1,650**
+- Cantidad total: **400 metros**
+- **Costo promedio por metro: $4.125** ← el dato principal
+- Costo promedio por rollo: $550 ← secundario, y por sí solo engañoso
+
+---
+
+# PROBLEMA 3 — Movimientos solo muestra entradas
+
+## Síntoma
+
+El módulo Movimientos solo lista las entradas. No aparecen ventas, salidas a mostrador, transferencias ni ajustes.
+
+## Qué debe pasar
+
+**Movimientos es el historial completo de todo lo que pasó con la mercancía.** Debe mostrar todos los tipos de movimiento del kardex:
+
+- ALTA
+- RECEPCION (entradas)
+- VENTA
+- DEVOLUCION
+- TRANSFERENCIA_SALIDA
+- TRANSFERENCIA_ENTRADA
+- SALIDA_MOSTRADOR
+- AJUSTE_POSITIVO
+- AJUSTE_NEGATIVO
+- CANCELACION
+
+## Cómo debe verse
+
+Tabla ordenada por fecha y hora, la más reciente arriba, con:
+
+| Fecha y hora | Tipo | Producto | Serie del rollo | Ubicación | Cantidad (con signo) | Usuario | Documento |
+
+- La **cantidad con signo y color**: entradas en verde con `+`, salidas en rojo con `-`
+- El **tipo con una etiqueta visual** distinguible de un vistazo
+- El **documento** enlazado: si es una entrada, abre el documento de entrada; si es una venta, abre el ticket; si es un ajuste, muestra su justificación
+- **Filtros:** por tipo de movimiento (selección múltiple), por rango de fechas, por ubicación, por producto, por usuario
+- **Buscador** por serie de rollo, SKU, folio de documento
+- **Paginado**, 100 filas por página
+- **Exportable a Excel**
+
+Respeta el alcance por ubicación: un usuario con alcance PROPIA solo ve los movimientos de su ubicación.
+
+Respeta los permisos de costo: TERMINAL no ve costos en esta pantalla.
+
+## Nota importante
+
+Existen en el kardex algunos movimientos de tipo VENTA y SALIDA_MOSTRADOR **sin ticket asociado**, generados por pruebas automatizadas antiguas (series 1000735, 1000739, 1000743, 1000744, 1000745). Deben aparecer en Movimientos porque son parte del historial real del kardex, pero **márcalos visualmente** como "sin documento" para que se distingan.
+
+---
+
+# PROBLEMA 4 — La pantalla de Caja no recibe los tickets
+
+## Síntoma
+
+Se armó y confirmó un ticket desde el POS, pero la pantalla de Caja no lo muestra. No se pudo probar el cobro.
+
+## Cómo debe funcionar
+
+La pantalla de Caja es deliberadamente simple. Solo hace tres cosas:
+
+1. **Recibe el ticket** — aparece en la lista automáticamente al confirmarse en la terminal
+2. **Se selecciona la forma de pago** — una o varias
+3. **Se confirma el cobro**
+
+Nada más. No arma tickets, no modifica líneas, no toca inventario.
+
+## Qué corregir
+
+1. **Diagnostica por qué no llegan los tickets y repórtame la causa.** ¿El endpoint no los devuelve, el filtro de ubicación los excluye, el filtro de estado está mal, o el frontend no los pinta?
+
+2. **La lista debe mostrar todos los tickets del día de esa ubicación**, con los pendientes de cobro primero y destacados.
+
+3. **Actualización automática** cada pocos segundos, para que el cajero vea llegar los tickets sin recargar.
+
+4. **Flujo de cobro, optimizado para velocidad:**
+   - Tocar el ticket abre el detalle
+   - Botones grandes: **Efectivo**, **Transferencia**, **Crédito**
+   - Al elegir uno, se asigna el total completo a esa forma
+   - **Confirmar**
+   - Para el caso común: **dos toques y listo**
+
+5. **Pago mixto:** botón "Dividir pago" que permite varias formas con su importe. Muestra en vivo cuánto falta y no deja confirmar hasta que la suma iguale **exactamente** el total. Valídalo también en el servidor.
+
+6. **Crédito:** requiere cliente. Si el ticket se hizo al público, caja puede asignarlo en ese momento. Genera el movimiento en `movimientos_credito`.
+
+7. **Tickets metreados:** solo efectivo. Los otros botones deshabilitados con nota explicativa.
+
+8. **CAJA sí ve costos y margen** en el detalle del ticket.
+
+9. Un ticket ya cobrado **no se puede volver a cobrar**. Valídalo en el servidor.
+
+10. Si no hay sesión de caja abierta, pedir el fondo inicial al entrar.
+
+## Pruebas obligatorias
+
+- Un ticket confirmado en el POS aparece en la lista de Caja **sin recargar la página**
+- Se cobra en efectivo con dos toques
+- El ticket pasa a cobrado y **el inventario no cambia** en ese momento
+- Un pago mixto que no suma el total exacto **se rechaza**
+- Un ticket ya cobrado no se puede cobrar otra vez
+- Un ticket metreado solo permite efectivo
+- CAJA ve costos y margen en el detalle
+
+---
+
+# ENTREGABLE
+
+1. **La causa exacta del problema 1** — por qué no se aplicaba el piso de precio
+2. **La causa exacta del problema 4** — por qué no llegaban los tickets a Caja
+3. Lista de lugares donde corregiste el costo promedio (problema 2)
+4. Lista de archivos creados y modificados
+5. Salida completa de la corrida de pruebas, incluidas las nuevas
+6. Confirmación de que las 12 pruebas del motor y las 27 de permisos siguen pasando
+7. Confirmación de que las pruebas corrieron en base aislada y no tocaron datos reales
