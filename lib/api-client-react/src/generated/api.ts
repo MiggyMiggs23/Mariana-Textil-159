@@ -63,6 +63,7 @@ import type {
   ListEntradasParams,
   ListProveedorPagosParams,
   ListRollosParams,
+  ListarTicketsCajaParams,
   ListarTicketsParams,
   ListarTicketsPendientesParams,
   Location,
@@ -109,6 +110,7 @@ import type {
   SesionCajaActual,
   SesionCajaAperturaInput,
   SesionCajaCierreInput,
+  TicketCajaResumen,
   TicketCancelacionInput,
   TicketCobroInput,
   TicketDetalle,
@@ -5487,6 +5489,90 @@ export function useListarTicketsPendientes<TData = Awaited<ReturnType<typeof lis
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListarTicketsPendientesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListarTicketsCajaUrl = (params?: ListarTicketsCajaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/caja/tickets?${stringifiedParams}` : `/api/caja/tickets`
+}
+
+/**
+ * @summary Lista pendientes y cobrados de la sesión de caja actual
+ */
+export const listarTicketsCaja = async (params?: ListarTicketsCajaParams, options?: Parameters<typeof customFetch>[1]): Promise<TicketCajaResumen[]> => {
+
+  return customFetch<TicketCajaResumen[]>(getListarTicketsCajaUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarTicketsCajaQueryKey = (params?: ListarTicketsCajaParams,) => {
+    return [
+    `/api/caja/tickets`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListarTicketsCajaQueryOptions = <TData = Awaited<ReturnType<typeof listarTicketsCaja>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListarTicketsCajaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarTicketsCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarTicketsCajaQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarTicketsCaja>>> = ({ signal }) => listarTicketsCaja(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarTicketsCaja>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarTicketsCajaQueryResult = NonNullable<Awaited<ReturnType<typeof listarTicketsCaja>>>
+export type ListarTicketsCajaQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista pendientes y cobrados de la sesión de caja actual
+ */
+
+export function useListarTicketsCaja<TData = Awaited<ReturnType<typeof listarTicketsCaja>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListarTicketsCajaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarTicketsCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarTicketsCajaQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

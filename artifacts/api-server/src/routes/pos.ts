@@ -17,6 +17,8 @@ import {
   CobrarTicketResponse,
   CrearTicketBody,
   CrearTicketResponse,
+  ListarTicketsCajaQueryParams,
+  ListarTicketsCajaResponse,
   ListarTicketsPendientesQueryParams,
   ListarTicketsPendientesResponse,
   ListarTicketsQueryParams,
@@ -58,6 +60,7 @@ import {
   cobrarTicket,
   crearTicket,
   isInventoryError,
+  listarTicketsCajaOperativa,
   listarTicketsPendientesCaja,
   PosError,
   validarPrecioPos,
@@ -448,6 +451,38 @@ router.get(
             )
           : response,
       );
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
+router.get(
+  "/caja/tickets",
+  requierePermiso("cobros_pagos", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const query = ListarTicketsCajaQueryParams.parse(req.query);
+      const ubicacionId = scopedLocation(req, query.ubicacionId);
+      const [sesion] = await db
+        .select({ id: sesionesCajaTable.id })
+        .from(sesionesCajaTable)
+        .where(
+          and(
+            eq(sesionesCajaTable.ubicacionId, ubicacionId),
+            eq(sesionesCajaTable.estado, "ABIERTA"),
+          ),
+        )
+        .limit(1);
+      if (!sesion) {
+        res.json(ListarTicketsCajaResponse.parse([]));
+        return;
+      }
+      const tickets = await listarTicketsCajaOperativa(db, {
+        ubicacionId,
+        sesionCajaId: sesion.id,
+      });
+      res.json(ListarTicketsCajaResponse.parse(tickets));
     } catch (error) {
       handlePosError(error, res, next);
     }

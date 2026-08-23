@@ -1444,6 +1444,17 @@ export interface TicketResumen {
   nombreUsuarioAutorizacion: string | null;
 }
 
+export interface TicketCajaResumen {
+  id: number;
+  folio: number;
+  total: string;
+  createdAt: string;
+  cobrado: boolean;
+  /** @nullable */
+  cobradoAt: string | null;
+  formasPago: FormaPagoTicket[];
+}
+
 export type TicketDetalle = TicketResumen & {
   lineas: TicketLinea[];
   pagos?: TicketPago[];
@@ -1734,6 +1745,10 @@ folio?: number;
 };
 
 export type ListarTicketsPendientesParams = {
+ubicacionId?: number;
+};
+
+export type ListarTicketsCajaParams = {
 ubicacionId?: number;
 };
 

@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, or, sql } from "drizzle-orm";
 import {
   auditoriaTable,
   clientesTable,
@@ -993,6 +993,67 @@ export async function listarTicketsPendientesCaja(
       clientesTable.nombre,
     )
     .orderBy(asc(ticketsTable.createdAt));
+}
+
+export async function listarTicketsCajaOperativa(
+  database: Reader,
+  input: { ubicacionId: number; sesionCajaId: number },
+) {
+  const tickets = await database
+    .select({
+      id: ticketsTable.id,
+      folio: ticketsTable.folio,
+      total: ticketsTable.total,
+      createdAt: ticketsTable.createdAt,
+      cobrado: ticketsTable.cobrado,
+      cobradoAt: ticketsTable.cobradoAt,
+    })
+    .from(ticketsTable)
+    .where(
+      and(
+        eq(ticketsTable.ubicacionId, input.ubicacionId),
+        eq(ticketsTable.estado, "VENDIDO"),
+        or(
+          eq(ticketsTable.cobrado, false),
+          and(
+            eq(ticketsTable.cobrado, true),
+            eq(ticketsTable.sesionCajaId, input.sesionCajaId),
+          ),
+        ),
+      ),
+    )
+    .orderBy(asc(ticketsTable.cobrado), asc(ticketsTable.createdAt));
+
+  const pagos =
+    tickets.length === 0
+      ? []
+      : await database
+          .select({
+            ticketId: ticketPagosTable.ticketId,
+            formaPago: ticketPagosTable.formaPago,
+          })
+          .from(ticketPagosTable)
+          .where(
+            inArray(
+              ticketPagosTable.ticketId,
+              tickets.map((ticket) => ticket.id),
+            ),
+          )
+          .orderBy(asc(ticketPagosTable.id));
+  const formasPagoPorTicket = new Map<number, FormaPagoTicket[]>();
+  for (const pago of pagos) {
+    const formasPago = formasPagoPorTicket.get(pago.ticketId) ?? [];
+    if (!formasPago.includes(pago.formaPago)) {
+      formasPagoPorTicket.set(pago.ticketId, [...formasPago, pago.formaPago]);
+    }
+  }
+
+  return tickets.map((ticket) => ({
+    ...ticket,
+    createdAt: ticket.createdAt.toISOString(),
+    cobradoAt: ticket.cobradoAt?.toISOString() ?? null,
+    formasPago: formasPagoPorTicket.get(ticket.id) ?? [],
+  }));
 }
 
 export async function buildCorteCaja(

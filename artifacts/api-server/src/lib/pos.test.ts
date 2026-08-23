@@ -26,6 +26,7 @@ import {
   cerrarSesionCaja,
   cobrarTicket,
   crearTicket,
+  listarTicketsCajaOperativa,
   listarTicketsPendientesCaja,
   PosError,
   validarPrecioPos,
@@ -589,12 +590,25 @@ await test("POS-05C lista y corte comparten todos los pendientes de la ubicació
     cantidad: "1",
     precio: "50",
   });
-  await db
-    .update(ticketsTable)
-    .set({ cobrado: true, sesionCajaId: session.id })
-    .where(eq(ticketsTable.id, cobrado.id));
+  await db.transaction((tx) =>
+    cobrarTicket(
+      tx,
+      {
+        ticketId: cobrado.id,
+        sesionCajaId: session.id,
+        usuarioId: USER_ID,
+        pagos: [{ formaPago: "EFECTIVO", importe: "50" }],
+        ip: "127.0.0.1",
+      },
+      true,
+    ),
+  );
 
   const lista = await listarTicketsPendientesCaja(db, ubicacionId);
+  const ticketsCaja = await listarTicketsCajaOperativa(db, {
+    ubicacionId,
+    sesionCajaId: session.id,
+  });
   const corte = await buildCorteCaja(db, session.id);
   const esperados = [anterior.id, actual.id];
 
@@ -605,6 +619,14 @@ await test("POS-05C lista y corte comparten todos los pendientes de la ubicació
   assert.deepEqual(
     corte?.pendientes.map((ticket) => ticket.ticketId),
     esperados,
+  );
+  assert.deepEqual(
+    ticketsCaja.map((ticket) => ticket.id),
+    [anterior.id, actual.id, cobrado.id],
+  );
+  assert.deepEqual(
+    ticketsCaja.find((ticket) => ticket.id === cobrado.id)?.formasPago,
+    ["EFECTIVO"],
   );
 });
 

@@ -16,6 +16,7 @@
  *   S-01  All four roles log in → 200 + permisos matrix present
  *   S-02  ADMIN /auth/me → effective matrix has 25 modules, all full
  *   S-03  CAJA /auth/me  → pos.puedeVer=true, proveedores.puedeVer=false
+ *   S-03A Caja tickets route is location-scoped and denied to BODEGA
  *   S-04  BODEGA denied POS  (GET /inventario/rollos → module=inventario OK, but POST vender → 403)
  *   S-05  BODEGA denied clientes → GET /clientes → 403
  *   S-06  CAJA can do POS sale (vender) on own-location rollo
@@ -362,6 +363,40 @@ await test("S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores 
   assert.equal(posEntry.puedeVer, false, "CAJA must not use terminal POS");
   assert.equal(cobrosEntry?.puedeVer, true, "CAJA should see cobros_pagos");
   assert.equal(provEntry.puedeVer, false, "CAJA must not see proveedores");
+});
+
+await test("S-03A: Caja ticket list is location-scoped and denied to BODEGA", async () => {
+  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  const own = await api(
+    "GET",
+    `/caja/tickets?ubicacionId=${seedTienda.id}`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(own.status, 200, JSON.stringify(own.body));
+  assert.ok(Array.isArray(own.body), "Caja tickets response must be an array");
+
+  const requestedOther = await api(
+    "GET",
+    `/caja/tickets?ubicacionId=${otherTiendaId}`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(requestedOther.status, 200, JSON.stringify(requestedOther.body));
+  assert.deepEqual(
+    requestedOther.body,
+    own.body,
+    "A PROPIA user must remain scoped to their operational location",
+  );
+
+  const bodegaLogin = await login(testBodega.usuario, testBodega.password);
+  const denied = await api(
+    "GET",
+    `/caja/tickets?ubicacionId=${seedTienda.id}`,
+    undefined,
+    bodegaLogin.cookie,
+  );
+  assert.equal(denied.status, 403, JSON.stringify(denied.body));
 });
 
 await test("S-03B: TERMINAL API responses omit costs, margins and profits", async () => {

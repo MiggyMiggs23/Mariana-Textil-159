@@ -1703,6 +1703,30 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /caja/tickets:
+    get:
+      operationId: listarTicketsCaja
+      tags: [caja]
+      summary: Lista pendientes y cobrados de la sesión de caja actual
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+      responses:
+        "200":
+          description: Tickets operativos de caja
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TicketCajaResumen"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /tickets/{id}:
     get:
       operationId: obtenerTicket
@@ -3328,6 +3352,20 @@ components:
         motivoCancelacion: { type: ["string", "null"] }
         autorizadoPor: { type: ["number", "null"] }
         nombreUsuarioAutorizacion: { type: ["string", "null"] }
+    TicketCajaResumen:
+      type: object
+      required: [id, folio, total, createdAt, cobrado, cobradoAt, formasPago]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        total: { type: string }
+        createdAt: { type: string, format: date-time }
+        cobrado: { type: boolean }
+        cobradoAt: { type: ["string", "null"], format: date-time }
+        formasPago:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormaPagoTicket"
     TicketDetalle:
       allOf:
         - $ref: "#/components/schemas/TicketResumen"

@@ -1,21 +1,17 @@
-import { useState } from "react";
-import { useLocation } from "wouter";
+import { useState, useEffect, useRef } from "react";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
   useObtenerCorteCaja,
   useCerrarSesionCaja,
-  useListarTicketsPendientes,
+  useListarTicketsCaja,
+  useObtenerTicket,
   useCobrarTicket,
   getObtenerSesionCajaActualQueryKey,
-  getListarTicketsPendientesQueryKey,
+  getListarTicketsCajaQueryKey,
+  getObtenerTicketQueryKey,
   getObtenerCorteCajaQueryKey,
   FormaPagoTicket,
-  TicketCobroInput,
-  TicketPagoInput,
-  SesionCajaAperturaInput,
-  SesionCajaCierreInput,
-  TicketResumen
 } from "@workspace/api-client-react";
 import { useLocationScope } from "@/lib/location-scope";
 import { Button } from "@/components/ui/button";
@@ -24,11 +20,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, Banknote, CreditCard, Wallet, Search, RefreshCw, AlertCircle, XCircle } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Loader2, Banknote, CreditCard, Wallet, RefreshCw, AlertCircle, XCircle, ArrowRightLeft, CheckCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSuccess: () => void }) {
   const [fondo, setFondo] = useState("");
@@ -41,7 +38,7 @@ function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSucc
       toast({ title: "Monto inválido", variant: "destructive" });
       return;
     }
-    
+
     abrirCaja.mutate({ data: { fondoInicial: fondoNum, ubicacionId } }, {
       onSuccess: () => {
         toast({ title: "Caja abierta correctamente" });
@@ -72,11 +69,11 @@ function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSucc
             <Label className="text-base">Fondo Inicial (Efectivo)</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-              <Input 
-                type="number" 
-                min="0" 
-                step="0.01" 
-                value={fondo} 
+              <Input
+                type="number"
+                min="0"
+                step="0.01"
+                value={fondo}
                 onChange={(e) => setFondo(e.target.value)}
                 className="pl-8 h-12 text-xl font-bold"
                 autoFocus
@@ -86,8 +83,8 @@ function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSucc
         </div>
       </CardContent>
       <CardFooter>
-        <Button 
-          className="w-full h-12 text-lg" 
+        <Button
+          className="w-full h-12 text-lg"
           onClick={handleAbrir}
           disabled={abrirCaja.isPending}
         >
@@ -99,27 +96,53 @@ function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSucc
   );
 }
 
-function CobroPanel({ ticket, onCobrado }: { ticket: TicketResumen, onCobrado: () => void }) {
+function CobroDialog({ ticketId, open, onOpenChange, onCobrado }: { ticketId: number | null, open: boolean, onOpenChange: (open: boolean) => void, onCobrado: () => void }) {
   const { toast } = useToast();
   const cobrarTicket = useCobrarTicket();
-  
-  const [pagos, setPagos] = useState<{formaPago: FormaPagoTicket, importe: string, referencia?: string}[]>([
-    { formaPago: FormaPagoTicket.EFECTIVO, importe: ticket.total }
-  ]);
-  const [clienteId, setClienteId] = useState(
-    ticket.clienteId == null ? "" : String(ticket.clienteId),
-  );
+
+  const { data: ticket, isLoading, isError, refetch } = useObtenerTicket(ticketId || 0, {
+    query: {
+      enabled: open && !!ticketId,
+      queryKey: getObtenerTicketQueryKey(ticketId || 0)
+    }
+  });
+
+  const [pagos, setPagos] = useState<{formaPago: FormaPagoTicket, importe: string, referencia?: string}[]>([]);
+  const [clienteId, setClienteId] = useState("");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
-  
+  const [showSplit, setShowSplit] = useState(false);
+
+  const initializedForTicketId = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (ticket && open && initializedForTicketId.current !== ticket.id) {
+      initializedForTicketId.current = ticket.id;
+      setPagos([]);
+      setClienteId(ticket.clienteId == null ? "" : String(ticket.clienteId));
+    }
+  }, [ticket, open]);
+
+  useEffect(() => {
+    if (!open) {
+      initializedForTicketId.current = null;
+      setPagos([]);
+      setClienteId("");
+      setAdminUser("");
+      setAdminPass("");
+      setShowSplit(false);
+    }
+  }, [open]);
+
   const totalPagado = pagos.reduce((sum, p) => sum + (Number(p.importe) || 0), 0);
-  const totalTicket = Number(ticket.total);
-  const faltante = totalTicket - totalPagado;
-  const usaCredito = pagos.some(
-    (pago) => pago.formaPago === FormaPagoTicket.CREDITO,
-  );
+  const totalTicket = Number(ticket?.total || 0);
+  const isPaymentSelected = pagos.length > 0;
+  const faltante = isPaymentSelected ? totalTicket - totalPagado : totalTicket;
+  const usaCredito = pagos.some((pago) => pago.formaPago === FormaPagoTicket.CREDITO);
+  const primaryPago = pagos[0];
 
   const handleCobrar = () => {
+    if (!ticket || !isPaymentSelected) return;
     if (Math.abs(faltante) > 0.01) {
       toast({ title: "El pago no coincide", description: "El total pagado debe ser igual al total del ticket", variant: "destructive" });
       return;
@@ -154,6 +177,7 @@ function CobroPanel({ ticket, onCobrado }: { ticket: TicketResumen, onCobrado: (
       onSuccess: () => {
         toast({ title: "Ticket cobrado exitosamente" });
         onCobrado();
+        onOpenChange(false);
       },
       onError: (err: unknown) => {
         toast({
@@ -165,177 +189,328 @@ function CobroPanel({ ticket, onCobrado }: { ticket: TicketResumen, onCobrado: (
     });
   };
 
+  const setPrimaryFormaPago = (formaPago: FormaPagoTicket) => {
+    const newPagos = [...pagos];
+    if (newPagos.length > 0) {
+      newPagos[0].formaPago = formaPago;
+    } else {
+      newPagos.push({ formaPago, importe: ticket?.total || "0" });
+    }
+    setPagos(newPagos);
+  };
+
   return (
-    <Card className="h-full flex flex-col shadow-sm border-sidebar-border/10">
-      <CardHeader className="bg-sidebar text-white pb-4 rounded-t-lg">
-        <CardTitle className="text-xl flex justify-between items-center">
-          <span>Cobrar Folio: {ticket.folio}</span>
-          <span className="text-xl font-bold bg-white/20 px-3 py-1 rounded">
-            {totalTicket.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
-          </span>
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="flex-1 overflow-y-auto p-4 space-y-6 bg-muted/10">
-        <div className="space-y-4">
-          <Label className="text-base font-semibold">Desglose de Pago</Label>
-          {pagos.map((pago, i) => (
-            <div key={i} className="flex items-end gap-3 bg-white p-3 rounded-md border shadow-sm">
-              <div className="flex-1 space-y-1">
-                <Label className="text-xs">Forma de Pago</Label>
-                <Select value={pago.formaPago} onValueChange={(v) => {
-                  const newPagos = [...pagos];
-                  newPagos[i].formaPago = v as FormaPagoTicket;
-                  setPagos(newPagos);
-                }}>
-                  <SelectTrigger className="h-10">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={FormaPagoTicket.EFECTIVO}>Efectivo</SelectItem>
-                    {ticket.tipo !== "METREADO" && (
-                      <>
-                        <SelectItem value={FormaPagoTicket.TRANSFERENCIA}>Transferencia</SelectItem>
-                        <SelectItem value={FormaPagoTicket.CREDITO}>Crédito</SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex-1 space-y-1">
-                <Label className="text-xs">Importe</Label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                  <Input 
-                    type="number" 
-                    min="0" 
-                    step="0.01" 
-                    value={pago.importe} 
-                    onChange={(e) => {
-                      const newPagos = [...pagos];
-                      newPagos[i].importe = e.target.value;
-                      setPagos(newPagos);
-                    }}
-                    className="pl-8 h-10 font-bold"
-                  />
-                </div>
-              </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl p-0 overflow-hidden" aria-describedby="dialog-description">
+        <DialogHeader className="p-6 pb-4 bg-sidebar text-white">
+          <DialogTitle className="text-2xl flex items-center gap-2">
+            <Wallet className="h-6 w-6" />
+            Registrar Cobro
+          </DialogTitle>
+          <DialogDescription id="dialog-description" className="sr-only">
+            Seleccione la forma de pago para este ticket
+          </DialogDescription>
+        </DialogHeader>
 
-              {pago.formaPago === FormaPagoTicket.TRANSFERENCIA && (
-                <div className="flex-1 space-y-1">
-                  <Label className="text-xs">Referencia</Label>
-                  <Input 
-                    placeholder="Opcional" 
-                    value={pago.referencia || ""}
-                    onChange={(e) => {
-                      const newPagos = [...pagos];
-                      newPagos[i].referencia = e.target.value;
-                      setPagos(newPagos);
-                    }}
-                    className="h-10"
-                  />
-                </div>
-              )}
-
-              {pagos.length > 1 && (
-                <Button variant="ghost" size="icon" className="h-10 w-10 text-destructive mb-0.5" onClick={() => {
-                  const newPagos = [...pagos];
-                  newPagos.splice(i, 1);
-                  setPagos(newPagos);
-                }}>
-                  <XCircle className="h-5 w-5" />
-                </Button>
-              )}
+        <div className="px-6 pb-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+          {isLoading ? (
+            <div className="py-16 flex flex-col items-center justify-center text-muted-foreground">
+              <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+              <p>Cargando detalles del ticket...</p>
             </div>
-          ))}
-          
-          <Button 
-            variant="outline" 
-            className="w-full border-dashed"
-            onClick={() => setPagos([...pagos, { formaPago: FormaPagoTicket.EFECTIVO, importe: "0" }])}
-          >
-            + Añadir forma de pago combinada
-          </Button>
-
-          {usaCredito && (
-            <div className="space-y-4 rounded-md border border-primary/20 bg-primary/5 p-4">
-              <div className="space-y-2">
-                <Label>Cliente para crédito</Label>
-                <Input
-                  type="number"
-                  min="1"
-                  value={clienteId}
-                  onChange={(event) => setClienteId(event.target.value)}
-                  placeholder="ID del cliente"
-                />
-              </div>
-              <div className="space-y-3 border-t border-primary/15 pt-3">
-                <p className="text-xs text-muted-foreground">
-                  Si el importe rebasa el límite, captura la autorización de un ADMIN.
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Usuario ADMIN</Label>
-                    <Input
-                      value={adminUser}
-                      onChange={(event) => setAdminUser(event.target.value)}
-                      autoComplete="off"
-                    />
+          ) : isError ? (
+            <div className="py-12 text-center text-destructive">
+              <AlertCircle className="mx-auto h-12 w-12 mb-4 opacity-50" />
+              <p className="font-medium text-lg mb-2">No se pudo cargar el ticket</p>
+              <Button variant="outline" onClick={() => refetch()}>Intentar de nuevo</Button>
+            </div>
+          ) : ticket ? (
+            <div className="pt-4 space-y-6">
+              <div className="bg-primary/5 p-5 rounded-xl flex items-center justify-between border border-primary/20">
+                <div>
+                  <div className="text-sm text-primary/70 font-bold mb-1 uppercase tracking-wider">TOTAL A COBRAR</div>
+                  <div className="text-4xl font-black text-primary">
+                    {totalTicket.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
                   </div>
-                  <div className="space-y-2">
-                    <Label>Contraseña ADMIN</Label>
-                    <Input
-                      type="password"
-                      value={adminPass}
-                      onChange={(event) => setAdminPass(event.target.value)}
-                      autoComplete="new-password"
-                    />
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-xl text-sidebar">Folio {ticket.folio}</div>
+                  <div className="text-sm font-medium px-2 py-0.5 bg-sidebar/10 text-sidebar rounded inline-block mt-1">
+                    {ticket.tipo}
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </CardContent>
 
-      <CardFooter className="flex-col items-stretch p-5 bg-muted/20 border-t gap-4">
-        <div className="flex justify-between items-center text-sm font-medium">
-          <span className="text-muted-foreground">Total Pagado:</span>
-          <span>{totalPagado.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+              {!showSplit ? (
+                <div className="space-y-5">
+                  <Label className="text-base font-semibold text-sidebar">Forma de Pago Principal</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Button
+                      type="button"
+                      variant={primaryPago?.formaPago === FormaPagoTicket.EFECTIVO ? "default" : "outline"}
+                      className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.EFECTIVO ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
+                      onClick={() => setPrimaryFormaPago(FormaPagoTicket.EFECTIVO)}
+                    >
+                      <Banknote className="h-8 w-8" />
+                      <span className="font-bold text-base">Efectivo</span>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={primaryPago?.formaPago === FormaPagoTicket.TRANSFERENCIA ? "default" : "outline"}
+                      className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.TRANSFERENCIA ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
+                      disabled={ticket.tipo === "METREADO"}
+                      onClick={() => setPrimaryFormaPago(FormaPagoTicket.TRANSFERENCIA)}
+                    >
+                      <ArrowRightLeft className="h-8 w-8" />
+                      <span className="font-bold text-base">Transf.</span>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={primaryPago?.formaPago === FormaPagoTicket.CREDITO ? "default" : "outline"}
+                      className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.CREDITO ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
+                      disabled={ticket.tipo === "METREADO"}
+                      onClick={() => setPrimaryFormaPago(FormaPagoTicket.CREDITO)}
+                    >
+                      <CreditCard className="h-8 w-8" />
+                      <span className="font-bold text-base">Crédito</span>
+                    </Button>
+                  </div>
+
+                  {primaryPago?.formaPago === FormaPagoTicket.TRANSFERENCIA && (
+                    <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2">
+                      <Label className="text-sm font-semibold">Referencia (Opcional)</Label>
+                      <Input
+                        placeholder="Número de rastreo o autorización"
+                        value={primaryPago.referencia || ""}
+                        onChange={(e) => {
+                          const newPagos = [...pagos];
+                          if (newPagos.length > 0) {
+                            newPagos[0].referencia = e.target.value;
+                            setPagos(newPagos);
+                          }
+                        }}
+                        className="h-12 border-2 focus-visible:ring-0 focus-visible:border-primary"
+                      />
+                    </div>
+                  )}
+
+                  <div className="pt-4 text-center border-t border-dashed">
+                    <Button
+                      variant="ghost"
+                      className="text-muted-foreground hover:text-primary hover:bg-primary/5 font-medium"
+                      onClick={() => {
+                        setShowSplit(true);
+                        if (pagos.length === 0) {
+                          setPagos([{ formaPago: FormaPagoTicket.EFECTIVO, importe: ticket.total }]);
+                        }
+                      }}
+                    >
+                      Dividir pago en múltiples formas
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4 animate-in fade-in">
+                  <div className="flex items-center justify-between mb-2 border-b pb-2">
+                    <Label className="text-base font-semibold text-sidebar">Desglose de Pago</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs font-medium text-primary hover:bg-primary/10"
+                      onClick={() => {
+                        setShowSplit(false);
+                        setPagos([{ formaPago: FormaPagoTicket.EFECTIVO, importe: ticket.total }]);
+                      }}
+                    >
+                      Volver a pago único
+                    </Button>
+                  </div>
+
+                  {pagos.map((pago, i) => (
+                    <div key={i} className="flex flex-wrap items-end gap-3 bg-secondary/20 p-4 rounded-xl border-2 border-transparent focus-within:border-primary/20 transition-colors relative group">
+                      <div className="flex-1 min-w-[140px] space-y-2">
+                        <Label className="text-xs font-bold text-muted-foreground">FORMA DE PAGO</Label>
+                        <Select value={pago.formaPago} onValueChange={(v) => {
+                          const newPagos = [...pagos];
+                          newPagos[i].formaPago = v as FormaPagoTicket;
+                          setPagos(newPagos);
+                        }}>
+                          <SelectTrigger className="h-12 bg-white border-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={FormaPagoTicket.EFECTIVO} className="font-medium py-3 cursor-pointer">Efectivo</SelectItem>
+                            {ticket.tipo !== "METREADO" && (
+                              <>
+                                <SelectItem value={FormaPagoTicket.TRANSFERENCIA} className="font-medium py-3 cursor-pointer">Transferencia</SelectItem>
+                                <SelectItem value={FormaPagoTicket.CREDITO} className="font-medium py-3 cursor-pointer">Crédito</SelectItem>
+                              </>
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="flex-1 min-w-[120px] space-y-2">
+                        <Label className="text-xs font-bold text-muted-foreground">IMPORTE</Label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">$</span>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={pago.importe}
+                            onChange={(e) => {
+                              const newPagos = [...pagos];
+                              newPagos[i].importe = e.target.value;
+                              setPagos(newPagos);
+                            }}
+                            className="pl-8 h-12 font-bold text-lg bg-white border-2 focus-visible:ring-0 focus-visible:border-primary"
+                          />
+                        </div>
+                      </div>
+
+                      {pago.formaPago === FormaPagoTicket.TRANSFERENCIA && (
+                        <div className="w-full space-y-2 mt-1 animate-in fade-in">
+                          <Label className="text-xs font-bold text-muted-foreground">REFERENCIA</Label>
+                          <Input
+                            placeholder="Opcional"
+                            value={pago.referencia || ""}
+                            onChange={(e) => {
+                              const newPagos = [...pagos];
+                              newPagos[i].referencia = e.target.value;
+                              setPagos(newPagos);
+                            }}
+                            className="h-10 bg-white border-2"
+                          />
+                        </div>
+                      )}
+
+                      {pagos.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute -right-2 -top-2 h-8 w-8 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                          onClick={() => {
+                            const newPagos = [...pagos];
+                            newPagos.splice(i, 1);
+                            setPagos(newPagos);
+                          }}
+                        >
+                          <XCircle className="h-5 w-5" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+
+                  <Button
+                    variant="outline"
+                    className="w-full border-2 border-dashed h-12 font-bold text-primary hover:bg-primary/5 hover:border-primary/50 transition-colors"
+                    onClick={() => setPagos([...pagos, { formaPago: FormaPagoTicket.EFECTIVO, importe: "0" }])}
+                  >
+                    + Añadir forma de pago combinada
+                  </Button>
+                </div>
+              )}
+
+              {usaCredito && (
+                <div className="space-y-4 rounded-xl border-2 border-amber-200 bg-amber-50 p-5 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex items-center gap-2 text-amber-800 mb-2">
+                    <AlertCircle className="h-5 w-5" />
+                    <span className="font-bold text-sm uppercase tracking-wider">Validación de Crédito</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="font-semibold text-amber-900">Cliente para crédito</Label>
+                    <Input
+                      type="number"
+                      min="1"
+                      value={clienteId}
+                      onChange={(event) => setClienteId(event.target.value)}
+                      placeholder="ID del cliente"
+                      className="bg-white border-amber-200 h-12 focus-visible:ring-amber-500"
+                    />
+                  </div>
+
+                  <div className="space-y-3 pt-3">
+                    <p className="text-xs font-medium text-amber-700/80">
+                      Si el importe rebasa el límite, captura la autorización de un ADMIN.
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-bold text-amber-900">USUARIO ADMIN</Label>
+                        <Input
+                          value={adminUser}
+                          onChange={(event) => setAdminUser(event.target.value)}
+                          autoComplete="off"
+                          className="bg-white border-amber-200 h-10 focus-visible:ring-amber-500"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-bold text-amber-900">CONTRASEÑA ADMIN</Label>
+                        <Input
+                          type="password"
+                          value={adminPass}
+                          onChange={(event) => setAdminPass(event.target.value)}
+                          autoComplete="new-password"
+                          className="bg-white border-amber-200 h-10 focus-visible:ring-amber-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : null}
         </div>
-        
-        {faltante !== 0 && (
-          <div className={`flex justify-between items-center text-sm font-bold ${faltante > 0 ? "text-amber-600" : "text-emerald-600"}`}>
-            <span>{faltante > 0 ? "Faltan:" : "Cambio (Sobran):"}</span>
-            <span>{Math.abs(faltante).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+
+        {ticket && !isLoading && !isError && (
+          <div className="p-6 bg-muted/30 border-t flex flex-col gap-4">
+            {faltante !== 0 && (
+              <div className={`p-4 rounded-xl flex justify-between items-center text-sm font-bold border-2 ${faltante > 0 ? "bg-amber-50 text-amber-700 border-amber-200 shadow-sm" : "bg-emerald-50 text-emerald-700 border-emerald-200 shadow-sm"}`}>
+                <span className="uppercase tracking-wider text-xs">{faltante > 0 ? "Falta por cubrir:" : "Cambio (Sobran):"}</span>
+                <span className="text-xl">{Math.abs(faltante).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <Button variant="outline" className="h-14 px-6 border-2 font-bold" onClick={() => onOpenChange(false)}>
+                Cancelar
+              </Button>
+              <Button
+                className="flex-1 h-14 text-lg font-black shadow-md hover:shadow-lg transition-all"
+                disabled={Math.abs(faltante) > 0.01 || cobrarTicket.isPending}
+                onClick={handleCobrar}
+              >
+                {cobrarTicket.isPending ? (
+                  <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                ) : (
+                  <Wallet className="mr-2 h-6 w-6" />
+                )}
+                Confirmar Pago
+              </Button>
+            </div>
           </div>
         )}
-        
-        <Button 
-          size="lg" 
-          className="w-full h-14 text-lg font-bold"
-          disabled={Math.abs(faltante) > 0.01 || cobrarTicket.isPending}
-          onClick={handleCobrar}
-        >
-          {cobrarTicket.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Banknote className="mr-2 h-5 w-5" />}
-          Registrar Cobro
-        </Button>
-      </CardFooter>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 export default function CobrosPage() {
-  const [, setLocation] = useLocation();
   const { selectedLocationId } = useLocationScope();
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
-  
+  const [cobroOpen, setCobroOpen] = useState(false);
+
   // Dialogs
   const [cierreOpen, setCierreOpen] = useState(false);
   const [efectivoContado, setEfectivoContado] = useState("");
   const { toast } = useToast();
+
+  useEffect(() => {
+    setCobroOpen(false);
+    setSelectedTicketId(null);
+  }, [selectedLocationId]);
 
   const {
     data: sesionData,
@@ -358,21 +533,20 @@ export default function CobrosPage() {
     isError: ticketsFailed,
     error: ticketsError,
     refetch: retryTickets,
-  } = useListarTicketsPendientes({
+  } = useListarTicketsCaja({
     ubicacionId: selectedLocationId || 0,
   }, {
     query: {
       enabled: !!selectedLocationId && !!sesionData?.sesion,
-      queryKey: getListarTicketsPendientesQueryKey({
+      queryKey: getListarTicketsCajaQueryKey({
         ubicacionId: selectedLocationId || 0,
       }),
       refetchInterval: 10000 // auto-refresh every 10s for new tickets
     }
   });
-  
+
   const tickets = ticketsData || [];
-  const selectedTicket = tickets.find(t => t.id === selectedTicketId);
-  
+
   const {
     data: corteData,
     isError: corteFailed,
@@ -406,7 +580,7 @@ export default function CobrosPage() {
       toast({ title: "Efectivo contado inválido", variant: "destructive" });
       return;
     }
-    
+
     cerrarCaja.mutate({ id: sesionData.sesion.id, data: { efectivoContado: contado } }, {
       onSuccess: () => {
         toast({ title: "Caja cerrada correctamente" });
@@ -464,8 +638,8 @@ export default function CobrosPage() {
 
   if (!sesionData || !sesionData.sesion) {
     return (
-      <AbrirCajaForm 
-        ubicacionId={selectedLocationId} 
+      <AbrirCajaForm
+        ubicacionId={selectedLocationId}
         onSuccess={() => queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: selectedLocationId }) })}
       />
     );
@@ -489,20 +663,19 @@ export default function CobrosPage() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 flex-1 min-h-0">
-        {/* Left - Tickets Pendientes */}
-        <Card className="flex-1 flex flex-col shadow-sm border-sidebar-border/10 min-w-[300px]">
+      <div className="flex flex-col flex-1 min-h-0">
+        <Card className="flex-1 flex flex-col shadow-sm border-sidebar-border/10">
           <CardHeader className="p-4 border-b bg-muted/20 flex flex-row items-center justify-between pb-4">
-            <CardTitle className="text-lg">Tickets por Cobrar</CardTitle>
-            <Button variant="ghost" size="icon" onClick={() => queryClient.invalidateQueries({ queryKey: getListarTicketsPendientesQueryKey({ ubicacionId: selectedLocationId || 0 }) })}>
+            <CardTitle className="text-lg">Tickets de Caja</CardTitle>
+            <Button variant="ghost" size="icon" aria-label="Actualizar tickets" onClick={() => queryClient.invalidateQueries({ queryKey: getListarTicketsCajaQueryKey({ ubicacionId: selectedLocationId || 0 }) })}>
               <RefreshCw className={`h-4 w-4 ${fetchingTickets ? "animate-spin" : ""}`} />
             </Button>
           </CardHeader>
-          <div className="flex-1 overflow-y-auto p-3 custom-scrollbar bg-secondary/10">
+          <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-secondary/10">
             {ticketsFailed ? (
               <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center text-destructive" role="alert">
                 <AlertCircle className="h-10 w-10" />
-                <p>{getApiErrorMessage(ticketsError, "No se pudieron cargar los tickets por cobrar.")}</p>
+                <p>{getApiErrorMessage(ticketsError, "No se pudieron cargar los tickets.")}</p>
                 <Button variant="outline" size="sm" onClick={() => retryTickets()}>
                   Intentar de nuevo
                 </Button>
@@ -513,37 +686,57 @@ export default function CobrosPage() {
                 <p>No hay tickets pendientes</p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3 max-w-4xl mx-auto">
                 {tickets.map(t => (
-                  <div 
-                    key={t.id} 
-                    onClick={() => setSelectedTicketId(t.id)}
-                    className={`p-4 rounded-lg border cursor-pointer transition-all ${selectedTicketId === t.id ? "bg-primary/5 border-primary shadow-md" : "bg-white hover:border-primary/50 shadow-sm"}`}
+                  <div
+                    key={t.id}
+                    className={`p-5 rounded-xl border-2 transition-all ${
+                      t.cobrado
+                        ? "bg-muted/40 border-transparent opacity-75 grayscale-[0.2]"
+                        : "bg-card border-border shadow-sm hover:border-primary/40 hover:shadow-md"
+                    }`}
                   >
-                    <div className="flex justify-between items-start">
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                       <div>
-                        <div className="font-bold text-lg">Folio: {t.folio}</div>
-                        <div className="text-sm text-muted-foreground mt-1">{t.nombreUsuarioTerminal}</div>
-                        <div className="text-xs bg-muted inline-block px-1.5 py-0.5 rounded mt-1 font-medium text-muted-foreground">
-                          {t.tipo}
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-xl text-sidebar">Folio: {t.folio}</span>
                         </div>
+                        <div className="text-sm font-medium text-muted-foreground mt-1.5 flex flex-wrap items-center gap-2">
+                          <span>{format(new Date(t.createdAt), "h:mm a", { locale: es })}</span>
+                          {t.cobrado && t.cobradoAt && (
+                             <>
+                               <span className="text-border text-xs">•</span>
+                               <span className="text-emerald-700">Cobrado a las {format(new Date(t.cobradoAt), "h:mm a", { locale: es })}</span>
+                             </>
+                          )}
+                        </div>
+                        {t.cobrado && t.formasPago && t.formasPago.length > 0 && (
+                          <div className="text-xs text-muted-foreground mt-2 font-bold flex items-center gap-1.5 capitalize tracking-wider">
+                            <Wallet className="h-3 w-3" />
+                            {t.formasPago.map(fp => fp === "EFECTIVO" ? "Efectivo" : fp === "TRANSFERENCIA" ? "Transferencia" : fp === "CREDITO" ? "Crédito" : fp).join(", ")}
+                          </div>
+                        )}
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-xl text-primary">
-                          {Number(t.total).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+
+                      <div className="flex items-center justify-between sm:justify-end gap-6">
+                        <div className="text-right">
+                          <div className={`font-black text-2xl ${t.cobrado ? "text-sidebar/70" : "text-primary"}`}>
+                            {Number(t.total).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+                          </div>
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1">{t.lineasCount || 0} líneas</div>
-                         <Button
-                           variant="link"
-                           size="sm"
-                           className="h-7 px-0 text-xs"
-                           onClick={(event) => {
-                             event.stopPropagation();
-                             setLocation(`/tickets/${t.id}`);
-                           }}
-                         >
-                           Ver detalle y márgenes
-                         </Button>
+
+                        {!t.cobrado && (
+                          <Button
+                            size="lg"
+                            className="font-black px-8 h-14 text-lg shadow-md hover:shadow-lg transition-shadow"
+                            onClick={() => {
+                              setSelectedTicketId(t.id);
+                              setCobroOpen(true);
+                            }}
+                          >
+                            Cobrar
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -552,35 +745,31 @@ export default function CobrosPage() {
             )}
           </div>
         </Card>
-
-        {/* Right - Panel de Cobro */}
-        <div className="w-full md:w-[450px] lg:w-[500px]">
-          {selectedTicket ? (
-            <CobroPanel 
-              ticket={selectedTicket} 
-              onCobrado={() => {
-                setSelectedTicketId(null);
-                queryClient.invalidateQueries({ queryKey: getListarTicketsPendientesQueryKey({ ubicacionId: selectedLocationId || 0 }) });
-                queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
-              }} 
-            />
-          ) : (
-            <Card className="h-full flex items-center justify-center bg-muted/20 border-dashed shadow-none">
-              <div className="text-center text-muted-foreground opacity-60">
-                <Wallet className="mx-auto h-16 w-16 mb-4" />
-                <p className="text-lg">Selecciona un ticket para cobrar</p>
-              </div>
-            </Card>
-          )}
-        </div>
       </div>
+
+      <CobroDialog
+        ticketId={selectedTicketId}
+        open={cobroOpen}
+        onOpenChange={(open) => {
+          setCobroOpen(open);
+          if (!open) {
+            setSelectedTicketId(null);
+          }
+        }}
+        onCobrado={() => {
+          setCobroOpen(false);
+          setSelectedTicketId(null);
+          queryClient.invalidateQueries({ queryKey: getListarTicketsCajaQueryKey({ ubicacionId: selectedLocationId || 0 }) });
+          queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
+        }}
+      />
 
       <Dialog open={cierreOpen} onOpenChange={setCierreOpen}>
         <DialogContent className="corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Corte y Cierre de Caja</DialogTitle>
           </DialogHeader>
-          
+
           <div className="py-4 space-y-6">
             {corteFailed ? (
               <div className="space-y-3 rounded-md border border-destructive/30 bg-destructive/10 p-4 text-center text-destructive" role="alert">
@@ -603,7 +792,7 @@ export default function CobrosPage() {
                     <div className="font-bold">{Number(corteData.totalCobrado).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</div>
                   </div>
                 </div>
-                
+
                 <div className="p-4 bg-primary/5 border border-primary/20 rounded-md">
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-medium text-primary">Efectivo Esperado:</span>
@@ -655,11 +844,11 @@ export default function CobrosPage() {
                   <Label>Efectivo Físico Contado</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      step="0.01" 
-                      value={efectivoContado} 
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={efectivoContado}
                       onChange={(e) => setEfectivoContado(e.target.value)}
                       className="pl-8 h-12 text-lg font-bold"
                       placeholder="0.00"
@@ -669,7 +858,7 @@ export default function CobrosPage() {
               </>
             )}
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setCierreOpen(false)}>Cancelar</Button>
             <Button variant="outline" onClick={handlePrintCorte} disabled={!corteData}>Imprimir Corte</Button>
@@ -700,25 +889,4 @@ function CorteRow({ label, value }: { label: string; value: string }) {
       <span className="font-mono font-semibold">{Number(value).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
     </div>
   );
-}
-
-// Minimal CheckCircle icon needed above
-function CheckCircle(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-  )
 }

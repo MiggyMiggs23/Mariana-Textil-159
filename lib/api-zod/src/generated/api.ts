@@ -2234,6 +2234,25 @@ export const ListarTicketsPendientesResponse = zod.array(ListarTicketsPendientes
 
 
 /**
+ * @summary Lista pendientes y cobrados de la sesión de caja actual
+ */
+export const ListarTicketsCajaQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const ListarTicketsCajaResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "total": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "cobrado": zod.boolean(),
+  "cobradoAt": zod.coerce.date().nullable(),
+  "formasPago": zod.array(zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']))
+})
+export const ListarTicketsCajaResponse = zod.array(ListarTicketsCajaResponseItem)
+
+
+/**
  * @summary Obtiene el detalle completo de un ticket
  */
 export const ObtenerTicketParams = zod.object({
