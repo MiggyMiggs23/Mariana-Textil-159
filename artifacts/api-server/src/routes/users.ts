@@ -31,6 +31,7 @@ router.use("/users", requireSession, requierePermiso("usuarios", "ver"));
 
 const DEFAULT_QUERY_SCOPE: Record<RolUsuario, AlcanceConsulta> = {
   ADMIN: "TODAS",
+  TERMINAL: "PROPIA",
   CAJA: "TODAS",
   INVENTARIOS: "TODAS",
   BODEGA: "PROPIA",

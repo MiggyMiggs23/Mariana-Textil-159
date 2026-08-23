@@ -60,6 +60,7 @@ import {
 import { requireSession } from "../middlewares/auth";
 import type { AuthContext } from "../middlewares/auth";
 import { getRequestIp } from "../lib/request";
+import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 import { requierePermiso } from "../lib/permisos";
 import {
   crearEntrada,
@@ -95,8 +96,9 @@ export const inventarioRouter = Router();
 /**
  * Returns the `ubicacionId` that should be used to filter a read query.
  *
- * - ADMIN with alcanceConsulta TODAS: use requestedUbicacionId (may be undefined = all).
- * - Non-ADMIN or alcanceConsulta PROPIA: always use assigned ubicacionId.
+ * - ADMIN: use requestedUbicacionId (may be undefined = all), regardless of
+ *   alcanceConsulta.
+ * - Non-ADMIN with alcanceConsulta PROPIA: always use assigned ubicacionId.
  * - If the user has no assigned location and scope is PROPIA, returns null
  *   (caller should return an empty set or 400).
  */
@@ -107,8 +109,8 @@ function resolveReadScope(
   const alcance = auth.user.alcanceConsulta;
   const assigned = auth.user.ubicacionId;
 
-  // ADMIN with TODAS scope: unrestricted
-  if (auth.user.rol === "ADMIN" && alcance === "TODAS") {
+  // ADMIN is always unrestricted; alcanceConsulta never limits this role.
+  if (auth.user.rol === "ADMIN") {
     return { ubicacionId: requestedUbicacionId, scopeError: null };
   }
 
@@ -408,7 +410,9 @@ inventarioRouter.post(
       );
 
       const response = CrearEntradaResponse.parse(result);
-      res.status(201).json(response);
+      res
+        .status(201)
+        .json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(400).json({ error: e.message });
@@ -523,7 +527,7 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       next(e);
     }
@@ -572,7 +576,7 @@ inventarioRouter.get(
         buildEntradaResult(tx, id),
       );
       const response = GetEntradaResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ENTRADA_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -631,7 +635,7 @@ inventarioRouter.post(
         return;
       }
       const response = ActivarRolloResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -692,7 +696,7 @@ inventarioRouter.post(
         return;
       }
       const response = MoverRolloResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -740,7 +744,7 @@ inventarioRouter.post(
         return;
       }
       const response = RecibirTransferenciaResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -798,7 +802,7 @@ inventarioRouter.post(
         return;
       }
       const response = SalidaMostradorResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -856,7 +860,7 @@ inventarioRouter.post(
         return;
       }
       const response = VenderRolloResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -915,7 +919,7 @@ inventarioRouter.post(
         return;
       }
       const response = AjustarRolloResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -977,7 +981,7 @@ inventarioRouter.post(
         return;
       }
       const response = RevertirMovimientoResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       if (e instanceof InventarioError) {
         const status =
@@ -1022,7 +1026,7 @@ inventarioRouter.get(
       }
 
       const response = GetRolloResponse.parse(detail);
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       next(e);
     }
@@ -1131,7 +1135,7 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(response);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
     } catch (e) {
       next(e);
     }

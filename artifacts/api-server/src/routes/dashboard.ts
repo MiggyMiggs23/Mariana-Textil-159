@@ -25,17 +25,22 @@ router.get(
         ? parsedRequestedLocationId
         : null;
 
-    if (user.alcanceConsulta === "PROPIA" && user.ubicacionId === null) {
+    const isAdmin = user.rol === "ADMIN";
+    if (!isAdmin && user.alcanceConsulta === "PROPIA" && user.ubicacionId === null) {
       res.status(403).json({ error: "No tienes una ubicación asignada." });
       return;
     }
 
     const visibleLocationIds =
-      user.alcanceConsulta === "PROPIA"
-        ? [user.ubicacionId!]
-        : requestedLocationId !== null
+      isAdmin
+        ? requestedLocationId !== null
           ? [requestedLocationId]
-          : null;
+          : null
+        : user.alcanceConsulta === "PROPIA"
+          ? [user.ubicacionId!]
+          : requestedLocationId !== null
+            ? [requestedLocationId]
+            : null;
 
     const locationScope = visibleLocationIds
       ? inArray(ubicacionesTable.id, visibleLocationIds)
