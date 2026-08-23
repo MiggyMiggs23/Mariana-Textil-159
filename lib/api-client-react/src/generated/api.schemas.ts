@@ -1414,6 +1414,10 @@ export interface TicketResumen {
   nombreCliente: string | null;
   tipo: TipoTicket;
   subtotal: string;
+  /** IVA aplicado al ticket; es 0.00 si no fue facturado */
+  iva: string;
+  /** Tasa de IVA vigente al crear el ticket */
+  tasaIva: string;
   total: string;
   estado: EstadoTicket;
   lineasCount?: number;
@@ -1447,7 +1451,11 @@ export interface TicketResumen {
 export interface TicketCajaResumen {
   id: number;
   folio: number;
+  subtotal: string;
+  iva: string;
+  tasaIva: string;
   total: string;
+  facturado: boolean;
   createdAt: string;
   cobrado: boolean;
   /** @nullable */
@@ -1514,6 +1522,8 @@ export interface CorteCuentaDestino {
 export interface CorteFacturacion {
   facturado: boolean;
   ticketsCount: number;
+  subtotal: string;
+  iva: string;
   importe: string;
 }
 
@@ -1555,6 +1565,8 @@ export interface CorteCaja {
   pendientes: CortePendiente[];
   fondoInicial: string;
   totalCobrado: string;
+  /** IVA incluido en los tickets cobrados de la sesión */
+  ivaCobrado: string;
   efectivoEsperado: string;
   /** @nullable */
   efectivoContado: string | null;

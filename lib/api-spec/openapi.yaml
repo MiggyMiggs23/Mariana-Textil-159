@@ -2081,7 +2081,17 @@ components:
         puedeAutorizar: { type: ["boolean", "null"] }
     PermisosRolRow:
       type: object
-      required: [id, rol, modulo, puedeVer, puedeCrear, puedeEditar, puedeAutorizar, updatedAt]
+      required:
+        [
+          id,
+          rol,
+          modulo,
+          puedeVer,
+          puedeCrear,
+          puedeEditar,
+          puedeAutorizar,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         rol:
@@ -2170,7 +2180,14 @@ components:
         activo: { type: boolean }
     ClienteCredito:
       type: object
-      required: [clienteId, limiteCredito, saldoActual, creditoDisponible, puedeComprarCredito]
+      required:
+        [
+          clienteId,
+          limiteCredito,
+          saldoActual,
+          creditoDisponible,
+          puedeComprarCredito,
+        ]
       properties:
         clienteId: { type: number }
         limiteCredito: { type: string }
@@ -2192,7 +2209,11 @@ components:
               sku: { type: string }
               precioUnitario: { type: string }
               fecha: { type: string, format: date }
-              promedio3: { type: string, description: "Promedio de las últimas 3 compras de ese producto" }
+              promedio3:
+                {
+                  type: string,
+                  description: "Promedio de las últimas 3 compras de ese producto",
+                }
         nota: { type: ["string", "null"] }
     ClienteMovimiento:
       type: object
@@ -2300,7 +2321,17 @@ components:
           $ref: "#/components/schemas/PermissionMatrix"
     User:
       type: object
-      required: [id, nombre, usuario, rol, ubicacion, alcanceConsulta, activo, ultimoAcceso]
+      required:
+        [
+          id,
+          nombre,
+          usuario,
+          rol,
+          ubicacion,
+          alcanceConsulta,
+          activo,
+          ultimoAcceso,
+        ]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -2351,7 +2382,13 @@ components:
         password: { type: string, minLength: 1, maxLength: 128 }
     Dashboard:
       type: object
-      required: [tiendasActivas, bodegasActivas, usuariosActivos, inventarioPorUbicacion]
+      required:
+        [
+          tiendasActivas,
+          bodegasActivas,
+          usuariosActivos,
+          inventarioPorUbicacion,
+        ]
       properties:
         tiendasActivas: { type: number }
         bodegasActivas: { type: number }
@@ -2391,10 +2428,25 @@ components:
         totalCosto: { type: string }
         totalCantidad: { type: string }
         totalRollos: { type: number }
-        costoPorUnidad: { type: ["string", "null"], description: "Costo unitario ponderado histórico por METRO o por KILO, según la unidad del producto" }
+        costoPorUnidad:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado histórico por METRO o por KILO, según la unidad del producto",
+          }
     ProductoCompraHistorial:
       type: object
-      required: [entradaId, folio, fecha, proveedorId, proveedorNombre, totalCosto, totalCantidad, totalRollos, costoPorUnidad]
+      required:
+        [
+          entradaId,
+          folio,
+          fecha,
+          proveedorId,
+          proveedorNombre,
+          totalCosto,
+          totalCantidad,
+          totalRollos,
+          costoPorUnidad,
+        ]
       properties:
         entradaId: { type: number }
         folio: { type: number }
@@ -2404,10 +2456,28 @@ components:
         totalCosto: { type: string }
         totalCantidad: { type: string }
         totalRollos: { type: number }
-        costoPorUnidad: { type: ["string", "null"], description: "Costo unitario ponderado de la entrada por METRO o por KILO, según la unidad del producto" }
+        costoPorUnidad:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado de la entrada por METRO o por KILO, según la unidad del producto",
+          }
     Producto:
       type: object
-      required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, createdAt, updatedAt]
+      required:
+        [
+          id,
+          sku,
+          tela,
+          color,
+          unidad,
+          precioSugerido,
+          notas,
+          activo,
+          rollos,
+          cantidad,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -2425,7 +2495,26 @@ components:
         updatedAt: { type: string, format: date-time }
     ProductoDetail:
       type: object
-      required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, skuBloqueado, unidadBloqueada, inventarioPorUbicacion, comprasResumen, comprasHistorial, createdAt, updatedAt]
+      required:
+        [
+          id,
+          sku,
+          tela,
+          color,
+          unidad,
+          precioSugerido,
+          notas,
+          activo,
+          rollos,
+          cantidad,
+          skuBloqueado,
+          unidadBloqueada,
+          inventarioPorUbicacion,
+          comprasResumen,
+          comprasHistorial,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -2491,7 +2580,8 @@ components:
           description: Contenido del archivo en base64
     ImportPreviewRow:
       type: object
-      required: [rowIndex, tela, color, unidad, precioSugerido, notas, sku, estado]
+      required:
+        [rowIndex, tela, color, unidad, precioSugerido, notas, sku, estado]
       properties:
         rowIndex: { type: number }
         tela: { type: string }
@@ -2523,7 +2613,20 @@ components:
         errores: { type: number }
     Proveedor:
       type: object
-      required: [id, nombre, tipo, monedaDefault, contactoNombre, telefono, correo, pais, notas, activo, createdAt]
+      required:
+        [
+          id,
+          nombre,
+          tipo,
+          monedaDefault,
+          contactoNombre,
+          telefono,
+          correo,
+          pais,
+          notas,
+          activo,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -2586,10 +2689,35 @@ components:
       enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, ABIERTO, VENDIDO, BAJA]
     TipoMovimiento:
       type: string
-      enum: [ALTA, RECEPCION, VENTA, DEVOLUCION, TRANSFERENCIA_SALIDA, TRANSFERENCIA_ENTRADA, SALIDA_MOSTRADOR, AJUSTE_POSITIVO, AJUSTE_NEGATIVO, CANCELACION]
+      enum:
+        [
+          ALTA,
+          RECEPCION,
+          VENTA,
+          DEVOLUCION,
+          TRANSFERENCIA_SALIDA,
+          TRANSFERENCIA_ENTRADA,
+          SALIDA_MOSTRADOR,
+          AJUSTE_POSITIVO,
+          AJUSTE_NEGATIVO,
+          CANCELACION,
+        ]
     RolloSummary:
       type: object
-      required: [id, serie, productoId, ubicacionId, estado, cantidadInicial, cantidadActual, costoUnitario, costoTotal, createdAt, updatedAt]
+      required:
+        [
+          id,
+          serie,
+          productoId,
+          ubicacionId,
+          estado,
+          cantidadInicial,
+          cantidadActual,
+          costoUnitario,
+          costoTotal,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -2611,7 +2739,19 @@ components:
         updatedAt: { type: string, format: date-time }
     MovimientoRow:
       type: object
-      required: [id, rolloId, productoId, ubicacionId, tipo, cantidad, saldoPosterior, usuarioId, revisado, createdAt]
+      required:
+        [
+          id,
+          rolloId,
+          productoId,
+          ubicacionId,
+          tipo,
+          cantidad,
+          saldoPosterior,
+          usuarioId,
+          revisado,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         rolloId: { type: number }
@@ -2636,7 +2776,21 @@ components:
         createdAt: { type: string, format: date-time }
     RolloDetail:
       type: object
-      required: [id, serie, productoId, ubicacionId, estado, cantidadInicial, cantidadActual, costoUnitario, costoTotal, historial, createdAt, updatedAt]
+      required:
+        [
+          id,
+          serie,
+          productoId,
+          ubicacionId,
+          estado,
+          cantidadInicial,
+          cantidadActual,
+          costoUnitario,
+          costoTotal,
+          historial,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -2699,7 +2853,18 @@ components:
         pageSize: { type: number }
     ConciliacionRow:
       type: object
-      required: [productoId, ubicacionId, ubicacionNombre, ubicacionActiva, cantidadMovimientos, cantidadCache, rollosMovimientos, rollosCache, discrepancia]
+      required:
+        [
+          productoId,
+          ubicacionId,
+          ubicacionNombre,
+          ubicacionActiva,
+          cantidadMovimientos,
+          cantidadCache,
+          rollosMovimientos,
+          rollosCache,
+          discrepancia,
+        ]
       properties:
         productoId: { type: number }
         ubicacionId: { type: number }
@@ -2772,7 +2937,8 @@ components:
       type: object
       required: [justificacion]
       properties:
-        cantidadNueva: { type: ["string", "null"], description: "null o omitido = BAJA" }
+        cantidadNueva:
+          { type: ["string", "null"], description: "null o omitido = BAJA" }
         justificacion: { type: string, minLength: 10 }
         uuidCliente: { type: ["string", "null"] }
     RevertirMovimientoInput:
@@ -2813,7 +2979,8 @@ components:
           minItems: 1
     EntradaRollo:
       type: object
-      required: [id, serie, productoId, cantidadInicial, costoUnitario, costoTotal]
+      required:
+        [id, serie, productoId, cantidadInicial, costoUnitario, costoTotal]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -2959,23 +3126,59 @@ components:
       type: object
       required: [importe, formaPago]
       properties:
-        importe: { type: number, minimum: 0.01, description: "Importe positivo; se guarda como negativo internamente" }
+        importe:
+          {
+            type: number,
+            minimum: 0.01,
+            description: "Importe positivo; se guarda como negativo internamente",
+          }
         formaPago:
           $ref: "#/components/schemas/FormaPagoProveedor"
-        fecha: { type: string, format: date-time, description: "Fecha del pago; por defecto ahora si se omite" }
+        fecha:
+          {
+            type: string,
+            format: date-time,
+            description: "Fecha del pago; por defecto ahora si se omite",
+          }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
-        entradaId: { type: ["number", "null"], description: "Opcional: liga el pago a una compra específica" }
+        entradaId:
+          {
+            type: ["number", "null"],
+            description: "Opcional: liga el pago a una compra específica",
+          }
     AjusteProveedorInput:
       type: object
       required: [importe, notas]
       properties:
-        importe: { type: number, description: "Signed: positivo aumenta deuda, negativo la reduce" }
-        notas: { type: string, minLength: 10, description: "Justificación mínimo 10 caracteres" }
+        importe:
+          {
+            type: number,
+            description: "Signed: positivo aumenta deuda, negativo la reduce",
+          }
+        notas:
+          {
+            type: string,
+            minLength: 10,
+            description: "Justificación mínimo 10 caracteres",
+          }
     ProveedorMetricas:
       type: object
       description: Datos operativos del proveedor; las métricas financieras solo se incluyen con proveedores_finanzas.ver.
-      required: [id, nombre, tipo, monedaDefault, contactoNombre, telefono, correo, pais, notas, activo, createdAt]
+      required:
+        [
+          id,
+          nombre,
+          tipo,
+          monedaDefault,
+          contactoNombre,
+          telefono,
+          correo,
+          pais,
+          notas,
+          activo,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -2990,22 +3193,46 @@ components:
         notas: { type: ["string", "null"] }
         activo: { type: boolean }
         createdAt: { type: string, format: date-time }
-        totalCompras: { type: string, description: "Total histórico de compras (suma de todos los COMPRAs)" }
-        totalComprado12Meses: { type: string, description: "Total comprado en los últimos 12 meses" }
-        comprasMes: { type: string, description: "Total comprado en el mes calendario actual" }
+        totalCompras:
+          {
+            type: string,
+            description: "Total histórico de compras (suma de todos los COMPRAs)",
+          }
+        totalComprado12Meses:
+          {
+            type: string,
+            description: "Total comprado en los últimos 12 meses",
+          }
+        comprasMes:
+          {
+            type: string,
+            description: "Total comprado en el mes calendario actual",
+          }
         totalPagado: { type: string }
         saldoPendiente: { type: string }
         ultimaCompra: { type: ["string", "null"], format: date-time }
         comprasCount: { type: number }
     ProveedoresResumen:
       type: object
-      required: [totalProveedores, proveedoresConSaldo, totalDeuda, totalPagado, comprasMes, items]
+      required:
+        [
+          totalProveedores,
+          proveedoresConSaldo,
+          totalDeuda,
+          totalPagado,
+          comprasMes,
+          items,
+        ]
       properties:
         totalProveedores: { type: number }
         proveedoresConSaldo: { type: number }
         totalDeuda: { type: string }
         totalPagado: { type: string }
-        comprasMes: { type: string, description: "Total comprado al conjunto de proveedores en el mes actual" }
+        comprasMes:
+          {
+            type: string,
+            description: "Total comprado al conjunto de proveedores en el mes actual",
+          }
         items:
           type: array
           items:
@@ -3018,14 +3245,36 @@ components:
         proveedoresConSaldo: { type: number }
         totalDeuda: { type: string }
         totalPagado: { type: string }
-        comprasMes: { type: string, description: "Total comprado al conjunto de proveedores en el mes actual" }
+        comprasMes:
+          {
+            type: string,
+            description: "Total comprado al conjunto de proveedores en el mes actual",
+          }
         items:
           type: array
           items:
             $ref: "#/components/schemas/ProveedorMetricas"
     CompraConEstado:
       type: object
-      required: [entradaId, folio, fecha, totalCosto, abonado, saldoPendiente, estado, nombreUbicacion, totalRollos, cantidadTotal, cantidadMetros, cantidadKilos, costoMetros, costoKilos, costoPorMetro, costoPorKilo]
+      required:
+        [
+          entradaId,
+          folio,
+          fecha,
+          totalCosto,
+          abonado,
+          saldoPendiente,
+          estado,
+          nombreUbicacion,
+          totalRollos,
+          cantidadTotal,
+          cantidadMetros,
+          cantidadKilos,
+          costoMetros,
+          costoKilos,
+          costoPorMetro,
+          costoPorKilo,
+        ]
       properties:
         entradaId: { type: number }
         folio: { type: number }
@@ -3036,15 +3285,35 @@ components:
         estado:
           type: string
           enum: [Pagada, Parcial, Pendiente]
-        nombreUbicacion: { type: string, description: "Nombre de la ubicación/bodega de recepción" }
-        totalRollos: { type: number, description: "Número de rollos recibidos en esta entrada" }
-        cantidadTotal: { type: string, description: "Suma de cantidades de todos los rollos (en la unidad del producto)" }
+        nombreUbicacion:
+          {
+            type: string,
+            description: "Nombre de la ubicación/bodega de recepción",
+          }
+        totalRollos:
+          {
+            type: number,
+            description: "Número de rollos recibidos en esta entrada",
+          }
+        cantidadTotal:
+          {
+            type: string,
+            description: "Suma de cantidades de todos los rollos (en la unidad del producto)",
+          }
         cantidadMetros: { type: string }
         cantidadKilos: { type: string }
         costoMetros: { type: string }
         costoKilos: { type: string }
-        costoPorMetro: { type: ["string", "null"], description: "Costo unitario ponderado por METRO" }
-        costoPorKilo: { type: ["string", "null"], description: "Costo unitario ponderado por KILO" }
+        costoPorMetro:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado por METRO",
+          }
+        costoPorKilo:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado por KILO",
+          }
     ProveedorComprasResult:
       type: object
       required: [items, total, totalCostoPeriodo, page, pageSize]
@@ -3054,7 +3323,11 @@ components:
           items:
             $ref: "#/components/schemas/CompraConEstado"
         total: { type: number }
-        totalCostoPeriodo: { type: string, description: "Suma de compras que cumplen los filtros antes de paginar" }
+        totalCostoPeriodo:
+          {
+            type: string,
+            description: "Suma de compras que cumplen los filtros antes de paginar",
+          }
         page: { type: number }
         pageSize: { type: number }
     MovimientoLedger:
@@ -3092,7 +3365,18 @@ components:
         count: { type: number }
     EstadisticasPorProducto:
       type: object
-      required: [productoId, sku, tela, color, unidad, totalCosto, totalRollos, cantidadTotal, costoPorUnidad]
+      required:
+        [
+          productoId,
+          sku,
+          tela,
+          color,
+          unidad,
+          totalCosto,
+          totalRollos,
+          cantidadTotal,
+          costoPorUnidad,
+        ]
       properties:
         productoId: { type: number }
         sku: { type: string }
@@ -3101,10 +3385,26 @@ components:
         unidad: { type: string }
         totalCosto: { type: string }
         totalRollos: { type: number }
-        cantidadTotal: { type: string, description: "Suma de cantidades de todos los rollos del producto" }
-        costoPorUnidad: { type: string, description: "Costo unitario ponderado por METRO o por KILO, según la unidad del producto" }
-        costoPorUnidadAnterior: { type: ["string", "null"], description: "Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto" }
-        variacionCostoUnidadPct: { type: ["string", "null"], description: "Variación porcentual del costo por unidad vs. el periodo anterior" }
+        cantidadTotal:
+          {
+            type: string,
+            description: "Suma de cantidades de todos los rollos del producto",
+          }
+        costoPorUnidad:
+          {
+            type: string,
+            description: "Costo unitario ponderado por METRO o por KILO, según la unidad del producto",
+          }
+        costoPorUnidadAnterior:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto",
+          }
+        variacionCostoUnidadPct:
+          {
+            type: ["string", "null"],
+            description: "Variación porcentual del costo por unidad vs. el periodo anterior",
+          }
     EstadisticasPorTela:
       type: object
       required: [tela, totalCosto, rollosCount]
@@ -3121,17 +3421,48 @@ components:
         rollosCount: { type: number }
     ProveedorEstadisticas:
       type: object
-      required: [desde, hasta, totalCompras, comprasCount, totalRollos, costoPorMetro, costoPorKilo, ticketPromedio, porMes, porProducto, porTela, porColor]
+      required:
+        [
+          desde,
+          hasta,
+          totalCompras,
+          comprasCount,
+          totalRollos,
+          costoPorMetro,
+          costoPorKilo,
+          ticketPromedio,
+          porMes,
+          porProducto,
+          porTela,
+          porColor,
+        ]
       properties:
         desde: { type: string, format: date-time }
         hasta: { type: string, format: date-time }
         totalCompras: { type: string }
         comprasCount: { type: number }
-        totalRollos: { type: number, description: "Total de rollos recibidos en el periodo" }
-        costoPorMetro: { type: ["string", "null"], description: "Costo unitario ponderado por METRO" }
-        costoPorKilo: { type: ["string", "null"], description: "Costo unitario ponderado por KILO" }
-        ticketPromedio: { type: string, description: "Importe promedio por compra (entrada)" }
-        diasDesdeUltimaCompra: { type: ["number", "null"], description: "Días desde la última compra hasta hoy; null si no hay compras" }
+        totalRollos:
+          {
+            type: number,
+            description: "Total de rollos recibidos en el periodo",
+          }
+        costoPorMetro:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado por METRO",
+          }
+        costoPorKilo:
+          {
+            type: ["string", "null"],
+            description: "Costo unitario ponderado por KILO",
+          }
+        ticketPromedio:
+          { type: string, description: "Importe promedio por compra (entrada)" }
+        diasDesdeUltimaCompra:
+          {
+            type: ["number", "null"],
+            description: "Días desde la última compra hasta hoy; null si no hay compras",
+          }
         variacionVsPeriodoAnterior: { type: ["string", "null"] }
         ultimaCompra: { type: ["string", "null"], format: date-time }
         porMes:
@@ -3170,7 +3501,20 @@ components:
         password: { type: string, minLength: 1, maxLength: 128 }
     PosRolloDisponible:
       type: object
-      required: [id, serie, productoId, sku, tela, color, unidad, ubicacionId, nombreUbicacion, cantidadActual, precioSugerido]
+      required:
+        [
+          id,
+          serie,
+          productoId,
+          sku,
+          tela,
+          color,
+          unidad,
+          ubicacionId,
+          nombreUbicacion,
+          cantidadActual,
+          precioSugerido,
+        ]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -3236,7 +3580,11 @@ components:
       type: object
       required: [uuidCliente, ubicacionId, clienteId, tipo, facturado, lineas]
       properties:
-        uuidCliente: { type: string, description: Identificador UUID generado por la terminal }
+        uuidCliente:
+          {
+            type: string,
+            description: Identificador UUID generado por la terminal,
+          }
         ubicacionId: { type: number }
         clienteId: { type: ["number", "null"] }
         tipo:
@@ -3280,7 +3628,17 @@ components:
             - type: "null"
     TicketPago:
       type: object
-      required: [id, ticketId, formaPago, importe, referencia, createdAt, usuarioId, nombreUsuario]
+      required:
+        [
+          id,
+          ticketId,
+          formaPago,
+          importe,
+          referencia,
+          createdAt,
+          usuarioId,
+          nombreUsuario,
+        ]
       properties:
         id: { type: number }
         ticketId: { type: number }
@@ -3293,7 +3651,23 @@ components:
         nombreUsuario: { type: string }
     TicketLinea:
       type: object
-      required: [id, ticketId, rolloId, productoId, cantidad, precioUnitario, precioSugerido, importe, skuProducto, telaProducto, colorProducto, unidadProducto, serieRollo, nombreUbicacion]
+      required:
+        [
+          id,
+          ticketId,
+          rolloId,
+          productoId,
+          cantidad,
+          precioUnitario,
+          precioSugerido,
+          importe,
+          skuProducto,
+          telaProducto,
+          colorProducto,
+          unidadProducto,
+          serieRollo,
+          nombreUbicacion,
+        ]
       properties:
         id: { type: number }
         ticketId: { type: number }
@@ -3321,7 +3695,32 @@ components:
           description: Dato administrativo calculado; puede omitirse para TERMINAL
     TicketResumen:
       type: object
-      required: [id, folio, ubicacionId, nombreUbicacion, usuarioTerminalId, nombreUsuarioTerminal, clienteId, nombreCliente, tipo, subtotal, total, estado, facturado, uuidCliente, createdAt, canceladoAt, canceladoPor, nombreUsuarioCancelacion, motivoCancelacion, autorizadoPor, nombreUsuarioAutorizacion]
+      required:
+        [
+          id,
+          folio,
+          ubicacionId,
+          nombreUbicacion,
+          usuarioTerminalId,
+          nombreUsuarioTerminal,
+          clienteId,
+          nombreCliente,
+          tipo,
+          subtotal,
+          iva,
+          tasaIva,
+          total,
+          estado,
+          facturado,
+          uuidCliente,
+          createdAt,
+          canceladoAt,
+          canceladoPor,
+          nombreUsuarioCancelacion,
+          motivoCancelacion,
+          autorizadoPor,
+          nombreUsuarioAutorizacion,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -3334,6 +3733,13 @@ components:
         tipo:
           $ref: "#/components/schemas/TipoTicket"
         subtotal: { type: string }
+        iva:
+          {
+            type: string,
+            description: IVA aplicado al ticket; es 0.00 si no fue facturado,
+          }
+        tasaIva:
+          { type: string, description: Tasa de IVA vigente al crear el ticket }
         total: { type: string }
         estado:
           $ref: "#/components/schemas/EstadoTicket"
@@ -3344,7 +3750,11 @@ components:
         nombreUsuarioCaja: { type: ["string", "null"] }
         facturado: { type: boolean }
         sesionCajaId: { type: ["number", "null"] }
-        uuidCliente: { type: string, description: Identificador UUID generado por la terminal }
+        uuidCliente:
+          {
+            type: string,
+            description: Identificador UUID generado por la terminal,
+          }
         createdAt: { type: string, format: date-time }
         canceladoAt: { type: ["string", "null"], format: date-time }
         canceladoPor: { type: ["number", "null"] }
@@ -3354,11 +3764,28 @@ components:
         nombreUsuarioAutorizacion: { type: ["string", "null"] }
     TicketCajaResumen:
       type: object
-      required: [id, folio, total, createdAt, cobrado, cobradoAt, formasPago]
+      required:
+        [
+          id,
+          folio,
+          subtotal,
+          iva,
+          tasaIva,
+          total,
+          facturado,
+          createdAt,
+          cobrado,
+          cobradoAt,
+          formasPago,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
+        subtotal: { type: string }
+        iva: { type: string }
+        tasaIva: { type: string }
         total: { type: string }
+        facturado: { type: boolean }
         createdAt: { type: string, format: date-time }
         cobrado: { type: boolean }
         cobradoAt: { type: ["string", "null"], format: date-time }
@@ -3393,7 +3820,8 @@ components:
         efectivoContado: { type: number, minimum: 0 }
     SesionCajaResumen:
       type: object
-      required: [ticketsCobrados, ticketsPendientes, totalCobrado, efectivoEsperado]
+      required:
+        [ticketsCobrados, ticketsPendientes, totalCobrado, efectivoEsperado]
       properties:
         ticketsCobrados: { type: number }
         ticketsPendientes: { type: number }
@@ -3401,7 +3829,19 @@ components:
         efectivoEsperado: { type: string }
     SesionCaja:
       type: object
-      required: [id, ubicacionId, nombreUbicacion, usuarioId, nombreUsuario, abiertaAt, cerradaAt, fondoInicial, efectivoContado, estado]
+      required:
+        [
+          id,
+          ubicacionId,
+          nombreUbicacion,
+          usuarioId,
+          nombreUsuario,
+          abiertaAt,
+          cerradaAt,
+          fondoInicial,
+          efectivoContado,
+          estado,
+        ]
       properties:
         id: { type: number }
         ubicacionId: { type: number }
@@ -3445,10 +3885,12 @@ components:
         importe: { type: string }
     CorteFacturacion:
       type: object
-      required: [facturado, ticketsCount, importe]
+      required: [facturado, ticketsCount, subtotal, iva, importe]
       properties:
         facturado: { type: boolean }
         ticketsCount: { type: number }
+        subtotal: { type: string }
+        iva: { type: string }
         importe: { type: string }
     CorteMetreado:
       type: object
@@ -3482,7 +3924,22 @@ components:
         createdAt: { type: string, format: date-time }
     CorteCaja:
       type: object
-      required: [sesion, formasPago, cuentasDestino, facturacion, metreado, productos, pendientes, fondoInicial, totalCobrado, efectivoEsperado, efectivoContado, diferencia]
+      required:
+        [
+          sesion,
+          formasPago,
+          cuentasDestino,
+          facturacion,
+          metreado,
+          productos,
+          pendientes,
+          fondoInicial,
+          totalCobrado,
+          ivaCobrado,
+          efectivoEsperado,
+          efectivoContado,
+          diferencia,
+        ]
       properties:
         sesion:
           $ref: "#/components/schemas/SesionCaja"
@@ -3514,6 +3971,11 @@ components:
             $ref: "#/components/schemas/CortePendiente"
         fondoInicial: { type: string }
         totalCobrado: { type: string }
+        ivaCobrado:
+          {
+            type: string,
+            description: IVA incluido en los tickets cobrados de la sesión,
+          }
         efectivoEsperado: { type: string }
         efectivoContado: { type: ["string", "null"] }
         diferencia: { type: ["string", "null"] }

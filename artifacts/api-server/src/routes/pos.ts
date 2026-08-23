@@ -92,10 +92,7 @@ function handlePosError(
 function scopedLocation(req: Request, requested?: number): number {
   if (req.auth!.user.rol === "ADMIN") {
     if (requested == null) {
-      throw new PosError(
-        "Selecciona una ubicación.",
-        "LOCATION_REQUIRED",
-      );
+      throw new PosError("Selecciona una ubicación.", "LOCATION_REQUIRED");
     }
     return requested;
   }
@@ -146,9 +143,7 @@ function requiereAlguno(
         check.modulo,
       );
       const allowed =
-        check.accion === "ver"
-          ? permission?.puedeVer
-          : permission?.puedeCrear;
+        check.accion === "ver" ? permission?.puedeVer : permission?.puedeCrear;
       if (allowed) {
         next();
         return;
@@ -358,6 +353,8 @@ router.get(
           nombreCliente: clientesTable.nombre,
           tipo: ticketsTable.tipo,
           subtotal: ticketsTable.subtotal,
+          iva: ticketsTable.iva,
+          tasaIva: ticketsTable.tasaIva,
           total: ticketsTable.total,
           estado: ticketsTable.estado,
           cobrado: ticketsTable.cobrado,

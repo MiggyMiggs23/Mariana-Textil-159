@@ -25,6 +25,8 @@ export interface CorteCaja {
   pendientes: CortePendiente[];
   fondoInicial: string;
   totalCobrado: string;
+  /** IVA incluido en los tickets cobrados de la sesión */
+  ivaCobrado: string;
   efectivoEsperado: string;
   /** @nullable */
   efectivoContado: string | null;

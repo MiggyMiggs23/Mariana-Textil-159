@@ -226,7 +226,10 @@ await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", a
     mensaje: expectedMessage,
     code: "PRICE_BELOW_COST",
   });
-  assert.equal(JSON.stringify(validation).toLowerCase().includes("costo"), false);
+  assert.equal(
+    JSON.stringify(validation).toLowerCase().includes("costo"),
+    false,
+  );
   assert.deepEqual(
     await validarPrecioPos(db, {
       ubicacionId,
@@ -486,6 +489,110 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
     (error: unknown) =>
       error instanceof PosError && error.code === "ALREADY_CHARGED",
   );
+});
+
+await test("POS-05A ticket facturado persiste IVA, cobra 319 y conserva margen sin IVA", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId, "5", "40");
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    cantidad: "5",
+    precio: "55",
+    facturado: true,
+  });
+
+  assert.equal(ticket.subtotal, "275.00");
+  assert.equal(ticket.iva, "44.00");
+  assert.equal(ticket.tasaIva, "0.1600");
+  assert.equal(ticket.total, "319.00");
+  const firstLine = ticket.lineas[0];
+  assert.ok(firstLine && "margen" in firstLine);
+  assert.equal(firstLine.margen, "75.00");
+
+  const session = await db.transaction((tx) =>
+    abrirSesionCaja(tx, {
+      ubicacionId,
+      usuarioId: USER_ID,
+      fondoInicial: "0",
+      ip: "127.0.0.1",
+    }),
+  );
+  createdSessionIds.push(session.id);
+
+  await assert.rejects(
+    () =>
+      db.transaction((tx) =>
+        cobrarTicket(
+          tx,
+          {
+            ticketId: ticket.id,
+            sesionCajaId: session.id,
+            usuarioId: USER_ID,
+            pagos: [{ formaPago: "EFECTIVO", importe: "275" }],
+            ip: "127.0.0.1",
+          },
+          true,
+        ),
+      ),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "PAYMENT_TOTAL_MISMATCH",
+  );
+
+  await db.transaction((tx) =>
+    cobrarTicket(
+      tx,
+      {
+        ticketId: ticket.id,
+        sesionCajaId: session.id,
+        usuarioId: USER_ID,
+        pagos: [
+          { formaPago: "EFECTIVO", importe: "100" },
+          { formaPago: "TRANSFERENCIA", importe: "219" },
+        ],
+        ip: "127.0.0.1",
+      },
+      true,
+    ),
+  );
+
+  const corte = await buildCorteCaja(db, session.id);
+  assert.equal(corte?.totalCobrado, "319.00");
+  assert.equal(corte?.ivaCobrado, "44.00");
+  assert.deepEqual(corte?.facturacion[0], {
+    facturado: true,
+    ticketsCount: 1,
+    subtotal: "275.00",
+    iva: "44.00",
+    importe: "319.00",
+  });
+  assert.deepEqual(corte?.facturacion[1], {
+    facturado: false,
+    ticketsCount: 0,
+    subtotal: "0.00",
+    iva: "0.00",
+    importe: "0.00",
+  });
+});
+
+await test("POS-05AA ticket no facturado mantiene IVA cero y total igual al subtotal", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId, "5", "40");
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    cantidad: "5",
+    precio: "55",
+  });
+
+  assert.equal(ticket.subtotal, "275.00");
+  assert.equal(ticket.iva, "0.00");
+  assert.equal(ticket.tasaIva, "0.1600");
+  assert.equal(ticket.total, "275.00");
 });
 
 await test("POS-05B cobro exige sesión abierta y cliente para crédito", async () => {
@@ -757,10 +864,10 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     .select()
     .from(movimientosCreditoTable)
     .where(eq(movimientosCreditoTable.ticketId, ticket.id));
-  assert.deepEqual(
-    ledger.map((movement) => movement.tipo).sort(),
-    ["REVERSO", "VENTA_CREDITO"],
-  );
+  assert.deepEqual(ledger.map((movement) => movement.tipo).sort(), [
+    "REVERSO",
+    "VENTA_CREDITO",
+  ]);
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.ticketsCancelados, 1);
   assert.equal(corte?.ticketsCobrados, 0);
@@ -817,10 +924,7 @@ try {
       .where(
         and(
           eq(auditoriaTable.entidad, "tickets"),
-          inArray(
-            auditoriaTable.entidadId,
-            createdTicketIds.map(String),
-          ),
+          inArray(auditoriaTable.entidadId, createdTicketIds.map(String)),
         ),
       );
     await db
@@ -832,7 +936,9 @@ try {
     await db
       .delete(ticketLineasTable)
       .where(inArray(ticketLineasTable.ticketId, createdTicketIds));
-    await db.delete(ticketsTable).where(inArray(ticketsTable.id, createdTicketIds));
+    await db
+      .delete(ticketsTable)
+      .where(inArray(ticketsTable.id, createdTicketIds));
   }
   if (createdSessionIds.length > 0) {
     await db
@@ -840,10 +946,7 @@ try {
       .where(
         and(
           eq(auditoriaTable.entidad, "sesiones_caja"),
-          inArray(
-            auditoriaTable.entidadId,
-            createdSessionIds.map(String),
-          ),
+          inArray(auditoriaTable.entidadId, createdSessionIds.map(String)),
         ),
       );
     await db
@@ -854,7 +957,9 @@ try {
     await db
       .delete(movimientosTable)
       .where(inArray(movimientosTable.rolloId, createdRolloIds));
-    await db.delete(rollosTable).where(inArray(rollosTable.id, createdRolloIds));
+    await db
+      .delete(rollosTable)
+      .where(inArray(rollosTable.id, createdRolloIds));
   }
   if (createdProductIds.length > 0 && createdLocationIds.length > 0) {
     await db
@@ -892,7 +997,5 @@ try {
   failed += 1;
 }
 
-process.stdout.write(
-  `\nPOS/caja: ${passed} passed, ${failed} failed\n`,
-);
+process.stdout.write(`\nPOS/caja: ${passed} passed, ${failed} failed\n`);
 if (failed > 0) process.exit(1);

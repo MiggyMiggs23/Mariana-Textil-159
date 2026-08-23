@@ -135,6 +135,8 @@ export async function buildTicketDetail(
       nombreCliente: clientesTable.nombre,
       tipo: ticketsTable.tipo,
       subtotal: ticketsTable.subtotal,
+      iva: ticketsTable.iva,
+      tasaIva: ticketsTable.tasaIva,
       total: ticketsTable.total,
       estado: ticketsTable.estado,
       cobrado: ticketsTable.cobrado,
@@ -203,10 +205,7 @@ export async function buildTicketDetail(
       nombreUsuario: usuariosTable.nombre,
     })
     .from(ticketPagosTable)
-    .innerJoin(
-      usuariosTable,
-      eq(ticketPagosTable.usuarioId, usuariosTable.id),
-    )
+    .innerJoin(usuariosTable, eq(ticketPagosTable.usuarioId, usuariosTable.id))
     .where(eq(ticketPagosTable.ticketId, ticketId))
     .orderBy(asc(ticketPagosTable.id));
 
@@ -419,7 +418,9 @@ export async function crearTicket(
           );
   const rolloMap = new Map(rollos.map((rollo) => [rollo.id, rollo]));
 
-  const productoIds = [...new Set(input.lineas.map((linea) => linea.productoId))];
+  const productoIds = [
+    ...new Set(input.lineas.map((linea) => linea.productoId)),
+  ];
   const productos = await tx
     .select()
     .from(productosTable)
@@ -459,8 +460,7 @@ export async function crearTicket(
           "ROLLO_SCOPE",
         );
       }
-      const estadoEsperado =
-        input.tipo === "NORMAL" ? "DISPONIBLE" : "ABIERTO";
+      const estadoEsperado = input.tipo === "NORMAL" ? "DISPONIBLE" : "ABIERTO";
       if (rollo.estado !== estadoEsperado) {
         throw new PosError(
           `El rollo serie ${rollo.serie} no está ${estadoEsperado}.`,
@@ -509,10 +509,15 @@ export async function crearTicket(
     };
   });
 
-  const totalCents = lineasPreparadas.reduce(
+  const subtotalCents = lineasPreparadas.reduce(
     (total, linea) => total + linea.importeCents,
     0,
   );
+  const IVA_RATE_BASIS_POINTS = 1600;
+  const ivaCents = input.facturado
+    ? Math.round((subtotalCents * IVA_RATE_BASIS_POINTS) / 10_000)
+    : 0;
+  const totalCents = subtotalCents + ivaCents;
   const folio = await reserveTicketFolio(tx);
   const [ticket] = await tx
     .insert(ticketsTable)
@@ -522,7 +527,9 @@ export async function crearTicket(
       usuarioTerminalId: input.usuarioTerminalId,
       clienteId: input.clienteId ?? null,
       tipo: input.tipo,
-      subtotal: decimalMoney(totalCents),
+      subtotal: decimalMoney(subtotalCents),
+      iva: decimalMoney(ivaCents),
+      tasaIva: "0.1600",
       total: decimalMoney(totalCents),
       estado: "VENDIDO",
       cobrado: false,
@@ -562,6 +569,8 @@ export async function crearTicket(
     datosDespues: {
       folio,
       tipo: input.tipo,
+      subtotal: decimalMoney(subtotalCents),
+      iva: decimalMoney(ivaCents),
       total: decimalMoney(totalCents),
       lineas: input.lineas.length,
     },
@@ -788,11 +797,7 @@ export async function cobrarTicket(
     );
   }
   if (ticket.cobrado) {
-    throw new PosError(
-      "El ticket ya fue cobrado.",
-      "ALREADY_CHARGED",
-      409,
-    );
+    throw new PosError("El ticket ya fue cobrado.", "ALREADY_CHARGED", 409);
   }
   const [sesion] = await tx
     .select()
@@ -866,7 +871,8 @@ export async function cobrarTicket(
     }
     if (
       creditCents > 0 &&
-      money(cliente.saldoCredito) + creditCents > money(cliente.limiteCredito) &&
+      money(cliente.saldoCredito) + creditCents >
+        money(cliente.limiteCredito) &&
       input.autorizadoPor == null
     ) {
       throw new PosError(
@@ -950,6 +956,8 @@ export async function listarTicketsPendientesCaja(
       nombreCliente: clientesTable.nombre,
       tipo: ticketsTable.tipo,
       subtotal: ticketsTable.subtotal,
+      iva: ticketsTable.iva,
+      tasaIva: ticketsTable.tasaIva,
       total: ticketsTable.total,
       estado: ticketsTable.estado,
       cobrado: ticketsTable.cobrado,
@@ -1003,7 +1011,11 @@ export async function listarTicketsCajaOperativa(
     .select({
       id: ticketsTable.id,
       folio: ticketsTable.folio,
+      subtotal: ticketsTable.subtotal,
+      iva: ticketsTable.iva,
+      tasaIva: ticketsTable.tasaIva,
       total: ticketsTable.total,
+      facturado: ticketsTable.facturado,
       createdAt: ticketsTable.createdAt,
       cobrado: ticketsTable.cobrado,
       cobradoAt: ticketsTable.cobradoAt,
@@ -1056,10 +1068,7 @@ export async function listarTicketsCajaOperativa(
   }));
 }
 
-export async function buildCorteCaja(
-  database: Reader,
-  sesionId: number,
-) {
+export async function buildCorteCaja(database: Reader, sesionId: number) {
   const [sesion] = await database
     .select({
       id: sesionesCajaTable.id,
@@ -1090,6 +1099,9 @@ export async function buildCorteCaja(
       formaPago: ticketPagosTable.formaPago,
       importe: ticketPagosTable.importe,
       facturado: ticketsTable.facturado,
+      subtotal: ticketsTable.subtotal,
+      iva: ticketsTable.iva,
+      total: ticketsTable.total,
       tipo: ticketsTable.tipo,
       estado: ticketsTable.estado,
     })
@@ -1097,10 +1109,9 @@ export async function buildCorteCaja(
     .innerJoin(ticketsTable, eq(ticketPagosTable.ticketId, ticketsTable.id))
     .where(eq(ticketsTable.sesionCajaId, sesion.id));
 
-  const pendientes = (await listarTicketsPendientesCaja(
-    database,
-    sesion.ubicacionId,
-  )).map((ticket) => ({
+  const pendientes = (
+    await listarTicketsPendientesCaja(database, sesion.ubicacionId)
+  ).map((ticket) => ({
     ticketId: ticket.id,
     folio: ticket.folio,
     total: ticket.total,
@@ -1169,6 +1180,7 @@ export async function buildCorteCaja(
   };
   let facturado = 0;
   let noFacturado = 0;
+  let ivaCobrado = 0;
   const ticketIds = new Set<number>();
   const formaPagoCounts: Record<FormaPagoTicket, number> = {
     EFECTIVO: 0,
@@ -1182,6 +1194,10 @@ export async function buildCorteCaja(
   };
   const facturadoTickets = new Set<number>();
   const noFacturadoTickets = new Set<number>();
+  const fiscalesPorTicket = new Map<
+    number,
+    { facturado: boolean; subtotal: number; iva: number; total: number }
+  >();
   for (const pago of pagos) {
     if (pago.estado === "CANCELADO") continue;
     const cents = money(pago.importe);
@@ -1190,17 +1206,37 @@ export async function buildCorteCaja(
     formaPagoCounts[pago.formaPago] += 1;
     formaPagoTickets[pago.formaPago].add(pago.ticketId);
     if (pago.facturado) {
-      facturado += cents;
       facturadoTickets.add(pago.ticketId);
     } else {
-      noFacturado += cents;
       noFacturadoTickets.add(pago.ticketId);
     }
+    fiscalesPorTicket.set(pago.ticketId, {
+      facturado: pago.facturado,
+      subtotal: money(pago.subtotal),
+      iva: money(pago.iva),
+      total: money(pago.total),
+    });
     if (pago.formaPago === "EFECTIVO") cuentas.CAJA_FISICA += cents;
     if (pago.formaPago === "CREDITO") cuentas.CUENTAS_POR_COBRAR += cents;
     if (pago.formaPago === "TRANSFERENCIA") {
       if (pago.facturado) cuentas.CUENTA_FISCAL += cents;
       else cuentas.CUENTA_NO_FISCAL += cents;
+    }
+  }
+  let subtotalFacturado = 0;
+  let ivaFacturado = 0;
+  let subtotalNoFacturado = 0;
+  let ivaNoFacturado = 0;
+  for (const fiscal of fiscalesPorTicket.values()) {
+    ivaCobrado += fiscal.iva;
+    if (fiscal.facturado) {
+      subtotalFacturado += fiscal.subtotal;
+      ivaFacturado += fiscal.iva;
+      facturado += fiscal.total;
+    } else {
+      subtotalNoFacturado += fiscal.subtotal;
+      ivaNoFacturado += fiscal.iva;
+      noFacturado += fiscal.total;
     }
   }
   const totalCobrado = Object.values(formas).reduce(
@@ -1224,6 +1260,7 @@ export async function buildCorteCaja(
     ).size,
     ticketsPendientes: pendientes.length,
     totalCobrado: decimalMoney(totalCobrado),
+    ivaCobrado: decimalMoney(ivaCobrado),
     formasPago: (["EFECTIVO", "TRANSFERENCIA", "CREDITO"] as const).map(
       (formaPago) => ({
         formaPago,
@@ -1258,11 +1295,15 @@ export async function buildCorteCaja(
       {
         facturado: true,
         ticketsCount: facturadoTickets.size,
+        subtotal: decimalMoney(subtotalFacturado),
+        iva: decimalMoney(ivaFacturado),
         importe: decimalMoney(facturado),
       },
       {
         facturado: false,
         ticketsCount: noFacturadoTickets.size,
+        subtotal: decimalMoney(subtotalNoFacturado),
+        iva: decimalMoney(ivaNoFacturado),
         importe: decimalMoney(noFacturado),
       },
     ],
@@ -1282,8 +1323,7 @@ export async function buildCorteCaja(
     })),
     efectivoEsperado: decimalMoney(esperado),
     efectivoContado: contado == null ? null : decimalMoney(contado),
-    diferencia:
-      contado == null ? null : decimalMoney(contado - esperado),
+    diferencia: contado == null ? null : decimalMoney(contado - esperado),
     fondoInicial: sesion.fondoInicial,
   };
 }

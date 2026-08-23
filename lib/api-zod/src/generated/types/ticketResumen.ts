@@ -21,6 +21,10 @@ export interface TicketResumen {
   nombreCliente: string | null;
   tipo: TipoTicket;
   subtotal: string;
+  /** IVA aplicado al ticket; es 0.00 si no fue facturado */
+  iva: string;
+  /** Tasa de IVA vigente al crear el ticket */
+  tasaIva: string;
   total: string;
   estado: EstadoTicket;
   lineasCount?: number;

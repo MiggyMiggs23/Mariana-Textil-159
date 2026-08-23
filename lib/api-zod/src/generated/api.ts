@@ -2102,6 +2102,8 @@ export const CrearTicketResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
   "total": zod.string(),
   "estado": zod.enum(['VENDIDO', 'CANCELADO']),
   "lineasCount": zod.number().optional(),
@@ -2173,6 +2175,8 @@ export const ListarTicketsResponseItem = zod.object({
   "nombreCliente": zod.string().nullable(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
   "total": zod.string(),
   "estado": zod.enum(['VENDIDO', 'CANCELADO']),
   "lineasCount": zod.number().optional(),
@@ -2212,6 +2216,8 @@ export const ListarTicketsPendientesResponseItem = zod.object({
   "nombreCliente": zod.string().nullable(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
   "total": zod.string(),
   "estado": zod.enum(['VENDIDO', 'CANCELADO']),
   "lineasCount": zod.number().optional(),
@@ -2243,7 +2249,11 @@ export const ListarTicketsCajaQueryParams = zod.object({
 export const ListarTicketsCajaResponseItem = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "subtotal": zod.string(),
+  "iva": zod.string(),
+  "tasaIva": zod.string(),
   "total": zod.string(),
+  "facturado": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "cobrado": zod.boolean(),
   "cobradoAt": zod.coerce.date().nullable(),
@@ -2270,6 +2280,8 @@ export const ObtenerTicketResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
   "total": zod.string(),
   "estado": zod.enum(['VENDIDO', 'CANCELADO']),
   "lineasCount": zod.number().optional(),
@@ -2354,6 +2366,8 @@ export const CancelarTicketResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
   "total": zod.string(),
   "estado": zod.enum(['VENDIDO', 'CANCELADO']),
   "lineasCount": zod.number().optional(),
@@ -2444,6 +2458,8 @@ export const CobrarTicketResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
   "total": zod.string(),
   "estado": zod.enum(['VENDIDO', 'CANCELADO']),
   "lineasCount": zod.number().optional(),
@@ -2583,6 +2599,8 @@ export const ObtenerCorteCajaResponse = zod.object({
   "facturacion": zod.array(zod.object({
   "facturado": zod.boolean(),
   "ticketsCount": zod.number(),
+  "subtotal": zod.string(),
+  "iva": zod.string(),
   "importe": zod.string()
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
@@ -2609,6 +2627,7 @@ export const ObtenerCorteCajaResponse = zod.object({
 })),
   "fondoInicial": zod.string(),
   "totalCobrado": zod.string(),
+  "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable()
@@ -2657,6 +2676,8 @@ export const CerrarSesionCajaResponse = zod.object({
   "facturacion": zod.array(zod.object({
   "facturado": zod.boolean(),
   "ticketsCount": zod.number(),
+  "subtotal": zod.string(),
+  "iva": zod.string(),
   "importe": zod.string()
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
@@ -2683,6 +2704,7 @@ export const CerrarSesionCajaResponse = zod.object({
 })),
   "fondoInicial": zod.string(),
   "totalCobrado": zod.string(),
+  "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable()

@@ -75,11 +75,17 @@ export const ticketsTable = pgTable(
     clienteId: integer("cliente_id").references(() => clientesTable.id),
     tipo: tipoTicketEnum("tipo").notNull(),
     subtotal: numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
+    iva: numeric("iva", { precision: 12, scale: 2 }).notNull().default("0"),
+    tasaIva: numeric("tasa_iva", { precision: 5, scale: 4 })
+      .notNull()
+      .default("0.1600"),
     total: numeric("total", { precision: 12, scale: 2 }).notNull(),
     estado: estadoTicketEnum("estado").notNull().default("VENDIDO"),
     cobrado: boolean("cobrado").notNull().default(false),
     cobradoAt: timestamp("cobrado_at", { withTimezone: true }),
-    usuarioCajaId: integer("usuario_caja_id").references(() => usuariosTable.id),
+    usuarioCajaId: integer("usuario_caja_id").references(
+      () => usuariosTable.id,
+    ),
     facturado: boolean("facturado").notNull().default(false),
     sesionCajaId: integer("sesion_caja_id").references(
       () => sesionesCajaTable.id,
@@ -91,9 +97,7 @@ export const ticketsTable = pgTable(
     canceladoAt: timestamp("cancelado_at", { withTimezone: true }),
     canceladoPor: integer("cancelado_por").references(() => usuariosTable.id),
     motivoCancelacion: text("motivo_cancelacion"),
-    autorizadoPor: integer("autorizado_por").references(
-      () => usuariosTable.id,
-    ),
+    autorizadoPor: integer("autorizado_por").references(() => usuariosTable.id),
   },
   (table) => [
     index("tickets_ubicacion_created_at_idx").on(
@@ -214,13 +218,17 @@ export const insertTicketSchema = createInsertSchema(ticketsTable).omit({
   id: true,
   createdAt: true,
 });
-export const insertTicketLineaSchema = createInsertSchema(ticketLineasTable).omit({
+export const insertTicketLineaSchema = createInsertSchema(
+  ticketLineasTable,
+).omit({
   id: true,
 });
-export const insertTicketPagoSchema = createInsertSchema(ticketPagosTable).omit({
-  id: true,
-  createdAt: true,
-});
+export const insertTicketPagoSchema = createInsertSchema(ticketPagosTable).omit(
+  {
+    id: true,
+    createdAt: true,
+  },
+);
 export const insertMovimientoCreditoSchema = createInsertSchema(
   movimientosCreditoTable,
 ).omit({ id: true, createdAt: true });

@@ -7,14 +7,28 @@ import {
   EstadoTicket,
   Role,
   useGetCurrentUser,
-  getGetCurrentUserQueryKey
+  getGetCurrentUserQueryKey,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+  CardDescription,
+} from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, ArrowLeft, Printer, Ban, ShieldAlert } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,7 +47,7 @@ export default function TicketDetailPage() {
   const [adminPass, setAdminPass] = useState("");
 
   const { data: user } = useGetCurrentUser({
-    query: { queryKey: getGetCurrentUserQueryKey() }
+    query: { queryKey: getGetCurrentUserQueryKey() },
   });
 
   const {
@@ -45,8 +59,8 @@ export default function TicketDetailPage() {
   } = useObtenerTicket(ticketId, {
     query: {
       enabled: !isNaN(ticketId),
-      queryKey: getObtenerTicketQueryKey(ticketId)
-    }
+      queryKey: getObtenerTicketQueryKey(ticketId),
+    },
   });
 
   const cancelarTicket = useCancelarTicket();
@@ -61,7 +75,8 @@ export default function TicketDetailPage() {
       !ticket ||
       autoPrintStarted.current ||
       new URLSearchParams(window.location.search).get("print") !== "3"
-    ) return;
+    )
+      return;
     autoPrintStarted.current = true;
     document.body.classList.add("print-80mm");
     const timers = [250, 900, 1550].map((delay) =>
@@ -79,18 +94,18 @@ export default function TicketDetailPage() {
   const handlePrint80mm = () => {
     // Usamos window.print() pero con una clase especial en el body si se requiere.
     // CSS en index.css debería ocultar layout y mostrar solo el área de impresión
-    document.body.classList.add('print-80mm');
+    document.body.classList.add("print-80mm");
     window.print();
     setTimeout(() => {
-      document.body.classList.remove('print-80mm');
+      document.body.classList.remove("print-80mm");
     }, 1000);
   };
 
   const handlePrintCarta = () => {
-    document.body.classList.add('print-carta');
+    document.body.classList.add("print-carta");
     window.print();
     setTimeout(() => {
-      document.body.classList.remove('print-carta');
+      document.body.classList.remove("print-carta");
     }, 1000);
   };
 
@@ -99,44 +114,68 @@ export default function TicketDetailPage() {
       toast({ title: "Debes ingresar un motivo", variant: "destructive" });
       return;
     }
-    
+
     let credencialesAdmin = null;
     if (user?.rol !== Role.ADMIN) {
       if (!adminUser || !adminPass) {
-        toast({ title: "Se requieren credenciales de administrador", variant: "destructive" });
+        toast({
+          title: "Se requieren credenciales de administrador",
+          variant: "destructive",
+        });
         return;
       }
       credencialesAdmin = { usuario: adminUser, password: adminPass };
     }
 
-    cancelarTicket.mutate({ id: ticketId, data: { motivo, credencialesAdmin } }, {
-      onSuccess: () => {
-        toast({ title: "Ticket cancelado correctamente" });
-        setCancelOpen(false);
-        queryClient.invalidateQueries({ queryKey: getObtenerTicketQueryKey(ticketId) });
+    cancelarTicket.mutate(
+      { id: ticketId, data: { motivo, credencialesAdmin } },
+      {
+        onSuccess: () => {
+          toast({ title: "Ticket cancelado correctamente" });
+          setCancelOpen(false);
+          queryClient.invalidateQueries({
+            queryKey: getObtenerTicketQueryKey(ticketId),
+          });
+        },
+        onError: (err: unknown) => {
+          toast({
+            title: "Error al cancelar",
+            description: getApiErrorMessage(
+              err,
+              "No se pudo cancelar el ticket.",
+            ),
+            variant: "destructive",
+          });
+        },
       },
-      onError: (err: unknown) => {
-        toast({
-          title: "Error al cancelar",
-          description: getApiErrorMessage(err, "No se pudo cancelar el ticket."),
-          variant: "destructive",
-        });
-      }
-    });
+    );
   };
 
   if (isLoading) {
-    return <div className="flex h-[calc(100dvh-8rem)] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return (
+      <div className="flex h-[calc(100dvh-8rem)] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   if (ticketFailed) {
     return (
       <div className="p-8 text-center" role="alert">
-        <h2 className="text-xl font-semibold text-destructive">No se pudo cargar el ticket</h2>
+        <h2 className="text-xl font-semibold text-destructive">
+          No se pudo cargar el ticket
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          {getApiErrorMessage(ticketError, "Intenta consultar el ticket nuevamente.")}
+          {getApiErrorMessage(
+            ticketError,
+            "Intenta consultar el ticket nuevamente.",
+          )}
         </p>
-        <Button variant="outline" className="mt-4" onClick={() => retryTicket()}>
+        <Button
+          variant="outline"
+          className="mt-4"
+          onClick={() => retryTicket()}
+        >
           Intentar de nuevo
         </Button>
       </div>
@@ -146,9 +185,13 @@ export default function TicketDetailPage() {
   if (!ticket) {
     return (
       <div className="p-8 text-center">
-        <h2 className="text-xl font-semibold text-destructive">Ticket no encontrado</h2>
+        <h2 className="text-xl font-semibold text-destructive">
+          Ticket no encontrado
+        </h2>
         <Link href={returnPath}>
-          <Button variant="link" className="mt-4">Volver al POS</Button>
+          <Button variant="link" className="mt-4">
+            Volver al POS
+          </Button>
         </Link>
       </div>
     );
@@ -159,11 +202,17 @@ export default function TicketDetailPage() {
       <div className="flex items-center justify-between no-print">
         <div className="flex items-center gap-4">
           <Link href={returnPath}>
-            <Button variant="outline" size="icon"><ArrowLeft className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-sidebar">Ticket #{ticket.folio}</h1>
-            <p className="text-muted-foreground text-sm">{ticket.tipo} - {ticket.nombreUbicacion}</p>
+            <h1 className="text-2xl font-bold tracking-tight text-sidebar">
+              Ticket #{ticket.folio}
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              {ticket.tipo} - {ticket.nombreUbicacion}
+            </p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -186,20 +235,39 @@ export default function TicketDetailPage() {
         <CardHeader className="bg-sidebar/5 border-b flex flex-row items-start justify-between">
           <div>
             <CardTitle>Detalle de Operación</CardTitle>
-            <CardDescription>Emitido por {ticket.nombreUsuarioTerminal}</CardDescription>
+            <CardDescription>
+              Emitido por {ticket.nombreUsuarioTerminal}
+            </CardDescription>
           </div>
           <div className="text-right">
-            <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-              ticket.estado === EstadoTicket.CANCELADO ? 'bg-destructive/20 text-destructive' :
-              ticket.cobrado === true ? 'bg-emerald-100 text-emerald-700' : 
-              ticket.cobrado === false ? 'bg-amber-100 text-amber-700' : 'bg-primary/10 text-primary'
-            }`}>
-              {ticket.estado === EstadoTicket.CANCELADO ? 'CANCELADO' : 
-               ticket.cobrado === true ? 'PAGADO' : 
-               ticket.cobrado === false ? 'PENDIENTE' : 'REGISTRADO'}
+            <div
+              className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
+                ticket.estado === EstadoTicket.CANCELADO
+                  ? "bg-destructive/20 text-destructive"
+                  : ticket.cobrado === true
+                    ? "bg-emerald-100 text-emerald-700"
+                    : ticket.cobrado === false
+                      ? "bg-amber-100 text-amber-700"
+                      : "bg-primary/10 text-primary"
+              }`}
+            >
+              {ticket.estado === EstadoTicket.CANCELADO
+                ? "CANCELADO"
+                : ticket.cobrado === true
+                  ? "PAGADO"
+                  : ticket.cobrado === false
+                    ? "PENDIENTE"
+                    : "REGISTRADO"}
             </div>
             {ticket.clienteId && (
-              <div className="mt-2 text-sm text-muted-foreground">Cliente: {ticket.nombreCliente}</div>
+              <div className="mt-2 text-sm text-muted-foreground">
+                Cliente: {ticket.nombreCliente}
+              </div>
+            )}
+            {ticket.facturado && (
+              <div className="mt-2 text-xs font-bold tracking-wider text-primary">
+                FACTURADO
+              </div>
             )}
           </div>
         </CardHeader>
@@ -209,23 +277,33 @@ export default function TicketDetailPage() {
               <tr>
                 <th className="px-4 py-3 font-semibold">Producto</th>
                 <th className="px-4 py-3 font-semibold text-right">Cant.</th>
-                <th className="px-4 py-3 font-semibold text-right">Precio Unit.</th>
+                <th className="px-4 py-3 font-semibold text-right">
+                  Precio Unit.
+                </th>
                 <th className="px-4 py-3 font-semibold text-right">Importe</th>
                 {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
                   <>
-                    <th className="px-4 py-3 font-semibold text-right">Costo</th>
-                    <th className="px-4 py-3 font-semibold text-right">Margen</th>
+                    <th className="px-4 py-3 font-semibold text-right">
+                      Costo
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-right">
+                      Margen
+                    </th>
                   </>
                 )}
               </tr>
             </thead>
             <tbody className="divide-y">
-              {ticket.lineas.map(linea => (
+              {ticket.lineas.map((linea) => (
                 <tr key={linea.id} className="hover:bg-muted/10">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-foreground">{linea.telaProducto} - {linea.colorProducto}</div>
+                    <div className="font-medium text-foreground">
+                      {linea.telaProducto} - {linea.colorProducto}
+                    </div>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-muted-foreground">{linea.skuProducto}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {linea.skuProducto}
+                      </span>
                       {linea.serieRollo && (
                         <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
                           {linea.serieRollo}
@@ -233,13 +311,39 @@ export default function TicketDetailPage() {
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right font-mono">{Number(linea.cantidad)} {linea.unidadProducto}</td>
-                  <td className="px-4 py-3 text-right">{Number(linea.precioUnitario).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
-                  <td className="px-4 py-3 text-right font-semibold">{Number(linea.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                  <td className="px-4 py-3 text-right font-mono">
+                    {Number(linea.cantidad)} {linea.unidadProducto}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {Number(linea.precioUnitario).toLocaleString("es-MX", {
+                      style: "currency",
+                      currency: "MXN",
+                    })}
+                  </td>
+                  <td className="px-4 py-3 text-right font-semibold">
+                    {Number(linea.importe).toLocaleString("es-MX", {
+                      style: "currency",
+                      currency: "MXN",
+                    })}
+                  </td>
                   {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
                     <>
-                      <td className="px-4 py-3 text-right">{linea.costoTotalCongelado == null ? "—" : Number(linea.costoTotalCongelado).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
-                      <td className="px-4 py-3 text-right">{linea.margen == null ? "—" : Number(linea.margen).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                      <td className="px-4 py-3 text-right">
+                        {linea.costoTotalCongelado == null
+                          ? "—"
+                          : Number(linea.costoTotalCongelado).toLocaleString(
+                              "es-MX",
+                              { style: "currency", currency: "MXN" },
+                            )}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {linea.margen == null
+                          ? "—"
+                          : Number(linea.margen).toLocaleString("es-MX", {
+                              style: "currency",
+                              currency: "MXN",
+                            })}
+                      </td>
                     </>
                   )}
                 </tr>
@@ -250,17 +354,38 @@ export default function TicketDetailPage() {
         <CardFooter className="bg-muted/20 border-t p-6 flex-col items-end gap-2">
           <div className="flex justify-between w-64 text-muted-foreground">
             <span>Subtotal:</span>
-            <span>{Number(ticket.subtotal).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+            <span>
+              {Number(ticket.subtotal).toLocaleString("es-MX", {
+                style: "currency",
+                currency: "MXN",
+              })}
+            </span>
           </div>
+          {ticket.facturado && (
+            <div className="flex justify-between w-64 text-muted-foreground">
+              <span>IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%):</span>
+              <span>
+                {Number(ticket.iva).toLocaleString("es-MX", {
+                  style: "currency",
+                  currency: "MXN",
+                })}
+              </span>
+            </div>
+          )}
           <div className="flex justify-between w-64 text-xl font-bold text-foreground mt-2 border-t pt-2">
             <span>Total:</span>
-            <span>{Number(ticket.total).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+            <span>
+              {Number(ticket.total).toLocaleString("es-MX", {
+                style: "currency",
+                currency: "MXN",
+              })}
+            </span>
           </div>
         </CardFooter>
       </Card>
 
       {/* --- ESTRUCTURAS DE IMPRESIÓN --- */}
-      
+
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
         <div className="text-center mb-4">
@@ -268,9 +393,12 @@ export default function TicketDetailPage() {
           <p className="text-xs">{ticket.nombreUbicacion}</p>
           <p className="text-xs">Folio: {ticket.folio}</p>
           <p className="text-xs">Tipo: {ticket.tipo}</p>
-          <p className="text-xs">{new Date(ticket.createdAt).toLocaleString('es-MX')}</p>
+          {ticket.facturado && <p className="text-xs font-bold">FACTURADO</p>}
+          <p className="text-xs">
+            {new Date(ticket.createdAt).toLocaleString("es-MX")}
+          </p>
         </div>
-        
+
         <div className="border-t border-b border-black py-2 mb-2">
           <table className="w-full text-xs">
             <thead>
@@ -281,22 +409,59 @@ export default function TicketDetailPage() {
               </tr>
             </thead>
             <tbody>
-              {ticket.lineas.map(linea => (
+              {ticket.lineas.map((linea) => (
                 <tr key={linea.id}>
                   <td className="py-1">
-                    <div className="line-clamp-2">{linea.telaProducto} {linea.colorProducto}</div>
-                    {linea.serieRollo && <div className="text-[10px] uppercase font-mono">{linea.serieRollo}</div>}
+                    <div className="line-clamp-2">
+                      {linea.telaProducto} {linea.colorProducto}
+                    </div>
+                    {linea.serieRollo && (
+                      <div className="text-[10px] uppercase font-mono">
+                        {linea.serieRollo}
+                      </div>
+                    )}
                   </td>
-                  <td className="text-right align-top py-1 font-mono">{Number(linea.cantidad)}</td>
-                  <td className="text-right align-top py-1">{Number(linea.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                  <td className="text-right align-top py-1 font-mono">
+                    {Number(linea.cantidad)}
+                  </td>
+                  <td className="text-right align-top py-1">
+                    {Number(linea.importe).toLocaleString("es-MX", {
+                      style: "currency",
+                      currency: "MXN",
+                    })}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        
-        <div className="text-right font-bold text-sm">
-          TOTAL: {Number(ticket.total).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+
+        <div className="text-right text-sm">
+          {ticket.facturado && (
+            <>
+              <div>
+                SUBTOTAL:{" "}
+                {Number(ticket.subtotal).toLocaleString("es-MX", {
+                  style: "currency",
+                  currency: "MXN",
+                })}
+              </div>
+              <div>
+                IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%):{" "}
+                {Number(ticket.iva).toLocaleString("es-MX", {
+                  style: "currency",
+                  currency: "MXN",
+                })}
+              </div>
+            </>
+          )}
+          <div className="font-bold">
+            TOTAL:{" "}
+            {Number(ticket.total).toLocaleString("es-MX", {
+              style: "currency",
+              currency: "MXN",
+            })}
+          </div>
         </div>
 
         {ticket.estado === EstadoTicket.CANCELADO && (
@@ -304,13 +469,14 @@ export default function TicketDetailPage() {
             *** TICKET CANCELADO ***
           </div>
         )}
-        
+
         <div className="text-center mt-6 text-[10px] italic">
           ¡Gracias por su compra!
-          <br/>Revise su mercancía, no hay devoluciones.
+          <br />
+          Revise su mercancía, no hay devoluciones.
         </div>
       </div>
-      
+
       {/* Carta Formato */}
       <div className="hidden print-carta-only print-document-container">
         <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
@@ -319,26 +485,40 @@ export default function TicketDetailPage() {
             <p className="text-sm mt-1">{ticket.nombreUbicacion}</p>
           </div>
           <div className="text-right">
-            <h2 className="text-2xl font-bold text-gray-500">TICKET DE VENTA</h2>
-            <p className="text-lg">Folio: <span className="font-bold text-black">{ticket.folio}</span></p>
-            <p className="text-sm">Fecha: {new Date(ticket.createdAt).toLocaleString('es-MX')}</p>
+            <h2 className="text-2xl font-bold text-gray-500">
+              TICKET DE VENTA
+            </h2>
+            <p className="text-lg">
+              Folio:{" "}
+              <span className="font-bold text-black">{ticket.folio}</span>
+            </p>
+            <p className="text-sm">
+              Fecha: {new Date(ticket.createdAt).toLocaleString("es-MX")}
+            </p>
           </div>
         </div>
 
         <div className="mb-6 grid grid-cols-2 gap-4 text-sm">
           <div>
             <div className="font-bold">Cliente:</div>
-            <div>{ticket.clienteId ? ticket.nombreCliente : 'Mostrador'}</div>
+            <div>{ticket.clienteId ? ticket.nombreCliente : "Mostrador"}</div>
           </div>
           <div>
             <div className="font-bold">Atendió:</div>
             <div>{ticket.nombreUsuarioTerminal}</div>
             <div className="font-bold mt-2">Estado:</div>
             <div>
-              {ticket.estado === EstadoTicket.CANCELADO ? 'CANCELADO' : 
-               ticket.cobrado === true ? 'PAGADO' : 
-               ticket.cobrado === false ? 'PENDIENTE' : 'REGISTRADO'}
+              {ticket.estado === EstadoTicket.CANCELADO
+                ? "CANCELADO"
+                : ticket.cobrado === true
+                  ? "PAGADO"
+                  : ticket.cobrado === false
+                    ? "PENDIENTE"
+                    : "REGISTRADO"}
             </div>
+            {ticket.facturado && (
+              <div className="mt-2 font-bold">FACTURADO</div>
+            )}
           </div>
         </div>
 
@@ -346,7 +526,9 @@ export default function TicketDetailPage() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 p-2 text-left">SKU</th>
-              <th className="border border-gray-300 p-2 text-left">Descripción</th>
+              <th className="border border-gray-300 p-2 text-left">
+                Descripción
+              </th>
               <th className="border border-gray-300 p-2 text-left">Serie</th>
               <th className="border border-gray-300 p-2 text-right">Cant.</th>
               <th className="border border-gray-300 p-2 text-right">Precio</th>
@@ -354,14 +536,32 @@ export default function TicketDetailPage() {
             </tr>
           </thead>
           <tbody>
-            {ticket.lineas.map(linea => (
+            {ticket.lineas.map((linea) => (
               <tr key={linea.id}>
-                <td className="border border-gray-300 p-2 font-mono text-xs">{linea.skuProducto}</td>
-                <td className="border border-gray-300 p-2">{linea.telaProducto} - {linea.colorProducto}</td>
-                <td className="border border-gray-300 p-2 font-mono text-xs">{linea.serieRollo || '-'}</td>
-                <td className="border border-gray-300 p-2 text-right font-mono">{Number(linea.cantidad)} {linea.unidadProducto}</td>
-                <td className="border border-gray-300 p-2 text-right">{Number(linea.precioUnitario).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
-                <td className="border border-gray-300 p-2 text-right font-bold">{Number(linea.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                <td className="border border-gray-300 p-2 font-mono text-xs">
+                  {linea.skuProducto}
+                </td>
+                <td className="border border-gray-300 p-2">
+                  {linea.telaProducto} - {linea.colorProducto}
+                </td>
+                <td className="border border-gray-300 p-2 font-mono text-xs">
+                  {linea.serieRollo || "-"}
+                </td>
+                <td className="border border-gray-300 p-2 text-right font-mono">
+                  {Number(linea.cantidad)} {linea.unidadProducto}
+                </td>
+                <td className="border border-gray-300 p-2 text-right">
+                  {Number(linea.precioUnitario).toLocaleString("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                  })}
+                </td>
+                <td className="border border-gray-300 p-2 text-right font-bold">
+                  {Number(linea.importe).toLocaleString("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                  })}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -371,11 +571,32 @@ export default function TicketDetailPage() {
           <div className="w-64">
             <div className="flex justify-between border-b border-gray-200 py-1">
               <span>Subtotal:</span>
-              <span>{Number(ticket.subtotal).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+              <span>
+                {Number(ticket.subtotal).toLocaleString("es-MX", {
+                  style: "currency",
+                  currency: "MXN",
+                })}
+              </span>
             </div>
+            {ticket.facturado && (
+              <div className="flex justify-between border-b border-gray-200 py-1">
+                <span>IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%):</span>
+                <span>
+                  {Number(ticket.iva).toLocaleString("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                  })}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between py-2 text-xl font-bold">
               <span>Total:</span>
-              <span>{Number(ticket.total).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span>
+              <span>
+                {Number(ticket.total).toLocaleString("es-MX", {
+                  style: "currency",
+                  currency: "MXN",
+                })}
+              </span>
             </div>
           </div>
         </div>
@@ -388,36 +609,54 @@ export default function TicketDetailPage() {
               <ShieldAlert className="h-5 w-5" /> Confirmar Cancelación
             </DialogTitle>
             <DialogDescription>
-              Esta acción revertirá los movimientos de inventario de este ticket. Esta acción no se puede deshacer.
+              Esta acción revertirá los movimientos de inventario de este
+              ticket. Esta acción no se puede deshacer.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Motivo de cancelación</Label>
-              <Textarea 
-                value={motivo} 
-                onChange={e => setMotivo(e.target.value)} 
+              <Textarea
+                value={motivo}
+                onChange={(e) => setMotivo(e.target.value)}
                 placeholder="Explica el motivo (mínimo 10 caracteres)"
               />
             </div>
             {user?.rol !== Role.ADMIN && (
               <div className="bg-destructive/5 p-4 rounded-md border border-destructive/20 space-y-4">
-                <p className="text-sm font-semibold text-destructive">Se requiere autorización de administrador</p>
+                <p className="text-sm font-semibold text-destructive">
+                  Se requiere autorización de administrador
+                </p>
                 <div className="space-y-2">
                   <Label>Usuario ADMIN</Label>
-                  <Input value={adminUser} onChange={e => setAdminUser(e.target.value)} />
+                  <Input
+                    value={adminUser}
+                    onChange={(e) => setAdminUser(e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Contraseña ADMIN</Label>
-                  <Input type="password" value={adminPass} onChange={e => setAdminPass(e.target.value)} />
+                  <Input
+                    type="password"
+                    value={adminPass}
+                    onChange={(e) => setAdminPass(e.target.value)}
+                  />
                 </div>
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCancelOpen(false)}>Atrás</Button>
-            <Button variant="destructive" onClick={handleCancelar} disabled={cancelarTicket.isPending}>
-              {cancelarTicket.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            <Button variant="outline" onClick={() => setCancelOpen(false)}>
+              Atrás
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleCancelar}
+              disabled={cancelarTicket.isPending}
+            >
+              {cancelarTicket.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
               Cancelar Definitivamente
             </Button>
           </DialogFooter>

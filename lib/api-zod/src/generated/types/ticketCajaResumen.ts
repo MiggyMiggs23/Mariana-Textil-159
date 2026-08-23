@@ -10,7 +10,11 @@ import type { FormaPagoTicket } from './formaPagoTicket';
 export interface TicketCajaResumen {
   id: number;
   folio: number;
+  subtotal: string;
+  iva: string;
+  tasaIva: string;
   total: string;
+  facturado: boolean;
   createdAt: Date;
   cobrado: boolean;
   /** @nullable */

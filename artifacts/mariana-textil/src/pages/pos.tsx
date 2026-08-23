@@ -3,7 +3,17 @@ import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Search, Plus, Trash2, Printer, Ban, Receipt, CheckCircle, HelpCircle, Loader2 } from "lucide-react";
+import {
+  Search,
+  Plus,
+  Trash2,
+  Printer,
+  Ban,
+  Receipt,
+  CheckCircle,
+  HelpCircle,
+  Loader2,
+} from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -21,8 +31,8 @@ import {
   PosRolloDisponible,
   PosProducto,
   TicketLineaInput,
-  TicketInput
-  ,Role
+  TicketInput,
+  Role,
 } from "@workspace/api-client-react";
 
 import { useLocationScope } from "@/lib/location-scope";
@@ -30,9 +40,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
@@ -45,15 +67,13 @@ type PriceValidation = {
 type CartLineKey = string;
 
 function getCartLineKey(item: any): CartLineKey {
-  return item.rollo
-    ? `rollo-${item.rollo.id}`
-    : `producto-${item.producto.id}`;
+  return item.rollo ? `rollo-${item.rollo.id}` : `producto-${item.producto.id}`;
 }
 
 // Componente Cart Line para el POS
-function CartLineItem({ 
-  item, 
-  onRemove, 
+function CartLineItem({
+  item,
+  onRemove,
   isMetreado,
   onChangeQuantity,
   onChangePrice,
@@ -61,16 +81,19 @@ function CartLineItem({
   lineKey,
   priceValidation,
   onPriceValidationChange,
-}: { 
-  item: any, 
-  onRemove: () => void, 
-  isMetreado: boolean,
-  onChangeQuantity?: (qty: number) => void,
-  onChangePrice: (price: number) => void,
-  locationId: number,
-  lineKey: CartLineKey,
-  priceValidation: PriceValidation,
-  onPriceValidationChange: (lineKey: CartLineKey, validation: PriceValidation) => void,
+}: {
+  item: any;
+  onRemove: () => void;
+  isMetreado: boolean;
+  onChangeQuantity?: (qty: number) => void;
+  onChangePrice: (price: number) => void;
+  locationId: number;
+  lineKey: CartLineKey;
+  priceValidation: PriceValidation;
+  onPriceValidationChange: (
+    lineKey: CartLineKey,
+    validation: PriceValidation,
+  ) => void;
 }) {
   const validarPrecio = useValidarPrecioPos();
   const validationSequence = useRef(0);
@@ -147,34 +170,41 @@ function CartLineItem({
   ]);
 
   const priceIsBlocked =
-    priceValidation.status === "invalid" ||
-    priceValidation.status === "error";
+    priceValidation.status === "invalid" || priceValidation.status === "error";
 
   return (
     <div className="border-b py-3 last:border-0">
       <div className="flex items-center justify-between">
         <div className="flex-1 overflow-hidden">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-sm truncate">{item.producto.tela} - {item.producto.color}</span>
+            <span className="font-semibold text-sm truncate">
+              {item.producto.tela} - {item.producto.color}
+            </span>
             {!isMetreado && item.rollo && (
               <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground font-mono">
                 {item.rollo.serie}
               </span>
             )}
           </div>
-          <div className="text-xs text-muted-foreground mt-0.5">{item.producto.sku}</div>
+          <div className="text-xs text-muted-foreground mt-0.5">
+            {item.producto.sku}
+          </div>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <div className="w-24">
-            <Label className="text-[10px] text-muted-foreground">Precio / {item.producto.unidad}</Label>
+            <Label className="text-[10px] text-muted-foreground">
+              Precio / {item.producto.unidad}
+            </Label>
             <div className="relative">
               <Input
                 type="number"
                 min="0.01"
                 step="0.01"
                 value={item.precioUnitario}
-                onChange={(event) => onChangePrice(Number(event.target.value) || 0)}
+                onChange={(event) =>
+                  onChangePrice(Number(event.target.value) || 0)
+                }
                 className={`h-8 text-right font-mono ${priceIsBlocked ? "border-destructive ring-1 ring-destructive" : ""}`}
                 aria-invalid={priceIsBlocked}
                 data-testid={`input-precio-${item.rollo?.serie ?? item.producto.id}`}
@@ -191,19 +221,32 @@ function CartLineItem({
                 min="0.1"
                 step="0.1"
                 value={item.cantidad}
-                onChange={(e) => onChangeQuantity && onChangeQuantity(Number(e.target.value) || 0)}
+                onChange={(e) =>
+                  onChangeQuantity &&
+                  onChangeQuantity(Number(e.target.value) || 0)
+                }
                 className="h-8 text-right font-mono"
               />
             </div>
           ) : (
-            <div className="font-mono text-sm">{item.cantidad} {item.producto.unidad}</div>
+            <div className="font-mono text-sm">
+              {item.cantidad} {item.producto.unidad}
+            </div>
           )}
 
           <div className="w-24 text-right font-bold">
-            {(item.cantidad * item.precioUnitario).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+            {(item.cantidad * item.precioUnitario).toLocaleString("es-MX", {
+              style: "currency",
+              currency: "MXN",
+            })}
           </div>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={onRemove}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive"
+            onClick={onRemove}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -244,7 +287,7 @@ export default function PosPage() {
   const [tipoTicket, setTipoTicket] = useState<TipoTicket>(TipoTicket.NORMAL);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  
+
   // Timer for debouncing search
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
@@ -256,11 +299,14 @@ export default function PosPage() {
   const [facturar, setFacturar] = useState(false);
   const [clientId, setClientId] = useState<string>("");
 
-  const searchParams = useMemo(() => ({
-    q: debouncedSearch,
-    tipo: tipoTicket,
-    ubicacionId: selectedLocationId || 0
-  }), [debouncedSearch, tipoTicket, selectedLocationId]);
+  const searchParams = useMemo(
+    () => ({
+      q: debouncedSearch,
+      tipo: tipoTicket,
+      ubicacionId: selectedLocationId || 0,
+    }),
+    [debouncedSearch, tipoTicket, selectedLocationId],
+  );
 
   const {
     data: searchResults,
@@ -270,8 +316,8 @@ export default function PosPage() {
   } = useBuscarPos(searchParams, {
     query: {
       enabled: debouncedSearch.length >= 2 && !!selectedLocationId,
-      queryKey: getBuscarPosQueryKey(searchParams)
-    }
+      queryKey: getBuscarPosQueryKey(searchParams),
+    },
   });
 
   const crearTicket = useCrearTicket();
@@ -285,30 +331,48 @@ export default function PosPage() {
   const addToCart = (item: any) => {
     // Para NORMAL, añadir el rollo
     if (tipoTicket === TipoTicket.NORMAL) {
-      if (cart.find(c => c.rollo?.id === item.id)) {
-        toast({ title: "El rollo ya está en el ticket", variant: "destructive" });
+      if (cart.find((c) => c.rollo?.id === item.id)) {
+        toast({
+          title: "El rollo ya está en el ticket",
+          variant: "destructive",
+        });
         return;
       }
-      setCart([...cart, {
-        rollo: item,
-        producto: { id: item.productoId, sku: item.sku, tela: item.tela, color: item.color, unidad: item.unidad },
-        cantidad: Number(item.cantidadActual),
-        precioUnitario: Number(item.precioSugerido),
-        priceValidation: { status: "idle" },
-      }]);
+      setCart([
+        ...cart,
+        {
+          rollo: item,
+          producto: {
+            id: item.productoId,
+            sku: item.sku,
+            tela: item.tela,
+            color: item.color,
+            unidad: item.unidad,
+          },
+          cantidad: Number(item.cantidadActual),
+          precioUnitario: Number(item.precioSugerido),
+          priceValidation: { status: "idle" },
+        },
+      ]);
     } else {
       // Para METREADO, añadir producto con cantidad 1 (editable luego)
-      if (cart.find(c => c.producto.id === item.id)) {
-        toast({ title: "El producto ya está en el ticket. Ajusta la cantidad.", variant: "default" });
+      if (cart.find((c) => c.producto.id === item.id)) {
+        toast({
+          title: "El producto ya está en el ticket. Ajusta la cantidad.",
+          variant: "default",
+        });
         return;
       }
-      setCart([...cart, {
-        rollo: null,
-        producto: item,
-        cantidad: 1,
-        precioUnitario: Number(item.precioSugerido),
-        priceValidation: { status: "valid" },
-      }]);
+      setCart([
+        ...cart,
+        {
+          rollo: null,
+          producto: item,
+          cantidad: 1,
+          precioUnitario: Number(item.precioSugerido),
+          priceValidation: { status: "valid" },
+        },
+      ]);
     }
     setSearch("");
   };
@@ -354,7 +418,20 @@ export default function PosPage() {
     setCart((current) => current.filter((_, itemIndex) => itemIndex !== index));
   };
 
-  const cartTotal = cart.reduce((sum, item) => sum + (item.cantidad * item.precioUnitario), 0);
+  const cartSubtotalCents = cart.reduce(
+    (sum, item) =>
+      sum +
+      Math.round(
+        (Math.round(Number(item.cantidad) * 1000) *
+          Math.round(Number(item.precioUnitario) * 100)) /
+          1000,
+      ),
+    0,
+  );
+  const cartSubtotal = cartSubtotalCents / 100;
+  const cartIvaCents = facturar ? Math.round(cartSubtotalCents * 0.16) : 0;
+  const cartIva = cartIvaCents / 100;
+  const cartTotal = (cartSubtotalCents + cartIvaCents) / 100;
   const hasInvalidValues = cart.some(
     (item) =>
       !Number.isFinite(item.cantidad) ||
@@ -381,17 +458,27 @@ export default function PosPage() {
 
   const handleCreateTicket = () => {
     if (!selectedLocationId) {
-      toast({ title: "Selecciona una ubicación válida", variant: "destructive" });
+      toast({
+        title: "Selecciona una ubicación válida",
+        variant: "destructive",
+      });
       return;
     }
-    
+
     if (cart.length === 0) {
-      toast({ title: "Agrega al menos un producto al ticket", variant: "destructive" });
+      toast({
+        title: "Agrega al menos un producto al ticket",
+        variant: "destructive",
+      });
       return;
     }
-    
+
     if (hasInvalidValues) {
-      toast({ title: "Revisa cantidades y precios", description: "Todos deben ser mayores a 0.", variant: "destructive" });
+      toast({
+        title: "Revisa cantidades y precios",
+        description: "Todos deben ser mayores a 0.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -407,11 +494,11 @@ export default function PosPage() {
     }
 
     const uuid = crypto.randomUUID();
-    const lineas: TicketLineaInput[] = cart.map(item => ({
+    const lineas: TicketLineaInput[] = cart.map((item) => ({
       rolloId: item.rollo?.id || null,
       productoId: item.producto.id,
       cantidad: Number(item.cantidad),
-      precioUnitario: Number(item.precioUnitario)
+      precioUnitario: Number(item.precioUnitario),
     }));
 
     const input: TicketInput = {
@@ -420,42 +507,51 @@ export default function PosPage() {
       tipo: tipoTicket,
       facturado: tipoTicket === TipoTicket.NORMAL ? facturar : false,
       clienteId: clientId ? Number(clientId) : null,
-      lineas
+      lineas,
     };
 
-    crearTicket.mutate({ data: input }, {
-      onSuccess: (ticket) => {
-        toast({ title: "Ticket creado correctamente", description: `Folio: ${ticket.folio}` });
-        setCart([]);
-        setSearch("");
-        setFacturar(false);
-        setLocation(`/tickets/${ticket.id}?print=3`);
-      },
-      onError: (err: unknown) => {
-        const message = getApiErrorMessage(err, "No se pudo crear el ticket.");
-        toast({ 
-          title: "Error al crear ticket", 
-          description: message,
-          variant: "destructive" 
-        });
-        const data =
-          err && typeof err === "object"
-            ? (err as { data?: { code?: string } }).data
-            : undefined;
-        if (data?.code === "PRICE_BELOW_COST") {
-          setCart((current) =>
-            current.map((item) =>
-              item.rollo && message.includes(String(item.rollo.serie))
-                ? {
-                    ...item,
-                    priceValidation: { status: "invalid", message },
-                  }
-                : item,
-            ),
+    crearTicket.mutate(
+      { data: input },
+      {
+        onSuccess: (ticket) => {
+          toast({
+            title: "Ticket creado correctamente",
+            description: `Folio: ${ticket.folio}`,
+          });
+          setCart([]);
+          setSearch("");
+          setFacturar(false);
+          setLocation(`/tickets/${ticket.id}?print=3`);
+        },
+        onError: (err: unknown) => {
+          const message = getApiErrorMessage(
+            err,
+            "No se pudo crear el ticket.",
           );
-        }
-      }
-    });
+          toast({
+            title: "Error al crear ticket",
+            description: message,
+            variant: "destructive",
+          });
+          const data =
+            err && typeof err === "object"
+              ? (err as { data?: { code?: string } }).data
+              : undefined;
+          if (data?.code === "PRICE_BELOW_COST") {
+            setCart((current) =>
+              current.map((item) =>
+                item.rollo && message.includes(String(item.rollo.serie))
+                  ? {
+                      ...item,
+                      priceValidation: { status: "invalid", message },
+                    }
+                  : item,
+              ),
+            );
+          }
+        },
+      },
+    );
   };
 
   if (!selectedLocationId) {
@@ -463,12 +559,24 @@ export default function PosPage() {
       <div className="flex h-[calc(100dvh-8rem)] items-center justify-center">
         <div className="w-full max-w-md text-center text-muted-foreground">
           <HelpCircle className="mx-auto h-12 w-12 mb-4 opacity-20" />
-          <h2 className="text-xl font-semibold text-foreground">Selecciona una ubicación</h2>
-          <p className="mb-5">Debes estar en una ubicación específica para operar la terminal POS.</p>
+          <h2 className="text-xl font-semibold text-foreground">
+            Selecciona una ubicación
+          </h2>
+          <p className="mb-5">
+            Debes estar en una ubicación específica para operar la terminal POS.
+          </p>
           {canChooseLocation ? (
-            <Select onValueChange={(value) => setSelectedLocationId(Number(value))}>
+            <Select
+              onValueChange={(value) => setSelectedLocationId(Number(value))}
+            >
               <SelectTrigger className="bg-background text-left">
-                <SelectValue placeholder={loadingLocations ? "Cargando ubicaciones..." : "Seleccionar tienda o bodega"} />
+                <SelectValue
+                  placeholder={
+                    loadingLocations
+                      ? "Cargando ubicaciones..."
+                      : "Seleccionar tienda o bodega"
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 {availableLocations?.map((location) => (
@@ -477,18 +585,22 @@ export default function PosPage() {
                   </SelectItem>
                 ))}
                 {!loadingLocations && availableLocations?.length === 0 && (
-                  <SelectItem value="none" disabled>No hay ubicaciones operativas activas</SelectItem>
+                  <SelectItem value="none" disabled>
+                    No hay ubicaciones operativas activas
+                  </SelectItem>
                 )}
               </SelectContent>
             </Select>
           ) : (
             <p className="rounded-md border bg-muted/30 p-3 text-sm">
-              Tu usuario no tiene una ubicación asignada. Pide a un ADMIN que la configure.
+              Tu usuario no tiene una ubicación asignada. Pide a un ADMIN que la
+              configure.
             </p>
           )}
           {locationsFailed && (
             <p className="mt-3 text-sm text-destructive">
-              No se pudieron cargar las ubicaciones. Recarga la página o vuelve a iniciar sesión.
+              No se pudieron cargar las ubicaciones. Recarga la página o vuelve
+              a iniciar sesión.
             </p>
           )}
         </div>
@@ -502,19 +614,27 @@ export default function PosPage() {
       <div className="flex-1 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-sidebar">Terminal POS</h1>
-            <p className="text-muted-foreground text-sm">Escanea o busca artículos para la venta.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-sidebar">
+              Terminal POS
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              Escanea o busca artículos para la venta.
+            </p>
           </div>
         </div>
 
-        <Tabs 
-          value={tipoTicket} 
+        <Tabs
+          value={tipoTicket}
           onValueChange={(v) => setTipoTicket(v as TipoTicket)}
           className="w-full"
         >
           <TabsList className="w-full grid grid-cols-2">
-            <TabsTrigger value={TipoTicket.NORMAL}>Venta de Rollos (NORMAL)</TabsTrigger>
-            <TabsTrigger value={TipoTicket.METREADO}>Cortes (METREADO)</TabsTrigger>
+            <TabsTrigger value={TipoTicket.NORMAL}>
+              Venta de Rollos (NORMAL)
+            </TabsTrigger>
+            <TabsTrigger value={TipoTicket.METREADO}>
+              Cortes (METREADO)
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -522,10 +642,14 @@ export default function PosPage() {
           <div className="p-4 border-b bg-muted/20">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input 
+              <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={tipoTicket === TipoTicket.NORMAL ? "Buscar por serie de rollo, SKU o tela..." : "Buscar por producto o SKU..."}
+                placeholder={
+                  tipoTicket === TipoTicket.NORMAL
+                    ? "Buscar por serie de rollo, SKU o tela..."
+                    : "Buscar por producto o SKU..."
+                }
                 className="pl-10 h-12 text-lg shadow-sm"
                 autoFocus
               />
@@ -534,67 +658,112 @@ export default function PosPage() {
               )}
             </div>
           </div>
-          
+
           <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-secondary/20">
             {debouncedSearch.length < 2 ? (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 Escanea o escribe para buscar...
               </div>
             ) : searchFailed ? (
-              <div className="h-full flex items-center justify-center text-center text-destructive" role="alert">
-                {getApiErrorMessage(searchError, "No se pudo realizar la búsqueda. Intenta de nuevo.")}
+              <div
+                className="h-full flex items-center justify-center text-center text-destructive"
+                role="alert"
+              >
+                {getApiErrorMessage(
+                  searchError,
+                  "No se pudo realizar la búsqueda. Intenta de nuevo.",
+                )}
               </div>
-            ) : !searchResults || (searchResults.rollos.length === 0 && searchResults.productos.length === 0) ? (
+            ) : !searchResults ||
+              (searchResults.rollos.length === 0 &&
+                searchResults.productos.length === 0) ? (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 No se encontraron resultados para "{debouncedSearch}"
               </div>
             ) : (
               <div className="grid gap-3 grid-cols-1 xl:grid-cols-2">
-                {tipoTicket === TipoTicket.NORMAL && searchResults.rollos.map((rollo: PosRolloDisponible) => (
-                  <Card key={rollo.id} className="overflow-hidden hover:border-primary/50 transition-colors shadow-sm">
-                    <div className="p-4 flex gap-4 items-center justify-between">
-                      <div className="overflow-hidden">
-                        <div className="font-bold text-base truncate">{rollo.tela} - {rollo.color}</div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="font-mono text-sm bg-primary/10 text-primary px-2 py-0.5 rounded-sm font-semibold">
-                            {rollo.serie}
-                          </span>
-                          <span className="text-xs text-muted-foreground">{rollo.sku}</span>
+                {tipoTicket === TipoTicket.NORMAL &&
+                  searchResults.rollos.map((rollo: PosRolloDisponible) => (
+                    <Card
+                      key={rollo.id}
+                      className="overflow-hidden hover:border-primary/50 transition-colors shadow-sm"
+                    >
+                      <div className="p-4 flex gap-4 items-center justify-between">
+                        <div className="overflow-hidden">
+                          <div className="font-bold text-base truncate">
+                            {rollo.tela} - {rollo.color}
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="font-mono text-sm bg-primary/10 text-primary px-2 py-0.5 rounded-sm font-semibold">
+                              {rollo.serie}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {rollo.sku}
+                            </span>
+                          </div>
+                          <div className="text-sm mt-2 text-muted-foreground">
+                            Disp:{" "}
+                            <span className="font-semibold text-foreground">
+                              {rollo.cantidadActual} {rollo.unidad}
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-sm mt-2 text-muted-foreground">
-                          Disp: <span className="font-semibold text-foreground">{rollo.cantidadActual} {rollo.unidad}</span>
+                        <div className="flex flex-col items-end gap-3 shrink-0">
+                          <div className="font-bold text-lg">
+                            {Number(rollo.precioSugerido).toLocaleString(
+                              "es-MX",
+                              { style: "currency", currency: "MXN" },
+                            )}
+                            /{rollo.unidad}
+                          </div>
+                          <Button
+                            size="sm"
+                            onClick={() => addToCart(rollo)}
+                            disabled={
+                              !!cart.find((c) => c.rollo?.id === rollo.id)
+                            }
+                          >
+                            <Plus className="h-4 w-4 mr-1" /> Agregar
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-3 shrink-0">
-                        <div className="font-bold text-lg">
-                          {Number(rollo.precioSugerido).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}/{rollo.unidad}
-                        </div>
-                        <Button size="sm" onClick={() => addToCart(rollo)} disabled={!!cart.find(c => c.rollo?.id === rollo.id)}>
-                          <Plus className="h-4 w-4 mr-1" /> Agregar
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  ))}
 
-                {tipoTicket === TipoTicket.METREADO && searchResults.productos.map((prod: PosProducto) => (
-                  <Card key={prod.id} className="overflow-hidden hover:border-primary/50 transition-colors shadow-sm">
-                    <div className="p-4 flex gap-4 items-center justify-between">
-                      <div className="overflow-hidden">
-                        <div className="font-bold text-base truncate">{prod.tela} - {prod.color}</div>
-                        <div className="text-xs text-muted-foreground mt-1">{prod.sku}</div>
-                      </div>
-                      <div className="flex flex-col items-end gap-3 shrink-0">
-                        <div className="font-bold text-lg">
-                          {Number(prod.precioSugerido).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}/{prod.unidad}
+                {tipoTicket === TipoTicket.METREADO &&
+                  searchResults.productos.map((prod: PosProducto) => (
+                    <Card
+                      key={prod.id}
+                      className="overflow-hidden hover:border-primary/50 transition-colors shadow-sm"
+                    >
+                      <div className="p-4 flex gap-4 items-center justify-between">
+                        <div className="overflow-hidden">
+                          <div className="font-bold text-base truncate">
+                            {prod.tela} - {prod.color}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {prod.sku}
+                          </div>
                         </div>
-                        <Button size="sm" onClick={() => addToCart(prod)} variant="secondary">
-                          <Plus className="h-4 w-4 mr-1" /> Seleccionar
-                        </Button>
+                        <div className="flex flex-col items-end gap-3 shrink-0">
+                          <div className="font-bold text-lg">
+                            {Number(prod.precioSugerido).toLocaleString(
+                              "es-MX",
+                              { style: "currency", currency: "MXN" },
+                            )}
+                            /{prod.unidad}
+                          </div>
+                          <Button
+                            size="sm"
+                            onClick={() => addToCart(prod)}
+                            variant="secondary"
+                          >
+                            <Plus className="h-4 w-4 mr-1" /> Seleccionar
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  ))}
               </div>
             )}
           </div>
@@ -606,11 +775,16 @@ export default function PosPage() {
         <Card className="flex-1 flex flex-col shadow-md border-sidebar-primary/20 bg-white">
           <CardHeader className="bg-sidebar text-white rounded-t-lg pb-4">
             <CardTitle className="flex justify-between items-center text-lg">
-              <span>Ticket {tipoTicket === TipoTicket.NORMAL ? "Normal" : "Metreado"}</span>
-              <span className="bg-white/20 text-white px-2 py-0.5 rounded text-sm">{cart.length} líneas</span>
+              <span>
+                Ticket{" "}
+                {tipoTicket === TipoTicket.NORMAL ? "Normal" : "Metreado"}
+              </span>
+              <span className="bg-white/20 text-white px-2 py-0.5 rounded text-sm">
+                {cart.length} líneas
+              </span>
             </CardTitle>
           </CardHeader>
-          
+
           <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-60">
@@ -622,12 +796,12 @@ export default function PosPage() {
                 {cart.map((item, idx) => (
                   <CartLineItem
                     key={getCartLineKey(item)}
-                    item={item} 
+                    item={item}
                     lineKey={getCartLineKey(item)}
                     locationId={selectedLocationId}
                     priceValidation={item.priceValidation ?? { status: "idle" }}
                     onPriceValidationChange={updateCartPriceValidation}
-                    onRemove={() => removeFromCart(idx)} 
+                    onRemove={() => removeFromCart(idx)}
                     isMetreado={tipoTicket === TipoTicket.METREADO}
                     onChangeQuantity={(qty) => updateCartQuantity(idx, qty)}
                     onChangePrice={(price) => updateCartPrice(idx, price)}
@@ -636,29 +810,80 @@ export default function PosPage() {
               </div>
             )}
           </div>
-          
+
           <Separator />
-          
+
           <CardFooter className="flex-col items-stretch p-5 bg-muted/10 gap-4">
-            <div className="flex justify-between items-end mb-2">
-              <span className="text-muted-foreground font-medium">Total</span>
-              <span className="text-3xl font-bold tracking-tight text-primary">
-                {cartTotal.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
-              </span>
-            </div>
-            
             {tipoTicket === TipoTicket.NORMAL && (
               <div className="flex items-center space-x-2 bg-secondary/50 p-3 rounded-md">
-                <Checkbox id="facturar" checked={facturar} onCheckedChange={(v) => setFacturar(v as boolean)} />
-                <Label htmlFor="facturar" className="font-semibold cursor-pointer">Requiere Factura</Label>
+                <Checkbox
+                  id="facturar"
+                  checked={facturar}
+                  onCheckedChange={(v) => setFacturar(v as boolean)}
+                />
+                <div>
+                  <Label
+                    htmlFor="facturar"
+                    className="font-semibold cursor-pointer"
+                  >
+                    Requiere Factura
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    El precio negociado es antes de IVA.
+                  </p>
+                </div>
               </div>
             )}
-            
+
+            <div className="space-y-1.5 rounded-lg bg-primary/5 p-4">
+              {facturar ? (
+                <>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Subtotal</span>
+                    <span>
+                      {cartSubtotal.toLocaleString("es-MX", {
+                        style: "currency",
+                        currency: "MXN",
+                      })}
+                    </span>
+                  </div>
+                  <div
+                    className="flex justify-between text-sm text-muted-foreground"
+                    data-testid="pos-iva"
+                  >
+                    <span>IVA (16%)</span>
+                    <span>
+                      {cartIva.toLocaleString("es-MX", {
+                        style: "currency",
+                        currency: "MXN",
+                      })}
+                    </span>
+                  </div>
+                </>
+              ) : null}
+              <div
+                className={`flex justify-between items-end ${facturar ? "border-t border-primary/15 pt-2" : ""}`}
+              >
+                <span className="text-muted-foreground font-medium">Total</span>
+                <span
+                  className="text-3xl font-bold tracking-tight text-primary"
+                  data-testid="pos-total"
+                >
+                  {cartTotal.toLocaleString("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                  })}
+                </span>
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Cliente (Opcional)</Label>
-              <Input 
-                placeholder="ID de cliente..." 
-                value={clientId} 
+              <Label className="text-xs text-muted-foreground">
+                Cliente (Opcional)
+              </Label>
+              <Input
+                placeholder="ID de cliente..."
+                value={clientId}
                 onChange={(e) => setClientId(e.target.value)}
                 className="h-9"
               />
@@ -675,15 +900,19 @@ export default function PosPage() {
                   : "Validando precios antes de confirmar…"}
               </p>
             )}
-            
-            <Button 
-              size="lg" 
-              className="w-full h-14 text-lg font-bold mt-2" 
+
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg font-bold mt-2"
               disabled={confirmDisabled}
               onClick={handleCreateTicket}
               data-testid="button-confirmar-venta"
             >
-              {crearTicket.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <CheckCircle className="mr-2 h-5 w-5" />}
+              {crearTicket.isPending ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <CheckCircle className="mr-2 h-5 w-5" />
+              )}
               {crearTicket.isPending ? "Enviando venta…" : "Confirmar Venta"}
             </Button>
           </CardFooter>
@@ -712,5 +941,5 @@ function ShoppingCart(props: any) {
       <circle cx="19" cy="21" r="1" />
       <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
     </svg>
-  )
+  );
 }

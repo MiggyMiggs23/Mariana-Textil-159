@@ -9,5 +9,7 @@
 export interface CorteFacturacion {
   facturado: boolean;
   ticketsCount: number;
+  subtotal: string;
+  iva: string;
   importe: string;
 }
