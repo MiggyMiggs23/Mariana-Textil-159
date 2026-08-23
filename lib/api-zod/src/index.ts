@@ -104,6 +104,8 @@ export * from "./generated/types/posBusquedaResult";
 export * from "./generated/types/posProducto";
 export * from "./generated/types/posRolloDisponible";
 export * from "./generated/types/producto";
+export * from "./generated/types/productoCompraHistorial";
+export * from "./generated/types/productoComprasResumen";
 export * from "./generated/types/productoDetail";
 export * from "./generated/types/productoInput";
 export * from "./generated/types/productoInventarioUbicacion";

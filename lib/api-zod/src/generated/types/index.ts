@@ -109,6 +109,8 @@ export * from './posBusquedaResult';
 export * from './posProducto';
 export * from './posRolloDisponible';
 export * from './producto';
+export * from './productoCompraHistorial';
+export * from './productoComprasResumen';
 export * from './productoDetail';
 export * from './productoInput';
 export * from './productoInventarioUbicacion';

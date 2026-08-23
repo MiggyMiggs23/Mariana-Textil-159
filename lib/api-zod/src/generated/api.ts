@@ -333,6 +333,23 @@ export const GetProductoResponse = zod.object({
   "rollos": zod.number(),
   "cantidad": zod.string()
 })),
+  "comprasResumen": zod.object({
+  "totalCosto": zod.string(),
+  "totalCantidad": zod.string(),
+  "totalRollos": zod.number(),
+  "costoPorUnidad": zod.string().nullable().describe('Costo unitario ponderado histórico por METRO o por KILO, según la unidad del producto')
+}),
+  "comprasHistorial": zod.array(zod.object({
+  "entradaId": zod.number(),
+  "folio": zod.number(),
+  "fecha": zod.coerce.date(),
+  "proveedorId": zod.number().nullable(),
+  "proveedorNombre": zod.string().nullable(),
+  "totalCosto": zod.string(),
+  "totalCantidad": zod.string(),
+  "totalRollos": zod.number(),
+  "costoPorUnidad": zod.string().nullable().describe('Costo unitario ponderado de la entrada por METRO o por KILO, según la unidad del producto')
+})),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -604,7 +621,13 @@ export const ListComprasProveedorResponse = zod.object({
   "estado": zod.enum(['Pagada', 'Parcial', 'Pendiente']),
   "nombreUbicacion": zod.string().describe('Nombre de la ubicación\/bodega de recepción'),
   "totalRollos": zod.number().describe('Número de rollos recibidos en esta entrada'),
-  "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos (en la unidad del producto)')
+  "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos (en la unidad del producto)'),
+  "cantidadMetros": zod.string(),
+  "cantidadKilos": zod.string(),
+  "costoMetros": zod.string(),
+  "costoKilos": zod.string(),
+  "costoPorMetro": zod.string().nullable().describe('Costo unitario ponderado por METRO'),
+  "costoPorKilo": zod.string().nullable().describe('Costo unitario ponderado por KILO')
 })),
   "total": zod.number(),
   "totalCostoPeriodo": zod.string().describe('Suma de compras que cumplen los filtros antes de paginar'),
@@ -759,8 +782,9 @@ export const EstadisticasProveedorResponse = zod.object({
   "totalCompras": zod.string(),
   "comprasCount": zod.number(),
   "totalRollos": zod.number().describe('Total de rollos recibidos en el periodo'),
-  "costoPromedio": zod.string().describe('Costo promedio por compra (entrada)'),
-  "ticketPromedio": zod.string().describe('Costo promedio por rollo en el periodo'),
+  "costoPorMetro": zod.string().nullable().describe('Costo unitario ponderado por METRO'),
+  "costoPorKilo": zod.string().nullable().describe('Costo unitario ponderado por KILO'),
+  "ticketPromedio": zod.string().describe('Importe promedio por compra (entrada)'),
   "diasDesdeUltimaCompra": zod.number().nullish().describe('Días desde la última compra hasta hoy; null si no hay compras'),
   "variacionVsPeriodoAnterior": zod.string().nullish(),
   "ultimaCompra": zod.coerce.date().nullish(),
@@ -778,9 +802,9 @@ export const EstadisticasProveedorResponse = zod.object({
   "totalCosto": zod.string(),
   "totalRollos": zod.number(),
   "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos del producto'),
-  "costoPromedio": zod.string().describe('Costo promedio por rollo en el periodo actual'),
-  "costoPromedioAnterior": zod.string().nullish().describe('Costo promedio por rollo en el periodo anterior (misma duración)'),
-  "variacionCostoPct": zod.string().nullish().describe('Variación % del costo promedio vs periodo anterior')
+  "costoPorUnidad": zod.string().describe('Costo unitario ponderado por METRO o por KILO, según la unidad del producto'),
+  "costoPorUnidadAnterior": zod.string().nullish().describe('Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto'),
+  "variacionCostoUnidadPct": zod.string().nullish().describe('Variación porcentual del costo por unidad vs. el periodo anterior')
 })),
   "porTela": zod.array(zod.object({
   "tela": zod.string(),

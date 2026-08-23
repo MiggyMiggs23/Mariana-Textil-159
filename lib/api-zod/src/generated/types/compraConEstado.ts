@@ -21,4 +21,18 @@ export interface CompraConEstado {
   totalRollos: number;
   /** Suma de cantidades de todos los rollos (en la unidad del producto) */
   cantidadTotal: string;
+  cantidadMetros: string;
+  cantidadKilos: string;
+  costoMetros: string;
+  costoKilos: string;
+  /**
+     * Costo unitario ponderado por METRO
+     * @nullable
+     */
+  costoPorMetro: string | null;
+  /**
+     * Costo unitario ponderado por KILO
+     * @nullable
+     */
+  costoPorKilo: string | null;
 }

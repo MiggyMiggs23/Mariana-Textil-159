@@ -5,6 +5,8 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ProductoCompraHistorial } from './productoCompraHistorial';
+import type { ProductoComprasResumen } from './productoComprasResumen';
 import type { ProductoInventarioUbicacion } from './productoInventarioUbicacion';
 import type { UnidadProducto } from './unidadProducto';
 
@@ -23,6 +25,8 @@ export interface ProductoDetail {
   skuBloqueado: boolean;
   unidadBloqueada: boolean;
   inventarioPorUbicacion: ProductoInventarioUbicacion[];
+  comprasResumen: ProductoComprasResumen;
+  comprasHistorial: ProductoCompraHistorial[];
   createdAt: Date;
   updatedAt: Date;
 }

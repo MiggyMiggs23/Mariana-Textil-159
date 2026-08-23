@@ -29,6 +29,14 @@ import { generateSKU } from "./productos";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
+function formatCurrency(value: string | number | null | undefined): string {
+  if (value == null) return "-";
+  const amount = typeof value === "string" ? parseFloat(value) : value;
+  return Number.isFinite(amount)
+    ? new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(amount)
+    : "-";
+}
+
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -141,6 +149,7 @@ export default function ProductoDetail() {
   }, [product]);
 
   const isAdmin = user?.rol === Role.ADMIN;
+  const canViewPurchaseCosts = user != null && user.rol !== Role.TERMINAL;
   const isBlocked = product?.skuBloqueado === true;
 
   const autoSku = generateSKU(formData.tela, formData.color);
@@ -373,6 +382,80 @@ export default function ProductoDetail() {
             </Card>
           </div>
         </div>
+
+        {canViewPurchaseCosts && product.comprasResumen && (
+          <Card className="border-t-4 border-t-primary">
+            <CardHeader>
+              <CardTitle className="text-xl">Historial de compras</CardTitle>
+              <CardDescription>
+                El costo por {product.unidad.toLowerCase()} se pondera con la cantidad recibida.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Costo por {product.unidad.toLowerCase()}</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {formatCurrency(product.comprasResumen.costoPorUnidad)}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Cantidad comprada</div>
+                  <div className="text-xl font-semibold">
+                    {parseFloat(product.comprasResumen.totalCantidad).toFixed(2)} {product.unidad}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Total comprado</div>
+                  <div className="text-xl font-semibold">{formatCurrency(product.comprasResumen.totalCosto)}</div>
+                  <div className="text-xs text-muted-foreground">{product.comprasResumen.totalRollos} rollos</div>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto border rounded-md">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Entrada</TableHead>
+                      <TableHead>Proveedor</TableHead>
+                      <TableHead className="text-right">Cantidad</TableHead>
+                      <TableHead className="text-right">Costo por {product.unidad.toLowerCase()}</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {product.comprasHistorial.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="h-20 text-center text-muted-foreground">
+                          No hay compras registradas.
+                        </TableCell>
+                      </TableRow>
+                    ) : product.comprasHistorial.map((compra) => (
+                      <TableRow key={compra.entradaId}>
+                        <TableCell className="whitespace-nowrap">
+                          {format(new Date(compra.fecha), "dd/MM/yyyy")}
+                        </TableCell>
+                        <TableCell>
+                          <Link href={`/entradas/${compra.entradaId}/documento`} className="font-mono text-primary hover:underline">
+                            #{compra.folio}
+                          </Link>
+                        </TableCell>
+                        <TableCell>{compra.proveedorNombre || "Sin proveedor"}</TableCell>
+                        <TableCell className="text-right">
+                          {parseFloat(compra.totalCantidad).toFixed(2)} {product.unidad}
+                          <div className="text-xs text-muted-foreground">{compra.totalRollos} rollos</div>
+                        </TableCell>
+                        <TableCell className="text-right font-semibold">{formatCurrency(compra.costoPorUnidad)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(compra.totalCosto)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Kardex Section */}
         <Card className="mt-8 border-t-4 border-t-secondary">

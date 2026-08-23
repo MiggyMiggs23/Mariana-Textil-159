@@ -2306,6 +2306,27 @@ components:
         nombre: { type: string }
         rollos: { type: number }
         cantidad: { type: string }
+    ProductoComprasResumen:
+      type: object
+      required: [totalCosto, totalCantidad, totalRollos, costoPorUnidad]
+      properties:
+        totalCosto: { type: string }
+        totalCantidad: { type: string }
+        totalRollos: { type: number }
+        costoPorUnidad: { type: ["string", "null"], description: "Costo unitario ponderado histórico por METRO o por KILO, según la unidad del producto" }
+    ProductoCompraHistorial:
+      type: object
+      required: [entradaId, folio, fecha, proveedorId, proveedorNombre, totalCosto, totalCantidad, totalRollos, costoPorUnidad]
+      properties:
+        entradaId: { type: number }
+        folio: { type: number }
+        fecha: { type: string, format: date-time }
+        proveedorId: { type: ["number", "null"] }
+        proveedorNombre: { type: ["string", "null"] }
+        totalCosto: { type: string }
+        totalCantidad: { type: string }
+        totalRollos: { type: number }
+        costoPorUnidad: { type: ["string", "null"], description: "Costo unitario ponderado de la entrada por METRO o por KILO, según la unidad del producto" }
     Producto:
       type: object
       required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, createdAt, updatedAt]
@@ -2326,7 +2347,7 @@ components:
         updatedAt: { type: string, format: date-time }
     ProductoDetail:
       type: object
-      required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, skuBloqueado, unidadBloqueada, inventarioPorUbicacion, createdAt, updatedAt]
+      required: [id, sku, tela, color, unidad, precioSugerido, notas, activo, rollos, cantidad, skuBloqueado, unidadBloqueada, inventarioPorUbicacion, comprasResumen, comprasHistorial, createdAt, updatedAt]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -2346,6 +2367,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ProductoInventarioUbicacion"
+        comprasResumen:
+          $ref: "#/components/schemas/ProductoComprasResumen"
+        comprasHistorial:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductoCompraHistorial"
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
     ProductoInput:
@@ -2920,7 +2947,7 @@ components:
             $ref: "#/components/schemas/ProveedorMetricas"
     CompraConEstado:
       type: object
-      required: [entradaId, folio, fecha, totalCosto, abonado, saldoPendiente, estado, nombreUbicacion, totalRollos, cantidadTotal]
+      required: [entradaId, folio, fecha, totalCosto, abonado, saldoPendiente, estado, nombreUbicacion, totalRollos, cantidadTotal, cantidadMetros, cantidadKilos, costoMetros, costoKilos, costoPorMetro, costoPorKilo]
       properties:
         entradaId: { type: number }
         folio: { type: number }
@@ -2934,6 +2961,12 @@ components:
         nombreUbicacion: { type: string, description: "Nombre de la ubicación/bodega de recepción" }
         totalRollos: { type: number, description: "Número de rollos recibidos en esta entrada" }
         cantidadTotal: { type: string, description: "Suma de cantidades de todos los rollos (en la unidad del producto)" }
+        cantidadMetros: { type: string }
+        cantidadKilos: { type: string }
+        costoMetros: { type: string }
+        costoKilos: { type: string }
+        costoPorMetro: { type: ["string", "null"], description: "Costo unitario ponderado por METRO" }
+        costoPorKilo: { type: ["string", "null"], description: "Costo unitario ponderado por KILO" }
     ProveedorComprasResult:
       type: object
       required: [items, total, totalCostoPeriodo, page, pageSize]
@@ -2981,7 +3014,7 @@ components:
         count: { type: number }
     EstadisticasPorProducto:
       type: object
-      required: [productoId, sku, tela, color, unidad, totalCosto, totalRollos, cantidadTotal, costoPromedio]
+      required: [productoId, sku, tela, color, unidad, totalCosto, totalRollos, cantidadTotal, costoPorUnidad]
       properties:
         productoId: { type: number }
         sku: { type: string }
@@ -2991,9 +3024,9 @@ components:
         totalCosto: { type: string }
         totalRollos: { type: number }
         cantidadTotal: { type: string, description: "Suma de cantidades de todos los rollos del producto" }
-        costoPromedio: { type: string, description: "Costo promedio por rollo en el periodo actual" }
-        costoPromedioAnterior: { type: ["string", "null"], description: "Costo promedio por rollo en el periodo anterior (misma duración)" }
-        variacionCostoPct: { type: ["string", "null"], description: "Variación % del costo promedio vs periodo anterior" }
+        costoPorUnidad: { type: string, description: "Costo unitario ponderado por METRO o por KILO, según la unidad del producto" }
+        costoPorUnidadAnterior: { type: ["string", "null"], description: "Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto" }
+        variacionCostoUnidadPct: { type: ["string", "null"], description: "Variación porcentual del costo por unidad vs. el periodo anterior" }
     EstadisticasPorTela:
       type: object
       required: [tela, totalCosto, rollosCount]
@@ -3010,15 +3043,16 @@ components:
         rollosCount: { type: number }
     ProveedorEstadisticas:
       type: object
-      required: [desde, hasta, totalCompras, comprasCount, totalRollos, costoPromedio, ticketPromedio, porMes, porProducto, porTela, porColor]
+      required: [desde, hasta, totalCompras, comprasCount, totalRollos, costoPorMetro, costoPorKilo, ticketPromedio, porMes, porProducto, porTela, porColor]
       properties:
         desde: { type: string, format: date-time }
         hasta: { type: string, format: date-time }
         totalCompras: { type: string }
         comprasCount: { type: number }
         totalRollos: { type: number, description: "Total de rollos recibidos en el periodo" }
-        costoPromedio: { type: string, description: "Costo promedio por compra (entrada)" }
-        ticketPromedio: { type: string, description: "Costo promedio por rollo en el periodo" }
+        costoPorMetro: { type: ["string", "null"], description: "Costo unitario ponderado por METRO" }
+        costoPorKilo: { type: ["string", "null"], description: "Costo unitario ponderado por KILO" }
+        ticketPromedio: { type: string, description: "Importe promedio por compra (entrada)" }
         diasDesdeUltimaCompra: { type: ["number", "null"], description: "Días desde la última compra hasta hoy; null si no hay compras" }
         variacionVsPeriodoAnterior: { type: ["string", "null"] }
         ultimaCompra: { type: ["string", "null"], format: date-time }

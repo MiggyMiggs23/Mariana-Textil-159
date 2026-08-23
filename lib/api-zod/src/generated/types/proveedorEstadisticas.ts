@@ -17,9 +17,17 @@ export interface ProveedorEstadisticas {
   comprasCount: number;
   /** Total de rollos recibidos en el periodo */
   totalRollos: number;
-  /** Costo promedio por compra (entrada) */
-  costoPromedio: string;
-  /** Costo promedio por rollo en el periodo */
+  /**
+     * Costo unitario ponderado por METRO
+     * @nullable
+     */
+  costoPorMetro: string | null;
+  /**
+     * Costo unitario ponderado por KILO
+     * @nullable
+     */
+  costoPorKilo: string | null;
+  /** Importe promedio por compra (entrada) */
   ticketPromedio: string;
   /**
      * Días desde la última compra hasta hoy; null si no hay compras

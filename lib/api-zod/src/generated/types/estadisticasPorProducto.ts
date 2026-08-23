@@ -16,16 +16,16 @@ export interface EstadisticasPorProducto {
   totalRollos: number;
   /** Suma de cantidades de todos los rollos del producto */
   cantidadTotal: string;
-  /** Costo promedio por rollo en el periodo actual */
-  costoPromedio: string;
+  /** Costo unitario ponderado por METRO o por KILO, según la unidad del producto */
+  costoPorUnidad: string;
   /**
-     * Costo promedio por rollo en el periodo anterior (misma duración)
+     * Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto
      * @nullable
      */
-  costoPromedioAnterior?: string | null;
+  costoPorUnidadAnterior?: string | null;
   /**
-     * Variación % del costo promedio vs periodo anterior
+     * Variación porcentual del costo por unidad vs. el periodo anterior
      * @nullable
      */
-  variacionCostoPct?: string | null;
+  variacionCostoUnidadPct?: string | null;
 }

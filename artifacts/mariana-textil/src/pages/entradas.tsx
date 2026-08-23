@@ -469,7 +469,9 @@ export default function Entradas() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Costo por unidad <span className="text-destructive">*</span></Label>
+                  <Label>
+                    Costo por {selectedProduct?.unidad?.toLowerCase() ?? "metro o kilo"} <span className="text-destructive">*</span>
+                  </Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                     <Input 
@@ -596,7 +598,7 @@ export default function Entradas() {
                   <TableHead className="text-right text-white">Rollos</TableHead>
                   <TableHead className="text-white">Unidad</TableHead>
                   <TableHead className="text-right text-white">Cantidad total</TableHead>
-                  <TableHead className="text-right text-white">Costo unitario</TableHead>
+                  <TableHead className="text-right text-white">Costo por metro / kilo</TableHead>
                   <TableHead className="text-right text-white">Costo total</TableHead>
                   <TableHead className="text-center text-white">Detalle</TableHead>
                 </TableRow>
@@ -631,7 +633,9 @@ export default function Entradas() {
                           <TableCell className="text-right font-bold">{linea.cantidades.length}</TableCell>
                           <TableCell>{linea.productoUnidad}</TableCell>
                           <TableCell className="text-right font-medium">{qtySum.toFixed(2)}</TableCell>
-                          <TableCell className="text-right">${parseFloat(linea.costoUnitario).toFixed(2)}</TableCell>
+                          <TableCell className="text-right">
+                            ${parseFloat(linea.costoUnitario).toFixed(2)} / {linea.productoUnidad.toLowerCase()}
+                          </TableCell>
                           <TableCell className="text-right font-bold text-emerald-600">${costSum.toFixed(2)}</TableCell>
                           <TableCell className="text-center">
                             <div className="flex items-center justify-center gap-2">

@@ -120,12 +120,62 @@ function presentProducto(row: typeof productosTable.$inferSelect) {
 function presentProductoDetail(
   row: typeof productosTable.$inferSelect,
   locations: { id: number; nombre: string }[],
+  compras: {
+    entrada_id: number;
+    folio: number;
+    fecha: Date | string;
+    proveedor_id: number | null;
+    proveedor_nombre: string | null;
+    total_costo: string;
+    total_cantidad: string;
+    total_rollos: string;
+  }[],
 ) {
+  const comprasHistorial = compras.map((compra) => {
+    const totalCosto = parseFloat(compra.total_costo);
+    const totalCantidad = parseFloat(compra.total_cantidad);
+    const totalRollos = parseInt(compra.total_rollos, 10);
+    return {
+      entradaId: compra.entrada_id,
+      folio: compra.folio,
+      fecha:
+        compra.fecha instanceof Date
+          ? compra.fecha.toISOString()
+          : new Date(compra.fecha).toISOString(),
+      proveedorId: compra.proveedor_id,
+      proveedorNombre: compra.proveedor_nombre,
+      totalCosto: totalCosto.toFixed(2),
+      totalCantidad: totalCantidad.toFixed(3),
+      totalRollos,
+      costoPorUnidad:
+        totalCantidad > 0 ? (totalCosto / totalCantidad).toFixed(2) : null,
+    };
+  });
+  const totalCosto = comprasHistorial.reduce(
+    (sum, compra) => sum + parseFloat(compra.totalCosto),
+    0,
+  );
+  const totalCantidad = comprasHistorial.reduce(
+    (sum, compra) => sum + parseFloat(compra.totalCantidad),
+    0,
+  );
+  const totalRollos = comprasHistorial.reduce(
+    (sum, compra) => sum + compra.totalRollos,
+    0,
+  );
   return {
     ...presentProducto(row),
     skuBloqueado: false,
     unidadBloqueada: false,
     inventarioPorUbicacion: emptyInventario(locations),
+    comprasResumen: {
+      totalCosto: totalCosto.toFixed(2),
+      totalCantidad: totalCantidad.toFixed(3),
+      totalRollos,
+      costoPorUnidad:
+        totalCantidad > 0 ? (totalCosto / totalCantidad).toFixed(2) : null,
+    },
+    comprasHistorial,
   };
 }
 
@@ -434,8 +484,43 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
   }
 
   const locations = await getRealLocations();
+  const comprasRows = await db.execute<{
+    entrada_id: number;
+    folio: number;
+    fecha: Date | string;
+    proveedor_id: number | null;
+    proveedor_nombre: string | null;
+    total_costo: string;
+    total_cantidad: string;
+    total_rollos: string;
+  }>(sql`
+    SELECT
+      e.id AS entrada_id,
+      e.folio,
+      e.fecha,
+      e.proveedor_id,
+      p.nombre AS proveedor_nombre,
+      COALESCE(SUM(r.costo_total), 0)::text AS total_costo,
+      COALESCE(SUM(r.cantidad_inicial), 0)::text AS total_cantidad,
+      COUNT(r.id)::text AS total_rollos
+    FROM rollos r
+    JOIN entradas e ON e.id = r.recepcion_id
+    LEFT JOIN proveedores p ON p.id = e.proveedor_id
+    WHERE r.producto_id = ${params.data.id}
+    GROUP BY e.id, e.folio, e.fecha, e.proveedor_id, p.nombre
+    ORDER BY e.fecha DESC, e.id DESC
+  `);
   const response = GetProductoResponse.parse(
-    presentProductoDetail(producto, locations),
+    presentProductoDetail(producto, locations, comprasRows.rows as Array<{
+      entrada_id: number;
+      folio: number;
+      fecha: Date | string;
+      proveedor_id: number | null;
+      proveedor_nombre: string | null;
+      total_costo: string;
+      total_cantidad: string;
+      total_rollos: string;
+    }>),
   );
   res.json(
     omitTerminalSensitiveFields(

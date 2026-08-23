@@ -50,6 +50,12 @@ export type CompraConEstado = {
   nombreUbicacion: string;
   totalRollos: number;
   cantidadTotal: string;
+  cantidadMetros: string;
+  cantidadKilos: string;
+  costoMetros: string;
+  costoKilos: string;
+  costoPorMetro: string | null;
+  costoPorKilo: string | null;
 };
 
 export type MovimientoLedger = {
@@ -96,7 +102,8 @@ export type EstadisticasPeriodo = {
   totalCompras: string;
   comprasCount: number;
   totalRollos: number;
-  costoPromedio: string;
+  costoPorMetro: string | null;
+  costoPorKilo: string | null;
   ticketPromedio: string;
   diasDesdeUltimaCompra: number | null;
   variacionVsPeriodoAnterior: string | null;
@@ -115,9 +122,9 @@ export type EstadisticasPeriodo = {
     totalCosto: string;
     totalRollos: number;
     cantidadTotal: string;
-    costoPromedio: string;
-    costoPromedioAnterior: string | null;
-    variacionCostoPct: string | null;
+    costoPorUnidad: string;
+    costoPorUnidadAnterior: string | null;
+    variacionCostoUnidadPct: string | null;
   }>;
   porTela: Array<{ tela: string; totalCosto: string; rollosCount: number }>;
   porColor: Array<{ color: string; totalCosto: string; rollosCount: number }>;
@@ -367,6 +374,10 @@ export async function comprasPorProveedor(opts: {
     nombre_ubicacion: string | null;
     total_rollos: string | null;
     cantidad_total: string | null;
+    cantidad_metros: string | null;
+    cantidad_kilos: string | null;
+    costo_metros: string | null;
+    costo_kilos: string | null;
   }>(sql`
     SELECT
       pp.id AS pp_id,
@@ -377,11 +388,16 @@ export async function comprasPorProveedor(opts: {
       e.ubicacion_id,
       u.nombre AS nombre_ubicacion,
       COUNT(ro.id)::text AS total_rollos,
-      COALESCE(SUM(ro.cantidad_inicial)::text, '0.00') AS cantidad_total
+      COALESCE(SUM(ro.cantidad_inicial)::text, '0.00') AS cantidad_total,
+      COALESCE(SUM(ro.cantidad_inicial) FILTER (WHERE pr.unidad = 'METRO'), 0)::text AS cantidad_metros,
+      COALESCE(SUM(ro.cantidad_inicial) FILTER (WHERE pr.unidad = 'KILO'), 0)::text AS cantidad_kilos,
+      COALESCE(SUM(ro.costo_total) FILTER (WHERE pr.unidad = 'METRO'), 0)::text AS costo_metros,
+      COALESCE(SUM(ro.costo_total) FILTER (WHERE pr.unidad = 'KILO'), 0)::text AS costo_kilos
     FROM pagos_proveedor pp
     LEFT JOIN entradas e ON e.id = pp.entrada_id
     LEFT JOIN ubicaciones u ON u.id = e.ubicacion_id
     LEFT JOIN rollos ro ON ro.recepcion_id = e.id
+    LEFT JOIN productos pr ON pr.id = ro.producto_id
     WHERE pp.proveedor_id = ${opts.proveedorId}
       AND pp.tipo = 'COMPRA'
       ${opts.desde ? sql`AND pp.fecha >= ${opts.desde}` : sql``}
@@ -400,6 +416,10 @@ export async function comprasPorProveedor(opts: {
     nombre_ubicacion: string | null;
     total_rollos: string | null;
     cantidad_total: string | null;
+    cantidad_metros: string | null;
+    cantidad_kilos: string | null;
+    costo_metros: string | null;
+    costo_kilos: string | null;
   }>;
 
   if (compras.length === 0) {
@@ -442,6 +462,11 @@ export async function comprasPorProveedor(opts: {
     const saldo = Math.max(0, totalCosto - abonado);
     const estado = calcEstadoCompra(totalCosto, abonado);
     const fechaDate = toDate(c.fecha)!;
+    const cantidadMetros = parseFloat(c.cantidad_metros ?? "0");
+    const cantidadKilos = parseFloat(c.cantidad_kilos ?? "0");
+    const costoMetros = parseFloat(c.costo_metros ?? "0");
+    const costoKilos = parseFloat(c.costo_kilos ?? "0");
+    const totalRollos = parseInt(c.total_rollos ?? "0", 10);
     return {
       entradaId: c.entrada_id ?? 0,
       folio: c.folio ?? 0,
@@ -451,8 +476,16 @@ export async function comprasPorProveedor(opts: {
       saldoPendiente: saldo.toFixed(2),
       estado,
       nombreUbicacion: c.nombre_ubicacion ?? "",
-      totalRollos: parseInt(c.total_rollos ?? "0", 10),
+      totalRollos,
       cantidadTotal: parseFloat(c.cantidad_total ?? "0").toFixed(2),
+      cantidadMetros: cantidadMetros.toFixed(3),
+      cantidadKilos: cantidadKilos.toFixed(3),
+      costoMetros: costoMetros.toFixed(2),
+      costoKilos: costoKilos.toFixed(2),
+      costoPorMetro:
+        cantidadMetros > 0 ? (costoMetros / cantidadMetros).toFixed(2) : null,
+      costoPorKilo:
+        cantidadKilos > 0 ? (costoKilos / cantidadKilos).toFixed(2) : null,
     };
   });
 
@@ -678,6 +711,10 @@ export async function estadisticasPeriodo(opts: {
     total: string;
     count: string;
     total_rollos: string;
+    cantidad_metros: string;
+    cantidad_kilos: string;
+    costo_metros: string;
+    costo_kilos: string;
     ultima: Date | string | null;
   }>(sql`
     WITH compras_periodo AS (
@@ -695,6 +732,30 @@ export async function estadisticasPeriodo(opts: {
         FROM compras_periodo cp_rollos
         JOIN rollos ro ON ro.recepcion_id = cp_rollos.entrada_id
       ) AS total_rollos,
+      (
+        SELECT COALESCE(SUM(ro.cantidad_inicial) FILTER (WHERE pr.unidad = 'METRO'), 0)::text
+        FROM compras_periodo cp_m
+        JOIN rollos ro ON ro.recepcion_id = cp_m.entrada_id
+        JOIN productos pr ON pr.id = ro.producto_id
+      ) AS cantidad_metros,
+      (
+        SELECT COALESCE(SUM(ro.cantidad_inicial) FILTER (WHERE pr.unidad = 'KILO'), 0)::text
+        FROM compras_periodo cp_k
+        JOIN rollos ro ON ro.recepcion_id = cp_k.entrada_id
+        JOIN productos pr ON pr.id = ro.producto_id
+      ) AS cantidad_kilos,
+      (
+        SELECT COALESCE(SUM(ro.costo_total) FILTER (WHERE pr.unidad = 'METRO'), 0)::text
+        FROM compras_periodo cp_m
+        JOIN rollos ro ON ro.recepcion_id = cp_m.entrada_id
+        JOIN productos pr ON pr.id = ro.producto_id
+      ) AS costo_metros,
+      (
+        SELECT COALESCE(SUM(ro.costo_total) FILTER (WHERE pr.unidad = 'KILO'), 0)::text
+        FROM compras_periodo cp_k
+        JOIN rollos ro ON ro.recepcion_id = cp_k.entrada_id
+        JOIN productos pr ON pr.id = ro.producto_id
+      ) AS costo_kilos,
       MAX(cp.fecha) AS ultima
     FROM compras_periodo cp
   `);
@@ -704,13 +765,20 @@ export async function estadisticasPeriodo(opts: {
       total: string;
       count: string;
       total_rollos: string;
+      cantidad_metros: string;
+      cantidad_kilos: string;
+      costo_metros: string;
+      costo_kilos: string;
       ultima: Date | string | null;
     }>
   )[0]!;
   const totalCompras = parseFloat(cur.total);
   const comprasCount = parseInt(cur.count, 10);
   const totalRollos = parseInt(cur.total_rollos, 10);
-  const costoPromedio = totalRollos > 0 ? totalCompras / totalRollos : 0;
+  const cantidadMetros = parseFloat(cur.cantidad_metros);
+  const cantidadKilos = parseFloat(cur.cantidad_kilos);
+  const costoMetros = parseFloat(cur.costo_metros);
+  const costoKilos = parseFloat(cur.costo_kilos);
   const ticketPromedio = comprasCount > 0 ? totalCompras / comprasCount : 0;
   const ultimaDate = toDate(cur.ultima);
   const diasDesdeUltimaCompra = ultimaDate
@@ -795,10 +863,12 @@ export async function estadisticasPeriodo(opts: {
   const prevProdRows = await db.execute<{
     producto_id: number;
     total_rollos: string;
+    cantidad_total: string;
   }>(sql`
     SELECT
       pr.id AS producto_id,
       COUNT(ro.id)::text AS total_rollos,
+      SUM(ro.cantidad_inicial)::text AS cantidad_total,
       SUM(ro.costo_total)::text AS total_costo
     FROM pagos_proveedor pp
     JOIN entradas e ON e.id = pp.entrada_id
@@ -810,15 +880,17 @@ export async function estadisticasPeriodo(opts: {
     GROUP BY pr.id
   `);
 
-  const prevProdMap = new Map<number, { rollos: number; costo: number }>();
+  const prevProdMap = new Map<number, { rollos: number; cantidad: number; costo: number }>();
   for (const r of prevProdRows.rows as Array<{
     producto_id: number;
     total_rollos: string;
+    cantidad_total: string;
     total_costo: string;
   }>) {
     const rollos = parseInt(r.total_rollos, 10);
     prevProdMap.set(r.producto_id, {
       rollos,
+      cantidad: parseFloat(r.cantidad_total),
       costo: parseFloat(r.total_costo),
     });
   }
@@ -837,15 +909,16 @@ export async function estadisticasPeriodo(opts: {
   ).map((r) => {
     const totalC = parseFloat(r.total_costo);
     const rollos = parseInt(r.total_rollos, 10);
-    const costoPromedioActual = rollos > 0 ? totalC / rollos : 0;
+    const cantidad = parseFloat(r.cantidad_total);
+    const costoPromedioActual = cantidad > 0 ? totalC / cantidad : 0;
     const prev = prevProdMap.get(r.producto_id);
-    let costoPromedioAnterior: string | null = null;
-    let variacionCostoPct: string | null = null;
-    if (prev && prev.rollos > 0) {
-      const cpa = prev.costo / prev.rollos;
-      costoPromedioAnterior = cpa.toFixed(2);
+    let costoPorUnidadAnterior: string | null = null;
+    let variacionCostoUnidadPct: string | null = null;
+    if (prev && prev.cantidad > 0) {
+      const cpa = prev.costo / prev.cantidad;
+      costoPorUnidadAnterior = cpa.toFixed(2);
       if (cpa > 0) {
-        variacionCostoPct = (
+        variacionCostoUnidadPct = (
           ((costoPromedioActual - cpa) / cpa) * 100
         ).toFixed(2);
       }
@@ -859,9 +932,9 @@ export async function estadisticasPeriodo(opts: {
       totalCosto: totalC.toFixed(2),
       totalRollos: rollos,
       cantidadTotal: parseFloat(r.cantidad_total).toFixed(2),
-      costoPromedio: costoPromedioActual.toFixed(2),
-      costoPromedioAnterior,
-      variacionCostoPct,
+      costoPorUnidad: costoPromedioActual.toFixed(2),
+      costoPorUnidadAnterior,
+      variacionCostoUnidadPct,
     };
   });
 
@@ -937,7 +1010,10 @@ export async function estadisticasPeriodo(opts: {
     totalCompras: totalCompras.toFixed(2),
     comprasCount,
     totalRollos,
-    costoPromedio: costoPromedio.toFixed(2),
+    costoPorMetro:
+      cantidadMetros > 0 ? (costoMetros / cantidadMetros).toFixed(2) : null,
+    costoPorKilo:
+      cantidadKilos > 0 ? (costoKilos / cantidadKilos).toFixed(2) : null,
     ticketPromedio: ticketPromedio.toFixed(2),
     diasDesdeUltimaCompra,
     variacionVsPeriodoAnterior: variacion,

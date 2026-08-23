@@ -458,6 +458,35 @@ export interface ProductoInventarioUbicacion {
   cantidad: string;
 }
 
+export interface ProductoComprasResumen {
+  totalCosto: string;
+  totalCantidad: string;
+  totalRollos: number;
+  /**
+     * Costo unitario ponderado histórico por METRO o por KILO, según la unidad del producto
+     * @nullable
+     */
+  costoPorUnidad: string | null;
+}
+
+export interface ProductoCompraHistorial {
+  entradaId: number;
+  folio: number;
+  fecha: string;
+  /** @nullable */
+  proveedorId: number | null;
+  /** @nullable */
+  proveedorNombre: string | null;
+  totalCosto: string;
+  totalCantidad: string;
+  totalRollos: number;
+  /**
+     * Costo unitario ponderado de la entrada por METRO o por KILO, según la unidad del producto
+     * @nullable
+     */
+  costoPorUnidad: string | null;
+}
+
 export interface Producto {
   id: number;
   sku: string;
@@ -489,6 +518,8 @@ export interface ProductoDetail {
   skuBloqueado: boolean;
   unidadBloqueada: boolean;
   inventarioPorUbicacion: ProductoInventarioUbicacion[];
+  comprasResumen: ProductoComprasResumen;
+  comprasHistorial: ProductoCompraHistorial[];
   createdAt: string;
   updatedAt: string;
 }
@@ -1080,6 +1111,20 @@ export interface CompraConEstado {
   totalRollos: number;
   /** Suma de cantidades de todos los rollos (en la unidad del producto) */
   cantidadTotal: string;
+  cantidadMetros: string;
+  cantidadKilos: string;
+  costoMetros: string;
+  costoKilos: string;
+  /**
+     * Costo unitario ponderado por METRO
+     * @nullable
+     */
+  costoPorMetro: string | null;
+  /**
+     * Costo unitario ponderado por KILO
+     * @nullable
+     */
+  costoPorKilo: string | null;
 }
 
 export interface ProveedorComprasResult {
@@ -1112,18 +1157,18 @@ export interface EstadisticasPorProducto {
   totalRollos: number;
   /** Suma de cantidades de todos los rollos del producto */
   cantidadTotal: string;
-  /** Costo promedio por rollo en el periodo actual */
-  costoPromedio: string;
+  /** Costo unitario ponderado por METRO o por KILO, según la unidad del producto */
+  costoPorUnidad: string;
   /**
-     * Costo promedio por rollo en el periodo anterior (misma duración)
+     * Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto
      * @nullable
      */
-  costoPromedioAnterior?: string | null;
+  costoPorUnidadAnterior?: string | null;
   /**
-     * Variación % del costo promedio vs periodo anterior
+     * Variación porcentual del costo por unidad vs. el periodo anterior
      * @nullable
      */
-  variacionCostoPct?: string | null;
+  variacionCostoUnidadPct?: string | null;
 }
 
 export interface EstadisticasPorTela {
@@ -1145,9 +1190,17 @@ export interface ProveedorEstadisticas {
   comprasCount: number;
   /** Total de rollos recibidos en el periodo */
   totalRollos: number;
-  /** Costo promedio por compra (entrada) */
-  costoPromedio: string;
-  /** Costo promedio por rollo en el periodo */
+  /**
+     * Costo unitario ponderado por METRO
+     * @nullable
+     */
+  costoPorMetro: string | null;
+  /**
+     * Costo unitario ponderado por KILO
+     * @nullable
+     */
+  costoPorKilo: string | null;
+  /** Importe promedio por compra (entrada) */
   ticketPromedio: string;
   /**
      * Días desde la última compra hasta hoy; null si no hay compras

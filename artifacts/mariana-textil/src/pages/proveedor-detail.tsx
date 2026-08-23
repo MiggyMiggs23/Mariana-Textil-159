@@ -539,7 +539,16 @@ export default function ProveedorDetail() {
                           <TableCell>{compra.nombreUbicacion}</TableCell>
                           <TableCell className="text-right text-sm">
                             <div>{compra.totalRollos} rll</div>
-                            <div className="text-xs text-muted-foreground">{parseFloat(compra.cantidadTotal).toFixed(2)}</div>
+                            {parseFloat(compra.cantidadMetros) > 0 && (
+                              <div className="text-xs text-muted-foreground">
+                                {parseFloat(compra.cantidadMetros).toFixed(2)} METRO · {formatCurrency(compra.costoPorMetro)} / metro
+                              </div>
+                            )}
+                            {parseFloat(compra.cantidadKilos) > 0 && (
+                              <div className="text-xs text-muted-foreground">
+                                {parseFloat(compra.cantidadKilos).toFixed(2)} KILO · {formatCurrency(compra.costoPorKilo)} / kilo
+                              </div>
+                            )}
                           </TableCell>
                           <TableCell className="text-right font-medium">{formatCurrency(compra.totalCosto)}</TableCell>
                           <TableCell className="text-right text-muted-foreground">{formatCurrency(compra.abonado)}</TableCell>
@@ -668,7 +677,7 @@ export default function ProveedorDetail() {
                <div className="h-64 flex items-center justify-center animate-pulse text-muted-foreground">Calculando estadísticas...</div>
              ) : estadisticas ? (
                <>
-                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <Card>
                        <CardContent className="p-4 flex flex-col gap-1">
                           <span className="text-sm font-medium text-muted-foreground">Total Comprado</span>
@@ -692,8 +701,20 @@ export default function ProveedorDetail() {
                     </Card>
                     <Card>
                        <CardContent className="p-4 flex flex-col gap-1">
-                          <span className="text-sm font-medium text-muted-foreground">Costo promedio por rollo</span>
-                          <span className="text-2xl font-bold">{formatCurrency(estadisticas.costoPromedio)}</span>
+                           <span className="text-sm font-medium text-muted-foreground">Costo por metro</span>
+                          <span className="text-2xl font-bold">
+                             {estadisticas.costoPorMetro == null ? "-" : formatCurrency(estadisticas.costoPorMetro)}
+                          </span>
+                          <span className="text-xs text-muted-foreground">Ponderado por cantidad</span>
+                       </CardContent>
+                    </Card>
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                           <span className="text-sm font-medium text-muted-foreground">Costo por kilo</span>
+                          <span className="text-2xl font-bold">
+                             {estadisticas.costoPorKilo == null ? "-" : formatCurrency(estadisticas.costoPorKilo)}
+                          </span>
+                          <span className="text-xs text-muted-foreground">Ponderado por cantidad</span>
                        </CardContent>
                     </Card>
                     <Card>
@@ -741,13 +762,14 @@ export default function ProveedorDetail() {
                            <TableHead>Producto (SKU)</TableHead>
                            <TableHead>Tela / Color</TableHead>
                            <TableHead className="text-right">Rollos / Cantidad</TableHead>
-                           <TableHead className="text-right">Costo Promedio</TableHead>
+                            <TableHead className="text-right">Costo por metro</TableHead>
+                            <TableHead className="text-right">Costo por kilo</TableHead>
                            <TableHead className="text-right">Total</TableHead>
                          </TableRow>
                        </TableHeader>
                        <TableBody>
                          {estadisticas.porProducto.length === 0 ? (
-                           <TableRow><TableCell colSpan={5} className="text-center h-24 text-muted-foreground">No hay productos en el periodo</TableCell></TableRow>
+                            <TableRow><TableCell colSpan={6} className="text-center h-24 text-muted-foreground">No hay productos en el periodo</TableCell></TableRow>
                          ) : (
                            estadisticas.porProducto.map(prod => (
                              <TableRow key={prod.productoId}>
@@ -758,8 +780,20 @@ export default function ProveedorDetail() {
                                  <div className="text-xs text-muted-foreground">{parseFloat(prod.cantidadTotal).toFixed(2)} {prod.unidad}</div>
                                </TableCell>
                                <TableCell className="text-right">
-                                 <div className="font-medium">{formatCurrency(prod.costoPromedio)}</div>
-                                 {prod.variacionCostoPct && <div className="text-[10px] text-muted-foreground">{prod.variacionCostoPct}{String(prod.variacionCostoPct).includes("%") ? "" : "%"} vs ant</div>}
+                                  {prod.unidad === "METRO" ? (
+                                    <>
+                                      <div className="font-medium">{formatCurrency(prod.costoPorUnidad)} / metro</div>
+                                      {prod.variacionCostoUnidadPct && <div className="text-[10px] text-muted-foreground">{prod.variacionCostoUnidadPct}{String(prod.variacionCostoUnidadPct).includes("%") ? "" : "%"} vs ant</div>}
+                                    </>
+                                  ) : "-"}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  {prod.unidad === "KILO" ? (
+                                    <>
+                                      <div className="font-medium">{formatCurrency(prod.costoPorUnidad)} / kilo</div>
+                                      {prod.variacionCostoUnidadPct && <div className="text-[10px] text-muted-foreground">{prod.variacionCostoUnidadPct}{String(prod.variacionCostoUnidadPct).includes("%") ? "" : "%"} vs ant</div>}
+                                    </>
+                                  ) : "-"}
                                </TableCell>
                                <TableCell className="text-right font-semibold">{formatCurrency(prod.totalCosto)}</TableCell>
                              </TableRow>

@@ -123,6 +123,7 @@ async function mkEntrada(
   productoId: number,
   ubicacionId: number,
   costo: string,
+  cantidades: string[] = ["1.0"],
 ): Promise<{ entradaId: number; totalCosto: string }> {
   const result = await db.transaction(async (tx) =>
     crearEntrada(tx, {
@@ -130,7 +131,7 @@ async function mkEntrada(
       proveedorId,
       usuarioId: 1,
       uuidCliente: randomUUID(),
-      lineas: [{ productoId, costoUnitario: costo, cantidades: ["1.0"] }],
+      lineas: [{ productoId, costoUnitario: costo, cantidades }],
     }),
   );
   createdEntradaIds.push(result.id);
@@ -343,6 +344,11 @@ await test("CP-05: Estado de compra Pendiente/Parcial/Pagada calculado correctam
   assert.ok(typeof compra1!.nombreUbicacion === "string", "nombreUbicacion debe ser string");
   assert.ok(compra1!.totalRollos >= 1, `totalRollos debe ser >= 1, got ${compra1!.totalRollos}`);
   assert.ok(parseFloat(compra1!.cantidadTotal) > 0, "cantidadTotal debe ser > 0");
+  assert.equal(compra1!.cantidadMetros, "1.000");
+  assert.equal(compra1!.cantidadKilos, "0.000");
+  assert.equal(compra1!.costoPorMetro, "200.00");
+  assert.equal(compra1!.costoPorKilo, null);
+  assert.equal("costoPromedioRollo" in compra1!, false);
 
   // Pago parcial con fecha explícita
   const fechaPago = new Date("2024-06-15T10:00:00Z");
@@ -438,18 +444,21 @@ await test("CP-08: estadisticasPeriodo devuelve breakdown correcto", async () =>
   const ubicacionId = await mkUbicacion();
 
   await mkEntrada(proveedorId, productoId, ubicacionId, "100.00");
-  await mkEntrada(proveedorId, productoId, ubicacionId, "200.00");
+  await mkEntrada(proveedorId, productoId, ubicacionId, "200.00", ["3.0"]);
 
   const desde = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
   const hasta = new Date(Date.now() + 1000); // now + 1 second
 
   const stats = await estadisticasPeriodo({ proveedorId, desde, hasta });
 
-  assert.equal(stats.totalCompras, "300.00", "No debe multiplicar compras por número de rollos");
+  assert.equal(stats.totalCompras, "700.00", "Debe sumar costo unitario por cada cantidad");
   assert.equal(stats.comprasCount, 2, "Debe contar entradas, no rollos");
   assert.equal(stats.totalRollos, 2, "Debe contar rollos del periodo");
-  assert.equal(stats.ticketPromedio, "150.00", "Ticket promedio = total / entradas");
-  assert.equal(stats.costoPromedio, "150.00", "Costo promedio = total / rollos");
+  assert.equal(stats.ticketPromedio, "350.00", "Ticket promedio = total / entradas");
+  assert.equal(stats.costoPorMetro, "175.00", "Costo por metro = costo / cantidad");
+  assert.equal(stats.costoPorKilo, null);
+  assert.equal("costoPromedioRollo" in stats, false);
+  assert.equal("costoPromedio" in stats, false);
   // diasDesdeUltimaCompra puede ser 0 o número positivo (o null si no hay compras, pero aquí hay)
   assert.ok(stats.diasDesdeUltimaCompra !== undefined, "diasDesdeUltimaCompra debe estar definido");
   assert.ok(stats.porMes.length >= 1, "Debe haber al menos 1 mes");
@@ -457,10 +466,13 @@ await test("CP-08: estadisticasPeriodo devuelve breakdown correcto", async () =>
   // Check enriched product fields
   const prod = stats.porProducto[0]!;
   assert.ok(typeof prod.cantidadTotal === "string", "cantidadTotal debe ser string");
-  assert.ok(typeof prod.costoPromedio === "string", "costoPromedio debe ser string");
-  // costoPromedioAnterior y variacionCostoPct pueden ser null (no hay datos previos)
-  assert.ok("costoPromedioAnterior" in prod, "costoPromedioAnterior debe existir en el objeto");
-  assert.ok("variacionCostoPct" in prod, "variacionCostoPct debe existir en el objeto");
+  assert.equal(prod.costoPorUnidad, "175.00", "Producto pondera costo por cantidad");
+  assert.equal("costoPromedioRollo" in prod, false);
+  assert.ok("costoPorUnidadAnterior" in prod, "costoPorUnidadAnterior debe existir en el objeto");
+  assert.ok(
+    "variacionCostoUnidadPct" in prod,
+    "variacionCostoUnidadPct debe existir en el objeto",
+  );
 });
 
 // =============================================================================
