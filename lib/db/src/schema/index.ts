@@ -4,6 +4,7 @@ export * from "./entradas";
 export * from "./enums";
 export * from "./locations";
 export * from "./pagos-proveedor";
+export * from "./pos";
 export * from "./permisos";
 export * from "./productos";
 export * from "./proveedores";

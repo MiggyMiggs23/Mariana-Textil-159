@@ -9,6 +9,7 @@ export const tipoUbicacionEnum = pgEnum("tipo_ubicacion", [
 
 export const rolUsuarioEnum = pgEnum("rol_usuario", [
   "ADMIN",
+  "TERMINAL",
   "CAJA",
   "INVENTARIOS",
   "BODEGA",
@@ -67,6 +68,30 @@ export const tipoMovimientoEnum = pgEnum("tipo_movimiento", [
   "CANCELACION",
 ]);
 
+export const tipoTicketEnum = pgEnum("tipo_ticket", ["NORMAL", "METREADO"]);
+
+export const estadoTicketEnum = pgEnum("estado_ticket", [
+  "VENDIDO",
+  "CANCELADO",
+]);
+
+export const formaPagoTicketEnum = pgEnum("forma_pago_ticket", [
+  "EFECTIVO",
+  "TRANSFERENCIA",
+  "CREDITO",
+]);
+
+export const estadoSesionCajaEnum = pgEnum("estado_sesion_caja", [
+  "ABIERTA",
+  "CERRADA",
+]);
+
+export const tipoMovimientoCreditoEnum = pgEnum("tipo_movimiento_credito", [
+  "VENTA_CREDITO",
+  "ABONO",
+  "REVERSO",
+]);
+
 export const alcanceConsultaEnum = pgEnum("alcance_consulta", [
   "PROPIA",
   "TODAS",
@@ -80,3 +105,11 @@ export type TipoProveedor = (typeof tipoProveedorEnum.enumValues)[number];
 export type Moneda = (typeof monedaEnum.enumValues)[number];
 export type EstadoRollo = (typeof estadoRolloEnum.enumValues)[number];
 export type TipoMovimiento = (typeof tipoMovimientoEnum.enumValues)[number];
+export type TipoTicket = (typeof tipoTicketEnum.enumValues)[number];
+export type EstadoTicket = (typeof estadoTicketEnum.enumValues)[number];
+export type FormaPagoTicket =
+  (typeof formaPagoTicketEnum.enumValues)[number];
+export type EstadoSesionCaja =
+  (typeof estadoSesionCajaEnum.enumValues)[number];
+export type TipoMovimientoCredito =
+  (typeof tipoMovimientoCreditoEnum.enumValues)[number];
