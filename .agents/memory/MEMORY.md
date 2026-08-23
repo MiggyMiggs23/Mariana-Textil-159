@@ -1,3 +1,4 @@
 - [Verificación de captura por rollo](entry-capture-verification.md) — probar edición y eliminación reales antes de guardar; la presencia visual del botón no basta.
 - [Verificación de impresión](print-verification.md) — validar media print con estilos computados y geometría; el texto oculto que permanece en el DOM puede dar falsos positivos.
 - [Costos de compra por unidad](purchase-unit-costs.md) — nunca usar promedio por rollo; mostrar costo ponderado con unidad explícita por metro o por kilo.
+- [Ramas temporales de Neon](temporary-neon-test-branches.md) — preparar esquema y seed aislados antes de ejecutar pruebas de base de datos.

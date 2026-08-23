@@ -80,6 +80,8 @@ import type {
   PermissionFlags,
   PermissionFlagsNullable,
   PosBusquedaResult,
+  PosPrecioValidationInput,
+  PosPrecioValidationResult,
   Producto,
   ProductoDetail,
   ProductoInput,
@@ -5185,6 +5187,77 @@ export function useBuscarPos<TData = Awaited<ReturnType<typeof buscarPos>>, TErr
 
 
 
+
+export const getValidarPrecioPosUrl = () => {
+
+
+
+
+  return `/api/pos/validar-precio`
+}
+
+/**
+ * @summary Valida si el precio de un rollo puede venderse sin revelar costos
+ */
+export const validarPrecioPos = async (posPrecioValidationInput: PosPrecioValidationInput, options?: Parameters<typeof customFetch>[1]): Promise<PosPrecioValidationResult> => {
+
+  return customFetch<PosPrecioValidationResult>(getValidarPrecioPosUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(posPrecioValidationInput)
+  }
+);}
+
+
+
+
+
+export const getValidarPrecioPosMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof validarPrecioPos>>, TError,{data: BodyType<PosPrecioValidationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof validarPrecioPos>>, TError,{data: BodyType<PosPrecioValidationInput>}, TContext> => {
+
+const mutationKey = ['validarPrecioPos'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof validarPrecioPos>>, {data: BodyType<PosPrecioValidationInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  validarPrecioPos(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ValidarPrecioPosMutationResult = NonNullable<Awaited<ReturnType<typeof validarPrecioPos>>>
+    export type ValidarPrecioPosMutationBody = BodyType<PosPrecioValidationInput>
+    export type ValidarPrecioPosMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Valida si el precio de un rollo puede venderse sin revelar costos
+ */
+export const useValidarPrecioPos = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof validarPrecioPos>>, TError,{data: BodyType<PosPrecioValidationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof validarPrecioPos>>,
+        TError,
+        {data: BodyType<PosPrecioValidationInput>},
+        TContext
+      > => {
+      return useMutation(getValidarPrecioPosMutationOptions(options));
+    }
 
 export const getCrearTicketUrl = () => {
 

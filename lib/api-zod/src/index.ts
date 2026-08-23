@@ -101,6 +101,8 @@ export * from "./generated/types/permissionFlags";
 export * from "./generated/types/permissionFlagsNullable";
 export * from "./generated/types/permissionMatrix";
 export * from "./generated/types/posBusquedaResult";
+export * from "./generated/types/posPrecioValidationInput";
+export * from "./generated/types/posPrecioValidationResult";
 export * from "./generated/types/posProducto";
 export * from "./generated/types/posRolloDisponible";
 export * from "./generated/types/producto";

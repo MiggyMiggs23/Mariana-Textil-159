@@ -106,6 +106,8 @@ export * from './permissionFlags';
 export * from './permissionFlagsNullable';
 export * from './permissionMatrix';
 export * from './posBusquedaResult';
+export * from './posPrecioValidationInput';
+export * from './posPrecioValidationResult';
 export * from './posProducto';
 export * from './posRolloDisponible';
 export * from './producto';

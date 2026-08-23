@@ -28,6 +28,7 @@ export interface ServerTime {
 
 export interface Error {
   error: string;
+  code?: string;
 }
 
 export type Role = typeof Role[keyof typeof Role];
@@ -1291,6 +1292,20 @@ export interface PosBusquedaResult {
   /** Solo rollos con estado DISPONIBLE */
   rollos: PosRolloDisponible[];
   productos: PosProducto[];
+}
+
+export interface PosPrecioValidationInput {
+  rolloId: number;
+  productoId: number;
+  ubicacionId: number;
+  /** @exclusiveMinimum 0 */
+  precioUnitario: number;
+}
+
+export interface PosPrecioValidationResult {
+  valido: boolean;
+  mensaje?: string;
+  code?: string;
 }
 
 export interface TicketLineaInput {

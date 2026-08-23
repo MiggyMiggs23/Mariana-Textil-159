@@ -390,6 +390,153 @@ await test("S-03B: TERMINAL API responses omit costs, margins and profits", asyn
   }
 });
 
+await test("S-03C: POS price rejection is JSON, visible and contains no cost", async () => {
+  const loginR = await login(testTerminal.usuario, testTerminal.password);
+  assert.equal(loginR.status, 200);
+  const offScopeRolloId = await mkRolloDisponible(
+    otherTiendaId,
+    sharedProductoId,
+    testAdmin.id,
+  );
+  const [producto] = await db
+    .select({ tela: productosTable.tela, color: productosTable.color })
+    .from(productosTable)
+    .where(eq(productosTable.id, sharedProductoId))
+    .limit(1);
+  const [rollo] = await db
+    .select({ serie: rollosTable.serie, estado: rollosTable.estado })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, sharedRolloId))
+    .limit(1);
+  const expectedMessage = `El precio de ${producto!.tela} ${producto!.color} serie ${rollo!.serie} está por debajo del mínimo permitido.`;
+  const [offScopeRollo] = await db
+    .select({ serie: rollosTable.serie })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, offScopeRolloId))
+    .limit(1);
+
+  const offScopeValidation = await api(
+    "POST",
+    "/pos/validar-precio",
+    {
+      ubicacionId: otherTiendaId,
+      productoId: sharedProductoId,
+      rolloId: offScopeRolloId,
+      precioUnitario: 99,
+    },
+    loginR.cookie,
+  );
+  assert.equal(offScopeValidation.status, 404);
+  assert.deepEqual(offScopeValidation.body, {
+    error: "Rollo no encontrado o no disponible para esta operación.",
+    code: "ROLLO_NOT_FOUND",
+  });
+  assert.equal(
+    JSON.stringify(offScopeValidation.body).includes(offScopeRollo!.serie),
+    false,
+  );
+
+  const offScopeCreation = await api(
+    "POST",
+    "/tickets",
+    {
+      uuidCliente: randomUUID(),
+      ubicacionId: otherTiendaId,
+      clienteId: null,
+      tipo: "NORMAL",
+      facturado: false,
+      lineas: [
+        {
+          rolloId: offScopeRolloId,
+          productoId: sharedProductoId,
+          cantidad: 15,
+          precioUnitario: 100,
+        },
+      ],
+    },
+    loginR.cookie,
+  );
+  assert.equal(offScopeCreation.status, 404);
+  assert.deepEqual(offScopeCreation.body, {
+    error: "Rollo no encontrado.",
+    code: "ROLLO_NOT_FOUND",
+  });
+  assert.equal(
+    JSON.stringify(offScopeCreation.body).includes(offScopeRollo!.serie),
+    false,
+  );
+
+  const validation = await api(
+    "POST",
+    "/pos/validar-precio",
+    {
+      ubicacionId: seedTienda.id,
+      productoId: sharedProductoId,
+      rolloId: sharedRolloId,
+      precioUnitario: 99,
+    },
+    loginR.cookie,
+  );
+  assert.equal(validation.status, 200);
+  assert.deepEqual(validation.body, {
+    valido: false,
+    mensaje: expectedMessage,
+    code: "PRICE_BELOW_COST",
+  });
+  assertNoTerminalSensitiveKeys(validation.body, "/pos/validar-precio");
+
+  const creation = await api(
+    "POST",
+    "/tickets",
+    {
+      uuidCliente: randomUUID(),
+      ubicacionId: seedTienda.id,
+      clienteId: null,
+      tipo: "NORMAL",
+      facturado: false,
+      lineas: [
+        {
+          rolloId: sharedRolloId,
+          productoId: sharedProductoId,
+          cantidad: 15,
+          precioUnitario: 99,
+        },
+      ],
+    },
+    loginR.cookie,
+  );
+  assert.equal(creation.status, 400);
+  assert.deepEqual(creation.body, {
+    error: expectedMessage,
+    code: "PRICE_BELOW_COST",
+  });
+  assertNoTerminalSensitiveKeys(creation.body, "/tickets");
+
+  const invalid = await api(
+    "POST",
+    "/pos/validar-precio",
+    {
+      ubicacionId: seedTienda.id,
+      productoId: sharedProductoId,
+      rolloId: sharedRolloId,
+      precioUnitario: 0,
+    },
+    loginR.cookie,
+  );
+  assert.equal(invalid.status, 400);
+  assert.deepEqual(invalid.body, {
+    error: "Revisa los datos enviados e intenta de nuevo.",
+    code: "VALIDATION_ERROR",
+  });
+
+  const [unchanged] = await db
+    .select({ estado: rollosTable.estado })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, sharedRolloId))
+    .limit(1);
+  assert.equal(unchanged!.estado, "DISPONIBLE");
+});
+
 // S-04: BODEGA denied POS sale (vender) but can read inventario
 await test("S-04: BODEGA — POST /inventario/rollos/:id/vender → 403", async () => {
   const login_r = await login(testBodega.usuario, testBodega.password);

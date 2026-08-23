@@ -27,6 +27,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Search, AlertTriangle, Check, X, FileEdit, Box, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export default function Ajustes() {
   const queryClient = useQueryClient();
@@ -39,7 +40,13 @@ export default function Ajustes() {
   const [searchSerie, setSearchSerie] = useState("");
   const debouncedSearch = useDebounce(searchSerie, 500);
 
-  const { data: rollosRes, isLoading: loadingRollos } = useListRollos({
+  const {
+    data: rollosRes,
+    isLoading: loadingRollos,
+    isError: rollosFailed,
+    error: rollosError,
+    refetch: retryRollos,
+  } = useListRollos({
     serie: debouncedSearch,
     page: 1,
     pageSize: 5
@@ -61,7 +68,13 @@ export default function Ajustes() {
   const revisarAjuste = useRevisarAjuste();
   const revertirMovimiento = useRevertirMovimiento();
   
-  const { data: pendientesRes, isLoading: loadingPendientes } = useListAjustesPendientes({
+  const {
+    data: pendientesRes,
+    isLoading: loadingPendientes,
+    isError: pendientesFailed,
+    error: pendientesError,
+    refetch: retryPendientes,
+  } = useListAjustesPendientes({
     query: { 
       enabled: isAdmin,
       queryKey: getListAjustesPendientesQueryKey()
@@ -78,7 +91,12 @@ export default function Ajustes() {
   const isFormValid = selectedRollo && justificacion.length >= 10 && (isBaja || (cantidadNueva && parseFloat(cantidadNueva) >= 0));
 
   const handleSubmitAjuste = () => {
-    if (!isFormValid || !selectedRollo) return;
+    if (!isFormValid || !selectedRollo) {
+      toast.error("El ajuste está incompleto", {
+        description: "Selecciona un rollo, captura una cantidad válida y explica el motivo.",
+      });
+      return;
+    }
     
     ajustarRollo.mutate({
       id: selectedRollo.id,
@@ -96,8 +114,8 @@ export default function Ajustes() {
         queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
         queryClient.invalidateQueries({ queryKey: getListAjustesPendientesQueryKey() });
       },
-      onError: (err: any) => {
-        const msg = err?.data?.error || err?.message || "Error al aplicar el ajuste";
+      onError: (err: unknown) => {
+        const msg = getApiErrorMessage(err, "Error al aplicar el ajuste");
         toast.error("Error", { description: msg });
       }
     });
@@ -113,8 +131,8 @@ export default function Ajustes() {
           queryClient.invalidateQueries({ queryKey: getListAjustesPendientesQueryKey() });
           queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
         },
-        onError: (err: any) => {
-          const msg = err?.data?.error || err?.message || "Error al procesar la revisión";
+        onError: (err: unknown) => {
+          const msg = getApiErrorMessage(err, "Error al procesar la revisión");
           toast.error("Error", { description: msg });
         }
       });
@@ -128,8 +146,8 @@ export default function Ajustes() {
           queryClient.invalidateQueries({ queryKey: getListAjustesPendientesQueryKey() });
           queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
         },
-        onError: (err: any) => {
-          const msg = err?.data?.error || err?.message || "Error al rechazar";
+        onError: (err: unknown) => {
+          const msg = getApiErrorMessage(err, "Error al rechazar");
           toast.error("Error", { description: msg });
         }
       });
@@ -181,6 +199,13 @@ export default function Ajustes() {
                         <div className="border rounded-md divide-y bg-background">
                           {loadingRollos ? (
                             <div className="p-4 text-center text-muted-foreground">Buscando...</div>
+                          ) : rollosFailed ? (
+                            <div className="space-y-3 p-4 text-center text-destructive" role="alert">
+                              <p>{getApiErrorMessage(rollosError, "No se pudo buscar el rollo.")}</p>
+                              <Button type="button" variant="outline" size="sm" onClick={() => retryRollos()}>
+                                Intentar de nuevo
+                              </Button>
+                            </div>
                           ) : rollosRes?.items.length === 0 ? (
                             <div className="p-4 text-center text-muted-foreground">No se encontró ningún rollo con esa serie.</div>
                           ) : (
@@ -349,6 +374,17 @@ export default function Ajustes() {
                         <TableRow>
                           <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
                             Cargando pendientes...
+                          </TableCell>
+                        </TableRow>
+                      ) : pendientesFailed ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="h-32 text-center text-destructive" role="alert">
+                            <div className="space-y-3">
+                              <p>{getApiErrorMessage(pendientesError, "No se pudieron cargar los ajustes pendientes.")}</p>
+                              <Button type="button" variant="outline" size="sm" onClick={() => retryPendientes()}>
+                                Intentar de nuevo
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ) : pendientesRes?.length === 0 ? (

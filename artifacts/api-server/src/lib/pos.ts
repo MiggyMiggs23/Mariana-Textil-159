@@ -63,6 +63,18 @@ export type PagoTicketInput = {
 
 type Reader = Pick<typeof db, "select">;
 
+function productName(tela: string, color: string): string {
+  return `${tela} ${color}`.trim();
+}
+
+function priceBelowCostMessage(
+  tela: string,
+  color: string,
+  serie: string,
+): string {
+  return `El precio de ${productName(tela, color)} serie ${serie} está por debajo del mínimo permitido.`;
+}
+
 function money(value: string | number): number {
   const parsed = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(parsed)) {
@@ -240,6 +252,76 @@ export async function buildTicketDetail(
   };
 }
 
+export async function validarPrecioPos(
+  database: Reader,
+  input: {
+    ubicacionId: number;
+    productoId: number;
+    rolloId: number;
+    precioUnitario: string;
+  },
+) {
+  const precioCents = money(input.precioUnitario);
+  if (precioCents <= 0) {
+    throw new PosError(
+      "El precio unitario debe ser mayor a cero.",
+      "INVALID_PRICE",
+    );
+  }
+
+  const [rollo] = await database
+    .select({
+      id: rollosTable.id,
+      serie: rollosTable.serie,
+      productoId: rollosTable.productoId,
+      ubicacionId: rollosTable.ubicacionId,
+      estado: rollosTable.estado,
+      costoUnitario: rollosTable.costoUnitario,
+      activoProducto: productosTable.activo,
+      tela: productosTable.tela,
+      color: productosTable.color,
+    })
+    .from(rollosTable)
+    .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+    .where(
+      and(
+        eq(rollosTable.id, input.rolloId),
+        eq(rollosTable.productoId, input.productoId),
+        eq(rollosTable.ubicacionId, input.ubicacionId),
+      ),
+    )
+    .limit(1);
+
+  if (!rollo) {
+    throw new PosError(
+      "Rollo no encontrado o no disponible para esta operación.",
+      "ROLLO_NOT_FOUND",
+      404,
+    );
+  }
+  if (!rollo.activoProducto) {
+    throw new PosError(
+      `Producto ${input.productoId} inválido o inactivo.`,
+      "INVALID_PRODUCT",
+    );
+  }
+  if (rollo.estado !== "DISPONIBLE") {
+    throw new PosError(
+      `El rollo serie ${rollo.serie} no está DISPONIBLE.`,
+      "ROLLO_NOT_AVAILABLE",
+      409,
+    );
+  }
+  if (precioCents < money(rollo.costoUnitario)) {
+    return {
+      valido: false,
+      mensaje: priceBelowCostMessage(rollo.tela, rollo.color, rollo.serie),
+      code: "PRICE_BELOW_COST",
+    };
+  }
+  return { valido: true };
+}
+
 export async function crearTicket(
   tx: Tx,
   input: CrearTicketInput,
@@ -329,7 +411,12 @@ export async function crearTicket(
             productosTable,
             eq(rollosTable.productoId, productosTable.id),
           )
-          .where(inArray(rollosTable.id, rolloIds));
+          .where(
+            and(
+              inArray(rollosTable.id, rolloIds),
+              eq(rollosTable.ubicacionId, input.ubicacionId),
+            ),
+          );
   const rolloMap = new Map(rollos.map((rollo) => [rollo.id, rollo]));
 
   const productoIds = [...new Set(input.lineas.map((linea) => linea.productoId))];
@@ -392,7 +479,7 @@ export async function crearTicket(
       }
       if (input.tipo === "NORMAL" && precioCents < money(rollo.costoUnitario)) {
         throw new PosError(
-          `El precio de ${producto.tela} serie ${rollo.serie} está por debajo del mínimo permitido.`,
+          priceBelowCostMessage(producto.tela, producto.color, rollo.serie),
           "PRICE_BELOW_COST",
         );
       }

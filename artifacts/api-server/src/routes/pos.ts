@@ -25,6 +25,8 @@ import {
   ObtenerSesionCajaActualResponse,
   ObtenerTicketParams,
   ObtenerTicketResponse,
+  ValidarPrecioPosBody,
+  ValidarPrecioPosResponse,
 } from "@workspace/api-zod";
 import {
   clientesTable,
@@ -55,6 +57,7 @@ import {
   crearTicket,
   isInventoryError,
   PosError,
+  validarPrecioPos,
 } from "../lib/pos";
 
 const router: IRouter = Router();
@@ -236,6 +239,27 @@ router.get(
       const ubicacionId = scopedLocation(req, query.ubicacionId);
       const result = await buscarPos(db, query.q, ubicacionId);
       res.json(BuscarPosResponse.parse(result));
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
+router.post(
+  "/pos/validar-precio",
+  requierePermiso("pos", "crear"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const body = ValidarPrecioPosBody.parse(req.body);
+      const ubicacionId = scopedLocation(req, body.ubicacionId);
+      assertOperationalLocation(req, ubicacionId);
+      const result = await validarPrecioPos(db, {
+        ubicacionId,
+        productoId: body.productoId,
+        rolloId: body.rolloId,
+        precioUnitario: String(body.precioUnitario),
+      });
+      res.json(ValidarPrecioPosResponse.parse(result));
     } catch (error) {
       handlePosError(error, res, next);
     }

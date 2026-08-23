@@ -6,7 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Error {
-  error: string;
+export interface PosPrecioValidationResult {
+  valido: boolean;
+  mensaje?: string;
   code?: string;
 }

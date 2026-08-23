@@ -27,6 +27,7 @@ import {
   cobrarTicket,
   crearTicket,
   PosError,
+  validarPrecioPos,
 } from "./pos";
 
 const RUN = `POS${Date.now()}`;
@@ -206,6 +207,33 @@ await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", a
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId, "8", "60");
+  const [producto] = await db
+    .select({ tela: productosTable.tela, color: productosTable.color })
+    .from(productosTable)
+    .where(eq(productosTable.id, productoId))
+    .limit(1);
+  const expectedMessage = `El precio de ${producto!.tela} ${producto!.color} serie ${rollo.serie} está por debajo del mínimo permitido.`;
+  const validation = await validarPrecioPos(db, {
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    precioUnitario: "59",
+  });
+  assert.deepEqual(validation, {
+    valido: false,
+    mensaje: expectedMessage,
+    code: "PRICE_BELOW_COST",
+  });
+  assert.equal(JSON.stringify(validation).toLowerCase().includes("costo"), false);
+  assert.deepEqual(
+    await validarPrecioPos(db, {
+      ubicacionId,
+      productoId,
+      rolloId: rollo.id,
+      precioUnitario: "60",
+    }),
+    { valido: true },
+  );
   await assert.rejects(
     () =>
       sale({
@@ -218,6 +246,7 @@ await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", a
     (error: unknown) => {
       assert.ok(error instanceof PosError);
       assert.equal(error.code, "PRICE_BELOW_COST");
+      assert.equal(error.message, expectedMessage);
       assert.equal(error.message.includes("60.00"), false);
       assert.equal(error.message.toLowerCase().includes("costo"), false);
       return true;
@@ -228,6 +257,45 @@ await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", a
     .from(rollosTable)
     .where(eq(rollosTable.id, rollo.id));
   assert.equal(updated!.estado, "DISPONIBLE");
+});
+
+await test("POS-02B validación anticipada conserva alcance del rollo", async () => {
+  const ubicacionId = await makeLocation();
+  const otraUbicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId);
+
+  await assert.rejects(
+    () =>
+      validarPrecioPos(db, {
+        ubicacionId: otraUbicacionId,
+        productoId,
+        rolloId: rollo.id,
+        precioUnitario: "75",
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof PosError);
+      assert.equal(error.code, "ROLLO_NOT_FOUND");
+      assert.equal(error.message.includes(rollo.serie), false);
+      return true;
+    },
+  );
+  await assert.rejects(
+    () =>
+      sale({
+        ubicacionId: otraUbicacionId,
+        productoId,
+        rolloId: rollo.id,
+        cantidad: "10",
+        precio: "75",
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof PosError);
+      assert.equal(error.code, "ROLLO_NOT_FOUND");
+      assert.equal(error.message.includes(rollo.serie), false);
+      return true;
+    },
+  );
 });
 
 await test("POS-03 concurrencia permite vender el mismo rollo solo una vez", async () => {
@@ -257,6 +325,18 @@ await test("POS-03 concurrencia permite vender el mismo rollo solo una vez", asy
   assert.equal(
     attempts.filter((attempt) => attempt.status === "rejected").length,
     1,
+  );
+  await assert.rejects(
+    () =>
+      sale({
+        ubicacionId,
+        productoId,
+        rolloId: rollo.id,
+        cantidad: "5",
+        precio: "35",
+      }),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "ROLLO_NOT_AVAILABLE",
   );
 });
 
@@ -403,6 +483,66 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
       ),
     (error: unknown) =>
       error instanceof PosError && error.code === "ALREADY_CHARGED",
+  );
+});
+
+await test("POS-05B cobro exige sesión abierta y cliente para crédito", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId, "2", "20");
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    cantidad: "2",
+    precio: "50",
+  });
+
+  await assert.rejects(
+    () =>
+      db.transaction((tx) =>
+        cobrarTicket(
+          tx,
+          {
+            ticketId: ticket.id,
+            sesionCajaId: 0,
+            usuarioId: USER_ID,
+            pagos: [{ formaPago: "EFECTIVO", importe: "100" }],
+            ip: "127.0.0.1",
+          },
+          true,
+        ),
+      ),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "OPEN_SESSION_REQUIRED",
+  );
+
+  const session = await db.transaction((tx) =>
+    abrirSesionCaja(tx, {
+      ubicacionId,
+      usuarioId: USER_ID,
+      fondoInicial: "0",
+      ip: "127.0.0.1",
+    }),
+  );
+  createdSessionIds.push(session.id);
+  await assert.rejects(
+    () =>
+      db.transaction((tx) =>
+        cobrarTicket(
+          tx,
+          {
+            ticketId: ticket.id,
+            sesionCajaId: session.id,
+            usuarioId: USER_ID,
+            pagos: [{ formaPago: "CREDITO", importe: "100" }],
+            ip: "127.0.0.1",
+          },
+          true,
+        ),
+      ),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "CLIENT_REQUIRED",
   );
 });
 

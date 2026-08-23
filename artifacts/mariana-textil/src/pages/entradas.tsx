@@ -31,6 +31,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { toast } from "sonner";
 import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 type DraftLinea = {
   id: string;
@@ -47,15 +48,27 @@ export default function Entradas() {
   const queryClient = useQueryClient();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  const { data: productos } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
-  const { data: ubicaciones } = useListLocations({ 
+  const {
+    data: productos,
+    isError: productosFailed,
+  } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
+  const {
+    data: ubicaciones,
+    isError: ubicacionesFailed,
+  } = useListLocations({
     query: { 
       enabled: user?.rol === Role.ADMIN,
       queryKey: getListLocationsQueryKey() 
     } 
   });
-  const { data: proveedores } = useListProveedores({ query: { queryKey: getListProveedoresQueryKey() } });
-  const { data: serverTime } = useGetFechaServidor({
+  const {
+    data: proveedores,
+    isError: proveedoresFailed,
+  } = useListProveedores({ query: { queryKey: getListProveedoresQueryKey() } });
+  const {
+    data: serverTime,
+    isError: serverTimeFailed,
+  } = useGetFechaServidor({
     query: {
       queryKey: getGetFechaServidorQueryKey(),
       refetchInterval: 60_000,
@@ -251,7 +264,10 @@ export default function Entradas() {
       return;
     }
 
-    if (!selectedProduct) return;
+    if (!selectedProduct) {
+      toast.error("No se pudo identificar el producto seleccionado");
+      return;
+    }
 
     const newLineData: DraftLinea = {
       id: capDraftId,
@@ -336,7 +352,12 @@ export default function Entradas() {
   const isFormValid = ubicacionId && lineas.length > 0;
 
   const handleSubmit = () => {
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      toast.error("La entrada está incompleta", {
+        description: "Selecciona una ubicación y agrega al menos una línea.",
+      });
+      return;
+    }
 
     crearEntrada.mutate({
       data: {
@@ -369,8 +390,8 @@ export default function Entradas() {
           window.open(`${baseUrl}/entradas/${data.id}/etiquetas`, '_blank');
         }
       },
-      onError: (err: any) => {
-        const msg = err?.data?.error || err?.message || "Error al procesar la entrada";
+      onError: (err: unknown) => {
+        const msg = getApiErrorMessage(err, "Error al procesar la entrada");
         toast.error("Error", { description: msg });
       }
     });
@@ -429,6 +450,21 @@ export default function Entradas() {
           <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADA</h1>
           <p className="text-muted-foreground mt-1">Registra la mercancía que llega a una ubicación. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
         </div>
+
+        {(productosFailed ||
+          proveedoresFailed ||
+          serverTimeFailed ||
+          (user?.rol === Role.ADMIN && ubicacionesFailed)) && (
+          <div
+            className="rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
+            role="alert"
+          >
+            <p className="font-semibold">No se pudieron cargar todos los datos de la entrada.</p>
+            <p className="mt-1">
+              Recarga la página antes de continuar; los catálogos incompletos no se mostrarán como listas vacías.
+            </p>
+          </div>
+        )}
 
         <Card className="border-t-4 border-t-primary shadow-sm">
           <CardHeader className="bg-muted/10 border-b">

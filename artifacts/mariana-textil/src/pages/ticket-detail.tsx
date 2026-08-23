@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -35,7 +36,13 @@ export default function TicketDetailPage() {
     query: { queryKey: getGetCurrentUserQueryKey() }
   });
 
-  const { data: ticket, isLoading } = useObtenerTicket(ticketId, {
+  const {
+    data: ticket,
+    isLoading,
+    isError: ticketFailed,
+    error: ticketError,
+    refetch: retryTicket,
+  } = useObtenerTicket(ticketId, {
     query: {
       enabled: !isNaN(ticketId),
       queryKey: getObtenerTicketQueryKey(ticketId)
@@ -108,14 +115,32 @@ export default function TicketDetailPage() {
         setCancelOpen(false);
         queryClient.invalidateQueries({ queryKey: getObtenerTicketQueryKey(ticketId) });
       },
-      onError: (err: any) => {
-        toast({ title: "Error al cancelar", description: err.message || err.error, variant: "destructive" });
+      onError: (err: unknown) => {
+        toast({
+          title: "Error al cancelar",
+          description: getApiErrorMessage(err, "No se pudo cancelar el ticket."),
+          variant: "destructive",
+        });
       }
     });
   };
 
   if (isLoading) {
     return <div className="flex h-[calc(100dvh-8rem)] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  }
+
+  if (ticketFailed) {
+    return (
+      <div className="p-8 text-center" role="alert">
+        <h2 className="text-xl font-semibold text-destructive">No se pudo cargar el ticket</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {getApiErrorMessage(ticketError, "Intenta consultar el ticket nuevamente.")}
+        </p>
+        <Button variant="outline" className="mt-4" onClick={() => retryTicket()}>
+          Intentar de nuevo
+        </Button>
+      </div>
+    );
   }
 
   if (!ticket) {

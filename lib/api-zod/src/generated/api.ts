@@ -2047,6 +2047,27 @@ export const BuscarPosResponse = zod.object({
 
 
 /**
+ * @summary Valida si el precio de un rollo puede venderse sin revelar costos
+ */
+export const validarPrecioPosBodyPrecioUnitarioExclusiveMin = 0;
+
+
+
+export const ValidarPrecioPosBody = zod.object({
+  "rolloId": zod.number(),
+  "productoId": zod.number(),
+  "ubicacionId": zod.number(),
+  "precioUnitario": zod.number().gt(validarPrecioPosBodyPrecioUnitarioExclusiveMin)
+})
+
+export const ValidarPrecioPosResponse = zod.object({
+  "valido": zod.boolean(),
+  "mensaje": zod.string().optional(),
+  "code": zod.string().optional()
+})
+
+
+/**
  * @summary Crea un ticket normal o de venta metreada sin cobrarlo
  */
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;

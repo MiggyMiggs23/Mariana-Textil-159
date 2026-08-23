@@ -1590,6 +1590,34 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /pos/validar-precio:
+    post:
+      operationId: validarPrecioPos
+      tags: [pos]
+      summary: Valida si el precio de un rollo puede venderse sin revelar costos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PosPrecioValidationInput"
+      responses:
+        "200":
+          description: Resultado seguro de la validación del precio
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PosPrecioValidationResult"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
   /tickets:
     post:
       operationId: crearTicket
@@ -1952,6 +1980,8 @@ components:
       required: [error]
       properties:
         error:
+          type: string
+        code:
           type: string
     Role:
       type: string
@@ -3131,6 +3161,21 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PosProducto"
+    PosPrecioValidationInput:
+      type: object
+      required: [rolloId, productoId, ubicacionId, precioUnitario]
+      properties:
+        rolloId: { type: number }
+        productoId: { type: number }
+        ubicacionId: { type: number }
+        precioUnitario: { type: number, exclusiveMinimum: 0 }
+    PosPrecioValidationResult:
+      type: object
+      required: [valido]
+      properties:
+        valido: { type: boolean }
+        mensaje: { type: string }
+        code: { type: string }
     TicketLineaInput:
       type: object
       required: [rolloId, productoId, cantidad, precioUnitario]

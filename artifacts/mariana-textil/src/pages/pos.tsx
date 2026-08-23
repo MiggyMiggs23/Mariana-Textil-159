@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   useBuscarPos,
   useCrearTicket,
+  useValidarPrecioPos,
   useGetCurrentUser,
   useListLocations,
   useListarTickets,
@@ -34,6 +35,20 @@ import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { getApiErrorMessage } from "@/lib/api-error";
+
+type PriceValidation = {
+  status: "idle" | "checking" | "valid" | "invalid" | "error";
+  message?: string;
+};
+
+type CartLineKey = string;
+
+function getCartLineKey(item: any): CartLineKey {
+  return item.rollo
+    ? `rollo-${item.rollo.id}`
+    : `producto-${item.producto.id}`;
+}
 
 // Componente Cart Line para el POS
 function CartLineItem({ 
@@ -42,62 +57,166 @@ function CartLineItem({
   isMetreado,
   onChangeQuantity,
   onChangePrice,
+  locationId,
+  lineKey,
+  priceValidation,
+  onPriceValidationChange,
 }: { 
   item: any, 
   onRemove: () => void, 
   isMetreado: boolean,
   onChangeQuantity?: (qty: number) => void,
   onChangePrice: (price: number) => void,
+  locationId: number,
+  lineKey: CartLineKey,
+  priceValidation: PriceValidation,
+  onPriceValidationChange: (lineKey: CartLineKey, validation: PriceValidation) => void,
 }) {
+  const validarPrecio = useValidarPrecioPos();
+  const validationSequence = useRef(0);
+
+  useEffect(() => {
+    const sequence = ++validationSequence.current;
+
+    if (isMetreado || !item.rollo) {
+      onPriceValidationChange(lineKey, { status: "valid" });
+      return;
+    }
+
+    if (!Number.isFinite(item.precioUnitario) || item.precioUnitario <= 0) {
+      onPriceValidationChange(lineKey, {
+        status: "invalid",
+        message: "Captura un precio mayor a cero.",
+      });
+      return;
+    }
+
+    onPriceValidationChange(lineKey, { status: "checking" });
+    let active = true;
+    const timer = window.setTimeout(() => {
+      validarPrecio.mutate(
+        {
+          data: {
+            ubicacionId: locationId,
+            productoId: item.producto.id,
+            rolloId: item.rollo.id,
+            precioUnitario: item.precioUnitario,
+          },
+        },
+        {
+          onSuccess: (result) => {
+            if (!active || validationSequence.current !== sequence) return;
+            onPriceValidationChange(
+              lineKey,
+              result.valido
+                ? { status: "valid" }
+                : {
+                    status: "invalid",
+                    message:
+                      result.mensaje ??
+                      "El precio está por debajo del mínimo permitido.",
+                  },
+            );
+          },
+          onError: (error) => {
+            if (!active || validationSequence.current !== sequence) return;
+            onPriceValidationChange(lineKey, {
+              status: "error",
+              message: getApiErrorMessage(
+                error,
+                "No se pudo validar el precio. Intenta de nuevo.",
+              ),
+            });
+          },
+        },
+      );
+    }, 300);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [
+    isMetreado,
+    item.precioUnitario,
+    item.producto.id,
+    item.rollo,
+    lineKey,
+    locationId,
+    onPriceValidationChange,
+  ]);
+
+  const priceIsBlocked =
+    priceValidation.status === "invalid" ||
+    priceValidation.status === "error";
+
   return (
-    <div className="flex items-center justify-between py-3 border-b last:border-0">
-      <div className="flex-1 overflow-hidden">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm truncate">{item.producto.tela} - {item.producto.color}</span>
-          {!isMetreado && item.rollo && (
-            <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground font-mono">
-              {item.rollo.serie}
-            </span>
-          )}
-        </div>
-        <div className="text-xs text-muted-foreground mt-0.5">{item.producto.sku}</div>
-      </div>
-      
-      <div className="flex items-center gap-3">
-        <div className="w-24">
-          <Label className="text-[10px] text-muted-foreground">Precio / {item.producto.unidad}</Label>
-          <Input
-            type="number"
-            min="0.01"
-            step="0.01"
-            value={item.precioUnitario}
-            onChange={(event) => onChangePrice(Number(event.target.value) || 0)}
-            className="h-8 text-right font-mono"
-          />
-        </div>
-        {isMetreado ? (
-          <div className="w-20">
-            <Input 
-              type="number" 
-              min="0.1" 
-              step="0.1" 
-              value={item.cantidad} 
-              onChange={(e) => onChangeQuantity && onChangeQuantity(Number(e.target.value) || 0)}
-              className="h-8 text-right font-mono"
-            />
+    <div className="border-b py-3 last:border-0">
+      <div className="flex items-center justify-between">
+        <div className="flex-1 overflow-hidden">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-sm truncate">{item.producto.tela} - {item.producto.color}</span>
+            {!isMetreado && item.rollo && (
+              <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground font-mono">
+                {item.rollo.serie}
+              </span>
+            )}
           </div>
-        ) : (
-          <div className="font-mono text-sm">{item.cantidad} {item.producto.unidad}</div>
-        )}
-        
-        <div className="w-24 text-right font-bold">
-          {(item.cantidad * item.precioUnitario).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+          <div className="text-xs text-muted-foreground mt-0.5">{item.producto.sku}</div>
         </div>
         
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={onRemove}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="w-24">
+            <Label className="text-[10px] text-muted-foreground">Precio / {item.producto.unidad}</Label>
+            <div className="relative">
+              <Input
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={item.precioUnitario}
+                onChange={(event) => onChangePrice(Number(event.target.value) || 0)}
+                className={`h-8 text-right font-mono ${priceIsBlocked ? "border-destructive ring-1 ring-destructive" : ""}`}
+                aria-invalid={priceIsBlocked}
+                data-testid={`input-precio-${item.rollo?.serie ?? item.producto.id}`}
+              />
+              {priceValidation.status === "checking" && (
+                <Loader2 className="absolute left-2 top-2 h-4 w-4 animate-spin text-muted-foreground" />
+              )}
+            </div>
+          </div>
+          {isMetreado ? (
+            <div className="w-20">
+              <Input
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={item.cantidad}
+                onChange={(e) => onChangeQuantity && onChangeQuantity(Number(e.target.value) || 0)}
+                className="h-8 text-right font-mono"
+              />
+            </div>
+          ) : (
+            <div className="font-mono text-sm">{item.cantidad} {item.producto.unidad}</div>
+          )}
+
+          <div className="w-24 text-right font-bold">
+            {(item.cantidad * item.precioUnitario).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+          </div>
+
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={onRemove}>
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
+      {priceIsBlocked && priceValidation.message && (
+        <p
+          className="mt-2 text-xs font-medium text-destructive"
+          role="alert"
+          data-testid={`precio-error-${item.rollo?.serie ?? item.producto.id}`}
+        >
+          {priceValidation.message}
+        </p>
+      )}
     </div>
   );
 }
@@ -143,7 +262,12 @@ export default function PosPage() {
     ubicacionId: selectedLocationId || 0
   }), [debouncedSearch, tipoTicket, selectedLocationId]);
 
-  const { data: searchResults, isFetching } = useBuscarPos(searchParams, {
+  const {
+    data: searchResults,
+    isFetching,
+    isError: searchFailed,
+    error: searchError,
+  } = useBuscarPos(searchParams, {
     query: {
       enabled: debouncedSearch.length >= 2 && !!selectedLocationId,
       queryKey: getBuscarPosQueryKey(searchParams)
@@ -169,7 +293,8 @@ export default function PosPage() {
         rollo: item,
         producto: { id: item.productoId, sku: item.sku, tela: item.tela, color: item.color, unidad: item.unidad },
         cantidad: Number(item.cantidadActual),
-        precioUnitario: Number(item.precioSugerido)
+        precioUnitario: Number(item.precioSugerido),
+        priceValidation: { status: "idle" },
       }]);
     } else {
       // Para METREADO, añadir producto con cantidad 1 (editable luego)
@@ -181,31 +306,78 @@ export default function PosPage() {
         rollo: null,
         producto: item,
         cantidad: 1,
-        precioUnitario: Number(item.precioSugerido)
+        precioUnitario: Number(item.precioSugerido),
+        priceValidation: { status: "valid" },
       }]);
     }
     setSearch("");
   };
 
   const updateCartQuantity = (index: number, qty: number) => {
-    const newCart = [...cart];
-    newCart[index].cantidad = qty;
-    setCart(newCart);
+    setCart((current) =>
+      current.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, cantidad: qty } : item,
+      ),
+    );
   };
 
   const updateCartPrice = (index: number, price: number) => {
-    const newCart = [...cart];
-    newCart[index].precioUnitario = price;
-    setCart(newCart);
+    setCart((current) =>
+      current.map((item, itemIndex) =>
+        itemIndex === index
+          ? {
+              ...item,
+              precioUnitario: price,
+              priceValidation: { status: "idle" },
+            }
+          : item,
+      ),
+    );
   };
 
+  const updateCartPriceValidation = useCallback(
+    (lineKey: CartLineKey, validation: PriceValidation) => {
+      setCart((current) =>
+        current.map((item) =>
+          getCartLineKey(item) === lineKey &&
+          (item.priceValidation?.status !== validation.status ||
+            item.priceValidation?.message !== validation.message)
+            ? { ...item, priceValidation: validation }
+            : item,
+        ),
+      );
+    },
+    [],
+  );
+
   const removeFromCart = (index: number) => {
-    const newCart = [...cart];
-    newCart.splice(index, 1);
-    setCart(newCart);
+    setCart((current) => current.filter((_, itemIndex) => itemIndex !== index));
   };
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.cantidad * item.precioUnitario), 0);
+  const hasInvalidValues = cart.some(
+    (item) =>
+      !Number.isFinite(item.cantidad) ||
+      item.cantidad <= 0 ||
+      !Number.isFinite(item.precioUnitario) ||
+      item.precioUnitario <= 0,
+  );
+  const validatingPrices = cart.some(
+    (item) =>
+      item.priceValidation?.status === "idle" ||
+      item.priceValidation?.status === "checking",
+  );
+  const blockedPrice = cart.find(
+    (item) =>
+      item.priceValidation?.status === "invalid" ||
+      item.priceValidation?.status === "error",
+  );
+  const confirmDisabled =
+    cart.length === 0 ||
+    crearTicket.isPending ||
+    hasInvalidValues ||
+    validatingPrices ||
+    Boolean(blockedPrice);
 
   const handleCreateTicket = () => {
     if (!selectedLocationId) {
@@ -213,10 +385,24 @@ export default function PosPage() {
       return;
     }
     
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+      toast({ title: "Agrega al menos un producto al ticket", variant: "destructive" });
+      return;
+    }
     
-    if (cart.some(item => isNaN(item.cantidad) || item.cantidad <= 0 || isNaN(item.precioUnitario) || item.precioUnitario <= 0)) {
+    if (hasInvalidValues) {
       toast({ title: "Revisa cantidades y precios", description: "Todos deben ser mayores a 0.", variant: "destructive" });
+      return;
+    }
+
+    if (validatingPrices || blockedPrice) {
+      toast({
+        title: "Revisa los precios del ticket",
+        description:
+          blockedPrice?.priceValidation?.message ??
+          "Espera a que termine la validación de precios.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -245,12 +431,29 @@ export default function PosPage() {
         setFacturar(false);
         setLocation(`/tickets/${ticket.id}?print=3`);
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
+        const message = getApiErrorMessage(err, "No se pudo crear el ticket.");
         toast({ 
           title: "Error al crear ticket", 
-          description: err?.message || err?.error || "Error desconocido", 
+          description: message,
           variant: "destructive" 
         });
+        const data =
+          err && typeof err === "object"
+            ? (err as { data?: { code?: string } }).data
+            : undefined;
+        if (data?.code === "PRICE_BELOW_COST") {
+          setCart((current) =>
+            current.map((item) =>
+              item.rollo && message.includes(String(item.rollo.serie))
+                ? {
+                    ...item,
+                    priceValidation: { status: "invalid", message },
+                  }
+                : item,
+            ),
+          );
+        }
       }
     });
   };
@@ -337,6 +540,10 @@ export default function PosPage() {
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 Escanea o escribe para buscar...
               </div>
+            ) : searchFailed ? (
+              <div className="h-full flex items-center justify-center text-center text-destructive" role="alert">
+                {getApiErrorMessage(searchError, "No se pudo realizar la búsqueda. Intenta de nuevo.")}
+              </div>
             ) : !searchResults || (searchResults.rollos.length === 0 && searchResults.productos.length === 0) ? (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 No se encontraron resultados para "{debouncedSearch}"
@@ -413,9 +620,13 @@ export default function PosPage() {
             ) : (
               <div className="space-y-1">
                 {cart.map((item, idx) => (
-                  <CartLineItem 
-                    key={idx} 
+                  <CartLineItem
+                    key={getCartLineKey(item)}
                     item={item} 
+                    lineKey={getCartLineKey(item)}
+                    locationId={selectedLocationId}
+                    priceValidation={item.priceValidation ?? { status: "idle" }}
+                    onPriceValidationChange={updateCartPriceValidation}
                     onRemove={() => removeFromCart(idx)} 
                     isMetreado={tipoTicket === TipoTicket.METREADO}
                     onChangeQuantity={(qty) => updateCartQuantity(idx, qty)}
@@ -452,15 +663,28 @@ export default function PosPage() {
                 className="h-9"
               />
             </div>
+
+            {(validatingPrices || blockedPrice) && (
+              <p
+                className={`text-sm ${blockedPrice ? "text-destructive" : "text-muted-foreground"}`}
+                role={blockedPrice ? "alert" : "status"}
+                data-testid="confirmar-venta-explicacion"
+              >
+                {blockedPrice
+                  ? "Corrige los precios marcados antes de confirmar la venta."
+                  : "Validando precios antes de confirmar…"}
+              </p>
+            )}
             
             <Button 
               size="lg" 
               className="w-full h-14 text-lg font-bold mt-2" 
-              disabled={cart.length === 0 || crearTicket.isPending}
+              disabled={confirmDisabled}
               onClick={handleCreateTicket}
+              data-testid="button-confirmar-venta"
             >
               {crearTicket.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <CheckCircle className="mr-2 h-5 w-5" />}
-              Confirmar Venta
+              {crearTicket.isPending ? "Enviando venta…" : "Confirmar Venta"}
             </Button>
           </CardFooter>
         </Card>

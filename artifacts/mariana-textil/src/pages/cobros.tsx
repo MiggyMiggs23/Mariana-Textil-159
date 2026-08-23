@@ -29,6 +29,7 @@ import { Loader2, Banknote, CreditCard, Wallet, Search, RefreshCw, AlertCircle, 
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSuccess: () => void }) {
   const [fondo, setFondo] = useState("");
@@ -47,8 +48,12 @@ function AbrirCajaForm({ ubicacionId, onSuccess }: { ubicacionId: number, onSucc
         toast({ title: "Caja abierta correctamente" });
         onSuccess();
       },
-      onError: (err: any) => {
-        toast({ title: "Error", description: err.message || err.error, variant: "destructive" });
+      onError: (err: unknown) => {
+        toast({
+          title: "Error",
+          description: getApiErrorMessage(err, "No se pudo abrir la caja."),
+          variant: "destructive",
+        });
       }
     });
   };
@@ -151,8 +156,12 @@ function CobroPanel({ ticket, onCobrado }: { ticket: TicketResumen, onCobrado: (
         toast({ title: "Ticket cobrado exitosamente" });
         onCobrado();
       },
-      onError: (err: any) => {
-        toast({ title: "Error al cobrar", description: err.message || err.error, variant: "destructive" });
+      onError: (err: unknown) => {
+        toast({
+          title: "Error al cobrar",
+          description: getApiErrorMessage(err, "No se pudo registrar el cobro."),
+          variant: "destructive",
+        });
       }
     });
   };
@@ -329,7 +338,13 @@ export default function CobrosPage() {
   const [efectivoContado, setEfectivoContado] = useState("");
   const { toast } = useToast();
 
-  const { data: sesionData, isLoading: loadingSesion } = useObtenerSesionCajaActual({
+  const {
+    data: sesionData,
+    isLoading: loadingSesion,
+    isError: sesionFailed,
+    error: sesionError,
+    refetch: retrySesion,
+  } = useObtenerSesionCajaActual({
     ubicacionId: selectedLocationId || 0
   }, {
     query: {
@@ -338,7 +353,13 @@ export default function CobrosPage() {
     }
   });
 
-  const { data: ticketsData, isFetching: fetchingTickets } = useListarTickets({
+  const {
+    data: ticketsData,
+    isFetching: fetchingTickets,
+    isError: ticketsFailed,
+    error: ticketsError,
+    refetch: retryTickets,
+  } = useListarTickets({
     ubicacionId: selectedLocationId || 0,
     cobrado: false,
     estado: EstadoTicket.VENDIDO
@@ -357,7 +378,12 @@ export default function CobrosPage() {
   const tickets = ticketsData || [];
   const selectedTicket = tickets.find(t => t.id === selectedTicketId);
   
-  const { data: corteData } = useObtenerCorteCaja(sesionData?.sesion?.id || 0, {
+  const {
+    data: corteData,
+    isError: corteFailed,
+    error: corteError,
+    refetch: retryCorte,
+  } = useObtenerCorteCaja(sesionData?.sesion?.id || 0, {
     query: {
       enabled: cierreOpen && !!selectedLocationId && !!sesionData?.sesion,
       queryKey: getObtenerCorteCajaQueryKey(sesionData?.sesion?.id || 0)
@@ -373,7 +399,13 @@ export default function CobrosPage() {
   };
 
   const handleCerrarCaja = () => {
-    if (!sesionData?.sesion) return;
+    if (!sesionData?.sesion) {
+      toast({
+        title: "No hay una sesión de caja abierta",
+        variant: "destructive",
+      });
+      return;
+    }
     const contado = Number(efectivoContado);
     if (isNaN(contado) || contado < 0) {
       toast({ title: "Efectivo contado inválido", variant: "destructive" });
@@ -386,8 +418,12 @@ export default function CobrosPage() {
         setCierreOpen(false);
         queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: selectedLocationId || 0 }) });
       },
-      onError: (err: any) => {
-        toast({ title: "Error al cerrar", description: err.message || err.error, variant: "destructive" });
+      onError: (err: unknown) => {
+        toast({
+          title: "Error al cerrar",
+          description: getApiErrorMessage(err, "No se pudo cerrar la caja."),
+          variant: "destructive",
+        });
       }
     });
   };
@@ -406,6 +442,29 @@ export default function CobrosPage() {
 
   if (loadingSesion) {
     return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  }
+
+  if (sesionFailed) {
+    return (
+      <div className="flex h-[calc(100dvh-8rem)] items-center justify-center">
+        <Card className="w-full max-w-md border-destructive/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertCircle className="h-5 w-5" />
+              No se pudo consultar la caja
+            </CardTitle>
+            <CardDescription role="alert">
+              {getApiErrorMessage(sesionError, "No se pudo conocer el estado de la sesión de caja.")}
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button className="w-full" variant="outline" onClick={() => retrySesion()}>
+              Intentar de nuevo
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
   }
 
   if (!sesionData || !sesionData.sesion) {
@@ -444,7 +503,15 @@ export default function CobrosPage() {
             </Button>
           </CardHeader>
           <div className="flex-1 overflow-y-auto p-3 custom-scrollbar bg-secondary/10">
-            {tickets.length === 0 ? (
+            {ticketsFailed ? (
+              <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center text-destructive" role="alert">
+                <AlertCircle className="h-10 w-10" />
+                <p>{getApiErrorMessage(ticketsError, "No se pudieron cargar los tickets por cobrar.")}</p>
+                <Button variant="outline" size="sm" onClick={() => retryTickets()}>
+                  Intentar de nuevo
+                </Button>
+              </div>
+            ) : tickets.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-60">
                 <CheckCircle className="h-12 w-12 mb-3 text-emerald-500" />
                 <p>No hay tickets pendientes</p>
@@ -518,7 +585,14 @@ export default function CobrosPage() {
           </DialogHeader>
           
           <div className="py-4 space-y-6">
-            {!corteData ? (
+            {corteFailed ? (
+              <div className="space-y-3 rounded-md border border-destructive/30 bg-destructive/10 p-4 text-center text-destructive" role="alert">
+                <p>{getApiErrorMessage(corteError, "No se pudo cargar el corte de caja.")}</p>
+                <Button variant="outline" size="sm" onClick={() => retryCorte()}>
+                  Intentar de nuevo
+                </Button>
+              </div>
+            ) : !corteData ? (
               <div className="flex justify-center p-4"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
             ) : (
               <>
