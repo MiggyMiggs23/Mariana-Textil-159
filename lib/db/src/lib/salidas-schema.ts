@@ -18,13 +18,14 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         );
       EXCEPTION WHEN duplicate_object THEN NULL;
       END $$;
+      ALTER TYPE estado_salida ADD VALUE IF NOT EXISTS 'REGISTRADA';
 
       CREATE TABLE IF NOT EXISTS salidas (
         id serial PRIMARY KEY,
         folio integer NOT NULL UNIQUE,
         origen_id integer NOT NULL REFERENCES ubicaciones(id),
         destino_id integer NOT NULL REFERENCES ubicaciones(id),
-        estado estado_salida NOT NULL DEFAULT 'SOLICITADA',
+        estado estado_salida NOT NULL DEFAULT 'REGISTRADA',
         usuario_solicita_id integer REFERENCES usuarios(id),
         usuario_acepta_id integer REFERENCES usuarios(id),
         usuario_prepara_id integer REFERENCES usuarios(id),
@@ -51,7 +52,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
 
       ALTER TABLE salidas
         ADD COLUMN IF NOT EXISTS usuario_cancela_id integer REFERENCES usuarios(id),
-        ADD COLUMN IF NOT EXISTS cancelada_at timestamptz;
+        ADD COLUMN IF NOT EXISTS cancelada_at timestamptz,
+        ADD COLUMN IF NOT EXISTS autorizado_por_id integer REFERENCES usuarios(id);
 
       CREATE TABLE IF NOT EXISTS salida_lineas (
         id serial PRIMARY KEY,
@@ -84,6 +86,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       CREATE INDEX IF NOT EXISTS salidas_destino_estado_idx ON salidas (destino_id, estado);
       CREATE INDEX IF NOT EXISTS salidas_estado_idx ON salidas (estado);
       CREATE INDEX IF NOT EXISTS salidas_folio_idx ON salidas (folio);
+      CREATE INDEX IF NOT EXISTS salidas_created_at_idx ON salidas (created_at);
+      CREATE INDEX IF NOT EXISTS salida_rollos_rollo_salida_idx ON salida_rollos (rollo_id, salida_id);
       CREATE INDEX IF NOT EXISTS salida_lineas_salida_idx ON salida_lineas (salida_id);
       CREATE INDEX IF NOT EXISTS salida_lineas_producto_idx ON salida_lineas (producto_id);
       CREATE INDEX IF NOT EXISTS salida_rollos_salida_idx ON salida_rollos (salida_id);
@@ -110,14 +114,13 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             puede_autorizar = EXCLUDED.puede_autorizar,
             updated_at = EXCLUDED.updated_at,
             updated_por = EXCLUDED.updated_por;
-          DELETE FROM permisos_rol WHERE modulo = 'transferencias';
 
           INSERT INTO permisos_rol (rol, modulo, puede_ver, puede_crear, puede_editar, puede_autorizar)
           VALUES
             ('TERMINAL', 'salidas', true, false, false, false),
-            ('CAJA', 'salidas', true, false, false, false),
-            ('INVENTARIOS', 'salidas', true, true, true, false),
-            ('BODEGA', 'salidas', true, false, true, false)
+            ('CAJA', 'salidas', false, false, false, false),
+            ('INVENTARIOS', 'salidas', true, true, false, false),
+            ('BODEGA', 'salidas', true, true, false, false)
           ON CONFLICT (rol, modulo) DO UPDATE SET
             puede_ver = EXCLUDED.puede_ver,
             puede_crear = EXCLUDED.puede_crear,
@@ -138,7 +141,6 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             puede_autorizar = EXCLUDED.puede_autorizar,
             updated_at = EXCLUDED.updated_at,
             updated_por = EXCLUDED.updated_por;
-          DELETE FROM permisos_usuario WHERE modulo = 'transferencias';
         END IF;
       END $$;
     `);

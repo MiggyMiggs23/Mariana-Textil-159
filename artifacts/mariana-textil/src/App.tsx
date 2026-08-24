@@ -24,6 +24,7 @@ import Entradas from '@/pages/entradas';
 import EntradaDocumento from '@/pages/entrada-documento';
 import EntradaEtiquetas from '@/pages/entrada-etiquetas';
 import Salidas from '@/pages/salidas';
+import SalidaNueva from '@/pages/salida-nueva';
 import SalidaDetail from '@/pages/salida-detail';
 import SalidaDocumento from '@/pages/salida-documento';
 import Movimientos from '@/pages/movimientos';
@@ -147,7 +148,8 @@ function Router() {
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
         
         <Route path="/salidas" component={() => <ProtectedRoute component={Salidas} allowedModule={Modules.SALIDAS} />} />
-        <Route path="/salidas/:id/documento/:tipo" component={() => <ProtectedRoute component={SalidaDocumento} allowedModule={Modules.SALIDAS} />} />
+        <Route path="/salidas/nueva" component={() => <ProtectedRoute component={SalidaNueva} allowedModule={Modules.SALIDAS} />} />
+        <Route path="/salidas/:id/documento/salida" component={() => <ProtectedRoute component={SalidaDocumento} allowedModule={Modules.SALIDAS} />} />
         <Route path="/salidas/:id" component={() => <ProtectedRoute component={SalidaDetail} allowedModule={Modules.SALIDAS} />} />
 
         <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedModule={Modules.MOVIMIENTOS} />} />

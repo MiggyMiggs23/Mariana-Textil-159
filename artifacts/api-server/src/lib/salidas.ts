@@ -15,6 +15,7 @@ import {
 } from "drizzle-orm";
 import {
   db,
+  auditoriaTable,
   productosTable,
   rollosTable,
   salidaFolioTable,
@@ -30,6 +31,7 @@ import {
   InventarioError,
   moverRollo,
   recibirTransferencia,
+  transferirRolloInmediato,
   type Tx,
 } from "./inventario";
 
@@ -50,13 +52,11 @@ export type CrearSalidaInput = {
   destinoId: number;
   usuarioSolicitaId: number;
   uuidCliente: string;
-  notaSolicitud?: string | null;
-  lineas: Array<{
-    productoId: number;
-    cantidadSolicitada: string;
-    rollosSolicitados?: number | null;
-    nota?: string | null;
-  }>;
+  transportista?: string | null;
+  observaciones?: string | null;
+  rolloIds?: number[];
+  /** Legacy request shape retained only for source compatibility; no new flow uses it. */
+  lineas?: Array<{ productoId: number; cantidadSolicitada: string; rollosSolicitados?: number | null; nota?: string | null }>;
 };
 
 export type PrepararSalidaInput = {
@@ -210,9 +210,16 @@ export async function buildSalidaDetail(
         notaDiferencia: salidaRollosTable.notaDiferencia,
         serie: rollosTable.serie,
         estado: rollosTable.estado,
+        cantidadActual: rollosTable.cantidadActual,
+        productoId: productosTable.id,
+        sku: productosTable.sku,
+        tela: productosTable.tela,
+        color: productosTable.color,
+        unidad: productosTable.unidad,
       })
       .from(salidaRollosTable)
       .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+      .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
       .where(eq(salidaRollosTable.salidaId, salida.id))
       .orderBy(salidaRollosTable.id),
   ]);
@@ -234,6 +241,15 @@ export async function buildSalidaDetail(
     if (rollo.recibido) current.received += 1;
     rollsPerLine.set(rollo.lineaId, current);
   }
+  const totalRollos = rollos.length;
+  const totalMetros = rollos
+    .filter((rollo) => rollo.unidad === "METRO")
+    .reduce((sum, rollo) => sum + Number(rollo.cantidadEnviada), 0)
+    .toFixed(3);
+  const totalKilos = rollos
+    .filter((rollo) => rollo.unidad === "KILO")
+    .reduce((sum, rollo) => sum + Number(rollo.cantidadEnviada), 0)
+    .toFixed(3);
 
   return {
     id: salida.id,
@@ -284,6 +300,12 @@ export async function buildSalidaDetail(
       iso(salida.solicitadaAt) ??
       salida.createdAt.toISOString(),
     totalProductos: lineas.length,
+    totalRollos,
+    totalMetros,
+    totalKilos,
+    usuarioId: salida.usuarioSolicitaId ?? null,
+    nombreUsuario: users.get(salida.usuarioSolicitaId ?? 0) ?? null,
+    observaciones: salida.notaSolicitud ?? null,
     totalCantidadSolicitada: total("cantidadSolicitada"),
     totalCantidadEnviada: total("cantidadEnviada"),
     totalCantidadRecibida: total("cantidadRecibida"),
@@ -325,6 +347,7 @@ async function requireSalidaDetail(database: ReadDb, salidaId: number) {
 }
 
 export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
+  const rolloIds = input.rolloIds ?? [];
   // Serialize retries for the same client UUID before the read/insert pair.
   // This makes concurrent duplicates return the first document instead of a
   // unique-constraint error.
@@ -341,36 +364,30 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   if (input.origenId === input.destinoId) {
     throw new InventarioError("El origen y el destino deben ser diferentes.", "SAME_LOCATION");
   }
-  if (!input.lineas.length) {
-    throw new InventarioError("La salida debe incluir al menos un producto.", "EMPTY_SALIDA");
-  }
-  const productIds = input.lineas.map((linea) => linea.productoId);
-  if (new Set(productIds).size !== productIds.length) {
-    throw new InventarioError("No se permiten productos duplicados.", "DUPLICATE_PRODUCT");
-  }
-  for (const linea of input.lineas) {
-    if (!Number.isFinite(Number(linea.cantidadSolicitada)) || Number(linea.cantidadSolicitada) <= 0) {
-      throw new InventarioError("La cantidad solicitada debe ser mayor a cero.", "INVALID_QUANTITY");
-    }
-  }
+  if (!rolloIds.length) throw new InventarioError("La salida debe incluir al menos un rollo.", "EMPTY_SALIDA");
+  if (new Set(rolloIds).size !== rolloIds.length) throw new InventarioError("Un rollo no puede repetirse.", "DUPLICATE_ROLL");
 
-  const [locations, products] = await Promise.all([
+  const [locations, rollos] = await Promise.all([
     tx
       .select()
       .from(ubicacionesTable)
       .where(inArray(ubicacionesTable.id, [input.origenId, input.destinoId])),
-    tx
-      .select({ id: productosTable.id, activo: productosTable.activo })
-      .from(productosTable)
-      .where(inArray(productosTable.id, productIds)),
+    tx.select().from(rollosTable).where(inArray(rollosTable.id, rolloIds)).for("update"),
   ]);
   if (locations.length !== 2 || locations.some((location) => !location.activa || ["TRANSITO", "EXTERNO"].includes(location.tipo))) {
     throw new InventarioError("El origen o destino no es una ubicación operativa activa.", "INVALID_LOCATION");
   }
-  if (products.length !== productIds.length || products.some((product) => !product.activo)) {
-    throw new InventarioError("Todos los productos deben existir y estar activos.", "INVALID_PRODUCT");
+  if (rollos.length !== rolloIds.length) throw new InventarioError("Uno de los rollos no existe.", "ROLLO_NOT_FOUND");
+  for (const rollo of rollos) {
+    if (rollo.ubicacionId !== input.origenId) {
+      throw new InventarioError(`El rollo ${rollo.serie} está en otra ubicación.`, "LOCATION_MISMATCH");
+    }
+    if (rollo.estado !== "DISPONIBLE") {
+      throw new InventarioError(`El rollo ${rollo.serie} no está DISPONIBLE.`, "ROLLO_UNAVAILABLE");
+    }
   }
 
+  // Folio allocation is intentionally after every validation and row lock.
   const folio = await reserveSalidaFolio(tx);
   const [salida] = await tx
     .insert(salidasTable)
@@ -379,20 +396,40 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
       origenId: input.origenId,
       destinoId: input.destinoId,
       usuarioSolicitaId: input.usuarioSolicitaId,
-      notaSolicitud: input.notaSolicitud?.trim() || null,
+      estado: "REGISTRADA",
+      notaSolicitud: input.observaciones?.trim() || null,
+      transportista: input.transportista?.trim() || null,
       uuidCliente: input.uuidCliente,
       solicitadaAt: new Date(),
     })
     .returning({ id: salidasTable.id });
-  await tx.insert(salidaLineasTable).values(
-    input.lineas.map((linea) => ({
-      salidaId: salida!.id,
-      productoId: linea.productoId,
-      cantidadSolicitada: Number(linea.cantidadSolicitada).toFixed(3),
-      rollosSolicitados: linea.rollosSolicitados ?? null,
-      nota: linea.nota?.trim() || null,
-    })),
-  );
+  const groups = new Map<number, typeof rollos>();
+  for (const rollo of rollos) groups.set(rollo.productoId, [...(groups.get(rollo.productoId) ?? []), rollo]);
+  const lineas = await tx.insert(salidaLineasTable).values([...groups.entries()].map(([productoId, rs]) => ({
+    salidaId: salida!.id, productoId,
+    cantidadSolicitada: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
+    cantidadEnviada: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
+    cantidadRecibida: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
+    rollosSolicitados: rs.length,
+  }))).returning();
+  const lineByProduct = new Map(lineas.map((linea) => [linea.productoId, linea]));
+  await tx.insert(salidaRollosTable).values(rollos.map((rollo) => ({
+    salidaId: salida!.id, lineaId: lineByProduct.get(rollo.productoId)!.id, rolloId: rollo.id,
+    cantidadEnviada: rollo.cantidadActual, cantidadRecibida: rollo.cantidadActual, recibido: true,
+  })));
+  for (const rollo of rollos) {
+    await transferirRolloInmediato(tx, {
+      rolloId: rollo.id, ubicacionOrigenId: input.origenId, ubicacionDestinoId: input.destinoId,
+      usuarioId: input.usuarioSolicitaId, documentoTipo: "SALIDA", documentoId: String(salida!.id),
+      justificacion: `Salida ${folio} a ubicación ${input.destinoId}.`,
+      uuidCliente: `${input.uuidCliente}:${rollo.id}`,
+    });
+  }
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioSolicitaId, accion: "CREAR", entidad: "salidas", entidadId: String(salida!.id),
+    datosDespues: { folio, origenId: input.origenId, destinoId: input.destinoId, rolloIds },
+    ip: "desconocida",
+  });
   return requireSalidaDetail(tx, salida!.id);
 }
 
@@ -672,9 +709,24 @@ export async function cancelarSalida(
   motivo: string,
 ) {
   const salida = await getSalidaForUpdate(tx, salidaId);
-  requireState(salida, CANCELLABLE_STATES, "cancelar");
+  requireState(salida, ["REGISTRADA"], "cancelar");
   if (motivo.trim().length < 10) {
     throw new InventarioError("El motivo de cancelación debe tener al menos 10 caracteres.", "REASON_REQUIRED");
+  }
+  const selected = await tx.select().from(salidaRollosTable)
+    .where(eq(salidaRollosTable.salidaId, salida.id)).for("update");
+  for (const item of selected) {
+    const [rollo] = await tx.select().from(rollosTable).where(eq(rollosTable.id, item.rolloId)).for("update").limit(1);
+    if (!rollo || rollo.estado !== "DISPONIBLE" || rollo.ubicacionId !== salida.destinoId ||
+      Number(rollo.cantidadActual) !== Number(item.cantidadEnviada)) {
+      throw new InventarioError(`No se puede cancelar: el rollo ${rollo?.serie ?? item.rolloId} ya cambió.`, "CANCEL_ROLLO_CHANGED");
+    }
+    await transferirRolloInmediato(tx, {
+      rolloId: rollo.id, ubicacionOrigenId: salida.destinoId, ubicacionDestinoId: salida.origenId,
+      usuarioId, documentoTipo: "SALIDA", documentoId: String(salida.id),
+      justificacion: `Cancelación de salida ${salida.folio}: ${motivo.trim()}`,
+      uuidCliente: `cancelacion:${salida.id}:${rollo.id}`,
+    });
   }
   await tx
     .update(salidasTable)
@@ -685,6 +737,10 @@ export async function cancelarSalida(
       motivoCancelacion: motivo.trim(),
     })
     .where(eq(salidasTable.id, salida.id));
+  await tx.insert(auditoriaTable).values({
+    usuarioId, accion: "CANCELAR", entidad: "salidas", entidadId: String(salida.id),
+    datosDespues: { motivo: motivo.trim() }, ip: "desconocida",
+  });
   return requireSalidaDetail(tx, salida.id);
 }
 
@@ -694,6 +750,8 @@ export type ListSalidasInput = {
   origenId?: number;
   destinoId?: number;
   productoId?: number;
+  usuarioId?: number;
+  search?: string;
   fechaDesde?: Date;
   fechaHasta?: Date;
   page: number;
@@ -715,6 +773,16 @@ export async function listarSalidas(input: ListSalidasInput) {
   if (input.productoId) {
     conditions.push(
       sql`EXISTS (SELECT 1 FROM salida_lineas sl WHERE sl.salida_id = ${salidasTable.id} AND sl.producto_id = ${input.productoId})`,
+    );
+  }
+  if (input.usuarioId) conditions.push(eq(salidasTable.usuarioSolicitaId, input.usuarioId));
+  if (input.search?.trim()) {
+    const search = input.search.trim();
+    const folio = Number(search);
+    conditions.push(
+      Number.isInteger(folio)
+        ? or(eq(salidasTable.folio, folio), sql`EXISTS (SELECT 1 FROM salida_rollos sr JOIN rollos r ON r.id = sr.rollo_id WHERE sr.salida_id = ${salidasTable.id} AND r.serie ILIKE ${`%${search}%`})`)
+        : sql`EXISTS (SELECT 1 FROM salida_rollos sr JOIN rollos r ON r.id = sr.rollo_id WHERE sr.salida_id = ${salidasTable.id} AND r.serie ILIKE ${`%${search}%`})`,
     );
   }
   const where = conditions.length ? and(...conditions) : undefined;

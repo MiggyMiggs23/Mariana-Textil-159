@@ -22,6 +22,17 @@ export interface SalidaResumen {
   totalCantidadSolicitada: string;
   totalCantidadEnviada: string;
   totalCantidadRecibida: string;
+  totalRollos?: number;
+  totalMetros?: string;
+  totalKilos?: string;
+  /** @nullable */
+  usuarioId?: number | null;
+  /** @nullable */
+  nombreUsuario?: string | null;
+  /** @nullable */
+  transportista?: string | null;
+  /** @nullable */
+  observaciones?: string | null;
   diferenciasPendientes: boolean;
   createdAt: Date;
   updatedAt: Date;

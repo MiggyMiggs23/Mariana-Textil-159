@@ -44,7 +44,7 @@ import type {
   EntradaDetail,
   EntradaInput,
   EntradaListResult,
-  EnviarSalidaInput,
+  EscanearRolloSalidaParams,
   EstadisticasProveedorParams,
   EstadoCuentaProveedorParams,
   ExistenciaRow,
@@ -81,7 +81,6 @@ import type {
   ObtenerSesionCajaActualParams,
   PagoProveedorInput,
   PagoProveedorRow,
-  PendientesCount,
   PermisosPreview,
   PermisosRolRow,
   PermisosUsuarioResult,
@@ -91,7 +90,6 @@ import type {
   PosBusquedaResult,
   PosPrecioValidationInput,
   PosPrecioValidationResult,
-  PrepararSalidaInput,
   Producto,
   ProductoDetail,
   ProductoInput,
@@ -107,7 +105,6 @@ import type {
   ProveedoresResumen,
   RateLimitedResponse,
   RecalcularInput,
-  RecibirSalidaInput,
   RecibirTransferenciaInput,
   RetiredTransferResponse,
   RevertirMovimientoInput,
@@ -119,6 +116,7 @@ import type {
   SalidaInput,
   SalidaListResult,
   SalidaMostradorInput,
+  SalidaRolloEscaneado,
   ServerTime,
   SesionCaja,
   SesionCajaActual,
@@ -6548,20 +6546,20 @@ export const useCrearSalida = <TError = ErrorType<ValidationErrorResponse | Unau
       return useMutation(getCrearSalidaMutationOptions(options));
     }
 
-export const getGetSalidasPendientesCountUrl = () => {
+export const getExportarSalidasUrl = () => {
 
 
 
 
-  return `/api/salidas/pendientes-count`
+  return `/api/salidas/exportar`
 }
 
 /**
- * @summary Obtiene el total de salidas pendientes
+ * @summary Exporta el historial de salidas
  */
-export const getSalidasPendientesCount = async ( options?: Parameters<typeof customFetch>[1]): Promise<PendientesCount> => {
+export const exportarSalidas = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
-  return customFetch<PendientesCount>(getGetSalidasPendientesCountUrl(),
+  return customFetch<Blob>(getExportarSalidasUrl(),
   {
     ...options,
     method: 'GET'
@@ -6574,45 +6572,134 @@ export const getSalidasPendientesCount = async ( options?: Parameters<typeof cus
 
 
 
-export const getGetSalidasPendientesCountQueryKey = () => {
+export const getExportarSalidasQueryKey = () => {
     return [
-    `/api/salidas/pendientes-count`
+    `/api/salidas/exportar`
     ] as const;
     }
 
 
-export const getGetSalidasPendientesCountQueryOptions = <TData = Awaited<ReturnType<typeof getSalidasPendientesCount>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidasPendientesCount>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getExportarSalidasQueryOptions = <TData = Awaited<ReturnType<typeof exportarSalidas>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSalidasPendientesCountQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getExportarSalidasQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSalidasPendientesCount>>> = ({ signal }) => getSalidasPendientesCount({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportarSalidas>>> = ({ signal }) => exportarSalidas({ signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSalidasPendientesCount>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData> & { queryKey: QueryKey }
 }
 
-export type GetSalidasPendientesCountQueryResult = NonNullable<Awaited<ReturnType<typeof getSalidasPendientesCount>>>
-export type GetSalidasPendientesCountQueryError = ErrorType<UnauthorizedResponse>
+export type ExportarSalidasQueryResult = NonNullable<Awaited<ReturnType<typeof exportarSalidas>>>
+export type ExportarSalidasQueryError = ErrorType<UnauthorizedResponse>
 
 
 /**
- * @summary Obtiene el total de salidas pendientes
+ * @summary Exporta el historial de salidas
  */
 
-export function useGetSalidasPendientesCount<TData = Awaited<ReturnType<typeof getSalidasPendientesCount>>, TError = ErrorType<UnauthorizedResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidasPendientesCount>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export function useExportarSalidas<TData = Awaited<ReturnType<typeof exportarSalidas>>, TError = ErrorType<UnauthorizedResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetSalidasPendientesCountQueryOptions(options)
+  const queryOptions = getExportarSalidasQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getEscanearRolloSalidaUrl = (serie: string,
+    params: EscanearRolloSalidaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/salidas/rollos/serie/${serie}?${stringifiedParams}` : `/api/salidas/rollos/serie/${serie}`
+}
+
+/**
+ * @summary Consulta una serie exacta disponible en el origen
+ */
+export const escanearRolloSalida = async (serie: string,
+    params: EscanearRolloSalidaParams, options?: Parameters<typeof customFetch>[1]): Promise<SalidaRolloEscaneado> => {
+
+  return customFetch<SalidaRolloEscaneado>(getEscanearRolloSalidaUrl(serie,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getEscanearRolloSalidaQueryKey = (serie: string,
+    params?: EscanearRolloSalidaParams,) => {
+    return [
+    `/api/salidas/rollos/serie/${serie}`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getEscanearRolloSalidaQueryOptions = <TData = Awaited<ReturnType<typeof escanearRolloSalida>>, TError = ErrorType<NotFoundResponse | ConflictResponse>>(serie: string,
+    params: EscanearRolloSalidaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof escanearRolloSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEscanearRolloSalidaQueryKey(serie,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof escanearRolloSalida>>> = ({ signal }) => escanearRolloSalida(serie,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: serie !== null && serie !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof escanearRolloSalida>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type EscanearRolloSalidaQueryResult = NonNullable<Awaited<ReturnType<typeof escanearRolloSalida>>>
+export type EscanearRolloSalidaQueryError = ErrorType<NotFoundResponse | ConflictResponse>
+
+
+/**
+ * @summary Consulta una serie exacta disponible en el origen
+ */
+
+export function useEscanearRolloSalida<TData = Awaited<ReturnType<typeof escanearRolloSalida>>, TError = ErrorType<NotFoundResponse | ConflictResponse>>(
+ serie: string,
+    params: EscanearRolloSalidaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof escanearRolloSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getEscanearRolloSalidaQueryOptions(serie,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -6701,436 +6788,6 @@ export function useGetSalida<TData = Awaited<ReturnType<typeof getSalida>>, TErr
 
 
 
-
-export const getAceptarSalidaUrl = (id: number,) => {
-
-
-
-
-  return `/api/salidas/${id}/aceptar`
-}
-
-/**
- * @summary Acepta una solicitud de salida
- */
-export const aceptarSalida = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
-
-  return customFetch<SalidaDetailResponseResponse>(getAceptarSalidaUrl(id),
-  {
-    ...options,
-    method: 'POST'
-
-
-  }
-);}
-
-
-
-
-
-export const getAceptarSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aceptarSalida>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof aceptarSalida>>, TError,{id: number}, TContext> => {
-
-const mutationKey = ['aceptarSalida'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aceptarSalida>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
-
-          return  aceptarSalida(id,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type AceptarSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof aceptarSalida>>>
-
-    export type AceptarSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
-
-    /**
- * @summary Acepta una solicitud de salida
- */
-export const useAceptarSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aceptarSalida>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof aceptarSalida>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
-      return useMutation(getAceptarSalidaMutationOptions(options));
-    }
-
-export const getRechazarSalidaUrl = (id: number,) => {
-
-
-
-
-  return `/api/salidas/${id}/rechazar`
-}
-
-/**
- * @summary Rechaza una solicitud de salida
- */
-export const rechazarSalida = async (id: number,
-    motivoSalidaInput: MotivoSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
-
-  return customFetch<SalidaDetailResponseResponse>(getRechazarSalidaUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(motivoSalidaInput)
-  }
-);}
-
-
-
-
-
-export const getRechazarSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rechazarSalida>>, TError,{id: number;data: BodyType<MotivoSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof rechazarSalida>>, TError,{id: number;data: BodyType<MotivoSalidaInput>}, TContext> => {
-
-const mutationKey = ['rechazarSalida'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rechazarSalida>>, {id: number;data: BodyType<MotivoSalidaInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  rechazarSalida(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RechazarSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof rechazarSalida>>>
-    export type RechazarSalidaMutationBody = BodyType<MotivoSalidaInput>
-    export type RechazarSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
-
-    /**
- * @summary Rechaza una solicitud de salida
- */
-export const useRechazarSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rechazarSalida>>, TError,{id: number;data: BodyType<MotivoSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof rechazarSalida>>,
-        TError,
-        {id: number;data: BodyType<MotivoSalidaInput>},
-        TContext
-      > => {
-      return useMutation(getRechazarSalidaMutationOptions(options));
-    }
-
-export const getPrepararSalidaUrl = (id: number,) => {
-
-
-
-
-  return `/api/salidas/${id}/preparar`
-}
-
-/**
- * @summary Asigna rollos y prepara una salida aceptada
- */
-export const prepararSalida = async (id: number,
-    prepararSalidaInput: PrepararSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
-
-  return customFetch<SalidaDetailResponseResponse>(getPrepararSalidaUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(prepararSalidaInput)
-  }
-);}
-
-
-
-
-
-export const getPrepararSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof prepararSalida>>, TError,{id: number;data: BodyType<PrepararSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof prepararSalida>>, TError,{id: number;data: BodyType<PrepararSalidaInput>}, TContext> => {
-
-const mutationKey = ['prepararSalida'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof prepararSalida>>, {id: number;data: BodyType<PrepararSalidaInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  prepararSalida(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PrepararSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof prepararSalida>>>
-    export type PrepararSalidaMutationBody = BodyType<PrepararSalidaInput>
-    export type PrepararSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
-
-    /**
- * @summary Asigna rollos y prepara una salida aceptada
- */
-export const usePrepararSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof prepararSalida>>, TError,{id: number;data: BodyType<PrepararSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof prepararSalida>>,
-        TError,
-        {id: number;data: BodyType<PrepararSalidaInput>},
-        TContext
-      > => {
-      return useMutation(getPrepararSalidaMutationOptions(options));
-    }
-
-export const getEnviarSalidaUrl = (id: number,) => {
-
-
-
-
-  return `/api/salidas/${id}/enviar`
-}
-
-/**
- * @summary Envía una salida preparada
- */
-export const enviarSalida = async (id: number,
-    enviarSalidaInput: EnviarSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
-
-  return customFetch<SalidaDetailResponseResponse>(getEnviarSalidaUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(enviarSalidaInput)
-  }
-);}
-
-
-
-
-
-export const getEnviarSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enviarSalida>>, TError,{id: number;data: BodyType<EnviarSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof enviarSalida>>, TError,{id: number;data: BodyType<EnviarSalidaInput>}, TContext> => {
-
-const mutationKey = ['enviarSalida'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof enviarSalida>>, {id: number;data: BodyType<EnviarSalidaInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  enviarSalida(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type EnviarSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof enviarSalida>>>
-    export type EnviarSalidaMutationBody = BodyType<EnviarSalidaInput>
-    export type EnviarSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
-
-    /**
- * @summary Envía una salida preparada
- */
-export const useEnviarSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enviarSalida>>, TError,{id: number;data: BodyType<EnviarSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof enviarSalida>>,
-        TError,
-        {id: number;data: BodyType<EnviarSalidaInput>},
-        TContext
-      > => {
-      return useMutation(getEnviarSalidaMutationOptions(options));
-    }
-
-export const getRecibirSalidaUrl = (id: number,) => {
-
-
-
-
-  return `/api/salidas/${id}/recibir`
-}
-
-/**
- * @summary Recibe una salida enviada en la ubicación destino
- */
-export const recibirSalida = async (id: number,
-    recibirSalidaInput: RecibirSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
-
-  return customFetch<SalidaDetailResponseResponse>(getRecibirSalidaUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(recibirSalidaInput)
-  }
-);}
-
-
-
-
-
-export const getRecibirSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirSalida>>, TError,{id: number;data: BodyType<RecibirSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof recibirSalida>>, TError,{id: number;data: BodyType<RecibirSalidaInput>}, TContext> => {
-
-const mutationKey = ['recibirSalida'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recibirSalida>>, {id: number;data: BodyType<RecibirSalidaInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  recibirSalida(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RecibirSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof recibirSalida>>>
-    export type RecibirSalidaMutationBody = BodyType<RecibirSalidaInput>
-    export type RecibirSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
-
-    /**
- * @summary Recibe una salida enviada en la ubicación destino
- */
-export const useRecibirSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirSalida>>, TError,{id: number;data: BodyType<RecibirSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof recibirSalida>>,
-        TError,
-        {id: number;data: BodyType<RecibirSalidaInput>},
-        TContext
-      > => {
-      return useMutation(getRecibirSalidaMutationOptions(options));
-    }
-
-export const getCerrarSalidaUrl = (id: number,) => {
-
-
-
-
-  return `/api/salidas/${id}/cerrar`
-}
-
-/**
- * @summary Cierra una salida recibida
- */
-export const cerrarSalida = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
-
-  return customFetch<SalidaDetailResponseResponse>(getCerrarSalidaUrl(id),
-  {
-    ...options,
-    method: 'POST'
-
-
-  }
-);}
-
-
-
-
-
-export const getCerrarSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cerrarSalida>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof cerrarSalida>>, TError,{id: number}, TContext> => {
-
-const mutationKey = ['cerrarSalida'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cerrarSalida>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
-
-          return  cerrarSalida(id,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CerrarSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof cerrarSalida>>>
-
-    export type CerrarSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
-
-    /**
- * @summary Cierra una salida recibida
- */
-export const useCerrarSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cerrarSalida>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof cerrarSalida>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
-      return useMutation(getCerrarSalidaMutationOptions(options));
-    }
 
 export const getCancelarSalidaUrl = (id: number,) => {
 

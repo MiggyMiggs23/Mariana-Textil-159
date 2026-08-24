@@ -64,6 +64,13 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
       puede_editar: false,
       puede_autorizar: true,
     },
+    {
+      modulo: "transferencias",
+      puede_ver: true,
+      puede_crear: true,
+      puede_editar: false,
+      puede_autorizar: true,
+    },
   ]);
 
   const defaultInventoryPermission = await pool.query<{
@@ -79,7 +86,7 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
   assert.deepEqual(defaultInventoryPermission.rows, [{
     puede_ver: true,
     puede_crear: true,
-    puede_editar: true,
+    puede_editar: false,
     puede_autorizar: false,
   }]);
 
@@ -111,6 +118,13 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
       puede_autorizar: false,
     },
   ]);
+  const bodegaDefault = await pool.query<{
+    puede_ver: boolean; puede_crear: boolean; puede_editar: boolean; puede_autorizar: boolean;
+  }>(`SELECT puede_ver, puede_crear, puede_editar, puede_autorizar
+      FROM permisos_rol WHERE rol = 'BODEGA' AND modulo = 'salidas'`);
+  assert.deepEqual(bodegaDefault.rows, [{
+    puede_ver: true, puede_crear: true, puede_editar: false, puede_autorizar: false,
+  }]);
 
   const schema = await pool.query<{ table_name: string }>(`
     SELECT table_name
@@ -130,13 +144,17 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     FROM information_schema.columns
     WHERE table_schema = 'public'
       AND table_name = 'salidas'
-      AND column_name IN ('usuario_cancela_id', 'cancelada_at')
+       AND column_name IN ('usuario_cancela_id', 'cancelada_at', 'autorizado_por_id')
     ORDER BY column_name;
   `);
   assert.deepEqual(
     cancellationColumns.rows.map((row) => row.column_name),
-    ["cancelada_at", "usuario_cancela_id"],
+    ["autorizado_por_id", "cancelada_at", "usuario_cancela_id"],
   );
+  const enumValues = await pool.query<{ enumlabel: string }>(`
+    SELECT enumlabel FROM pg_enum WHERE enumtypid = 'estado_salida'::regtype
+  `);
+  assert.ok(enumValues.rows.some((row) => row.enumlabel === "REGISTRADA"));
 
   const folio = await pool.query<{ ultimo_folio: number }>(
     "SELECT ultimo_folio FROM salida_folio WHERE id = 1",

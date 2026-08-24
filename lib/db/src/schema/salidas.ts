@@ -31,7 +31,7 @@ export const salidasTable = pgTable(
     destinoId: integer("destino_id")
       .notNull()
       .references(() => ubicacionesTable.id),
-    estado: estadoSalidaEnum("estado").notNull().default("SOLICITADA"),
+    estado: estadoSalidaEnum("estado").notNull().default("REGISTRADA"),
     usuarioSolicitaId: integer("usuario_solicita_id").references(
       () => usuariosTable.id,
     ),
@@ -51,6 +51,9 @@ export const salidasTable = pgTable(
       () => usuariosTable.id,
     ),
     usuarioCancelaId: integer("usuario_cancela_id").references(
+      () => usuariosTable.id,
+    ),
+    autorizadoPorId: integer("autorizado_por_id").references(
       () => usuariosTable.id,
     ),
     solicitadaAt: timestamp("solicitada_at", { withTimezone: true }),
@@ -76,6 +79,7 @@ export const salidasTable = pgTable(
     index("salidas_destino_estado_idx").on(table.destinoId, table.estado),
     index("salidas_estado_idx").on(table.estado),
     index("salidas_folio_idx").on(table.folio),
+    index("salidas_created_at_idx").on(table.createdAt),
   ],
 );
 

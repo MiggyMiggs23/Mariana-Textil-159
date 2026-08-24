@@ -1,479 +1,82 @@
 import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, sql } from "drizzle-orm";
-import {
-  db,
-  ensureSalidasSchema,
-  existenciasTable,
-  movimientosTable,
-  pool,
-  productosTable,
-  rollosTable,
-  salidaLineasTable,
-  salidaRollosTable,
-  salidasTable,
-  ubicacionesTable,
-  usuariosTable,
-} from "@workspace/db";
-import { crearRollo, InventarioError } from "./inventario";
-import {
-  aceptarSalida,
-  cancelarSalida,
-  cerrarSalida,
-  crearSalida,
-  enviarSalida,
-  prepararSalida,
-  recibirSalida,
-  rechazarSalida,
-} from "./salidas";
+import { and, eq, inArray } from "drizzle-orm";
+import { db, ensureSalidasSchema, existenciasTable, movimientosTable, pool, productosTable, rollosTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
+import { crearRollo, InventarioError, venderRollo } from "./inventario";
+import { buildSalidaDetail, cancelarSalida, crearSalida, listarSalidas } from "./salidas";
 
 if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
-  throw new Error("Las pruebas de Salidas solo pueden ejecutarse con TEST_DATABASE_URL.");
-}
-
-const run = `SAL-${Date.now()}`;
-const productoIds: number[] = [];
-const ubicacionIds: number[] = [];
-const rolloIds: number[] = [];
-const salidaIds: number[] = [];
-
-let usuarioId = 0;
-let transitoId = 0;
-
-before(async () => {
-  await ensureSalidasSchema(pool);
-  const [usuario] = await db
-    .select({ id: usuariosTable.id })
-    .from(usuariosTable)
-    .where(eq(usuariosTable.activo, true))
-    .limit(1);
-  assert.ok(usuario, "La rama de prueba debe incluir al menos un usuario activo.");
-  usuarioId = usuario.id;
-
-  const [transito] = await db
-    .select({ id: ubicacionesTable.id })
-    .from(ubicacionesTable)
-    .where(eq(ubicacionesTable.tipo, "TRANSITO"))
-    .limit(1);
-  assert.ok(transito, "La rama de prueba debe incluir la ubicación técnica de tránsito.");
-  transitoId = transito.id;
-});
-
-async function fixture() {
-  const suffix = `${run}-${productoIds.length + 1}`;
-  const [producto] = await db
-    .insert(productosTable)
-    .values({
-      sku: suffix,
-      tela: `Tela ${suffix}`,
-      color: "Azul",
-      unidad: "METRO",
-      precioSugerido: "100.00",
-    })
-    .returning();
-  assert.ok(producto);
-  productoIds.push(producto.id);
-
-  const [origen, destino] = await db
-    .insert(ubicacionesTable)
-    .values([
-      { nombre: `Origen ${suffix}`, tipo: "BODEGA" },
-      { nombre: `Destino ${suffix}`, tipo: "TIENDA" },
-    ])
-    .returning();
-  assert.ok(origen && destino);
-  ubicacionIds.push(origen.id, destino.id);
-  return { productoId: producto.id, origenId: origen.id, destinoId: destino.id };
-}
-
-async function rollo(productoId: number, ubicacionId: number, cantidad: string) {
-  const result = await db.transaction((tx) =>
-    crearRollo(tx, {
-      productoId,
-      ubicacionId,
-      cantidadInicial: cantidad,
-      costoUnitario: "40.00",
-      usuarioId,
-      estado: "DISPONIBLE",
-    }),
-  );
-  rolloIds.push(result.rollo.id);
-  return result.rollo;
-}
-
-async function solicitud(input: {
-  productoId: number;
-  origenId: number;
-  destinoId: number;
-  cantidad: string;
-  uuidCliente?: string;
-}) {
-  const salida = await db.transaction((tx) =>
-    crearSalida(tx, {
-      uuidCliente: input.uuidCliente ?? randomUUID(),
-      origenId: input.origenId,
-      destinoId: input.destinoId,
-      usuarioSolicitaId: usuarioId,
-      lineas: [
-        {
-          productoId: input.productoId,
-          cantidadSolicitada: input.cantidad,
-          rollosSolicitados: null,
-          nota: null,
-        },
-      ],
-    }),
-  );
-  if (!salidaIds.includes(salida.id)) salidaIds.push(salida.id);
-  return salida;
-}
-
-async function existencia(productoId: number, ubicacionId: number) {
-  const [row] = await db
-    .select({ total: existenciasTable.cantidadTotal })
-    .from(existenciasTable)
-    .where(
-      and(
-        eq(existenciasTable.productoId, productoId),
-        eq(existenciasTable.ubicacionId, ubicacionId),
-      ),
-    )
-    .limit(1);
-  return Number(row?.total ?? 0);
-}
-
-async function assertCache(productoId: number, ubicacionIdsToCheck: number[]) {
-  for (const ubicacionId of ubicacionIdsToCheck) {
-    const [row] = await db
-      .select({ total: sql<string>`COALESCE(SUM(${movimientosTable.cantidad}), 0)::text` })
-      .from(movimientosTable)
-      .where(
-        and(
-          eq(movimientosTable.productoId, productoId),
-          eq(movimientosTable.ubicacionId, ubicacionId),
-        ),
-      );
-    assert.equal(
-      Number(row?.total ?? 0),
-      await existencia(productoId, ubicacionId),
-      `El caché no coincide con kardex en ubicación ${ubicacionId}.`,
-    );
-  }
-}
-
-test("flujo 200 solicitado → 185 enviado/recibido/cerrado conserva inventario consolidado", async () => {
-  const fx = await fixture();
-  const rolls: Array<Awaited<ReturnType<typeof rollo>>> = [];
-  for (const cantidad of ["40", "45", "50", "50"]) {
-    rolls.push(await rollo(fx.productoId, fx.origenId, cantidad));
-  }
-  const uuidCliente = randomUUID();
-  const [created, retry] = await Promise.all([
-    solicitud({ ...fx, cantidad: "200", uuidCliente }),
-    solicitud({ ...fx, cantidad: "200", uuidCliente }),
-  ]);
-  assert.equal(retry.id, created.id, "El UUID de cliente debe hacer idempotente la solicitud.");
-  assert.ok(created.folio >= 500);
-
-  const accepted = await db.transaction((tx) => aceptarSalida(tx, created.id, usuarioId));
-  const lineId = accepted.lineas[0]!.id;
-  await db.transaction((tx) =>
-    prepararSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      lineas: [{ lineaId: lineId, rolloIds: rolls.map((item) => item.id) }],
-    }),
-  );
-  const sent = await db.transaction((tx) =>
-    enviarSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      transportista: "Unidad de prueba",
-      notaEnvio: null,
-    }),
-  );
-  assert.equal(sent.estado, "ENVIADA");
-  assert.equal(sent.totalCantidadEnviada, "185.000");
-  assert.equal(await existencia(fx.productoId, fx.origenId), 0);
-  assert.equal(await existencia(fx.productoId, transitoId), 185);
-
-  const received = await db.transaction((tx) =>
-    recibirSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      notaRecepcion: null,
-      rollos: rolls.map((item) => ({
-        rolloId: item.id,
-        recibido: true,
-        cantidadRecibida: item.cantidadActual,
-        notaDiferencia: null,
-      })),
-    }),
-  );
-  assert.equal(received.estado, "RECIBIDA");
-  assert.equal(received.totalCantidadRecibida, "185.000");
-  assert.equal(await existencia(fx.productoId, transitoId), 0);
-  assert.equal(await existencia(fx.productoId, fx.destinoId), 185);
-
-  const closed = await db.transaction((tx) => cerrarSalida(tx, created.id, usuarioId));
-  assert.equal(closed.estado, "CERRADA");
-  assert.equal(
-    (await existencia(fx.productoId, fx.origenId)) +
-      (await existencia(fx.productoId, transitoId)) +
-      (await existencia(fx.productoId, fx.destinoId)),
-    185,
-  );
-  await assertCache(fx.productoId, [fx.origenId, transitoId, fx.destinoId]);
-
-  const documented = await db
-    .select()
-    .from(movimientosTable)
-    .where(
-      and(
-        inArray(movimientosTable.rolloId, rolls.map((item) => item.id)),
-        eq(movimientosTable.documentoId, String(created.id)),
-      ),
-    );
-  assert.equal(documented.length, 16, "Cada rollo debe dejar cuatro movimientos documentados.");
-  assert.deepEqual(
-    [...new Set(documented.map((movement) => movement.documentoTipo))].sort(),
-    ["RECEPCION_SALIDA", "SALIDA"],
-  );
-});
-
-test("folios simultáneos son distintos", async () => {
-  const fx = await fixture();
-  const [first, second] = await Promise.all([
-    solicitud({ ...fx, cantidad: "10" }),
-    solicitud({ ...fx, cantidad: "11" }),
-  ]);
-  assert.notEqual(first.folio, second.folio);
-});
-
-test("dos salidas no pueden preparar simultáneamente el mismo rollo", async () => {
-  const fx = await fixture();
-  const selected = await rollo(fx.productoId, fx.origenId, "25");
-  const [a, b] = await Promise.all([
-    solicitud({ ...fx, cantidad: "25" }),
-    solicitud({ ...fx, cantidad: "25" }),
-  ]);
-  const [acceptedA, acceptedB] = await Promise.all([
-    db.transaction((tx) => aceptarSalida(tx, a.id, usuarioId)),
-    db.transaction((tx) => aceptarSalida(tx, b.id, usuarioId)),
-  ]);
-  const results = await Promise.allSettled([
-    db.transaction((tx) =>
-      prepararSalida(tx, {
-        salidaId: a.id,
-        usuarioId,
-        lineas: [{ lineaId: acceptedA.lineas[0]!.id, rolloIds: [selected.id] }],
-      }),
-    ),
-    db.transaction((tx) =>
-      prepararSalida(tx, {
-        salidaId: b.id,
-        usuarioId,
-        lineas: [{ lineaId: acceptedB.lineas[0]!.id, rolloIds: [selected.id] }],
-      }),
-    ),
-  ]);
-  assert.equal(results.filter((item) => item.status === "fulfilled").length, 1);
-  const rejected = results.find((item) => item.status === "rejected");
-  assert.ok(rejected?.status === "rejected");
-  assert.ok(rejected.reason instanceof InventarioError);
-  assert.equal(rejected.reason.code, "ROLLO_RESERVED");
-});
-
-test("diferencia de cantidad exige nota y genera ajuste documentado", async () => {
-  const fx = await fixture();
-  const selected = await rollo(fx.productoId, fx.origenId, "30");
-  const created = await solicitud({ ...fx, cantidad: "30" });
-  const accepted = await db.transaction((tx) => aceptarSalida(tx, created.id, usuarioId));
-  await db.transaction((tx) =>
-    prepararSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      lineas: [{ lineaId: accepted.lineas[0]!.id, rolloIds: [selected.id] }],
-    }),
-  );
-  await db.transaction((tx) =>
-    enviarSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      transportista: "Unidad de prueba",
-      notaEnvio: null,
-    }),
-  );
-  await assert.rejects(
-    db.transaction((tx) =>
-      recibirSalida(tx, {
-        salidaId: created.id,
-        usuarioId,
-        notaRecepcion: null,
-        rollos: [
-          {
-            rolloId: selected.id,
-            recibido: true,
-            cantidadRecibida: "28",
-            notaDiferencia: "corta",
-          },
-        ],
-      }),
-    ),
-    (error: unknown) => error instanceof InventarioError && error.code === "DIFFERENCE_NOTE_REQUIRED",
-  );
-  await db.transaction((tx) =>
-    recibirSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      notaRecepcion: null,
-      rollos: [
-        {
-          rolloId: selected.id,
-          recibido: true,
-          cantidadRecibida: "28",
-          notaDiferencia: "Merma confirmada al medir el rollo",
-        },
-      ],
-    }),
-  );
-  assert.equal(await existencia(fx.productoId, fx.destinoId), 28);
-  const rollMovements = await db
-    .select()
-    .from(movimientosTable)
-    .where(eq(movimientosTable.rolloId, selected.id));
-  const adjustment = rollMovements.find(
-    (movement) =>
-      movement.tipo === "AJUSTE_NEGATIVO" &&
-      movement.documentoTipo === "RECEPCION_SALIDA" &&
-      movement.documentoId === String(created.id),
-  );
-  assert.ok(
-    adjustment,
-    `No se encontró ajuste documentado: ${JSON.stringify(
-      rollMovements.map((movement) => ({
-        tipo: movement.tipo,
-        documentoTipo: movement.documentoTipo,
-        documentoId: movement.documentoId,
-      })),
-    )}`,
-  );
-  assert.equal(adjustment.revisado, true);
-  await assertCache(fx.productoId, [fx.origenId, transitoId, fx.destinoId]);
-});
-
-test("rollo no recibido permanece en tránsito, bloquea cierre y puede recibirse después", async () => {
-  const fx = await fixture();
-  const selected = await rollo(fx.productoId, fx.origenId, "20");
-  const created = await solicitud({ ...fx, cantidad: "20" });
-  const accepted = await db.transaction((tx) => aceptarSalida(tx, created.id, usuarioId));
-  await db.transaction((tx) =>
-    prepararSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      lineas: [{ lineaId: accepted.lineas[0]!.id, rolloIds: [selected.id] }],
-    }),
-  );
-  await db.transaction((tx) =>
-    enviarSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      transportista: "Unidad de prueba",
-      notaEnvio: null,
-    }),
-  );
-  await assert.rejects(
-    db.transaction((tx) =>
-      cancelarSalida(tx, created.id, usuarioId, "Cancelación posterior al envío"),
-    ),
-    (error: unknown) => error instanceof InventarioError && error.code === "INVALID_SALIDA_STATE",
-  );
-  await db.transaction((tx) =>
-    recibirSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      notaRecepcion: null,
-      rollos: [
-        {
-          rolloId: selected.id,
-          recibido: false,
-          cantidadRecibida: null,
-          notaDiferencia: "No llegó en el transporte asignado",
-        },
-      ],
-    }),
-  );
-  const [inTransit] = await db
-    .select()
-    .from(rollosTable)
-    .where(eq(rollosTable.id, selected.id));
-  assert.equal(inTransit?.estado, "EN_TRANSITO");
-  assert.equal(inTransit?.ubicacionId, transitoId);
-  await assert.rejects(
-    db.transaction((tx) => cerrarSalida(tx, created.id, usuarioId)),
-    (error: unknown) => error instanceof InventarioError && error.code === "PENDING_ROLLOS",
-  );
-  await db.transaction((tx) =>
-    recibirSalida(tx, {
-      salidaId: created.id,
-      usuarioId,
-      notaRecepcion: null,
-      rollos: [
-        {
-          rolloId: selected.id,
-          recibido: true,
-          cantidadRecibida: "20",
-          notaDiferencia: null,
-        },
-      ],
-    }),
-  );
-  const closed = await db.transaction((tx) => cerrarSalida(tx, created.id, usuarioId));
-  assert.equal(closed.estado, "CERRADA");
-});
-
-test("saltos de estado y motivos insuficientes son rechazados", async () => {
-  const fx = await fixture();
-  const created = await solicitud({ ...fx, cantidad: "10" });
-  await assert.rejects(
-    db.transaction((tx) =>
-      enviarSalida(tx, {
-        salidaId: created.id,
-        usuarioId,
-        transportista: "Unidad",
-        notaEnvio: null,
-      }),
-    ),
-    (error: unknown) => error instanceof InventarioError && error.code === "INVALID_SALIDA_STATE",
-  );
-  await assert.rejects(
-    db.transaction((tx) => rechazarSalida(tx, created.id, usuarioId, "corto")),
-    (error: unknown) => error instanceof InventarioError && error.code === "REASON_REQUIRED",
-  );
-  await assert.rejects(
-    db.transaction((tx) => cancelarSalida(tx, created.id, usuarioId, "corto")),
-    (error: unknown) => error instanceof InventarioError && error.code === "REASON_REQUIRED",
-  );
-});
-
-after(async () => {
-  await db.transaction(async (tx) => {
-    if (salidaIds.length > 0) {
-      await tx.delete(salidaRollosTable).where(inArray(salidaRollosTable.salidaId, salidaIds));
-      await tx.delete(salidaLineasTable).where(inArray(salidaLineasTable.salidaId, salidaIds));
-      await tx.delete(salidasTable).where(inArray(salidasTable.id, salidaIds));
-    }
-    if (rolloIds.length > 0) {
-      await tx.delete(movimientosTable).where(inArray(movimientosTable.rolloId, rolloIds));
-      await tx.delete(rollosTable).where(inArray(rollosTable.id, rolloIds));
-    }
-    if (productoIds.length > 0) {
-      await tx.delete(existenciasTable).where(inArray(existenciasTable.productoId, productoIds));
-      await tx.delete(productosTable).where(inArray(productosTable.id, productoIds));
-    }
-    if (ubicacionIds.length > 0) {
-      await tx.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, ubicacionIds));
-    }
+  test("salidas DB suite is guarded", { skip: "TEST_DATABASE_URL required" }, () => {});
+} else {
+  const tag = `P7-${Date.now()}`;
+  const products: number[] = [], locations: number[] = [], rolls: number[] = [], docs: number[] = [];
+  let user = 0;
+  before(async () => {
+    await ensureSalidasSchema(pool);
+    const [u] = await db.select({ id: usuariosTable.id }).from(usuariosTable).where(eq(usuariosTable.activo, true)).limit(1);
+    assert.ok(u); user = u.id;
   });
-});
+  async function fx(unidad: "METRO" | "KILO" = "METRO") {
+    const n = `${tag}-${products.length}`;
+    const [p] = await db.insert(productosTable).values({ sku: n, tela: n, color: "Azul", unidad, precioSugerido: "10" }).returning();
+    const [o, d] = await db.insert(ubicacionesTable).values([{ nombre: `O-${n}`, tipo: "BODEGA" }, { nombre: `D-${n}`, tipo: "TIENDA" }]).returning();
+    products.push(p!.id); locations.push(o!.id, d!.id);
+    return { productoId: p!.id, origenId: o!.id, destinoId: d!.id };
+  }
+  async function roll(productoId: number, ubicacionId: number, cantidad: string) {
+    const r = await db.transaction((tx) => crearRollo(tx, { productoId, ubicacionId, cantidadInicial: cantidad, costoUnitario: "1", usuarioId: user, estado: "DISPONIBLE" }));
+    rolls.push(r.rollo.id); return r.rollo;
+  }
+  async function create(origenId: number, destinoId: number, rolloIds: number[], uuidCliente = randomUUID()) {
+    const r = await db.transaction((tx) => crearSalida(tx, { origenId, destinoId, rolloIds, uuidCliente, usuarioSolicitaId: user, transportista: "Prueba" }));
+    if (!docs.includes(r.id)) docs.push(r.id);
+    return r;
+  }
+  test("four rolls transfer immediately without TRANSITO, ledger/cache and totals stay conserved", async () => {
+    const f = await fx(); const rs = await Promise.all(["40", "45", "50", "50"].map((q) => roll(f.productoId, f.origenId, q)));
+    const salida = await create(f.origenId, f.destinoId, rs.map((r) => r.id));
+    assert.equal(salida.estado, "REGISTRADA"); assert.equal(salida.totalRollos, 4); assert.equal(salida.totalMetros, "185.000");
+    const moved = await db.select().from(rollosTable).where(inArray(rollosTable.id, rs.map((r) => r.id)));
+    assert.ok(moved.every((r) => r.ubicacionId === f.destinoId && r.estado === "DISPONIBLE"));
+    const movs = await db.select().from(movimientosTable).where(and(inArray(movimientosTable.rolloId, rs.map((r) => r.id)), eq(movimientosTable.documentoId, String(salida.id))));
+    assert.equal(movs.length, 8); assert.ok(movs.every((m) => m.documentoTipo === "SALIDA"));
+    assert.equal(movs.filter((m) => m.tipo === "TRANSFERENCIA_SALIDA").length, 4);
+    assert.equal(movs.filter((m) => m.tipo === "TRANSFERENCIA_ENTRADA").length, 4);
+    const cache = await db.select().from(existenciasTable).where(eq(existenciasTable.productoId, f.productoId));
+    assert.equal(Number(cache.find((x) => x.ubicacionId === f.origenId)?.cantidadTotal), 0);
+    assert.equal(Number(cache.find((x) => x.ubicacionId === f.destinoId)?.cantidadTotal), 185);
+  });
+  test("uuid is idempotent; concurrent same roll has exactly one winner; valid parallel docs receive distinct folios", async () => {
+    const f = await fx(); const a = await roll(f.productoId, f.origenId, "10"), b = await roll(f.productoId, f.origenId, "11"), c = await roll(f.productoId, f.origenId, "12");
+    const uuid = randomUUID(); const [x, y] = await Promise.all([create(f.origenId, f.destinoId, [a.id], uuid), create(f.origenId, f.destinoId, [a.id], uuid)]);
+    assert.equal(x.id, y.id);
+    const race = await Promise.allSettled([create(f.origenId, f.destinoId, [b.id]), create(f.origenId, f.destinoId, [b.id])]);
+    assert.equal(race.filter((r) => r.status === "fulfilled").length, 1);
+    const [one, two] = await Promise.all([create(f.origenId, f.destinoId, [c.id]), create(f.origenId, f.destinoId, [await roll(f.productoId, f.origenId, "13").then(r => r.id)])]);
+    assert.notEqual(one.folio, two.folio);
+  });
+  test("cancellation validates motive, reverses direct pairs, and blocks changed rolls", async () => {
+    const f = await fx(); const r = await roll(f.productoId, f.origenId, "20"); const s = await create(f.origenId, f.destinoId, [r.id]);
+    await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s.id, user, "corto")), (e: unknown) => e instanceof InventarioError && e.code === "REASON_REQUIRED");
+    await db.transaction((tx) => cancelarSalida(tx, s.id, user, "Motivo válido de cancelación"));
+    const [back] = await db.select().from(rollosTable).where(eq(rollosTable.id, r.id)); assert.equal(back!.ubicacionId, f.origenId);
+    const changed = await roll(f.productoId, f.origenId, "21"); const s2 = await create(f.origenId, f.destinoId, [changed.id]);
+    await db.transaction((tx) => venderRollo(tx, { rolloId: changed.id, usuarioId: user }));
+    await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s2.id, user, "Motivo válido de cancelación")), (e: unknown) => e instanceof InventarioError && e.code === "CANCEL_ROLLO_CHANGED");
+  });
+  test("legacy states remain readable and REGISTRADA totals split metres/kilos", async () => {
+    const m = await fx("METRO"), k = await fx("KILO"); const rm = await roll(m.productoId, m.origenId, "7"), rk = await roll(k.productoId, k.origenId, "3");
+    const sm = await create(m.origenId, m.destinoId, [rm.id]); const sk = await create(k.origenId, k.destinoId, [rk.id]);
+    assert.equal(sm.totalMetros, "7.000"); assert.equal(sk.totalKilos, "3.000");
+    await db.update(salidasTable).set({ estado: "ENVIADA" }).where(eq(salidasTable.id, sm.id));
+    assert.equal((await buildSalidaDetail(db, sm.id))?.estado, "ENVIADA");
+    assert.ok((await listarSalidas({ page: 1, pageSize: 100 })).items.some((x) => x.id === sm.id));
+  });
+  after(async () => { await db.transaction(async (tx) => {
+    if (docs.length) { await tx.delete(salidaRollosTable).where(inArray(salidaRollosTable.salidaId, docs)); await tx.delete(salidaLineasTable).where(inArray(salidaLineasTable.salidaId, docs)); await tx.delete(salidasTable).where(inArray(salidasTable.id, docs)); }
+    if (rolls.length) { await tx.delete(movimientosTable).where(inArray(movimientosTable.rolloId, rolls)); await tx.delete(rollosTable).where(inArray(rollosTable.id, rolls)); }
+    if (products.length) { await tx.delete(existenciasTable).where(inArray(existenciasTable.productoId, products)); await tx.delete(productosTable).where(inArray(productosTable.id, products)); }
+    if (locations.length) await tx.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, locations));
+  }); });
+}

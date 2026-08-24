@@ -1,54 +1,26 @@
 import { Router } from "express";
-import { eq } from "drizzle-orm";
+import ExcelJS from "exceljs";
+import { and, eq, sql } from "drizzle-orm";
 import {
-  AceptarSalidaParams,
-  AceptarSalidaResponse,
   CancelarSalidaBody,
   CancelarSalidaParams,
   CancelarSalidaResponse,
-  CerrarSalidaParams,
-  CerrarSalidaResponse,
   CrearSalidaBody,
-  CrearSalidaResponse,
-  EnviarSalidaBody,
-  EnviarSalidaParams,
-  EnviarSalidaResponse,
+  EscanearRolloSalidaParams,
+  EscanearRolloSalidaResponse,
   GetSalidaParams,
-  GetSalidaResponse,
-  GetSalidasPendientesCountResponse,
   ListSalidasQueryParams,
-  ListSalidasResponse,
-  PrepararSalidaBody,
-  PrepararSalidaParams,
-  PrepararSalidaResponse,
-  RecibirSalidaBody,
-  RecibirSalidaParams,
-  RecibirSalidaResponse,
-  RechazarSalidaBody,
-  RechazarSalidaParams,
-  RechazarSalidaResponse,
 } from "@workspace/api-zod";
-import { db, salidasTable, type EstadoSalida } from "@workspace/db";
+import { db, productosTable, rollosTable, salidasTable, usuariosTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
-import {
-  aceptarSalida,
-  buildSalidaDetail,
-  cancelarSalida,
-  cerrarSalida,
-  countSalidasPendientes,
-  crearSalida,
-  enviarSalida,
-  listarSalidas,
-  prepararSalida,
-  recibirSalida,
-  rechazarSalida,
-} from "../lib/salidas";
+import { buildSalidaDetail, cancelarSalida, crearSalida, listarSalidas } from "../lib/salidas";
 
 const router = Router();
 
 const ESTADOS: EstadoSalida[] = [
+  "REGISTRADA",
   "SOLICITADA",
   "ACEPTADA",
   "RECHAZADA",
@@ -172,13 +144,15 @@ router.get(
         origenId: query.origenId,
         destinoId: query.destinoId,
         productoId: query.productoId,
+          usuarioId: query.usuarioId,
+          search: query.search,
         fechaDesde: query.fechaDesde,
         fechaHasta: query.fechaHasta,
         page: Math.max(1, query.page ?? 1),
-        pageSize: Math.min(100, Math.max(1, query.pageSize ?? 20)),
+        pageSize: Math.min(100, Math.max(1, query.pageSize ?? 100)),
         visibleUbicacionId,
       });
-      res.json(ListSalidasResponse.parse(result));
+      res.json(result);
     } catch (error) {
       if (!sendError(error, res)) next(error);
     }
@@ -193,27 +167,28 @@ router.post(
     try {
       const body = CrearSalidaBody.parse(req.body);
       const auth = req.auth!;
-      let destinoId = body.destinoId;
+      let origenId = body.origenId;
       if (auth.user.rol !== "ADMIN") {
         if (auth.user.ubicacionId == null) {
           res.status(403).json({ error: "No tienes una ubicación asignada." });
           return;
         }
-        destinoId = auth.user.ubicacionId;
+        if (origenId !== auth.user.ubicacionId) {
+          throw new InventarioError("El origen debe ser tu ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
+        }
+        origenId = auth.user.ubicacionId;
       }
       const result = await db.transaction((tx) =>
         crearSalida(tx, {
           ...body,
-          destinoId,
+          origenId,
           usuarioSolicitaId: auth.user.id,
-          lineas: body.lineas.map((linea) => ({
-            ...linea,
-            rollosSolicitados: linea.rollosSolicitados ?? null,
-            nota: linea.nota ?? null,
-          })),
+          rolloIds: body.rolloIds,
+          transportista: body.transportista,
+          observaciones: body.observaciones,
         }),
       );
-      res.status(201).json(CrearSalidaResponse.parse(result));
+      res.status(201).json(result);
     } catch (error) {
       if (!sendError(error, res)) next(error);
     }
@@ -221,25 +196,73 @@ router.post(
 );
 
 router.get(
-  "/salidas/pendientes-count",
+  "/salidas/exportar",
   requireSession,
   requierePermiso("salidas", "ver"),
   async (req, res, next) => {
     try {
+      const raw = req.query;
+      const query = ListSalidasQueryParams.parse({
+        ...raw,
+        fechaDesde: typeof raw.fechaDesde === "string" ? new Date(raw.fechaDesde) : undefined,
+        fechaHasta: typeof raw.fechaHasta === "string" ? new Date(raw.fechaHasta) : undefined,
+        page: 1, pageSize: 100,
+      });
       const auth = req.auth!;
-      if (auth.user.rol !== "ADMIN" && auth.user.ubicacionId == null) {
-        res.status(403).json({ error: "No tienes una ubicación asignada." });
-        return;
-      }
-      const visibleUbicacionId =
-        auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS"
-          ? undefined
-          : auth.user.ubicacionId;
-      const result = await countSalidasPendientes(visibleUbicacionId);
-      res.json(GetSalidasPendientesCountResponse.parse({ count: result.total }));
-    } catch (error) {
-      next(error);
-    }
+      const visibleUbicacionId = auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS"
+        ? undefined : auth.user.ubicacionId;
+      if (visibleUbicacionId == null && auth.user.rol !== "ADMIN") throw new InventarioError("No tienes una ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
+      const estados = query.estados?.split(",").filter((v): v is EstadoSalida => ESTADOS.includes(v as EstadoSalida));
+      const result = await listarSalidas({
+        estados, folio: query.folio, origenId: query.origenId, destinoId: query.destinoId,
+        productoId: query.productoId, usuarioId: query.usuarioId, search: query.search,
+        fechaDesde: query.fechaDesde, fechaHasta: query.fechaHasta, page: 1, pageSize: 100,
+        visibleUbicacionId,
+      });
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Salidas");
+      sheet.columns = [
+        { header: "Folio", key: "folio", width: 12 }, { header: "Estado", key: "estado", width: 14 },
+        { header: "Origen", key: "origen", width: 24 }, { header: "Destino", key: "destino", width: 24 },
+        { header: "Usuario", key: "usuario", width: 24 }, { header: "Rollos", key: "rollos", width: 10 },
+        { header: "Metros", key: "metros", width: 14 }, { header: "Kilos", key: "kilos", width: 14 },
+        { header: "Transportista", key: "transportista", width: 24 }, { header: "Observaciones", key: "observaciones", width: 35 },
+      ];
+      for (const item of result.items) sheet.addRow({
+        folio: item.folio, estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
+        usuario: item.nombreUsuario, rollos: item.totalRollos, metros: item.totalMetros, kilos: item.totalKilos,
+        transportista: item.transportista, observaciones: item.observaciones,
+      });
+      sheet.getRow(1).font = { bold: true };
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", "attachment; filename=salidas.xlsx");
+      res.send(Buffer.from(await workbook.xlsx.writeBuffer()));
+    } catch (error) { if (!sendError(error, res)) next(error); }
+  },
+);
+
+router.get(
+  "/salidas/rollos/serie/:serie",
+  requireSession,
+  requierePermiso("salidas", "crear"),
+  async (req, res, next) => {
+    try {
+      const origenId = Number(req.query.origenId);
+      if (!Number.isInteger(origenId)) throw new InventarioError("origenId es obligatorio.", "VALIDATION_ERROR");
+      const { serie } = EscanearRolloSalidaParams.parse(req.params);
+      if (!canOperate(req.auth!, origenId)) throw new InventarioError("No puedes operar desde ese origen.", "SALIDA_LOCATION_FORBIDDEN");
+      const [rollo] = await db.select({
+        id: rollosTable.id, serie: rollosTable.serie, estado: rollosTable.estado,
+        ubicacionId: rollosTable.ubicacionId, cantidadActual: rollosTable.cantidadActual,
+        productoId: productosTable.id, sku: productosTable.sku, tela: productosTable.tela,
+        color: productosTable.color, unidad: productosTable.unidad,
+      }).from(rollosTable).innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+        .where(eq(rollosTable.serie, serie)).limit(1);
+      if (!rollo) throw new InventarioError("Serie no encontrada.", "ROLLO_NOT_FOUND");
+      if (rollo.ubicacionId !== origenId) throw new InventarioError(`La serie ${rollo.serie} está en la ubicación ${rollo.ubicacionId}.`, "LOCATION_MISMATCH");
+      if (rollo.estado !== "DISPONIBLE") throw new InventarioError(`La serie ${rollo.serie} no está DISPONIBLE.`, "ROLLO_UNAVAILABLE");
+      res.json(EscanearRolloSalidaResponse.parse(rollo));
+    } catch (error) { if (!sendError(error, res)) next(error); }
   },
 );
 
@@ -252,125 +275,7 @@ router.get(
       const { id } = GetSalidaParams.parse(req.params);
       await requireSalidaAccess(req.auth!, id, "read");
       const detail = await buildSalidaDetail(db, id);
-      res.json(GetSalidaResponse.parse(detail));
-    } catch (error) {
-      if (!sendError(error, res)) next(error);
-    }
-  },
-);
-
-router.post(
-  "/salidas/:id/aceptar",
-  requireSession,
-  requierePermiso("salidas", "editar"),
-  async (req, res, next) => {
-    try {
-      const { id } = AceptarSalidaParams.parse(req.params);
-      await requireSalidaAccess(req.auth!, id, "origin");
-      const result = await db.transaction((tx) => aceptarSalida(tx, id, req.auth!.user.id));
-      res.json(AceptarSalidaResponse.parse(result));
-    } catch (error) {
-      if (!sendError(error, res)) next(error);
-    }
-  },
-);
-
-router.post(
-  "/salidas/:id/rechazar",
-  requireSession,
-  requierePermiso("salidas", "editar"),
-  async (req, res, next) => {
-    try {
-      const { id } = RechazarSalidaParams.parse(req.params);
-      const body = RechazarSalidaBody.parse(req.body);
-      await requireSalidaAccess(req.auth!, id, "origin");
-      const result = await db.transaction((tx) =>
-        rechazarSalida(tx, id, req.auth!.user.id, body.motivo),
-      );
-      res.json(RechazarSalidaResponse.parse(result));
-    } catch (error) {
-      if (!sendError(error, res)) next(error);
-    }
-  },
-);
-
-router.post(
-  "/salidas/:id/preparar",
-  requireSession,
-  requierePermiso("salidas", "editar"),
-  async (req, res, next) => {
-    try {
-      const { id } = PrepararSalidaParams.parse(req.params);
-      const body = PrepararSalidaBody.parse(req.body);
-      await requireSalidaAccess(req.auth!, id, "origin");
-      const result = await db.transaction((tx) =>
-        prepararSalida(tx, { salidaId: id, usuarioId: req.auth!.user.id, lineas: body.lineas }),
-      );
-      res.json(PrepararSalidaResponse.parse(result));
-    } catch (error) {
-      if (!sendError(error, res)) next(error);
-    }
-  },
-);
-
-router.post(
-  "/salidas/:id/enviar",
-  requireSession,
-  requierePermiso("salidas", "editar"),
-  async (req, res, next) => {
-    try {
-      const { id } = EnviarSalidaParams.parse(req.params);
-      const body = EnviarSalidaBody.parse(req.body);
-      await requireSalidaAccess(req.auth!, id, "origin");
-      const result = await db.transaction((tx) =>
-        enviarSalida(tx, {
-          salidaId: id,
-          usuarioId: req.auth!.user.id,
-          transportista: body.transportista,
-          notaEnvio: body.notaEnvio ?? null,
-        }),
-      );
-      res.json(EnviarSalidaResponse.parse(result));
-    } catch (error) {
-      if (!sendError(error, res)) next(error);
-    }
-  },
-);
-
-router.post(
-  "/salidas/:id/recibir",
-  requireSession,
-  requierePermiso("salidas", "editar"),
-  async (req, res, next) => {
-    try {
-      const { id } = RecibirSalidaParams.parse(req.params);
-      const body = RecibirSalidaBody.parse(req.body);
-      await requireSalidaAccess(req.auth!, id, "destination");
-      const result = await db.transaction((tx) =>
-        recibirSalida(tx, {
-          salidaId: id,
-          usuarioId: req.auth!.user.id,
-          notaRecepcion: body.notaRecepcion ?? null,
-          rollos: body.rollos ?? [],
-        }),
-      );
-      res.json(RecibirSalidaResponse.parse(result));
-    } catch (error) {
-      if (!sendError(error, res)) next(error);
-    }
-  },
-);
-
-router.post(
-  "/salidas/:id/cerrar",
-  requireSession,
-  requierePermiso("salidas", "autorizar"),
-  async (req, res, next) => {
-    try {
-      const { id } = CerrarSalidaParams.parse(req.params);
-      await requireSalidaAccess(req.auth!, id, "destination");
-      const result = await db.transaction((tx) => cerrarSalida(tx, id, req.auth!.user.id));
-      res.json(CerrarSalidaResponse.parse(result));
+      res.json(detail);
     } catch (error) {
       if (!sendError(error, res)) next(error);
     }
@@ -384,11 +289,29 @@ router.post(
   async (req, res, next) => {
     try {
       const { id } = CancelarSalidaParams.parse(req.params);
-      const body = CancelarSalidaBody.parse(req.body);
+      const body = CancelarSalidaBody.parse(req.body) as { motivo: string; adminUsuario?: string; adminPassword?: string };
       await requireSalidaAccess(req.auth!, id, "either");
-      const result = await db.transaction((tx) =>
-        cancelarSalida(tx, id, req.auth!.user.id, body.motivo),
-      );
+      const auth = req.auth!;
+      const result = await db.transaction(async (tx) => {
+        let autorizadoPorId: number | null = null;
+        if (auth.user.rol !== "ADMIN") {
+          if (!body.adminUsuario || !body.adminPassword) {
+            throw new InventarioError("Se requieren credenciales de un administrador activo.", "ADMIN_AUTH_REQUIRED");
+          }
+          const [admin] = await tx.select({ id: usuariosTable.id }).from(usuariosTable).where(and(
+            eq(usuariosTable.usuario, body.adminUsuario),
+            eq(usuariosTable.rol, "ADMIN"), eq(usuariosTable.activo, true),
+            sql`${usuariosTable.passwordHash} = crypt(${body.adminPassword}, ${usuariosTable.passwordHash})`,
+          )).limit(1);
+          if (!admin) throw new InventarioError("Credenciales de administrador inválidas.", "ADMIN_AUTH_INVALID");
+          autorizadoPorId = admin.id;
+        }
+        const detail = await cancelarSalida(tx, id, auth.user.id, body.motivo);
+        if (autorizadoPorId != null) {
+          await tx.update(salidasTable).set({ autorizadoPorId }).where(eq(salidasTable.id, id));
+        }
+        return detail;
+      });
       res.json(CancelarSalidaResponse.parse(result));
     } catch (error) {
       if (!sendError(error, res)) next(error);

@@ -6,9 +6,6 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface MotivoSalidaInput {
-  /** @minLength 10 */
-  motivo: string;
-  adminUsuario?: string;
-  adminPassword?: string;
-}
+export type EscanearRolloSalidaParams = {
+origenId: number;
+};

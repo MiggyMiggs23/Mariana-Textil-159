@@ -1061,6 +1061,7 @@ export type EstadoSalida = typeof EstadoSalida[keyof typeof EstadoSalida];
 
 
 export const EstadoSalida = {
+  REGISTRADA: 'REGISTRADA',
   SOLICITADA: 'SOLICITADA',
   ACEPTADA: 'ACEPTADA',
   RECHAZADA: 'RECHAZADA',
@@ -1092,14 +1093,18 @@ export interface SalidaInput {
   origenId: number;
   destinoId: number;
   /** @nullable */
-  notaSolicitud?: string | null;
+  transportista?: string | null;
+  /** @nullable */
+  observaciones?: string | null;
   /** @minItems 1 */
-  lineas: SalidaLineaInput[];
+  rolloIds: number[];
 }
 
 export interface MotivoSalidaInput {
   /** @minLength 10 */
   motivo: string;
+  adminUsuario?: string;
+  adminPassword?: string;
 }
 
 export interface PrepararSalidaLineaInput {
@@ -1149,6 +1154,17 @@ export interface SalidaResumen {
   totalCantidadSolicitada: string;
   totalCantidadEnviada: string;
   totalCantidadRecibida: string;
+  totalRollos?: number;
+  totalMetros?: string;
+  totalKilos?: string;
+  /** @nullable */
+  usuarioId?: number | null;
+  /** @nullable */
+  nombreUsuario?: string | null;
+  /** @nullable */
+  transportista?: string | null;
+  /** @nullable */
+  observaciones?: string | null;
   diferenciasPendientes: boolean;
   createdAt: string;
   updatedAt: string;
@@ -1198,6 +1214,25 @@ export interface SalidaRollo {
   diferencia: string | null;
   /** @nullable */
   notaDiferencia?: string | null;
+  cantidadActual?: string;
+  productoId?: number;
+  sku?: string;
+  tela?: string;
+  color?: string;
+  unidad?: UnidadProducto;
+}
+
+export interface SalidaRolloEscaneado {
+  id: number;
+  serie: string;
+  estado: EstadoRollo;
+  ubicacionId: number;
+  cantidadActual: string;
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
 }
 
 export type SalidaDetail = SalidaResumen & ({
@@ -2002,6 +2037,8 @@ pageSize?: number;
 export type ListRollosParams = {
 ubicacionId?: number;
 productoId?: number;
+usuarioId?: number;
+search?: string;
 estado?: ListRollosEstado;
 serie?: string;
 soloAbiertos?: boolean;
@@ -2110,9 +2147,15 @@ folio?: number;
 origenId?: number;
 destinoId?: number;
 productoId?: number;
+usuarioId?: number;
+search?: string;
 fechaDesde?: string;
 fechaHasta?: string;
 page?: number;
 pageSize?: number;
+};
+
+export type EscanearRolloSalidaParams = {
+origenId: number;
 };
 

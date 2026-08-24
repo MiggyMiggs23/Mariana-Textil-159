@@ -263,6 +263,8 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       ticketMap,
       salidaMap,
     );
+    const salidaInmediata = reference.tipo === "SALIDA" &&
+      (row.tipo === "TRANSFERENCIA_SALIDA" || row.tipo === "TRANSFERENCIA_ENTRADA");
     return {
       ...row,
       createdAt: row.createdAt.toISOString(),
@@ -272,8 +274,10 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       movimientoOrigenId: row.movimientoOrigenId ?? null,
       justificacion: row.justificacion ?? null,
       revisadoPor: row.revisadoPor ?? null,
-      documentoEtiqueta: document.label,
-      documentoRuta: document.route,
+      documentoEtiqueta: salidaInmediata
+        ? (row.tipo === "TRANSFERENCIA_SALIDA" ? "Salida a sitio" : "Entrada por salida")
+        : document.label,
+      documentoRuta: salidaInmediata && reference.id ? `/salidas/${reference.id}` : document.route,
       referenciaRolloRuta: `/inventario/rollos/${row.rolloId}`,
     };
   });
@@ -311,7 +315,7 @@ function resolveDocument(
     if (folio == null) return { label: null, route: null };
     return {
       label: `Salida ${folio}`,
-      route: `/salidas/${salidaId}/documento/salida`,
+      route: `/salidas/${salidaId}`,
     };
   }
   if (reference.tipo === "RECEPCION_SALIDA") {

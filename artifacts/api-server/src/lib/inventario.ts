@@ -875,6 +875,81 @@ export type MoverRolloInput = {
   uuidCliente?: string | null;
 };
 
+/**
+ * Atomic, direct site-to-site transfer.  This deliberately does not share the
+ * two-stage transfer implementation: salidas are already received at their
+ * destination when their document is registered and must never occupy the
+ * technical TRANSITO location.
+ */
+export type TransferirRolloInmediatoInput = {
+  rolloId: number;
+  ubicacionOrigenId: number;
+  ubicacionDestinoId: number;
+  usuarioId: number;
+  justificacion?: string | null;
+  documentoTipo: string;
+  documentoId: string;
+  /** Stable operation UUID; :salida and :entrada are ledger idempotency keys. */
+  uuidCliente?: string | null;
+};
+
+export type TransferirRolloInmediatoResult = {
+  rollo: typeof rollosTable.$inferSelect;
+  salidaMovimiento: typeof movimientosTable.$inferSelect;
+  entradaMovimiento: typeof movimientosTable.$inferSelect;
+};
+
+export async function transferirRolloInmediato(
+  tx: Tx,
+  input: TransferirRolloInmediatoInput,
+): Promise<TransferirRolloInmediatoResult> {
+  if (input.ubicacionOrigenId === input.ubicacionDestinoId) {
+    throw new InventarioError("El origen y destino deben ser diferentes.", "SAME_LOCATION");
+  }
+  const salidaUuid = input.uuidCliente ? `${input.uuidCliente}:salida` : null;
+  const entradaUuid = input.uuidCliente ? `${input.uuidCliente}:entrada` : null;
+  if (salidaUuid) {
+    const duplicate = await checkUuidCliente(tx, salidaUuid);
+    if (duplicate) {
+      const [[rollo], [entrada]] = await Promise.all([
+        tx.select().from(rollosTable).where(eq(rollosTable.id, duplicate.rolloId)).limit(1),
+        tx.select().from(movimientosTable).where(eq(movimientosTable.uuidCliente, entradaUuid!)).limit(1),
+      ]);
+      if (rollo && entrada) {
+        return { rollo, salidaMovimiento: duplicate, entradaMovimiento: entrada };
+      }
+      throw new InventarioError("Transferencia incompleta con UUID duplicado.", "IDEMPOTENCY_CONFLICT");
+    }
+  }
+  const [rollo] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).for("update").limit(1);
+  if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  if (rollo.ubicacionId !== input.ubicacionOrigenId) {
+    throw new InventarioError("El rollo no se encuentra en la ubicación de origen indicada.", "LOCATION_MISMATCH");
+  }
+  if (rollo.estado !== "DISPONIBLE") {
+    throw new InventarioError("El rollo no está DISPONIBLE.", "ROLLO_UNAVAILABLE");
+  }
+  await tx.update(rollosTable).set({ ubicacionId: input.ubicacionDestinoId, estado: "DISPONIBLE" })
+    .where(eq(rollosTable.id, rollo.id));
+  const salidaMovimiento = await insertMovimiento(tx, {
+    rolloId: rollo.id, productoId: rollo.productoId, ubicacionId: input.ubicacionOrigenId,
+    tipo: "TRANSFERENCIA_SALIDA", cantidad: `-${rollo.cantidadActual}`, usuarioId: input.usuarioId,
+    justificacion: input.justificacion ?? null, documentoTipo: input.documentoTipo,
+    documentoId: input.documentoId, uuidCliente: salidaUuid,
+  });
+  const entradaMovimiento = await insertMovimiento(tx, {
+    rolloId: rollo.id, productoId: rollo.productoId, ubicacionId: input.ubicacionDestinoId,
+    tipo: "TRANSFERENCIA_ENTRADA", cantidad: rollo.cantidadActual, usuarioId: input.usuarioId,
+    justificacion: input.justificacion ?? null, documentoTipo: input.documentoTipo,
+    documentoId: input.documentoId, uuidCliente: entradaUuid,
+  });
+  await refreshCache(tx, rollo.productoId, input.ubicacionOrigenId);
+  await refreshCache(tx, rollo.productoId, input.ubicacionDestinoId);
+  const [updated] = await tx.select().from(rollosTable).where(eq(rollosTable.id, rollo.id)).limit(1);
+  return { rollo: updated!, salidaMovimiento, entradaMovimiento };
+}
+
 export type MoverRolloResult = {
   rollo: typeof rollosTable.$inferSelect;
   salidaMovimiento: typeof movimientosTable.$inferSelect;

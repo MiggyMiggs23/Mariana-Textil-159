@@ -9,8 +9,6 @@ import {
   getListLocationsQueryKey,
   useListAjustesPendientes,
   getListAjustesPendientesQueryKey,
-  useGetSalidasPendientesCount,
-  getGetSalidasPendientesCountQueryKey,
   useObtenerSesionCajaActual,
   getObtenerSesionCajaActualQueryKey
 } from "@workspace/api-client-react";
@@ -128,13 +126,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }
   });
 
-  const { data: salidasPendientes } = useGetSalidasPendientesCount({
-    query: {
-      enabled: hasPermission(user, Modules.SALIDAS, "ver"),
-      queryKey: getGetSalidasPendientesCountQueryKey()
-    }
-  });
-  
   const { selectedLocationId, setSelectedLocationId } = useLocationScope();
   const { data: locations } = useListLocations({
     query: {
@@ -303,11 +294,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   {item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
                     <span data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
                       {ajustesPendientes.length}
-                    </span>
-                  ) : null}
-                  {item.path === "/salidas" && salidasPendientes && salidasPendientes.count > 0 ? (
-                    <span data-testid={`badge-salidas`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
-                      {salidasPendientes.count}
                     </span>
                   ) : null}
                 </Link>

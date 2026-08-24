@@ -15,6 +15,8 @@ folio?: number;
 origenId?: number;
 destinoId?: number;
 productoId?: number;
+usuarioId?: number;
+search?: string;
 fechaDesde?: Date;
 fechaHasta?: Date;
 page?: number;

@@ -10,6 +10,7 @@ export type EstadoSalida = typeof EstadoSalida[keyof typeof EstadoSalida];
 
 
 export const EstadoSalida = {
+  REGISTRADA: 'REGISTRADA',
   SOLICITADA: 'SOLICITADA',
   ACEPTADA: 'ACEPTADA',
   RECHAZADA: 'RECHAZADA',

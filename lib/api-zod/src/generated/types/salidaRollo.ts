@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { EstadoRollo } from './estadoRollo';
+import type { UnidadProducto } from './unidadProducto';
 
 export interface SalidaRollo {
   id: number;
@@ -22,4 +23,10 @@ export interface SalidaRollo {
   diferencia: string | null;
   /** @nullable */
   notaDiferencia?: string | null;
+  cantidadActual?: string;
+  productoId?: number;
+  sku?: string;
+  tela?: string;
+  color?: string;
+  unidad?: UnidadProducto;
 }

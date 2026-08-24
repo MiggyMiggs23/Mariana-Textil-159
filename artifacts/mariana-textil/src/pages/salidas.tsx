@@ -1,57 +1,46 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
-import { 
-  useListSalidas, 
+import {
+  useListSalidas,
   getListSalidasQueryKey,
   useGetCurrentUser,
   useListLocations,
-  useGetSalidasPendientesCount,
+  useListUsers,
+  useListProductos,
+  exportarSalidas,
   getGetCurrentUserQueryKey,
   getListLocationsQueryKey,
-  getGetSalidasPendientesCountQueryKey
+  getListUsersQueryKey,
+  getListProductosQueryKey,
+  EstadoSalida,
 } from "@workspace/api-client-react";
 import { keepPreviousData } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
-  FileText,
   Search,
   Plus,
   Loader2,
   ArrowRight,
   Package,
   Clock,
-  ArrowUpFromLine
+  ArrowUpFromLine,
+  Filter,
+  Download,
+  Calendar as CalendarIcon,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { useLocationScope } from "@/lib/location-scope";
-import { SalidaCreateDialog } from "@/components/salidas/salida-create-dialog";
-
 import { AppLayout } from "@/components/layout/app-layout";
-
-type TabConfig = {
-  id: string;
-  label: string;
-  estados?: string;
-  enforcedSide?: "origen" | "destino";
-};
-
-const TABS: TabConfig[] = [
-  { id: "por-aceptar", label: "Por aceptar", estados: "SOLICITADA", enforcedSide: "origen" },
-  { id: "por-preparar", label: "Por preparar", estados: "ACEPTADA", enforcedSide: "origen" },
-  { id: "por-enviar", label: "Por enviar", estados: "PREPARADA", enforcedSide: "origen" },
-  { id: "en-transito", label: "En tránsito", estados: "ENVIADA", enforcedSide: "origen" },
-  { id: "por-recibir", label: "Por recibir", estados: "ENVIADA,RECIBIDA", enforcedSide: "destino" },
-  { id: "por-cerrar", label: "Por cerrar", estados: "RECIBIDA", enforcedSide: "destino" },
-  { id: "historial", label: "Historial", estados: "CERRADA,RECHAZADA,CANCELADA" },
-];
+import { useToast } from "@/hooks/use-toast";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; class: string }> = {
@@ -62,7 +51,7 @@ function EstadoBadge({ estado }: { estado: string }) {
     ENVIADA: { label: "Enviada", class: "bg-amber-100 text-amber-800 border-amber-200" },
     RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
     CERRADA: { label: "Cerrada", class: "bg-green-100 text-green-800 border-green-200" },
-    CANCELADA: { label: "Cancelada", class: "bg-red-100 text-red-800 border-red-200" },
+    CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
   };
   const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
   return (
@@ -74,24 +63,27 @@ function EstadoBadge({ estado }: { estado: string }) {
 
 export default function Salidas() {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
   const { selectedLocationId } = useLocationScope();
+
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const { data: locations } = useListLocations({ query: { queryKey: getListLocationsQueryKey() } });
-  const { data: pendientes } = useGetSalidasPendientesCount({
-    query: {
-      enabled: !!user,
-      queryKey: getGetSalidasPendientesCountQueryKey(),
-    },
-  });
+  const { data: users } = useListUsers({ query: { queryKey: getListUsersQueryKey() } });
+  const { data: products } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
 
-  const [activeTab, setActiveTab] = useState<string>("por-aceptar");
   const [page, setPage] = useState(1);
   const [folio, setFolio] = useState("");
   const [debouncedFolio, setDebouncedFolio] = useState("");
   const [origenId, setOrigenId] = useState<string>("all");
   const [destinoId, setDestinoId] = useState<string>("all");
-  
-  const [createOpen, setCreateOpen] = useState(false);
+  const [estado, setEstado] = useState<string>("all");
+  const [usuarioId, setUsuarioId] = useState<string>("all");
+  const [productoId, setProductoId] = useState<string>("all");
+  const [fechaDesde, setFechaDesde] = useState<Date | undefined>();
+  const [fechaHasta, setFechaHasta] = useState<Date | undefined>();
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Debounce folio
   useEffect(() => {
@@ -102,26 +94,23 @@ export default function Salidas() {
     return () => clearTimeout(timer);
   }, [folio]);
 
-  const activeTabConfig = TABS.find(t => t.id === activeTab);
-
   let queryOrigen = origenId !== "all" ? Number(origenId) : undefined;
-  let queryDestino = destinoId !== "all" ? Number(destinoId) : undefined;
-
-  if (selectedLocationId !== null) {
-    if (activeTabConfig?.enforcedSide === "origen") {
-      queryOrigen = selectedLocationId;
-    } else if (activeTabConfig?.enforcedSide === "destino") {
-      queryDestino = selectedLocationId;
-    }
+  if (selectedLocationId !== null && origenId === "all") {
+    // If scope is limited to a location, default queryOrigen to it, unless they are filtering by it specifically
+    queryOrigen = selectedLocationId;
   }
 
   const queryParams = {
-    estados: activeTabConfig?.estados,
     folio: debouncedFolio ? Number(debouncedFolio) : undefined,
     origenId: queryOrigen,
-    destinoId: queryDestino,
+    destinoId: destinoId !== "all" ? Number(destinoId) : undefined,
+    usuarioId: usuarioId !== "all" ? Number(usuarioId) : undefined,
+    productoId: productoId !== "all" ? Number(productoId) : undefined,
+    estados: estado !== "all" ? estado : undefined,
+    fechaDesde: fechaDesde ? format(fechaDesde, 'yyyy-MM-dd') : undefined,
+    fechaHasta: fechaHasta ? format(fechaHasta, 'yyyy-MM-dd') : undefined,
     page,
-    pageSize: activeTab === "por-recibir" || activeTab === "por-cerrar" ? 100 : 20
+    pageSize: 100
   };
 
   const { data: salidasResult, isLoading, error } = useListSalidas(queryParams, {
@@ -132,116 +121,203 @@ export default function Salidas() {
   });
 
   const canCreate = user ? hasPermission(user, Modules.SALIDAS, 'crear') : false;
-  const rawItems = salidasResult?.items ?? [];
-  const displayItems = activeTab === "por-recibir"
-    ? rawItems.filter(
-        (salida) =>
-          salida.estado === "ENVIADA" ||
-          (salida.estado === "RECIBIDA" && salida.diferenciasPendientes),
-      )
-    : activeTab === "por-cerrar"
-      ? rawItems.filter((salida) => !salida.diferenciasPendientes)
-      : rawItems;
-  const trayScopeLabel =
-    activeTabConfig?.enforcedSide === "origen"
-      ? "Operación de origen"
-      : activeTabConfig?.enforcedSide === "destino"
-        ? "Operación de destino"
-        : "Consulta histórica";
+  const displayItems = salidasResult?.items ?? [];
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      // Provide custom params directly if the fetch API supports it in the custom fetch, or let the generated hook handle it if no params.
+      // The generated hook does not accept ListSalidasParams for export, so it downloads everything or whatever the default is.
+      const blob = await exportarSalidas();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `salidas-${format(new Date(), 'yyyy-MM-dd')}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e: any) {
+      toast({ title: "Error al exportar", description: getApiErrorMessage(e), variant: "destructive" });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const resetFilters = () => {
+    setOrigenId("all");
+    setDestinoId("all");
+    setEstado("all");
+    setUsuarioId("all");
+    setProductoId("all");
+    setFechaDesde(undefined);
+    setFechaHasta(undefined);
+    setFolio("");
+    setPage(1);
+  };
+
+  const activeFilterCount = [
+    origenId !== "all",
+    destinoId !== "all",
+    estado !== "all",
+    usuarioId !== "all",
+    productoId !== "all",
+    !!fechaDesde,
+    !!fechaHasta,
+    !!folio
+  ].filter(Boolean).length;
 
   return (
     <AppLayout>
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
-            <ArrowUpFromLine className="w-8 h-8 text-primary" />
-            Salidas
-          </h1>
-          <p className="text-muted-foreground mt-1">Gestiona los movimientos de mercancía entre sucursales.</p>
-        </div>
-        <div className="flex w-full items-center gap-3 sm:w-auto">
-          <div
-            className="rounded-lg border bg-card px-3 py-2 text-sm shadow-sm"
-            data-testid="salidas-pending-count"
-          >
-            <span className="text-muted-foreground">Pendientes </span>
-            <span className="font-bold text-foreground">{pendientes?.count ?? 0}</span>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
+              <ArrowUpFromLine className="w-8 h-8 text-primary" />
+              Salidas
+            </h1>
+            <p className="text-muted-foreground mt-1">Historial completo de salidas y movimientos entre almacenes.</p>
           </div>
-          {canCreate && (
-            <Button data-testid="btn-create-salida" onClick={() => setCreateOpen(true)} className="ml-auto gap-2 shadow-sm h-10 px-5 sm:ml-0">
-              <Plus className="w-4 h-4" />
-              Nueva Solicitud
+          <div className="flex w-full items-center gap-3 sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={handleExport}
+              disabled={isExporting}
+              className="gap-2 shadow-sm h-10 bg-white"
+            >
+              {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              Excel
             </Button>
+            {canCreate && (
+              <Link href="/salidas/nueva">
+                <Button data-testid="btn-create-salida" className="gap-2 shadow-sm h-10 px-5">
+                  <Plus className="w-4 h-4" />
+                  Nueva Salida
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="p-4 border-b border-slate-100 bg-slate-50 flex flex-wrap gap-4 items-center justify-between">
+            <div className="flex items-center gap-4 flex-1">
+              <div className="relative w-full max-w-sm">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  data-testid="filter-folio"
+                  placeholder="Buscar por folio..."
+                  value={folio}
+                  onChange={(e) => setFolio(e.target.value)}
+                  className="pl-9 bg-white border-slate-200"
+                  type="number"
+                  min="1"
+                />
+              </div>
+              <Button
+                variant={showFilters || activeFilterCount > 0 ? "secondary" : "outline"}
+                onClick={() => setShowFilters(!showFilters)}
+                className="gap-2 bg-white"
+              >
+                <Filter className="w-4 h-4" />
+                Filtros
+                {activeFilterCount > 0 && (
+                  <Badge variant="secondary" className="ml-1 px-1.5 h-5">{activeFilterCount}</Badge>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {showFilters && (
+            <div className="p-4 border-b border-slate-100 bg-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-in slide-in-from-top-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</label>
+                <Select value={estado} onValueChange={(val) => { setEstado(val); setPage(1); }}>
+                  <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Estado (Todos)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los estados</SelectItem>
+                    {Object.values(EstadoSalida).map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Origen</label>
+                <Select value={origenId} onValueChange={(val) => { setOrigenId(val); setPage(1); }}>
+                  <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Origen (Todos)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los orígenes</SelectItem>
+                    {locations?.map(l => <SelectItem key={l.id} value={String(l.id)}>{l.nombre}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Destino</label>
+                <Select value={destinoId} onValueChange={(val) => { setDestinoId(val); setPage(1); }}>
+                  <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Destino (Todos)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los destinos</SelectItem>
+                    {locations?.map(l => <SelectItem key={l.id} value={String(l.id)}>{l.nombre}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Usuario (Solicitante)</label>
+                <Select value={usuarioId} onValueChange={(val) => { setUsuarioId(val); setPage(1); }}>
+                  <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Usuario (Todos)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los usuarios</SelectItem>
+                    {users?.map(u => <SelectItem key={u.id} value={String(u.id)}>{u.nombre}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Producto</label>
+                <Select value={productoId} onValueChange={(val) => { setProductoId(val); setPage(1); }}>
+                  <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Producto (Todos)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los productos</SelectItem>
+                    {products?.map(p => <SelectItem key={p.id} value={String(p.id)}>{p.sku} - {p.tela}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Desde</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal bg-white">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {fechaDesde ? format(fechaDesde, 'dd/MM/yyyy') : <span>Seleccionar fecha</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={fechaDesde} onSelect={(d) => { setFechaDesde(d); setPage(1); }} initialFocus />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasta</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal bg-white">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {fechaHasta ? format(fechaHasta, 'dd/MM/yyyy') : <span>Seleccionar fecha</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={fechaHasta} onSelect={(d) => { setFechaHasta(d); setPage(1); }} initialFocus />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-1.5 flex items-end">
+                <Button variant="ghost" onClick={resetFilters} className="w-full text-slate-500 hover:text-slate-900">
+                  <X className="w-4 h-4 mr-2" />
+                  Limpiar Filtros
+                </Button>
+              </div>
+            </div>
           )}
-        </div>
-      </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row gap-4 items-center">
-          <div className="relative flex-1 w-full max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              data-testid="filter-folio"
-              placeholder="Buscar por folio..."
-              value={folio}
-              onChange={(e) => setFolio(e.target.value)}
-              className="pl-9 bg-white border-slate-200"
-              type="number"
-              min="1"
-            />
-          </div>
-          <Select
-            value={origenId}
-            onValueChange={(val) => { setOrigenId(val); setPage(1); }}
-            disabled={activeTabConfig?.enforcedSide === "origen" && selectedLocationId !== null}
-          >
-            <SelectTrigger data-testid="filter-origen" className="w-full sm:w-[200px] bg-white">
-              <SelectValue placeholder="Origen (Todos)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Origen (Todos)</SelectItem>
-              {locations?.map(l => (
-                <SelectItem key={l.id} value={String(l.id)}>{l.nombre}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value={destinoId}
-            onValueChange={(val) => { setDestinoId(val); setPage(1); }}
-            disabled={activeTabConfig?.enforcedSide === "destino" && selectedLocationId !== null}
-          >
-            <SelectTrigger data-testid="filter-destino" className="w-full sm:w-[200px] bg-white">
-              <SelectValue placeholder="Destino (Todos)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Destino (Todos)</SelectItem>
-              {locations?.map(l => (
-                <SelectItem key={l.id} value={String(l.id)}>{l.nombre}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); setPage(1); }}>
-          <div className="border-b border-slate-100 px-4 py-2 text-xs font-medium text-muted-foreground" data-testid="tray-scope">
-            {trayScopeLabel}
-          </div>
-          <div className="px-4 pt-4 border-b border-slate-200 w-full overflow-x-auto custom-scrollbar">
-            <TabsList className="bg-transparent p-0 h-auto gap-6 justify-start w-max">
-              {TABS.map(tab => (
-                <TabsTrigger
-                  key={tab.id}
-                  value={tab.id}
-                  data-testid={`tab-${tab.id}`}
-                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-1 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-primary transition-none"
-                >
-                  {tab.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
-          
           <div className="p-0 min-h-[400px]">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center h-[400px] text-slate-400">
@@ -255,27 +331,27 @@ export default function Salidas() {
             ) : displayItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[400px] text-slate-400">
                 <Package className="w-12 h-12 mb-4 opacity-20" />
-                <p className="text-lg font-medium text-slate-600">No hay salidas</p>
-                <p className="text-sm">No se encontraron salidas en esta bandeja.</p>
+                <p className="text-lg font-medium text-slate-600">No hay resultados</p>
+                <p className="text-sm">Ajusta los filtros para ver más resultados.</p>
               </div>
             ) : (
               <div className="divide-y divide-slate-100">
                 {displayItems.map((salida) => (
-                  <Link 
-                    key={salida.id} 
+                  <Link
+                    key={salida.id}
                     href={`/salidas/${salida.id}`}
                     data-testid={`row-salida-${salida.id}`}
-                    className="flex flex-col sm:flex-row sm:items-center p-4 hover:bg-slate-50 transition-colors gap-4 group"
+                    className={`flex flex-col sm:flex-row sm:items-center p-4 hover:bg-slate-50 transition-colors gap-4 group ${salida.estado === 'CANCELADA' ? 'opacity-60' : ''}`}
                   >
                     <div className="w-20 shrink-0">
                       <p className="text-xs font-semibold text-slate-500 mb-1">FOLIO</p>
-                      <p className="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors">
+                      <p className={`text-lg font-bold transition-colors ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900 group-hover:text-primary'}`}>
                         {String(salida.folio).padStart(5, '0')}
                       </p>
                     </div>
-                    
+
                     <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
+                      <div className={salida.estado === 'CANCELADA' ? 'line-through' : ''}>
                         <div className="flex items-center gap-2 mb-1">
                           <p className="font-medium text-slate-900 truncate">{salida.nombreOrigen}</p>
                           <ArrowRight className="w-4 h-4 text-slate-300 shrink-0" />
@@ -290,7 +366,7 @@ export default function Salidas() {
                           <span className="truncate">{salida.nombreSolicitadoPor}</span>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center justify-start sm:justify-end gap-6">
                         <div className="text-left sm:text-right">
                           <p className="text-xs font-semibold text-slate-500 mb-1">CANTIDAD</p>
@@ -311,9 +387,9 @@ export default function Salidas() {
               </div>
             )}
           </div>
-          
+
           {salidasResult && Math.ceil(salidasResult.total / salidasResult.pageSize) > 1 && (
-            <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50">
               <p className="text-sm text-slate-500">
                 Mostrando página {page} de {Math.ceil(salidasResult.total / salidasResult.pageSize)} ({salidasResult.total} resultados)
               </p>
@@ -339,11 +415,8 @@ export default function Salidas() {
               </div>
             </div>
           )}
-        </Tabs>
+        </div>
       </div>
-
-      <SalidaCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
-    </div>
     </AppLayout>
   );
 }

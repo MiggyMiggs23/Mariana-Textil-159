@@ -10,6 +10,8 @@ import type { ListRollosEstado } from './listRollosEstado';
 export type ListRollosParams = {
 ubicacionId?: number;
 productoId?: number;
+usuarioId?: number;
+search?: string;
 estado?: ListRollosEstado;
 serie?: string;
 soloAbiertos?: boolean;

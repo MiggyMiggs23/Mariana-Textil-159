@@ -5,14 +5,15 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
-import type { SalidaLineaInput } from './salidaLineaInput';
 
 export interface SalidaInput {
   uuidCliente: string;
   origenId: number;
   destinoId: number;
   /** @nullable */
-  notaSolicitud?: string | null;
+  transportista?: string | null;
+  /** @nullable */
+  observaciones?: string | null;
   /** @minItems 1 */
-  lineas: SalidaLineaInput[];
+  rolloIds: number[];
 }

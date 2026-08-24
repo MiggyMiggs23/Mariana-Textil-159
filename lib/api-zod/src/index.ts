@@ -159,6 +159,7 @@ export * from "./generated/types/salidaListResult";
 export * from "./generated/types/salidaMostradorInput";
 export * from "./generated/types/salidaResumen";
 export * from "./generated/types/salidaRollo";
+export * from "./generated/types/salidaRolloEscaneado";
 export * from "./generated/types/serverTime";
 export * from "./generated/types/serverTimeZonaHoraria";
 export * from "./generated/types/sesionCaja";
@@ -192,6 +193,7 @@ export * from "./generated/types/venderRolloInput";
 // ── Colliding Params types re-exported under QueryParams alias ───────────
 // (server uses the Zod versions from api.ts; these TS interfaces are for
 //  the frontend – api-client-react generates its own hooks independently)
+export type { EscanearRolloSalidaParams as EscanearRolloSalidaQueryParams } from "./generated/types/escanearRolloSalidaParams";
 export type { EstadisticasProveedorParams as EstadisticasProveedorQueryParams } from "./generated/types/estadisticasProveedorParams";
 export type { EstadoCuentaProveedorParams as EstadoCuentaProveedorQueryParams } from "./generated/types/estadoCuentaProveedorParams";
 export type { ExportarProveedorXlsxParams as ExportarProveedorXlsxQueryParams } from "./generated/types/exportarProveedorXlsxParams";
