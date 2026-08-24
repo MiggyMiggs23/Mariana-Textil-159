@@ -12,6 +12,7 @@
  */
 
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   db,
@@ -23,6 +24,7 @@ import {
 } from "@workspace/db";
 import {
   crearRollo,
+  crearEntrada,
   activarRollo,
   moverRollo,
   recibirTransferencia,
@@ -1037,6 +1039,145 @@ await test("T-16: Tras reversos, SUM(movimientos) = caché para todo par", async
       `Discrepancy after reversals: movimientos=${row.cantidadMovimientos} vs cache=${row.cantidadCache}`,
     );
   }
+});
+
+await test("T-20A: creación rechaza costos faltante, cero, negativo y menor a precisión DB", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const invalidCosts = [undefined, "", "0", "-1", "0.004"];
+
+  for (const [index, costoUnitario] of invalidCosts.entries()) {
+    await assert.rejects(
+      () =>
+        db.transaction((tx) =>
+          crearRollo(tx, {
+            productoId,
+            ubicacionId,
+            cantidadInicial: "10",
+            costoUnitario: costoUnitario as string,
+            usuarioId: 1,
+            estado: "DISPONIBLE",
+          }),
+        ),
+      (error: unknown) =>
+        error instanceof InventarioError &&
+        error.code === "INVALID_UNIT_COST",
+    );
+
+    await assert.rejects(
+      () =>
+        db.transaction((tx) =>
+          crearEntrada(tx, {
+            ubicacionId,
+            usuarioId: 1,
+            uuidCliente: randomUUID(),
+            lineas: [
+              {
+                productoId,
+                costoUnitario: costoUnitario as string,
+                cantidades: ["10"],
+              },
+            ],
+          }),
+        ),
+      (error: unknown) =>
+        error instanceof InventarioError &&
+        error.code === "INVALID_UNIT_COST",
+    );
+  }
+});
+
+await test("T-20B: activación rechaza rollo legado sin costo antes de mutar", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const { rollo } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "10",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "PROGRAMADO",
+    }),
+  );
+  trackRollo(rollo.serie);
+  await db
+    .update(rollosTable)
+    .set({ costoUnitario: "0.00" })
+    .where(eq(rollosTable.id, rollo.id));
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+
+  await assert.rejects(
+    () =>
+      db.transaction((tx) =>
+        activarRollo(tx, {
+          rolloId: rollo.id,
+          cantidadReal: "10",
+          usuarioId: 1,
+        }),
+      ),
+    (error: unknown) =>
+      error instanceof InventarioError &&
+      error.code === "ROLLO_SIN_COSTO" &&
+      error.message === expectedMessage &&
+      !error.message.includes("0.00"),
+  );
+
+  const [unchanged] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  assert.equal(unchanged!.estado, "PROGRAMADO");
+  const movimientos = await db
+    .select()
+    .from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rollo.id));
+  assert.equal(movimientos.length, 0);
+});
+
+await test("T-20C: venta directa rechaza rollo legado sin costo antes de mutar", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const { rollo } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "10",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+  await db
+    .update(rollosTable)
+    .set({ costoUnitario: "0.00" })
+    .where(eq(rollosTable.id, rollo.id));
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+
+  await assert.rejects(
+    () =>
+      db.transaction((tx) =>
+        venderRollo(tx, { rolloId: rollo.id, usuarioId: 1 }),
+      ),
+    (error: unknown) =>
+      error instanceof InventarioError &&
+      error.code === "ROLLO_SIN_COSTO" &&
+      error.message === expectedMessage &&
+      !error.message.includes("0.00"),
+  );
+
+  const [unchanged] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  assert.equal(unchanged!.estado, "DISPONIBLE");
+  const movimientos = await db
+    .select()
+    .from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rollo.id));
+  assert.equal(movimientos.length, 1);
+  assert.equal(movimientos[0]!.tipo, "ALTA");
 });
 
 // =============================================================================

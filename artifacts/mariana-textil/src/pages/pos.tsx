@@ -537,7 +537,10 @@ export default function PosPage() {
             err && typeof err === "object"
               ? (err as { data?: { code?: string } }).data
               : undefined;
-          if (data?.code === "PRICE_BELOW_COST") {
+          if (
+            data?.code === "PRICE_BELOW_COST" ||
+            data?.code === "ROLLO_SIN_COSTO"
+          ) {
             setCart((current) =>
               current.map((item) =>
                 item.rollo && message.includes(String(item.rollo.serie))

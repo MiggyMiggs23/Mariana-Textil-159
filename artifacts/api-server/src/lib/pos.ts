@@ -23,6 +23,10 @@ import {
   venderRollo,
   type Tx,
 } from "./inventario";
+import {
+  isValidUnitCost,
+  rollWithoutValidUnitCostMessage,
+} from "./unit-cost";
 
 const FOLIO_ROW_ID = 1;
 
@@ -311,6 +315,13 @@ export async function validarPrecioPos(
       409,
     );
   }
+  if (!isValidUnitCost(rollo.costoUnitario)) {
+    return {
+      valido: false,
+      code: "ROLLO_SIN_COSTO",
+      mensaje: rollWithoutValidUnitCostMessage(rollo.serie),
+    };
+  }
   if (precioCents < money(rollo.costoUnitario)) {
     return {
       valido: false,
@@ -475,6 +486,15 @@ export async function crearTicket(
         throw new PosError(
           `La venta normal debe incluir la cantidad completa del rollo serie ${rollo.serie}.`,
           "FULL_ROLLO_REQUIRED",
+        );
+      }
+      if (
+        input.tipo === "NORMAL" &&
+        !isValidUnitCost(rollo.costoUnitario)
+      ) {
+        throw new PosError(
+          rollWithoutValidUnitCostMessage(rollo.serie),
+          "ROLLO_SIN_COSTO",
         );
       }
       if (input.tipo === "NORMAL" && precioCents < money(rollo.costoUnitario)) {

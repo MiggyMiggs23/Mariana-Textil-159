@@ -79,6 +79,7 @@ import {
   listKardexFilters as queryKardexFilters,
   type KardexFiltersInput,
 } from "../lib/kardex";
+import { isValidUnitCost } from "../lib/unit-cost";
 
 export const inventarioRouter = Router();
 
@@ -327,7 +328,7 @@ inventarioRouter.post(
             .json({ error: "Cada línea debe incluir al menos una cantidad." });
           return;
         }
-        if (parseFloat(linea.costoUnitario) <= 0) {
+        if (!isValidUnitCost(linea.costoUnitario)) {
           res
             .status(400)
             .json({ error: "El costo unitario debe ser mayor a cero." });

@@ -34,6 +34,10 @@ import {
   type EstadoRollo,
   type TipoMovimiento,
 } from "@workspace/db";
+import {
+  isValidUnitCost,
+  rollWithoutValidUnitCostMessage,
+} from "./unit-cost";
 
 // ── Drizzle transaction type ──────────────────────────────────────────────────
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -330,6 +334,13 @@ export async function crearRollo(
     }
   }
 
+  if (!isValidUnitCost(input.costoUnitario)) {
+    throw new InventarioError(
+      "El costo unitario debe ser mayor a cero.",
+      "INVALID_UNIT_COST",
+    );
+  }
+
   const [producto] = await tx
     .select({ sku: productosTable.sku })
     .from(productosTable)
@@ -458,7 +469,9 @@ export type EntradaResult = {
  * without creating anything new.
  *
  * Business validation (products exist/active, provider active, location type,
- * positive quantities/costs, duplicate lines) is performed by the caller/route.
+ * positive quantities, duplicate lines) is performed by the caller/route.
+ * Positive unit cost is also enforced here so direct engine callers cannot
+ * create rolls whose persisted two-decimal cost would be zero.
  */
 export async function crearEntrada(
   tx: Tx,
@@ -472,6 +485,13 @@ export async function crearEntrada(
     .limit(1);
   if (dup) {
     return buildEntradaResult(tx, dup.id);
+  }
+
+  if (input.lineas.some((linea) => !isValidUnitCost(linea.costoUnitario))) {
+    throw new InventarioError(
+      "El costo unitario debe ser mayor a cero.",
+      "INVALID_UNIT_COST",
+    );
   }
 
   if (input.lineas.length === 0) {
@@ -791,6 +811,13 @@ export async function activarRollo(
 
   if (!rollo) {
     throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  }
+
+  if (!isValidUnitCost(rollo.costoUnitario)) {
+    throw new InventarioError(
+      rollWithoutValidUnitCostMessage(rollo.serie),
+      "ROLLO_SIN_COSTO",
+    );
   }
 
   assertTransition(rollo.estado, "DISPONIBLE");
@@ -1164,6 +1191,12 @@ export async function venderRollo(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  if (!isValidUnitCost(rollo.costoUnitario)) {
+    throw new InventarioError(
+      rollWithoutValidUnitCostMessage(rollo.serie),
+      "ROLLO_SIN_COSTO",
+    );
+  }
   assertTransition(rollo.estado, "VENDIDO");
 
   await tx

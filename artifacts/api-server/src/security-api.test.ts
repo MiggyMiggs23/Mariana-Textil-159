@@ -51,6 +51,7 @@ import { randomUUID } from "node:crypto";
 import { and, count, eq, sql } from "drizzle-orm";
 import {
   db,
+  entradasTable,
   existenciasTable,
   movimientosTable,
   permisosRolTable,
@@ -59,6 +60,7 @@ import {
   proveedoresTable,
   rollosTable,
   sesionesTable,
+  ticketsTable,
   ubicacionesTable,
   usuariosTable,
   type RolUsuario,
@@ -122,6 +124,7 @@ const createdRolloIds: number[] = [];
 const createdProveedorIds: number[] = [];
 const createdPermisosUsuarioIds: number[] = [];
 const createdClienteIds: number[] = [];
+const createdEntradaIds: number[] = [];
 // Rol-level rows we temporarily delete, stored as {rol, modulo, ...original}
 type RolRowBackup = {
   rol: RolUsuario;
@@ -258,7 +261,7 @@ async function mkProducto(): Promise<number> {
 
 // Create rollo via DB engine helper (bypasses HTTP auth)
 async function mkRolloDisponible(ubicacionId: number, productoId: number, adminId: number): Promise<number> {
-  const [rollo] = await db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     const result = await crearEntrada(tx, {
       ubicacionId,
       proveedorId: null,
@@ -272,8 +275,10 @@ async function mkRolloDisponible(ubicacionId: number, productoId: number, adminI
         cantidades: ["15.000"],
       }],
     });
-    return result.rollos;
+    return result;
   });
+  createdEntradaIds.push(result.id);
+  const [rollo] = result.rollos;
   createdRolloIds.push(rollo!.id);
   return rollo!.id;
 }
@@ -570,6 +575,153 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
     .where(eq(rollosTable.id, sharedRolloId))
     .limit(1);
   assert.equal(unchanged!.estado, "DISPONIBLE");
+});
+
+await test("S-03D: legacy zero-cost roll is blocked by advance and definitive POS validation", async () => {
+  const productoId = await mkProducto();
+  const rolloId = await mkRolloDisponible(
+    seedTienda.id,
+    productoId,
+    testAdmin.id,
+  );
+  await db
+    .update(rollosTable)
+    .set({ costoUnitario: "0.00" })
+    .where(eq(rollosTable.id, rolloId));
+
+  const [rollo] = await db
+    .select({ serie: rollosTable.serie })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId))
+    .limit(1);
+  assert.ok(rollo, "legacy roll fixture must exist");
+
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+  const terminalLogin = await login(
+    testTerminal.usuario,
+    testTerminal.password,
+  );
+  assert.equal(terminalLogin.status, 200);
+
+  const validation = await api(
+    "POST",
+    "/pos/validar-precio",
+    {
+      ubicacionId: seedTienda.id,
+      productoId,
+      rolloId,
+      precioUnitario: 150,
+    },
+    terminalLogin.cookie,
+  );
+  assert.equal(validation.status, 200, JSON.stringify(validation.body));
+  assert.deepEqual(validation.body, {
+    valido: false,
+    code: "ROLLO_SIN_COSTO",
+    mensaje: expectedMessage,
+  });
+  assert.ok(
+    String((validation.body as Record<string, unknown>).mensaje).includes(
+      rollo.serie,
+    ),
+    "advance response must include the affected series",
+  );
+  assert.equal(
+    JSON.stringify(validation.body).includes("0.00"),
+    false,
+    "advance response must not expose the invalid stored amount",
+  );
+  assertNoTerminalSensitiveKeys(validation.body, "/pos/validar-precio");
+
+  const ticketUuid = randomUUID();
+  const creation = await api(
+    "POST",
+    "/tickets",
+    {
+      uuidCliente: ticketUuid,
+      ubicacionId: seedTienda.id,
+      clienteId: null,
+      tipo: "NORMAL",
+      facturado: false,
+      lineas: [
+        {
+          rolloId,
+          productoId,
+          cantidad: 15,
+          precioUnitario: 150,
+        },
+      ],
+    },
+    terminalLogin.cookie,
+  );
+  assert.equal(creation.status, 400, JSON.stringify(creation.body));
+  assert.deepEqual(creation.body, {
+    error: expectedMessage,
+    code: "ROLLO_SIN_COSTO",
+  });
+  assert.ok(
+    String((creation.body as Record<string, unknown>).error).includes(
+      rollo.serie,
+    ),
+    "definitive response must include the affected series",
+  );
+  assert.equal(
+    JSON.stringify(creation.body).includes("0.00"),
+    false,
+    "definitive response must not expose the invalid stored amount",
+  );
+  assertNoTerminalSensitiveKeys(creation.body, "/tickets");
+
+  const [unchanged] = await db
+    .select({ estado: rollosTable.estado })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId))
+    .limit(1);
+  assert.equal(unchanged?.estado, "DISPONIBLE");
+
+  const [{ value: ticketCount }] = await db
+    .select({ value: count() })
+    .from(ticketsTable)
+    .where(eq(ticketsTable.uuidCliente, ticketUuid));
+  assert.equal(ticketCount, 0, "rejected sale must not create a ticket");
+});
+
+await test("S-03E: entrada without costoUnitario is rejected without creating a roll", async () => {
+  const productoId = await mkProducto();
+  const uuidCliente = randomUUID();
+  const adminLogin = await login(testAdmin.usuario, testAdmin.password);
+  assert.equal(adminLogin.status, 200);
+
+  const before = await db
+    .select({ id: rollosTable.id })
+    .from(rollosTable)
+    .where(eq(rollosTable.productoId, productoId));
+
+  const response = await api(
+    "POST",
+    "/inventario/entradas",
+    {
+      ubicacionId: seedTienda.id,
+      proveedorId: null,
+      observaciones: null,
+      uuidCliente,
+      lineas: [{ productoId, cantidades: ["7.000"] }],
+    },
+    adminLogin.cookie,
+  );
+  assert.equal(response.status, 400, JSON.stringify(response.body));
+
+  const after = await db
+    .select({ id: rollosTable.id })
+    .from(rollosTable)
+    .where(eq(rollosTable.productoId, productoId));
+  assert.equal(after.length, before.length, "invalid entrada must not create a roll");
+
+  const [{ value: entradaCount }] = await db
+    .select({ value: count() })
+    .from(entradasTable)
+    .where(eq(entradasTable.uuidCliente, uuidCliente));
+  assert.equal(entradaCount, 0, "invalid request must not create an entrada");
 });
 
 // S-04: BODEGA denied POS sale (vender) but can read inventario
@@ -1589,6 +1741,13 @@ async function cleanup(): Promise<void> {
     } catch { /* best effort */ }
     try {
       await db.delete(rollosTable).where(eq(rollosTable.id, id));
+    } catch { /* best effort */ }
+  }
+
+  // Delete entrada headers created by mkRolloDisponible after their rollos.
+  for (const id of createdEntradaIds) {
+    try {
+      await db.delete(entradasTable).where(eq(entradasTable.id, id));
     } catch { /* best effort */ }
   }
 

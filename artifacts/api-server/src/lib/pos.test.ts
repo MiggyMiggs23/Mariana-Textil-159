@@ -303,6 +303,72 @@ await test("POS-02B validación anticipada conserva alcance del rollo", async ()
   );
 });
 
+await test("POS-20 rollo legado sin costo falla anticipada y definitivamente con mensaje seguro", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId);
+  await db
+    .update(rollosTable)
+    .set({ costoUnitario: "0.00" })
+    .where(eq(rollosTable.id, rollo.id));
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+
+  assert.deepEqual(
+    await validarPrecioPos(db, {
+      ubicacionId,
+      productoId,
+      rolloId: rollo.id,
+      precioUnitario: "75",
+    }),
+    {
+      valido: false,
+      code: "ROLLO_SIN_COSTO",
+      mensaje: expectedMessage,
+    },
+  );
+
+  const uuid = randomUUID();
+  const [folioAntes] = await db
+    .select()
+    .from(ticketFolioTable)
+    .where(eq(ticketFolioTable.id, 1))
+    .limit(1);
+  await assert.rejects(
+    () =>
+      sale({
+        ubicacionId,
+        productoId,
+        rolloId: rollo.id,
+        cantidad: "10",
+        precio: "75",
+        uuid,
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof PosError);
+      assert.equal(error.code, "ROLLO_SIN_COSTO");
+      assert.equal(error.message, expectedMessage);
+      assert.equal(error.message.includes("0.00"), false);
+      return true;
+    },
+  );
+  const [folioDespues] = await db
+    .select()
+    .from(ticketFolioTable)
+    .where(eq(ticketFolioTable.id, 1))
+    .limit(1);
+  assert.equal(folioDespues?.ultimoFolio, folioAntes?.ultimoFolio);
+  const rejectedTickets = await db
+    .select()
+    .from(ticketsTable)
+    .where(eq(ticketsTable.uuidCliente, uuid));
+  assert.equal(rejectedTickets.length, 0);
+  const [unchanged] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  assert.equal(unchanged!.estado, "DISPONIBLE");
+});
+
 await test("POS-03 concurrencia permite vender el mismo rollo solo una vez", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();

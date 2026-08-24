@@ -44,6 +44,16 @@ type DraftLinea = {
   cantidades: string[];
 };
 
+const isValidUnitCost = (value: string): boolean => {
+  const parsed = Number(value);
+  return (
+    value.trim() !== "" &&
+    Number.isFinite(parsed) &&
+    parsed > 0 &&
+    Number(parsed.toFixed(2)) > 0
+  );
+};
+
 export default function Entradas() {
   const queryClient = useQueryClient();
 
@@ -139,8 +149,12 @@ export default function Entradas() {
   }, [isCaptureModalOpen]);
 
   const handleStartCapture = () => {
-    if (!productoId || !costoUnitario || !declaredCount || Number(declaredCount) <= 0 || !ubicacionId) {
+    if (!productoId || !declaredCount || Number(declaredCount) <= 0 || !ubicacionId) {
       toast.error("Por favor completa todos los campos obligatorios (*)");
+      return;
+    }
+    if (!isValidUnitCost(costoUnitario)) {
+      toast.error("El costo unitario debe ser mayor a cero.");
       return;
     }
     
@@ -255,6 +269,10 @@ export default function Entradas() {
 
   const handleConfirmCapture = (forceReduce = false) => {
     const declared = Number(declaredCount);
+    if (!isValidUnitCost(costoUnitario)) {
+      toast.error("El costo unitario debe ser mayor a cero.");
+      return;
+    }
     if (!forceReduce && capCantidades.length < declared) {
       toast.error(`Faltan capturar ${declared - capCantidades.length} rollos`);
       return;
@@ -356,6 +374,10 @@ export default function Entradas() {
       toast.error("La entrada está incompleta", {
         description: "Selecciona una ubicación y agrega al menos una línea.",
       });
+      return;
+    }
+    if (lineas.some((linea) => !isValidUnitCost(linea.costoUnitario))) {
+      toast.error("El costo unitario debe ser mayor a cero.");
       return;
     }
 
@@ -512,6 +534,7 @@ export default function Entradas() {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                     <Input 
                       type="number" 
+                      min="0.01"
                       step="0.01" 
                       className="pl-7" 
                       value={costoUnitario} 
