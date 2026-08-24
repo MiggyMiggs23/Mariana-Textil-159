@@ -1,0 +1,166 @@
+# PROMPT 6 — Reorganización de la barra lateral y acceso de Caja
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> **Este prompt NO modifica ninguna función existente.** Solo reordena el menú, consolida entradas y ajusta el acceso del rol CAJA.
+> Trabaja de forma autónoma. Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# PARTE 1 — Nueva estructura de la barra lateral
+
+Reordena la barra lateral exactamente así, de arriba hacia abajo:
+
+```
+DASHBOARD                    ← entrada suelta, sin encabezado de sección
+
+INVENTARIO
+  Productos
+  Inventario
+  Ajustes
+
+OPERACIÓN
+  Ventas / POS
+  Entradas
+  Salidas
+  Movimientos
+
+ADMINISTRACIÓN
+  Caja
+  Clientes
+  Proveedores
+  Próximos Contenedores
+  Conciliación
+
+REPORTES                     ← entrada suelta, sin encabezado de sección
+
+CONFIGURACIÓN
+  Sitios
+  Usuarios
+  Permisos
+```
+
+**Notas sobre el orden:**
+
+- **Dashboard** y **Reportes** son entradas sueltas, sin encabezado de sección arriba.
+- **"Sitios"** es el nuevo nombre de lo que hoy se llama **Ubicaciones**. Cambia la etiqueta en la barra lateral, el título de la pantalla y cualquier texto visible para el usuario. **No cambies** el nombre de la tabla `ubicaciones` ni el identificador del módulo de permisos, para no romper nada.
+- **Movimientos** pasa de la sección de inventario a **Operación**.
+- **Ajustes** pasa a la sección **Inventario**.
+- **Conciliación** pasa a **Administración**.
+
+## Consolidación de Caja
+
+Las tres entradas actuales **"Resumen de Caja"**, **"Cortes"** y **"Cobros / Pagos"** se consolidan en una sola entrada llamada **Caja**, dentro de Administración.
+
+- **Caja abre la pantalla de cobros que ya existe** (la lista de tickets por cobrar con su botón de cobrar y el botón de Realizar Corte). No construyas una pantalla nueva.
+- Las pantallas de resumen y cortes **siguen existiendo y funcionando**; simplemente ya no tienen entrada propia en el menú. Se llega a ellas desde dentro de Caja.
+- Más adelante se agregarán más funciones dentro de Caja. Por ahora solo se define ese espacio.
+
+**No elimines código ni rutas.** Solo reorganiza la navegación.
+
+---
+
+# PARTE 2 — Acceso restringido del rol CAJA
+
+El usuario de caja trabaja en una sola pantalla y no necesita navegar por el sistema.
+
+**Para el rol CAJA:**
+
+1. **No se muestra la barra lateral.** El cajero entra directo a la pantalla de Caja y ahí se queda. Sin menú de navegación.
+2. La pantalla ocupa todo el ancho disponible.
+3. Solo tiene acceso a: la lista de tickets por cobrar, el flujo de cobro, y realizar el corte de su sesión.
+4. Si intenta llegar a cualquier otra ruta escribiendo la URL, se le redirige a la pantalla de Caja o se le muestra "Sin acceso". **Valida en el servidor**, no solo escondiendo el menú.
+
+**Historial de cortes:**
+
+5. Una vez que el cajero realiza un corte, **no puede consultar cortes anteriores**. Solo ve la sesión abierta actual.
+6. Al cerrar un corte, ve el resumen de ese corte para verificar que cuadre, y ahí termina. No hay acceso al histórico.
+7. **ADMIN sí ve todo el historial de cortes**, de todas las ubicaciones y todas las fechas, desde la pantalla de Caja o desde Reportes.
+8. Los cortes históricos **se conservan en la base**. Solo se restringe quién los consulta.
+
+**Regla:** esto se aplica en el servidor. Un usuario CAJA que llame directamente al endpoint de cortes históricos debe recibir **403**, aunque la interfaz no le muestre el botón.
+
+---
+
+# PARTE 3 — Botón de cerrar sesión
+
+**Ubicación:** arriba a la derecha, en la barra superior, junto al nombre del usuario y su rol.
+
+- Aplica a **todos los roles**, incluido CAJA (que no tiene barra lateral, así que este es su único acceso para salir).
+- **Elimina el botón de cerrar sesión que está hoy al pie de la barra lateral.** Debe quedar uno solo.
+- El bloque de arriba a la derecha muestra: nombre del usuario, su rol, su ubicación asignada, y el botón de cerrar sesión.
+
+**Confirmación obligatoria:**
+
+Al presionarlo, se abre una ventana de confirmación:
+
+- Título: **"¿Cerrar sesión?"**
+- Mensaje: algo como *"Se cerrará tu sesión y regresarás a la pantalla de acceso."*
+- Dos botones: **Cancelar** (secundario) y **Cerrar sesión** (primario)
+- Cerrar la ventana con la tecla Escape o tocando fuera equivale a cancelar
+
+**Advertencia especial para CAJA con sesión de caja abierta:**
+
+Si el usuario es CAJA y tiene una sesión de caja **abierta**, la ventana de confirmación debe advertirlo:
+
+> *"Tienes una sesión de caja abierta. Si cierras sesión, la caja seguirá abierta y podrás retomarla al volver a entrar."*
+
+No bloquees el cierre de sesión, solo avisa. La sesión de caja no se cierra automáticamente al salir del sistema; son cosas distintas.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- **No modifiques ninguna función existente.** Este prompt solo reorganiza navegación y ajusta acceso.
+- No elimines pantallas, rutas ni código de resumen de caja, cortes ni cobros. Solo dejan de tener entrada propia en el menú.
+- No cambies el nombre de la tabla `ubicaciones` ni el identificador del módulo de permisos.
+- No borres cortes históricos. Solo restringe quién los consulta.
+- No cierres automáticamente la sesión de caja al cerrar sesión del sistema.
+- No dejes dos botones de cerrar sesión.
+- No confíes solo en esconder el menú: valida los accesos en el servidor.
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Estructura del menú:**
+1. Como ADMIN, la barra lateral muestra las secciones y entradas en el orden exacto especificado
+2. "Sitios" abre la pantalla que antes se llamaba Ubicaciones, y funciona igual
+3. "Caja" abre la pantalla de cobros existente
+4. No quedan entradas duplicadas ni sobrantes de "Resumen de Caja", "Cortes" ni "Cobros / Pagos"
+
+**Acceso de CAJA:**
+5. Un usuario CAJA entra y ve **solo** la pantalla de Caja, sin barra lateral
+6. Intentar llegar a `/inventario`, `/productos` o cualquier otra ruta: redirige o muestra "Sin acceso"
+7. Llamar directamente al endpoint de cortes históricos como CAJA: **403**
+8. CAJA puede cobrar tickets y realizar el corte de su sesión normalmente
+9. Después de realizar un corte, CAJA no puede consultar ese corte ni los anteriores
+
+**Acceso de ADMIN:**
+10. ADMIN ve el historial completo de cortes, de todas las ubicaciones y fechas
+11. ADMIN conserva acceso a todos los módulos
+
+**Cerrar sesión:**
+12. El botón aparece arriba a la derecha para todos los roles
+13. No existe otro botón de cerrar sesión al pie de la barra lateral
+14. Al presionarlo aparece la ventana de confirmación
+15. Cancelar mantiene la sesión activa
+16. Confirmar cierra la sesión y lleva a la pantalla de acceso
+17. Un usuario CAJA con sesión de caja abierta ve la advertencia adicional
+18. Al volver a entrar, la sesión de caja sigue abierta
+
+**Regresión:**
+19. Las 12 pruebas del motor siguen pasando
+20. Las pruebas de permisos y del POS siguen pasando
+21. Todas las pantallas siguen funcionando igual que antes: no se modificó ninguna función
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Lista de archivos creados y modificados
+3. Confirmación de que no se eliminó ninguna función ni pantalla
+4. Cómo llego a las pantallas de resumen de caja y cortes ahora que no tienen entrada propia
+5. Salida completa de la corrida de pruebas
+6. Confirmación de que las pruebas corrieron en base aislada
