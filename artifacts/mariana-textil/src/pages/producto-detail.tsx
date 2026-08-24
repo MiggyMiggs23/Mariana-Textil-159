@@ -89,7 +89,7 @@ export default function ProductoDetail() {
 
   const handleExportCsv = () => {
     if (!kardexRes || kardexRes.movimientos.length === 0) return;
-    const header = ["Fecha", "Rollo", "Tipo", "Ubicacion", "Cantidad", "Saldo Posterior", "Referencia"];
+    const header = ["Fecha", "Rollo", "Tipo", "Sitio", "Cantidad", "Saldo Posterior", "Referencia"];
     const rows = kardexRes.movimientos.map(m => [
       format(new Date(m.createdAt), "dd/MM/yyyy HH:mm"),
       m.serie || "",
@@ -357,14 +357,14 @@ export default function ProductoDetail() {
               <CardHeader className="py-4 bg-muted/10 border-b">
                 <CardTitle className="text-sm font-bold flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-primary" />
-                  Por Ubicación
+                  Por Sitio
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y">
                   {product.inventarioPorUbicacion.length === 0 ? (
                     <div className="p-6 text-center text-sm text-muted-foreground">
-                      No hay inventario registrado en ninguna ubicación.
+                      No hay inventario registrado en ningún sitio.
                     </div>
                   ) : (
                     product.inventarioPorUbicacion.map(inv => (
@@ -479,13 +479,13 @@ export default function ProductoDetail() {
           <CardContent className="p-0">
             <div className="bg-muted/10 p-4 border-b flex flex-wrap gap-4 items-end">
               <div className="space-y-1.5 flex-1 min-w-[200px]">
-                <Label className="text-xs flex items-center gap-1"><MapPin className="w-3 h-3"/> Ubicación</Label>
+                <Label className="text-xs flex items-center gap-1"><MapPin className="w-3 h-3"/> Sitio</Label>
                 <Select value={kardexUbicacionId} onValueChange={(v) => { setKardexUbicacionId(v); setKardexPage(1); }}>
                   <SelectTrigger className="h-8 bg-background">
-                    <SelectValue placeholder="Todas las ubicaciones" />
+                    <SelectValue placeholder="Todos los sitios" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todas las ubicaciones</SelectItem>
+                    <SelectItem value="all">Todos los sitios</SelectItem>
                     {ubicaciones?.filter(u => u.activa).map(u => (
                       <SelectItem key={u.id} value={u.id.toString()}>{u.nombre}</SelectItem>
                     ))}
@@ -518,7 +518,7 @@ export default function ProductoDetail() {
                       <TableHead className="whitespace-nowrap">Fecha</TableHead>
                       <TableHead>Rollo</TableHead>
                       <TableHead>Tipo</TableHead>
-                      <TableHead>Ubicación</TableHead>
+                      <TableHead>Sitio</TableHead>
                       <TableHead className="text-right">Cantidad</TableHead>
                       <TableHead className="text-right">Saldo</TableHead>
                       <TableHead>Referencia</TableHead>

@@ -93,7 +93,7 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Inventario por Ubicación</CardTitle>
+            <CardTitle>Inventario por Sitio</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {inventario.length === 0 ? (
@@ -104,7 +104,7 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[300px]">Ubicación</TableHead>
+                    <TableHead className="w-[300px]">Sitio</TableHead>
                     <TableHead className="text-right">Metros (m)</TableHead>
                     <TableHead className="text-right">Kilos (kg)</TableHead>
                     <TableHead className="text-right">Rollos</TableHead>

@@ -160,7 +160,7 @@ export default function Usuarios() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-sidebar">Usuarios</h1>
             <p className="text-muted-foreground mt-2">
-              Gestión de personal, accesos y asignación de ubicaciones.
+              Gestión de personal, accesos y asignación de sitios.
             </p>
           </div>
           {canCreate && (
@@ -179,7 +179,7 @@ export default function Usuarios() {
                   <TableHead>Nombre / Usuario</TableHead>
                   <TableHead>Rol</TableHead>
                   <TableHead>Alcance</TableHead>
-                  <TableHead>Ubicación</TableHead>
+                  <TableHead>Sitio</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
@@ -287,7 +287,7 @@ export default function Usuarios() {
                     <SelectValue placeholder="PROPIA" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="PROPIA">PROPIA (Sólo ubicación asignada)</SelectItem>
+                    <SelectItem value="PROPIA">PROPIA (Sólo sitio asignado)</SelectItem>
                     <SelectItem value="TODAS">TODAS (Vista global)</SelectItem>
                   </SelectContent>
                 </Select>
@@ -295,13 +295,13 @@ export default function Usuarios() {
             </div>
 
             <div className="space-y-2">
-              <Label>Ubicación</Label>
+              <Label>Sitio</Label>
               <Select value={formData.ubicacionId} onValueChange={(val) => setFormData({...formData, ubicacionId: val})}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Global (Sin ubicación)" />
+                  <SelectValue placeholder="Global (Sin sitio)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="null">Global (Sin ubicación)</SelectItem>
+                  <SelectItem value="null">Global (Sin sitio)</SelectItem>
                   {locations?.map(loc => (
                     <SelectItem key={loc.id} value={String(loc.id)}>
                       {loc.nombre}

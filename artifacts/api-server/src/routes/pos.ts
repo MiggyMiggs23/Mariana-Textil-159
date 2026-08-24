@@ -21,6 +21,7 @@ import {
   ListarTicketsCajaResponse,
   ListarTicketsPendientesQueryParams,
   ListarTicketsPendientesResponse,
+  ListarSesionesCajaResponse,
   ListarTicketsQueryParams,
   ListarTicketsResponse,
   ObtenerCorteCajaParams,
@@ -62,6 +63,7 @@ import {
   isInventoryError,
   listarTicketsCajaOperativa,
   listarTicketsPendientesCaja,
+  listarSesionesCajaHistorial,
   PosError,
   validarPrecioPos,
 } from "../lib/pos";
@@ -678,6 +680,25 @@ router.get(
   },
 );
 
+router.get(
+  "/sesiones-caja",
+  async (req, res, next): Promise<void> => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res
+          .status(403)
+          .json({ error: "Solo ADMIN puede consultar el historial de caja." });
+        return;
+      }
+      res.json(
+        ListarSesionesCajaResponse.parse(await listarSesionesCajaHistorial(db)),
+      );
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
 router.post(
   "/sesiones-caja/abrir",
   requierePermiso("cobros_pagos", "crear"),
@@ -714,6 +735,16 @@ router.get(
         return;
       }
       assertOperationalLocation(req, corte.sesion.ubicacionId);
+      if (
+        req.auth!.user.rol === "CAJA" &&
+        corte.sesion.estado !== "ABIERTA"
+      ) {
+        throw new PosError(
+          "Solo puedes consultar el corte de la sesión de caja abierta.",
+          "SESSION_CLOSED",
+          403,
+        );
+      }
       res.json(ObtenerCorteCajaResponse.parse(corte));
     } catch (error) {
       handlePosError(error, res, next);

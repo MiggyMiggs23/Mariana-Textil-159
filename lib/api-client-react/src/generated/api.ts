@@ -124,6 +124,7 @@ import type {
   SesionCajaActual,
   SesionCajaAperturaInput,
   SesionCajaCierreInput,
+  SesionCajaHistorialItem,
   TicketCajaResumen,
   TicketCancelacionInput,
   TicketCobroInput,
@@ -6082,6 +6083,84 @@ export function useObtenerSesionCajaActual<TData = Awaited<ReturnType<typeof obt
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getObtenerSesionCajaActualQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListarSesionesCajaUrl = () => {
+
+
+
+
+  return `/api/sesiones-caja`
+}
+
+/**
+ * Disponible únicamente para ADMIN. El resultado está ordenado de la sesión más reciente a la más antigua.
+ * @summary Lista el historial de sesiones y cortes de todas las ubicaciones
+ */
+export const listarSesionesCaja = async ( options?: Parameters<typeof customFetch>[1]): Promise<SesionCajaHistorialItem[]> => {
+
+  return customFetch<SesionCajaHistorialItem[]>(getListarSesionesCajaUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarSesionesCajaQueryKey = () => {
+    return [
+    `/api/sesiones-caja`
+    ] as const;
+    }
+
+
+export const getListarSesionesCajaQueryOptions = <TData = Awaited<ReturnType<typeof listarSesionesCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarSesionesCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarSesionesCajaQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarSesionesCaja>>> = ({ signal }) => listarSesionesCaja({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarSesionesCaja>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarSesionesCajaQueryResult = NonNullable<Awaited<ReturnType<typeof listarSesionesCaja>>>
+export type ListarSesionesCajaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista el historial de sesiones y cortes de todas las ubicaciones
+ */
+
+export function useListarSesionesCaja<TData = Awaited<ReturnType<typeof listarSesionesCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarSesionesCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarSesionesCajaQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

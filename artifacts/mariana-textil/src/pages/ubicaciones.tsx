@@ -47,7 +47,7 @@ export default function Ubicaciones() {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getListLocationsQueryKey() });
-          toast.success("Ubicación actualizada correctamente");
+          toast.success("Sitio actualizado correctamente");
           setEditingLocation(null);
         },
         onError: (err: any) => {
@@ -72,9 +72,9 @@ export default function Ubicaciones() {
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Ubicaciones</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Sitios</h1>
           <p className="text-muted-foreground mt-2">
-            Administración de tiendas y bodegas. Las ubicaciones de sistema no pueden ser editadas.
+            Administración de tiendas y bodegas. Los sitios de sistema no pueden ser editados.
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export default function Ubicaciones() {
                 {(!locations || locations.length === 0) && (
                   <TableRow>
                     <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                      No hay ubicaciones registradas.
+                      No hay sitios registrados.
                     </TableCell>
                   </TableRow>
                 )}
@@ -130,7 +130,7 @@ export default function Ubicaciones() {
       <Dialog open={!!editingLocation} onOpenChange={(open) => !open && setEditingLocation(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar Ubicación</DialogTitle>
+            <DialogTitle>Editar Sitio</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -138,7 +138,7 @@ export default function Ubicaciones() {
               <Input 
                 value={editName} 
                 onChange={(e) => setEditName(e.target.value)} 
-                placeholder="Nombre de la ubicación"
+                placeholder="Nombre del sitio"
               />
             </div>
             <div className="flex items-center space-x-2">
@@ -149,7 +149,7 @@ export default function Ubicaciones() {
                 onChange={(e) => setEditActive(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
               />
-              <Label htmlFor="active-checkbox">Ubicación activa</Label>
+              <Label htmlFor="active-checkbox">Sitio activo</Label>
             </div>
           </div>
           <DialogFooter>

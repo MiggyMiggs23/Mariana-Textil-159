@@ -165,6 +165,7 @@ export * from "./generated/types/sesionCaja";
 export * from "./generated/types/sesionCajaActual";
 export * from "./generated/types/sesionCajaAperturaInput";
 export * from "./generated/types/sesionCajaCierreInput";
+export * from "./generated/types/sesionCajaHistorialItem";
 export * from "./generated/types/sesionCajaResumen";
 export * from "./generated/types/ticketCajaResumen";
 export * from "./generated/types/ticketCancelacionInput";

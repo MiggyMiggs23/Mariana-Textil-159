@@ -50,6 +50,7 @@ import { createServer, type Server } from "node:http";
 import { randomUUID } from "node:crypto";
 import { and, count, eq, sql } from "drizzle-orm";
 import {
+  auditoriaTable,
   db,
   entradasTable,
   existenciasTable,
@@ -59,6 +60,7 @@ import {
   productosTable,
   proveedoresTable,
   rollosTable,
+  sesionesCajaTable,
   sesionesTable,
   ticketsTable,
   ubicacionesTable,
@@ -125,6 +127,7 @@ const createdProveedorIds: number[] = [];
 const createdPermisosUsuarioIds: number[] = [];
 const createdClienteIds: number[] = [];
 const createdEntradaIds: number[] = [];
+const createdSesionCajaIds: number[] = [];
 // Rol-level rows we temporarily delete, stored as {rol, modulo, ...original}
 type RolRowBackup = {
   rol: RolUsuario;
@@ -1690,6 +1693,117 @@ await test("S-29: promotion to ADMIN removes overrides and ADMIN override routes
   assert.equal(deleteOverride.status, 403);
 });
 
+await test("S-30: CAJA reads only its open corte; ADMIN lists and reads cross-location history", async () => {
+  const cajaLocationId = await mkUbicacion();
+  const otherLocationId = await mkUbicacion();
+  const caja = await mkUser("CAJA", cajaLocationId);
+  const cajaLogin = await login(caja.usuario, caja.password);
+  const adminLogin = await login(testAdmin.usuario, testAdmin.password);
+  assert.equal(cajaLogin.status, 200);
+  assert.equal(adminLogin.status, 200);
+
+  const cajaOpened = await api(
+    "POST",
+    "/sesiones-caja/abrir",
+    { ubicacionId: cajaLocationId, fondoInicial: 100 },
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaOpened.status, 201, JSON.stringify(cajaOpened.body));
+  const cajaSessionId = (cajaOpened.body as Record<string, unknown>).id as number;
+  createdSesionCajaIds.push(cajaSessionId);
+
+  const cajaCurrentCorte = await api(
+    "GET",
+    `/sesiones-caja/${cajaSessionId}/corte`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaCurrentCorte.status, 200, JSON.stringify(cajaCurrentCorte.body));
+
+  const closed = await api(
+    "POST",
+    `/sesiones-caja/${cajaSessionId}/cerrar`,
+    { efectivoContado: 100 },
+    cajaLogin.cookie,
+  );
+  assert.equal(closed.status, 200, JSON.stringify(closed.body));
+  assert.equal(
+    ((closed.body as Record<string, unknown>).sesion as Record<string, unknown>)
+      .id,
+    cajaSessionId,
+    "close must return the just-closed full corte",
+  );
+  assert.ok(
+    Array.isArray((closed.body as Record<string, unknown>).formasPago),
+    "close response must retain full corte details",
+  );
+
+  const cajaClosedCorte = await api(
+    "GET",
+    `/sesiones-caja/${cajaSessionId}/corte`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaClosedCorte.status, 403, JSON.stringify(cajaClosedCorte.body));
+
+  const otherOpened = await api(
+    "POST",
+    "/sesiones-caja/abrir",
+    { ubicacionId: otherLocationId, fondoInicial: 50 },
+    adminLogin.cookie,
+  );
+  assert.equal(otherOpened.status, 201, JSON.stringify(otherOpened.body));
+  const otherSessionId = (otherOpened.body as Record<string, unknown>).id as number;
+  createdSesionCajaIds.push(otherSessionId);
+
+  const cajaHistory = await api(
+    "GET",
+    "/sesiones-caja",
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaHistory.status, 403, JSON.stringify(cajaHistory.body));
+
+  const adminHistory = await api(
+    "GET",
+    "/sesiones-caja",
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(adminHistory.status, 200, JSON.stringify(adminHistory.body));
+  const history = adminHistory.body as Array<Record<string, unknown>>;
+  assert.ok(Array.isArray(history));
+  const cajaSummary = history.find((item) => item.id === cajaSessionId);
+  const otherSummary = history.find((item) => item.id === otherSessionId);
+  assert.equal(cajaSummary?.ubicacionId, cajaLocationId);
+  assert.equal(cajaSummary?.estado, "CERRADA");
+  assert.equal(cajaSummary?.diferencia, "0.00");
+  assert.equal(otherSummary?.ubicacionId, otherLocationId);
+  assert.equal(otherSummary?.estado, "ABIERTA");
+  assert.ok(
+    history.findIndex((item) => item.id === otherSessionId) <
+      history.findIndex((item) => item.id === cajaSessionId),
+    "history must be descending by session date",
+  );
+
+  for (const id of [cajaSessionId, otherSessionId]) {
+    const adminCorte = await api(
+      "GET",
+      `/sesiones-caja/${id}/corte`,
+      undefined,
+      adminLogin.cookie,
+    );
+    assert.equal(adminCorte.status, 200, JSON.stringify(adminCorte.body));
+    assert.equal(
+      ((adminCorte.body as Record<string, unknown>).sesion as Record<
+        string,
+        unknown
+      >).id,
+      id,
+    );
+  }
+});
+
 // ─── Cleanup ──────────────────────────────────────────────────────────────────
 
 async function cleanup(): Promise<void> {
@@ -1765,8 +1879,15 @@ async function cleanup(): Promise<void> {
   }
 
   // Delete users
+  for (const id of createdSesionCajaIds) {
+    try {
+      await db.delete(sesionesCajaTable).where(eq(sesionesCajaTable.id, id));
+    } catch { /* best effort */ }
+  }
+
   for (const id of createdUserIds) {
     try {
+      await db.delete(auditoriaTable).where(eq(auditoriaTable.usuarioId, id));
       await db.delete(usuariosTable).where(eq(usuariosTable.id, id));
     } catch { /* best effort */ }
   }

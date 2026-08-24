@@ -1088,6 +1088,64 @@ export async function listarTicketsCajaOperativa(
   }));
 }
 
+export async function listarSesionesCajaHistorial(database: Reader) {
+  const rows = await database
+    .select({
+      id: sesionesCajaTable.id,
+      ubicacionId: sesionesCajaTable.ubicacionId,
+      nombreUbicacion: ubicacionesTable.nombre,
+      usuarioId: sesionesCajaTable.usuarioId,
+      nombreUsuario: usuariosTable.nombre,
+      abiertaAt: sesionesCajaTable.abiertaAt,
+      cerradaAt: sesionesCajaTable.cerradaAt,
+      fondoInicial: sesionesCajaTable.fondoInicial,
+      efectivoContado: sesionesCajaTable.efectivoContado,
+      estado: sesionesCajaTable.estado,
+      ticketsCobrados:
+        sql<number>`COUNT(DISTINCT CASE WHEN ${ticketsTable.estado} = 'VENDIDO' THEN ${ticketsTable.id} END)::int`,
+      ticketsCancelados:
+        sql<number>`COUNT(DISTINCT CASE WHEN ${ticketsTable.estado} = 'CANCELADO' THEN ${ticketsTable.id} END)::int`,
+      totalCobrado:
+        sql<string>`COALESCE(SUM(CASE WHEN ${ticketsTable.estado} = 'VENDIDO' THEN ${ticketPagosTable.importe} ELSE 0 END), 0)::text`,
+      efectivoCobrado:
+        sql<string>`COALESCE(SUM(CASE WHEN ${ticketsTable.estado} = 'VENDIDO' AND ${ticketPagosTable.formaPago} = 'EFECTIVO' THEN ${ticketPagosTable.importe} ELSE 0 END), 0)::text`,
+    })
+    .from(sesionesCajaTable)
+    .innerJoin(
+      ubicacionesTable,
+      eq(sesionesCajaTable.ubicacionId, ubicacionesTable.id),
+    )
+    .innerJoin(usuariosTable, eq(sesionesCajaTable.usuarioId, usuariosTable.id))
+    .leftJoin(
+      ticketsTable,
+      eq(ticketsTable.sesionCajaId, sesionesCajaTable.id),
+    )
+    .leftJoin(ticketPagosTable, eq(ticketPagosTable.ticketId, ticketsTable.id))
+    .groupBy(
+      sesionesCajaTable.id,
+      ubicacionesTable.nombre,
+      usuariosTable.nombre,
+    )
+    .orderBy(desc(sesionesCajaTable.abiertaAt));
+
+  return rows.map((row) => {
+    const efectivoEsperadoCents =
+      money(row.fondoInicial) + money(row.efectivoCobrado);
+    const efectivoContadoCents =
+      row.efectivoContado == null ? null : money(row.efectivoContado);
+    return {
+      ...row,
+      abiertaAt: row.abiertaAt.toISOString(),
+      cerradaAt: row.cerradaAt?.toISOString() ?? null,
+      efectivoEsperado: decimalMoney(efectivoEsperadoCents),
+      diferencia:
+        efectivoContadoCents == null
+          ? null
+          : decimalMoney(efectivoContadoCents - efectivoEsperadoCents),
+    };
+  });
+}
+
 export async function buildCorteCaja(database: Reader, sesionId: number) {
   const [sesion] = await database
     .select({

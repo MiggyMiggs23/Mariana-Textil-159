@@ -1900,6 +1900,25 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /sesiones-caja:
+    get:
+      operationId: listarSesionesCaja
+      tags: [caja]
+      summary: Lista el historial de sesiones y cortes de todas las ubicaciones
+      description: Disponible únicamente para ADMIN. El resultado está ordenado de la sesión más reciente a la más antigua.
+      responses:
+        "200":
+          description: Resumen de todas las sesiones de caja
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SesionCajaHistorialItem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /sesiones-caja/abrir:
     post:
       operationId: abrirSesionCaja
@@ -4456,6 +4475,43 @@ components:
         ticketsPendientes: { type: number }
         totalCobrado: { type: string }
         efectivoEsperado: { type: string }
+    SesionCajaHistorialItem:
+      type: object
+      required:
+        [
+          id,
+          ubicacionId,
+          nombreUbicacion,
+          usuarioId,
+          nombreUsuario,
+          abiertaAt,
+          cerradaAt,
+          fondoInicial,
+          efectivoContado,
+          estado,
+          ticketsCobrados,
+          ticketsCancelados,
+          totalCobrado,
+          efectivoEsperado,
+          diferencia,
+        ]
+      properties:
+        id: { type: number }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        abiertaAt: { type: string, format: date-time }
+        cerradaAt: { type: ["string", "null"], format: date-time }
+        fondoInicial: { type: string }
+        efectivoContado: { type: ["string", "null"] }
+        estado:
+          $ref: "#/components/schemas/EstadoSesionCaja"
+        ticketsCobrados: { type: number }
+        ticketsCancelados: { type: number }
+        totalCobrado: { type: string }
+        efectivoEsperado: { type: string }
+        diferencia: { type: ["string", "null"] }
     SesionCaja:
       type: object
       required:

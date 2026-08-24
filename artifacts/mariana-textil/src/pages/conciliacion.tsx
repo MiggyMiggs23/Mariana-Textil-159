@@ -56,7 +56,7 @@ export default function Conciliacion() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-sidebar">Conciliación de Inventario</h1>
           <p className="text-muted-foreground mt-1">
-            Verifica la integridad de las existencias contra el kardex de movimientos. La consulta global incluye ubicaciones inactivas con historial o existencias.
+            Verifica la integridad de las existencias contra el kardex de movimientos. La consulta global incluye sitios inactivos con historial o existencias.
           </p>
         </div>
 
@@ -78,14 +78,14 @@ export default function Conciliacion() {
             
             <div className="space-y-2 flex-1">
               <label className="text-sm font-medium flex items-center gap-2">
-                <Filter className="w-4 h-4 text-muted-foreground" /> Ubicación
+                <Filter className="w-4 h-4 text-muted-foreground" /> Sitio
               </label>
               <Select value={ubicacionId} onValueChange={setUbicacionId}>
                 <SelectTrigger className="bg-background">
-                  <SelectValue placeholder="Todas las ubicaciones" />
+                  <SelectValue placeholder="Todos los sitios" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas las ubicaciones</SelectItem>
+                  <SelectItem value="all">Todos los sitios</SelectItem>
                   {ubicaciones?.filter(u => u.activa).map(u => (
                     <SelectItem key={u.id} value={u.id.toString()}>{u.nombre}</SelectItem>
                   ))}
@@ -128,7 +128,7 @@ export default function Conciliacion() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Producto ID</TableHead>
-                    <TableHead>Ubicación</TableHead>
+                    <TableHead>Sitio</TableHead>
                     <TableHead className="text-right">Movimientos (Real)</TableHead>
                     <TableHead className="text-right">Caché (Actual)</TableHead>
                     <TableHead className="text-right">Rollos (Mov/Caché)</TableHead>

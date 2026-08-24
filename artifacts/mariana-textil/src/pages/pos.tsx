@@ -459,7 +459,7 @@ export default function PosPage() {
   const handleCreateTicket = () => {
     if (!selectedLocationId) {
       toast({
-        title: "Selecciona una ubicación válida",
+        title: "Selecciona un sitio válido",
         variant: "destructive",
       });
       return;
@@ -563,10 +563,10 @@ export default function PosPage() {
         <div className="w-full max-w-md text-center text-muted-foreground">
           <HelpCircle className="mx-auto h-12 w-12 mb-4 opacity-20" />
           <h2 className="text-xl font-semibold text-foreground">
-            Selecciona una ubicación
+            Selecciona un sitio
           </h2>
           <p className="mb-5">
-            Debes estar en una ubicación específica para operar la terminal POS.
+            Debes estar en un sitio específico para operar la terminal POS.
           </p>
           {canChooseLocation ? (
             <Select
@@ -576,7 +576,7 @@ export default function PosPage() {
                 <SelectValue
                   placeholder={
                     loadingLocations
-                      ? "Cargando ubicaciones..."
+                      ? "Cargando sitios..."
                       : "Seleccionar tienda o bodega"
                   }
                 />
@@ -589,20 +589,20 @@ export default function PosPage() {
                 ))}
                 {!loadingLocations && availableLocations?.length === 0 && (
                   <SelectItem value="none" disabled>
-                    No hay ubicaciones operativas activas
+                    No hay sitios operativos activos
                   </SelectItem>
                 )}
               </SelectContent>
             </Select>
           ) : (
             <p className="rounded-md border bg-muted/30 p-3 text-sm">
-              Tu usuario no tiene una ubicación asignada. Pide a un ADMIN que la
+              Tu usuario no tiene un sitio asignado. Pide a un ADMIN que lo
               configure.
             </p>
           )}
           {locationsFailed && (
             <p className="mt-3 text-sm text-destructive">
-              No se pudieron cargar las ubicaciones. Recarga la página o vuelve
+              No se pudieron cargar los sitios. Recarga la página o vuelve
               a iniciar sesión.
             </p>
           )}

@@ -498,7 +498,7 @@ export default function ProveedorDetail() {
                     <TableRow className="bg-muted/10">
                       <TableHead>Folio</TableHead>
                       <TableHead>Fecha</TableHead>
-                      <TableHead>Ubicación</TableHead>
+                      <TableHead>Sitio</TableHead>
                       <TableHead className="text-right">Rollos / Cantidad</TableHead>
                       <TableHead className="text-right">Total</TableHead>
                       <TableHead className="text-right">Abonado</TableHead>
@@ -897,7 +897,7 @@ export default function ProveedorDetail() {
               <tr>
                 <th>Folio</th>
                 <th>Fecha</th>
-                <th>Ubicación</th>
+                <th>Sitio</th>
                 <th className="amount">Rollos</th>
                 <th className="amount">Cantidad</th>
                 <th className="amount">Total</th>

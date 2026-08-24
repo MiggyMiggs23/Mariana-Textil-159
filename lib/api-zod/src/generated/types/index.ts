@@ -170,6 +170,7 @@ export * from './sesionCaja';
 export * from './sesionCajaActual';
 export * from './sesionCajaAperturaInput';
 export * from './sesionCajaCierreInput';
+export * from './sesionCajaHistorialItem';
 export * from './sesionCajaResumen';
 export * from './ticketCajaResumen';
 export * from './ticketCancelacionInput';

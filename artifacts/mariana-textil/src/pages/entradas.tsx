@@ -372,7 +372,7 @@ export default function Entradas() {
   const handleSubmit = () => {
     if (!isFormValid) {
       toast.error("La entrada está incompleta", {
-        description: "Selecciona una ubicación y agrega al menos una línea.",
+        description: "Selecciona un sitio y agrega al menos una línea.",
       });
       return;
     }
@@ -470,7 +470,7 @@ export default function Entradas() {
       <div className="max-w-6xl mx-auto space-y-6 pb-32">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADA</h1>
-          <p className="text-muted-foreground mt-1">Registra la mercancía que llega a una ubicación. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
+          <p className="text-muted-foreground mt-1">Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
         </div>
 
         {(productosFailed ||
@@ -558,7 +558,7 @@ export default function Entradas() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Ubicación <span className="text-destructive">*</span></Label>
+                  <Label>Sitio <span className="text-destructive">*</span></Label>
                   {user?.rol === Role.ADMIN ? (
                     <Select value={ubicacionId} onValueChange={setUbicacionId}>
                       <SelectTrigger data-testid="select-entrada-ubicacion">
@@ -653,7 +653,7 @@ export default function Entradas() {
                   </TableHead>
                   <TableHead className="text-white">Producto</TableHead>
                   <TableHead className="text-white">SKU</TableHead>
-                  <TableHead className="text-white">Ubicación</TableHead>
+                  <TableHead className="text-white">Sitio</TableHead>
                   <TableHead className="text-right text-white">Rollos</TableHead>
                   <TableHead className="text-white">Unidad</TableHead>
                   <TableHead className="text-right text-white">Cantidad total</TableHead>
@@ -788,7 +788,7 @@ export default function Entradas() {
                 <DialogTitle className="text-xl font-bold uppercase">{selectedProduct?.tela} - {selectedProduct?.color}</DialogTitle>
                 <DialogDescription className="mt-1 font-mono text-sm text-foreground/80">{selectedProduct?.sku}</DialogDescription>
                 <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
-                  <span className="font-semibold text-foreground/70">UBICACIÓN:</span> 
+                  <span className="font-semibold text-foreground/70">SITIO:</span>
                   {ubicaciones?.find(u => u.id.toString() === ubicacionId)?.nombre || user?.ubicacion?.nombre}
                 </div>
               </div>

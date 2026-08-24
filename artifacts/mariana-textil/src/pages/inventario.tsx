@@ -67,7 +67,7 @@ export default function Inventario() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-sidebar">Control de Inventario</h1>
             <p className="text-muted-foreground mt-1">
-              {consolidado ? "Vista Consolidada (Todas las ubicaciones)" : "Inventario Local"}
+              {consolidado ? "Vista Consolidada (Todos los sitios)" : "Inventario Local"}
             </p>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function Inventario() {
                     <TableRow>
                       <TableHead>Producto</TableHead>
                       <TableHead>SKU</TableHead>
-                      {consolidado && <TableHead>Ubicación</TableHead>}
+                      {consolidado && <TableHead>Sitio</TableHead>}
                       <TableHead className="text-right">Rollos</TableHead>
                       <TableHead className="text-right">Cantidad</TableHead>
                     </TableRow>

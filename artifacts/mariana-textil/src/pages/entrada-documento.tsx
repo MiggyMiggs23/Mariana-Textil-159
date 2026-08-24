@@ -107,7 +107,7 @@ export default function EntradaDocumento() {
                   <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-center">Cantidad de Rollos</th>
                   <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-right">Total de Metros/Kilos</th>
                   <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">SKU</th>
-                  <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Ubicación</th>
+                  <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Sitio</th>
                 </tr>
               </thead>
               <tbody>

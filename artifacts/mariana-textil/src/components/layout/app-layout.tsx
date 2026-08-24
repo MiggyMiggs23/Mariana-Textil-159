@@ -10,7 +10,9 @@ import {
   useListAjustesPendientes,
   getListAjustesPendientesQueryKey,
   useGetSalidasPendientesCount,
-  getGetSalidasPendientesCountQueryKey
+  getGetSalidasPendientesCountQueryKey,
+  useObtenerSesionCajaActual,
+  getObtenerSesionCajaActualQueryKey
 } from "@workspace/api-client-react";
 import { hasPermission, Modules, Module } from "@/lib/permisos";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,8 +20,6 @@ import {
   LayoutDashboard, 
   MapPin, 
   Users, 
-  Wallet, 
-  PackageSearch, 
   Boxes,
   LogOut,
   Menu,
@@ -33,7 +33,6 @@ import {
   Truck,
   Ship,
   Banknote,
-  Receipt,
   FileBarChart,
   Shield
 } from "lucide-react";
@@ -42,6 +41,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { useLocationScope } from "@/lib/location-scope";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type NavItem = {
   name: string;
@@ -52,15 +59,22 @@ type NavItem = {
 };
 
 type NavGroup = {
-  title: string;
+  title?: string;
   items: NavItem[];
 };
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    title: "INICIO",
     items: [
       { name: "Dashboard", path: "/", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
+    ]
+  },
+  {
+    title: "INVENTARIO",
+    items: [
+      { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
+      { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
+      { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
     ]
   },
   {
@@ -73,37 +87,26 @@ const NAV_GROUPS: NavGroup[] = [
     ]
   },
   {
-    title: "INVENTARIO",
-    items: [
-      { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
-      { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
-      { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
-    ]
-  },
-  {
     title: "ADMINISTRACIÓN",
     items: [
+      { name: "Caja", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: false },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
-      { name: "Ubicaciones", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
-      { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
-      { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
+      { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
       { name: "Conciliación", path: "/administracion/conciliacion", icon: Activity, module: Modules.CONCILIACION, isClickable: true },
-      { name: "Próx. Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
     ]
   },
   {
-    title: "CAJA OPERATIVA",
-    items: [
-      { name: "Resumen de Caja", path: "/caja/resumen", icon: Wallet, module: Modules.RESUMEN_CAJA, isClickable: false },
-      { name: "Cortes", path: "/caja/cortes", icon: Receipt, module: Modules.CORTES, isClickable: false },
-      { name: "Cobros y Pagos", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
-    ]
-  },
-  {
-    title: "REPORTES",
     items: [
       { name: "Reportes", path: "/reportes", icon: FileBarChart, module: Modules.REPORTES, isClickable: false },
+    ]
+  },
+  {
+    title: "CONFIGURACIÓN",
+    items: [
+      { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
+      { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
+      { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
     ]
   }
 ];
@@ -142,6 +145,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const logout = useLogout();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const isCaja = user?.rol === Role.CAJA;
+  const assignedLocationId = user?.ubicacion?.id;
+  const { data: sesionCajaData } = useObtenerSesionCajaActual(
+    { ubicacionId: assignedLocationId ?? 0 },
+    {
+      query: {
+        enabled: isCaja && !!assignedLocationId,
+        queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: assignedLocationId ?? 0 }),
+      },
+    },
+  );
 
   useEffect(() => {
     if (error) {
@@ -178,7 +193,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div className={cn("space-y-1", compact ? "w-full" : "w-64")}>
         {!compact && (
           <span className="text-xs font-medium text-muted-foreground">
-            Ubicación
+            Sitio
           </span>
         )}
         <Select
@@ -215,7 +230,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div className={cn("space-y-1", compact ? "w-full" : "w-64")}>
         {!compact && (
           <span className="text-xs font-medium text-muted-foreground">
-            Ubicación (Sólo lectura)
+            Sitio (Sólo lectura)
           </span>
         )}
         <div
@@ -228,7 +243,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         >
           <MapPin className="h-4 w-4 shrink-0" />
           <span className="truncate">
-            {user.ubicacion?.nombre ?? "Sin ubicación"}
+            {user.ubicacion?.nombre ?? "Sin sitio asignado"}
           </span>
         </div>
       </div>
@@ -243,10 +258,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         if (allowedItems.length === 0) return null;
 
         return (
-          <div key={group.title} className="px-3 space-y-1">
-            <h4 className="px-3 text-xs font-semibold text-sidebar-foreground/50 tracking-wider mb-2">
-              {group.title}
-            </h4>
+          <div key={group.title ?? group.items[0].path} className="px-3 space-y-1">
+            {group.title && (
+              <h4 className="px-3 text-xs font-semibold text-sidebar-foreground/50 tracking-wider mb-2">
+                {group.title}
+              </h4>
+            )}
             {allowedItems.map((item) => {
               const isActive =
                 location === item.path ||
@@ -300,7 +317,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-[100dvh] flex bg-background">
       {/* Sidebar for Desktop */}
-      <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
+      {!isCaja && <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
         <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
           <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
           <span className="font-bold text-lg tracking-tight text-white">Mariana Textil</span>
@@ -310,24 +327,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           {renderNavContent()}
         </nav>
 
-        <div className="p-4 border-t border-sidebar-border bg-sidebar-accent/10 flex-shrink-0">
-          <div className="mb-4 space-y-3">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-medium text-sm text-white truncate">{user.nombre}</span>
-              <span className="text-xs text-sidebar-foreground/70 font-mono tracking-tight">{user.rol}</span>
-            </div>
-          </div>
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-sidebar-foreground hover:text-white hover:bg-sidebar-accent/50 h-8 text-sm"
-            onClick={handleLogout}
-            disabled={logout.isPending}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Cerrar sesión
-          </Button>
-        </div>
-      </aside>
+      </aside>}
 
       {/* Mobile Header & Menu */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -337,11 +337,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <BrandLogo variant="mark" className="h-9 w-9" />
               <span className="font-bold text-lg">Mariana Textil</span>
             </div>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
-              <Menu className="w-6 h-6" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setLogoutDialogOpen(true)}>
+                <LogOut className="w-5 h-5" />
+                <span className="sr-only">Cerrar sesión</span>
+              </Button>
+              {!isCaja && <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
+                <Menu className="w-6 h-6" />
+              </Button>}
+            </div>
           </div>
-          <div className="border-t border-white/10 px-4 pb-3 pt-2">
+          <div className="border-t border-white/10 px-4 pb-3 pt-2 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">{user.nombre}</p>
+              <p className="text-xs text-white/70">{user.rol} · {user.ubicacion?.nombre ?? "Sin sitio asignado"}</p>
+            </div>
             {renderLocationControl(true)}
           </div>
         </header>
@@ -356,8 +366,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="text-right leading-tight">
               <p className="text-sm font-semibold">{user.nombre}</p>
               <p className="text-xs text-muted-foreground">{user.rol}</p>
+              <p className="text-xs text-muted-foreground">{user.ubicacion?.nombre ?? "Sin sitio asignado"}</p>
             </div>
           </div>
+          <Button variant="ghost" size="sm" onClick={() => setLogoutDialogOpen(true)}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Cerrar sesión
+          </Button>
         </header>
 
         {mobileMenuOpen && (
@@ -378,22 +393,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 {renderNavContent(() => setMobileMenuOpen(false))}
               </nav>
 
-              <div className="p-4 border-t border-sidebar-border bg-sidebar-accent/10 flex-shrink-0">
-                <div className="mb-4 space-y-3">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-medium text-sm text-white truncate">{user.nombre}</span>
-                    <span className="text-xs text-sidebar-foreground/70 font-mono">{user.rol}</span>
-                  </div>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-sidebar-foreground hover:text-white hover:bg-sidebar-accent h-8 text-sm"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Cerrar sesión
-                </Button>
-              </div>
             </div>
           </div>
         )}
@@ -402,6 +401,29 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¿Cerrar sesión?</DialogTitle>
+            <DialogDescription>
+              Se cerrará tu sesión y regresarás a la pantalla de acceso.
+            </DialogDescription>
+          </DialogHeader>
+          {isCaja && sesionCajaData?.sesion && (
+            <p className="text-sm text-amber-700 dark:text-amber-400">
+              Tienes una sesión de caja abierta. Si cierras sesión, la caja seguirá abierta y podrás retomarla al volver a entrar.
+            </p>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLogoutDialogOpen(false)} disabled={logout.isPending}>
+              Cancelar
+            </Button>
+            <Button onClick={handleLogout} disabled={logout.isPending}>
+              Cerrar sesión
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

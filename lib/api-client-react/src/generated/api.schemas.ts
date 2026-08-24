@@ -1767,6 +1767,27 @@ export interface SesionCajaResumen {
   efectivoEsperado: string;
 }
 
+export interface SesionCajaHistorialItem {
+  id: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  usuarioId: number;
+  nombreUsuario: string;
+  abiertaAt: string;
+  /** @nullable */
+  cerradaAt: string | null;
+  fondoInicial: string;
+  /** @nullable */
+  efectivoContado: string | null;
+  estado: EstadoSesionCaja;
+  ticketsCobrados: number;
+  ticketsCancelados: number;
+  totalCobrado: string;
+  efectivoEsperado: string;
+  /** @nullable */
+  diferencia: string | null;
+}
+
 export interface SesionCaja {
   id: number;
   ubicacionId: number;

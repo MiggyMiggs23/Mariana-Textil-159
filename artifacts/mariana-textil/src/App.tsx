@@ -79,11 +79,11 @@ function ProtectedRoute({ component: Component, allowedModule }: { component: Re
   }, [error, setLocation]);
 
   useEffect(() => {
-    if (user && location === "/") {
+    if (user?.rol === "CAJA" && location !== "/cobros") {
+      setLocation("/cobros");
+    } else if (user && location === "/") {
       if (user.rol === "TERMINAL") {
         setLocation("/pos");
-      } else if (user.rol === "CAJA") {
-        setLocation("/cobros");
       } else if (!hasPermission(user, Modules.DASHBOARD, 'ver')) {
         if (hasPermission(user, Modules.POS, 'ver')) {
           setLocation("/pos");
@@ -103,6 +103,14 @@ function ProtectedRoute({ component: Component, allowedModule }: { component: Re
   }
 
   if (!user) return null;
+
+  if (user.rol === "CAJA" && location !== "/cobros") {
+    return (
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-sidebar-primary" />
+      </div>
+    );
+  }
 
   if (allowedModule && !hasPermission(user, allowedModule, 'ver')) {
     return (
@@ -161,7 +169,7 @@ function Router() {
         
         <Route path="/administracion/conciliacion" component={() => <ProtectedRoute component={Conciliacion} allowedModule={Modules.CONCILIACION} />} />
         
-        <Route component={NotFound} />
+        <Route component={() => <ProtectedRoute component={NotFound} />} />
       </Switch>
     </RoutedErrorBoundary>
   );

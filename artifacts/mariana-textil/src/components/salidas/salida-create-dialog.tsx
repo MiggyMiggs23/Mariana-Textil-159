@@ -156,7 +156,7 @@ export function SalidaCreateDialog({ open, onOpenChange }: { open: boolean, onOp
                 name="origenId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ubicación Origen</FormLabel>
+                    <FormLabel>Sitio de origen</FormLabel>
                     <Select
                       value={field.value ? String(field.value) : ""}
                       onValueChange={(val) => field.onChange(Number(val))}
@@ -182,7 +182,7 @@ export function SalidaCreateDialog({ open, onOpenChange }: { open: boolean, onOp
                 name="destinoId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ubicación Destino</FormLabel>
+                    <FormLabel>Sitio de destino</FormLabel>
                     <Select
                       disabled={!isAdmin}
                       value={field.value ? String(field.value) : ""}

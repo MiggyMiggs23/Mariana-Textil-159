@@ -7,12 +7,18 @@ import {
   useListarTicketsCaja,
   useObtenerTicket,
   useCobrarTicket,
+  useListarSesionesCaja,
+  useGetCurrentUser,
+  Role,
+  CorteCaja,
   getObtenerSesionCajaActualQueryKey,
   getListarTicketsCajaQueryKey,
   getObtenerTicketQueryKey,
   getObtenerCorteCajaQueryKey,
+  getListarSesionesCajaQueryKey,
   FormaPagoTicket,
 } from "@workspace/api-client-react";
+import { AppLayout } from "@/components/layout/app-layout";
 import { useLocationScope } from "@/lib/location-scope";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,6 +62,82 @@ import {
 import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+
+const money = (value: string | number | null) =>
+  Number(value ?? 0).toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
+
+function HistorialCortes() {
+  const [sessionId, setSessionId] = useState<number | null>(null);
+  const {
+    data: sesiones,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useListarSesionesCaja();
+  const {
+    data: corte,
+    isLoading: loadingCorte,
+    isError: corteFailed,
+    error: corteError,
+    refetch: retryCorte,
+  } = useObtenerCorteCaja(sessionId || 0, {
+    query: {
+      enabled: !!sessionId,
+      queryKey: getObtenerCorteCajaQueryKey(sessionId || 0),
+    },
+  });
+
+  return (
+    <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-sidebar">Historial de cortes</h1>
+          <p className="text-sm text-muted-foreground">Sesiones de todos los sitios, de la más reciente a la más antigua.</p>
+        </div>
+        <Button variant="outline" onClick={() => refetch()} disabled={isLoading}>
+          <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />Actualizar
+        </Button>
+      </div>
+      {isLoading ? <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+        : isError ? <Card className="border-destructive/30"><CardContent className="space-y-3 p-6 text-destructive"><p>{getApiErrorMessage(error, "No se pudo cargar el historial de cortes.")}</p><Button variant="outline" onClick={() => refetch()}>Intentar de nuevo</Button></CardContent></Card>
+        : !sesiones?.length ? <Card><CardContent className="p-10 text-center text-muted-foreground">No hay sesiones de caja registradas.</CardContent></Card>
+        : <div className="grid gap-3">{sesiones.map((sesion) => (
+          <Card key={sesion.id} className="overflow-hidden">
+            <CardContent className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
+              <div className="grid gap-1 text-sm">
+                <p className="font-semibold">{sesion.nombreUbicacion} <span className="font-normal text-muted-foreground">· {sesion.nombreUsuario}</span></p>
+                <p className="text-muted-foreground">Abrió: {format(new Date(sesion.abiertaAt), "PPP p", { locale: es })} · Cerró: {sesion.cerradaAt ? format(new Date(sesion.cerradaAt), "PPP p", { locale: es }) : "Pendiente"}</p>
+                <p><span className="font-medium">Estado:</span> {sesion.estado} · {sesion.ticketsCobrados} cobrados</p>
+              </div>
+              <div className="grid grid-cols-2 gap-x-5 gap-y-1 text-sm md:text-right">
+                <span className="text-muted-foreground">Total</span><span className="font-mono font-semibold">{money(sesion.totalCobrado)}</span>
+                <span className="text-muted-foreground">Esperado</span><span className="font-mono font-semibold">{money(sesion.efectivoEsperado)}</span>
+                <span className="text-muted-foreground">Diferencia</span><span className="font-mono font-semibold">{sesion.diferencia === null ? "—" : money(sesion.diferencia)}</span>
+              </div>
+              <Button variant="outline" onClick={() => setSessionId(sesion.id)}>Ver corte</Button>
+            </CardContent>
+          </Card>
+        ))}</div>}
+      <Dialog open={!!sessionId} onOpenChange={(open) => !open && setSessionId(null)}>
+        <DialogContent className="corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl">
+          <DialogHeader><DialogTitle>Detalle de corte</DialogTitle></DialogHeader>
+          {loadingCorte ? <div className="flex h-48 items-center justify-center"><Loader2 className="h-7 w-7 animate-spin" /></div>
+            : corteFailed ? <div className="space-y-3 text-destructive"><p>{getApiErrorMessage(corteError, "No se pudo cargar el corte.")}</p><Button variant="outline" onClick={() => retryCorte()}>Intentar de nuevo</Button></div>
+            : corte ? <CorteDetail corte={corte} /> : null}
+          <DialogFooter><Button variant="outline" onClick={() => {
+            document.body.classList.add("print-corte");
+            window.print();
+            window.setTimeout(() => document.body.classList.remove("print-corte"), 500);
+          }} disabled={!corte}>Imprimir Corte</Button><Button onClick={() => setSessionId(null)}>Cerrar</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
 
 function AbrirCajaForm({
   ubicacionId,
@@ -712,7 +794,7 @@ function CobroDialog({
   );
 }
 
-export default function CobrosPage() {
+function CobrosContent() {
   const { selectedLocationId } = useLocationScope();
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
@@ -721,6 +803,7 @@ export default function CobrosPage() {
   // Dialogs
   const [cierreOpen, setCierreOpen] = useState(false);
   const [efectivoContado, setEfectivoContado] = useState("");
+  const [closedCorte, setClosedCorte] = useState<CorteCaja | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -772,7 +855,7 @@ export default function CobrosPage() {
   const tickets = ticketsData || [];
 
   const {
-    data: corteData,
+    data: fetchedCorteData,
     isError: corteFailed,
     error: corteError,
     refetch: retryCorte,
@@ -782,6 +865,7 @@ export default function CobrosPage() {
       queryKey: getObtenerCorteCajaQueryKey(sesionData?.sesion?.id || 0),
     },
   });
+  const corteData = closedCorte || fetchedCorteData;
 
   const cerrarCaja = useCerrarSesionCaja();
 
@@ -808,14 +892,9 @@ export default function CobrosPage() {
     cerrarCaja.mutate(
       { id: sesionData.sesion.id, data: { efectivoContado: contado } },
       {
-        onSuccess: () => {
+        onSuccess: (corte) => {
           toast({ title: "Caja cerrada correctamente" });
-          setCierreOpen(false);
-          queryClient.invalidateQueries({
-            queryKey: getObtenerSesionCajaActualQueryKey({
-              ubicacionId: selectedLocationId || 0,
-            }),
-          });
+          setClosedCorte(corte);
         },
         onError: (err: unknown) => {
           toast({
@@ -834,9 +913,9 @@ export default function CobrosPage() {
         <div className="text-center text-muted-foreground">
           <AlertCircle className="mx-auto h-12 w-12 mb-4 opacity-20" />
           <h2 className="text-xl font-semibold text-foreground">
-            Selecciona una ubicación
+            Selecciona un sitio
           </h2>
-          <p>Debes seleccionar tu ubicación para operar la caja.</p>
+          <p>Debes seleccionar tu sitio para operar la caja.</p>
         </div>
       </div>
     );
@@ -1081,14 +1160,19 @@ export default function CobrosPage() {
         }}
       />
 
-      <Dialog open={cierreOpen} onOpenChange={setCierreOpen}>
+      <Dialog
+        open={cierreOpen}
+        onOpenChange={(open) => {
+          if (open || !closedCorte) setCierreOpen(open);
+        }}
+      >
         <DialogContent className="corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Corte y Cierre de Caja</DialogTitle>
           </DialogHeader>
 
           <div className="py-4 space-y-6">
-            {corteFailed ? (
+            {corteFailed && !closedCorte ? (
               <div
                 className="space-y-3 rounded-md border border-destructive/30 bg-destructive/10 p-4 text-center text-destructive"
                 role="alert"
@@ -1165,6 +1249,18 @@ export default function CobrosPage() {
                     Incluye fondo inicial + cobros en efectivo.
                   </p>
                 </div>
+                {closedCorte && (
+                  <div className="grid gap-4 rounded-md border border-emerald-200 bg-emerald-50 p-4 sm:grid-cols-2">
+                    <div>
+                      <p className="text-xs text-emerald-700">Efectivo físico contado</p>
+                      <p className="text-xl font-bold text-emerald-900">{money(closedCorte.efectivoContado)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-emerald-700">Diferencia de cierre</p>
+                      <p className="text-xl font-bold text-emerald-900">{money(closedCorte.diferencia)}</p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <CorteSection title="Formas de pago">
@@ -1235,7 +1331,7 @@ export default function CobrosPage() {
                   )}
                 </CorteSection>
 
-                <div className="space-y-2">
+                {!closedCorte && <div className="space-y-2">
                   <Label>Efectivo Físico Contado</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -1251,15 +1347,15 @@ export default function CobrosPage() {
                       placeholder="0.00"
                     />
                   </div>
-                </div>
+                </div>}
               </>
             )}
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCierreOpen(false)}>
+            {!closedCorte && <Button variant="outline" onClick={() => setCierreOpen(false)}>
               Cancelar
-            </Button>
+            </Button>}
             <Button
               variant="outline"
               onClick={handlePrintCorte}
@@ -1267,7 +1363,7 @@ export default function CobrosPage() {
             >
               Imprimir Corte
             </Button>
-            <Button
+            {!closedCorte ? <Button
               onClick={handleCerrarCaja}
               disabled={cerrarCaja.isPending || !efectivoContado}
             >
@@ -1275,10 +1371,64 @@ export default function CobrosPage() {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Confirmar Cierre
-            </Button>
+            </Button> : <Button onClick={() => {
+              setCierreOpen(false);
+              setClosedCorte(null);
+              queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: selectedLocationId || 0 }) });
+              queryClient.invalidateQueries({ queryKey: getListarSesionesCajaQueryKey() });
+            }}>Finalizar</Button>}
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+export default function CobrosPage() {
+  const { data: currentUser } = useGetCurrentUser();
+  const isAdmin = currentUser?.rol === Role.ADMIN;
+  const [view, setView] = useState<"operativa" | "historial">("operativa");
+
+  return (
+    <AppLayout>
+      <div className="space-y-6">
+        {isAdmin && (
+          <div className="flex w-fit rounded-lg border bg-muted/30 p-1">
+            <Button variant={view === "operativa" ? "default" : "ghost"} size="sm" onClick={() => setView("operativa")}>Caja operativa</Button>
+            <Button variant={view === "historial" ? "default" : "ghost"} size="sm" onClick={() => setView("historial")}>Historial de cortes</Button>
+          </div>
+        )}
+        {isAdmin && view === "historial" ? <HistorialCortes /> : <CobrosContent />}
+      </div>
+    </AppLayout>
+  );
+}
+
+function CorteDetail({ corte }: { corte: CorteCaja }) {
+  return (
+    <div className="space-y-5 py-4">
+      <div className="grid gap-3 rounded-md border bg-muted/20 p-3 text-sm sm:grid-cols-2">
+        <p><span className="text-muted-foreground">Sitio:</span> {corte.sesion.nombreUbicacion}</p>
+        <p><span className="text-muted-foreground">Operador:</span> {corte.sesion.nombreUsuario}</p>
+        <p><span className="text-muted-foreground">Apertura:</span> {format(new Date(corte.sesion.abiertaAt), "PPP p", { locale: es })}</p>
+        <p><span className="text-muted-foreground">Cierre:</span> {corte.sesion.cerradaAt ? format(new Date(corte.sesion.cerradaAt), "PPP p", { locale: es }) : "Sesión abierta"}</p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <CorteRow label="Fondo inicial" value={corte.fondoInicial} />
+        <CorteRow label="Total cobrado" value={corte.totalCobrado} />
+        <CorteRow label="IVA cobrado" value={corte.ivaCobrado} />
+        <CorteRow label="Efectivo esperado" value={corte.efectivoEsperado} />
+        <CorteRow label="Efectivo contado" value={corte.efectivoContado ?? "0"} />
+      </div>
+      <p className="text-right text-sm font-semibold">Diferencia: {corte.diferencia === null ? "—" : money(corte.diferencia)}</p>
+      <div className="grid gap-4 md:grid-cols-2">
+        <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${row.ticketsCount} tickets)`} value={row.importe} />)}</CorteSection>
+        <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={row.cuentaDestino} value={row.importe} />)}</CorteSection>
+        <CorteSection title="Facturación">{corte.facturacion.map((row) => <CorteFiscalRow key={String(row.facturado)} row={row} />)}</CorteSection>
+        <CorteSection title="Normal / Metreado">{corte.metreado.map((row) => <CorteRow key={row.tipo} label={`${row.tipo} · ${row.cantidad}`} value={row.importe} />)}</CorteSection>
+      </div>
+      <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${row.cantidad} ${row.unidad}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
+      <CorteSection title={`Tickets pendientes (${corte.pendientes.length})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${row.folio} · ${row.nombreCliente || "Mostrador"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
     </div>
   );
 }

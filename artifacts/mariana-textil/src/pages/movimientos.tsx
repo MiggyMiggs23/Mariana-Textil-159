@@ -305,13 +305,13 @@ export default function Movimientos() {
 
               {showLocationFilter && (
                 <div className="space-y-1.5">
-                  <Label>Ubicación</Label>
+                  <Label>Sitio</Label>
                   <Select value={filters.ubicacionId} onValueChange={v => { setFilters(f => ({ ...f, ubicacionId: v })); setPage(1); }}>
                     <SelectTrigger data-testid="select-ubicacion">
-                      <SelectValue placeholder="Todas" />
+                      <SelectValue placeholder="Todos los sitios" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
-                      <SelectItem value="all">Todas</SelectItem>
+                      <SelectItem value="all">Todos los sitios</SelectItem>
                       {filtersData?.ubicaciones?.map(u => (
                         <SelectItem key={u.id} value={u.id.toString()}>
                           {u.nombre} {!u.activa && "(Inactiva)"}
@@ -378,7 +378,7 @@ export default function Movimientos() {
                       data-testid="switch-incluir-inactivas"
                     />
                     <Label htmlFor="include-inactive" className="cursor-pointer font-medium text-sm flex-1">
-                      Incluir Inactivas
+                      Incluir sitios inactivos
                     </Label>
                   </div>
                 </div>
@@ -432,7 +432,7 @@ export default function Movimientos() {
                         <TableHead className="whitespace-nowrap">Tipo</TableHead>
                         <TableHead className="min-w-[180px]">Producto</TableHead>
                         <TableHead className="whitespace-nowrap">Rollo / Serie</TableHead>
-                        <TableHead className="whitespace-nowrap">Ubicación</TableHead>
+                        <TableHead className="whitespace-nowrap">Sitio</TableHead>
                         <TableHead className="text-right whitespace-nowrap">Cantidad</TableHead>
                         <TableHead className="whitespace-nowrap">Usuario</TableHead>
                         <TableHead className="whitespace-nowrap">Documento</TableHead>
@@ -549,7 +549,7 @@ export default function Movimientos() {
                         </div>
 
                         <div>
-                          <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Ubicación</span>
+                          <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Sitio</span>
                           <div className="flex items-center gap-1.5 flex-wrap font-medium">
                             <span>{row.nombreUbicacion}</span>
                             {!row.ubicacionActiva && <Badge variant="secondary" className="text-[9px] h-3.5 px-1 py-0 uppercase">Inactiva</Badge>}

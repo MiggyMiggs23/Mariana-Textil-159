@@ -164,7 +164,7 @@ export default function RolloDetail() {
                   <TableRow>
                     <TableHead>Fecha</TableHead>
                     <TableHead>Tipo</TableHead>
-                    <TableHead>Ubicación</TableHead>
+                    <TableHead>Sitio</TableHead>
                     <TableHead className="text-right">Cantidad</TableHead>
                     <TableHead className="text-right">Saldo Posterior</TableHead>
                     <TableHead>Referencia</TableHead>

@@ -2532,6 +2532,30 @@ export const ObtenerSesionCajaActualResponse = zod.object({
 
 
 /**
+ * Disponible únicamente para ADMIN. El resultado está ordenado de la sesión más reciente a la más antigua.
+ * @summary Lista el historial de sesiones y cortes de todas las ubicaciones
+ */
+export const ListarSesionesCajaResponseItem = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "fondoInicial": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA']),
+  "ticketsCobrados": zod.number(),
+  "ticketsCancelados": zod.number(),
+  "totalCobrado": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "diferencia": zod.string().nullable()
+})
+export const ListarSesionesCajaResponse = zod.array(ListarSesionesCajaResponseItem)
+
+
+/**
  * @summary Abre un turno de caja para una ubicación
  */
 export const abrirSesionCajaBodyFondoInicialMin = 0;
