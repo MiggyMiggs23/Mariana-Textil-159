@@ -50,6 +50,7 @@ import type {
   ExistenciaRow,
   ExportKardexXlsxParams,
   ExportarProveedorXlsxParams,
+  ExportarSalidasParams,
   ForbiddenResponse,
   GetConciliacionParams,
   GetDashboardParams,
@@ -6484,7 +6485,7 @@ export const getCrearSalidaUrl = () => {
 }
 
 /**
- * @summary Crea una solicitud de salida
+ * @summary Registra una salida inmediata entre sitios
  */
 export const crearSalida = async (salidaInput: SalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
 
@@ -6533,7 +6534,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CrearSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
 
     /**
- * @summary Crea una solicitud de salida
+ * @summary Registra una salida inmediata entre sitios
  */
 export const useCrearSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalida>>, TError,{data: BodyType<SalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -6546,20 +6547,27 @@ export const useCrearSalida = <TError = ErrorType<ValidationErrorResponse | Unau
       return useMutation(getCrearSalidaMutationOptions(options));
     }
 
-export const getExportarSalidasUrl = () => {
+export const getExportarSalidasUrl = (params?: ExportarSalidasParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/salidas/exportar`
+  return stringifiedParams.length > 0 ? `/api/salidas/exportar?${stringifiedParams}` : `/api/salidas/exportar`
 }
 
 /**
  * @summary Exporta el historial de salidas
  */
-export const exportarSalidas = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+export const exportarSalidas = async (params?: ExportarSalidasParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
-  return customFetch<Blob>(getExportarSalidasUrl(),
+  return customFetch<Blob>(getExportarSalidasUrl(params),
   {
     ...options,
     method: 'GET'
@@ -6572,23 +6580,23 @@ export const exportarSalidas = async ( options?: Parameters<typeof customFetch>[
 
 
 
-export const getExportarSalidasQueryKey = () => {
+export const getExportarSalidasQueryKey = (params?: ExportarSalidasParams,) => {
     return [
-    `/api/salidas/exportar`
+    `/api/salidas/exportar`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getExportarSalidasQueryOptions = <TData = Awaited<ReturnType<typeof exportarSalidas>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getExportarSalidasQueryOptions = <TData = Awaited<ReturnType<typeof exportarSalidas>>, TError = ErrorType<UnauthorizedResponse>>(params?: ExportarSalidasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getExportarSalidasQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getExportarSalidasQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportarSalidas>>> = ({ signal }) => exportarSalidas({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportarSalidas>>> = ({ signal }) => exportarSalidas(params, { signal, ...requestOptions });
 
 
 
@@ -6606,11 +6614,11 @@ export type ExportarSalidasQueryError = ErrorType<UnauthorizedResponse>
  */
 
 export function useExportarSalidas<TData = Awaited<ReturnType<typeof exportarSalidas>>, TError = ErrorType<UnauthorizedResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: ExportarSalidasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getExportarSalidasQueryOptions(options)
+  const queryOptions = getExportarSalidasQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

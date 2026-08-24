@@ -5,19 +5,18 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
-import type { ListRollosEstado } from './listRollosEstado';
+import type { EstadoSalida } from './estadoSalida';
 
-export type ListRollosParams = {
-ubicacionId?: number;
+export type ExportarSalidasParams = {
+fechaDesde?: Date;
+fechaHasta?: Date;
+origenId?: number;
+destinoId?: number;
 productoId?: number;
 usuarioId?: number;
+estado?: EstadoSalida;
 /**
  * Folio exacto o serie de rollo exacta/parcial
  */
 search?: string;
-estado?: ListRollosEstado;
-serie?: string;
-soloAbiertos?: boolean;
-page?: number;
-pageSize?: number;
 };

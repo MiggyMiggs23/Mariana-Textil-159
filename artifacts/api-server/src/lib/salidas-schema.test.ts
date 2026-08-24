@@ -56,22 +56,11 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     WHERE rol = 'ADMIN' AND modulo IN ('salidas', 'transferencias')
     ORDER BY modulo;
   `);
-  assert.deepEqual(permission.rows, [
-    {
-      modulo: "salidas",
-      puede_ver: true,
-      puede_crear: true,
-      puede_editar: false,
-      puede_autorizar: true,
-    },
-    {
-      modulo: "transferencias",
-      puede_ver: true,
-      puede_crear: true,
-      puede_editar: false,
-      puede_autorizar: true,
-    },
-  ]);
+  assert.deepEqual(
+    permission.rows,
+    [],
+    "ADMIN usa bypass y no debe conservar filas redundantes en la matriz.",
+  );
 
   const defaultInventoryPermission = await pool.query<{
     puede_ver: boolean;
@@ -165,7 +154,4 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     "El upgrade idempotente no debe reiniciar ni retroceder el folio.",
   );
 
-  await pool.query(
-    "DELETE FROM permisos_rol WHERE rol = 'ADMIN' AND modulo = 'salidas'",
-  );
 });

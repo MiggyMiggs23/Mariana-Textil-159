@@ -966,6 +966,7 @@ paths:
           schema: { type: number }
         - in: query
           name: search
+          description: Folio exacto o serie de rollo exacta/parcial
           schema: { type: string }
         - in: query
           name: estado
@@ -2055,7 +2056,7 @@ paths:
     post:
       operationId: crearSalida
       tags: [salidas]
-      summary: Crea una solicitud de salida
+      summary: Registra una salida inmediata entre sitios
       requestBody:
         required: true
         content:
@@ -2080,6 +2081,32 @@ paths:
       operationId: exportarSalidas
       tags: [salidas]
       summary: Exporta el historial de salidas
+      parameters:
+        - in: query
+          name: fechaDesde
+          schema: { type: string, format: date }
+        - in: query
+          name: fechaHasta
+          schema: { type: string, format: date }
+        - in: query
+          name: origenId
+          schema: { type: number }
+        - in: query
+          name: destinoId
+          schema: { type: number }
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: usuarioId
+          schema: { type: number }
+        - in: query
+          name: estado
+          schema: { $ref: "#/components/schemas/EstadoSalida" }
+        - in: query
+          name: search
+          description: Folio exacto o serie de rollo exacta/parcial
+          schema: { type: string }
       responses:
         "200":
           description: Archivo XLSX
@@ -3451,17 +3478,6 @@ components:
     EstadoSalida:
       type: string
       enum: [REGISTRADA, SOLICITADA, ACEPTADA, RECHAZADA, PREPARADA, ENVIADA, RECIBIDA, CERRADA, CANCELADA]
-    SalidaLineaInput:
-      type: object
-      required: [productoId, cantidadSolicitada]
-      properties:
-        productoId: { type: number }
-        cantidadSolicitada:
-          type: string
-          pattern: "^(?:0\\.(?:0*[1-9]\\d*)|[1-9]\\d*(?:\\.\\d+)?)$"
-          description: Cantidad decimal positiva
-        rollosSolicitados: { type: ["number", "null"], minimum: 1 }
-        nota: { type: ["string", "null"] }
     SalidaInput:
       type: object
       required: [uuidCliente, origenId, destinoId, rolloIds]
@@ -3482,45 +3498,6 @@ components:
         motivo: { type: string, minLength: 10 }
         adminUsuario: { type: string }
         adminPassword: { type: string }
-    PrepararSalidaLineaInput:
-      type: object
-      required: [lineaId, rolloIds]
-      properties:
-        lineaId: { type: number }
-        rolloIds:
-          type: array
-          items: { type: number }
-    PrepararSalidaInput:
-      type: object
-      required: [lineas]
-      properties:
-        lineas:
-          type: array
-          minItems: 1
-          items:
-            $ref: "#/components/schemas/PrepararSalidaLineaInput"
-    EnviarSalidaInput:
-      type: object
-      required: [transportista]
-      properties:
-        transportista: { type: string, minLength: 1 }
-        notaEnvio: { type: ["string", "null"] }
-    RecibirSalidaRolloInput:
-      type: object
-      required: [rolloId, recibido]
-      properties:
-        rolloId: { type: number }
-        recibido: { type: boolean }
-        cantidadRecibida: { type: ["string", "null"] }
-        notaDiferencia: { type: ["string", "null"] }
-    RecibirSalidaInput:
-      type: object
-      properties:
-        notaRecepcion: { type: ["string", "null"] }
-        rollos:
-          type: array
-          items:
-            $ref: "#/components/schemas/RecibirSalidaRolloInput"
     SalidaResumen:
       type: object
       required:
@@ -3562,11 +3539,6 @@ components:
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }
-    PendientesCount:
-      type: object
-      required: [count]
-      properties:
-        count: { type: number }
     SalidaLinea:
       type: object
       required:

@@ -1350,7 +1350,7 @@ export const ListRollosQueryParams = zod.object({
   "ubicacionId": zod.coerce.number().optional(),
   "productoId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
-  "search": zod.coerce.string().optional(),
+  "search": zod.coerce.string().optional().describe('Folio exacto o serie de rollo exacta\/parcial'),
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']).optional(),
   "serie": zod.coerce.string().optional(),
   "soloAbiertos": zod.coerce.boolean().optional(),
@@ -2780,7 +2780,7 @@ export const ListSalidasResponse = zod.object({
 
 
 /**
- * @summary Crea una solicitud de salida
+ * @summary Registra una salida inmediata entre sitios
  */
 
 
@@ -2887,6 +2887,17 @@ export const CrearSalidaResponse = zod.object({
 /**
  * @summary Exporta el historial de salidas
  */
+export const ExportarSalidasQueryParams = zod.object({
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "origenId": zod.coerce.number().optional(),
+  "destinoId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
+  "estado": zod.enum(['REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'RECHAZADA', 'PREPARADA', 'ENVIADA', 'RECIBIDA', 'CERRADA', 'CANCELADA']).optional(),
+  "search": zod.coerce.string().optional().describe('Folio exacto o serie de rollo exacta\/parcial')
+})
+
 export const ExportarSalidasResponse = zod.unknown()
 
 

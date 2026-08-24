@@ -8,6 +8,7 @@ import {
   CrearSalidaBody,
   EscanearRolloSalidaParams,
   EscanearRolloSalidaResponse,
+  ExportarSalidasQueryParams,
   GetSalidaParams,
   ListSalidasQueryParams,
 } from "@workspace/api-zod";
@@ -202,19 +203,18 @@ router.get(
   async (req, res, next) => {
     try {
       const raw = req.query;
-      const query = ListSalidasQueryParams.parse({
+      const query = ExportarSalidasQueryParams.parse({
         ...raw,
         fechaDesde: typeof raw.fechaDesde === "string" ? new Date(raw.fechaDesde) : undefined,
         fechaHasta: typeof raw.fechaHasta === "string" ? new Date(raw.fechaHasta) : undefined,
-        page: 1, pageSize: 100,
       });
       const auth = req.auth!;
       const visibleUbicacionId = auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS"
         ? undefined : auth.user.ubicacionId;
       if (visibleUbicacionId == null && auth.user.rol !== "ADMIN") throw new InventarioError("No tienes una ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
-      const estados = query.estados?.split(",").filter((v): v is EstadoSalida => ESTADOS.includes(v as EstadoSalida));
+      const estados = query.estado ? [query.estado] : undefined;
       const result = await listarSalidas({
-        estados, folio: query.folio, origenId: query.origenId, destinoId: query.destinoId,
+        estados, origenId: query.origenId, destinoId: query.destinoId,
         productoId: query.productoId, usuarioId: query.usuarioId, search: query.search,
         fechaDesde: query.fechaDesde, fechaHasta: query.fechaHasta, page: 1, pageSize: 100,
         visibleUbicacionId,

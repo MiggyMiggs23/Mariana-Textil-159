@@ -116,6 +116,33 @@ export default function SalidaDetail() {
   const atOrigin = isAdmin || user?.ubicacion?.id === salida.origenId;
   const atDestination = isAdmin || user?.ubicacion?.id === salida.destinoId;
 
+  const productSummary = (salida.lineas && salida.lineas.length > 0)
+    ? salida.lineas.map(l => ({
+        sku: l.skuProducto,
+        tela: l.telaProducto,
+        color: l.colorProducto,
+        unidad: l.unidadProducto,
+        rollos: l.rollosEnviados || l.rollosSolicitados || 0,
+        cantidad: Number(l.cantidadEnviada) > 0 ? Number(l.cantidadEnviada) : Number(l.cantidadSolicitada)
+      }))
+    : Array.from(salida.rollos.reduce((acc, roll) => {
+        const key = roll.productoId ?? 0;
+        if (!acc.has(key)) {
+          acc.set(key, {
+            sku: roll.sku ?? "N/A",
+            tela: roll.tela ?? "N/A",
+            color: roll.color ?? "N/A",
+            unidad: roll.unidad ?? "N/A",
+            rollos: 0,
+            cantidad: 0
+          });
+        }
+        const current = acc.get(key)!;
+        current.rollos += 1;
+        current.cantidad += Number(roll.cantidadEnviada ?? 0);
+        return acc;
+      }, new Map<number, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
+
   // New exits created via one-step capture will go straight to ENVIADA or CERRADA (if completed) or might use a different state flow.
   // We allow cancellation if authorized and state is not already canceled.
   const canCancel = salida.estado !== 'CANCELADA' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
@@ -178,13 +205,11 @@ export default function SalidaDetail() {
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto sm:justify-end">
-          {salida.estado !== 'CANCELADA' && (
-            <Link href={`/salidas/${salida.id}/documento/salida`}>
-              <Button data-testid="btn-print-salida" variant="outline" className="gap-2 bg-white">
-                <Printer className="w-4 h-4" /> Imprimir Documento
-              </Button>
-            </Link>
-          )}
+          <Link href={`/salidas/${salida.id}/documento/salida`}>
+            <Button data-testid="btn-print-salida" variant="outline" className="gap-2 bg-white">
+              <Printer className="w-4 h-4" /> Imprimir Documento
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -237,22 +262,44 @@ export default function SalidaDetail() {
         <div className="space-y-6">
           <Card className="shadow-sm border-slate-200">
             <CardHeader className="pb-3 border-b border-slate-100 bg-slate-50">
-              <CardTitle className="text-base font-semibold">Resumen</CardTitle>
+              <CardTitle className="text-base font-semibold">Resumen por Producto</CardTitle>
             </CardHeader>
-            <CardContent className="p-5 space-y-4">
-              <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-                <span className="text-sm font-semibold text-slate-500">Total Rollos</span>
+            <CardContent className="p-0">
+              <div className="max-h-[300px] overflow-y-auto custom-scrollbar border-b border-slate-100">
+                {productSummary.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-slate-400">Sin productos</div>
+                ) : (
+                  <div className="divide-y divide-slate-100">
+                    {productSummary.map((item, i) => (
+                      <div key={i} className="p-3 bg-white">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="font-semibold text-sm text-slate-800 line-clamp-1" title={item.tela}>{item.tela}</span>
+                          <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-2 shrink-0">{item.rollos} rollos</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-slate-500">{item.color} • {item.sku}</span>
+                          <span className="text-sm font-bold text-primary">{item.cantidad.toFixed(2)} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+            <CardContent className="pt-4 pb-5 space-y-4 bg-slate-50/50">
+              <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Rollos</span>
                 <span className="text-2xl font-black text-slate-900">{salida.totalRollos ?? salida.rollos.length}</span>
               </div>
               {salida.totalMetros && Number(salida.totalMetros) > 0 && (
-                <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-                  <span className="text-sm font-semibold text-slate-500">Metros</span>
+                <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metros</span>
                   <span className="text-lg font-bold text-slate-700">{salida.totalMetros}</span>
                 </div>
               )}
               {salida.totalKilos && Number(salida.totalKilos) > 0 && (
-                <div className="flex justify-between items-end pb-2">
-                  <span className="text-sm font-semibold text-slate-500">Kilos</span>
+                <div className="flex justify-between items-end pb-1">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kilos</span>
                   <span className="text-lg font-bold text-slate-700">{salida.totalKilos}</span>
                 </div>
               )}

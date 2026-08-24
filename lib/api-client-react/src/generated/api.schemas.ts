@@ -1072,22 +1072,6 @@ export const EstadoSalida = {
   CANCELADA: 'CANCELADA',
 } as const;
 
-export interface SalidaLineaInput {
-  productoId: number;
-  /**
-     * Cantidad decimal positiva
-     * @pattern ^(?:0\.(?:0*[1-9]\d*)|[1-9]\d*(?:\.\d+)?)$
-     */
-  cantidadSolicitada: string;
-  /**
-     * @minimum 1
-     * @nullable
-     */
-  rollosSolicitados?: number | null;
-  /** @nullable */
-  nota?: string | null;
-}
-
 export interface SalidaInput {
   uuidCliente: string;
   origenId: number;
@@ -1105,38 +1089,6 @@ export interface MotivoSalidaInput {
   motivo: string;
   adminUsuario?: string;
   adminPassword?: string;
-}
-
-export interface PrepararSalidaLineaInput {
-  lineaId: number;
-  rolloIds: number[];
-}
-
-export interface PrepararSalidaInput {
-  /** @minItems 1 */
-  lineas: PrepararSalidaLineaInput[];
-}
-
-export interface EnviarSalidaInput {
-  /** @minLength 1 */
-  transportista: string;
-  /** @nullable */
-  notaEnvio?: string | null;
-}
-
-export interface RecibirSalidaRolloInput {
-  rolloId: number;
-  recibido: boolean;
-  /** @nullable */
-  cantidadRecibida?: string | null;
-  /** @nullable */
-  notaDiferencia?: string | null;
-}
-
-export interface RecibirSalidaInput {
-  /** @nullable */
-  notaRecepcion?: string | null;
-  rollos?: RecibirSalidaRolloInput[];
 }
 
 export interface SalidaResumen {
@@ -1175,10 +1127,6 @@ export interface SalidaListResult {
   total: number;
   page: number;
   pageSize: number;
-}
-
-export interface PendientesCount {
-  count: number;
 }
 
 export interface SalidaLinea {
@@ -2038,6 +1986,9 @@ export type ListRollosParams = {
 ubicacionId?: number;
 productoId?: number;
 usuarioId?: number;
+/**
+ * Folio exacto o serie de rollo exacta/parcial
+ */
 search?: string;
 estado?: ListRollosEstado;
 serie?: string;
@@ -2153,6 +2104,20 @@ fechaDesde?: string;
 fechaHasta?: string;
 page?: number;
 pageSize?: number;
+};
+
+export type ExportarSalidasParams = {
+fechaDesde?: string;
+fechaHasta?: string;
+origenId?: number;
+destinoId?: number;
+productoId?: number;
+usuarioId?: number;
+estado?: EstadoSalida;
+/**
+ * Folio exacto o serie de rollo exacta/parcial
+ */
+search?: string;
 };
 
 export type EscanearRolloSalidaParams = {

@@ -13,7 +13,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
     await client.query(`
       DO $$ BEGIN
         CREATE TYPE estado_salida AS ENUM (
-          'SOLICITADA', 'ACEPTADA', 'RECHAZADA', 'PREPARADA',
+          'REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'RECHAZADA', 'PREPARADA',
           'ENVIADA', 'RECIBIDA', 'CERRADA', 'CANCELADA'
         );
       EXCEPTION WHEN duplicate_object THEN NULL;
@@ -127,6 +127,9 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             puede_editar = EXCLUDED.puede_editar,
             puede_autorizar = EXCLUDED.puede_autorizar
           WHERE permisos_rol.updated_por IS NULL;
+
+          DELETE FROM permisos_rol
+          WHERE rol = 'ADMIN' AND modulo IN ('salidas', 'transferencias');
         END IF;
 
         IF to_regclass('public.permisos_usuario') IS NOT NULL THEN

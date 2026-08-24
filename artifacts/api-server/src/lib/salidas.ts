@@ -59,20 +59,20 @@ export type CrearSalidaInput = {
   lineas?: Array<{ productoId: number; cantidadSolicitada: string; rollosSolicitados?: number | null; nota?: string | null }>;
 };
 
-export type PrepararSalidaInput = {
+type PrepararSalidaInput = {
   salidaId: number;
   usuarioId: number;
   lineas: Array<{ lineaId: number; rolloIds: number[] }>;
 };
 
-export type EnviarSalidaInput = {
+type EnviarSalidaInput = {
   salidaId: number;
   usuarioId: number;
   transportista: string;
   notaEnvio?: string | null;
 };
 
-export type RecibirSalidaInput = {
+type RecibirSalidaInput = {
   salidaId: number;
   usuarioId: number;
   notaRecepcion?: string | null;
@@ -432,7 +432,7 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   return requireSalidaDetail(tx, salida!.id);
 }
 
-export async function aceptarSalida(tx: Tx, salidaId: number, usuarioId: number) {
+async function aceptarSalida(tx: Tx, salidaId: number, usuarioId: number) {
   const salida = await getSalidaForUpdate(tx, salidaId);
   requireState(salida, ["SOLICITADA"], "aceptar");
   await tx
@@ -442,7 +442,7 @@ export async function aceptarSalida(tx: Tx, salidaId: number, usuarioId: number)
   return requireSalidaDetail(tx, salidaId);
 }
 
-export async function rechazarSalida(
+async function rechazarSalida(
   tx: Tx,
   salidaId: number,
   usuarioId: number,
@@ -460,7 +460,7 @@ export async function rechazarSalida(
   return requireSalidaDetail(tx, salidaId);
 }
 
-export async function prepararSalida(tx: Tx, input: PrepararSalidaInput) {
+async function prepararSalida(tx: Tx, input: PrepararSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   requireState(salida, ["ACEPTADA"], "preparar");
   const selected = input.lineas.flatMap((linea) =>
@@ -552,7 +552,7 @@ async function recomputeLineTotals(tx: Tx, salidaId: number): Promise<void> {
   }
 }
 
-export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
+async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   requireState(salida, ["PREPARADA"], "enviar");
   if (!input.transportista.trim()) {
@@ -599,7 +599,7 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   return requireSalidaDetail(tx, salida.id);
 }
 
-export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
+async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   requireState(salida, ["ENVIADA", "RECIBIDA"], "recibir");
   const salidaRollos = await tx
@@ -684,7 +684,7 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   return requireSalidaDetail(tx, salida.id);
 }
 
-export async function cerrarSalida(tx: Tx, salidaId: number, usuarioId: number) {
+async function cerrarSalida(tx: Tx, salidaId: number, usuarioId: number) {
   const salida = await getSalidaForUpdate(tx, salidaId);
   requireState(salida, ["RECIBIDA"], "cerrar");
   const [pending] = await tx
@@ -799,7 +799,7 @@ export async function listarSalidas(input: ListSalidasInput) {
   return { items: items.filter((item): item is NonNullable<typeof item> => item != null), total: totalRows[0]?.total ?? 0, page: input.page, pageSize: input.pageSize };
 }
 
-export async function countSalidasPendientes(visibleUbicacionId?: number | null) {
+async function countSalidasPendientes(visibleUbicacionId?: number | null) {
   const originStates: EstadoSalida[] = ["SOLICITADA", "ACEPTADA", "PREPARADA"];
   const destinationStates: EstadoSalida[] = ["ENVIADA", "RECIBIDA"];
   const conditions = visibleUbicacionId == null

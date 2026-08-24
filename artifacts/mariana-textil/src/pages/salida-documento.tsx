@@ -27,18 +27,8 @@ export default function SalidaDocumento() {
     );
   }
 
-  const isAvailable = salida.estado !== "CANCELADA" && salida.estado !== "RECHAZADA";
-
-  if (!isAvailable) {
-    return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-4 text-center bg-white">
-        <AlertCircle className="w-12 h-12 text-amber-500 mb-4" />
-        <p className="text-lg font-medium text-slate-900">Documento no disponible</p>
-        <p className="text-sm text-slate-500">El estado actual de la salida no permite imprimir este documento.</p>
-        <Link href={`/salidas/${salida.id}`} className="mt-4 text-blue-600 hover:underline">Volver a Salida</Link>
-      </div>
-    );
-  }
+  // We allow printing even if cancelled
+  const isAvailable = true; // or just remove the check
 
   const dateObj = new Date(salida.createdAt);
 
@@ -74,13 +64,20 @@ export default function SalidaDocumento() {
           <div
             key={pageIndex}
             data-testid={`document-page-${pageIndex + 1}`}
-            className={`document-page bg-white shadow-xl print:shadow-none w-[11in] h-[8.5in] relative box-border flex flex-col overflow-hidden ${pageIndex < totalPages - 1 ? 'page-break' : ''}`}
+            className={`document-page bg-white shadow-xl print:shadow-none w-[11in] h-[8.5in] relative box-border flex flex-col overflow-hidden shrink-0 ${pageIndex < totalPages - 1 ? 'page-break' : ''}`}
           >
+            {salida.estado === 'CANCELADA' && (
+              <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
+                <span className="text-9xl font-black text-red-600 rotate-[-30deg] tracking-widest border-8 border-red-600 p-8 rounded-3xl">
+                  CANCELADA
+                </span>
+              </div>
+            )}
             {/* Header */}
             <div className="flex justify-between items-center p-6 border-b">
               <div className="flex items-center gap-4">
                 <div className="w-2 h-16 bg-[#1e3a8a] mr-2"></div>
-                <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter uppercase">SALIDA</h1>
+                <h1 className="text-4xl font-black text-[#1e3a8a] tracking-tighter uppercase">HOJA DE SALIDA</h1>
                 <div className="ml-4 text-[#1e3a8a] font-bold text-xl leading-tight border-l-2 pl-4 border-gray-300">
                   MARIANA<br/>TEXTIL
                 </div>
@@ -137,15 +134,17 @@ export default function SalidaDocumento() {
             </div>
 
             {/* Table */}
-            <div className="px-8 mt-2 flex-1">
+            <div className="px-8 mt-2 flex-1 relative z-10">
               <table className="w-full text-left border-collapse border border-gray-200">
                 <thead>
                   <tr className="bg-[#1e3a8a] text-white">
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-10 text-center">#</th>
-                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-48">Serie Rollo</th>
+                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-40">Serie</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Producto</th>
+                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-32">Color</th>
+                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-28">SKU</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-right w-24">Cantidad</th>
-                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-left w-20">U.M.</th>
+                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-left w-20">Unidad</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -156,9 +155,13 @@ export default function SalidaDocumento() {
                       <tr key={index} className="border-b border-gray-200 even:bg-gray-50">
                         <td className="py-1 px-3 text-center text-gray-500 text-xs">{globalIndex}</td>
                         <td className="py-1 px-3 font-mono font-bold text-sm text-black">{rollo.serie}</td>
-                        <td className="py-1 px-3 text-sm text-gray-800 truncate max-w-[400px]">
-                          {line?.skuProducto} - {line?.telaProducto} {line?.colorProducto}
+                        <td className="py-1 px-3 text-sm text-gray-800 truncate max-w-[250px]">
+                          {line?.telaProducto}
                         </td>
+                        <td className="py-1 px-3 text-sm text-gray-800 truncate max-w-[150px]">
+                          {line?.colorProducto}
+                        </td>
+                        <td className="py-1 px-3 font-mono text-xs text-gray-700">{line?.skuProducto}</td>
                         <td className="py-1 px-3 text-right text-sm font-medium">{rollo.cantidadEnviada}</td>
                         <td className="py-1 px-3 text-xs font-bold text-gray-500 tracking-wider">{line?.unidadProducto}</td>
                       </tr>
@@ -166,7 +169,7 @@ export default function SalidaDocumento() {
                   })}
                   {Array.from({ length: Math.max(0, rollosPerPage - pageRollos.length) }).map((_, i) => (
                     <tr key={`pad-${i}`} className="border-b border-gray-100 h-[29px]">
-                      <td></td><td></td><td></td><td></td><td></td>
+                      <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                   ))}
                 </tbody>
@@ -175,25 +178,61 @@ export default function SalidaDocumento() {
 
             {/* Footer */}
             {pageIndex === totalPages - 1 && (
-              <div className="px-8 mt-auto pb-4">
-                <div className="flex justify-between items-end gap-8">
+              <div className="px-8 mt-auto pb-4 relative z-10">
+                <div className="flex justify-between items-start gap-8">
                   {/* Observaciones */}
-                  <div className="w-[40%] bg-gray-50 border border-gray-200 rounded-md p-3 h-24">
+                  <div className="w-[35%] bg-gray-50 border border-gray-200 rounded-md p-3 h-24">
                     <div className="text-[10px] font-bold text-gray-500 uppercase mb-1">Observaciones / Notas</div>
                     <div className="text-xs text-black italic leading-tight">
                       {salida.observaciones || salida.notaSolicitud || "Sin observaciones."}
+                      {salida.estado === 'CANCELADA' && (
+                        <div className="mt-2 text-red-600 font-bold">
+                          MOTIVO CANCELACIÓN: {salida.motivoCancelacion}
+                        </div>
+                      )}
                     </div>
                   </div>
 
+                  {/* Totals */}
+                  <div className="w-[20%]">
+                    <table className="w-full text-sm border-collapse border border-gray-200 bg-white">
+                      <tbody>
+                        <tr>
+                          <td className="py-1 px-2 border border-gray-200 font-bold text-gray-600 text-xs uppercase bg-gray-50">Total Rollos</td>
+                          <td className="py-1 px-2 border border-gray-200 font-bold text-right">{salida.totalRollos ?? salida.rollos.length}</td>
+                        </tr>
+                        {Number(salida.totalMetros) > 0 && (
+                          <tr>
+                            <td className="py-1 px-2 border border-gray-200 font-bold text-gray-600 text-xs uppercase bg-gray-50">Total Metros</td>
+                            <td className="py-1 px-2 border border-gray-200 font-bold text-right">{salida.totalMetros}</td>
+                          </tr>
+                        )}
+                        {Number(salida.totalKilos) > 0 && (
+                          <tr>
+                            <td className="py-1 px-2 border border-gray-200 font-bold text-gray-600 text-xs uppercase bg-gray-50">Total Kilos</td>
+                            <td className="py-1 px-2 border border-gray-200 font-bold text-right">{salida.totalKilos}</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
                   {/* Signatures */}
-                  <div className="flex-1 grid grid-cols-2 gap-8">
+                  <div className="flex-1 grid grid-cols-3 gap-5 mt-10">
                     <div className="text-center">
-                      <div className="border-b border-black w-full mb-1 h-12"></div>
-                      <div className="text-[10px] font-bold uppercase text-gray-700 tracking-wider">Entregó (Chofer / Transp.)</div>
+                      <div className="border-b border-black w-full mb-1 h-0"></div>
+                      <div className="text-[10px] font-bold uppercase text-gray-700 tracking-wider">ENTREGA</div>
+                      <div className="text-[8px] text-gray-500">Nombre y Firma</div>
                     </div>
                     <div className="text-center">
-                      <div className="border-b border-black w-full mb-1 h-12"></div>
-                      <div className="text-[10px] font-bold uppercase text-gray-700 tracking-wider">Despachó (Almacén Origen)</div>
+                      <div className="border-b border-black w-full mb-1 h-0"></div>
+                      <div className="text-[10px] font-bold uppercase text-gray-700 tracking-wider">TRANSPORTA</div>
+                      <div className="text-[8px] text-gray-500">Nombre y Firma</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="border-b border-black w-full mb-1 h-0"></div>
+                      <div className="text-[10px] font-bold uppercase text-gray-700 tracking-wider">RECIBE</div>
+                      <div className="text-[8px] text-gray-500">Nombre y Firma</div>
                     </div>
                   </div>
                 </div>

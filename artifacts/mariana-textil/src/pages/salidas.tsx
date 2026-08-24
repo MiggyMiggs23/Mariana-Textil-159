@@ -72,8 +72,8 @@ export default function Salidas() {
   const { data: products } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
 
   const [page, setPage] = useState(1);
-  const [folio, setFolio] = useState("");
-  const [debouncedFolio, setDebouncedFolio] = useState("");
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [origenId, setOrigenId] = useState<string>("all");
   const [destinoId, setDestinoId] = useState<string>("all");
   const [estado, setEstado] = useState<string>("all");
@@ -85,14 +85,14 @@ export default function Salidas() {
   const [isExporting, setIsExporting] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Debounce folio
+  // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedFolio(folio);
+      setDebouncedSearch(search);
       setPage(1);
     }, 500);
     return () => clearTimeout(timer);
-  }, [folio]);
+  }, [search]);
 
   let queryOrigen = origenId !== "all" ? Number(origenId) : undefined;
   if (selectedLocationId !== null && origenId === "all") {
@@ -101,7 +101,7 @@ export default function Salidas() {
   }
 
   const queryParams = {
-    folio: debouncedFolio ? Number(debouncedFolio) : undefined,
+    search: debouncedSearch || undefined,
     origenId: queryOrigen,
     destinoId: destinoId !== "all" ? Number(destinoId) : undefined,
     usuarioId: usuarioId !== "all" ? Number(usuarioId) : undefined,
@@ -126,9 +126,17 @@ export default function Salidas() {
   const handleExport = async () => {
     setIsExporting(true);
     try {
-      // Provide custom params directly if the fetch API supports it in the custom fetch, or let the generated hook handle it if no params.
-      // The generated hook does not accept ListSalidasParams for export, so it downloads everything or whatever the default is.
-      const blob = await exportarSalidas();
+      const exportParams = {
+        search: debouncedSearch || undefined,
+        origenId: queryOrigen,
+        destinoId: destinoId !== "all" ? Number(destinoId) : undefined,
+        usuarioId: usuarioId !== "all" ? Number(usuarioId) : undefined,
+        productoId: productoId !== "all" ? Number(productoId) : undefined,
+        estados: estado !== "all" ? estado : undefined,
+        fechaDesde: fechaDesde ? format(fechaDesde, 'yyyy-MM-dd') : undefined,
+        fechaHasta: fechaHasta ? format(fechaHasta, 'yyyy-MM-dd') : undefined,
+      };
+      const blob = await exportarSalidas(exportParams);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -152,7 +160,7 @@ export default function Salidas() {
     setProductoId("all");
     setFechaDesde(undefined);
     setFechaHasta(undefined);
-    setFolio("");
+    setSearch("");
     setPage(1);
   };
 
@@ -164,7 +172,7 @@ export default function Salidas() {
     productoId !== "all",
     !!fechaDesde,
     !!fechaHasta,
-    !!folio
+    !!search
   ].filter(Boolean).length;
 
   return (
@@ -205,13 +213,12 @@ export default function Salidas() {
               <div className="relative w-full max-w-sm">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
-                  data-testid="filter-folio"
-                  placeholder="Buscar por folio..."
-                  value={folio}
-                  onChange={(e) => setFolio(e.target.value)}
+                  data-testid="filter-search"
+                  placeholder="Buscar por folio o serie..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="pl-9 bg-white border-slate-200"
-                  type="number"
-                  min="1"
+                  type="text"
                 />
               </div>
               <Button

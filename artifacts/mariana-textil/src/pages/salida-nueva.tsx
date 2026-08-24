@@ -42,7 +42,7 @@ export default function SalidaNueva() {
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const { data: locations } = useListLocations({ query: { queryKey: getListLocationsQueryKey() } });
-  
+
   const createMutation = useCrearSalida();
 
   const [origenId, setOrigenId] = useState<number | "">("");
@@ -105,7 +105,7 @@ export default function SalidaNueva() {
     e.preventDefault();
     const serie = serieInput.trim().toUpperCase();
     if (!serie) return;
-    
+
     if (!origenId) {
       toast({ title: "Atención", description: "Selecciona un origen primero", variant: "destructive" });
       playSound('error');
@@ -126,16 +126,16 @@ export default function SalidaNueva() {
         ...options,
         staleTime: 0,
       });
-      
+
       setScannedRolls(prev => [roll, ...prev]);
       setSerieInput("");
       playSound('success');
     } catch (error: any) {
       playSound('error');
-      toast({ 
-        title: "Error al escanear", 
-        description: getApiErrorMessage(error), 
-        variant: "destructive" 
+      toast({
+        title: "Error al escanear",
+        description: getApiErrorMessage(error),
+        variant: "destructive"
       });
       setSerieInput("");
     } finally {
@@ -188,6 +188,24 @@ export default function SalidaNueva() {
     return acc;
   }, { metros: 0, kilos: 0 });
 
+  const productSummary = Array.from(scannedRolls.reduce((acc, roll) => {
+    const key = `${roll.sku}-${roll.tela}-${roll.color}-${roll.unidad}`;
+    if (!acc.has(key)) {
+      acc.set(key, {
+        sku: roll.sku,
+        tela: roll.tela,
+        color: roll.color,
+        unidad: roll.unidad,
+        rollos: 0,
+        cantidad: 0
+      });
+    }
+    const current = acc.get(key)!;
+    current.rollos += 1;
+    current.cantidad += Number(roll.cantidadActual);
+    return acc;
+  }, new Map<string, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
+
   if (successFolio && successId) {
     return (
       <AppLayout>
@@ -197,7 +215,7 @@ export default function SalidaNueva() {
           </div>
           <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Salida Registrada</h1>
           <p className="text-xl text-slate-500 mb-8 font-medium">Folio: <span className="text-primary font-bold">{String(successFolio).padStart(6, '0')}</span></p>
-          
+
           <div className="flex gap-4 w-full justify-center">
             <Button size="lg" variant="outline" onClick={() => setLocation("/salidas")} className="w-48 text-base">
               Ir al Historial
@@ -209,7 +227,7 @@ export default function SalidaNueva() {
               </Button>
             </Link>
           </div>
-          
+
           <Button variant="ghost" onClick={() => {
             setSuccessFolio(null);
             setSuccessId(null);
@@ -242,7 +260,7 @@ export default function SalidaNueva() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
+
           {/* Metadata Column */}
           <div className="lg:col-span-4 space-y-6">
             <Card className="border-slate-200 shadow-sm">
@@ -263,9 +281,9 @@ export default function SalidaNueva() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Origen</label>
-                  <Select 
-                    value={String(origenId)} 
-                    onValueChange={v => setOrigenId(Number(v))} 
+                  <Select
+                    value={String(origenId)}
+                    onValueChange={v => setOrigenId(Number(v))}
                     disabled={!isAdmin}
                   >
                     <SelectTrigger className="bg-white">
@@ -281,9 +299,9 @@ export default function SalidaNueva() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Destino</label>
-                  <Select 
-                    value={String(destinoId)} 
-                    onValueChange={v => setDestinoId(Number(v))} 
+                  <Select
+                    value={String(destinoId)}
+                    onValueChange={v => setDestinoId(Number(v))}
                     disabled={!origenId}
                   >
                     <SelectTrigger className="bg-white">
@@ -301,10 +319,10 @@ export default function SalidaNueva() {
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Transportista (Opcional)</label>
                   <div className="relative">
                     <Truck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <Input 
-                      value={transportista} 
-                      onChange={e => setTransportista(e.target.value)} 
-                      placeholder="Nombre, placas..." 
+                    <Input
+                      value={transportista}
+                      onChange={e => setTransportista(e.target.value)}
+                      placeholder="Nombre, placas..."
                       className="pl-9 bg-white"
                     />
                   </div>
@@ -314,10 +332,10 @@ export default function SalidaNueva() {
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Observaciones (Opcional)</label>
                   <div className="relative">
                     <FileText className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                    <Textarea 
-                      value={observaciones} 
-                      onChange={e => setObservaciones(e.target.value)} 
-                      placeholder="Notas del envío..." 
+                    <Textarea
+                      value={observaciones}
+                      onChange={e => setObservaciones(e.target.value)}
+                      placeholder="Notas del envío..."
                       className="pl-9 bg-white min-h-[80px]"
                     />
                   </div>
@@ -334,7 +352,7 @@ export default function SalidaNueva() {
                   <div className="absolute left-4 flex items-center justify-center bg-primary/10 w-10 h-10 rounded-full">
                     <Barcode className="w-5 h-5 text-primary" />
                   </div>
-                  <Input 
+                  <Input
                     ref={scannerInputRef}
                     value={serieInput}
                     onChange={e => setSerieInput(e.target.value)}
@@ -387,9 +405,9 @@ export default function SalidaNueva() {
                                   <p className="font-semibold text-primary">{roll.cantidadActual}</p>
                                   <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{roll.unidad}</p>
                                 </div>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
                                   onClick={() => handleRemoveRoll(roll.serie)}
                                   className="text-slate-400 hover:text-red-500 hover:bg-red-50 shrink-0"
                                 >
@@ -408,25 +426,47 @@ export default function SalidaNueva() {
               <div className="md:col-span-1">
                 <Card className="border-slate-200 shadow-sm sticky top-24">
                   <CardHeader className="pb-3 border-b border-slate-100 bg-slate-50/50">
-                    <CardTitle className="text-base font-semibold">Resumen de Totales</CardTitle>
+                    <CardTitle className="text-base font-semibold">Resumen por Producto</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-5 space-y-4">
-                    <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-                      <span className="text-sm font-semibold text-slate-500">Rollos Totales</span>
-                      <span className="text-3xl font-black text-slate-900">{scannedRolls.length}</span>
+                  <CardContent className="p-0">
+                    <div className="max-h-[300px] overflow-y-auto custom-scrollbar border-b border-slate-100">
+                      {productSummary.length === 0 ? (
+                        <div className="p-4 text-center text-sm text-slate-400">Sin productos</div>
+                      ) : (
+                        <div className="divide-y divide-slate-100">
+                          {productSummary.map((item, i) => (
+                            <div key={i} className="p-3 bg-white">
+                              <div className="flex justify-between items-start mb-1">
+                                <span className="font-semibold text-sm text-slate-800 line-clamp-1" title={item.tela}>{item.tela}</span>
+                                <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-2 shrink-0">{item.rollos} rollos</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs text-slate-500">{item.color} • {item.sku}</span>
+                                <span className="text-sm font-bold text-primary">{item.cantidad.toFixed(2)} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-                      <span className="text-sm font-semibold text-slate-500">Metros</span>
-                      <span className="text-2xl font-bold text-slate-700">{totals.metros.toFixed(2)}</span>
+                  </CardContent>
+                  <CardContent className="pt-4 space-y-3 bg-slate-50/50">
+                    <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Rollos</span>
+                      <span className="text-2xl font-black text-slate-900">{scannedRolls.length}</span>
                     </div>
-                    <div className="flex justify-between items-end pb-2">
-                      <span className="text-sm font-semibold text-slate-500">Kilos</span>
-                      <span className="text-2xl font-bold text-slate-700">{totals.kilos.toFixed(2)}</span>
+                    <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metros</span>
+                      <span className="text-lg font-bold text-slate-700">{totals.metros.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-end pb-1">
+                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kilos</span>
+                      <span className="text-lg font-bold text-slate-700">{totals.kilos.toFixed(2)}</span>
                     </div>
                   </CardContent>
                   <CardFooter className="bg-slate-50/50 border-t border-slate-100 pt-4">
-                    <Button 
-                      className="w-full h-12 text-base font-bold bg-green-600 hover:bg-green-700 text-white" 
+                    <Button
+                      className="w-full h-12 text-base font-bold bg-green-600 hover:bg-green-700 text-white shadow-sm"
                       onClick={handleConfirm}
                       disabled={scannedRolls.length === 0 || !origenId || !destinoId || createMutation.isPending}
                     >
