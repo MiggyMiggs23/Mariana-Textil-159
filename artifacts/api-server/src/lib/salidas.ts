@@ -107,22 +107,21 @@ function requireState(
 }
 
 async function reserveSalidaFolio(tx: Tx): Promise<number> {
+  await tx
+    .insert(salidaFolioTable)
+    .values({ id: SALIDA_FOLIO_ROW_ID, ultimoFolio: 499 })
+    .onConflictDoNothing();
+
   const [row] = await tx
     .select()
     .from(salidaFolioTable)
     .where(eq(salidaFolioTable.id, SALIDA_FOLIO_ROW_ID))
     .for("update");
-  const next = (row?.ultimoFolio ?? 499) + 1;
-  if (row) {
-    await tx
-      .update(salidaFolioTable)
-      .set({ ultimoFolio: next })
-      .where(eq(salidaFolioTable.id, SALIDA_FOLIO_ROW_ID));
-  } else {
-    await tx
-      .insert(salidaFolioTable)
-      .values({ id: SALIDA_FOLIO_ROW_ID, ultimoFolio: next });
-  }
+  const next = row!.ultimoFolio + 1;
+  await tx
+    .update(salidaFolioTable)
+    .set({ ultimoFolio: next })
+    .where(eq(salidaFolioTable.id, SALIDA_FOLIO_ROW_ID));
   return next;
 }
 

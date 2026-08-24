@@ -16,6 +16,7 @@
  *  which is called at the end of every mutating operation.
  */
 
+import { createHash } from "node:crypto";
 import { and, eq, sql, desc, count, gte, inArray, lte } from "drizzle-orm";
 import {
   auditoriaTable,
@@ -69,25 +70,24 @@ const FOLIO_ROW_ID = 1;
  * a tx. Returns the numeric strings in allocation order.
  */
 async function reserveSeries(tx: Tx, quantity: number): Promise<string[]> {
+  await tx
+    .insert(seriesConsecutivoTable)
+    .values({ id: SERIES_ROW_ID, ultimoNumero: 1000000 })
+    .onConflictDoNothing();
+
   const [row] = await tx
     .select()
     .from(seriesConsecutivoTable)
     .where(eq(seriesConsecutivoTable.id, SERIES_ROW_ID))
     .for("update");
 
-  const start = row?.ultimoNumero ?? 1000000;
+  const start = row!.ultimoNumero;
   const next = start + quantity;
 
-  if (row) {
-    await tx
-      .update(seriesConsecutivoTable)
-      .set({ ultimoNumero: next })
-      .where(eq(seriesConsecutivoTable.id, SERIES_ROW_ID));
-  } else {
-    await tx
-      .insert(seriesConsecutivoTable)
-      .values({ id: SERIES_ROW_ID, ultimoNumero: next });
-  }
+  await tx
+    .update(seriesConsecutivoTable)
+    .set({ ultimoNumero: next })
+    .where(eq(seriesConsecutivoTable.id, SERIES_ROW_ID));
 
   const series: string[] = [];
   for (let i = 1; i <= quantity; i++) {
@@ -899,6 +899,14 @@ export type TransferirRolloInmediatoResult = {
   entradaMovimiento: typeof movimientosTable.$inferSelect;
 };
 
+function deriveUuid(base: string, label: string): string {
+  const bytes = Buffer.from(createHash("sha256").update(`${base}\0${label}`).digest().subarray(0, 16));
+  bytes[6] = (bytes[6]! & 0x0f) | 0x50;
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+  const hex = bytes.toString("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
 export async function transferirRolloInmediato(
   tx: Tx,
   input: TransferirRolloInmediatoInput,
@@ -906,8 +914,8 @@ export async function transferirRolloInmediato(
   if (input.ubicacionOrigenId === input.ubicacionDestinoId) {
     throw new InventarioError("El origen y destino deben ser diferentes.", "SAME_LOCATION");
   }
-  const salidaUuid = input.uuidCliente ? `${input.uuidCliente}:salida` : null;
-  const entradaUuid = input.uuidCliente ? `${input.uuidCliente}:entrada` : null;
+  const salidaUuid = input.uuidCliente ? deriveUuid(input.uuidCliente, "salida") : null;
+  const entradaUuid = input.uuidCliente ? deriveUuid(input.uuidCliente, "entrada") : null;
   if (salidaUuid) {
     const duplicate = await checkUuidCliente(tx, salidaUuid);
     if (duplicate) {
