@@ -177,6 +177,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!user) return null;
 
+  const userBlockLocation =
+    user.rol === Role.ADMIN
+      ? "Global"
+      : user.ubicacion?.nombre ?? "Sin sitio asignado";
+
   const handleLogout = () => {
     logout.mutate(undefined, {
       onSuccess: () => {
@@ -350,7 +355,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="border-t border-white/10 px-4 pb-3 pt-2 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">{user.nombre}</p>
-              <p className="text-xs text-white/70">{user.rol} · {user.ubicacion?.nombre ?? "Sin sitio asignado"}</p>
+              <p className="text-xs text-white/70">{user.rol} · {userBlockLocation}</p>
             </div>
             {renderLocationControl(true)}
           </div>
@@ -366,7 +371,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="text-right leading-tight">
               <p className="text-sm font-semibold">{user.nombre}</p>
               <p className="text-xs text-muted-foreground">{user.rol}</p>
-              <p className="text-xs text-muted-foreground">{user.ubicacion?.nombre ?? "Sin sitio asignado"}</p>
+              <p className="text-xs text-muted-foreground">{userBlockLocation}</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={() => setLogoutDialogOpen(true)}>
