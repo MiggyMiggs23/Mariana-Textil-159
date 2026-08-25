@@ -364,6 +364,64 @@ router.get(
 );
 
 router.get(
+  "/clientes/cartera.xlsx",
+  requierePermiso("clientes_finanzas", "ver"),
+  async (_req, res, next): Promise<void> => {
+    try {
+      const result = await pool.query(`
+        SELECT c.nombre, SUM(a.pendiente)::text AS saldo,
+          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < now()),0)::text AS vencido,
+          MIN(a.due_at) AS "primerVencimiento"
+        FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
+        WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Cartera");
+      sheet.columns = [
+        { header: "Cliente", key: "nombre", width: 30 },
+        { header: "Saldo", key: "saldo", width: 15 },
+        { header: "Vencido", key: "vencido", width: 15 },
+        { header: "Primer vencimiento", key: "primerVencimiento", width: 22 },
+      ];
+      sheet.addRows(result.rows);
+      res.type(
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+      res.attachment("cartera-clientes.xlsx");
+      await workbook.xlsx.write(res);
+      res.end();
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.get(
+  "/clientes/cartera.pdf",
+  requierePermiso("clientes_finanzas", "ver"),
+  async (_req, res, next): Promise<void> => {
+    try {
+      const result = await pool.query(`
+        SELECT c.nombre,SUM(a.pendiente)::text saldo,
+          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at<now()),0)::text vencido
+        FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
+        WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
+      const pdf = createTextPdf(
+        "Cartera de clientes",
+        result.rows.map(
+          (row) =>
+            `${row.nombre} | saldo ${row.saldo} | vencido ${row.vencido}`,
+        ),
+      );
+      res.type("application/pdf");
+      res.attachment("cartera-clientes.pdf");
+      res.send(pdf);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.get(
   "/clientes/:id",
   requierePermiso("clientes", "ver"),
   async (req, res, next): Promise<void> => {
@@ -901,57 +959,6 @@ router.get(
       );
       res.type("application/pdf");
       res.attachment(`estado-cuenta-${id}.pdf`);
-      res.send(pdf);
-    } catch (error) {
-      next(error);
-    }
-  },
-);
-
-router.get(
-  "/clientes/cartera.xlsx",
-  requierePermiso("clientes_finanzas", "ver"),
-  async (_req, res, next): Promise<void> => {
-    try {
-      const result = await pool.query(`
-        SELECT c.nombre, SUM(a.pendiente)::text AS saldo,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < now()),0)::text AS vencido,
-          MIN(a.due_at) AS "primerVencimiento"
-        FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
-        WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
-      const workbook = new ExcelJS.Workbook();
-      const sheet = workbook.addWorksheet("Cartera");
-      sheet.columns = [
-        { header: "Cliente", key: "nombre", width: 30 }, { header: "Saldo", key: "saldo", width: 15 },
-        { header: "Vencido", key: "vencido", width: 15 }, { header: "Primer vencimiento", key: "primerVencimiento", width: 22 },
-      ];
-      sheet.addRows(result.rows);
-      res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-      res.attachment("cartera-clientes.xlsx");
-      await workbook.xlsx.write(res);
-      res.end();
-    } catch (error) {
-      next(error);
-    }
-  },
-);
-
-router.get(
-  "/clientes/cartera.pdf",
-  requierePermiso("clientes_finanzas", "ver"),
-  async (_req, res, next): Promise<void> => {
-    try {
-      const result = await pool.query(`
-        SELECT c.nombre,SUM(a.pendiente)::text saldo,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at<now()),0)::text vencido
-        FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
-        WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
-      const pdf = createTextPdf(
-        "Cartera de clientes",
-        result.rows.map((row) => `${row.nombre} | saldo ${row.saldo} | vencido ${row.vencido}`),
-      );
-      res.type("application/pdf");
-      res.attachment("cartera-clientes.pdf");
       res.send(pdf);
     } catch (error) {
       next(error);

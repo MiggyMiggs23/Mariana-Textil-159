@@ -148,7 +148,12 @@ const deletedRolRows: RolRowBackup[] = [];
 
 // ─── HTTP helpers ──────────────────────────────────────────────────────────────
 
-type FetchResult = { status: number; body: unknown; cookie: string };
+type FetchResult = {
+  status: number;
+  body: unknown;
+  cookie: string;
+  contentType: string;
+};
 
 async function api(
   method: string,
@@ -175,7 +180,12 @@ async function api(
   // Extract session cookie from set-cookie header
   const match = setCookie.match(/mariana_session=([^;]+)/);
   const sessionCookie = match ? `mariana_session=${match[1]}` : (cookie ?? "");
-  return { status: res.status, body: parsed, cookie: sessionCookie };
+  return {
+    status: res.status,
+    body: parsed,
+    cookie: sessionCookie,
+    contentType: ct,
+  };
 }
 
 async function login(usuario: string, password: string): Promise<FetchResult> {
@@ -1543,6 +1553,25 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   assert.equal(creditoAdmin.status, 200, `ADMIN should access credito: ${JSON.stringify(creditoAdmin.body)}`);
   const finanzasAdmin = await api("GET", `/clientes/${clienteId}/estado-cuenta`, undefined, adminLogin.cookie);
   assert.equal(finanzasAdmin.status, 200, `ADMIN should access estado-cuenta: ${JSON.stringify(finanzasAdmin.body)}`);
+  const carteraXlsx = await api(
+    "GET",
+    "/clientes/cartera.xlsx",
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(carteraXlsx.status, 200, "ADMIN should download cartera XLSX");
+  assert.match(
+    carteraXlsx.contentType,
+    /^application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/,
+  );
+  const carteraPdf = await api(
+    "GET",
+    "/clientes/cartera.pdf",
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(carteraPdf.status, 200, "ADMIN should download cartera PDF");
+  assert.match(carteraPdf.contentType, /^application\/pdf/);
 });
 
 // S-27: Inventory reversals and kardex/cache reconciliation
