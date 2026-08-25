@@ -1,0 +1,210 @@
+# PROMPT 8 — Ajustes al rol Bodega
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+Tres cambios sobre el rol BODEGA: reducir sus permisos, quitarle la captura de costos en las entradas, y darle una vista de inventario propia agrupada por producto.
+
+**Respeta el motor.** Todo movimiento de rollos pasa por `server/lib/inventario.ts`.
+**No borres datos existentes.**
+**Respeta el diseño existente.** Mismo azul marino, misma tipografía, mismos componentes.
+
+---
+
+# PARTE 1 — Reducir permisos de BODEGA
+
+El encargado de bodega solo necesita lo indispensable para operar. Actualiza la matriz de permisos por defecto:
+
+**Se le quita el acceso a:**
+- `productos` — todas las banderas apagadas
+- `proveedores` — todas apagadas
+- `contenedores` — todas apagadas
+- `reportes` — todas apagadas
+- `clientes` y todos sus submódulos — apagados
+- Cualquier módulo de administración
+
+**Conserva:**
+
+| Módulo | Ver | Crear | Editar | Autorizar |
+|---|---|---|---|---|
+| dashboard | sí | no | no | no |
+| inventario | sí | no | no | no |
+| entradas | sí | sí | no | no |
+| salidas | sí | sí | no | no |
+| movimientos | sí | no | no | no |
+| ajustes | sí | sí | no | no |
+
+**Importante:** estos son los valores **por defecto**. El administrador puede volver a habilitar cualquier módulo desde la pantalla de Permisos sin tocar código. Ese es el punto de que la matriz sea configurable.
+
+Verifica que la barra lateral de un usuario BODEGA muestre únicamente las entradas que le corresponden, y que el servidor devuelva **403** si intenta llegar a un endpoint de los módulos revocados.
+
+---
+
+# PARTE 2 — Entradas sin costo, con bloqueo de venta
+
+## El problema
+
+Hoy el costo unitario es obligatorio al registrar una entrada. Bodega no debe capturar costos: esa información es del administrador.
+
+## Cómo debe funcionar
+
+**En la pantalla de Entrada, para usuarios BODEGA:**
+
+- **Elimina el campo "Costo unitario"** del formulario. No lo muestres deshabilitado ni vacío: simplemente no aparece.
+- La entrada se registra normalmente con todos los demás datos: producto, sitio, cantidad de rollos, metrajes, proveedor, notas.
+- Los rollos se crean con `costo_unitario` en **null**, no en cero. Null significa "pendiente de capturar"; cero significaría "costó cero", que es distinto.
+- Al guardar, mensaje claro: *"Entrada registrada. Los costos quedan pendientes de captura por administración."*
+
+**Para ADMIN e INVENTARIOS**, el campo de costo sigue apareciendo y siendo obligatorio, como hasta ahora.
+
+## Bloqueo de venta
+
+**Un rollo sin costo no se puede vender.** Ya existe esa validación del prompt anterior; confirma que funcione con costo en null y no solo con cero.
+
+Al intentar venderlo en el POS, mensaje: *"El rollo serie XXXXXXX no tiene costo registrado. Contacte al administrador."*
+
+Un rollo sin costo **sí se puede** mover por salida a otro sitio. La restricción es solo para vender.
+
+## Bandeja de entradas pendientes de costo
+
+Nueva vista para ADMIN, dentro del módulo Entradas: pestaña o filtro **"Pendientes de costo"**.
+
+- Lista las entradas que tienen al menos un rollo con `costo_unitario` en null
+- Cada renglón: folio, fecha, sitio, proveedor, número de rollos sin costo, cantidad total, quién la registró
+- Ordenadas por fecha, las más viejas primero — son las que más urgen
+- **Badge en la barra lateral** junto a Entradas con el número de entradas pendientes de costo, visible solo para ADMIN
+- Una entrada pendiente **más de 48 horas** se resalta en color de alerta
+
+**Pantalla de captura de costos:**
+
+Al abrir una entrada pendiente, el ADMIN ve los rollos agrupados por producto y captura el costo unitario.
+
+- **Un solo campo de costo por producto**, que se aplica a todos los rollos de ese producto en esa entrada. Es el caso normal: todo el lote se compró al mismo precio.
+- Opción de capturar costos distintos rollo por rollo, si hiciera falta
+- Muestra en vivo el costo total calculado por producto y el de la entrada completa
+- Al guardar, en una sola transacción: se actualiza `costo_unitario` y `costo_total` de cada rollo, y se registra en auditoría quién capturó los costos y cuándo
+- Los rollos quedan vendibles de inmediato
+
+**Importante:** capturar el costo **no genera movimientos de inventario**. No cambia cantidades ni existencias, solo completa un dato del rollo. No pases esto por el motor de movimientos.
+
+Si la entrada tenía proveedor asignado, al capturar los costos se genera o actualiza el registro de compra correspondiente en `pagos_proveedor`, con el importe correcto.
+
+---
+
+# PARTE 3 — Inventario agrupado por producto
+
+## Cómo debe verse
+
+En el módulo Inventario, la vista principal cambia a un **árbol expandible por producto**, similar al de Productos pero con datos de existencia.
+
+**Nivel 1 — Producto (la tela):** una fila por tela, con una **flecha del lado izquierdo**. Muestra:
+- Nombre de la tela
+- Cuántos colores tiene con existencia
+- Total de rollos sumando todos sus colores
+- Total de metros y total de kilos, en columnas separadas
+
+**Nivel 2 — Colores:** al tocar la flecha, se despliegan debajo, indentados, los colores de esa tela que tienen existencia. Por cada color:
+- Nombre del color
+- SKU
+- Número de rollos
+- Cantidad total con su unidad
+
+Ejemplo:
+
+```
+⌄ Razo                          2 colores    30 rollos    1,500.00 m
+     Verde bandera   RAZ-VER    20 rollos    1,000.00 m
+     Naranja         RAZ-NAR    10 rollos      500.00 m
+› Tafeta                        4 colores    48 rollos    2,400.00 m
+```
+
+**No muestres las series individuales en este árbol.** Para ver los rollos específicos está la pantalla de detalle del producto. Mantener el árbol en dos niveles lo hace legible con volumen real.
+
+**Comportamiento:**
+- Botones "Expandir todo" y "Colapsar todo"
+- Al buscar, las telas con coincidencias se expanden solas
+- El estado de expansión se conserva mientras se navega dentro de la sesión
+- Buscador por tela, color o SKU
+- Solo se muestran productos **con existencia mayor a cero**. Un interruptor opcional "Mostrar productos sin existencia" permite verlos todos.
+- Nunca sumes metros con kilos: siempre en columnas separadas
+
+## Filtro por sitio
+
+- Para **BODEGA** y cualquier usuario con alcance PROPIA: se muestra únicamente el inventario de su sitio, sin selector.
+- Para usuarios con alcance TODAS: selector de sitio, con opción de vista consolidada.
+- Aplica el filtro **en el servidor**, no solo en la interfaz.
+
+## Costos
+
+BODEGA no tiene acceso a productos, pero sí ve su inventario. **En esta vista no aparece ningún costo ni valor de inventario** para roles que no sean ADMIN. Confirma que los campos de costo se omitan de la respuesta JSON, no solo de la pantalla.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No pongas el costo en cero cuando bodega registra una entrada: debe quedar en **null**
+- No permitas vender un rollo con costo nulo
+- No bloquees las salidas de rollos sin costo: solo las ventas
+- No generes movimientos de inventario al capturar costos
+- No muestres series individuales en el árbol de inventario
+- No sumes metros con kilos en ningún total
+- No elimines módulos del sistema: solo cambias los permisos por defecto de BODEGA
+- No confíes en la interfaz para aplicar permisos ni filtros de sitio
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Permisos de BODEGA:**
+1. La barra lateral de BODEGA muestra solo Dashboard, Inventario, Entradas, Salidas, Movimientos y Ajustes
+2. `GET /productos` como BODEGA responde **403**
+3. `GET /proveedores` como BODEGA responde **403**
+4. Endpoints de reportes y clientes como BODEGA: **403**
+5. El ADMIN puede volver a habilitar `productos` para BODEGA desde la pantalla de Permisos, y el acceso funciona sin reiniciar
+
+**Entrada sin costo:**
+6. BODEGA registra una entrada y el formulario **no muestra** el campo de costo
+7. Los rollos creados quedan con `costo_unitario` en **null**, no en cero
+8. ADMIN e INVENTARIOS sí ven el campo y sigue siendo obligatorio
+9. Intentar vender un rollo con costo nulo en el POS: **se rechaza** con el mensaje correcto
+10. El mismo rollo **sí** se puede mover por salida a otro sitio
+
+**Captura de costos:**
+11. La entrada aparece en la bandeja de pendientes de costo
+12. El badge de la barra lateral muestra el conteo correcto, solo para ADMIN
+13. ADMIN captura un costo por producto y se aplica a todos los rollos de ese producto en esa entrada
+14. Al guardar, los rollos quedan vendibles de inmediato
+15. **No se generaron movimientos de inventario** al capturar el costo
+16. Las existencias no cambiaron
+17. Si la entrada tenía proveedor, la compra se registra con el importe correcto
+18. Queda registro en auditoría de quién capturó los costos
+
+**Inventario agrupado:**
+19. El árbol muestra telas en el primer nivel y colores al expandir
+20. Los totales por tela suman correctamente sus colores
+21. Metros y kilos van en columnas separadas, nunca sumados
+22. BODEGA ve solo el inventario de su sitio, sin selector
+23. Llamar al endpoint como BODEGA con el id de otro sitio devuelve **solo su sitio**
+24. La respuesta para BODEGA **no incluye** campos de costo
+25. La búsqueda expande las telas con coincidencias
+26. Los productos sin existencia no aparecen por defecto
+
+**Regresión:**
+27. Las 12 pruebas del motor siguen pasando
+28. Las pruebas de permisos, POS y salidas siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos con su módulo y acción de permiso
+5. Cuántos rollos existen hoy con costo nulo o en cero, si los hay
+6. Salida completa de la corrida de pruebas
+7. Confirmación de que las pruebas corrieron en base aislada
+8. Cómo pruebo cada cambio: con qué usuarios y en qué orden
