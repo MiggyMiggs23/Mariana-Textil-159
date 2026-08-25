@@ -34,6 +34,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 import {
   Dialog,
@@ -85,6 +86,7 @@ export default function SalidaDetail() {
   const [motivo, setMotivo] = useState("");
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
+  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
 
   if (isLoading) {
     return (
@@ -153,6 +155,7 @@ export default function SalidaDetail() {
   };
 
   const onCancel = () => {
+    setPasswordVisibilityResetKey((current) => current + 1);
     if (motivo.trim().length < 10) {
       toast({ title: "Atención", description: "El motivo debe tener al menos 10 caracteres", variant: "destructive" });
       return;
@@ -166,6 +169,7 @@ export default function SalidaDetail() {
     }, {
       onSuccess: () => {
         toast({ title: "Salida cancelada" });
+        setAdminPassword("");
         setDialogState({ type: null });
         invalidate();
       },
@@ -362,7 +366,7 @@ export default function SalidaDetail() {
                 <p className="text-sm text-red-600 font-medium">
                   Si hubo un error y esta salida no debe proceder, puedes cancelarla.
                 </p>
-                <Button data-testid="btn-action-cancel" onClick={() => { setMotivo(""); setAdminUsername(""); setAdminPassword(""); setDialogState({ type: 'cancel' }); }} variant="outline" className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 bg-white">
+                <Button data-testid="btn-action-cancel" onClick={() => { setMotivo(""); setAdminUsername(""); setAdminPassword(""); setPasswordVisibilityResetKey((current) => current + 1); setDialogState({ type: 'cancel' }); }} variant="outline" className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 bg-white">
                   <XSquare className="w-4 h-4 mr-2" /> Cancelar Salida
                 </Button>
               </CardContent>
@@ -388,7 +392,13 @@ export default function SalidaDetail() {
         </div>
       </div>
 
-      <Dialog open={dialogState.type === 'cancel'} onOpenChange={(o) => !o && setDialogState({ type: null })}>
+      <Dialog open={dialogState.type === 'cancel'} onOpenChange={(o) => {
+        if (!o) {
+          setAdminPassword("");
+          setPasswordVisibilityResetKey((current) => current + 1);
+          setDialogState({ type: null });
+        }
+      }}>
         <DialogContent>
           <DialogHeader><DialogTitle>Cancelar Salida</DialogTitle></DialogHeader>
           <div className="space-y-4 pt-4">
@@ -406,18 +416,22 @@ export default function SalidaDetail() {
                   value={adminUsername}
                   onChange={e => setAdminUsername(e.target.value)}
                 />
-                <Input
+                <PasswordInput
+                  id="salida-admin-password"
                   data-testid="input-cancel-password"
-                  type="password"
                   placeholder="Contraseña Admin"
+                  aria-label="Contraseña ADMIN"
                   value={adminPassword}
                   onChange={e => setAdminPassword(e.target.value)}
+                  autoComplete="current-password"
+                  visibilityResetKey={`${dialogState.type}:${passwordVisibilityResetKey}`}
+                  toggleTestId="toggle-salida-admin-password"
                 />
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogState({ type: null })}>Cerrar</Button>
+            <Button variant="outline" onClick={() => { setAdminPassword(""); setPasswordVisibilityResetKey((current) => current + 1); setDialogState({ type: null }); }}>Cerrar</Button>
             <Button data-testid="btn-submit-cancel" variant="destructive" onClick={onCancel} disabled={cancelMutation.isPending || motivo.length < 10 || (!isAdmin && (!adminUsername || !adminPassword))}>
               {cancelMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Confirmar Cancelación

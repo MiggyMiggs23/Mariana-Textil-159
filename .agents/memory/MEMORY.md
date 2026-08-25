@@ -5,3 +5,4 @@
 - [Bases limpias en ramas Neon](neon-clean-test-databases.md) — si la rama hereda una base parcial, crear una base vacía dentro de ella y aplicar esquema/seed.
 - [Defaults de permisos en instalaciones existentes](role-permission-default-upgrades.md) — corregir filas sin autor y conservar personalizaciones explícitas.
 - [Catálogos operativos con permisos restringidos](operational-catalog-permissions.md) — separar catálogos mínimos de los endpoints administrativos para no romper flujos permitidos.
+- [Selección al mostrar contraseñas](password-visibility-selection.md) — restaurar foco y selección después del commit; Chromium los colapsa en el primer frame al cambiar el tipo.

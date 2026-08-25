@@ -3,12 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLogin, useGetCurrentUser, getGetCurrentUserQueryKey } from "@workspace/api-client-react";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { BrandLogo } from "@/components/brand-logo";
 
@@ -27,6 +28,7 @@ export default function Login() {
   });
 
   const login = useLogin();
+  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -81,7 +83,11 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onSubmitCapture={() => setPasswordVisibilityResetKey((current) => current + 1)}
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
               <FormField
                 control={form.control}
                 name="usuario"
@@ -107,10 +113,11 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Contraseña</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         placeholder="••••••••"
                         autoComplete="current-password"
+                        visibilityResetKey={passwordVisibilityResetKey}
+                        toggleTestId="toggle-login-password"
                         {...field}
                       />
                     </FormControl>

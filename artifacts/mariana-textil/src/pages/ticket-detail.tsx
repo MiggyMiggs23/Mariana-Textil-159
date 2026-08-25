@@ -34,6 +34,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -45,6 +46,7 @@ export default function TicketDetailPage() {
   const [motivo, setMotivo] = useState("");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
+  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
 
   const { data: user } = useGetCurrentUser({
     query: { queryKey: getGetCurrentUserQueryKey() },
@@ -110,6 +112,7 @@ export default function TicketDetailPage() {
   };
 
   const handleCancelar = () => {
+    setPasswordVisibilityResetKey((current) => current + 1);
     if (!motivo.trim()) {
       toast({ title: "Debes ingresar un motivo", variant: "destructive" });
       return;
@@ -133,6 +136,7 @@ export default function TicketDetailPage() {
         onSuccess: () => {
           toast({ title: "Ticket cancelado correctamente" });
           setCancelOpen(false);
+          setAdminPass("");
           queryClient.invalidateQueries({
             queryKey: getObtenerTicketQueryKey(ticketId),
           });
@@ -217,7 +221,13 @@ export default function TicketDetailPage() {
         </div>
         <div className="flex gap-3">
           {canCancel && ticket.estado !== EstadoTicket.CANCELADO && (
-            <Button variant="destructive" onClick={() => setCancelOpen(true)}>
+            <Button variant="destructive" onClick={() => {
+              setMotivo("");
+              setAdminUser("");
+              setAdminPass("");
+              setPasswordVisibilityResetKey((current) => current + 1);
+              setCancelOpen(true);
+            }}>
               <Ban className="h-4 w-4 mr-2" /> Cancelar Ticket
             </Button>
           )}
@@ -602,7 +612,13 @@ export default function TicketDetailPage() {
         </div>
       </div>
 
-      <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
+      <Dialog open={cancelOpen} onOpenChange={(open) => {
+        setCancelOpen(open);
+        if (!open) {
+          setAdminPass("");
+          setPasswordVisibilityResetKey((current) => current + 1);
+        }
+      }}>
         <DialogContent className="sm:max-w-md no-print">
           <DialogHeader>
             <DialogTitle className="text-destructive flex items-center gap-2">
@@ -635,18 +651,25 @@ export default function TicketDetailPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Contraseña ADMIN</Label>
-                  <Input
-                    type="password"
+                  <Label htmlFor="ticket-admin-password">Contraseña ADMIN</Label>
+                  <PasswordInput
+                    id="ticket-admin-password"
                     value={adminPass}
                     onChange={(e) => setAdminPass(e.target.value)}
+                    autoComplete="current-password"
+                    visibilityResetKey={`${cancelOpen}:${passwordVisibilityResetKey}`}
+                    toggleTestId="toggle-ticket-admin-password"
                   />
                 </div>
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCancelOpen(false)}>
+            <Button variant="outline" onClick={() => {
+              setCancelOpen(false);
+              setAdminPass("");
+              setPasswordVisibilityResetKey((current) => current + 1);
+            }}>
               Atrás
             </Button>
             <Button

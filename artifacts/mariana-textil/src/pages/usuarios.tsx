@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
@@ -37,6 +38,7 @@ export default function Usuarios() {
   
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -63,6 +65,7 @@ export default function Usuarios() {
 
   const openCreate = () => {
     resetForm();
+    setPasswordVisibilityResetKey((current) => current + 1);
     setIsCreateOpen(true);
   };
 
@@ -76,15 +79,18 @@ export default function Usuarios() {
       alcanceConsulta: user.alcanceConsulta || "PROPIA",
       activo: user.activo
     });
+    setPasswordVisibilityResetKey((current) => current + 1);
     setEditingUser(user);
   };
 
   const closeDialogs = () => {
     setIsCreateOpen(false);
     setEditingUser(null);
+    setPasswordVisibilityResetKey((current) => current + 1);
   };
 
   const handleSave = () => {
+    setPasswordVisibilityResetKey((current) => current + 1);
     if (!formData.nombre.trim() || !formData.usuario.trim()) {
       toast.error("Datos incompletos", { description: "Nombre y usuario son obligatorios" });
       return;
@@ -312,12 +318,15 @@ export default function Usuarios() {
             </div>
 
             <div className="space-y-2 mt-2">
-              <Label>Contraseña {editingUser && <span className="text-muted-foreground font-normal">(Dejar en blanco para no cambiar)</span>}</Label>
-              <Input 
-                type="password"
+              <Label htmlFor="user-password">Contraseña {editingUser && <span className="text-muted-foreground font-normal">(Dejar en blanco para no cambiar)</span>}</Label>
+              <PasswordInput
+                id="user-password"
                 value={formData.password} 
                 onChange={(e) => setFormData({...formData, password: e.target.value})} 
                 placeholder={editingUser ? "••••••••" : "Mínimo 10 caracteres"}
+                autoComplete="new-password"
+                visibilityResetKey={passwordVisibilityResetKey}
+                toggleTestId="toggle-user-password"
               />
             </div>
 

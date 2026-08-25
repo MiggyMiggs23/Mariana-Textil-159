@@ -22,6 +22,7 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { useLocationScope } from "@/lib/location-scope";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import {
   Card,
@@ -255,6 +256,7 @@ function CobroDialog({
   const [clienteId, setClienteId] = useState("");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
+  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
   const [showSplit, setShowSplit] = useState(false);
 
   const initializedForTicketId = useRef<number | null>(null);
@@ -274,6 +276,7 @@ function CobroDialog({
       setClienteId("");
       setAdminUser("");
       setAdminPass("");
+      setPasswordVisibilityResetKey((current) => current + 1);
       setShowSplit(false);
     }
   }, [open]);
@@ -291,6 +294,7 @@ function CobroDialog({
   const primaryPago = pagos[0];
 
   const handleCobrar = () => {
+    setPasswordVisibilityResetKey((current) => current + 1);
     if (!ticket || !isPaymentSelected) return;
     if (Math.abs(faltante) > 0.01) {
       toast({
@@ -729,15 +733,17 @@ function CobroDialog({
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-bold text-amber-900">
+                        <Label htmlFor="cobro-admin-password" className="text-xs font-bold text-amber-900">
                           CONTRASEÑA ADMIN
                         </Label>
-                        <Input
-                          type="password"
+                        <PasswordInput
+                          id="cobro-admin-password"
                           value={adminPass}
                           onChange={(event) => setAdminPass(event.target.value)}
                           autoComplete="new-password"
                           className="bg-white border-amber-200 h-10 focus-visible:ring-amber-500"
+                          visibilityResetKey={`${open}:${passwordVisibilityResetKey}`}
+                          toggleTestId="toggle-cobro-admin-password"
                         />
                       </div>
                     </div>
