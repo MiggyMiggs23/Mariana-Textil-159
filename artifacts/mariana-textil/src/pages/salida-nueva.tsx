@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { formatNumber } from "@workspace/number-format";
 
 export default function SalidaNueva() {
   const [, setLocation] = useLocation();
@@ -402,7 +403,7 @@ export default function SalidaNueva() {
                               </div>
                               <div className="flex items-center gap-4">
                                 <div className="text-right">
-                                  <p className="font-semibold text-primary">{roll.cantidadActual}</p>
+                                  <p className="font-semibold text-primary">{formatNumber(roll.cantidadActual, { kind: "quantity" })}</p>
                                   <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{roll.unidad}</p>
                                 </div>
                                 <Button
@@ -438,11 +439,11 @@ export default function SalidaNueva() {
                             <div key={i} className="p-3 bg-white">
                               <div className="flex justify-between items-start mb-1">
                                 <span className="font-semibold text-sm text-slate-800 line-clamp-1" title={item.tela}>{item.tela}</span>
-                                <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-2 shrink-0">{item.rollos} rollos</span>
+                                <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-2 shrink-0">{formatNumber(item.rollos, { kind: "count" })} rollos</span>
                               </div>
                               <div className="flex justify-between items-center">
                                 <span className="text-xs text-slate-500">{item.color} • {item.sku}</span>
-                                <span className="text-sm font-bold text-primary">{item.cantidad.toFixed(2)} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
+                                <span className="text-sm font-bold text-primary">{formatNumber(item.cantidad, { kind: "quantity" })} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
                               </div>
                             </div>
                           ))}
@@ -453,15 +454,15 @@ export default function SalidaNueva() {
                   <CardContent className="pt-4 space-y-3 bg-slate-50/50">
                     <div className="flex justify-between items-end border-b border-slate-100 pb-2">
                       <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Rollos</span>
-                      <span className="text-2xl font-black text-slate-900">{scannedRolls.length}</span>
+                       <span className="text-2xl font-black text-slate-900">{formatNumber(scannedRolls.length, { kind: "count" })}</span>
                     </div>
                     <div className="flex justify-between items-end border-b border-slate-100 pb-2">
                       <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metros</span>
-                      <span className="text-lg font-bold text-slate-700">{totals.metros.toFixed(2)}</span>
+                       <span className="text-lg font-bold text-slate-700">{formatNumber(totals.metros, { kind: "quantity" })}</span>
                     </div>
                     <div className="flex justify-between items-end pb-1">
                       <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kilos</span>
-                      <span className="text-lg font-bold text-slate-700">{totals.kilos.toFixed(2)}</span>
+                       <span className="text-lg font-bold text-slate-700">{formatNumber(totals.kilos, { kind: "quantity" })}</span>
                     </div>
                   </CardContent>
                   <CardFooter className="bg-slate-50/50 border-t border-slate-100 pt-4">

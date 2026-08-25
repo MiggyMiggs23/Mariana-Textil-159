@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import * as RechartsPrimitive from 'recharts';
+import {
+  formatNumber,
+  type NumberFormatKind,
+} from "@workspace/number-format";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
@@ -108,6 +112,7 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: 'line' | 'dot' | 'dashed';
       nameKey?: string;
       labelKey?: string;
+      valueKind: Exclude<NumberFormatKind, "identifier">;
     }
 >(
   (
@@ -122,6 +127,7 @@ const ChartTooltipContent = React.forwardRef<
       labelFormatter,
       labelClassName,
       formatter,
+      valueKind,
       color,
       nameKey,
       labelKey,
@@ -239,7 +245,10 @@ const ChartTooltipContent = React.forwardRef<
                         </div>
                         {item.value && (
                           <span className="font-mono font-medium tabular-nums text-foreground">
-                            {item.value.toLocaleString()}
+                            {formatNumber(
+                              Array.isArray(item.value) ? item.value[0] : item.value,
+                               { kind: valueKind },
+                            )}
                           </span>
                         )}
                       </div>

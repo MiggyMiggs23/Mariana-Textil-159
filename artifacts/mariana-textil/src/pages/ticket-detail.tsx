@@ -36,6 +36,7 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { BrandLogo } from "@/components/brand-logo";
+import { formatNumber } from "@workspace/number-format";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -323,37 +324,25 @@ export default function TicketDetailPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right font-mono">
-                    {Number(linea.cantidad)} {linea.unidadProducto}
+                    {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {Number(linea.precioUnitario).toLocaleString("es-MX", {
-                      style: "currency",
-                      currency: "MXN",
-                    })}
+                    {formatNumber(linea.precioUnitario, { kind: "money" })}
                   </td>
                   <td className="px-4 py-3 text-right font-semibold">
-                    {Number(linea.importe).toLocaleString("es-MX", {
-                      style: "currency",
-                      currency: "MXN",
-                    })}
+                    {formatNumber(linea.importe, { kind: "money" })}
                   </td>
                   {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
                     <>
                       <td className="px-4 py-3 text-right">
                         {linea.costoTotalCongelado == null
                           ? "—"
-                          : Number(linea.costoTotalCongelado).toLocaleString(
-                              "es-MX",
-                              { style: "currency", currency: "MXN" },
-                            )}
+                          : formatNumber(linea.costoTotalCongelado, { kind: "money" })}
                       </td>
                       <td className="px-4 py-3 text-right">
                         {linea.margen == null
                           ? "—"
-                          : Number(linea.margen).toLocaleString("es-MX", {
-                              style: "currency",
-                              currency: "MXN",
-                            })}
+                          : formatNumber(linea.margen, { kind: "money" })}
                       </td>
                     </>
                   )}
@@ -366,30 +355,21 @@ export default function TicketDetailPage() {
           <div className="flex justify-between w-64 text-muted-foreground">
             <span>Subtotal:</span>
             <span>
-              {Number(ticket.subtotal).toLocaleString("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              })}
+              {formatNumber(ticket.subtotal, { kind: "money" })}
             </span>
           </div>
           {ticket.facturado && (
             <div className="flex justify-between w-64 text-muted-foreground">
-              <span>IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%):</span>
+              <span>IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })}):</span>
               <span>
-                {Number(ticket.iva).toLocaleString("es-MX", {
-                  style: "currency",
-                  currency: "MXN",
-                })}
+                {formatNumber(ticket.iva, { kind: "money" })}
               </span>
             </div>
           )}
           <div className="flex justify-between w-64 text-xl font-bold text-foreground mt-2 border-t pt-2">
             <span>Total:</span>
             <span>
-              {Number(ticket.total).toLocaleString("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              })}
+              {formatNumber(ticket.total, { kind: "money" })}
             </span>
           </div>
         </CardFooter>
@@ -433,13 +413,10 @@ export default function TicketDetailPage() {
                     )}
                   </td>
                   <td className="text-right align-top py-1 font-mono">
-                    {Number(linea.cantidad)}
+                    {formatNumber(linea.cantidad, { kind: "quantity" })}
                   </td>
                   <td className="text-right align-top py-1">
-                    {Number(linea.importe).toLocaleString("es-MX", {
-                      style: "currency",
-                      currency: "MXN",
-                    })}
+                    {formatNumber(linea.importe, { kind: "money" })}
                   </td>
                 </tr>
               ))}
@@ -452,26 +429,17 @@ export default function TicketDetailPage() {
             <>
               <div>
                 SUBTOTAL:{" "}
-                {Number(ticket.subtotal).toLocaleString("es-MX", {
-                  style: "currency",
-                  currency: "MXN",
-                })}
+                {formatNumber(ticket.subtotal, { kind: "money" })}
               </div>
               <div>
-                IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%):{" "}
-                {Number(ticket.iva).toLocaleString("es-MX", {
-                  style: "currency",
-                  currency: "MXN",
-                })}
+                IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })}):{" "}
+                {formatNumber(ticket.iva, { kind: "money" })}
               </div>
             </>
           )}
           <div className="font-bold">
             TOTAL:{" "}
-            {Number(ticket.total).toLocaleString("es-MX", {
-              style: "currency",
-              currency: "MXN",
-            })}
+            {formatNumber(ticket.total, { kind: "money" })}
           </div>
         </div>
 
@@ -559,19 +527,13 @@ export default function TicketDetailPage() {
                   {linea.serieRollo || "-"}
                 </td>
                 <td className="border border-gray-300 p-2 text-right font-mono">
-                  {Number(linea.cantidad)} {linea.unidadProducto}
+                  {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
                 </td>
                 <td className="border border-gray-300 p-2 text-right">
-                  {Number(linea.precioUnitario).toLocaleString("es-MX", {
-                    style: "currency",
-                    currency: "MXN",
-                  })}
+                  {formatNumber(linea.precioUnitario, { kind: "money" })}
                 </td>
                 <td className="border border-gray-300 p-2 text-right font-bold">
-                  {Number(linea.importe).toLocaleString("es-MX", {
-                    style: "currency",
-                    currency: "MXN",
-                  })}
+                  {formatNumber(linea.importe, { kind: "money" })}
                 </td>
               </tr>
             ))}
@@ -583,30 +545,21 @@ export default function TicketDetailPage() {
             <div className="flex justify-between border-b border-gray-200 py-1">
               <span>Subtotal:</span>
               <span>
-                {Number(ticket.subtotal).toLocaleString("es-MX", {
-                  style: "currency",
-                  currency: "MXN",
-                })}
+                {formatNumber(ticket.subtotal, { kind: "money" })}
               </span>
             </div>
             {ticket.facturado && (
               <div className="flex justify-between border-b border-gray-200 py-1">
-                <span>IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%):</span>
+                <span>IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })}):</span>
                 <span>
-                  {Number(ticket.iva).toLocaleString("es-MX", {
-                    style: "currency",
-                    currency: "MXN",
-                  })}
+                  {formatNumber(ticket.iva, { kind: "money" })}
                 </span>
               </div>
             )}
             <div className="flex justify-between py-2 text-xl font-bold">
               <span>Total:</span>
               <span>
-                {Number(ticket.total).toLocaleString("es-MX", {
-                  style: "currency",
-                  currency: "MXN",
-                })}
+                {formatNumber(ticket.total, { kind: "money" })}
               </span>
             </div>
           </div>

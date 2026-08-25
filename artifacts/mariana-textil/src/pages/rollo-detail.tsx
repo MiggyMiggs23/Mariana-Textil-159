@@ -10,6 +10,7 @@ import { es } from "date-fns/locale";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/api-client-react";
+import { formatNumber } from "@workspace/number-format";
 
 export default function RolloDetail() {
   const { id } = useParams();
@@ -81,11 +82,11 @@ export default function RolloDetail() {
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Cantidad Actual</div>
                   <div className="text-3xl font-bold tracking-tight text-foreground">
-                    {cantidadActual.toFixed(2)} <span className="text-base font-normal text-muted-foreground">{rollo.unidadProducto}</span>
+                    {formatNumber(rollo.cantidadActual, { kind: "quantity" })} <span className="text-base font-normal text-muted-foreground">{rollo.unidadProducto}</span>
                   </div>
                   {isDeducted && (
                     <div className="text-xs text-muted-foreground mt-1">
-                      De {cantidadInicial.toFixed(2)} originales
+                      De {formatNumber(rollo.cantidadInicial, { kind: "quantity" })} originales
                     </div>
                   )}
                 </div>
@@ -93,10 +94,10 @@ export default function RolloDetail() {
                   <div>
                     <div className="text-sm text-muted-foreground mb-1">Costo Total</div>
                     <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-500">
-                      {rollo.costoTotal != null ? `$${parseFloat(rollo.costoTotal).toFixed(2)}` : 'Pendiente'}
+                      {rollo.costoTotal != null ? formatNumber(rollo.costoTotal, { kind: "money" }) : 'Pendiente'}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {rollo.costoUnitario != null ? `$${parseFloat(rollo.costoUnitario).toFixed(2)} / ${rollo.unidadProducto}` : 'Pendiente'}
+                      {rollo.costoUnitario != null ? `${formatNumber(rollo.costoUnitario, { kind: "money" })} / ${rollo.unidadProducto}` : 'Pendiente'}
                     </div>
                   </div>
                 )}
@@ -192,10 +193,10 @@ export default function RolloDetail() {
                         </TableCell>
                         <TableCell className="text-sm">{mov.nombreUbicacion}</TableCell>
                         <TableCell className={`text-right font-medium tabular-nums ${isPositive ? 'text-emerald-600 dark:text-emerald-400' : isNegative ? 'text-red-600 dark:text-red-400' : ''}`}>
-                          {isPositive ? '+' : isNegative ? '-' : ''}{parseFloat(mov.cantidad).toFixed(2)}
+                           {isPositive ? '+' : isNegative ? '-' : ''}{formatNumber(Math.abs(Number(mov.cantidad)), { kind: "quantity" })}
                         </TableCell>
                         <TableCell className="text-right font-bold tabular-nums">
-                          {parseFloat(mov.saldoPosterior).toFixed(2)}
+                          {formatNumber(mov.saldoPosterior, { kind: "quantity" })}
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate" title={mov.justificacion || mov.documentoId || ''}>
                           {mov.documentoTipo && `${mov.documentoTipo} ${mov.documentoId || ''} `}

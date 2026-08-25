@@ -28,6 +28,7 @@ import { Search, AlertTriangle, Check, X, FileEdit, Box, ChevronRight } from "lu
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { formatNumber } from "@workspace/number-format";
 
 export default function Ajustes() {
   const queryClient = useQueryClient();
@@ -221,7 +222,7 @@ export default function Ajustes() {
                                   <div className="text-xs text-muted-foreground">{rollo.telaProducto} / {rollo.colorProducto}</div>
                                 </div>
                                 <div className="text-right">
-                                  <div className="font-medium">{parseFloat(rollo.cantidadActual).toFixed(2)}</div>
+                                  <div className="font-medium">{formatNumber(rollo.cantidadActual, { kind: "quantity" })}</div>
                                   <Badge variant="outline" className="text-[10px]">{rollo.estado}</Badge>
                                 </div>
                               </div>
@@ -245,7 +246,7 @@ export default function Ajustes() {
                       <div className="grid grid-cols-2 gap-4 mt-6">
                         <div>
                           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">CANTIDAD ACTUAL</p>
-                          <p className="text-2xl font-bold">{parseFloat(selectedRollo.cantidadActual).toFixed(2)}</p>
+                          <p className="text-2xl font-bold">{formatNumber(selectedRollo.cantidadActual, { kind: "quantity" })}</p>
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">ESTADO</p>
@@ -299,7 +300,7 @@ export default function Ajustes() {
                           <div className="absolute right-3 top-1/2 -translate-y-1/2 text-sm">
                             <span className="text-muted-foreground">Diferencia: </span>
                             <span className={parseFloat(cantidadNueva) < parseFloat(selectedRollo.cantidadActual) ? "text-destructive font-bold" : parseFloat(cantidadNueva) > parseFloat(selectedRollo.cantidadActual) ? "text-emerald-600 font-bold" : "text-muted-foreground"}>
-                              {(parseFloat(cantidadNueva) - parseFloat(selectedRollo.cantidadActual)).toFixed(2)}
+                              {formatNumber(parseFloat(cantidadNueva) - parseFloat(selectedRollo.cantidadActual), { kind: "quantity" })}
                             </span>
                           </div>
                         )}
@@ -410,7 +411,7 @@ export default function Ajustes() {
                             </TableCell>
                             <TableCell className="text-right">
                               <span className={parseFloat(mov.cantidad) < 0 ? "text-destructive font-bold" : "text-emerald-600 font-bold"}>
-                                {parseFloat(mov.cantidad) > 0 ? '+' : ''}{parseFloat(mov.cantidad).toFixed(2)}
+                                {parseFloat(mov.cantidad) > 0 ? '+' : ''}{formatNumber(Math.abs(parseFloat(mov.cantidad)), { kind: "quantity" })}
                               </span>
                             </TableCell>
                             <TableCell className="max-w-[300px]">

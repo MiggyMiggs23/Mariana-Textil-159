@@ -42,6 +42,10 @@ import {
   analiticaGlobalProveedores,
   type EstadoCompra,
 } from "../lib/compras-proveedor";
+import {
+  EXCEL_NUMBER_FORMAT,
+  toExcelNumber,
+} from "@workspace/number-format";
 
 const router: IRouter = Router();
 
@@ -786,9 +790,9 @@ router.get(
         sheet.addRow([
           new Date(m.fecha).toLocaleDateString("es-MX"),
           m.tipo,
-          m.folio ?? "",
-          parseFloat(m.importe),
-          parseFloat(m.saldoAcumulado),
+          m.folio == null ? "" : String(m.folio),
+          toExcelNumber(m.importe),
+          toExcelNumber(m.saldoAcumulado),
           m.formaPago ?? "",
           m.referencia ?? "",
           m.notas ?? "",
@@ -796,7 +800,10 @@ router.get(
       }
 
       sheet.addRow([]);
-      sheet.addRow(["Saldo actual:", parseFloat(saldoActual)]);
+      sheet.addRow(["Saldo actual:", toExcelNumber(saldoActual)]);
+      sheet.getColumn(4).numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn(5).numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getRow(sheet.rowCount).getCell(2).numFmt = EXCEL_NUMBER_FORMAT.money;
 
       const filename = `estado-cuenta-${prov.nombre.replace(/\s+/g, "-").toLowerCase()}.xlsx`;
       res.setHeader(

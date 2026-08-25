@@ -17,6 +17,7 @@ import {
 import { keepPreviousData } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { formatNumber } from "@workspace/number-format";
 import {
   Search,
   Plus,
@@ -378,10 +379,10 @@ export default function Salidas() {
                         <div className="text-left sm:text-right">
                           <p className="text-xs font-semibold text-slate-500 mb-1">CANTIDAD</p>
                           <p className="text-sm font-medium text-slate-900">
-                            {salida.totalCantidadSolicitada} <span className="text-slate-400 font-normal">solicitada</span>
+                             {formatNumber(salida.totalCantidadSolicitada, { kind: "quantity" })} <span className="text-slate-400 font-normal">solicitada</span>
                           </p>
                           {Number(salida.totalCantidadEnviada) > 0 && (
-                            <p className="text-xs text-amber-600 mt-0.5">{salida.totalCantidadEnviada} enviada</p>
+                             <p className="text-xs text-amber-600 mt-0.5">{formatNumber(salida.totalCantidadEnviada, { kind: "quantity" })} enviada</p>
                           )}
                         </div>
                         <div className="w-[100px] flex justify-end">
@@ -398,7 +399,7 @@ export default function Salidas() {
           {salidasResult && Math.ceil(salidasResult.total / salidasResult.pageSize) > 1 && (
             <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50">
               <p className="text-sm text-slate-500">
-                Mostrando página {page} de {Math.ceil(salidasResult.total / salidasResult.pageSize)} ({salidasResult.total} resultados)
+                 Mostrando página {formatNumber(page, { kind: "count" })} de {formatNumber(Math.ceil(salidasResult.total / salidasResult.pageSize), { kind: "count" })} ({formatNumber(salidasResult.total, { kind: "count" })} resultados)
               </p>
               <div className="flex gap-2">
                 <Button

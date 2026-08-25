@@ -4,6 +4,9 @@
   "files": [],
   "references": [
     {
+      "path": "./lib/number-format"
+    },
+    {
       "path": "./lib/db"
     },
     {

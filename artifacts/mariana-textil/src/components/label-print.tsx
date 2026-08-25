@@ -1,5 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { BrandLogo } from './brand-logo';
+import { formatNumber } from "@workspace/number-format";
 
 export interface LabelData {
   sku: string;
@@ -39,7 +40,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           </div>
           <div>
             <div className="text-[10px] font-bold text-gray-500 uppercase leading-none mt-2">{unitLabel}</div>
-            <div className="text-[26px] font-black tracking-tighter leading-none mt-1">{parseFloat(data.cantidad).toFixed(2)}</div>
+            <div className="text-[26px] font-black tracking-tighter leading-none mt-1">{formatNumber(data.cantidad, { kind: "quantity" })}</div>
           </div>
         </div>
 

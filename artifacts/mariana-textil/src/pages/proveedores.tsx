@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { Search, Plus, Truck, Building2, Globe2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { formatNumber } from "@workspace/number-format";
 
 
 // Helper for generic API errors
@@ -42,12 +43,6 @@ function getErrorMessage(error: unknown): string {
     return (apiError.data as { error: string }).error;
   }
   return typeof apiError.message === "string" ? apiError.message : "Error desconocido";
-}
-
-function formatCurrency(value: string | number): string {
-  const num = typeof value === "string" ? parseFloat(value) : value;
-  if (isNaN(num)) return "$0.00";
-  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(num);
 }
 
 function formatDate(dateStr: string | null): string {
@@ -130,19 +125,19 @@ export default function Proveedores() {
               <Card>
                 <CardContent className="p-4 flex flex-col gap-1">
                   <span className="text-sm font-medium text-muted-foreground">Total Deuda</span>
-                  <span className="text-2xl font-bold">{formatCurrency(proveedores?.totalDeuda ?? "0")}</span>
+                  <span className="text-2xl font-bold">{formatNumber(proveedores?.totalDeuda ?? "0", { kind: "money" })}</span>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-4 flex flex-col gap-1">
                   <span className="text-sm font-medium text-muted-foreground">Compras del Mes</span>
-                  <span className="text-2xl font-bold">{formatCurrency(proveedores?.comprasMes ?? "0")}</span>
+                  <span className="text-2xl font-bold">{formatNumber(proveedores?.comprasMes ?? "0", { kind: "money" })}</span>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-4 flex flex-col gap-1">
                   <span className="text-sm font-medium text-muted-foreground">Proveedores con Saldo</span>
-                  <span className="text-2xl font-bold">{proveedores?.proveedoresConSaldo || 0}</span>
+                  <span className="text-2xl font-bold">{formatNumber(proveedores?.proveedoresConSaldo || 0, { kind: "count" })}</span>
                 </CardContent>
               </Card>
             </>
@@ -150,7 +145,7 @@ export default function Proveedores() {
           <Card>
             <CardContent className="p-4 flex flex-col gap-1">
               <span className="text-sm font-medium text-muted-foreground">Total Proveedores</span>
-              <span className="text-2xl font-bold">{proveedores?.totalProveedores || 0}</span>
+              <span className="text-2xl font-bold">{formatNumber(proveedores?.totalProveedores || 0, { kind: "count" })}</span>
             </CardContent>
           </Card>
         </div>
@@ -253,11 +248,11 @@ export default function Proveedores() {
                           <>
                             <TableCell className="text-right">
                               <div className={`font-semibold ${parseFloat(p.saldoPendiente ?? "0") > 0 ? "text-destructive" : ""}`}>
-                                {formatCurrency(p.saldoPendiente ?? "0")}
+                                 {formatNumber(p.saldoPendiente ?? "0", { kind: "money" })}
                               </div>
                             </TableCell>
                             <TableCell className="text-right">
-                              <div className="text-sm font-medium">{formatCurrency(p.totalComprado12Meses ?? "0")}</div>
+                              <div className="text-sm font-medium">{formatNumber(p.totalComprado12Meses ?? "0", { kind: "money" })}</div>
                             </TableCell>
                           </>
                         )}
@@ -285,12 +280,12 @@ export default function Proveedores() {
               {isAnaliticaLoading ? <Card><CardContent className="p-12 text-center">Calculando análisis...</CardContent></Card> : analitica && (
                 <>
                   <div className="grid md:grid-cols-2 gap-6">
-                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Tendencia mensual de compras</h2><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={analitica.tendenciaMensual}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="mes"/><YAxis/><Tooltip formatter={(v) => formatCurrency(Number(v))}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer></div></CardContent></Card>
-                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Deuda por proveedor</h2><div className="space-y-3">{analitica.deuda.map(d => <div key={d.proveedorId} className="flex justify-between border-b pb-2"><Link href={`/proveedores/${d.proveedorId}`} className="font-medium hover:underline">{d.proveedor}</Link><span className="text-destructive font-semibold">{formatCurrency(d.saldo)}</span></div>)}</div></CardContent></Card>
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Tendencia mensual de compras</h2><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={analitica.tendenciaMensual}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="mes"/><YAxis/><Tooltip formatter={(v) => formatNumber(Number(v), { kind: "money" })}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer></div></CardContent></Card>
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Deuda por proveedor</h2><div className="space-y-3">{analitica.deuda.map(d => <div key={d.proveedorId} className="flex justify-between border-b pb-2"><Link href={`/proveedores/${d.proveedorId}`} className="font-medium hover:underline">{d.proveedor}</Link><span className="text-destructive font-semibold">{formatNumber(d.saldo, { kind: "money" })}</span></div>)}</div></CardContent></Card>
                   </div>
                   <div className="grid md:grid-cols-2 gap-6">
-                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Pareto de compras</h2><Table><TableHeader><TableRow><TableHead>Proveedor</TableHead><TableHead className="text-right">Comprado</TableHead><TableHead className="text-right">% acumulado</TableHead></TableRow></TableHeader><TableBody>{analitica.pareto.map(p => <TableRow key={p.proveedorId}><TableCell>{p.proveedor}</TableCell><TableCell className="text-right">{formatCurrency(p.total)}</TableCell><TableCell className="text-right">{p.porcentajeAcumulado}%</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
-                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Costos al alza</h2><Table><TableHeader><TableRow><TableHead>Producto / proveedor</TableHead><TableHead className="text-right">Anterior</TableHead><TableHead className="text-right">Actual</TableHead></TableRow></TableHeader><TableBody>{analitica.costosAlAlza.map(c => <TableRow key={`${c.productoId}-${c.proveedor}`}><TableCell><b>{c.sku}</b><div className="text-xs text-muted-foreground">{c.proveedor} · +{c.variacionPct}%</div></TableCell><TableCell className="text-right">{formatCurrency(c.costoAnterior)}</TableCell><TableCell className="text-right font-semibold">{formatCurrency(c.costoActual)}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Pareto de compras</h2><Table><TableHeader><TableRow><TableHead>Proveedor</TableHead><TableHead className="text-right">Comprado</TableHead><TableHead className="text-right">% acumulado</TableHead></TableRow></TableHeader><TableBody>{analitica.pareto.map(p => <TableRow key={p.proveedorId}><TableCell>{p.proveedor}</TableCell><TableCell className="text-right">{formatNumber(p.total, { kind: "money" })}</TableCell><TableCell className="text-right">{formatNumber(p.porcentajeAcumulado, { kind: "percentage", percentageInput: "percent" })}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Costos al alza</h2><Table><TableHeader><TableRow><TableHead>Producto / proveedor</TableHead><TableHead className="text-right">Anterior</TableHead><TableHead className="text-right">Actual</TableHead></TableRow></TableHeader><TableBody>{analitica.costosAlAlza.map(c => <TableRow key={`${c.productoId}-${c.proveedor}`}><TableCell><b>{c.sku}</b><div className="text-xs text-muted-foreground">{c.proveedor} · +{formatNumber(c.variacionPct, { kind: "percentage", percentageInput: "percent" })}</div></TableCell><TableCell className="text-right">{formatNumber(c.costoAnterior, { kind: "money" })}</TableCell><TableCell className="text-right font-semibold">{formatNumber(c.costoActual, { kind: "money" })}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
                   </div>
                   <div className="grid md:grid-cols-3 gap-6">
                     <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Antigüedad global de deuda</h2><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={[
@@ -298,8 +293,8 @@ export default function Proveedores() {
                       { rango:"31–60", saldo:Number(analitica.antiguedadDeuda.de31a60) },
                       { rango:"61–90", saldo:Number(analitica.antiguedadDeuda.de61a90) },
                       { rango:"90+", saldo:Number(analitica.antiguedadDeuda.mas90) },
-                    ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(v) => formatCurrency(Number(v))}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer></div></CardContent></Card>
-                    <Card className="md:col-span-2"><CardContent className="pt-6"><h2 className="font-semibold mb-4">Comparación del mismo producto entre proveedores</h2><div className="max-h-80 overflow-auto"><Table><TableHeader><TableRow><TableHead>Producto</TableHead><TableHead>Costos por proveedor</TableHead><TableHead className="text-right">Más barato / ahorro</TableHead></TableRow></TableHeader><TableBody>{analitica.comparacionCostos.map(p => <TableRow key={p.productoId}><TableCell><b>{p.sku}</b><div className="text-xs text-muted-foreground">{p.unidad}</div></TableCell><TableCell className="text-xs">{p.proveedores.map(x => `${x.proveedor}: ${formatCurrency(x.costoUnitario)}`).join(" · ")}</TableCell><TableCell className="text-right"><b>{p.proveedorMasBarato}</b><div className="text-xs text-emerald-700">hasta {p.ahorroPct}%</div></TableCell></TableRow>)}</TableBody></Table></div></CardContent></Card>
+                    ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(v) => formatNumber(Number(v), { kind: "money" })}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer></div></CardContent></Card>
+                    <Card className="md:col-span-2"><CardContent className="pt-6"><h2 className="font-semibold mb-4">Comparación del mismo producto entre proveedores</h2><div className="max-h-80 overflow-auto"><Table><TableHeader><TableRow><TableHead>Producto</TableHead><TableHead>Costos por proveedor</TableHead><TableHead className="text-right">Más barato / ahorro</TableHead></TableRow></TableHeader><TableBody>{analitica.comparacionCostos.map(p => <TableRow key={p.productoId}><TableCell><b>{p.sku}</b><div className="text-xs text-muted-foreground">{p.unidad}</div></TableCell><TableCell className="text-xs">{p.proveedores.map(x => `${x.proveedor}: ${formatNumber(x.costoUnitario, { kind: "money" })}`).join(" · ")}</TableCell><TableCell className="text-right"><b>{p.proveedorMasBarato}</b><div className="text-xs text-emerald-700">hasta {formatNumber(p.ahorroPct, { kind: "percentage", percentageInput: "percent" })}</div></TableCell></TableRow>)}</TableBody></Table></div></CardContent></Card>
                   </div>
                 </>
               )}

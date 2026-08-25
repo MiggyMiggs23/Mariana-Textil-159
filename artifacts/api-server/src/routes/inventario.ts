@@ -105,6 +105,10 @@ import {
   type KardexFiltersInput,
 } from "../lib/kardex";
 import { isValidUnitCost } from "../lib/unit-cost";
+import {
+  EXCEL_NUMBER_FORMAT,
+  toExcelNumber,
+} from "@workspace/number-format";
 
 export const inventarioRouter = Router();
 
@@ -1611,6 +1615,7 @@ inventarioRouter.get(
         { header: "Documento", key: "documento", width: 28 },
         { header: "Justificación", key: "justificacion", width: 40 },
       ];
+      sheet.getColumn("cantidad").numFmt = EXCEL_NUMBER_FORMAT.quantity;
       const dateFormatter = new Intl.DateTimeFormat("es-MX", {
         timeZone: "America/Mexico_City",
         year: "numeric",
@@ -1634,7 +1639,7 @@ inventarioRouter.get(
           producto: `${movement.telaProducto} - ${movement.colorProducto}`,
           serie: movement.serie,
           ubicacion: movement.nombreUbicacion,
-          cantidad: Number(movement.cantidad),
+          cantidad: toExcelNumber(movement.cantidad),
           unidad: movement.unidadProducto,
           usuario: movement.nombreUsuario,
           documento: movement.documentoEtiqueta ?? "",

@@ -63,12 +63,7 @@ import {
 import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
-const money = (value: string | number | null) =>
-  Number(value ?? 0).toLocaleString("es-MX", {
-    style: "currency",
-    currency: "MXN",
-  });
+import { formatNumber } from "@workspace/number-format";
 
 function HistorialCortes() {
   const [sessionId, setSessionId] = useState<number | null>(null);
@@ -112,12 +107,12 @@ function HistorialCortes() {
               <div className="grid gap-1 text-sm">
                 <p className="font-semibold">{sesion.nombreUbicacion} <span className="font-normal text-muted-foreground">· {sesion.nombreUsuario}</span></p>
                 <p className="text-muted-foreground">Abrió: {format(new Date(sesion.abiertaAt), "PPP p", { locale: es })} · Cerró: {sesion.cerradaAt ? format(new Date(sesion.cerradaAt), "PPP p", { locale: es }) : "Pendiente"}</p>
-                <p><span className="font-medium">Estado:</span> {sesion.estado} · {sesion.ticketsCobrados} cobrados</p>
+                <p><span className="font-medium">Estado:</span> {sesion.estado} · {formatNumber(sesion.ticketsCobrados, { kind: "count" })} cobrados</p>
               </div>
               <div className="grid grid-cols-2 gap-x-5 gap-y-1 text-sm md:text-right">
-                <span className="text-muted-foreground">Total</span><span className="font-mono font-semibold">{money(sesion.totalCobrado)}</span>
-                <span className="text-muted-foreground">Esperado</span><span className="font-mono font-semibold">{money(sesion.efectivoEsperado)}</span>
-                <span className="text-muted-foreground">Diferencia</span><span className="font-mono font-semibold">{sesion.diferencia === null ? "—" : money(sesion.diferencia)}</span>
+                <span className="text-muted-foreground">Total</span><span className="font-mono font-semibold">{formatNumber(sesion.totalCobrado, { kind: "money" })}</span>
+                <span className="text-muted-foreground">Esperado</span><span className="font-mono font-semibold">{formatNumber(sesion.efectivoEsperado, { kind: "money" })}</span>
+                <span className="text-muted-foreground">Diferencia</span><span className="font-mono font-semibold">{formatNumber(sesion.diferencia, { kind: "money" })}</span>
               </div>
               <Button variant="outline" onClick={() => setSessionId(sesion.id)}>Ver corte</Button>
             </CardContent>
@@ -391,15 +386,12 @@ function CobroDialog({
                     TOTAL A COBRAR
                   </div>
                   <div className="text-4xl font-black text-primary">
-                    {totalTicket.toLocaleString("es-MX", {
-                      style: "currency",
-                      currency: "MXN",
-                    })}
+                    {formatNumber(totalTicket, { kind: "money" })}
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="font-bold text-xl text-sidebar">
-                    Folio {ticket.folio}
+                    Folio {formatNumber(ticket.folio, { kind: "identifier" })}
                   </div>
                   <div className="text-sm font-medium px-2 py-0.5 bg-sidebar/10 text-sidebar rounded inline-block mt-1">
                     {ticket.tipo}
@@ -411,30 +403,21 @@ function CobroDialog({
                   <div className="flex justify-between text-muted-foreground">
                     <span>Subtotal</span>
                     <span>
-                      {Number(ticket.subtotal).toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                      {formatNumber(ticket.subtotal, { kind: "money" })}
                     </span>
                   </div>
                   <div className="mt-1 flex justify-between text-muted-foreground">
                     <span>
-                      IVA ({(Number(ticket.tasaIva) * 100).toFixed(0)}%)
+                      IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })})
                     </span>
                     <span>
-                      {Number(ticket.iva).toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                      {formatNumber(ticket.iva, { kind: "money" })}
                     </span>
                   </div>
                   <div className="mt-2 flex justify-between border-t border-primary/15 pt-2 font-bold text-primary">
                     <span>Total a cobrar</span>
                     <span>
-                      {totalTicket.toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                      {formatNumber(totalTicket, { kind: "money" })}
                     </span>
                   </div>
                 </div>
@@ -752,10 +735,7 @@ function CobroDialog({
                   {faltante > 0 ? "Falta por cubrir:" : "Cambio (Sobran):"}
                 </span>
                 <span className="text-xl">
-                  {Math.abs(faltante).toLocaleString("es-MX", {
-                    style: "currency",
-                    currency: "MXN",
-                  })}
+                  {formatNumber(Math.abs(faltante), { kind: "money" })}
                 </span>
               </div>
             )}
@@ -1056,7 +1036,7 @@ function CobrosContent() {
                       <div>
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-xl text-sidebar">
-                            Folio: {t.folio}
+                            Folio: {formatNumber(t.folio, { kind: "identifier" })}
                           </span>
                         </div>
                         <div className="text-sm font-medium text-muted-foreground mt-1.5 flex flex-wrap items-center gap-2">
@@ -1102,10 +1082,7 @@ function CobrosContent() {
                           <div
                             className={`font-black text-2xl ${t.cobrado ? "text-sidebar/70" : "text-primary"}`}
                           >
-                            {Number(t.total).toLocaleString("es-MX", {
-                              style: "currency",
-                              currency: "MXN",
-                            })}
+                            {formatNumber(t.total, { kind: "money" })}
                           </div>
                         </div>
 
@@ -1197,10 +1174,7 @@ function CobrosContent() {
                       Fondo Inicial
                     </div>
                     <div className="font-bold">
-                      {Number(corteData.fondoInicial).toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                      {formatNumber(corteData.fondoInicial, { kind: "money" })}
                     </div>
                   </div>
                   <div className="p-3 bg-muted rounded-md text-center">
@@ -1208,10 +1182,7 @@ function CobrosContent() {
                       Total Cobrado
                     </div>
                     <div className="font-bold">
-                      {Number(corteData.totalCobrado).toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                      {formatNumber(corteData.totalCobrado, { kind: "money" })}
                     </div>
                   </div>
                   <div className="p-3 bg-primary/5 rounded-md text-center">
@@ -1219,10 +1190,7 @@ function CobrosContent() {
                       IVA Cobrado
                     </div>
                     <div className="font-bold text-primary">
-                      {Number(corteData.ivaCobrado).toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                      {formatNumber(corteData.ivaCobrado, { kind: "money" })}
                     </div>
                   </div>
                 </div>
@@ -1233,10 +1201,7 @@ function CobrosContent() {
                       Efectivo Esperado:
                     </span>
                     <span className="text-xl font-bold text-primary">
-                      {Number(corteData.efectivoEsperado).toLocaleString(
-                        "es-MX",
-                        { style: "currency", currency: "MXN" },
-                      )}
+                      {formatNumber(corteData.efectivoEsperado, { kind: "money" })}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -1247,11 +1212,11 @@ function CobrosContent() {
                   <div className="grid gap-4 rounded-md border border-emerald-200 bg-emerald-50 p-4 sm:grid-cols-2">
                     <div>
                       <p className="text-xs text-emerald-700">Efectivo físico contado</p>
-                      <p className="text-xl font-bold text-emerald-900">{money(closedCorte.efectivoContado)}</p>
+                      <p className="text-xl font-bold text-emerald-900">{formatNumber(closedCorte.efectivoContado, { kind: "money" })}</p>
                     </div>
                     <div>
                       <p className="text-xs text-emerald-700">Diferencia de cierre</p>
-                      <p className="text-xl font-bold text-emerald-900">{money(closedCorte.diferencia)}</p>
+                      <p className="text-xl font-bold text-emerald-900">{formatNumber(closedCorte.diferencia, { kind: "money" })}</p>
                     </div>
                   </div>
                 )}
@@ -1261,7 +1226,7 @@ function CobrosContent() {
                     {corteData.formasPago.map((row) => (
                       <CorteRow
                         key={row.formaPago}
-                        label={`${row.formaPago} (${row.ticketsCount} tickets)`}
+                        label={`${row.formaPago} (${formatNumber(row.ticketsCount, { kind: "count" })} tickets)`}
                         value={row.importe}
                       />
                     ))}
@@ -1284,7 +1249,7 @@ function CobrosContent() {
                     {corteData.metreado.map((row) => (
                       <CorteRow
                         key={row.tipo}
-                        label={`${row.tipo} · ${row.cantidad}`}
+                        label={`${row.tipo} · ${formatNumber(row.cantidad, { kind: "quantity" })}`}
                         value={row.importe}
                       />
                     ))}
@@ -1300,7 +1265,7 @@ function CobrosContent() {
                     corteData.productos.map((row) => (
                       <CorteRow
                         key={row.productoId}
-                        label={`${row.sku} · ${row.tela} ${row.color} · ${row.cantidad} ${row.unidad}`}
+                        label={`${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`}
                         value={row.importe}
                       />
                     ))
@@ -1318,7 +1283,7 @@ function CobrosContent() {
                     corteData.pendientes.map((row) => (
                       <CorteRow
                         key={row.ticketId}
-                        label={`Folio ${row.folio} · ${row.nombreCliente || "Venta a Público"}`}
+                        label={`Folio ${formatNumber(row.folio, { kind: "identifier" })} · ${row.nombreCliente || "Venta a Público"}`}
                         value={row.total}
                       />
                     ))
@@ -1414,15 +1379,15 @@ function CorteDetail({ corte }: { corte: CorteCaja }) {
         <CorteRow label="Efectivo esperado" value={corte.efectivoEsperado} />
         <CorteRow label="Efectivo contado" value={corte.efectivoContado ?? "0"} />
       </div>
-      <p className="text-right text-sm font-semibold">Diferencia: {corte.diferencia === null ? "—" : money(corte.diferencia)}</p>
+      <p className="text-right text-sm font-semibold">Diferencia: {formatNumber(corte.diferencia, { kind: "money" })}</p>
       <div className="grid gap-4 md:grid-cols-2">
-        <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${row.ticketsCount} tickets)`} value={row.importe} />)}</CorteSection>
+      <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${formatNumber(row.ticketsCount, { kind: "count" })} tickets)`} value={row.importe} />)}</CorteSection>
         <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={row.cuentaDestino} value={row.importe} />)}</CorteSection>
         <CorteSection title="Facturación">{corte.facturacion.map((row) => <CorteFiscalRow key={String(row.facturado)} row={row} />)}</CorteSection>
-        <CorteSection title="Normal / Metreado">{corte.metreado.map((row) => <CorteRow key={row.tipo} label={`${row.tipo} · ${row.cantidad}`} value={row.importe} />)}</CorteSection>
+      <CorteSection title="Normal / Metreado">{corte.metreado.map((row) => <CorteRow key={row.tipo} label={`${row.tipo} · ${formatNumber(row.cantidad, { kind: "quantity" })}`} value={row.importe} />)}</CorteSection>
       </div>
-      <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${row.cantidad} ${row.unidad}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
-      <CorteSection title={`Tickets pendientes (${corte.pendientes.length})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${row.folio} · ${row.nombreCliente || "Venta a Público"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
+      <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
+      <CorteSection title={`Tickets pendientes (${formatNumber(corte.pendientes.length, { kind: "count" })})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${formatNumber(row.folio, { kind: "identifier" })} · ${row.nombreCliente || "Venta a Público"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
     </div>
   );
 }
@@ -1447,10 +1412,7 @@ function CorteRow({ label, value }: { label: string; value: string }) {
     <div className="flex justify-between gap-4 text-xs">
       <span className="text-muted-foreground">{label}</span>
       <span className="font-mono font-semibold">
-        {Number(value).toLocaleString("es-MX", {
-          style: "currency",
-          currency: "MXN",
-        })}
+        {formatNumber(value, { kind: "money" })}
       </span>
     </div>
   );
@@ -1471,31 +1433,22 @@ function CorteFiscalRow({
     <div className="rounded border bg-muted/20 p-2 text-xs">
       <div className="mb-1 flex justify-between font-semibold">
         <span>
-          {row.facturado ? "Facturado" : "No facturado"} ({row.ticketsCount})
+          {row.facturado ? "Facturado" : "No facturado"} ({formatNumber(row.ticketsCount, { kind: "count" })})
         </span>
         <span>
-          {Number(row.importe).toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          })}
+          {formatNumber(row.importe, { kind: "money" })}
         </span>
       </div>
       <div className="flex justify-between text-muted-foreground">
         <span>Subtotal</span>
         <span>
-          {Number(row.subtotal).toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          })}
+          {formatNumber(row.subtotal, { kind: "money" })}
         </span>
       </div>
       <div className="mt-0.5 flex justify-between text-muted-foreground">
         <span>IVA</span>
         <span>
-          {Number(row.iva).toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          })}
+          {formatNumber(row.iva, { kind: "money" })}
         </span>
       </div>
     </div>

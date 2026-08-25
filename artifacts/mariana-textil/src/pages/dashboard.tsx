@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Users, Warehouse } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocationScope } from "@/lib/location-scope";
+import { formatNumber } from "@workspace/number-format";
 
 export default function Dashboard() {
   const { data: user } = useGetCurrentUser();
@@ -67,7 +68,7 @@ export default function Dashboard() {
                 <Building2 className="h-5 w-5 text-sidebar-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{dashboard.tiendasActivas}</div>
+                 <div className="text-3xl font-bold">{formatNumber(dashboard.tiendasActivas, { kind: "count" })}</div>
               </CardContent>
             </Card>
             <Card>
@@ -76,7 +77,7 @@ export default function Dashboard() {
                 <Warehouse className="h-5 w-5 text-sidebar-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{dashboard.bodegasActivas}</div>
+                 <div className="text-3xl font-bold">{formatNumber(dashboard.bodegasActivas, { kind: "count" })}</div>
               </CardContent>
             </Card>
             <Card>
@@ -85,7 +86,7 @@ export default function Dashboard() {
                 <Users className="h-5 w-5 text-sidebar-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{dashboard.usuariosActivos}</div>
+                 <div className="text-3xl font-bold">{formatNumber(dashboard.usuariosActivos, { kind: "count" })}</div>
               </CardContent>
             </Card>
           </div>
@@ -114,9 +115,9 @@ export default function Dashboard() {
                   {inventario.map((item) => (
                     <TableRow key={item.ubicacionId}>
                       <TableCell className="font-medium">{item.nombre}</TableCell>
-                      <TableCell className="text-right tabular-nums">{item.metros}</TableCell>
-                      <TableCell className="text-right tabular-nums">{item.kilos}</TableCell>
-                      <TableCell className="text-right tabular-nums">{item.rollos}</TableCell>
+                       <TableCell className="text-right tabular-nums">{formatNumber(item.metros, { kind: "quantity" })}</TableCell>
+                       <TableCell className="text-right tabular-nums">{formatNumber(item.kilos, { kind: "quantity" })}</TableCell>
+                       <TableCell className="text-right tabular-nums">{formatNumber(item.rollos, { kind: "count" })}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

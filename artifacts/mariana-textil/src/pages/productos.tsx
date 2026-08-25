@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ChevronDown, Plus, Upload, Search, Package, CheckCircle2, AlertCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { formatNumber } from "@workspace/number-format";
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -270,11 +271,11 @@ export default function Productos() {
                           <div className="flex items-center gap-6 text-sm">
                             <div className="text-right hidden sm:block">
                               <span className="text-muted-foreground">Rollos: </span>
-                              <span className="font-semibold text-sidebar">{totalRollos}</span>
+                              <span className="font-semibold text-sidebar">{formatNumber(totalRollos, { kind: "count" })}</span>
                             </div>
                             <div className="text-right hidden sm:block w-24">
                               <span className="text-muted-foreground">Total: </span>
-                              <span className="font-semibold text-sidebar">{totalCantidad.toFixed(2)}</span>
+                              <span className="font-semibold text-sidebar">{formatNumber(totalCantidad, { kind: "quantity" })}</span>
                             </div>
                             {isAdmin && (
                               <Button 
@@ -320,9 +321,9 @@ export default function Productos() {
                                     <TableCell>
                                       <Badge variant="outline" className="text-[10px]">{p.unidad}</Badge>
                                     </TableCell>
-                                    <TableCell className="text-right">${parseFloat(p.precioSugerido).toFixed(2)}</TableCell>
-                                    <TableCell className="text-right font-medium">{p.rollos}</TableCell>
-                                    <TableCell className="text-right font-medium">{parseFloat(p.cantidad).toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">{formatNumber(p.precioSugerido, { kind: "money" })}</TableCell>
+                                    <TableCell className="text-right font-medium">{formatNumber(p.rollos, { kind: "count" })}</TableCell>
+                                    <TableCell className="text-right font-medium">{formatNumber(p.cantidad, { kind: "quantity" })}</TableCell>
                                     <TableCell className="text-right">
                                       <Badge variant={p.activo ? "default" : "secondary"} className={p.activo ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20" : ""}>
                                         {p.activo ? "Activo" : "Inactivo"}
@@ -699,7 +700,7 @@ function ImportProductsDialog({ open, onClose }: { open: boolean, onClose: () =>
                         <TableCell className="text-center text-xs text-muted-foreground">{row.rowIndex}</TableCell>
                         <TableCell>
                           <div className="font-semibold text-sm">{row.tela} - {row.color}</div>
-                          <div className="text-[10px] text-muted-foreground">{row.unidad} | ${row.precioSugerido}</div>
+                          <div className="text-[10px] text-muted-foreground">{row.unidad} | {formatNumber(row.precioSugerido, { kind: "money" })}</div>
                         </TableCell>
                         <TableCell className="font-mono text-xs">{row.sku || "Auto"}</TableCell>
                         <TableCell>

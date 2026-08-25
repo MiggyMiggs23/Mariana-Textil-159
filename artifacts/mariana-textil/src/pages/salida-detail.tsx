@@ -35,6 +35,7 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { formatNumber } from "@workspace/number-format";
 
 import {
   Dialog,
@@ -224,7 +225,7 @@ export default function SalidaDetail() {
             <CardHeader className="pb-4 border-b border-slate-100 bg-slate-50">
               <CardTitle className="text-base flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" />
-                Rollos Incluidos ({salida.rollos.length})
+                Rollos Incluidos ({formatNumber(salida.rollos.length, { kind: "count" })})
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -243,14 +244,14 @@ export default function SalidaDetail() {
                       const linea = salida.lineas.find(l => l.id === rollo.lineaId);
                       return (
                         <tr key={rollo.id} className={`hover:bg-slate-50/50 ${salida.estado === 'CANCELADA' ? 'opacity-60' : ''}`}>
-                          <td className="px-4 py-3 text-slate-500 w-10">{index + 1}</td>
+                          <td className="px-4 py-3 text-slate-500 w-10">{formatNumber(index + 1, { kind: "count" })}</td>
                           <td className="px-4 py-3 font-mono font-bold text-slate-900">{rollo.serie}</td>
                           <td className="px-4 py-3">
                             <p className="font-semibold text-slate-800 truncate max-w-[200px]">{linea?.skuProducto}</p>
                             <p className="text-xs text-slate-500 mt-0.5 truncate max-w-[200px]">{linea?.telaProducto} {linea?.colorProducto}</p>
                           </td>
                           <td className="px-4 py-3 text-right">
-                            <span className="font-medium text-slate-900">{rollo.cantidadEnviada}</span>
+                            <span className="font-medium text-slate-900">{formatNumber(rollo.cantidadEnviada, { kind: "quantity" })}</span>
                             <span className="text-[10px] ml-1 uppercase text-slate-400 font-bold tracking-wider">{linea?.unidadProducto}</span>
                           </td>
                         </tr>
@@ -278,11 +279,11 @@ export default function SalidaDetail() {
                       <div key={i} className="p-3 bg-white">
                         <div className="flex justify-between items-start mb-1">
                           <span className="font-semibold text-sm text-slate-800 line-clamp-1" title={item.tela}>{item.tela}</span>
-                          <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-2 shrink-0">{item.rollos} rollos</span>
+                          <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded ml-2 shrink-0">{formatNumber(item.rollos, { kind: "count" })} rollos</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-xs text-slate-500">{item.color} • {item.sku}</span>
-                          <span className="text-sm font-bold text-primary">{item.cantidad.toFixed(2)} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
+                          <span className="text-sm font-bold text-primary">{formatNumber(item.cantidad, { kind: "quantity" })} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
                         </div>
                       </div>
                     ))}
@@ -293,18 +294,18 @@ export default function SalidaDetail() {
             <CardContent className="pt-4 pb-5 space-y-4 bg-slate-50/50">
               <div className="flex justify-between items-end border-b border-slate-100 pb-2">
                 <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Rollos</span>
-                <span className="text-2xl font-black text-slate-900">{salida.totalRollos ?? salida.rollos.length}</span>
+                <span className="text-2xl font-black text-slate-900">{formatNumber(salida.totalRollos ?? salida.rollos.length, { kind: "count" })}</span>
               </div>
               {salida.totalMetros && Number(salida.totalMetros) > 0 && (
                 <div className="flex justify-between items-end border-b border-slate-100 pb-2">
                   <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metros</span>
-                  <span className="text-lg font-bold text-slate-700">{salida.totalMetros}</span>
+                  <span className="text-lg font-bold text-slate-700">{formatNumber(salida.totalMetros, { kind: "quantity" })}</span>
                 </div>
               )}
               {salida.totalKilos && Number(salida.totalKilos) > 0 && (
                 <div className="flex justify-between items-end pb-1">
                   <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kilos</span>
-                  <span className="text-lg font-bold text-slate-700">{salida.totalKilos}</span>
+                  <span className="text-lg font-bold text-slate-700">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
                 </div>
               )}
             </CardContent>

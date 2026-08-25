@@ -4,6 +4,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, MapPin, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatNumber } from "@workspace/number-format";
 
 export default function SalidaDocumento() {
   const { id } = useParams();
@@ -85,7 +86,7 @@ export default function SalidaDocumento() {
               <div className="flex items-center gap-6">
                 <div className="text-right">
                   <div className="text-gray-500 font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
-                  <div className="text-sm font-semibold mt-1">Página {pageIndex + 1} de {totalPages}</div>
+                  <div className="text-sm font-semibold mt-1">Página {formatNumber(pageIndex + 1, { kind: "count" })} de {formatNumber(totalPages, { kind: "count" })}</div>
                 </div>
                 <div className="w-px h-12 bg-gray-300"></div>
                 <BrandLogo variant="mark" className="w-12 h-12" />
@@ -153,7 +154,7 @@ export default function SalidaDocumento() {
                     const globalIndex = pageIndex * rollosPerPage + index + 1;
                     return (
                       <tr key={index} className="border-b border-gray-200 even:bg-gray-50">
-                        <td className="py-1 px-3 text-center text-gray-500 text-xs">{globalIndex}</td>
+                        <td className="py-1 px-3 text-center text-gray-500 text-xs">{formatNumber(globalIndex, { kind: "count" })}</td>
                         <td className="py-1 px-3 font-mono font-bold text-sm text-black">{rollo.serie}</td>
                         <td className="py-1 px-3 text-sm text-gray-800 truncate max-w-[250px]">
                           {line?.telaProducto}
@@ -162,7 +163,7 @@ export default function SalidaDocumento() {
                           {line?.colorProducto}
                         </td>
                         <td className="py-1 px-3 font-mono text-xs text-gray-700">{line?.skuProducto}</td>
-                        <td className="py-1 px-3 text-right text-sm font-medium">{rollo.cantidadEnviada}</td>
+                        <td className="py-1 px-3 text-right text-sm font-medium">{formatNumber(rollo.cantidadEnviada, { kind: "quantity" })}</td>
                         <td className="py-1 px-3 text-xs font-bold text-gray-500 tracking-wider">{line?.unidadProducto}</td>
                       </tr>
                     );
@@ -199,18 +200,18 @@ export default function SalidaDocumento() {
                       <tbody>
                         <tr>
                           <td className="py-1 px-2 border border-gray-200 font-bold text-gray-600 text-xs uppercase bg-gray-50">Total Rollos</td>
-                          <td className="py-1 px-2 border border-gray-200 font-bold text-right">{salida.totalRollos ?? salida.rollos.length}</td>
+                           <td className="py-1 px-2 border border-gray-200 font-bold text-right">{formatNumber(salida.totalRollos ?? salida.rollos.length, { kind: "count" })}</td>
                         </tr>
                         {Number(salida.totalMetros) > 0 && (
                           <tr>
                             <td className="py-1 px-2 border border-gray-200 font-bold text-gray-600 text-xs uppercase bg-gray-50">Total Metros</td>
-                            <td className="py-1 px-2 border border-gray-200 font-bold text-right">{salida.totalMetros}</td>
+                             <td className="py-1 px-2 border border-gray-200 font-bold text-right">{formatNumber(salida.totalMetros, { kind: "quantity" })}</td>
                           </tr>
                         )}
                         {Number(salida.totalKilos) > 0 && (
                           <tr>
                             <td className="py-1 px-2 border border-gray-200 font-bold text-gray-600 text-xs uppercase bg-gray-50">Total Kilos</td>
-                            <td className="py-1 px-2 border border-gray-200 font-bold text-right">{salida.totalKilos}</td>
+                             <td className="py-1 px-2 border border-gray-200 font-bold text-right">{formatNumber(salida.totalKilos, { kind: "quantity" })}</td>
                           </tr>
                         )}
                       </tbody>

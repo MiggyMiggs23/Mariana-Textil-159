@@ -20,6 +20,11 @@ import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { createTextPdf } from "../lib/pdf";
 import { canLinkAdjustmentToTicket } from "../lib/clientes-aging";
+import {
+  EXCEL_NUMBER_FORMAT,
+  formatNumber,
+  toExcelNumber,
+} from "@workspace/number-format";
 
 const router: IRouter = Router();
 
@@ -352,7 +357,16 @@ router.get(
         { header: "Cantidad", key: "cantidad", width: 14 },
         { header: "Margen", key: "margen", width: 14 },
       ];
-      sheet.addRows(result.rows);
+      sheet.getColumn("subtotal").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("cantidad").numFmt = EXCEL_NUMBER_FORMAT.quantity;
+      sheet.getColumn("margen").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.addRows(result.rows.map((row) => ({
+        ...row,
+        folio: row.folio == null ? "" : String(row.folio),
+        subtotal: toExcelNumber(row.subtotal),
+        cantidad: toExcelNumber(row.cantidad),
+        margen: row.margen == null ? null : toExcelNumber(row.margen),
+      })));
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.setHeader("Content-Disposition", 'attachment; filename="analitica-clientes.xlsx"');
       await workbook.xlsx.write(res);
@@ -382,7 +396,13 @@ router.get(
         { header: "Vencido", key: "vencido", width: 15 },
         { header: "Primer vencimiento", key: "primerVencimiento", width: 22 },
       ];
-      sheet.addRows(result.rows);
+      sheet.getColumn("saldo").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("vencido").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.addRows(result.rows.map((row) => ({
+        ...row,
+        saldo: toExcelNumber(row.saldo),
+        vencido: toExcelNumber(row.vencido),
+      })));
       res.type(
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       );
@@ -409,7 +429,7 @@ router.get(
         "Cartera de clientes",
         result.rows.map(
           (row) =>
-            `${row.nombre} | saldo ${row.saldo} | vencido ${row.vencido}`,
+            `${row.nombre} | saldo ${formatNumber(row.saldo, { kind: "money" })} | vencido ${formatNumber(row.vencido, { kind: "money" })}`,
         ),
       );
       res.type("application/pdf");
@@ -887,7 +907,7 @@ router.get(
       const rows = movements.rows
         .map(
           (item) =>
-            `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(item.importe)}</td><td>${escape(item.saldo)}</td><td>${escape(item.notas)}</td></tr>`,
+            `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldo, { kind: "money" }))}</td><td>${escape(item.notas)}</td></tr>`,
         )
         .join("");
       res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
@@ -923,7 +943,14 @@ router.get(
         { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
         { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },
       ];
-      sheet.addRows(result.rows);
+      sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("saldo").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.addRows(result.rows.map((row) => ({
+        ...row,
+        folio: row.folio == null ? "" : String(row.folio),
+        importe: toExcelNumber(row.importe),
+        saldo: toExcelNumber(row.saldo),
+      })));
       res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.attachment(`estado-cuenta-${id}.xlsx`);
       await workbook.xlsx.write(res);
@@ -954,7 +981,7 @@ router.get(
       const pdf = createTextPdf(
         `Estado de cuenta - cliente ${id}`,
         result.rows.map((row) =>
-          `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${row.importe} | saldo ${row.saldo} | folio ${row.folio ?? "-"}`,
+          `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo ${formatNumber(row.saldo, { kind: "money" })} | folio ${row.folio ?? "-"}`,
         ),
       );
       res.type("application/pdf");

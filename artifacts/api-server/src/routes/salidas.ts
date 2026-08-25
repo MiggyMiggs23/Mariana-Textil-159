@@ -18,6 +18,10 @@ import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
 import { buildSalidaDetail, cancelarSalida, crearSalida, listarSalidas } from "../lib/salidas";
+import {
+  EXCEL_NUMBER_FORMAT,
+  toExcelNumber,
+} from "@workspace/number-format";
 
 const router = Router();
 
@@ -258,10 +262,13 @@ router.get(
         { header: "Transportista", key: "transportista", width: 24 }, { header: "Observaciones", key: "observaciones", width: 35 },
       ];
       for (const item of result.items) sheet.addRow({
-        folio: item.folio, estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
-        usuario: item.nombreUsuario, rollos: item.totalRollos, metros: item.totalMetros, kilos: item.totalKilos,
+        folio: String(item.folio), estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
+        usuario: item.nombreUsuario, rollos: toExcelNumber(item.totalRollos), metros: toExcelNumber(item.totalMetros), kilos: toExcelNumber(item.totalKilos),
         transportista: item.transportista, observaciones: item.observaciones,
       });
+      sheet.getColumn("rollos").numFmt = EXCEL_NUMBER_FORMAT.count;
+      sheet.getColumn("metros").numFmt = EXCEL_NUMBER_FORMAT.quantity;
+      sheet.getColumn("kilos").numFmt = EXCEL_NUMBER_FORMAT.quantity;
       sheet.getRow(1).font = { bold: true };
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.setHeader("Content-Disposition", "attachment; filename=salidas.xlsx");

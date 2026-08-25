@@ -44,6 +44,7 @@ import {
   resetRollToUniform,
 } from "@/lib/roll-capture-state";
 import { Link } from "wouter";
+import { formatNumber } from "@workspace/number-format";
 
 type DraftLinea = {
   id: string;
@@ -542,14 +543,14 @@ export default function Entradas() {
               <div className="bg-background rounded-md border p-6 flex justify-around items-center text-center">
                 <div>
                   <div className="text-sm text-muted-foreground">Total Rollos</div>
-                  <div className="text-2xl font-bold">{resultado.totalRollos}</div>
+                   <div className="text-2xl font-bold">{formatNumber(resultado.totalRollos, { kind: "count" })}</div>
                 </div>
                 {showCost && (
                   <>
                     <div className="w-px h-12 bg-border"></div>
                     <div>
                       <div className="text-sm text-muted-foreground">Costo Total</div>
-                      <div className="text-2xl font-bold text-emerald-600">${parseFloat(resultado.totalCosto || "0").toFixed(2)}</div>
+                      <div className="text-2xl font-bold text-emerald-600">{formatNumber(resultado.totalCosto, { kind: "money" })}</div>
                     </div>
                   </>
                 )}
@@ -812,16 +813,16 @@ export default function Entradas() {
                           <TableCell className="font-bold">{linea.productoName}</TableCell>
                           <TableCell className="font-mono text-xs">{linea.productoSKU}</TableCell>
                           <TableCell>{ubiName}</TableCell>
-                          <TableCell className="text-right font-bold">{linea.cantidades.length}</TableCell>
+                          <TableCell className="text-right font-bold">{formatNumber(linea.cantidades.length, { kind: "count" })}</TableCell>
                           <TableCell>{linea.productoUnidad}</TableCell>
-                          <TableCell className="text-right font-medium">{qtySum.toFixed(2)}</TableCell>
+                          <TableCell className="text-right font-medium">{formatNumber(qtySum, { kind: "quantity" })}</TableCell>
                           {showCost && (
                             <TableCell className="text-right">
-                              ${parseFloat(linea.costoUnitario || "0").toFixed(2)} / {linea.productoUnidad.toLowerCase()}
+                              {formatNumber(linea.costoUnitario, { kind: "money" })} / {linea.productoUnidad.toLowerCase()}
                             </TableCell>
                           )}
                           {showCost && (
-                            <TableCell className="text-right font-bold text-emerald-600">${costSum.toFixed(2)}</TableCell>
+                            <TableCell className="text-right font-bold text-emerald-600">{formatNumber(costSum, { kind: "money" })}</TableCell>
                           )}
                           <TableCell className="text-center">
                             <div className="flex items-center justify-center gap-2">
@@ -860,11 +861,11 @@ export default function Entradas() {
                 {lineas.length > 0 && (
                   <TableRow className="bg-muted/30 font-bold">
                     <TableCell colSpan={4} className="text-right text-lg">TOTAL GENERAL:</TableCell>
-                    <TableCell className="text-right text-lg">{totalRollos}</TableCell>
+                    <TableCell className="text-right text-lg">{formatNumber(totalRollos, { kind: "count" })}</TableCell>
                     <TableCell></TableCell>
-                    <TableCell className="text-right text-lg">{totalQtyGeneral.toFixed(2)}</TableCell>
+                    <TableCell className="text-right text-lg">{formatNumber(totalQtyGeneral, { kind: "quantity" })}</TableCell>
                     <TableCell></TableCell>
-                    <TableCell className="text-right text-lg text-emerald-700">${totalCostoGeneral.toFixed(2)}</TableCell>
+                    <TableCell className="text-right text-lg text-emerald-700">{formatNumber(totalCostoGeneral, { kind: "money" })}</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 )}
@@ -1165,20 +1166,34 @@ export default function Entradas() {
                 <div className="text-sm font-bold text-primary">Estado de captura:</div>
                 <div className="flex flex-wrap justify-end gap-x-5 gap-y-1 text-sm font-bold">
                   <div className="text-emerald-700" data-testid="count-uniform-rolls">
-                    Uniformes: {uniformRollCount}
+                    Uniformes: {formatNumber(uniformRollCount, { kind: "count" })}
                   </div>
                   <div className="text-amber-700" data-testid="count-adjusted-rolls">
-                    Ajustados: {adjustedRollCount}
+                    Ajustados: {formatNumber(adjustedRollCount, { kind: "count" })}
                   </div>
                   <div className="text-slate-600" data-testid="count-blank-rolls">
-                    En blanco: {blankRollCount}
+                    En blanco: {formatNumber(blankRollCount, { kind: "count" })}
                   </div>
                 </div>
               </div>
               <div className="flex flex-wrap justify-end gap-x-6 gap-y-1 text-xs font-semibold text-muted-foreground">
-                <div>Qty: {capCantidades.reduce((a, b) => a + (Number(b) || 0), 0).toFixed(2)}</div>
+                 <div>
+                   Qty:{" "}
+                   {formatNumber(
+                     capCantidades.reduce((a, b) => a + (Number(b) || 0), 0),
+                     { kind: "quantity" },
+                   )}
+                 </div>
                 {showCost && (
-                  <div>$: {(capCantidades.reduce((a, b) => a + (Number(b) || 0), 0) * parseFloat(costoUnitario || "0")).toFixed(2)}</div>
+                   <div>
+                     {formatNumber(
+                       capCantidades.reduce(
+                         (a, b) => a + (Number(b) || 0),
+                         0,
+                       ) * parseFloat(costoUnitario || "0"),
+                       { kind: "money" },
+                     )}
+                   </div>
                 )}
               </div>
             </div>

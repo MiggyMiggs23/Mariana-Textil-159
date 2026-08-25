@@ -464,4 +464,6 @@ test("XLSX export is a real filtered workbook without sensitive columns", async 
     "Cantidad", "Unidad", "Usuario", "Documento", "Justificación",
   ]);
   assert.equal(sheet!.getCell("C2").value, "VENTA");
+  assert.equal(typeof sheet!.getCell("H2").value, "number");
+  assert.equal(sheet!.getColumn("H").numFmt, "#,##0.000");
 });

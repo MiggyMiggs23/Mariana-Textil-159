@@ -67,6 +67,7 @@ import {
   salidasTable,
   sesionesCajaTable,
   sesionesTable,
+  ticketLineasTable,
   ticketsTable,
   ubicacionesTable,
   usuariosTable,
@@ -74,6 +75,7 @@ import {
 } from "@workspace/db";
 import app from "./app";
 import { crearEntrada, crearRollo } from "./lib/inventario";
+import ExcelJS from "exceljs";
 
 // ─── Test Harness ──────────────────────────────────────────────────────────────
 
@@ -1553,6 +1555,88 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   assert.equal(creditoAdmin.status, 200, `ADMIN should access credito: ${JSON.stringify(creditoAdmin.body)}`);
   const finanzasAdmin = await api("GET", `/clientes/${clienteId}/estado-cuenta`, undefined, adminLogin.cookie);
   assert.equal(finanzasAdmin.status, 200, `ADMIN should access estado-cuenta: ${JSON.stringify(finanzasAdmin.body)}`);
+
+  const clientAdjustment = await api(
+    "POST",
+    `/clientes/${clienteId}/ajustes`,
+    {
+      importe: 1234.56,
+      motivo: "Ajuste temporal para validar exportación XLSX",
+      referencia: `XLSX-${RUN}`,
+    },
+    adminLogin.cookie,
+  );
+  assert.equal(clientAdjustment.status, 201);
+
+  const loadWorkbook = async (path: string): Promise<ExcelJS.Workbook> => {
+    const response = await fetch(`${BASE}${path}`, {
+      headers: { Cookie: adminLogin.cookie },
+    });
+    assert.equal(response.status, 200, `Expected XLSX at ${path}`);
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(
+      Buffer.from(await response.arrayBuffer()) as never,
+    );
+    return workbook;
+  };
+
+  const analyticsProductId = await mkProducto();
+  const [maxFolio] = await db
+    .select({ value: sql<number>`COALESCE(MAX(${ticketsTable.folio}), 0)` })
+    .from(ticketsTable);
+  const [analyticsTicket] = await db
+    .insert(ticketsTable)
+    .values({
+      folio: Number(maxFolio?.value ?? 0) + 1,
+      ubicacionId: seedTienda.id,
+      usuarioTerminalId: testAdmin.id,
+      clienteId,
+      tipo: "NORMAL",
+      subtotal: "1250.00",
+      iva: "200.00",
+      tasaIva: "0.1600",
+      total: "1450.00",
+      estado: "VENDIDO",
+      cobrado: true,
+      uuidCliente: randomUUID(),
+    })
+    .returning({ id: ticketsTable.id });
+  await db.insert(ticketLineasTable).values({
+    ticketId: analyticsTicket!.id,
+    productoId: analyticsProductId,
+    cantidad: "12.345",
+    precioUnitario: "101.26",
+    precioSugerido: "101.26",
+    importe: "1250.00",
+    costoUnitarioCongelado: "0.00",
+    costoTotalCongelado: "0.00",
+  });
+
+  const analyticsWorkbook = await loadWorkbook("/clientes/analitica.xlsx");
+  const analyticsSheet = analyticsWorkbook.getWorksheet("Analítica");
+  assert.ok(analyticsSheet);
+  assert.equal(typeof analyticsSheet.getCell("D2").value, "number");
+  assert.equal(typeof analyticsSheet.getCell("F2").value, "number");
+  assert.equal(typeof analyticsSheet.getCell("B2").value, "string");
+  assert.equal(analyticsSheet.getColumn(4).numFmt, '"$"#,##0.00');
+  assert.equal(analyticsSheet.getColumn(6).numFmt, "#,##0.000");
+  assert.equal(analyticsSheet.getColumn(7).numFmt, '"$"#,##0.00');
+  await db
+    .delete(ticketLineasTable)
+    .where(eq(ticketLineasTable.ticketId, analyticsTicket!.id));
+  await db.delete(ticketsTable).where(eq(ticketsTable.id, analyticsTicket!.id));
+
+  const clientStatementWorkbook = await loadWorkbook(
+    `/clientes/${clienteId}/estado-cuenta.xlsx`,
+  );
+  const clientStatementSheet = clientStatementWorkbook.getWorksheet("Estado de cuenta");
+  assert.ok(clientStatementSheet);
+  assert.equal(typeof clientStatementSheet.getCell("C2").value, "number");
+  assert.equal(typeof clientStatementSheet.getCell("D2").value, "number");
+  assert.equal(typeof clientStatementSheet.getCell("E2").value, "string");
+  assert.equal(clientStatementSheet.getColumn(3).numFmt, '"$"#,##0.00');
+  assert.equal(clientStatementSheet.getColumn(4).numFmt, '"$"#,##0.00');
+
   const carteraXlsx = await api(
     "GET",
     "/clientes/cartera.xlsx",
@@ -1564,6 +1648,69 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
     carteraXlsx.contentType,
     /^application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/,
   );
+  const carteraWorkbook = await loadWorkbook("/clientes/cartera.xlsx");
+  const carteraSheet = carteraWorkbook.getWorksheet("Cartera");
+  assert.ok(carteraSheet);
+  assert.equal(typeof carteraSheet.getCell("B2").value, "number");
+  assert.equal(typeof carteraSheet.getCell("C2").value, "number");
+  assert.equal(carteraSheet.getColumn(2).numFmt, '"$"#,##0.00');
+  assert.equal(carteraSheet.getColumn(3).numFmt, '"$"#,##0.00');
+
+  const salidasWorkbook = await loadWorkbook("/salidas/exportar");
+  const salidasSheet = salidasWorkbook.getWorksheet("Salidas");
+  assert.ok(salidasSheet);
+  assert.equal(typeof salidasSheet.getCell("A2").value, "string");
+  assert.equal(typeof salidasSheet.getCell("F2").value, "number");
+  assert.equal(typeof salidasSheet.getCell("G2").value, "number");
+  assert.equal(typeof salidasSheet.getCell("H2").value, "number");
+  assert.equal(salidasSheet.getColumn(6).numFmt, "#,##0");
+  assert.equal(salidasSheet.getColumn(7).numFmt, "#,##0.000");
+  assert.equal(salidasSheet.getColumn(8).numFmt, "#,##0.000");
+
+  const [provider] = await db
+    .insert(proveedoresTable)
+    .values({
+      nombre: `Proveedor XLSX ${RUN}`,
+      tipo: "NACIONAL",
+      monedaDefault: "MXN",
+    })
+    .returning({ id: proveedoresTable.id });
+  assert.ok(provider);
+  const providerAdjustment = await api(
+    "POST",
+    `/proveedores/${provider.id}/ajustes`,
+    { importe: 765.43, notas: "Ajuste temporal para validar exportación XLSX" },
+    adminLogin.cookie,
+  );
+  assert.equal(providerAdjustment.status, 201);
+  const providerWorkbook = await loadWorkbook(
+    `/proveedores/${provider.id}/exportar`,
+  );
+  const providerSheet = providerWorkbook.getWorksheet("Estado de Cuenta");
+  assert.ok(providerSheet);
+  const providerHeaderRow = providerSheet
+    .getColumn(1)
+    .values.findIndex((value) => value === "Fecha");
+  assert.ok(providerHeaderRow > 0);
+  assert.equal(
+    typeof providerSheet.getCell(providerHeaderRow + 1, 4).value,
+    "number",
+  );
+  assert.equal(
+    typeof providerSheet.getCell(providerHeaderRow + 1, 5).value,
+    "number",
+  );
+  assert.equal(providerSheet.getColumn(4).numFmt, '"$"#,##0.00');
+  assert.equal(providerSheet.getColumn(5).numFmt, '"$"#,##0.00');
+  assert.equal(
+    typeof providerSheet.getRow(providerSheet.rowCount).getCell(2).value,
+    "number",
+  );
+  assert.equal(
+    providerSheet.getRow(providerSheet.rowCount).getCell(2).numFmt,
+    '"$"#,##0.00',
+  );
+
   const carteraPdf = await api(
     "GET",
     "/clientes/cartera.pdf",

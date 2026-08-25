@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ShieldAlert, CheckCircle2, RefreshCw, Filter, AlertTriangle } from "lucide-react";
+import { formatNumber } from "@workspace/number-format";
 
 export default function Conciliacion() {
   const queryClient = useQueryClient();
@@ -157,15 +158,15 @@ export default function Conciliacion() {
                           </span>
                         </TableCell>
                         <TableCell className={`text-right tabular-nums ${cantDiff ? 'font-bold' : ''}`}>
-                          {cantMov.toFixed(2)}
+                           {formatNumber(cantMov, { kind: "quantity" })}
                         </TableCell>
                         <TableCell className={`text-right tabular-nums ${cantDiff ? 'text-destructive font-bold' : ''}`}>
-                          {cantCach.toFixed(2)}
+                           {formatNumber(cantCach, { kind: "quantity" })}
                         </TableCell>
                         <TableCell className="text-right tabular-nums">
-                          <span className={rollDiff ? '' : 'text-muted-foreground'}>{row.rollosMovimientos}</span>
+                           <span className={rollDiff ? '' : 'text-muted-foreground'}>{formatNumber(row.rollosMovimientos, { kind: "count" })}</span>
                           <span className="text-muted-foreground mx-1">/</span>
-                          <span className={rollDiff ? 'text-destructive font-bold' : 'text-muted-foreground'}>{row.rollosCache}</span>
+                           <span className={rollDiff ? 'text-destructive font-bold' : 'text-muted-foreground'}>{formatNumber(row.rollosCache, { kind: "count" })}</span>
                         </TableCell>
                         <TableCell className="text-right">
                           <Button 

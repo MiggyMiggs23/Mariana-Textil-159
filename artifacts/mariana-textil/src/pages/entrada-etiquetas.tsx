@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Printer, Loader2, CheckSquare } from "lucide-react";
+import { formatNumber } from "@workspace/number-format";
 
 export default function EntradaEtiquetas() {
   const { id } = useParams();
@@ -84,7 +85,7 @@ export default function EntradaEtiquetas() {
           <div>
             <h1 className="font-bold">Etiquetas - Folio #{entrada.folio.toString().padStart(6,'0')}</h1>
             <p className="text-xs text-muted-foreground">
-              {selectedRollos.size} de {entrada.totalRollos} rollos seleccionados
+              {formatNumber(selectedRollos.size, { kind: "count" })} de {formatNumber(entrada.totalRollos, { kind: "count" })} rollos seleccionados
             </p>
           </div>
         </div>

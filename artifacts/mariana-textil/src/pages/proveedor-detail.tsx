@@ -39,6 +39,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { formatNumber } from "@workspace/number-format";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -53,13 +54,6 @@ function getErrorMessage(error: unknown): string {
     return (apiError.data as { error: string }).error;
   }
   return typeof apiError.message === "string" ? apiError.message : "Error desconocido";
-}
-
-function formatCurrency(value: string | number | undefined | null): string {
-  if (value === undefined || value === null) return "$0.00";
-  const num = typeof value === "string" ? parseFloat(value) : value;
-  if (isNaN(num)) return "$0.00";
-  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(num);
 }
 
 function formatDate(dateStr: string | null | undefined): string {
@@ -320,7 +314,7 @@ export default function ProveedorDetail() {
                 <div className="bg-muted/30 p-4 rounded-xl border border-border min-w-[200px] flex flex-col justify-center items-end">
                   <span className="text-sm font-medium text-muted-foreground">Saldo Actual</span>
                   <span className={`text-3xl font-bold tracking-tight ${(estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0) ? "text-destructive" : ""}`}>
-                    {formatCurrency(estadoCuenta?.saldoActual || "0")}
+                    {formatNumber(estadoCuenta?.saldoActual || "0", { kind: "money" })}
                   </span>
                   {estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
                     <Button size="sm" className="mt-3 w-full" onClick={() => { setPagoPreselectedEntrada(null); setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
@@ -531,28 +525,28 @@ export default function ProveedorDetail() {
                         >
                           <TableCell className="font-mono font-medium text-primary">
                             <span className="inline-flex items-center gap-1 underline underline-offset-4">
-                              #{compra.folio}
+                              #{formatNumber(compra.folio, { kind: "identifier" })}
                               <ExternalLink className="h-3 w-3" />
                             </span>
                           </TableCell>
                           <TableCell>{formatDate(compra.fecha)}</TableCell>
                           <TableCell>{compra.nombreUbicacion}</TableCell>
                           <TableCell className="text-right text-sm">
-                            <div>{compra.totalRollos} rll</div>
+                            <div>{formatNumber(compra.totalRollos, { kind: "count" })} rll</div>
                             {parseFloat(compra.cantidadMetros) > 0 && (
                               <div className="text-xs text-muted-foreground">
-                                {parseFloat(compra.cantidadMetros).toFixed(2)} METRO · {formatCurrency(compra.costoPorMetro)} / metro
+                                {formatNumber(compra.cantidadMetros, { kind: "quantity" })} METRO · {formatNumber(compra.costoPorMetro, { kind: "money" })} / metro
                               </div>
                             )}
                             {parseFloat(compra.cantidadKilos) > 0 && (
                               <div className="text-xs text-muted-foreground">
-                                {parseFloat(compra.cantidadKilos).toFixed(2)} KILO · {formatCurrency(compra.costoPorKilo)} / kilo
+                                {formatNumber(compra.cantidadKilos, { kind: "quantity" })} KILO · {formatNumber(compra.costoPorKilo, { kind: "money" })} / kilo
                               </div>
                             )}
                           </TableCell>
-                          <TableCell className="text-right font-medium">{formatCurrency(compra.totalCosto)}</TableCell>
-                          <TableCell className="text-right text-muted-foreground">{formatCurrency(compra.abonado)}</TableCell>
-                          <TableCell className="text-right font-semibold">{formatCurrency(compra.saldoPendiente)}</TableCell>
+                          <TableCell className="text-right font-medium">{formatNumber(compra.totalCosto, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right text-muted-foreground">{formatNumber(compra.abonado, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-semibold">{formatNumber(compra.saldoPendiente, { kind: "money" })}</TableCell>
                           <TableCell>
                             <Badge variant={compra.estado === CompraConEstadoEstado.Pagada ? "default" : compra.estado === CompraConEstadoEstado.Parcial ? "secondary" : "destructive"}>
                               {compra.estado}
@@ -578,10 +572,10 @@ export default function ProveedorDetail() {
                   <TableFooter>
                     <TableRow data-testid="row-compras-totales">
                       <TableCell colSpan={4} className="font-semibold">
-                        Compras del periodo: {comprasData?.total ?? 0}
+                        Compras del periodo: {formatNumber(comprasData?.total ?? 0, { kind: "count" })}
                       </TableCell>
                       <TableCell className="text-right font-bold">
-                        {formatCurrency(comprasData?.totalCostoPeriodo ?? "0")}
+                        {formatNumber(comprasData?.totalCostoPeriodo ?? "0", { kind: "money" })}
                       </TableCell>
                       <TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 4 : 3} className="text-right text-xs text-muted-foreground">
                         Total antes de paginar
@@ -643,14 +637,14 @@ export default function ProveedorDetail() {
                               </Badge>
                             </TableCell>
                             <TableCell className="max-w-[200px]">
-                              {mov.folio ? <span className="block font-mono text-xs">Entrada #{mov.folio}</span> : null}
+                              {mov.folio ? <span className="block font-mono text-xs">Entrada #{formatNumber(mov.folio, { kind: "identifier" })}</span> : null}
                               {mov.formaPago ? <span className="block text-xs text-muted-foreground">{mov.formaPago}</span> : null}
                               {mov.referencia ? <span className="block text-xs truncate">Ref: {mov.referencia}</span> : null}
                               {mov.notas ? <span className="block text-xs text-muted-foreground truncate">{mov.notas}</span> : null}
                             </TableCell>
-                            <TableCell className="text-right font-medium text-destructive">{isCargo ? formatCurrency(Math.abs(importeNum)) : ""}</TableCell>
-                            <TableCell className="text-right font-medium text-emerald-600">{isAbono ? formatCurrency(Math.abs(importeNum)) : ""}</TableCell>
-                            <TableCell className="text-right font-semibold border-l bg-muted/5">{formatCurrency(mov.saldoAcumulado)}</TableCell>
+                            <TableCell className="text-right font-medium text-destructive">{isCargo ? formatNumber(Math.abs(importeNum), { kind: "money" }) : ""}</TableCell>
+                            <TableCell className="text-right font-medium text-emerald-600">{isAbono ? formatNumber(Math.abs(importeNum), { kind: "money" }) : ""}</TableCell>
+                            <TableCell className="text-right font-semibold border-l bg-muted/5">{formatNumber(mov.saldoAcumulado, { kind: "money" })}</TableCell>
                           </TableRow>
                         )
                       })
@@ -681,26 +675,26 @@ export default function ProveedorDetail() {
                     <Card>
                        <CardContent className="p-4 flex flex-col gap-1">
                           <span className="text-sm font-medium text-muted-foreground">Total Comprado</span>
-                          <span className="text-2xl font-bold">{formatCurrency(estadisticas.totalCompras)}</span>
+                          <span className="text-2xl font-bold">{formatNumber(estadisticas.totalCompras, { kind: "money" })}</span>
                        </CardContent>
                     </Card>
                     <Card>
                        <CardContent className="p-4 flex flex-col gap-1">
                           <span className="text-sm font-medium text-muted-foreground">Compras</span>
-                          <span className="text-2xl font-bold">{estadisticas.comprasCount}</span>
+                          <span className="text-2xl font-bold">{formatNumber(estadisticas.comprasCount, { kind: "count" })}</span>
                        </CardContent>
                     </Card>
                     <Card>
                        <CardContent className="p-4 flex flex-col gap-1">
                           <span className="text-sm font-medium text-muted-foreground">Ticket promedio por compra</span>
-                          <span className="text-2xl font-bold">{formatCurrency(estadisticas.ticketPromedio)}</span>
+                          <span className="text-2xl font-bold">{formatNumber(estadisticas.ticketPromedio, { kind: "money" })}</span>
                        </CardContent>
                     </Card>
                     <Card>
                        <CardContent className="p-4 flex flex-col gap-1">
                            <span className="text-sm font-medium text-muted-foreground">Costo por metro</span>
                           <span className="text-2xl font-bold">
-                             {estadisticas.costoPorMetro == null ? "-" : formatCurrency(estadisticas.costoPorMetro)}
+                              {estadisticas.costoPorMetro == null ? "-" : formatNumber(estadisticas.costoPorMetro, { kind: "money" })}
                           </span>
                           <span className="text-xs text-muted-foreground">Ponderado por cantidad</span>
                        </CardContent>
@@ -709,7 +703,7 @@ export default function ProveedorDetail() {
                        <CardContent className="p-4 flex flex-col gap-1">
                            <span className="text-sm font-medium text-muted-foreground">Costo por kilo</span>
                           <span className="text-2xl font-bold">
-                             {estadisticas.costoPorKilo == null ? "-" : formatCurrency(estadisticas.costoPorKilo)}
+                              {estadisticas.costoPorKilo == null ? "-" : formatNumber(estadisticas.costoPorKilo, { kind: "money" })}
                           </span>
                           <span className="text-xs text-muted-foreground">Ponderado por cantidad</span>
                        </CardContent>
@@ -719,17 +713,17 @@ export default function ProveedorDetail() {
                           <span className="text-sm font-medium text-muted-foreground">Última compra</span>
                           <span className="text-xl font-bold">{estadisticas.ultimaCompra ? formatDate(estadisticas.ultimaCompra) : "-"}</span>
                           {estadisticas.diasDesdeUltimaCompra != null && (
-                            <span className="text-xs text-muted-foreground">Hace {estadisticas.diasDesdeUltimaCompra} días</span>
+                             <span className="text-xs text-muted-foreground">Hace {formatNumber(estadisticas.diasDesdeUltimaCompra, { kind: "count" })} días</span>
                           )}
                        </CardContent>
                     </Card>
                  </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Frecuencia promedio</div><div className="text-xl font-bold">{estadisticas.frecuencia.promedioDiasEntreCompras ?? "—"} días</div><div className="text-xs">Última: {formatDate(estadisticas.frecuencia.ultimaCompra)}</div></CardContent></Card>
-                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Días promedio para pagar</div><div className="text-xl font-bold">{estadisticas.diasPromedioPago ?? "—"}</div></CardContent></Card>
-                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Concentración producto principal</div><div className="text-xl font-bold">{estadisticas.concentracion.productoPrincipalPct}%</div><div className="text-xs">Top 3: {estadisticas.concentracion.tresPrincipalesPct}%</div></CardContent></Card>
-                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Margen generado</div><div className="text-xl font-bold">{formatCurrency(estadisticas.margenGenerado.margen)}</div><div className="text-xs">{estadisticas.margenGenerado.margenPct ?? "—"}% sobre ventas · {estadisticas.margenGenerado.lineasIncluidas} líneas</div><div className="text-[10px] text-muted-foreground">Excluidas: {estadisticas.margenGenerado.lineasExcluidasSinRollo} sin rollo, {estadisticas.margenGenerado.lineasExcluidasSinCosto} sin costo</div><div className="text-[10px] text-muted-foreground mt-1">{estadisticas.margenGenerado.nota}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Frecuencia promedio</div><div className="text-xl font-bold">{formatNumber(estadisticas.frecuencia.promedioDiasEntreCompras, { kind: "count" })} días</div><div className="text-xs">Última: {formatDate(estadisticas.frecuencia.ultimaCompra)}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Días promedio para pagar</div><div className="text-xl font-bold">{formatNumber(estadisticas.diasPromedioPago, { kind: "count" })}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Concentración producto principal</div><div className="text-xl font-bold">{formatNumber(estadisticas.concentracion.productoPrincipalPct, { kind: "percentage", percentageInput: "percent" })}</div><div className="text-xs">Top 3: {formatNumber(estadisticas.concentracion.tresPrincipalesPct, { kind: "percentage", percentageInput: "percent" })}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Margen generado</div><div className="text-xl font-bold">{formatNumber(estadisticas.margenGenerado.margen, { kind: "money" })}</div><div className="text-xs">{formatNumber(estadisticas.margenGenerado.margenPct, { kind: "percentage", percentageInput: "percent" })} sobre ventas · {formatNumber(estadisticas.margenGenerado.lineasIncluidas, { kind: "count" })} líneas</div><div className="text-[10px] text-muted-foreground">Excluidas: {formatNumber(estadisticas.margenGenerado.lineasExcluidasSinRollo, { kind: "count" })} sin rollo, {formatNumber(estadisticas.margenGenerado.lineasExcluidasSinCosto, { kind: "count" })} sin costo</div><div className="text-[10px] text-muted-foreground mt-1">{estadisticas.margenGenerado.nota}</div></CardContent></Card>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -737,7 +731,7 @@ export default function ProveedorDetail() {
                       <ResponsiveContainer width="100%" height="100%"><BarChart data={[
                         { periodo: `Alto · ${estadisticas.estacionalidad.mesMayor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMayor?.total ?? 0) },
                         { periodo: `Bajo · ${estadisticas.estacionalidad.mesMenor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMenor?.total ?? 0) },
-                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="periodo" tick={{fontSize:10}}/><YAxis/><Tooltip formatter={(value) => formatCurrency(Number(value))}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer>
+                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="periodo" tick={{fontSize:10}}/><YAxis/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer>
                     </CardContent></Card>
                     <Card><CardHeader><CardTitle className="text-lg">Antigüedad de deuda</CardTitle></CardHeader><CardContent className="h-48">
                       <ResponsiveContainer width="100%" height="100%"><BarChart data={[
@@ -745,7 +739,7 @@ export default function ProveedorDetail() {
                         { rango:"31–60", saldo:Number(estadisticas.antiguedadDeuda.de31a60) },
                         { rango:"61–90", saldo:Number(estadisticas.antiguedadDeuda.de61a90) },
                         { rango:"90+", saldo:Number(estadisticas.antiguedadDeuda.mas90) },
-                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(value) => formatCurrency(Number(value))}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer>
+                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer>
                     </CardContent></Card>
                   </div>
 
@@ -760,8 +754,8 @@ export default function ProveedorDetail() {
                            <BarChart data={estadisticas.porMes}>
                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                              <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                             <YAxis tickFormatter={(val) => `$${val/1000}k`} axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                             <Tooltip formatter={(value: any) => formatCurrency(value)} />
+                              <YAxis tickFormatter={(val) => formatNumber(val, { kind: "money" })} axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                              <Tooltip formatter={(value: any) => formatNumber(value, { kind: "money" })} />
                              <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                            </BarChart>
                          </ResponsiveContainer>
@@ -798,32 +792,32 @@ export default function ProveedorDetail() {
                                <TableCell className="font-medium font-mono text-sm">{prod.sku}</TableCell>
                                <TableCell>{prod.tela} <Badge variant="secondary" className="ml-2 font-normal text-[10px]">{prod.color}</Badge></TableCell>
                                <TableCell className="text-right text-sm">
-                                 <div>{prod.totalRollos} rll</div>
-                                 <div className="text-xs text-muted-foreground">{parseFloat(prod.cantidadTotal).toFixed(2)} {prod.unidad}</div>
+                                  <div>{formatNumber(prod.totalRollos, { kind: "count" })} rll</div>
+                                  <div className="text-xs text-muted-foreground">{formatNumber(prod.cantidadTotal, { kind: "quantity" })} {prod.unidad}</div>
                                </TableCell>
                                <TableCell className="text-right">
                                   {prod.unidad === "METRO" ? (
                                     <>
-                                      <div className="font-medium">{formatCurrency(prod.costoPorUnidad)} / metro</div>
+                                      <div className="font-medium">{formatNumber(prod.costoPorUnidad, { kind: "money" })} / metro</div>
                                     </>
                                   ) : "-"}
                                 </TableCell>
                                 <TableCell className="text-right">
                                   {prod.unidad === "KILO" ? (
                                     <>
-                                      <div className="font-medium">{formatCurrency(prod.costoPorUnidad)} / kilo</div>
+                                      <div className="font-medium">{formatNumber(prod.costoPorUnidad, { kind: "money" })} / kilo</div>
                                     </>
                                   ) : "-"}
                                </TableCell>
-                               <TableCell className="text-right font-semibold">{formatCurrency(prod.totalCosto)}</TableCell>
+                                <TableCell className="text-right font-semibold">{formatNumber(prod.totalCosto, { kind: "money" })}</TableCell>
                              </TableRow>
                              <TableRow key={`${prod.productoId}-analytics`} className="bg-muted/10">
                                <TableCell colSpan={6}>
                                  <div className="grid md:grid-cols-2 gap-4 py-2 text-xs">
                                    <div><b>Historial real por compra</b>
-                                     {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatCurrency(Number(value))}/${prod.unidad.toLowerCase()}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke="hsl(var(--primary))" strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}
+                                      {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${prod.unidad.toLowerCase()}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke="hsl(var(--primary))" strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}
                                    </div>
-                                   <div><b>Comparación:</b> {prod.comparacionProveedores.map(c => `${c.proveedor}: ${formatCurrency(c.costoUnitario)}`).join(" · ") || "Sin comparación"}<br/>Más barato: <b>{prod.proveedorMasBarato ?? "—"}</b> · Ahorro potencial: <b>{formatCurrency(prod.ahorroPotencial)}</b></div>
+                                    <div><b>Comparación:</b> {prod.comparacionProveedores.map(c => `${c.proveedor}: ${formatNumber(c.costoUnitario, { kind: "money" })}`).join(" · ") || "Sin comparación"}<br/>Más barato: <b>{prod.proveedorMasBarato ?? "—"}</b> · Ahorro potencial: <b>{formatNumber(prod.ahorroPotencial, { kind: "money" })}</b></div>
                                  </div>
                                </TableCell>
                              </TableRow>
@@ -857,8 +851,8 @@ export default function ProveedorDetail() {
                            {estadisticas.porTela.map(tela => (
                              <TableRow key={tela.tela}>
                                <TableCell className="font-medium">{tela.tela}</TableCell>
-                               <TableCell className="text-right">{tela.rollosCount}</TableCell>
-                               <TableCell className="text-right font-semibold">{formatCurrency(tela.totalCosto)}</TableCell>
+                                <TableCell className="text-right">{formatNumber(tela.rollosCount, { kind: "count" })}</TableCell>
+                                <TableCell className="text-right font-semibold">{formatNumber(tela.totalCosto, { kind: "money" })}</TableCell>
                              </TableRow>
                            ))}
                          </TableBody>
@@ -886,8 +880,8 @@ export default function ProveedorDetail() {
                                  <div className="w-3 h-3 rounded-full border shadow-sm" style={{ backgroundColor: color.color }}></div>
                                  {color.color}
                                </TableCell>
-                               <TableCell className="text-right">{color.rollosCount}</TableCell>
-                               <TableCell className="text-right font-semibold">{formatCurrency(color.totalCosto)}</TableCell>
+                                <TableCell className="text-right">{formatNumber(color.rollosCount, { kind: "count" })}</TableCell>
+                                <TableCell className="text-right font-semibold">{formatNumber(color.totalCosto, { kind: "money" })}</TableCell>
                              </TableRow>
                            ))}
                          </TableBody>
@@ -921,7 +915,7 @@ export default function ProveedorDetail() {
             <div className="text-right">
               <p>Saldo actual</p>
               <p className="text-xl font-bold">
-                {formatCurrency(estadoCuenta?.saldoActual ?? "0")}
+                {formatNumber(estadoCuenta?.saldoActual ?? "0", { kind: "money" })}
               </p>
             </div>
           </div>
@@ -945,14 +939,14 @@ export default function ProveedorDetail() {
               {comprasData?.items.length ? (
                 comprasData.items.map((compra) => (
                   <tr key={`print-compra-${compra.entradaId}`}>
-                    <td>#{compra.folio}</td>
+                    <td>#{formatNumber(compra.folio, { kind: "identifier" })}</td>
                     <td>{formatDate(compra.fecha)}</td>
                     <td>{compra.nombreUbicacion}</td>
-                    <td className="amount">{compra.totalRollos}</td>
-                    <td className="amount">{parseFloat(compra.cantidadTotal).toFixed(2)}</td>
-                    <td className="amount">{formatCurrency(compra.totalCosto)}</td>
-                    <td className="amount">{formatCurrency(compra.abonado)}</td>
-                    <td className="amount">{formatCurrency(compra.saldoPendiente)}</td>
+                    <td className="amount">{formatNumber(compra.totalRollos, { kind: "count" })}</td>
+                    <td className="amount">{formatNumber(compra.cantidadTotal, { kind: "quantity" })}</td>
+                    <td className="amount">{formatNumber(compra.totalCosto, { kind: "money" })}</td>
+                    <td className="amount">{formatNumber(compra.abonado, { kind: "money" })}</td>
+                    <td className="amount">{formatNumber(compra.saldoPendiente, { kind: "money" })}</td>
                     <td>{compra.estado}</td>
                   </tr>
                 ))
@@ -965,10 +959,10 @@ export default function ProveedorDetail() {
             <tfoot>
               <tr>
                 <td colSpan={5}>
-                  <strong>Compras del periodo: {comprasData?.total ?? 0}</strong>
+                  <strong>Compras del periodo: {formatNumber(comprasData?.total ?? 0, { kind: "count" })}</strong>
                 </td>
                 <td className="amount">
-                  <strong>{formatCurrency(comprasData?.totalCostoPeriodo ?? "0")}</strong>
+                  <strong>{formatNumber(comprasData?.totalCostoPeriodo ?? "0", { kind: "money" })}</strong>
                 </td>
                 <td colSpan={3}></td>
               </tr>
@@ -996,18 +990,18 @@ export default function ProveedorDetail() {
                       <td>{formatDate(movimiento.fecha)}</td>
                       <td>{movimiento.tipo}</td>
                       <td>
-                        {movimiento.folio ? `Entrada #${movimiento.folio}` : ""}
+                        {movimiento.folio ? `Entrada #${formatNumber(movimiento.folio, { kind: "identifier" })}` : ""}
                         {movimiento.referencia ? ` · ${movimiento.referencia}` : ""}
                         {movimiento.notas ? ` · ${movimiento.notas}` : ""}
                       </td>
                       <td className="amount">
-                        {importe > 0 ? formatCurrency(importe) : ""}
+                        {importe > 0 ? formatNumber(importe, { kind: "money" }) : ""}
                       </td>
                       <td className="amount">
-                        {importe < 0 ? formatCurrency(Math.abs(importe)) : ""}
+                        {importe < 0 ? formatNumber(Math.abs(importe), { kind: "money" }) : ""}
                       </td>
                       <td className="amount">
-                        {formatCurrency(movimiento.saldoAcumulado)}
+                        {formatNumber(movimiento.saldoAcumulado, { kind: "money" })}
                       </td>
                     </tr>
                   );
@@ -1111,7 +1105,7 @@ function PagoDialog({ open, onClose, proveedorId, entradaId }: { open: boolean, 
         <DialogHeader>
           <DialogTitle>Registrar Pago</DialogTitle>
           <DialogDescription>
-            {entradaId ? `Abonar a la orden de compra #${entradaId}` : "Abono general a la cuenta del proveedor"}
+            {entradaId ? `Abonar a la orden de compra #${formatNumber(entradaId, { kind: "identifier" })}` : "Abono general a la cuenta del proveedor"}
           </DialogDescription>
         </DialogHeader>
 

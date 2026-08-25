@@ -4,6 +4,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatNumber } from "@workspace/number-format";
 
 export default function EntradaDocumento() {
   const { id } = useParams();
@@ -113,10 +114,10 @@ export default function EntradaDocumento() {
               <tbody>
                 {entrada.lineas.slice(0, 10).map((linea, index) => (
                   <tr key={index} className="border-b border-gray-200 even:bg-gray-50">
-                    <td className="py-2 px-3 text-center text-gray-500 text-xs">{index + 1}</td>
+                    <td className="py-2 px-3 text-center text-gray-500 text-xs">{formatNumber(index + 1, { kind: "count" })}</td>
                     <td className="py-2 px-3 font-bold text-sm text-black truncate max-w-[250px]">{linea.skuProducto} - {linea.telaProducto} {linea.colorProducto}</td>
-                    <td className="py-2 px-3 text-center font-bold text-sm">{linea.rollosCount}</td>
-                    <td className="py-2 px-3 text-right text-sm font-medium">{parseFloat(linea.cantidadTotal).toFixed(2)} {linea.unidadProducto}</td>
+                    <td className="py-2 px-3 text-center font-bold text-sm">{formatNumber(linea.rollosCount, { kind: "count" })}</td>
+                    <td className="py-2 px-3 text-right text-sm font-medium">{formatNumber(linea.cantidadTotal, { kind: "quantity" })} {linea.unidadProducto}</td>
                     <td className="py-2 px-3 font-mono text-xs text-gray-600">{linea.skuProducto}</td>
                     <td className="py-2 px-3 text-sm text-gray-800">{entrada.nombreUbicacion}</td>
                   </tr>

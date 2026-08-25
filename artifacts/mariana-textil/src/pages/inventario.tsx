@@ -21,6 +21,7 @@ import { Search, Boxes, Filter, ArrowRight, ChevronDown, ChevronRight } from "lu
 import { useDebounce } from "@/hooks/use-debounce";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { formatNumber } from "@workspace/number-format";
 
 export default function Inventario() {
   const [, setLocation] = useLocation();
@@ -187,9 +188,9 @@ export default function Inventario() {
                               <Badge variant="outline" className="ml-2 bg-background font-normal text-xs">{grupo.coloresCount} colores</Badge>
                             </TableCell>
                             {isTodas && <TableCell></TableCell>}
-                            <TableCell className="text-right font-bold py-3">{grupo.rollosCount}</TableCell>
-                            <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? parseFloat(grupo.totalMetros).toFixed(2) : "-"}</TableCell>
-                            <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? parseFloat(grupo.totalKilos).toFixed(2) : "-"}</TableCell>
+                            <TableCell className="text-right font-bold py-3">{formatNumber(grupo.rollosCount, { kind: "count" })}</TableCell>
+                            <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? formatNumber(grupo.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
+                            <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? formatNumber(grupo.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
                           </TableRow>
                           {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => (
                             <TableRow key={hijo.productoId} className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
@@ -202,10 +203,10 @@ export default function Inventario() {
                                 </div>
                               </TableCell>
                               {isTodas && <TableCell className="py-2"></TableCell>}
-                              <TableCell className="text-right py-2">{hijo.rollosCount}</TableCell>
+                               <TableCell className="text-right py-2">{formatNumber(hijo.rollosCount, { kind: "count" })}</TableCell>
                               <TableCell className="text-right tabular-nums py-2" colSpan={2}>
                                 <div className="flex items-center justify-end gap-1">
-                                  <span className="font-medium">{parseFloat(hijo.cantidadTotal).toFixed(2)}</span>
+                                   <span className="font-medium">{formatNumber(hijo.cantidadTotal, { kind: "quantity" })}</span>
                                   <span className="text-xs text-muted-foreground uppercase">{hijo.unidad}</span>
                                 </div>
                               </TableCell>
@@ -272,11 +273,11 @@ export default function Inventario() {
                       <div className="flex items-end justify-between mt-auto">
                         <div>
                           <div className="text-2xl font-bold tracking-tight">
-                            {parseFloat(rollo.cantidadActual).toFixed(2)}
+                             {formatNumber(rollo.cantidadActual, { kind: "quantity" })}
                           </div>
                           {parseFloat(rollo.cantidadActual) !== parseFloat(rollo.cantidadInicial) && (
                             <div className="text-xs text-muted-foreground line-through">
-                              {parseFloat(rollo.cantidadInicial).toFixed(2)} original
+                               {formatNumber(rollo.cantidadInicial, { kind: "quantity" })} original
                             </div>
                           )}
                         </div>

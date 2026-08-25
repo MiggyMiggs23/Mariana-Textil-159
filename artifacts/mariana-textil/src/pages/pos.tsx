@@ -59,6 +59,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { ClientSelector } from "@/components/client-selector";
+import { formatNumber } from "@workspace/number-format";
 
 type PriceValidation = {
   status: "idle" | "checking" | "valid" | "invalid" | "error";
@@ -231,15 +232,12 @@ function CartLineItem({
             </div>
           ) : (
             <div className="font-mono text-sm">
-              {item.cantidad} {item.producto.unidad}
+               {formatNumber(item.cantidad, { kind: "quantity" })} {item.producto.unidad}
             </div>
           )}
 
           <div className="w-24 text-right font-bold">
-            {(item.cantidad * item.precioUnitario).toLocaleString("es-MX", {
-              style: "currency",
-              currency: "MXN",
-            })}
+            {formatNumber(item.cantidad * item.precioUnitario, { kind: "money" })}
           </div>
 
           <Button
@@ -721,16 +719,13 @@ export default function PosPage() {
                           <div className="text-sm mt-2 text-muted-foreground">
                             Disp:{" "}
                             <span className="font-semibold text-foreground">
-                              {rollo.cantidadActual} {rollo.unidad}
+                               {formatNumber(rollo.cantidadActual, { kind: "quantity" })} {rollo.unidad}
                             </span>
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
-                            {Number(rollo.precioSugerido).toLocaleString(
-                              "es-MX",
-                              { style: "currency", currency: "MXN" },
-                            )}
+                            {formatNumber(rollo.precioSugerido, { kind: "money" })}
                             /{rollo.unidad}
                           </div>
                           <Button
@@ -764,10 +759,7 @@ export default function PosPage() {
                         </div>
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
-                            {Number(prod.precioSugerido).toLocaleString(
-                              "es-MX",
-                              { style: "currency", currency: "MXN" },
-                            )}
+                            {formatNumber(prod.precioSugerido, { kind: "money" })}
                             /{prod.unidad}
                           </div>
                           <Button
@@ -858,10 +850,7 @@ export default function PosPage() {
                   <div className="flex justify-between text-sm text-muted-foreground">
                     <span>Subtotal</span>
                     <span>
-                      {cartSubtotal.toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                       {formatNumber(cartSubtotal, { kind: "money" })}
                     </span>
                   </div>
                   <div
@@ -870,10 +859,7 @@ export default function PosPage() {
                   >
                     <span>IVA (16%)</span>
                     <span>
-                      {cartIva.toLocaleString("es-MX", {
-                        style: "currency",
-                        currency: "MXN",
-                      })}
+                       {formatNumber(cartIva, { kind: "money" })}
                     </span>
                   </div>
                 </>
@@ -886,10 +872,7 @@ export default function PosPage() {
                   className="text-3xl font-bold tracking-tight text-primary"
                   data-testid="pos-total"
                 >
-                  {cartTotal.toLocaleString("es-MX", {
-                    style: "currency",
-                    currency: "MXN",
-                  })}
+                   {formatNumber(cartTotal, { kind: "money" })}
                 </span>
               </div>
             </div>

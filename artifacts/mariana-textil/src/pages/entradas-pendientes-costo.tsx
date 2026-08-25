@@ -27,6 +27,7 @@ import { es } from "date-fns/locale";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Link, useLocation } from "wouter";
+import { formatNumber } from "@workspace/number-format";
 
 function CaptureCostDialog({
   entradaId,
@@ -192,7 +193,7 @@ function CaptureCostDialog({
                               {hasOverrides && <Badge variant="outline" className="mt-1 text-[10px] bg-amber-50 text-amber-700 border-amber-200">Sobrescrito parcialmente</Badge>}
                             </TableCell>
                             <TableCell className="text-right">
-                              {parseFloat(linea.cantidadTotal).toFixed(2)} <span className="text-xs text-muted-foreground">{linea.unidadProducto}</span>
+                               {formatNumber(linea.cantidadTotal, { kind: "quantity" })} <span className="text-xs text-muted-foreground">{linea.unidadProducto}</span>
                             </TableCell>
                             <TableCell>
                               {hasPending ? (
@@ -211,7 +212,7 @@ function CaptureCostDialog({
                               )}
                             </TableCell>
                             <TableCell className="text-right font-bold text-emerald-600">
-                              ${lineTotal.toFixed(2)}
+                               {formatNumber(lineTotal, { kind: "money" })}
                             </TableCell>
                           </TableRow>
                           {isExpanded && entrada.rollos.filter(r => r.productoId === linea.productoId).map(rollo => {
@@ -235,7 +236,7 @@ function CaptureCostDialog({
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right text-muted-foreground">
-                                  {parseFloat(rollo.cantidadInicial).toFixed(2)} <span className="text-[10px]">{linea.unidadProducto}</span>
+                                   {formatNumber(rollo.cantidadInicial, { kind: "quantity" })} <span className="text-[10px]">{linea.unidadProducto}</span>
                                 </TableCell>
                                 <TableCell>
                                   {isPending ? (
@@ -262,12 +263,12 @@ function CaptureCostDialog({
                                     </div>
                                   ) : (
                                     <div className="text-right text-sm text-muted-foreground">
-                                      ${parseFloat(rollo.costoUnitario!).toFixed(2)}
+                                       {formatNumber(rollo.costoUnitario, { kind: "money" })}
                                     </div>
                                   )}
                                 </TableCell>
                                 <TableCell className="text-right text-emerald-600 opacity-80 text-sm">
-                                  ${rowTotal.toFixed(2)}
+                                   {formatNumber(rowTotal, { kind: "money" })}
                                 </TableCell>
                               </TableRow>
                             );
@@ -287,7 +288,7 @@ function CaptureCostDialog({
         <DialogFooter className="bg-muted/30 -mx-6 -mb-6 p-4 border-t flex sm:justify-between items-center mt-4">
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium text-muted-foreground">Gran Total:</span>
-            <span className="text-2xl font-bold text-emerald-700" data-testid="text-grand-total">${totals.cost.toFixed(2)}</span>
+             <span className="text-2xl font-bold text-emerald-700" data-testid="text-grand-total">{formatNumber(totals.cost, { kind: "money" })}</span>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={onClose} disabled={captureMutation.isPending}>
@@ -405,9 +406,9 @@ export default function EntradasPendientesCosto() {
                         </TableCell>
                         <TableCell>{item.nombreUbicacion}</TableCell>
                         <TableCell>{item.nombreProveedor || <span className="text-muted-foreground italic">Sin proveedor</span>}</TableCell>
-                        <TableCell className="text-right font-medium">{item.rollosPendientes}</TableCell>
-                        <TableCell className="text-right tabular-nums">{parseFloat(item.totalMetros) > 0 ? parseFloat(item.totalMetros).toFixed(2) : "-"}</TableCell>
-                        <TableCell className="text-right tabular-nums">{parseFloat(item.totalKilos) > 0 ? parseFloat(item.totalKilos).toFixed(2) : "-"}</TableCell>
+                         <TableCell className="text-right font-medium">{formatNumber(item.rollosPendientes, { kind: "count" })}</TableCell>
+                         <TableCell className="text-right tabular-nums">{parseFloat(item.totalMetros) > 0 ? formatNumber(item.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
+                         <TableCell className="text-right tabular-nums">{parseFloat(item.totalKilos) > 0 ? formatNumber(item.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
                         <TableCell className="text-sm text-muted-foreground">{item.nombreUsuario}</TableCell>
                         <TableCell className="text-center">
                           <Button size="sm" onClick={() => setSelectedEntradaId(item.id)} data-testid={`btn-capture-${item.id}`}>

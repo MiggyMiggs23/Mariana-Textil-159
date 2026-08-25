@@ -23,6 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { formatNumber } from "@workspace/number-format";
 import {
   Search, Download, FileText, ChevronDown, Filter, History, Loader2, AlertCircle
 } from "lucide-react";
@@ -472,9 +473,9 @@ export default function Movimientos() {
                             </TableCell>
                             <TableCell className="align-top py-3 text-right">
                               <div className={`font-bold text-sm tracking-tight ${cantColor}`}>
-                                {sign}{cant} <span className="text-xs font-normal opacity-70 ml-0.5">{row.unidadProducto.toLowerCase()}</span>
+                                 {sign}{formatNumber(Math.abs(cant), { kind: "quantity" })} <span className="text-xs font-normal opacity-70 ml-0.5">{row.unidadProducto.toLowerCase()}</span>
                               </div>
-                              <div className="text-[11px] text-muted-foreground font-medium mt-1">Saldo: {row.saldoPosterior}</div>
+                               <div className="text-[11px] text-muted-foreground font-medium mt-1">Saldo: {formatNumber(row.saldoPosterior, { kind: "quantity" })}</div>
                             </TableCell>
                             <TableCell className="align-top py-3">
                               <div className="text-sm font-medium text-foreground truncate max-w-[120px]" title={row.nombreUsuario}>{row.nombreUsuario}</div>
@@ -528,9 +529,9 @@ export default function Movimientos() {
                         </div>
                         <div className="text-right">
                           <div className={`font-bold tracking-tight ${cantColor}`}>
-                            {sign}{cant} <span className="text-xs font-normal opacity-70 ml-0.5">{row.unidadProducto.toLowerCase()}</span>
+                             {sign}{formatNumber(Math.abs(cant), { kind: "quantity" })} <span className="text-xs font-normal opacity-70 ml-0.5">{row.unidadProducto.toLowerCase()}</span>
                           </div>
-                          <div className="text-[11px] font-medium text-muted-foreground mt-1">Saldo: {row.saldoPosterior}</div>
+                           <div className="text-[11px] font-medium text-muted-foreground mt-1">Saldo: {formatNumber(row.saldoPosterior, { kind: "quantity" })}</div>
                         </div>
                       </div>
 
@@ -592,8 +593,8 @@ export default function Movimientos() {
               {/* Pagination */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 pb-6">
                 <div className="text-sm font-medium text-muted-foreground order-2 sm:order-1">
-                  Mostrando <span className="text-foreground">{data.movimientos.length}</span> de <span className="text-foreground">{data.total}</span> movimientos
-                  {data.totalPages > 1 && <span className="ml-1 opacity-80">(Página {data.page} de {data.totalPages})</span>}
+                   Mostrando <span className="text-foreground">{formatNumber(data.movimientos.length, { kind: "count" })}</span> de <span className="text-foreground">{formatNumber(data.total, { kind: "count" })}</span> movimientos
+                   {data.totalPages > 1 && <span className="ml-1 opacity-80">(Página {formatNumber(data.page, { kind: "count" })} de {formatNumber(data.totalPages, { kind: "count" })})</span>}
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto order-1 sm:order-2">
                   <Button

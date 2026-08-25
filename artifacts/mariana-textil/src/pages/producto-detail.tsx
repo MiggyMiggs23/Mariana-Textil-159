@@ -28,14 +28,7 @@ import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock, Download, Chevron
 import { generateSKU } from "./productos";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
-function formatCurrency(value: string | number | null | undefined): string {
-  if (value == null) return "-";
-  const amount = typeof value === "string" ? parseFloat(value) : value;
-  return Number.isFinite(amount)
-    ? new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(amount)
-    : "-";
-}
+import { formatNumber } from "@workspace/number-format";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -291,7 +284,7 @@ export default function ProductoDetail() {
                   {isEditing ? (
                     <Input type="number" step="0.01" value={formData.precioSugerido} onChange={e => setFormData({...formData, precioSugerido: e.target.value})} data-testid="input-edit-precio" />
                   ) : (
-                    <div className="font-medium text-lg text-emerald-700 h-10 flex items-center">${parseFloat(product.precioSugerido).toFixed(2)}</div>
+                    <div className="font-medium text-lg text-emerald-700 h-10 flex items-center">{formatNumber(product.precioSugerido, { kind: "money" })}</div>
                   )}
                 </div>
 
@@ -341,12 +334,12 @@ export default function ProductoDetail() {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <div className="text-4xl font-bold tracking-tighter mb-1">{parseFloat(product.cantidad).toFixed(2)}</div>
+                    <div className="text-4xl font-bold tracking-tighter mb-1">{formatNumber(product.cantidad, { kind: "quantity" })}</div>
                     <div className="text-sm font-medium text-sidebar-primary">{product.unidad} TOTALES</div>
                   </div>
                   <div className="h-px bg-white/10 w-full"></div>
                   <div>
-                    <div className="text-2xl font-bold tracking-tight mb-1">{product.rollos}</div>
+                    <div className="text-2xl font-bold tracking-tight mb-1">{formatNumber(product.rollos, { kind: "count" })}</div>
                     <div className="text-sm text-sidebar-foreground/70">ROLLOS EN EXISTENCIA</div>
                   </div>
                 </div>
@@ -371,8 +364,8 @@ export default function ProductoDetail() {
                       <div key={inv.ubicacionId} className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors">
                         <div className="font-medium text-sm">{inv.nombre}</div>
                         <div className="text-right">
-                          <div className="font-bold text-foreground">{parseFloat(inv.cantidad).toFixed(2)} <span className="text-xs font-normal text-muted-foreground">{product.unidad}</span></div>
-                          <div className="text-xs text-muted-foreground">{inv.rollos} rollos</div>
+                          <div className="font-bold text-foreground">{formatNumber(inv.cantidad, { kind: "quantity" })} <span className="text-xs font-normal text-muted-foreground">{product.unidad}</span></div>
+                          <div className="text-xs text-muted-foreground">{formatNumber(inv.rollos, { kind: "count" })} rollos</div>
                         </div>
                       </div>
                     ))
@@ -396,19 +389,19 @@ export default function ProductoDetail() {
                 <div>
                   <div className="text-sm text-muted-foreground">Costo por {product.unidad.toLowerCase()}</div>
                   <div className="text-2xl font-bold text-primary">
-                    {formatCurrency(product.comprasResumen.costoPorUnidad)}
+                    {formatNumber(product.comprasResumen.costoPorUnidad, { kind: "money" })}
                   </div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Cantidad comprada</div>
                   <div className="text-xl font-semibold">
-                    {parseFloat(product.comprasResumen.totalCantidad).toFixed(2)} {product.unidad}
+                    {formatNumber(product.comprasResumen.totalCantidad, { kind: "quantity" })} {product.unidad}
                   </div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Total comprado</div>
-                  <div className="text-xl font-semibold">{formatCurrency(product.comprasResumen.totalCosto)}</div>
-                  <div className="text-xs text-muted-foreground">{product.comprasResumen.totalRollos} rollos</div>
+                  <div className="text-xl font-semibold">{formatNumber(product.comprasResumen.totalCosto, { kind: "money" })}</div>
+                  <div className="text-xs text-muted-foreground">{formatNumber(product.comprasResumen.totalRollos, { kind: "count" })} rollos</div>
                 </div>
               </div>
 
@@ -443,11 +436,11 @@ export default function ProductoDetail() {
                         </TableCell>
                         <TableCell>{compra.proveedorNombre || "Sin proveedor"}</TableCell>
                         <TableCell className="text-right">
-                          {parseFloat(compra.totalCantidad).toFixed(2)} {product.unidad}
-                          <div className="text-xs text-muted-foreground">{compra.totalRollos} rollos</div>
+                           {formatNumber(compra.totalCantidad, { kind: "quantity" })} {product.unidad}
+                           <div className="text-xs text-muted-foreground">{formatNumber(compra.totalRollos, { kind: "count" })} rollos</div>
                         </TableCell>
-                        <TableCell className="text-right font-semibold">{formatCurrency(compra.costoPorUnidad)}</TableCell>
-                        <TableCell className="text-right">{formatCurrency(compra.totalCosto)}</TableCell>
+                         <TableCell className="text-right font-semibold">{formatNumber(compra.costoPorUnidad, { kind: "money" })}</TableCell>
+                         <TableCell className="text-right">{formatNumber(compra.totalCosto, { kind: "money" })}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -545,10 +538,10 @@ export default function ProductoDetail() {
                           </TableCell>
                           <TableCell className="text-sm">{mov.nombreUbicacion}</TableCell>
                           <TableCell className={`text-right font-medium tabular-nums ${isPositive ? 'text-emerald-600 dark:text-emerald-400' : isNegative ? 'text-red-600 dark:text-red-400' : ''}`}>
-                            {isPositive ? '+' : isNegative ? '-' : ''}{parseFloat(mov.cantidad).toFixed(2)}
+                            {isPositive ? '+' : isNegative ? '-' : ''}{formatNumber(Math.abs(parseFloat(mov.cantidad)), { kind: "quantity" })}
                           </TableCell>
                           <TableCell className="text-right font-bold tabular-nums">
-                            {parseFloat(mov.saldoPosterior).toFixed(2)}
+                            {formatNumber(mov.saldoPosterior, { kind: "quantity" })}
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate" title={mov.justificacion || mov.documentoId || ''}>
                             {mov.documentoTipo && `${mov.documentoTipo} ${mov.documentoId || ''} `}
