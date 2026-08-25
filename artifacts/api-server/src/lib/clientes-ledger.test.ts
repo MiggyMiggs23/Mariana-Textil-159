@@ -56,6 +56,22 @@ test("linked legacy negative adjustment keeps ledger and aging consistent", asyn
 
     assert.equal(ledger.rows[0]!.total, "60.00");
     assert.equal(aging.rows[0]!.total, ledger.rows[0]!.total);
+
+    const filteredStatement = await client.query<{ saldo: string }>(
+      `WITH ledger AS (
+         SELECT tipo,
+           SUM(importe) OVER (ORDER BY created_at,id)::text AS saldo
+         FROM movimientos_credito
+         WHERE cliente_id=$1
+       )
+       SELECT saldo FROM ledger WHERE tipo='AJUSTE'`,
+      [customerId],
+    );
+    assert.equal(
+      filteredStatement.rows[0]!.saldo,
+      "60.00",
+      "the filtered movement keeps the all-time running balance",
+    );
   } finally {
     await client.query("ROLLBACK");
     client.release();

@@ -50,3 +50,11 @@ test("financial export is a valid PDF byte stream", () => {
   assert.equal(pdf.subarray(0, 8).toString("ascii"), "%PDF-1.4");
   assert.match(pdf.toString("ascii"), /xref[\s\S]*%%EOF$/);
 });
+
+test("financial PDF paginates without dropping rows", () => {
+  const lines = Array.from({ length: 120 }, (_, index) => `Fila ${index + 1}`);
+  const pdf = createTextPdf("Cartera", lines).toString("ascii");
+  assert.equal((pdf.match(/\/Type \/Page\b/g) ?? []).length, 3);
+  assert.match(pdf, /\(Fila 1\) Tj/);
+  assert.match(pdf, /\(Fila 120\) Tj/);
+});

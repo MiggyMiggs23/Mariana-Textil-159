@@ -20,3 +20,9 @@ La autorización de crédito debe bloquear la fila del cliente antes de leer el 
 **Why:** Dos cajas con tickets distintos pueden leer simultáneamente el mismo disponible y exceder el límite si la validación no se serializa por cliente.
 
 **How to apply:** Mantener `FOR UPDATE` sobre el cliente dentro de la misma transacción de cobro y cubrirlo con una prueba concurrente en ubicaciones/sesiones distintas.
+
+Los filtros de estado de cuenta deben aplicarse después de calcular el saldo corrido sobre todo el ledger; `saldoActual` siempre es el total histórico. Los PDF financieros deben paginar sin truncar filas.
+
+**Why:** Filtrar antes de la ventana altera cada saldo y reporta un subtotal como actual; truncar silenciosamente hace que PDF y XLSX discrepen.
+
+**How to apply:** Usar un CTE con la ventana completa y filtrar afuera. Verificar PDF con más filas que una página y conservar la primera y la última.

@@ -755,30 +755,40 @@ router.get(
         res.status(400).json({ error: "Tipo de movimiento inválido." });
         return;
       }
-      const movements = await pool.query(
-        `SELECT m.id, m.tipo, m.importe::text, m.created_at AS fecha,
-          m.created_at AS "fechaEfectiva", m.notas, m.forma_pago AS "formaPago",
-          m.referencia, t.folio AS "ticketFolio", u.nombre AS "nombreUsuario",
-          SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorrido"
-         FROM movimientos_credito m
-         LEFT JOIN tickets t ON t.id=m.ticket_id
-         JOIN usuarios u ON u.id=m.usuario_id
-         WHERE m.cliente_id=$1
-           AND ($2::date IS NULL OR m.created_at >= $2::date)
-           AND ($3::date IS NULL OR m.created_at < $3::date+interval '1 day')
-           AND ($4::text IS NULL OR m.tipo::text=$4)
-         ORDER BY m.created_at,m.id`,
-        [id, desde, hasta, tipo],
-      );
+      const [movements, balance] = await Promise.all([
+        pool.query(
+          `WITH ledger AS (
+             SELECT m.id, m.tipo, m.importe, m.created_at, m.notas,
+               m.forma_pago, m.referencia, t.folio AS ticket_folio,
+               u.nombre AS nombre_usuario,
+               SUM(m.importe) OVER (ORDER BY m.created_at,m.id) AS saldo_corrido
+             FROM movimientos_credito m
+             LEFT JOIN tickets t ON t.id=m.ticket_id
+             JOIN usuarios u ON u.id=m.usuario_id
+             WHERE m.cliente_id=$1
+           )
+           SELECT id, tipo, importe::text, created_at AS fecha,
+             created_at AS "fechaEfectiva", notas, forma_pago AS "formaPago",
+             referencia, ticket_folio AS "ticketFolio",
+             nombre_usuario AS "nombreUsuario", saldo_corrido::text AS "saldoCorrido"
+           FROM ledger
+           WHERE ($2::date IS NULL OR created_at >= $2::date)
+             AND ($3::date IS NULL OR created_at < $3::date+interval '1 day')
+             AND ($4::text IS NULL OR tipo::text=$4)
+           ORDER BY created_at,id`,
+          [id, desde, hasta, tipo],
+        ),
+        pool.query<{ saldo: string }>(
+          `SELECT COALESCE(SUM(importe),0)::text AS saldo
+           FROM movimientos_credito WHERE cliente_id=$1`,
+          [id],
+        ),
+      ]);
       const withBalance = movements.rows;
-      const saldoActual =
-        withBalance.length === 0
-          ? "0.00"
-          : withBalance[withBalance.length - 1]!.saldoCorrido;
       res.json({
         clienteId: id,
         movimientos: [...withBalance].reverse(),
-        saldoActual,
+        saldoActual: balance.rows[0]?.saldo ?? "0.00",
       });
     } catch (e) {
       next(e);
