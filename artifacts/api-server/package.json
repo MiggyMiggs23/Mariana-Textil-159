@@ -23,10 +23,13 @@
     "test:kardex-api": "NODE_ENV=test tsx --test src/kardex-api.test.ts",
     "test:admin-bypass-empty": "tsx src/admin-bypass-empty-permissions.test.ts",
     "test:security-api": "tsx src/security-api.test.ts",
+    "test:clientes-ajustes": "tsx --test src/clientes-ajustes-api.test.ts",
+    "test:clientes-ajustes:unit": "tsx --test src/lib/spanish-order.test.ts",
     "test:admin-analytics": "tsx --test src/lib/admin-analytics.contract.ts",
     "test:admin-analytics-integration": "tsx --test src/admin-analytics.integration.test.ts"
   },
   "dependencies": {
+    "@google-cloud/storage": "^8.0.1",
     "@workspace/api-zod": "workspace:*",
     "@workspace/db": "workspace:*",
     "@workspace/number-format": "workspace:*",
@@ -35,6 +38,7 @@
     "drizzle-orm": "catalog:",
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
+    "google-auth-library": "^11.0.2",
     "pino": "^9.14.0",
     "pino-http": "^10.5.0",
     "zod": "catalog:"

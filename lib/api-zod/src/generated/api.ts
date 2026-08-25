@@ -1926,6 +1926,27 @@ export const GetClientesResumenResponse = zod.object({
 })
 
 
+export const ListCuentasIncobrablesQueryParams = zod.object({
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional()
+})
+
+export const ListCuentasIncobrablesResponse = zod.object({
+  "filas": zod.array(zod.object({
+  "id": zod.number().optional(),
+  "fecha": zod.coerce.date().optional(),
+  "clienteId": zod.number().optional(),
+  "cliente": zod.string().optional(),
+  "monto": zod.number().optional(),
+  "motivo": zod.string().optional(),
+  "ejecutadoPor": zod.string().optional(),
+  "autorizadoPor": zod.string().optional()
+})).optional(),
+  "totalCuentas": zod.number().optional(),
+  "total": zod.number().optional()
+})
+
+
 /**
  * @summary Lista el catálogo operativo de clientes (sin datos financieros)
  */
@@ -1939,6 +1960,8 @@ export const ListClientesResponseItem = zod.object({
   "telefono": zod.string().nullish(),
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
@@ -1966,6 +1989,8 @@ export const CreateClienteBody = zod.object({
   "telefono": zod.string().nullish(),
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "contactoNombre": zod.string().nullish(),
@@ -1983,6 +2008,8 @@ export const CreateClienteResponse = zod.object({
   "telefono": zod.string().nullish(),
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
@@ -2060,6 +2087,8 @@ export const GetClienteResponse = zod.object({
   "telefono": zod.string().nullish(),
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
@@ -2087,6 +2116,8 @@ export const UpdateClienteBody = zod.object({
   "telefono": zod.string().nullish(),
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean().optional(),
@@ -2103,6 +2134,8 @@ export const UpdateClienteResponse = zod.object({
   "telefono": zod.string().nullish(),
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
@@ -2112,6 +2145,87 @@ export const UpdateClienteResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
+
+
+export const BajaClienteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const bajaClienteBodyMotivoMin = 20;
+
+
+
+export const BajaClienteBody = zod.object({
+  "motivo": zod.string().min(bajaClienteBodyMotivoMin),
+  "adminUsuario": zod.string().optional(),
+  "adminPassword": zod.string().optional()
+})
+
+export const BajaClienteResponse = zod.object({
+  "resultado": zod.string().optional(),
+  "saldoAnterior": zod.number().optional()
+})
+
+
+export const ReactivarClienteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ReactivarClienteResponse = zod.unknown()
+
+
+/**
+ * @summary Lista documentos INE
+ */
+export const ListClienteDocumentosParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListClienteDocumentosResponseItem = zod.object({
+  "id": zod.number(),
+  "clienteId": zod.number(),
+  "lado": zod.enum(['FRENTE', 'REVERSO']),
+  "publicId": zod.string(),
+  "filename": zod.string(),
+  "mimeType": zod.string(),
+  "subidoPor": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+export const ListClienteDocumentosResponse = zod.array(ListClienteDocumentosResponseItem)
+
+
+/**
+ * @summary Sube documento INE
+ */
+export const UploadClienteDocumentoParams = zod.object({
+  "id": zod.coerce.number(),
+  "lado": zod.enum(['FRENTE', 'REVERSO'])
+})
+
+export const UploadClienteDocumentoResponse = zod.object({
+  "id": zod.number(),
+  "clienteId": zod.number(),
+  "lado": zod.enum(['FRENTE', 'REVERSO']),
+  "publicId": zod.string(),
+  "filename": zod.string(),
+  "mimeType": zod.string(),
+  "subidoPor": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+
+
+export const ViewClienteDocumentoParams = zod.object({
+  "publicId": zod.coerce.string()
+})
+
+export const ViewClienteDocumentoResponse = zod.unknown()
+
+
+export const DownloadClienteDocumentoParams = zod.object({
+  "publicId": zod.coerce.string()
+})
+
+export const DownloadClienteDocumentoResponse = zod.unknown()
 
 
 /**
@@ -2673,6 +2787,7 @@ export const CrearTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -2747,6 +2862,7 @@ export const ListarTicketsResponseItem = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -2788,6 +2904,7 @@ export const ListarTicketsPendientesResponseItem = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -2852,6 +2969,7 @@ export const ObtenerTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -2939,6 +3057,7 @@ export const CancelarTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -3033,6 +3152,7 @@ export const CobrarTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),

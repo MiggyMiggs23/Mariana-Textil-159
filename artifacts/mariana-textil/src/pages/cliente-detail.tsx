@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useRoute } from "wouter";
-import { ArrowLeft, Download, Loader2, LockKeyhole, Printer } from "lucide-react";
+import { ArrowLeft, Download, Loader2, LockKeyhole, Printer, FileText } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
   getGetClienteComprasQueryKey,
@@ -17,6 +17,15 @@ import {
   useGetClientePrecios,
   useGetCurrentUser,
   useCreateClientePago,
+  useListClienteDocumentos,
+  getListClienteDocumentosQueryKey,
+  viewClienteDocumento,
+  downloadClienteDocumento,
+  customFetch,
+  type ClienteDocumento,
+  useBajaCliente,
+  useReactivarCliente,
+  useUpdateCliente,
 } from "@workspace/api-client-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/app-layout";
@@ -32,6 +41,7 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { createAdjustment, downloadClientFile, getAccount, getClientAnalytics, getPortfolio, getPurchases, getStats, updateCreditTerms } from "@/lib/clientes-api";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -58,6 +68,18 @@ export default function ClienteDetail() {
   const [creditOpen, setCreditOpen] = useState(false);
   const [creditLimit, setCreditLimit] = useState("");
   const [creditDays, setCreditDays] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    nombre: "", telefono: "", correo: "", rfc: "",
+    direccionParticular: "", direccionEntrega: "", mismaDireccion: true,
+    contactoNombre: "", notas: ""
+  });
+  const [bajaOpen, setBajaOpen] = useState(false);
+  const [bajaMotivo, setBajaMotivo] = useState("");
+  const [bajaRequiresAuth, setBajaRequiresAuth] = useState<{ monto: string; desde: string | null } | null>(null);
+  const [adminUser, setAdminUser] = useState("");
+  const [adminPass, setAdminPass] = useState("");
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
@@ -67,6 +89,8 @@ export default function ClienteDetail() {
   const canCreatePayment = hasPermission(user, Modules.CLIENTES_FINANZAS, "crear");
   const canAdjust = hasPermission(user, Modules.CLIENTES_FINANZAS, "autorizar");
   const canEditCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "editar");
+  const canEditClient = hasPermission(user, Modules.CLIENTES, "editar");
+
   const clientQuery = useGetCliente(id, { query: { enabled: Number.isFinite(id), queryKey: getGetClienteQueryKey(id) } });
   const credit = useGetClienteCredito(id, { query: { enabled: canCredit && Number.isFinite(id), queryKey: getGetClienteCreditoQueryKey(id) } });
   const periodDates = useMemo(() => {
@@ -97,6 +121,71 @@ export default function ClienteDetail() {
   const creditUpdate = useMutation({ mutationFn: () => updateCreditTerms(id, { limiteCredito: Number(creditLimit), diasCredito: Number(creditDays) }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) }); setCreditOpen(false); toast({ title: "Crédito actualizado" }); }, onError: (error) => toast({ title: "No se pudo actualizar", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
   const submitPayment = () => createPayment.mutate({ id, data: { importe: Number(amount), formaPago: paymentMethod, referencia: reference || null, notas: paymentNotes || null, fechaEfectiva: paymentDate || null, ticketId: paymentTicketId ? Number(paymentTicketId) : null } }, { onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["cliente-account", id] }); queryClient.invalidateQueries({ queryKey: getGetClientePagosQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); setPaymentOpen(false); setAmount(""); setReference(""); setPaymentDate(""); setPaymentNotes(""); setPaymentTicketId(""); toast({ title: "Pago registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el pago", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
 
+  const updateClient = useUpdateCliente();
+  const reactivateClient = useReactivarCliente();
+  const executeBaja = useBajaCliente();
+
+  const handleEditSubmit = () => {
+    updateClient.mutate({
+      id, data: {
+        nombre: editForm.nombre.trim() || undefined,
+        telefono: editForm.telefono.trim() || null,
+        correo: editForm.correo.trim() || null,
+        rfc: editForm.rfc.trim() || null,
+        direccionParticular: editForm.direccionParticular.trim() || null,
+        direccionEntrega: editForm.mismaDireccion ? (editForm.direccionParticular.trim() || null) : (editForm.direccionEntrega.trim() || null),
+        contactoNombre: editForm.contactoNombre.trim() || null,
+        notas: editForm.notas.trim() || null,
+      }
+    }, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) });
+        setEditOpen(false);
+        toast({ title: "Cliente actualizado" });
+      },
+      onError: (err) => toast({ title: "Error al actualizar", description: getApiErrorMessage(err), variant: "destructive" })
+    });
+  };
+
+  const handleBajaSubmit = () => {
+    if (bajaMotivo.trim().length < 20) {
+      toast({ title: "Motivo muy corto", description: "El motivo debe tener al menos 20 caracteres.", variant: "destructive" });
+      return;
+    }
+    executeBaja.mutate({
+      id, data: {
+        motivo: bajaMotivo,
+        adminUsuario: adminUser || undefined,
+        adminPassword: adminPass || undefined
+      }
+    }, {
+      onSuccess: (res) => {
+        queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) });
+        setBajaOpen(false);
+        setBajaRequiresAuth(null);
+        if (res.resultado === "ELIMINADO") {
+          toast({ title: "Cliente eliminado correctamente" });
+          window.location.href = "/clientes";
+        } else {
+          toast({ title: "Cliente desactivado", description: `Saldo anterior: $${res.saldoAnterior}` });
+        }
+      },
+      onError: (err: any) => {
+        if (err?.data?.code === "ADMIN_CREDENTIALS_REQUIRED" || (err?.data?.error && err.data.error.includes("credenciales"))) {
+          setBajaRequiresAuth({
+            monto: err.data.monto || err.data.saldoPendiente || "Desconocido",
+            desde: err.data.desdeCuando || err.data.fechaPrimerVencimiento || null
+          });
+          toast({ title: "Autorización requerida", description: "Se detectó saldo pendiente. Ingresa credenciales de administrador.", variant: "destructive" });
+        } else if (err?.data?.error && err.data.error.includes("no vencido")) {
+           toast({ title: "No se puede dar de baja", description: err.data.error, variant: "destructive" });
+        } else {
+          toast({ title: "Error al dar de baja", description: getApiErrorMessage(err), variant: "destructive" });
+        }
+      }
+    });
+  };
+
   if (clientQuery.isLoading) return <AppLayout><div className="mx-auto max-w-7xl space-y-4"><Skeleton className="h-12 w-72" /><Skeleton className="h-96 w-full" /></div></AppLayout>;
   if (clientQuery.isError || !clientQuery.data) return <AppLayout><Card className="mx-auto max-w-xl border-destructive/30"><CardContent className="space-y-4 p-8 text-center"><p className="text-destructive" role="alert" data-testid="error-client-detail">{getApiErrorMessage(clientQuery.error, "No se pudo cargar el cliente.")}</p><Button asChild><Link href="/clientes">Volver a clientes</Link></Button></CardContent></Card></AppLayout>;
   const client = clientQuery.data;
@@ -109,7 +198,36 @@ export default function ClienteDetail() {
             <Button variant="ghost" size="icon" asChild><Link href="/clientes" aria-label="Volver a clientes" data-testid="link-back-clients"><ArrowLeft className="h-5 w-5" /></Link></Button>
             <div><div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-sidebar" data-testid="text-client-name">{client.nombre}</h1>{client.id === 1 && <Badge variant="secondary"><LockKeyhole className="mr-1 h-3 w-3" />Cliente de sistema</Badge>}<Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></div><p className="text-sm text-muted-foreground">Cliente #{formatNumber(client.id, { kind: "identifier" })} · Alta {date(client.createdAt)}</p></div>
           </div>
-          {canFinances && <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.pdf`, `estado-cuenta-${id}.pdf`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />Descargar PDF</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></div>}
+          <div className="flex flex-wrap gap-2">
+            {canEditClient && !client.esSistema && (
+              <Button variant="outline" onClick={() => {
+                setEditForm({
+                  nombre: client.nombre,
+                  telefono: client.telefono || "",
+                  correo: client.correo || "",
+                  rfc: client.rfc || "",
+                  direccionParticular: client.direccionParticular || "",
+                  direccionEntrega: client.direccionEntrega || "",
+                  mismaDireccion: !client.direccionEntrega || client.direccionEntrega === client.direccionParticular,
+                  contactoNombre: client.contactoNombre || "",
+                  notas: client.notas || ""
+                });
+                setEditOpen(true);
+              }}>Editar datos</Button>
+            )}
+            {!client.esSistema && client.activo && (
+              <Button variant="destructive" onClick={() => {
+                setBajaMotivo(""); setAdminUser(""); setAdminPass(""); setBajaOpen(true);
+              }}>Dar de baja</Button>
+            )}
+            {!client.esSistema && !client.activo && (
+              <Button onClick={() => reactivateClient.mutate({ id }, { onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) }); toast({ title: "Cliente reactivado" }) }, onError: (e) => toast({ title: "Error al reactivar", description: getApiErrorMessage(e), variant: "destructive" }) })}>
+                {reactivateClient.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Reactivar cliente
+              </Button>
+            )}
+            {canFinances && <><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.pdf`, `estado-cuenta-${id}.pdf`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />Descargar PDF</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></>}
+          </div>
         </div>
         <Tabs defaultValue="datos">
           <TabsList className="h-auto w-full justify-start overflow-x-auto">
@@ -119,10 +237,19 @@ export default function ClienteDetail() {
             {canFinances && <TabsTrigger value="compras">Compras</TabsTrigger>}
             {(canFinances || canPrices) && <TabsTrigger value="analitica">Analítica</TabsTrigger>}
           </TabsList>
-          <TabsContent value="datos">
+          <TabsContent value="datos" className="space-y-4">
             <Card><CardHeader><CardTitle>Datos de contacto</CardTitle></CardHeader><CardContent className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              <Datum label="Teléfono" value={client.telefono} /><Datum label="Correo" value={client.correo} /><Datum label="RFC" value={client.rfc} /><Datum label="Dirección" value={client.direccion} /><Datum label="Notas" value={client.notas} />
+              <Datum label="Teléfono" value={client.telefono} />
+              <Datum label="Correo" value={client.correo} />
+              <Datum label="RFC" value={client.rfc} />
+              <Datum label="Dirección Particular" value={client.direccionParticular} />
+              <Datum label="Dirección de Entrega" value={client.direccionEntrega || client.direccionParticular} />
+              <Datum label="Notas" value={client.notas} />
             </CardContent></Card>
+
+            {user?.rol === "ADMIN" && (
+              <INEManager clienteId={id} />
+            )}
           </TabsContent>
           {canCredit && <TabsContent value="credito"><QueryState query={credit}>{(() => {
             const limit = Number(credit.data?.limiteCredito);
@@ -141,7 +268,234 @@ export default function ClienteDetail() {
         <Dialog open={adjustmentOpen} onOpenChange={setAdjustmentOpen}><DialogContent><DialogHeader><DialogTitle>Ajuste de saldo</DialogTitle></DialogHeader><div className="space-y-3"><Label>Importe (positivo o negativo)</Label><Input type="number" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} /><Label>Motivo (mínimo 10 caracteres)</Label><Textarea value={reason} onChange={(e) => setReason(e.target.value)} /></div><DialogFooter><Button onClick={() => adjustment.mutate()} disabled={!Number(amount) || reason.trim().length < 10 || adjustment.isPending}>Registrar ajuste</Button></DialogFooter></DialogContent></Dialog>
         <Dialog open={creditOpen} onOpenChange={setCreditOpen}><DialogContent><DialogHeader><DialogTitle>Editar términos de crédito</DialogTitle></DialogHeader><div className="space-y-3"><Label>Límite de crédito</Label><Input type="number" min="0" value={creditLimit} onChange={(e) => setCreditLimit(e.target.value)} /><Label>Días de crédito</Label><Input type="number" min="0" step="1" value={creditDays} onChange={(e) => setCreditDays(e.target.value)} /></div><DialogFooter><Button onClick={() => creditUpdate.mutate()} disabled={Number(creditLimit) < 0 || Number(creditDays) < 0 || creditUpdate.isPending}>Guardar términos</Button></DialogFooter></DialogContent></Dialog>
       </div>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader><DialogTitle>Editar Cliente</DialogTitle></DialogHeader>
+          <div className="grid gap-4 py-2 sm:grid-cols-2">
+            <div className="space-y-2"><Label>Nombre</Label><Input value={editForm.nombre} onChange={e => setEditForm(c => ({...c, nombre: e.target.value}))} /></div>
+            <div className="space-y-2"><Label>Teléfono</Label><Input value={editForm.telefono} onChange={e => setEditForm(c => ({...c, telefono: e.target.value}))} /></div>
+            <div className="space-y-2"><Label>Correo</Label><Input type="email" value={editForm.correo} onChange={e => setEditForm(c => ({...c, correo: e.target.value}))} /></div>
+            <div className="space-y-2"><Label>RFC</Label><Input value={editForm.rfc} onChange={e => setEditForm(c => ({...c, rfc: e.target.value}))} /></div>
+
+            <div className="space-y-2">
+              <Label>Dirección Particular</Label>
+              <Input value={editForm.direccionParticular} onChange={e => {
+                setEditForm(c => ({...c, direccionParticular: e.target.value, direccionEntrega: c.mismaDireccion ? e.target.value : c.direccionEntrega}));
+              }} />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Dirección de Entrega</Label>
+              <Input
+                value={editForm.mismaDireccion ? editForm.direccionParticular : editForm.direccionEntrega}
+                onChange={(e) => setEditForm(c => ({...c, direccionEntrega: e.target.value}))}
+                disabled={editForm.mismaDireccion}
+              />
+              <div className="flex items-center space-x-2 mt-1">
+                <input
+                  type="checkbox"
+                  id="edit-same-address"
+                  checked={editForm.mismaDireccion}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setEditForm(c => ({
+                      ...c,
+                      mismaDireccion: checked,
+                      direccionEntrega: checked ? c.direccionParticular : c.direccionEntrega
+                    }));
+                  }}
+                  className="rounded border-gray-300"
+                />
+                <label htmlFor="edit-same-address" className="text-xs text-muted-foreground cursor-pointer">
+                  La misma que la particular
+                </label>
+              </div>
+            </div>
+
+            <div className="space-y-2"><Label>Nombre de Contacto</Label><Input value={editForm.contactoNombre} onChange={e => setEditForm(c => ({...c, contactoNombre: e.target.value}))} /></div>
+            <div className="space-y-2 sm:col-span-2"><Label>Notas</Label><Textarea value={editForm.notas} onChange={e => setEditForm(c => ({...c, notas: e.target.value}))} /></div>
+          </div>
+          <DialogFooter><Button onClick={handleEditSubmit} disabled={updateClient.isPending}>{updateClient.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : "Guardar"}</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={bajaOpen} onOpenChange={(val) => {
+        setBajaOpen(val);
+        if (!val) { setBajaRequiresAuth(null); setAdminUser(""); setAdminPass(""); }
+      }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Dar de baja a cliente</DialogTitle></DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Motivo de la baja (mínimo 20 caracteres)</Label>
+              <Textarea value={bajaMotivo} onChange={e => setBajaMotivo(e.target.value)} />
+            </div>
+            {bajaRequiresAuth && (
+              <div className="rounded-md border p-3 space-y-3 bg-muted/20">
+                <p className="text-sm font-semibold text-amber-600">Requiere autorización de administrador</p>
+                <p className="text-xs text-muted-foreground">Saldo vencido: ${bajaRequiresAuth.monto} {bajaRequiresAuth.desde ? `desde ${bajaRequiresAuth.desde}` : ""}</p>
+                <div className="space-y-2"><Label>Usuario ADMIN</Label><Input value={adminUser} onChange={e => setAdminUser(e.target.value)} /></div>
+                <div className="space-y-2"><Label>Contraseña ADMIN</Label><PasswordInput value={adminPass} onChange={e => setAdminPass(e.target.value)} autoComplete="current-password" /></div>
+              </div>
+            )}
+          </div>
+          <DialogFooter><Button variant="destructive" onClick={handleBajaSubmit} disabled={executeBaja.isPending}>{executeBaja.isPending ? "Procesando..." : "Confirmar Baja"}</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
+  );
+}
+
+function INEManager({ clienteId }: { clienteId: number }) {
+  const { data, isLoading } = useListClienteDocumentos(clienteId, { query: { queryKey: getListClienteDocumentosQueryKey(clienteId) } });
+  const [uploading, setUploading] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const handleUpload = async (lado: "FRENTE" | "REVERSO", file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Archivo muy grande", description: "El tamaño máximo es 5MB.", variant: "destructive" });
+      return;
+    }
+    setUploading(lado);
+    try {
+      await customFetch<ClienteDocumento>(`/api/clientes/${clienteId}/documentos/${lado}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": file.type,
+          "X-File-Name": file.name,
+        },
+        body: file,
+      });
+      queryClient.invalidateQueries({ queryKey: getListClienteDocumentosQueryKey(clienteId) });
+      toast({ title: "Documento subido correctamente" });
+    } catch (e) {
+      toast({ title: "Error al subir", description: getApiErrorMessage(e), variant: "destructive" });
+    } finally {
+      setUploading(null);
+    }
+  };
+
+  const frente = data?.find(d => d.lado === "FRENTE");
+  const reverso = data?.find(d => d.lado === "REVERSO");
+
+  return (
+    <Card className="border-primary/20">
+      <CardHeader className="pb-3 border-b bg-muted/10 flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="text-lg">Documentos de Identidad (INE)</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">Acceso restringido y auditado. Solo uso interno.</p>
+        </div>
+        <LockKeyhole className="h-5 w-5 text-muted-foreground opacity-50" />
+      </CardHeader>
+      <CardContent className="pt-6 grid gap-6 sm:grid-cols-2">
+        {isLoading ? <Skeleton className="h-32 w-full col-span-2" /> : (
+          <>
+            <DocumentSlot lado="FRENTE" doc={frente} onUpload={f => handleUpload("FRENTE", f)} loading={uploading === "FRENTE"} />
+            <DocumentSlot lado="REVERSO" doc={reverso} onUpload={f => handleUpload("REVERSO", f)} loading={uploading === "REVERSO"} />
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function DocumentSlot({ lado, doc, onUpload, loading }: { lado: "FRENTE" | "REVERSO"; doc: any; onUpload: (f: File) => void; loading: boolean }) {
+  const [preview, setPreview] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleView = async () => {
+    if (!doc) return;
+    try {
+      const blob = await viewClienteDocumento(doc.publicId);
+      const url = URL.createObjectURL(blob);
+      setPreview(url);
+    } catch (e) {
+      toast({ title: "Error al cargar documento", description: getApiErrorMessage(e), variant: "destructive" });
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!doc) return;
+    try {
+      const blob = await downloadClienteDocumento(doc.publicId);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = doc.nombreArchivo;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      toast({ title: "Error al descargar", description: getApiErrorMessage(e), variant: "destructive" });
+    }
+  };
+
+  return (
+    <div className="border rounded-md p-4 bg-muted/5 flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden">
+      <p className="font-semibold">{lado}</p>
+
+      {doc ? (
+        <div className="space-y-2 w-full">
+          <div className="text-xs text-muted-foreground">
+            Subido por {doc.subidoPor.nombre} el {new Date(doc.subidoAt).toLocaleDateString()}
+          </div>
+
+          {preview ? (
+            <div className="relative aspect-video w-full bg-black/5 rounded-md overflow-hidden flex items-center justify-center">
+              {doc.mimeType === "application/pdf" ? (
+                <div className="text-center p-4 flex flex-col items-center">
+                  <FileText className="h-10 w-10 text-muted-foreground mb-2" />
+                  <p className="font-semibold text-sm mb-2">{doc.nombreArchivo}</p>
+                  <Button variant="outline" size="sm" onClick={() => window.open(preview, '_blank')}>Abrir en nueva pestaña</Button>
+                </div>
+              ) : (
+                <img src={preview} alt={`INE ${lado}`} className="max-w-full max-h-full object-contain" />
+              )}
+              <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 bg-white/50" onClick={() => { URL.revokeObjectURL(preview); setPreview(null); }}>
+                X
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleView}>Ver</Button>
+              <Button variant="outline" size="sm" onClick={handleDownload}>Descargar</Button>
+            </div>
+          )}
+
+          <div className="pt-2">
+            <Label htmlFor={`upload-${lado}`} className="cursor-pointer text-xs font-medium text-primary hover:underline">
+              {loading ? "Subiendo..." : "Reemplazar documento"}
+            </Label>
+            <input
+              id={`upload-${lado}`}
+              type="file"
+              accept=".jpg,.jpeg,.png,.pdf"
+              className="hidden"
+              disabled={loading}
+              onChange={e => e.target.files?.[0] && onUpload(e.target.files[0])}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="py-6">
+          <p className="text-sm text-muted-foreground mb-4">No hay documento subido.</p>
+          <Label htmlFor={`upload-${lado}`} className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium">
+            {loading ? "Subiendo..." : "Subir archivo"}
+          </Label>
+          <input
+            id={`upload-${lado}`}
+            type="file"
+            accept=".jpg,.jpeg,.png,.pdf"
+            className="hidden"
+            disabled={loading}
+            onChange={e => e.target.files?.[0] && onUpload(e.target.files[0])}
+          />
+        </div>
+      )}
+    </div>
   );
 }
 

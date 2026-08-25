@@ -7,12 +7,14 @@ import {
   getGetClienteCreditoQueryKey,
   getGetCurrentUserQueryKey,
   getListClientesQueryKey,
+  getListCuentasIncobrablesQueryKey,
   useGetClientesResumen,
   useGetClientesCartera,
   useGetClienteCredito,
   useGetCurrentUser,
   useListClientes,
   useCreateCliente,
+  useListCuentasIncobrables,
 } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Badge } from "@/components/ui/badge";
@@ -57,7 +59,16 @@ export default function Clientes() {
     return [...(clientsQuery.data ?? [])]
       .filter((client) => status === "all" || client.activo === (status === "active"))
       .filter((client) => !term || [client.nombre, client.telefono, client.correo, client.rfc].some((field) => field?.toLowerCase().includes(term)))
-      .sort((a, b) => sort === "name" ? a.nombre.localeCompare(b.nombre, "es") : +new Date(b.createdAt) - +new Date(a.createdAt));
+      .sort((a, b) => {
+        if (sort === "name") {
+          const aIsSys = a.esSistema || a.id === 1;
+          const bIsSys = b.esSistema || b.id === 1;
+          if (aIsSys && !bIsSys) return -1;
+          if (!aIsSys && bIsSys) return 1;
+          return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base", numeric: true });
+        }
+        return +new Date(b.createdAt) - +new Date(a.createdAt);
+      });
   }, [clientsQuery.data, search, sort, status]);
 
   return (
@@ -76,10 +87,11 @@ export default function Clientes() {
           )}
         </div>
         <Tabs defaultValue="clientes">
-          <TabsList className="grid w-full grid-cols-3 sm:w-[430px]">
+          <TabsList className="grid w-full grid-cols-4 sm:w-[580px]">
             <TabsTrigger value="clientes" data-testid="tab-clientes">Clientes</TabsTrigger>
             <TabsTrigger value="cartera" disabled={!canFinances} data-testid="tab-cartera">Cartera</TabsTrigger>
             <TabsTrigger value="analisis" disabled={!canFinances} data-testid="tab-analysis">Análisis</TabsTrigger>
+            {user?.rol === "ADMIN" && <TabsTrigger value="incobrables" data-testid="tab-incobrables">Incobrables</TabsTrigger>}
           </TabsList>
           <TabsContent value="clientes" className="space-y-4">
             <Card>
@@ -147,6 +159,11 @@ export default function Clientes() {
             <div className="mb-4 flex justify-end"><Select value={analyticsMonths} onValueChange={setAnalyticsMonths}><SelectTrigger className="w-52"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="3">Últimos 3 meses</SelectItem><SelectItem value="6">Últimos 6 meses</SelectItem><SelectItem value="12">Últimos 12 meses</SelectItem><SelectItem value="24">Últimos 24 meses</SelectItem></SelectContent></Select></div>
             {analyticsQuery.isLoading ? <Skeleton className="h-64 w-full" /> : analyticsQuery.isError ? <p className="text-destructive">No se pudo cargar la analítica.</p> : <div className="space-y-4"><SummaryPanel loading={false} error={null} values={[["Ventas", formatNumber(analyticsQuery.data?.ventas, { kind: "money" })], ["Margen identificable", formatNumber(analyticsQuery.data?.margen, { kind: "money" })], ["Tickets", formatNumber(analyticsQuery.data?.tickets, { kind: "count" })], ["Metros / kilos", `${formatNumber(analyticsQuery.data?.metros, { kind: "quantity" })} / ${formatNumber(analyticsQuery.data?.kilos, { kind: "quantity" })}`]]} /><div className="grid gap-4 lg:grid-cols-2"><AnalyticsTable title="Top por ventas" rows={(analyticsQuery.data?.topVentas ?? []).map((item) => [item.nombre, formatNumber(item.ventas, { kind: "money" }), formatNumber(item.margen, { kind: "money" })])} /><AnalyticsTable title="Top por margen" rows={(analyticsQuery.data?.topMargen ?? []).map((item) => [item.nombre, formatNumber(item.ventas, { kind: "money" }), formatNumber(item.margen, { kind: "money" })])} /><AnalyticsTable title="Pareto de clientes" rows={(analyticsQuery.data?.pareto ?? []).map((item) => [item.nombre, formatNumber(item.ventas, { kind: "money" }), formatNumber(item.acumulado, { kind: "percentage", percentageInput: "ratio" })])} /><AnalyticsTable title="Público vs registrado" rows={(analyticsQuery.data?.publicoVsRegistrado ?? []).map((item) => [item.segmento, formatNumber(item.ventas, { kind: "money" }), `${formatNumber(item.tickets, { kind: "count" })} tickets`])} /></div><AnalyticsTable title="Evolución mensual" rows={(analyticsQuery.data?.mensual ?? []).map((item) => [item.mes, formatNumber(item.ventas, { kind: "money" }), formatNumber(item.margen, { kind: "money" })])} />{(analyticsQuery.data?.lineasSinCosto ?? 0) > 0 && <p className="rounded-md bg-amber-50 p-3 text-sm text-amber-900">El margen excluye {formatNumber(analyticsQuery.data?.lineasSinCosto, { kind: "count" })} línea(s) sin costo.</p>}<Button variant="outline" onClick={() => downloadClientFile(`/clientes/analitica.xlsx?desde=${analyticsPeriod.desde}&hasta=${analyticsPeriod.hasta}`, "analitica-clientes.xlsx")}>Exportar analítica Excel</Button></div>}
           </TabsContent>
+          {user?.rol === "ADMIN" && (
+            <TabsContent value="incobrables">
+              <IncobrablesTab />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
       {canCreate && <CreateClienteDialog open={createOpen} onClose={() => setCreateOpen(false)} />}
@@ -159,7 +176,9 @@ type ClientForm = {
   telefono: string;
   correo: string;
   rfc: string;
-  direccion: string;
+  direccionParticular: string;
+  direccionEntrega: string;
+  mismaDireccion: boolean;
   contactoNombre: string;
   limiteCredito: string;
   diasCredito: string;
@@ -171,7 +190,9 @@ const emptyClientForm: ClientForm = {
   telefono: "",
   correo: "",
   rfc: "",
-  direccion: "",
+  direccionParticular: "",
+  direccionEntrega: "",
+  mismaDireccion: true,
   contactoNombre: "",
   limiteCredito: "",
   diasCredito: "",
@@ -217,7 +238,8 @@ function CreateClienteDialog({ open, onClose }: { open: boolean; onClose: () => 
         telefono: form.telefono.trim() || null,
         correo: form.correo.trim() || null,
         rfc: form.rfc.trim() || null,
-        direccion: form.direccion.trim() || null,
+        direccionParticular: form.direccionParticular.trim() || null,
+        direccionEntrega: form.mismaDireccion ? (form.direccionParticular.trim() || null) : (form.direccionEntrega.trim() || null),
         contactoNombre: form.contactoNombre.trim() || null,
         notas: form.notas.trim() || null,
         ...(form.limiteCredito.trim()
@@ -255,7 +277,37 @@ function CreateClienteDialog({ open, onClose }: { open: boolean; onClose: () => 
           <ClientField label="Teléfono" value={form.telefono} onChange={(value) => set("telefono", value)} />
           <ClientField label="Correo" value={form.correo} onChange={(value) => set("correo", value)} type="email" />
           <ClientField label="RFC" value={form.rfc} onChange={(value) => set("rfc", value)} />
-          <ClientField label="Dirección" value={form.direccion} onChange={(value) => set("direccion", value)} />
+
+          <ClientField label="Dirección Particular" value={form.direccionParticular} onChange={(value) => {
+            set("direccionParticular", value);
+            if (form.mismaDireccion) set("direccionEntrega", value);
+          }} />
+
+          <div className="space-y-2">
+            <Label>Dirección de Entrega</Label>
+            <Input
+              value={form.mismaDireccion ? form.direccionParticular : form.direccionEntrega}
+              onChange={(e) => set("direccionEntrega", e.target.value)}
+              disabled={form.mismaDireccion}
+            />
+            <div className="flex items-center space-x-2 mt-1">
+              <input
+                type="checkbox"
+                id="same-address"
+                checked={form.mismaDireccion}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  set("mismaDireccion", checked as any);
+                  if (checked) set("direccionEntrega", form.direccionParticular);
+                }}
+                className="rounded border-gray-300"
+              />
+              <label htmlFor="same-address" className="text-xs text-muted-foreground cursor-pointer">
+                La misma que la particular
+              </label>
+            </div>
+          </div>
+
           <ClientField label="Nombre de contacto" value={form.contactoNombre} onChange={(value) => set("contactoNombre", value)} />
           <ClientField label="Límite de crédito" value={form.limiteCredito} onChange={(value) => set("limiteCredito", value)} type="number" />
           <ClientField label={`Días de crédito${form.limiteCredito.trim() ? " *" : ""}`} value={form.diasCredito} onChange={(value) => set("diasCredito", value)} type="number" />
@@ -303,6 +355,88 @@ function ClientFinancialCells({ id }: { id: number }) {
   if (query.isLoading) return <><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell></>;
   if (query.isError) return <><TableCell className="text-right text-muted-foreground">—</TableCell><TableCell className="text-right text-muted-foreground">—</TableCell></>;
   return <><TableCell className="text-right font-mono" data-testid={`text-client-balance-${id}`}>{formatNumber(query.data?.saldoActual, { kind: "money" })}</TableCell><TableCell className="text-right font-mono">{formatNumber(query.data?.creditoDisponible, { kind: "money" })}</TableCell></>;
+}
+
+function IncobrablesTab() {
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
+
+  const { data, isLoading, isError } = useListCuentasIncobrables(
+    { fechaDesde: desde || undefined, fechaHasta: hasta || undefined },
+    { query: { queryKey: getListCuentasIncobrablesQueryKey({ fechaDesde: desde || undefined, fechaHasta: hasta || undefined }) } }
+  );
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle>Cuentas Incobrables</CardTitle>
+          <div className="flex items-center gap-2">
+            <Input type="date" value={desde} onChange={e => setDesde(e.target.value)} className="w-40" aria-label="Desde" />
+            <Input type="date" value={hasta} onChange={e => setHasta(e.target.value)} className="w-40" aria-label="Hasta" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <Skeleton className="h-64 w-full" />
+          ) : isError ? (
+            <p className="text-destructive py-4 text-center">Error al cargar cuentas incobrables.</p>
+          ) : (
+            <>
+              <div className="mb-4">
+                <p className="text-sm text-muted-foreground">Total del periodo</p>
+                <p className="text-3xl font-bold text-destructive">{formatNumber(data?.total, { kind: "money" })}</p>
+              </div>
+              <div className="overflow-x-auto border rounded-md">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Cliente</TableHead>
+                      <TableHead>Ejecutó</TableHead>
+                      <TableHead>Autorizó</TableHead>
+                      <TableHead>Motivo</TableHead>
+                      <TableHead className="text-right">Monto</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(!data?.filas || data.filas.length === 0) ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                          No hay cuentas incobrables en este periodo.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      data.filas.map((row) => (
+                        <TableRow key={row.id}>
+                          <TableCell className="whitespace-nowrap">
+                            {row.fecha && new Date(row.fecha).toLocaleDateString("es-MX", { dateStyle: "medium" })}
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            <Link href={`/clientes/${row.clienteId}`} className="hover:underline text-primary">
+                              {row.cliente}
+                            </Link>
+                          </TableCell>
+                          <TableCell>{row.ejecutadoPor}</TableCell>
+                          <TableCell>{row.autorizadoPor}</TableCell>
+                          <TableCell className="max-w-[300px] truncate" title={row.motivo}>
+                            {row.motivo}
+                          </TableCell>
+                          <TableCell className="text-right font-mono font-semibold text-destructive">
+                            {formatNumber(row.monto, { kind: "money" })}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 function SummaryPanel({ loading, error, values }: { loading: boolean; error: unknown; values: string[][] }) {

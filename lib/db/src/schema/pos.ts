@@ -206,6 +206,9 @@ export const movimientosCreditoTable = pgTable(
     metadata: text("metadata"),
     diasPlazo: integer("dias_plazo"),
     fechaVencimiento: date("fecha_vencimiento"),
+    esIncobrable: boolean("es_incobrable").notNull().default(false),
+    motivoIncobrable: text("motivo_incobrable"),
+    autorizadoPor: integer("autorizado_por").references(() => usuariosTable.id),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

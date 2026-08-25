@@ -129,7 +129,7 @@ export function ClientSelector({
             <CommandList>
               <CommandEmpty>{isError ? "No se pudieron cargar los clientes." : "Sin coincidencias."}</CommandEmpty>
               <CommandGroup heading="Clientes">
-                {(clients ?? []).filter((client) => client.activo).sort((a, b) => Number(b.esSistema || b.id === 1) - Number(a.esSistema || a.id === 1) || a.nombre.localeCompare(b.nombre, "es")).map((client) => (
+                {(clients ?? []).filter((client) => client.activo).sort((a, b) => Number(b.esSistema || b.id === 1) - Number(a.esSistema || a.id === 1) || a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base", numeric: true })).map((client) => (
                   <CommandItem
                     key={client.id}
                     value={`${client.nombre} ${client.telefono ?? ""} ${client.id}`}

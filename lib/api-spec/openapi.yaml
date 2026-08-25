@@ -1429,6 +1429,42 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+
+  /cuentas-incobrables:
+    get:
+      operationId: listCuentasIncobrables
+      tags: [clientes]
+      parameters:
+        - name: fechaDesde
+          in: query
+          schema: { type: string, format: date-time }
+        - name: fechaHasta
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filas:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: number }
+                        fecha: { type: string, format: date-time }
+                        clienteId: { type: number }
+                        cliente: { type: string }
+                        monto: { type: number }
+                        motivo: { type: string }
+                        ejecutadoPor: { type: string }
+                        autorizadoPor: { type: string }
+                  totalCuentas: { type: number }
+                  total: { type: number }
+
   /clientes:
     get:
       operationId: listClientes
@@ -1561,6 +1597,123 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+
+
+  /clientes/{id}/baja:
+    post:
+      operationId: bajaCliente
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [motivo]
+              properties:
+                motivo: { type: string, minLength: 20 }
+                adminUsuario: { type: string }
+                adminPassword: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  resultado: { type: string }
+                  saldoAnterior: { type: number }
+  /clientes/{id}/reactivar:
+    post:
+      operationId: reactivarCliente
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: OK
+
+  /clientes/{id}/documentos:
+    get:
+      operationId: listClienteDocumentos
+      tags: [clientes]
+      summary: Lista documentos INE
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClienteDocumento"
+  /clientes/{id}/documentos/{lado}:
+    post:
+      operationId: uploadClienteDocumento
+      tags: [clientes]
+      summary: Sube documento INE
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+        - name: lado
+          in: path
+          required: true
+          schema: { type: string, enum: [FRENTE, REVERSO] }
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema: { type: string, format: binary }
+          image/png:
+            schema: { type: string, format: binary }
+          application/pdf:
+            schema: { type: string, format: binary }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteDocumento"
+  /cliente-documentos/{publicId}/ver:
+    get:
+      operationId: viewClienteDocumento
+      tags: [clientes]
+      parameters:
+        - name: publicId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /cliente-documentos/{publicId}/descargar:
+    get:
+      operationId: downloadClienteDocumento
+      tags: [clientes]
+      parameters:
+        - name: publicId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
   /clientes/{id}/credito:
     get:
       operationId: getClienteCredito
@@ -3416,6 +3569,8 @@ components:
         telefono: { type: ["string", "null"] }
         correo: { type: ["string", "null"] }
         direccion: { type: ["string", "null"] }
+        direccionParticular: { type: ["string", "null"] }
+        direccionEntrega: { type: ["string", "null"] }
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         activo: { type: boolean }
@@ -3432,6 +3587,8 @@ components:
         telefono: { type: ["string", "null"] }
         correo: { type: ["string", "null"] }
         direccion: { type: ["string", "null"] }
+        direccionParticular: { type: ["string", "null"] }
+        direccionEntrega: { type: ["string", "null"] }
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         contactoNombre: { type: ["string", "null"] }
@@ -3448,6 +3605,20 @@ components:
           type: string
           const: CLIENT_NAME_CONFLICT
         existingClientId: { type: number }
+
+    ClienteDocumento:
+      type: object
+      required: [id, clienteId, lado, publicId, filename, mimeType, subidoPor, createdAt]
+      properties:
+        id: { type: number }
+        clienteId: { type: number }
+        lado: { type: string, enum: [FRENTE, REVERSO] }
+        publicId: { type: string }
+        filename: { type: string }
+        mimeType: { type: string }
+        subidoPor: { type: number }
+        createdAt: { type: string, format: date-time }
+
     ClienteUpdate:
       type: object
       properties:
@@ -3455,6 +3626,8 @@ components:
         telefono: { type: ["string", "null"] }
         correo: { type: ["string", "null"] }
         direccion: { type: ["string", "null"] }
+        direccionParticular: { type: ["string", "null"] }
+        direccionEntrega: { type: ["string", "null"] }
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         activo: { type: boolean }
@@ -5690,6 +5863,7 @@ components:
         nombreUsuarioTerminal: { type: string }
         clienteId: { type: ["number", "null"] }
         nombreCliente: { type: ["string", "null"] }
+        direccionEntregaEfectiva: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoTicket"
         subtotal: { type: string }

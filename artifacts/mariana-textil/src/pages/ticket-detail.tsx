@@ -276,6 +276,11 @@ export default function TicketDetailPage() {
                 Cliente: {ticket.clienteId === 1 ? "VENTA AL PÚBLICO" : ticket.nombreCliente || `Cliente #${ticket.clienteId}`}
               </div>
             )}
+            {ticket.direccionEntregaEfectiva && (
+              <div className="mt-1 text-sm text-muted-foreground max-w-[300px] truncate" title={ticket.direccionEntregaEfectiva}>
+                Entrega: {ticket.direccionEntregaEfectiva}
+              </div>
+            )}
             {ticket.facturado && (
               <div className="mt-2 text-xs font-bold tracking-wider text-primary">
                 FACTURADO
@@ -388,6 +393,17 @@ export default function TicketDetailPage() {
           <p className="text-xs">
             {new Date(ticket.createdAt).toLocaleString("es-MX")}
           </p>
+          {ticket.clienteId && ticket.clienteId !== 1 && (
+             <div className="text-xs mt-1 border-t border-black/20 pt-1">
+               <span className="font-semibold">Cliente:</span> {ticket.nombreCliente || `#${ticket.clienteId}`}
+               {ticket.direccionEntregaEfectiva && (
+                 <>
+                   <br/>
+                   <span className="font-semibold">Entrega:</span> {ticket.direccionEntregaEfectiva}
+                 </>
+               )}
+             </div>
+          )}
         </div>
 
         <div className="border-t border-b border-black py-2 mb-2">
@@ -481,6 +497,12 @@ export default function TicketDetailPage() {
           <div>
             <div className="font-bold">Cliente:</div>
             <div>{ticket.clienteId === 1 || !ticket.clienteId ? "VENTA AL PÚBLICO" : ticket.nombreCliente || `Cliente #${ticket.clienteId}`}</div>
+            {ticket.direccionEntregaEfectiva && (
+              <div className="mt-1">
+                <span className="font-bold">Dirección de entrega:</span><br />
+                {ticket.direccionEntregaEfectiva}
+              </div>
+            )}
           </div>
           <div>
             <div className="font-bold">Atendió:</div>

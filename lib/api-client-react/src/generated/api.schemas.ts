@@ -517,6 +517,10 @@ export interface Cliente {
   /** @nullable */
   direccion?: string | null;
   /** @nullable */
+  direccionParticular?: string | null;
+  /** @nullable */
+  direccionEntrega?: string | null;
+  /** @nullable */
   rfc?: string | null;
   /** @nullable */
   notas?: string | null;
@@ -543,6 +547,10 @@ export interface ClienteInput {
   /** @nullable */
   direccion?: string | null;
   /** @nullable */
+  direccionParticular?: string | null;
+  /** @nullable */
+  direccionEntrega?: string | null;
+  /** @nullable */
   rfc?: string | null;
   /** @nullable */
   notas?: string | null;
@@ -566,6 +574,25 @@ export interface ClienteDuplicateError {
   existingClientId: number;
 }
 
+export type ClienteDocumentoLado = typeof ClienteDocumentoLado[keyof typeof ClienteDocumentoLado];
+
+
+export const ClienteDocumentoLado = {
+  FRENTE: 'FRENTE',
+  REVERSO: 'REVERSO',
+} as const;
+
+export interface ClienteDocumento {
+  id: number;
+  clienteId: number;
+  lado: ClienteDocumentoLado;
+  publicId: string;
+  filename: string;
+  mimeType: string;
+  subidoPor: number;
+  createdAt: string;
+}
+
 export interface ClienteUpdate {
   /**
      * @minLength 1
@@ -578,6 +605,10 @@ export interface ClienteUpdate {
   correo?: string | null;
   /** @nullable */
   direccion?: string | null;
+  /** @nullable */
+  direccionParticular?: string | null;
+  /** @nullable */
+  direccionEntrega?: string | null;
   /** @nullable */
   rfc?: string | null;
   /** @nullable */
@@ -2558,6 +2589,8 @@ export interface TicketResumen {
   clienteId: number | null;
   /** @nullable */
   nombreCliente: string | null;
+  /** @nullable */
+  direccionEntregaEfectiva?: string | null;
   tipo: TipoTicket;
   subtotal: string;
   /** IVA aplicado al ticket; es 0.00 si no fue facturado */
@@ -3007,9 +3040,43 @@ productoId?: number;
 ubicacionId?: number;
 };
 
+export type ListCuentasIncobrablesParams = {
+fechaDesde?: string;
+fechaHasta?: string;
+};
+
+export type ListCuentasIncobrables200FilasItem = {
+  id?: number;
+  fecha?: string;
+  clienteId?: number;
+  cliente?: string;
+  monto?: number;
+  motivo?: string;
+  ejecutadoPor?: string;
+  autorizadoPor?: string;
+};
+
+export type ListCuentasIncobrables200 = {
+  filas?: ListCuentasIncobrables200FilasItem[];
+  totalCuentas?: number;
+  total?: number;
+};
+
 export type GetClientesAnaliticaParams = {
 desde?: string;
 hasta?: string;
+};
+
+export type BajaClienteBody = {
+  /** @minLength 20 */
+  motivo: string;
+  adminUsuario?: string;
+  adminPassword?: string;
+};
+
+export type BajaCliente200 = {
+  resultado?: string;
+  saldoAnterior?: number;
 };
 
 export type UpdateClienteCredito200 = { [key: string]: unknown };

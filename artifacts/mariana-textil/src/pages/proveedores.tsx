@@ -72,6 +72,7 @@ export default function Proveedores() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTipo, setFilterTipo] = useState("ALL");
   const [filterEstado, setFilterEstado] = useState("ALL");
+  const [sortOrder, setSortOrder] = useState<"AZ" | "SALDO">("AZ");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
   const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver');
@@ -91,15 +92,20 @@ export default function Proveedores() {
     });
   }, [proveedores, searchTerm, filterTipo, filterEstado]);
 
-  // Sort by pending balance desc
+  // Sort by A-Z or balance
   const sortedProveedores = useMemo(() => {
-    if (!canViewFinanzas) return filteredProveedores;
-    return [...filteredProveedores].sort((a, b) => {
-      const saldoA = parseFloat(a.saldoPendiente ?? "0") || 0;
-      const saldoB = parseFloat(b.saldoPendiente ?? "0") || 0;
-      return saldoB - saldoA;
-    });
-  }, [canViewFinanzas, filteredProveedores]);
+    const list = [...filteredProveedores].sort((a, b) =>
+      a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" })
+    );
+    if (sortOrder === "SALDO" && canViewFinanzas) {
+      return list.sort((a, b) => {
+        const saldoA = parseFloat(a.saldoPendiente ?? "0") || 0;
+        const saldoB = parseFloat(b.saldoPendiente ?? "0") || 0;
+        return saldoB - saldoA;
+      });
+    }
+    return list;
+  }, [canViewFinanzas, filteredProveedores, sortOrder]);
 
   return (
     <AppLayout>
@@ -188,6 +194,17 @@ export default function Proveedores() {
                 <SelectItem value="INACTIVE">Inactivos</SelectItem>
               </SelectContent>
             </Select>
+            {canViewFinanzas && (
+              <Select value={sortOrder} onValueChange={(val: "AZ" | "SALDO") => setSortOrder(val)}>
+                <SelectTrigger className="w-full sm:w-[150px] bg-background" data-testid="select-sort-supplier">
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="AZ">Nombre A-Z</SelectItem>
+                  <SelectItem value="SALDO">Mayor Deuda</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <CardContent className="p-0">

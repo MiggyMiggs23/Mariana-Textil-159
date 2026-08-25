@@ -29,6 +29,7 @@ import {
   formatNumber,
   toExcelNumber,
 } from "@workspace/number-format";
+import { ordenarEspanol } from "../lib/spanish-order";
 
 const router: IRouter = Router();
 
@@ -43,7 +44,9 @@ function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {
     nombre: row.nombre,
     telefono: row.telefono,
     correo: row.correo,
-    direccion: row.direccion,
+    direccionParticular: row.direccionParticular,
+    direccionEntrega: row.direccionEntrega,
+    direccion: row.direccionParticular,
     rfc: row.rfc,
     notas: row.notas,
     activo: row.activo,
@@ -118,10 +121,9 @@ router.get(
   requierePermiso("clientes", "ver"),
   async (req, res, next): Promise<void> => {
     try {
-      const rows = await db
-        .select()
-        .from(clientesTable)
-        .orderBy(clientesTable.nombre);
+      const rows = ordenarEspanol(
+        await db.select().from(clientesTable),
+      );
 
       const permiso = await resolvePermiso(
         req.auth!.user.id,
@@ -164,8 +166,10 @@ router.post(
   requierePermiso("clientes", "crear"),
   async (req, res, next): Promise<void> => {
     try {
-      const { nombre, telefono, correo, direccion, rfc, notas, contactoNombre, diasCredito, limiteCredito } =
+      const { nombre, telefono, correo, direccion, direccionParticular, direccionEntrega, rfc, notas, contactoNombre, diasCredito, limiteCredito } =
         req.body as Record<string, unknown>;
+      const direccionParticularInput =
+        direccionParticular !== undefined ? direccionParticular : direccion;
 
       if (typeof nombre !== "string" || nombre.trim().length < 1) {
         res.status(400).json({ error: "El nombre es obligatorio." });
@@ -202,7 +206,8 @@ router.post(
           nombre: normalizedName,
           telefono: typeof telefono === "string" ? telefono.trim() || null : null,
           correo: typeof correo === "string" ? correo.trim() || null : null,
-          direccion: typeof direccion === "string" ? direccion.trim() || null : null,
+          direccionParticular: typeof direccionParticularInput === "string" ? direccionParticularInput.trim() || null : null,
+          direccionEntrega: typeof direccionEntrega === "string" ? direccionEntrega.trim() || null : null,
           rfc: typeof rfc === "string" ? rfc.trim() || null : null,
           notas: typeof notas === "string" ? notas.trim() || null : null,
           contactoNombre:
@@ -570,15 +575,16 @@ router.patch(
         return;
       }
 
-      const { nombre, telefono, correo, direccion, rfc, notas, activo, contactoNombre, diasCredito, limiteCredito } =
+      const { nombre, telefono, correo, direccion, direccionParticular, direccionEntrega, rfc, notas, activo, contactoNombre, diasCredito, limiteCredito } =
         req.body as Record<string, unknown>;
+      const direccionParticularInput =
+        direccionParticular !== undefined ? direccionParticular : direccion;
       if (diasCredito !== undefined || limiteCredito !== undefined) {
         res.status(403).json({
           error: "Los términos de crédito solo se modifican en /clientes/:id/credito.",
         });
         return;
       }
-
       if (
         before.esSistema &&
         ((nombre !== undefined && nombre !== "Venta a Público") ||
@@ -590,6 +596,12 @@ router.patch(
         });
         return;
       }
+      if (activo !== undefined) {
+        res.status(403).json({
+          error: "El estado del cliente solo se modifica mediante /clientes/:id/baja o /clientes/:id/reactivar.",
+        });
+        return;
+      }
 
       const updates: Partial<typeof clientesTable.$inferInsert> = {};
       if (typeof nombre === "string") updates.nombre = nombre.trim();
@@ -597,13 +609,14 @@ router.patch(
         updates.telefono = telefono as string | null;
       if (typeof correo === "string" || correo === null)
         updates.correo = correo as string | null;
-      if (typeof direccion === "string" || direccion === null)
-        updates.direccion = direccion as string | null;
+      if (typeof direccionParticularInput === "string" || direccionParticularInput === null)
+        updates.direccionParticular = direccionParticularInput as string | null;
+      if (typeof direccionEntrega === "string" || direccionEntrega === null)
+        updates.direccionEntrega = direccionEntrega as string | null;
       if (typeof rfc === "string" || rfc === null)
         updates.rfc = rfc as string | null;
       if (typeof notas === "string" || notas === null)
         updates.notas = notas as string | null;
-      if (typeof activo === "boolean") updates.activo = activo;
       if (typeof contactoNombre === "string" || contactoNombre === null)
         updates.contactoNombre = contactoNombre as string | null;
 
@@ -1339,6 +1352,7 @@ router.post(
           .for("update")
           .limit(1);
         if (!client) return null;
+        if (!client.activo) throw new Error("INACTIVE_CLIENT");
         if (body.ticketId != null) {
           const [ticket] = await tx
             .select({ id: ticketsTable.id })
@@ -1423,6 +1437,10 @@ router.post(
         res.status(400).json({ error: "Venta a Público no admite movimientos de crédito." });
         return;
       }
+      if (e instanceof Error && e.message === "INACTIVE_CLIENT") {
+        res.status(409).json({ error: "El cliente está inactivo.", code: "INACTIVE_CLIENT" });
+        return;
+      }
       if (e instanceof Error && e.message === "INVALID_PAYMENT_TICKET") {
         res.status(400).json({ error: "El ticket no pertenece al cliente." });
         return;
@@ -1468,12 +1486,17 @@ router.post(
       }
       const result = await db.transaction(async (tx) => {
         const [client] = await tx
-          .select({ id: clientesTable.id, esSistema: clientesTable.esSistema })
+          .select({
+            id: clientesTable.id,
+            esSistema: clientesTable.esSistema,
+            activo: clientesTable.activo,
+          })
           .from(clientesTable)
           .where(eq(clientesTable.id, id))
           .for("update")
           .limit(1);
         if (!client) return null;
+        if (!client.activo) throw new Error("INACTIVE_CLIENT");
         if (client.esSistema) throw new Error("SYSTEM_CLIENT_CREDIT");
         if (ticketId != null) {
           const [ticket] = await tx
@@ -1526,6 +1549,10 @@ router.post(
     } catch (error) {
       if (error instanceof Error && error.message === "SYSTEM_CLIENT_CREDIT") {
         res.status(400).json({ error: "Venta a Público no admite ajustes de crédito." });
+        return;
+      }
+      if (error instanceof Error && error.message === "INACTIVE_CLIENT") {
+        res.status(409).json({ error: "El cliente está inactivo.", code: "INACTIVE_CLIENT" });
         return;
       }
       if (error instanceof Error && error.message === "INVALID_PAYMENT_TICKET") {

@@ -19,6 +19,10 @@ export interface ClienteInput {
   /** @nullable */
   direccion?: string | null;
   /** @nullable */
+  direccionParticular?: string | null;
+  /** @nullable */
+  direccionEntrega?: string | null;
+  /** @nullable */
   rfc?: string | null;
   /** @nullable */
   notas?: string | null;

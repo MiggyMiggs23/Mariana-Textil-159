@@ -144,6 +144,10 @@ export async function buildTicketDetail(
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
       diasCreditoCliente: clientesTable.diasCredito,
+      direccionEntregaEfectiva: sql<string | null>`COALESCE(
+        NULLIF(btrim(${clientesTable.direccionEntrega}), ''),
+        NULLIF(btrim(${clientesTable.direccionParticular}), '')
+      )`,
       tipo: ticketsTable.tipo,
       subtotal: ticketsTable.subtotal,
       iva: ticketsTable.iva,
@@ -390,6 +394,7 @@ export async function crearTicket(
     .select({ id: clientesTable.id, activo: clientesTable.activo })
     .from(clientesTable)
     .where(eq(clientesTable.id, input.clienteId))
+    .for("update")
     .limit(1);
   if (!clienteTicket?.activo) {
     throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
@@ -676,6 +681,19 @@ export async function cancelarTicket(
     );
   const creditCents = money(creditRow?.total ?? "0");
   if (ticket.clienteId != null && creditCents > 0) {
+    const [clienteCredito] = await tx
+      .select({ id: clientesTable.id, activo: clientesTable.activo })
+      .from(clientesTable)
+      .where(eq(clientesTable.id, ticket.clienteId))
+      .for("update")
+      .limit(1);
+    if (!clienteCredito?.activo) {
+      throw new PosError(
+        "El cliente está inactivo; no se puede modificar su cuenta.",
+        "INVALID_CLIENT",
+        409,
+      );
+    }
     const [existingReverse] = await tx
       .select({ id: movimientosCreditoTable.id })
       .from(movimientosCreditoTable)

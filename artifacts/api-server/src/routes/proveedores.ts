@@ -46,6 +46,7 @@ import {
   EXCEL_NUMBER_FORMAT,
   toExcelNumber,
 } from "@workspace/number-format";
+import { ordenarEspanol } from "../lib/spanish-order";
 
 const router: IRouter = Router();
 
@@ -117,10 +118,9 @@ router.get(
       );
       const hasFinanzas = finanzasPerm?.puedeVer === true;
 
-      const rows = await db
-        .select()
-        .from(proveedoresTable)
-        .orderBy(proveedoresTable.nombre);
+      const rows = ordenarEspanol(
+        await db.select().from(proveedoresTable),
+      );
 
       if (!hasFinanzas) {
         // Omit all financial fields

@@ -154,4 +154,12 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     "El upgrade idempotente no debe reiniciar ni retroceder el folio.",
   );
 
+  // Restore the customized CAJA row so this isolated suite does not leak an
+  // intentional override into later security tests sharing the same database.
+  await pool.query(`
+    UPDATE permisos_rol
+    SET updated_por = NULL
+    WHERE rol = 'CAJA' AND modulo = 'salidas'
+  `);
+  await ensureSalidasSchema(pool);
 });

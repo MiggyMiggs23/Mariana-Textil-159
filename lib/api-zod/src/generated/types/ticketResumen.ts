@@ -19,6 +19,8 @@ export interface TicketResumen {
   clienteId: number | null;
   /** @nullable */
   nombreCliente: string | null;
+  /** @nullable */
+  direccionEntregaEfectiva?: string | null;
   tipo: TipoTicket;
   subtotal: string;
   /** IVA aplicado al ticket; es 0.00 si no fue facturado */

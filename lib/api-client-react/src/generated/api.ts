@@ -30,6 +30,8 @@ import type {
   AjusteProveedorInput,
   AjusteRolloInput,
   AnaliticaGlobalProveedores,
+  BajaCliente200,
+  BajaClienteBody,
   BuscarPosParams,
   CapturarCostosEntradaInput,
   CatalogosEntrada,
@@ -39,6 +41,7 @@ import type {
   ClienteCompras,
   ClienteCredito,
   ClienteCreditoUpdate,
+  ClienteDocumento,
   ClienteDuplicateError,
   ClienteEstadisticas,
   ClienteEstadoCuenta,
@@ -98,6 +101,8 @@ import type {
   KardexResult,
   ListAdminCortesParams,
   ListComprasProveedorParams,
+  ListCuentasIncobrables200,
+  ListCuentasIncobrablesParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
   ListKardexFiltersParams,
@@ -276,6 +281,7 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
 export const getLoginUrl = () => {
 
 
@@ -4676,6 +4682,84 @@ export function useGetClientesResumen<TData = Awaited<ReturnType<typeof getClien
 
 
 
+export const getListCuentasIncobrablesUrl = (params?: ListCuentasIncobrablesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/cuentas-incobrables?${stringifiedParams}` : `/api/cuentas-incobrables`
+}
+
+export const listCuentasIncobrables = async (params?: ListCuentasIncobrablesParams, options?: Parameters<typeof customFetch>[1]): Promise<ListCuentasIncobrables200> => {
+
+  return customFetch<ListCuentasIncobrables200>(getListCuentasIncobrablesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListCuentasIncobrablesQueryKey = (params?: ListCuentasIncobrablesParams,) => {
+    return [
+    `/api/cuentas-incobrables`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListCuentasIncobrablesQueryOptions = <TData = Awaited<ReturnType<typeof listCuentasIncobrables>>, TError = ErrorType<unknown>>(params?: ListCuentasIncobrablesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCuentasIncobrables>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListCuentasIncobrablesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCuentasIncobrables>>> = ({ signal }) => listCuentasIncobrables(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCuentasIncobrables>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCuentasIncobrablesQueryResult = NonNullable<Awaited<ReturnType<typeof listCuentasIncobrables>>>
+export type ListCuentasIncobrablesQueryError = ErrorType<unknown>
+
+
+
+export function useListCuentasIncobrables<TData = Awaited<ReturnType<typeof listCuentasIncobrables>>, TError = ErrorType<unknown>>(
+ params?: ListCuentasIncobrablesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCuentasIncobrables>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListCuentasIncobrablesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getListClientesUrl = () => {
 
 
@@ -5210,6 +5294,430 @@ export const useUpdateCliente = <TError = ErrorType<ValidationErrorResponse | Un
       > => {
       return useMutation(getUpdateClienteMutationOptions(options));
     }
+
+export const getBajaClienteUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/baja`
+}
+
+export const bajaCliente = async (id: number,
+    bajaClienteBody: BajaClienteBody, options?: Parameters<typeof customFetch>[1]): Promise<BajaCliente200> => {
+
+  return customFetch<BajaCliente200>(getBajaClienteUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(bajaClienteBody)
+  }
+);}
+
+
+
+
+
+export const getBajaClienteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<BajaClienteBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<BajaClienteBody>}, TContext> => {
+
+const mutationKey = ['bajaCliente'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bajaCliente>>, {id: number;data: BodyType<BajaClienteBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  bajaCliente(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BajaClienteMutationResult = NonNullable<Awaited<ReturnType<typeof bajaCliente>>>
+    export type BajaClienteMutationBody = BodyType<BajaClienteBody>
+    export type BajaClienteMutationError = ErrorType<unknown>
+
+    export const useBajaCliente = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<BajaClienteBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof bajaCliente>>,
+        TError,
+        {id: number;data: BodyType<BajaClienteBody>},
+        TContext
+      > => {
+      return useMutation(getBajaClienteMutationOptions(options));
+    }
+
+export const getReactivarClienteUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/reactivar`
+}
+
+export const reactivarCliente = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getReactivarClienteUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getReactivarClienteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reactivarCliente>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reactivarCliente>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['reactivarCliente'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reactivarCliente>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  reactivarCliente(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReactivarClienteMutationResult = NonNullable<Awaited<ReturnType<typeof reactivarCliente>>>
+
+    export type ReactivarClienteMutationError = ErrorType<unknown>
+
+    export const useReactivarCliente = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reactivarCliente>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reactivarCliente>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getReactivarClienteMutationOptions(options));
+    }
+
+export const getListClienteDocumentosUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/documentos`
+}
+
+/**
+ * @summary Lista documentos INE
+ */
+export const listClienteDocumentos = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteDocumento[]> => {
+
+  return customFetch<ClienteDocumento[]>(getListClienteDocumentosUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListClienteDocumentosQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/documentos`
+    ] as const;
+    }
+
+
+export const getListClienteDocumentosQueryOptions = <TData = Awaited<ReturnType<typeof listClienteDocumentos>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClienteDocumentos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListClienteDocumentosQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listClienteDocumentos>>> = ({ signal }) => listClienteDocumentos(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listClienteDocumentos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListClienteDocumentosQueryResult = NonNullable<Awaited<ReturnType<typeof listClienteDocumentos>>>
+export type ListClienteDocumentosQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Lista documentos INE
+ */
+
+export function useListClienteDocumentos<TData = Awaited<ReturnType<typeof listClienteDocumentos>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClienteDocumentos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListClienteDocumentosQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUploadClienteDocumentoUrl = (id: number,
+    lado: 'FRENTE' | 'REVERSO',) => {
+
+
+
+
+  return `/api/clientes/${id}/documentos/${lado}`
+}
+
+/**
+ * @summary Sube documento INE
+ */
+export const uploadClienteDocumento = async (id: number,
+    lado: 'FRENTE' | 'REVERSO',
+    uploadClienteDocumentoBody: Blob, options?: Parameters<typeof customFetch>[1]): Promise<ClienteDocumento> => {
+
+  return customFetch<ClienteDocumento>(getUploadClienteDocumentoUrl(id,lado),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'image/jpeg', ...options?.headers },
+    body: uploadClienteDocumentoBody
+  }
+);}
+
+
+
+
+
+export const getUploadClienteDocumentoMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadClienteDocumento>>, TError,{id: number;lado: 'FRENTE' | 'REVERSO';data: BodyType<Blob>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof uploadClienteDocumento>>, TError,{id: number;lado: 'FRENTE' | 'REVERSO';data: BodyType<Blob>}, TContext> => {
+
+const mutationKey = ['uploadClienteDocumento'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadClienteDocumento>>, {id: number;lado: 'FRENTE' | 'REVERSO';data: BodyType<Blob>}> = (props) => {
+          const {id,lado,data} = props ?? {};
+
+          return  uploadClienteDocumento(id,lado,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UploadClienteDocumentoMutationResult = NonNullable<Awaited<ReturnType<typeof uploadClienteDocumento>>>
+    export type UploadClienteDocumentoMutationBody = BodyType<Blob>
+    export type UploadClienteDocumentoMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Sube documento INE
+ */
+export const useUploadClienteDocumento = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadClienteDocumento>>, TError,{id: number;lado: 'FRENTE' | 'REVERSO';data: BodyType<Blob>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof uploadClienteDocumento>>,
+        TError,
+        {id: number;lado: 'FRENTE' | 'REVERSO';data: BodyType<Blob>},
+        TContext
+      > => {
+      return useMutation(getUploadClienteDocumentoMutationOptions(options));
+    }
+
+export const getViewClienteDocumentoUrl = (publicId: string,) => {
+
+
+
+
+  return `/api/cliente-documentos/${publicId}/ver`
+}
+
+export const viewClienteDocumento = async (publicId: string, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getViewClienteDocumentoUrl(publicId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getViewClienteDocumentoQueryKey = (publicId: string,) => {
+    return [
+    `/api/cliente-documentos/${publicId}/ver`
+    ] as const;
+    }
+
+
+export const getViewClienteDocumentoQueryOptions = <TData = Awaited<ReturnType<typeof viewClienteDocumento>>, TError = ErrorType<unknown>>(publicId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof viewClienteDocumento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getViewClienteDocumentoQueryKey(publicId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof viewClienteDocumento>>> = ({ signal }) => viewClienteDocumento(publicId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: publicId !== null && publicId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof viewClienteDocumento>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ViewClienteDocumentoQueryResult = NonNullable<Awaited<ReturnType<typeof viewClienteDocumento>>>
+export type ViewClienteDocumentoQueryError = ErrorType<unknown>
+
+
+
+export function useViewClienteDocumento<TData = Awaited<ReturnType<typeof viewClienteDocumento>>, TError = ErrorType<unknown>>(
+ publicId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof viewClienteDocumento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getViewClienteDocumentoQueryOptions(publicId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDownloadClienteDocumentoUrl = (publicId: string,) => {
+
+
+
+
+  return `/api/cliente-documentos/${publicId}/descargar`
+}
+
+export const downloadClienteDocumento = async (publicId: string, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getDownloadClienteDocumentoUrl(publicId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getDownloadClienteDocumentoQueryKey = (publicId: string,) => {
+    return [
+    `/api/cliente-documentos/${publicId}/descargar`
+    ] as const;
+    }
+
+
+export const getDownloadClienteDocumentoQueryOptions = <TData = Awaited<ReturnType<typeof downloadClienteDocumento>>, TError = ErrorType<unknown>>(publicId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadClienteDocumento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getDownloadClienteDocumentoQueryKey(publicId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof downloadClienteDocumento>>> = ({ signal }) => downloadClienteDocumento(publicId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: publicId !== null && publicId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof downloadClienteDocumento>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type DownloadClienteDocumentoQueryResult = NonNullable<Awaited<ReturnType<typeof downloadClienteDocumento>>>
+export type DownloadClienteDocumentoQueryError = ErrorType<unknown>
+
+
+
+export function useDownloadClienteDocumento<TData = Awaited<ReturnType<typeof downloadClienteDocumento>>, TError = ErrorType<unknown>>(
+ publicId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadClienteDocumento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getDownloadClienteDocumentoQueryOptions(publicId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getGetClienteCreditoUrl = (id: number,) => {
 
@@ -9716,5 +10224,3 @@ export function useExportAdminCuentasDestinoPdf<TData = Awaited<ReturnType<typeo
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
-// End of generated API client.

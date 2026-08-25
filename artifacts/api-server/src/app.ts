@@ -71,6 +71,14 @@ export const apiErrorHandler: ErrorRequestHandler = (
     return;
   }
 
+  if ((error as { type?: string }).type === "entity.too.large") {
+    res.status(413).json({
+      error: "El archivo excede el tamaño máximo de 5 MiB.",
+      code: "FILE_TOO_LARGE",
+    });
+    return;
+  }
+
   req.log.error({ err: error }, "Unhandled API error");
   res.status(500).json({
     error: "Ocurrió un error inesperado. Intenta de nuevo.",

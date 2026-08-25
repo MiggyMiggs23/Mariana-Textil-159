@@ -5,6 +5,7 @@ import type { Pool } from "pg";
  * legacy tickets are backfilled, so making cliente_id mandatory is safe.
  */
 export async function ensureClientesSchema(pool: Pool): Promise<void> {
+  await pool.query("CREATE EXTENSION IF NOT EXISTS pgcrypto");
   // PostgreSQL does not allow a newly-added enum value to be used in the same
   // transaction that added it.
   await pool.query(
@@ -13,6 +14,30 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
   await pool.query("BEGIN");
   try {
     await pool.query(`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = current_schema() AND table_name = 'clientes'
+            AND column_name = 'direccion'
+        ) AND NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = current_schema() AND table_name = 'clientes'
+            AND column_name = 'direccion_particular'
+        ) THEN
+          ALTER TABLE clientes RENAME COLUMN direccion TO direccion_particular;
+        ELSIF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_schema = current_schema() AND table_name = 'clientes'
+            AND column_name = 'direccion'
+        ) THEN
+          UPDATE clientes
+          SET direccion_particular = COALESCE(direccion_particular, direccion);
+          ALTER TABLE clientes DROP COLUMN direccion;
+        END IF;
+      END $$;
+      ALTER TABLE clientes ADD COLUMN IF NOT EXISTS direccion_particular text;
+      ALTER TABLE clientes ADD COLUMN IF NOT EXISTS direccion_entrega text;
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS es_sistema boolean NOT NULL DEFAULT false;
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS contacto_nombre text;
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS dias_credito integer NOT NULL DEFAULT 0;
@@ -21,6 +46,28 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS metadata text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS dias_plazo integer;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS fecha_vencimiento date;
+      ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS es_incobrable boolean NOT NULL DEFAULT false;
+      ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS motivo_incobrable text;
+      ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS autorizado_por integer REFERENCES usuarios(id);
+      CREATE TABLE IF NOT EXISTS cliente_documentos (
+        id serial PRIMARY KEY,
+        public_id uuid NOT NULL DEFAULT gen_random_uuid() UNIQUE,
+        cliente_id integer NOT NULL REFERENCES clientes(id),
+        tipo text NOT NULL DEFAULT 'INE' CHECK (tipo = 'INE'),
+        lado text NOT NULL CHECK (lado IN ('FRENTE', 'REVERSO')),
+        nombre_archivo text NOT NULL,
+        ruta_archivo text NOT NULL UNIQUE,
+        mime_type text NOT NULL,
+        tamano_bytes integer NOT NULL CHECK (tamano_bytes > 0 AND tamano_bytes <= 5242880),
+        subido_por integer NOT NULL REFERENCES usuarios(id),
+        subido_at timestamptz NOT NULL DEFAULT now(),
+        vigente boolean NOT NULL DEFAULT true,
+        reemplaza_id integer REFERENCES cliente_documentos(id)
+      );
+      CREATE INDEX IF NOT EXISTS cliente_documentos_cliente_idx
+        ON cliente_documentos(cliente_id);
+      CREATE UNIQUE INDEX IF NOT EXISTS cliente_documentos_slot_vigente_uidx
+        ON cliente_documentos(cliente_id, lado) WHERE vigente;
        CREATE TABLE IF NOT EXISTS notificaciones_credito (
          id serial PRIMARY KEY,
          ticket_id integer NOT NULL UNIQUE REFERENCES tickets(id),
@@ -82,6 +129,19 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ON CONFLICT (id) DO UPDATE SET
         nombre = CASE WHEN clientes.es_sistema THEN 'Venta a Público' ELSE clientes.nombre END,
         activo = true, es_sistema = true, limite_credito = 0, dias_credito = 0;
+      INSERT INTO clientes (nombre, activo, es_sistema, limite_credito, saldo_credito, dias_credito)
+      SELECT seed.nombre, true, false, 0, 0, 0
+      FROM (VALUES
+        ('Rafael Flores'), ('Jacinta Mendoza'), ('Hilario Bonifacio'),
+        ('Jesús López'), ('José López'), ('Miguel Esteban')
+      ) AS seed(nombre)
+      WHERE NOT EXISTS (
+        SELECT 1 FROM clientes c
+        WHERE lower(translate(btrim(c.nombre),
+          'áéíóúüñÁÉÍÓÚÜÑ', 'aeiouunAEIOUUN')) =
+              lower(translate(btrim(seed.nombre),
+          'áéíóúüñÁÉÍÓÚÜÑ', 'aeiouunAEIOUUN'))
+      );
       SELECT setval(pg_get_serial_sequence('clientes', 'id'),
         GREATEST((SELECT COALESCE(MAX(id), 1) FROM clientes), 1), true);
       UPDATE tickets SET cliente_id = 1 WHERE cliente_id IS NULL;
