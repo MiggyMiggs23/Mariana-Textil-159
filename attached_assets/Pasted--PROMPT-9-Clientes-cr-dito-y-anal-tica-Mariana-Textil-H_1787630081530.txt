@@ -1,0 +1,369 @@
+# PROMPT 9 — Clientes, crédito y analítica
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+Este prompt construye el módulo de Clientes completo: perfiles, crédito, estado de cuenta y analítica profunda. También ajusta los KPIs de Proveedores para que ambos módulos hablen el mismo lenguaje.
+
+**Respeta el motor.** Ninguna pantalla de este módulo escribe en `rollos`, `movimientos` ni `existencias`.
+**No borres datos existentes.**
+**Respeta el diseño existente.** Mismo azul marino, misma tipografía, mismos componentes.
+**Nunca sumes metros con kilos.** Van siempre en columnas o renglones separados.
+
+---
+
+# PARTE 1 — Cliente "Venta a Público" y obligatoriedad en el POS
+
+## El cliente del sistema
+
+Crea un cliente especial con **id 1**, llamado **"Venta a Público"**.
+
+- Es un **cliente del sistema**: no se puede eliminar, desactivar ni renombrar
+- No admite crédito. Si alguien intenta marcar una venta a crédito con este cliente, se rechaza con mensaje claro.
+- Sí acumula estadísticas: es el segmento de ventas anónimas y su comportamiento importa
+- Aparece marcado visualmente distinto en los listados, para no confundirlo con clientes reales
+
+## Obligatorio en el POS
+
+Hoy el cliente es opcional en la terminal. **Pasa a ser obligatorio.**
+
+- El campo de cliente viene **preseleccionado con "Venta a Público"**
+- Es el primer resultado de la lista al abrir el selector
+- Cambiar a un cliente real toma un toque: buscador con filtrado en vivo por nombre o teléfono
+- **No se puede confirmar una venta sin cliente asignado.** Si por alguna vía queda vacío, se rechaza en el servidor.
+- El ticket impreso muestra el nombre del cliente. Si es Venta a Público, imprime **"VENTA AL PÚBLICO"**.
+
+**Migración:** los tickets existentes sin cliente se asignan a "Venta a Público". No los dejes en null.
+
+**Alta rápida desde el POS:** si el cliente no existe, un botón "Nuevo cliente" abre un formulario mínimo —nombre y teléfono— sin salir de la venta. Los demás datos se completan después desde el módulo de Clientes.
+
+---
+
+# PARTE 2 — Tabla de clientes
+
+Amplía la tabla `clientes`:
+
+- id (serial, PK)
+- nombre (text)
+- es_sistema (boolean, default false) — solo true para Venta a Público
+- telefono, correo (text, nullable)
+- rfc (text, nullable) — para los que piden factura
+- direccion (text, nullable)
+- contacto_nombre (text, nullable)
+- limite_credito (decimal 12,2, nullable) — null significa sin crédito autorizado
+- dias_credito (int, nullable) — plazo pactado, para calcular vencimientos
+- notas (text, nullable)
+- activo (boolean, default true)
+- created_at, updated_at
+
+**El saldo NO se guarda como campo.** Se calcula siempre como `SUM(movimientos_credito.importe)`.
+
+---
+
+# PARTE 3 — Perfil del cliente
+
+Vista de detalle con pestañas, respetando los permisos ya establecidos.
+
+## Pestaña "Datos" — requiere `clientes.puede_ver`
+
+Los datos del cliente, editables según permiso. Arriba, una tarjeta de identidad con:
+- Nombre y si es cliente del sistema
+- Cliente desde (fecha de su primera compra, no la de alta)
+- Estado: activo, inactivo, o **en riesgo** (ver KPIs)
+
+## Pestaña "Crédito" — requiere `clientes_credito.puede_ver`
+
+Información puntual, sin historial:
+- Límite de crédito autorizado
+- Saldo actual
+- **Crédito disponible** = límite − saldo
+- **Utilización del crédito** en porcentaje, con barra visual
+- Días de crédito pactados
+- Indicador de color: verde con margen, amarillo arriba del 80%, rojo excedido
+- Si tiene saldo vencido, aviso destacado
+
+## Pestaña "Estado de cuenta" — requiere `clientes_finanzas.puede_ver`
+
+- **Saldo actual** destacado arriba, grande
+- Tabla cronológica de todos los movimientos: fecha, tipo (venta o pago), folio del ticket o de la nota de remisión, importe con signo, **saldo corrido**, usuario, forma de pago si fue pago
+- Filtros por rango de fechas y tipo de movimiento
+- **Antigüedad de saldos (aging)**: cuánto del saldo tiene 0-30 días, 31-60, 61-90, más de 90. Cada tramo con su importe y porcentaje, en barra visual. El tramo de más de 90 días en rojo.
+- Botón **"Registrar pago"**: importe, forma de pago, referencia, fecha, notas, y opcionalmente ligarlo a un ticket específico
+- Los pagos no se editan ni se borran; se corrigen con un movimiento tipo AJUSTE que deja rastro
+- Exportable a PDF y Excel
+
+## Pestaña "Compras" — requiere `clientes_finanzas.puede_ver`
+
+Historial de todos sus tickets:
+- Folio, fecha, sitio, número de líneas, metros, kilos, importe, forma de pago, si fue facturado, estado de cobro
+- Clic en una fila abre el ticket
+- Filtros por fechas, sitio, producto, forma de pago
+- Fila de totales del periodo filtrado
+
+## Pestaña "Analítica" — requiere `clientes_finanzas.puede_ver`
+
+Es la pestaña más rica. Ver Parte 4.
+
+---
+
+# PARTE 4 — KPIs del cliente
+
+Todos con **selector de periodo**: este mes, mes anterior, últimos 3 meses, últimos 6 meses, este año, año anterior, rango personalizado. Por defecto últimos 12 meses.
+
+## Bloque 1 — Resumen
+
+| KPI | Definición | Para qué sirve |
+|---|---|---|
+| **Total comprado** | Suma de importes de sus tickets en el periodo | Tamaño del cliente |
+| **Número de compras** | Cuántos tickets | Actividad |
+| **Ticket promedio** | Total comprado ÷ número de compras | Si vale la pena atenderlo |
+| **Metros comprados** | Suma de cantidades en unidad METRO | Volumen real |
+| **Kilos comprados** | Suma de cantidades en unidad KILO | Volumen real |
+| **Rollos comprados** | Cuántas piezas se llevó | Logística |
+
+## Bloque 2 — Rentabilidad
+
+**Este es el bloque más importante y hoy no existe.**
+
+| KPI | Definición |
+|---|---|
+| **Margen generado** | Suma de (importe − costo congelado) de todas sus líneas |
+| **Margen porcentual** | Margen ÷ total comprado × 100 |
+| **Descuento promedio** | Cuánto por debajo del precio sugerido compra, en porcentaje |
+| **Margen por metro** | Margen total ÷ metros comprados |
+| **Ranking de rentabilidad** | Su posición entre todos los clientes por margen generado |
+
+Junto a estos, muestra el **contraste explícito**: su posición por volumen contra su posición por margen. Si un cliente es el número 2 en compras pero el número 8 en margen, eso debe saltar a la vista con un indicador.
+
+## Bloque 3 — Comportamiento
+
+| KPI | Definición | Alerta |
+|---|---|---|
+| **Última compra** | Fecha y días transcurridos | — |
+| **Frecuencia de compra** | Promedio de días entre compras | — |
+| **Estado de actividad** | Activo, en riesgo o inactivo | Ver regla abajo |
+| **Primera compra** | Fecha, y antigüedad como cliente | — |
+| **Tendencia** | Compras del periodo contra el periodo anterior, en porcentaje y con flecha | Baja de más del 30% se resalta |
+
+**Regla de estado de actividad**, basada en su propia frecuencia:
+- **Activo**: su última compra está dentro de su frecuencia habitual
+- **En riesgo**: lleva más del doble de su frecuencia habitual sin comprar
+- **Inactivo**: lleva más del triple, o más de 180 días
+
+Esta regla es mejor que un umbral fijo: un cliente que compra cada semana y lleva tres semanas sin venir está en riesgo, mientras que uno que compra cada dos meses no.
+
+## Bloque 4 — Qué compra
+
+- **Productos más comprados**: tabla ordenada por importe, con producto, SKU, rollos, cantidad, importe, margen generado y porcentaje de sus compras totales
+- **Por tela**: agrupado, sumando todos los colores. Con gráfica de barras.
+- **Por color**: los colores que más consume, con gráfica. Útil para anticipar qué pedir.
+- **Última compra de cada producto**: cuándo se llevó cada uno por última vez. Sirve para saber a quién ofrecerle qué.
+- **Productos que dejó de comprar**: los que compraba con regularidad y lleva más de dos ciclos sin pedir. Es una señal de que se fue con otro proveedor.
+
+## Bloque 5 — Estacionalidad
+
+- **Compras por mes**: gráfica de barras de los últimos 12 o 24 meses
+- **Mes más alto y mes más bajo** del periodo, con su importe
+- **Comparativo interanual**: cada mes contra el mismo mes del año pasado
+- **Día de la semana con más compras**: útil para saber cuándo esperarlo
+
+## Bloque 6 — Pago y crédito
+
+| KPI | Definición | Para qué sirve |
+|---|---|---|
+| **Mezcla de pago** | Porcentaje de sus compras en efectivo, transferencia y crédito | Qué tanto financia |
+| **Días promedio de pago** | Desde la venta a crédito hasta que la liquida | Puntualidad real |
+| **Puntualidad** | Porcentaje de sus créditos pagados dentro del plazo pactado | Confiabilidad |
+| **Saldo máximo histórico** | El saldo más alto que ha tenido | Referencia para el límite |
+| **Facturación** | Porcentaje de sus compras facturadas | Perfil fiscal |
+
+## Bloque 7 — Concentración
+
+- **Porcentaje de mis ventas** que representa este cliente, en el periodo
+- **Su posición** en el ranking de clientes por importe
+- Si supera el 15% de tus ventas totales, aviso de **concentración de riesgo**: perder a ese cliente te dolería
+
+---
+
+# PARTE 5 — Vista general de clientes
+
+Pantalla principal del módulo. Pestañas.
+
+## Pestaña "Clientes"
+
+Tabla con: nombre, teléfono, estado de actividad, última compra, total comprado en 12 meses, saldo, crédito disponible, y un indicador de rentabilidad.
+
+- Columnas de saldo y rentabilidad solo con `clientes_finanzas.puede_ver`
+- Ordenable por cualquier columna
+- Filtros: estado de actividad, con o sin crédito, con o sin saldo, rango de compra
+- Buscador por nombre, teléfono o RFC
+
+## Pestaña "Cartera" — requiere `clientes_finanzas.puede_ver`
+
+- **Cartera total**: cuánto te deben en total
+- **Aging global**: 0-30, 31-60, 61-90, más de 90 días, con importes y barra
+- **Saldo vencido**: cuánto está fuera del plazo pactado
+- Tabla de clientes con saldo, ordenada de mayor a menor, con su aging individual
+- **Clientes que exceden su límite** de crédito, destacados
+- Exportable
+
+## Pestaña "Análisis" — requiere `clientes_finanzas.puede_ver`
+
+La vista de negocio, no de un cliente individual:
+
+- **Top 10 clientes por importe** y **Top 10 por margen**, lado a lado. La diferencia entre ambas listas es información valiosa.
+- **Concentración (Pareto)**: qué porcentaje de tus clientes genera el 80% de tus ventas
+- **Venta a Público contra clientes registrados**: porcentaje de cada uno, en importe y en número de tickets
+- **Clientes nuevos** por mes: cuántos compraron por primera vez
+- **Clientes en riesgo**: lista de los que dejaron de comprar según su propia frecuencia, ordenados por importe histórico. Es la lista a la que hay que llamar.
+- **Clientes recuperados**: los que estaban inactivos y volvieron
+- **Margen promedio por cliente** y distribución
+- **Productos más vendidos** en general, con su margen
+- **Colores más vendidos** en general
+- **Estacionalidad global**: ventas por mes, mes más alto y más bajo
+
+---
+
+# PARTE 6 — Ajuste de KPIs en Proveedores
+
+Aplica el mismo nivel de detalle al módulo de Proveedores, que hoy está más pobre.
+
+## Conservar y reforzar
+
+- **Costo por unidad (metro o kilo)** por producto — es el dato principal, alimenta el piso de precio
+- **Historial de costo por producto**: cada compra con su fecha y su costo unitario, en gráfica de línea. No un promedio contra periodo anterior, sino la evolución real. Así ves si te están subiendo precios de a poco.
+- Total comprado, número de compras, rollos recibidos
+
+## Agregar
+
+| KPI | Para qué sirve |
+|---|---|
+| **Productos más comprados** por importe y por cantidad, con su costo unitario | Dónde está tu gasto |
+| **Por tela y por color** | Qué te surte realmente |
+| **Estacionalidad de compras**: mes más alto y más bajo | Cuándo pedir |
+| **Frecuencia de compra** y días desde la última | Ritmo de reposición |
+| **Concentración**: qué porcentaje de tus compras representa | Riesgo de dependencia |
+| **Productos exclusivos**: los que solo compras a él | Riesgo si falla |
+| **Comparativo de costo entre proveedores** para el mismo producto | **El más útil de todos**: te dice a quién conviene comprarle cada tela |
+| **Días promedio de pago** que le das | Tu comportamiento como pagador |
+| **Aging de tu deuda** con él | Qué tan atrasado estás |
+| **Margen generado** por sus productos al venderlos | Si lo que te vende deja utilidad |
+
+## Eliminar
+
+- El costo promedio **por rollo**, si quedó en algún lado
+- La "variación de costo unitario contra periodo anterior" como número aislado. **Se reemplaza** por la gráfica de evolución del costo, que dice lo mismo pero mejor.
+
+## Vista de análisis de compras
+
+Pestaña nueva en el listado de Proveedores:
+- **Comparativo de costo del mismo producto entre proveedores**, en tabla: producto, cuántos proveedores te lo venden, el costo de cada uno, y cuál es el más barato. Con el ahorro potencial calculado.
+- **Concentración de compras (Pareto)**
+- **Deuda total** y aging global
+- **Compras por mes**, con mes más alto y más bajo
+- **Productos con costo al alza**: los que subieron más de 10% respecto a la compra anterior
+
+---
+
+# PARTE 7 — Consideraciones de cálculo
+
+- **El margen se calcula sobre el subtotal**, nunca sobre el total con IVA
+- Los tickets **cancelados se excluyen** de todos los KPIs
+- Las ventas metreadas se incluyen en volumen e importe, pero si no tienen rollo ligado, **no cuentan para margen**. Márcalo en la interfaz para que no parezca un error.
+- Los rollos con costo nulo no cuentan para margen. Indícalo.
+- Metros y kilos **siempre por separado**
+- Todos los KPIs respetan el filtro de periodo seleccionado
+- Las consultas pesadas deben estar indexadas. Si un KPI tarda más de dos segundos con datos reales, dímelo y lo optimizamos.
+
+---
+
+# PARTE 8 — Permisos
+
+Los módulos ya existen. Confirma:
+
+| Módulo | Contenido |
+|---|---|
+| `clientes` | Datos operativos, alta y edición. Sin financiero. |
+| `clientes_credito` | Pestaña de crédito: límite, saldo, disponible |
+| `clientes_precios` | Historial de precios negociados, para el POS |
+| `clientes_finanzas` | Estado de cuenta, compras, analítica, cartera, análisis global |
+
+Matriz por defecto: TERMINAL con `clientes`, `clientes_credito` y `clientes_precios`. CAJA con `clientes`, `clientes_credito` y `clientes_finanzas` en ver. ADMIN todo. INVENTARIOS y BODEGA sin acceso.
+
+**Los campos financieros se omiten de la respuesta JSON** cuando falta el permiso, no solo de la pantalla.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No permitas confirmar un ticket sin cliente asignado
+- No permitas eliminar, desactivar ni renombrar el cliente Venta a Público
+- No permitas crédito al cliente Venta a Público
+- No guardes el saldo como campo editable: se calcula sumando
+- No permitas editar ni borrar pagos: se corrigen con ajustes
+- No sumes metros con kilos
+- No calcules margen sobre el total con IVA
+- No incluyas tickets cancelados en los KPIs
+- No mandes campos financieros en la respuesta esperando que la interfaz los esconda
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Venta a Público:**
+1. Existe el cliente id 1, no se puede eliminar ni desactivar
+2. El POS lo trae preseleccionado
+3. No se puede confirmar un ticket sin cliente, ni llamando la API directamente
+4. Intentar venderle a crédito: **se rechaza**
+5. Los tickets antiguos sin cliente quedaron asignados a él
+6. Sus estadísticas se acumulan correctamente
+
+**Crédito y estado de cuenta:**
+7. Una venta a crédito genera el movimiento y aparece en el estado de cuenta
+8. Un pago parcial reduce el saldo exactamente
+9. El saldo corrido cuadra con la suma de movimientos
+10. El aging clasifica correctamente por antigüedad
+11. Un cliente que excede su límite aparece destacado
+12. El crédito disponible se calcula bien
+
+**KPIs:**
+13. El margen del cliente coincide con la suma de (importe − costo) de sus líneas
+14. Un ticket cancelado no cuenta en ningún KPI
+15. Una venta metreada sin rollo ligado no cuenta para margen y está marcada
+16. El estado de actividad se calcula con la frecuencia propia del cliente
+17. La estacionalidad identifica correctamente el mes más alto y el más bajo
+18. Metros y kilos nunca se suman entre sí
+19. El ranking por volumen y el ranking por margen se calculan por separado
+
+**Proveedores:**
+20. La gráfica de evolución de costo muestra cada compra con su fecha
+21. El comparativo entre proveedores identifica el costo más bajo por producto
+22. No queda ningún costo promedio por rollo en el sistema
+
+**Permisos:**
+23. TERMINAL: `GET /clientes/:id/estado-cuenta` responde **403**
+24. TERMINAL: `GET /clientes` responde 200 sin campos de saldo
+25. CAJA ve estado de cuenta y cartera
+26. BODEGA: cualquier endpoint de clientes responde **403**
+
+**Regresión:**
+27. Las 12 pruebas del motor siguen pasando
+28. Las pruebas de permisos, POS y salidas siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos con su módulo y acción de permiso
+5. Cuántos tickets antiguos se reasignaron a Venta a Público
+6. Qué KPIs eliminaste de Proveedores y cuáles agregaste
+7. Si algún KPI tarda más de dos segundos en calcularse, cuál
+8. Salida completa de la corrida de pruebas
+9. Confirmación de que las pruebas corrieron en base aislada
+10. Cómo pruebo cada bloque: con qué usuario y en qué orden
