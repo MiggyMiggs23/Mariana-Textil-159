@@ -211,6 +211,44 @@ export interface AdminRealtimeDashboard {
   ultimosTickets: AdminRealtimeTicket[];
 }
 
+export interface AdminAlertaTicket {
+  id: number;
+  folio: number;
+  createdAt: string;
+  /** Minutos completos desde la creación del ticket. */
+  minutosTranscurridos: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  clienteId: number;
+  nombreCliente: string;
+  importe: string;
+  creadorId: number;
+  nombreCreador: string;
+}
+
+export interface AdminAlertaCredito {
+  movimientoId: number;
+  clienteId: number;
+  nombreCliente: string;
+  /** @nullable */
+  nota: string | null;
+  /** @nullable */
+  ticketFolio: number | null;
+  /** Saldo vigente de la fila después de aplicar pagos FIFO. */
+  importe: string;
+  fechaVencimiento: string;
+  /** Días firmados contra hoy en Ciudad de México; negativo significa vencido. */
+  diasRestantes: number;
+}
+
+export interface AdminAlertas {
+  generatedAt: string;
+  /** Suma de ticketsPendientes y creditos. */
+  total: number;
+  ticketsPendientes: AdminAlertaTicket[];
+  creditos: AdminAlertaCredito[];
+}
+
 export type AdminCorteRowEstado = typeof AdminCorteRowEstado[keyof typeof AdminCorteRowEstado];
 
 

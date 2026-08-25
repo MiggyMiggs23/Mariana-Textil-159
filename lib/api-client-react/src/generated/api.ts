@@ -21,6 +21,7 @@ import type {
 
 import type {
   ActivarRolloInput,
+  AdminAlertas,
   AdminComparacionTiendas,
   AdminCortesResult,
   AdminCuentasDestino,
@@ -9339,6 +9340,84 @@ export function useGetAdminRealtimePending<TData = Awaited<ReturnType<typeof get
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetAdminRealtimePendingQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminAlertasUrl = () => {
+
+
+
+
+  return `/api/admin/alertas`
+}
+
+/**
+ * Calcula el estado actual sin consultar ni crear registros de notificaciones.
+ * @summary Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+ */
+export const getAdminAlertas = async ( options?: Parameters<typeof customFetch>[1]): Promise<AdminAlertas> => {
+
+  return customFetch<AdminAlertas>(getGetAdminAlertasUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminAlertasQueryKey = () => {
+    return [
+    `/api/admin/alertas`
+    ] as const;
+    }
+
+
+export const getGetAdminAlertasQueryOptions = <TData = Awaited<ReturnType<typeof getAdminAlertas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminAlertas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminAlertasQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminAlertas>>> = ({ signal }) => getAdminAlertas({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminAlertas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminAlertasQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminAlertas>>>
+export type GetAdminAlertasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+ */
+
+export function useGetAdminAlertas<TData = Awaited<ReturnType<typeof getAdminAlertas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminAlertas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminAlertasQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

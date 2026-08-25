@@ -42,6 +42,7 @@ import TicketDetail from '@/pages/ticket-detail';
 import Ajustes from '@/pages/ajustes';
 import Conciliacion from '@/pages/conciliacion';
 import Permisos from '@/pages/permisos';
+import Alertas from '@/pages/alertas';
 import CajaTiempoReal from '@/pages/caja/tiempo-real';
 import CajaCortes from '@/pages/caja/cortes';
 import CajaCuentasDestino from '@/pages/caja/cuentas-destino';
@@ -95,12 +96,14 @@ function ProtectedRoute({ component: Component, allowedModule, allowedAction = "
         setLocation("/pos");
       } else if (user.rol === "CAJA") {
         setLocation("/cobros");
-      } else if (!hasPermission(user, Modules.DASHBOARD, 'ver')) {
-        if (hasPermission(user, Modules.POS, 'ver')) {
-          setLocation("/pos");
-        } else if (hasPermission(user, Modules.COBROS_PAGOS, 'ver')) {
-          setLocation("/cobros");
-        }
+      } else if (user.rol === "ADMIN") {
+        setLocation("/caja/tiempo-real");
+      } else if (hasPermission(user, Modules.DASHBOARD, 'ver')) {
+        setLocation("/inventario/vista-global");
+      } else if (hasPermission(user, Modules.POS, 'ver')) {
+        setLocation("/pos");
+      } else if (hasPermission(user, Modules.COBROS_PAGOS, 'ver')) {
+        setLocation("/cobros");
       }
     }
   }, [user, location, setLocation]);
@@ -166,6 +169,7 @@ function Router() {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/" component={() => <ProtectedRoute component={Dashboard} allowedModule={Modules.DASHBOARD} />} />
+        <Route path="/inventario/vista-global" component={() => <ProtectedRoute component={Dashboard} allowedModule={Modules.DASHBOARD} />} />
         <Route path="/ubicaciones" component={() => <ProtectedRoute component={Ubicaciones} allowedModule={Modules.UBICACIONES} />} />
         <Route path="/usuarios" component={() => <ProtectedRoute component={Usuarios} allowedModule={Modules.USUARIOS} />} />
         <Route path="/permisos" component={() => <ProtectedRoute component={Permisos} allowedModule={Modules.PERMISOS} />} />
@@ -199,6 +203,7 @@ function Router() {
         <Route path="/caja/diferencias" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
         <Route path="/caja/cuentas-destino" component={() => <ProtectedRoute component={CajaCuentasDestino} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
         <Route path="/caja/comparativo" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
+        <Route path="/alertas" component={() => <ProtectedRoute component={Alertas} adminOnly />} />
         <Route path="/notificaciones" component={() => <ProtectedRoute component={Notificaciones} adminOnly />} />
         <Route path="/reportes" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
         <Route path="/reportes/:tab" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />

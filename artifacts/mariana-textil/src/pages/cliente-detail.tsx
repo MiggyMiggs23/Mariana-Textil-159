@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link, useRoute } from "wouter";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useRoute, useSearch } from "wouter";
 import { ArrowLeft, Download, Loader2, LockKeyhole, Printer, FileText } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
@@ -51,6 +51,7 @@ const date = (value?: string) => value ? new Intl.DateTimeFormat("es-MX", { date
 
 export default function ClienteDetail() {
   const [, params] = useRoute("/clientes/:id");
+  const search = useSearch();
   const id = Number(params?.id);
   const [period, setPeriod] = useState("12");
   const [movementType, setMovementType] = useState("all");
@@ -79,6 +80,12 @@ export default function ClienteDetail() {
   const [bajaRequiresAuth, setBajaRequiresAuth] = useState<{ monto: string; desde: string | null } | null>(null);
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
+  const requestedTab = new URLSearchParams(search).get("tab");
+  const [activeTab, setActiveTab] = useState(requestedTab === "estado" ? "estado" : "datos");
+
+  useEffect(() => {
+    if (requestedTab === "estado") setActiveTab("estado");
+  }, [requestedTab]);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -229,7 +236,7 @@ export default function ClienteDetail() {
             {canFinances && <><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.pdf`, `estado-cuenta-${id}.pdf`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />Descargar PDF</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></>}
           </div>
         </div>
-        <Tabs defaultValue="datos">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="h-auto w-full justify-start overflow-x-auto">
             <TabsTrigger value="datos">Datos</TabsTrigger>
             {canCredit && <TabsTrigger value="credito">Crédito</TabsTrigger>}

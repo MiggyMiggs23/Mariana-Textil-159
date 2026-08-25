@@ -4024,6 +4024,39 @@ export const GetAdminRealtimePendingResponse = zod.object({
 
 
 /**
+ * Calcula el estado actual sin consultar ni crear registros de notificaciones.
+ * @summary Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+ */
+export const GetAdminAlertasResponse = zod.object({
+  "generatedAt": zod.coerce.date(),
+  "total": zod.number().describe('Suma de ticketsPendientes y creditos.'),
+  "ticketsPendientes": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "minutosTranscurridos": zod.number().describe('Minutos completos desde la creación del ticket.'),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "clienteId": zod.number(),
+  "nombreCliente": zod.string(),
+  "importe": zod.string(),
+  "creadorId": zod.number(),
+  "nombreCreador": zod.string()
+})),
+  "creditos": zod.array(zod.object({
+  "movimientoId": zod.number(),
+  "clienteId": zod.number(),
+  "nombreCliente": zod.string(),
+  "nota": zod.string().nullable(),
+  "ticketFolio": zod.number().nullable(),
+  "importe": zod.string().describe('Saldo vigente de la fila después de aplicar pagos FIFO.'),
+  "fechaVencimiento": zod.coerce.date(),
+  "diasRestantes": zod.number().describe('Días firmados contra hoy en Ciudad de México; negativo significa vencido.')
+}))
+})
+
+
+/**
  * @summary Historial de cortes
  */
 export const listAdminCortesQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');

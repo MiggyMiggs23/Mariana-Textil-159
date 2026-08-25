@@ -2762,6 +2762,20 @@ paths:
               schema: { $ref: "#/components/schemas/AdminPendingSummary" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/alertas:
+    get:
+      operationId: getAdminAlertas
+      tags: [admin-analytics]
+      summary: Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+      description: Calcula el estado actual sin consultar ni crear registros de notificaciones.
+      responses:
+        "200":
+          description: Alertas actuales ordenadas de mayor antigüedad o urgencia
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminAlertas" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/cortes:
     get:
       operationId: listAdminCortes
@@ -3402,6 +3416,53 @@ components:
               pendiente: { type: string }
               pendientes30Min: { type: number }
               alertas: { type: array, items: { type: string } }
+    AdminAlertaTicket:
+      type: object
+      required: [id, folio, createdAt, minutosTranscurridos, ubicacionId, nombreUbicacion, clienteId, nombreCliente, importe, creadorId, nombreCreador]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        createdAt: { type: string, format: date-time }
+        minutosTranscurridos:
+          type: number
+          description: Minutos completos desde la creación del ticket.
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        clienteId: { type: number }
+        nombreCliente: { type: string }
+        importe: { type: string }
+        creadorId: { type: number }
+        nombreCreador: { type: string }
+    AdminAlertaCredito:
+      type: object
+      required: [movimientoId, clienteId, nombreCliente, nota, ticketFolio, importe, fechaVencimiento, diasRestantes]
+      properties:
+        movimientoId: { type: number }
+        clienteId: { type: number }
+        nombreCliente: { type: string }
+        nota: { type: ["string", "null"] }
+        ticketFolio: { type: ["number", "null"] }
+        importe:
+          type: string
+          description: Saldo vigente de la fila después de aplicar pagos FIFO.
+        fechaVencimiento: { type: string, format: date }
+        diasRestantes:
+          type: number
+          description: Días firmados contra hoy en Ciudad de México; negativo significa vencido.
+    AdminAlertas:
+      type: object
+      required: [generatedAt, total, ticketsPendientes, creditos]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        total:
+          type: number
+          description: Suma de ticketsPendientes y creditos.
+        ticketsPendientes:
+          type: array
+          items: { $ref: "#/components/schemas/AdminAlertaTicket" }
+        creditos:
+          type: array
+          items: { $ref: "#/components/schemas/AdminAlertaCredito" }
     AdminCorteRow:
       type: object
       required: [id, ubicacionId, nombreUbicacion, usuarioId, nombreUsuario, abiertaAt, cerradaAt, estado, fondoInicial, vendido, totalCobrado, efectivoEsperado, efectivoContado, diferencia, ticketsCobrados, ticketsCancelados]

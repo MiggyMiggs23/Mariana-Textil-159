@@ -16,6 +16,7 @@ import salidasRouter from "./salidas";
 import adminAnalyticsRouter from "./admin-analytics";
 import notificacionesRouter from "./notificaciones";
 import etiquetasRouter from "./etiquetas";
+import adminAlertasRouter from "./admin-alertas";
 
 const router: IRouter = Router();
 
@@ -34,6 +35,7 @@ router.use("/inventario", inventarioRouter);
 router.use(posRouter);
 router.use(salidasRouter);
 router.use(adminAnalyticsRouter);
+router.use(adminAlertasRouter);
 router.use(notificacionesRouter);
 router.use(etiquetasRouter);
 

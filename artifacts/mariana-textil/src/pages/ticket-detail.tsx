@@ -37,21 +37,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber } from "@workspace/number-format";
 import { groupTicketLines } from "@/lib/ticket-lines";
-
-function MonochromeTicketLogo({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      aria-label="Mariana Textil"
-      viewBox="0 0 160 112"
-      className={`block text-black ${className}`}
-      role="img"
-    >
-      <path fill="currentColor" d="M16 8h32l32 43 32-43h32v76h-30V48L80 93 46 48v36H16z" />
-      <path fill="#fff" d="M48 8h23l9 13 9-13h23L80 51z" />
-      <text x="80" y="106" textAnchor="middle" fill="currentColor" fontSize="17" fontWeight="900" letterSpacing="1">MARIANA</text>
-    </svg>
-  );
-}
+import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -454,7 +440,7 @@ export default function TicketDetailPage() {
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
         <div className="text-center mb-4">
-          <MonochromeTicketLogo className="mx-auto mb-1 h-auto w-[50mm] max-w-full" />
+          <MonochromeBrandLogo className="mx-auto mb-1 h-[43mm] w-[38mm] max-w-full" />
           <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-2 border-t border-black" />
@@ -542,7 +528,7 @@ export default function TicketDetailPage() {
       {/* Media Carta */}
       <div className="hidden print-carta-only print-document-container">
         <div className="mb-5 text-center">
-          <MonochromeTicketLogo className="mx-auto h-auto w-[50mm]" />
+          <MonochromeBrandLogo className="mx-auto h-[43mm] w-[38mm]" />
           <p className="text-lg font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-sm font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-3 border-t-2 border-black" />

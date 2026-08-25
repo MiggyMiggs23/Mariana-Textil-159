@@ -9,3 +9,4 @@
 - [Cliente sistema y aging de crédito](system-customer-credit-aging.md) — preservar clientes históricos al reservar id 1 y asignar reversos/ajustes correctamente antes del FIFO.
 - [Subidas binarias con MIME dinámico](binary-upload-client.md) — no confiar en el cliente generado cuando el endpoint acepta varios MIME y headers derivados del archivo.
 - [E2E autenticadas aisladas](temporary-e2e-admins.md) — nunca crear o limpiar usuarios en la base de la app; usar una rama Neon desechable y eliminar solo la rama.
+- [Autoajuste tipográfico de impresión](print-font-autofit.md) — recalcular tras cargar fuentes y antes de imprimir; ResizeObserver no detecta cambios de métricas.

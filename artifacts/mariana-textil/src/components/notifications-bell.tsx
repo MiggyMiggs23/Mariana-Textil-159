@@ -1,51 +1,53 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import {
+  useGetAdminAlertas,
+  getGetAdminAlertasQueryKey,
+  useCountNotificacionesNoLeidas,
   getCountNotificacionesNoLeidasQueryKey,
-  getListNotificacionesQueryKey,
-  useListNotificaciones,
-  useMarkAllNotificacionesRead,
-  useMarkNotificacionRead,
 } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { Bell, Check, ExternalLink, Loader2 } from "lucide-react";
+import { Bell, AlertTriangle, ExternalLink, Loader2, Clock, MessageSquareWarning, Store } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-function formatNotificationTime(value: Date | string) {
-  return new Intl.DateTimeFormat("es-MX", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
+function dueLabel(days: number): string {
+  if (days < 0) return `${Math.abs(days)}d de atraso`;
+  if (days === 0) return "Vence hoy";
+  return `Vence en ${days}d`;
 }
 
 export function NotificationsBell({
-  unreadCount,
   mobile = false,
+  adminOnly = false,
 }: {
-  unreadCount: number;
   mobile?: boolean;
+  adminOnly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const queryClient = useQueryClient();
-  const notifications = useListNotificaciones({
+
+  const { data: alertas, isLoading: loadingAlertas } = useGetAdminAlertas({
     query: {
-      enabled: open,
-      queryKey: getListNotificacionesQueryKey(),
+      enabled: adminOnly,
+      queryKey: getGetAdminAlertasQueryKey(),
+      refetchInterval: 30_000,
     },
   });
-  const refresh = () => {
-    void queryClient.invalidateQueries({ queryKey: getListNotificacionesQueryKey() });
-    void queryClient.invalidateQueries({ queryKey: getCountNotificacionesNoLeidasQueryKey() });
-  };
-  const markOne = useMarkNotificacionRead({ mutation: { onSuccess: refresh } });
-  const markAll = useMarkAllNotificacionesRead({ mutation: { onSuccess: refresh } });
-  const recent = notifications.data?.notificaciones.slice(0, 8) ?? [];
+
+  const { data: notificacionesCount } = useCountNotificacionesNoLeidas({
+    query: {
+      enabled: adminOnly,
+      queryKey: getCountNotificacionesNoLeidasQueryKey(),
+      refetchInterval: 60_000,
+    },
+  });
+
+  if (!adminOnly) return null;
+
+  const totalAlertas = alertas?.total ?? 0;
+  const unreadNotifs = notificacionesCount?.count ?? 0;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -56,31 +58,31 @@ export function NotificationsBell({
           data-testid="button-notifications"
           className={cn(
             "relative",
-            mobile ? "text-white hover:bg-sidebar-accent" : "text-muted-foreground",
+            mobile ? "text-white hover:bg-sidebar-accent" : "text-muted-foreground hover:text-foreground",
           )}
-          aria-label="Abrir notificaciones"
+          aria-label="Abrir alertas"
         >
           <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
+          {totalAlertas > 0 && (
             <span
-              data-testid="badge-notificaciones"
-              className="absolute right-0 top-0 flex h-5 min-w-5 -translate-y-1/4 translate-x-1/4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white"
+              data-testid="badge-alertas"
+              className="absolute right-0 top-0 flex h-5 min-w-5 -translate-y-1/4 translate-x-1/4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-background"
             >
-              {unreadCount}
+              {totalAlertas > 99 ? '99+' : totalAlertas}
             </span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[min(92vw,390px)] p-0">
-        <div className="flex items-center justify-between border-b px-4 py-3">
+      <PopoverContent align="end" className="w-[min(92vw,400px)] p-0">
+        <div className="flex items-center justify-between border-b px-4 py-3 bg-muted/20">
           <div>
-            <p className="font-semibold">Notificaciones</p>
-            <p className="text-xs text-muted-foreground">
-              {formatNumber(unreadCount, { kind: "count" })} sin leer
+            <p className="font-semibold text-sidebar">Alertas en tiempo real</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {formatNumber(totalAlertas, { kind: "count" })} pendientes
             </p>
           </div>
           <Link
-            href="/notificaciones"
+            href="/alertas"
             onClick={() => setOpen(false)}
             className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
           >
@@ -89,40 +91,72 @@ export function NotificationsBell({
         </div>
 
         <ScrollArea className="h-[360px]">
-          {notifications.isLoading ? (
+          {loadingAlertas ? (
             <div className="flex h-32 items-center justify-center text-muted-foreground">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Cargando…
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Cargando alertas...
             </div>
-          ) : recent.length === 0 ? (
-            <div className="px-4 py-12 text-center text-sm text-muted-foreground">
-              No hay notificaciones recientes.
+          ) : totalAlertas === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 gap-3">
+              <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                <Clock className="h-5 w-5 text-green-600 dark:text-green-500" />
+              </div>
+              <p className="font-medium text-green-600 dark:text-green-500">Sin alertas pendientes</p>
             </div>
           ) : (
             <div className="divide-y">
-              {recent.map((item) => (
+              {alertas?.ticketsPendientes.map((item) => (
                 <Link
-                  key={item.id}
-                  href={`/tickets/${item.ticketId}`}
-                  onClick={() => {
-                    if (!item.leidaAt) markOne.mutate({ id: item.id });
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    "block space-y-1 px-4 py-3 transition-colors hover:bg-muted",
-                    !item.leidaAt && "bg-primary/5",
-                  )}
+                  key={`ticket-${item.id}`}
+                  href={`/tickets/${item.id}`}
+                  onClick={() => setOpen(false)}
+                  className="block p-4 transition-colors hover:bg-muted focus:bg-muted outline-none"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <p className={cn("text-sm", !item.leidaAt && "font-semibold")}>
-                      {item.clienteNombre} · Folio {item.folio}
+                  <div className="flex items-start justify-between gap-3 mb-1.5">
+                    <p className="text-sm font-semibold text-amber-700 dark:text-amber-500 flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5" /> Ticket Pendiente
                     </p>
-                    {!item.leidaAt && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />}
+                    <span className="text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 px-1.5 py-0.5 rounded">
+                      Hace {item.minutosTranscurridos}m
+                    </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {formatNumber(item.importe, { kind: "money" })} · vence {String(item.fechaVencimiento).slice(0, 10)}
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="font-medium text-sidebar">Folio {item.folio}</span>
+                    <span className="font-mono font-semibold">{formatNumber(item.importe, { kind: "money" })}</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                    <Store className="h-3 w-3" /> {item.nombreUbicacion} · {item.nombreCreador}
                   </p>
+                </Link>
+              ))}
+              {alertas?.creditos.map((item) => (
+                <Link
+                  key={`credito-${item.movimientoId}`}
+                  href={`/clientes/${item.clienteId}?tab=estado`}
+                  onClick={() => setOpen(false)}
+                  className="block p-4 transition-colors hover:bg-muted focus:bg-muted outline-none"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-1.5">
+                    <p className={`text-sm font-semibold flex items-center gap-1.5 ${
+                      item.diasRestantes < 0 ? "text-destructive" : "text-amber-700 dark:text-amber-500"
+                    }`}>
+                      <AlertTriangle className="h-3.5 w-3.5" /> Pago de cliente
+                    </p>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      item.diasRestantes < 0
+                        ? "bg-destructive/10 text-destructive"
+                        : "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+                    }`}>
+                      {dueLabel(item.diasRestantes)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="font-medium text-sidebar truncate">{item.nombreCliente}</span>
+                    <span className={`font-mono font-semibold shrink-0 ${
+                      item.diasRestantes < 0 ? "text-destructive" : "text-amber-700 dark:text-amber-400"
+                    }`}>{formatNumber(item.importe, { kind: "money" })}</span>
+                  </div>
                   <p className="text-[11px] text-muted-foreground">
-                    {formatNotificationTime(item.createdAt)}
+                    {item.ticketFolio ? `Folio ${item.ticketFolio}` : item.nota || "Movimiento sin folio"}
                   </p>
                 </Link>
               ))}
@@ -130,17 +164,20 @@ export function NotificationsBell({
           )}
         </ScrollArea>
 
-        <div className="border-t p-3">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={() => markAll.mutate()}
-            disabled={unreadCount === 0 || markAll.isPending}
+        <div className="border-t bg-muted/40 p-2">
+          <Link
+            href="/notificaciones"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center justify-center gap-2 rounded-md py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            <Check className="mr-2 h-4 w-4" />
-            Marcar todas como leídas
-          </Button>
+            <MessageSquareWarning className="h-4 w-4" />
+            Ver notificaciones de crédito
+            {unreadNotifs > 0 && (
+              <span className="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
+                {unreadNotifs}
+              </span>
+            )}
+          </Link>
         </div>
       </PopoverContent>
     </Popover>

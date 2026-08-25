@@ -38,14 +38,14 @@ import {
   Wallet,
   BarChart3,
   Tags,
-  Settings
+  Settings,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { useLocationScope } from "@/lib/location-scope";
-import { useCountNotificacionesNoLeidas, getCountNotificacionesNoLeidasQueryKey } from "@workspace/api-client-react";
 import {
   Dialog,
   DialogContent,
@@ -74,7 +74,7 @@ type NavGroup = {
 const NAV_GROUPS: NavGroup[] = [
   {
     items: [
-      { name: "Dashboard", path: "/", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
+      { name: "Tiempo Real", path: "/caja/tiempo-real", icon: Activity, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
     ]
   },
   {
@@ -82,6 +82,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
       { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
+      { name: "Vista Global", path: "/inventario/vista-global", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
       { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
       { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
     ]
@@ -98,10 +99,10 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "CAJA",
     items: [
+      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
       { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Tiempo Real", path: "/caja/tiempo-real", icon: Activity, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
     ]
   },
   {
@@ -154,13 +155,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       enabled: user?.rol === Role.ADMIN,
       queryKey: getCountEntradasPendientesCostoQueryKey()
     }
-  });
-  const { data: notificationsCount } = useCountNotificacionesNoLeidas({
-    query: {
-      enabled: user?.rol === Role.ADMIN,
-      queryKey: getCountNotificacionesNoLeidasQueryKey(),
-      refetchInterval: 30_000,
-    },
   });
   const { data: etiquetasAlerts } = useQuery({
     queryKey: ["etiquetas", "alertas"],
@@ -396,9 +390,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="font-bold text-lg">Mariana Textil</span>
             </div>
             <div className="flex items-center gap-1">
-              {user.rol === Role.ADMIN && (
-                <NotificationsBell unreadCount={notificationsCount?.count ?? 0} mobile />
-              )}
+              <NotificationsBell adminOnly={user.rol === Role.ADMIN} mobile />
               <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setLogoutDialogOpen(true)}>
                 <LogOut className="w-5 h-5" />
                 <span className="sr-only">Cerrar sesión</span>
@@ -420,9 +412,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="no-print hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
           {renderLocationControl()}
           <div className="h-8 w-px bg-border" />
-          {user.rol === Role.ADMIN && (
-            <NotificationsBell unreadCount={notificationsCount?.count ?? 0} />
-          )}
+          <NotificationsBell adminOnly={user.rol === Role.ADMIN} />
           <div className="flex items-center gap-3">
             <div className="grid h-9 w-9 place-items-center rounded-full bg-sidebar text-sm font-bold text-white">
               {user.nombre.charAt(0).toUpperCase()}

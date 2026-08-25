@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { QRCodeSVG } from 'qrcode.react';
-import { formatNumber } from "@workspace/number-format";
+import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 
 export interface LabelData {
   sku: string;
@@ -12,24 +12,33 @@ export interface LabelData {
   reimpresaEn?: string;
 }
 
+function formatLabelQuantity(value: string): string {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed.toFixed(3) : value;
+}
+
 function AutoFitText({
   children,
   className,
   maxFontSize,
   minFontSize,
+  testId,
 }: {
   children: string;
   className: string;
   maxFontSize: number;
   minFontSize: number;
+  testId?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
+    let cancelled = false;
 
     const fit = () => {
+      if (cancelled) return;
       let fontSize = maxFontSize;
       element.style.fontSize = `${fontSize}px`;
       while (element.scrollWidth > element.clientWidth && fontSize > minFontSize) {
@@ -39,9 +48,15 @@ function AutoFitText({
     };
 
     fit();
-    const observer = new ResizeObserver(fit);
-    observer.observe(element);
-    return () => observer.disconnect();
+    void document.fonts?.ready.then(() => requestAnimationFrame(fit));
+    window.addEventListener("beforeprint", fit);
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(fit);
+    observer?.observe(element);
+    return () => {
+      cancelled = true;
+      observer?.disconnect();
+      window.removeEventListener("beforeprint", fit);
+    };
   }, [children, maxFontSize, minFontSize]);
 
   return (
@@ -49,6 +64,7 @@ function AutoFitText({
       ref={ref}
       className={className}
       style={{ fontSize: `${maxFontSize}px` }}
+      data-testid={testId}
     >
       {children}
     </div>
@@ -75,7 +91,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
 
       <div className="border-b-[1.2mm] border-black w-full flex-shrink-0"></div>
 
-      <div className="grid grid-cols-[30%_35%_35%] flex-1 min-h-0 pt-[2.5mm]">
+      <div className="grid grid-cols-[35%_30%_35%] flex-1 min-h-0 pt-[2.5mm]">
         <div className="flex flex-col min-w-0 pr-[3mm]">
           <div className="flex-1 border-b border-gray-400 flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">SKU</div>
@@ -93,17 +109,19 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           </div>
           <div className="flex-[1.25] flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">{unitLabel}</div>
-            <div className="text-[29px] font-black tracking-tighter leading-none mt-[1.5mm]">{formatNumber(data.cantidad, { kind: "quantity" })}</div>
+            <AutoFitText
+              className="w-full min-w-0 max-w-full overflow-hidden whitespace-nowrap font-black tabular-nums tracking-tighter leading-none mt-[1.5mm]"
+              maxFontSize={29}
+              minFontSize={10}
+              testId="label-quantity"
+            >
+              {formatLabelQuantity(data.cantidad)}
+            </AutoFitText>
           </div>
         </div>
 
         <div className="border-l border-gray-400 flex flex-col items-center justify-center px-[3mm] min-w-0">
-          <svg aria-label="Mariana Textil" viewBox="0 0 120 92" className="w-[27mm] h-[26mm] text-black" role="img">
-            <path fill="currentColor" d="M7 7h25l28 38L88 7h25v78H88V43L60 80 32 43v42H7z" />
-            <path fill="#fff" d="M32 7h20l8 12 8-12h20L60 45z" />
-          </svg>
-          <div className="text-[18px] font-black leading-none tracking-[0.03em] mt-[1mm]">MARIANA</div>
-          <div className="text-[7px] font-bold leading-none tracking-[0.16em] mt-[1.5mm] whitespace-nowrap">TEXTIL S.A. DE C.V.</div>
+          <MonochromeBrandLogo className="h-[34mm] w-[28mm] max-h-full max-w-full" />
         </div>
 
         <div className="border-l border-gray-400 flex flex-col items-center justify-center pl-[3mm] relative min-w-0">
