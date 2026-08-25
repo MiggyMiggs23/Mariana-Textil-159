@@ -9,7 +9,9 @@ import type { TicketLinea } from './ticketLinea';
 import type { TicketPago } from './ticketPago';
 import type { TicketResumen } from './ticketResumen';
 
-export type TicketDetalle = TicketResumen & {
+export type TicketDetalle = TicketResumen & ({
+  /** @nullable */
+  diasCreditoCliente?: number | null;
   lineas: TicketLinea[];
   pagos?: TicketPago[];
-};
+});

@@ -35,6 +35,8 @@ tags:
     description: Solicitud, preparación y recepción de salidas entre ubicaciones
   - name: admin-analytics
     description: Analítica financiera y operativa exclusiva para ADMIN
+  - name: notificaciones
+    description: Notificaciones y alertas de crédito exclusivas para ADMIN
 paths:
   /healthz:
     get:
@@ -127,6 +129,29 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Location"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      operationId: createLocation
+      tags: [locations]
+      summary: Crea una tienda o bodega
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocationInput"
+      responses:
+        "201":
+          description: Ubicación creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -1445,6 +1470,12 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "409":
+          description: Ya existe un cliente activo con el mismo nombre
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteDuplicateError"
   /clientes/cartera:
     get:
       operationId: getClientesCartera
@@ -1981,6 +2012,65 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /notificaciones:
+    get:
+      operationId: listNotificaciones
+      tags: [notificaciones]
+      summary: Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+      responses:
+        "200":
+          description: Panel de notificaciones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificacionesPanel"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /notificaciones/no-leidas/count:
+    get:
+      operationId: countNotificacionesNoLeidas
+      tags: [notificaciones]
+      summary: Cuenta notificaciones de crédito sin leer (ADMIN)
+      responses:
+        "200":
+          description: Conteo de no leídas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificacionesNoLeidasCount"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /notificaciones/leer-todas:
+    post:
+      operationId: markAllNotificacionesRead
+      tags: [notificaciones]
+      summary: Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+      responses:
+        "200":
+          description: Notificaciones actualizadas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificacionesNoLeidasCount"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /notificaciones/{id}/leer:
+    post:
+      operationId: markNotificacionRead
+      tags: [notificaciones]
+      summary: Marca una notificación como leída sin eliminarla (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/NotificacionId"
+      responses:
+        "200":
+          description: Notificación actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificacionCredito"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /tickets:
     post:
       operationId: crearTicket
@@ -2799,6 +2889,12 @@ components:
       required: true
       schema:
         type: number
+    NotificacionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
   responses:
     SalidaDetailResponse:
       description: Estado actualizado de la salida
@@ -3206,6 +3302,14 @@ components:
           $ref: "#/components/schemas/LocationType"
         activa: { type: boolean }
         esSistema: { type: boolean }
+    LocationInput:
+      type: object
+      required: [nombre, tipo]
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 120 }
+        tipo:
+          type: string
+          enum: [TIENDA, BODEGA]
     LocationUpdate:
       type: object
       properties:
@@ -3331,6 +3435,19 @@ components:
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         contactoNombre: { type: ["string", "null"] }
+        limiteCredito:
+          type: ["string", "null"]
+          pattern: '^\d+(\.\d{1,2})?$'
+        diasCredito: { type: ["number", "null"], minimum: 0 }
+    ClienteDuplicateError:
+      type: object
+      required: [error, code, existingClientId]
+      properties:
+        error: { type: string }
+        code:
+          type: string
+          const: CLIENT_NAME_CONFLICT
+        existingClientId: { type: number }
     ClienteUpdate:
       type: object
       properties:
@@ -3410,6 +3527,10 @@ components:
         formaPago: { type: ["string", "null"] }
         referencia: { type: ["string", "null"] }
         fechaEfectiva: { type: string, format: date-time }
+        diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
+        fechaVencimiento: { type: ["string", "null"], format: date }
+        estado: { type: ["string", "null"], enum: [VIGENTE, POR_VENCER, VENCIDA, PAGADA, SIN_PLAZO] }
+        sinPlazo: { type: boolean }
     ClienteEstadoCuenta:
       type: object
       required: [clienteId, movimientos, saldoActual]
@@ -3521,8 +3642,9 @@ components:
         saldoActual: { type: string }
         antiguedad:
           type: string
-          enum: [POR_VENCER, "1_30", "31_60", "61_90", MAS_90]
+          enum: [SIN_PLAZO, POR_VENCER, "1_30", "31_60", "61_90", MAS_90]
         diasVencido: { type: number }
+        sinPlazo: { type: string }
     ClientesCartera:
       type: object
       required: [clientes]
@@ -3554,6 +3676,67 @@ components:
         pareto: { type: array, items: { type: object, additionalProperties: true } }
         publicoVsRegistrado: { type: array, items: { type: object, additionalProperties: true } }
         mensual: { type: array, items: { type: object, additionalProperties: true } }
+    NotificacionCredito:
+      type: object
+      required: [id, ticketId, clienteId, clienteNombre, folio, importe, diasPlazo, fechaVencimiento, cajeroId, cajeroNombre, tiendaId, tiendaNombre, urgente, leidaAt, createdAt]
+      properties:
+        id: { type: number }
+        ticketId: { type: number }
+        clienteId: { type: number }
+        clienteNombre: { type: string }
+        folio: { type: number }
+        importe: { type: string }
+        diasPlazo: { type: number, enum: [7, 15, 30, 60] }
+        fechaVencimiento: { type: string, format: date }
+        cajeroId: { type: number }
+        cajeroNombre: { type: string }
+        tiendaId: { type: number }
+        tiendaNombre: { type: string }
+        urgente: { type: boolean }
+        leidaAt: { type: ["string", "null"], format: date-time }
+        createdAt: { type: string, format: date-time }
+    AlertaCredito:
+      type: object
+      required: [movimientoId, ticketId, clienteId, clienteNombre, folio, pendiente, fechaVencimiento, diasVencido, estado]
+      properties:
+        movimientoId: { type: number }
+        ticketId: { type: ["number", "null"] }
+        clienteId: { type: number }
+        clienteNombre: { type: string }
+        folio: { type: ["number", "null"] }
+        pendiente: { type: string }
+        fechaVencimiento: { type: string, format: date }
+        diasVencido: { type: number }
+        estado: { type: string, enum: [POR_VENCER, VENCIDA] }
+    ClienteConNotasVencidas:
+      type: object
+      required: [clienteId, clienteNombre, notasVencidas, saldoVencido]
+      properties:
+        clienteId: { type: number }
+        clienteNombre: { type: string }
+        notasVencidas: { type: number }
+        saldoVencido: { type: string }
+    NotificacionesNoLeidasCount:
+      type: object
+      required: [count]
+      properties:
+        count: { type: number }
+    NotificacionesPanel:
+      type: object
+      required: [notificaciones, porVencer, vencidas, clientesConMultiplesVencidas]
+      properties:
+        notificaciones:
+          type: array
+          items: { $ref: "#/components/schemas/NotificacionCredito" }
+        porVencer:
+          type: array
+          items: { $ref: "#/components/schemas/AlertaCredito" }
+        vencidas:
+          type: array
+          items: { $ref: "#/components/schemas/AlertaCredito" }
+        clientesConMultiplesVencidas:
+          type: array
+          items: { $ref: "#/components/schemas/ClienteConNotasVencidas" }
     ProveedorPagosResult:
       type: object
       required: [proveedorId, pagos]
@@ -5389,6 +5572,7 @@ components:
           items:
             $ref: "#/components/schemas/TicketPagoInput"
         clienteId: { type: ["number", "null"] }
+        diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
         credencialesAdmin:
           oneOf:
             - $ref: "#/components/schemas/CredencialesAdmin"
@@ -5575,6 +5759,7 @@ components:
         - type: object
           required: [lineas]
           properties:
+            diasCreditoCliente: { type: ["number", "null"] }
             lineas:
               type: array
               items:

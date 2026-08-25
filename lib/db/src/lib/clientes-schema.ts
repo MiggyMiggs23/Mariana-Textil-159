@@ -19,6 +19,34 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS forma_pago forma_pago_ticket;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS referencia text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS metadata text;
+      ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS dias_plazo integer;
+      ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS fecha_vencimiento date;
+       CREATE TABLE IF NOT EXISTS notificaciones_credito (
+         id serial PRIMARY KEY,
+         ticket_id integer NOT NULL UNIQUE REFERENCES tickets(id),
+         cliente_id integer NOT NULL REFERENCES clientes(id),
+         cliente_nombre text NOT NULL,
+         folio integer NOT NULL,
+         importe numeric(12,2) NOT NULL,
+         dias_plazo integer NOT NULL CHECK (dias_plazo IN (7, 15, 30, 60)),
+         fecha_vencimiento date NOT NULL,
+         cajero_id integer NOT NULL REFERENCES usuarios(id),
+         cajero_nombre text NOT NULL,
+         tienda_id integer NOT NULL REFERENCES ubicaciones(id),
+         tienda_nombre text NOT NULL,
+         urgente boolean NOT NULL DEFAULT false,
+         leida_at timestamptz,
+         created_at timestamptz NOT NULL DEFAULT now()
+       );
+       CREATE INDEX IF NOT EXISTS notificaciones_credito_leida_created_idx
+         ON notificaciones_credito (leida_at, created_at);
+       CREATE INDEX IF NOT EXISTS notificaciones_credito_cliente_idx
+         ON notificaciones_credito (cliente_id);
+      ALTER TABLE movimientos_credito DROP CONSTRAINT IF EXISTS movimientos_credito_plazo_check;
+      ALTER TABLE movimientos_credito ADD CONSTRAINT movimientos_credito_plazo_check CHECK (
+        (dias_plazo IS NULL AND fecha_vencimiento IS NULL)
+        OR (dias_plazo IN (7, 15, 30, 60) AND fecha_vencimiento IS NOT NULL)
+      );
       ALTER TABLE movimientos_credito
         DROP CONSTRAINT IF EXISTS movimientos_credito_importe_tipo_check;
       ALTER TABLE movimientos_credito
@@ -58,14 +86,21 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
         GREATEST((SELECT COALESCE(MAX(id), 1) FROM clientes), 1), true);
       UPDATE tickets SET cliente_id = 1 WHERE cliente_id IS NULL;
       ALTER TABLE tickets ALTER COLUMN cliente_id SET NOT NULL;
+      -- The API preflight makes this a friendly 409; this partial expression
+      -- index is the authoritative protection against simultaneous requests.
+      -- System and inactive records deliberately do not reserve a name.
+      CREATE UNIQUE INDEX IF NOT EXISTS clientes_activos_no_sistema_nombre_normalizado_uidx
+        ON clientes (lower(btrim(nombre)))
+        WHERE activo AND NOT es_sistema;
       CREATE INDEX IF NOT EXISTS tickets_cliente_created_at_idx
         ON tickets (cliente_id, created_at);
       -- FIFO allocates every negative ledger entry to the oldest credit sale.
       -- It is the single source for aging in both detail and global cartera.
+      DROP FUNCTION IF EXISTS credit_fifo_aging(integer);
       CREATE OR REPLACE FUNCTION credit_fifo_aging(p_cliente_id integer)
       RETURNS TABLE (
         movimiento_id integer, ticket_id integer, created_at timestamptz,
-        due_at timestamptz, original numeric, pendiente numeric
+        due_at date, original numeric, pendiente numeric
       ) LANGUAGE sql STABLE AS $$
         WITH fifo_negatives AS (
           SELECT COALESCE(SUM(-importe), 0) AS total
@@ -84,8 +119,8 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
               ),0)
               ELSE 0
             END) AS neto,
-            c.dias_credito
-          FROM movimientos_credito m JOIN clientes c ON c.id=m.cliente_id
+            m.fecha_vencimiento
+          FROM movimientos_credito m
           WHERE m.cliente_id=p_cliente_id AND (
             m.tipo='VENTA_CREDITO' OR (m.tipo='AJUSTE' AND m.importe > 0)
           )
@@ -97,7 +132,7 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
           FROM cargos v
         )
         SELECT v.id, v.ticket_id, v.created_at,
-          v.created_at + (v.dias_credito * interval '1 day'), v.neto,
+          v.fecha_vencimiento, v.neto,
           GREATEST(0, v.neto - GREATEST(0, n.total - v.antes))
         FROM ordenadas v CROSS JOIN fifo_negatives n
         WHERE GREATEST(0, v.neto - GREATEST(0, n.total - v.antes)) > 0

@@ -2,8 +2,11 @@ import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { 
   useListLocations, 
+  useCreateLocation,
   useUpdateLocation, 
   Location, 
+  LocationInputTipo,
+  useGetCurrentUser,
   getListLocationsQueryKey 
 } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,16 +19,24 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch"; // I need to create switch.tsx or just use a checkbox
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { Pencil } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
+import { Modules, hasPermission } from "@/lib/permisos";
 
 export default function Ubicaciones() {
   const { data: locations, isLoading } = useListLocations();
   const updateLocation = useUpdateLocation();
+  const createLocation = useCreateLocation();
+  const { data: user } = useGetCurrentUser();
   const queryClient = useQueryClient();
   
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [createName, setCreateName] = useState("");
+  const [createType, setCreateType] = useState<LocationInputTipo>(LocationInputTipo.TIENDA);
   const [editName, setEditName] = useState("");
   const [editActive, setEditActive] = useState(false);
+  const canCreate = hasPermission(user, Modules.UBICACIONES, "crear");
+  const canEdit = hasPermission(user, Modules.UBICACIONES, "editar");
 
   const openEdit = (loc: Location) => {
     setEditingLocation(loc);
@@ -57,6 +68,22 @@ export default function Ubicaciones() {
     );
   };
 
+  const handleCreate = () => {
+    if (!createName.trim()) return;
+    createLocation.mutate({ data: { nombre: createName.trim(), tipo: createType } }, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getListLocationsQueryKey() });
+        toast.success("Sitio creado correctamente");
+        setCreateName("");
+        setCreateType(LocationInputTipo.TIENDA);
+        setCreating(false);
+      },
+      onError: (err: any) => {
+        toast.error("Error al crear", { description: err?.data?.error || "Ocurrió un error inesperado" });
+      },
+    });
+  };
+
   if (isLoading) {
     return (
       <AppLayout>
@@ -71,11 +98,14 @@ export default function Ubicaciones() {
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Sitios</h1>
-          <p className="text-muted-foreground mt-2">
-            Administración de tiendas y bodegas. Los sitios de sistema no pueden ser editados.
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-sidebar">Sitios</h1>
+            <p className="text-muted-foreground mt-2">
+              Administración de tiendas y bodegas. Los sitios de sistema no pueden ser editados.
+            </p>
+          </div>
+          {canCreate && <Button onClick={() => setCreating(true)} data-testid="button-create-location"><Plus className="mr-2 h-4 w-4" />Nuevo sitio</Button>}
         </div>
 
         <Card>
@@ -105,7 +135,7 @@ export default function Ubicaciones() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      {!loc.esSistema && (
+                      {canEdit && !loc.esSistema && (
                         <Button variant="ghost" size="sm" onClick={() => openEdit(loc)}>
                           <Pencil className="w-4 h-4 mr-2" />
                           Editar
@@ -127,7 +157,27 @@ export default function Ubicaciones() {
         </Card>
       </div>
 
-      <Dialog open={!!editingLocation} onOpenChange={(open) => !open && setEditingLocation(null)}>
+      {canCreate && <Dialog open={creating} onOpenChange={setCreating}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Nuevo sitio</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2"><Label>Nombre *</Label><Input value={createName} onChange={(event) => setCreateName(event.target.value)} /></div>
+            <div className="space-y-2">
+              <Label>Tipo</Label>
+              <select className="h-10 w-full rounded-md border bg-background px-3" value={createType} onChange={(event) => setCreateType(event.target.value as LocationInputTipo)}>
+                <option value={LocationInputTipo.TIENDA}>Tienda</option>
+                <option value={LocationInputTipo.BODEGA}>Bodega</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreating(false)}>Cancelar</Button>
+            <Button onClick={handleCreate} disabled={!createName.trim() || createLocation.isPending}>Guardar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>}
+
+      {canEdit && <Dialog open={!!editingLocation} onOpenChange={(open) => !open && setEditingLocation(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Editar Sitio</DialogTitle>
@@ -159,7 +209,7 @@ export default function Ubicaciones() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog>}
     </AppLayout>
   );
 }

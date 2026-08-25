@@ -19,6 +19,8 @@
  *   S-03A Caja tickets route is location-scoped and denied to BODEGA
  *   S-04  BODEGA denied POS  (GET /inventario/rollos → module=inventario OK, but POST vender → 403)
  *   S-05  BODEGA denied clientes → GET /clientes → 403
+ *   S-05A BODEGA denied client creation → POST /clientes → 403
+ *   S-05B Concurrent normalized client creates return one 201 and one conflict
  *   S-06  CAJA can do POS sale (vender) on own-location rollo
  *   S-07  CAJA denied GET /proveedores → 403
  *   S-08  INVENTARIOS GET /proveedores → 200, response has no financial JSON keys
@@ -771,6 +773,45 @@ await test("S-05: BODEGA GET /clientes → 403", async () => {
   const login_r = await login(testBodega.usuario, testBodega.password);
   const r = await api("GET", "/clientes", undefined, login_r.cookie);
   assert.equal(r.status, 403, `Expected 403, got ${r.status}: ${JSON.stringify(r.body)}`);
+});
+
+await test("S-05A: BODEGA POST /clientes → 403", async () => {
+  const login_r = await login(testBodega.usuario, testBodega.password);
+  const r = await api(
+    "POST",
+    "/clientes",
+    { nombre: `Cliente prohibido ${RUN}` },
+    login_r.cookie,
+  );
+  assert.equal(r.status, 403, `Expected 403, got ${r.status}: ${JSON.stringify(r.body)}`);
+});
+
+await test("S-05B: concurrent normalized client creates → 201 + structured 409", async () => {
+  const login_r = await login(testAdmin.usuario, testAdmin.password);
+  const name = `Cliente Concurrente ${RUN}`;
+  const [first, second] = await Promise.all([
+    api("POST", "/clientes", { nombre: `  ${name.toUpperCase()}  ` }, login_r.cookie),
+    api("POST", "/clientes", { nombre: name.toLocaleLowerCase("es-MX") }, login_r.cookie),
+  ]);
+  const created = [first, second].find((result) => result.status === 201);
+  const conflict = [first, second].find((result) => result.status === 409);
+  try {
+    assert.ok(created, `Expected one create: ${JSON.stringify([first.body, second.body])}`);
+    assert.ok(conflict, `Expected one conflict: ${JSON.stringify([first.body, second.body])}`);
+    const createdBody = created.body as { id: number };
+    const conflictBody = conflict.body as {
+      code?: string;
+      existingClientId?: number;
+    };
+    assert.equal(conflictBody.code, "CLIENT_NAME_CONFLICT");
+    assert.equal(conflictBody.existingClientId, createdBody.id);
+  } finally {
+    const createdId = (created?.body as { id?: number } | undefined)?.id;
+    if (createdId) {
+      const { clientesTable } = await import("@workspace/db");
+      await db.delete(clientesTable).where(eq(clientesTable.id, createdId));
+    }
+  }
 });
 
 // S-06: CAJA cannot bypass ticketing through the legacy inventory sale endpoint

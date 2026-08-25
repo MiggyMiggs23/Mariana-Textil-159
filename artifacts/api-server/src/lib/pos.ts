@@ -4,6 +4,7 @@ import {
   clientesTable,
   db,
   movimientosCreditoTable,
+  notificacionesCreditoTable,
   movimientosTable,
   productosTable,
   rollosTable,
@@ -27,6 +28,11 @@ import {
   isValidUnitCost,
   rollWithoutValidUnitCostMessage,
 } from "./unit-cost";
+import {
+  creditDueDate,
+  isCreditTerm,
+  type CreditTerm,
+} from "./clientes-aging";
 
 const FOLIO_ROW_ID = 1;
 
@@ -137,6 +143,7 @@ export async function buildTicketDetail(
       nombreUsuarioTerminal: usuariosTable.nombre,
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
+      diasCreditoCliente: clientesTable.diasCredito,
       tipo: ticketsTable.tipo,
       subtotal: ticketsTable.subtotal,
       iva: ticketsTable.iva,
@@ -796,6 +803,7 @@ export async function cobrarTicket(
     clienteId?: number | null;
     pagos: PagoTicketInput[];
     autorizadoPor?: number | null;
+    diasPlazo?: number | null;
     ip: string;
   },
   includeCosts: boolean,
@@ -872,6 +880,14 @@ export async function cobrarTicket(
   const creditCents = pagos
     .filter((pago) => pago.formaPago === "CREDITO")
     .reduce((sum, pago) => sum + pago.cents, 0);
+  if (creditCents > 0 && !isCreditTerm(input.diasPlazo)) {
+    throw new PosError(
+      "Debes elegir un plazo de crédito de 7, 15, 30 o 60 días.",
+      "CREDIT_TERM_REQUIRED",
+    );
+  }
+  const diasPlazo =
+    creditCents > 0 ? (input.diasPlazo as CreditTerm) : null;
   const clienteId = input.clienteId ?? ticket.clienteId;
   if (clienteId !== ticket.clienteId) {
     throw new PosError(
@@ -936,6 +952,34 @@ export async function cobrarTicket(
           origen: "COBRO_TICKET",
           autorizadoPor: input.autorizadoPor ?? null,
         }),
+        diasPlazo: diasPlazo!,
+        fechaVencimiento: creditDueDate(ticket.createdAt, diasPlazo!),
+      });
+      const [cajero] = await tx
+        .select({ nombre: usuariosTable.nombre })
+        .from(usuariosTable)
+        .where(eq(usuariosTable.id, input.usuarioId))
+        .limit(1);
+      const [tienda] = await tx
+        .select({ nombre: ubicacionesTable.nombre })
+        .from(ubicacionesTable)
+        .where(eq(ubicacionesTable.id, ticket.ubicacionId))
+        .limit(1);
+      await tx.insert(notificacionesCreditoTable).values({
+        ticketId: ticket.id,
+        clienteId,
+        clienteNombre: cliente.nombre,
+        folio: ticket.folio,
+        importe: decimalMoney(creditCents),
+        diasPlazo: diasPlazo!,
+        fechaVencimiento: creditDueDate(ticket.createdAt, diasPlazo!),
+        cajeroId: input.usuarioId,
+        cajeroNombre: cajero?.nombre ?? "Usuario eliminado",
+        tiendaId: ticket.ubicacionId,
+        tiendaNombre: tienda?.nombre ?? "Tienda eliminada",
+        urgente:
+          money(ledger?.saldo ?? "0") + creditCents >
+          money(cliente.limiteCredito),
       });
     }
   }

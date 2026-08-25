@@ -10,6 +10,7 @@ export type ClienteCarteraItemAntiguedad = typeof ClienteCarteraItemAntiguedad[k
 
 
 export const ClienteCarteraItemAntiguedad = {
+  SIN_PLAZO: 'SIN_PLAZO',
   POR_VENCER: 'POR_VENCER',
   '1_30': '1_30',
   '31_60': '31_60',

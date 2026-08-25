@@ -13,4 +13,5 @@ export interface ClienteCarteraItem {
   saldoActual: string;
   antiguedad: ClienteCarteraItemAntiguedad;
   diasVencido: number;
+  sinPlazo?: string;
 }

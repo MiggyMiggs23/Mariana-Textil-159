@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CredencialesAdmin } from './credencialesAdmin';
+import type { TicketCobroInputDiasPlazo } from './ticketCobroInputDiasPlazo';
 import type { TicketPagoInput } from './ticketPagoInput';
 
 export interface TicketCobroInput {
@@ -13,5 +14,7 @@ export interface TicketCobroInput {
   pagos: TicketPagoInput[];
   /** @nullable */
   clienteId?: number | null;
+  /** @nullable */
+  diasPlazo?: TicketCobroInputDiasPlazo;
   credencialesAdmin?: CredencialesAdmin | null;
 }

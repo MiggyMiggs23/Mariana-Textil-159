@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ArrowUpDown, LockKeyhole, Search, Users } from "lucide-react";
+import { ArrowUpDown, Loader2, LockKeyhole, Plus, Search, Users } from "lucide-react";
 import {
   getGetClientesResumenQueryKey,
   getGetClientesCarteraQueryKey,
@@ -12,12 +12,15 @@ import {
   useGetClienteCredito,
   useGetCurrentUser,
   useListClientes,
+  useCreateCliente,
 } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -26,17 +29,20 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { downloadClientFile } from "@/lib/clientes-api";
 import { getGlobalAnalytics } from "@/lib/clientes-api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatNumber } from "@workspace/number-format";
+import { toast } from "sonner";
 
 export default function Clientes() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("active");
   const [sort, setSort] = useState<"name" | "recent">("name");
   const [analyticsMonths, setAnalyticsMonths] = useState("12");
+  const [createOpen, setCreateOpen] = useState(false);
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver");
   const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver");
+  const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
   const clientsQuery = useListClientes({ query: { queryKey: getListClientesQueryKey() } });
   const summaryQuery = useGetClientesResumen({
     query: { enabled: canFinances, queryKey: getGetClientesResumenQueryKey() },
@@ -62,6 +68,12 @@ export default function Clientes() {
             <h1 className="text-3xl font-bold tracking-tight text-sidebar">Clientes</h1>
             <p className="mt-1 text-sm text-muted-foreground">Directorio, cartera y comportamiento comercial.</p>
           </div>
+          {canCreate && (
+            <Button onClick={() => setCreateOpen(true)} className="w-full sm:w-auto" data-testid="button-create-client">
+              <Plus className="mr-2 h-4 w-4" />
+              Nuevo cliente
+            </Button>
+          )}
         </div>
         <Tabs defaultValue="clientes">
           <TabsList className="grid w-full grid-cols-3 sm:w-[430px]">
@@ -137,8 +149,148 @@ export default function Clientes() {
           </TabsContent>
         </Tabs>
       </div>
+      {canCreate && <CreateClienteDialog open={createOpen} onClose={() => setCreateOpen(false)} />}
     </AppLayout>
   );
+}
+
+type ClientForm = {
+  nombre: string;
+  telefono: string;
+  correo: string;
+  rfc: string;
+  direccion: string;
+  contactoNombre: string;
+  limiteCredito: string;
+  diasCredito: string;
+  notas: string;
+};
+
+const emptyClientForm: ClientForm = {
+  nombre: "",
+  telefono: "",
+  correo: "",
+  rfc: "",
+  direccion: "",
+  contactoNombre: "",
+  limiteCredito: "",
+  diasCredito: "",
+  notas: "",
+};
+
+function duplicateClientId(error: unknown): number | null {
+  if (!error || typeof error !== "object") return null;
+  const data = (error as { data?: unknown }).data;
+  if (!data || typeof data !== "object") return null;
+  const record = data as Record<string, unknown>;
+  return record.code === "CLIENT_NAME_CONFLICT" && typeof record.existingClientId === "number"
+    ? record.existingClientId
+    : null;
+}
+
+function CreateClienteDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [form, setForm] = useState<ClientForm>(emptyClientForm);
+  const [existingId, setExistingId] = useState<number | null>(null);
+  const create = useCreateCliente();
+  const queryClient = useQueryClient();
+  const set = (field: keyof ClientForm, value: string) =>
+    setForm((current) => ({ ...current, [field]: value }));
+
+  const close = () => {
+    setForm(emptyClientForm);
+    setExistingId(null);
+    onClose();
+  };
+  const submit = () => {
+    if (!form.nombre.trim()) {
+      toast.error("El nombre es obligatorio.");
+      return;
+    }
+    if (form.limiteCredito.trim() && !form.diasCredito.trim()) {
+      toast.error("Los días de crédito son obligatorios al capturar un límite.");
+      return;
+    }
+    setExistingId(null);
+    create.mutate({
+      data: {
+        nombre: form.nombre.trim(),
+        telefono: form.telefono.trim() || null,
+        correo: form.correo.trim() || null,
+        rfc: form.rfc.trim() || null,
+        direccion: form.direccion.trim() || null,
+        contactoNombre: form.contactoNombre.trim() || null,
+        notas: form.notas.trim() || null,
+        ...(form.limiteCredito.trim()
+          ? {
+              limiteCredito: form.limiteCredito.trim(),
+              diasCredito: Number(form.diasCredito),
+            }
+          : {}),
+      },
+    }, {
+      onSuccess: (client) => {
+        queryClient.invalidateQueries({ queryKey: getListClientesQueryKey() });
+        toast.success("Cliente creado", { description: client.nombre });
+        close();
+      },
+      onError: (error) => {
+        const id = duplicateClientId(error);
+        if (id) setExistingId(id);
+        else toast.error("No se pudo crear el cliente", {
+          description: getApiErrorMessage(error),
+        });
+      },
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(value) => !value && close()}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Nuevo cliente</DialogTitle>
+          <DialogDescription>Registra los datos comerciales del cliente.</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-2 sm:grid-cols-2">
+          <ClientField label="Nombre *" value={form.nombre} onChange={(value) => set("nombre", value)} testId="input-create-client-name" />
+          <ClientField label="Teléfono" value={form.telefono} onChange={(value) => set("telefono", value)} />
+          <ClientField label="Correo" value={form.correo} onChange={(value) => set("correo", value)} type="email" />
+          <ClientField label="RFC" value={form.rfc} onChange={(value) => set("rfc", value)} />
+          <ClientField label="Dirección" value={form.direccion} onChange={(value) => set("direccion", value)} />
+          <ClientField label="Nombre de contacto" value={form.contactoNombre} onChange={(value) => set("contactoNombre", value)} />
+          <ClientField label="Límite de crédito" value={form.limiteCredito} onChange={(value) => set("limiteCredito", value)} type="number" />
+          <ClientField label={`Días de crédito${form.limiteCredito.trim() ? " *" : ""}`} value={form.diasCredito} onChange={(value) => set("diasCredito", value)} type="number" />
+          <div className="sm:col-span-2">
+            <ClientField label="Notas" value={form.notas} onChange={(value) => set("notas", value)} />
+          </div>
+        </div>
+        {existingId && (
+          <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950" role="alert">
+            <p>Ya existe un cliente activo con ese nombre.</p>
+            <Button variant="link" className="h-auto p-0 text-amber-950 underline" asChild>
+              <Link href={`/clientes/${existingId}`}>Abrir cliente</Link>
+            </Button>
+          </div>
+        )}
+        <DialogFooter>
+          <Button variant="outline" onClick={close}>Cancelar</Button>
+          <Button onClick={submit} disabled={create.isPending} data-testid="button-save-client">
+            {create.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Guardar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ClientField({ label, value, onChange, type = "text", testId }: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  testId?: string;
+}) {
+  return <div className="space-y-2"><Label>{label}</Label><Input type={type} value={value} onChange={(event) => onChange(event.target.value)} data-testid={testId} min={type === "number" ? 0 : undefined} /></div>;
 }
 
 function DownloadIcon() { return <span aria-hidden="true" className="mr-1">↓</span>; }

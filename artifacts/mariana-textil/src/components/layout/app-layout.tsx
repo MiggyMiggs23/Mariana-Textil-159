@@ -37,13 +37,15 @@ import {
   Shield,
   AlertCircle,
   Wallet,
-  BarChart3
+  BarChart3,
+  Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { useLocationScope } from "@/lib/location-scope";
+import { useCountNotificacionesNoLeidas, getCountNotificacionesNoLeidasQueryKey } from "@workspace/api-client-react";
 import {
   Dialog,
   DialogContent,
@@ -99,6 +101,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Diferencias", path: "/caja/diferencias", icon: AlertCircle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Cuentas Destino", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Comparativo", path: "/caja/comparativo", icon: BarChart3, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Notificaciones", path: "/notificaciones", icon: Bell, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
       { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
@@ -142,6 +145,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       enabled: user?.rol === Role.ADMIN,
       queryKey: getCountEntradasPendientesCostoQueryKey()
     }
+  });
+  const { data: notificationsCount } = useCountNotificacionesNoLeidas({
+    query: {
+      enabled: user?.rol === Role.ADMIN,
+      queryKey: getCountNotificacionesNoLeidasQueryKey(),
+      refetchInterval: 30_000,
+    },
   });
 
   const { selectedLocationId, setSelectedLocationId } = useLocationScope();
@@ -319,6 +329,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   ) : item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
                     <span data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
                       {ajustesPendientes.length}
+                    </span>
+                  ) : item.path === "/notificaciones" && user.rol === Role.ADMIN && notificationsCount?.count ? (
+                    <span data-testid="badge-notificaciones" className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-destructive text-white text-[10px] font-bold rounded-full">
+                      {notificationsCount.count}
                     </span>
                   ) : null}
                 </Link>

@@ -45,6 +45,7 @@ import CajaCortes from '@/pages/caja/cortes';
 import CajaDiferencias from '@/pages/caja/diferencias';
 import CajaCuentasDestino from '@/pages/caja/cuentas-destino';
 import CajaComparativo from '@/pages/caja/comparativo';
+import Notificaciones from '@/pages/notificaciones';
 import { LocationScopeProvider } from '@/lib/location-scope';
 import { Modules, hasPermission } from '@/lib/permisos';
 
@@ -196,6 +197,7 @@ function Router() {
         <Route path="/caja/diferencias" component={() => <ProtectedRoute component={CajaDiferencias} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
         <Route path="/caja/cuentas-destino" component={() => <ProtectedRoute component={CajaCuentasDestino} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
         <Route path="/caja/comparativo" component={() => <ProtectedRoute component={CajaComparativo} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/notificaciones" component={() => <ProtectedRoute component={Notificaciones} adminOnly />} />
 
         <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} />} />
         

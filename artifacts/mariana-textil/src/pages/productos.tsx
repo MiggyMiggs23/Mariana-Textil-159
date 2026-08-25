@@ -10,7 +10,6 @@ import {
   getListProductosQueryKey,
   getGetCurrentUserQueryKey,
   Producto,
-  Role,
   UnidadProducto,
   ImportPreviewRow,
   ImportPreviewRowEstado
@@ -28,6 +27,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ChevronDown, Plus, Upload, Search, Package, CheckCircle2, AlertCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatNumber } from "@workspace/number-format";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -165,7 +165,7 @@ export default function Productos() {
     setIsCreateOpen(true);
   };
 
-  const isAdmin = user?.rol === Role.ADMIN;
+  const canCreate = hasPermission(user, Modules.PRODUCTOS, "crear");
 
   return (
     <AppLayout>
@@ -177,7 +177,7 @@ export default function Productos() {
               Gestión de telas, colores, SKUs e inventario general.
             </p>
           </div>
-          {isAdmin && (
+          {canCreate && (
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Button variant="outline" onClick={() => setIsImportOpen(true)} className="flex-1 sm:flex-none" data-testid="button-import">
                 <Upload className="w-4 h-4 mr-2" />
@@ -277,7 +277,7 @@ export default function Productos() {
                               <span className="text-muted-foreground">Total: </span>
                               <span className="font-semibold text-sidebar">{formatNumber(totalCantidad, { kind: "quantity" })}</span>
                             </div>
-                            {isAdmin && (
+                            {canCreate && (
                               <Button 
                                 variant="ghost" 
                                 size="sm" 
@@ -331,7 +331,7 @@ export default function Productos() {
                                     </TableCell>
                                   </TableRow>
                                 ))}
-                                {isAdmin && (
+                                {canCreate && (
                                   <TableRow>
                                     <TableCell colSpan={7} className="p-2">
                                       <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-primary h-8" onClick={() => openCreate(tela)}>

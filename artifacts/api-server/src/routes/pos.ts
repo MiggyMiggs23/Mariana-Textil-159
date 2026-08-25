@@ -513,7 +513,10 @@ router.get(
       const parsed = ObtenerTicketResponse.parse(ticket);
       res.json(
         omitTerminalTicketSensitiveFields(
-          parsed as unknown as Record<string, unknown>,
+          {
+            ...(parsed as unknown as Record<string, unknown>),
+            diasCreditoCliente: ticket.diasCreditoCliente,
+          },
           terminal,
         ),
       );
@@ -582,6 +585,8 @@ router.post(
     try {
       const params = CobrarTicketParams.parse(req.params);
       const body = CobrarTicketBody.parse(req.body);
+      const diasPlazo =
+        typeof req.body?.diasPlazo === "number" ? req.body.diasPlazo : null;
       const [ticket] = await db
         .select({
           ubicacionId: ticketsTable.ubicacionId,
@@ -628,6 +633,7 @@ router.post(
               referencia: pago.referencia,
             })),
             autorizadoPor,
+            diasPlazo,
             ip: getRequestIp(req),
           },
           true,

@@ -399,6 +399,23 @@ export interface Location {
   esSistema: boolean;
 }
 
+export type LocationInputTipo = typeof LocationInputTipo[keyof typeof LocationInputTipo];
+
+
+export const LocationInputTipo = {
+  TIENDA: 'TIENDA',
+  BODEGA: 'BODEGA',
+} as const;
+
+export interface LocationInput {
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  nombre: string;
+  tipo: LocationInputTipo;
+}
+
 export interface LocationUpdate {
   /**
      * @minLength 1
@@ -531,6 +548,22 @@ export interface ClienteInput {
   notas?: string | null;
   /** @nullable */
   contactoNombre?: string | null;
+  /**
+     * @nullable
+     * @pattern ^\d+(\.\d{1,2})?$
+     */
+  limiteCredito?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  diasCredito?: number | null;
+}
+
+export interface ClienteDuplicateError {
+  error: string;
+  code: 'CLIENT_NAME_CONFLICT';
+  existingClientId: number;
 }
 
 export interface ClienteUpdate {
@@ -597,6 +630,33 @@ export interface ClientePrecios {
   nota?: string | null;
 }
 
+/**
+ * @nullable
+ */
+export type ClienteMovimientoDiasPlazo = typeof ClienteMovimientoDiasPlazo[keyof typeof ClienteMovimientoDiasPlazo] | null;
+
+
+export const ClienteMovimientoDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
+/**
+ * @nullable
+ */
+export type ClienteMovimientoEstado = typeof ClienteMovimientoEstado[keyof typeof ClienteMovimientoEstado] | null;
+
+
+export const ClienteMovimientoEstado = {
+  VIGENTE: 'VIGENTE',
+  POR_VENCER: 'POR_VENCER',
+  VENCIDA: 'VENCIDA',
+  PAGADA: 'PAGADA',
+  SIN_PLAZO: 'SIN_PLAZO',
+} as const;
+
 export interface ClienteMovimiento {
   tipo?: string;
   importe?: string;
@@ -612,6 +672,13 @@ export interface ClienteMovimiento {
   /** @nullable */
   referencia?: string | null;
   fechaEfectiva?: string;
+  /** @nullable */
+  diasPlazo?: ClienteMovimientoDiasPlazo;
+  /** @nullable */
+  fechaVencimiento?: string | null;
+  /** @nullable */
+  estado?: ClienteMovimientoEstado;
+  sinPlazo?: boolean;
 }
 
 export interface ClienteEstadoCuenta {
@@ -729,6 +796,7 @@ export type ClienteCarteraItemAntiguedad = typeof ClienteCarteraItemAntiguedad[k
 
 
 export const ClienteCarteraItemAntiguedad = {
+  SIN_PLAZO: 'SIN_PLAZO',
   POR_VENCER: 'POR_VENCER',
   '1_30': '1_30',
   '31_60': '31_60',
@@ -742,6 +810,7 @@ export interface ClienteCarteraItem {
   saldoActual: string;
   antiguedad: ClienteCarteraItemAntiguedad;
   diasVencido: number;
+  sinPlazo?: string;
 }
 
 export interface ClientesCartera {
@@ -781,6 +850,75 @@ export interface ClientesAnalitica {
   mensual?: ClientesAnaliticaMensualItem[];
   [key: string]: unknown;
  }
+
+export type NotificacionCreditoDiasPlazo = typeof NotificacionCreditoDiasPlazo[keyof typeof NotificacionCreditoDiasPlazo];
+
+
+export const NotificacionCreditoDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
+export interface NotificacionCredito {
+  id: number;
+  ticketId: number;
+  clienteId: number;
+  clienteNombre: string;
+  folio: number;
+  importe: string;
+  diasPlazo: NotificacionCreditoDiasPlazo;
+  fechaVencimiento: string;
+  cajeroId: number;
+  cajeroNombre: string;
+  tiendaId: number;
+  tiendaNombre: string;
+  urgente: boolean;
+  /** @nullable */
+  leidaAt: string | null;
+  createdAt: string;
+}
+
+export type AlertaCreditoEstado = typeof AlertaCreditoEstado[keyof typeof AlertaCreditoEstado];
+
+
+export const AlertaCreditoEstado = {
+  POR_VENCER: 'POR_VENCER',
+  VENCIDA: 'VENCIDA',
+} as const;
+
+export interface AlertaCredito {
+  movimientoId: number;
+  /** @nullable */
+  ticketId: number | null;
+  clienteId: number;
+  clienteNombre: string;
+  /** @nullable */
+  folio: number | null;
+  pendiente: string;
+  fechaVencimiento: string;
+  diasVencido: number;
+  estado: AlertaCreditoEstado;
+}
+
+export interface ClienteConNotasVencidas {
+  clienteId: number;
+  clienteNombre: string;
+  notasVencidas: number;
+  saldoVencido: string;
+}
+
+export interface NotificacionesNoLeidasCount {
+  count: number;
+}
+
+export interface NotificacionesPanel {
+  notificaciones: NotificacionCredito[];
+  porVencer: AlertaCredito[];
+  vencidas: AlertaCredito[];
+  clientesConMultiplesVencidas: ClienteConNotasVencidas[];
+}
 
 export type TipoPagoProveedor = typeof TipoPagoProveedor[keyof typeof TipoPagoProveedor];
 
@@ -2331,11 +2469,26 @@ export interface TicketPagoInput {
   referencia?: string | null;
 }
 
+/**
+ * @nullable
+ */
+export type TicketCobroInputDiasPlazo = typeof TicketCobroInputDiasPlazo[keyof typeof TicketCobroInputDiasPlazo] | null;
+
+
+export const TicketCobroInputDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
 export interface TicketCobroInput {
   /** @minItems 1 */
   pagos: TicketPagoInput[];
   /** @nullable */
   clienteId?: number | null;
+  /** @nullable */
+  diasPlazo?: TicketCobroInputDiasPlazo;
   credencialesAdmin?: CredencialesAdmin | null;
 }
 
@@ -2456,10 +2609,12 @@ export interface TicketCajaResumen {
   formasPago: FormaPagoTicket[];
 }
 
-export type TicketDetalle = TicketResumen & {
+export type TicketDetalle = TicketResumen & ({
+  /** @nullable */
+  diasCreditoCliente?: number | null;
   lineas: TicketLinea[];
   pagos?: TicketPago[];
-};
+});
 
 export interface SesionCajaAperturaInput {
   /** @minimum 0 */

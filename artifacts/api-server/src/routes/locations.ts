@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { and, eq, inArray } from "drizzle-orm";
 import {
+  CreateLocationBody,
+  CreateLocationResponse,
   ListLocationsResponse,
   UpdateLocationBody,
   UpdateLocationParams,
@@ -35,6 +37,42 @@ router.get(
     )
     .orderBy(ubicacionesTable.id);
   res.json(ListLocationsResponse.parse(locations.map(presentLocation)));
+  },
+);
+
+router.post(
+  "/locations",
+  requierePermiso("ubicaciones", "crear"),
+  async (req, res): Promise<void> => {
+    const body = CreateLocationBody.safeParse(req.body);
+    if (!body.success) {
+      res.status(400).json({ error: "Datos de ubicación inválidos." });
+      return;
+    }
+    try {
+      const created = await db.transaction(async (tx) => {
+        const [row] = await tx
+          .insert(ubicacionesTable)
+          .values({ nombre: body.data.nombre.trim(), tipo: body.data.tipo })
+          .returning();
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id,
+          accion: "CREAR",
+          entidad: "ubicaciones",
+          entidadId: String(row.id),
+          datosDespues: presentLocation(row),
+          ip: getRequestIp(req),
+        });
+        return row;
+      });
+      res.status(201).json(CreateLocationResponse.parse(presentLocation(created)));
+    } catch (error) {
+      if ((error as { code?: string }).code === "23505") {
+        res.status(400).json({ error: "Ya existe una ubicación con ese nombre." });
+        return;
+      }
+      throw error;
+    }
   },
 );
 

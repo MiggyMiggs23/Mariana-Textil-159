@@ -3,6 +3,10 @@ import test from "node:test";
 import {
   allocateCreditFifo,
   canLinkAdjustmentToTicket,
+  creditDueDate,
+  creditStatus,
+  isCreditTerm,
+  mexicoCityDate,
 } from "./clientes-aging";
 import { createTextPdf } from "./pdf";
 
@@ -57,4 +61,40 @@ test("financial PDF paginates without dropping rows", () => {
   assert.equal((pdf.match(/\/Type \/Page\b/g) ?? []).length, 3);
   assert.match(pdf, /\(Fila 1\) Tj/);
   assert.match(pdf, /\(Fila 120\) Tj/);
+});
+
+test("credit due dates support every mandatory term from Mexico City sale date", () => {
+  const sale = new Date("2026-08-31T04:30:00.000Z"); // Aug 30 in Mexico City
+  assert.equal(mexicoCityDate(sale), "2026-08-30");
+  assert.equal(creditDueDate(sale, 7), "2026-09-06");
+  assert.equal(creditDueDate(sale, 15), "2026-09-14");
+  assert.equal(creditDueDate(sale, 30), "2026-09-29");
+  assert.equal(creditDueDate(sale, 60), "2026-10-29");
+});
+
+test("credit status boundaries are calculated at query time", () => {
+  assert.equal(creditStatus(0, "2026-09-10", "2026-09-20"), "PAGADA");
+  assert.equal(creditStatus(100, null, "2026-09-20"), "SIN_PLAZO");
+  assert.equal(creditStatus(100, "2026-09-24", "2026-09-20"), "VIGENTE");
+  assert.equal(creditStatus(100, "2026-09-23", "2026-09-20"), "POR_VENCER");
+  assert.equal(creditStatus(100, "2026-09-20", "2026-09-20"), "POR_VENCER");
+  assert.equal(creditStatus(100, "2026-09-19", "2026-09-20"), "VENCIDA");
+});
+
+test("only the four explicit credit terms are accepted", () => {
+  for (const term of [7, 15, 30, 60]) assert.equal(isCreditTerm(term), true);
+  for (const invalid of [undefined, null, 0, 14, 45, "30"]) {
+    assert.equal(isCreditTerm(invalid), false);
+  }
+});
+
+test("aging examples remain current until due date and age only afterward", () => {
+  assert.equal(creditStatus(100, "2026-01-31", "2026-01-21"), "VIGENTE");
+  assert.equal(creditStatus(100, "2026-03-02", "2026-02-15"), "VIGENTE");
+  assert.equal(creditStatus(100, "2026-01-08", "2026-01-21"), "VENCIDA");
+  const overdueDays =
+    (Date.parse("2026-01-21T00:00:00Z") -
+      Date.parse("2026-01-08T00:00:00Z")) /
+    86_400_000;
+  assert.equal(overdueDays, 13);
 });

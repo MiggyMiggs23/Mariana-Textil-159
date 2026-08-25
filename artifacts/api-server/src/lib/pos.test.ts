@@ -7,6 +7,7 @@ import {
   db,
   existenciasTable,
   movimientosCreditoTable,
+  notificacionesCreditoTable,
   movimientosTable,
   productosTable,
   rollosTable,
@@ -524,6 +525,7 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
           { formaPago: "TRANSFERENCIA", importe: "200" },
           { formaPago: "CREDITO", importe: "300" },
         ],
+        diasPlazo: 30,
         ip: "127.0.0.1",
       },
       true,
@@ -611,6 +613,7 @@ await test("POS-05B crédito concurrente serializa por cliente y respeta el lím
           usuarioId: USER_ID,
           clienteId: clientId,
           pagos: [{ formaPago: "CREDITO", importe: "400" }],
+          diasPlazo: 30,
           ip: "127.0.0.1",
         },
         true,
@@ -625,6 +628,7 @@ await test("POS-05B crédito concurrente serializa por cliente y respeta el lím
           usuarioId: USER_ID,
           clienteId: clientId,
           pagos: [{ formaPago: "CREDITO", importe: "400" }],
+          diasPlazo: 30,
           ip: "127.0.0.1",
         },
         true,
@@ -810,6 +814,7 @@ await test("POS-05B cobro exige sesión abierta y cliente para crédito", async 
             sesionCajaId: session.id,
             usuarioId: USER_ID,
             pagos: [{ formaPago: "CREDITO", importe: "100" }],
+            diasPlazo: 30,
             ip: "127.0.0.1",
           },
           true,
@@ -968,6 +973,7 @@ await test("POS-06 crédito sobre límite requiere autorización ADMIN", async (
             usuarioId: USER_ID,
             clienteId: clientId,
             pagos: [{ formaPago: "CREDITO", importe: "100" }],
+            diasPlazo: 30,
             ip: "127.0.0.1",
           },
           true,
@@ -986,11 +992,21 @@ await test("POS-06 crédito sobre límite requiere autorización ADMIN", async (
         clienteId: clientId,
         pagos: [{ formaPago: "CREDITO", importe: "100" }],
         autorizadoPor: USER_ID,
+        diasPlazo: 30,
         ip: "127.0.0.1",
       },
       true,
     ),
   );
+  const [notification] = await db
+    .select({
+      urgente: notificacionesCreditoTable.urgente,
+      fechaVencimiento: notificacionesCreditoTable.fechaVencimiento,
+    })
+    .from(notificacionesCreditoTable)
+    .where(eq(notificacionesCreditoTable.ticketId, ticket.id));
+  assert.equal(notification?.urgente, true, "zero-limit credit must be urgent");
+  assert.match(notification?.fechaVencimiento ?? "", /^\d{4}-\d{2}-\d{2}$/);
 });
 
 await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos", async () => {
@@ -1024,6 +1040,7 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
         usuarioId: USER_ID,
         clienteId: clientId,
         pagos: [{ formaPago: "CREDITO", importe: "150" }],
+        diasPlazo: 30,
         ip: "127.0.0.1",
       },
       true,
@@ -1132,6 +1149,9 @@ try {
           inArray(auditoriaTable.entidadId, createdTicketIds.map(String)),
         ),
       );
+    await db
+      .delete(notificacionesCreditoTable)
+      .where(inArray(notificacionesCreditoTable.ticketId, createdTicketIds));
     await db
       .delete(movimientosCreditoTable)
       .where(inArray(movimientosCreditoTable.ticketId, createdTicketIds));

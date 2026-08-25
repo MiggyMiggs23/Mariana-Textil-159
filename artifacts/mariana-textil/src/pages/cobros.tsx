@@ -65,6 +65,30 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber } from "@workspace/number-format";
 
+const CREDIT_TERMS = [7, 15, 30, 60] as const;
+type CreditTerm = (typeof CREDIT_TERMS)[number];
+
+function mexicoCityDate(date: Date): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+function creditDueDate(saleDate: string, term: CreditTerm): string {
+  const [year, month, day] = mexicoCityDate(new Date(saleDate))
+    .split("-")
+    .map(Number);
+  return new Date(Date.UTC(year!, month! - 1, day! + term))
+    .toISOString()
+    .slice(0, 10);
+}
+
 function HistorialCortes() {
   const [sessionId, setSessionId] = useState<number | null>(null);
   const {
@@ -252,6 +276,7 @@ function CobroDialog({
   const [adminPass, setAdminPass] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
   const [showSplit, setShowSplit] = useState(false);
+  const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
 
   const initializedForTicketId = useRef<number | null>(null);
 
@@ -270,6 +295,7 @@ function CobroDialog({
       setAdminPass("");
       setPasswordVisibilityResetKey((current) => current + 1);
       setShowSplit(false);
+      setDiasPlazo(null);
     }
   }, [open]);
 
@@ -284,10 +310,29 @@ function CobroDialog({
     (pago) => pago.formaPago === FormaPagoTicket.CREDITO,
   );
   const primaryPago = pagos[0];
+  const ticketCreditInfo = ticket as
+    | (typeof ticket & { diasCreditoCliente?: number })
+    | undefined;
+  const fechaVencimiento =
+    ticket && diasPlazo
+      ? creditDueDate(ticket.createdAt, diasPlazo)
+      : null;
+
+  useEffect(() => {
+    if (!usaCredito) setDiasPlazo(null);
+  }, [usaCredito]);
 
   const handleCobrar = () => {
     setPasswordVisibilityResetKey((current) => current + 1);
     if (!ticket || !isPaymentSelected) return;
+    if (usaCredito && diasPlazo === null) {
+      toast({
+        title: "Elige el plazo de crédito",
+        description: "Selecciona 7, 15, 30 o 60 días antes de confirmar.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (Math.abs(faltante) > 0.01) {
       toast({
         title: "El pago no coincide",
@@ -310,11 +355,12 @@ function CobroDialog({
         id: ticket.id,
         data: {
           pagos: pagosValidos,
+          diasPlazo,
           credencialesAdmin:
             adminUser && adminPass
               ? { usuario: adminUser, password: adminPass }
               : undefined,
-        },
+        } as Parameters<typeof cobrarTicket.mutate>[0]["data"],
       },
       {
         onSuccess: () => {
@@ -671,6 +717,53 @@ function CobroDialog({
                     </span>
                   </div>
 
+                  <div className="space-y-3">
+                    <Label className="font-semibold text-amber-900">
+                      Elige el plazo de vencimiento
+                    </Label>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                      {CREDIT_TERMS.map((term) => (
+                        <Button
+                          key={term}
+                          type="button"
+                          variant={diasPlazo === term ? "default" : "outline"}
+                          className="h-16 text-base font-black"
+                          onClick={() => setDiasPlazo(term)}
+                          data-testid={`credit-term-${term}`}
+                        >
+                          {term} días
+                        </Button>
+                      ))}
+                    </div>
+                    {ticketCreditInfo?.diasCreditoCliente != null &&
+                      ticketCreditInfo.diasCreditoCliente > 0 && (
+                        <p className="text-sm text-amber-800">
+                          Plazo habitual de este cliente:{" "}
+                          <strong>
+                            {ticketCreditInfo.diasCreditoCliente} días
+                          </strong>
+                          . Esta referencia no selecciona el plazo.
+                        </p>
+                      )}
+                    {fechaVencimiento ? (
+                      <p
+                        className="rounded-md bg-white p-3 text-center font-bold text-amber-950"
+                        data-testid="credit-due-date"
+                      >
+                        Vence el{" "}
+                        {format(
+                          new Date(`${fechaVencimiento}T12:00:00`),
+                          "d 'de' MMMM 'de' yyyy",
+                          { locale: es },
+                        )}
+                      </p>
+                    ) : (
+                      <p className="text-sm font-medium text-amber-800">
+                        Debes elegir un plazo para confirmar el cobro a crédito.
+                      </p>
+                    )}
+                  </div>
+
                   <div className="space-y-2">
                     <Label className="font-semibold text-amber-900">
                       Cliente del ticket
@@ -750,7 +843,11 @@ function CobroDialog({
               </Button>
               <Button
                 className="flex-1 h-14 text-lg font-black shadow-md hover:shadow-lg transition-all"
-                disabled={Math.abs(faltante) > 0.01 || cobrarTicket.isPending}
+                disabled={
+                  Math.abs(faltante) > 0.01 ||
+                  cobrarTicket.isPending ||
+                  (usaCredito && diasPlazo === null)
+                }
                 onClick={handleCobrar}
               >
                 {cobrarTicket.isPending ? (

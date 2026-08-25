@@ -24,4 +24,14 @@ export interface ClienteInput {
   notas?: string | null;
   /** @nullable */
   contactoNombre?: string | null;
+  /**
+     * @nullable
+     * @pattern ^\d+(\.\d{1,2})?$
+     */
+  limiteCredito?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  diasCredito?: number | null;
 }

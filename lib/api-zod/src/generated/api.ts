@@ -120,6 +120,27 @@ export const ListLocationsResponse = zod.array(ListLocationsResponseItem)
 
 
 /**
+ * @summary Crea una tienda o bodega
+ */
+export const createLocationBodyNombreMax = 120;
+
+
+
+export const CreateLocationBody = zod.object({
+  "nombre": zod.string().min(1).max(createLocationBodyNombreMax),
+  "tipo": zod.enum(['TIENDA', 'BODEGA'])
+})
+
+export const CreateLocationResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
+  "activa": zod.boolean(),
+  "esSistema": zod.boolean()
+})
+
+
+/**
  * @summary Edita el nombre o estado de una ubicación
  */
 export const UpdateLocationParams = zod.object({
@@ -1935,6 +1956,9 @@ export const ListClientesResponse = zod.array(ListClientesResponseItem)
  */
 export const createClienteBodyNombreMax = 200;
 
+export const createClienteBodyLimiteCreditoRegExp = new RegExp('^\\d+(\\.\\d{1,2})?$');
+export const createClienteBodyDiasCreditoMin = 0;
+
 
 
 export const CreateClienteBody = zod.object({
@@ -1944,7 +1968,9 @@ export const CreateClienteBody = zod.object({
   "direccion": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
-  "contactoNombre": zod.string().nullish()
+  "contactoNombre": zod.string().nullish(),
+  "limiteCredito": zod.string().regex(createClienteBodyLimiteCreditoRegExp).nullish(),
+  "diasCredito": zod.number().min(createClienteBodyDiasCreditoMin).nullish()
 })
 
 export const createClienteResponseDiasCreditoMin = 0;
@@ -1976,8 +2002,9 @@ export const GetClientesCarteraResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "saldoActual": zod.string(),
-  "antiguedad": zod.enum(['POR_VENCER', '1_30', '31_60', '61_90', 'MAS_90']),
-  "diasVencido": zod.number()
+  "antiguedad": zod.enum(['SIN_PLAZO', 'POR_VENCER', '1_30', '31_60', '61_90', 'MAS_90']),
+  "diasVencido": zod.number(),
+  "sinPlazo": zod.string().optional()
 }))
 })
 
@@ -2173,7 +2200,11 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "nombreUsuario": zod.string().optional(),
   "formaPago": zod.string().nullish(),
   "referencia": zod.string().nullish(),
-  "fechaEfectiva": zod.coerce.date().optional()
+  "fechaEfectiva": zod.coerce.date().optional(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
+  "fechaVencimiento": zod.coerce.date().nullish(),
+  "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
+  "sinPlazo": zod.boolean().optional()
 })),
   "saldoActual": zod.string()
 })
@@ -2515,6 +2546,100 @@ export const ValidarPrecioPosResponse = zod.object({
 
 
 /**
+ * @summary Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+ */
+export const ListNotificacionesResponse = zod.object({
+  "notificaciones": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
+  "fechaVencimiento": zod.coerce.date(),
+  "cajeroId": zod.number(),
+  "cajeroNombre": zod.string(),
+  "tiendaId": zod.number(),
+  "tiendaNombre": zod.string(),
+  "urgente": zod.boolean(),
+  "leidaAt": zod.coerce.date().nullable(),
+  "createdAt": zod.coerce.date()
+})),
+  "porVencer": zod.array(zod.object({
+  "movimientoId": zod.number(),
+  "ticketId": zod.number().nullable(),
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "folio": zod.number().nullable(),
+  "pendiente": zod.string(),
+  "fechaVencimiento": zod.coerce.date(),
+  "diasVencido": zod.number(),
+  "estado": zod.enum(['POR_VENCER', 'VENCIDA'])
+})),
+  "vencidas": zod.array(zod.object({
+  "movimientoId": zod.number(),
+  "ticketId": zod.number().nullable(),
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "folio": zod.number().nullable(),
+  "pendiente": zod.string(),
+  "fechaVencimiento": zod.coerce.date(),
+  "diasVencido": zod.number(),
+  "estado": zod.enum(['POR_VENCER', 'VENCIDA'])
+})),
+  "clientesConMultiplesVencidas": zod.array(zod.object({
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "notasVencidas": zod.number(),
+  "saldoVencido": zod.string()
+}))
+})
+
+
+/**
+ * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
+ */
+export const CountNotificacionesNoLeidasResponse = zod.object({
+  "count": zod.number()
+})
+
+
+/**
+ * @summary Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+ */
+export const MarkAllNotificacionesReadResponse = zod.object({
+  "count": zod.number()
+})
+
+
+/**
+ * @summary Marca una notificación como leída sin eliminarla (ADMIN)
+ */
+export const MarkNotificacionReadParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const MarkNotificacionReadResponse = zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
+  "fechaVencimiento": zod.coerce.date(),
+  "cajeroId": zod.number(),
+  "cajeroNombre": zod.string(),
+  "tiendaId": zod.number(),
+  "tiendaNombre": zod.string(),
+  "urgente": zod.boolean(),
+  "leidaAt": zod.coerce.date().nullable(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Crea un ticket normal o de venta metreada sin cobrarlo
  */
 
@@ -2570,6 +2695,7 @@ export const CrearTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -2748,6 +2874,7 @@ export const ObtenerTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -2834,6 +2961,7 @@ export const CancelarTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -2889,6 +3017,7 @@ export const CobrarTicketBody = zod.object({
   "referencia": zod.string().nullish()
 })).min(1),
   "clienteId": zod.number().nullish(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
   "credencialesAdmin": zod.union([zod.object({
   "usuario": zod.string().min(1).max(cobrarTicketBodyCredencialesAdminOneUsuarioMax),
   "password": zod.string().min(1).max(cobrarTicketBodyCredencialesAdminOnePasswordMax)
@@ -2926,6 +3055,7 @@ export const CobrarTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),

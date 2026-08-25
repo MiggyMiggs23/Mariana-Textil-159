@@ -39,6 +39,7 @@ import type {
   ClienteCompras,
   ClienteCredito,
   ClienteCreditoUpdate,
+  ClienteDuplicateError,
   ClienteEstadisticas,
   ClienteEstadoCuenta,
   ClienteInput,
@@ -107,12 +108,16 @@ import type {
   ListarTicketsParams,
   ListarTicketsPendientesParams,
   Location,
+  LocationInput,
   LocationUpdate,
   LoginInput,
   MotivoSalidaInput,
   MoverRolloInput,
   MovimientoRow,
   NotFoundResponse,
+  NotificacionCredito,
+  NotificacionesNoLeidasCount,
+  NotificacionesPanel,
   ObtenerSesionCajaActualParams,
   PagoProveedorInput,
   PagoProveedorRow,
@@ -271,13 +276,6 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
-
-
-
-
-
-
 export const getLoginUrl = () => {
 
 
@@ -490,13 +488,6 @@ export function useGetCurrentUser<TData = Awaited<ReturnType<typeof getCurrentUs
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
-
-
-
-
-
-
 export const getGetDashboardUrl = (params?: GetDashboardParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -657,6 +648,77 @@ export function useListLocations<TData = Awaited<ReturnType<typeof listLocations
 
 
 
+
+export const getCreateLocationUrl = () => {
+
+
+
+
+  return `/api/locations`
+}
+
+/**
+ * @summary Crea una tienda o bodega
+ */
+export const createLocation = async (locationInput: LocationInput, options?: Parameters<typeof customFetch>[1]): Promise<Location> => {
+
+  return customFetch<Location>(getCreateLocationUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(locationInput)
+  }
+);}
+
+
+
+
+
+export const getCreateLocationMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLocation>>, TError,{data: BodyType<LocationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createLocation>>, TError,{data: BodyType<LocationInput>}, TContext> => {
+
+const mutationKey = ['createLocation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createLocation>>, {data: BodyType<LocationInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createLocation(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateLocationMutationResult = NonNullable<Awaited<ReturnType<typeof createLocation>>>
+    export type CreateLocationMutationBody = BodyType<LocationInput>
+    export type CreateLocationMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Crea una tienda o bodega
+ */
+export const useCreateLocation = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLocation>>, TError,{data: BodyType<LocationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createLocation>>,
+        TError,
+        {data: BodyType<LocationInput>},
+        TContext
+      > => {
+      return useMutation(getCreateLocationMutationOptions(options));
+    }
 
 export const getUpdateLocationUrl = (id: number,) => {
 
@@ -4717,7 +4779,7 @@ export const createCliente = async (clienteInput: ClienteInput, options?: Parame
 
 
 
-export const getCreateClienteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+export const getCreateClienteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ClienteDuplicateError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCliente>>, TError,{data: BodyType<ClienteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createCliente>>, TError,{data: BodyType<ClienteInput>}, TContext> => {
 
@@ -4746,12 +4808,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreateClienteMutationResult = NonNullable<Awaited<ReturnType<typeof createCliente>>>
     export type CreateClienteMutationBody = BodyType<ClienteInput>
-    export type CreateClienteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+    export type CreateClienteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ClienteDuplicateError>
 
     /**
  * @summary Da de alta un cliente
  */
-export const useCreateCliente = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+export const useCreateCliente = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ClienteDuplicateError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCliente>>, TError,{data: BodyType<ClienteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof createCliente>>,
@@ -6811,6 +6873,302 @@ export const useValidarPrecioPos = <TError = ErrorType<ValidationErrorResponse |
         TContext
       > => {
       return useMutation(getValidarPrecioPosMutationOptions(options));
+    }
+
+export const getListNotificacionesUrl = () => {
+
+
+
+
+  return `/api/notificaciones`
+}
+
+/**
+ * @summary Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+ */
+export const listNotificaciones = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesPanel> => {
+
+  return customFetch<NotificacionesPanel>(getListNotificacionesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListNotificacionesQueryKey = () => {
+    return [
+    `/api/notificaciones`
+    ] as const;
+    }
+
+
+export const getListNotificacionesQueryOptions = <TData = Awaited<ReturnType<typeof listNotificaciones>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNotificaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListNotificacionesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNotificaciones>>> = ({ signal }) => listNotificaciones({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNotificaciones>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListNotificacionesQueryResult = NonNullable<Awaited<ReturnType<typeof listNotificaciones>>>
+export type ListNotificacionesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+ */
+
+export function useListNotificaciones<TData = Awaited<ReturnType<typeof listNotificaciones>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNotificaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListNotificacionesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCountNotificacionesNoLeidasUrl = () => {
+
+
+
+
+  return `/api/notificaciones/no-leidas/count`
+}
+
+/**
+ * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
+ */
+export const countNotificacionesNoLeidas = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesNoLeidasCount> => {
+
+  return customFetch<NotificacionesNoLeidasCount>(getCountNotificacionesNoLeidasUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getCountNotificacionesNoLeidasQueryKey = () => {
+    return [
+    `/api/notificaciones/no-leidas/count`
+    ] as const;
+    }
+
+
+export const getCountNotificacionesNoLeidasQueryOptions = <TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCountNotificacionesNoLeidasQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>> = ({ signal }) => countNotificacionesNoLeidas({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type CountNotificacionesNoLeidasQueryResult = NonNullable<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>>
+export type CountNotificacionesNoLeidasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
+ */
+
+export function useCountNotificacionesNoLeidas<TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getCountNotificacionesNoLeidasQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getMarkAllNotificacionesReadUrl = () => {
+
+
+
+
+  return `/api/notificaciones/leer-todas`
+}
+
+/**
+ * @summary Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+ */
+export const markAllNotificacionesRead = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesNoLeidasCount> => {
+
+  return customFetch<NotificacionesNoLeidasCount>(getMarkAllNotificacionesReadUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getMarkAllNotificacionesReadMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markAllNotificacionesRead>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markAllNotificacionesRead>>, TError,void, TContext> => {
+
+const mutationKey = ['markAllNotificacionesRead'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markAllNotificacionesRead>>, void> = () => {
+
+
+          return  markAllNotificacionesRead(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarkAllNotificacionesReadMutationResult = NonNullable<Awaited<ReturnType<typeof markAllNotificacionesRead>>>
+
+    export type MarkAllNotificacionesReadMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+ */
+export const useMarkAllNotificacionesRead = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markAllNotificacionesRead>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof markAllNotificacionesRead>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getMarkAllNotificacionesReadMutationOptions(options));
+    }
+
+export const getMarkNotificacionReadUrl = (id: number,) => {
+
+
+
+
+  return `/api/notificaciones/${id}/leer`
+}
+
+/**
+ * @summary Marca una notificación como leída sin eliminarla (ADMIN)
+ */
+export const markNotificacionRead = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<NotificacionCredito> => {
+
+  return customFetch<NotificacionCredito>(getMarkNotificacionReadUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getMarkNotificacionReadMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['markNotificacionRead'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markNotificacionRead>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  markNotificacionRead(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarkNotificacionReadMutationResult = NonNullable<Awaited<ReturnType<typeof markNotificacionRead>>>
+
+    export type MarkNotificacionReadMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Marca una notificación como leída sin eliminarla (ADMIN)
+ */
+export const useMarkNotificacionRead = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof markNotificacionRead>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getMarkNotificacionReadMutationOptions(options));
     }
 
 export const getCrearTicketUrl = () => {
@@ -9358,3 +9716,5 @@ export function useExportAdminCuentasDestinoPdf<TData = Awaited<ReturnType<typeo
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+// End of generated API client.

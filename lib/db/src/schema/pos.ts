@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   index,
   integer,
   numeric,
@@ -203,6 +204,8 @@ export const movimientosCreditoTable = pgTable(
     formaPago: formaPagoTicketEnum("forma_pago"),
     referencia: text("referencia"),
     metadata: text("metadata"),
+    diasPlazo: integer("dias_plazo"),
+    fechaVencimiento: date("fecha_vencimiento"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -219,6 +222,51 @@ export const movimientosCreditoTable = pgTable(
         OR (${table.tipo} IN ('ABONO', 'REVERSO') AND ${table.importe} < 0)
         OR (${table.tipo} = 'AJUSTE' AND ${table.importe} <> 0)`,
     ),
+    check(
+      "movimientos_credito_plazo_check",
+      sql`(${table.diasPlazo} IS NULL AND ${table.fechaVencimiento} IS NULL)
+        OR (${table.diasPlazo} IN (7, 15, 30, 60) AND ${table.fechaVencimiento} IS NOT NULL)`,
+    ),
+  ],
+);
+
+/** Persistent administrator review queue for issued customer credit. */
+export const notificacionesCreditoTable = pgTable(
+  "notificaciones_credito",
+  {
+    id: serial("id").primaryKey(),
+    ticketId: integer("ticket_id")
+      .notNull()
+      .unique()
+      .references(() => ticketsTable.id),
+    clienteId: integer("cliente_id")
+      .notNull()
+      .references(() => clientesTable.id),
+    clienteNombre: text("cliente_nombre").notNull(),
+    folio: integer("folio").notNull(),
+    importe: numeric("importe", { precision: 12, scale: 2 }).notNull(),
+    diasPlazo: integer("dias_plazo").notNull(),
+    fechaVencimiento: date("fecha_vencimiento", { mode: "string" }).notNull(),
+    cajeroId: integer("cajero_id")
+      .notNull()
+      .references(() => usuariosTable.id),
+    cajeroNombre: text("cajero_nombre").notNull(),
+    tiendaId: integer("tienda_id")
+      .notNull()
+      .references(() => ubicacionesTable.id),
+    tiendaNombre: text("tienda_nombre").notNull(),
+    urgente: boolean("urgente").notNull().default(false),
+    leidaAt: timestamp("leida_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("notificaciones_credito_leida_created_idx").on(
+      table.leidaAt,
+      table.createdAt,
+    ),
+    index("notificaciones_credito_cliente_idx").on(table.clienteId),
   ],
 );
 
@@ -263,4 +311,5 @@ export type InsertMovimientoCredito = z.infer<
   typeof insertMovimientoCreditoSchema
 >;
 export type MovimientoCredito = typeof movimientosCreditoTable.$inferSelect;
+export type NotificacionCredito = typeof notificacionesCreditoTable.$inferSelect;
 export type TicketFolio = typeof ticketFolioTable.$inferSelect;

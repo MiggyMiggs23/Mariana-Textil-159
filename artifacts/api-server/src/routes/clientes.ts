@@ -21,6 +21,10 @@ import { getRequestIp } from "../lib/request";
 import { createTextPdf } from "../lib/pdf";
 import { canLinkAdjustmentToTicket } from "../lib/clientes-aging";
 import {
+  isActiveNonSystemNameConflict,
+  parseClientCreditTerms,
+} from "../lib/clientes-create";
+import {
   EXCEL_NUMBER_FORMAT,
   formatNumber,
   toExcelNumber,
@@ -81,7 +85,7 @@ router.get(
            FROM clientes c LEFT JOIN movimientos_credito m ON m.cliente_id=c.id
            WHERE c.activo GROUP BY c.id
          ), vencido AS (
-           SELECT c.id, COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < now()),0) AS total
+           SELECT c.id, COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < (now() AT TIME ZONE 'America/Mexico_City')::date),0) AS total
            FROM clientes c LEFT JOIN LATERAL credit_fifo_aging(c.id) a ON true
            WHERE c.activo GROUP BY c.id
          )
@@ -162,29 +166,49 @@ router.post(
     try {
       const { nombre, telefono, correo, direccion, rfc, notas, contactoNombre, diasCredito, limiteCredito } =
         req.body as Record<string, unknown>;
-      if (diasCredito !== undefined || limiteCredito !== undefined) {
-        res.status(403).json({
-          error: "Los términos de crédito solo se modifican en /clientes/:id/credito.",
-        });
-        return;
-      }
 
       if (typeof nombre !== "string" || nombre.trim().length < 1) {
         res.status(400).json({ error: "El nombre es obligatorio." });
+        return;
+      }
+      const normalizedName = nombre.trim();
+      const creditTerms = parseClientCreditTerms(limiteCredito, diasCredito);
+      if (!creditTerms.ok) {
+        res.status(400).json({ error: creditTerms.error });
+        return;
+      }
+
+      const [duplicate] = await db
+        .select({ id: clientesTable.id })
+        .from(clientesTable)
+        .where(and(
+          eq(clientesTable.activo, true),
+          eq(clientesTable.esSistema, false),
+          sql`lower(btrim(${clientesTable.nombre})) = lower(${normalizedName})`,
+        ))
+        .limit(1);
+      if (duplicate) {
+        res.status(409).json({
+          error: "Ya existe un cliente activo con ese nombre.",
+          code: "CLIENT_NAME_CONFLICT",
+          existingClientId: duplicate.id,
+        });
         return;
       }
 
       const [created] = await db
         .insert(clientesTable)
         .values({
-          nombre: (nombre as string).trim(),
-          telefono: typeof telefono === "string" ? telefono : null,
-          correo: typeof correo === "string" ? correo : null,
-          direccion: typeof direccion === "string" ? direccion : null,
-          rfc: typeof rfc === "string" ? rfc : null,
-          notas: typeof notas === "string" ? notas : null,
+          nombre: normalizedName,
+          telefono: typeof telefono === "string" ? telefono.trim() || null : null,
+          correo: typeof correo === "string" ? correo.trim() || null : null,
+          direccion: typeof direccion === "string" ? direccion.trim() || null : null,
+          rfc: typeof rfc === "string" ? rfc.trim() || null : null,
+          notas: typeof notas === "string" ? notas.trim() || null : null,
           contactoNombre:
-            typeof contactoNombre === "string" ? contactoNombre.trim() : null,
+            typeof contactoNombre === "string" ? contactoNombre.trim() || null : null,
+          limiteCredito: creditTerms.limiteCredito,
+          diasCredito: creditTerms.diasCredito,
         })
         .returning();
 
@@ -199,6 +223,26 @@ router.post(
 
       res.status(201).json(presentClienteOperativo(created));
     } catch (e) {
+      if (isActiveNonSystemNameConflict(e)) {
+        const nombre = typeof req.body?.nombre === "string" ? req.body.nombre.trim() : "";
+        const [duplicate] = await db
+          .select({ id: clientesTable.id })
+          .from(clientesTable)
+          .where(and(
+            eq(clientesTable.activo, true),
+            eq(clientesTable.esSistema, false),
+            sql`lower(btrim(${clientesTable.nombre})) = lower(${nombre})`,
+          ))
+          .limit(1);
+        if (duplicate) {
+          res.status(409).json({
+            error: "Ya existe un cliente activo con ese nombre.",
+            code: "CLIENT_NAME_CONFLICT",
+            existingClientId: duplicate.id,
+          });
+          return;
+        }
+      }
       next(e);
     }
   },
@@ -218,17 +262,19 @@ router.get(
           WHERE c.activo AND NOT c.es_sistema
         )
         SELECT id, nombre, SUM(pendiente)::text AS "saldoActual",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at >= now()),0)::text AS "porVencer",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < now() AND due_at >= now()-interval '30 day'),0)::text AS "1_30",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < now()-interval '30 day' AND due_at >= now()-interval '60 day'),0)::text AS "31_60",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < now()-interval '60 day' AND due_at >= now()-interval '90 day'),0)::text AS "61_90",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < now()-interval '90 day'),0)::text AS "mas90",
-          CASE WHEN MIN(due_at) FILTER (WHERE due_at < now()) IS NULL THEN 'POR_VENCER'
-            WHEN MIN(due_at) >= now()-interval '30 day' THEN '1_30'
-            WHEN MIN(due_at) >= now()-interval '60 day' THEN '31_60'
-            WHEN MIN(due_at) >= now()-interval '90 day' THEN '61_90'
+          COALESCE(SUM(pendiente) FILTER (WHERE due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date),0)::text AS "porVencer",
+          COALESCE(SUM(pendiente) FILTER (WHERE due_at IS NULL),0)::text AS "sinPlazo",
+          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date AND due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date-30),0)::text AS "1_30",
+          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date-30 AND due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date-60),0)::text AS "31_60",
+          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date-60 AND due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date-90),0)::text AS "61_90",
+          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date-90),0)::text AS "mas90",
+          CASE WHEN BOOL_AND(due_at IS NULL) THEN 'SIN_PLAZO'
+            WHEN MIN(due_at) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date) IS NULL THEN 'POR_VENCER'
+            WHEN MIN(due_at) >= (now() AT TIME ZONE 'America/Mexico_City')::date-30 THEN '1_30'
+            WHEN MIN(due_at) >= (now() AT TIME ZONE 'America/Mexico_City')::date-60 THEN '31_60'
+            WHEN MIN(due_at) >= (now() AT TIME ZONE 'America/Mexico_City')::date-90 THEN '61_90'
             ELSE 'MAS_90' END AS antiguedad,
-          GREATEST(0, EXTRACT(day FROM now()-MIN(due_at) FILTER (WHERE due_at < now())) )::int AS "diasVencido"
+          GREATEST(0, (now() AT TIME ZONE 'America/Mexico_City')::date-MIN(due_at) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date))::int AS "diasVencido"
         FROM cartera GROUP BY id,nombre ORDER BY SUM(pendiente) DESC`);
       res.json({ clientes: result.rows });
     } catch (error) {
@@ -298,7 +344,7 @@ router.get(
            GROUP BY p.color ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
         pool.query(
           `SELECT c.id,c.nombre,MIN(t.created_at) AS "primeraCompra",MAX(t.created_at) AS "ultimaCompra",
-            COALESCE((SELECT SUM(a.pendiente) FROM credit_fifo_aging(c.id) a WHERE a.due_at<now()),0)::text vencido
+            COALESCE((SELECT SUM(a.pendiente) FROM credit_fifo_aging(c.id) a WHERE a.due_at<(now() AT TIME ZONE 'America/Mexico_City')::date),0)::text vencido
            FROM clientes c LEFT JOIN tickets t ON t.cliente_id=c.id AND t.estado='VENDIDO'
            WHERE NOT c.es_sistema GROUP BY c.id,c.nombre`, []),
       ]);
@@ -384,8 +430,9 @@ router.get(
     try {
       const result = await pool.query(`
         SELECT c.nombre, SUM(a.pendiente)::text AS saldo,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < now()),0)::text AS vencido,
-          MIN(a.due_at) AS "primerVencimiento"
+          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < (now() AT TIME ZONE 'America/Mexico_City')::date),0)::text AS vencido,
+          MIN(a.due_at) AS "primerVencimiento",
+          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at IS NULL),0)::text AS "sinPlazo"
         FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
         WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
       const workbook = new ExcelJS.Workbook();
@@ -395,13 +442,16 @@ router.get(
         { header: "Saldo", key: "saldo", width: 15 },
         { header: "Vencido", key: "vencido", width: 15 },
         { header: "Primer vencimiento", key: "primerVencimiento", width: 22 },
+        { header: "Sin plazo definido", key: "sinPlazo", width: 18 },
       ];
       sheet.getColumn("saldo").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn("vencido").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("sinPlazo").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.addRows(result.rows.map((row) => ({
         ...row,
         saldo: toExcelNumber(row.saldo),
         vencido: toExcelNumber(row.vencido),
+        sinPlazo: toExcelNumber(row.sinPlazo),
       })));
       res.type(
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -422,14 +472,15 @@ router.get(
     try {
       const result = await pool.query(`
         SELECT c.nombre,SUM(a.pendiente)::text saldo,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at<now()),0)::text vencido
+          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at<(now() AT TIME ZONE 'America/Mexico_City')::date),0)::text vencido,
+          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at IS NULL),0)::text "sinPlazo"
         FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
         WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
       const pdf = createTextPdf(
         "Cartera de clientes",
         result.rows.map(
           (row) =>
-            `${row.nombre} | saldo ${formatNumber(row.saldo, { kind: "money" })} | vencido ${formatNumber(row.vencido, { kind: "money" })}`,
+            `${row.nombre} | saldo ${formatNumber(row.saldo, { kind: "money" })} | vencido ${formatNumber(row.vencido, { kind: "money" })} | sin plazo definido ${formatNumber(row.sinPlazo, { kind: "money" })}`,
         ),
       );
       res.type("application/pdf");
@@ -624,8 +675,15 @@ router.get(
       const puedeComprarCredito = disponible > 0;
       const aging = await pool.query(
         `SELECT due_at AS "fechaVencimiento",pendiente::text,
-          GREATEST(0,EXTRACT(day FROM now()-due_at))::int AS "diasVencido"
-         FROM credit_fifo_aging($1) ORDER BY due_at`,
+          CASE WHEN due_at IS NULL THEN 0 ELSE GREATEST(0,(now() AT TIME ZONE 'America/Mexico_City')::date-due_at) END::int AS "diasVencido",
+               (due_at IS NULL) AS "sinPlazo",
+               CASE
+            WHEN due_at IS NULL THEN 'SIN_PLAZO'
+            WHEN due_at < (now() AT TIME ZONE 'America/Mexico_City')::date THEN 'VENCIDA'
+            WHEN due_at <= (now() AT TIME ZONE 'America/Mexico_City')::date + 3 THEN 'POR_VENCER'
+            ELSE 'VIGENTE'
+          END AS estado
+         FROM credit_fifo_aging($1) ORDER BY due_at NULLS LAST`,
         [id],
       );
       const activity = await pool.query(
@@ -837,7 +895,8 @@ router.get(
         pool.query(
           `WITH ledger AS (
              SELECT m.id, m.tipo, m.importe, m.created_at, m.notas,
-               m.forma_pago, m.referencia, t.folio AS ticket_folio,
+                m.forma_pago, m.referencia, m.dias_plazo, m.fecha_vencimiento,
+                t.folio AS ticket_folio,
                u.nombre AS nombre_usuario,
                SUM(m.importe) OVER (ORDER BY m.created_at,m.id) AS saldo_corrido
              FROM movimientos_credito m
@@ -846,7 +905,21 @@ router.get(
              WHERE m.cliente_id=$1
            )
            SELECT id, tipo, importe::text, created_at AS fecha,
-             created_at AS "fechaEfectiva", notas, forma_pago AS "formaPago",
+              created_at AS "fechaEfectiva",
+              CASE WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL
+                THEN CONCAT_WS(' · ', notas, 'Sin plazo definido (crédito legado)')
+                ELSE notas END AS notas,
+              forma_pago AS "formaPago", dias_plazo AS "diasPlazo",
+              fecha_vencimiento AS "fechaVencimiento",
+              CASE
+                WHEN tipo='VENTA_CREDITO' AND NOT EXISTS (
+                  SELECT 1 FROM credit_fifo_aging($1) a WHERE a.movimiento_id=ledger.id
+                ) THEN 'PAGADA'
+                WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL THEN 'SIN_PLAZO'
+                WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento < (now() AT TIME ZONE 'America/Mexico_City')::date THEN 'VENCIDA'
+                WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento <= (now() AT TIME ZONE 'America/Mexico_City')::date+3 THEN 'POR_VENCER'
+                WHEN tipo='VENTA_CREDITO' THEN 'VIGENTE'
+              END AS estado,
              referencia, ticket_folio AS "ticketFolio",
              nombre_usuario AS "nombreUsuario", saldo_corrido::text AS "saldoCorrido"
            FROM ledger
@@ -862,7 +935,15 @@ router.get(
           [id],
         ),
       ]);
-      const withBalance = movements.rows;
+       const withBalance = movements.rows.map((movement) => ({
+         ...movement,
+         fechaVencimiento:
+           movement.fechaVencimiento == null
+             ? null
+             : typeof movement.fechaVencimiento === "string"
+               ? movement.fechaVencimiento
+               : (movement.fechaVencimiento as Date).toISOString().slice(0, 10),
+       }));
       res.json({
         clienteId: id,
         movimientos: [...withBalance].reverse(),
