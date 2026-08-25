@@ -11,14 +11,24 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/api-client-react";
 import { formatNumber } from "@workspace/number-format";
+import { useQuery } from "@tanstack/react-query";
+import { etiquetasApi } from "@/lib/etiquetas-api";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 export default function RolloDetail() {
   const { id } = useParams();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const isAdmin = user?.rol === Role.ADMIN;
+  const canViewLabels = hasPermission(user, Modules.ETIQUETAS, "ver");
 
   const { data: rollo, isLoading } = useGetRollo(Number(id), {
     query: { enabled: !!id, queryKey: getGetRolloQueryKey(Number(id)) }
+  });
+  const { data: reimpresiones } = useQuery({
+    queryKey: ["etiquetas", "rollo", Number(id), "resumen"],
+    queryFn: () => etiquetasApi.resumenRollo(Number(id)),
+    enabled: Boolean(id) && canViewLabels,
+    retry: false,
   });
 
   if (isLoading) {
@@ -132,12 +142,19 @@ export default function RolloDetail() {
               <div className="font-mono text-xl tracking-widest font-bold text-black mb-4">
                 {rollo.serie}
               </div>
-              <Button asChild className="w-full" variant="outline">
+              {canViewLabels && <Button asChild className="w-full" variant="outline">
                 <Link href={`/inventario/rollos/${rollo.id}/etiqueta`}>
                   <Printer className="w-4 h-4 mr-2" />
                   Reimprimir Etiqueta
                 </Link>
-              </Button>
+              </Button>}
+              {reimpresiones && reimpresiones.count > 0 && (
+                <div className="mt-4 w-full rounded-md border border-amber-200 bg-amber-50 p-3 text-center text-sm text-amber-900">
+                  <p className="font-semibold">Etiqueta reimpresa {reimpresiones.count} {reimpresiones.count === 1 ? "vez" : "veces"}</p>
+                  <p className="mt-0.5 text-xs">Última: {reimpresiones.ultimaReimpresion ? format(new Date(reimpresiones.ultimaReimpresion), "dd/MM/yyyy HH:mm") : "—"}</p>
+                  {isAdmin && <Link href={`/etiquetas?tab=historial`} className="mt-1 inline-block text-xs font-semibold text-primary hover:underline">Ver historial</Link>}
+                </div>
+              )}
             </Card>
 
             <Card className="bg-muted/10 border-dashed">

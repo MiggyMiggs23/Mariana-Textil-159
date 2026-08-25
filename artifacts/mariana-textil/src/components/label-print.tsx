@@ -9,6 +9,7 @@ export interface LabelData {
   color: string;
   cantidad: string;
   unidad: string;
+  reimpresaEn?: string;
 }
 
 export function LabelPrint({ data, className = "" }: { data: LabelData; className?: string }) {
@@ -65,6 +66,11 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           <div className="text-[9px] font-mono text-center font-bold mt-1 break-all leading-tight max-w-full text-black">
             {qrPayload}
           </div>
+          {data.reimpresaEn && (
+            <div className="absolute bottom-0 right-0 text-[7px] font-bold tracking-wide text-gray-600">
+              REIMPRESA · {new Date(data.reimpresaEn).toLocaleDateString("es-MX")}
+            </div>
+          )}
         </div>
       </div>
     </div>

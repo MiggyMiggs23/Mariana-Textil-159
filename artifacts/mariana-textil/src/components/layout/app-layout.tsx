@@ -15,7 +15,7 @@ import {
   getCountEntradasPendientesCostoQueryKey
 } from "@workspace/api-client-react";
 import { hasPermission, Modules, Module } from "@/lib/permisos";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { 
   LayoutDashboard, 
   MapPin, 
@@ -38,7 +38,8 @@ import {
   AlertCircle,
   Wallet,
   BarChart3,
-  Bell
+  Bell,
+  Tags
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -54,6 +55,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { etiquetasApi } from "@/lib/etiquetas-api";
 
 type NavItem = {
   name: string;
@@ -90,6 +92,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: true },
       { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
+      { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
     ]
   },
   {
@@ -152,6 +155,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       queryKey: getCountNotificacionesNoLeidasQueryKey(),
       refetchInterval: 30_000,
     },
+  });
+  const { data: etiquetasAlerts } = useQuery({
+    queryKey: ["etiquetas", "alertas"],
+    queryFn: etiquetasApi.alertas,
+    enabled: user?.rol === Role.ADMIN,
+    retry: false,
+    refetchInterval: 60_000,
   });
 
   const { selectedLocationId, setSelectedLocationId } = useLocationScope();
@@ -333,7 +343,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
                   <span className="text-sm">{item.name}</span>
-                  {item.path === "/entradas" && countPendientesData?.count ? (
+                  {item.path === "/etiquetas" && etiquetasAlerts?.count ? (
+                    <span data-testid="badge-etiquetas-alertas" title="Rollos con 3 o más reimpresiones" className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-amber-500 text-white text-[10px] font-bold rounded-full">
+                      {etiquetasAlerts.count}
+                    </span>
+                  ) : item.path === "/entradas" && countPendientesData?.count ? (
                     <span data-testid={`badge-entradas-pendientes`} className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-destructive text-white text-[10px] font-bold rounded-full">
                       {countPendientesData.count}
                     </span>

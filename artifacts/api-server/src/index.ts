@@ -5,6 +5,7 @@ import {
   ensureSalidasSchema,
   ensureTicketIvaSchema,
   ensureAdminAnalyticsSchema,
+  ensureEtiquetasSchema,
   pool,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
@@ -33,6 +34,8 @@ async function startServer() {
   logger.info("Esquema de Salidas verificado");
   await ensurePendingCostsSchema(pool);
   await ensureAdminAnalyticsSchema(pool);
+  await ensureEtiquetasSchema(pool);
+  logger.info("Esquema de Etiquetas verificado");
   logger.info("Esquema de costos pendientes verificado");
 
   const server = app.listen(port);

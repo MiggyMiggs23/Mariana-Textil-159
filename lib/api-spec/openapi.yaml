@@ -37,6 +37,8 @@ tags:
     description: Analítica financiera y operativa exclusiva para ADMIN
   - name: notificaciones
     description: Notificaciones y alertas de crédito exclusivas para ADMIN
+  - name: etiquetas
+    description: Búsqueda y reimpresión controlada de etiquetas de rollos
 paths:
   /healthz:
     get:
@@ -2960,6 +2962,149 @@ paths:
               schema: { type: string, format: binary }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /etiquetas/rollos:
+    get:
+      operationId: buscarRollosEtiquetas
+      tags: [etiquetas]
+      summary: Busca hasta 50 rollos respetando el alcance de sitio
+      parameters:
+        - { in: query, name: q, schema: { type: string, maxLength: 150 } }
+        - { in: query, name: sitioId, schema: { type: number } }
+        - { in: query, name: estado, schema: { $ref: "#/components/schemas/EstadoRollo" } }
+        - { in: query, name: productoId, schema: { type: number } }
+        - { in: query, name: fechaDesde, schema: { type: string, format: date } }
+        - { in: query, name: fechaHasta, schema: { type: string, format: date } }
+        - { in: query, name: folio, schema: { type: number } }
+      responses:
+        "200":
+          description: Resultados de búsqueda
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, limit, total]
+                properties:
+                  items: { type: array, maxItems: 50, items: { $ref: "#/components/schemas/RolloEtiqueta" } }
+                  limit: { type: number, const: 50 }
+                  total: { type: number }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /etiquetas/rollos/{id}:
+    get:
+      operationId: obtenerRolloEtiqueta
+      tags: [etiquetas]
+      summary: Obtiene un rollo y su contador de reimpresiones
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number } }
+      responses:
+        "200":
+          description: Detalle para etiqueta
+          content: { application/json: { schema: { $ref: "#/components/schemas/RolloEtiqueta" } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /etiquetas/reimpresiones:
+    post:
+      operationId: crearReimpresionEtiquetas
+      tags: [etiquetas]
+      summary: Registra y devuelve de una a 50 etiquetas para imprimir
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rolloIds, motivo]
+              properties:
+                rolloIds: { type: array, minItems: 1, maxItems: 50, uniqueItems: true, items: { type: number } }
+                motivo: { type: string, minLength: 10, maxLength: 1000 }
+                adminUsuario: { type: string }
+                adminPassword: { type: string, format: password, writeOnly: true }
+      responses:
+        "201":
+          description: Etiquetas registradas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [etiquetas, registradoAt]
+                properties:
+                  etiquetas: { type: array, items: { $ref: "#/components/schemas/EtiquetaImprimible" } }
+                  registradoAt: { type: string, format: date-time }
+        "400":
+          description: Solicitud inválida
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /etiquetas/historial:
+    get:
+      operationId: listarHistorialEtiquetas
+      tags: [etiquetas]
+      summary: Historial de reimpresiones exclusivo ADMIN
+      parameters:
+        - { in: query, name: fechaDesde, schema: { type: string, format: date } }
+        - { in: query, name: fechaHasta, schema: { type: string, format: date } }
+        - { in: query, name: sitioId, schema: { type: number } }
+        - { in: query, name: usuarioId, schema: { type: number } }
+        - { in: query, name: productoId, schema: { type: number } }
+        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 100, default: 50 } }
+      responses:
+        "200":
+          description: Historial paginado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total, page, pageSize]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/ReimpresionEtiquetaHistorial" }
+                  total: { type: number }
+                  page: { type: number }
+                  pageSize: { type: number }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /etiquetas/historial/export.xlsx:
+    get:
+      operationId: exportarHistorialEtiquetasXlsx
+      tags: [etiquetas]
+      summary: Exporta historial filtrado a Excel (ADMIN)
+      parameters:
+        - { in: query, name: fechaDesde, schema: { type: string, format: date } }
+        - { in: query, name: fechaHasta, schema: { type: string, format: date } }
+        - { in: query, name: sitioId, schema: { type: number } }
+        - { in: query, name: usuarioId, schema: { type: number } }
+        - { in: query, name: productoId, schema: { type: number } }
+      responses:
+        "200":
+          description: Libro XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /etiquetas/alertas/count:
+    get:
+      operationId: contarAlertasEtiquetas
+      tags: [etiquetas]
+      summary: Cuenta rollos con tres o más reimpresiones (ADMIN)
+      responses:
+        "200":
+          description: Conteo de alertas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, threshold]
+                properties:
+                  count: { type: number }
+                  threshold: { type: number, const: 3 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 components:
   parameters:
     AnalyticsDesde:
@@ -3092,6 +3237,68 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    RolloEtiqueta:
+      type: object
+      required: [id, serie, productoId, producto, sku, cantidad, unidad, sitioId, sitio, estado, createdAt, reimpresionesCount, alertaReimpresiones]
+      properties:
+        id: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        producto: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        sku: { type: string }
+        cantidad: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        sitioId: { type: number }
+        sitio: { type: string }
+        estado: { $ref: "#/components/schemas/EstadoRollo" }
+        createdAt: { type: string, format: date-time }
+        entradaId: { type: [number, "null"] }
+        folioEntrada: { type: [number, "null"] }
+        reimpresionesCount: { type: number }
+        ultimaReimpresion: { type: [string, "null"], format: date-time }
+        alertaReimpresiones: { type: boolean }
+    EtiquetaImprimible:
+      type: object
+      required: [rolloId, productoId, producto, tela, color, sku, serie, cantidad, unidad, qr, marca, fechaReimpresion, formatoMm]
+      properties:
+        rolloId: { type: number }
+        productoId: { type: number }
+        producto: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        sku: { type: string }
+        serie: { type: string }
+        cantidad: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        qr: { type: string, description: "Carga exacta SKU-SERIE" }
+        marca: { type: string, const: REIMPRESA }
+        fechaReimpresion: { type: string, format: date-time }
+        formatoMm:
+          type: object
+          required: [ancho, alto]
+          properties:
+            ancho: { type: number, const: 100 }
+            alto: { type: number, const: 60 }
+    ReimpresionEtiquetaHistorial:
+      type: object
+      required: [id, rolloId, serie, productoId, producto, sku, sitioId, sitio, usuarioId, solicito, autorizadoPor, autorizo, motivo, createdAt]
+      properties:
+        id: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        producto: { type: string }
+        sku: { type: string }
+        sitioId: { type: number }
+        sitio: { type: string }
+        usuarioId: { type: number }
+        solicito: { type: string }
+        autorizadoPor: { type: [number, "null"] }
+        autorizo: { type: [string, "null"] }
+        motivo: { type: string }
+        createdAt: { type: string, format: date-time }
     AnalyticsMoneyTotals:
       type: object
       required: [ventas, cobrado, pendiente, subtotal, iva, costo, margen, margenPorcentaje, tickets, ticketsCobrados, ticketsPendientes, cancelaciones, lineasExcluidasMargen]

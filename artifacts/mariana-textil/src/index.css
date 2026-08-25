@@ -138,6 +138,10 @@
     size: letter landscape;
     margin: 10mm;
   }
+  @page label-sheet {
+    size: letter portrait;
+    margin: 5mm;
+  }
 
   body.printing-labels {
     background: transparent;
@@ -235,8 +239,32 @@
     width: 100mm;
     height: 60mm;
     margin: 0;
-    padding: 0;
     overflow: hidden;
+  }
+
+  .etiquetas-print {
+    width: 100mm;
+    margin: 0;
+  }
+
+  .etiquetas-print .label-page:last-child {
+    page-break-after: auto;
+  }
+
+  .etiquetas-sheet-print {
+    page: label-sheet;
+    width: 200mm;
+    display: grid !important;
+    grid-template-columns: 100mm 100mm;
+    grid-auto-rows: 60mm;
+    align-content: start;
+  }
+
+  .etiquetas-sheet-print .sheet-label {
+    page: auto;
+    break-inside: avoid;
+    page-break-after: auto;
+    border: 0.2mm dashed #aaa;
   }
   
   .document-page {

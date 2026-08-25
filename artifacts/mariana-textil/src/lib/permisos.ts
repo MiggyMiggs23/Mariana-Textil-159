@@ -6,6 +6,7 @@ export const Modules = {
   ENTRADAS: 'entradas',
   SALIDAS: 'salidas',
   MOVIMIENTOS: 'movimientos',
+  ETIQUETAS: 'etiquetas',
   INVENTARIO: 'inventario',
   PRODUCTOS: 'productos',
   AJUSTES: 'ajustes',

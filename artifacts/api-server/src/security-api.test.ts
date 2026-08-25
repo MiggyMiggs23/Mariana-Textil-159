@@ -76,6 +76,7 @@ import {
   usuariosTable,
   type RolUsuario,
 } from "@workspace/db";
+import { MODULOS } from "./lib/permisos";
 import app from "./app";
 import { crearEntrada, crearRollo } from "./lib/inventario";
 import ExcelJS from "exceljs";
@@ -367,8 +368,8 @@ await test("S-01: All four roles login → 200 + permisos array present", async 
   }
 });
 
-// S-02: ADMIN /auth/me → matrix has 24 modules, all full access
-await test("S-02: ADMIN /auth/me effective matrix — 24 modules, all full access", async () => {
+// S-02: ADMIN /auth/me → matrix has every configured module, all full access
+await test("S-02: ADMIN /auth/me effective matrix — all modules have full access", async () => {
   const login_r = await login(testAdmin.usuario, testAdmin.password);
   assert.equal(login_r.status, 200);
   const me = await api("GET", "/auth/me", undefined, login_r.cookie);
@@ -376,7 +377,11 @@ await test("S-02: ADMIN /auth/me effective matrix — 24 modules, all full acces
   const body = me.body as Record<string, unknown>;
   const permisos = body.permisos as unknown[];
   assert.ok(Array.isArray(permisos), "permisos should be array");
-  assert.equal(permisos.length, 24, `Expected 24 modules, got ${permisos.length}`);
+  assert.equal(permisos.length, MODULOS.length, `Expected ${MODULOS.length} modules, got ${permisos.length}`);
+  assert.ok(
+    (permisos as Array<Record<string, unknown>>).some((permission) => permission.modulo === "etiquetas"),
+    "ADMIN matrix must include etiquetas",
+  );
   for (const p of permisos as Array<Record<string, unknown>>) {
     assert.equal(p.puedeVer, true, `ADMIN ${p.modulo}: puedeVer must be true`);
     assert.equal(p.puedeCrear, true, `ADMIN ${p.modulo}: puedeCrear must be true`);

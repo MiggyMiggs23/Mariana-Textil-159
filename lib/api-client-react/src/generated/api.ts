@@ -33,6 +33,8 @@ import type {
   BajaCliente200,
   BajaClienteBody,
   BuscarPosParams,
+  BuscarRollosEtiquetas200,
+  BuscarRollosEtiquetasParams,
   CapturarCostosEntradaInput,
   CatalogosEntrada,
   Cliente,
@@ -56,8 +58,11 @@ import type {
   ClientesResumen,
   ConciliacionRow,
   ConflictResponse,
+  ContarAlertasEtiquetas200,
   CorteCaja,
   CountEntradasPendientesCosto200,
+  CrearReimpresionEtiquetas201,
+  CrearReimpresionEtiquetasBody,
   CreateClienteAjuste201,
   CurrentUser,
   Dashboard,
@@ -65,6 +70,7 @@ import type {
   EntradaInput,
   EntradaListResult,
   EntradasPendientesCostoResult,
+  Error,
   EscanearRolloSalidaParams,
   EstadisticasProveedorParams,
   EstadoCuentaProveedorParams,
@@ -75,6 +81,7 @@ import type {
   ExportAdminCuentasDestinoPdfParams,
   ExportAdminCuentasDestinoXlsxParams,
   ExportKardexXlsxParams,
+  ExportarHistorialEtiquetasXlsxParams,
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
   ForbiddenResponse,
@@ -109,6 +116,8 @@ import type {
   ListProveedorPagosParams,
   ListRollosParams,
   ListSalidasParams,
+  ListarHistorialEtiquetas200,
+  ListarHistorialEtiquetasParams,
   ListarTicketsCajaParams,
   ListarTicketsParams,
   ListarTicketsPendientesParams,
@@ -155,6 +164,7 @@ import type {
   RevertirMovimientoInput,
   Role,
   RolloDetail,
+  RolloEtiqueta,
   RolloListResult,
   SalidaDetail,
   SalidaDetailResponseResponse,
@@ -281,6 +291,12 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
 
 export const getLoginUrl = () => {
 
@@ -494,6 +510,13 @@ export function useGetCurrentUser<TData = Awaited<ReturnType<typeof getCurrentUs
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
+
 export const getGetDashboardUrl = (params?: GetDashboardParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -10219,6 +10242,483 @@ export function useExportAdminCuentasDestinoPdf<TData = Awaited<ReturnType<typeo
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getExportAdminCuentasDestinoPdfQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getBuscarRollosEtiquetasUrl = (params?: BuscarRollosEtiquetasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/etiquetas/rollos?${stringifiedParams}` : `/api/etiquetas/rollos`
+}
+
+/**
+ * @summary Busca hasta 50 rollos respetando el alcance de sitio
+ */
+export const buscarRollosEtiquetas = async (params?: BuscarRollosEtiquetasParams, options?: Parameters<typeof customFetch>[1]): Promise<BuscarRollosEtiquetas200> => {
+
+  return customFetch<BuscarRollosEtiquetas200>(getBuscarRollosEtiquetasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getBuscarRollosEtiquetasQueryKey = (params?: BuscarRollosEtiquetasParams,) => {
+    return [
+    `/api/etiquetas/rollos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getBuscarRollosEtiquetasQueryOptions = <TData = Awaited<ReturnType<typeof buscarRollosEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: BuscarRollosEtiquetasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof buscarRollosEtiquetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getBuscarRollosEtiquetasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof buscarRollosEtiquetas>>> = ({ signal }) => buscarRollosEtiquetas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof buscarRollosEtiquetas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type BuscarRollosEtiquetasQueryResult = NonNullable<Awaited<ReturnType<typeof buscarRollosEtiquetas>>>
+export type BuscarRollosEtiquetasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Busca hasta 50 rollos respetando el alcance de sitio
+ */
+
+export function useBuscarRollosEtiquetas<TData = Awaited<ReturnType<typeof buscarRollosEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: BuscarRollosEtiquetasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof buscarRollosEtiquetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getBuscarRollosEtiquetasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getObtenerRolloEtiquetaUrl = (id: number,) => {
+
+
+
+
+  return `/api/etiquetas/rollos/${id}`
+}
+
+/**
+ * @summary Obtiene un rollo y su contador de reimpresiones
+ */
+export const obtenerRolloEtiqueta = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<RolloEtiqueta> => {
+
+  return customFetch<RolloEtiqueta>(getObtenerRolloEtiquetaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerRolloEtiquetaQueryKey = (id: number,) => {
+    return [
+    `/api/etiquetas/rollos/${id}`
+    ] as const;
+    }
+
+
+export const getObtenerRolloEtiquetaQueryOptions = <TData = Awaited<ReturnType<typeof obtenerRolloEtiqueta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerRolloEtiqueta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerRolloEtiquetaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerRolloEtiqueta>>> = ({ signal }) => obtenerRolloEtiqueta(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerRolloEtiqueta>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerRolloEtiquetaQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerRolloEtiqueta>>>
+export type ObtenerRolloEtiquetaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene un rollo y su contador de reimpresiones
+ */
+
+export function useObtenerRolloEtiqueta<TData = Awaited<ReturnType<typeof obtenerRolloEtiqueta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerRolloEtiqueta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerRolloEtiquetaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCrearReimpresionEtiquetasUrl = () => {
+
+
+
+
+  return `/api/etiquetas/reimpresiones`
+}
+
+/**
+ * @summary Registra y devuelve de una a 50 etiquetas para imprimir
+ */
+export const crearReimpresionEtiquetas = async (crearReimpresionEtiquetasBody: CrearReimpresionEtiquetasBody, options?: Parameters<typeof customFetch>[1]): Promise<CrearReimpresionEtiquetas201> => {
+
+  return customFetch<CrearReimpresionEtiquetas201>(getCrearReimpresionEtiquetasUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(crearReimpresionEtiquetasBody)
+  }
+);}
+
+
+
+
+
+export const getCrearReimpresionEtiquetasMutationOptions = <TError = ErrorType<Error | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearReimpresionEtiquetas>>, TError,{data: BodyType<CrearReimpresionEtiquetasBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof crearReimpresionEtiquetas>>, TError,{data: BodyType<CrearReimpresionEtiquetasBody>}, TContext> => {
+
+const mutationKey = ['crearReimpresionEtiquetas'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearReimpresionEtiquetas>>, {data: BodyType<CrearReimpresionEtiquetasBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  crearReimpresionEtiquetas(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrearReimpresionEtiquetasMutationResult = NonNullable<Awaited<ReturnType<typeof crearReimpresionEtiquetas>>>
+    export type CrearReimpresionEtiquetasMutationBody = BodyType<CrearReimpresionEtiquetasBody>
+    export type CrearReimpresionEtiquetasMutationError = ErrorType<Error | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Registra y devuelve de una a 50 etiquetas para imprimir
+ */
+export const useCrearReimpresionEtiquetas = <TError = ErrorType<Error | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearReimpresionEtiquetas>>, TError,{data: BodyType<CrearReimpresionEtiquetasBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof crearReimpresionEtiquetas>>,
+        TError,
+        {data: BodyType<CrearReimpresionEtiquetasBody>},
+        TContext
+      > => {
+      return useMutation(getCrearReimpresionEtiquetasMutationOptions(options));
+    }
+
+export const getListarHistorialEtiquetasUrl = (params?: ListarHistorialEtiquetasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/etiquetas/historial?${stringifiedParams}` : `/api/etiquetas/historial`
+}
+
+/**
+ * @summary Historial de reimpresiones exclusivo ADMIN
+ */
+export const listarHistorialEtiquetas = async (params?: ListarHistorialEtiquetasParams, options?: Parameters<typeof customFetch>[1]): Promise<ListarHistorialEtiquetas200> => {
+
+  return customFetch<ListarHistorialEtiquetas200>(getListarHistorialEtiquetasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarHistorialEtiquetasQueryKey = (params?: ListarHistorialEtiquetasParams,) => {
+    return [
+    `/api/etiquetas/historial`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListarHistorialEtiquetasQueryOptions = <TData = Awaited<ReturnType<typeof listarHistorialEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListarHistorialEtiquetasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarHistorialEtiquetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarHistorialEtiquetasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarHistorialEtiquetas>>> = ({ signal }) => listarHistorialEtiquetas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarHistorialEtiquetas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarHistorialEtiquetasQueryResult = NonNullable<Awaited<ReturnType<typeof listarHistorialEtiquetas>>>
+export type ListarHistorialEtiquetasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Historial de reimpresiones exclusivo ADMIN
+ */
+
+export function useListarHistorialEtiquetas<TData = Awaited<ReturnType<typeof listarHistorialEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListarHistorialEtiquetasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarHistorialEtiquetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarHistorialEtiquetasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportarHistorialEtiquetasXlsxUrl = (params?: ExportarHistorialEtiquetasXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/etiquetas/historial/export.xlsx?${stringifiedParams}` : `/api/etiquetas/historial/export.xlsx`
+}
+
+/**
+ * @summary Exporta historial filtrado a Excel (ADMIN)
+ */
+export const exportarHistorialEtiquetasXlsx = async (params?: ExportarHistorialEtiquetasXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportarHistorialEtiquetasXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportarHistorialEtiquetasXlsxQueryKey = (params?: ExportarHistorialEtiquetasXlsxParams,) => {
+    return [
+    `/api/etiquetas/historial/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportarHistorialEtiquetasXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ExportarHistorialEtiquetasXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportarHistorialEtiquetasXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>> = ({ signal }) => exportarHistorialEtiquetasXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportarHistorialEtiquetasXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>>
+export type ExportarHistorialEtiquetasXlsxQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta historial filtrado a Excel (ADMIN)
+ */
+
+export function useExportarHistorialEtiquetasXlsx<TData = Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportarHistorialEtiquetasXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportarHistorialEtiquetasXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportarHistorialEtiquetasXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getContarAlertasEtiquetasUrl = () => {
+
+
+
+
+  return `/api/etiquetas/alertas/count`
+}
+
+/**
+ * @summary Cuenta rollos con tres o más reimpresiones (ADMIN)
+ */
+export const contarAlertasEtiquetas = async ( options?: Parameters<typeof customFetch>[1]): Promise<ContarAlertasEtiquetas200> => {
+
+  return customFetch<ContarAlertasEtiquetas200>(getContarAlertasEtiquetasUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getContarAlertasEtiquetasQueryKey = () => {
+    return [
+    `/api/etiquetas/alertas/count`
+    ] as const;
+    }
+
+
+export const getContarAlertasEtiquetasQueryOptions = <TData = Awaited<ReturnType<typeof contarAlertasEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof contarAlertasEtiquetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getContarAlertasEtiquetasQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof contarAlertasEtiquetas>>> = ({ signal }) => contarAlertasEtiquetas({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof contarAlertasEtiquetas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ContarAlertasEtiquetasQueryResult = NonNullable<Awaited<ReturnType<typeof contarAlertasEtiquetas>>>
+export type ContarAlertasEtiquetasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Cuenta rollos con tres o más reimpresiones (ADMIN)
+ */
+
+export function useContarAlertasEtiquetas<TData = Awaited<ReturnType<typeof contarAlertasEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof contarAlertasEtiquetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getContarAlertasEtiquetasQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

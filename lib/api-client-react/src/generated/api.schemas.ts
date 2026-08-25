@@ -5,6 +5,99 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export type RolloEtiquetaUnidad = typeof RolloEtiquetaUnidad[keyof typeof RolloEtiquetaUnidad];
+
+
+export const RolloEtiquetaUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export type EstadoRollo = typeof EstadoRollo[keyof typeof EstadoRollo];
+
+
+export const EstadoRollo = {
+  PROGRAMADO: 'PROGRAMADO',
+  DISPONIBLE: 'DISPONIBLE',
+  EN_TRANSITO: 'EN_TRANSITO',
+  ABIERTO: 'ABIERTO',
+  VENDIDO: 'VENDIDO',
+  BAJA: 'BAJA',
+} as const;
+
+export interface RolloEtiqueta {
+  id: number;
+  serie: string;
+  productoId: number;
+  producto: string;
+  tela?: string;
+  color?: string;
+  sku: string;
+  cantidad: string;
+  unidad: RolloEtiquetaUnidad;
+  sitioId: number;
+  sitio: string;
+  estado: EstadoRollo;
+  createdAt: string;
+  /** @nullable */
+  entradaId?: number | null;
+  /** @nullable */
+  folioEntrada?: number | null;
+  reimpresionesCount: number;
+  /** @nullable */
+  ultimaReimpresion?: string | null;
+  alertaReimpresiones: boolean;
+}
+
+export type EtiquetaImprimibleUnidad = typeof EtiquetaImprimibleUnidad[keyof typeof EtiquetaImprimibleUnidad];
+
+
+export const EtiquetaImprimibleUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export type EtiquetaImprimibleFormatoMm = {
+  ancho: 100;
+  alto: 60;
+};
+
+export interface EtiquetaImprimible {
+  rolloId: number;
+  productoId: number;
+  producto: string;
+  tela: string;
+  color: string;
+  sku: string;
+  serie: string;
+  cantidad: string;
+  unidad: EtiquetaImprimibleUnidad;
+  /** Carga exacta SKU-SERIE */
+  qr: string;
+  marca: 'REIMPRESA';
+  fechaReimpresion: string;
+  formatoMm: EtiquetaImprimibleFormatoMm;
+}
+
+export interface ReimpresionEtiquetaHistorial {
+  id: number;
+  rolloId: number;
+  serie: string;
+  productoId: number;
+  producto: string;
+  sku: string;
+  sitioId: number;
+  sitio: string;
+  usuarioId: number;
+  solicito: string;
+  /** @nullable */
+  autorizadoPor: number | null;
+  /** @nullable */
+  autorizo: string | null;
+  motivo: string;
+  createdAt: string;
+}
+
 export interface AnalyticsMoneyTotals {
   ventas: string;
   cobrado: string;
@@ -1316,18 +1409,6 @@ export interface ProveedorUpdate {
   notas?: string | null;
   activo?: boolean;
 }
-
-export type EstadoRollo = typeof EstadoRollo[keyof typeof EstadoRollo];
-
-
-export const EstadoRollo = {
-  PROGRAMADO: 'PROGRAMADO',
-  DISPONIBLE: 'DISPONIBLE',
-  EN_TRANSITO: 'EN_TRANSITO',
-  ABIERTO: 'ABIERTO',
-  VENDIDO: 'VENDIDO',
-  BAJA: 'BAJA',
-} as const;
 
 export type TipoMovimiento = typeof TipoMovimiento[keyof typeof TipoMovimiento];
 
@@ -3351,5 +3432,82 @@ desde?: AnalyticsDesdeParameter;
  */
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
+};
+
+export type BuscarRollosEtiquetasParams = {
+/**
+ * @maxLength 150
+ */
+q?: string;
+sitioId?: number;
+estado?: EstadoRollo;
+productoId?: number;
+fechaDesde?: string;
+fechaHasta?: string;
+folio?: number;
+};
+
+export type BuscarRollosEtiquetas200 = {
+  /** @maxItems 50 */
+  items: RolloEtiqueta[];
+  limit: 50;
+  total: number;
+};
+
+export type CrearReimpresionEtiquetasBody = {
+  /**
+     * @minItems 1
+     * @maxItems 50
+     */
+  rolloIds: number[];
+  /**
+     * @minLength 10
+     * @maxLength 1000
+     */
+  motivo: string;
+  adminUsuario?: string;
+  adminPassword?: string;
+};
+
+export type CrearReimpresionEtiquetas201 = {
+  etiquetas: EtiquetaImprimible[];
+  registradoAt: string;
+};
+
+export type ListarHistorialEtiquetasParams = {
+fechaDesde?: string;
+fechaHasta?: string;
+sitioId?: number;
+usuarioId?: number;
+productoId?: number;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
+export type ListarHistorialEtiquetas200 = {
+  items: ReimpresionEtiquetaHistorial[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+export type ExportarHistorialEtiquetasXlsxParams = {
+fechaDesde?: string;
+fechaHasta?: string;
+sitioId?: number;
+usuarioId?: number;
+productoId?: number;
+};
+
+export type ContarAlertasEtiquetas200 = {
+  count: number;
+  threshold: 3;
 };
 

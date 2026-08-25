@@ -26,7 +26,9 @@
     "test:clientes-ajustes": "tsx --test src/clientes-ajustes-api.test.ts",
     "test:clientes-ajustes:unit": "tsx --test src/lib/spanish-order.test.ts",
     "test:admin-analytics": "tsx --test src/lib/admin-analytics.contract.ts",
-    "test:admin-analytics-integration": "tsx --test src/admin-analytics.integration.test.ts"
+    "test:admin-analytics-integration": "tsx --test src/admin-analytics.integration.test.ts",
+    "test:etiquetas": "NODE_ENV=test tsx --test src/etiquetas-api.test.ts",
+    "test:etiquetas-integration": "NODE_ENV=test tsx --test src/etiquetas-api.integration.test.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^8.0.1",

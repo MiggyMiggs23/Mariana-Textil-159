@@ -436,7 +436,7 @@ await test("P-21: BODEGA cannot see proveedores_finanzas", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-22: BODEGA has exactly the PROMPT 8 baseline", async () => {
+await test("P-22: BODEGA has exactly the operational baseline including etiquetas", async () => {
   const matrix = await buildPermissionMatrix(bodegaUserId, "BODEGA");
   const expected: Record<string, { ver: boolean; crear: boolean; editar: boolean }> = {
     dashboard: { ver: true, crear: false, editar: false },
@@ -445,6 +445,7 @@ await test("P-22: BODEGA has exactly the PROMPT 8 baseline", async () => {
     salidas: { ver: true, crear: true, editar: false },
     movimientos: { ver: true, crear: false, editar: false },
     ajustes: { ver: true, crear: true, editar: false },
+    etiquetas: { ver: true, crear: true, editar: false },
   };
   for (const modulo of MODULOS) {
     const permission = matrix[modulo];

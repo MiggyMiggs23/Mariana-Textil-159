@@ -32,6 +32,7 @@ import SalidaNueva from '@/pages/salida-nueva';
 import SalidaDetail from '@/pages/salida-detail';
 import SalidaDocumento from '@/pages/salida-documento';
 import Movimientos from '@/pages/movimientos';
+import Etiquetas from '@/pages/etiquetas';
 import Inventario from '@/pages/inventario';
 import RolloDetail from '@/pages/rollo-detail';
 import RolloEtiqueta from '@/pages/rollo-etiqueta';
@@ -181,10 +182,11 @@ function Router() {
         <Route path="/salidas/:id" component={() => <ProtectedRoute component={SalidaDetail} allowedModule={Modules.SALIDAS} />} />
 
         <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedModule={Modules.MOVIMIENTOS} />} />
+        <Route path="/etiquetas" component={() => <ProtectedRoute component={Etiquetas} allowedModule={Modules.ETIQUETAS} />} />
 
         <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} allowedModule={Modules.INVENTARIO} />} />
         <Route path="/inventario/rollos/:id" component={() => <ProtectedRoute component={RolloDetail} allowedModule={Modules.INVENTARIO} />} />
-        <Route path="/inventario/rollos/:id/etiqueta" component={() => <ProtectedRoute component={RolloEtiqueta} allowedModule={Modules.INVENTARIO} />} />
+        <Route path="/inventario/rollos/:id/etiqueta" component={() => <ProtectedRoute component={RolloEtiqueta} allowedModule={Modules.ETIQUETAS} />} />
         <Route path="/inventario/ajustes" component={() => <ProtectedRoute component={Ajustes} allowedModule={Modules.AJUSTES} />} />
         
         <Route path="/productos" component={() => <ProtectedRoute component={Productos} allowedModule={Modules.PRODUCTOS} />} />

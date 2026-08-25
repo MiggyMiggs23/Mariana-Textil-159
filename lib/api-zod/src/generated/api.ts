@@ -4465,3 +4465,185 @@ export const ExportAdminCuentasDestinoPdfQueryParams = zod.object({
 export const ExportAdminCuentasDestinoPdfResponse = zod.unknown()
 
 
+/**
+ * @summary Busca hasta 50 rollos respetando el alcance de sitio
+ */
+export const buscarRollosEtiquetasQueryQMax = 150;
+
+
+
+export const BuscarRollosEtiquetasQueryParams = zod.object({
+  "q": zod.coerce.string().max(buscarRollosEtiquetasQueryQMax).optional(),
+  "sitioId": zod.coerce.number().optional(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']).optional(),
+  "productoId": zod.coerce.number().optional(),
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "folio": zod.coerce.number().optional()
+})
+
+export const buscarRollosEtiquetasResponseItemsMax = 50;
+
+
+
+export const BuscarRollosEtiquetasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "producto": zod.string(),
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "sku": zod.string(),
+  "cantidad": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "sitioId": zod.number(),
+  "sitio": zod.string(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "createdAt": zod.coerce.date(),
+  "entradaId": zod.number().nullish(),
+  "folioEntrada": zod.number().nullish(),
+  "reimpresionesCount": zod.number(),
+  "ultimaReimpresion": zod.coerce.date().nullish(),
+  "alertaReimpresiones": zod.boolean()
+})).max(buscarRollosEtiquetasResponseItemsMax),
+  "limit": zod.literal(50),
+  "total": zod.number()
+})
+
+
+/**
+ * @summary Obtiene un rollo y su contador de reimpresiones
+ */
+export const ObtenerRolloEtiquetaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ObtenerRolloEtiquetaResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "producto": zod.string(),
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "sku": zod.string(),
+  "cantidad": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "sitioId": zod.number(),
+  "sitio": zod.string(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "createdAt": zod.coerce.date(),
+  "entradaId": zod.number().nullish(),
+  "folioEntrada": zod.number().nullish(),
+  "reimpresionesCount": zod.number(),
+  "ultimaReimpresion": zod.coerce.date().nullish(),
+  "alertaReimpresiones": zod.boolean()
+})
+
+
+/**
+ * @summary Registra y devuelve de una a 50 etiquetas para imprimir
+ */
+export const crearReimpresionEtiquetasBodyRolloIdsMax = 50;
+
+export const crearReimpresionEtiquetasBodyMotivoMin = 10;
+export const crearReimpresionEtiquetasBodyMotivoMax = 1000;
+
+
+
+export const CrearReimpresionEtiquetasBody = zod.object({
+  "rolloIds": zod.array(zod.number()).min(1).max(crearReimpresionEtiquetasBodyRolloIdsMax),
+  "motivo": zod.string().min(crearReimpresionEtiquetasBodyMotivoMin).max(crearReimpresionEtiquetasBodyMotivoMax),
+  "adminUsuario": zod.string().optional(),
+  "adminPassword": zod.string().optional()
+})
+
+export const CrearReimpresionEtiquetasResponse = zod.object({
+  "etiquetas": zod.array(zod.object({
+  "rolloId": zod.number(),
+  "productoId": zod.number(),
+  "producto": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "sku": zod.string(),
+  "serie": zod.string(),
+  "cantidad": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "qr": zod.string().describe('Carga exacta SKU-SERIE'),
+  "marca": zod.literal("REIMPRESA"),
+  "fechaReimpresion": zod.coerce.date(),
+  "formatoMm": zod.object({
+  "ancho": zod.literal(100),
+  "alto": zod.literal(60)
+})
+})),
+  "registradoAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Historial de reimpresiones exclusivo ADMIN
+ */
+export const listarHistorialEtiquetasQueryPageDefault = 1;
+
+export const listarHistorialEtiquetasQueryPageSizeDefault = 50;
+export const listarHistorialEtiquetasQueryPageSizeMax = 100;
+
+
+
+export const ListarHistorialEtiquetasQueryParams = zod.object({
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "sitioId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional(),
+  "page": zod.coerce.number().min(1).default(listarHistorialEtiquetasQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listarHistorialEtiquetasQueryPageSizeMax).default(listarHistorialEtiquetasQueryPageSizeDefault)
+})
+
+export const ListarHistorialEtiquetasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "producto": zod.string(),
+  "sku": zod.string(),
+  "sitioId": zod.number(),
+  "sitio": zod.string(),
+  "usuarioId": zod.number(),
+  "solicito": zod.string(),
+  "autorizadoPor": zod.number().nullable(),
+  "autorizo": zod.string().nullable(),
+  "motivo": zod.string(),
+  "createdAt": zod.coerce.date()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Exporta historial filtrado a Excel (ADMIN)
+ */
+export const ExportarHistorialEtiquetasXlsxQueryParams = zod.object({
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "sitioId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional()
+})
+
+export const ExportarHistorialEtiquetasXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Cuenta rollos con tres o más reimpresiones (ADMIN)
+ */
+export const ContarAlertasEtiquetasResponse = zod.object({
+  "count": zod.number(),
+  "threshold": zod.literal(3)
+})
+
+

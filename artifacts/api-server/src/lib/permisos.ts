@@ -40,6 +40,7 @@ export const MODULOS = [
   "entradas",
   "salidas",
   "movimientos",
+  "etiquetas",
   "inventario",
   "productos",
   "ajustes",
