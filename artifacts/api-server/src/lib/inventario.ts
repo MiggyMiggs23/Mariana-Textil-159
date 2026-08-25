@@ -39,6 +39,10 @@ import {
   isValidUnitCost,
   rollWithoutValidUnitCostMessage,
 } from "./unit-cost";
+import {
+  formatQuantityThousandths,
+  quantityToThousandths,
+} from "./quantity-comparison";
 
 // ── Drizzle transaction type ──────────────────────────────────────────────────
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -1852,8 +1856,10 @@ export async function conciliarTodo(
     for (const [key, v] of keyMap) {
       const [pId, uId] = key.split(":").map(Number) as [number, number];
       const ubicacion = ubicacionesMap.get(uId);
-      const movTotalF = parseFloat(v.movTotal).toFixed(3);
-      const cacheTotalF = parseFloat(v.cacheTotal).toFixed(3);
+      const movTotal = quantityToThousandths(v.movTotal);
+      const cacheTotal = quantityToThousandths(v.cacheTotal);
+      const movTotalF = formatQuantityThousandths(movTotal);
+      const cacheTotalF = formatQuantityThousandths(cacheTotal);
 
       // rollosMovimientos = count of DISPONIBLE/EN_TRANSITO rolls
       const [cntRow] = await tx
@@ -1867,6 +1873,7 @@ export async function conciliarTodo(
           ),
         );
 
+      const rollosMovimientos = cntRow?.cnt ?? 0;
       results.push({
         productoId: pId,
         ubicacionId: uId,
@@ -1874,9 +1881,10 @@ export async function conciliarTodo(
         ubicacionActiva: ubicacion?.activa ?? false,
         cantidadMovimientos: movTotalF,
         cantidadCache: cacheTotalF,
-        rollosMovimientos: cntRow?.cnt ?? 0,
+        rollosMovimientos,
         rollosCache: v.rollosCache,
-        discrepancia: movTotalF !== cacheTotalF,
+        discrepancia:
+          movTotal !== cacheTotal || rollosMovimientos !== v.rollosCache,
       });
     }
 

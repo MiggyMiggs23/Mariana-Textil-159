@@ -18,6 +18,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ShieldAlert, CheckCircle2, RefreshCw, Filter, AlertTriangle } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
 
+function quantityDifference(
+  movimientos: string | number,
+  cache: string | number,
+) {
+  return (
+    Math.round((Number(movimientos) - Number(cache)) * 1_000) / 1_000
+  );
+}
+
 export default function Conciliacion() {
   const queryClient = useQueryClient();
   const [productoId, setProductoId] = useState<string>("all");
@@ -32,6 +41,9 @@ export default function Conciliacion() {
   });
 
   const recalcular = useRecalcularExistencias();
+  const combinacionesVerificadas = conciliaciones?.length ?? 0;
+  const discrepancias =
+    conciliaciones?.filter((row) => row.discrepancia) ?? [];
 
   const handleRecalcular = (pId: number, uId: number) => {
     recalcular.mutate({
@@ -103,13 +115,18 @@ export default function Conciliacion() {
               <p>Analizando integridad de datos...</p>
             </CardContent>
           </Card>
-        ) : conciliaciones?.length === 0 ? (
+        ) : discrepancias.length === 0 ? (
           <Card className="border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-900">
             <CardContent className="py-16 text-center">
               <CheckCircle2 className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
-              <h2 className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">Integridad Perfecta</h2>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                No se encontraron discrepancias. La caché de existencias coincide exactamente con el historial de movimientos.
+              <h2 className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">
+                Sin discrepancias
+              </h2>
+              <p className="text-emerald-800 dark:text-emerald-300 max-w-md mx-auto font-medium">
+                Sin discrepancias. Las existencias coinciden con el kardex.
+              </p>
+              <p className="text-sm text-muted-foreground mt-3">
+                {formatNumber(combinacionesVerificadas, { kind: "count" })} combinaciones de producto y sitio verificadas.
               </p>
             </CardContent>
           </Card>
@@ -121,7 +138,8 @@ export default function Conciliacion() {
                 Discrepancias Encontradas
               </CardTitle>
               <CardDescription>
-                Se detectaron diferencias entre el resumen en caché y los movimientos reales. Recalcula para corregir.
+                {formatNumber(discrepancias.length, { kind: "count" })} discrepancias en{" "}
+                {formatNumber(combinacionesVerificadas, { kind: "count" })} combinaciones de producto y sitio verificadas.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -132,19 +150,21 @@ export default function Conciliacion() {
                     <TableHead>Sitio</TableHead>
                     <TableHead className="text-right">Movimientos (Real)</TableHead>
                     <TableHead className="text-right">Caché (Actual)</TableHead>
+                    <TableHead className="text-right">Diferencia</TableHead>
                     <TableHead className="text-right">Rollos (Mov/Caché)</TableHead>
                     <TableHead className="text-right">Acción</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {conciliaciones?.map((row, idx) => {
-                    const cantMov = parseFloat(row.cantidadMovimientos);
-                    const cantCach = parseFloat(row.cantidadCache);
-                    const cantDiff = cantMov !== cantCach;
+                  {discrepancias.map((row) => {
+                    const cantMov = Number(row.cantidadMovimientos);
+                    const cantCach = Number(row.cantidadCache);
+                    const diferencia = quantityDifference(cantMov, cantCach);
+                    const cantDiff = diferencia !== 0;
                     const rollDiff = row.rollosMovimientos !== row.rollosCache;
                     
                     return (
-                      <TableRow key={idx} className="bg-destructive/5">
+                      <TableRow key={`${row.productoId}:${row.ubicacionId}`} className="bg-destructive/5">
                         <TableCell className="font-mono font-medium">{row.productoId}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -162,6 +182,9 @@ export default function Conciliacion() {
                         </TableCell>
                         <TableCell className={`text-right tabular-nums ${cantDiff ? 'text-destructive font-bold' : ''}`}>
                            {formatNumber(cantCach, { kind: "quantity" })}
+                        </TableCell>
+                        <TableCell className={`text-right tabular-nums ${cantDiff ? 'text-destructive font-bold' : 'text-muted-foreground'}`}>
+                          {formatNumber(diferencia, { kind: "quantity" })}
                         </TableCell>
                         <TableCell className="text-right tabular-nums">
                            <span className={rollDiff ? '' : 'text-muted-foreground'}>{formatNumber(row.rollosMovimientos, { kind: "count" })}</span>
