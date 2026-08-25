@@ -1,0 +1,20 @@
+Error en la edición de metrajes en Entradas
+En el modal de captura rollo por rollo, al editar el metraje de un rollo después de haber aplicado el valor uniforme, el valor se pierde al pasar al siguiente rollo y regresa al valor base.
+Reproducción: declarar 190 rollos, escribir 50 en el campo uniforme, presionar “Aplicar a todos”, editar el rollo 3 a 48.5, y al mover el foco a otro rollo, el rollo 3 vuelve a mostrar 50.
+Diagnostica primero y repórtame la causa. Lo más probable es que el valor editado no se esté guardando en el estado del componente y la lista se vuelva a dibujar con los valores originales. Pero confírmalo antes de corregir.
+Comportamiento correcto:
+	•	Editar el metraje de un rollo guarda ese valor de forma permanente en el estado
+	•	Cambiar de campo, hacer desplazamiento, o cualquier otra interacción no lo revierte
+	•	El valor se conserva hasta que el usuario lo cambie de nuevo o lo regrese al valor base
+	•	Se pueden editar varios rollos seguidos sin que se pierda ninguno
+	•	“Aplicar a todos” no sobrescribe los rollos ya editados: solo llena los que están en blanco
+	•	Los rollos editados quedan marcados visualmente para distinguirse de los que traen el valor uniforme
+	•	La barra de acumulado muestra en vivo: cuántos rollos tienen el valor uniforme, cuántos fueron ajustados, y el total real
+Revisa si el mismo problema existe en otras pantallas con listas editables: la captura de costos por producto, las líneas de una salida, o cualquier otra. Si el error es de cómo se maneja el estado de la lista, probablemente se repite. Repórtame qué encontraste.
+Pruebas:
+	•	Declarar 190 rollos, aplicar 50 m, editar el rollo 3 a 48.5, mover el foco a otro campo: el rollo 3 sigue en 48.5
+	•	Editar cinco rollos distintos uno tras otro: los cinco conservan su valor
+	•	Hacer desplazamiento por la lista y regresar: los valores editados siguen ahí
+	•	Volver a presionar “Aplicar a todos”: los editados no cambian
+	•	El total refleja los valores reales, no el uniforme multiplicado
+	•	Al guardar, los rollos se crean con los metrajes correctos, incluidas las variantes
