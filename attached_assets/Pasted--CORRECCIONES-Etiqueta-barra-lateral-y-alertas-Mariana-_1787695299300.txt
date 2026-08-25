@@ -1,0 +1,226 @@
+# CORRECCIONES — Etiqueta, barra lateral y alertas
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# PARTE 1 — El logo de la etiqueta está mal
+
+## Problema
+
+La etiqueta muestra una **letra M genérica dibujada**, no el logo real de Mariana Textil. El logo de la empresa tiene una forma específica con diagonales cruzadas y superpuestas; lo que aparece es una M tipográfica común.
+
+## Corrección
+
+**Usa el archivo de logo que ya existe en el proyecto**, el mismo que se muestra en la pantalla de inicio de sesión y en la barra lateral. Está en `client/public/logo-mariana.png` o su ruta equivalente.
+
+**No dibujes, no generes, no aproximes ni sustituyas el logo por una tipografía.** Debe ser el archivo original.
+
+**Para la versión monocromática de impresión térmica:**
+- Toma el archivo original y conviértelo a negro sólido mediante procesamiento de imagen: umbralización o silueta
+- Conserva la forma exacta del logo, incluidas las diagonales cruzadas
+- Lo único que cambia es que los azules y degradados pasan a negro plano
+- **No lo redibujes a mano ni lo reemplaces por una letra de una fuente**
+
+Si el archivo tiene fondo transparente y eso causa problemas al imprimir, resuélvelo componiéndolo sobre fondo blanco. No lo sustituyas.
+
+Verifica que el logo se vea correcto también en el ticket, en la hoja de entrada y en la hoja de salida. Si en alguno de esos documentos también se está usando una versión dibujada, corrígelo igual.
+
+## Segundo problema en la etiqueta
+
+**El valor "100.000" se sale de su columna** y queda cortado por la línea divisoria vertical.
+
+Ajusta el diseño para que cualquier cantidad quepa completa dentro de su columna:
+- Cantidades de hasta seis dígitos más tres decimales, por ejemplo `100000.000`
+- Si el número es largo, reduce el tamaño de fuente automáticamente hasta que quepa
+- **Nunca lo cortes ni permitas que invada la columna del logo**
+
+---
+
+# PARTE 2 — Reestructura de la barra lateral
+
+## Nueva estructura
+
+```
+TIEMPO REAL                  ← entrada suelta, pantalla de inicio del ADMIN
+
+INVENTARIO
+  Productos
+  Inventario
+  Vista Global
+  Ajustes
+  Etiquetas
+
+OPERACIÓN
+  Ventas / POS
+  Entradas
+  Salidas
+  Movimientos
+
+CAJA
+  Cuentas
+  Cobros
+  Cortes
+  Alertas
+
+DIRECTORIO
+  Clientes
+  Proveedores
+
+REPORTES                     ← entrada suelta
+
+PRÓXIMOS CONTENEDORES        ← entrada suelta
+
+CONFIGURACIÓN
+  Sitios
+  Usuarios
+  Permisos
+  Conciliación
+```
+
+## Cambios
+
+**Tiempo Real sube hasta arriba y se vuelve la pantalla de inicio del ADMIN.** Al iniciar sesión, el administrador cae directo ahí. Es lo primero que necesita ver: cómo va el día.
+
+**El Dashboard actual se renombra a "Vista Global"** y baja a la sección Inventario, en tercer lugar. Su contenido no cambia: sigue siendo el desglose de inventario por sitio, que está bien hecho. Solo deja de ser la pantalla de inicio.
+
+**Etiquetas queda en Inventario.**
+
+**Caja se ordena así:** Cuentas, Cobros, Cortes, Alertas.
+
+**"Cuentas Destino" se renombra a "Cuentas"** y **"Cobros (POS)" a "Cobros"**. Cambia solo la etiqueta visible; **no toques los identificadores de módulos de permisos**.
+
+**Comparativo y Diferencias salen de la barra lateral** y pasan a pestañas dentro de Reportes.
+
+**Conciliación queda en Configuración.**
+
+**Se elimina la sección "Administración".**
+
+**Si una sección queda sin entradas visibles para un rol, su encabezado tampoco aparece.** No dejes títulos huérfanos.
+
+---
+
+# PARTE 3 — Alertas
+
+Nueva entrada **Alertas** dentro de la sección Caja. Reemplaza a la entrada de Notificaciones en la barra lateral.
+
+## Qué contiene, exclusivamente
+
+Solo dos tipos de alerta:
+
+**1. Tickets sin cobrar**
+- Tickets con más de **30 minutos** desde que se generaron y siguen sin cobrarse
+- Muestra: folio, hora de creación, minutos transcurridos, sitio, cliente, importe, quién lo hizo
+- Ordenados del más viejo al más reciente
+- Clic para abrir el ticket
+
+**2. Pagos de clientes por vencer o vencidos**
+- Notas que vencen en los próximos 3 días
+- Notas ya vencidas con saldo pendiente
+- Muestra: cliente, folio de la nota, importe, fecha de vencimiento, días que faltan o de atraso
+- Las vencidas primero, ordenadas de la más antigua
+- Clic para abrir el estado de cuenta del cliente
+
+**No incluyas aquí** las notificaciones de cada venta a crédito registrada. Esas se conservan en la pantalla completa de notificaciones, a la que se llega desde la campana.
+
+## La campana de la barra superior
+
+Se conserva arriba a la derecha, junto al bloque de usuario:
+
+- Ícono de campana con **badge** del número de alertas activas
+- El badge cuenta **solo los dos tipos de alerta** de esta pantalla: tickets sin cobrar de más de 30 minutos, y pagos por vencer o vencidos
+- Al tocarla se abre un panel con un resumen de esas alertas
+- Enlace **"Ver todas"** que lleva a la pantalla de Alertas
+- Solo visible para **ADMIN**
+
+**La diferencia entre las dos:** la campana es el aviso rápido de que algo pasa. La pantalla de Alertas es donde se revisa a fondo, con filtros y detalle.
+
+## Comportamiento
+
+- Las alertas **se calculan en vivo**, no se guardan como registros. Un ticket que se cobra desaparece de la lista automáticamente; una nota que se paga también.
+- Actualización cada **30 segundos**
+- Si no hay ninguna alerta, mensaje claro en verde: *"Sin alertas pendientes"*
+- Solo **ADMIN** tiene acceso. CAJA no ve esta entrada ni la campana.
+
+---
+
+# PARTE 4 — Reportes con pestañas
+
+Reportes abre una pantalla con pestañas. Por ahora incorpora las dos que se movieron:
+
+- **Comparativo** — la pantalla de comparativo entre sitios que ya existe
+- **Diferencias** — la pantalla de control de diferencias de caja que ya existe
+
+**No construyas reportes nuevos.** Solo mueve las dos pantallas existentes conservando su funcionalidad completa.
+
+Deja la estructura lista para agregar después: Ventas, Inventario y rotación, Utilidad y márgenes, Compras, y Clientes y crédito.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- **No dibujes, generes ni aproximes el logo.** Usa el archivo original del proyecto.
+- No sustituyas el logo por una letra de una fuente tipográfica
+- No permitas que la cantidad se corte o invada otra columna en la etiqueta
+- No cambies identificadores de módulos de permisos ni nombres de tablas
+- No elimines pantallas ni código: Comparativo y Diferencias siguen existiendo como pestañas
+- No incluyas las notificaciones de ventas a crédito en la pantalla de Alertas
+- No guardes las alertas como registros: se calculan en vivo
+- No des acceso a Alertas ni a la campana a roles distintos de ADMIN
+- No dejes encabezados de sección sin entradas visibles
+- No le devuelvas la barra lateral a TERMINAL
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Etiqueta:**
+1. El logo de la etiqueta es el archivo original, no una M dibujada
+2. La forma con diagonales cruzadas se conserva en la versión monocromática
+3. Una cantidad de `100000.000` cabe completa dentro de su columna, sin cortarse
+4. El logo se ve correcto también en el ticket, la hoja de entrada y la hoja de salida
+
+**Barra lateral:**
+5. ADMIN inicia sesión y cae directo en Tiempo Real
+6. Tiempo Real es la primera entrada de la barra lateral
+7. "Vista Global" está en Inventario, en tercer lugar, y muestra el mismo contenido del dashboard anterior
+8. Caja muestra en orden: Cuentas, Cobros, Cortes, Alertas
+9. No existe ya la sección Administración
+10. Ningún rol ve encabezados de sección vacíos
+11. TERMINAL sigue sin barra lateral
+
+**Alertas:**
+12. Un ticket con más de 30 minutos sin cobrar aparece en Alertas
+13. Al cobrarlo, desaparece de la lista automáticamente
+14. Una nota que vence en 2 días aparece en Alertas
+15. Una nota vencida aparece primero, ordenada por antigüedad
+16. Al liquidarla, desaparece
+17. Las notificaciones de ventas a crédito **no aparecen** en Alertas
+18. El badge de la campana cuenta solo esos dos tipos
+19. Sin alertas, se muestra el mensaje en verde
+20. CAJA no ve la entrada Alertas ni la campana: **403** al llamar el endpoint
+
+**Reportes:**
+21. Reportes abre con las pestañas Comparativo y Diferencias
+22. Ambas conservan su funcionalidad y filtros
+
+**Regresión:**
+23. Todas las pantallas siguen funcionando igual
+24. Las 12 pruebas del motor siguen pasando
+25. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. **Qué archivo de logo estás usando ahora y cómo lo convertiste a monocromático**
+3. Lista de archivos modificados
+4. Confirmación de que no se eliminó ninguna función ni pantalla
+5. Confirmación de que ningún identificador de permisos cambió
+6. Salida de la corrida de pruebas
+7. Confirmación de que las pruebas corrieron en base aislada
