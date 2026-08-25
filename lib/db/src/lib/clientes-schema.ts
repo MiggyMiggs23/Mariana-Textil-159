@@ -74,22 +74,27 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
             tipo = 'ABONO' OR
             (tipo = 'AJUSTE' AND importe < 0 AND ticket_id IS NULL)
           )
-        ), ventas AS (
+        ), cargos AS (
           SELECT m.id, m.ticket_id, m.created_at,
-            GREATEST(0, m.importe - COALESCE((
-              SELECT SUM(-r.importe) FROM movimientos_credito r
-              WHERE r.cliente_id=m.cliente_id AND r.tipo='REVERSO'
-                AND r.ticket_id=m.ticket_id
-            ),0)) AS neto,
+            GREATEST(0, m.importe - CASE
+              WHEN m.tipo = 'VENTA_CREDITO' THEN COALESCE((
+                SELECT SUM(-r.importe) FROM movimientos_credito r
+                WHERE r.cliente_id=m.cliente_id AND r.tipo='REVERSO'
+                  AND r.ticket_id=m.ticket_id
+              ),0)
+              ELSE 0
+            END) AS neto,
             c.dias_credito
           FROM movimientos_credito m JOIN clientes c ON c.id=m.cliente_id
-          WHERE m.cliente_id=p_cliente_id AND m.tipo='VENTA_CREDITO'
+          WHERE m.cliente_id=p_cliente_id AND (
+            m.tipo='VENTA_CREDITO' OR (m.tipo='AJUSTE' AND m.importe > 0)
+          )
         ), ordenadas AS (
           SELECT v.*,
             COALESCE(SUM(v.neto) OVER (
               ORDER BY v.created_at, v.id ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
             ), 0) AS antes
-          FROM ventas v
+          FROM cargos v
         )
         SELECT v.id, v.ticket_id, v.created_at,
           v.created_at + (v.dias_credito * interval '1 day'), v.neto,

@@ -109,7 +109,7 @@ export default function ClienteDetail() {
             <Button variant="ghost" size="icon" asChild><Link href="/clientes" aria-label="Volver a clientes" data-testid="link-back-clients"><ArrowLeft className="h-5 w-5" /></Link></Button>
             <div><div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-sidebar" data-testid="text-client-name">{client.nombre}</h1>{client.id === 1 && <Badge variant="secondary"><LockKeyhole className="mr-1 h-3 w-3" />Cliente de sistema</Badge>}<Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></div><p className="text-sm text-muted-foreground">Cliente #{client.id} · Alta {date(client.createdAt)}</p></div>
           </div>
-          {canFinances && <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta/imprimir`, `estado-cuenta-${id}.html`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />PDF / imprimir</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></div>}
+          {canFinances && <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.pdf`, `estado-cuenta-${id}.pdf`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />Descargar PDF</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></div>}
         </div>
         <Tabs defaultValue="datos">
           <TabsList className="h-auto w-full justify-start overflow-x-auto">

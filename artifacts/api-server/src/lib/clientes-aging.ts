@@ -1,5 +1,5 @@
 export type CreditSalePortion = {
-  ticketId: number;
+  ticketId: number | null;
   amount: number;
   linkedReversal: number;
 };
@@ -8,7 +8,7 @@ export type CreditSalePortion = {
 export function allocateCreditFifo(
   sales: CreditSalePortion[],
   fifoNegativeAmount: number,
-): Array<{ ticketId: number; outstanding: number }> {
+): Array<{ ticketId: number | null; outstanding: number }> {
   let available = Math.max(0, fifoNegativeAmount);
   return sales.flatMap((sale) => {
     const net = Math.max(0, sale.amount - sale.linkedReversal);

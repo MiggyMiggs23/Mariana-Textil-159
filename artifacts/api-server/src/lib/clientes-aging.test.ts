@@ -25,6 +25,17 @@ test("unlinked negative amount applies oldest sale first", () => {
   assert.deepEqual(result, [{ ticketId: 20, outstanding: 60 }]);
 });
 
+test("positive adjustment remains as an aged receivable", () => {
+  const result = allocateCreditFifo(
+    [
+      { ticketId: 10, amount: 100, linkedReversal: 0 },
+      { ticketId: null, amount: 30, linkedReversal: 0 },
+    ],
+    100,
+  );
+  assert.deepEqual(result, [{ ticketId: null, outstanding: 30 }]);
+});
+
 test("financial export is a valid PDF byte stream", () => {
   const pdf = createTextPdf("Estado de cuenta", ["2026-01-01 | ABONO | 100.00"]);
   assert.equal(pdf.subarray(0, 8).toString("ascii"), "%PDF-1.4");
