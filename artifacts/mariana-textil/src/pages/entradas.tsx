@@ -31,9 +31,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle } from "lucide-react";
+import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "@/lib/api-error";
+import {
+  applyUniformToBlankRolls,
+  createBlankRollQuantities,
+  createUniformRollQuantities,
+  getRollCaptureCounts,
+  isAdjustedRoll,
+  isValidDeclaredRollCount,
+  resetRollToUniform,
+} from "@/lib/roll-capture-state";
 import { Link } from "wouter";
 
 type DraftLinea = {
@@ -45,6 +54,8 @@ type DraftLinea = {
   costoUnitario?: string;
   declaredCount: number;
   cantidades: string[];
+  uniformBaseline: string | null;
+  adjustedIndexes: number[];
 };
 
 const isValidUnitCost = (value: string): boolean => {
@@ -125,6 +136,7 @@ export default function Entradas() {
   const [isEditingLine, setIsEditingLine] = useState(false);
   const [uniformQty, setUniformQty] = useState("");
   const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);
+  const [editedQtyIndexes, setEditedQtyIndexes] = useState<Set<number>>(new Set());
 
   const qtyInputRef = useRef<HTMLInputElement>(null);
 
@@ -154,8 +166,12 @@ export default function Entradas() {
   }, [isCaptureModalOpen]);
 
   const handleStartCapture = () => {
-    if (!productoId || !declaredCount || Number(declaredCount) <= 0 || !ubicacionId) {
+    if (!productoId || !declaredCount || !ubicacionId) {
       toast.error("Por favor completa todos los campos obligatorios (*)");
+      return;
+    }
+    if (!isValidDeclaredRollCount(declaredCount)) {
+      toast.error("La cantidad de rollos debe ser un número entero mayor a cero.");
       return;
     }
     if (showCost && !isValidUnitCost(costoUnitario)) {
@@ -164,13 +180,14 @@ export default function Entradas() {
     }
 
     setCapDraftId(crypto.randomUUID());
-    setCapCantidades([]);
+    setCapCantidades(createBlankRollQuantities(Number(declaredCount)));
     setCapCurrentQty("");
     setEditingQtyIndex(null);
     setEditingQtyValue("");
     setIsEditingLine(false);
     setUniformQty("");
     setUniformBaseline(null);
+    setEditedQtyIndexes(new Set());
     setIsCaptureModalOpen(true);
   };
 
@@ -179,15 +196,29 @@ export default function Entradas() {
     setCostoUnitario(linea.costoUnitario || "");
     setDeclaredCount(linea.declaredCount.toString());
     setCapDraftId(linea.id);
-    setCapCantidades([...linea.cantidades]);
+    setCapCantidades(Array.from({ length: linea.declaredCount }, (_, index) => linea.cantidades[index] ?? ""));
     setCapCurrentQty("");
     setEditingQtyIndex(null);
     setEditingQtyValue("");
     setIsEditingLine(true);
-    setUniformQty("");
-    setUniformBaseline(null);
+    setUniformQty(linea.uniformBaseline ?? "");
+    setUniformBaseline(linea.uniformBaseline);
+    setEditedQtyIndexes(new Set(linea.adjustedIndexes));
     setIsCaptureModalOpen(true);
   };
+
+  const isRollAdjusted = (qty: string, index: number) => (
+    isAdjustedRoll(qty, index, uniformBaseline, editedQtyIndexes)
+  );
+  const capturedRollCount = capCantidades.filter((qty) => qty.trim() !== "").length;
+  const captureCounts = getRollCaptureCounts(capCantidades, uniformBaseline, editedQtyIndexes);
+  const blankRollCount = captureCounts.blank;
+  const adjustedRollCount = captureCounts.adjusted;
+  const uniformRollCount = captureCounts.uniform;
+  const nextBlankIndex = capCantidades.findIndex((qty) => qty.trim() === "");
+  const nextRollNumber = nextBlankIndex === -1
+    ? Math.max(1, Number(declaredCount) || 1)
+    : nextBlankIndex + 1;
 
   const handleApplyUniformQty = () => {
     const parsed = Number(uniformQty);
@@ -200,27 +231,59 @@ export default function Entradas() {
       toast.error("Indica primero una cantidad válida de rollos");
       return;
     }
-    if (
-      capCantidades.length > 0 &&
-      !window.confirm(
-        "Ya hay rollos capturados. Aplicar el valor uniforme sobrescribirá esas cantidades. ¿Deseas continuar?",
-      )
-    ) {
+    const blankCount = capCantidades.filter((qty) => qty.trim() === "").length;
+    if (blankCount === 0) {
+      toast.info("No hay rollos en blanco por completar.");
       return;
     }
 
-    setCapCantidades(Array.from({ length: declared }, () => uniformQty));
-    setUniformBaseline(uniformQty);
+    setCapCantidades((previous) => applyUniformToBlankRolls(previous, uniformQty));
+    setUniformBaseline((previous) => previous === null || blankCount > 0 ? uniformQty : previous);
     setEditingQtyIndex(null);
     setEditingQtyValue("");
-    toast.success(`Se aplicó ${uniformQty} a ${declared} rollos`);
+    toast.success(`Se aplicó ${uniformQty} a ${blankCount} rollos sin capturar`);
+  };
+
+  const handleOverwriteUniformQty = () => {
+    const parsed = Number(uniformQty);
+    const declared = Number(declaredCount);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      toast.error("La cantidad uniforme debe ser mayor que cero");
+      return;
+    }
+    if (!Number.isInteger(declared) || declared <= 0) {
+      toast.error("Indica primero una cantidad válida de rollos");
+      return;
+    }
+
+    const adjustedCount = capCantidades.reduce(
+      (count, qty, index) => count + (qty.trim() !== "" && isRollAdjusted(qty, index) ? 1 : 0),
+      0,
+    );
+    const warning = adjustedCount > 0
+      ? `Se reemplazarán los ${declared} rollos y se perderán ${adjustedCount} valores ajustados manualmente. ¿Deseas continuar?`
+      : `Se reemplazarán los valores de los ${declared} rollos. ¿Deseas continuar?`;
+    if (!window.confirm(warning)) return;
+
+    setCapCantidades(createUniformRollQuantities(declared, uniformQty));
+    setUniformBaseline(uniformQty);
+    setEditedQtyIndexes(new Set());
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    toast.success(`Se sobrescribieron los ${declared} rollos con ${uniformQty}`);
   };
 
   const handleAddQty = (e?: React.FormEvent) => {
     e?.preventDefault();
     const val = parseFloat(capCurrentQty);
-    if (!isNaN(val) && val > 0) {
-      setCapCantidades([...capCantidades, capCurrentQty]);
+    const nextBlankIndex = capCantidades.findIndex((qty) => qty.trim() === "");
+    if (!isNaN(val) && val > 0 && nextBlankIndex !== -1) {
+      setCapCantidades((previous) => previous.map((qty, index) => index === nextBlankIndex ? capCurrentQty : qty));
+      setEditedQtyIndexes((previous) => {
+        const next = new Set(previous);
+        next.add(nextBlankIndex);
+        return next;
+      });
       setCapCurrentQty("");
       qtyInputRef.current?.focus();
     }
@@ -238,7 +301,12 @@ export default function Entradas() {
   };
 
   const handleRemoveCapturedQty = (idx: number) => {
-    setCapCantidades(prev => prev.filter((_, i) => i !== idx));
+    setCapCantidades(prev => prev.map((qty, i) => i === idx ? "" : qty));
+    setEditedQtyIndexes((previous) => {
+      const next = new Set(previous);
+      next.delete(idx);
+      return next;
+    });
     setEditingQtyIndex(null);
     setEditingQtyValue("");
     qtyInputRef.current?.focus();
@@ -259,27 +327,47 @@ export default function Entradas() {
     setCapCantidades(prev =>
       prev.map((qty, idx) => idx === editingQtyIndex ? editingQtyValue : qty),
     );
+    setEditedQtyIndexes((previous) => {
+      const next = new Set(previous);
+      next.add(editingQtyIndex);
+      return next;
+    });
     setEditingQtyIndex(null);
     setEditingQtyValue("");
     qtyInputRef.current?.focus();
   };
 
+  const handleResetToUniform = (idx: number) => {
+    if (uniformBaseline === null) return;
+    setCapCantidades((previous) => resetRollToUniform(previous, idx, uniformBaseline));
+    setEditedQtyIndexes((previous) => {
+      const next = new Set(previous);
+      next.delete(idx);
+      return next;
+    });
+  };
+
   const attemptCancelCapture = () => {
-    if (capCantidades.length > 0 && !isEditingLine) {
+    if (capCantidades.some((qty) => qty.trim() !== "") && !isEditingLine) {
       setIsConfirmCancelOpen(true);
     } else {
       setIsCaptureModalOpen(false);
     }
   };
 
-  const handleConfirmCapture = (forceReduce = false) => {
+  const handleConfirmCapture = () => {
     const declared = Number(declaredCount);
+    if (!isValidDeclaredRollCount(declared) || capCantidades.length !== declared) {
+      toast.error("La cantidad declarada no coincide con los rollos de la captura.");
+      return;
+    }
     if (showCost && !isValidUnitCost(costoUnitario)) {
       toast.error("El costo unitario debe ser mayor a cero.");
       return;
     }
-    if (!forceReduce && capCantidades.length < declared) {
-      toast.error(`Faltan capturar ${declared - capCantidades.length} rollos`);
+    const blankCount = capCantidades.filter((qty) => qty.trim() === "").length;
+    if (blankCount > 0) {
+      toast.error(`Faltan ${blankCount} rollos por capturar.`);
       return;
     }
     if (capCantidades.length > declared) {
@@ -299,8 +387,10 @@ export default function Entradas() {
       productoSKU: selectedProduct.sku,
       productoUnidad: selectedProduct.unidad,
       costoUnitario: showCost ? costoUnitario : undefined,
-      declaredCount: forceReduce ? capCantidades.length : declared,
-      cantidades: capCantidades
+      declaredCount: declared,
+      cantidades: capCantidades,
+      uniformBaseline,
+      adjustedIndexes: Array.from(editedQtyIndexes).sort((a, b) => a - b),
     };
 
     if (isEditingLine) {
@@ -831,10 +921,10 @@ export default function Entradas() {
               </div>
               <div className="text-right">
                 <div className="text-2xl font-black text-primary tracking-tighter">
-                  Rollo {Math.min(capCantidades.length + 1, Math.max(1, Number(declaredCount) || 1))} de {declaredCount}
+                  Rollo {nextRollNumber} de {declaredCount}
                 </div>
                 <div className="text-[10px] uppercase font-bold text-muted-foreground">
-                  {capCantidades.length} capturados
+                  {capturedRollCount} capturados
                 </div>
               </div>
             </div>
@@ -870,14 +960,29 @@ export default function Entradas() {
                   </div>
                   <Button
                     type="button"
-                    variant="secondary"
                     onClick={handleApplyUniformQty}
                     disabled={!uniformQty}
                     data-testid="button-apply-uniform"
                   >
-                    Aplicar a todos
+                    {blankRollCount === Number(declaredCount)
+                      ? "Aplicar a todos"
+                      : `Aplicar a los ${blankRollCount} rollos restantes`}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleOverwriteUniformQty}
+                    disabled={!uniformQty}
+                    data-testid="button-overwrite-uniform"
+                  >
+                    Sobrescribir todos
                   </Button>
                 </div>
+                {adjustedRollCount > 0 && (
+                  <p className="mt-2 text-xs font-medium text-amber-700">
+                    Hay {adjustedRollCount} {adjustedRollCount === 1 ? "rollo ajustado" : "rollos ajustados"} que “Aplicar” conservará.
+                  </p>
+                )}
               </div>
 
               <form onSubmit={handleAddQty} className="flex gap-3">
@@ -899,7 +1004,7 @@ export default function Entradas() {
                 <Button
                   type="submit"
                   className="h-20 px-8 bg-primary hover:bg-primary/90"
-                  disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}
+                  disabled={!capCurrentQty || blankRollCount === 0}
                   data-testid="button-add-captured-roll"
                 >
                   <Plus className="w-5 h-5 mr-2" />
@@ -910,136 +1015,171 @@ export default function Entradas() {
 
             {/* List area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/5 custom-scrollbar">
-              {capCantidades.length === 0 ? (
+              {capturedRollCount === 0 ? (
                 <div className="h-full flex items-center justify-center text-muted-foreground flex-col">
                   <Calculator className="w-16 h-16 opacity-10 mb-4" />
                   <p className="text-lg font-medium">Ingresa la cantidad del primer rollo</p>
                 </div>
               ) : (
-                capCantidades.map((qty, idx) => (
-                  <div
-                    key={idx}
-                    className={`flex items-center justify-between bg-white p-3 rounded-lg border shadow-sm group transition-colors ${
-                      uniformBaseline != null && Number(qty) !== Number(uniformBaseline)
-                        ? "border-amber-400 bg-amber-50/60"
-                        : "hover:border-primary/50"
-                    }`}
-                    data-testid={`row-captured-roll-${idx}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="w-8 h-8 rounded bg-muted/50 flex items-center justify-center text-xs font-mono font-bold text-muted-foreground border">
-                        {idx+1}
-                      </span>
-                      {editingQtyIndex === idx ? (
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            min="0.01"
-                            step="0.01"
-                            value={editingQtyValue}
-                            onChange={(event) => setEditingQtyValue(event.target.value)}
-                            onKeyDown={(event) => {
-                              if (event.key === "Enter") {
-                                event.preventDefault();
-                                handleSaveCapturedQty();
-                              }
-                            }}
-                            className="h-10 w-32 text-lg font-bold"
-                            autoFocus
-                            data-testid={`input-edit-roll-${idx}`}
-                          />
-                          <span className="text-sm font-bold text-muted-foreground">
-                            {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-2xl font-black tabular-nums">
-                          {qty} <span className="text-sm font-bold text-muted-foreground">{selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}</span>
+                capCantidades.map((qty, idx) => {
+                  const isBlank = qty.trim() === "";
+                  const isAdjusted = isRollAdjusted(qty, idx);
+                  const isUniform = !isBlank && !isAdjusted && uniformBaseline !== null;
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`flex flex-col gap-3 rounded-lg border p-3 shadow-sm transition-colors sm:flex-row sm:items-center sm:justify-between ${
+                        isAdjusted
+                          ? "border-amber-400 bg-amber-50/70 dark:bg-amber-950/20"
+                          : isUniform
+                            ? "border-emerald-200 bg-emerald-50/40 dark:bg-emerald-950/10"
+                            : isBlank
+                              ? "border-dashed bg-muted/20"
+                              : "bg-white hover:border-primary/50 dark:bg-background"
+                      }`}
+                      data-testid={`row-captured-roll-${idx}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="w-8 h-8 rounded bg-muted/50 flex items-center justify-center text-xs font-mono font-bold text-muted-foreground border">
+                          {idx+1}
                         </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {uniformBaseline != null && (
+                        {editingQtyIndex === idx ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="number"
+                              min="0.01"
+                              step="0.01"
+                              value={editingQtyValue}
+                              onChange={(event) => setEditingQtyValue(event.target.value)}
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  handleSaveCapturedQty();
+                                }
+                              }}
+                              className="h-10 w-32 text-lg font-bold"
+                              autoFocus
+                              data-testid={`input-edit-roll-${idx}`}
+                            />
+                            <span className="text-sm font-bold text-muted-foreground">
+                              {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
+                            </span>
+                          </div>
+                        ) : isBlank ? (
+                          <span className="text-sm font-semibold text-muted-foreground">
+                            Pendiente de captura
+                          </span>
+                        ) : (
+                          <span className="text-2xl font-black tabular-nums">
+                            {qty} <span className="text-sm font-bold text-muted-foreground">{selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}</span>
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
                         <span
                           className={`rounded px-2 py-1 text-[10px] font-black uppercase ${
-                            Number(qty) === Number(uniformBaseline)
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-amber-100 text-amber-800"
+                            isAdjusted
+                              ? "bg-amber-100 text-amber-800"
+                              : isUniform
+                                ? "bg-emerald-100 text-emerald-700"
+                                : "bg-slate-100 text-slate-600"
                           }`}
+                          data-testid={`badge-roll-state-${idx}`}
                         >
-                          {Number(qty) === Number(uniformBaseline) ? "Uniforme" : "Ajustado"}
+                          {isAdjusted ? "Ajustado" : isUniform ? "Uniforme" : "En blanco"}
                         </span>
-                      )}
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase bg-muted px-2 py-1 rounded">Serie por asignar #{idx+1}</span>
-                      <div className="flex gap-1">
-                        {editingQtyIndex === idx ? (
-                          <>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8"
-                              onClick={handleSaveCapturedQty}
-                              data-testid={`btn-save-roll-${idx}`}
-                            >
-                              Guardar
-                            </Button>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase bg-muted px-2 py-1 rounded">Serie por asignar #{idx+1}</span>
+                        <div className="flex gap-1">
+                          {isAdjusted && uniformBaseline !== null && editingQtyIndex !== idx && (
                             <Button
                               variant="ghost"
-                              size="sm"
-                              className="h-8"
-                              onClick={() => {
-                                setEditingQtyIndex(null);
-                                setEditingQtyValue("");
-                              }}
+                              size="icon"
+                              className="h-8 w-8 text-emerald-700 hover:bg-emerald-100"
+                              onClick={() => handleResetToUniform(idx)}
+                              aria-label={`Restaurar rollo ${idx + 1} al valor uniforme`}
+                              title="Regresar al valor uniforme"
+                              data-testid={`btn-reset-roll-${idx}`}
                             >
-                              Cancelar
+                              <RotateCcw className="w-4 h-4" />
                             </Button>
-                          </>
-                        ) : (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-primary opacity-60 group-hover:opacity-100 hover:bg-primary/10 transition-opacity"
-                            onClick={() => handleStartEditCapturedQty(idx)}
-                            aria-label={`Editar cantidad del rollo ${idx + 1}`}
-                            data-testid={`btn-edit-roll-${idx}`}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive opacity-50 group-hover:opacity-100 hover:bg-destructive/10 transition-opacity"
-                          onClick={() => handleRemoveCapturedQty(idx)}
-                          aria-label={`Eliminar rollo ${idx + 1}`}
-                          data-testid={`btn-delete-roll-${idx}`}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                          )}
+                          {editingQtyIndex === idx ? (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8"
+                                onClick={handleSaveCapturedQty}
+                                data-testid={`btn-save-roll-${idx}`}
+                              >
+                                Guardar
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8"
+                                onClick={() => {
+                                  setEditingQtyIndex(null);
+                                  setEditingQtyValue("");
+                                }}
+                              >
+                                Cancelar
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-primary opacity-60 hover:bg-primary/10 transition-opacity sm:opacity-70 sm:hover:opacity-100"
+                              onClick={() => handleStartEditCapturedQty(idx)}
+                              aria-label={`Editar cantidad del rollo ${idx + 1}`}
+                              data-testid={`btn-edit-roll-${idx}`}
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                          {!isBlank && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-destructive opacity-60 hover:bg-destructive/10 transition-opacity sm:hover:opacity-100"
+                              onClick={() => handleRemoveCapturedQty(idx)}
+                              aria-label={`Vaciar cantidad del rollo ${idx + 1}`}
+                              data-testid={`btn-delete-roll-${idx}`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
 
             {/* Live Totals Row */}
-            <div className="p-3 bg-primary/5 border-t shrink-0 flex justify-between items-center">
-              <div className="text-sm font-bold text-primary">Subtotales al momento:</div>
-              <div className="flex flex-wrap justify-end gap-x-6 gap-y-1 text-sm font-bold">
-                {uniformBaseline != null && (
-                  <>
-                    <div className="text-emerald-700">
-                      Uniformes: {capCantidades.filter((qty) => Number(qty) === Number(uniformBaseline)).length}
-                    </div>
-                    <div className="text-amber-700">
-                      Ajustados: {capCantidades.filter((qty) => Number(qty) !== Number(uniformBaseline)).length}
-                    </div>
-                  </>
+            <div className="p-3 bg-primary/5 border-t shrink-0 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="text-sm font-bold text-primary">Estado de captura:</div>
+                <div className="flex flex-wrap justify-end gap-x-5 gap-y-1 text-sm font-bold">
+                  <div className="text-emerald-700" data-testid="count-uniform-rolls">
+                    Uniformes: {uniformRollCount}
+                  </div>
+                  <div className="text-amber-700" data-testid="count-adjusted-rolls">
+                    Ajustados: {adjustedRollCount}
+                  </div>
+                  <div className="text-slate-600" data-testid="count-blank-rolls">
+                    En blanco: {blankRollCount}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap justify-end gap-x-6 gap-y-1 text-xs font-semibold text-muted-foreground">
+                <div>Qty: {capCantidades.reduce((a, b) => a + (Number(b) || 0), 0).toFixed(2)}</div>
+                {showCost && (
+                  <div>$: {(capCantidades.reduce((a, b) => a + (Number(b) || 0), 0) * parseFloat(costoUnitario || "0")).toFixed(2)}</div>
                 )}
-                <div>Qty: {capCantidades.reduce((a, b) => a + parseFloat(b), 0).toFixed(2)}</div>
-                <div>$: {(capCantidades.reduce((a, b) => a + parseFloat(b), 0) * parseFloat(costoUnitario || "0")).toFixed(2)}</div>
               </div>
             </div>
 
@@ -1054,7 +1194,7 @@ export default function Entradas() {
                     e.preventDefault();
                     handleKeypadPress(k);
                   }}
-                  disabled={capCantidades.length >= Number(declaredCount) && k !== 'DEL'}
+                  disabled={blankRollCount === 0 && k !== 'DEL'}
                 >
                   {k}
                 </Button>
@@ -1062,31 +1202,32 @@ export default function Entradas() {
               <Button
                 className="col-span-3 h-16 text-xl font-black rounded-none bg-primary hover:bg-primary/90 text-white"
                 onClick={handleAddQty}
-                disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}
+                disabled={!capCurrentQty || blankRollCount === 0}
               >
                 SIGUIENTE ROLLO (ENTER)
               </Button>
             </div>
           </div>
 
-          <DialogFooter className="p-4 border-t bg-background shrink-0 flex-row justify-between gap-4">
-            <Button variant="outline" onClick={attemptCancelCapture} className="w-1/3">
+          <DialogFooter className="p-4 border-t bg-background shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <Button variant="outline" onClick={attemptCancelCapture} className="w-full sm:w-1/3">
               Descartar
             </Button>
-            {capCantidades.length > 0 && capCantidades.length < Number(declaredCount) ? (
-              <Button variant="secondary" className="w-2/3" onClick={() => handleConfirmCapture(true)}>
-                Terminar Incompleto ({capCantidades.length})
-              </Button>
-            ) : (
+            <div className="w-full space-y-2 sm:w-2/3">
+              {blankRollCount > 0 && (
+                <p className="text-center text-sm font-semibold text-amber-700" data-testid="missing-rolls-message">
+                  Faltan {blankRollCount} {blankRollCount === 1 ? "rollo" : "rollos"} por capturar.
+                </p>
+              )}
               <Button
-                className="w-2/3 bg-[#1e3a8a] text-white hover:bg-[#1e3a8a]/90 font-bold"
-                onClick={() => handleConfirmCapture(false)}
-                disabled={capCantidades.length !== Number(declaredCount)}
+                className="w-full bg-[#1e3a8a] text-white hover:bg-[#1e3a8a]/90 font-bold"
+                onClick={handleConfirmCapture}
+                disabled={blankRollCount > 0}
                 data-testid="button-confirm-line"
               >
                 {isEditingLine ? "Guardar Cambios" : "Confirmar Línea"}
               </Button>
-            )}
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
