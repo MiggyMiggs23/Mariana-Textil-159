@@ -27,7 +27,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 
 type SortKey = "nombreUbicacion" | "participacion" | "ventas" | "margen" | "tickets" | "ticketPromedio" | "metros" | "efectivo" | "transferencia" | "credito" | "diferenciaCaja" | "porcentajeFacturado";
 
-export default function CajaComparativo() {
+export default function CajaComparativo({ embedded = false }: { embedded?: boolean }) {
   const [periodo, setPeriodo] = useState<GetAdminComparacionTiendasPeriodo>("mensual");
   const [desde, setDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
   const [hasta, setHasta] = useState(format(new Date(), "yyyy-MM-dd"));
@@ -110,8 +110,7 @@ export default function CajaComparativo() {
     Credito: Number(t.credito)
   }));
 
-  return (
-    <AppLayout>
+  const content = (
       <div className="max-w-[1600px] mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -373,6 +372,6 @@ export default function CajaComparativo() {
           </div>
         )}
       </div>
-    </AppLayout>
   );
+  return embedded ? content : <AppLayout>{content}</AppLayout>;
 }

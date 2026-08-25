@@ -35,11 +35,10 @@ import {
   Banknote,
   FileBarChart,
   Shield,
-  AlertCircle,
   Wallet,
   BarChart3,
-  Bell,
-  Tags
+  Tags,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -56,6 +55,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { etiquetasApi } from "@/lib/etiquetas-api";
+import { NotificationsBell } from "@/components/notifications-bell";
 
 type NavItem = {
   name: string;
@@ -83,6 +83,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
       { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
       { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
+      { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
     ]
   },
   {
@@ -92,28 +93,32 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: true },
       { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
-      { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
     ]
   },
   {
-    title: "ADMINISTRACIÓN",
+    title: "CAJA",
     items: [
-      { name: "Cobros (POS)", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
-      { name: "Tiempo Real", path: "/caja/tiempo-real", icon: Activity, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
       { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Diferencias", path: "/caja/diferencias", icon: AlertCircle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Cuentas Destino", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Comparativo", path: "/caja/comparativo", icon: BarChart3, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Notificaciones", path: "/notificaciones", icon: Bell, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Tiempo Real", path: "/caja/tiempo-real", icon: Activity, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+    ]
+  },
+  {
+    title: "DIRECTORIO",
+    items: [
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
-      { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
-      { name: "Conciliación", path: "/administracion/conciliacion", icon: Activity, module: Modules.CONCILIACION, isClickable: true },
     ]
   },
   {
     items: [
-      { name: "Reportes", path: "/reportes", icon: FileBarChart, module: Modules.REPORTES, isClickable: false },
+      { name: "Reportes", path: "/reportes", icon: BarChart3, module: Modules.REPORTES, isClickable: true, adminOnly: true },
+    ]
+  },
+  {
+    items: [
+      { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
     ]
   },
   {
@@ -122,6 +127,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
       { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
+      { name: "Conciliación", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },
     ]
   }
 ];
@@ -288,9 +294,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const navGroups = isCaja
     ? [{
         items: [
-          { name: "Caja", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+          { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+          { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true },
           { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
-          { name: "Salidas recibidas", path: "/salidas", icon: ArrowDownToLine, module: Modules.SALIDAS, isClickable: true },
+          { name: "Salidas", path: "/salidas", icon: ArrowDownToLine, module: Modules.SALIDAS, isClickable: true },
         ],
       }]
     : NAV_GROUPS;
@@ -355,10 +362,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     <span data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
                       {ajustesPendientes.length}
                     </span>
-                  ) : item.path === "/notificaciones" && user.rol === Role.ADMIN && notificationsCount?.count ? (
-                    <span data-testid="badge-notificaciones" className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-destructive text-white text-[10px] font-bold rounded-full">
-                      {notificationsCount.count}
-                    </span>
                   ) : null}
                 </Link>
               );
@@ -393,6 +396,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="font-bold text-lg">Mariana Textil</span>
             </div>
             <div className="flex items-center gap-1">
+              {user.rol === Role.ADMIN && (
+                <NotificationsBell unreadCount={notificationsCount?.count ?? 0} mobile />
+              )}
               <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setLogoutDialogOpen(true)}>
                 <LogOut className="w-5 h-5" />
                 <span className="sr-only">Cerrar sesión</span>
@@ -414,6 +420,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="no-print hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
           {renderLocationControl()}
           <div className="h-8 w-px bg-border" />
+          {user.rol === Role.ADMIN && (
+            <NotificationsBell unreadCount={notificationsCount?.count ?? 0} />
+          )}
           <div className="flex items-center gap-3">
             <div className="grid h-9 w-9 place-items-center rounded-full bg-sidebar text-sm font-bold text-white">
               {user.nombre.charAt(0).toUpperCase()}

@@ -44,10 +44,9 @@ import Conciliacion from '@/pages/conciliacion';
 import Permisos from '@/pages/permisos';
 import CajaTiempoReal from '@/pages/caja/tiempo-real';
 import CajaCortes from '@/pages/caja/cortes';
-import CajaDiferencias from '@/pages/caja/diferencias';
 import CajaCuentasDestino from '@/pages/caja/cuentas-destino';
-import CajaComparativo from '@/pages/caja/comparativo';
 import Notificaciones from '@/pages/notificaciones';
+import Reportes from '@/pages/reportes';
 import { LocationScopeProvider } from '@/lib/location-scope';
 import { Modules, hasPermission } from '@/lib/permisos';
 
@@ -196,11 +195,13 @@ function Router() {
         <Route path="/cobros" component={() => <ProtectedRoute component={Cobros} allowedModule={Modules.COBROS_PAGOS} />} />
 
         <Route path="/caja/tiempo-real" component={() => <ProtectedRoute component={CajaTiempoReal} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
-        <Route path="/caja/cortes" component={() => <ProtectedRoute component={CajaCortes} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
-        <Route path="/caja/diferencias" component={() => <ProtectedRoute component={CajaDiferencias} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/caja/cortes" component={() => <ProtectedRoute component={CajaCortes} allowedModule={Modules.COBROS_PAGOS} />} />
+        <Route path="/caja/diferencias" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
         <Route path="/caja/cuentas-destino" component={() => <ProtectedRoute component={CajaCuentasDestino} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
-        <Route path="/caja/comparativo" component={() => <ProtectedRoute component={CajaComparativo} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/caja/comparativo" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
         <Route path="/notificaciones" component={() => <ProtectedRoute component={Notificaciones} adminOnly />} />
+        <Route path="/reportes" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
+        <Route path="/reportes/:tab" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
 
         <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} />} />
         

@@ -28,7 +28,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 
 type SortKey = "nombre" | "cortes" | "exactos" | "porcentajeExactos" | "diferencia";
 
-export default function CajaDiferencias() {
+export default function CajaDiferencias({ embedded = false }: { embedded?: boolean }) {
   const { selectedLocationId } = useLocationScope();
 
   const [preset, setPreset] = useState("mes"); // hoy, semana, mes, trimestre, semestre, año, custom
@@ -102,8 +102,7 @@ export default function CajaDiferencias() {
     </TableHead>
   );
 
-  return (
-    <AppLayout>
+  const content = (
       <div className="max-w-[1600px] mx-auto space-y-6">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
           <div>
@@ -437,6 +436,6 @@ export default function CajaDiferencias() {
           </div>
         )}
       </div>
-    </AppLayout>
   );
+  return embedded ? content : <AppLayout>{content}</AppLayout>;
 }
