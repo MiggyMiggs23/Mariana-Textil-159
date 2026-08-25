@@ -135,8 +135,8 @@
     margin: 0;
   }
   @page document {
-    size: letter landscape;
-    margin: 10mm;
+    size: 5.5in 8.5in;
+    margin: 8mm;
   }
   @page label-sheet {
     size: letter portrait;
@@ -195,7 +195,7 @@
 
   .print-document-container {
     width: 100%;
-    max-width: 210mm;
+    max-width: 123.7mm;
     margin: 0 auto;
     background: white;
     color: black;

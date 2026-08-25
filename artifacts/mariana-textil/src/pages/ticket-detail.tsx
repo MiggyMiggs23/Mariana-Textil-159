@@ -35,8 +35,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
-import { BrandLogo } from "@/components/brand-logo";
 import { formatNumber } from "@workspace/number-format";
+import { groupTicketLines } from "@/lib/ticket-lines";
+
+function MonochromeTicketLogo({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-label="Mariana Textil"
+      viewBox="0 0 160 112"
+      className={`block text-black ${className}`}
+      role="img"
+    >
+      <path fill="currentColor" d="M16 8h32l32 43 32-43h32v76h-30V48L80 93 46 48v36H16z" />
+      <path fill="#fff" d="M48 8h23l9 13 9-13h23L80 51z" />
+      <text x="80" y="106" textAnchor="middle" fill="currentColor" fontSize="17" fontWeight="900" letterSpacing="1">MARIANA</text>
+    </svg>
+  );
+}
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -48,6 +63,7 @@ export default function TicketDetailPage() {
   const [motivo, setMotivo] = useState("");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
+  const [showRolls, setShowRolls] = useState(false);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
 
   const { data: user } = useGetCurrentUser({
@@ -203,6 +219,47 @@ export default function TicketDetailPage() {
     );
   }
 
+  const groupedLines = groupTicketLines(ticket.lineas);
+  const displayLines = showRolls
+    ? ticket.lineas.map((linea) => ({
+        rowKey: `line-${linea.id}`,
+        skuProducto: linea.skuProducto,
+        telaProducto: linea.telaProducto,
+        colorProducto: linea.colorProducto,
+        unidadProducto: linea.unidadProducto,
+        precioUnitario: linea.precioUnitario,
+        rollos: 1,
+        cantidad: linea.cantidad,
+        importe: linea.importe,
+        costoTotalCongelado: linea.costoTotalCongelado,
+        margen: linea.margen,
+        serieRollo: linea.serieRollo,
+      }))
+    : groupedLines.map((linea) => ({
+        rowKey: `group-${linea.key}`,
+        skuProducto: linea.skuProducto,
+        telaProducto: linea.telaProducto,
+        colorProducto: linea.colorProducto,
+        unidadProducto: linea.unidadProducto,
+        precioUnitario: linea.precioUnitario,
+        rollos: linea.rollos,
+        cantidad: linea.cantidad,
+        importe: linea.importe,
+        costoTotalCongelado: linea.costoTotalCongelado,
+        margen: linea.margen,
+        serieRollo: null,
+      }));
+  const customerName =
+    ticket.clienteId === 1 || !ticket.clienteId
+      ? "VENTA AL PÚBLICO"
+      : ticket.nombreCliente || `Cliente #${ticket.clienteId}`;
+  const createdAt = new Date(ticket.createdAt);
+  const formattedDate = createdAt.toLocaleDateString("es-MX");
+  const formattedTime = createdAt.toLocaleTimeString("es-MX", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
       <div className="flex items-center justify-between no-print">
@@ -234,7 +291,7 @@ export default function TicketDetailPage() {
             </Button>
           )}
           <Button variant="outline" onClick={handlePrintCarta}>
-            <Printer className="h-4 w-4 mr-2" /> Imprimir Carta
+            <Printer className="h-4 w-4 mr-2" /> Imprimir Media Carta
           </Button>
           <Button onClick={handlePrint80mm}>
             <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
@@ -250,6 +307,14 @@ export default function TicketDetailPage() {
             <CardDescription>
               Emitido por {ticket.nombreUsuarioTerminal}
             </CardDescription>
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto px-0 pt-2 text-sm"
+              onClick={() => setShowRolls((current) => !current)}
+            >
+              {showRolls ? "Ver agrupado" : "Ver rollos"}
+            </Button>
           </div>
           <div className="text-right">
             <div
@@ -293,7 +358,8 @@ export default function TicketDetailPage() {
             <thead className="bg-muted/50 text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 font-semibold">Producto</th>
-                <th className="px-4 py-3 font-semibold text-right">Cant.</th>
+                <th className="px-4 py-3 font-semibold text-right">Rollos</th>
+                <th className="px-4 py-3 font-semibold text-right">Cantidad</th>
                 <th className="px-4 py-3 font-semibold text-right">
                   Precio Unit.
                 </th>
@@ -311,8 +377,8 @@ export default function TicketDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {ticket.lineas.map((linea) => (
-                <tr key={linea.id} className="hover:bg-muted/10">
+              {displayLines.map((linea) => (
+                <tr key={linea.rowKey} className="hover:bg-muted/10">
                   <td className="px-4 py-3">
                     <div className="font-medium text-foreground">
                       {linea.telaProducto} - {linea.colorProducto}
@@ -327,6 +393,9 @@ export default function TicketDetailPage() {
                         </span>
                       )}
                     </div>
+                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums">
+                    {linea.rollos}
                   </td>
                   <td className="px-4 py-3 text-right font-mono">
                     {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
@@ -385,24 +454,22 @@ export default function TicketDetailPage() {
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
         <div className="text-center mb-4">
-          <BrandLogo className="mx-auto mb-2 h-16 w-auto max-w-[120px]" />
-          <p className="text-xs">{ticket.nombreUbicacion}</p>
-          <p className="text-xs">Folio: {ticket.folio}</p>
-          <p className="text-xs">Tipo: {ticket.tipo}</p>
+          <MonochromeTicketLogo className="mx-auto mb-1 h-auto w-[50mm] max-w-full" />
+          <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
+          <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
+          <div className="my-2 border-t border-black" />
+          <div className="text-left text-[10px] leading-relaxed">
+            <div><span className="font-semibold">Folio:</span> {ticket.folio}</div>
+            <div><span className="font-semibold">Fecha:</span> {formattedDate} · {formattedTime}</div>
+            <div><span className="font-semibold">Atendió:</span> {ticket.nombreUsuarioTerminal}</div>
+            <div><span className="font-semibold">Cliente:</span> {customerName}</div>
+          </div>
+          <p className="mt-1 text-xs">Tipo: {ticket.tipo}</p>
           {ticket.facturado && <p className="text-xs font-bold">FACTURADO</p>}
-          <p className="text-xs">
-            {new Date(ticket.createdAt).toLocaleString("es-MX")}
-          </p>
-          {ticket.clienteId && ticket.clienteId !== 1 && (
-             <div className="text-xs mt-1 border-t border-black/20 pt-1">
-               <span className="font-semibold">Cliente:</span> {ticket.nombreCliente || `#${ticket.clienteId}`}
-               {ticket.direccionEntregaEfectiva && (
-                 <>
-                   <br/>
-                   <span className="font-semibold">Entrega:</span> {ticket.direccionEntregaEfectiva}
-                 </>
-               )}
-             </div>
+          {ticket.direccionEntregaEfectiva && (
+            <div className="text-left text-[10px] mt-1">
+              <span className="font-semibold">Entrega:</span> {ticket.direccionEntregaEfectiva}
+            </div>
           )}
         </div>
 
@@ -410,26 +477,26 @@ export default function TicketDetailPage() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-black/20">
-                <th className="text-left font-normal pb-1">Art.</th>
-                <th className="text-right font-normal pb-1">Cant</th>
+                <th className="text-left font-normal pb-1">Producto</th>
+                <th className="text-right font-normal pb-1">Rollos</th>
                 <th className="text-right font-normal pb-1">Imp</th>
               </tr>
             </thead>
             <tbody>
-              {ticket.lineas.map((linea) => (
-                <tr key={linea.id}>
+              {groupedLines.map((linea) => (
+                <tr key={linea.key}>
                   <td className="py-1">
-                    <div className="line-clamp-2">
+                    <div className="font-semibold">
                       {linea.telaProducto} {linea.colorProducto}
                     </div>
-                    {linea.serieRollo && (
-                      <div className="text-[10px] uppercase font-mono">
-                        {linea.serieRollo}
-                      </div>
-                    )}
+                    <div className="text-[9px]">
+                      {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                      {" · "}
+                      {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
+                    </div>
                   </td>
                   <td className="text-right align-top py-1 font-mono">
-                    {formatNumber(linea.cantidad, { kind: "quantity" })}
+                    {linea.rollos}
                   </td>
                   <td className="text-right align-top py-1">
                     {formatNumber(linea.importe, { kind: "money" })}
@@ -472,81 +539,63 @@ export default function TicketDetailPage() {
         </div>
       </div>
 
-      {/* Carta Formato */}
+      {/* Media Carta */}
       <div className="hidden print-carta-only print-document-container">
-        <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
-          <div>
-            <BrandLogo className="h-24 w-auto max-w-[150px]" />
-            <p className="text-sm mt-1">{ticket.nombreUbicacion}</p>
-          </div>
-          <div className="text-right">
-            <h2 className="text-2xl font-bold text-gray-500">
-              TICKET DE VENTA
-            </h2>
-            <p className="text-lg">
-              Folio:{" "}
-              <span className="font-bold text-black">{ticket.folio}</span>
-            </p>
-            <p className="text-sm">
-              Fecha: {new Date(ticket.createdAt).toLocaleString("es-MX")}
-            </p>
+        <div className="mb-5 text-center">
+          <MonochromeTicketLogo className="mx-auto h-auto w-[50mm]" />
+          <p className="text-lg font-bold">Mariana Textil S.A. de C.V.</p>
+          <p className="text-sm font-semibold">{ticket.nombreUbicacion}</p>
+          <div className="my-3 border-t-2 border-black" />
+          <div className="grid grid-cols-2 gap-x-6 text-left text-sm">
+            <div><span className="font-bold">Folio:</span> {ticket.folio}</div>
+            <div><span className="font-bold">Fecha:</span> {formattedDate} · {formattedTime}</div>
+            <div><span className="font-bold">Atendió:</span> {ticket.nombreUsuarioTerminal}</div>
+            <div><span className="font-bold">Cliente:</span> {customerName}</div>
           </div>
         </div>
 
-        <div className="mb-6 grid grid-cols-2 gap-4 text-sm">
+        <div className="mb-4 flex justify-between gap-4 text-xs">
           <div>
-            <div className="font-bold">Cliente:</div>
-            <div>{ticket.clienteId === 1 || !ticket.clienteId ? "VENTA AL PÚBLICO" : ticket.nombreCliente || `Cliente #${ticket.clienteId}`}</div>
             {ticket.direccionEntregaEfectiva && (
-              <div className="mt-1">
-                <span className="font-bold">Dirección de entrega:</span><br />
-                {ticket.direccionEntregaEfectiva}
-              </div>
+              <><span className="font-bold">Dirección de entrega:</span> {ticket.direccionEntregaEfectiva}</>
             )}
           </div>
-          <div>
-            <div className="font-bold">Atendió:</div>
-            <div>{ticket.nombreUsuarioTerminal}</div>
-            <div className="font-bold mt-2">Estado:</div>
-            <div>
-              {ticket.estado === EstadoTicket.CANCELADO
-                ? "CANCELADO"
-                : ticket.cobrado === true
-                  ? "PAGADO"
-                  : ticket.cobrado === false
-                    ? "PENDIENTE"
-                    : "REGISTRADO"}
-            </div>
-            {ticket.facturado && (
-              <div className="mt-2 font-bold">FACTURADO</div>
-            )}
+          <div className="shrink-0 text-right font-bold">
+            {ticket.estado === EstadoTicket.CANCELADO
+              ? "CANCELADO"
+              : ticket.cobrado === true
+                ? "PAGADO"
+                : ticket.cobrado === false
+                  ? "PENDIENTE"
+                  : "REGISTRADO"}
+            {ticket.facturado && <div>FACTURADO</div>}
           </div>
         </div>
 
-        <table className="w-full text-sm border-collapse mb-6">
+        <table className="w-full text-xs border-collapse mb-6">
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 p-2 text-left">SKU</th>
               <th className="border border-gray-300 p-2 text-left">
                 Descripción
               </th>
-              <th className="border border-gray-300 p-2 text-left">Serie</th>
-              <th className="border border-gray-300 p-2 text-right">Cant.</th>
-              <th className="border border-gray-300 p-2 text-right">Precio</th>
+              <th className="border border-gray-300 p-2 text-right">Rollos</th>
+              <th className="border border-gray-300 p-2 text-right">Cantidad</th>
+              <th className="border border-gray-300 p-2 text-right">Precio unit.</th>
               <th className="border border-gray-300 p-2 text-right">Importe</th>
             </tr>
           </thead>
           <tbody>
-            {ticket.lineas.map((linea) => (
-              <tr key={linea.id}>
+            {groupedLines.map((linea) => (
+              <tr key={linea.key}>
                 <td className="border border-gray-300 p-2 font-mono text-xs">
                   {linea.skuProducto}
                 </td>
                 <td className="border border-gray-300 p-2">
                   {linea.telaProducto} - {linea.colorProducto}
                 </td>
-                <td className="border border-gray-300 p-2 font-mono text-xs">
-                  {linea.serieRollo || "-"}
+                <td className="border border-gray-300 p-2 text-right">
+                  {linea.rollos}
                 </td>
                 <td className="border border-gray-300 p-2 text-right font-mono">
                   {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
