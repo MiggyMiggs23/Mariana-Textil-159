@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
+import { BrandLogo } from "@/components/brand-logo";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -399,7 +400,7 @@ export default function TicketDetailPage() {
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
         <div className="text-center mb-4">
-          <h2 className="text-lg font-bold">MARIANA TEXTIL</h2>
+          <BrandLogo className="mx-auto mb-2 h-16 w-auto max-w-[120px]" />
           <p className="text-xs">{ticket.nombreUbicacion}</p>
           <p className="text-xs">Folio: {ticket.folio}</p>
           <p className="text-xs">Tipo: {ticket.tipo}</p>
@@ -491,7 +492,7 @@ export default function TicketDetailPage() {
       <div className="hidden print-carta-only print-document-container">
         <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold">MARIANA TEXTIL</h1>
+            <BrandLogo className="h-24 w-auto max-w-[150px]" />
             <p className="text-sm mt-1">{ticket.nombreUbicacion}</p>
           </div>
           <div className="text-right">

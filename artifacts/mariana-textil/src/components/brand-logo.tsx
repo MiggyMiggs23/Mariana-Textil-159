@@ -1,5 +1,4 @@
 import fullLogo from "@/assets/mariana-textil-logo.png";
-import brandMark from "@/assets/mariana-textil-mark.png";
 import { cn } from "@/lib/utils";
 
 type BrandLogoProps = {
@@ -13,10 +12,11 @@ export function BrandLogo({
 }: BrandLogoProps) {
   return (
     <img
-      src={variant === "mark" ? brandMark : fullLogo}
+      src={fullLogo}
       alt="Mariana Textil S.A. de C.V."
       className={cn("block object-contain", className)}
       draggable={false}
+      data-logo-variant={variant}
     />
   );
 }
