@@ -99,7 +99,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       ON CONFLICT (id) DO NOTHING;
     `);
 
-    // transferencias wins when both aliases exist, preserving prior setup.
+    // Migrate the legacy alias only into rows that were not explicitly
+    // customized by an administrator.
     await client.query(`
       DO $$ BEGIN
         IF to_regclass('public.permisos_rol') IS NOT NULL THEN
@@ -113,14 +114,50 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             puede_editar = EXCLUDED.puede_editar,
             puede_autorizar = EXCLUDED.puede_autorizar,
             updated_at = EXCLUDED.updated_at,
-            updated_por = EXCLUDED.updated_por;
+            updated_por = EXCLUDED.updated_por
+          WHERE permisos_rol.updated_por IS NULL;
 
           INSERT INTO permisos_rol (rol, modulo, puede_ver, puede_crear, puede_editar, puede_autorizar)
           VALUES
             ('TERMINAL', 'salidas', true, false, false, false),
-            ('CAJA', 'salidas', false, false, false, false),
+            ('CAJA', 'salidas', true, false, false, false),
             ('INVENTARIOS', 'salidas', true, true, false, false),
             ('BODEGA', 'salidas', true, true, false, false)
+          ON CONFLICT (rol, modulo) DO UPDATE SET
+            puede_ver = EXCLUDED.puede_ver,
+            puede_crear = EXCLUDED.puede_crear,
+            puede_editar = EXCLUDED.puede_editar,
+            puede_autorizar = EXCLUDED.puede_autorizar
+          WHERE permisos_rol.updated_por IS NULL;
+
+          -- Keep existing installations aligned with the documented CAJA
+          -- defaults without overwriting rows explicitly customized by ADMIN.
+          INSERT INTO permisos_rol
+            (rol, modulo, puede_ver, puede_crear, puede_editar, puede_autorizar)
+          VALUES
+            ('CAJA', 'dashboard', false, false, false, false),
+            ('CAJA', 'pos', false, false, false, false),
+            ('CAJA', 'entradas', false, false, false, false),
+            ('CAJA', 'movimientos', false, false, false, false),
+            ('CAJA', 'inventario', true, false, false, false),
+            ('CAJA', 'productos', false, false, false, false),
+            ('CAJA', 'ajustes', false, false, false, false),
+            ('CAJA', 'clientes', true, false, false, false),
+            ('CAJA', 'clientes_credito', true, false, false, false),
+            ('CAJA', 'clientes_precios', false, false, false, false),
+            ('CAJA', 'clientes_finanzas', true, false, false, false),
+            ('CAJA', 'proveedores', false, false, false, false),
+            ('CAJA', 'proveedores_finanzas', false, false, false, false),
+            ('CAJA', 'contenedores', false, false, false, false),
+            ('CAJA', 'ubicaciones', false, false, false, false),
+            ('CAJA', 'usuarios', false, false, false, false),
+            ('CAJA', 'permisos', false, false, false, false),
+            ('CAJA', 'resumen_caja', true, false, false, false),
+            ('CAJA', 'cortes', true, true, false, false),
+            ('CAJA', 'cobros_pagos', true, true, false, false),
+            ('CAJA', 'reportes', false, false, false, false),
+            ('CAJA', 'conciliacion', false, false, false, false),
+            ('CAJA', 'auditoria', false, false, false, false)
           ON CONFLICT (rol, modulo) DO UPDATE SET
             puede_ver = EXCLUDED.puede_ver,
             puede_crear = EXCLUDED.puede_crear,
@@ -143,7 +180,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             puede_editar = EXCLUDED.puede_editar,
             puede_autorizar = EXCLUDED.puede_autorizar,
             updated_at = EXCLUDED.updated_at,
-            updated_por = EXCLUDED.updated_por;
+            updated_por = EXCLUDED.updated_por
+          WHERE permisos_usuario.updated_por IS NULL;
         END IF;
       END $$;
     `);

@@ -75,8 +75,15 @@ async function loadHeader(id: number) {
 }
 
 function canRead(auth: AuthContext, origenId: number, destinoId: number): boolean {
+  if (auth.user.rol === "CAJA") {
+    return auth.user.ubicacionId != null && auth.user.ubicacionId === destinoId;
+  }
   if (auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS") return true;
   return auth.user.ubicacionId === origenId || auth.user.ubicacionId === destinoId;
+}
+
+function rejectCajaMutation(auth: AuthContext): boolean {
+  return auth.user.rol === "CAJA";
 }
 
 function canOperate(auth: AuthContext, ubicacionId: number): boolean {
@@ -176,7 +183,10 @@ router.get(
         estados,
         folio: query.folio,
         origenId: query.origenId,
-        destinoId: query.destinoId,
+        destinoId:
+          auth.user.rol === "CAJA"
+            ? auth.user.ubicacionId!
+            : query.destinoId,
         productoId: query.productoId,
           usuarioId: query.usuarioId,
           search: query.search,
@@ -201,6 +211,10 @@ router.post(
     try {
       const body = CrearSalidaBody.parse(req.body);
       const auth = req.auth!;
+      if (rejectCajaMutation(auth)) {
+        res.status(403).json({ error: "El rol CAJA solo puede consultar salidas recibidas." });
+        return;
+      }
       let origenId = body.origenId;
       if (auth.user.rol !== "ADMIN") {
         if (auth.user.ubicacionId == null) {
@@ -247,7 +261,8 @@ router.get(
       if (visibleUbicacionId == null && auth.user.rol !== "ADMIN") throw new InventarioError("No tienes una ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
       const estados = query.estado ? [query.estado] : undefined;
       const result = await listarSalidas({
-        estados, origenId: query.origenId, destinoId: query.destinoId,
+        estados, origenId: query.origenId,
+        destinoId: auth.user.rol === "CAJA" ? auth.user.ubicacionId! : query.destinoId,
         productoId: query.productoId, usuarioId: query.usuarioId, search: query.search,
         fechaDesde: query.fechaDesde, fechaHasta: query.fechaHasta, page: 1, pageSize: 100,
         visibleUbicacionId,
@@ -326,6 +341,10 @@ router.post(
     try {
       const { id } = CancelarSalidaParams.parse(req.params);
       const body = CancelarSalidaBody.parse(req.body) as { motivo: string; adminUsuario?: string; adminPassword?: string };
+      if (rejectCajaMutation(req.auth!)) {
+        res.status(403).json({ error: "El rol CAJA no puede cancelar salidas." });
+        return;
+      }
       await requireSalidaAccess(req.auth!, id, "either");
       const auth = req.auth!;
       const result = await db.transaction(async (tx) => {

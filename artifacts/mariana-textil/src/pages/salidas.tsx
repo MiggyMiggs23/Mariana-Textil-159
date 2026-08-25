@@ -68,9 +68,10 @@ export default function Salidas() {
   const { selectedLocationId } = useLocationScope();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
+  const isCaja = user?.rol === "CAJA";
   const { data: locations } = useGetUbicacionesSalida({ query: { queryKey: getGetUbicacionesSalidaQueryKey() } });
-  const { data: users } = useListUsers({ query: { queryKey: getListUsersQueryKey() } });
-  const { data: products } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
+  const { data: users } = useListUsers({ query: { enabled: !isCaja, queryKey: getListUsersQueryKey() } });
+  const { data: products } = useListProductos({ query: { enabled: !isCaja, queryKey: getListProductosQueryKey() } });
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -96,7 +97,7 @@ export default function Salidas() {
   }, [search]);
 
   let queryOrigen = origenId !== "all" ? Number(origenId) : undefined;
-  if (selectedLocationId !== null && origenId === "all") {
+  if (!isCaja && selectedLocationId !== null && origenId === "all") {
     // If scope is limited to a location, default queryOrigen to it, unless they are filtering by it specifically
     queryOrigen = selectedLocationId;
   }
@@ -104,10 +105,10 @@ export default function Salidas() {
   const queryParams = {
     search: debouncedSearch || undefined,
     origenId: queryOrigen,
-    destinoId: destinoId !== "all" ? Number(destinoId) : undefined,
-    usuarioId: usuarioId !== "all" ? Number(usuarioId) : undefined,
-    productoId: productoId !== "all" ? Number(productoId) : undefined,
-    estados: estado !== "all" ? estado : undefined,
+    destinoId: !isCaja && destinoId !== "all" ? Number(destinoId) : undefined,
+    usuarioId: !isCaja && usuarioId !== "all" ? Number(usuarioId) : undefined,
+    productoId: !isCaja && productoId !== "all" ? Number(productoId) : undefined,
+    estados: !isCaja && estado !== "all" ? estado : undefined,
     fechaDesde: fechaDesde ? format(fechaDesde, 'yyyy-MM-dd') : undefined,
     fechaHasta: fechaHasta ? format(fechaHasta, 'yyyy-MM-dd') : undefined,
     page,
@@ -121,7 +122,7 @@ export default function Salidas() {
     }
   });
 
-  const canCreate = user ? hasPermission(user, Modules.SALIDAS, 'crear') : false;
+  const canCreate = !isCaja && user ? hasPermission(user, Modules.SALIDAS, 'crear') : false;
   const displayItems = salidasResult?.items ?? [];
 
   const handleExport = async () => {
@@ -167,10 +168,10 @@ export default function Salidas() {
 
   const activeFilterCount = [
     origenId !== "all",
-    destinoId !== "all",
-    estado !== "all",
-    usuarioId !== "all",
-    productoId !== "all",
+    !isCaja && destinoId !== "all",
+    !isCaja && estado !== "all",
+    !isCaja && usuarioId !== "all",
+    !isCaja && productoId !== "all",
     !!fechaDesde,
     !!fechaHasta,
     !!search
@@ -183,12 +184,16 @@ export default function Salidas() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
               <ArrowUpFromLine className="w-8 h-8 text-primary" />
-              Salidas
+              {isCaja ? "Salidas recibidas" : "Salidas"}
             </h1>
-            <p className="text-muted-foreground mt-1">Historial completo de salidas y movimientos entre almacenes.</p>
+            <p className="text-muted-foreground mt-1">
+              {isCaja
+                ? `Mercancía enviada a ${user?.ubicacion?.nombre ?? "tu sitio"} para verificar contra la hoja foliada.`
+                : "Historial completo de salidas y movimientos entre almacenes."}
+            </p>
           </div>
           <div className="flex w-full items-center gap-3 sm:w-auto">
-            <Button
+            {!isCaja && <Button
               variant="outline"
               onClick={handleExport}
               disabled={isExporting}
@@ -196,7 +201,7 @@ export default function Salidas() {
             >
               {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
               Excel
-            </Button>
+            </Button>}
             {canCreate && (
               <Link href="/salidas/nueva">
                 <Button data-testid="btn-create-salida" className="gap-2 shadow-sm h-10 px-5">
@@ -238,7 +243,7 @@ export default function Salidas() {
 
           {showFilters && (
             <div className="p-4 border-b border-slate-100 bg-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-in slide-in-from-top-2">
-              <div className="space-y-1.5">
+              {!isCaja && <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</label>
                 <Select value={estado} onValueChange={(val) => { setEstado(val); setPage(1); }}>
                   <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Estado (Todos)" /></SelectTrigger>
@@ -247,7 +252,7 @@ export default function Salidas() {
                     {Object.values(EstadoSalida).map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
+              </div>}
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Origen</label>
                 <Select value={origenId} onValueChange={(val) => { setOrigenId(val); setPage(1); }}>
@@ -258,7 +263,7 @@ export default function Salidas() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1.5">
+              {!isCaja && <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Destino</label>
                 <Select value={destinoId} onValueChange={(val) => { setDestinoId(val); setPage(1); }}>
                   <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Destino (Todos)" /></SelectTrigger>
@@ -267,8 +272,8 @@ export default function Salidas() {
                     {locations?.map(l => <SelectItem key={l.id} value={String(l.id)}>{l.nombre}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="space-y-1.5">
+              </div>}
+              {!isCaja && <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Usuario (Solicitante)</label>
                 <Select value={usuarioId} onValueChange={(val) => { setUsuarioId(val); setPage(1); }}>
                   <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Usuario (Todos)" /></SelectTrigger>
@@ -277,8 +282,8 @@ export default function Salidas() {
                     {users?.map(u => <SelectItem key={u.id} value={String(u.id)}>{u.nombre}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="space-y-1.5">
+              </div>}
+              {!isCaja && <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Producto</label>
                 <Select value={productoId} onValueChange={(val) => { setProductoId(val); setPage(1); }}>
                   <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Producto (Todos)" /></SelectTrigger>
@@ -287,7 +292,7 @@ export default function Salidas() {
                     {products?.map(p => <SelectItem key={p.id} value={String(p.id)}>{p.sku} - {p.tela}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
+              </div>}
 
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Desde</label>
@@ -343,6 +348,42 @@ export default function Salidas() {
                 <p className="text-sm">Ajusta los filtros para ver más resultados.</p>
               </div>
             ) : (
+              isCaja ? (
+                <div className="overflow-x-auto">
+                  <div className="grid min-w-[1050px] grid-cols-[80px_150px_160px_80px_100px_100px_1fr_120px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <span>Folio</span>
+                    <span>Fecha y hora</span>
+                    <span>Origen</span>
+                    <span className="text-right">Rollos</span>
+                    <span className="text-right">Metros</span>
+                    <span className="text-right">Kilos</span>
+                    <span>Transportista</span>
+                    <span>Estado</span>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {displayItems.map((salida) => {
+                      const cancelled = salida.estado === "CANCELADA";
+                      return (
+                        <Link
+                          key={salida.id}
+                          href={`/salidas/${salida.id}`}
+                          data-testid={`row-salida-${salida.id}`}
+                          className={`grid min-w-[1050px] grid-cols-[80px_150px_160px_80px_100px_100px_1fr_120px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
+                        >
+                          <span className="font-bold">{String(salida.folio).padStart(5, "0")}</span>
+                          <span className="text-sm">{format(new Date(salida.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
+                          <span className="truncate font-medium">{salida.nombreOrigen}</span>
+                          <span className="text-right font-semibold tabular-nums">{formatNumber(salida.totalRollos ?? 0, { kind: "count" })}</span>
+                          <span className="text-right tabular-nums">{formatNumber(salida.totalMetros, { kind: "quantity" })}</span>
+                          <span className="text-right tabular-nums">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
+                          <span className="truncate">{salida.transportista || "—"}</span>
+                          <span className={cancelled ? "no-underline" : ""}><EstadoBadge estado={salida.estado} /></span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
               <div className="divide-y divide-slate-100">
                 {displayItems.map((salida) => (
                   <Link
@@ -393,6 +434,7 @@ export default function Salidas() {
                   </Link>
                 ))}
               </div>
+              )
             )}
           </div>
 

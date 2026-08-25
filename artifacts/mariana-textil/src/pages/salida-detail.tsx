@@ -114,6 +114,7 @@ export default function SalidaDetail() {
   }
 
   const isAdmin = user?.rol === Role.ADMIN;
+  const isCaja = user?.rol === Role.CAJA;
   const canAuthorize = hasPermission(user, Modules.SALIDAS, 'autorizar');
 
   const atOrigin = isAdmin || user?.ubicacion?.id === salida.origenId;
@@ -148,7 +149,7 @@ export default function SalidaDetail() {
 
   // New exits created via one-step capture will go straight to ENVIADA or CERRADA (if completed) or might use a different state flow.
   // We allow cancellation if authorized and state is not already canceled.
-  const canCancel = salida.estado !== 'CANCELADA' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
+  const canCancel = !isCaja && salida.estado !== 'CANCELADA' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) });

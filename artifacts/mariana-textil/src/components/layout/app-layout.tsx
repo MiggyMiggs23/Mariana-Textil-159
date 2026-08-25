@@ -166,6 +166,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const isCaja = user?.rol === Role.CAJA;
+  const isTerminal = user?.rol === Role.TERMINAL;
   const assignedLocationId = user?.ubicacion?.id;
   const { data: sesionCajaData } = useObtenerSesionCajaActual(
     { ubicacionId: assignedLocationId ?? 0 },
@@ -211,7 +212,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const renderLocationControl = (compact = false) => {
-    const isTodas = user.alcanceConsulta === "TODAS";
+    const isTodas = user.alcanceConsulta === "TODAS" && !isCaja;
 
     return isTodas ? (
       <div className={cn("space-y-1", compact ? "w-full" : "w-64")}>
@@ -274,9 +275,19 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const navGroups = isCaja
+    ? [{
+        items: [
+          { name: "Caja", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+          { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
+          { name: "Salidas recibidas", path: "/salidas", icon: ArrowDownToLine, module: Modules.SALIDAS, isClickable: true },
+        ],
+      }]
+    : NAV_GROUPS;
+
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
-      {NAV_GROUPS.map((group) => {
+      {navGroups.map((group) => {
         const allowedItems = group.items.filter(item =>
           hasPermission(user, item.module, 'ver') &&
           (!item.adminOnly || user.rol === Role.ADMIN)
@@ -347,7 +358,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-[100dvh] flex bg-background">
       {/* Sidebar for Desktop */}
-      {!isCaja && <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
+      {!isTerminal && <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
         <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
           <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
           <span className="font-bold text-lg tracking-tight text-white">Mariana Textil</span>
@@ -372,7 +383,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <LogOut className="w-5 h-5" />
                 <span className="sr-only">Cerrar sesión</span>
               </Button>
-              {!isCaja && <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
+              {!isTerminal && <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
                 <Menu className="w-6 h-6" />
               </Button>}
             </div>

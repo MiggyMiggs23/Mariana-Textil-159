@@ -27,12 +27,17 @@ export default function Inventario() {
   const [, setLocation] = useLocation();
   const { data: user } = useGetCurrentUser();
   const isTodas = user?.alcanceConsulta === "TODAS";
+  const isCaja = user?.rol === Role.CAJA;
 
   const { selectedLocationId } = useLocationScope();
 
   // "consolidado" solo si es TODAS y eligió Vista Global
-  const consolidado = isTodas && selectedLocationId === null;
-  const effectiveUbicacionId = consolidado ? undefined : (selectedLocationId ?? user?.ubicacion?.id);
+  const consolidado = !isCaja && isTodas && selectedLocationId === null;
+  const effectiveUbicacionId = isCaja
+    ? user?.ubicacion?.id
+    : consolidado
+      ? undefined
+      : (selectedLocationId ?? user?.ubicacion?.id);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -270,7 +275,7 @@ export default function Inventario() {
                         {isTodas && <div className="text-xs text-muted-foreground mt-1">{rollo.nombreUbicacion}</div>}
                       </div>
 
-                      <div className="flex items-end justify-between mt-auto">
+                        <div className="flex items-end justify-between mt-auto gap-3">
                         <div>
                           <div className="text-2xl font-bold tracking-tight">
                              {formatNumber(rollo.cantidadActual, { kind: "quantity" })}
@@ -281,6 +286,22 @@ export default function Inventario() {
                             </div>
                           )}
                         </div>
+                        {isCaja && (
+                          <div className="mt-3 border-t pt-3 text-xs text-muted-foreground">
+                            <div className="flex justify-between gap-3">
+                              <span>Costo unitario</span>
+                              <span className="font-semibold text-foreground">
+                                {rollo.costoUnitario == null ? "Pendiente" : formatNumber(rollo.costoUnitario, { kind: "money" })}
+                              </span>
+                            </div>
+                            <div className="mt-1 flex justify-between gap-3">
+                              <span>Costo total</span>
+                              <span className="font-semibold text-foreground">
+                                {rollo.costoTotal == null ? "Pendiente" : formatNumber(rollo.costoTotal, { kind: "money" })}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                         <ArrowRight className="w-5 h-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                       </div>
                     </CardContent>

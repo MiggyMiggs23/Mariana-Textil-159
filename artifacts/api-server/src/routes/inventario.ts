@@ -146,6 +146,14 @@ function resolveReadScope(
     return { ubicacionId: requestedUbicacionId, scopeError: null };
   }
 
+  // CAJA is always restricted to its assigned store, even if a legacy user
+  // record still has alcanceConsulta=TODAS.
+  if (auth.user.rol === "CAJA") {
+    return assigned == null
+      ? { ubicacionId: null, scopeError: "No tienes una ubicación asignada." }
+      : { ubicacionId: assigned, scopeError: null };
+  }
+
   // alcanceConsulta TODAS (non-ADMIN): honor the requested filter
   if (alcance === "TODAS") {
     return { ubicacionId: requestedUbicacionId, scopeError: null };
@@ -1142,7 +1150,12 @@ inventarioRouter.get(
       }
 
       const response = GetRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol !== "ADMIN" && auth.user.rol !== "CAJA",
+        ),
+      );
     } catch (e) {
       next(e);
     }
@@ -1251,7 +1264,12 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol !== "ADMIN" && auth.user.rol !== "CAJA",
+        ),
+      );
     } catch (e) {
       next(e);
     }
@@ -1267,8 +1285,13 @@ inventarioRouter.get(
   "/ubicaciones",
   requireSession,
   requierePermiso("inventario", "ver"),
-  async (_req, res, next) => {
+  async (req, res, next) => {
     try {
+      const auth = req.auth!;
+      if (auth.user.rol === "CAJA" && auth.user.ubicacionId == null) {
+        res.status(403).json({ error: "No tienes una ubicación asignada." });
+        return;
+      }
       const ubicaciones = await db
         .select({
           id: ubicacionesTable.id,
@@ -1277,7 +1300,14 @@ inventarioRouter.get(
           activa: ubicacionesTable.activa,
         })
         .from(ubicacionesTable)
-        .where(eq(ubicacionesTable.activa, true))
+        .where(
+          auth.user.rol === "CAJA"
+            ? and(
+                eq(ubicacionesTable.activa, true),
+                eq(ubicacionesTable.id, auth.user.ubicacionId!),
+              )
+            : eq(ubicacionesTable.activa, true),
+        )
         .orderBy(asc(ubicacionesTable.nombre));
       res.json(GetUbicacionesInventarioResponse.parse(ubicaciones));
     } catch (error) {

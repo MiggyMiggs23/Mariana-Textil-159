@@ -185,6 +185,29 @@ await test("P-06: CAJA puede ver cobros_pagos pero no POS", async () => {
   assert.equal((await resolvePermiso(cajaUserId, "CAJA", "pos"))?.puedeVer, false);
 });
 
+await test("P-06A: CAJA conserva exactamente los permisos operativos documentados", async () => {
+  const matrix = await buildPermissionMatrix(cajaUserId, "CAJA");
+  const readable = new Set([
+    "salidas",
+    "inventario",
+    "clientes",
+    "clientes_credito",
+    "clientes_finanzas",
+    "resumen_caja",
+    "cortes",
+    "cobros_pagos",
+  ]);
+  const creatable = new Set(["cortes", "cobros_pagos"]);
+
+  for (const modulo of MODULOS) {
+    const permission = matrix[modulo];
+    assert.equal(permission.puedeVer, readable.has(modulo), `${modulo}.ver`);
+    assert.equal(permission.puedeCrear, creatable.has(modulo), `${modulo}.crear`);
+    assert.equal(permission.puedeEditar, false, `${modulo}.editar`);
+    assert.equal(permission.puedeAutorizar, false, `${modulo}.autorizar`);
+  }
+});
+
 await test("P-06B: TERMINAL conserva la matriz operativa configurada", async () => {
   const matrix = await buildPermissionMatrix(terminalUserId, "TERMINAL");
   const expected: Record<

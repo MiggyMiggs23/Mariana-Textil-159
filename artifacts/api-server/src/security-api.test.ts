@@ -15,7 +15,7 @@
  * Scenarios:
  *   S-01  All four roles log in → 200 + permisos matrix present
  *   S-02  ADMIN /auth/me → effective matrix has 24 modules, all full
- *   S-03  CAJA /auth/me  → pos.puedeVer=true, proveedores.puedeVer=false
+ *   S-03  CAJA /auth/me  → Caja/Inventario/Salidas only; POS and admin modules denied
  *   S-03A Caja tickets route is location-scoped and denied to BODEGA
  *   S-04  BODEGA denied POS  (GET /inventario/rollos → module=inventario OK, but POST vender → 403)
  *   S-05  BODEGA denied clientes → GET /clientes → 403
@@ -56,6 +56,7 @@ import {
   db,
   entradasTable,
   ensureClientesSchema,
+  ensureSalidasSchema,
   existenciasTable,
   movimientosTable,
   permisosRolTable,
@@ -105,6 +106,7 @@ let BASE: string;
 
 async function startServer(): Promise<void> {
   await ensureClientesSchema(pool);
+  await ensureSalidasSchema(pool);
   return new Promise((resolve, reject) => {
     server = createServer(app);
     server.listen(0, "127.0.0.1", () => {
@@ -393,10 +395,21 @@ await test("S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores 
   const posEntry = permisos.find((p) => p.modulo === "pos");
   const cobrosEntry = permisos.find((p) => p.modulo === "cobros_pagos");
   const provEntry = permisos.find((p) => p.modulo === "proveedores");
+  const inventarioEntry = permisos.find((p) => p.modulo === "inventario");
+  const salidasEntry = permisos.find((p) => p.modulo === "salidas");
+  const productosEntry = permisos.find((p) => p.modulo === "productos");
+  const movimientosEntry = permisos.find((p) => p.modulo === "movimientos");
+  const reportesEntry = permisos.find((p) => p.modulo === "reportes");
   assert.ok(posEntry, "pos module missing");
   assert.ok(provEntry, "proveedores module missing");
   assert.equal(posEntry.puedeVer, false, "CAJA must not use terminal POS");
   assert.equal(cobrosEntry?.puedeVer, true, "CAJA should see cobros_pagos");
+  assert.equal(inventarioEntry?.puedeVer, true, "CAJA should see inventory");
+  assert.equal(salidasEntry?.puedeVer, true, "CAJA should see received outputs");
+  assert.equal(salidasEntry?.puedeCrear, false, "CAJA must not create outputs");
+  assert.equal(productosEntry?.puedeVer, false, "CAJA must not see products administration");
+  assert.equal(movimientosEntry?.puedeVer, false, "CAJA must not see movements");
+  assert.equal(reportesEntry?.puedeVer, false, "CAJA must not see reports");
   assert.equal(provEntry.puedeVer, false, "CAJA must not see proveedores");
 });
 
@@ -990,6 +1003,68 @@ await test("S-09A: BODEGA Salidas catalog is least-privilege and null-cost rolls
   assert.equal(Number(destinationStock.cantidadTotal), 15);
 });
 
+await test("S-09B: CAJA only lists and opens outputs received at its assigned store", async () => {
+  const ownBodegaLogin = await login(testBodega.usuario, testBodega.password);
+  const otherBodegaLogin = await login(testBodegaOtherLoc.usuario, testBodegaOtherLoc.password);
+
+  const outboundProductId = await mkProducto();
+  const outboundRolloId = await mkRolloDisponible(seedTienda.id, outboundProductId, testAdmin.id);
+  const outbound = await api("POST", "/salidas", {
+    uuidCliente: randomUUID(),
+    origenId: seedTienda.id,
+    destinoId: otherTiendaId,
+    transportista: "Transportista salida",
+    rolloIds: [outboundRolloId],
+  }, ownBodegaLogin.cookie);
+  assert.equal(outbound.status, 201, JSON.stringify(outbound.body));
+  const outboundId = Number((outbound.body as { id: number }).id);
+  createdSalidaIds.push(outboundId);
+
+  const inboundProductId = await mkProducto();
+  const inboundRolloId = await mkRolloDisponible(otherTiendaId, inboundProductId, testAdmin.id);
+  const inbound = await api("POST", "/salidas", {
+    uuidCliente: randomUUID(),
+    origenId: otherTiendaId,
+    destinoId: seedTienda.id,
+    transportista: "Transportista entrada",
+    rolloIds: [inboundRolloId],
+  }, otherBodegaLogin.cookie);
+  assert.equal(inbound.status, 201, JSON.stringify(inbound.body));
+  const inboundId = Number((inbound.body as { id: number }).id);
+  createdSalidaIds.push(inboundId);
+
+  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  const listed = await api(
+    "GET",
+    `/salidas?destinoId=${otherTiendaId}&page=1&pageSize=100`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(listed.status, 200, JSON.stringify(listed.body));
+  const items = (listed.body as { items: Array<{ id: number; destinoId: number }> }).items;
+  assert.ok(items.some((item) => item.id === inboundId), "Inbound output must be visible");
+  assert.ok(!items.some((item) => item.id === outboundId), "Outbound output must stay hidden");
+  assert.ok(items.every((item) => item.destinoId === seedTienda.id), "Every row must target CAJA's store");
+
+  const inboundDetail = await api("GET", `/salidas/${inboundId}`, undefined, cajaLogin.cookie);
+  assert.equal(inboundDetail.status, 200, JSON.stringify(inboundDetail.body));
+  const outboundDetail = await api("GET", `/salidas/${outboundId}`, undefined, cajaLogin.cookie);
+  assert.equal(outboundDetail.status, 403, JSON.stringify(outboundDetail.body));
+
+  const forbiddenCreate = await api("POST", "/salidas", {
+    uuidCliente: randomUUID(),
+    origenId: seedTienda.id,
+    destinoId: otherTiendaId,
+    rolloIds: [],
+  }, cajaLogin.cookie);
+  assert.equal(forbiddenCreate.status, 403, JSON.stringify(forbiddenCreate.body));
+
+  const forbiddenCancel = await api("POST", `/salidas/${inboundId}/cancelar`, {
+    motivo: "No permitido para CAJA",
+  }, cajaLogin.cookie);
+  assert.equal(forbiddenCancel.status, 403, JSON.stringify(forbiddenCancel.body));
+});
+
 // S-10: Financial proveedor routes denied for INVENTARIOS (no proveedores_finanzas)
 await test("S-10: INVENTARIOS GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied)", async () => {
   const login_r = await login(testInventarios.usuario, testInventarios.password);
@@ -1465,10 +1540,57 @@ await test("S-23A: operational locations allow TODAS selection; grouped inventor
     "The administrative location list must remain permission-protected",
   );
 
+  const cajaInventoryLocations = await api(
+    "GET",
+    "/inventario/ubicaciones",
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaInventoryLocations.status, 200, JSON.stringify(cajaInventoryLocations.body));
+  assert.deepEqual(
+    (cajaInventoryLocations.body as Array<{ id: number }>).map((location) => location.id),
+    [seedTienda.id],
+    "CAJA must only receive its assigned inventory location",
+  );
+
+  const cajaRollos = await api(
+    "GET",
+    `/inventario/rollos?ubicacionId=${otherTiendaId}&pageSize=100`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaRollos.status, 200, JSON.stringify(cajaRollos.body));
+  const cajaItems = (cajaRollos.body as { items: Array<Record<string, unknown>> }).items;
+  assert.ok(cajaItems.length > 0, "CAJA fixture inventory must be visible");
+  assert.ok(
+    cajaItems.every((item) => item.ubicacionId === seedTienda.id),
+    "CAJA with legacy TODAS scope must still be forced to its assigned store",
+  );
+  assert.ok(
+    cajaItems.some((item) => "costoUnitario" in item && "costoTotal" in item),
+    "CAJA inventory must include unit and total costs",
+  );
+
   const ownProductoId = await mkProducto();
   await mkRolloDisponible(seedTienda.id, ownProductoId, testAdmin.id);
   const otherProductoId = await mkProducto();
-  await mkRolloDisponible(otherTiendaId, otherProductoId, testAdmin.id);
+  const otherRolloId = await mkRolloDisponible(otherTiendaId, otherProductoId, testAdmin.id);
+
+  const cajaOtherDetail = await api(
+    "GET",
+    `/inventario/rollos/${otherRolloId}`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaOtherDetail.status, 404, JSON.stringify(cajaOtherDetail.body));
+
+  const cajaForbiddenAdjustment = await api(
+    "POST",
+    `/inventario/rollos/${sharedRolloId}/ajustar`,
+    { nuevaCantidad: "14.000", justificacion: "Intento no permitido", uuidCliente: randomUUID() },
+    cajaLogin.cookie,
+  );
+  assert.equal(cajaForbiddenAdjustment.status, 403, JSON.stringify(cajaForbiddenAdjustment.body));
 
   const propiaLogin = await login(testBodega.usuario, testBodega.password);
   const grouped = await api(

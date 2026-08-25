@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { AppLayout } from '@/components/layout/app-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
@@ -76,7 +77,7 @@ function NotFound() {
   );
 }
 
-function ProtectedRoute({ component: Component, allowedModule, adminOnly }: { component: React.ComponentType, allowedModule?: string, adminOnly?: boolean }) {
+function ProtectedRoute({ component: Component, allowedModule, allowedAction = "ver", adminOnly }: { component: React.ComponentType, allowedModule?: string, allowedAction?: "ver" | "crear" | "editar" | "autorizar", adminOnly?: boolean }) {
   const [location, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
@@ -89,11 +90,11 @@ function ProtectedRoute({ component: Component, allowedModule, adminOnly }: { co
   }, [error, setLocation]);
 
   useEffect(() => {
-    if (user?.rol === "CAJA" && location !== "/cobros") {
-      setLocation("/cobros");
-    } else if (user && location === "/") {
+    if (user && location === "/") {
       if (user.rol === "TERMINAL") {
         setLocation("/pos");
+      } else if (user.rol === "CAJA") {
+        setLocation("/cobros");
       } else if (!hasPermission(user, Modules.DASHBOARD, 'ver')) {
         if (hasPermission(user, Modules.POS, 'ver')) {
           setLocation("/pos");
@@ -114,14 +115,6 @@ function ProtectedRoute({ component: Component, allowedModule, adminOnly }: { co
 
   if (!user) return null;
 
-  if (user.rol === "CAJA" && location !== "/cobros") {
-    return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-sidebar-primary" />
-      </div>
-    );
-  }
-
   if (adminOnly && user.rol !== "ADMIN") {
     return (
       <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
@@ -139,7 +132,7 @@ function ProtectedRoute({ component: Component, allowedModule, adminOnly }: { co
     );
   }
 
-  if (allowedModule && !hasPermission(user, allowedModule, 'ver')) {
+  if (allowedModule && !hasPermission(user, allowedModule, allowedAction)) {
     return (
       <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
         <div className="space-y-4">
@@ -159,6 +152,14 @@ function ProtectedRoute({ component: Component, allowedModule, adminOnly }: { co
   return <Component />;
 }
 
+function PosWithLayout() {
+  return (
+    <AppLayout>
+      <Pos />
+    </AppLayout>
+  );
+}
+
 function Router() {
   return (
     <RoutedErrorBoundary>
@@ -175,7 +176,7 @@ function Router() {
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
 
         <Route path="/salidas" component={() => <ProtectedRoute component={Salidas} allowedModule={Modules.SALIDAS} />} />
-        <Route path="/salidas/nueva" component={() => <ProtectedRoute component={SalidaNueva} allowedModule={Modules.SALIDAS} />} />
+        <Route path="/salidas/nueva" component={() => <ProtectedRoute component={SalidaNueva} allowedModule={Modules.SALIDAS} allowedAction="crear" />} />
         <Route path="/salidas/:id/documento/salida" component={() => <ProtectedRoute component={SalidaDocumento} allowedModule={Modules.SALIDAS} />} />
         <Route path="/salidas/:id" component={() => <ProtectedRoute component={SalidaDetail} allowedModule={Modules.SALIDAS} />} />
 
@@ -189,7 +190,7 @@ function Router() {
         <Route path="/productos" component={() => <ProtectedRoute component={Productos} allowedModule={Modules.PRODUCTOS} />} />
         <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} allowedModule={Modules.PRODUCTOS} />} />
         
-        <Route path="/pos" component={() => <ProtectedRoute component={Pos} allowedModule={Modules.POS} />} />
+        <Route path="/pos" component={() => <ProtectedRoute component={PosWithLayout} allowedModule={Modules.POS} />} />
         <Route path="/cobros" component={() => <ProtectedRoute component={Cobros} allowedModule={Modules.COBROS_PAGOS} />} />
 
         <Route path="/caja/tiempo-real" component={() => <ProtectedRoute component={CajaTiempoReal} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
