@@ -1246,6 +1246,37 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     )
     .orderBy(productosTable.tela, productosTable.color);
 
+  const ticketsCobradosDetalle = await database
+    .select({
+      ticketId: ticketsTable.id,
+      folio: ticketsTable.folio,
+      importe: ticketsTable.total,
+      cobradoAt: ticketsTable.cobradoAt,
+    })
+    .from(ticketsTable)
+    .where(and(
+      eq(ticketsTable.sesionCajaId, sesion.id),
+      eq(ticketsTable.estado, "VENDIDO"),
+      eq(ticketsTable.cobrado, true),
+    ))
+    .orderBy(ticketsTable.cobradoAt);
+  const cancelacionesDetalle = await database
+    .select({
+      ticketId: ticketsTable.id,
+      folio: ticketsTable.folio,
+      importe: ticketsTable.total,
+      motivo: ticketsTable.motivoCancelacion,
+      canceladoAt: ticketsTable.canceladoAt,
+      autor: usuariosTable.nombre,
+    })
+    .from(ticketsTable)
+    .leftJoin(usuariosTable, eq(ticketsTable.canceladoPor, usuariosTable.id))
+    .where(and(
+      eq(ticketsTable.sesionCajaId, sesion.id),
+      eq(ticketsTable.estado, "CANCELADO"),
+    ))
+    .orderBy(ticketsTable.canceladoAt);
+
   const tipos = await database
     .select({
       tipo: ticketsTable.tipo,
@@ -1277,6 +1308,10 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
   let facturado = 0;
   let noFacturado = 0;
   let ivaCobrado = 0;
+  const facturacionPagos = {
+    facturado: { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 },
+    noFacturado: { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 },
+  };
   const ticketIds = new Set<number>();
   const formaPagoCounts: Record<FormaPagoTicket, number> = {
     EFECTIVO: 0,
@@ -1303,8 +1338,10 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     formaPagoTickets[pago.formaPago].add(pago.ticketId);
     if (pago.facturado) {
       facturadoTickets.add(pago.ticketId);
+      facturacionPagos.facturado[pago.formaPago] += cents;
     } else {
       noFacturadoTickets.add(pago.ticketId);
+      facturacionPagos.noFacturado[pago.formaPago] += cents;
     }
     fiscalesPorTicket.set(pago.ticketId, {
       facturado: pago.facturado,
@@ -1394,6 +1431,9 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         subtotal: decimalMoney(subtotalFacturado),
         iva: decimalMoney(ivaFacturado),
         importe: decimalMoney(facturado),
+        efectivo: decimalMoney(facturacionPagos.facturado.EFECTIVO),
+        transferencia: decimalMoney(facturacionPagos.facturado.TRANSFERENCIA),
+        credito: decimalMoney(facturacionPagos.facturado.CREDITO),
       },
       {
         facturado: false,
@@ -1401,6 +1441,9 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         subtotal: decimalMoney(subtotalNoFacturado),
         iva: decimalMoney(ivaNoFacturado),
         importe: decimalMoney(noFacturado),
+        efectivo: decimalMoney(facturacionPagos.noFacturado.EFECTIVO),
+        transferencia: decimalMoney(facturacionPagos.noFacturado.TRANSFERENCIA),
+        credito: decimalMoney(facturacionPagos.noFacturado.CREDITO),
       },
     ],
     metreado: (["NORMAL", "METREADO"] as const).map((tipo) => {
@@ -1416,6 +1459,16 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     pendientes: pendientes.map((ticket) => ({
       ...ticket,
       createdAt: ticket.createdAt.toISOString(),
+    })),
+    ticketsCobradosDetalle: ticketsCobradosDetalle.map((ticket) => ({
+      ...ticket,
+      cobradoAt: ticket.cobradoAt!.toISOString(),
+    })),
+    cancelaciones: cancelacionesDetalle.map((ticket) => ({
+      ...ticket,
+      motivo: ticket.motivo ?? "",
+      canceladoAt: ticket.canceladoAt!.toISOString(),
+      autor: ticket.autor ?? "Usuario desconocido",
     })),
     efectivoEsperado: decimalMoney(esperado),
     efectivoContado: contado == null ? null : decimalMoney(contado),

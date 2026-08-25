@@ -21,6 +21,12 @@ import type {
 
 import type {
   ActivarRolloInput,
+  AdminComparacionTiendas,
+  AdminCortesResult,
+  AdminCuentasDestino,
+  AdminDiferencias,
+  AdminPendingSummary,
+  AdminRealtimeDashboard,
   AjusteProveedorInput,
   AjusteRolloInput,
   AnaliticaGlobalProveedores,
@@ -60,10 +66,19 @@ import type {
   EstadoCuentaProveedorParams,
   ExistenciaAgrupada,
   ExistenciaRow,
+  ExportAdminCortesPdfParams,
+  ExportAdminCortesXlsxParams,
+  ExportAdminCuentasDestinoPdfParams,
+  ExportAdminCuentasDestinoXlsxParams,
   ExportKardexXlsxParams,
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
   ForbiddenResponse,
+  GetAdminComparacionTiendasParams,
+  GetAdminCuentasDestinoParams,
+  GetAdminDiferenciasParams,
+  GetAdminRealtimeDashboardParams,
+  GetAdminRealtimePendingParams,
   GetClienteAnaliticaParams,
   GetClienteComprasParams,
   GetClienteEstadoCuentaParams,
@@ -80,6 +95,7 @@ import type {
   ImportResult,
   KardexFilters,
   KardexResult,
+  ListAdminCortesParams,
   ListComprasProveedorParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
@@ -8278,3 +8294,1067 @@ export const useCancelarSalida = <TError = ErrorType<ValidationErrorResponse | U
       return useMutation(getCancelarSalidaMutationOptions(options));
     }
 
+export const getGetAdminRealtimeDashboardUrl = (params?: GetAdminRealtimeDashboardParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/dashboard/realtime?${stringifiedParams}` : `/api/admin/dashboard/realtime`
+}
+
+/**
+ * @summary Tablero consolidado; agregados completos cada 5 minutos y pendientes cada 30 segundos
+ */
+export const getAdminRealtimeDashboard = async (params?: GetAdminRealtimeDashboardParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminRealtimeDashboard> => {
+
+  return customFetch<AdminRealtimeDashboard>(getGetAdminRealtimeDashboardUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminRealtimeDashboardQueryKey = (params?: GetAdminRealtimeDashboardParams,) => {
+    return [
+    `/api/admin/dashboard/realtime`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAdminRealtimeDashboardQueryOptions = <TData = Awaited<ReturnType<typeof getAdminRealtimeDashboard>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetAdminRealtimeDashboardParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminRealtimeDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminRealtimeDashboardQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminRealtimeDashboard>>> = ({ signal }) => getAdminRealtimeDashboard(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminRealtimeDashboard>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminRealtimeDashboardQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminRealtimeDashboard>>>
+export type GetAdminRealtimeDashboardQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Tablero consolidado; agregados completos cada 5 minutos y pendientes cada 30 segundos
+ */
+
+export function useGetAdminRealtimeDashboard<TData = Awaited<ReturnType<typeof getAdminRealtimeDashboard>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetAdminRealtimeDashboardParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminRealtimeDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminRealtimeDashboardQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminRealtimePendingUrl = (params?: GetAdminRealtimePendingParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/dashboard/realtime/pendientes?${stringifiedParams}` : `/api/admin/dashboard/realtime/pendientes`
+}
+
+/**
+ * @summary Conteo e importe pendiente compatible con actualización cada 30 segundos
+ */
+export const getAdminRealtimePending = async (params?: GetAdminRealtimePendingParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminPendingSummary> => {
+
+  return customFetch<AdminPendingSummary>(getGetAdminRealtimePendingUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminRealtimePendingQueryKey = (params?: GetAdminRealtimePendingParams,) => {
+    return [
+    `/api/admin/dashboard/realtime/pendientes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAdminRealtimePendingQueryOptions = <TData = Awaited<ReturnType<typeof getAdminRealtimePending>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetAdminRealtimePendingParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminRealtimePending>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminRealtimePendingQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminRealtimePending>>> = ({ signal }) => getAdminRealtimePending(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminRealtimePending>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminRealtimePendingQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminRealtimePending>>>
+export type GetAdminRealtimePendingQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Conteo e importe pendiente compatible con actualización cada 30 segundos
+ */
+
+export function useGetAdminRealtimePending<TData = Awaited<ReturnType<typeof getAdminRealtimePending>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetAdminRealtimePendingParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminRealtimePending>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminRealtimePendingQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListAdminCortesUrl = (params?: ListAdminCortesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cortes?${stringifiedParams}` : `/api/admin/cortes`
+}
+
+/**
+ * @summary Historial de cortes
+ */
+export const listAdminCortes = async (params?: ListAdminCortesParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminCortesResult> => {
+
+  return customFetch<AdminCortesResult>(getListAdminCortesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAdminCortesQueryKey = (params?: ListAdminCortesParams,) => {
+    return [
+    `/api/admin/cortes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAdminCortesQueryOptions = <TData = Awaited<ReturnType<typeof listAdminCortes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListAdminCortesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminCortes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAdminCortesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminCortes>>> = ({ signal }) => listAdminCortes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAdminCortes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAdminCortesQueryResult = NonNullable<Awaited<ReturnType<typeof listAdminCortes>>>
+export type ListAdminCortesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Historial de cortes
+ */
+
+export function useListAdminCortes<TData = Awaited<ReturnType<typeof listAdminCortes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListAdminCortesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminCortes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAdminCortesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminCorteUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/cortes/${id}`
+}
+
+/**
+ * @summary Detalle histórico de un corte
+ */
+export const getAdminCorte = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<CorteCaja> => {
+
+  return customFetch<CorteCaja>(getGetAdminCorteUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminCorteQueryKey = (id: number,) => {
+    return [
+    `/api/admin/cortes/${id}`
+    ] as const;
+    }
+
+
+export const getGetAdminCorteQueryOptions = <TData = Awaited<ReturnType<typeof getAdminCorte>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminCorte>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminCorteQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminCorte>>> = ({ signal }) => getAdminCorte(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminCorte>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminCorteQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminCorte>>>
+export type GetAdminCorteQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Detalle histórico de un corte
+ */
+
+export function useGetAdminCorte<TData = Awaited<ReturnType<typeof getAdminCorte>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminCorte>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminCorteQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCorteXlsxUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/cortes/${id}/export.xlsx`
+}
+
+/**
+ * @summary Exporta detalle histórico de un corte a XLSX
+ */
+export const exportAdminCorteXlsx = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCorteXlsxUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCorteXlsxQueryKey = (id: number,) => {
+    return [
+    `/api/admin/cortes/${id}/export.xlsx`
+    ] as const;
+    }
+
+
+export const getExportAdminCorteXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCorteXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCorteXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCorteXlsxQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCorteXlsx>>> = ({ signal }) => exportAdminCorteXlsx(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCorteXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCorteXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCorteXlsx>>>
+export type ExportAdminCorteXlsxQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Exporta detalle histórico de un corte a XLSX
+ */
+
+export function useExportAdminCorteXlsx<TData = Awaited<ReturnType<typeof exportAdminCorteXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCorteXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCorteXlsxQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCortePdfUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/cortes/${id}/export.pdf`
+}
+
+/**
+ * @summary Exporta detalle histórico de un corte a PDF o reimpresión
+ */
+export const exportAdminCortePdf = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCortePdfUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCortePdfQueryKey = (id: number,) => {
+    return [
+    `/api/admin/cortes/${id}/export.pdf`
+    ] as const;
+    }
+
+
+export const getExportAdminCortePdfQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCortePdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortePdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCortePdfQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCortePdf>>> = ({ signal }) => exportAdminCortePdf(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortePdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCortePdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCortePdf>>>
+export type ExportAdminCortePdfQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Exporta detalle histórico de un corte a PDF o reimpresión
+ */
+
+export function useExportAdminCortePdf<TData = Awaited<ReturnType<typeof exportAdminCortePdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortePdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCortePdfQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminDiferenciasUrl = (params?: GetAdminDiferenciasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/diferencias?${stringifiedParams}` : `/api/admin/diferencias`
+}
+
+/**
+ * @summary Diferencias agrupadas por cajero y tienda, tendencias y alertas
+ */
+export const getAdminDiferencias = async (params?: GetAdminDiferenciasParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminDiferencias> => {
+
+  return customFetch<AdminDiferencias>(getGetAdminDiferenciasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminDiferenciasQueryKey = (params?: GetAdminDiferenciasParams,) => {
+    return [
+    `/api/admin/diferencias`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAdminDiferenciasQueryOptions = <TData = Awaited<ReturnType<typeof getAdminDiferencias>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetAdminDiferenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminDiferencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminDiferenciasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminDiferencias>>> = ({ signal }) => getAdminDiferencias(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminDiferencias>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminDiferenciasQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminDiferencias>>>
+export type GetAdminDiferenciasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Diferencias agrupadas por cajero y tienda, tendencias y alertas
+ */
+
+export function useGetAdminDiferencias<TData = Awaited<ReturnType<typeof getAdminDiferencias>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetAdminDiferenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminDiferencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminDiferenciasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminCuentasDestinoUrl = (params?: GetAdminCuentasDestinoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cuentas-destino?${stringifiedParams}` : `/api/admin/cuentas-destino`
+}
+
+/**
+ * @summary Resumen y tendencias de cuentas destino derivadas de pagos y facturación
+ */
+export const getAdminCuentasDestino = async (params?: GetAdminCuentasDestinoParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminCuentasDestino> => {
+
+  return customFetch<AdminCuentasDestino>(getGetAdminCuentasDestinoUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminCuentasDestinoQueryKey = (params?: GetAdminCuentasDestinoParams,) => {
+    return [
+    `/api/admin/cuentas-destino`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAdminCuentasDestinoQueryOptions = <TData = Awaited<ReturnType<typeof getAdminCuentasDestino>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetAdminCuentasDestinoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminCuentasDestino>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminCuentasDestinoQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminCuentasDestino>>> = ({ signal }) => getAdminCuentasDestino(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminCuentasDestino>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminCuentasDestinoQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminCuentasDestino>>>
+export type GetAdminCuentasDestinoQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Resumen y tendencias de cuentas destino derivadas de pagos y facturación
+ */
+
+export function useGetAdminCuentasDestino<TData = Awaited<ReturnType<typeof getAdminCuentasDestino>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetAdminCuentasDestinoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminCuentasDestino>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminCuentasDestinoQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminComparacionTiendasUrl = (params: GetAdminComparacionTiendasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/comparacion-tiendas?${stringifiedParams}` : `/api/admin/comparacion-tiendas`
+}
+
+/**
+ * @summary Comparación de tiendas por periodo
+ */
+export const getAdminComparacionTiendas = async (params: GetAdminComparacionTiendasParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminComparacionTiendas> => {
+
+  return customFetch<AdminComparacionTiendas>(getGetAdminComparacionTiendasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminComparacionTiendasQueryKey = (params?: GetAdminComparacionTiendasParams,) => {
+    return [
+    `/api/admin/comparacion-tiendas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAdminComparacionTiendasQueryOptions = <TData = Awaited<ReturnType<typeof getAdminComparacionTiendas>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: GetAdminComparacionTiendasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminComparacionTiendas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminComparacionTiendasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminComparacionTiendas>>> = ({ signal }) => getAdminComparacionTiendas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminComparacionTiendas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminComparacionTiendasQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminComparacionTiendas>>>
+export type GetAdminComparacionTiendasQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Comparación de tiendas por periodo
+ */
+
+export function useGetAdminComparacionTiendas<TData = Awaited<ReturnType<typeof getAdminComparacionTiendas>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: GetAdminComparacionTiendasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminComparacionTiendas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminComparacionTiendasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCortesXlsxUrl = (params?: ExportAdminCortesXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cortes/export.xlsx?${stringifiedParams}` : `/api/admin/cortes/export.xlsx`
+}
+
+/**
+ * @summary Exporta cortes a XLSX
+ */
+export const exportAdminCortesXlsx = async (params?: ExportAdminCortesXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCortesXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCortesXlsxQueryKey = (params?: ExportAdminCortesXlsxParams,) => {
+    return [
+    `/api/admin/cortes/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportAdminCortesXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCortesXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ExportAdminCortesXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortesXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCortesXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCortesXlsx>>> = ({ signal }) => exportAdminCortesXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortesXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCortesXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCortesXlsx>>>
+export type ExportAdminCortesXlsxQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta cortes a XLSX
+ */
+
+export function useExportAdminCortesXlsx<TData = Awaited<ReturnType<typeof exportAdminCortesXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportAdminCortesXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortesXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCortesXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCortesPdfUrl = (params?: ExportAdminCortesPdfParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cortes/export.pdf?${stringifiedParams}` : `/api/admin/cortes/export.pdf`
+}
+
+/**
+ * @summary Exporta cortes a PDF
+ */
+export const exportAdminCortesPdf = async (params?: ExportAdminCortesPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCortesPdfUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCortesPdfQueryKey = (params?: ExportAdminCortesPdfParams,) => {
+    return [
+    `/api/admin/cortes/export.pdf`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportAdminCortesPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCortesPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ExportAdminCortesPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortesPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCortesPdfQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCortesPdf>>> = ({ signal }) => exportAdminCortesPdf(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortesPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCortesPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCortesPdf>>>
+export type ExportAdminCortesPdfQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta cortes a PDF
+ */
+
+export function useExportAdminCortesPdf<TData = Awaited<ReturnType<typeof exportAdminCortesPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportAdminCortesPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCortesPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCortesPdfQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCuentasDestinoXlsxUrl = (params?: ExportAdminCuentasDestinoXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cuentas-destino/export.xlsx?${stringifiedParams}` : `/api/admin/cuentas-destino/export.xlsx`
+}
+
+/**
+ * @summary Exporta cuentas destino a XLSX
+ */
+export const exportAdminCuentasDestinoXlsx = async (params?: ExportAdminCuentasDestinoXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCuentasDestinoXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCuentasDestinoXlsxQueryKey = (params?: ExportAdminCuentasDestinoXlsxParams,) => {
+    return [
+    `/api/admin/cuentas-destino/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportAdminCuentasDestinoXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ExportAdminCuentasDestinoXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCuentasDestinoXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>> = ({ signal }) => exportAdminCuentasDestinoXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCuentasDestinoXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>>
+export type ExportAdminCuentasDestinoXlsxQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta cuentas destino a XLSX
+ */
+
+export function useExportAdminCuentasDestinoXlsx<TData = Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportAdminCuentasDestinoXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentasDestinoXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCuentasDestinoXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCuentasDestinoPdfUrl = (params?: ExportAdminCuentasDestinoPdfParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cuentas-destino/export.pdf?${stringifiedParams}` : `/api/admin/cuentas-destino/export.pdf`
+}
+
+/**
+ * @summary Exporta cuentas destino a PDF
+ */
+export const exportAdminCuentasDestinoPdf = async (params?: ExportAdminCuentasDestinoPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCuentasDestinoPdfUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCuentasDestinoPdfQueryKey = (params?: ExportAdminCuentasDestinoPdfParams,) => {
+    return [
+    `/api/admin/cuentas-destino/export.pdf`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportAdminCuentasDestinoPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ExportAdminCuentasDestinoPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCuentasDestinoPdfQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>> = ({ signal }) => exportAdminCuentasDestinoPdf(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCuentasDestinoPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>>
+export type ExportAdminCuentasDestinoPdfQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta cuentas destino a PDF
+ */
+
+export function useExportAdminCuentasDestinoPdf<TData = Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportAdminCuentasDestinoPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentasDestinoPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCuentasDestinoPdfQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}

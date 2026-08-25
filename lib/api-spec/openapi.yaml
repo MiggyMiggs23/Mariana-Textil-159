@@ -33,6 +33,8 @@ tags:
     description: Apertura, cobro y corte de caja
   - name: salidas
     description: Solicitud, preparación y recepción de salidas entre ubicaciones
+  - name: admin-analytics
+    description: Analítica financiera y operativa exclusiva para ADMIN
 paths:
   /healthz:
     get:
@@ -2481,8 +2483,256 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /admin/dashboard/realtime:
+    get:
+      operationId: getAdminRealtimeDashboard
+      tags: [admin-analytics]
+      summary: Tablero consolidado; agregados completos cada 5 minutos y pendientes cada 30 segundos
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200":
+          description: Estado consolidado y pendiente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminRealtimeDashboard" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/dashboard/realtime/pendientes:
+    get:
+      operationId: getAdminRealtimePending
+      tags: [admin-analytics]
+      summary: Conteo e importe pendiente compatible con actualización cada 30 segundos
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200":
+          description: Pendientes actuales
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminPendingSummary" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cortes:
+    get:
+      operationId: listAdminCortes
+      tags: [admin-analytics]
+      summary: Historial de cortes
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - { in: query, name: cajeroId, schema: { type: number } }
+        - { in: query, name: numeroCorte, schema: { type: number } }
+        - { in: query, name: soloConDiferencia, schema: { type: boolean, default: false } }
+        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 200, default: 50 } }
+      responses:
+        "200":
+          description: Cortes paginados
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminCortesResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cortes/{id}:
+    get:
+      operationId: getAdminCorte
+      tags: [admin-analytics]
+      summary: Detalle histórico de un corte
+      parameters:
+        - $ref: "#/components/parameters/SesionCajaId"
+      responses:
+        "200":
+          description: Corte histórico
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CorteCaja" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /admin/cortes/{id}/export.xlsx:
+    get:
+      operationId: exportAdminCorteXlsx
+      tags: [admin-analytics]
+      summary: Exporta detalle histórico de un corte a XLSX
+      parameters: [ { $ref: "#/components/parameters/SesionCajaId" } ]
+      responses:
+        "200":
+          description: XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /admin/cortes/{id}/export.pdf:
+    get:
+      operationId: exportAdminCortePdf
+      tags: [admin-analytics]
+      summary: Exporta detalle histórico de un corte a PDF o reimpresión
+      parameters: [ { $ref: "#/components/parameters/SesionCajaId" } ]
+      responses:
+        "200":
+          description: PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /admin/diferencias:
+    get:
+      operationId: getAdminDiferencias
+      tags: [admin-analytics]
+      summary: Diferencias agrupadas por cajero y tienda, tendencias y alertas
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - { in: query, name: umbralCorte, schema: { type: number, minimum: 0, default: 500 } }
+        - { in: query, name: umbralTienda, schema: { type: number, minimum: 0, default: 500 } }
+        - { in: query, name: agrupacion, schema: { type: string, enum: [semana, mes], default: semana } }
+      responses:
+        "200":
+          description: Resumen de diferencias
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminDiferencias" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuentas-destino:
+    get:
+      operationId: getAdminCuentasDestino
+      tags: [admin-analytics]
+      summary: Resumen y tendencias de cuentas destino derivadas de pagos y facturación
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200":
+          description: Cuentas destino
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminCuentasDestino" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/comparacion-tiendas:
+    get:
+      operationId: getAdminComparacionTiendas
+      tags: [admin-analytics]
+      summary: Comparación de tiendas por periodo
+      parameters:
+        - in: query
+          name: periodo
+          required: true
+          schema: { type: string, enum: [diario, semanal, mensual, trimestral, semestral, anual, personalizado] }
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+      responses:
+        "200":
+          description: Comparación por tienda
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminComparacionTiendas" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cortes/export.xlsx:
+    get:
+      operationId: exportAdminCortesXlsx
+      tags: [admin-analytics]
+      summary: Exporta cortes a XLSX
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - { in: query, name: cajeroId, schema: { type: number } }
+        - { in: query, name: numeroCorte, schema: { type: number } }
+        - { in: query, name: soloConDiferencia, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cortes/export.pdf:
+    get:
+      operationId: exportAdminCortesPdf
+      tags: [admin-analytics]
+      summary: Exporta cortes a PDF
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - { in: query, name: cajeroId, schema: { type: number } }
+        - { in: query, name: numeroCorte, schema: { type: number } }
+        - { in: query, name: soloConDiferencia, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuentas-destino/export.xlsx:
+    get:
+      operationId: exportAdminCuentasDestinoXlsx
+      tags: [admin-analytics]
+      summary: Exporta cuentas destino a XLSX
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200":
+          description: XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuentas-destino/export.pdf:
+    get:
+      operationId: exportAdminCuentasDestinoPdf
+      tags: [admin-analytics]
+      summary: Exporta cuentas destino a PDF
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200":
+          description: PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 components:
   parameters:
+    AnalyticsDesde:
+      name: desde
+      in: query
+      schema: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+      description: Día inicial en America/Mexico_City
+    AnalyticsHasta:
+      name: hasta
+      in: query
+      schema: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+      description: Día final en America/Mexico_City
+    AnalyticsUbicacionId:
+      name: ubicacionId
+      in: query
+      schema: { type: number }
     LocationId:
       name: id
       in: path
@@ -2593,6 +2843,327 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    AnalyticsMoneyTotals:
+      type: object
+      required: [ventas, cobrado, pendiente, subtotal, iva, costo, margen, margenPorcentaje, tickets, ticketsCobrados, ticketsPendientes, cancelaciones, lineasExcluidasMargen]
+      properties:
+        ventas: { type: string }
+        cobrado: { type: string }
+        pendiente: { type: string }
+        subtotal: { type: string }
+        iva: { type: string }
+        costo: { type: string }
+        margen: { type: string }
+        margenPorcentaje: { type: string }
+        tickets: { type: number }
+        ticketsCobrados: { type: number }
+        ticketsPendientes: { type: number }
+        cancelaciones: { type: number }
+        lineasExcluidasMargen: { type: number }
+    AnalyticsQuantity:
+      type: object
+      required: [unidad, cantidad]
+      properties:
+        unidad: { type: string, enum: [METRO, KILO] }
+        cantidad: { type: string }
+    AdminRealtimeDashboard:
+      type: object
+      required: [generatedAt, fullRefreshSeconds, pendingRefreshSeconds, totales, cantidades, pendientes, tiendas, comparativo, ultimosTickets]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        fullRefreshSeconds: { type: number, enum: [300] }
+        pendingRefreshSeconds: { type: number, enum: [30] }
+        totales: { $ref: "#/components/schemas/AnalyticsMoneyTotals" }
+        cantidades:
+          type: array
+          items: { $ref: "#/components/schemas/AnalyticsQuantity" }
+        pendientes:
+          $ref: "#/components/schemas/AdminPendingSummary"
+        tiendas:
+          type: array
+          items: { $ref: "#/components/schemas/AdminRealtimeStore" }
+        comparativo:
+          type: array
+          items: { $ref: "#/components/schemas/AdminRealtimeStore" }
+        ultimosTickets:
+          type: array
+          maxItems: 20
+          items: { $ref: "#/components/schemas/AdminRealtimeTicket" }
+    AdminRealtimeStore:
+      type: object
+      description: Incluye toda tienda activa; sesionCajaId nulo distingue explícitamente una tienda sin caja abierta.
+      required: [ubicacionId, nombreUbicacion, sesionCajaId, abiertaAt, cajero, usuarioTerminal, vendido, cobrado, pendiente, tickets, ticketPromedio, margen, margenPorcentaje, efectivo, transferencia, credito, pendientes30Min, cancelaciones, tasaCancelacion, alertas]
+      properties:
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        sesionCajaId: { type: ["number", "null"] }
+        abiertaAt: { type: ["string", "null"], format: date-time }
+        cajero: { type: ["string", "null"] }
+        usuarioTerminal: { type: ["string", "null"] }
+        vendido: { type: string }
+        cobrado: { type: string }
+        pendiente: { type: string }
+        tickets: { type: number }
+        ticketPromedio: { type: string }
+        margen: { type: string }
+        margenPorcentaje:
+          type: string
+          description: Porcentaje en unidades; 15.00 significa 15%
+        efectivo: { type: string }
+        transferencia: { type: string }
+        credito: { type: string }
+        pendientes30Min: { type: number }
+        cancelaciones: { type: number }
+        tasaCancelacion:
+          type: string
+          description: Porcentaje en unidades; 10.00 significa 10%
+        alertas: { type: array, items: { type: string } }
+    AdminRealtimeTicket:
+      type: object
+      required: [id, folio, createdAt, nombreUbicacion, nombreCliente, importe, margen, cobrado]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        createdAt: { type: string, format: date-time }
+        nombreUbicacion: { type: string }
+        nombreCliente: { type: ["string", "null"] }
+        importe: { type: string }
+        margen: { type: string }
+        cobrado: { type: boolean }
+    AdminPendingSummary:
+      type: object
+      required: [tickets, importe, tiendas]
+      properties:
+        tickets: { type: number }
+        importe: { type: string }
+        tiendas:
+          type: array
+          items:
+            type: object
+            required: [ubicacionId, pendiente, pendientes30Min, alertas]
+            properties:
+              ubicacionId: { type: number }
+              pendiente: { type: string }
+              pendientes30Min: { type: number }
+              alertas: { type: array, items: { type: string } }
+    AdminCorteRow:
+      type: object
+      required: [id, ubicacionId, nombreUbicacion, usuarioId, nombreUsuario, abiertaAt, cerradaAt, estado, fondoInicial, vendido, totalCobrado, efectivoEsperado, efectivoContado, diferencia, ticketsCobrados, ticketsCancelados]
+      properties:
+        id: { type: number }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        abiertaAt: { type: string, format: date-time }
+        cerradaAt: { type: ["string", "null"], format: date-time }
+        estado: { type: string, enum: [ABIERTA, CERRADA] }
+        fondoInicial: { type: string }
+        vendido: { type: string }
+        totalCobrado: { type: string }
+        efectivoEsperado: { type: string }
+        efectivoContado: { type: ["string", "null"] }
+        diferencia: { type: ["string", "null"] }
+        ticketsCobrados: { type: number }
+        ticketsCancelados: { type: number }
+    AdminCortesResult:
+      type: object
+      required: [items, total, page, pageSize, totales]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AdminCorteRow" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+        totales:
+          type: object
+          required: [vendido, cobrado, efectivoEsperado, efectivoContado, diferencia, tickets]
+          properties:
+            vendido: { type: string }
+            cobrado: { type: string }
+            efectivoEsperado: { type: string }
+            efectivoContado: { type: string }
+            diferencia: { type: string }
+            tickets: { type: number }
+    AdminDiferenciaGroup:
+      type: object
+      required: [id, nombre, cortes, exactos, faltantes, sobrantes, importeFaltantes, importeSobrantes, diferencia, diferenciaNeta, diferenciaAbsoluta, promedio, porcentajeExactos]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        cortes: { type: number }
+        exactos: { type: number }
+        faltantes: { type: number }
+        sobrantes: { type: number }
+        importeFaltantes: { type: string }
+        importeSobrantes: { type: string }
+        diferencia: { type: string }
+        diferenciaNeta: { type: string }
+        diferenciaAbsoluta: { type: string }
+        promedio: { type: string }
+        porcentajeExactos: { type: string }
+    AdminTrendPoint:
+      type: object
+      required: [fecha, importe, diferenciaAbsoluta, porcentajeExactos]
+      properties:
+        fecha: { type: string, format: date }
+        importe: { type: string }
+        diferenciaAbsoluta: { type: string }
+        porcentajeExactos: { type: string }
+    AdminAlert:
+      type: object
+      required: [sesionId, tipo, mensaje, importe]
+      properties:
+        sesionId: { type: number }
+        tipo: { type: string, enum: [FALTANTE, SOBRANTE] }
+        mensaje: { type: string }
+        importe: { type: string }
+    AdminDiferencias:
+      type: object
+      required: [resumen, porCajero, porTienda, tendencia, alertas]
+      properties:
+        resumen:
+          type: object
+          required: [cortes, exactos, faltantes, sobrantes, importeFaltantes, importeSobrantes, diferenciaNeta, diferenciaAbsoluta, porcentajeExactos]
+          properties:
+            cortes: { type: number }
+            exactos: { type: number }
+            faltantes: { type: number }
+            sobrantes: { type: number }
+            importeFaltantes: { type: string }
+            importeSobrantes: { type: string }
+            diferenciaNeta: { type: string }
+            diferenciaAbsoluta: { type: string }
+            porcentajeExactos: { type: string }
+        porCajero: { type: array, items: { $ref: "#/components/schemas/AdminDiferenciaGroup" } }
+        porTienda: { type: array, items: { $ref: "#/components/schemas/AdminDiferenciaGroup" } }
+        tendencia: { type: array, items: { $ref: "#/components/schemas/AdminTrendPoint" } }
+        alertas: { type: array, items: { $ref: "#/components/schemas/AdminAlert" } }
+    AdminCuentaDestinoRow:
+      type: object
+      required: [cuentaDestino, formaPago, importe, importeAnterior, variacionPorcentaje, porcentaje, operaciones]
+      properties:
+        cuentaDestino: { type: string }
+        formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA, CREDITO] }
+        importe: { type: string }
+        importeAnterior: { type: string }
+        variacionPorcentaje:
+          type: string
+          description: Porcentaje en unidades; 12.50 significa 12.5%
+        porcentaje: { type: string }
+        operaciones: { type: number }
+    AdminCuentaTrend:
+      type: object
+      required: [fecha, cuentaDestino, importe]
+      properties:
+        fecha: { type: string, format: date }
+        cuentaDestino: { type: string }
+        importe: { type: string }
+    AdminCuentasDestino:
+      type: object
+      required: [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado]
+      properties:
+        resumen: { type: array, items: { $ref: "#/components/schemas/AdminCuentaDestinoRow" } }
+        tendencia: { type: array, items: { $ref: "#/components/schemas/AdminCuentaTrend" } }
+        porTienda:
+          type: array
+          items:
+            type: object
+            required: [ubicacionId, nombreUbicacion, cajaFisica, cuentaFiscal, cuentaNoFiscal, cuentasPorCobrar, total]
+            properties:
+              ubicacionId: { type: number }
+              nombreUbicacion: { type: string }
+              cajaFisica: { type: string }
+              cuentaFiscal: { type: string }
+              cuentaNoFiscal: { type: string }
+              cuentasPorCobrar: { type: string }
+              total: { type: string }
+        facturacion:
+          type: object
+          required: [facturadoTotal, noFacturadoTotal, facturadoEfectivo, facturadoTransferencia, noFacturadoEfectivo, noFacturadoTransferencia]
+          properties:
+            facturadoTotal: { type: string }
+            noFacturadoTotal: { type: string }
+            facturadoEfectivo: { type: string }
+            facturadoTransferencia: { type: string }
+            noFacturadoEfectivo: { type: string }
+            noFacturadoTransferencia: { type: string }
+        ivaCobrado: { type: string }
+        totalCobrado: { type: string }
+    AdminStoreComparison:
+      type: object
+      required: [ubicacionId, nombreUbicacion, ventas, subtotal, costo, margen, tickets, ticketPromedio, diferenciaTicketPromedio, tendenciaPorcentaje, mejorDia, peorDia, cancelaciones, lineasExcluidasMargen, metros, kilos, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
+      properties:
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        ventas: { type: string }
+        subtotal: { type: string }
+        costo: { type: string }
+        margen: { type: string }
+        tickets: { type: number }
+        ticketPromedio: { type: string }
+        diferenciaTicketPromedio: { type: string }
+        tendenciaPorcentaje: { type: string }
+        mejorDia: { $ref: "#/components/schemas/AdminStoreDay" }
+        peorDia: { $ref: "#/components/schemas/AdminStoreDay" }
+        cancelaciones: { type: number }
+        lineasExcluidasMargen: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+        efectivo: { type: string }
+        transferencia: { type: string }
+        credito: { type: string }
+        porcentajeFacturado: { type: string }
+        diferenciaCaja: { type: string }
+        participacion: { type: string }
+    AdminComparacionTiendas:
+      type: object
+      required: [periodo, desde, hasta, tiendas, totales, promedioGeneralTicket, ventasPorFecha]
+      properties:
+        periodo: { type: string }
+        desde: { type: string, format: date }
+        hasta: { type: string, format: date }
+        tiendas: { type: array, items: { $ref: "#/components/schemas/AdminStoreComparison" } }
+        totales: { $ref: "#/components/schemas/AdminStoreComparisonTotals" }
+        promedioGeneralTicket: { type: string }
+        ventasPorFecha:
+          type: array
+          items: { $ref: "#/components/schemas/AdminStoreSalesPoint" }
+    AdminStoreDay:
+      type: object
+      required: [fecha, ventas]
+      properties:
+        fecha: { type: ["string", "null"], format: date }
+        ventas: { type: string }
+    AdminStoreComparisonTotals:
+      type: object
+      required: [ventas, subtotal, costo, margen, tickets, ticketPromedio, cancelaciones, lineasExcluidasMargen, metros, kilos, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
+      properties:
+        ventas: { type: string }
+        subtotal: { type: string }
+        costo: { type: string }
+        margen: { type: string }
+        tickets: { type: number }
+        ticketPromedio: { type: string }
+        cancelaciones: { type: number }
+        lineasExcluidasMargen: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+        efectivo: { type: string }
+        transferencia: { type: string }
+        credito: { type: string }
+        porcentajeFacturado: { type: string }
+        diferenciaCaja: { type: string }
+        participacion: { type: string }
+    AdminStoreSalesPoint:
+      type: object
+      required: [fecha, ubicacionId, nombreUbicacion, ventas]
+      properties:
+        fecha: { type: string, format: date }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        ventas: { type: string }
     HealthStatus:
       type: object
       required: [status]
@@ -5127,13 +5698,16 @@ components:
         importe: { type: string }
     CorteFacturacion:
       type: object
-      required: [facturado, ticketsCount, subtotal, iva, importe]
+      required: [facturado, ticketsCount, subtotal, iva, importe, efectivo, transferencia, credito]
       properties:
         facturado: { type: boolean }
         ticketsCount: { type: number }
         subtotal: { type: string }
         iva: { type: string }
         importe: { type: string }
+        efectivo: { type: string }
+        transferencia: { type: string }
+        credito: { type: string }
     CorteMetreado:
       type: object
       required: [tipo, ticketsCount, cantidad, importe]
@@ -5164,6 +5738,24 @@ components:
         total: { type: string }
         nombreCliente: { type: ["string", "null"] }
         createdAt: { type: string, format: date-time }
+    CorteTicketCobrado:
+      type: object
+      required: [ticketId, folio, importe, cobradoAt]
+      properties:
+        ticketId: { type: number }
+        folio: { type: number }
+        importe: { type: string }
+        cobradoAt: { type: string, format: date-time }
+    CorteCancelacion:
+      type: object
+      required: [ticketId, folio, importe, motivo, canceladoAt, autor]
+      properties:
+        ticketId: { type: number }
+        folio: { type: number }
+        importe: { type: string }
+        motivo: { type: string }
+        canceladoAt: { type: string, format: date-time }
+        autor: { type: string }
     CorteCaja:
       type: object
       required:
@@ -5175,6 +5767,9 @@ components:
           metreado,
           productos,
           pendientes,
+          ticketsCobrados,
+          ticketsCobradosDetalle,
+          cancelaciones,
           fondoInicial,
           totalCobrado,
           ivaCobrado,
@@ -5211,6 +5806,15 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/CortePendiente"
+        ticketsCobradosDetalle:
+          type: array
+          items: { $ref: "#/components/schemas/CorteTicketCobrado" }
+        ticketsCobrados:
+          type: number
+          description: Conteo de tickets cobrados en la sesión.
+        cancelaciones:
+          type: array
+          items: { $ref: "#/components/schemas/CorteCancelacion" }
         fondoInicial: { type: string }
         totalCobrado: { type: string }
         ivaCobrado:
@@ -5221,3 +5825,15 @@ components:
         efectivoEsperado: { type: string }
         efectivoContado: { type: ["string", "null"] }
         diferencia: { type: ["string", "null"] }
+        costo:
+          type: string
+          description: Solo presente en respuestas exclusivas para ADMIN
+        margen:
+          type: string
+          description: Margen sobre subtotal; solo presente para ADMIN
+        margenPorcentaje:
+          type: string
+          description: Solo presente para ADMIN
+        lineasExcluidasMargen:
+          type: number
+          description: Líneas metreadas sin rollo o sin costo, solo para ADMIN

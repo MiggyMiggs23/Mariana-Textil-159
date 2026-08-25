@@ -3073,7 +3073,10 @@ export const ObtenerCorteCajaResponse = zod.object({
   "ticketsCount": zod.number(),
   "subtotal": zod.string(),
   "iva": zod.string(),
-  "importe": zod.string()
+  "importe": zod.string(),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string()
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
@@ -3097,12 +3100,31 @@ export const ObtenerCorteCajaResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "createdAt": zod.coerce.date()
 })),
+  "ticketsCobradosDetalle": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "cobradoAt": zod.coerce.date()
+})),
+  "ticketsCobrados": zod.number().describe('Conteo de tickets cobrados en la sesión.'),
+  "cancelaciones": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "motivo": zod.string(),
+  "canceladoAt": zod.coerce.date(),
+  "autor": zod.string()
+})),
   "fondoInicial": zod.string(),
   "totalCobrado": zod.string(),
   "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
-  "diferencia": zod.string().nullable()
+  "diferencia": zod.string().nullable(),
+  "costo": zod.string().optional().describe('Solo presente en respuestas exclusivas para ADMIN'),
+  "margen": zod.string().optional().describe('Margen sobre subtotal; solo presente para ADMIN'),
+  "margenPorcentaje": zod.string().optional().describe('Solo presente para ADMIN'),
+  "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
 })
 
 
@@ -3150,7 +3172,10 @@ export const CerrarSesionCajaResponse = zod.object({
   "ticketsCount": zod.number(),
   "subtotal": zod.string(),
   "iva": zod.string(),
-  "importe": zod.string()
+  "importe": zod.string(),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string()
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
@@ -3174,12 +3199,31 @@ export const CerrarSesionCajaResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "createdAt": zod.coerce.date()
 })),
+  "ticketsCobradosDetalle": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "cobradoAt": zod.coerce.date()
+})),
+  "ticketsCobrados": zod.number().describe('Conteo de tickets cobrados en la sesión.'),
+  "cancelaciones": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "motivo": zod.string(),
+  "canceladoAt": zod.coerce.date(),
+  "autor": zod.string()
+})),
   "fondoInicial": zod.string(),
   "totalCobrado": zod.string(),
   "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
-  "diferencia": zod.string().nullable()
+  "diferencia": zod.string().nullable(),
+  "costo": zod.string().optional().describe('Solo presente en respuestas exclusivas para ADMIN'),
+  "margen": zod.string().optional().describe('Margen sobre subtotal; solo presente para ADMIN'),
+  "margenPorcentaje": zod.string().optional().describe('Solo presente para ADMIN'),
+  "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
 })
 
 
@@ -3595,5 +3639,579 @@ export const CancelarSalidaResponse = zod.object({
   "unidad": zod.enum(['METRO', 'KILO']).optional()
 }))
 }))
+
+
+/**
+ * @summary Tablero consolidado; agregados completos cada 5 minutos y pendientes cada 30 segundos
+ */
+export const getAdminRealtimeDashboardQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminRealtimeDashboardQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetAdminRealtimeDashboardQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getAdminRealtimeDashboardQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getAdminRealtimeDashboardQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const getAdminRealtimeDashboardResponseUltimosTicketsMax = 20;
+
+
+
+export const GetAdminRealtimeDashboardResponse = zod.object({
+  "generatedAt": zod.coerce.date(),
+  "fullRefreshSeconds": zod.literal(300),
+  "pendingRefreshSeconds": zod.literal(30),
+  "totales": zod.object({
+  "ventas": zod.string(),
+  "cobrado": zod.string(),
+  "pendiente": zod.string(),
+  "subtotal": zod.string(),
+  "iva": zod.string(),
+  "costo": zod.string(),
+  "margen": zod.string(),
+  "margenPorcentaje": zod.string(),
+  "tickets": zod.number(),
+  "ticketsCobrados": zod.number(),
+  "ticketsPendientes": zod.number(),
+  "cancelaciones": zod.number(),
+  "lineasExcluidasMargen": zod.number()
+}),
+  "cantidades": zod.array(zod.object({
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidad": zod.string()
+})),
+  "pendientes": zod.object({
+  "tickets": zod.number(),
+  "importe": zod.string(),
+  "tiendas": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "pendiente": zod.string(),
+  "pendientes30Min": zod.number(),
+  "alertas": zod.array(zod.string())
+}))
+}),
+  "tiendas": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "sesionCajaId": zod.number().nullable(),
+  "abiertaAt": zod.coerce.date().nullable(),
+  "cajero": zod.string().nullable(),
+  "usuarioTerminal": zod.string().nullable(),
+  "vendido": zod.string(),
+  "cobrado": zod.string(),
+  "pendiente": zod.string(),
+  "tickets": zod.number(),
+  "ticketPromedio": zod.string(),
+  "margen": zod.string(),
+  "margenPorcentaje": zod.string().describe('Porcentaje en unidades; 15.00 significa 15%'),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string(),
+  "pendientes30Min": zod.number(),
+  "cancelaciones": zod.number(),
+  "tasaCancelacion": zod.string().describe('Porcentaje en unidades; 10.00 significa 10%'),
+  "alertas": zod.array(zod.string())
+}).describe('Incluye toda tienda activa; sesionCajaId nulo distingue explícitamente una tienda sin caja abierta.')),
+  "comparativo": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "sesionCajaId": zod.number().nullable(),
+  "abiertaAt": zod.coerce.date().nullable(),
+  "cajero": zod.string().nullable(),
+  "usuarioTerminal": zod.string().nullable(),
+  "vendido": zod.string(),
+  "cobrado": zod.string(),
+  "pendiente": zod.string(),
+  "tickets": zod.number(),
+  "ticketPromedio": zod.string(),
+  "margen": zod.string(),
+  "margenPorcentaje": zod.string().describe('Porcentaje en unidades; 15.00 significa 15%'),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string(),
+  "pendientes30Min": zod.number(),
+  "cancelaciones": zod.number(),
+  "tasaCancelacion": zod.string().describe('Porcentaje en unidades; 10.00 significa 10%'),
+  "alertas": zod.array(zod.string())
+}).describe('Incluye toda tienda activa; sesionCajaId nulo distingue explícitamente una tienda sin caja abierta.')),
+  "ultimosTickets": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "nombreUbicacion": zod.string(),
+  "nombreCliente": zod.string().nullable(),
+  "importe": zod.string(),
+  "margen": zod.string(),
+  "cobrado": zod.boolean()
+})).max(getAdminRealtimeDashboardResponseUltimosTicketsMax)
+})
+
+
+/**
+ * @summary Conteo e importe pendiente compatible con actualización cada 30 segundos
+ */
+export const getAdminRealtimePendingQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminRealtimePendingQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetAdminRealtimePendingQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getAdminRealtimePendingQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getAdminRealtimePendingQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const GetAdminRealtimePendingResponse = zod.object({
+  "tickets": zod.number(),
+  "importe": zod.string(),
+  "tiendas": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "pendiente": zod.string(),
+  "pendientes30Min": zod.number(),
+  "alertas": zod.array(zod.string())
+}))
+})
+
+
+/**
+ * @summary Historial de cortes
+ */
+export const listAdminCortesQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAdminCortesQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAdminCortesQuerySoloConDiferenciaDefault = false;
+export const listAdminCortesQueryPageDefault = 1;
+
+export const listAdminCortesQueryPageSizeDefault = 50;
+export const listAdminCortesQueryPageSizeMax = 200;
+
+
+
+export const ListAdminCortesQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listAdminCortesQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(listAdminCortesQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional(),
+  "cajeroId": zod.coerce.number().optional(),
+  "numeroCorte": zod.coerce.number().optional(),
+  "soloConDiferencia": zod.coerce.boolean().default(listAdminCortesQuerySoloConDiferenciaDefault),
+  "page": zod.coerce.number().min(1).default(listAdminCortesQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listAdminCortesQueryPageSizeMax).default(listAdminCortesQueryPageSizeDefault)
+})
+
+export const ListAdminCortesResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA']),
+  "fondoInicial": zod.string(),
+  "vendido": zod.string(),
+  "totalCobrado": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "diferencia": zod.string().nullable(),
+  "ticketsCobrados": zod.number(),
+  "ticketsCancelados": zod.number()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number(),
+  "totales": zod.object({
+  "vendido": zod.string(),
+  "cobrado": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "efectivoContado": zod.string(),
+  "diferencia": zod.string(),
+  "tickets": zod.number()
+})
+})
+
+
+/**
+ * @summary Detalle histórico de un corte
+ */
+export const GetAdminCorteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetAdminCorteResponse = zod.object({
+  "sesion": zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "abiertaAt": zod.coerce.date(),
+  "cerradaAt": zod.coerce.date().nullable(),
+  "fondoInicial": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA'])
+}),
+  "formasPago": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "pagosCount": zod.number(),
+  "ticketsCount": zod.number()
+})),
+  "cuentasDestino": zod.array(zod.object({
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "cuentaDestino": zod.string(),
+  "importe": zod.string()
+})),
+  "facturacion": zod.array(zod.object({
+  "facturado": zod.boolean(),
+  "ticketsCount": zod.number(),
+  "subtotal": zod.string(),
+  "iva": zod.string(),
+  "importe": zod.string(),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string()
+})).describe('Desglose facturado y no facturado'),
+  "metreado": zod.array(zod.object({
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "ticketsCount": zod.number(),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})).describe('Desglose NORMAL y METREADO'),
+  "productos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})),
+  "pendientes": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "total": zod.string(),
+  "nombreCliente": zod.string().nullable(),
+  "createdAt": zod.coerce.date()
+})),
+  "ticketsCobradosDetalle": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "cobradoAt": zod.coerce.date()
+})),
+  "ticketsCobrados": zod.number().describe('Conteo de tickets cobrados en la sesión.'),
+  "cancelaciones": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "importe": zod.string(),
+  "motivo": zod.string(),
+  "canceladoAt": zod.coerce.date(),
+  "autor": zod.string()
+})),
+  "fondoInicial": zod.string(),
+  "totalCobrado": zod.string(),
+  "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
+  "efectivoEsperado": zod.string(),
+  "efectivoContado": zod.string().nullable(),
+  "diferencia": zod.string().nullable(),
+  "costo": zod.string().optional().describe('Solo presente en respuestas exclusivas para ADMIN'),
+  "margen": zod.string().optional().describe('Margen sobre subtotal; solo presente para ADMIN'),
+  "margenPorcentaje": zod.string().optional().describe('Solo presente para ADMIN'),
+  "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
+})
+
+
+/**
+ * @summary Exporta detalle histórico de un corte a XLSX
+ */
+export const ExportAdminCorteXlsxParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ExportAdminCorteXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta detalle histórico de un corte a PDF o reimpresión
+ */
+export const ExportAdminCortePdfParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ExportAdminCortePdfResponse = zod.unknown()
+
+
+/**
+ * @summary Diferencias agrupadas por cajero y tienda, tendencias y alertas
+ */
+export const getAdminDiferenciasQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminDiferenciasQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminDiferenciasQueryUmbralCorteDefault = 500;
+export const getAdminDiferenciasQueryUmbralCorteMin = 0;
+
+export const getAdminDiferenciasQueryUmbralTiendaDefault = 500;
+export const getAdminDiferenciasQueryUmbralTiendaMin = 0;
+
+export const getAdminDiferenciasQueryAgrupacionDefault = `semana`;
+
+export const GetAdminDiferenciasQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getAdminDiferenciasQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getAdminDiferenciasQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional(),
+  "umbralCorte": zod.coerce.number().min(getAdminDiferenciasQueryUmbralCorteMin).default(getAdminDiferenciasQueryUmbralCorteDefault),
+  "umbralTienda": zod.coerce.number().min(getAdminDiferenciasQueryUmbralTiendaMin).default(getAdminDiferenciasQueryUmbralTiendaDefault),
+  "agrupacion": zod.enum(['semana', 'mes']).default(getAdminDiferenciasQueryAgrupacionDefault)
+})
+
+export const GetAdminDiferenciasResponse = zod.object({
+  "resumen": zod.object({
+  "cortes": zod.number(),
+  "exactos": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "importeFaltantes": zod.string(),
+  "importeSobrantes": zod.string(),
+  "diferenciaNeta": zod.string(),
+  "diferenciaAbsoluta": zod.string(),
+  "porcentajeExactos": zod.string()
+}),
+  "porCajero": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "cortes": zod.number(),
+  "exactos": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "importeFaltantes": zod.string(),
+  "importeSobrantes": zod.string(),
+  "diferencia": zod.string(),
+  "diferenciaNeta": zod.string(),
+  "diferenciaAbsoluta": zod.string(),
+  "promedio": zod.string(),
+  "porcentajeExactos": zod.string()
+})),
+  "porTienda": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "cortes": zod.number(),
+  "exactos": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "importeFaltantes": zod.string(),
+  "importeSobrantes": zod.string(),
+  "diferencia": zod.string(),
+  "diferenciaNeta": zod.string(),
+  "diferenciaAbsoluta": zod.string(),
+  "promedio": zod.string(),
+  "porcentajeExactos": zod.string()
+})),
+  "tendencia": zod.array(zod.object({
+  "fecha": zod.coerce.date(),
+  "importe": zod.string(),
+  "diferenciaAbsoluta": zod.string(),
+  "porcentajeExactos": zod.string()
+})),
+  "alertas": zod.array(zod.object({
+  "sesionId": zod.number(),
+  "tipo": zod.enum(['FALTANTE', 'SOBRANTE']),
+  "mensaje": zod.string(),
+  "importe": zod.string()
+}))
+})
+
+
+/**
+ * @summary Resumen y tendencias de cuentas destino derivadas de pagos y facturación
+ */
+export const getAdminCuentasDestinoQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminCuentasDestinoQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetAdminCuentasDestinoQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getAdminCuentasDestinoQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getAdminCuentasDestinoQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const GetAdminCuentasDestinoResponse = zod.object({
+  "resumen": zod.array(zod.object({
+  "cuentaDestino": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "importe": zod.string(),
+  "importeAnterior": zod.string(),
+  "variacionPorcentaje": zod.string().describe('Porcentaje en unidades; 12.50 significa 12.5%'),
+  "porcentaje": zod.string(),
+  "operaciones": zod.number()
+})),
+  "tendencia": zod.array(zod.object({
+  "fecha": zod.coerce.date(),
+  "cuentaDestino": zod.string(),
+  "importe": zod.string()
+})),
+  "porTienda": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "cajaFisica": zod.string(),
+  "cuentaFiscal": zod.string(),
+  "cuentaNoFiscal": zod.string(),
+  "cuentasPorCobrar": zod.string(),
+  "total": zod.string()
+})),
+  "facturacion": zod.object({
+  "facturadoTotal": zod.string(),
+  "noFacturadoTotal": zod.string(),
+  "facturadoEfectivo": zod.string(),
+  "facturadoTransferencia": zod.string(),
+  "noFacturadoEfectivo": zod.string(),
+  "noFacturadoTransferencia": zod.string()
+}),
+  "ivaCobrado": zod.string(),
+  "totalCobrado": zod.string()
+})
+
+
+/**
+ * @summary Comparación de tiendas por periodo
+ */
+export const getAdminComparacionTiendasQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminComparacionTiendasQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetAdminComparacionTiendasQueryParams = zod.object({
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']),
+  "desde": zod.coerce.string().regex(getAdminComparacionTiendasQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getAdminComparacionTiendasQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City')
+})
+
+export const GetAdminComparacionTiendasResponse = zod.object({
+  "periodo": zod.string(),
+  "desde": zod.coerce.date(),
+  "hasta": zod.coerce.date(),
+  "tiendas": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "ventas": zod.string(),
+  "subtotal": zod.string(),
+  "costo": zod.string(),
+  "margen": zod.string(),
+  "tickets": zod.number(),
+  "ticketPromedio": zod.string(),
+  "diferenciaTicketPromedio": zod.string(),
+  "tendenciaPorcentaje": zod.string(),
+  "mejorDia": zod.object({
+  "fecha": zod.coerce.date().nullable(),
+  "ventas": zod.string()
+}),
+  "peorDia": zod.object({
+  "fecha": zod.coerce.date().nullable(),
+  "ventas": zod.string()
+}),
+  "cancelaciones": zod.number(),
+  "lineasExcluidasMargen": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string(),
+  "porcentajeFacturado": zod.string(),
+  "diferenciaCaja": zod.string(),
+  "participacion": zod.string()
+})),
+  "totales": zod.object({
+  "ventas": zod.string(),
+  "subtotal": zod.string(),
+  "costo": zod.string(),
+  "margen": zod.string(),
+  "tickets": zod.number(),
+  "ticketPromedio": zod.string(),
+  "cancelaciones": zod.number(),
+  "lineasExcluidasMargen": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "efectivo": zod.string(),
+  "transferencia": zod.string(),
+  "credito": zod.string(),
+  "porcentajeFacturado": zod.string(),
+  "diferenciaCaja": zod.string(),
+  "participacion": zod.string()
+}),
+  "promedioGeneralTicket": zod.string(),
+  "ventasPorFecha": zod.array(zod.object({
+  "fecha": zod.coerce.date(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "ventas": zod.string()
+}))
+})
+
+
+/**
+ * @summary Exporta cortes a XLSX
+ */
+export const exportAdminCortesXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCortesXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCortesXlsxQuerySoloConDiferenciaDefault = false;
+
+export const ExportAdminCortesXlsxQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportAdminCortesXlsxQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportAdminCortesXlsxQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional(),
+  "cajeroId": zod.coerce.number().optional(),
+  "numeroCorte": zod.coerce.number().optional(),
+  "soloConDiferencia": zod.coerce.boolean().default(exportAdminCortesXlsxQuerySoloConDiferenciaDefault)
+})
+
+export const ExportAdminCortesXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta cortes a PDF
+ */
+export const exportAdminCortesPdfQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCortesPdfQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCortesPdfQuerySoloConDiferenciaDefault = false;
+
+export const ExportAdminCortesPdfQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportAdminCortesPdfQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportAdminCortesPdfQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional(),
+  "cajeroId": zod.coerce.number().optional(),
+  "numeroCorte": zod.coerce.number().optional(),
+  "soloConDiferencia": zod.coerce.boolean().default(exportAdminCortesPdfQuerySoloConDiferenciaDefault)
+})
+
+export const ExportAdminCortesPdfResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta cuentas destino a XLSX
+ */
+export const exportAdminCuentasDestinoXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCuentasDestinoXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const ExportAdminCuentasDestinoXlsxQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportAdminCuentasDestinoXlsxQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportAdminCuentasDestinoXlsxQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const ExportAdminCuentasDestinoXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta cuentas destino a PDF
+ */
+export const exportAdminCuentasDestinoPdfQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCuentasDestinoPdfQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const ExportAdminCuentasDestinoPdfQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportAdminCuentasDestinoPdfQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportAdminCuentasDestinoPdfQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const ExportAdminCuentasDestinoPdfResponse = zod.unknown()
 
 

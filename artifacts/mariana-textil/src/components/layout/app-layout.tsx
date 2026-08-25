@@ -34,7 +34,10 @@ import {
   Ship,
   Banknote,
   FileBarChart,
-  Shield
+  Shield,
+  AlertCircle,
+  Wallet,
+  BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -56,6 +59,7 @@ type NavItem = {
   icon: any;
   module: Module;
   isClickable: boolean;
+  adminOnly?: boolean;
 };
 
 type NavGroup = {
@@ -89,7 +93,12 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "ADMINISTRACIÓN",
     items: [
-      { name: "Caja", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+      { name: "Cobros (POS)", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+      { name: "Tiempo Real", path: "/caja/tiempo-real", icon: Activity, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Diferencias", path: "/caja/diferencias", icon: AlertCircle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Cuentas Destino", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      { name: "Comparativo", path: "/caja/comparativo", icon: BarChart3, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
       { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
@@ -258,7 +267,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
       {NAV_GROUPS.map((group) => {
-        const allowedItems = group.items.filter(item => hasPermission(user, item.module, 'ver'));
+        const allowedItems = group.items.filter(item =>
+          hasPermission(user, item.module, 'ver') &&
+          (!item.adminOnly || user.rol === Role.ADMIN)
+        );
         
         if (allowedItems.length === 0) return null;
 

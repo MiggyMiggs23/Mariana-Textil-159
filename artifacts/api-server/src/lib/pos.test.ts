@@ -726,6 +726,9 @@ await test("POS-05A ticket facturado persiste IVA, cobra 319 y conserva margen s
     subtotal: "275.00",
     iva: "44.00",
     importe: "319.00",
+    efectivo: "100.00",
+    transferencia: "219.00",
+    credito: "0.00",
   });
   assert.deepEqual(corte?.facturacion[1], {
     facturado: false,
@@ -733,6 +736,9 @@ await test("POS-05A ticket facturado persiste IVA, cobra 319 y conserva margen s
     subtotal: "0.00",
     iva: "0.00",
     importe: "0.00",
+    efectivo: "0.00",
+    transferencia: "0.00",
+    credito: "0.00",
   });
 });
 

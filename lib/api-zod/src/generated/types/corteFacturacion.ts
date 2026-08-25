@@ -12,4 +12,7 @@ export interface CorteFacturacion {
   subtotal: string;
   iva: string;
   importe: string;
+  efectivo: string;
+  transferencia: string;
+  credito: string;
 }

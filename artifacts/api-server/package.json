@@ -21,7 +21,9 @@
     "test:salidas-api": "tsx --test src/salidas-api.test.ts",
     "test:kardex-api": "NODE_ENV=test tsx --test src/kardex-api.test.ts",
     "test:admin-bypass-empty": "tsx src/admin-bypass-empty-permissions.test.ts",
-    "test:security-api": "tsx src/security-api.test.ts"
+    "test:security-api": "tsx src/security-api.test.ts",
+    "test:admin-analytics": "tsx --test src/lib/admin-analytics.contract.ts",
+    "test:admin-analytics-integration": "tsx --test src/admin-analytics.integration.test.ts"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",

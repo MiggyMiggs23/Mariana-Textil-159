@@ -55,6 +55,9 @@ export const sesionesCajaTable = pgTable(
       table.ubicacionId,
       table.estado,
     ),
+    index("sesiones_caja_cerrada_at_idx")
+      .on(table.cerradaAt)
+      .where(sql`${table.estado} = 'CERRADA'`),
     uniqueIndex("sesiones_caja_una_abierta_ubicacion_idx")
       .on(table.ubicacionId)
       .where(sql`${table.estado} = 'ABIERTA'`),
@@ -114,6 +117,11 @@ export const ticketsTable = pgTable(
       table.clienteId,
       table.createdAt,
     ),
+    index("tickets_created_at_idx").on(table.createdAt),
+    index("tickets_sesion_estado_idx").on(table.sesionCajaId, table.estado),
+    index("tickets_cobrado_created_at_idx")
+      .on(table.createdAt, table.ubicacionId)
+      .where(sql`${table.cobrado} = true`),
   ],
 );
 

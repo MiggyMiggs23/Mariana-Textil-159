@@ -1,0 +1,868 @@
+import { pool } from "@workspace/db";
+import { parseMexicoDateQuery } from "./mexico-date";
+
+export const ANALYTICS_TIME_ZONE = "America/Mexico_City";
+
+/** Testable timing boundary used by routes to surface KPI query duration. */
+export async function measureKpi<T>(
+  name: string,
+  query: () => Promise<T>,
+): Promise<{ value: T; name: string; durationMs: number }> {
+  const started = performance.now();
+  const value = await query();
+  return { value, name, durationMs: performance.now() - started };
+}
+
+export type AnalyticsFilters = {
+  desde?: Date;
+  hasta?: Date;
+  ubicacionId?: number;
+};
+
+export function previousEqualPeriod(filters: AnalyticsFilters): AnalyticsFilters {
+  if (!filters.desde || !filters.hasta) {
+    throw new AnalyticsInputError("El periodo requiere límites para calcular su comparación.");
+  }
+  const duration = filters.hasta.getTime() - filters.desde.getTime() + 1;
+  const hasta = new Date(filters.desde.getTime() - 1);
+  return {
+    desde: new Date(hasta.getTime() - duration + 1),
+    hasta,
+    ubicacionId: filters.ubicacionId,
+  };
+}
+
+type QueryInput = {
+  desde?: string | Date;
+  hasta?: string | Date;
+  ubicacionId?: number;
+};
+
+export class AnalyticsInputError extends Error {}
+
+export type AccountDestination =
+  | "Caja física"
+  | "Cuenta fiscal"
+  | "Cuenta no fiscal"
+  | "Cuentas por cobrar";
+
+/** Canonical payment/facturado-derived destination rule, shared by reports. */
+export function accountDestination(
+  formaPago: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO",
+  facturado: boolean,
+): AccountDestination {
+  if (formaPago === "EFECTIVO") return "Caja física";
+  if (formaPago === "CREDITO") return "Cuentas por cobrar";
+  return facturado ? "Cuenta fiscal" : "Cuenta no fiscal";
+}
+
+export function calculateFrozenMargin(
+  lines: Array<{
+    importe: string | number;
+    costoTotalCongelado: string | number | null;
+    costoUnitarioCongelado: string | number | null;
+    rolloId: number | null;
+  }>,
+) {
+  let costo = 0;
+  let margen = 0;
+  const subtotal = lines.reduce((sum, line) => sum + Number(line.importe), 0);
+  let lineasExcluidasMargen = 0;
+  for (const line of lines) {
+    if (
+      line.rolloId == null ||
+      line.costoUnitarioCongelado == null ||
+      Number(line.costoUnitarioCongelado) <= 0 ||
+      line.costoTotalCongelado == null
+    ) {
+      lineasExcluidasMargen += 1;
+      continue;
+    }
+    costo += Number(line.costoTotalCongelado);
+    margen += Number(line.importe) - Number(line.costoTotalCongelado);
+  }
+  return {
+    costo: decimal(costo),
+    margen: decimal(margen),
+    margenPorcentaje: decimal(subtotal === 0 ? 0 : (margen / subtotal) * 100),
+    lineasExcluidasMargen,
+  };
+}
+
+export function parseAnalyticsFilters(input: QueryInput): AnalyticsFilters {
+  const desde = input.desde instanceof Date
+    ? parseMexicoDateQuery(input.desde.toISOString().slice(0, 10), "start")
+    : parseMexicoDateQuery(input.desde, "start");
+  const hasta = input.hasta instanceof Date
+    ? parseMexicoDateQuery(input.hasta.toISOString().slice(0, 10), "end")
+    : parseMexicoDateQuery(input.hasta, "end");
+  if (desde === null || hasta === null) {
+    throw new AnalyticsInputError("Las fechas deben usar el formato YYYY-MM-DD.");
+  }
+  if (desde && hasta && desde > hasta) {
+    throw new AnalyticsInputError("La fecha desde no puede ser posterior a hasta.");
+  }
+  // Dashboard/analytics without explicit controls always means the current
+  // business day, never an accidental all-time scan.
+  if (desde === undefined && hasta === undefined) {
+    return {
+      desde: parseMexicoDateQuery(dateMexico(), "start")!,
+      hasta: parseMexicoDateQuery(dateMexico(), "end")!,
+      ubicacionId: input.ubicacionId,
+    };
+  }
+  return { desde, hasta, ubicacionId: input.ubicacionId };
+}
+
+function decimal(value: unknown, scale = 2): string {
+  const number = Number(value ?? 0);
+  return (Number.isFinite(number) ? number : 0).toFixed(scale);
+}
+
+function dateMexico(value = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: ANALYTICS_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(value);
+  const field = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)!.value;
+  return `${field("year")}-${field("month")}-${field("day")}`;
+}
+
+export function mexicoCityHour(value = new Date()): number {
+  return Number(new Intl.DateTimeFormat("en-US", {
+    timeZone: ANALYTICS_TIME_ZONE,
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).format(value));
+}
+
+function where(
+  filters: AnalyticsFilters,
+  alias = "t",
+  timestampColumn = "created_at",
+) {
+  return {
+    text: `($1::timestamptz IS NULL OR ${alias}.${timestampColumn} >= $1)
+      AND ($2::timestamptz IS NULL OR ${alias}.${timestampColumn} <= $2)
+      AND ($3::int IS NULL OR ${alias}.ubicacion_id = $3)`,
+    values: [
+      filters.desde?.toISOString() ?? null,
+      filters.hasta?.toISOString() ?? null,
+      filters.ubicacionId ?? null,
+    ],
+  };
+}
+
+export async function getSalesSummary(filters: AnalyticsFilters) {
+  const condition = where(filters);
+  const result = await pool.query(
+    `WITH filtered AS (
+       SELECT t.id,t.estado,t.cobrado,t.total,t.subtotal,t.iva
+       FROM tickets t WHERE ${condition.text}
+     ), lines AS (
+       SELECT l.ticket_id,
+         COALESCE(SUM(l.costo_total_congelado)
+           FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado > 0),0) costo,
+         COALESCE(SUM(l.importe)
+           FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado > 0),0) importe_margen,
+         COUNT(*) FILTER (WHERE l.rollo_id IS NULL OR l.costo_unitario_congelado <= 0)::int excluidas
+       FROM ticket_lineas l JOIN filtered f ON f.id=l.ticket_id
+       WHERE f.estado='VENDIDO' GROUP BY l.ticket_id
+     )
+     SELECT
+       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO'),0)::text ventas,
+       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND f.cobrado),0)::text cobrado,
+       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado),0)::text pendiente,
+       COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO'),0)::text subtotal,
+       COALESCE(SUM(f.iva) FILTER (WHERE f.estado='VENDIDO'),0)::text iva,
+       COALESCE(SUM(l.costo),0)::text costo,
+       COALESCE(SUM(l.importe_margen-l.costo),0)::text margen,
+       COUNT(*) FILTER (WHERE f.estado='VENDIDO')::int tickets,
+       COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND f.cobrado)::int "ticketsCobrados",
+       COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado)::int "ticketsPendientes",
+       COUNT(*) FILTER (WHERE f.estado='CANCELADO')::int cancelaciones,
+       COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen"
+     FROM filtered f LEFT JOIN lines l ON l.ticket_id=f.id`,
+    condition.values,
+  );
+  const row = result.rows[0]!;
+  const subtotal = Number(row.subtotal);
+  const margin = Number(row.margen);
+  return {
+    ventas: decimal(row.ventas),
+    cobrado: decimal(row.cobrado),
+    pendiente: decimal(row.pendiente),
+    subtotal: decimal(subtotal),
+    iva: decimal(row.iva),
+    costo: decimal(row.costo),
+    margen: decimal(margin),
+    margenPorcentaje: decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
+    tickets: Number(row.tickets),
+    ticketsCobrados: Number(row.ticketsCobrados),
+    ticketsPendientes: Number(row.ticketsPendientes),
+    cancelaciones: Number(row.cancelaciones),
+    lineasExcluidasMargen: Number(row.lineasExcluidasMargen),
+  };
+}
+
+export async function getSessionMargin(sesionId: number) {
+  const result = await pool.query(
+    `SELECT
+       COALESCE(SUM(l.costo_total_congelado) FILTER
+         (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0)::text costo,
+       COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
+         (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0)::text margen,
+        COALESCE(SUM(l.importe),0)::text subtotal,
+       COUNT(*) FILTER
+         (WHERE l.rollo_id IS NULL OR l.costo_unitario_congelado<=0)::int excluidas
+     FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
+     WHERE t.sesion_caja_id=$1 AND t.estado='VENDIDO'`,
+    [sesionId],
+  );
+  const row = result.rows[0]!;
+  const margin = Number(row.margen);
+  const subtotal = Number(row.subtotal);
+  return {
+    costo: decimal(row.costo),
+    margen: decimal(margin),
+    margenPorcentaje: decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
+    lineasExcluidasMargen: Number(row.excluidas),
+  };
+}
+
+export async function getQuantities(filters: AnalyticsFilters) {
+  const condition = where(filters);
+  const result = await pool.query(
+    `SELECT p.unidad,COALESCE(SUM(l.cantidad),0)::text cantidad
+     FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
+     JOIN productos p ON p.id=l.producto_id
+     WHERE ${condition.text} AND t.estado='VENDIDO'
+     GROUP BY p.unidad ORDER BY p.unidad`,
+    condition.values,
+  );
+  const byUnit = new Map(result.rows.map((row) => [row.unidad, decimal(row.cantidad, 3)]));
+  return [
+    { unidad: "METRO" as const, cantidad: byUnit.get("METRO") ?? "0.000" },
+    { unidad: "KILO" as const, cantidad: byUnit.get("KILO") ?? "0.000" },
+  ];
+}
+
+export async function getPending(filters: AnalyticsFilters) {
+  const condition = where(filters);
+  const result = await pool.query(
+    `SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0)::text importe
+     FROM tickets t WHERE ${condition.text}
+       AND t.estado='VENDIDO' AND NOT t.cobrado`,
+    condition.values,
+  );
+  return {
+    tickets: Number(result.rows[0]!.tickets),
+    importe: decimal(result.rows[0]!.importe),
+  };
+}
+
+/** One read model powers both the five-minute dashboard and 30-second poll. */
+export async function getRealtimeStores(filters: AnalyticsFilters) {
+  const condition = where(filters);
+  const result = await pool.query(
+    `WITH filtered AS (
+       SELECT t.* FROM tickets t WHERE ${condition.text}
+     ), line_margin AS (
+       SELECT l.ticket_id,
+         COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
+           (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0) margen,
+          COALESCE(SUM(l.importe),0) subtotal
+       FROM ticket_lineas l JOIN filtered t ON t.id=l.ticket_id GROUP BY l.ticket_id
+     ), payment AS (
+       SELECT t.id,
+         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='EFECTIVO'),0) efectivo,
+         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia,
+         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='CREDITO'),0) credito
+       FROM filtered t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id
+       WHERE t.estado='VENDIDO' AND t.cobrado GROUP BY t.id
+     )
+     SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
+       s.id "sesionCajaId",s.abierta_at "abiertaAt",caj.nombre cajero,
+       term.nombre "usuarioTerminal",
+       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0)::text vendido,
+       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND t.cobrado),0)::text cobrado,
+       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado),0)::text pendiente,
+       COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
+       COALESCE(SUM(m.margen),0)::text margen,COALESCE(SUM(m.subtotal),0)::text subtotal,
+       COALESCE(SUM(p.efectivo),0)::text efectivo,COALESCE(SUM(p.transferencia),0)::text transferencia,
+       COALESCE(SUM(p.credito),0)::text credito,
+       COUNT(*) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado AND t.created_at < now()-interval '30 minutes')::int "pendientes30Min",
+       COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones
+     FROM ubicaciones u
+     LEFT JOIN filtered t ON t.ubicacion_id=u.id
+     LEFT JOIN line_margin m ON m.ticket_id=t.id
+     LEFT JOIN payment p ON p.id=t.id
+     LEFT JOIN LATERAL (
+       SELECT sc.* FROM sesiones_caja sc WHERE sc.ubicacion_id=u.id AND sc.estado='ABIERTA'
+       ORDER BY sc.abierta_at DESC LIMIT 1
+     ) s ON true
+     LEFT JOIN usuarios caj ON caj.id=s.usuario_id
+     LEFT JOIN LATERAL (
+       SELECT ut.nombre FROM filtered ft JOIN usuarios ut ON ut.id=ft.usuario_terminal_id
+       WHERE ft.ubicacion_id=u.id ORDER BY ft.created_at DESC LIMIT 1
+     ) term ON true
+     WHERE u.tipo='TIENDA' AND u.activa
+     GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre
+     ORDER BY u.nombre`,
+    condition.values,
+  );
+  return result.rows.map((row) => {
+    const sold = Number(row.vendido);
+    const subtotal = Number(row.subtotal);
+    const tickets = Number(row.tickets);
+    const cancellationRate = tickets + Number(row.cancelaciones) === 0 ? 0 :
+      (Number(row.cancelaciones) / (tickets + Number(row.cancelaciones))) * 100;
+    const alerts: string[] = [];
+    if (Number(row.pendientes30Min) > 0) alerts.push("PENDIENTE_MAS_30_MIN");
+    const mexicoHour = mexicoCityHour();
+    if (row.sesionCajaId == null && mexicoHour >= 10) alerts.push("SIN_CAJA_ABIERTA");
+    if (subtotal > 0 && (Number(row.margen) / subtotal) * 100 < 15) alerts.push("MARGEN_BAJO");
+    if (cancellationRate > 10) alerts.push("CANCELACIONES_ALTAS");
+    return {
+      ...row,
+      abiertaAt: row.abiertaAt ? new Date(row.abiertaAt).toISOString() : null,
+      vendido: decimal(sold), cobrado: decimal(row.cobrado), pendiente: decimal(row.pendiente),
+      ticketPromedio: decimal(tickets === 0 ? 0 : sold / tickets),
+      margen: decimal(row.margen),
+      margenPorcentaje: decimal(subtotal === 0 ? 0 : (Number(row.margen) / subtotal) * 100),
+      efectivo: decimal(row.efectivo), transferencia: decimal(row.transferencia), credito: decimal(row.credito),
+      tickets, pendientes30Min: Number(row.pendientes30Min),
+      cancelaciones: Number(row.cancelaciones), tasaCancelacion: decimal(cancellationRate), alertas: alerts,
+    };
+  });
+}
+
+export async function getRealtimeTickets(filters: AnalyticsFilters) {
+  const condition = where(filters);
+  const result = await pool.query(
+    `SELECT t.id,t.folio,t.created_at "createdAt",u.nombre "nombreUbicacion",c.nombre "nombreCliente",
+       t.total::text importe,t.cobrado,
+       COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
+         (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0)::text margen
+     FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
+     LEFT JOIN clientes c ON c.id=t.cliente_id LEFT JOIN ticket_lineas l ON l.ticket_id=t.id
+     WHERE ${condition.text} GROUP BY t.id,u.nombre,c.nombre
+     ORDER BY t.created_at DESC LIMIT 20`,
+    condition.values,
+  );
+  return result.rows.map((row) => ({
+    ...row, createdAt: new Date(row.createdAt).toISOString(),
+    importe: decimal(row.importe), margen: decimal(row.margen),
+  }));
+}
+
+export async function listCuts(
+  filters: AnalyticsFilters,
+  page = 1,
+  pageSize = 50,
+  extra: { cajeroId?: number; numeroCorte?: number; soloConDiferencia?: boolean } = {},
+) {
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId ?? null,
+    extra.cajeroId ?? null,
+    extra.numeroCorte ?? null,
+    extra.soloConDiferencia ?? false,
+    pageSize,
+    (page - 1) * pageSize,
+  ];
+  const base = `($1::timestamptz IS NULL OR s.abierta_at >= $1)
+    AND ($2::timestamptz IS NULL OR s.abierta_at <= $2)
+    AND ($3::int IS NULL OR s.ubicacion_id=$3)`;
+  const extraWhere = `AND ($4::int IS NULL OR s.usuario_id=$4)
+    AND ($5::int IS NULL OR s.id=$5)
+    AND (NOT $6::boolean OR (s.efectivo_contado IS NOT NULL AND
+      s.efectivo_contado-s.fondo_inicial-COALESCE(x.efectivo,0) <> 0))`;
+  const lateral = `LEFT JOIN LATERAL (
+    SELECT COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0) vendido,
+      COALESCE(SUM(p.importe) FILTER (WHERE t.estado='VENDIDO'),0) total,
+      COALESCE(SUM(p.importe) FILTER (WHERE t.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) efectivo,
+      COUNT(DISTINCT t.id) FILTER (WHERE t.estado='VENDIDO' AND t.cobrado) cobrados,
+      COUNT(DISTINCT t.id) FILTER (WHERE t.estado='CANCELADO') cancelados
+    FROM tickets t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id WHERE t.sesion_caja_id=s.id
+  ) x ON true`;
+  const [rows, count, totals] = await Promise.all([
+    pool.query(
+      `SELECT s.id,s.ubicacion_id "ubicacionId",u.nombre "nombreUbicacion",
+        s.usuario_id "usuarioId",usr.nombre "nombreUsuario",s.abierta_at "abiertaAt",
+        s.cerrada_at "cerradaAt",s.estado,s.fondo_inicial::text "fondoInicial",
+        COALESCE(x.vendido,0)::text vendido,COALESCE(x.total,0)::text "totalCobrado",
+        (s.fondo_inicial+COALESCE(x.efectivo,0))::text "efectivoEsperado",
+        s.efectivo_contado::text "efectivoContado",
+        CASE WHEN s.efectivo_contado IS NULL THEN NULL
+          ELSE (s.efectivo_contado-s.fondo_inicial-COALESCE(x.efectivo,0))::text END diferencia,
+        COALESCE(x.cobrados,0)::int "ticketsCobrados",
+        COALESCE(x.cancelados,0)::int "ticketsCancelados"
+       FROM sesiones_caja s JOIN ubicaciones u ON u.id=s.ubicacion_id
+       JOIN usuarios usr ON usr.id=s.usuario_id
+       ${lateral} WHERE ${base} ${extraWhere}
+       ORDER BY s.abierta_at DESC LIMIT $7 OFFSET $8`,
+      values,
+    ),
+    pool.query(`SELECT COUNT(*)::int total FROM sesiones_caja s ${lateral}
+      WHERE ${base} ${extraWhere}`, values.slice(0, 6)),
+    pool.query(`SELECT COALESCE(SUM(x.vendido),0)::text vendido,
+      COALESCE(SUM(x.total),0)::text cobrado,
+      COALESCE(SUM(s.fondo_inicial+x.efectivo),0)::text "efectivoEsperado",
+      COALESCE(SUM(s.efectivo_contado),0)::text "efectivoContado",
+      COALESCE(SUM(s.efectivo_contado-s.fondo_inicial-x.efectivo),0)::text diferencia,
+      COALESCE(SUM(x.cobrados),0)::int tickets
+      FROM sesiones_caja s ${lateral} WHERE ${base} ${extraWhere}`, values.slice(0, 6)),
+  ]);
+  return {
+    items: rows.rows.map((row) => ({
+      ...row,
+      abiertaAt: new Date(row.abiertaAt).toISOString(),
+      cerradaAt: row.cerradaAt ? new Date(row.cerradaAt).toISOString() : null,
+      fondoInicial: decimal(row.fondoInicial),
+      vendido: decimal(row.vendido),
+      totalCobrado: decimal(row.totalCobrado),
+      efectivoEsperado: decimal(row.efectivoEsperado),
+      efectivoContado: row.efectivoContado == null ? null : decimal(row.efectivoContado),
+      diferencia: row.diferencia == null ? null : decimal(row.diferencia),
+    })),
+    total: Number(count.rows[0]!.total),
+    page,
+    pageSize,
+    totales: {
+      vendido: decimal(totals.rows[0]!.vendido),
+      cobrado: decimal(totals.rows[0]!.cobrado),
+      efectivoEsperado: decimal(totals.rows[0]!.efectivoEsperado),
+      efectivoContado: decimal(totals.rows[0]!.efectivoContado),
+      diferencia: decimal(totals.rows[0]!.diferencia),
+      tickets: Number(totals.rows[0]!.tickets),
+    },
+  };
+}
+
+export async function getDestinationAccounts(filters: AnalyticsFilters) {
+  // Account destinations are cash-flow reporting: a ticket sold yesterday and
+  // charged today belongs to today's collected period.
+  const condition = where(filters, "t", "cobrado_at");
+  const priorCondition = where(previousEqualPeriod(filters), "t", "cobrado_at");
+  const accountSql = `SELECT (t.cobrado_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
+       p.forma_pago "formaPago",t.facturado,SUM(p.importe)::text importe,COUNT(*)::int operaciones
+     FROM tickets t JOIN ticket_pagos p ON p.ticket_id=t.id
+     WHERE %CONDITION% AND t.estado='VENDIDO' AND t.cobrado
+     GROUP BY fecha,p.forma_pago,t.facturado ORDER BY fecha,p.forma_pago,t.facturado`;
+  const [result, fiscal, prior, byStore] = await Promise.all([pool.query(
+    accountSql.replace("%CONDITION%", condition.text),
+    condition.values,
+  ), pool.query(
+    `SELECT COALESCE(SUM(t.iva),0)::text iva
+     FROM tickets t WHERE ${condition.text}
+       AND t.estado='VENDIDO' AND t.cobrado`,
+    condition.values,
+  ), pool.query(accountSql.replace("%CONDITION%", priorCondition.text), priorCondition.values),
+  pool.query(
+    `SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",p.forma_pago "formaPago",
+       t.facturado,SUM(p.importe)::text importe
+     FROM tickets t JOIN ticket_pagos p ON p.ticket_id=t.id
+     JOIN ubicaciones u ON u.id=t.ubicacion_id
+     WHERE ${condition.text} AND t.estado='VENDIDO' AND t.cobrado
+     GROUP BY u.id,u.nombre,p.forma_pago,t.facturado ORDER BY u.nombre`,
+    condition.values,
+  )]);
+  const rows = result.rows.map((row) => ({
+    ...row,
+    cuentaDestino: accountDestination(row.formaPago, row.facturado),
+  }));
+  const priorTotals = new Map<AccountDestination, number>();
+  for (const row of prior.rows) {
+    const destination = accountDestination(row.formaPago, row.facturado);
+    priorTotals.set(destination, (priorTotals.get(destination) ?? 0) + Number(row.importe));
+  }
+  const summary = new Map<string, { cuentaDestino: string; formaPago: string; importe: number; operaciones: number }>([
+    ["Caja física", { cuentaDestino: "Caja física", formaPago: "EFECTIVO", importe: 0, operaciones: 0 }],
+    ["Cuenta fiscal", { cuentaDestino: "Cuenta fiscal", formaPago: "TRANSFERENCIA", importe: 0, operaciones: 0 }],
+    ["Cuenta no fiscal", { cuentaDestino: "Cuenta no fiscal", formaPago: "TRANSFERENCIA", importe: 0, operaciones: 0 }],
+    ["Cuentas por cobrar", { cuentaDestino: "Cuentas por cobrar", formaPago: "CREDITO", importe: 0, operaciones: 0 }],
+  ]);
+  for (const row of rows) {
+    const current = summary.get(row.cuentaDestino) ?? {
+      cuentaDestino: row.cuentaDestino,
+      formaPago: row.formaPago,
+      importe: 0,
+      operaciones: 0,
+    };
+    current.importe += Number(row.importe);
+    current.operaciones += Number(row.operaciones);
+    summary.set(row.cuentaDestino, current);
+  }
+  const total = [...summary.values()].reduce((sum, row) => sum + row.importe, 0);
+  return {
+    resumen: [...summary.values()].map((row) => ({
+      ...row,
+      importe: decimal(row.importe),
+      importeAnterior: decimal(priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0),
+      variacionPorcentaje: decimal((priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0) === 0
+        ? (row.importe === 0 ? 0 : 100)
+        : ((row.importe - (priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0)) /
+          (priorTotals.get(row.cuentaDestino as AccountDestination) ?? 1)) * 100),
+      porcentaje: decimal(total === 0 ? 0 : (row.importe / total) * 100),
+    })),
+    tendencia: [...rows.reduce((map, row) => {
+      const key = `${row.fecha}|${row.cuentaDestino}`;
+      const current = map.get(key) ?? {
+        fecha: row.fecha,
+        cuentaDestino: row.cuentaDestino,
+        importe: 0,
+      };
+      current.importe += Number(row.importe);
+      map.set(key, current);
+      return map;
+    }, new Map<string, { fecha: string; cuentaDestino: string; importe: number }>()).values()]
+      .map((row) => ({ ...row, importe: decimal(row.importe) })),
+    ivaCobrado: decimal(fiscal.rows[0]!.iva),
+    totalCobrado: decimal(total),
+    porTienda: [...byStore.rows.reduce((map, row) => {
+      const item = map.get(Number(row.ubicacionId)) ?? {
+        ubicacionId: Number(row.ubicacionId), nombreUbicacion: String(row.nombreUbicacion),
+        cajaFisica: 0, cuentaFiscal: 0, cuentaNoFiscal: 0, cuentasPorCobrar: 0,
+      };
+      const key = accountDestination(row.formaPago, row.facturado);
+      if (key === "Caja física") item.cajaFisica += Number(row.importe);
+      else if (key === "Cuenta fiscal") item.cuentaFiscal += Number(row.importe);
+      else if (key === "Cuenta no fiscal") item.cuentaNoFiscal += Number(row.importe);
+      else item.cuentasPorCobrar += Number(row.importe);
+      map.set(item.ubicacionId, item); return map;
+    }, new Map<number, { ubicacionId: number; nombreUbicacion: string; cajaFisica: number; cuentaFiscal: number; cuentaNoFiscal: number; cuentasPorCobrar: number }>()).values()]
+      .map((row) => ({
+        ...row, cajaFisica: decimal(row.cajaFisica), cuentaFiscal: decimal(row.cuentaFiscal),
+        cuentaNoFiscal: decimal(row.cuentaNoFiscal), cuentasPorCobrar: decimal(row.cuentasPorCobrar),
+        total: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
+      })),
+    facturacion: {
+      facturadoTotal: decimal(rows.filter((r) => r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoTotal: decimal(rows.filter((r) => !r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
+      facturadoEfectivo: decimal(rows.filter((r) => r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
+      facturadoTransferencia: decimal(rows.filter((r) => r.facturado && r.formaPago === "TRANSFERENCIA").reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoEfectivo: decimal(rows.filter((r) => !r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoTransferencia: decimal(rows.filter((r) => !r.facturado && r.formaPago === "TRANSFERENCIA").reduce((s, r) => s + Number(r.importe), 0)),
+    },
+  };
+}
+
+export async function getDifferences(
+  filters: AnalyticsFilters,
+  options: { umbralCorte?: number; umbralTienda?: number; agrupacion?: "semana" | "mes" } = {},
+) {
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId ?? null,
+  ];
+  const result = await pool.query(
+    `WITH cuts AS (
+       SELECT s.id,s.usuario_id,s.ubicacion_id,usr.nombre cajero,u.nombre tienda,
+         (s.cerrada_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
+         s.efectivo_contado-s.fondo_inicial-COALESCE(SUM(p.importe)
+           FILTER (WHERE t.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) diferencia
+       FROM sesiones_caja s JOIN usuarios usr ON usr.id=s.usuario_id
+       JOIN ubicaciones u ON u.id=s.ubicacion_id
+       LEFT JOIN tickets t ON t.sesion_caja_id=s.id
+       LEFT JOIN ticket_pagos p ON p.ticket_id=t.id
+       WHERE s.estado='CERRADA' AND s.efectivo_contado IS NOT NULL
+         AND ($1::timestamptz IS NULL OR s.cerrada_at >= $1)
+         AND ($2::timestamptz IS NULL OR s.cerrada_at <= $2)
+         AND ($3::int IS NULL OR s.ubicacion_id=$3)
+       GROUP BY s.id,usr.nombre,u.nombre
+     ) SELECT * FROM cuts ORDER BY fecha,id`,
+    values,
+  );
+  const group = (key: "usuario_id" | "ubicacion_id", name: "cajero" | "tienda") => {
+    const map = new Map<number, { id: number; nombre: string; values: number[] }>();
+    for (const row of result.rows) {
+      const id = Number(row[key]);
+      const item = map.get(id) ?? {
+        id,
+        nombre: String(row[name]),
+        values: [] as number[],
+      };
+      item.values.push(Number(row.diferencia));
+      map.set(id, item);
+    }
+    return [...map.values()].map((item) => {
+      const total = item.values.reduce((sum, value) => sum + value, 0);
+      const shortages = item.values.filter((value) => value < 0).map(Math.abs);
+      const surpluses = item.values.filter((value) => value > 0);
+      const net = shortages.reduce((sum, value) => sum + value, 0) -
+        surpluses.reduce((sum, value) => sum + value, 0);
+      return {
+        id: item.id,
+        nombre: item.nombre,
+        cortes: item.values.length,
+        exactos: item.values.filter((value) => value === 0).length,
+        faltantes: shortages.length,
+        sobrantes: surpluses.length,
+        importeFaltantes: decimal(shortages.reduce((sum, value) => sum + value, 0)),
+        importeSobrantes: decimal(surpluses.reduce((sum, value) => sum + value, 0)),
+        diferencia: decimal(net),
+        diferenciaNeta: decimal(net),
+        diferenciaAbsoluta: decimal(item.values.reduce((sum, value) => sum + Math.abs(value), 0)),
+        promedio: decimal(total / item.values.length),
+        porcentajeExactos: decimal(
+          (item.values.filter((value) => value === 0).length / item.values.length) * 100,
+        ),
+      };
+    });
+  };
+  const trends = new Map<string, number[]>();
+  for (const row of result.rows) {
+    const local = new Date(`${row.fecha}T12:00:00Z`);
+    const date = options.agrupacion === "mes"
+      ? row.fecha.slice(0, 7) + "-01"
+      : new Date(local.getTime() - ((local.getUTCDay() + 6) % 7) * 86400000).toISOString().slice(0, 10);
+    const valuesForPeriod = trends.get(date) ?? [];
+    valuesForPeriod.push(Number(row.diferencia));
+    trends.set(date, valuesForPeriod);
+  }
+  const differences = result.rows.map((row) => Number(row.diferencia));
+  const exactos = differences.filter((value) => value === 0).length;
+  const faltantes = differences.filter((value) => value < 0).map(Math.abs);
+  const sobrantes = differences.filter((value) => value > 0);
+  const groupedCashiers = group("usuario_id", "cajero");
+  const thresholdAlerts = result.rows.filter((row) => Math.abs(Number(row.diferencia)) >= (options.umbralCorte ?? 500)).map((row) => {
+    const amount = Number(row.diferencia);
+    return {
+      sesionId: Number(row.id),
+      tipo: amount < 0 ? "FALTANTE" as const : "SOBRANTE" as const,
+      mensaje: `${amount < 0 ? "Faltante" : "Sobrante"} en ${row.tienda} por ${row.cajero}`,
+      importe: decimal(amount),
+    };
+  });
+  const monthRows = await pool.query(
+    `SELECT s.usuario_id,COUNT(*) FILTER (WHERE s.efectivo_contado-s.fondo_inicial-COALESCE(x.efectivo,0)<0)::int faltantes
+     FROM sesiones_caja s LEFT JOIN LATERAL (
+       SELECT COALESCE(SUM(p.importe) FILTER (WHERE t.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) efectivo
+       FROM tickets t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id WHERE t.sesion_caja_id=s.id
+     ) x ON true WHERE s.estado='CERRADA' AND s.efectivo_contado IS NOT NULL
+       AND s.cerrada_at >= date_trunc('month', now() AT TIME ZONE '${ANALYTICS_TIME_ZONE}') AT TIME ZONE '${ANALYTICS_TIME_ZONE}'
+     GROUP BY s.usuario_id`,
+  );
+  const monthlyShortages = new Map(monthRows.rows.map((row) => [Number(row.usuario_id), Number(row.faltantes)]));
+  const repeatedAlerts = groupedCashiers
+    .filter((cashier) => (monthlyShortages.get(cashier.id) ?? 0) > 3)
+    .map((cashier) => ({
+      sesionId: 0,
+      tipo: "FALTANTE" as const,
+      mensaje: `${cashier.nombre} acumula más de tres cortes con faltante`,
+      importe: cashier.diferencia,
+    }));
+  return {
+    resumen: {
+      cortes: differences.length,
+      exactos,
+      faltantes: faltantes.length,
+      sobrantes: sobrantes.length,
+      importeFaltantes: decimal(faltantes.reduce((sum, value) => sum + value, 0)),
+      importeSobrantes: decimal(sobrantes.reduce((sum, value) => sum + value, 0)),
+      diferenciaNeta: decimal(faltantes.reduce((sum, value) => sum + value, 0) - sobrantes.reduce((sum, value) => sum + value, 0)),
+      diferenciaAbsoluta: decimal(differences.reduce((sum, value) => sum + Math.abs(value), 0)),
+      porcentajeExactos: decimal(differences.length === 0 ? 0 : (exactos / differences.length) * 100),
+    },
+    porCajero: groupedCashiers,
+    porTienda: group("ubicacion_id", "tienda"),
+    tendencia: [...trends].map(([fecha, valuesForPeriod]) => ({
+      fecha,
+      importe: decimal(valuesForPeriod.filter((v) => v < 0).reduce((s, v) => s + Math.abs(v), 0) -
+        valuesForPeriod.filter((v) => v > 0).reduce((s, v) => s + v, 0)),
+      diferenciaAbsoluta: decimal(valuesForPeriod.reduce((s, v) => s + Math.abs(v), 0)),
+      porcentajeExactos: decimal(valuesForPeriod.length === 0 ? 0 :
+        (valuesForPeriod.filter((v) => v === 0).length / valuesForPeriod.length) * 100),
+    })),
+    alertas: [...thresholdAlerts, ...repeatedAlerts,
+      ...group("ubicacion_id", "tienda").filter((store) =>
+        store.diferenciaAbsoluta && Number(store.diferenciaAbsoluta) >= (options.umbralTienda ?? 500),
+      ).map((store) => ({ sesionId: 0, tipo: "FALTANTE" as const, mensaje: `${store.nombre} supera umbral acumulado`, importe: store.diferenciaAbsoluta }))],
+  };
+}
+
+function localParts(date: Date) {
+  const [year, month, day] = dateMexico(date).split("-").map(Number);
+  return { year: year!, month: month!, day: day! };
+}
+
+function calendarDate(year: number, month: number, day: number): string {
+  return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+export function comparisonRange(
+  periodo: string,
+  desde?: string | Date,
+  hasta?: string | Date,
+) {
+  if (periodo === "personalizado") {
+    if (!desde || !hasta) throw new AnalyticsInputError("El periodo personalizado requiere desde y hasta.");
+    parseAnalyticsFilters({ desde, hasta });
+    return {
+      desde: desde instanceof Date ? desde.toISOString().slice(0, 10) : desde,
+      hasta: hasta instanceof Date ? hasta.toISOString().slice(0, 10) : hasta,
+    };
+  }
+  if (desde != null || hasta != null) {
+    throw new AnalyticsInputError("desde y hasta solo se aceptan para periodo personalizado.");
+  }
+  const now = new Date();
+  const p = localParts(now);
+  let month = p.month;
+  let day = p.day;
+  if (periodo === "semanal") {
+    const weekday = Number(new Intl.DateTimeFormat("en-US", { timeZone: ANALYTICS_TIME_ZONE, weekday: "short" })
+      .format(now) === "Sun" ? 7 : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(
+        new Intl.DateTimeFormat("en-US", { timeZone: ANALYTICS_TIME_ZONE, weekday: "short" }).format(now),
+      ) + 1);
+    const start = new Date(Date.UTC(p.year, p.month - 1, p.day - weekday + 1));
+    return { desde: start.toISOString().slice(0, 10), hasta: dateMexico(now) };
+  }
+  if (periodo === "mensual") day = 1;
+  else if (periodo === "trimestral") { month = Math.floor((month - 1) / 3) * 3 + 1; day = 1; }
+  else if (periodo === "semestral") { month = month <= 6 ? 1 : 7; day = 1; }
+  else if (periodo === "anual") { month = 1; day = 1; }
+  else if (periodo !== "diario") throw new AnalyticsInputError("Periodo inválido.");
+  return { desde: calendarDate(p.year, month, day), hasta: dateMexico(now) };
+}
+
+export async function compareStores(filters: AnalyticsFilters) {
+  const condition = where(filters);
+  const result = await pool.query(
+    `WITH ticket_data AS (
+       SELECT t.id,t.ubicacion_id,t.estado,t.facturado,t.total,t.subtotal
+       FROM tickets t WHERE ${condition.text}
+     ), line_data AS (
+       SELECT l.ticket_id,
+         COALESCE(SUM(l.costo_total_congelado) FILTER
+           (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0) costo,
+         COALESCE(SUM(l.importe) FILTER
+           (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0) margen_base,
+         COUNT(*) FILTER (WHERE l.rollo_id IS NULL OR l.costo_unitario_congelado<=0)::int excluidas,
+         COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'),0) metros,
+         COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'),0) kilos
+       FROM ticket_lineas l JOIN ticket_data t ON t.id=l.ticket_id
+       JOIN productos p ON p.id=l.producto_id WHERE t.estado='VENDIDO' GROUP BY l.ticket_id
+     )
+     SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
+       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0)::text ventas,
+       COALESCE(SUM(t.subtotal) FILTER (WHERE t.estado='VENDIDO'),0)::text subtotal,
+       COALESCE(SUM(l.costo),0)::text costo,
+       COALESCE(SUM(l.margen_base-l.costo),0)::text margen,
+       COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
+       COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones,
+       COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen",
+       COALESCE(SUM(l.metros),0)::text metros,COALESCE(SUM(l.kilos),0)::text kilos,
+       COALESCE(pay.efectivo,0)::text efectivo,
+       COALESCE(pay.transferencia,0)::text transferencia,
+       COALESCE(pay.credito,0)::text credito,
+       COALESCE(pay.facturado,0)::text facturado,
+       COALESCE(cash.diferencia,0)::text "diferenciaCaja"
+     FROM ubicaciones u LEFT JOIN ticket_data t ON t.ubicacion_id=u.id
+     LEFT JOIN line_data l ON l.ticket_id=t.id
+     LEFT JOIN LATERAL (
+       SELECT
+         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='EFECTIVO'),0) efectivo,
+         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia,
+         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='CREDITO'),0) credito,
+         COALESCE(SUM(p.importe) FILTER (WHERE ft.facturado),0) facturado
+       FROM ticket_data ft JOIN ticket_pagos p ON p.ticket_id=ft.id
+       WHERE ft.ubicacion_id=u.id AND ft.estado='VENDIDO'
+     ) pay ON true
+     LEFT JOIN LATERAL (
+       SELECT COALESCE(SUM(s.efectivo_contado-s.fondo_inicial-x.efectivo),0) diferencia
+       FROM sesiones_caja s LEFT JOIN LATERAL (
+         SELECT COALESCE(SUM(p.importe) FILTER
+           (WHERE ct.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) efectivo
+         FROM tickets ct LEFT JOIN ticket_pagos p ON p.ticket_id=ct.id
+         WHERE ct.sesion_caja_id=s.id
+       ) x ON true
+       WHERE s.ubicacion_id=u.id AND s.estado='CERRADA' AND s.efectivo_contado IS NOT NULL
+         AND ($1::timestamptz IS NULL OR s.cerrada_at >= $1)
+         AND ($2::timestamptz IS NULL OR s.cerrada_at <= $2)
+     ) cash ON true WHERE u.tipo='TIENDA'
+     GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,pay.credito,pay.facturado,cash.diferencia
+     ORDER BY ventas DESC,u.nombre`,
+    condition.values,
+  );
+  const previous = previousEqualPeriod(filters);
+  const priorWhere = where(previous);
+  const [priorRows, dailyRows] = await Promise.all([
+    pool.query(
+      `SELECT t.ubicacion_id "ubicacionId",COALESCE(SUM(t.total),0)::text ventas
+       FROM tickets t WHERE ${priorWhere.text} AND t.estado='VENDIDO'
+       GROUP BY t.ubicacion_id`,
+      priorWhere.values,
+    ),
+    pool.query(
+      `SELECT (t.created_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
+        t.ubicacion_id "ubicacionId",u.nombre "nombreUbicacion",SUM(t.total)::text ventas
+       FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
+       WHERE ${condition.text} AND t.estado='VENDIDO'
+       GROUP BY fecha,t.ubicacion_id,u.nombre ORDER BY fecha,u.nombre`,
+      condition.values,
+    ),
+  ]);
+  const totalSales = result.rows.reduce((sum, row) => sum + Number(row.ventas), 0);
+  const totalTickets = result.rows.reduce((sum, row) => sum + Number(row.tickets), 0);
+  const globalAverage = totalTickets === 0 ? 0 : totalSales / totalTickets;
+  const priorMap = new Map(priorRows.rows.map((row) => [Number(row.ubicacionId), Number(row.ventas)]));
+  const dailyMap = new Map<number, Array<{ fecha: string; ventas: number }>>();
+  for (const row of dailyRows.rows) {
+    const items = dailyMap.get(Number(row.ubicacionId)) ?? [];
+    items.push({ fecha: row.fecha, ventas: Number(row.ventas) });
+    dailyMap.set(Number(row.ubicacionId), items);
+  }
+  const tiendas = result.rows.map((row) => {
+    const sales = Number(row.ventas);
+    const tickets = Number(row.tickets);
+    const average = tickets === 0 ? 0 : sales / tickets;
+    const priorSales = priorMap.get(Number(row.ubicacionId)) ?? 0;
+    const days = dailyMap.get(Number(row.ubicacionId)) ?? [];
+    const sorted = [...days].sort((a, b) => a.ventas - b.ventas);
+    return {
+      ...row,
+      ventas: decimal(sales), subtotal: decimal(row.subtotal),
+      costo: decimal(row.costo), margen: decimal(row.margen),
+      metros: decimal(row.metros, 3), kilos: decimal(row.kilos, 3),
+      ticketPromedio: decimal(average),
+      diferenciaTicketPromedio: decimal(average - globalAverage),
+      tendenciaPorcentaje: decimal(priorSales === 0 ? (sales === 0 ? 0 : 100) : ((sales - priorSales) / priorSales) * 100),
+      mejorDia: sorted.length === 0 ? { fecha: null, ventas: "0.00" } :
+        { fecha: sorted[sorted.length - 1]!.fecha, ventas: decimal(sorted[sorted.length - 1]!.ventas) },
+      peorDia: sorted.length === 0 ? { fecha: null, ventas: "0.00" } :
+        { fecha: sorted[0]!.fecha, ventas: decimal(sorted[0]!.ventas) },
+      efectivo: decimal(row.efectivo), transferencia: decimal(row.transferencia),
+      credito: decimal(row.credito),
+      porcentajeFacturado: decimal(sales === 0 ? 0 : (Number(row.facturado) / sales) * 100),
+      diferenciaCaja: decimal(row.diferenciaCaja),
+      participacion: decimal(totalSales === 0 ? 0 : (sales / totalSales) * 100),
+    };
+  });
+  const sum = (key: string) => result.rows.reduce((total, row) => total + Number(row[key] ?? 0), 0);
+  const facturado = sum("facturado");
+  return {
+    tiendas,
+    promedioGeneralTicket: decimal(globalAverage),
+    ventasPorFecha: dailyRows.rows.map((row) => ({
+      fecha: row.fecha, ubicacionId: Number(row.ubicacionId),
+      nombreUbicacion: row.nombreUbicacion, ventas: decimal(row.ventas),
+    })),
+    totales: {
+      ventas: decimal(totalSales), subtotal: decimal(sum("subtotal")), costo: decimal(sum("costo")),
+      margen: decimal(sum("margen")), tickets: totalTickets, ticketPromedio: decimal(globalAverage),
+      cancelaciones: sum("cancelaciones"), lineasExcluidasMargen: sum("lineasExcluidasMargen"),
+      metros: decimal(sum("metros"), 3), kilos: decimal(sum("kilos"), 3),
+      efectivo: decimal(sum("efectivo")), transferencia: decimal(sum("transferencia")),
+      credito: decimal(sum("credito")),
+      porcentajeFacturado: decimal(totalSales === 0 ? 0 : (facturado / totalSales) * 100),
+      diferenciaCaja: decimal(sum("diferenciaCaja")), participacion: decimal(totalSales === 0 ? 0 : 100),
+    },
+  };
+}

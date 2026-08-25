@@ -40,6 +40,11 @@ import TicketDetail from '@/pages/ticket-detail';
 import Ajustes from '@/pages/ajustes';
 import Conciliacion from '@/pages/conciliacion';
 import Permisos from '@/pages/permisos';
+import CajaTiempoReal from '@/pages/caja/tiempo-real';
+import CajaCortes from '@/pages/caja/cortes';
+import CajaDiferencias from '@/pages/caja/diferencias';
+import CajaCuentasDestino from '@/pages/caja/cuentas-destino';
+import CajaComparativo from '@/pages/caja/comparativo';
 import { LocationScopeProvider } from '@/lib/location-scope';
 import { Modules, hasPermission } from '@/lib/permisos';
 
@@ -70,7 +75,7 @@ function NotFound() {
   );
 }
 
-function ProtectedRoute({ component: Component, allowedModule }: { component: React.ComponentType, allowedModule?: string }) {
+function ProtectedRoute({ component: Component, allowedModule, adminOnly }: { component: React.ComponentType, allowedModule?: string, adminOnly?: boolean }) {
   const [location, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
@@ -116,6 +121,23 @@ function ProtectedRoute({ component: Component, allowedModule }: { component: Re
     );
   }
 
+  if (adminOnly && user.rol !== "ADMIN") {
+    return (
+      <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold text-destructive">Sin acceso</h1>
+          <p className="text-muted-foreground">Esta sección es exclusiva para administradores.</p>
+          <button
+            onClick={() => setLocation('/')}
+            className="text-primary hover:underline font-medium"
+          >
+            Volver al inicio
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (allowedModule && !hasPermission(user, allowedModule, 'ver')) {
     return (
       <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
@@ -150,14 +172,14 @@ function Router() {
         <Route path="/entradas/pendientes-costo" component={() => <ProtectedRoute component={EntradasPendientesCosto} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
-        
+
         <Route path="/salidas" component={() => <ProtectedRoute component={Salidas} allowedModule={Modules.SALIDAS} />} />
         <Route path="/salidas/nueva" component={() => <ProtectedRoute component={SalidaNueva} allowedModule={Modules.SALIDAS} />} />
         <Route path="/salidas/:id/documento/salida" component={() => <ProtectedRoute component={SalidaDocumento} allowedModule={Modules.SALIDAS} />} />
         <Route path="/salidas/:id" component={() => <ProtectedRoute component={SalidaDetail} allowedModule={Modules.SALIDAS} />} />
 
         <Route path="/movimientos" component={() => <ProtectedRoute component={Movimientos} allowedModule={Modules.MOVIMIENTOS} />} />
-        
+
         <Route path="/inventario" component={() => <ProtectedRoute component={Inventario} allowedModule={Modules.INVENTARIO} />} />
         <Route path="/inventario/rollos/:id" component={() => <ProtectedRoute component={RolloDetail} allowedModule={Modules.INVENTARIO} />} />
         <Route path="/inventario/rollos/:id/etiqueta" component={() => <ProtectedRoute component={RolloEtiqueta} allowedModule={Modules.INVENTARIO} />} />
@@ -168,6 +190,13 @@ function Router() {
         
         <Route path="/pos" component={() => <ProtectedRoute component={Pos} allowedModule={Modules.POS} />} />
         <Route path="/cobros" component={() => <ProtectedRoute component={Cobros} allowedModule={Modules.COBROS_PAGOS} />} />
+
+        <Route path="/caja/tiempo-real" component={() => <ProtectedRoute component={CajaTiempoReal} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/caja/cortes" component={() => <ProtectedRoute component={CajaCortes} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/caja/diferencias" component={() => <ProtectedRoute component={CajaDiferencias} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/caja/cuentas-destino" component={() => <ProtectedRoute component={CajaCuentasDestino} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+        <Route path="/caja/comparativo" component={() => <ProtectedRoute component={CajaComparativo} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
+
         <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} />} />
         
         <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedModule={Modules.PROVEEDORES} />} />

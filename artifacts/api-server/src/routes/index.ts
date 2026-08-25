@@ -11,6 +11,7 @@ import permisosRouter from "./permisos";
 import { inventarioRouter } from "./inventario";
 import posRouter from "./pos";
 import salidasRouter from "./salidas";
+import adminAnalyticsRouter from "./admin-analytics";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(permisosRouter);
 router.use("/inventario", inventarioRouter);
 router.use(posRouter);
 router.use(salidasRouter);
+router.use(adminAnalyticsRouter);
 
 export default router;

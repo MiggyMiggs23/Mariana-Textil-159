@@ -5,6 +5,345 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface AnalyticsMoneyTotals {
+  ventas: string;
+  cobrado: string;
+  pendiente: string;
+  subtotal: string;
+  iva: string;
+  costo: string;
+  margen: string;
+  margenPorcentaje: string;
+  tickets: number;
+  ticketsCobrados: number;
+  ticketsPendientes: number;
+  cancelaciones: number;
+  lineasExcluidasMargen: number;
+}
+
+export type AnalyticsQuantityUnidad = typeof AnalyticsQuantityUnidad[keyof typeof AnalyticsQuantityUnidad];
+
+
+export const AnalyticsQuantityUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface AnalyticsQuantity {
+  unidad: AnalyticsQuantityUnidad;
+  cantidad: string;
+}
+
+export type AdminRealtimeDashboardFullRefreshSeconds = typeof AdminRealtimeDashboardFullRefreshSeconds[keyof typeof AdminRealtimeDashboardFullRefreshSeconds];
+
+
+export const AdminRealtimeDashboardFullRefreshSeconds = {
+  NUMBER_300: 300,
+} as const;
+
+export type AdminRealtimeDashboardPendingRefreshSeconds = typeof AdminRealtimeDashboardPendingRefreshSeconds[keyof typeof AdminRealtimeDashboardPendingRefreshSeconds];
+
+
+export const AdminRealtimeDashboardPendingRefreshSeconds = {
+  NUMBER_30: 30,
+} as const;
+
+export type AdminPendingSummaryTiendasItem = {
+  ubicacionId: number;
+  pendiente: string;
+  pendientes30Min: number;
+  alertas: string[];
+};
+
+export interface AdminPendingSummary {
+  tickets: number;
+  importe: string;
+  tiendas: AdminPendingSummaryTiendasItem[];
+}
+
+/**
+ * Incluye toda tienda activa; sesionCajaId nulo distingue explícitamente una tienda sin caja abierta.
+ */
+export interface AdminRealtimeStore {
+  ubicacionId: number;
+  nombreUbicacion: string;
+  /** @nullable */
+  sesionCajaId: number | null;
+  /** @nullable */
+  abiertaAt: string | null;
+  /** @nullable */
+  cajero: string | null;
+  /** @nullable */
+  usuarioTerminal: string | null;
+  vendido: string;
+  cobrado: string;
+  pendiente: string;
+  tickets: number;
+  ticketPromedio: string;
+  margen: string;
+  /** Porcentaje en unidades; 15.00 significa 15% */
+  margenPorcentaje: string;
+  efectivo: string;
+  transferencia: string;
+  credito: string;
+  pendientes30Min: number;
+  cancelaciones: number;
+  /** Porcentaje en unidades; 10.00 significa 10% */
+  tasaCancelacion: string;
+  alertas: string[];
+}
+
+export interface AdminRealtimeTicket {
+  id: number;
+  folio: number;
+  createdAt: string;
+  nombreUbicacion: string;
+  /** @nullable */
+  nombreCliente: string | null;
+  importe: string;
+  margen: string;
+  cobrado: boolean;
+}
+
+export interface AdminRealtimeDashboard {
+  generatedAt: string;
+  fullRefreshSeconds: AdminRealtimeDashboardFullRefreshSeconds;
+  pendingRefreshSeconds: AdminRealtimeDashboardPendingRefreshSeconds;
+  totales: AnalyticsMoneyTotals;
+  cantidades: AnalyticsQuantity[];
+  pendientes: AdminPendingSummary;
+  tiendas: AdminRealtimeStore[];
+  comparativo: AdminRealtimeStore[];
+  /** @maxItems 20 */
+  ultimosTickets: AdminRealtimeTicket[];
+}
+
+export type AdminCorteRowEstado = typeof AdminCorteRowEstado[keyof typeof AdminCorteRowEstado];
+
+
+export const AdminCorteRowEstado = {
+  ABIERTA: 'ABIERTA',
+  CERRADA: 'CERRADA',
+} as const;
+
+export interface AdminCorteRow {
+  id: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  usuarioId: number;
+  nombreUsuario: string;
+  abiertaAt: string;
+  /** @nullable */
+  cerradaAt: string | null;
+  estado: AdminCorteRowEstado;
+  fondoInicial: string;
+  vendido: string;
+  totalCobrado: string;
+  efectivoEsperado: string;
+  /** @nullable */
+  efectivoContado: string | null;
+  /** @nullable */
+  diferencia: string | null;
+  ticketsCobrados: number;
+  ticketsCancelados: number;
+}
+
+export type AdminCortesResultTotales = {
+  vendido: string;
+  cobrado: string;
+  efectivoEsperado: string;
+  efectivoContado: string;
+  diferencia: string;
+  tickets: number;
+};
+
+export interface AdminCortesResult {
+  items: AdminCorteRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totales: AdminCortesResultTotales;
+}
+
+export interface AdminDiferenciaGroup {
+  id: number;
+  nombre: string;
+  cortes: number;
+  exactos: number;
+  faltantes: number;
+  sobrantes: number;
+  importeFaltantes: string;
+  importeSobrantes: string;
+  diferencia: string;
+  diferenciaNeta: string;
+  diferenciaAbsoluta: string;
+  promedio: string;
+  porcentajeExactos: string;
+}
+
+export interface AdminTrendPoint {
+  fecha: string;
+  importe: string;
+  diferenciaAbsoluta: string;
+  porcentajeExactos: string;
+}
+
+export type AdminAlertTipo = typeof AdminAlertTipo[keyof typeof AdminAlertTipo];
+
+
+export const AdminAlertTipo = {
+  FALTANTE: 'FALTANTE',
+  SOBRANTE: 'SOBRANTE',
+} as const;
+
+export interface AdminAlert {
+  sesionId: number;
+  tipo: AdminAlertTipo;
+  mensaje: string;
+  importe: string;
+}
+
+export type AdminDiferenciasResumen = {
+  cortes: number;
+  exactos: number;
+  faltantes: number;
+  sobrantes: number;
+  importeFaltantes: string;
+  importeSobrantes: string;
+  diferenciaNeta: string;
+  diferenciaAbsoluta: string;
+  porcentajeExactos: string;
+};
+
+export interface AdminDiferencias {
+  resumen: AdminDiferenciasResumen;
+  porCajero: AdminDiferenciaGroup[];
+  porTienda: AdminDiferenciaGroup[];
+  tendencia: AdminTrendPoint[];
+  alertas: AdminAlert[];
+}
+
+export type AdminCuentaDestinoRowFormaPago = typeof AdminCuentaDestinoRowFormaPago[keyof typeof AdminCuentaDestinoRowFormaPago];
+
+
+export const AdminCuentaDestinoRowFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CREDITO: 'CREDITO',
+} as const;
+
+export interface AdminCuentaDestinoRow {
+  cuentaDestino: string;
+  formaPago: AdminCuentaDestinoRowFormaPago;
+  importe: string;
+  importeAnterior: string;
+  /** Porcentaje en unidades; 12.50 significa 12.5% */
+  variacionPorcentaje: string;
+  porcentaje: string;
+  operaciones: number;
+}
+
+export interface AdminCuentaTrend {
+  fecha: string;
+  cuentaDestino: string;
+  importe: string;
+}
+
+export type AdminCuentasDestinoPorTiendaItem = {
+  ubicacionId: number;
+  nombreUbicacion: string;
+  cajaFisica: string;
+  cuentaFiscal: string;
+  cuentaNoFiscal: string;
+  cuentasPorCobrar: string;
+  total: string;
+};
+
+export type AdminCuentasDestinoFacturacion = {
+  facturadoTotal: string;
+  noFacturadoTotal: string;
+  facturadoEfectivo: string;
+  facturadoTransferencia: string;
+  noFacturadoEfectivo: string;
+  noFacturadoTransferencia: string;
+};
+
+export interface AdminCuentasDestino {
+  resumen: AdminCuentaDestinoRow[];
+  tendencia: AdminCuentaTrend[];
+  porTienda: AdminCuentasDestinoPorTiendaItem[];
+  facturacion: AdminCuentasDestinoFacturacion;
+  ivaCobrado: string;
+  totalCobrado: string;
+}
+
+export interface AdminStoreDay {
+  /** @nullable */
+  fecha: string | null;
+  ventas: string;
+}
+
+export interface AdminStoreComparison {
+  ubicacionId: number;
+  nombreUbicacion: string;
+  ventas: string;
+  subtotal: string;
+  costo: string;
+  margen: string;
+  tickets: number;
+  ticketPromedio: string;
+  diferenciaTicketPromedio: string;
+  tendenciaPorcentaje: string;
+  mejorDia: AdminStoreDay;
+  peorDia: AdminStoreDay;
+  cancelaciones: number;
+  lineasExcluidasMargen: number;
+  metros: string;
+  kilos: string;
+  efectivo: string;
+  transferencia: string;
+  credito: string;
+  porcentajeFacturado: string;
+  diferenciaCaja: string;
+  participacion: string;
+}
+
+export interface AdminStoreComparisonTotals {
+  ventas: string;
+  subtotal: string;
+  costo: string;
+  margen: string;
+  tickets: number;
+  ticketPromedio: string;
+  cancelaciones: number;
+  lineasExcluidasMargen: number;
+  metros: string;
+  kilos: string;
+  efectivo: string;
+  transferencia: string;
+  credito: string;
+  porcentajeFacturado: string;
+  diferenciaCaja: string;
+  participacion: string;
+}
+
+export interface AdminStoreSalesPoint {
+  fecha: string;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  ventas: string;
+}
+
+export interface AdminComparacionTiendas {
+  periodo: string;
+  desde: string;
+  hasta: string;
+  tiendas: AdminStoreComparison[];
+  totales: AdminStoreComparisonTotals;
+  promedioGeneralTicket: string;
+  ventasPorFecha: AdminStoreSalesPoint[];
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -2200,6 +2539,9 @@ export interface CorteFacturacion {
   subtotal: string;
   iva: string;
   importe: string;
+  efectivo: string;
+  transferencia: string;
+  credito: string;
 }
 
 export interface CorteMetreado {
@@ -2228,6 +2570,22 @@ export interface CortePendiente {
   createdAt: string;
 }
 
+export interface CorteTicketCobrado {
+  ticketId: number;
+  folio: number;
+  importe: string;
+  cobradoAt: string;
+}
+
+export interface CorteCancelacion {
+  ticketId: number;
+  folio: number;
+  importe: string;
+  motivo: string;
+  canceladoAt: string;
+  autor: string;
+}
+
 export interface CorteCaja {
   sesion: SesionCaja;
   formasPago: CorteFormaPago[];
@@ -2238,6 +2596,10 @@ export interface CorteCaja {
   metreado: CorteMetreado[];
   productos: CorteProducto[];
   pendientes: CortePendiente[];
+  ticketsCobradosDetalle: CorteTicketCobrado[];
+  /** Conteo de tickets cobrados en la sesión. */
+  ticketsCobrados: number;
+  cancelaciones: CorteCancelacion[];
   fondoInicial: string;
   totalCobrado: string;
   /** IVA incluido en los tickets cobrados de la sesión */
@@ -2247,6 +2609,14 @@ export interface CorteCaja {
   efectivoContado: string | null;
   /** @nullable */
   diferencia: string | null;
+  /** Solo presente en respuestas exclusivas para ADMIN */
+  costo?: string;
+  /** Margen sobre subtotal; solo presente para ADMIN */
+  margen?: string;
+  /** Solo presente para ADMIN */
+  margenPorcentaje?: string;
+  /** Líneas metreadas sin rollo o sin costo, solo para ADMIN */
+  lineasExcluidasMargen?: number;
 }
 
 /**
@@ -2283,6 +2653,18 @@ export type ConflictResponse = Error;
  * Demasiados intentos
  */
 export type RateLimitedResponse = Error;
+
+/**
+ * Día inicial en America/Mexico_City
+ */
+export type AnalyticsDesdeParameter = string;
+
+/**
+ * Día final en America/Mexico_City
+ */
+export type AnalyticsHastaParameter = string;
+
+export type AnalyticsUbicacionIdParameter = number;
 
 export type GetDashboardParams = {
 /**
@@ -2559,5 +2941,193 @@ search?: string;
 
 export type EscanearRolloSalidaParams = {
 origenId: number;
+};
+
+export type GetAdminRealtimeDashboardParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+};
+
+export type GetAdminRealtimePendingParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+};
+
+export type ListAdminCortesParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+cajeroId?: number;
+numeroCorte?: number;
+soloConDiferencia?: boolean;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 200
+ */
+pageSize?: number;
+};
+
+export type GetAdminDiferenciasParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+/**
+ * @minimum 0
+ */
+umbralCorte?: number;
+/**
+ * @minimum 0
+ */
+umbralTienda?: number;
+agrupacion?: GetAdminDiferenciasAgrupacion;
+};
+
+export type GetAdminDiferenciasAgrupacion = typeof GetAdminDiferenciasAgrupacion[keyof typeof GetAdminDiferenciasAgrupacion];
+
+
+export const GetAdminDiferenciasAgrupacion = {
+  semana: 'semana',
+  mes: 'mes',
+} as const;
+
+export type GetAdminCuentasDestinoParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+};
+
+export type GetAdminComparacionTiendasParams = {
+periodo: GetAdminComparacionTiendasPeriodo;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+};
+
+export type GetAdminComparacionTiendasPeriodo = typeof GetAdminComparacionTiendasPeriodo[keyof typeof GetAdminComparacionTiendasPeriodo];
+
+
+export const GetAdminComparacionTiendasPeriodo = {
+  diario: 'diario',
+  semanal: 'semanal',
+  mensual: 'mensual',
+  trimestral: 'trimestral',
+  semestral: 'semestral',
+  anual: 'anual',
+  personalizado: 'personalizado',
+} as const;
+
+export type ExportAdminCortesXlsxParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+cajeroId?: number;
+numeroCorte?: number;
+soloConDiferencia?: boolean;
+};
+
+export type ExportAdminCortesPdfParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+cajeroId?: number;
+numeroCorte?: number;
+soloConDiferencia?: boolean;
+};
+
+export type ExportAdminCuentasDestinoXlsxParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+};
+
+export type ExportAdminCuentasDestinoPdfParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
 };
 

@@ -5,12 +5,14 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CorteCancelacion } from './corteCancelacion';
 import type { CorteCuentaDestino } from './corteCuentaDestino';
 import type { CorteFacturacion } from './corteFacturacion';
 import type { CorteFormaPago } from './corteFormaPago';
 import type { CorteMetreado } from './corteMetreado';
 import type { CortePendiente } from './cortePendiente';
 import type { CorteProducto } from './corteProducto';
+import type { CorteTicketCobrado } from './corteTicketCobrado';
 import type { SesionCaja } from './sesionCaja';
 
 export interface CorteCaja {
@@ -23,6 +25,10 @@ export interface CorteCaja {
   metreado: CorteMetreado[];
   productos: CorteProducto[];
   pendientes: CortePendiente[];
+  ticketsCobradosDetalle: CorteTicketCobrado[];
+  /** Conteo de tickets cobrados en la sesión. */
+  ticketsCobrados: number;
+  cancelaciones: CorteCancelacion[];
   fondoInicial: string;
   totalCobrado: string;
   /** IVA incluido en los tickets cobrados de la sesión */
@@ -32,4 +38,12 @@ export interface CorteCaja {
   efectivoContado: string | null;
   /** @nullable */
   diferencia: string | null;
+  /** Solo presente en respuestas exclusivas para ADMIN */
+  costo?: string;
+  /** Margen sobre subtotal; solo presente para ADMIN */
+  margen?: string;
+  /** Solo presente para ADMIN */
+  margenPorcentaje?: string;
+  /** Líneas metreadas sin rollo o sin costo, solo para ADMIN */
+  lineasExcluidasMargen?: number;
 }
