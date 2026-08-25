@@ -1,0 +1,238 @@
+# MÓDULO NUEVO — Etiquetas
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# PARA QUÉ SIRVE
+
+Las etiquetas de los rollos se generan al registrar una entrada. Pero en la operación diaria una etiqueta se puede dañar, despegar, mojar o volverse ilegible. Sin ella, el rollo no se puede escanear y queda inutilizable para el POS y para las salidas.
+
+Este módulo permite **buscar cualquier rollo y reimprimir su etiqueta**.
+
+**Por qué requiere control:** reimprimir una etiqueta significa que existirán dos papeles con la misma serie. Si el original aparece después, hay riesgo de confusión o de que alguien intente usar el mismo rollo dos veces. Por eso toda reimpresión deja rastro y, para bodega, requiere autorización.
+
+---
+
+# PARTE 1 — Ubicación en el menú
+
+Nueva entrada **Etiquetas** en la sección **OPERACIÓN**, inmediatamente debajo de Movimientos:
+
+```
+OPERACIÓN
+  Ventas / POS
+  Entradas
+  Salidas
+  Movimientos
+  Etiquetas          ← nueva
+```
+
+Identificador del módulo de permisos: `etiquetas`.
+
+---
+
+# PARTE 2 — Pantalla de búsqueda
+
+## Buscador
+
+Campo de búsqueda prominente, siempre enfocado al entrar. Acepta:
+
+- **Escaneo del QR** del rollo, si la etiqueta todavía se lee parcialmente
+- **Número de serie** escrito a mano
+- **SKU** del producto, que devuelve todos sus rollos
+- **Tela o color**, que devuelve los rollos de esos productos
+
+## Resultados
+
+Tabla con:
+
+| Serie | Producto | Color | SKU | Cantidad | Unidad | Sitio | Estado | Entrada | Acción |
+
+- El **estado del rollo** con su color: DISPONIBLE, VENDIDO, ABIERTO, EN_TRANSITO, BAJA, PROGRAMADO
+- **Entrada** es el folio de la entrada donde se dio de alta, clicable para abrir el documento
+- La acción es el botón **"Reimprimir etiqueta"**
+
+## Filtros
+
+- Sitio
+- Estado del rollo
+- Producto
+- Rango de fechas de alta
+- Folio de entrada
+
+**Respeta el alcance por sitio:** un usuario con alcance PROPIA solo ve los rollos de su sitio. Filtra **en el servidor**.
+
+## Reimpresión múltiple
+
+Casillas de selección para reimprimir varias etiquetas en una hoja. Útil cuando se dañó un lote completo, por ejemplo por humedad en una estiba.
+
+El límite es de 50 etiquetas por operación. Si se necesitan más, se hace en varias tandas.
+
+---
+
+# PARTE 3 — Flujo de reimpresión según el rol
+
+## ADMIN
+
+Reimprime directamente. Se le pide **motivo obligatorio**, mínimo 10 caracteres, pero no requiere autorización de nadie.
+
+## BODEGA e INVENTARIOS
+
+Requieren **autorización de un ADMIN**:
+
+1. El usuario selecciona los rollos y presiona "Reimprimir etiqueta"
+2. Se abre un modal que pide:
+   - **Motivo obligatorio**, mínimo 10 caracteres, con opciones sugeridas: *Etiqueta dañada · Etiqueta despegada · Etiqueta ilegible · Etiqueta mojada · Otro*
+   - Si elige "Otro", el motivo escrito es obligatorio
+3. Debajo, campos de **usuario y contraseña de un ADMIN**
+4. El sistema valida las credenciales **en el servidor**. Si no corresponden a un usuario con rol ADMIN, rechaza con mensaje claro.
+5. Al autorizar, se genera la hoja de etiquetas y se registra la operación
+
+**El ADMIN debe estar físicamente presente** para escribir su contraseña. Es una autorización deliberada, no un permiso permanente.
+
+## Otros roles
+
+TERMINAL y CAJA **no tienen acceso** al módulo.
+
+---
+
+# PARTE 4 — Registro de reimpresiones
+
+Nueva tabla `reimpresiones_etiqueta`:
+
+- id (serial, PK)
+- rollo_id (int, FK)
+- usuario_id (int, FK) — quién la solicitó
+- autorizado_por (int, FK, nullable) — el ADMIN que autorizó; null si el propio ADMIN la hizo
+- motivo (text)
+- sitio_id (int, FK) — desde dónde se solicitó
+- created_at (timestamptz)
+- Índices en (rollo_id), (created_at), (usuario_id)
+
+**Nada se borra.** El registro es permanente.
+
+## Historial visible
+
+Pestaña **"Historial de reimpresiones"** dentro del módulo, visible para ADMIN:
+
+| Fecha y hora | Serie | Producto | Sitio | Solicitó | Autorizó | Motivo |
+
+- Filtros por fechas, sitio, usuario y producto
+- Exportable a Excel
+
+## Contador en el rollo
+
+En el detalle del rollo, si tiene reimpresiones, se muestra: **"Etiqueta reimpresa 2 veces"** con la fecha de la última y un enlace al historial.
+
+## Alerta de reimpresiones repetidas
+
+Un rollo con **tres o más reimpresiones** se marca en la pantalla de búsqueda con un aviso visual.
+
+Motivo: tres etiquetas dañadas del mismo rollo puede ser un problema de manejo, de la impresora, o algo que amerita revisión.
+
+En el panel del ADMIN, alerta cuando algún rollo llega a ese umbral.
+
+---
+
+# PARTE 5 — La etiqueta reimpresa
+
+**El contenido es idéntico al original:** nombre completo del producto, SKU, número de serie, cantidad con su unidad, código QR que codifica `SKU-SERIE`, y logo de Mariana Textil.
+
+**La serie no cambia nunca.** Es el mismo rollo; una serie nueva rompería la trazabilidad.
+
+**Marca discreta de reimpresión:** en la esquina inferior, en letra pequeña, la leyenda **"REIMPRESA"** con la fecha. Sirve para distinguirla del original si ambas aparecen, sin estorbar la lectura de los datos importantes.
+
+Mismo formato de 100 × 60 mm y los mismos requisitos del QR: corrección de errores nivel M o superior, mínimo 25 × 25 mm, margen de 4 módulos, negro sobre blanco.
+
+---
+
+# PARTE 6 — Permisos
+
+Módulo `etiquetas`:
+
+| Rol | Ver | Crear (reimprimir) | Editar | Autorizar |
+|---|---|---|---|---|
+| ADMIN | acceso total por bypass | | | |
+| INVENTARIOS | sí | sí, con autorización | no | no |
+| BODEGA | sí | sí, con autorización | no | no |
+| TERMINAL | no | no | no | no |
+| CAJA | no | no | no | no |
+
+**Reglas:**
+- Buscar rollos requiere `etiquetas.puede_ver`
+- Reimprimir requiere `etiquetas.puede_crear` **más** la validación de credenciales de ADMIN si el rol no es ADMIN
+- El historial de reimpresiones requiere ser ADMIN
+- Todo se valida **en el servidor**
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No generes una serie nueva al reimprimir: es el mismo rollo
+- No permitas reimprimir sin motivo
+- No permitas que BODEGA o INVENTARIOS reimpriman sin credenciales de ADMIN validadas en el servidor
+- No des acceso al módulo a TERMINAL ni a CAJA
+- No borres registros de reimpresión
+- No permitas ver rollos de otros sitios a usuarios con alcance PROPIA
+- No cambies el contenido ni el formato de la etiqueta más allá de la marca de reimpresión
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Búsqueda:**
+1. Buscar por serie exacta devuelve el rollo
+2. Buscar por SKU devuelve todos los rollos de ese producto
+3. Buscar por tela o color devuelve los rollos correspondientes
+4. Escanear el QR de un rollo lo encuentra
+5. Un usuario con alcance PROPIA solo ve rollos de su sitio
+6. Llamar al endpoint con el id de otro sitio devuelve solo los suyos
+
+**Reimpresión como ADMIN:**
+7. ADMIN reimprime con motivo, sin necesitar autorización externa
+8. Sin motivo o con menos de 10 caracteres: **se rechaza**
+9. La etiqueta sale con la misma serie y la marca "REIMPRESA"
+
+**Reimpresión como BODEGA:**
+10. BODEGA selecciona un rollo y se le pide motivo y credenciales de ADMIN
+11. Con credenciales incorrectas: **se rechaza**
+12. Con credenciales de un usuario que no es ADMIN: **se rechaza**
+13. Con credenciales válidas de ADMIN: se genera la etiqueta y se registra quién autorizó
+14. La validación de credenciales ocurre en el servidor: llamar la API directamente sin ellas devuelve **403**
+
+**Registro:**
+15. Cada reimpresión queda registrada con rollo, usuario, autorizador, motivo, sitio y fecha
+16. El historial muestra todas las reimpresiones y es exportable
+17. El detalle del rollo muestra el contador de reimpresiones
+18. Un rollo con tres reimpresiones se marca con el aviso visual
+
+**Permisos:**
+19. TERMINAL llamando a cualquier endpoint del módulo: **403**
+20. CAJA llamando a cualquier endpoint del módulo: **403**
+21. BODEGA llamando al historial de reimpresiones: **403**
+
+**Reimpresión múltiple:**
+22. Seleccionar 5 rollos genera una hoja con las 5 etiquetas
+23. Cada una queda registrada por separado en el historial
+24. Intentar reimprimir más de 50 de una vez: **se rechaza** con mensaje claro
+
+**Regresión:**
+25. Las 12 pruebas del motor siguen pasando
+26. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos con su módulo y acción de permiso
+5. Confirmación de que la validación de credenciales de ADMIN ocurre en el servidor
+6. Salida completa de la corrida de pruebas
+7. Confirmación de que las pruebas corrieron en base aislada
+8. Cómo pruebo cada flujo: con qué usuarios y en qué orden

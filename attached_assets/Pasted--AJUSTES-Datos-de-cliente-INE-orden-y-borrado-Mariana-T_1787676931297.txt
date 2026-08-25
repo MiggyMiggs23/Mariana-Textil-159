@@ -1,0 +1,217 @@
+# AJUSTES — Datos de cliente, INE, orden y borrado
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# PARTE 1 — Direcciones separadas
+
+El cliente hoy tiene un solo campo `direccion`. Se separa en dos:
+
+- **Dirección particular** — el campo actual `direccion` se renombra a `direccion_particular`. Conserva los datos existentes.
+- **Dirección de entrega** — campo nuevo `direccion_entrega`, opcional.
+
+**En el formulario:**
+- Los dos campos, cada uno con su etiqueta clara
+- Casilla **"La misma que la particular"** que copia el contenido de un campo al otro. Ahorra capturar dos veces el caso común.
+
+**Dónde se usa la dirección de entrega:** en las hojas y documentos donde haya que mandar mercancía. Si está vacía, se usa la particular.
+
+---
+
+# PARTE 2 — INE del cliente
+
+Campo nuevo para subir la identificación oficial.
+
+## Almacenamiento
+
+- Nueva tabla `cliente_documentos`: id, cliente_id (FK), tipo (por ahora solo `INE`), nombre_archivo, ruta_archivo, mime_type, tamano_bytes, subido_por (FK usuarios), subido_at
+- Acepta imágenes (JPG, PNG) y PDF
+- Tamaño máximo 5 MB por archivo
+- Se pueden subir **hasta dos archivos** por cliente, para frente y reverso
+- Reemplazar un archivo conserva el anterior en historial, no lo borra
+
+## Acceso restringido
+
+**Solo ADMIN puede ver, subir, reemplazar o descargar el INE.**
+
+- Ningún otro rol ve la sección de INE en el perfil del cliente, ni siquiera vacía o deshabilitada
+- El endpoint que sirve el archivo valida el rol **en el servidor**. Un usuario que no sea ADMIN recibe **403**, aunque conozca la URL directa.
+- La ruta del archivo **no debe ser adivinable**: usa identificadores aleatorios, no el id del cliente
+- Los archivos **no se sirven desde una carpeta pública**. Se entregan a través de un endpoint que valida la sesión y el rol en cada petición.
+
+## Registro de consultas
+
+Cada vez que alguien ve o descarga un INE, se registra en `auditoria`: quién, cuándo, de qué cliente y qué acción (ver o descargar).
+
+Motivo: es un documento de identidad oficial y hay que poder rastrear quién lo consultó.
+
+## En la interfaz
+
+- Sección **"INE"** dentro de la pestaña de Datos del cliente, visible solo para ADMIN
+- Muestra vista previa de las imágenes, o el ícono de PDF con el nombre del archivo
+- Botones para subir, reemplazar y descargar
+- Indica quién lo subió y cuándo
+- Al subir, aviso discreto de que el documento queda con acceso restringido y su consulta se registra
+
+---
+
+# PARTE 3 — Orden alfabético
+
+**Todos los listados de clientes se ordenan alfabéticamente por nombre de forma predeterminada.**
+
+- Orden alfabético con reglas de español: los acentos no alteran la posición, y la Ñ va después de la N
+- **"Venta a Público" siempre aparece primero**, antes del orden alfabético, marcado visualmente como cliente del sistema
+- El usuario puede reordenar por otras columnas si quiere, pero al entrar siempre arranca en alfabético
+- Aplica en: el listado principal, el selector del POS, el selector de cobro a crédito, los reportes y cualquier otro lugar donde se listen clientes
+
+**Aplica el mismo criterio a proveedores**: orden alfabético por nombre de forma predeterminada.
+
+---
+
+# PARTE 4 — Borrado de clientes
+
+## Reglas
+
+**Un cliente se borra de verdad solo si nunca tuvo movimientos.** Si ya operó, se desactiva, porque borrarlo dejaría tickets y movimientos apuntando a un cliente inexistente y descuadraría los reportes.
+
+| Situación | Qué pasa |
+|---|---|
+| Sin tickets, sin movimientos de crédito, sin saldo | **Se borra** de la base |
+| Con historial pero **sin saldo pendiente** | **Se desactiva.** Conserva su historial y deja de aparecer en selectores |
+| Con **saldo pendiente no vencido** | **Se rechaza.** Mensaje: "Este cliente tiene un saldo pendiente de $X. Liquida el saldo antes de darlo de baja." |
+| Con **saldo vencido** | Requiere **autorización de ADMIN con contraseña**, y el saldo se registra como pérdida. Ver abajo. |
+
+**El cliente "Venta a Público" no se puede borrar ni desactivar** bajo ninguna circunstancia.
+
+## Baja con saldo vencido
+
+Cuando un cliente tiene saldo vencido y se le quiere dar de baja, ese dinero se da por perdido. Es una decisión con consecuencia contable, así que:
+
+1. Modal que pide **usuario y contraseña de un ADMIN**, aunque quien lo esté haciendo ya sea admin. Es una confirmación deliberada, no un permiso.
+2. **Motivo obligatorio**, mínimo 20 caracteres
+3. La pantalla muestra con claridad el monto que se va a dar por perdido y desde cuándo está vencido
+4. Al confirmar, en una sola transacción:
+   - Se genera un movimiento de crédito tipo `AJUSTE` con importe negativo igual al saldo, dejando la cuenta en cero
+   - Ese movimiento se marca como **incobrable**, con su motivo
+   - El cliente se desactiva
+   - Se registra en auditoría: quién autorizó, quién lo ejecutó, el monto y el motivo
+5. **No se borra nada.** El historial completo se conserva.
+
+## Reporte de cuentas incobrables
+
+Nueva vista para ADMIN dentro de Clientes: lista de todos los saldos dados por perdidos, con cliente, monto, fecha, quién lo autorizó y el motivo. Con totales por periodo.
+
+Es información que necesitas para tu contabilidad y para saber cuánto te ha costado el crédito.
+
+## Reactivar
+
+Un cliente desactivado se puede reactivar desde su perfil, con registro en auditoría. Si tenía saldo dado por incobrable, ese movimiento **no se revierte**: el historial queda como está.
+
+---
+
+# PARTE 5 — Clientes de prueba
+
+Da de alta estos seis clientes, solo con su nombre. Los demás campos quedan vacíos para llenarlos después:
+
+1. Rafael Flores
+2. Jacinta Mendoza
+3. Hilario Bonifacio
+4. Jesús López
+5. José López
+6. Miguel Esteban
+
+Sin límite de crédito asignado. Activos.
+
+Verifica que al listarlos aparezcan en este orden alfabético, con Venta a Público primero:
+
+```
+Venta a Público
+Hilario Bonifacio
+Jacinta Mendoza
+Jesús López
+José López
+Miguel Esteban
+Rafael Flores
+```
+
+Nota que **Jesús va antes que José**: la comparación es letra por letra y la "s" va antes que la "o" en la tercera posición.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No permitas que ningún rol distinto de ADMIN vea, suba o descargue un INE
+- No sirvas los archivos de INE desde una carpeta pública
+- No uses el id del cliente en la ruta del archivo
+- No borres un cliente que tenga historial de movimientos
+- No permitas dar de baja a un cliente con saldo pendiente no vencido
+- No permitas dar de baja con saldo vencido sin contraseña de ADMIN y motivo
+- No borres ni revierta el historial al dar un saldo por incobrable
+- No permitas borrar ni desactivar a "Venta a Público"
+- No pierdas los datos del campo `direccion` al renombrarlo
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Direcciones:**
+1. Los datos del campo `direccion` anterior quedaron en `direccion_particular`
+2. La casilla "La misma que la particular" copia el contenido correctamente
+3. Los documentos usan la dirección de entrega, y la particular si está vacía
+
+**INE:**
+4. ADMIN sube un archivo y se guarda correctamente
+5. ADMIN ve la vista previa y puede descargarlo
+6. CAJA, TERMINAL, INVENTARIOS y BODEGA **no ven** la sección de INE
+7. Un usuario que no es ADMIN llamando al endpoint del archivo recibe **403**
+8. La ruta del archivo no contiene el id del cliente ni es adivinable
+9. Cada consulta y descarga queda registrada en auditoría con usuario y fecha
+10. Un archivo mayor a 5 MB se rechaza con mensaje claro
+11. Un tipo de archivo no permitido se rechaza
+
+**Orden alfabético:**
+12. El listado de clientes arranca en orden alfabético
+13. "Venta a Público" aparece primero, antes del orden alfabético
+14. Los acentos no alteran la posición: "Jesús" se ordena como "Jesus"
+15. Jesús López va antes que José López
+16. El selector del POS también viene ordenado
+17. Proveedores también viene ordenado alfabéticamente
+
+**Borrado:**
+18. Un cliente sin ningún movimiento se borra de la base
+19. Un cliente con historial y sin saldo se desactiva, conservando su historial
+20. Un cliente con saldo pendiente no vencido: **se rechaza** con el monto en el mensaje
+21. Un cliente con saldo vencido requiere contraseña de ADMIN
+22. Sin motivo de al menos 20 caracteres: **se rechaza**
+23. Al confirmar la baja con saldo vencido, el saldo queda en cero con un movimiento marcado como incobrable
+24. El historial de tickets y movimientos se conserva completo
+25. Queda registro en auditoría con quién autorizó, el monto y el motivo
+26. "Venta a Público" no se puede borrar ni desactivar: **se rechaza**
+27. Un cliente desactivado se puede reactivar, y el movimiento de incobrable no se revierte
+28. El reporte de cuentas incobrables muestra los montos correctos
+
+**Clientes de prueba:**
+29. Los seis clientes existen y aparecen en el orden alfabético esperado
+
+**Regresión:**
+30. Las 12 pruebas del motor siguen pasando
+31. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Cómo se almacenan los archivos de INE y cómo se protege el acceso
+4. Lista de archivos creados y modificados
+5. Endpoints nuevos con su módulo y acción de permiso
+6. Confirmación de que los datos de `direccion` se conservaron al renombrar
+7. Salida completa de la corrida de pruebas
+8. Confirmación de que las pruebas corrieron en base aislada
+9. Cómo pruebo cada cambio: con qué usuario y en qué orden
