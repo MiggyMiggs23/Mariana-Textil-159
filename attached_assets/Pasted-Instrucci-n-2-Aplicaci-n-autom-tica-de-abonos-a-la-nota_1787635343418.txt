@@ -1,0 +1,20 @@
+Instrucción 2 — Aplicación automática de abonos a la nota más antigua
+Cuando se registra un pago a un cliente o a un proveedor, el sistema lo aplica automáticamente, empezando por la deuda más antigua.
+Cómo funciona:
+	1.	Se toman las notas pendientes, ordenadas de la más antigua a la más reciente
+	2.	El abono cubre la primera. Si alcanza, esa nota queda PAGADA
+	3.	Lo que sobra pasa a la siguiente, y así hasta agotar el abono
+	4.	Si el abono no alcanza a cubrir una nota completa, esa queda PARCIAL, mostrando cuánto se abonó y cuánto falta
+	5.	Si sobra dinero después de cubrir todas las notas, queda como saldo a favor
+Ejemplo: el cliente debe tres notas —$1,000 del 5 de agosto, $500 del 12 y $800 del 20— y abona $1,300. Resultado: la del 5 queda pagada, la del 12 queda pagada, y la del 20 queda parcial con $200 abonados y $600 pendientes.
+Cómo se muestra:
+Al registrar el pago, antes de confirmar, se muestra una vista previa de cómo se va a aplicar: qué notas quedan pagadas, cuál queda parcial y cuánto sobra. Simple y clara, sin tecnicismos.
+Después de confirmar, el estado de cuenta muestra cada nota con su etiqueta de color: PAGADA en verde, PARCIAL en amarillo con el monto pendiente, PENDIENTE en gris.
+En el detalle de un pago se ve a qué notas se aplicó y con cuánto a cada una.
+Reglas:
+	•	Aplica igual a clientes y a proveedores, con la misma lógica y la misma presentación
+	•	El usuario puede desmarcar la aplicación automática y elegir a mano a qué nota va el abono. Es la excepción, no lo normal.
+	•	Los pagos siguen sin poder editarse ni borrarse: se corrigen con un movimiento de ajuste que deja rastro
+	•	El saldo total sigue calculándose como la suma de movimientos. La aplicación a notas es información adicional, no reemplaza ese cálculo.
+	•	Todo dentro de una sola transacción
+Pruebas: un abono que cubre exactamente una nota la marca pagada · un abono mayor se reparte en orden de antigüedad · un abono menor deja la nota parcial · un sobrante queda como saldo a favor · la vista previa coincide con el resultado final · el saldo total no cambia por la forma de aplicar el abono.
