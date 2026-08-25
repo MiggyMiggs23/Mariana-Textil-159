@@ -19,7 +19,7 @@ La autorización de crédito debe bloquear la fila del cliente antes de leer el 
 
 **Why:** Dos cajas con tickets distintos pueden leer simultáneamente el mismo disponible y exceder el límite si la validación no se serializa por cliente.
 
-**How to apply:** Mantener `FOR UPDATE` sobre el cliente dentro de la misma transacción de cobro y cubrirlo con una prueba concurrente en ubicaciones/sesiones distintas.
+**How to apply:** Mantener serialización transaccional explícita por cliente (advisory lock y `FOR UPDATE`) antes del saldo/cargo, con prueba concurrente en ubicaciones/sesiones distintas.
 
 Los filtros de estado de cuenta deben aplicarse después de calcular el saldo corrido sobre todo el ledger; `saldoActual` siempre es el total histórico. Los PDF financieros deben paginar sin truncar filas.
 

@@ -880,6 +880,13 @@ export async function cobrarTicket(
     );
   }
   {
+    // Serialize credit issuance for this customer even when different tickets
+    // are being charged in different cash sessions/locations.
+    if (creditCents > 0) {
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(240024, ${clienteId})`,
+      );
+    }
     const [cliente] = await tx
       .select()
       .from(clientesTable)

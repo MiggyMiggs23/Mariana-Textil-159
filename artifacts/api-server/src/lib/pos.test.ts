@@ -1111,10 +1111,10 @@ await test("POS-09 cierre es irreversible y calcula diferencia", async () => {
 let financialTriggersDisabled = false;
 try {
   await db.execute(
-    sql`ALTER TABLE movimientos_credito DISABLE TRIGGER movimientos_credito_inmutables`,
+    sql`ALTER TABLE movimientos_credito DISABLE TRIGGER USER`,
   );
   await db.execute(
-    sql`ALTER TABLE ticket_pagos DISABLE TRIGGER ticket_pagos_inmutables`,
+    sql`ALTER TABLE ticket_pagos DISABLE TRIGGER USER`,
   );
   financialTriggersDisabled = true;
   if (createdTicketIds.length > 0) {
@@ -1197,10 +1197,10 @@ try {
 } finally {
   if (financialTriggersDisabled) {
     await db.execute(
-      sql`ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables`,
+      sql`ALTER TABLE movimientos_credito ENABLE TRIGGER USER`,
     );
     await db.execute(
-      sql`ALTER TABLE ticket_pagos ENABLE TRIGGER ticket_pagos_inmutables`,
+      sql`ALTER TABLE ticket_pagos ENABLE TRIGGER USER`,
     );
   }
 }
