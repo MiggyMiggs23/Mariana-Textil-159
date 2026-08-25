@@ -97,7 +97,7 @@ export default function EntradaEtiquetas() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="thermal">Térmica 100x60mm</SelectItem>
+                <SelectItem value="thermal">Térmica 100×70 mm</SelectItem>
                 <SelectItem value="sheet">Plantilla Carta</SelectItem>
               </SelectContent>
             </Select>
@@ -134,27 +134,28 @@ export default function EntradaEtiquetas() {
         </div>
 
         {/* Print area */}
-        <div className={`print-only-container flex gap-[4mm] justify-center ${printMode === 'thermal' ? 'flex-wrap print:block print:p-0' : 'flex-wrap max-w-[8.5in] mx-auto print:max-w-none print:w-[8.5in] bg-white p-8 print:p-4 shadow-xl print:shadow-none print:m-0'}`}>
+        <div className={`print-only-container flex gap-[4mm] justify-center ${printMode === 'thermal' ? 'etiquetas-print flex-wrap print:block print:p-0' : 'etiquetas-sheet-print flex-wrap max-w-[8.5in] mx-auto print:max-w-none print:w-[8.5in] bg-white p-8 print:p-4 shadow-xl print:shadow-none print:m-0'}`}>
           {rollosToPrint.map(rollo => (
-            <div key={rollo.id} className={`${printMode === 'thermal' ? 'shadow-lg print:shadow-none bg-white' : 'border border-dashed border-gray-300'}`}>
-              <LabelPrint 
-                data={{
-                  sku: rollo.sku,
-                  serie: rollo.serie,
-                  tela: rollo.tela,
-                  color: rollo.color,
-                  cantidad: rollo.cantidadInicial,
-                  unidad: rollo.unidad
-                }} 
-              />
-            </div>
+            <LabelPrint
+              key={rollo.id}
+              className={printMode === 'thermal' ? 'shadow-lg print:shadow-none' : 'sheet-label'}
+              data={{
+                sku: rollo.sku,
+                serie: rollo.serie,
+                tela: rollo.tela,
+                color: rollo.color,
+                cantidad: rollo.cantidadInicial,
+                unidad: rollo.unidad
+              }}
+            />
           ))}
         </div>
 
         <div className="no-print text-center text-sm text-muted-foreground mt-12 bg-muted/50 py-4 rounded-md">
-          <p className="font-bold">Etiquetas recomendadas: papel térmico adhesivo 100×60 mm · Impresión: térmica directa o transferencia térmica.</p>
+          <p className="font-bold">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</p>
           <p className="text-xs mt-1">Asegúrese de desactivar márgenes y encabezados en la configuración de impresión de su navegador.</p>
         </div>
+        {printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
       </div>
     </div>
   );

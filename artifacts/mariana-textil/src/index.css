@@ -131,7 +131,7 @@
 
 @media print {
   @page label {
-    size: 100mm 60mm;
+    size: 100mm 70mm;
     margin: 0;
   }
   @page document {
@@ -237,7 +237,7 @@
     page: label;
     page-break-after: always;
     width: 100mm;
-    height: 60mm;
+    height: 70mm;
     margin: 0;
     overflow: hidden;
   }
@@ -256,7 +256,7 @@
     width: 200mm;
     display: grid !important;
     grid-template-columns: 100mm 100mm;
-    grid-auto-rows: 60mm;
+    grid-auto-rows: 70mm;
     align-content: start;
   }
 
@@ -265,6 +265,17 @@
     break-inside: avoid;
     page-break-after: auto;
     border: 0.2mm dashed #aaa;
+  }
+
+  .label-sheet-note {
+    display: block !important;
+    position: fixed;
+    bottom: 1mm;
+    left: 0;
+    width: 100%;
+    color: #666;
+    font-size: 7pt;
+    text-align: center;
   }
   
   .document-page {

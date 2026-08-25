@@ -314,6 +314,7 @@ export default function Etiquetas() {
           color: rollo.color, cantidad: rollo.cantidad, unidad: rollo.unidad, reimpresaEn: printData.createdAt,
         }} className={printMode === "sheet" ? "sheet-label" : ""} />)}
       </div>}
+      {printData && printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-lg">
@@ -329,8 +330,8 @@ export default function Etiquetas() {
             <div className="space-y-2"><Label>Formato de impresión</Label>
               <Select value={printMode} onValueChange={(value: "thermal" | "sheet") => setPrintMode(value)}>
                 <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
-                  <SelectItem value="thermal">Térmica 100 × 60 mm</SelectItem>
-                  <SelectItem value="sheet">Hoja carta múltiple (hasta 8 por hoja)</SelectItem>
+                  <SelectItem value="thermal">Térmica 100 × 70 mm</SelectItem>
+                  <SelectItem value="sheet">Hoja carta múltiple (hasta 6 por hoja)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
