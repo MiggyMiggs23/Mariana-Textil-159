@@ -72,7 +72,7 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
           FROM movimientos_credito
           WHERE cliente_id = p_cliente_id AND (
             tipo = 'ABONO' OR
-            (tipo = 'AJUSTE' AND importe < 0 AND ticket_id IS NULL)
+            (tipo = 'AJUSTE' AND importe < 0)
           )
         ), cargos AS (
           SELECT m.id, m.ticket_id, m.created_at,

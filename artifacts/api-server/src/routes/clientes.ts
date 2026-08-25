@@ -19,6 +19,7 @@ import { requireSession } from "../middlewares/auth";
 import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { createTextPdf } from "../lib/pdf";
+import { canLinkAdjustmentToTicket } from "../lib/clientes-aging";
 
 const router: IRouter = Router();
 
@@ -1329,6 +1330,17 @@ router.post(
         res.status(400).json({ error: "Fecha efectiva inválida o futura." });
         return;
       }
+      const ticketId =
+        Number.isInteger(Number(req.body?.ticketId))
+          ? Number(req.body.ticketId)
+          : null;
+      if (!canLinkAdjustmentToTicket(importe, ticketId)) {
+        res.status(400).json({
+          error:
+            "Los ajustes negativos se aplican por antigüedad y no pueden ligarse a un ticket.",
+        });
+        return;
+      }
       const result = await db.transaction(async (tx) => {
         const [client] = await tx
           .select({ id: clientesTable.id, esSistema: clientesTable.esSistema })
@@ -1338,13 +1350,13 @@ router.post(
           .limit(1);
         if (!client) return null;
         if (client.esSistema) throw new Error("SYSTEM_CLIENT_CREDIT");
-        if (req.body?.ticketId != null) {
+        if (ticketId != null) {
           const [ticket] = await tx
             .select({ id: ticketsTable.id })
             .from(ticketsTable)
             .where(
               and(
-                eq(ticketsTable.id, Number(req.body.ticketId)),
+                eq(ticketsTable.id, ticketId),
                 eq(ticketsTable.clienteId, id),
               ),
             )
@@ -1359,10 +1371,7 @@ router.post(
             importe: importe.toFixed(2),
             usuarioId: req.auth!.user.id,
             notas: motivo,
-            ticketId:
-              Number.isInteger(Number(req.body?.ticketId))
-                ? Number(req.body.ticketId)
-                : null,
+            ticketId,
             referencia:
               typeof req.body?.referencia === "string"
                 ? req.body.referencia

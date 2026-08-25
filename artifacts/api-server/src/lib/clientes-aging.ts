@@ -18,3 +18,10 @@ export function allocateCreditFifo(
     return outstanding > 0 ? [{ ticketId: sale.ticketId, outstanding }] : [];
   });
 }
+
+export function canLinkAdjustmentToTicket(
+  amount: number,
+  ticketId: number | null,
+): boolean {
+  return amount >= 0 || ticketId === null;
+}

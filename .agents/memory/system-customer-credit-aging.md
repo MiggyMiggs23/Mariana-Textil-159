@@ -9,7 +9,7 @@ Al reservar el cliente sistema con id 1, una instalación existente puede tener 
 
 **How to apply:** Cualquier migración futura que reserve identificadores debe detectar colisiones y reubicar referencias dentro de una transacción.
 
-En el aging de crédito, un REVERSO ligado a ticket cancela primero el cargo del mismo ticket; pagos y ajustes negativos no ligados se aplican FIFO. Los ajustes positivos son nuevos cargos fechados y deben aparecer en cartera.
+En el aging de crédito, un REVERSO ligado a ticket cancela primero el cargo del mismo ticket; pagos y ajustes negativos se aplican FIFO. No permitir ligar ajustes negativos nuevos a tickets, pero incluir los vínculos legados en FIFO. Los ajustes positivos son nuevos cargos fechados y deben aparecer en cartera.
 
 **Why:** Tratar todos los negativos como pagos FIFO puede dejar vencida una venta cancelada o subestimar cartera; ignorar ajustes positivos hace que aging y saldo diverjan.
 

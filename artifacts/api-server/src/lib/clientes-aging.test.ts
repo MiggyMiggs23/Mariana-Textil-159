@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { allocateCreditFifo } from "./clientes-aging";
+import {
+  allocateCreditFifo,
+  canLinkAdjustmentToTicket,
+} from "./clientes-aging";
 import { createTextPdf } from "./pdf";
 
 test("linked REVERSO cancels its own later ticket before ABONO FIFO", () => {
@@ -34,6 +37,12 @@ test("positive adjustment remains as an aged receivable", () => {
     100,
   );
   assert.deepEqual(result, [{ ticketId: null, outstanding: 30 }]);
+});
+
+test("negative adjustment cannot be linked to a ticket and bypass FIFO", () => {
+  assert.equal(canLinkAdjustmentToTicket(-100, 25), false);
+  assert.equal(canLinkAdjustmentToTicket(-100, null), true);
+  assert.equal(canLinkAdjustmentToTicket(100, 25), true);
 });
 
 test("financial export is a valid PDF byte stream", () => {
