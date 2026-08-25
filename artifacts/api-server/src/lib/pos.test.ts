@@ -559,6 +559,97 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
   );
 });
 
+await test("POS-05B crédito concurrente serializa por cliente y respeta el límite", async () => {
+  const firstLocationId = await makeLocation();
+  const secondLocationId = await makeLocation();
+  const firstProductId = await makeProduct();
+  const secondProductId = await makeProduct();
+  const firstRoll = await makeRollo(firstProductId, firstLocationId, "10", "20");
+  const secondRoll = await makeRollo(secondProductId, secondLocationId, "10", "20");
+  const clientId = await makeClient("500");
+  const firstTicket = await sale({
+    ubicacionId: firstLocationId,
+    productoId: firstProductId,
+    rolloId: firstRoll.id,
+    cantidad: "10",
+    precio: "40",
+    clienteId: clientId,
+  });
+  const secondTicket = await sale({
+    ubicacionId: secondLocationId,
+    productoId: secondProductId,
+    rolloId: secondRoll.id,
+    cantidad: "10",
+    precio: "40",
+    clienteId: clientId,
+  });
+  const firstSession = await db.transaction((tx) =>
+    abrirSesionCaja(tx, {
+      ubicacionId: firstLocationId,
+      usuarioId: USER_ID,
+      fondoInicial: "0",
+      ip: "127.0.0.1",
+    }),
+  );
+  const secondSession = await db.transaction((tx) =>
+    abrirSesionCaja(tx, {
+      ubicacionId: secondLocationId,
+      usuarioId: USER_ID,
+      fondoInicial: "0",
+      ip: "127.0.0.1",
+    }),
+  );
+  createdSessionIds.push(firstSession.id, secondSession.id);
+
+  const results = await Promise.allSettled([
+    db.transaction((tx) =>
+      cobrarTicket(
+        tx,
+        {
+          ticketId: firstTicket.id,
+          sesionCajaId: firstSession.id,
+          usuarioId: USER_ID,
+          clienteId: clientId,
+          pagos: [{ formaPago: "CREDITO", importe: "400" }],
+          ip: "127.0.0.1",
+        },
+        true,
+      ),
+    ),
+    db.transaction((tx) =>
+      cobrarTicket(
+        tx,
+        {
+          ticketId: secondTicket.id,
+          sesionCajaId: secondSession.id,
+          usuarioId: USER_ID,
+          clienteId: clientId,
+          pagos: [{ formaPago: "CREDITO", importe: "400" }],
+          ip: "127.0.0.1",
+        },
+        true,
+      ),
+    ),
+  ]);
+
+  assert.equal(results.filter((result) => result.status === "fulfilled").length, 1);
+  const rejected = results.find(
+    (result): result is PromiseRejectedResult => result.status === "rejected",
+  );
+  assert.ok(rejected);
+  assert.ok(
+    rejected.reason instanceof PosError &&
+      rejected.reason.code === "CREDIT_AUTH_REQUIRED",
+  );
+  const [balance] = await db
+    .select({
+      saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
+    })
+    .from(movimientosCreditoTable)
+    .where(eq(movimientosCreditoTable.clienteId, clientId));
+  assert.equal(balance!.saldo, "400.00");
+});
+
 await test("POS-05A ticket facturado persiste IVA, cobra 319 y conserva margen sin IVA", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
@@ -1017,7 +1108,15 @@ await test("POS-09 cierre es irreversible y calcula diferencia", async () => {
   );
 });
 
+let financialTriggersDisabled = false;
 try {
+  await db.execute(
+    sql`ALTER TABLE movimientos_credito DISABLE TRIGGER movimientos_credito_inmutables`,
+  );
+  await db.execute(
+    sql`ALTER TABLE ticket_pagos DISABLE TRIGGER ticket_pagos_inmutables`,
+  );
+  financialTriggersDisabled = true;
   if (createdTicketIds.length > 0) {
     await db
       .delete(auditoriaTable)
@@ -1095,6 +1194,15 @@ try {
 } catch (error) {
   process.stdout.write(`  ⚠ cleanup: ${(error as Error).message}\n`);
   failed += 1;
+} finally {
+  if (financialTriggersDisabled) {
+    await db.execute(
+      sql`ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables`,
+    );
+    await db.execute(
+      sql`ALTER TABLE ticket_pagos ENABLE TRIGGER ticket_pagos_inmutables`,
+    );
+  }
 }
 
 process.stdout.write(`\nPOS/caja: ${passed} passed, ${failed} failed\n`);

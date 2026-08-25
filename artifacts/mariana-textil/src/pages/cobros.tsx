@@ -61,7 +61,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { ClientSelector } from "@/components/client-selector";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -254,7 +253,6 @@ function CobroDialog({
   const [pagos, setPagos] = useState<
     { formaPago: FormaPagoTicket; importe: string; referencia?: string }[]
   >([]);
-  const [clienteId, setClienteId] = useState("1");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
@@ -266,7 +264,6 @@ function CobroDialog({
     if (ticket && open && initializedForTicketId.current !== ticket.id) {
       initializedForTicketId.current = ticket.id;
       setPagos([]);
-       setClienteId(ticket.clienteId == null ? "1" : String(ticket.clienteId));
     }
   }, [ticket, open]);
 
@@ -274,7 +271,6 @@ function CobroDialog({
     if (!open) {
       initializedForTicketId.current = null;
       setPagos([]);
-      setClienteId("1");
       setAdminUser("");
       setAdminPass("");
       setPasswordVisibilityResetKey((current) => current + 1);
@@ -314,21 +310,11 @@ function CobroDialog({
         referencia: p.referencia || undefined,
       }));
 
-    if (usaCredito && !clienteId) {
-      toast({
-        title: "Selecciona un cliente",
-        description: "El crédito debe quedar asociado a un cliente.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     cobrarTicket.mutate(
       {
         id: ticket.id,
         data: {
           pagos: pagosValidos,
-          clienteId: clienteId ? Number(clienteId) : undefined,
           credencialesAdmin:
             adminUser && adminPass
               ? { usuario: adminUser, password: adminPass }
@@ -704,14 +690,17 @@ function CobroDialog({
 
                   <div className="space-y-2">
                     <Label className="font-semibold text-amber-900">
-                      Cliente para crédito
+                      Cliente del ticket
                     </Label>
-                    <ClientSelector
-                      value={clienteId ? Number(clienteId) : null}
-                      required
-                      onChange={(client) => setClienteId(String(client.id))}
-                      className="[&_button]:border-amber-200"
-                    />
+                    <div className="rounded-md border border-amber-200 bg-white px-3 py-2 text-sm font-medium text-amber-950">
+                      {ticket?.nombreCliente ||
+                        (ticket?.clienteId === 1
+                          ? "VENTA AL PÚBLICO"
+                          : `Cliente #${ticket?.clienteId ?? "—"}`)}
+                    </div>
+                    <p className="text-xs text-amber-700">
+                      El cliente se fija al crear el ticket y no puede cambiarse durante el cobro.
+                    </p>
                   </div>
 
                   <div className="space-y-3 pt-3">

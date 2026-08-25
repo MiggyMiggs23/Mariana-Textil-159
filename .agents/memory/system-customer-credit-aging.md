@@ -14,3 +14,9 @@ En el aging de crédito, un REVERSO ligado a ticket cancela primero el cargo del
 **Why:** Tratar todos los negativos como pagos FIFO puede dejar vencida una venta cancelada o subestimar cartera; ignorar ajustes positivos hace que aging y saldo diverjan.
 
 **How to apply:** Toda métrica, semáforo y exportación de cartera debe usar la misma asignación: reverso por ticket, después FIFO para abonos/ajustes negativos, incluyendo ajustes positivos como cargos.
+
+La autorización de crédito debe bloquear la fila del cliente antes de leer el ledger y conservar el bloqueo hasta insertar el cargo.
+
+**Why:** Dos cajas con tickets distintos pueden leer simultáneamente el mismo disponible y exceder el límite si la validación no se serializa por cliente.
+
+**How to apply:** Mantener `FOR UPDATE` sobre el cliente dentro de la misma transacción de cobro y cubrirlo con una prueba concurrente en ubicaciones/sesiones distintas.
