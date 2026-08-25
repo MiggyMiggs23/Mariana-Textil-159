@@ -6,9 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ClienteCompraItem } from './clienteCompraItem';
+import type { ClienteComprasPeriodo } from './clienteComprasPeriodo';
 
 export interface ClienteCompras {
   clienteId: number;
   compras: ClienteCompraItem[];
   total: number;
+  periodo?: ClienteComprasPeriodo;
 }

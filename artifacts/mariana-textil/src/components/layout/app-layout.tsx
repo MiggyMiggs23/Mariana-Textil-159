@@ -90,7 +90,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "ADMINISTRACIÓN",
     items: [
       { name: "Caja", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
-      { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: false },
+      { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
       { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
       { name: "Conciliación", path: "/administracion/conciliacion", icon: Activity, module: Modules.CONCILIACION, isClickable: true },

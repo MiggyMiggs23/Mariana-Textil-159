@@ -12,8 +12,8 @@ export interface TicketInput {
   /** Identificador UUID generado por la terminal */
   uuidCliente: string;
   ubicacionId: number;
-  /** @nullable */
-  clienteId: number | null;
+  /** @minimum 1 */
+  clienteId: number;
   tipo: TipoTicket;
   facturado: boolean;
   /** @minItems 1 */

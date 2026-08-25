@@ -281,6 +281,12 @@ router.post(
   async (req, res, next): Promise<void> => {
     try {
       const body = CrearTicketBody.parse(req.body);
+      if (body.clienteId == null) {
+        throw new PosError(
+          "Debes seleccionar un cliente para crear el ticket.",
+          "CLIENT_REQUIRED",
+        );
+      }
       const ubicacionId = scopedLocation(req, body.ubicacionId);
       assertOperationalLocation(req, ubicacionId);
       const includeCosts = req.auth!.user.rol !== "TERMINAL";

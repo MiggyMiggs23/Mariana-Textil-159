@@ -23,10 +23,14 @@ export const clientesTable = pgTable("clientes", {
   rfc: text("rfc"),
   notas: text("notas"),
   activo: boolean("activo").notNull().default(true),
-  // Credit fields — only surfaced via clientes_credito module
+  esSistema: boolean("es_sistema").notNull().default(false),
+  contactoNombre: text("contacto_nombre"),
+  diasCredito: integer("dias_credito").notNull().default(0),
   limiteCredito: decimal("limite_credito", { precision: 14, scale: 2 })
     .notNull()
     .default("0.00"),
+  // Legacy cache retained for upgrade compatibility. Never use as the source
+  // of truth: balances are the sum of movimientos_credito.
   saldoCredito: decimal("saldo_credito", { precision: 14, scale: 2 })
     .notNull()
     .default("0.00"),
@@ -41,6 +45,8 @@ export const clientesTable = pgTable("clientes", {
 
 export const insertClienteSchema = createInsertSchema(clientesTable).omit({
   id: true,
+  esSistema: true,
+  saldoCredito: true,
   createdAt: true,
   updatedAt: true,
 });

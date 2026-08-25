@@ -464,6 +464,56 @@ export const GetProveedoresResumenResponse = zod.object({
 
 
 /**
+ * @summary Analítica global de compras, deuda y costos de proveedores
+ */
+export const GetAnaliticaGlobalProveedoresResponse = zod.object({
+  "pareto": zod.array(zod.object({
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "total": zod.string(),
+  "porcentajeAcumulado": zod.string()
+})),
+  "deuda": zod.array(zod.object({
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "saldo": zod.string()
+})),
+  "tendenciaMensual": zod.array(zod.object({
+  "mes": zod.string(),
+  "total": zod.string()
+})),
+  "costosAlAlza": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "proveedor": zod.string(),
+  "costoAnterior": zod.string(),
+  "costoActual": zod.string(),
+  "variacionPct": zod.string()
+})),
+  "comparacionCostos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "unidad": zod.string(),
+  "proveedorMasBarato": zod.string(),
+  "costoMasBarato": zod.string(),
+  "costoMasCaro": zod.string(),
+  "ahorroPct": zod.string(),
+  "proveedores": zod.array(zod.object({
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "costoUnitario": zod.string()
+}))
+})),
+  "antiguedadDeuda": zod.object({
+  "hasta30": zod.string(),
+  "de31a60": zod.string(),
+  "de61a90": zod.string(),
+  "mas90": zod.string()
+})
+})
+
+
+/**
  * @summary Lista proveedores con métricas de compras
  */
 export const ListProveedoresResponse = zod.object({
@@ -786,8 +836,48 @@ export const EstadisticasProveedorResponse = zod.object({
   "costoPorKilo": zod.string().nullable().describe('Costo unitario ponderado por KILO'),
   "ticketPromedio": zod.string().describe('Importe promedio por compra (entrada)'),
   "diasDesdeUltimaCompra": zod.number().nullish().describe('Días desde la última compra hasta hoy; null si no hay compras'),
-  "variacionVsPeriodoAnterior": zod.string().nullish(),
   "ultimaCompra": zod.coerce.date().nullish(),
+  "frecuencia": zod.object({
+  "promedioDiasEntreCompras": zod.string().nullable(),
+  "ultimaCompra": zod.coerce.date().nullable()
+}),
+  "estacionalidad": zod.object({
+  "mesMayor": zod.object({
+  "mes": zod.string().optional(),
+  "total": zod.string().optional()
+}).nullable(),
+  "mesMenor": zod.object({
+  "mes": zod.string().optional(),
+  "total": zod.string().optional()
+}).nullable()
+}),
+  "concentracion": zod.object({
+  "productoPrincipalPct": zod.string(),
+  "tresPrincipalesPct": zod.string()
+}),
+  "productosExclusivos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string()
+})),
+  "diasPromedioPago": zod.string().nullable(),
+  "antiguedadDeuda": zod.object({
+  "hasta30": zod.string(),
+  "de31a60": zod.string(),
+  "de61a90": zod.string(),
+  "mas90": zod.string()
+}),
+  "margenGenerado": zod.object({
+  "ventas": zod.string(),
+  "costo": zod.string(),
+  "margen": zod.string(),
+  "margenPct": zod.string().nullable(),
+  "lineasIncluidas": zod.number(),
+  "lineasExcluidasSinRollo": zod.number(),
+  "lineasExcluidasSinCosto": zod.number(),
+  "nota": zod.string()
+}),
   "porMes": zod.array(zod.object({
   "mes": zod.string(),
   "total": zod.string(),
@@ -803,8 +893,19 @@ export const EstadisticasProveedorResponse = zod.object({
   "totalRollos": zod.number(),
   "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos del producto'),
   "costoPorUnidad": zod.string().describe('Costo unitario ponderado por METRO o por KILO, según la unidad del producto'),
-  "costoPorUnidadAnterior": zod.string().nullish().describe('Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto'),
-  "variacionCostoUnidadPct": zod.string().nullish().describe('Variación porcentual del costo por unidad vs. el periodo anterior')
+  "historialCostos": zod.array(zod.object({
+  "entradaId": zod.number(),
+  "fecha": zod.coerce.date(),
+  "cantidad": zod.string(),
+  "costoUnitario": zod.string()
+})),
+  "comparacionProveedores": zod.array(zod.object({
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "costoUnitario": zod.string()
+})),
+  "proveedorMasBarato": zod.string().nullable(),
+  "ahorroPotencial": zod.string()
 })),
   "porTela": zod.array(zod.object({
   "tela": zod.string(),
@@ -1807,6 +1908,10 @@ export const GetClientesResumenResponse = zod.object({
 /**
  * @summary Lista el catálogo operativo de clientes (sin datos financieros)
  */
+export const listClientesResponseDiasCreditoMin = 0;
+
+
+
 export const ListClientesResponseItem = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -1816,6 +1921,9 @@ export const ListClientesResponseItem = zod.object({
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
+  "esSistema": zod.boolean(),
+  "contactoNombre": zod.string().nullish(),
+  "diasCredito": zod.number().min(listClientesResponseDiasCreditoMin),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -1835,8 +1943,13 @@ export const CreateClienteBody = zod.object({
   "correo": zod.string().nullish(),
   "direccion": zod.string().nullish(),
   "rfc": zod.string().nullish(),
-  "notas": zod.string().nullish()
+  "notas": zod.string().nullish(),
+  "contactoNombre": zod.string().nullish()
 })
+
+export const createClienteResponseDiasCreditoMin = 0;
+
+
 
 export const CreateClienteResponse = zod.object({
   "id": zod.number(),
@@ -1847,9 +1960,60 @@ export const CreateClienteResponse = zod.object({
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
+  "esSistema": zod.boolean(),
+  "contactoNombre": zod.string().nullish(),
+  "diasCredito": zod.number().min(createClienteResponseDiasCreditoMin),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
+
+
+/**
+ * @summary Cartera y antigüedad de saldos
+ */
+export const GetClientesCarteraResponse = zod.object({
+  "clientes": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "saldoActual": zod.string(),
+  "antiguedad": zod.enum(['POR_VENCER', '1_30', '31_60', '61_90', 'MAS_90']),
+  "diasVencido": zod.number()
+}))
+})
+
+
+/**
+ * @summary Analítica global de clientes
+ */
+export const GetClientesAnaliticaQueryParams = zod.object({
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional()
+})
+
+export const GetClientesAnaliticaResponse = zod.object({
+  "periodo": zod.object({
+  "desde": zod.coerce.date().nullable(),
+  "hasta": zod.coerce.date().nullable()
+}),
+  "ventas": zod.string(),
+  "tickets": zod.number(),
+  "costo": zod.string(),
+  "margen": zod.string(),
+  "lineasSinCosto": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "topVentas": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
+  "topMargen": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
+  "pareto": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
+  "publicoVsRegistrado": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
+  "mensual": zod.array(zod.record(zod.string(), zod.unknown())).optional()
+})
+
+
+/**
+ * @summary Exporta analítica a Excel
+ */
+export const ExportClientesAnaliticaResponse = zod.unknown()
 
 
 /**
@@ -1858,6 +2022,10 @@ export const CreateClienteResponse = zod.object({
 export const GetClienteParams = zod.object({
   "id": zod.coerce.number()
 })
+
+export const getClienteResponseDiasCreditoMin = 0;
+
+
 
 export const GetClienteResponse = zod.object({
   "id": zod.number(),
@@ -1868,6 +2036,9 @@ export const GetClienteResponse = zod.object({
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
+  "esSistema": zod.boolean(),
+  "contactoNombre": zod.string().nullish(),
+  "diasCredito": zod.number().min(getClienteResponseDiasCreditoMin),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -1891,8 +2062,13 @@ export const UpdateClienteBody = zod.object({
   "direccion": zod.string().nullish(),
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
-  "activo": zod.boolean().optional()
+  "activo": zod.boolean().optional(),
+  "contactoNombre": zod.string().nullish()
 })
+
+export const updateClienteResponseDiasCreditoMin = 0;
+
+
 
 export const UpdateClienteResponse = zod.object({
   "id": zod.number(),
@@ -1903,6 +2079,9 @@ export const UpdateClienteResponse = zod.object({
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean(),
+  "esSistema": zod.boolean(),
+  "contactoNombre": zod.string().nullish(),
+  "diasCredito": zod.number().min(updateClienteResponseDiasCreditoMin),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -1920,8 +2099,33 @@ export const GetClienteCreditoResponse = zod.object({
   "limiteCredito": zod.string(),
   "saldoActual": zod.string(),
   "creditoDisponible": zod.string(),
-  "puedeComprarCredito": zod.boolean()
+  "puedeComprarCredito": zod.boolean(),
+  "diasCredito": zod.number(),
+  "utilizacion": zod.string(),
+  "totalVencido": zod.string(),
+  "primerVencimiento": zod.coerce.date().nullish(),
+  "primeraCompra": zod.coerce.date().nullish(),
+  "ultimaActividad": zod.coerce.date().nullish(),
+  "antiguedad": zod.array(zod.record(zod.string(), zod.unknown())).optional()
 })
+
+
+export const UpdateClienteCreditoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const updateClienteCreditoBodyLimiteCreditoMin = 0;
+
+export const updateClienteCreditoBodyDiasCreditoMin = 0;
+
+
+
+export const UpdateClienteCreditoBody = zod.object({
+  "limiteCredito": zod.number().min(updateClienteCreditoBodyLimiteCreditoMin),
+  "diasCredito": zod.number().min(updateClienteCreditoBodyDiasCreditoMin)
+})
+
+export const UpdateClienteCreditoResponse = zod.record(zod.string(), zod.unknown())
 
 
 /**
@@ -1951,13 +2155,25 @@ export const GetClienteEstadoCuentaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const GetClienteEstadoCuentaQueryParams = zod.object({
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional(),
+  "tipo": zod.coerce.string().optional()
+})
+
 export const GetClienteEstadoCuentaResponse = zod.object({
   "clienteId": zod.number(),
   "movimientos": zod.array(zod.object({
   "tipo": zod.string().optional(),
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
-  "notas": zod.string().nullish()
+  "notas": zod.string().nullish(),
+  "saldoCorrido": zod.string().optional(),
+  "ticketFolio": zod.number().nullish(),
+  "nombreUsuario": zod.string().optional(),
+  "formaPago": zod.string().nullish(),
+  "referencia": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().optional()
 })),
   "saldoActual": zod.string()
 })
@@ -1970,14 +2186,27 @@ export const GetClienteComprasParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const GetClienteComprasQueryParams = zod.object({
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional()
+})
+
 export const GetClienteComprasResponse = zod.object({
   "clienteId": zod.number(),
   "compras": zod.array(zod.object({
   "id": zod.number().optional(),
   "fecha": zod.coerce.date().optional(),
-  "total": zod.string().optional()
+  "total": zod.string().optional(),
+  "folio": zod.number().optional(),
+  "subtotal": zod.string().optional(),
+  "iva": zod.string().optional(),
+  "metros": zod.string().optional(),
+  "kilos": zod.string().optional(),
+  "margen": zod.string().nullish(),
+  "lineasSinCosto": zod.number().optional()
 })),
-  "total": zod.number()
+  "total": zod.number(),
+  "periodo": zod.record(zod.string(), zod.unknown()).optional()
 })
 
 
@@ -1992,6 +2221,26 @@ export const GetClienteEstadisticasResponse = zod.object({
   "clienteId": zod.number(),
   "totalCompras": zod.string().nullish(),
   "comprasCount": zod.number().nullish()
+})
+
+
+export const GetClienteAnaliticaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetClienteAnaliticaQueryParams = zod.object({
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional()
+})
+
+export const GetClienteAnaliticaResponse = zod.object({
+  "clienteId": zod.number(),
+  "periodo": zod.record(zod.string(), zod.unknown()),
+  "productos": zod.array(zod.record(zod.string(), zod.unknown())),
+  "telasColores": zod.array(zod.record(zod.string(), zod.unknown())),
+  "tendencia": zod.array(zod.record(zod.string(), zod.unknown())),
+  "mezclaPagos": zod.array(zod.record(zod.string(), zod.unknown())),
+  "actividad": zod.record(zod.string(), zod.unknown())
 })
 
 
@@ -2028,13 +2277,54 @@ export const CreateClientePagoBody = zod.object({
   "importe": zod.number().min(createClientePagoBodyImporteMin),
   "formaPago": zod.string(),
   "referencia": zod.string().nullish(),
-  "notas": zod.string().nullish()
+  "notas": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().nullish(),
+  "ticketId": zod.number().nullish()
 })
 
 export const CreateClientePagoResponse = zod.object({
   "id": zod.number(),
   "clienteId": zod.number()
 })
+
+
+export const CreateClienteAjusteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const createClienteAjusteBodyMotivoMin = 10;
+
+
+
+export const CreateClienteAjusteBody = zod.object({
+  "importe": zod.number(),
+  "motivo": zod.string().min(createClienteAjusteBodyMotivoMin),
+  "referencia": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().nullish(),
+  "ticketId": zod.number().nullish()
+})
+
+export const CreateClienteAjusteResponse = zod.record(zod.string(), zod.unknown())
+
+
+export const ExportClienteEstadoCuentaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ExportClienteEstadoCuentaResponse = zod.unknown()
+
+
+export const ExportClienteEstadoCuentaPdfParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ExportClienteEstadoCuentaPdfResponse = zod.unknown()
+
+
+export const ExportClientesCarteraResponse = zod.unknown()
+
+
+export const ExportClientesCarteraPdfResponse = zod.unknown()
 
 
 /**
@@ -2227,6 +2517,7 @@ export const ValidarPrecioPosResponse = zod.object({
 /**
  * @summary Crea un ticket normal o de venta metreada sin cobrarlo
  */
+
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
 
 export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
@@ -2237,7 +2528,7 @@ export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
 export const CrearTicketBody = zod.object({
   "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
   "ubicacionId": zod.number(),
-  "clienteId": zod.number().nullable(),
+  "clienteId": zod.number().min(1),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "facturado": zod.boolean(),
   "lineas": zod.array(zod.object({

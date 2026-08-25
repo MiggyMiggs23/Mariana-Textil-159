@@ -1,6 +1,7 @@
 import app from "./app";
 import {
   ensurePendingCostsSchema,
+  ensureClientesSchema,
   ensureSalidasSchema,
   ensureTicketIvaSchema,
   pool,
@@ -23,6 +24,8 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 async function startServer() {
+  await ensureClientesSchema(pool);
+  logger.info("Esquema de clientes verificado");
   await ensureTicketIvaSchema(pool);
   logger.info("Esquema de IVA de tickets verificado");
   await ensureSalidasSchema(pool);

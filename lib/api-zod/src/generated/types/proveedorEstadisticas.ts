@@ -9,6 +9,12 @@ import type { EstadisticasPorColor } from './estadisticasPorColor';
 import type { EstadisticasPorMes } from './estadisticasPorMes';
 import type { EstadisticasPorProducto } from './estadisticasPorProducto';
 import type { EstadisticasPorTela } from './estadisticasPorTela';
+import type { ProveedorEstadisticasAntiguedadDeuda } from './proveedorEstadisticasAntiguedadDeuda';
+import type { ProveedorEstadisticasConcentracion } from './proveedorEstadisticasConcentracion';
+import type { ProveedorEstadisticasEstacionalidad } from './proveedorEstadisticasEstacionalidad';
+import type { ProveedorEstadisticasFrecuencia } from './proveedorEstadisticasFrecuencia';
+import type { ProveedorEstadisticasMargenGenerado } from './proveedorEstadisticasMargenGenerado';
+import type { ProveedorEstadisticasProductosExclusivosItem } from './proveedorEstadisticasProductosExclusivosItem';
 
 export interface ProveedorEstadisticas {
   desde: Date;
@@ -35,9 +41,15 @@ export interface ProveedorEstadisticas {
      */
   diasDesdeUltimaCompra?: number | null;
   /** @nullable */
-  variacionVsPeriodoAnterior?: string | null;
-  /** @nullable */
   ultimaCompra?: Date | null;
+  frecuencia: ProveedorEstadisticasFrecuencia;
+  estacionalidad: ProveedorEstadisticasEstacionalidad;
+  concentracion: ProveedorEstadisticasConcentracion;
+  productosExclusivos: ProveedorEstadisticasProductosExclusivosItem[];
+  /** @nullable */
+  diasPromedioPago: string | null;
+  antiguedadDeuda: ProveedorEstadisticasAntiguedadDeuda;
+  margenGenerado: ProveedorEstadisticasMargenGenerado;
   porMes: EstadisticasPorMes[];
   porProducto: EstadisticasPorProducto[];
   porTela: EstadisticasPorTela[];

@@ -61,6 +61,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { ClientSelector } from "@/components/client-selector";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -253,7 +254,7 @@ function CobroDialog({
   const [pagos, setPagos] = useState<
     { formaPago: FormaPagoTicket; importe: string; referencia?: string }[]
   >([]);
-  const [clienteId, setClienteId] = useState("");
+  const [clienteId, setClienteId] = useState("1");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
@@ -265,7 +266,7 @@ function CobroDialog({
     if (ticket && open && initializedForTicketId.current !== ticket.id) {
       initializedForTicketId.current = ticket.id;
       setPagos([]);
-      setClienteId(ticket.clienteId == null ? "" : String(ticket.clienteId));
+       setClienteId(ticket.clienteId == null ? "1" : String(ticket.clienteId));
     }
   }, [ticket, open]);
 
@@ -273,7 +274,7 @@ function CobroDialog({
     if (!open) {
       initializedForTicketId.current = null;
       setPagos([]);
-      setClienteId("");
+      setClienteId("1");
       setAdminUser("");
       setAdminPass("");
       setPasswordVisibilityResetKey((current) => current + 1);
@@ -705,13 +706,11 @@ function CobroDialog({
                     <Label className="font-semibold text-amber-900">
                       Cliente para crédito
                     </Label>
-                    <Input
-                      type="number"
-                      min="1"
-                      value={clienteId}
-                      onChange={(event) => setClienteId(event.target.value)}
-                      placeholder="ID del cliente"
-                      className="bg-white border-amber-200 h-12 focus-visible:ring-amber-500"
+                    <ClientSelector
+                      value={clienteId ? Number(clienteId) : null}
+                      required
+                      onChange={(client) => setClienteId(String(client.id))}
+                      className="[&_button]:border-amber-200"
                     />
                   </div>
 
@@ -1330,7 +1329,7 @@ function CobrosContent() {
                     corteData.pendientes.map((row) => (
                       <CorteRow
                         key={row.ticketId}
-                        label={`Folio ${row.folio} · ${row.nombreCliente || "Mostrador"}`}
+                        label={`Folio ${row.folio} · ${row.nombreCliente || "Venta a Público"}`}
                         value={row.total}
                       />
                     ))
@@ -1434,7 +1433,7 @@ function CorteDetail({ corte }: { corte: CorteCaja }) {
         <CorteSection title="Normal / Metreado">{corte.metreado.map((row) => <CorteRow key={row.tipo} label={`${row.tipo} · ${row.cantidad}`} value={row.importe} />)}</CorteSection>
       </div>
       <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${row.cantidad} ${row.unidad}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
-      <CorteSection title={`Tickets pendientes (${corte.pendientes.length})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${row.folio} · ${row.nombreCliente || "Mostrador"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
+      <CorteSection title={`Tickets pendientes (${corte.pendientes.length})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${row.folio} · ${row.nombreCliente || "Venta a Público"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
     </div>
   );
 }

@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClienteCreditoAntiguedadItem } from './clienteCreditoAntiguedadItem';
 
 export interface ClienteCredito {
   clienteId: number;
@@ -12,4 +13,14 @@ export interface ClienteCredito {
   saldoActual: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
+  diasCredito: number;
+  utilizacion: string;
+  totalVencido: string;
+  /** @nullable */
+  primerVencimiento?: Date | null;
+  /** @nullable */
+  primeraCompra?: Date | null;
+  /** @nullable */
+  ultimaActividad?: Date | null;
+  antiguedad?: ClienteCreditoAntiguedadItem[];
 }

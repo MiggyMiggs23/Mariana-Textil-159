@@ -51,7 +51,7 @@ export type CrearTicketLineaInput = {
 export type CrearTicketInput = {
   ubicacionId: number;
   usuarioTerminalId: number;
-  clienteId?: number | null;
+  clienteId: number;
   tipo: TipoTicket;
   facturado: boolean;
   uuidCliente: string;
@@ -355,6 +355,12 @@ export async function crearTicket(
       "EMPTY_TICKET",
     );
   }
+  if (!Number.isInteger(input.clienteId) || input.clienteId <= 0) {
+    throw new PosError(
+      "Debes seleccionar un cliente para crear el ticket.",
+      "CLIENT_REQUIRED",
+    );
+  }
   if (input.tipo === "METREADO" && input.facturado) {
     throw new PosError(
       "Las ventas metreadas no pueden marcarse como facturadas.",
@@ -373,15 +379,13 @@ export async function crearTicket(
       "INVALID_LOCATION",
     );
   }
-  if (input.clienteId != null) {
-    const [cliente] = await tx
-      .select({ id: clientesTable.id, activo: clientesTable.activo })
-      .from(clientesTable)
-      .where(eq(clientesTable.id, input.clienteId))
-      .limit(1);
-    if (!cliente?.activo) {
-      throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
-    }
+  const [clienteTicket] = await tx
+    .select({ id: clientesTable.id, activo: clientesTable.activo })
+    .from(clientesTable)
+    .where(eq(clientesTable.id, input.clienteId))
+    .limit(1);
+  if (!clienteTicket?.activo) {
+    throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
   }
 
   const rolloIds = input.lineas.flatMap((linea) =>
@@ -542,7 +546,7 @@ export async function crearTicket(
       folio,
       ubicacionId: input.ubicacionId,
       usuarioTerminalId: input.usuarioTerminalId,
-      clienteId: input.clienteId ?? null,
+      clienteId: input.clienteId,
       tipo: input.tipo,
       subtotal: decimalMoney(subtotalCents),
       iva: decimalMoney(ivaCents),
@@ -683,13 +687,12 @@ export async function cancelarTicket(
         importe: decimalMoney(-creditCents),
         usuarioId: input.usuarioId,
         notas: `Cancelación ticket ${ticket.folio}`,
+        formaPago: "CREDITO",
+        metadata: JSON.stringify({
+          origen: "CANCELACION_TICKET",
+          ticketFolio: ticket.folio,
+        }),
       });
-      await tx
-        .update(clientesTable)
-        .set({
-          saldoCredito: sql`GREATEST(0, ${clientesTable.saldoCredito} - ${decimalMoney(creditCents)}::numeric)`,
-        })
-        .where(eq(clientesTable.id, ticket.clienteId));
     }
   }
 
@@ -870,13 +873,13 @@ export async function cobrarTicket(
     .filter((pago) => pago.formaPago === "CREDITO")
     .reduce((sum, pago) => sum + pago.cents, 0);
   const clienteId = input.clienteId ?? ticket.clienteId;
-  if (creditCents > 0 && clienteId == null) {
+  if (clienteId !== ticket.clienteId) {
     throw new PosError(
-      "Para cobrar a crédito debes seleccionar un cliente.",
-      "CLIENT_REQUIRED",
+      "El cliente del ticket no puede cambiarse durante el cobro.",
+      "CLIENT_MISMATCH",
     );
   }
-  if (clienteId != null) {
+  {
     const [cliente] = await tx
       .select()
       .from(clientesTable)
@@ -886,9 +889,21 @@ export async function cobrarTicket(
     if (!cliente?.activo) {
       throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
     }
+    if (creditCents > 0 && cliente.esSistema) {
+      throw new PosError(
+        "Venta a Público no admite compras a crédito.",
+        "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
+      );
+    }
+    const [ledger] = await tx
+      .select({
+        saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
+      })
+      .from(movimientosCreditoTable)
+      .where(eq(movimientosCreditoTable.clienteId, clienteId));
     if (
       creditCents > 0 &&
-      money(cliente.saldoCredito) + creditCents >
+      money(ledger?.saldo ?? "0") + creditCents >
         money(cliente.limiteCredito) &&
       input.autorizadoPor == null
     ) {
@@ -905,17 +920,16 @@ export async function cobrarTicket(
         tipo: "VENTA_CREDITO",
         importe: decimalMoney(creditCents),
         usuarioId: input.usuarioId,
+        formaPago: "CREDITO",
         notas:
           input.autorizadoPor == null
             ? `Ticket ${ticket.folio}`
             : `Ticket ${ticket.folio}, autorizado por ${input.autorizadoPor}`,
+        metadata: JSON.stringify({
+          origen: "COBRO_TICKET",
+          autorizadoPor: input.autorizadoPor ?? null,
+        }),
       });
-      await tx
-        .update(clientesTable)
-        .set({
-          saldoCredito: sql`${clientesTable.saldoCredito} + ${decimalMoney(creditCents)}::numeric`,
-        })
-        .where(eq(clientesTable.id, clienteId));
     }
   }
 
@@ -932,7 +946,7 @@ export async function cobrarTicket(
   await tx
     .update(ticketsTable)
     .set({
-      clienteId: clienteId ?? null,
+      clienteId,
       cobrado: true,
       cobradoAt: now,
       usuarioCajaId: input.usuarioId,

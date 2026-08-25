@@ -23,12 +23,16 @@ import type {
   ActivarRolloInput,
   AjusteProveedorInput,
   AjusteRolloInput,
+  AnaliticaGlobalProveedores,
   BuscarPosParams,
   CapturarCostosEntradaInput,
   CatalogosEntrada,
   Cliente,
+  ClienteAjusteInput,
+  ClienteAnalitica,
   ClienteCompras,
   ClienteCredito,
+  ClienteCreditoUpdate,
   ClienteEstadisticas,
   ClienteEstadoCuenta,
   ClienteInput,
@@ -37,11 +41,14 @@ import type {
   ClientePagos,
   ClientePrecios,
   ClienteUpdate,
+  ClientesAnalitica,
+  ClientesCartera,
   ClientesResumen,
   ConciliacionRow,
   ConflictResponse,
   CorteCaja,
   CountEntradasPendientesCosto200,
+  CreateClienteAjuste201,
   CurrentUser,
   Dashboard,
   EntradaDetail,
@@ -57,6 +64,10 @@ import type {
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
   ForbiddenResponse,
+  GetClienteAnaliticaParams,
+  GetClienteComprasParams,
+  GetClienteEstadoCuentaParams,
+  GetClientesAnaliticaParams,
   GetConciliacionParams,
   GetDashboardParams,
   GetExistenciasAgrupadasParams,
@@ -139,6 +150,7 @@ import type {
   TicketResumen,
   UbicacionInventario,
   UnauthorizedResponse,
+  UpdateClienteCredito200,
   User,
   UserInput,
   UserUpdate,
@@ -1426,6 +1438,83 @@ export function useGetProveedoresResumen<TData = Awaited<ReturnType<typeof getPr
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetProveedoresResumenQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAnaliticaGlobalProveedoresUrl = () => {
+
+
+
+
+  return `/api/proveedores/analitica-global`
+}
+
+/**
+ * @summary Analítica global de compras, deuda y costos de proveedores
+ */
+export const getAnaliticaGlobalProveedores = async ( options?: Parameters<typeof customFetch>[1]): Promise<AnaliticaGlobalProveedores> => {
+
+  return customFetch<AnaliticaGlobalProveedores>(getGetAnaliticaGlobalProveedoresUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAnaliticaGlobalProveedoresQueryKey = () => {
+    return [
+    `/api/proveedores/analitica-global`
+    ] as const;
+    }
+
+
+export const getGetAnaliticaGlobalProveedoresQueryOptions = <TData = Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAnaliticaGlobalProveedoresQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>> = ({ signal }) => getAnaliticaGlobalProveedores({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAnaliticaGlobalProveedoresQueryResult = NonNullable<Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>>
+export type GetAnaliticaGlobalProveedoresQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Analítica global de compras, deuda y costos de proveedores
+ */
+
+export function useGetAnaliticaGlobalProveedores<TData = Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAnaliticaGlobalProveedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAnaliticaGlobalProveedoresQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -4657,6 +4746,244 @@ export const useCreateCliente = <TError = ErrorType<ValidationErrorResponse | Un
       return useMutation(getCreateClienteMutationOptions(options));
     }
 
+export const getGetClientesCarteraUrl = () => {
+
+
+
+
+  return `/api/clientes/cartera`
+}
+
+/**
+ * @summary Cartera y antigüedad de saldos
+ */
+export const getClientesCartera = async ( options?: Parameters<typeof customFetch>[1]): Promise<ClientesCartera> => {
+
+  return customFetch<ClientesCartera>(getGetClientesCarteraUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClientesCarteraQueryKey = () => {
+    return [
+    `/api/clientes/cartera`
+    ] as const;
+    }
+
+
+export const getGetClientesCarteraQueryOptions = <TData = Awaited<ReturnType<typeof getClientesCartera>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientesCartera>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClientesCarteraQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClientesCartera>>> = ({ signal }) => getClientesCartera({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClientesCartera>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClientesCarteraQueryResult = NonNullable<Awaited<ReturnType<typeof getClientesCartera>>>
+export type GetClientesCarteraQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Cartera y antigüedad de saldos
+ */
+
+export function useGetClientesCartera<TData = Awaited<ReturnType<typeof getClientesCartera>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientesCartera>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClientesCarteraQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClientesAnaliticaUrl = (params?: GetClientesAnaliticaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/clientes/analitica?${stringifiedParams}` : `/api/clientes/analitica`
+}
+
+/**
+ * @summary Analítica global de clientes
+ */
+export const getClientesAnalitica = async (params?: GetClientesAnaliticaParams, options?: Parameters<typeof customFetch>[1]): Promise<ClientesAnalitica> => {
+
+  return customFetch<ClientesAnalitica>(getGetClientesAnaliticaUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClientesAnaliticaQueryKey = (params?: GetClientesAnaliticaParams,) => {
+    return [
+    `/api/clientes/analitica`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetClientesAnaliticaQueryOptions = <TData = Awaited<ReturnType<typeof getClientesAnalitica>>, TError = ErrorType<unknown>>(params?: GetClientesAnaliticaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientesAnalitica>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClientesAnaliticaQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClientesAnalitica>>> = ({ signal }) => getClientesAnalitica(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClientesAnalitica>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClientesAnaliticaQueryResult = NonNullable<Awaited<ReturnType<typeof getClientesAnalitica>>>
+export type GetClientesAnaliticaQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Analítica global de clientes
+ */
+
+export function useGetClientesAnalitica<TData = Awaited<ReturnType<typeof getClientesAnalitica>>, TError = ErrorType<unknown>>(
+ params?: GetClientesAnaliticaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientesAnalitica>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClientesAnaliticaQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportClientesAnaliticaUrl = () => {
+
+
+
+
+  return `/api/clientes/analitica.xlsx`
+}
+
+/**
+ * @summary Exporta analítica a Excel
+ */
+export const exportClientesAnalitica = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportClientesAnaliticaUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportClientesAnaliticaQueryKey = () => {
+    return [
+    `/api/clientes/analitica.xlsx`
+    ] as const;
+    }
+
+
+export const getExportClientesAnaliticaQueryOptions = <TData = Awaited<ReturnType<typeof exportClientesAnalitica>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClientesAnalitica>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportClientesAnaliticaQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportClientesAnalitica>>> = ({ signal }) => exportClientesAnalitica({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportClientesAnalitica>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportClientesAnaliticaQueryResult = NonNullable<Awaited<ReturnType<typeof exportClientesAnalitica>>>
+export type ExportClientesAnaliticaQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Exporta analítica a Excel
+ */
+
+export function useExportClientesAnalitica<TData = Awaited<ReturnType<typeof exportClientesAnalitica>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClientesAnalitica>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportClientesAnaliticaQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getGetClienteUrl = (id: number,) => {
 
 
@@ -4883,6 +5210,72 @@ export function useGetClienteCredito<TData = Awaited<ReturnType<typeof getClient
 
 
 
+export const getUpdateClienteCreditoUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/credito`
+}
+
+export const updateClienteCredito = async (id: number,
+    clienteCreditoUpdate: ClienteCreditoUpdate, options?: Parameters<typeof customFetch>[1]): Promise<UpdateClienteCredito200> => {
+
+  return customFetch<UpdateClienteCredito200>(getUpdateClienteCreditoUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(clienteCreditoUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateClienteCreditoMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateClienteCredito>>, TError,{id: number;data: BodyType<ClienteCreditoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateClienteCredito>>, TError,{id: number;data: BodyType<ClienteCreditoUpdate>}, TContext> => {
+
+const mutationKey = ['updateClienteCredito'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateClienteCredito>>, {id: number;data: BodyType<ClienteCreditoUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateClienteCredito(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateClienteCreditoMutationResult = NonNullable<Awaited<ReturnType<typeof updateClienteCredito>>>
+    export type UpdateClienteCreditoMutationBody = BodyType<ClienteCreditoUpdate>
+    export type UpdateClienteCreditoMutationError = ErrorType<unknown>
+
+    export const useUpdateClienteCredito = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateClienteCredito>>, TError,{id: number;data: BodyType<ClienteCreditoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateClienteCredito>>,
+        TError,
+        {id: number;data: BodyType<ClienteCreditoUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateClienteCreditoMutationOptions(options));
+    }
+
 export const getGetClientePreciosUrl = (id: number,) => {
 
 
@@ -4960,20 +5353,29 @@ export function useGetClientePrecios<TData = Awaited<ReturnType<typeof getClient
 
 
 
-export const getGetClienteEstadoCuentaUrl = (id: number,) => {
+export const getGetClienteEstadoCuentaUrl = (id: number,
+    params?: GetClienteEstadoCuentaParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/clientes/${id}/estado-cuenta`
+  return stringifiedParams.length > 0 ? `/api/clientes/${id}/estado-cuenta?${stringifiedParams}` : `/api/clientes/${id}/estado-cuenta`
 }
 
 /**
  * @summary Estado de cuenta del cliente (clientes_finanzas requerido)
  */
-export const getClienteEstadoCuenta = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteEstadoCuenta> => {
+export const getClienteEstadoCuenta = async (id: number,
+    params?: GetClienteEstadoCuentaParams, options?: Parameters<typeof customFetch>[1]): Promise<ClienteEstadoCuenta> => {
 
-  return customFetch<ClienteEstadoCuenta>(getGetClienteEstadoCuentaUrl(id),
+  return customFetch<ClienteEstadoCuenta>(getGetClienteEstadoCuentaUrl(id,params),
   {
     ...options,
     method: 'GET'
@@ -4986,23 +5388,25 @@ export const getClienteEstadoCuenta = async (id: number, options?: Parameters<ty
 
 
 
-export const getGetClienteEstadoCuentaQueryKey = (id: number,) => {
+export const getGetClienteEstadoCuentaQueryKey = (id: number,
+    params?: GetClienteEstadoCuentaParams,) => {
     return [
-    `/api/clientes/${id}/estado-cuenta`
+    `/api/clientes/${id}/estado-cuenta`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetClienteEstadoCuentaQueryOptions = <TData = Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetClienteEstadoCuentaQueryOptions = <TData = Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    params?: GetClienteEstadoCuentaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetClienteEstadoCuentaQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteEstadoCuentaQueryKey(id,params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteEstadoCuenta>>> = ({ signal }) => getClienteEstadoCuenta(id, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteEstadoCuenta>>> = ({ signal }) => getClienteEstadoCuenta(id,params, { signal, ...requestOptions });
 
 
 
@@ -5020,11 +5424,12 @@ export type GetClienteEstadoCuentaQueryError = ErrorType<UnauthorizedResponse | 
  */
 
 export function useGetClienteEstadoCuenta<TData = Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ id: number,
+    params?: GetClienteEstadoCuentaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetClienteEstadoCuentaQueryOptions(id,options)
+  const queryOptions = getGetClienteEstadoCuentaQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -5037,20 +5442,29 @@ export function useGetClienteEstadoCuenta<TData = Awaited<ReturnType<typeof getC
 
 
 
-export const getGetClienteComprasUrl = (id: number,) => {
+export const getGetClienteComprasUrl = (id: number,
+    params?: GetClienteComprasParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/clientes/${id}/compras`
+  return stringifiedParams.length > 0 ? `/api/clientes/${id}/compras?${stringifiedParams}` : `/api/clientes/${id}/compras`
 }
 
 /**
  * @summary Historial de compras del cliente (clientes_finanzas requerido)
  */
-export const getClienteCompras = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteCompras> => {
+export const getClienteCompras = async (id: number,
+    params?: GetClienteComprasParams, options?: Parameters<typeof customFetch>[1]): Promise<ClienteCompras> => {
 
-  return customFetch<ClienteCompras>(getGetClienteComprasUrl(id),
+  return customFetch<ClienteCompras>(getGetClienteComprasUrl(id,params),
   {
     ...options,
     method: 'GET'
@@ -5063,23 +5477,25 @@ export const getClienteCompras = async (id: number, options?: Parameters<typeof 
 
 
 
-export const getGetClienteComprasQueryKey = (id: number,) => {
+export const getGetClienteComprasQueryKey = (id: number,
+    params?: GetClienteComprasParams,) => {
     return [
-    `/api/clientes/${id}/compras`
+    `/api/clientes/${id}/compras`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetClienteComprasQueryOptions = <TData = Awaited<ReturnType<typeof getClienteCompras>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetClienteComprasQueryOptions = <TData = Awaited<ReturnType<typeof getClienteCompras>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    params?: GetClienteComprasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetClienteComprasQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteComprasQueryKey(id,params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteCompras>>> = ({ signal }) => getClienteCompras(id, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteCompras>>> = ({ signal }) => getClienteCompras(id,params, { signal, ...requestOptions });
 
 
 
@@ -5097,11 +5513,12 @@ export type GetClienteComprasQueryError = ErrorType<UnauthorizedResponse | Forbi
  */
 
 export function useGetClienteCompras<TData = Awaited<ReturnType<typeof getClienteCompras>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ id: number,
+    params?: GetClienteComprasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteCompras>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetClienteComprasQueryOptions(id,options)
+  const queryOptions = getGetClienteComprasQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -5179,6 +5596,89 @@ export function useGetClienteEstadisticas<TData = Awaited<ReturnType<typeof getC
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetClienteEstadisticasQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClienteAnaliticaUrl = (id: number,
+    params?: GetClienteAnaliticaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/clientes/${id}/analitica?${stringifiedParams}` : `/api/clientes/${id}/analitica`
+}
+
+export const getClienteAnalitica = async (id: number,
+    params?: GetClienteAnaliticaParams, options?: Parameters<typeof customFetch>[1]): Promise<ClienteAnalitica> => {
+
+  return customFetch<ClienteAnalitica>(getGetClienteAnaliticaUrl(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteAnaliticaQueryKey = (id: number,
+    params?: GetClienteAnaliticaParams,) => {
+    return [
+    `/api/clientes/${id}/analitica`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetClienteAnaliticaQueryOptions = <TData = Awaited<ReturnType<typeof getClienteAnalitica>>, TError = ErrorType<unknown>>(id: number,
+    params?: GetClienteAnaliticaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteAnalitica>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteAnaliticaQueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteAnalitica>>> = ({ signal }) => getClienteAnalitica(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteAnalitica>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteAnaliticaQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteAnalitica>>>
+export type GetClienteAnaliticaQueryError = ErrorType<unknown>
+
+
+
+export function useGetClienteAnalitica<TData = Awaited<ReturnType<typeof getClienteAnalitica>>, TError = ErrorType<unknown>>(
+ id: number,
+    params?: GetClienteAnaliticaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteAnalitica>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteAnaliticaQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -5339,6 +5839,356 @@ export const useCreateClientePago = <TError = ErrorType<ValidationErrorResponse 
       > => {
       return useMutation(getCreateClientePagoMutationOptions(options));
     }
+
+export const getCreateClienteAjusteUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/ajustes`
+}
+
+export const createClienteAjuste = async (id: number,
+    clienteAjusteInput: ClienteAjusteInput, options?: Parameters<typeof customFetch>[1]): Promise<CreateClienteAjuste201> => {
+
+  return customFetch<CreateClienteAjuste201>(getCreateClienteAjusteUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(clienteAjusteInput)
+  }
+);}
+
+
+
+
+
+export const getCreateClienteAjusteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClienteAjuste>>, TError,{id: number;data: BodyType<ClienteAjusteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createClienteAjuste>>, TError,{id: number;data: BodyType<ClienteAjusteInput>}, TContext> => {
+
+const mutationKey = ['createClienteAjuste'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createClienteAjuste>>, {id: number;data: BodyType<ClienteAjusteInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createClienteAjuste(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateClienteAjusteMutationResult = NonNullable<Awaited<ReturnType<typeof createClienteAjuste>>>
+    export type CreateClienteAjusteMutationBody = BodyType<ClienteAjusteInput>
+    export type CreateClienteAjusteMutationError = ErrorType<unknown>
+
+    export const useCreateClienteAjuste = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createClienteAjuste>>, TError,{id: number;data: BodyType<ClienteAjusteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createClienteAjuste>>,
+        TError,
+        {id: number;data: BodyType<ClienteAjusteInput>},
+        TContext
+      > => {
+      return useMutation(getCreateClienteAjusteMutationOptions(options));
+    }
+
+export const getExportClienteEstadoCuentaUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/estado-cuenta.xlsx`
+}
+
+export const exportClienteEstadoCuenta = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportClienteEstadoCuentaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportClienteEstadoCuentaQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/estado-cuenta.xlsx`
+    ] as const;
+    }
+
+
+export const getExportClienteEstadoCuentaQueryOptions = <TData = Awaited<ReturnType<typeof exportClienteEstadoCuenta>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportClienteEstadoCuentaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportClienteEstadoCuenta>>> = ({ signal }) => exportClienteEstadoCuenta(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportClienteEstadoCuenta>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportClienteEstadoCuentaQueryResult = NonNullable<Awaited<ReturnType<typeof exportClienteEstadoCuenta>>>
+export type ExportClienteEstadoCuentaQueryError = ErrorType<unknown>
+
+
+
+export function useExportClienteEstadoCuenta<TData = Awaited<ReturnType<typeof exportClienteEstadoCuenta>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClienteEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportClienteEstadoCuentaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportClienteEstadoCuentaPdfUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/estado-cuenta.pdf`
+}
+
+export const exportClienteEstadoCuentaPdf = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportClienteEstadoCuentaPdfUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportClienteEstadoCuentaPdfQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/estado-cuenta.pdf`
+    ] as const;
+    }
+
+
+export const getExportClienteEstadoCuentaPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportClienteEstadoCuentaPdfQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>> = ({ signal }) => exportClienteEstadoCuentaPdf(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportClienteEstadoCuentaPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>>
+export type ExportClienteEstadoCuentaPdfQueryError = ErrorType<unknown>
+
+
+
+export function useExportClienteEstadoCuentaPdf<TData = Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClienteEstadoCuentaPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportClienteEstadoCuentaPdfQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportClientesCarteraUrl = () => {
+
+
+
+
+  return `/api/clientes/cartera.xlsx`
+}
+
+export const exportClientesCartera = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportClientesCarteraUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportClientesCarteraQueryKey = () => {
+    return [
+    `/api/clientes/cartera.xlsx`
+    ] as const;
+    }
+
+
+export const getExportClientesCarteraQueryOptions = <TData = Awaited<ReturnType<typeof exportClientesCartera>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClientesCartera>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportClientesCarteraQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportClientesCartera>>> = ({ signal }) => exportClientesCartera({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportClientesCartera>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportClientesCarteraQueryResult = NonNullable<Awaited<ReturnType<typeof exportClientesCartera>>>
+export type ExportClientesCarteraQueryError = ErrorType<unknown>
+
+
+
+export function useExportClientesCartera<TData = Awaited<ReturnType<typeof exportClientesCartera>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClientesCartera>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportClientesCarteraQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportClientesCarteraPdfUrl = () => {
+
+
+
+
+  return `/api/clientes/cartera.pdf`
+}
+
+export const exportClientesCarteraPdf = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportClientesCarteraPdfUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportClientesCarteraPdfQueryKey = () => {
+    return [
+    `/api/clientes/cartera.pdf`
+    ] as const;
+    }
+
+
+export const getExportClientesCarteraPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportClientesCarteraPdf>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClientesCarteraPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportClientesCarteraPdfQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportClientesCarteraPdf>>> = ({ signal }) => exportClientesCarteraPdf({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportClientesCarteraPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportClientesCarteraPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportClientesCarteraPdf>>>
+export type ExportClientesCarteraPdfQueryError = ErrorType<unknown>
+
+
+
+export function useExportClientesCarteraPdf<TData = Awaited<ReturnType<typeof exportClientesCarteraPdf>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportClientesCarteraPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportClientesCarteraPdfQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getListPermisosRolesUrl = () => {
 

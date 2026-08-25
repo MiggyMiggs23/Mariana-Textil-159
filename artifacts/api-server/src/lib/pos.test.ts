@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   auditoriaTable,
   clientesTable,
@@ -141,7 +141,7 @@ async function sale(input: {
       {
         ubicacionId: input.ubicacionId,
         usuarioTerminalId: USER_ID,
-        clienteId: input.clienteId ?? null,
+        clienteId: input.clienteId ?? 1,
         tipo: input.tipo ?? "NORMAL",
         facturado: input.facturado ?? false,
         uuidCliente: input.uuid ?? randomUUID(),
@@ -529,11 +529,13 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
       true,
     ),
   );
-  const [client] = await db
-    .select()
-    .from(clientesTable)
-    .where(eq(clientesTable.id, clientId));
-  assert.equal(client!.saldoCredito, "300.00");
+  const [balance] = await db
+    .select({
+      saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
+    })
+    .from(movimientosCreditoTable)
+    .where(eq(movimientosCreditoTable.clienteId, clientId));
+  assert.equal(balance!.saldo, "300.00");
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.totalCobrado, "600.00");
   assert.equal(corte?.formasPago[0]?.importe, "100.00");
@@ -713,6 +715,39 @@ await test("POS-05B cobro exige sesión abierta y cliente para crédito", async 
             pagos: [{ formaPago: "CREDITO", importe: "100" }],
             ip: "127.0.0.1",
           },
+          true,
+        ),
+      ),
+    (error: unknown) =>
+      error instanceof PosError &&
+      error.code === "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
+  );
+});
+
+await test("POS-05BB crear ticket exige cliente", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId, "1", "20");
+  await assert.rejects(
+    () =>
+      db.transaction((tx) =>
+        crearTicket(
+          tx,
+          {
+            ubicacionId,
+            usuarioTerminalId: USER_ID,
+            clienteId: null,
+            tipo: "NORMAL",
+            facturado: false,
+            uuidCliente: randomUUID(),
+            lineas: [{
+              rolloId: rollo.id,
+              productoId,
+              cantidad: "1",
+              precioUnitario: "50",
+            }],
+            ip: "127.0.0.1",
+          } as unknown as Parameters<typeof crearTicket>[1],
           true,
         ),
       ),
@@ -921,11 +956,6 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     .from(ticketPagosTable)
     .where(eq(ticketPagosTable.ticketId, ticket.id));
   assert.equal(payments.length, 1);
-  const [client] = await db
-    .select()
-    .from(clientesTable)
-    .where(eq(clientesTable.id, clientId));
-  assert.equal(client!.saldoCredito, "0.00");
   const ledger = await db
     .select()
     .from(movimientosCreditoTable)
@@ -934,6 +964,10 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     "REVERSO",
     "VENTA_CREDITO",
   ]);
+  assert.equal(
+    ledger.reduce((sum, movement) => sum + Number(movement.importe), 0),
+    0,
+  );
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.ticketsCancelados, 1);
   assert.equal(corte?.ticketsCobrados, 0);

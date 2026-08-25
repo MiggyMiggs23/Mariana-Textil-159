@@ -53,12 +53,14 @@ import {
   auditoriaTable,
   db,
   entradasTable,
+  ensureClientesSchema,
   existenciasTable,
   movimientosTable,
   permisosRolTable,
   permisosUsuarioTable,
   productosTable,
   proveedoresTable,
+  pool,
   rollosTable,
   salidaLineasTable,
   salidaRollosTable,
@@ -98,6 +100,7 @@ let server: Server;
 let BASE: string;
 
 async function startServer(): Promise<void> {
+  await ensureClientesSchema(pool);
   return new Promise((resolve, reject) => {
     server = createServer(app);
     server.listen(0, "127.0.0.1", () => {
@@ -495,7 +498,7 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
     {
       uuidCliente: randomUUID(),
       ubicacionId: otherTiendaId,
-      clienteId: null,
+      clienteId: 1,
       tipo: "NORMAL",
       facturado: false,
       lineas: [
@@ -544,7 +547,7 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
     {
       uuidCliente: randomUUID(),
       ubicacionId: seedTienda.id,
-      clienteId: null,
+      clienteId: 1,
       tipo: "NORMAL",
       facturado: false,
       lineas: [
@@ -653,7 +656,7 @@ await test("S-03D: legacy zero-cost roll is blocked by advance and definitive PO
     {
       uuidCliente: ticketUuid,
       ubicacionId: seedTienda.id,
-      clienteId: null,
+      clienteId: 1,
       tipo: "NORMAL",
       facturado: false,
       lineas: [

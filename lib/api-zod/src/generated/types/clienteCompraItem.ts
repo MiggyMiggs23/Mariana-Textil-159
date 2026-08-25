@@ -10,4 +10,12 @@ export interface ClienteCompraItem {
   id?: number;
   fecha?: Date;
   total?: string;
+  folio?: number;
+  subtotal?: string;
+  iva?: string;
+  metros?: string;
+  kilos?: string;
+  /** @nullable */
+  margen?: string | null;
+  lineasSinCosto?: number;
 }

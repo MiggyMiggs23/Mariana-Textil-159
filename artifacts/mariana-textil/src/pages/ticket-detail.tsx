@@ -272,7 +272,7 @@ export default function TicketDetailPage() {
             </div>
             {ticket.clienteId && (
               <div className="mt-2 text-sm text-muted-foreground">
-                Cliente: {ticket.nombreCliente}
+                Cliente: {ticket.clienteId === 1 ? "VENTA AL PÚBLICO" : ticket.nombreCliente || `Cliente #${ticket.clienteId}`}
               </div>
             )}
             {ticket.facturado && (
@@ -512,7 +512,7 @@ export default function TicketDetailPage() {
         <div className="mb-6 grid grid-cols-2 gap-4 text-sm">
           <div>
             <div className="font-bold">Cliente:</div>
-            <div>{ticket.clienteId ? ticket.nombreCliente : "Mostrador"}</div>
+            <div>{ticket.clienteId === 1 || !ticket.clienteId ? "VENTA AL PÚBLICO" : ticket.nombreCliente || `Cliente #${ticket.clienteId}`}</div>
           </div>
           <div>
             <div className="font-bold">Atendió:</div>

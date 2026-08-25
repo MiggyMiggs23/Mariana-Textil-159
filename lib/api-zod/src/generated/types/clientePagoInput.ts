@@ -14,4 +14,8 @@ export interface ClientePagoInput {
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
+  /** @nullable */
+  fechaEfectiva?: Date | null;
+  /** @nullable */
+  ticketId?: number | null;
 }

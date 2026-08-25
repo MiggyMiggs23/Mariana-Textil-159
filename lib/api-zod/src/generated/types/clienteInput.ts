@@ -22,4 +22,6 @@ export interface ClienteInput {
   rfc?: string | null;
   /** @nullable */
   notas?: string | null;
+  /** @nullable */
+  contactoNombre?: string | null;
 }

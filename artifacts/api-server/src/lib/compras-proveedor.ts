@@ -10,9 +10,8 @@
  *  - estadoCuenta()         – chronological ledger with running balance
  *  - resumenProveedores()   – aggregate dashboard across all suppliers
  *                             with comprasMes and totalComprado12Meses
- *  - estadisticasPeriodo()  – breakdown by month/product/tela/color with
- *                             totalRollos, ticketPromedio, diasDesdeUltimaCompra,
- *                             and per-product cantidadTotal + cost variation
+ *  - estadisticasPeriodo()  – purchasing, cost, payment and margin analytics
+ *  - analiticaGlobalProveedores() – Pareto, debt, monthly trend and rising costs
  *
  * Accounting rules:
  *   saldo = SUM(importe) per proveedor_id
@@ -106,8 +105,26 @@ export type EstadisticasPeriodo = {
   costoPorKilo: string | null;
   ticketPromedio: string;
   diasDesdeUltimaCompra: number | null;
-  variacionVsPeriodoAnterior: string | null;
   ultimaCompra: string | null;
+  frecuencia: { promedioDiasEntreCompras: string | null; ultimaCompra: string | null };
+  estacionalidad: {
+    mesMayor: { mes: string; total: string } | null;
+    mesMenor: { mes: string; total: string } | null;
+  };
+  concentracion: { productoPrincipalPct: string; tresPrincipalesPct: string };
+  productosExclusivos: Array<{ productoId: number; sku: string; tela: string; color: string }>;
+  diasPromedioPago: string | null;
+  antiguedadDeuda: { hasta30: string; de31a60: string; de61a90: string; mas90: string };
+  margenGenerado: {
+    ventas: string;
+    costo: string;
+    margen: string;
+    margenPct: string | null;
+    lineasIncluidas: number;
+    lineasExcluidasSinRollo: number;
+    lineasExcluidasSinCosto: number;
+    nota: string;
+  };
   porMes: Array<{
     mes: string; // YYYY-MM
     total: string;
@@ -123,11 +140,43 @@ export type EstadisticasPeriodo = {
     totalRollos: number;
     cantidadTotal: string;
     costoPorUnidad: string;
-    costoPorUnidadAnterior: string | null;
-    variacionCostoUnidadPct: string | null;
+    historialCostos: Array<{ entradaId: number; fecha: string; cantidad: string; costoUnitario: string }>;
+    comparacionProveedores: Array<{ proveedorId: number; proveedor: string; costoUnitario: string }>;
+    proveedorMasBarato: string | null;
+    ahorroPotencial: string;
   }>;
   porTela: Array<{ tela: string; totalCosto: string; rollosCount: number }>;
   porColor: Array<{ color: string; totalCosto: string; rollosCount: number }>;
+};
+
+export type AnaliticaGlobalProveedores = {
+  pareto: Array<{ proveedorId: number; proveedor: string; total: string; porcentajeAcumulado: string }>;
+  deuda: Array<{ proveedorId: number; proveedor: string; saldo: string }>;
+  tendenciaMensual: Array<{ mes: string; total: string }>;
+  costosAlAlza: Array<{
+    productoId: number;
+    sku: string;
+    proveedor: string;
+    costoAnterior: string;
+    costoActual: string;
+    variacionPct: string;
+  }>;
+  comparacionCostos: Array<{
+    productoId: number;
+    sku: string;
+    unidad: string;
+    proveedorMasBarato: string;
+    costoMasBarato: string;
+    costoMasCaro: string;
+    ahorroPct: string;
+    proveedores: Array<{ proveedorId: number; proveedor: string; costoUnitario: string }>;
+  }>;
+  antiguedadDeuda: {
+    hasta30: string;
+    de31a60: string;
+    de61a90: string;
+    mas90: string;
+  };
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -786,27 +835,6 @@ export async function estadisticasPeriodo(opts: {
     ? Math.floor((Date.now() - ultimaDate.getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
-  // Previous period (same duration)
-  const durMs = hasta.getTime() - desde.getTime();
-  const prevHasta = new Date(desde.getTime() - 1);
-  const prevDesde = new Date(desde.getTime() - durMs - 1);
-
-  const prevAgg = await db.execute<{ total: string }>(sql`
-    SELECT COALESCE(SUM(pp.importe), 0)::text AS total
-    FROM pagos_proveedor pp
-    WHERE pp.proveedor_id = ${proveedorId}
-      AND pp.tipo = 'COMPRA'
-      AND pp.fecha BETWEEN ${prevDesde} AND ${prevHasta}
-  `);
-
-  const prevTotal = parseFloat(
-    (prevAgg.rows as Array<{ total: string }>)[0]?.total ?? "0",
-  );
-  const variacion =
-    prevTotal > 0
-      ? (((totalCompras - prevTotal) / prevTotal) * 100).toFixed(2)
-      : null;
-
   // Por mes
   const mesRows = await db.execute<{ mes: string; total: string; count: string }>(sql`
     SELECT
@@ -860,41 +888,33 @@ export async function estadisticasPeriodo(opts: {
     ORDER BY total_costo DESC
   `);
 
-  // Por producto – previous period (for cost comparison)
-  const prevProdRows = await db.execute<{
-    producto_id: number;
-    total_rollos: string;
-    cantidad_total: string;
-  }>(sql`
-    SELECT
-      pr.id AS producto_id,
-      COUNT(ro.id)::text AS total_rollos,
-      SUM(ro.cantidad_inicial)::text AS cantidad_total,
-      SUM(ro.costo_total)::text AS total_costo
-    FROM pagos_proveedor pp
-    JOIN entradas e ON e.id = pp.entrada_id
-    JOIN rollos ro ON ro.recepcion_id = e.id
-    JOIN productos pr ON pr.id = ro.producto_id
-    WHERE pp.proveedor_id = ${proveedorId}
-      AND pp.tipo = 'COMPRA'
-      AND pp.fecha BETWEEN ${prevDesde} AND ${prevHasta}
-    GROUP BY pr.id
-  `);
-
-  const prevProdMap = new Map<number, { rollos: number; cantidad: number; costo: number }>();
-  for (const r of prevProdRows.rows as Array<{
-    producto_id: number;
-    total_rollos: string;
-    cantidad_total: string;
-    total_costo: string;
-  }>) {
-    const rollos = parseInt(r.total_rollos, 10);
-    prevProdMap.set(r.producto_id, {
-      rollos,
-      cantidad: parseFloat(r.cantidad_total),
-      costo: parseFloat(r.total_costo),
-    });
-  }
+  const [historyResult, comparisonResult] = await Promise.all([
+    db.execute(sql`
+      SELECT ro.producto_id, e.id AS entrada_id, pp.fecha,
+        SUM(ro.cantidad_inicial)::text AS cantidad,
+        (SUM(ro.costo_total) / NULLIF(SUM(ro.cantidad_inicial), 0))::text AS costo_unitario
+      FROM pagos_proveedor pp
+      JOIN entradas e ON e.id = pp.entrada_id
+      JOIN rollos ro ON ro.recepcion_id = e.id
+      WHERE pp.proveedor_id = ${proveedorId} AND pp.tipo = 'COMPRA'
+        AND pp.fecha BETWEEN ${desde} AND ${hasta}
+      GROUP BY ro.producto_id, e.id, pp.fecha ORDER BY pp.fecha
+    `),
+    db.execute(sql`
+      SELECT ro.producto_id, p.id AS proveedor_id, p.nombre AS proveedor,
+        (SUM(ro.costo_total) / NULLIF(SUM(ro.cantidad_inicial), 0))::text AS costo_unitario
+      FROM pagos_proveedor pp
+      JOIN proveedores p ON p.id = pp.proveedor_id
+      JOIN rollos ro ON ro.recepcion_id = pp.entrada_id
+      WHERE pp.tipo = 'COMPRA' AND pp.fecha BETWEEN ${desde} AND ${hasta}
+      GROUP BY ro.producto_id, p.id, p.nombre
+      ORDER BY ro.producto_id, (SUM(ro.costo_total) / NULLIF(SUM(ro.cantidad_inicial), 0))
+    `),
+  ]);
+  type HistoryRow = { producto_id: number; entrada_id: number; fecha: Date | string; cantidad: string; costo_unitario: string };
+  type ComparisonRow = { producto_id: number; proveedor_id: number; proveedor: string; costo_unitario: string };
+  const historyRows = historyResult.rows as HistoryRow[];
+  const comparisonRows = comparisonResult.rows as ComparisonRow[];
 
   const porProducto = (
     prodRows.rows as Array<{
@@ -912,18 +932,19 @@ export async function estadisticasPeriodo(opts: {
     const rollos = parseInt(r.total_rollos, 10);
     const cantidad = parseFloat(r.cantidad_total);
     const costoPromedioActual = cantidad > 0 ? totalC / cantidad : 0;
-    const prev = prevProdMap.get(r.producto_id);
-    let costoPorUnidadAnterior: string | null = null;
-    let variacionCostoUnidadPct: string | null = null;
-    if (prev && prev.cantidad > 0) {
-      const cpa = prev.costo / prev.cantidad;
-      costoPorUnidadAnterior = cpa.toFixed(2);
-      if (cpa > 0) {
-        variacionCostoUnidadPct = (
-          ((costoPromedioActual - cpa) / cpa) * 100
-        ).toFixed(2);
-      }
-    }
+    const historialCostos = historyRows.filter((h) => h.producto_id === r.producto_id).map((h) => ({
+      entradaId: h.entrada_id,
+      fecha: toDate(h.fecha)!.toISOString(),
+      cantidad: parseFloat(h.cantidad).toFixed(3),
+      costoUnitario: parseFloat(h.costo_unitario).toFixed(2),
+    }));
+    const comparacionProveedores = comparisonRows.filter((c) => c.producto_id === r.producto_id).map((c) => ({
+      proveedorId: c.proveedor_id,
+      proveedor: c.proveedor,
+      costoUnitario: parseFloat(c.costo_unitario).toFixed(2),
+    }));
+    const cheapest = comparacionProveedores[0] ?? null;
+    const ahorro = cheapest ? Math.max(0, costoPromedioActual - parseFloat(cheapest.costoUnitario)) * cantidad : 0;
     return {
       productoId: r.producto_id,
       sku: r.sku,
@@ -934,8 +955,10 @@ export async function estadisticasPeriodo(opts: {
       totalRollos: rollos,
       cantidadTotal: parseFloat(r.cantidad_total).toFixed(2),
       costoPorUnidad: costoPromedioActual.toFixed(2),
-      costoPorUnidadAnterior,
-      variacionCostoUnidadPct,
+      historialCostos,
+      comparacionProveedores,
+      proveedorMasBarato: cheapest?.proveedor ?? null,
+      ahorroPotencial: ahorro.toFixed(2),
     };
   });
 
@@ -1005,6 +1028,72 @@ export async function estadisticasPeriodo(opts: {
     rollosCount: parseInt(r.rollos_count, 10),
   }));
 
+  const extras = await db.execute(sql`
+    WITH compras AS (
+      SELECT pp.entrada_id, pp.fecha, pp.importe
+      FROM pagos_proveedor pp WHERE pp.proveedor_id = ${proveedorId} AND pp.tipo = 'COMPRA'
+    ), deudas AS (
+      SELECT c.entrada_id, c.fecha, GREATEST(0, c.importe - COALESCE(ABS(SUM(p.importe)), 0)) AS saldo
+      FROM compras c LEFT JOIN pagos_proveedor p ON p.entrada_id = c.entrada_id AND p.tipo = 'PAGO'
+      GROUP BY c.entrada_id, c.fecha, c.importe
+    ), pagadas AS (
+      SELECT c.entrada_id, EXTRACT(EPOCH FROM (MAX(p.fecha)-c.fecha))/86400 AS dias
+      FROM compras c JOIN pagos_proveedor p ON p.entrada_id=c.entrada_id AND p.tipo='PAGO'
+      GROUP BY c.entrada_id,c.fecha HAVING ABS(SUM(p.importe)) >= MAX(c.importe)
+    )
+    SELECT
+      (SELECT AVG(dias)::text FROM pagadas) AS dias_pago,
+      COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date <= 30),0)::text AS d30,
+      COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date BETWEEN 31 AND 60),0)::text AS d60,
+      COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date BETWEEN 61 AND 90),0)::text AS d90,
+      COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date > 90),0)::text AS dmayor
+    FROM deudas
+  `);
+  const extra = extras.rows[0] as { dias_pago: string | null; d30: string; d60: string; d90: string; dmayor: string };
+
+  const exclusiveRows = await db.execute(sql`
+    SELECT pr.id, pr.sku, pr.tela, pr.color
+    FROM productos pr JOIN rollos ro ON ro.producto_id=pr.id
+    GROUP BY pr.id,pr.sku,pr.tela,pr.color
+    HAVING COUNT(DISTINCT ro.proveedor_id) FILTER (WHERE ro.proveedor_id IS NOT NULL)=1
+      AND MAX(ro.proveedor_id) FILTER (WHERE ro.proveedor_id IS NOT NULL)=${proveedorId}
+    ORDER BY pr.sku
+  `);
+  // A sale is attributed only to its physical roll. Never infer a supplier from
+  // producto_id: a product can have rolls from several suppliers.
+  const marginRows = await db.execute(sql`
+    WITH lineas_periodo AS (
+      SELECT tl.*, t.id AS ticket_id
+      FROM ticket_lineas tl JOIN tickets t ON t.id=tl.ticket_id
+      WHERE t.estado='VENDIDO' AND t.created_at BETWEEN ${desde} AND ${hasta}
+    ), lineas_proveedor AS (
+      SELECT lp.*
+      FROM lineas_periodo lp
+      JOIN rollos ro ON ro.id=lp.rollo_id
+      JOIN entradas e ON e.id=ro.recepcion_id
+      WHERE e.proveedor_id=${proveedorId}
+    )
+    SELECT
+      COALESCE(SUM(importe) FILTER (WHERE costo_total_congelado > 0),0)::text AS ventas,
+      COALESCE(SUM(costo_total_congelado) FILTER (WHERE costo_total_congelado > 0),0)::text AS costo,
+      COUNT(*) FILTER (WHERE costo_total_congelado > 0)::text AS incluidas,
+      (SELECT COUNT(*) FROM lineas_periodo WHERE rollo_id IS NULL)::text AS sin_rollo,
+      COUNT(*) FILTER (WHERE costo_total_congelado IS NULL OR costo_total_congelado <= 0)::text AS sin_costo
+    FROM lineas_proveedor
+  `);
+  const margin = marginRows.rows[0] as {
+    ventas: string; costo: string; incluidas: string; sin_rollo: string; sin_costo: string;
+  };
+  const ventas = parseFloat(margin.ventas), costoVenta = parseFloat(margin.costo), margen = ventas-costoVenta;
+  const monthSorted = [...porMes].sort((a,b) => parseFloat(b.total)-parseFloat(a.total));
+  const topTotal = porProducto[0] ? parseFloat(porProducto[0].totalCosto) : 0;
+  const top3Total = porProducto.slice(0,3).reduce((s,p) => s+parseFloat(p.totalCosto),0);
+  const purchaseDates = (mesRows.rows.length ? await db.execute(sql`
+    SELECT fecha FROM pagos_proveedor WHERE proveedor_id=${proveedorId} AND tipo='COMPRA'
+      AND fecha BETWEEN ${desde} AND ${hasta} ORDER BY fecha
+  `) : { rows: [] }).rows as Array<{fecha: Date|string}>;
+  const intervals = purchaseDates.slice(1).map((r,i) => (toDate(r.fecha)!.getTime()-toDate(purchaseDates[i]!.fecha)!.getTime())/86400000);
+
   return {
     desde: desde.toISOString(),
     hasta: hasta.toISOString(),
@@ -1017,11 +1106,123 @@ export async function estadisticasPeriodo(opts: {
       cantidadKilos > 0 ? (costoKilos / cantidadKilos).toFixed(2) : null,
     ticketPromedio: ticketPromedio.toFixed(2),
     diasDesdeUltimaCompra,
-    variacionVsPeriodoAnterior: variacion,
     ultimaCompra: ultimaDate ? ultimaDate.toISOString() : null,
+    frecuencia: {
+      promedioDiasEntreCompras: intervals.length ? (intervals.reduce((a,b)=>a+b,0)/intervals.length).toFixed(1) : null,
+      ultimaCompra: ultimaDate ? ultimaDate.toISOString() : null,
+    },
+    estacionalidad: {
+      mesMayor: monthSorted[0] ? { mes: monthSorted[0].mes, total: monthSorted[0].total } : null,
+      mesMenor: monthSorted.length ? { mes: monthSorted[monthSorted.length-1]!.mes, total: monthSorted[monthSorted.length-1]!.total } : null,
+    },
+    concentracion: {
+      productoPrincipalPct: totalCompras > 0 ? (topTotal/totalCompras*100).toFixed(2) : "0.00",
+      tresPrincipalesPct: totalCompras > 0 ? (top3Total/totalCompras*100).toFixed(2) : "0.00",
+    },
+    productosExclusivos: (exclusiveRows.rows as Array<{id:number;sku:string;tela:string;color:string}>).map(r => ({productoId:r.id,sku:r.sku,tela:r.tela,color:r.color})),
+    diasPromedioPago: extra.dias_pago ? parseFloat(extra.dias_pago).toFixed(1) : null,
+    antiguedadDeuda: { hasta30: parseFloat(extra.d30).toFixed(2), de31a60: parseFloat(extra.d60).toFixed(2), de61a90: parseFloat(extra.d90).toFixed(2), mas90: parseFloat(extra.dmayor).toFixed(2) },
+    margenGenerado: {
+      ventas: ventas.toFixed(2),
+      costo: costoVenta.toFixed(2),
+      margen: margen.toFixed(2),
+      margenPct: ventas > 0 ? (margen/ventas*100).toFixed(2) : null,
+      lineasIncluidas: parseInt(margin.incluidas, 10),
+      lineasExcluidasSinRollo: parseInt(margin.sin_rollo, 10),
+      lineasExcluidasSinCosto: parseInt(margin.sin_costo, 10),
+      nota: "Solo se incluyen líneas VENDIDAS ligadas al rollo físico recibido de este proveedor; líneas sin rollo o sin costo se excluyen.",
+    },
     porMes,
     porProducto,
     porTela,
     porColor,
+  };
+}
+
+export async function analiticaGlobalProveedores(): Promise<AnaliticaGlobalProveedores> {
+  const [paretoResult, deudaResult, trendResult, risingResult, comparisonResult, agingResult] = await Promise.all([
+    db.execute(sql`SELECT p.id proveedor_id,p.nombre proveedor,SUM(pp.importe)::text total
+      FROM pagos_proveedor pp JOIN proveedores p ON p.id=pp.proveedor_id WHERE pp.tipo='COMPRA'
+      GROUP BY p.id,p.nombre ORDER BY SUM(pp.importe) DESC`),
+    db.execute(sql`SELECT p.id proveedor_id,p.nombre proveedor,SUM(pp.importe)::text saldo
+      FROM pagos_proveedor pp JOIN proveedores p ON p.id=pp.proveedor_id GROUP BY p.id,p.nombre
+      HAVING SUM(pp.importe)>0 ORDER BY SUM(pp.importe) DESC`),
+    db.execute(sql`SELECT TO_CHAR(fecha,'YYYY-MM') mes,SUM(importe)::text total FROM pagos_proveedor
+      WHERE tipo='COMPRA' AND fecha>=CURRENT_DATE-INTERVAL '12 months' GROUP BY 1 ORDER BY 1`),
+    db.execute(sql`WITH history AS (
+      SELECT ro.producto_id,pp.proveedor_id,p.nombre proveedor,pr.sku,pp.fecha,
+        SUM(ro.costo_total)/NULLIF(SUM(ro.cantidad_inicial),0) costo,
+        ROW_NUMBER() OVER(PARTITION BY ro.producto_id,pp.proveedor_id ORDER BY pp.fecha DESC) rn
+      FROM pagos_proveedor pp JOIN rollos ro ON ro.recepcion_id=pp.entrada_id
+      JOIN proveedores p ON p.id=pp.proveedor_id JOIN productos pr ON pr.id=ro.producto_id
+      WHERE pp.tipo='COMPRA' GROUP BY ro.producto_id,pp.proveedor_id,p.nombre,pr.sku,pp.fecha
+    ) SELECT a.producto_id,a.sku,a.proveedor,b.costo::text costo_anterior,a.costo::text costo_actual,
+      ((a.costo-b.costo)/NULLIF(b.costo,0)*100)::text variacion
+      FROM history a JOIN history b ON b.producto_id=a.producto_id AND b.proveedor_id=a.proveedor_id AND b.rn=2
+      WHERE a.rn=1 AND a.costo>b.costo ORDER BY ((a.costo-b.costo)/NULLIF(b.costo,0)) DESC LIMIT 20`),
+    db.execute(sql`
+      SELECT pr.id producto_id,pr.sku,pr.unidad,p.id proveedor_id,p.nombre proveedor,
+        (SUM(ro.costo_total)/NULLIF(SUM(ro.cantidad_inicial),0))::text costo_unitario
+      FROM rollos ro JOIN productos pr ON pr.id=ro.producto_id
+      JOIN entradas e ON e.id=ro.recepcion_id
+      JOIN proveedores p ON p.id=e.proveedor_id
+      WHERE ro.costo_total IS NOT NULL AND ro.cantidad_inicial>0
+      GROUP BY pr.id,pr.sku,pr.unidad,p.id,p.nombre
+      HAVING SUM(ro.costo_total)>0
+      ORDER BY pr.sku,(SUM(ro.costo_total)/NULLIF(SUM(ro.cantidad_inicial),0))
+    `),
+    db.execute(sql`
+      WITH compras AS (
+        SELECT pp.proveedor_id,pp.id,pp.fecha,pp.importe,
+          COALESCE(SUM(pp.importe) OVER (
+            PARTITION BY pp.proveedor_id ORDER BY pp.fecha,pp.id
+            ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+          ),0) AS comprado_antes
+        FROM pagos_proveedor pp WHERE pp.tipo='COMPRA'
+      ), pagos AS (
+        SELECT proveedor_id,COALESCE(ABS(SUM(importe)),0) pagado
+        FROM pagos_proveedor WHERE tipo='PAGO' GROUP BY proveedor_id
+      ), deudas AS (
+        SELECT c.fecha,GREATEST(0,c.importe-LEAST(c.importe,GREATEST(0,COALESCE(p.pagado,0)-c.comprado_antes))) saldo
+        FROM compras c LEFT JOIN pagos p ON p.proveedor_id=c.proveedor_id
+      )
+      SELECT
+        COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date<=30),0)::text d30,
+        COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date BETWEEN 31 AND 60),0)::text d60,
+        COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date BETWEEN 61 AND 90),0)::text d90,
+        COALESCE(SUM(saldo) FILTER (WHERE CURRENT_DATE-fecha::date>90),0)::text dmayor
+      FROM deudas
+    `),
+  ]);
+  type P={proveedor_id:number;proveedor:string;total:string}; const pRows=paretoResult.rows as P[];
+  const grand=pRows.reduce((s,r)=>s+parseFloat(r.total),0); let accumulated=0;
+  type Comparison = { producto_id:number;sku:string;unidad:string;proveedor_id:number;proveedor:string;costo_unitario:string };
+  const comparisonRows = comparisonResult.rows as Comparison[];
+  const comparisonProductIds = [...new Set(comparisonRows.map(r => r.producto_id))];
+  const comparacionCostos = comparisonProductIds.map(productoId => {
+    const rows = comparisonRows.filter(r => r.producto_id === productoId);
+    const cheapest = rows[0]!;
+    const expensive = rows[rows.length - 1]!;
+    const low = parseFloat(cheapest.costo_unitario);
+    const high = parseFloat(expensive.costo_unitario);
+    return {
+      productoId,
+      sku: cheapest.sku,
+      unidad: cheapest.unidad,
+      proveedorMasBarato: cheapest.proveedor,
+      costoMasBarato: low.toFixed(2),
+      costoMasCaro: high.toFixed(2),
+      ahorroPct: high > 0 ? ((high-low)/high*100).toFixed(2) : "0.00",
+      proveedores: rows.map(r => ({ proveedorId:r.proveedor_id, proveedor:r.proveedor, costoUnitario:parseFloat(r.costo_unitario).toFixed(2) })),
+    };
+  }).filter(r => r.proveedores.length > 1).sort((a,b) => parseFloat(b.ahorroPct)-parseFloat(a.ahorroPct));
+  const aging = agingResult.rows[0] as {d30:string;d60:string;d90:string;dmayor:string};
+  return {
+    pareto:pRows.map(r=>{accumulated+=parseFloat(r.total);return {proveedorId:r.proveedor_id,proveedor:r.proveedor,total:parseFloat(r.total).toFixed(2),porcentajeAcumulado:grand? (accumulated/grand*100).toFixed(2):"0.00"}}),
+    deuda:(deudaResult.rows as Array<{proveedor_id:number;proveedor:string;saldo:string}>).map(r=>({proveedorId:r.proveedor_id,proveedor:r.proveedor,saldo:parseFloat(r.saldo).toFixed(2)})),
+    tendenciaMensual:(trendResult.rows as Array<{mes:string;total:string}>).map(r=>({mes:r.mes,total:parseFloat(r.total).toFixed(2)})),
+    costosAlAlza:(risingResult.rows as Array<{producto_id:number;sku:string;proveedor:string;costo_anterior:string;costo_actual:string;variacion:string}>).map(r=>({productoId:r.producto_id,sku:r.sku,proveedor:r.proveedor,costoAnterior:parseFloat(r.costo_anterior).toFixed(2),costoActual:parseFloat(r.costo_actual).toFixed(2),variacionPct:parseFloat(r.variacion).toFixed(2)})),
+    comparacionCostos,
+    antiguedadDeuda: { hasta30:parseFloat(aging.d30).toFixed(2), de31a60:parseFloat(aging.d60).toFixed(2), de61a90:parseFloat(aging.d90).toFixed(2), mas90:parseFloat(aging.dmayor).toFixed(2) },
   };
 }

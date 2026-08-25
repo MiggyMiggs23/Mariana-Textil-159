@@ -72,7 +72,9 @@ export const ticketsTable = pgTable(
     usuarioTerminalId: integer("usuario_terminal_id")
       .notNull()
       .references(() => usuariosTable.id),
-    clienteId: integer("cliente_id").references(() => clientesTable.id),
+    clienteId: integer("cliente_id")
+      .notNull()
+      .references(() => clientesTable.id),
     tipo: tipoTicketEnum("tipo").notNull(),
     subtotal: numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
     iva: numeric("iva", { precision: 12, scale: 2 }).notNull().default("0"),
@@ -108,6 +110,10 @@ export const ticketsTable = pgTable(
     index("tickets_estado_idx").on(table.estado),
     index("tickets_folio_idx").on(table.folio),
     index("tickets_uuid_cliente_idx").on(table.uuidCliente),
+    index("tickets_cliente_created_at_idx").on(
+      table.clienteId,
+      table.createdAt,
+    ),
   ],
 );
 
@@ -186,6 +192,9 @@ export const movimientosCreditoTable = pgTable(
       .notNull()
       .references(() => usuariosTable.id),
     notas: text("notas"),
+    formaPago: formaPagoTicketEnum("forma_pago"),
+    referencia: text("referencia"),
+    metadata: text("metadata"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -199,7 +208,8 @@ export const movimientosCreditoTable = pgTable(
     check(
       "movimientos_credito_importe_tipo_check",
       sql`(${table.tipo} = 'VENTA_CREDITO' AND ${table.importe} > 0)
-        OR (${table.tipo} IN ('ABONO', 'REVERSO') AND ${table.importe} < 0)`,
+        OR (${table.tipo} IN ('ABONO', 'REVERSO') AND ${table.importe} < 0)
+        OR (${table.tipo} = 'AJUSTE' AND ${table.importe} <> 0)`,
     ),
   ],
 );

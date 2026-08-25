@@ -20,6 +20,11 @@ export interface Cliente {
   /** @nullable */
   notas?: string | null;
   activo: boolean;
+  esSistema: boolean;
+  /** @nullable */
+  contactoNombre?: string | null;
+  /** @minimum 0 */
+  diasCredito: number;
   createdAt: Date;
   updatedAt: Date;
 }

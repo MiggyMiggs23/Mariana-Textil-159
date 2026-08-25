@@ -23,4 +23,6 @@ export interface ClienteUpdate {
   /** @nullable */
   notas?: string | null;
   activo?: boolean;
+  /** @nullable */
+  contactoNombre?: string | null;
 }

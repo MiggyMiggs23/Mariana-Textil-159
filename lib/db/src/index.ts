@@ -4,6 +4,7 @@ import * as schema from "./schema";
 export { ensureTicketIvaSchema } from "./lib/ticket-iva-schema";
 export { ensureSalidasSchema } from "./lib/salidas-schema";
 export { ensurePendingCostsSchema } from "./lib/pending-costs-schema";
+export { ensureClientesSchema } from "./lib/clientes-schema";
 
 const { Pool } = pg;
 

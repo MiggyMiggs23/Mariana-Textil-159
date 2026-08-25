@@ -374,6 +374,22 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /proveedores/analitica-global:
+    get:
+      operationId: getAnaliticaGlobalProveedores
+      tags: [proveedores]
+      summary: Analítica global de compras, deuda y costos de proveedores
+      responses:
+        "200":
+          description: Analítica global
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnaliticaGlobalProveedores"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /proveedores:
     get:
       operationId: listProveedores
@@ -1427,6 +1443,44 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /clientes/cartera:
+    get:
+      operationId: getClientesCartera
+      tags: [clientes]
+      summary: Cartera y antigüedad de saldos
+      responses:
+        "200":
+          description: Cartera
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientesCartera"
+  /clientes/analitica:
+    get:
+      operationId: getClientesAnalitica
+      tags: [clientes]
+      summary: Analítica global de clientes
+      parameters:
+        - { name: desde, in: query, schema: { type: string, format: date } }
+        - { name: hasta, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Analítica
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientesAnalitica"
+  /clientes/analitica.xlsx:
+    get:
+      operationId: exportClientesAnalitica
+      tags: [clientes]
+      summary: Exporta analítica a Excel
+      responses:
+        "200":
+          description: Libro Excel
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
   /clientes/{id}:
     get:
       operationId: getCliente
@@ -1494,6 +1548,25 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateClienteCredito
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClienteCreditoUpdate"
+      responses:
+        "200":
+          description: Términos actualizados
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
   /clientes/{id}/precios:
     get:
       operationId: getClientePrecios
@@ -1521,6 +1594,9 @@ paths:
       summary: Estado de cuenta del cliente (clientes_finanzas requerido)
       parameters:
         - $ref: "#/components/parameters/ClienteId"
+        - { name: desde, in: query, schema: { type: string, format: date } }
+        - { name: hasta, in: query, schema: { type: string, format: date } }
+        - { name: tipo, in: query, schema: { type: string } }
       responses:
         "200":
           description: Estado de cuenta
@@ -1541,6 +1617,8 @@ paths:
       summary: Historial de compras del cliente (clientes_finanzas requerido)
       parameters:
         - $ref: "#/components/parameters/ClienteId"
+        - { name: desde, in: query, schema: { type: string, format: date } }
+        - { name: hasta, in: query, schema: { type: string, format: date } }
       responses:
         "200":
           description: Compras del cliente
@@ -1574,6 +1652,21 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/{id}/analitica:
+    get:
+      operationId: getClienteAnalitica
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+        - { name: desde, in: query, schema: { type: string, format: date } }
+        - { name: hasta, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Analítica completa del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteAnalitica"
   /clientes/{id}/pagos:
     get:
       operationId: getClientePagos
@@ -1621,6 +1714,68 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/{id}/ajustes:
+    post:
+      operationId: createClienteAjuste
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClienteAjusteInput"
+      responses:
+        "201":
+          description: Ajuste creado
+          content:
+            application/json:
+              schema: { type: object, additionalProperties: true }
+  /clientes/{id}/estado-cuenta.xlsx:
+    get:
+      operationId: exportClienteEstadoCuenta
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: Excel
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+  /clientes/{id}/estado-cuenta.pdf:
+    get:
+      operationId: exportClienteEstadoCuentaPdf
+      tags: [clientes]
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      responses:
+        "200":
+          description: PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+  /clientes/cartera.xlsx:
+    get:
+      operationId: exportClientesCartera
+      tags: [clientes]
+      responses:
+        "200":
+          description: Excel
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+  /clientes/cartera.pdf:
+    get:
+      operationId: exportClientesCarteraPdf
+      tags: [clientes]
+      responses:
+        "200":
+          description: PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
   /permisos/roles:
     get:
       operationId: listPermisosRoles
@@ -2579,7 +2734,7 @@ components:
         $ref: "#/components/schemas/ModulePermission"
     Cliente:
       type: object
-      required: [id, nombre, activo, createdAt, updatedAt]
+      required: [id, nombre, activo, esSistema, diasCredito, createdAt, updatedAt]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -2589,6 +2744,9 @@ components:
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         activo: { type: boolean }
+        esSistema: { type: boolean }
+        contactoNombre: { type: ["string", "null"] }
+        diasCredito: { type: number, minimum: 0 }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
     ClienteInput:
@@ -2601,6 +2759,7 @@ components:
         direccion: { type: ["string", "null"] }
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
+        contactoNombre: { type: ["string", "null"] }
     ClienteUpdate:
       type: object
       properties:
@@ -2611,6 +2770,7 @@ components:
         rfc: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         activo: { type: boolean }
+        contactoNombre: { type: ["string", "null"] }
     ClienteCredito:
       type: object
       required:
@@ -2620,6 +2780,9 @@ components:
           saldoActual,
           creditoDisponible,
           puedeComprarCredito,
+          diasCredito,
+          utilizacion,
+          totalVencido,
         ]
       properties:
         clienteId: { type: number }
@@ -2627,6 +2790,21 @@ components:
         saldoActual: { type: string }
         creditoDisponible: { type: string }
         puedeComprarCredito: { type: boolean }
+        diasCredito: { type: number }
+        utilizacion: { type: string }
+        totalVencido: { type: string }
+        primerVencimiento: { type: ["string", "null"], format: date-time }
+        primeraCompra: { type: ["string", "null"], format: date-time }
+        ultimaActividad: { type: ["string", "null"], format: date-time }
+        antiguedad:
+          type: array
+          items: { type: object, additionalProperties: true }
+    ClienteCreditoUpdate:
+      type: object
+      required: [limiteCredito, diasCredito]
+      properties:
+        limiteCredito: { type: number, minimum: 0 }
+        diasCredito: { type: number, minimum: 0 }
     ClientePrecios:
       type: object
       required: [clienteId, precios]
@@ -2655,6 +2833,12 @@ components:
         importe: { type: string }
         fecha: { type: string, format: date-time }
         notas: { type: ["string", "null"] }
+        saldoCorrido: { type: string }
+        ticketFolio: { type: ["number", "null"] }
+        nombreUsuario: { type: string }
+        formaPago: { type: ["string", "null"] }
+        referencia: { type: ["string", "null"] }
+        fechaEfectiva: { type: string, format: date-time }
     ClienteEstadoCuenta:
       type: object
       required: [clienteId, movimientos, saldoActual]
@@ -2671,6 +2855,13 @@ components:
         id: { type: number }
         fecha: { type: string, format: date-time }
         total: { type: string }
+        folio: { type: number }
+        subtotal: { type: string }
+        iva: { type: string }
+        metros: { type: string }
+        kilos: { type: string }
+        margen: { type: ["string", "null"] }
+        lineasSinCosto: { type: number }
     ClienteCompras:
       type: object
       required: [clienteId, compras, total]
@@ -2681,6 +2872,7 @@ components:
           items:
             $ref: "#/components/schemas/ClienteCompraItem"
         total: { type: number }
+        periodo: { type: object, additionalProperties: true }
     ClienteEstadisticas:
       type: object
       required: [clienteId]
@@ -2718,6 +2910,29 @@ components:
         formaPago: { type: string }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
+        fechaEfectiva: { type: ["string", "null"], format: date-time }
+        ticketId: { type: ["number", "null"] }
+    ClienteAjusteInput:
+      type: object
+      required: [importe, motivo]
+      properties:
+        importe: { type: number }
+        motivo: { type: string, minLength: 10 }
+        referencia: { type: ["string", "null"] }
+        fechaEfectiva: { type: ["string", "null"], format: date-time }
+        ticketId: { type: ["number", "null"] }
+    ClienteAnalitica:
+      type: object
+      additionalProperties: true
+      required: [clienteId, periodo, productos, telasColores, tendencia, mezclaPagos, actividad]
+      properties:
+        clienteId: { type: number }
+        periodo: { type: object, additionalProperties: true }
+        productos: { type: array, items: { type: object, additionalProperties: true } }
+        telasColores: { type: array, items: { type: object, additionalProperties: true } }
+        tendencia: { type: array, items: { type: object, additionalProperties: true } }
+        mezclaPagos: { type: array, items: { type: object, additionalProperties: true } }
+        actividad: { type: object, additionalProperties: true }
     ClientesResumen:
       type: object
       required: [totalClientes, clientesConSaldo, totalCartera, totalVencido]
@@ -2726,6 +2941,48 @@ components:
         clientesConSaldo: { type: number }
         totalCartera: { type: string }
         totalVencido: { type: string }
+    ClienteCarteraItem:
+      type: object
+      required: [id, nombre, saldoActual, antiguedad, diasVencido]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        saldoActual: { type: string }
+        antiguedad:
+          type: string
+          enum: [POR_VENCER, "1_30", "31_60", "61_90", MAS_90]
+        diasVencido: { type: number }
+    ClientesCartera:
+      type: object
+      required: [clientes]
+      properties:
+        clientes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClienteCarteraItem"
+    ClientesAnalitica:
+      type: object
+      additionalProperties: true
+      required: [periodo, ventas, tickets, costo, margen, lineasSinCosto, metros, kilos]
+      properties:
+        periodo:
+          type: object
+          required: [desde, hasta]
+          properties:
+            desde: { type: ["string", "null"], format: date }
+            hasta: { type: ["string", "null"], format: date }
+        ventas: { type: string }
+        tickets: { type: number }
+        costo: { type: string }
+        margen: { type: string }
+        lineasSinCosto: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+        topVentas: { type: array, items: { type: object, additionalProperties: true } }
+        topMargen: { type: array, items: { type: object, additionalProperties: true } }
+        pareto: { type: array, items: { type: object, additionalProperties: true } }
+        publicoVsRegistrado: { type: array, items: { type: object, additionalProperties: true } }
+        mensual: { type: array, items: { type: object, additionalProperties: true } }
     ProveedorPagosResult:
       type: object
       required: [proveedorId, pagos]
@@ -4177,6 +4434,10 @@ components:
           totalRollos,
           cantidadTotal,
           costoPorUnidad,
+          historialCostos,
+          comparacionProveedores,
+          proveedorMasBarato,
+          ahorroPotencial,
         ]
       properties:
         productoId: { type: number }
@@ -4196,16 +4457,27 @@ components:
             type: string,
             description: "Costo unitario ponderado por METRO o por KILO, según la unidad del producto",
           }
-        costoPorUnidadAnterior:
-          {
-            type: ["string", "null"],
-            description: "Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto",
-          }
-        variacionCostoUnidadPct:
-          {
-            type: ["string", "null"],
-            description: "Variación porcentual del costo por unidad vs. el periodo anterior",
-          }
+        historialCostos:
+          type: array
+          items:
+            type: object
+            required: [entradaId, fecha, cantidad, costoUnitario]
+            properties:
+              entradaId: { type: number }
+              fecha: { type: string, format: date-time }
+              cantidad: { type: string }
+              costoUnitario: { type: string }
+        comparacionProveedores:
+          type: array
+          items:
+            type: object
+            required: [proveedorId, proveedor, costoUnitario]
+            properties:
+              proveedorId: { type: number }
+              proveedor: { type: string }
+              costoUnitario: { type: string }
+        proveedorMasBarato: { type: ["string", "null"] }
+        ahorroPotencial: { type: string }
     EstadisticasPorTela:
       type: object
       required: [tela, totalCosto, rollosCount]
@@ -4232,6 +4504,13 @@ components:
           costoPorMetro,
           costoPorKilo,
           ticketPromedio,
+          frecuencia,
+          estacionalidad,
+          concentracion,
+          productosExclusivos,
+          diasPromedioPago,
+          antiguedadDeuda,
+          margenGenerado,
           porMes,
           porProducto,
           porTela,
@@ -4264,8 +4543,60 @@ components:
             type: ["number", "null"],
             description: "Días desde la última compra hasta hoy; null si no hay compras",
           }
-        variacionVsPeriodoAnterior: { type: ["string", "null"] }
         ultimaCompra: { type: ["string", "null"], format: date-time }
+        frecuencia:
+          type: object
+          required: [promedioDiasEntreCompras, ultimaCompra]
+          properties:
+            promedioDiasEntreCompras: { type: ["string", "null"] }
+            ultimaCompra: { type: ["string", "null"], format: date-time }
+        estacionalidad:
+          type: object
+          required: [mesMayor, mesMenor]
+          properties:
+            mesMayor:
+              type: [object, "null"]
+              properties: { mes: { type: string }, total: { type: string } }
+            mesMenor:
+              type: [object, "null"]
+              properties: { mes: { type: string }, total: { type: string } }
+        concentracion:
+          type: object
+          required: [productoPrincipalPct, tresPrincipalesPct]
+          properties:
+            productoPrincipalPct: { type: string }
+            tresPrincipalesPct: { type: string }
+        productosExclusivos:
+          type: array
+          items:
+            type: object
+            required: [productoId, sku, tela, color]
+            properties:
+              productoId: { type: number }
+              sku: { type: string }
+              tela: { type: string }
+              color: { type: string }
+        diasPromedioPago: { type: ["string", "null"] }
+        antiguedadDeuda:
+          type: object
+          required: [hasta30, de31a60, de61a90, mas90]
+          properties:
+            hasta30: { type: string }
+            de31a60: { type: string }
+            de61a90: { type: string }
+            mas90: { type: string }
+        margenGenerado:
+          type: object
+          required: [ventas, costo, margen, margenPct, lineasIncluidas, lineasExcluidasSinRollo, lineasExcluidasSinCosto, nota]
+          properties:
+            ventas: { type: string }
+            costo: { type: string }
+            margen: { type: string }
+            margenPct: { type: ["string", "null"] }
+            lineasIncluidas: { type: number }
+            lineasExcluidasSinRollo: { type: number }
+            lineasExcluidasSinCosto: { type: number }
+            nota: { type: string }
         porMes:
           type: array
           items:
@@ -4282,6 +4613,79 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/EstadisticasPorColor"
+    AnaliticaGlobalProveedores:
+      type: object
+      required: [pareto, deuda, tendenciaMensual, costosAlAlza, comparacionCostos, antiguedadDeuda]
+      properties:
+        pareto:
+          type: array
+          items:
+            type: object
+            required: [proveedorId, proveedor, total, porcentajeAcumulado]
+            properties:
+              proveedorId: { type: number }
+              proveedor: { type: string }
+              total: { type: string }
+              porcentajeAcumulado: { type: string }
+        deuda:
+          type: array
+          items:
+            type: object
+            required: [proveedorId, proveedor, saldo]
+            properties:
+              proveedorId: { type: number }
+              proveedor: { type: string }
+              saldo: { type: string }
+        tendenciaMensual:
+          type: array
+          items:
+            type: object
+            required: [mes, total]
+            properties:
+              mes: { type: string }
+              total: { type: string }
+        costosAlAlza:
+          type: array
+          items:
+            type: object
+            required: [productoId, sku, proveedor, costoAnterior, costoActual, variacionPct]
+            properties:
+              productoId: { type: number }
+              sku: { type: string }
+              proveedor: { type: string }
+              costoAnterior: { type: string }
+              costoActual: { type: string }
+              variacionPct: { type: string }
+        comparacionCostos:
+          type: array
+          items:
+            type: object
+            required: [productoId, sku, unidad, proveedorMasBarato, costoMasBarato, costoMasCaro, ahorroPct, proveedores]
+            properties:
+              productoId: { type: number }
+              sku: { type: string }
+              unidad: { type: string }
+              proveedorMasBarato: { type: string }
+              costoMasBarato: { type: string }
+              costoMasCaro: { type: string }
+              ahorroPct: { type: string }
+              proveedores:
+                type: array
+                items:
+                  type: object
+                  required: [proveedorId, proveedor, costoUnitario]
+                  properties:
+                    proveedorId: { type: number }
+                    proveedor: { type: string }
+                    costoUnitario: { type: string }
+        antiguedadDeuda:
+          type: object
+          required: [hasta30, de31a60, de61a90, mas90]
+          properties:
+            hasta30: { type: string }
+            de31a60: { type: string }
+            de61a90: { type: string }
+            mas90: { type: string }
     TipoTicket:
       type: string
       enum: [NORMAL, METREADO]
@@ -4387,7 +4791,7 @@ components:
             description: Identificador UUID generado por la terminal,
           }
         ubicacionId: { type: number }
-        clienteId: { type: ["number", "null"] }
+        clienteId: { type: number, minimum: 1 }
         tipo:
           $ref: "#/components/schemas/TipoTicket"
         facturado: { type: boolean }

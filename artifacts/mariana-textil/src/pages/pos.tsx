@@ -58,6 +58,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { ClientSelector } from "@/components/client-selector";
 
 type PriceValidation = {
   status: "idle" | "checking" | "valid" | "invalid" | "error";
@@ -297,7 +298,8 @@ export default function PosPage() {
   // Cart state
   const [cart, setCart] = useState<any[]>([]);
   const [facturar, setFacturar] = useState(false);
-  const [clientId, setClientId] = useState<string>("");
+  const [clientId, setClientId] = useState<string>("1");
+  const [clientName, setClientName] = useState("Venta a Público");
 
   const searchParams = useMemo(
     () => ({
@@ -451,6 +453,7 @@ export default function PosPage() {
   );
   const confirmDisabled =
     cart.length === 0 ||
+    !clientId ||
     crearTicket.isPending ||
     hasInvalidValues ||
     validatingPrices ||
@@ -468,6 +471,15 @@ export default function PosPage() {
     if (cart.length === 0) {
       toast({
         title: "Agrega al menos un producto al ticket",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!clientId) {
+      toast({
+        title: "Selecciona un cliente",
+        description: "Toda venta debe asociarse a un cliente.",
         variant: "destructive",
       });
       return;
@@ -506,7 +518,7 @@ export default function PosPage() {
       ubicacionId: selectedLocationId,
       tipo: tipoTicket,
       facturado: tipoTicket === TipoTicket.NORMAL ? facturar : false,
-      clienteId: clientId ? Number(clientId) : null,
+       clienteId: Number(clientId),
       lineas,
     };
 
@@ -521,6 +533,8 @@ export default function PosPage() {
           setCart([]);
           setSearch("");
           setFacturar(false);
+          setClientId("1");
+          setClientName("Venta a Público");
           setLocation(`/tickets/${ticket.id}?print=3`);
         },
         onError: (err: unknown) => {
@@ -882,14 +896,19 @@ export default function PosPage() {
 
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">
-                Cliente (Opcional)
+                Cliente <span aria-hidden="true">*</span>
               </Label>
-              <Input
-                placeholder="ID de cliente..."
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-                className="h-9"
+              <ClientSelector
+                value={clientId ? Number(clientId) : null}
+                required
+                onChange={(client) => {
+                  setClientId(String(client.id));
+                  setClientName(client.nombre);
+                }}
               />
+              <p className="text-xs text-muted-foreground" data-testid="text-ticket-client">
+                El ticket se emitirá a nombre de {clientName}.
+              </p>
             </div>
 
             {(validatingPrices || blockedPrice) && (

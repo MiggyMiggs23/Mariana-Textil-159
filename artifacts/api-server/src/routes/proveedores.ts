@@ -39,6 +39,7 @@ import {
   registrarPago,
   registrarAjuste,
   resumenProveedores,
+  analiticaGlobalProveedores,
   type EstadoCompra,
 } from "../lib/compras-proveedor";
 
@@ -75,6 +76,18 @@ router.get(
     try {
       const resumen = await resumenProveedores();
       res.json(resumen);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+router.get(
+  "/proveedores/analitica-global",
+  requierePermiso("proveedores_finanzas", "ver"),
+  async (_req, res, next): Promise<void> => {
+    try {
+      res.json(await analiticaGlobalProveedores());
     } catch (e) {
       next(e);
     }

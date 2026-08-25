@@ -5,6 +5,8 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { EstadisticasPorProductoComparacionProveedoresItem } from './estadisticasPorProductoComparacionProveedoresItem';
+import type { EstadisticasPorProductoHistorialCostosItem } from './estadisticasPorProductoHistorialCostosItem';
 
 export interface EstadisticasPorProducto {
   productoId: number;
@@ -18,14 +20,9 @@ export interface EstadisticasPorProducto {
   cantidadTotal: string;
   /** Costo unitario ponderado por METRO o por KILO, según la unidad del producto */
   costoPorUnidad: string;
-  /**
-     * Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto
-     * @nullable
-     */
-  costoPorUnidadAnterior?: string | null;
-  /**
-     * Variación porcentual del costo por unidad vs. el periodo anterior
-     * @nullable
-     */
-  variacionCostoUnidadPct?: string | null;
+  historialCostos: EstadisticasPorProductoHistorialCostosItem[];
+  comparacionProveedores: EstadisticasPorProductoComparacionProveedoresItem[];
+  /** @nullable */
+  proveedorMasBarato: string | null;
+  ahorroPotencial: string;
 }

@@ -20,6 +20,8 @@ import Productos from '@/pages/productos';
 import ProductoDetail from '@/pages/producto-detail';
 import Proveedores from '@/pages/proveedores';
 import ProveedorDetail from '@/pages/proveedor-detail';
+import Clientes from '@/pages/clientes';
+import ClienteDetail from '@/pages/cliente-detail';
 import Entradas from '@/pages/entradas';
 import EntradasPendientesCosto from '@/pages/entradas-pendientes-costo';
 import EntradaDocumento from '@/pages/entrada-documento';
@@ -170,6 +172,8 @@ function Router() {
         
         <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedModule={Modules.PROVEEDORES} />} />
         <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedModule={Modules.PROVEEDORES} />} />
+        <Route path="/clientes" component={() => <ProtectedRoute component={Clientes} allowedModule={Modules.CLIENTES} />} />
+        <Route path="/clientes/:id" component={() => <ProtectedRoute component={ClienteDetail} allowedModule={Modules.CLIENTES} />} />
         
         <Route path="/administracion/conciliacion" component={() => <ProtectedRoute component={Conciliacion} allowedModule={Modules.CONCILIACION} />} />
         

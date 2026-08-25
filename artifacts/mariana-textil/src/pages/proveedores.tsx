@@ -9,7 +9,9 @@ import {
   getGetCurrentUserQueryKey,
   Role,
   TipoProveedor,
-  Moneda
+  Moneda,
+  useGetAnaliticaGlobalProveedores,
+  getGetAnaliticaGlobalProveedoresQueryKey
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,8 +22,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Search, Plus, Truck, Building2, Globe2 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
 
 
@@ -76,6 +80,9 @@ export default function Proveedores() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
   const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver');
+  const { data: analitica, isLoading: isAnaliticaLoading } = useGetAnaliticaGlobalProveedores({
+    query: { enabled: canViewFinanzas, queryKey: getGetAnaliticaGlobalProveedoresQueryKey() }
+  });
 
   const filteredProveedores = useMemo(() => {
     if (!proveedores?.items) return [];
@@ -148,6 +155,12 @@ export default function Proveedores() {
           </Card>
         </div>
 
+        <Tabs defaultValue="proveedores">
+          <TabsList>
+            <TabsTrigger value="proveedores">Proveedores</TabsTrigger>
+            {canViewFinanzas && <TabsTrigger value="analisis">Análisis global</TabsTrigger>}
+          </TabsList>
+          <TabsContent value="proveedores">
         <Card>
           <div className="p-4 border-b flex flex-col sm:flex-row gap-4 items-center bg-muted/20">
             <div className="relative flex-1 w-full">
@@ -266,6 +279,33 @@ export default function Proveedores() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+          {canViewFinanzas && (
+            <TabsContent value="analisis" className="space-y-6">
+              {isAnaliticaLoading ? <Card><CardContent className="p-12 text-center">Calculando análisis...</CardContent></Card> : analitica && (
+                <>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Tendencia mensual de compras</h2><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={analitica.tendenciaMensual}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="mes"/><YAxis/><Tooltip formatter={(v) => formatCurrency(Number(v))}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer></div></CardContent></Card>
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Deuda por proveedor</h2><div className="space-y-3">{analitica.deuda.map(d => <div key={d.proveedorId} className="flex justify-between border-b pb-2"><Link href={`/proveedores/${d.proveedorId}`} className="font-medium hover:underline">{d.proveedor}</Link><span className="text-destructive font-semibold">{formatCurrency(d.saldo)}</span></div>)}</div></CardContent></Card>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Pareto de compras</h2><Table><TableHeader><TableRow><TableHead>Proveedor</TableHead><TableHead className="text-right">Comprado</TableHead><TableHead className="text-right">% acumulado</TableHead></TableRow></TableHeader><TableBody>{analitica.pareto.map(p => <TableRow key={p.proveedorId}><TableCell>{p.proveedor}</TableCell><TableCell className="text-right">{formatCurrency(p.total)}</TableCell><TableCell className="text-right">{p.porcentajeAcumulado}%</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Costos al alza</h2><Table><TableHeader><TableRow><TableHead>Producto / proveedor</TableHead><TableHead className="text-right">Anterior</TableHead><TableHead className="text-right">Actual</TableHead></TableRow></TableHeader><TableBody>{analitica.costosAlAlza.map(c => <TableRow key={`${c.productoId}-${c.proveedor}`}><TableCell><b>{c.sku}</b><div className="text-xs text-muted-foreground">{c.proveedor} · +{c.variacionPct}%</div></TableCell><TableCell className="text-right">{formatCurrency(c.costoAnterior)}</TableCell><TableCell className="text-right font-semibold">{formatCurrency(c.costoActual)}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card>
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <Card><CardContent className="pt-6"><h2 className="font-semibold mb-4">Antigüedad global de deuda</h2><div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={[
+                      { rango:"0–30", saldo:Number(analitica.antiguedadDeuda.hasta30) },
+                      { rango:"31–60", saldo:Number(analitica.antiguedadDeuda.de31a60) },
+                      { rango:"61–90", saldo:Number(analitica.antiguedadDeuda.de61a90) },
+                      { rango:"90+", saldo:Number(analitica.antiguedadDeuda.mas90) },
+                    ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(v) => formatCurrency(Number(v))}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer></div></CardContent></Card>
+                    <Card className="md:col-span-2"><CardContent className="pt-6"><h2 className="font-semibold mb-4">Comparación del mismo producto entre proveedores</h2><div className="max-h-80 overflow-auto"><Table><TableHeader><TableRow><TableHead>Producto</TableHead><TableHead>Costos por proveedor</TableHead><TableHead className="text-right">Más barato / ahorro</TableHead></TableRow></TableHeader><TableBody>{analitica.comparacionCostos.map(p => <TableRow key={p.productoId}><TableCell><b>{p.sku}</b><div className="text-xs text-muted-foreground">{p.unidad}</div></TableCell><TableCell className="text-xs">{p.proveedores.map(x => `${x.proveedor}: ${formatCurrency(x.costoUnitario)}`).join(" · ")}</TableCell><TableCell className="text-right"><b>{p.proveedorMasBarato}</b><div className="text-xs text-emerald-700">hasta {p.ahorroPct}%</div></TableCell></TableRow>)}</TableBody></Table></div></CardContent></Card>
+                  </div>
+                </>
+              )}
+            </TabsContent>
+          )}
+        </Tabs>
       </div>
 
       <CreateProveedorDialog open={isCreateOpen} onClose={() => setIsCreateOpen(false)} />

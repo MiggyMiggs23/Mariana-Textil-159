@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { Fragment, useState, useRef, useEffect, useMemo } from "react";
 import { useParams, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
@@ -37,7 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
 
 // Helper for generic API errors
@@ -682,9 +682,6 @@ export default function ProveedorDetail() {
                        <CardContent className="p-4 flex flex-col gap-1">
                           <span className="text-sm font-medium text-muted-foreground">Total Comprado</span>
                           <span className="text-2xl font-bold">{formatCurrency(estadisticas.totalCompras)}</span>
-                          {estadisticas.variacionVsPeriodoAnterior && (
-                            <span className="text-xs text-muted-foreground">Vs ant: {estadisticas.variacionVsPeriodoAnterior}{String(estadisticas.variacionVsPeriodoAnterior).includes("%") ? "" : "%"}</span>
-                          )}
                        </CardContent>
                     </Card>
                     <Card>
@@ -727,6 +724,30 @@ export default function ProveedorDetail() {
                        </CardContent>
                     </Card>
                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Frecuencia promedio</div><div className="text-xl font-bold">{estadisticas.frecuencia.promedioDiasEntreCompras ?? "—"} días</div><div className="text-xs">Última: {formatDate(estadisticas.frecuencia.ultimaCompra)}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Días promedio para pagar</div><div className="text-xl font-bold">{estadisticas.diasPromedioPago ?? "—"}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Concentración producto principal</div><div className="text-xl font-bold">{estadisticas.concentracion.productoPrincipalPct}%</div><div className="text-xs">Top 3: {estadisticas.concentracion.tresPrincipalesPct}%</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Margen generado</div><div className="text-xl font-bold">{formatCurrency(estadisticas.margenGenerado.margen)}</div><div className="text-xs">{estadisticas.margenGenerado.margenPct ?? "—"}% sobre ventas · {estadisticas.margenGenerado.lineasIncluidas} líneas</div><div className="text-[10px] text-muted-foreground">Excluidas: {estadisticas.margenGenerado.lineasExcluidasSinRollo} sin rollo, {estadisticas.margenGenerado.lineasExcluidasSinCosto} sin costo</div><div className="text-[10px] text-muted-foreground mt-1">{estadisticas.margenGenerado.nota}</div></CardContent></Card>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card><CardHeader><CardTitle className="text-lg">Estacionalidad alta / baja</CardTitle></CardHeader><CardContent className="h-48">
+                      <ResponsiveContainer width="100%" height="100%"><BarChart data={[
+                        { periodo: `Alto · ${estadisticas.estacionalidad.mesMayor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMayor?.total ?? 0) },
+                        { periodo: `Bajo · ${estadisticas.estacionalidad.mesMenor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMenor?.total ?? 0) },
+                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="periodo" tick={{fontSize:10}}/><YAxis/><Tooltip formatter={(value) => formatCurrency(Number(value))}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer>
+                    </CardContent></Card>
+                    <Card><CardHeader><CardTitle className="text-lg">Antigüedad de deuda</CardTitle></CardHeader><CardContent className="h-48">
+                      <ResponsiveContainer width="100%" height="100%"><BarChart data={[
+                        { rango:"0–30", saldo:Number(estadisticas.antiguedadDeuda.hasta30) },
+                        { rango:"31–60", saldo:Number(estadisticas.antiguedadDeuda.de31a60) },
+                        { rango:"61–90", saldo:Number(estadisticas.antiguedadDeuda.de61a90) },
+                        { rango:"90+", saldo:Number(estadisticas.antiguedadDeuda.mas90) },
+                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(value) => formatCurrency(Number(value))}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer>
+                    </CardContent></Card>
+                  </div>
 
                  <Card>
                    <CardHeader>
@@ -772,7 +793,8 @@ export default function ProveedorDetail() {
                             <TableRow><TableCell colSpan={6} className="text-center h-24 text-muted-foreground">No hay productos en el periodo</TableCell></TableRow>
                          ) : (
                            estadisticas.porProducto.map(prod => (
-                             <TableRow key={prod.productoId}>
+                             <Fragment key={prod.productoId}>
+                             <TableRow>
                                <TableCell className="font-medium font-mono text-sm">{prod.sku}</TableCell>
                                <TableCell>{prod.tela} <Badge variant="secondary" className="ml-2 font-normal text-[10px]">{prod.color}</Badge></TableCell>
                                <TableCell className="text-right text-sm">
@@ -783,7 +805,6 @@ export default function ProveedorDetail() {
                                   {prod.unidad === "METRO" ? (
                                     <>
                                       <div className="font-medium">{formatCurrency(prod.costoPorUnidad)} / metro</div>
-                                      {prod.variacionCostoUnidadPct && <div className="text-[10px] text-muted-foreground">{prod.variacionCostoUnidadPct}{String(prod.variacionCostoUnidadPct).includes("%") ? "" : "%"} vs ant</div>}
                                     </>
                                   ) : "-"}
                                 </TableCell>
@@ -791,12 +812,22 @@ export default function ProveedorDetail() {
                                   {prod.unidad === "KILO" ? (
                                     <>
                                       <div className="font-medium">{formatCurrency(prod.costoPorUnidad)} / kilo</div>
-                                      {prod.variacionCostoUnidadPct && <div className="text-[10px] text-muted-foreground">{prod.variacionCostoUnidadPct}{String(prod.variacionCostoUnidadPct).includes("%") ? "" : "%"} vs ant</div>}
                                     </>
                                   ) : "-"}
                                </TableCell>
                                <TableCell className="text-right font-semibold">{formatCurrency(prod.totalCosto)}</TableCell>
                              </TableRow>
+                             <TableRow key={`${prod.productoId}-analytics`} className="bg-muted/10">
+                               <TableCell colSpan={6}>
+                                 <div className="grid md:grid-cols-2 gap-4 py-2 text-xs">
+                                   <div><b>Historial real por compra</b>
+                                     {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatCurrency(Number(value))}/${prod.unidad.toLowerCase()}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke="hsl(var(--primary))" strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}
+                                   </div>
+                                   <div><b>Comparación:</b> {prod.comparacionProveedores.map(c => `${c.proveedor}: ${formatCurrency(c.costoUnitario)}`).join(" · ") || "Sin comparación"}<br/>Más barato: <b>{prod.proveedorMasBarato ?? "—"}</b> · Ahorro potencial: <b>{formatCurrency(prod.ahorroPotencial)}</b></div>
+                                 </div>
+                               </TableCell>
+                             </TableRow>
+                             </Fragment>
                            ))
                          )}
                        </TableBody>
@@ -805,6 +836,10 @@ export default function ProveedorDetail() {
                  </Card>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                   <Card>
+                     <CardHeader><CardTitle className="text-lg">Productos exclusivos</CardTitle></CardHeader>
+                     <CardContent className="text-sm">{estadisticas.productosExclusivos.length ? estadisticas.productosExclusivos.map(p => <Badge key={p.productoId} variant="secondary" className="mr-2 mb-2">{p.sku} · {p.tela} {p.color}</Badge>) : <span className="text-muted-foreground">No hay productos comprados exclusivamente a este proveedor.</span>}</CardContent>
+                   </Card>
                    <Card>
                      <CardHeader>
                        <CardTitle className="text-lg">Por Tela</CardTitle>

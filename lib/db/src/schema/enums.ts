@@ -103,6 +103,7 @@ export const tipoMovimientoCreditoEnum = pgEnum("tipo_movimiento_credito", [
   "VENTA_CREDITO",
   "ABONO",
   "REVERSO",
+  "AJUSTE",
 ]);
 
 export const alcanceConsultaEnum = pgEnum("alcance_consulta", [

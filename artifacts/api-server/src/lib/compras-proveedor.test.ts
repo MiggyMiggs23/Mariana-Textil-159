@@ -17,6 +17,7 @@ import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
 import {
   db,
+  clientesTable,
   entradasTable,
   existenciasTable,
   movimientosTable,
@@ -24,11 +25,14 @@ import {
   productosTable,
   proveedoresTable,
   rollosTable,
+  ticketLineasTable,
+  ticketsTable,
   ubicacionesTable,
 } from "@workspace/db";
 import { crearEntrada } from "./inventario";
 import {
   backfillCompras,
+  analiticaGlobalProveedores,
   comprasPorProveedor,
   estadoCuenta,
   estadisticasPeriodo,
@@ -48,6 +52,8 @@ const createdProveedorIds: number[] = [];
 const createdProductoIds: number[] = [];
 const createdUbicacionIds: number[] = [];
 const createdEntradaIds: number[] = [];
+const createdClienteIds: number[] = [];
+const createdTicketIds: number[] = [];
 
 async function test(name: string, fn: () => Promise<void>): Promise<void> {
   try {
@@ -468,11 +474,86 @@ await test("CP-08: estadisticasPeriodo devuelve breakdown correcto", async () =>
   assert.ok(typeof prod.cantidadTotal === "string", "cantidadTotal debe ser string");
   assert.equal(prod.costoPorUnidad, "175.00", "Producto pondera costo por cantidad");
   assert.equal("costoPromedioRollo" in prod, false);
-  assert.ok("costoPorUnidadAnterior" in prod, "costoPorUnidadAnterior debe existir en el objeto");
-  assert.ok(
-    "variacionCostoUnidadPct" in prod,
-    "variacionCostoUnidadPct debe existir en el objeto",
+  assert.equal("costoPorUnidadAnterior" in prod, false);
+  assert.equal("variacionCostoUnidadPct" in prod, false);
+  assert.equal(prod.historialCostos.length, 2, "Debe conservar un costo unitario por compra");
+  assert.equal(prod.historialCostos[0]!.costoUnitario, "100.00");
+  assert.equal(prod.historialCostos[1]!.costoUnitario, "200.00");
+  assert.ok(prod.comparacionProveedores.some((p) => p.proveedorId === proveedorId));
+  assert.equal(typeof prod.ahorroPotencial, "string");
+  assert.ok(stats.frecuencia.ultimaCompra);
+  assert.ok(stats.estacionalidad.mesMayor);
+  assert.equal(typeof stats.concentracion.productoPrincipalPct, "string");
+  assert.equal(typeof stats.antiguedadDeuda.hasta30, "string");
+  assert.equal(typeof stats.margenGenerado.margen, "string");
+});
+
+await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", async () => {
+  const proveedorA = await mkProveedor();
+  const proveedorB = await mkProveedor();
+  const productoId = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const entradaA = await mkEntrada(proveedorA, productoId, ubicacionId, "40.00");
+  const entradaB = await mkEntrada(proveedorB, productoId, ubicacionId, "100.00");
+  const [cliente] = await db.insert(clientesTable).values({
+    nombre: `Cliente ${RUN}-${++seq}`,
+  }).returning();
+  createdClienteIds.push(cliente!.id);
+  const rollos = await db.select({ id: rollosTable.id, recepcionId: rollosTable.recepcionId })
+    .from(rollosTable).where(inArray(rollosTable.recepcionId, [entradaA.entradaId, entradaB.entradaId]));
+  const rolloA = rollos.find((r) => r.recepcionId === entradaA.entradaId)!.id;
+  const rolloB = rollos.find((r) => r.recepcionId === entradaB.entradaId)!.id;
+  const [ticket] = await db.insert(ticketsTable).values({
+    folio: 900000000 + seq,
+    ubicacionId,
+    usuarioTerminalId: 1,
+    clienteId: cliente!.id,
+    tipo: "NORMAL",
+    subtotal: "300.00",
+    iva: "0.00",
+    tasaIva: "0.1600",
+    total: "300.00",
+    uuidCliente: randomUUID(),
+  }).returning();
+  createdTicketIds.push(ticket!.id);
+  await db.insert(ticketLineasTable).values([
+    { ticketId: ticket!.id, rolloId: rolloA, productoId, cantidad: "1", precioUnitario: "100", precioSugerido: "100", importe: "100", costoUnitarioCongelado: "40", costoTotalCongelado: "40" },
+    { ticketId: ticket!.id, rolloId: rolloB, productoId, cantidad: "1", precioUnitario: "200", precioSugerido: "200", importe: "200", costoUnitarioCongelado: "100", costoTotalCongelado: "100" },
+    { ticketId: ticket!.id, rolloId: rolloA, productoId, cantidad: "1", precioUnitario: "50", precioSugerido: "50", importe: "50", costoUnitarioCongelado: "0", costoTotalCongelado: "0" },
+  ]);
+  const [metreado] = await db.insert(ticketsTable).values({
+    folio: 900000100 + seq, ubicacionId, usuarioTerminalId: 1, clienteId: cliente!.id,
+    tipo: "METREADO", subtotal: "70.00", iva: "0.00", tasaIva: "0.1600", total: "70.00", uuidCliente: randomUUID(),
+  }).returning();
+  createdTicketIds.push(metreado!.id);
+  await db.insert(ticketLineasTable).values({
+    ticketId: metreado!.id, rolloId: null, productoId, cantidad: "1", precioUnitario: "70", precioSugerido: "70", importe: "70", costoUnitarioCongelado: "30", costoTotalCongelado: "30",
+  });
+  const desde = new Date(Date.now() - 60_000);
+  const hasta = new Date(Date.now() + 60_000);
+  const statsA = await estadisticasPeriodo({ proveedorId: proveedorA, desde, hasta });
+  const statsB = await estadisticasPeriodo({ proveedorId: proveedorB, desde, hasta });
+  assert.deepEqual(
+    { ventas: statsA.margenGenerado.ventas, costo: statsA.margenGenerado.costo, margen: statsA.margenGenerado.margen, incluidas: statsA.margenGenerado.lineasIncluidas },
+    { ventas: "100.00", costo: "40.00", margen: "60.00", incluidas: 1 },
   );
+  assert.deepEqual(
+    { ventas: statsB.margenGenerado.ventas, costo: statsB.margenGenerado.costo, margen: statsB.margenGenerado.margen, incluidas: statsB.margenGenerado.lineasIncluidas },
+    { ventas: "200.00", costo: "100.00", margen: "100.00", incluidas: 1 },
+  );
+  assert.equal(statsA.margenGenerado.lineasExcluidasSinRollo, 1);
+  assert.equal(statsA.margenGenerado.lineasExcluidasSinCosto, 1);
+  assert.match(statsA.margenGenerado.nota, /rollo físico/);
+  const global = await analiticaGlobalProveedores();
+  const comparison = global.comparacionCostos.find((p) => p.productoId === productoId);
+  assert.ok(comparison, "El producto compartido debe aparecer en la comparación global");
+  assert.deepEqual(
+    comparison!.proveedores.map((p) => p.proveedorId).sort((a, b) => a - b),
+    [proveedorA, proveedorB].sort((a, b) => a - b),
+  );
+  assert.equal(comparison!.proveedorMasBarato, comparison!.proveedores[0]!.proveedor);
+  assert.ok(parseFloat(comparison!.ahorroPct) > 0);
+  assert.deepEqual(Object.keys(global.antiguedadDeuda).sort(), ["de31a60", "de61a90", "hasta30", "mas90"].sort());
 });
 
 // =============================================================================
@@ -484,6 +565,10 @@ process.stdout.write(`Results: ${passed} passed, ${failed} failed\n`);
 
 try {
   await db.transaction(async (tx) => {
+    if (createdTicketIds.length > 0) {
+      await tx.delete(ticketLineasTable).where(inArray(ticketLineasTable.ticketId, createdTicketIds));
+      await tx.delete(ticketsTable).where(inArray(ticketsTable.id, createdTicketIds));
+    }
     // Delete pagos first
     if (createdEntradaIds.length > 0) {
       await tx
@@ -494,6 +579,9 @@ try {
       await tx
         .delete(pagosProveedorTable)
         .where(inArray(pagosProveedorTable.proveedorId, createdProveedorIds));
+    }
+    if (createdClienteIds.length > 0) {
+      await tx.delete(clientesTable).where(inArray(clientesTable.id, createdClienteIds));
     }
 
     // Delete entradas and related

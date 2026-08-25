@@ -165,6 +165,11 @@ export interface Cliente {
   /** @nullable */
   notas?: string | null;
   activo: boolean;
+  esSistema: boolean;
+  /** @nullable */
+  contactoNombre?: string | null;
+  /** @minimum 0 */
+  diasCredito: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -185,6 +190,8 @@ export interface ClienteInput {
   rfc?: string | null;
   /** @nullable */
   notas?: string | null;
+  /** @nullable */
+  contactoNombre?: string | null;
 }
 
 export interface ClienteUpdate {
@@ -204,7 +211,11 @@ export interface ClienteUpdate {
   /** @nullable */
   notas?: string | null;
   activo?: boolean;
+  /** @nullable */
+  contactoNombre?: string | null;
 }
+
+export type ClienteCreditoAntiguedadItem = { [key: string]: unknown };
 
 export interface ClienteCredito {
   clienteId: number;
@@ -212,6 +223,23 @@ export interface ClienteCredito {
   saldoActual: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
+  diasCredito: number;
+  utilizacion: string;
+  totalVencido: string;
+  /** @nullable */
+  primerVencimiento?: string | null;
+  /** @nullable */
+  primeraCompra?: string | null;
+  /** @nullable */
+  ultimaActividad?: string | null;
+  antiguedad?: ClienteCreditoAntiguedadItem[];
+}
+
+export interface ClienteCreditoUpdate {
+  /** @minimum 0 */
+  limiteCredito: number;
+  /** @minimum 0 */
+  diasCredito: number;
 }
 
 export type ClientePreciosPreciosItem = {
@@ -236,6 +264,15 @@ export interface ClienteMovimiento {
   fecha?: string;
   /** @nullable */
   notas?: string | null;
+  saldoCorrido?: string;
+  /** @nullable */
+  ticketFolio?: number | null;
+  nombreUsuario?: string;
+  /** @nullable */
+  formaPago?: string | null;
+  /** @nullable */
+  referencia?: string | null;
+  fechaEfectiva?: string;
 }
 
 export interface ClienteEstadoCuenta {
@@ -248,12 +285,23 @@ export interface ClienteCompraItem {
   id?: number;
   fecha?: string;
   total?: string;
+  folio?: number;
+  subtotal?: string;
+  iva?: string;
+  metros?: string;
+  kilos?: string;
+  /** @nullable */
+  margen?: string | null;
+  lineasSinCosto?: number;
 }
+
+export type ClienteComprasPeriodo = { [key: string]: unknown };
 
 export interface ClienteCompras {
   clienteId: number;
   compras: ClienteCompraItem[];
   total: number;
+  periodo?: ClienteComprasPeriodo;
 }
 
 export interface ClienteEstadisticas {
@@ -290,7 +338,46 @@ export interface ClientePagoInput {
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
+  /** @nullable */
+  fechaEfectiva?: string | null;
+  /** @nullable */
+  ticketId?: number | null;
 }
+
+export interface ClienteAjusteInput {
+  importe: number;
+  /** @minLength 10 */
+  motivo: string;
+  /** @nullable */
+  referencia?: string | null;
+  /** @nullable */
+  fechaEfectiva?: string | null;
+  /** @nullable */
+  ticketId?: number | null;
+}
+
+export type ClienteAnaliticaPeriodo = { [key: string]: unknown };
+
+export type ClienteAnaliticaProductosItem = { [key: string]: unknown };
+
+export type ClienteAnaliticaTelasColoresItem = { [key: string]: unknown };
+
+export type ClienteAnaliticaTendenciaItem = { [key: string]: unknown };
+
+export type ClienteAnaliticaMezclaPagosItem = { [key: string]: unknown };
+
+export type ClienteAnaliticaActividad = { [key: string]: unknown };
+
+export interface ClienteAnalitica {
+  clienteId: number;
+  periodo: ClienteAnaliticaPeriodo;
+  productos: ClienteAnaliticaProductosItem[];
+  telasColores: ClienteAnaliticaTelasColoresItem[];
+  tendencia: ClienteAnaliticaTendenciaItem[];
+  mezclaPagos: ClienteAnaliticaMezclaPagosItem[];
+  actividad: ClienteAnaliticaActividad;
+  [key: string]: unknown;
+ }
 
 export interface ClientesResumen {
   totalClientes: number;
@@ -298,6 +385,63 @@ export interface ClientesResumen {
   totalCartera: string;
   totalVencido: string;
 }
+
+export type ClienteCarteraItemAntiguedad = typeof ClienteCarteraItemAntiguedad[keyof typeof ClienteCarteraItemAntiguedad];
+
+
+export const ClienteCarteraItemAntiguedad = {
+  POR_VENCER: 'POR_VENCER',
+  '1_30': '1_30',
+  '31_60': '31_60',
+  '61_90': '61_90',
+  MAS_90: 'MAS_90',
+} as const;
+
+export interface ClienteCarteraItem {
+  id: number;
+  nombre: string;
+  saldoActual: string;
+  antiguedad: ClienteCarteraItemAntiguedad;
+  diasVencido: number;
+}
+
+export interface ClientesCartera {
+  clientes: ClienteCarteraItem[];
+}
+
+export type ClientesAnaliticaPeriodo = {
+  /** @nullable */
+  desde: string | null;
+  /** @nullable */
+  hasta: string | null;
+};
+
+export type ClientesAnaliticaTopVentasItem = { [key: string]: unknown };
+
+export type ClientesAnaliticaTopMargenItem = { [key: string]: unknown };
+
+export type ClientesAnaliticaParetoItem = { [key: string]: unknown };
+
+export type ClientesAnaliticaPublicoVsRegistradoItem = { [key: string]: unknown };
+
+export type ClientesAnaliticaMensualItem = { [key: string]: unknown };
+
+export interface ClientesAnalitica {
+  periodo: ClientesAnaliticaPeriodo;
+  ventas: string;
+  tickets: number;
+  costo: string;
+  margen: string;
+  lineasSinCosto: number;
+  metros: string;
+  kilos: string;
+  topVentas?: ClientesAnaliticaTopVentasItem[];
+  topMargen?: ClientesAnaliticaTopMargenItem[];
+  pareto?: ClientesAnaliticaParetoItem[];
+  publicoVsRegistrado?: ClientesAnaliticaPublicoVsRegistradoItem[];
+  mensual?: ClientesAnaliticaMensualItem[];
+  [key: string]: unknown;
+ }
 
 export type TipoPagoProveedor = typeof TipoPagoProveedor[keyof typeof TipoPagoProveedor];
 
@@ -1523,6 +1667,19 @@ export interface EstadisticasPorMes {
   count: number;
 }
 
+export type EstadisticasPorProductoHistorialCostosItem = {
+  entradaId: number;
+  fecha: string;
+  cantidad: string;
+  costoUnitario: string;
+};
+
+export type EstadisticasPorProductoComparacionProveedoresItem = {
+  proveedorId: number;
+  proveedor: string;
+  costoUnitario: string;
+};
+
 export interface EstadisticasPorProducto {
   productoId: number;
   sku: string;
@@ -1535,16 +1692,11 @@ export interface EstadisticasPorProducto {
   cantidadTotal: string;
   /** Costo unitario ponderado por METRO o por KILO, según la unidad del producto */
   costoPorUnidad: string;
-  /**
-     * Costo unitario ponderado del periodo anterior por METRO o por KILO, según la unidad del producto
-     * @nullable
-     */
-  costoPorUnidadAnterior?: string | null;
-  /**
-     * Variación porcentual del costo por unidad vs. el periodo anterior
-     * @nullable
-     */
-  variacionCostoUnidadPct?: string | null;
+  historialCostos: EstadisticasPorProductoHistorialCostosItem[];
+  comparacionProveedores: EstadisticasPorProductoComparacionProveedoresItem[];
+  /** @nullable */
+  proveedorMasBarato: string | null;
+  ahorroPotencial: string;
 }
 
 export interface EstadisticasPorTela {
@@ -1558,6 +1710,67 @@ export interface EstadisticasPorColor {
   totalCosto: string;
   rollosCount: number;
 }
+
+export type ProveedorEstadisticasFrecuencia = {
+  /** @nullable */
+  promedioDiasEntreCompras: string | null;
+  /** @nullable */
+  ultimaCompra: string | null;
+};
+
+/**
+ * @nullable
+ */
+export type ProveedorEstadisticasEstacionalidadMesMayor = {
+  mes?: string;
+  total?: string;
+} | null;
+
+/**
+ * @nullable
+ */
+export type ProveedorEstadisticasEstacionalidadMesMenor = {
+  mes?: string;
+  total?: string;
+} | null;
+
+export type ProveedorEstadisticasEstacionalidad = {
+  /** @nullable */
+  mesMayor: ProveedorEstadisticasEstacionalidadMesMayor;
+  /** @nullable */
+  mesMenor: ProveedorEstadisticasEstacionalidadMesMenor;
+};
+
+export type ProveedorEstadisticasConcentracion = {
+  productoPrincipalPct: string;
+  tresPrincipalesPct: string;
+};
+
+export type ProveedorEstadisticasProductosExclusivosItem = {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+};
+
+export type ProveedorEstadisticasAntiguedadDeuda = {
+  hasta30: string;
+  de31a60: string;
+  de61a90: string;
+  mas90: string;
+};
+
+export type ProveedorEstadisticasMargenGenerado = {
+  ventas: string;
+  costo: string;
+  margen: string;
+  /** @nullable */
+  margenPct: string | null;
+  lineasIncluidas: number;
+  lineasExcluidasSinRollo: number;
+  lineasExcluidasSinCosto: number;
+  nota: string;
+};
 
 export interface ProveedorEstadisticas {
   desde: string;
@@ -1584,13 +1797,79 @@ export interface ProveedorEstadisticas {
      */
   diasDesdeUltimaCompra?: number | null;
   /** @nullable */
-  variacionVsPeriodoAnterior?: string | null;
-  /** @nullable */
   ultimaCompra?: string | null;
+  frecuencia: ProveedorEstadisticasFrecuencia;
+  estacionalidad: ProveedorEstadisticasEstacionalidad;
+  concentracion: ProveedorEstadisticasConcentracion;
+  productosExclusivos: ProveedorEstadisticasProductosExclusivosItem[];
+  /** @nullable */
+  diasPromedioPago: string | null;
+  antiguedadDeuda: ProveedorEstadisticasAntiguedadDeuda;
+  margenGenerado: ProveedorEstadisticasMargenGenerado;
   porMes: EstadisticasPorMes[];
   porProducto: EstadisticasPorProducto[];
   porTela: EstadisticasPorTela[];
   porColor: EstadisticasPorColor[];
+}
+
+export type AnaliticaGlobalProveedoresParetoItem = {
+  proveedorId: number;
+  proveedor: string;
+  total: string;
+  porcentajeAcumulado: string;
+};
+
+export type AnaliticaGlobalProveedoresDeudaItem = {
+  proveedorId: number;
+  proveedor: string;
+  saldo: string;
+};
+
+export type AnaliticaGlobalProveedoresTendenciaMensualItem = {
+  mes: string;
+  total: string;
+};
+
+export type AnaliticaGlobalProveedoresCostosAlAlzaItem = {
+  productoId: number;
+  sku: string;
+  proveedor: string;
+  costoAnterior: string;
+  costoActual: string;
+  variacionPct: string;
+};
+
+export type AnaliticaGlobalProveedoresComparacionCostosItemProveedoresItem = {
+  proveedorId: number;
+  proveedor: string;
+  costoUnitario: string;
+};
+
+export type AnaliticaGlobalProveedoresComparacionCostosItem = {
+  productoId: number;
+  sku: string;
+  unidad: string;
+  proveedorMasBarato: string;
+  costoMasBarato: string;
+  costoMasCaro: string;
+  ahorroPct: string;
+  proveedores: AnaliticaGlobalProveedoresComparacionCostosItemProveedoresItem[];
+};
+
+export type AnaliticaGlobalProveedoresAntiguedadDeuda = {
+  hasta30: string;
+  de31a60: string;
+  de61a90: string;
+  mas90: string;
+};
+
+export interface AnaliticaGlobalProveedores {
+  pareto: AnaliticaGlobalProveedoresParetoItem[];
+  deuda: AnaliticaGlobalProveedoresDeudaItem[];
+  tendenciaMensual: AnaliticaGlobalProveedoresTendenciaMensualItem[];
+  costosAlAlza: AnaliticaGlobalProveedoresCostosAlAlzaItem[];
+  comparacionCostos: AnaliticaGlobalProveedoresComparacionCostosItem[];
+  antiguedadDeuda: AnaliticaGlobalProveedoresAntiguedadDeuda;
 }
 
 export type TipoTicket = typeof TipoTicket[keyof typeof TipoTicket];
@@ -1697,8 +1976,8 @@ export interface TicketInput {
   /** Identificador UUID generado por la terminal */
   uuidCliente: string;
   ubicacionId: number;
-  /** @nullable */
-  clienteId: number | null;
+  /** @minimum 1 */
+  clienteId: number;
   tipo: TipoTicket;
   facturado: boolean;
   /** @minItems 1 */
@@ -2190,6 +2469,31 @@ export type GetConciliacionParams = {
 productoId?: number;
 ubicacionId?: number;
 };
+
+export type GetClientesAnaliticaParams = {
+desde?: string;
+hasta?: string;
+};
+
+export type UpdateClienteCredito200 = { [key: string]: unknown };
+
+export type GetClienteEstadoCuentaParams = {
+desde?: string;
+hasta?: string;
+tipo?: string;
+};
+
+export type GetClienteComprasParams = {
+desde?: string;
+hasta?: string;
+};
+
+export type GetClienteAnaliticaParams = {
+desde?: string;
+hasta?: string;
+};
+
+export type CreateClienteAjuste201 = { [key: string]: unknown };
 
 export type BuscarPosParams = {
 /**

@@ -12,4 +12,13 @@ export interface ClienteMovimiento {
   fecha?: Date;
   /** @nullable */
   notas?: string | null;
+  saldoCorrido?: string;
+  /** @nullable */
+  ticketFolio?: number | null;
+  nombreUsuario?: string;
+  /** @nullable */
+  formaPago?: string | null;
+  /** @nullable */
+  referencia?: string | null;
+  fechaEfectiva?: Date;
 }
