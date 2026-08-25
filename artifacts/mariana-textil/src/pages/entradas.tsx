@@ -42,6 +42,8 @@ import {
   isAdjustedRoll,
   isValidDeclaredRollCount,
   resetRollToUniform,
+  updateEditedRollIndexes,
+  updateRollQuantity,
 } from "@/lib/roll-capture-state";
 import { Link } from "wouter";
 import { formatNumber } from "@workspace/number-format";
@@ -134,6 +136,8 @@ export default function Entradas() {
   const [capCurrentQty, setCapCurrentQty] = useState("");
   const [editingQtyIndex, setEditingQtyIndex] = useState<number | null>(null);
   const [editingQtyValue, setEditingQtyValue] = useState("");
+  const [editingOriginalQty, setEditingOriginalQty] = useState("");
+  const [editingOriginalWasAdjusted, setEditingOriginalWasAdjusted] = useState(false);
   const [isEditingLine, setIsEditingLine] = useState(false);
   const [uniformQty, setUniformQty] = useState("");
   const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);
@@ -185,6 +189,8 @@ export default function Entradas() {
     setCapCurrentQty("");
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
     setIsEditingLine(false);
     setUniformQty("");
     setUniformBaseline(null);
@@ -201,6 +207,8 @@ export default function Entradas() {
     setCapCurrentQty("");
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
     setIsEditingLine(true);
     setUniformQty(linea.uniformBaseline ?? "");
     setUniformBaseline(linea.uniformBaseline);
@@ -242,6 +250,8 @@ export default function Entradas() {
     setUniformBaseline((previous) => previous === null || blankCount > 0 ? uniformQty : previous);
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
     toast.success(`Se aplicó ${uniformQty} a ${blankCount} rollos sin capturar`);
   };
 
@@ -271,6 +281,8 @@ export default function Entradas() {
     setEditedQtyIndexes(new Set());
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
     toast.success(`Se sobrescribieron los ${declared} rollos con ${uniformQty}`);
   };
 
@@ -310,12 +322,25 @@ export default function Entradas() {
     });
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
     qtyInputRef.current?.focus();
   };
 
   const handleStartEditCapturedQty = (idx: number) => {
     setEditingQtyIndex(idx);
     setEditingQtyValue(capCantidades[idx] ?? "");
+    setEditingOriginalQty(capCantidades[idx] ?? "");
+    setEditingOriginalWasAdjusted(editedQtyIndexes.has(idx));
+  };
+
+  const handleChangeCapturedQty = (value: string) => {
+    if (editingQtyIndex === null) return;
+    setEditingQtyValue(value);
+    setCapCantidades((previous) => updateRollQuantity(previous, editingQtyIndex, value));
+    setEditedQtyIndexes((previous) => (
+      updateEditedRollIndexes(previous, editingQtyIndex, value, uniformBaseline)
+    ));
   };
 
   const handleSaveCapturedQty = () => {
@@ -325,16 +350,32 @@ export default function Entradas() {
       toast.error("La cantidad debe ser mayor que cero");
       return;
     }
-    setCapCantidades(prev =>
-      prev.map((qty, idx) => idx === editingQtyIndex ? editingQtyValue : qty),
-    );
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
+    qtyInputRef.current?.focus();
+  };
+
+  const handleCancelCapturedQty = () => {
+    if (editingQtyIndex === null) return;
+    const cancelledIndex = editingQtyIndex;
+    setCapCantidades((previous) => (
+      updateRollQuantity(previous, cancelledIndex, editingOriginalQty)
+    ));
     setEditedQtyIndexes((previous) => {
       const next = new Set(previous);
-      next.add(editingQtyIndex);
+      if (editingOriginalWasAdjusted) {
+        next.add(cancelledIndex);
+      } else {
+        next.delete(cancelledIndex);
+      }
       return next;
     });
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
     qtyInputRef.current?.focus();
   };
 
@@ -369,6 +410,14 @@ export default function Entradas() {
     const blankCount = capCantidades.filter((qty) => qty.trim() === "").length;
     if (blankCount > 0) {
       toast.error(`Faltan ${blankCount} rollos por capturar.`);
+      return;
+    }
+    const invalidRollIndex = capCantidades.findIndex((qty) => {
+      const parsed = Number(qty);
+      return !Number.isFinite(parsed) || parsed <= 0;
+    });
+    if (invalidRollIndex !== -1) {
+      toast.error(`El metraje del rollo ${invalidRollIndex + 1} debe ser mayor que cero.`);
       return;
     }
     if (capCantidades.length > declared) {
@@ -1052,7 +1101,7 @@ export default function Entradas() {
                               min="0.01"
                               step="0.01"
                               value={editingQtyValue}
-                              onChange={(event) => setEditingQtyValue(event.target.value)}
+                              onChange={(event) => handleChangeCapturedQty(event.target.value)}
                               onKeyDown={(event) => {
                                 if (event.key === "Enter") {
                                   event.preventDefault();
@@ -1120,10 +1169,7 @@ export default function Entradas() {
                                 variant="ghost"
                                 size="sm"
                                 className="h-8"
-                                onClick={() => {
-                                  setEditingQtyIndex(null);
-                                  setEditingQtyValue("");
-                                }}
+                                onClick={handleCancelCapturedQty}
                               >
                                 Cancelar
                               </Button>

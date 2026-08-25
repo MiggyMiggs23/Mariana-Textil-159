@@ -21,6 +21,35 @@ export const applyUniformToBlankRolls = (values: string[], uniformValue: string)
   values.map((value) => value.trim() === "" ? uniformValue : value)
 );
 
+export const updateRollQuantity = (
+  values: string[],
+  index: number,
+  value: string,
+): string[] => (
+  values.map((currentValue, currentIndex) => currentIndex === index ? value : currentValue)
+);
+
+export const updateEditedRollIndexes = (
+  editedIndexes: ReadonlySet<number>,
+  index: number,
+  value: string,
+  uniformBaseline: string | null,
+): Set<number> => {
+  const next = new Set(editedIndexes);
+  const isAdjusted = value.trim() !== "" && (
+    uniformBaseline === null ||
+    Number(value) !== Number(uniformBaseline)
+  );
+
+  if (isAdjusted) {
+    next.add(index);
+  } else {
+    next.delete(index);
+  }
+
+  return next;
+};
+
 export const isAdjustedRoll = (
   value: string,
   index: number,

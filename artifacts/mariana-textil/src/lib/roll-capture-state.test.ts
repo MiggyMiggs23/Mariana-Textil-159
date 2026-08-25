@@ -7,6 +7,8 @@ import {
   getRollCaptureCounts,
   isValidDeclaredRollCount,
   resetRollToUniform,
+  updateEditedRollIndexes,
+  updateRollQuantity,
 } from "./roll-capture-state";
 
 test("rechaza cantidades declaradas fraccionarias o no positivas", () => {
@@ -88,4 +90,43 @@ test("el contador mantiene los rollos pendientes en blanco", () => {
     adjusted: 1,
     blank: 3,
   });
+});
+
+test("conserva cinco ediciones sucesivas entre 190 rollos y calcula el total real", () => {
+  let values = createUniformRollQuantities(190, "50");
+  let editedIndexes = new Set<number>();
+  const edits = [
+    [2, "48.5"],
+    [17, "49"],
+    [41, "51"],
+    [72, "47.25"],
+    [103, "52"],
+  ] as const;
+
+  for (const [index, value] of edits) {
+    values = updateRollQuantity(values, index, value);
+    editedIndexes = updateEditedRollIndexes(editedIndexes, index, value, "50");
+  }
+
+  const reapplied = applyUniformToBlankRolls(values, "50");
+
+  for (const [index, value] of edits) {
+    assert.equal(reapplied[index], value);
+  }
+  assert.deepEqual(getRollCaptureCounts(reapplied, "50", editedIndexes), {
+    uniform: 185,
+    adjusted: 5,
+    blank: 0,
+  });
+  assert.equal(
+    reapplied.reduce((total, value) => total + Number(value), 0),
+    9497.75,
+  );
+});
+
+test("regresar manualmente al valor base quita la marca de ajuste", () => {
+  let editedIndexes = updateEditedRollIndexes(new Set(), 2, "48.5", "50");
+  editedIndexes = updateEditedRollIndexes(editedIndexes, 2, "50", "50");
+
+  assert.deepEqual(Array.from(editedIndexes), []);
 });
