@@ -6,3 +6,4 @@
 - [Defaults de permisos en instalaciones existentes](role-permission-default-upgrades.md) — corregir filas sin autor y conservar personalizaciones explícitas.
 - [Catálogos operativos con permisos restringidos](operational-catalog-permissions.md) — separar catálogos mínimos de los endpoints administrativos para no romper flujos permitidos.
 - [Selección al mostrar contraseñas](password-visibility-selection.md) — restaurar foco y selección después del commit; Chromium los colapsa en el primer frame al cambiar el tipo.
+- [Cliente sistema y aging de crédito](system-customer-credit-aging.md) — preservar clientes históricos al reservar id 1 y asignar reversos/ajustes correctamente antes del FIFO.
