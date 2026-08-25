@@ -1,0 +1,24 @@
+Mejorar el modal de captura de metrajes en Entradas
+Hoy, en el modal de captura rollo por rollo, el botón “Aplicar a todos” sobrescribe todos los rollos, incluidos los que el usuario ya corrigió a mano. Eso obliga a recapturar las variantes.
+Caso real que hay que resolver: llegan 105 rollos, 100 de 50 metros y 5 con metrajes distintos. El usuario debe poder aplicar 50 m a todos de un golpe y después corregir solo esos 5, sin perder nada.
+Cómo debe funcionar:
+	1.	El usuario declara la cantidad total de rollos en el formulario, como hoy (105).
+	2.	En el modal, el bloque “Todos los rollos con el mismo metraje” conserva su campo y su botón, pero cambia de comportamiento:
+	•	“Aplicar a todos” solo llena los rollos que están en blanco. Nunca sobrescribe un valor ya capturado o corregido.
+	•	Si hay rollos ya editados, el botón muestra cuántos va a llenar: “Aplicar a los 100 rollos restantes”.
+	•	Agrega un segundo botón, secundario y menos prominente, “Sobrescribir todos”, que sí reemplaza todo. Al presionarlo pide confirmación indicando cuántos valores editados se van a perder.
+	3.	Los rollos editados a mano quedan marcados visualmente —un ícono, un color de fondo distinto o una etiqueta— para que se distingan de los que traen el valor uniforme.
+	4.	La barra de acumulado muestra tres datos: cuántos rollos tienen el valor uniforme, cuántos fueron ajustados, y cuántos siguen en blanco.
+	5.	Se puede editar cualquier rollo en cualquier momento, antes o después de aplicar el valor uniforme. Editar uno lo marca como ajustado.
+	6.	Un rollo se puede regresar al valor uniforme: un botón pequeño en cada rollo ajustado que lo devuelve al metraje base y le quita la marca.
+	7.	Confirmar solo se habilita cuando no queda ningún rollo en blanco. Si faltan, el mensaje dice cuántos: “Faltan 3 rollos por capturar.”
+	8.	El flujo típico debe ser: declarar 105 rollos → escribir 50 → “Aplicar a todos” → tocar los 5 que vienen distintos y corregirlos → Confirmar. Menos de diez toques para 105 rollos.
+Aplica el mismo comportamiento en cualquier otra pantalla donde exista captura masiva con valor uniforme.
+Pruebas:
+	•	Aplicar a todos con 105 declarados llena los 105
+	•	Corregir 5 y volver a presionar “Aplicar a todos”: los 5 corregidos no cambian
+	•	“Sobrescribir todos” pide confirmación e indica cuántos valores se pierden
+	•	Los rollos ajustados se distinguen visualmente de los uniformes
+	•	El contador muestra correctamente uniformes, ajustados y en blanco
+	•	Regresar un rollo ajustado al valor uniforme le quita la marca
+	•	Confirmar se bloquea si queda algún rollo en blanco, indicando cuántos
