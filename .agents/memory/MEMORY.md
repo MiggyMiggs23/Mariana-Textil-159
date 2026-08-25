@@ -8,4 +8,4 @@
 - [Selección al mostrar contraseñas](password-visibility-selection.md) — restaurar foco y selección después del commit; Chromium los colapsa en el primer frame al cambiar el tipo.
 - [Cliente sistema y aging de crédito](system-customer-credit-aging.md) — preservar clientes históricos al reservar id 1 y asignar reversos/ajustes correctamente antes del FIFO.
 - [Subidas binarias con MIME dinámico](binary-upload-client.md) — no confiar en el cliente generado cuando el endpoint acepta varios MIME y headers derivados del archivo.
-- [Administradores temporales para E2E](temporary-e2e-admins.md) — no depender del password seed; limpiar sesión y auditoría antes de borrar el usuario temporal.
+- [E2E autenticadas aisladas](temporary-e2e-admins.md) — nunca crear o limpiar usuarios en la base de la app; usar una rama Neon desechable y eliminar solo la rama.

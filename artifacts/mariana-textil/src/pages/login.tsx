@@ -18,6 +18,17 @@ const loginSchema = z.object({
   password: z.string().min(1, "La contraseña es requerida"),
 });
 
+const INVISIBLE_IDENTIFIER_CHARACTERS =
+  /[\u200B-\u200F\u202A-\u202E\u2060-\u2069\uFEFF]/g;
+
+function normalizeUsername(value: string) {
+  return value
+    .normalize("NFKC")
+    .replace(INVISIBLE_IDENTIFIER_CHARACTERS, "")
+    .trim()
+    .toLowerCase();
+}
+
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
@@ -46,7 +57,7 @@ export default function Login() {
 
   const onSubmit = (data: LoginForm) => {
     login.mutate(
-      { data },
+      { data: { ...data, usuario: normalizeUsername(data.usuario) } },
       {
         onSuccess: () => {
           queryClient.invalidateQueries();

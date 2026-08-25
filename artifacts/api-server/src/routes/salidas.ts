@@ -18,6 +18,7 @@ import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
 import { buildSalidaDetail, cancelarSalida, crearSalida, listarSalidas } from "../lib/salidas";
+import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   EXCEL_NUMBER_FORMAT,
   toExcelNumber,
@@ -354,7 +355,7 @@ router.post(
             throw new InventarioError("Se requieren credenciales de un administrador activo.", "ADMIN_AUTH_REQUIRED");
           }
           const [admin] = await tx.select({ id: usuariosTable.id }).from(usuariosTable).where(and(
-            eq(usuariosTable.usuario, body.adminUsuario),
+            eq(usuariosTable.usuario, normalizeUsername(body.adminUsuario)),
             eq(usuariosTable.rol, "ADMIN"), eq(usuariosTable.activo, true),
             sql`${usuariosTable.passwordHash} = crypt(${body.adminPassword}, ${usuariosTable.passwordHash})`,
           )).limit(1);

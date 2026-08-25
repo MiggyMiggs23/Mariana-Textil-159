@@ -14,7 +14,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - `NODE_ENV=development pnpm --filter @workspace/db run seed` — precarga ubicaciones y el ADMIN inicial en desarrollo
 - `ADMIN_SEED_PASSWORD` — contraseña inicial del ADMIN; obligatoria fuera de desarrollo
 - La API, Drizzle, migraciones, pruebas y seed usan exclusivamente el `DATABASE_URL` administrado por Replit.
-- El proyecto externo visible en el MCP de Neon no es la base de esta aplicación y no debe usarse para consultar ni modificar sus datos.
+- El proyecto externo visible en el MCP de Neon no es la base de la aplicación. Solo puede usarse para ramas/base desechables de pruebas; nunca como conexión de la app ni para datos reales.
 
 ## Stack
 
@@ -73,4 +73,6 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Ejecuta `codegen` después de cada cambio en OpenAPI.
 - Ejecuta `push` y luego `NODE_ENV=development pnpm --filter @workspace/db run seed` al preparar la base de desarrollo.
 - Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
+- Toda E2E que necesite crear usuarios, sesiones o datos debe usar una rama Neon desechable con una base vacía, esquema y seed actuales. `TEST_DATABASE_URL` debe existir y ser distinta de `DATABASE_URL`.
+- Está prohibido crear ADMIN temporales o limpiar usuarios/sesiones mediante `executeSql({ environment: "development" })`. La limpieza E2E consiste en eliminar únicamente la rama Neon desechable.
 - Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.

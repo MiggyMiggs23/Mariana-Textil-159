@@ -21,6 +21,7 @@ import {
 import { presentUser } from "../lib/presenters";
 import { buildPermissionMatrix } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { normalizeUsername } from "../lib/auth-identifiers";
 
 const router: IRouter = Router();
 const LOCKOUT_WINDOW_MS = 15 * 60 * 1000;
@@ -33,7 +34,7 @@ router.post("/auth/login", async (req, res): Promise<void> => {
     return;
   }
 
-  const username = parsed.data.usuario.trim().toLowerCase();
+  const username = normalizeUsername(parsed.data.usuario);
   const ip = getRequestIp(req);
   const since = new Date(Date.now() - LOCKOUT_WINDOW_MS);
 

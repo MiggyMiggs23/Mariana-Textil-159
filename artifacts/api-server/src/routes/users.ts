@@ -24,6 +24,7 @@ import {
 } from "../lib/presenters";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { normalizeUsername } from "../lib/auth-identifiers";
 
 const router: IRouter = Router();
 
@@ -115,7 +116,7 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
         .insert(usuariosTable)
         .values({
           nombre: parsed.data.nombre.trim(),
-          usuario: parsed.data.usuario.trim().toLowerCase(),
+          usuario: normalizeUsername(parsed.data.usuario),
           passwordHash: sql`crypt(${parsed.data.password}, gen_salt('bf', 12))`,
           rol: role,
           ubicacionId: role === "ADMIN" ? null : location!.id,
@@ -218,7 +219,7 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   } = {};
   if (body.data.nombre !== undefined) updates.nombre = body.data.nombre.trim();
   if (body.data.usuario !== undefined) {
-    updates.usuario = body.data.usuario.trim().toLowerCase();
+    updates.usuario = normalizeUsername(body.data.usuario);
   }
   if (body.data.rol !== undefined) updates.rol = finalRole;
   if (body.data.activo !== undefined) updates.activo = body.data.activo;

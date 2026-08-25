@@ -3,6 +3,7 @@ import { pool } from "@workspace/db";
 import { requireRole, requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { normalizeUsername } from "../lib/auth-identifiers";
 
 const router: IRouter = Router();
 router.use("/clientes", requireSession);
@@ -154,7 +155,7 @@ router.post(
         `SELECT id,nombre FROM usuarios
          WHERE usuario=$1 AND rol='ADMIN' AND activo
            AND password_hash=crypt($2,password_hash)`,
-        [adminUsuario, adminPassword],
+        [normalizeUsername(adminUsuario), adminPassword],
       );
       const autorizador = auth.rows[0];
       if (!autorizador) {

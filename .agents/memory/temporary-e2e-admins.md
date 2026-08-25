@@ -1,10 +1,10 @@
 ---
-name: Administradores temporales para E2E
-description: Convención para autenticación y limpieza segura de pruebas visuales en desarrollo.
+name: E2E autenticadas aisladas
+description: Regla obligatoria para pruebas visuales que crean usuarios, sesiones o datos.
 ---
 
-Para pruebas E2E autenticadas, crear un ADMIN temporal único en lugar de asumir que la contraseña inicial del seed sigue vigente. Al terminar, eliminar dentro de una transacción la sesión y la auditoría generadas por ese usuario antes de borrar la cuenta.
+Nunca crear ADMIN temporales, sesiones, fixtures ni otros datos E2E en la base activa de la aplicación, incluyendo `executeSql` con `environment: "development"`.
 
-**Why:** La contraseña seed debe cambiarse en instalaciones usadas, y los logins crean referencias de auditoría que impiden borrar directamente el usuario temporal.
+**Why:** Una E2E autenticada se ejecutó contra la base activa y luego limpió directamente usuario, sesión y auditoría. Aunque el predicado solo alcanzó la cuenta temporal, ese procedimiento pone datos reales en riesgo y dificulta distinguir una limpieza segura de una pérdida de acceso.
 
-**How to apply:** Usar esta convención solo para pruebas visuales que necesiten sesión real; no modificar credenciales de cuentas existentes y confirmar la limpieza aunque la prueba falle.
+**How to apply:** Crear una rama Neon desechable y una base vacía dentro de ella; aplicar esquema y seed actuales; configurar `TEST_DATABASE_URL` distinta de `DATABASE_URL`; apuntar API y navegador de prueba exclusivamente a esa base. Crear ahí cualquier credencial temporal. Al terminar, eliminar solo la rama; nunca ejecutar limpieza de usuarios, sesiones o auditoría en la base de la app.

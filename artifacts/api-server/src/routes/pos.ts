@@ -67,6 +67,7 @@ import {
   PosError,
   validarPrecioPos,
 } from "../lib/pos";
+import { normalizeUsername } from "../lib/auth-identifiers";
 
 const router: IRouter = Router();
 router.use(requireSession);
@@ -170,7 +171,7 @@ async function verifyAdminCredentials(
     .from(usuariosTable)
     .where(
       and(
-        eq(usuariosTable.usuario, credentials.usuario.trim()),
+        eq(usuariosTable.usuario, normalizeUsername(credentials.usuario)),
         eq(usuariosTable.rol, "ADMIN"),
         eq(usuariosTable.activo, true),
         sql`${usuariosTable.passwordHash} = crypt(${credentials.password}, ${usuariosTable.passwordHash})`,

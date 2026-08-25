@@ -6,6 +6,7 @@ import { ZodError, z } from "zod/v4";
 import { db } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
+import { normalizeUsername } from "../lib/auth-identifiers";
 
 const router = Router();
 const id = z.coerce.number().int().positive();
@@ -197,7 +198,7 @@ router.post(
         }
         const admin = await db.execute(sql`
           SELECT id, nombre, usuario FROM usuarios
-          WHERE lower(usuario)=lower(${body.adminUsuario}) AND activo=true AND rol='ADMIN'
+          WHERE usuario=${normalizeUsername(body.adminUsuario)} AND activo=true AND rol='ADMIN'
             AND password_hash=crypt(${body.adminPassword}, password_hash)
           LIMIT 1
         `);
