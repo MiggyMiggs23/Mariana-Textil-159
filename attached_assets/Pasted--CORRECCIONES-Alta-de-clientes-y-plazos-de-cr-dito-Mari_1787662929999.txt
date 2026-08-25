@@ -1,0 +1,181 @@
+# CORRECCIONES — Alta de clientes y plazos de crédito
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+Dos correcciones al módulo de Clientes.
+
+---
+
+# PARTE 1 — Falta el botón de dar de alta clientes
+
+## Problema
+
+El módulo de Clientes **no tiene botón para crear un cliente nuevo**. No hay forma de registrarlos. Proveedores sí lo tiene y funciona bien.
+
+## Corrección
+
+### En el listado de Clientes
+
+Botón **"Nuevo cliente"** arriba a la derecha, con el mismo estilo y comportamiento del que existe en Proveedores.
+
+Abre un formulario con:
+- **Nombre** (obligatorio)
+- Teléfono, correo, RFC, dirección, nombre de contacto (opcionales)
+- Límite de crédito y días de crédito (opcionales)
+- Notas (opcional)
+
+Reglas:
+- Solo el nombre es obligatorio
+- Si se captura límite de crédito, los días de crédito se vuelven obligatorios
+- Validar que no exista otro cliente activo con el mismo nombre. Si existe, avisar y **ofrecer abrirlo** en lugar de duplicarlo.
+- Requiere permiso `clientes.puede_crear`
+
+### En el POS
+
+Junto al selector de cliente, un botón **"Nuevo cliente"** que abre un formulario mínimo **sin salir de la venta**: solo **nombre y teléfono**.
+
+- Al guardarlo queda **seleccionado automáticamente** en el ticket que se está armando
+- No pide límite de crédito: un cliente creado desde el POS nace **sin crédito autorizado**. El administrador se lo asigna después.
+- Requiere permiso `clientes.puede_crear`. TERMINAL lo tiene.
+- Dos campos, guardar, y de regreso a la venta. Nada más.
+
+### Revisión de todos los catálogos
+
+**Revisa si el mismo problema existe en otros módulos.** Verifica que clientes, proveedores, productos, usuarios y sitios tengan su botón de alta visible para quien tiene permiso de crear. Repórtame cuáles estaban sin él.
+
+---
+
+# PARTE 2 — Plazo de vencimiento en ventas a crédito
+
+## Cómo debe funcionar
+
+Cuando caja marca un ticket como crédito, **debe elegir el plazo de vencimiento**. **Sin valor por defecto**: el cajero elige siempre, conscientemente.
+
+### En la pantalla de cobro
+
+Al seleccionar Crédito como forma de pago, aparecen cuatro botones grandes: **7 días**, **15 días**, **30 días** y **60 días**.
+
+- **No se puede confirmar el cobro sin elegir uno.** El botón de confirmar queda deshabilitado con una leyenda que lo explique.
+- Antes de confirmar, el sistema muestra la **fecha de vencimiento calculada**: *"Vence el 15 de septiembre de 2026"*
+- Si el cliente tiene un plazo pactado en su ficha, se muestra como nota informativa: *"Plazo habitual de este cliente: 30 días"*. **No preselecciona nada.**
+
+### Base de datos
+
+Agrega a `movimientos_credito`:
+- `dias_plazo` (int) — 7, 15, 30 o 60
+- `fecha_vencimiento` (date) — calculada desde la fecha de la venta
+
+El campo `dias_credito` del cliente **se conserva** como referencia informativa. No preselecciona.
+
+**Migración:** los movimientos de crédito existentes sin plazo se dejan como están, marcados visualmente como "sin plazo definido". No inventes una fecha de vencimiento retroactiva.
+
+### Estados de la nota
+
+| Estado | Cuándo | Color |
+|---|---|---|
+| **Vigente** | Dentro del plazo | Gris |
+| **Por vencer** | Faltan 3 días o menos | Amarillo |
+| **Vencida** | Pasó la fecha y sigue con saldo | Rojo |
+| **Pagada** | Saldo en cero | Verde |
+
+El estado se calcula al consultar, comparando la fecha de vencimiento contra la fecha actual. **No lo guardes como campo:** se desactualizaría solo.
+
+### Corrección importante del aging
+
+**El aging debe calcularse desde la fecha de vencimiento, no desde la fecha de venta.**
+
+Hoy está mal: una nota a 60 días aparece como si tuviera dos meses de atraso desde el día que se generó, cuando en realidad ni siquiera ha vencido. Una nota no está vencida mientras esté dentro de su plazo.
+
+Corrígelo en el estado de cuenta del cliente, en la cartera y en cualquier reporte que use aging. Los tramos siguen siendo 0-30, 31-60, 61-90 y más de 90, pero contados **desde el vencimiento**.
+
+Aplica el mismo criterio al aging de proveedores si tienen plazo pactado.
+
+### Notificación a ADMIN
+
+Cada vez que caja registra una venta a crédito, se genera una notificación para el administrador con:
+- Cliente
+- Folio del ticket
+- Importe
+- Plazo elegido y fecha de vencimiento
+- Cajero que lo registró
+- Tienda
+
+Implementación:
+- **Badge en la barra lateral** con el conteo de notificaciones sin leer, visible solo para ADMIN
+- Panel de notificaciones donde el ADMIN las revisa y marca como leídas
+- Si el crédito **excede el límite** del cliente, la notificación se marca como **urgente** y se muestra en rojo
+- Las notificaciones se conservan; marcarlas como leídas no las borra
+
+### Alertas adicionales para ADMIN
+
+En el panel de notificaciones o en la vista de cartera:
+- Notas que vencen en los próximos 3 días
+- Notas vencidas, ordenadas de la más antigua a la más reciente
+- Clientes con más de una nota vencida
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No preselecciones un plazo por defecto: el cajero debe elegir
+- No permitas confirmar un cobro a crédito sin plazo
+- No guardes el estado de la nota como campo: se calcula al consultar
+- No inventes fechas de vencimiento retroactivas para los créditos existentes
+- No calcules el aging desde la fecha de venta: se cuenta desde el vencimiento
+- No borres las notificaciones al marcarlas como leídas
+- No permitas crear clientes duplicados sin avisar
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Alta de clientes:**
+1. Se crea un cliente desde el listado y aparece de inmediato
+2. Se crea uno desde el POS y queda seleccionado en el ticket que se está armando
+3. Un cliente creado desde el POS nace sin límite de crédito
+4. Intentar crear uno con nombre duplicado avisa y ofrece abrir el existente
+5. Un usuario sin `clientes.puede_crear` no ve el botón, y llamando la API recibe **403**
+6. Si se captura límite de crédito, los días de crédito se vuelven obligatorios
+
+**Plazos:**
+7. No se puede confirmar un cobro a crédito sin elegir plazo
+8. La fecha de vencimiento se calcula correctamente para 7, 15, 30 y 60 días
+9. El plazo habitual del cliente se muestra como nota pero no preselecciona
+10. Una nota de 30 días **no** aparece como vencida al día 15
+11. Una nota a 7 días aparece como "por vencer" al día 5
+12. Una nota vencida cambia de estado al pasar la fecha, sin intervención
+
+**Aging:**
+13. El aging se calcula desde el vencimiento, no desde la venta
+14. Una nota a 30 días con 20 días de antigüedad está en el tramo 0-30 y **vigente**
+15. Una nota a 60 días con 45 días de antigüedad está **vigente**, no vencida
+16. Una nota a 7 días con 20 días de antigüedad está **vencida** con 13 días de atraso
+17. Los movimientos de crédito antiguos sin plazo se muestran marcados, sin fecha inventada
+
+**Notificaciones:**
+18. Una venta a crédito genera la notificación con todos los datos
+19. Un crédito que excede el límite genera notificación urgente en rojo
+20. El badge muestra el conteo correcto de no leídas
+21. Marcar como leída no borra la notificación
+22. Solo ADMIN ve el panel de notificaciones; otros roles reciben **403**
+
+**Regresión:**
+23. Las 12 pruebas del motor siguen pasando
+24. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Qué catálogos encontraste sin botón de alta
+3. Cuántos movimientos de crédito existentes quedaron sin plazo definido
+4. Lista de archivos creados y modificados
+5. Endpoints nuevos con su módulo y acción de permiso
+6. Salida completa de la corrida de pruebas
+7. Confirmación de que las pruebas corrieron en base aislada
+8. Cómo pruebo cada cambio: con qué usuario y en qué orden

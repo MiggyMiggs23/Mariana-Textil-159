@@ -1,0 +1,331 @@
+# PROMPT 10 — Caja: histórico, control y tiempo real
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+Hoy Caja cobra tickets y hace cortes. Falta la capa de administración: el histórico, el control de diferencias, y el seguimiento en tiempo real de lo que pasa en las tiendas.
+
+**Alcance:** este módulo responde una sola pregunta — **¿cuadró el dinero?** La rentabilidad y los márgenes por producto van en el módulo de Reportes, no aquí. La única excepción es el margen en tiempo real del panel de ADMIN, porque sirve para detectar una venta rara en el momento.
+
+**Respeta el motor.** Ninguna pantalla de este módulo escribe en `rollos`, `movimientos` ni `existencias`.
+**No borres datos existentes.**
+**Respeta el diseño existente.** Mismo azul marino, misma tipografía, mismos componentes.
+**Formato numérico:** dinero con dos decimales y coma de miles; metros y kilos con tres decimales.
+
+---
+
+# PARTE 1 — Panel en tiempo real (solo ADMIN)
+
+Nueva pantalla dentro de Caja, es lo primero que ve el ADMIN al entrar al módulo.
+
+**Visible únicamente para ADMIN.** Ni CAJA ni TERMINAL tienen acceso, ni por interfaz ni por API.
+
+## Concepto clave: vendido contra cobrado
+
+Son dos números distintos y durante el día no coinciden. La diferencia son los tickets que la terminal ya confirmó pero caja aún no cobra.
+
+- **Vendido** — lo que la terminal confirmó. El inventario ya salió.
+- **Cobrado** — lo que caja registró. El dinero ya entró.
+- **Pendiente de cobro** — la diferencia. En una tienda sana son minutos; si crece, algo pasa.
+
+Muestra los tres, siempre juntos, para que la brecha sea evidente.
+
+## Encabezado del panel
+
+- Fecha de hoy y hora de la última actualización
+- **Totales consolidados del día**: vendido, cobrado, pendiente de cobro
+- **Margen del día** en importe y porcentaje
+- Número de tickets: vendidos, cobrados, pendientes, cancelados
+
+## Tarjetas por tienda
+
+Una tarjeta por cada tienda con sesión de caja abierta:
+
+- Nombre de la tienda
+- **Vendido hoy** y **cobrado hoy**
+- **Pendiente de cobro**, destacado si es mayor a cero
+- Número de tickets
+- Ticket promedio
+- **Margen del día** en importe y porcentaje
+- Cajero y usuario de terminal en turno
+- Hora de apertura de la caja
+- Desglose rápido por forma de pago: efectivo, transferencia, crédito
+
+**Alertas visuales en la tarjeta:**
+- Ticket pendiente **más de 30 minutos**: la tarjeta se marca en color de alerta con el conteo
+- Tienda **sin sesión de caja abierta** después de las 10:00 a.m.: aviso
+- **Margen del día por debajo del 15%**: aviso, puede indicar descuentos excesivos
+- **Cancelaciones del día mayores al 10%** de los tickets: aviso
+
+## Actualización
+
+- **El panel general se actualiza cada 5 minutos**, automáticamente
+- **Los tickets pendientes de cobro se actualizan cada 30 segundos**, porque su alerta pierde valor si llega tarde
+- Botón de actualizar manualmente
+- Indicador visible de cuándo fue la última actualización
+- Si la actualización falla, aviso claro con opción de reintentar. Nunca dejes el panel mostrando datos viejos sin indicarlo.
+
+## Comparativo del día
+
+Tabla con todas las tiendas, ordenable:
+
+| Tienda | Tickets | Vendido | Cobrado | Pendiente | Margen $ | Margen % | Efectivo | Transferencia | Crédito |
+
+Fila de totales al pie.
+
+## Últimos tickets
+
+Lista de los últimos 20 tickets de todas las tiendas, en vivo: folio, hora, tienda, cliente, importe, margen, estado de cobro. Clic para abrir el ticket.
+
+Sirve para detectar en el momento una venta con margen anormal o un descuento fuera de lo común.
+
+---
+
+# PARTE 2 — Histórico de cortes
+
+Pantalla dentro de Caja. **Solo ADMIN.**
+
+Un usuario CAJA no puede consultar cortes anteriores, ni el suyo una vez cerrado. Ya está definido así; confirma que se cumple y que el endpoint responde **403**.
+
+## Listado
+
+Tabla ordenada por fecha, la más reciente arriba:
+
+| Fecha | Tienda | Cajero | Apertura | Cierre | Tickets | Vendido | Cobrado | Efectivo esperado | Efectivo contado | **Diferencia** | Estado |
+
+- La columna de **diferencia** es la más importante: en verde si es cero, en rojo si falta dinero, en amarillo si sobra
+- Filtros: rango de fechas, tienda, cajero, y **"solo con diferencia"**
+- Buscador por número de corte
+- Fila de totales del periodo filtrado
+- Exportable a Excel y PDF
+
+## Detalle de un corte
+
+Al abrir un corte se ve exactamente lo que vio el cajero al cerrarlo, más lo que solo tú ves:
+
+- Datos del turno: fecha, tienda, cajero, apertura, cierre, fondo inicial
+- **Desglose por forma de pago**: efectivo, transferencia, crédito
+- **Desglose por cuenta destino**: caja física, cuenta fiscal, cuenta no fiscal, cuentas por cobrar
+- **Facturado contra no facturado**, cada uno con su desglose de forma de pago
+- **Ventas metreadas** en renglón propio
+- Desglose por producto: nombre, color, cantidad, importe
+- **Margen del turno** — solo visible para ADMIN
+- Lista de tickets cobrados en el turno
+- Lista de tickets que quedaron pendientes al cierre
+- Cancelaciones del turno con su motivo y quién autorizó
+- Efectivo esperado, contado y diferencia
+- Reimprimible y exportable
+
+---
+
+# PARTE 3 — Control de diferencias
+
+Es el corazón del control interno de efectivo. Pestaña dentro de Caja, **solo ADMIN**.
+
+## Resumen del periodo
+
+Con selector de periodo: hoy, esta semana, este mes, este trimestre, este semestre, este año, rango personalizado.
+
+| Indicador | Definición |
+|---|---|
+| **Cortes en el periodo** | Cuántos se hicieron |
+| **Cortes exactos** | Cuántos cerraron en cero |
+| **Cortes con faltante** | Cuántos y por cuánto en total |
+| **Cortes con sobrante** | Cuántos y por cuánto en total |
+| **Diferencia neta** | Faltantes menos sobrantes |
+| **Diferencia acumulada absoluta** | Suma de todas las diferencias sin importar el signo. Mide qué tan preciso es el manejo de efectivo, aunque se compensen. |
+| **Porcentaje de cortes exactos** | Cortes en cero ÷ total de cortes |
+
+## Por cajero
+
+Tabla que responde quién maneja mejor el efectivo:
+
+| Cajero | Cortes | Exactos | % exactos | Faltantes | Sobrante | Diferencia neta | Diferencia acumulada | Diferencia promedio |
+
+Ordenable por cualquier columna. Un cajero con muchos cortes exactos y otro con diferencias constantes salta a la vista.
+
+**Nota importante:** un sobrante también es una diferencia. Que sobre dinero no es bueno, significa que algo no se registró bien.
+
+## Por tienda
+
+La misma tabla agrupada por tienda, para detectar si el problema es de una persona o de un lugar.
+
+## Tendencia
+
+- Gráfica de la diferencia acumulada por semana o por mes
+- Gráfica del porcentaje de cortes exactos en el tiempo
+- Sirve para saber si el control está mejorando o empeorando
+
+## Alertas
+
+- Cajero con **más de tres cortes con faltante** en el mes
+- Corte con diferencia mayor a un umbral configurable, por defecto $500
+- Tienda cuya diferencia acumulada del mes supera un umbral configurable
+
+---
+
+# PARTE 4 — Cuentas destino
+
+Pestaña dentro de Caja, **solo ADMIN**. Responde a dónde fue el dinero.
+
+Con selector de periodo: día, semana, mes, trimestre, semestre, año, rango personalizado.
+
+## Resumen
+
+Cuatro tarjetas grandes:
+
+- **Caja física** — todo lo cobrado en efectivo
+- **Cuenta fiscal** — transferencias de ventas facturadas
+- **Cuenta no fiscal** — transferencias de ventas sin factura
+- **Cuentas por cobrar** — lo que quedó a crédito
+
+Cada una con su importe, su porcentaje del total, y su comparativo contra el periodo anterior.
+
+## Desglose
+
+- **Por tienda**: cuánto aportó cada una a cada cuenta
+- **Por día**: gráfica de barras apiladas mostrando la mezcla diaria
+- **Facturado contra no facturado**: porcentaje de cada uno, y dentro de lo facturado, cuánto entró por transferencia y cuánto en efectivo
+- **IVA cobrado** en el periodo, en renglón propio
+
+Exportable a Excel y PDF.
+
+---
+
+# PARTE 5 — Comparativo entre tiendas
+
+Pestaña dentro de Caja, **solo ADMIN**.
+
+Con los seis periodos: diario, semanal, mensual, trimestral, semestral y anual.
+
+## Tabla comparativa
+
+| Tienda | Tickets | Vendido | Ticket promedio | Metros | Kilos | Efectivo | Transferencia | Crédito | % facturado | Cancelaciones | Diferencia de caja |
+
+Fila de totales. Ordenable.
+
+## Indicadores por tienda
+
+- **Participación**: qué porcentaje de la venta total representa cada tienda
+- **Tendencia**: comparativo contra el periodo anterior, con flecha y porcentaje
+- **Mejor y peor día** del periodo, por tienda
+- **Ticket promedio** comparado contra el promedio general
+- **Mezcla de pago** de cada tienda: algunas venden más a crédito que otras, y eso importa
+
+## Gráficas
+
+- Ventas por tienda en el periodo, barras
+- Evolución de ventas por tienda en el tiempo, líneas
+- Distribución de formas de pago por tienda, barras apiladas
+
+---
+
+# PARTE 6 — Permisos
+
+| Vista | ADMIN | CAJA | TERMINAL | Otros |
+|---|---|---|---|---|
+| Cobrar tickets | sí | sí | no | no |
+| Realizar corte del turno propio | sí | sí | no | no |
+| Ver resumen del corte recién cerrado | sí | sí | no | no |
+| Panel en tiempo real | sí | **no** | no | no |
+| Histórico de cortes | sí | **no** | no | no |
+| Control de diferencias | sí | **no** | no | no |
+| Cuentas destino | sí | **no** | no | no |
+| Comparativo entre tiendas | sí | **no** | no | no |
+| Margen en cualquier vista | sí | ver nota | no | no |
+
+**Nota sobre el margen para CAJA:** ya está definido que CAJA ve costos y margen en el detalle del ticket que está cobrando, para detectar ventas raras. Eso se conserva. Lo que no ve es el margen agregado del día, del turno ni de la tienda.
+
+**Todo se valida en el servidor.** Un usuario CAJA que llame directamente a los endpoints de histórico, diferencias, cuentas destino o tiempo real debe recibir **403**.
+
+Los campos de margen se **omiten de la respuesta JSON** cuando el rol no debe verlos.
+
+---
+
+# PARTE 7 — Consideraciones de cálculo
+
+- Los tickets **cancelados se excluyen** de ventas y márgenes, pero **sí aparecen** en el conteo de cancelaciones
+- El margen se calcula sobre el **subtotal**, nunca sobre el total con IVA
+- Las ventas metreadas cuentan en importe pero **no en margen** si no tienen rollo ligado. Márcalo.
+- Los rollos con costo nulo no cuentan para margen. Indícalo.
+- **Metros y kilos siempre separados**
+- La zona horaria de todos los cortes de día es America/Mexico_City
+- Un "día" va de las 00:00 a las 23:59 hora de México, no por turno de caja
+- Las consultas deben estar indexadas. Si alguna tarda más de dos segundos con datos reales, repórtalo.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No des acceso a CAJA al histórico, al tiempo real, a diferencias, a cuentas destino ni al comparativo
+- No muestres margen agregado a CAJA ni a TERMINAL
+- No incluyas tickets cancelados en ventas ni márgenes
+- No calcules margen sobre el total con IVA
+- No sumes metros con kilos
+- No construyas aquí análisis de rentabilidad por producto: eso va en Reportes
+- No mandes campos de margen en la respuesta esperando que la interfaz los esconda
+- No dejes el panel mostrando datos viejos sin indicar que la actualización falló
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Tiempo real:**
+1. Un ticket confirmado en terminal aparece en el panel en la siguiente actualización
+2. Vendido, cobrado y pendiente suman correctamente y la brecha es la diferencia real
+3. El margen del día coincide con la suma de márgenes de los tickets del día
+4. Un ticket pendiente más de 30 minutos dispara la alerta en la tarjeta
+5. El panel general refresca cada 5 minutos y los pendientes cada 30 segundos
+6. Si la actualización falla, se muestra el aviso y no datos viejos silenciosamente
+7. CAJA llamando al endpoint del panel: **403**
+8. TERMINAL llamando al endpoint del panel: **403**
+
+**Histórico:**
+9. ADMIN ve cortes de todas las tiendas y fechas
+10. CAJA llamando al endpoint de histórico: **403**
+11. El detalle del corte muestra lo mismo que vio el cajero, más el margen
+12. El filtro "solo con diferencia" muestra únicamente los cortes que no cerraron en cero
+
+**Diferencias:**
+13. Un corte con faltante de $200 se clasifica correctamente
+14. Un corte con sobrante de $150 también cuenta como diferencia
+15. La diferencia neta es faltantes menos sobrantes
+16. La diferencia acumulada absoluta suma ambos sin importar el signo
+17. La tabla por cajero agrupa correctamente
+18. Un cajero con más de tres faltantes en el mes dispara la alerta
+
+**Cuentas destino:**
+19. Efectivo va a caja física
+20. Transferencia facturada va a cuenta fiscal
+21. Transferencia sin factura va a cuenta no fiscal
+22. Crédito va a cuentas por cobrar
+23. La suma de las cuatro cuentas iguala el total cobrado
+24. El IVA cobrado aparece en renglón propio
+
+**Comparativo:**
+25. Los seis periodos calculan correctamente
+26. La participación de cada tienda suma 100%
+27. Metros y kilos van separados
+
+**Regresión:**
+28. Las 12 pruebas del motor siguen pasando
+29. Las pruebas de permisos, POS, salidas y clientes siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos con su módulo y acción de permiso
+5. Confirmación de que CAJA no accede a ninguna vista de administración
+6. Si algún KPI tarda más de dos segundos, cuál
+7. Salida completa de la corrida de pruebas
+8. Confirmación de que las pruebas corrieron en base aislada
+9. Cómo pruebo cada vista: con qué usuario y en qué orden
