@@ -1,10 +1,11 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
-  useGetExistencias, 
+import {
+  useGetExistenciasAgrupadas,
   useListRollos,
   useGetCurrentUser,
+  getGetExistenciasAgrupadasQueryKey,
   Role,
   ListRollosEstado
 } from "@workspace/api-client-react";
@@ -16,29 +17,84 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useLocationScope } from "@/lib/location-scope";
-import { Search, Boxes, Filter, ArrowRight } from "lucide-react";
+import { Search, Boxes, Filter, ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function Inventario() {
   const [, setLocation] = useLocation();
   const { data: user } = useGetCurrentUser();
-  const isAdmin = user?.rol === Role.ADMIN;
-  
+  const isTodas = user?.alcanceConsulta === "TODAS";
+
   const { selectedLocationId } = useLocationScope();
 
-  // "consolidado" solo si es ADMIN y eligió Vista Global
-  const consolidado = isAdmin && selectedLocationId === null;
+  // "consolidado" solo si es TODAS y eligió Vista Global
+  const consolidado = isTodas && selectedLocationId === null;
   const effectiveUbicacionId = consolidado ? undefined : (selectedLocationId ?? user?.ubicacion?.id);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
   const [estadoFilter, setEstadoFilter] = useState<string>("TODOS");
+  const [showZero, setShowZero] = useState(false);
 
-  const { data: existencias, isLoading: loadingExistencias } = useGetExistencias({
-    ubicacionId: effectiveUbicacionId,
-    consolidado
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
+    try {
+      const stored = sessionStorage.getItem("inv_expanded_groups");
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
   });
+
+  const { data: existenciasAgrupadas, isLoading: loadingExistencias } = useGetExistenciasAgrupadas({
+    ubicacionId: effectiveUbicacionId,
+    search: debouncedSearch || undefined,
+    includeSinExistencia: showZero ? true : undefined
+  }, {
+    query: {
+      queryKey: getGetExistenciasAgrupadasQueryKey({
+        ubicacionId: effectiveUbicacionId,
+        search: debouncedSearch || undefined,
+        includeSinExistencia: showZero ? true : undefined
+      })
+    }
+  });
+
+  useEffect(() => {
+    if (debouncedSearch && existenciasAgrupadas) {
+      const keys = existenciasAgrupadas.map(g => g.productoKey);
+      setExpandedGroups(prev => {
+        const next = new Set(prev);
+        keys.forEach(k => next.add(k));
+        sessionStorage.setItem("inv_expanded_groups", JSON.stringify(Array.from(next)));
+        return next;
+      });
+    }
+  }, [debouncedSearch, existenciasAgrupadas]);
+
+  const toggleGroup = (key: string) => {
+    setExpandedGroups(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      sessionStorage.setItem("inv_expanded_groups", JSON.stringify(Array.from(next)));
+      return next;
+    });
+  };
+
+  const toggleAllGroups = () => {
+    if (!existenciasAgrupadas) return;
+    if (expandedGroups.size === existenciasAgrupadas.length) {
+      setExpandedGroups(new Set());
+      sessionStorage.setItem("inv_expanded_groups", JSON.stringify([]));
+    } else {
+      const all = new Set(existenciasAgrupadas.map(g => g.productoKey));
+      setExpandedGroups(all);
+      sessionStorage.setItem("inv_expanded_groups", JSON.stringify(Array.from(all)));
+    }
+  };
 
   const { data: rollosRes, isLoading: loadingRollos } = useListRollos({
     ubicacionId: effectiveUbicacionId,
@@ -48,17 +104,6 @@ export default function Inventario() {
     page: 1,
     pageSize: 100
   });
-
-  // Local filter for existencias (search applied to tela/color/sku)
-  const filteredExistencias = existencias?.filter(e => {
-    if (!debouncedSearch) return true;
-    const term = debouncedSearch.toLowerCase();
-    return (
-      (e.skuProducto || "").toLowerCase().includes(term) ||
-      (e.telaProducto || "").toLowerCase().includes(term) ||
-      (e.colorProducto || "").toLowerCase().includes(term)
-    );
-  }) ?? [];
 
   return (
     <AppLayout>
@@ -82,8 +127,8 @@ export default function Inventario() {
             <div className="flex gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Buscar SKU, tela, color, serie..." 
+                <Input
+                  placeholder="Buscar SKU, tela, color, serie..."
                   className="pl-9 bg-background"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -93,45 +138,80 @@ export default function Inventario() {
           </div>
 
           <TabsContent value="existencias" className="m-0">
+            <div className="flex items-center gap-4 mb-4 mt-2">
+              <Button variant="outline" size="sm" onClick={toggleAllGroups} disabled={!existenciasAgrupadas?.length}>
+                {existenciasAgrupadas && expandedGroups.size === existenciasAgrupadas.length ? "Contraer todos" : "Expandir todos"}
+              </Button>
+              <div className="flex items-center gap-2 border bg-card px-3 py-1.5 rounded-md shadow-sm">
+                <Switch id="show-zero" checked={showZero} onCheckedChange={setShowZero} data-testid="toggle-show-zero" />
+                <Label htmlFor="show-zero" className="text-sm font-medium cursor-pointer">Mostrar sin existencias</Label>
+              </div>
+            </div>
+
             <Card>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader className="bg-muted/30">
                     <TableRow>
-                      <TableHead>Producto</TableHead>
-                      <TableHead>SKU</TableHead>
-                      {consolidado && <TableHead>Sitio</TableHead>}
+                      <TableHead className="w-8"></TableHead>
+                      <TableHead>Tela / Producto</TableHead>
+                      {isTodas && <TableHead>Sitio</TableHead>}
                       <TableHead className="text-right">Rollos</TableHead>
-                      <TableHead className="text-right">Cantidad</TableHead>
+                      <TableHead className="text-right">Total Metros</TableHead>
+                      <TableHead className="text-right">Total Kilos</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loadingExistencias ? (
                       <TableRow>
-                        <TableCell colSpan={consolidado ? 5 : 4} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={isTodas ? 6 : 5} className="h-32 text-center text-muted-foreground">
                           Cargando inventario...
                         </TableCell>
                       </TableRow>
-                    ) : filteredExistencias.length === 0 ? (
+                    ) : existenciasAgrupadas?.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={consolidado ? 5 : 4} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={isTodas ? 6 : 5} className="h-32 text-center text-muted-foreground">
                           <Boxes className="w-8 h-8 mx-auto mb-2 opacity-20" />
                           No se encontraron existencias
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredExistencias.map((item, idx) => (
-                        <TableRow key={`${item.productoId}-${item.ubicacionId}-${idx}`}>
-                          <TableCell className="font-medium">
-                            {item.telaProducto} <span className="text-muted-foreground">/</span> {item.colorProducto}
-                          </TableCell>
-                          <TableCell><span className="font-mono text-sm bg-muted/50 px-1.5 py-0.5 rounded">{item.skuProducto}</span></TableCell>
-                          {consolidado && <TableCell>{item.nombreUbicacion}</TableCell>}
-                          <TableCell className="text-right font-bold">{item.rollosCount}</TableCell>
-                          <TableCell className="text-right tabular-nums">
-                            {parseFloat(item.cantidadTotal).toFixed(2)} <span className="text-xs text-muted-foreground">{item.unidadProducto}</span>
-                          </TableCell>
-                        </TableRow>
+                      existenciasAgrupadas?.map(grupo => (
+                        <React.Fragment key={grupo.productoKey}>
+                          <TableRow className="bg-secondary/20 hover:bg-secondary/30 cursor-pointer border-b border-border/50" onClick={() => toggleGroup(grupo.productoKey)} data-testid={`group-${grupo.productoKey}`}>
+                            <TableCell className="p-3">
+                              {expandedGroups.has(grupo.productoKey) ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                            </TableCell>
+                            <TableCell className="font-bold py-3">
+                              {grupo.telaProducto}
+                              <Badge variant="outline" className="ml-2 bg-background font-normal text-xs">{grupo.coloresCount} colores</Badge>
+                            </TableCell>
+                            {isTodas && <TableCell></TableCell>}
+                            <TableCell className="text-right font-bold py-3">{grupo.rollosCount}</TableCell>
+                            <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? parseFloat(grupo.totalMetros).toFixed(2) : "-"}</TableCell>
+                            <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? parseFloat(grupo.totalKilos).toFixed(2) : "-"}</TableCell>
+                          </TableRow>
+                          {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => (
+                            <TableRow key={hijo.productoId} className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
+                              <TableCell></TableCell>
+                              <TableCell className="pl-6 py-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-primary/40"></div>
+                                  <span className="font-medium text-sm">{hijo.color}</span>
+                                  <span className="font-mono text-xs bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground ml-2 border">{hijo.sku}</span>
+                                </div>
+                              </TableCell>
+                              {isTodas && <TableCell className="py-2"></TableCell>}
+                              <TableCell className="text-right py-2">{hijo.rollosCount}</TableCell>
+                              <TableCell className="text-right tabular-nums py-2" colSpan={2}>
+                                <div className="flex items-center justify-end gap-1">
+                                  <span className="font-medium">{parseFloat(hijo.cantidadTotal).toFixed(2)}</span>
+                                  <span className="text-xs text-muted-foreground uppercase">{hijo.unidad}</span>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </React.Fragment>
                       ))
                     )}
                   </TableBody>
@@ -166,8 +246,8 @@ export default function Inventario() {
                 </div>
               ) : (
                 rollosRes?.items.map(rollo => (
-                  <Card 
-                    key={rollo.id} 
+                  <Card
+                    key={rollo.id}
                     className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group flex flex-col"
                     onClick={() => setLocation(`/inventario/rollos/${rollo.id}`)}
                   >
@@ -186,9 +266,9 @@ export default function Inventario() {
                         <div className="font-semibold text-foreground truncate" title={`${rollo.telaProducto} / ${rollo.colorProducto}`}>
                           {rollo.telaProducto} <span className="text-muted-foreground font-normal">/</span> {rollo.colorProducto}
                         </div>
-                        {consolidado && <div className="text-xs text-muted-foreground mt-1">{rollo.nombreUbicacion}</div>}
+                        {isTodas && <div className="text-xs text-muted-foreground mt-1">{rollo.nombreUbicacion}</div>}
                       </div>
-                      
+
                       <div className="flex items-end justify-between mt-auto">
                         <div>
                           <div className="text-2xl font-bold tracking-tight">
@@ -207,7 +287,7 @@ export default function Inventario() {
                 ))
               )}
             </div>
-            
+
             {rollosRes && rollosRes.total > rollosRes.pageSize && (
               <div className="text-center text-sm text-muted-foreground p-4 bg-muted/20 rounded-lg">
                 Mostrando los primeros {rollosRes.items.length} rollos. Utilice la búsqueda para encontrar rollos específicos.

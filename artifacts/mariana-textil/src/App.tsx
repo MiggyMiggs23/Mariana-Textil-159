@@ -21,6 +21,7 @@ import ProductoDetail from '@/pages/producto-detail';
 import Proveedores from '@/pages/proveedores';
 import ProveedorDetail from '@/pages/proveedor-detail';
 import Entradas from '@/pages/entradas';
+import EntradasPendientesCosto from '@/pages/entradas-pendientes-costo';
 import EntradaDocumento from '@/pages/entrada-documento';
 import EntradaEtiquetas from '@/pages/entrada-etiquetas';
 import Salidas from '@/pages/salidas';
@@ -144,6 +145,7 @@ function Router() {
         <Route path="/permisos" component={() => <ProtectedRoute component={Permisos} allowedModule={Modules.PERMISOS} />} />
 
         <Route path="/entradas" component={() => <ProtectedRoute component={Entradas} allowedModule={Modules.ENTRADAS} />} />
+        <Route path="/entradas/pendientes-costo" component={() => <ProtectedRoute component={EntradasPendientesCosto} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
         

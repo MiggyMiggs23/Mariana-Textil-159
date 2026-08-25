@@ -25,5 +25,5 @@ export function isValidUnitCost(value: unknown): boolean {
 }
 
 export function rollWithoutValidUnitCostMessage(serie: string): string {
-  return `El rollo serie ${serie} no tiene un costo unitario válido. Contacta a administración.`;
+  return `El rollo serie ${serie} no tiene costo registrado. Contacte al administrador.`;
 }

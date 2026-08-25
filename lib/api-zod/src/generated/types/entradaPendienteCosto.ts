@@ -6,20 +6,16 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface EntradaSummary {
+export interface EntradaPendienteCosto {
   id: number;
   folio: number;
-  ubicacionId: number;
+  fecha: Date;
   nombreUbicacion: string;
   /** @nullable */
-  proveedorId: number | null;
-  /** @nullable */
   nombreProveedor: string | null;
-  usuarioId: number;
+  rollosPendientes: number;
+  totalMetros: string;
+  totalKilos: string;
   nombreUsuario: string;
-  fecha: Date;
-  totalRollos: number;
-  /** @nullable */
-  totalCosto: string | null;
-  createdAt: Date;
+  overdue48h: boolean;
 }

@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { ProductCombobox } from "@/components/product-combobox";
-import { 
-  useListProductos, 
-  useListLocations, 
-  useListProveedores, 
+import {
+  useGetCatalogosEntrada,
+  getGetCatalogosEntradaQueryKey,
+  useListLocations,
   useCrearEntrada,
   useGetCurrentUser,
-  getListProductosQueryKey,
   getListLocationsQueryKey,
-  getListProveedoresQueryKey,
   getGetCurrentUserQueryKey,
   getListEntradasQueryKey,
   getGetDashboardQueryKey,
@@ -17,6 +15,10 @@ import {
   getGetExistenciasQueryKey,
   useGetFechaServidor,
   getGetFechaServidorQueryKey,
+  useListEntradasPendientesCosto,
+  getListEntradasPendientesCostoQueryKey,
+  useCountEntradasPendientesCosto,
+  getCountEntradasPendientesCostoQueryKey,
   Role,
   EntradaDetail
 } from "@workspace/api-client-react";
@@ -29,9 +31,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2 } from "lucide-react";
+import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { Link } from "wouter";
 
 type DraftLinea = {
   id: string;
@@ -39,7 +42,7 @@ type DraftLinea = {
   productoName: string;
   productoSKU: string;
   productoUnidad: string;
-  costoUnitario: string;
+  costoUnitario?: string;
   declaredCount: number;
   cantidades: string[];
 };
@@ -58,23 +61,25 @@ export default function Entradas() {
   const queryClient = useQueryClient();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
+  const showCost = user?.rol === Role.ADMIN || user?.rol === Role.INVENTARIOS;
+
   const {
-    data: productos,
-    isError: productosFailed,
-  } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
+    data: catalogos,
+    isError: catalogosFailed,
+  } = useGetCatalogosEntrada({ query: { queryKey: getGetCatalogosEntradaQueryKey() } });
+
+  const productos = catalogos?.productos;
+  const proveedores = catalogos?.proveedores;
+
   const {
     data: ubicaciones,
     isError: ubicacionesFailed,
   } = useListLocations({
-    query: { 
+    query: {
       enabled: user?.rol === Role.ADMIN,
-      queryKey: getListLocationsQueryKey() 
-    } 
+      queryKey: getListLocationsQueryKey()
+    }
   });
-  const {
-    data: proveedores,
-    isError: proveedoresFailed,
-  } = useListProveedores({ query: { queryKey: getListProveedoresQueryKey() } });
   const {
     data: serverTime,
     isError: serverTimeFailed,
@@ -84,12 +89,12 @@ export default function Entradas() {
       refetchInterval: 60_000,
     },
   });
-  
+
   const crearEntrada = useCrearEntrada();
 
   // General data (draft wide)
   const [uuidCliente, setUuidCliente] = useState(() => crypto.randomUUID());
-  
+
   // Detalle del artículo state (form state)
   const [productoId, setProductoId] = useState<string>("");
   const [costoUnitario, setCostoUnitario] = useState<string>("");
@@ -102,7 +107,7 @@ export default function Entradas() {
   const [selectedLines, setSelectedLines] = useState<Set<string>>(new Set());
   const [expandedLines, setExpandedLines] = useState<Set<string>>(new Set());
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
-  
+
   // Printing preferences
   const [autoPrintDoc, setAutoPrintDoc] = useState(true);
   const [autoPrintLabels, setAutoPrintLabels] = useState(true);
@@ -110,7 +115,7 @@ export default function Entradas() {
   // Modals state
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
   const [isConfirmCancelOpen, setIsConfirmCancelOpen] = useState(false);
-  
+
   // Capture state
   const [capDraftId, setCapDraftId] = useState("");
   const [capCantidades, setCapCantidades] = useState<string[]>([]);
@@ -120,7 +125,7 @@ export default function Entradas() {
   const [isEditingLine, setIsEditingLine] = useState(false);
   const [uniformQty, setUniformQty] = useState("");
   const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);
-  
+
   const qtyInputRef = useRef<HTMLInputElement>(null);
 
   const [resultado, setResult] = useState<EntradaDetail | null>(null);
@@ -153,11 +158,11 @@ export default function Entradas() {
       toast.error("Por favor completa todos los campos obligatorios (*)");
       return;
     }
-    if (!isValidUnitCost(costoUnitario)) {
+    if (showCost && !isValidUnitCost(costoUnitario)) {
       toast.error("El costo unitario debe ser mayor a cero.");
       return;
     }
-    
+
     setCapDraftId(crypto.randomUUID());
     setCapCantidades([]);
     setCapCurrentQty("");
@@ -171,7 +176,7 @@ export default function Entradas() {
 
   const handleEditLine = (linea: DraftLinea) => {
     setProductoId(linea.productoId);
-    setCostoUnitario(linea.costoUnitario);
+    setCostoUnitario(linea.costoUnitario || "");
     setDeclaredCount(linea.declaredCount.toString());
     setCapDraftId(linea.id);
     setCapCantidades([...linea.cantidades]);
@@ -269,7 +274,7 @@ export default function Entradas() {
 
   const handleConfirmCapture = (forceReduce = false) => {
     const declared = Number(declaredCount);
-    if (!isValidUnitCost(costoUnitario)) {
+    if (showCost && !isValidUnitCost(costoUnitario)) {
       toast.error("El costo unitario debe ser mayor a cero.");
       return;
     }
@@ -293,7 +298,7 @@ export default function Entradas() {
       productoName: `${selectedProduct.tela} - ${selectedProduct.color}`,
       productoSKU: selectedProduct.sku,
       productoUnidad: selectedProduct.unidad,
-      costoUnitario: costoUnitario,
+      costoUnitario: showCost ? costoUnitario : undefined,
       declaredCount: forceReduce ? capCantidades.length : declared,
       cantidades: capCantidades
     };
@@ -309,7 +314,7 @@ export default function Entradas() {
       setCostoUnitario("");
       setDeclaredCount("");
     }
-    
+
     setIsCaptureModalOpen(false);
   };
 
@@ -363,8 +368,8 @@ export default function Entradas() {
   const totalRollos = lineas.reduce((acc, l) => acc + l.cantidades.length, 0);
   const totalQtyGeneral = lineas.reduce((acc, l) => acc + l.cantidades.reduce((a, b) => a + parseFloat(b), 0), 0);
   const totalCostoGeneral = lineas.reduce((acc, l) => {
-    const qtySum = l.cantidades.reduce((qAcc, q) => qAcc + parseFloat(q), 0);
-    return acc + (qtySum * parseFloat(l.costoUnitario));
+    const qtySum = l.cantidades.reduce((a, b) => a + parseFloat(b), 0);
+    return acc + (qtySum * parseFloat(l.costoUnitario || "0"));
   }, 0);
 
   const isFormValid = ubicacionId && lineas.length > 0;
@@ -376,7 +381,7 @@ export default function Entradas() {
       });
       return;
     }
-    if (lineas.some((linea) => !isValidUnitCost(linea.costoUnitario))) {
+    if (showCost && lineas.some((linea) => !isValidUnitCost(linea.costoUnitario || ""))) {
       toast.error("El costo unitario debe ser mayor a cero.");
       return;
     }
@@ -389,21 +394,29 @@ export default function Entradas() {
         uuidCliente,
         lineas: lineas.map(l => ({
           productoId: Number(l.productoId),
-          costoUnitario: l.costoUnitario,
+          costoUnitario: showCost ? l.costoUnitario : undefined,
           cantidades: l.cantidades
         }))
       }
     }, {
       onSuccess: (data) => {
-        toast.success("Entrada registrada correctamente");
+        if (!showCost) {
+          toast.success("Entrada registrada. Los costos quedan pendientes de captura por administración.");
+        } else {
+          toast.success("Entrada registrada correctamente");
+        }
         setResult(data);
-        
+
         queryClient.invalidateQueries({ queryKey: getListEntradasQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getGetCatalogosEntradaQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetDashboardQueryKey() });
         queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetExistenciasQueryKey() });
-        
+        if (!showCost) {
+          queryClient.invalidateQueries({ queryKey: getListEntradasPendientesCostoQueryKey({ page: 1, pageSize: 100 }) });
+          queryClient.invalidateQueries({ queryKey: getCountEntradasPendientesCostoQueryKey() });
+        }
+
         const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
         if (autoPrintDoc) {
           window.open(`${baseUrl}/entradas/${data.id}/documento`, '_blank');
@@ -431,16 +444,25 @@ export default function Entradas() {
               <CardDescription>Folio #{resultado.folio.toString().padStart(6, '0')}</CardDescription>
             </CardHeader>
             <CardContent>
+              {!showCost && (
+                <div className="mb-6 p-4 bg-amber-50/50 border border-amber-200 rounded-md text-amber-800 text-sm text-center">
+                  Entrada registrada. Los costos quedan pendientes de captura por administración.
+                </div>
+              )}
               <div className="bg-background rounded-md border p-6 flex justify-around items-center text-center">
                 <div>
                   <div className="text-sm text-muted-foreground">Total Rollos</div>
                   <div className="text-2xl font-bold">{resultado.totalRollos}</div>
                 </div>
-                <div className="w-px h-12 bg-border"></div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Costo Total</div>
-                  <div className="text-2xl font-bold text-emerald-600">${parseFloat(resultado.totalCosto).toFixed(2)}</div>
-                </div>
+                {showCost && (
+                  <>
+                    <div className="w-px h-12 bg-border"></div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Costo Total</div>
+                      <div className="text-2xl font-bold text-emerald-600">${parseFloat(resultado.totalCosto || "0").toFixed(2)}</div>
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
             <CardFooter className="flex flex-wrap justify-center gap-4 pt-4">
@@ -468,13 +490,22 @@ export default function Entradas() {
   return (
     <AppLayout>
       <div className="max-w-6xl mx-auto space-y-6 pb-32">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADA</h1>
-          <p className="text-muted-foreground mt-1">Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADA</h1>
+            <p className="text-muted-foreground mt-1">Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
+          </div>
+          {user?.rol === Role.ADMIN && (
+            <Button asChild variant="outline" className="hidden sm:flex border-amber-500 text-amber-700 bg-amber-50 hover:bg-amber-100">
+              <Link href="/entradas/pendientes-costo">
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Costos Pendientes
+              </Link>
+            </Button>
+          )}
         </div>
 
-        {(productosFailed ||
-          proveedoresFailed ||
+        {(catalogosFailed ||
           serverTimeFailed ||
           (user?.rol === Role.ADMIN && ubicacionesFailed)) && (
           <div
@@ -495,11 +526,11 @@ export default function Entradas() {
           <CardContent className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                
+
                 <div className="space-y-2">
                   <Label>Producto <span className="text-destructive">*</span></Label>
                   <ProductCombobox
-                    products={productos ?? []}
+                    products={(productos as any) ?? []}
                     value={productoId}
                     onValueChange={setProductoId}
                     placeholder="Escribe tela, color o SKU..."
@@ -517,32 +548,34 @@ export default function Entradas() {
 
                 <div className="space-y-2">
                   <Label>Cantidad de rollos <span className="text-destructive">*</span></Label>
-                  <Input 
-                    type="number" 
+                  <Input
+                    type="number"
                     min="1"
-                    value={declaredCount} 
-                    onChange={e => setDeclaredCount(e.target.value)} 
+                    value={declaredCount}
+                    onChange={e => setDeclaredCount(e.target.value)}
                     data-testid="input-declared"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label>
-                    Costo por {selectedProduct?.unidad?.toLowerCase() ?? "metro o kilo"} <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                    <Input 
-                      type="number" 
-                      min="0.01"
-                      step="0.01" 
-                      className="pl-7" 
-                      value={costoUnitario} 
-                      onChange={e => setCostoUnitario(e.target.value)}
-                      data-testid="input-costo-unitario"
-                    />
+                {showCost && (
+                  <div className="space-y-2">
+                    <Label>
+                      Costo por {selectedProduct?.unidad?.toLowerCase() ?? "metro o kilo"} <span className="text-destructive">*</span>
+                    </Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                      <Input
+                        type="number"
+                        min="0.01"
+                        step="0.01"
+                        className="pl-7"
+                        value={costoUnitario}
+                        onChange={e => setCostoUnitario(e.target.value)}
+                        data-testid="input-costo-unitario"
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="space-y-2">
                   <Label>Fecha y hora de entrada</Label>
@@ -583,7 +616,7 @@ export default function Entradas() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">Sin proveedor</SelectItem>
-                      {proveedores?.items.filter(p => p.activo).map(p => (
+                      {proveedores?.filter(p => p.activo).map(p => (
                         <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
                       ))}
                     </SelectContent>
@@ -592,7 +625,7 @@ export default function Entradas() {
 
                 <div className="space-y-2 md:col-span-2">
                   <Label>Notas</Label>
-                  <textarea 
+                  <textarea
                     className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="Referencia de factura, pedimento, etc."
                     value={observaciones}
@@ -645,9 +678,9 @@ export default function Entradas() {
               <TableHeader>
                 <TableRow className="bg-[#1e3a8a] hover:bg-[#1e3a8a]">
                   <TableHead className="w-12 text-white">
-                    <Checkbox 
-                      checked={lineas.length > 0 && selectedLines.size === lineas.length} 
-                      onCheckedChange={toggleSelectAll} 
+                    <Checkbox
+                      checked={lineas.length > 0 && selectedLines.size === lineas.length}
+                      onCheckedChange={toggleSelectAll}
                       className="border-white data-[state=checked]:bg-white data-[state=checked]:text-[#1e3a8a]"
                     />
                   </TableHead>
@@ -657,8 +690,8 @@ export default function Entradas() {
                   <TableHead className="text-right text-white">Rollos</TableHead>
                   <TableHead className="text-white">Unidad</TableHead>
                   <TableHead className="text-right text-white">Cantidad total</TableHead>
-                  <TableHead className="text-right text-white">Costo por metro / kilo</TableHead>
-                  <TableHead className="text-right text-white">Costo total</TableHead>
+                  {showCost && <TableHead className="text-right text-white">Costo por metro / kilo</TableHead>}
+                  {showCost && <TableHead className="text-right text-white">Costo total</TableHead>}
                   <TableHead className="text-center text-white">Detalle</TableHead>
                 </TableRow>
               </TableHeader>
@@ -673,7 +706,7 @@ export default function Entradas() {
                   lineas.map((linea) => {
                     const isExpanded = expandedLines.has(linea.id);
                     const qtySum = linea.cantidades.reduce((a, b) => a + parseFloat(b), 0);
-                    const costSum = qtySum * parseFloat(linea.costoUnitario);
+                    const costSum = qtySum * parseFloat(linea.costoUnitario || "0");
                     const isSelected = selectedLines.has(linea.id);
                     const ubiName = ubicaciones?.find(u => u.id.toString() === ubicacionId)?.nombre || user?.ubicacion?.nombre || "";
 
@@ -681,9 +714,9 @@ export default function Entradas() {
                       <React.Fragment key={linea.id}>
                         <TableRow className={isSelected ? "bg-primary/5" : ""}>
                           <TableCell>
-                            <Checkbox 
-                              checked={isSelected} 
-                              onCheckedChange={() => toggleSelectLine(linea.id)} 
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={() => toggleSelectLine(linea.id)}
                             />
                           </TableCell>
                           <TableCell className="font-bold">{linea.productoName}</TableCell>
@@ -692,10 +725,14 @@ export default function Entradas() {
                           <TableCell className="text-right font-bold">{linea.cantidades.length}</TableCell>
                           <TableCell>{linea.productoUnidad}</TableCell>
                           <TableCell className="text-right font-medium">{qtySum.toFixed(2)}</TableCell>
-                          <TableCell className="text-right">
-                            ${parseFloat(linea.costoUnitario).toFixed(2)} / {linea.productoUnidad.toLowerCase()}
-                          </TableCell>
-                          <TableCell className="text-right font-bold text-emerald-600">${costSum.toFixed(2)}</TableCell>
+                          {showCost && (
+                            <TableCell className="text-right">
+                              ${parseFloat(linea.costoUnitario || "0").toFixed(2)} / {linea.productoUnidad.toLowerCase()}
+                            </TableCell>
+                          )}
+                          {showCost && (
+                            <TableCell className="text-right font-bold text-emerald-600">${costSum.toFixed(2)}</TableCell>
+                          )}
                           <TableCell className="text-center">
                             <div className="flex items-center justify-center gap-2">
                               <Button variant="ghost" size="icon" className="h-8 w-8 text-primary" onClick={() => handleEditLine(linea)}>
@@ -729,7 +766,7 @@ export default function Entradas() {
                     );
                   })
                 )}
-                
+
                 {lineas.length > 0 && (
                   <TableRow className="bg-muted/30 font-bold">
                     <TableCell colSpan={4} className="text-right text-lg">TOTAL GENERAL:</TableCell>
@@ -762,8 +799,8 @@ export default function Entradas() {
             <Button variant="outline" className="flex-1 sm:flex-none" onClick={discardWholeDraft}>
               Cancelar
             </Button>
-            <Button 
-              className="flex-1 sm:flex-none bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white shadow-md" 
+            <Button
+              className="flex-1 sm:flex-none bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white shadow-md"
               disabled={!isFormValid || crearEntrada.isPending}
               onClick={handleSubmit}
               data-testid="btn-save-entrada"
@@ -845,11 +882,11 @@ export default function Entradas() {
 
               <form onSubmit={handleAddQty} className="flex gap-3">
                 <div className="relative flex-1">
-                  <Input 
+                  <Input
                     ref={qtyInputRef}
-                    type="number" 
-                    step="0.01" 
-                    placeholder="0.00" 
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
                     value={capCurrentQty}
                     onChange={e => setCapCurrentQty(e.target.value)}
                     className="text-4xl h-20 font-black text-center pr-16"
@@ -859,9 +896,9 @@ export default function Entradas() {
                     {selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}
                   </div>
                 </div>
-                <Button 
-                  type="submit" 
-                  className="h-20 px-8 bg-primary hover:bg-primary/90" 
+                <Button
+                  type="submit"
+                  className="h-20 px-8 bg-primary hover:bg-primary/90"
                   disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}
                   data-testid="button-add-captured-roll"
                 >
@@ -970,9 +1007,9 @@ export default function Entradas() {
                             <Edit2 className="w-4 h-4" />
                           </Button>
                         )}
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="h-8 w-8 text-destructive opacity-50 group-hover:opacity-100 hover:bg-destructive/10 transition-opacity"
                           onClick={() => handleRemoveCapturedQty(idx)}
                           aria-label={`Eliminar rollo ${idx + 1}`}
@@ -1009,8 +1046,8 @@ export default function Entradas() {
             {/* Mobile Keypad */}
             <div className="sm:hidden grid grid-cols-3 gap-[1px] bg-border shrink-0">
               {['1','2','3','4','5','6','7','8','9','.','0','DEL'].map(k => (
-                <Button 
-                  key={k} 
+                <Button
+                  key={k}
                   variant="ghost"
                   className={`h-16 text-2xl font-black rounded-none bg-background hover:bg-muted ${k === 'DEL' ? 'text-destructive' : ''}`}
                   onClick={(e) => {
@@ -1022,7 +1059,7 @@ export default function Entradas() {
                   {k}
                 </Button>
               ))}
-              <Button 
+              <Button
                 className="col-span-3 h-16 text-xl font-black rounded-none bg-primary hover:bg-primary/90 text-white"
                 onClick={handleAddQty}
                 disabled={!capCurrentQty || capCantidades.length >= Number(declaredCount)}

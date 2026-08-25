@@ -11,6 +11,8 @@ export interface EntradaRollo {
   serie: string;
   productoId: number;
   cantidadInicial: string;
-  costoUnitario: string;
-  costoTotal: string;
+  /** @nullable */
+  costoUnitario: string | null;
+  /** @nullable */
+  costoTotal: string | null;
 }

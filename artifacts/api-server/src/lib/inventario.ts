@@ -398,7 +398,7 @@ export async function crearRollo(
 
 export type CrearEntradaLineaInput = {
   productoId: number;
-  costoUnitario: string;
+  costoUnitario: string | null;
   cantidades: string[];
 };
 
@@ -410,6 +410,8 @@ export type CrearEntradaInput = {
   ip?: string | null;
   uuidCliente: string;
   lineas: CrearEntradaLineaInput[];
+  /** Server-owned capability; routes may enable it only for BODEGA. */
+  allowPendingCosts?: boolean;
 };
 
 export type EntradaRolloResult = {
@@ -417,8 +419,8 @@ export type EntradaRolloResult = {
   serie: string;
   productoId: number;
   cantidadInicial: string;
-  costoUnitario: string;
-  costoTotal: string;
+  costoUnitario: string | null;
+  costoTotal: string | null;
 };
 
 export type EntradaLineaResult = {
@@ -427,10 +429,10 @@ export type EntradaLineaResult = {
   telaProducto: string;
   colorProducto: string;
   unidadProducto: string;
-  costoUnitario: string;
+  costoUnitario: string | null;
   rollosCount: number;
   cantidadTotal: string;
-  costoTotal: string;
+  costoTotal: string | null;
 };
 
 export type EntradaResult = {
@@ -445,7 +447,7 @@ export type EntradaResult = {
   fecha: string;
   observaciones: string | null;
   totalRollos: number;
-  totalCosto: string;
+  totalCosto: string | null;
   uuidCliente: string;
   createdAt: string;
   lineas: EntradaLineaResult[];
@@ -487,7 +489,22 @@ export async function crearEntrada(
     return buildEntradaResult(tx, dup.id);
   }
 
-  if (input.lineas.some((linea) => !isValidUnitCost(linea.costoUnitario))) {
+  const hasPendingCosts = input.lineas.some(
+    (linea) => linea.costoUnitario == null,
+  );
+  if (hasPendingCosts && !input.allowPendingCosts) {
+    throw new InventarioError(
+      "El costo unitario debe ser mayor a cero.",
+      "INVALID_UNIT_COST",
+    );
+  }
+  if (
+    input.lineas.some(
+      (linea) =>
+        linea.costoUnitario != null &&
+        !isValidUnitCost(linea.costoUnitario),
+    )
+  ) {
     throw new InventarioError(
       "El costo unitario debe ser mayor a cero.",
       "INVALID_UNIT_COST",
@@ -515,11 +532,12 @@ export async function crearEntrada(
   // Compute total cost across all lines/rolls
   let totalCosto = 0;
   for (const l of input.lineas) {
+    if (l.costoUnitario == null) continue;
     for (const c of l.cantidades) {
       totalCosto += parseFloat(c) * parseFloat(l.costoUnitario);
     }
   }
-  const totalCostoStr = totalCosto.toFixed(2);
+  const totalCostoStr = hasPendingCosts ? null : totalCosto.toFixed(2);
 
   // Server-side date — never from the client
   const fechaServidor = new Date();
@@ -550,9 +568,10 @@ export async function crearEntrada(
   // 4 & 5) Create DISPONIBLE rolls + RECEPCION movements
   for (const linea of input.lineas) {
     for (const cantidad of linea.cantidades) {
-      const costoTotal = (
-        parseFloat(cantidad) * parseFloat(linea.costoUnitario)
-      ).toFixed(2);
+      const costoTotal =
+        linea.costoUnitario == null
+          ? null
+          : (parseFloat(cantidad) * parseFloat(linea.costoUnitario)).toFixed(2);
 
       const [rollo] = await tx
         .insert(rollosTable)
@@ -608,7 +627,7 @@ export async function crearEntrada(
   });
 
   // 8) Register COMPRA in pagos_proveedor (idempotent via partial unique index)
-  if (input.proveedorId != null) {
+  if (input.proveedorId != null && totalCostoStr != null) {
     await tx
       .insert(pagosProveedorTable)
       .values({
@@ -710,10 +729,10 @@ export async function buildEntradaResult(
     telaProducto: string;
     colorProducto: string;
     unidadProducto: string;
-    costoUnitario: string;
+    costoUnitario: string | null;
     rollosCount: number;
     cantidadTotal: number;
-    costoTotal: number;
+    costoTotal: number | null;
   };
   const groups = new Map<number, Group>();
   for (const r of rolloRows) {
@@ -726,11 +745,12 @@ export async function buildEntradaResult(
       costoUnitario: r.costoUnitario,
       rollosCount: 0,
       cantidadTotal: 0,
-      costoTotal: 0,
+      costoTotal: r.costoTotal == null ? null : 0,
     };
     g.rollosCount += 1;
     g.cantidadTotal += parseFloat(r.cantidadInicial);
-    g.costoTotal += parseFloat(r.costoTotal);
+    if (r.costoTotal == null) g.costoTotal = null;
+    else if (g.costoTotal != null) g.costoTotal += parseFloat(r.costoTotal);
     groups.set(r.productoId, g);
   }
 
@@ -743,7 +763,7 @@ export async function buildEntradaResult(
     costoUnitario: g.costoUnitario,
     rollosCount: g.rollosCount,
     cantidadTotal: g.cantidadTotal.toFixed(3),
-    costoTotal: g.costoTotal.toFixed(2),
+    costoTotal: g.costoTotal == null ? null : g.costoTotal.toFixed(2),
   }));
 
   return {
@@ -764,6 +784,136 @@ export async function buildEntradaResult(
     lineas,
     rollos,
   };
+}
+
+export type CapturarCostosEntradaInput = {
+  entradaId: number;
+  usuarioId: number;
+  ip?: string | null;
+  costosProductos: Array<{ productoId: number; costoUnitario: string }>;
+  costosRollos?: Array<{ rolloId: number; costoUnitario: string }>;
+};
+
+/**
+ * Completes a pending reception without touching inventory quantities,
+ * movements, states, or the existence cache.
+ */
+export async function capturarCostosEntrada(
+  tx: Tx,
+  input: CapturarCostosEntradaInput,
+): Promise<EntradaResult> {
+  const [entrada] = await tx
+    .select()
+    .from(entradasTable)
+    .where(eq(entradasTable.id, input.entradaId))
+    .for("update")
+    .limit(1);
+  if (!entrada) {
+    throw new InventarioError("Entrada no encontrada.", "ENTRADA_NOT_FOUND");
+  }
+
+  const rollos = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.recepcionId, input.entradaId))
+    .orderBy(rollosTable.id)
+    .for("update");
+  const pendientes = rollos.filter((rollo) => rollo.costoUnitario == null);
+  if (pendientes.length === 0) {
+    throw new InventarioError(
+      "La entrada ya tiene todos sus costos registrados.",
+      "COSTS_ALREADY_CAPTURED",
+    );
+  }
+
+  const defaults = new Map(
+    input.costosProductos.map((item) => [item.productoId, item.costoUnitario]),
+  );
+  const overrides = new Map(
+    (input.costosRollos ?? []).map((item) => [item.rolloId, item.costoUnitario]),
+  );
+  for (const [rolloId] of overrides) {
+    const rollo = rollos.find((item) => item.id === rolloId);
+    if (!rollo) {
+      throw new InventarioError(
+        `El rollo ${rolloId} no pertenece a la entrada.`,
+        "ROLLO_NOT_IN_ENTRY",
+      );
+    }
+    if (rollo.costoUnitario != null) {
+      throw new InventarioError(
+        `El rollo serie ${rollo.serie} ya tiene costo registrado.`,
+        "ROLLO_COST_ALREADY_CAPTURED",
+      );
+    }
+  }
+
+  for (const rollo of pendientes) {
+    const costo = overrides.get(rollo.id) ?? defaults.get(rollo.productoId);
+    if (!isValidUnitCost(costo)) {
+      throw new InventarioError(
+        `Falta un costo positivo para el producto ${rollo.productoId}.`,
+        "INVALID_UNIT_COST",
+      );
+    }
+    const costoTotal = (
+      Number(rollo.cantidadInicial) * Number(costo)
+    ).toFixed(2);
+    await tx
+      .update(rollosTable)
+      .set({ costoUnitario: costo, costoTotal })
+      .where(eq(rollosTable.id, rollo.id));
+  }
+
+  const [totalRow] = await tx
+    .select({
+      total: sql<string | null>`
+        CASE WHEN COUNT(*) FILTER (WHERE costo_total IS NULL) > 0 THEN NULL
+        ELSE SUM(costo_total)::text END`,
+    })
+    .from(rollosTable)
+    .where(eq(rollosTable.recepcionId, input.entradaId));
+  if (totalRow?.total == null) {
+    throw new InventarioError(
+      "No fue posible completar todos los costos de la entrada.",
+      "PENDING_COSTS_REMAIN",
+    );
+  }
+  const totalCosto = Number(totalRow.total).toFixed(2);
+  await tx
+    .update(entradasTable)
+    .set({ totalCosto })
+    .where(eq(entradasTable.id, input.entradaId));
+
+  if (entrada.proveedorId != null) {
+    await tx.execute(sql`
+      INSERT INTO pagos_proveedor
+        (proveedor_id, entrada_id, importe, tipo, fecha, usuario_id)
+      VALUES
+        (${entrada.proveedorId}, ${entrada.id}, ${totalCosto}, 'COMPRA',
+         ${entrada.fecha}, ${input.usuarioId})
+      ON CONFLICT (entrada_id) WHERE tipo = 'COMPRA' AND entrada_id IS NOT NULL
+      DO UPDATE SET
+        proveedor_id = EXCLUDED.proveedor_id,
+        importe = EXCLUDED.importe,
+        fecha = EXCLUDED.fecha,
+        usuario_id = EXCLUDED.usuario_id
+    `);
+  }
+
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    accion: "EDITAR",
+    entidad: "entradas_costos",
+    entidadId: String(entrada.id),
+    datosAntes: { totalCosto: entrada.totalCosto },
+    datosDespues: {
+      totalCosto,
+      rollosActualizados: pendientes.length,
+    },
+    ip: input.ip ?? "desconocida",
+  });
+  return buildEntradaResult(tx, entrada.id);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

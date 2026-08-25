@@ -26,7 +26,11 @@ import {
   seriesConsecutivoTable,
   ubicacionesTable,
 } from "@workspace/db";
-import { crearEntrada, InventarioError } from "./inventario";
+import {
+  capturarCostosEntrada,
+  crearEntrada,
+  InventarioError,
+} from "./inventario";
 
 // ── Test harness ──────────────────────────────────────────────────────────────
 
@@ -357,6 +361,110 @@ await test("E-04: Entrada sin rollos → InventarioError", async () => {
     },
     "Entrada vacía debe lanzar InventarioError",
   );
+});
+
+await test("E-06: costos pendientes requieren capability y se capturan sin movimientos nuevos", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const proveedorId = await mkProveedor();
+  const uuidCliente = randomUUID();
+
+  await assert.rejects(
+    db.transaction((tx) =>
+      crearEntrada(tx, {
+        ubicacionId,
+        proveedorId,
+        usuarioId: 1,
+        uuidCliente: randomUUID(),
+        lineas: [{ productoId, costoUnitario: null, cantidades: ["4.000"] }],
+      }),
+    ),
+    (error: unknown) =>
+      error instanceof InventarioError && error.code === "INVALID_UNIT_COST",
+  );
+
+  const pending = await db.transaction((tx) =>
+    crearEntrada(tx, {
+      ubicacionId,
+      proveedorId,
+      usuarioId: 1,
+      uuidCliente,
+      allowPendingCosts: true,
+      lineas: [{ productoId, costoUnitario: null, cantidades: ["4.000", "6.000"] }],
+    }),
+  );
+  createdEntradaIds.push(pending.id);
+  assert.equal(pending.totalCosto, null);
+  assert.equal(pending.rollos.length, 2);
+  assert.ok(pending.rollos.every((rollo) => rollo.costoUnitario === null));
+  const pendingRolloIds = pending.rollos.map((rollo) => rollo.id);
+  const movementsBefore = await db
+    .select()
+    .from(movimientosTable)
+    .where(inArray(movimientosTable.rolloId, pendingRolloIds));
+  assert.equal(movementsBefore.length, 2);
+  assert.ok(movementsBefore.every((movement) => movement.tipo === "RECEPCION"));
+  const comprasBefore = await db
+    .select()
+    .from(pagosProveedorTable)
+    .where(eq(pagosProveedorTable.entradaId, pending.id));
+  assert.equal(comprasBefore.length, 0);
+
+  await assert.rejects(
+    db.transaction((tx) =>
+      capturarCostosEntrada(tx, {
+        entradaId: pending.id,
+        usuarioId: 1,
+        costosProductos: [],
+        costosRollos: [
+          { rolloId: pending.rollos[0]!.id, costoUnitario: "25.00" },
+        ],
+      }),
+    ),
+    (error: unknown) =>
+      error instanceof InventarioError && error.code === "INVALID_UNIT_COST",
+  );
+  const afterRejectedCapture = await db
+    .select()
+    .from(rollosTable)
+    .where(inArray(rollosTable.id, pendingRolloIds));
+  assert.ok(
+    afterRejectedCapture.every(
+      (rollo) => rollo.costoUnitario === null && rollo.costoTotal === null,
+    ),
+    "missing defaults and overrides must reject without partially costing rolls",
+  );
+  const [headerAfterRejectedCapture] = await db
+    .select({ totalCosto: entradasTable.totalCosto })
+    .from(entradasTable)
+    .where(eq(entradasTable.id, pending.id));
+  assert.equal(headerAfterRejectedCapture?.totalCosto, null);
+
+  const captured = await db.transaction((tx) =>
+    capturarCostosEntrada(tx, {
+      entradaId: pending.id,
+      usuarioId: 1,
+      costosProductos: [],
+      costosRollos: [
+        { rolloId: pending.rollos[0]!.id, costoUnitario: "25.00" },
+        { rolloId: pending.rollos[1]!.id, costoUnitario: "30.00" },
+      ],
+    }),
+  );
+  assert.equal(captured.totalCosto, "280.00");
+  assert.equal(captured.rollos[0]?.costoUnitario, "25.00");
+  assert.equal(captured.rollos[1]?.costoUnitario, "30.00");
+  const movementsAfter = await db
+    .select()
+    .from(movimientosTable)
+    .where(inArray(movimientosTable.rolloId, pendingRolloIds));
+  assert.equal(movementsAfter.length, 2, "capture must not add movements");
+  const comprasAfter = await db
+    .select()
+    .from(pagosProveedorTable)
+    .where(eq(pagosProveedorTable.entradaId, pending.id));
+  assert.equal(comprasAfter.length, 1);
+  assert.equal(comprasAfter[0]!.importe, "280.00");
 });
 
 // =============================================================================

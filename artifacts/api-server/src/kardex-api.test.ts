@@ -359,11 +359,11 @@ test("history covers types, order, pagination, search, documents and safe fields
   const cancellation = body.movimientos.find((row: any) => row.tipo === "CANCELACION");
   assert.equal(cancellation.documentoRuta, `/tickets/${ids.tickets[0]}`);
   const dispatch = body.movimientos.find((row: any) => row.tipo === "TRANSFERENCIA_SALIDA");
-  assert.equal(dispatch.documentoRuta, `/salidas/${ids.salidas[0]}/documento/salida`);
-  assert.equal(dispatch.documentoEtiqueta, `Salida ${salidaFolio}`);
+  assert.equal(dispatch.documentoRuta, `/salidas/${ids.salidas[0]}`);
+  assert.equal(dispatch.documentoEtiqueta, "Salida a sitio");
   const reception = body.movimientos.find((row: any) => row.tipo === "TRANSFERENCIA_ENTRADA");
-  assert.equal(reception.documentoRuta, `/salidas/${ids.salidas[0]}/documento/recepcion`);
-  assert.equal(reception.documentoEtiqueta, `Recepción de salida ${salidaFolio}`);
+  assert.equal(reception.documentoRuta, `/salidas/${ids.salidas[0]}`);
+  assert.equal(reception.documentoEtiqueta, "Entrada por salida");
   const stale = body.movimientos.find((row: any) => row.tipo === "ALTA");
   assert.equal(stale.documentoTipo, "TICKET");
   assert.equal(stale.documentoRuta, null);

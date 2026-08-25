@@ -4,12 +4,12 @@ import {
   useListSalidas,
   getListSalidasQueryKey,
   useGetCurrentUser,
-  useListLocations,
+  useGetUbicacionesSalida,
   useListUsers,
   useListProductos,
   exportarSalidas,
   getGetCurrentUserQueryKey,
-  getListLocationsQueryKey,
+  getGetUbicacionesSalidaQueryKey,
   getListUsersQueryKey,
   getListProductosQueryKey,
   EstadoSalida,
@@ -67,7 +67,7 @@ export default function Salidas() {
   const { selectedLocationId } = useLocationScope();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  const { data: locations } = useListLocations({ query: { queryKey: getListLocationsQueryKey() } });
+  const { data: locations } = useGetUbicacionesSalida({ query: { queryKey: getGetUbicacionesSalidaQueryKey() } });
   const { data: users } = useListUsers({ query: { queryKey: getListUsersQueryKey() } });
   const { data: products } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
 

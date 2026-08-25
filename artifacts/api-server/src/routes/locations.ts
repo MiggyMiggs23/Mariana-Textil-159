@@ -12,7 +12,7 @@ import {
   ubicacionesTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
-import { resolvePermiso, requierePermiso } from "../lib/permisos";
+import { requierePermiso } from "../lib/permisos";
 import { presentLocation } from "../lib/presenters";
 import { getRequestIp } from "../lib/request";
 
@@ -20,16 +20,10 @@ const router: IRouter = Router();
 
 router.use("/locations", requireSession);
 
-router.get("/locations", async (req, res): Promise<void> => {
-  const auth = req.auth!;
-  const permUbicaciones = await resolvePermiso(auth.user.id, auth.user.rol, "ubicaciones");
-  const permSalidas = await resolvePermiso(auth.user.id, auth.user.rol, "salidas");
-
-  if (!permUbicaciones?.puedeVer && !permSalidas?.puedeVer) {
-    res.status(403).json({ error: "No tienes permisos para ver ubicaciones." });
-    return;
-  }
-
+router.get(
+  "/locations",
+  requierePermiso("ubicaciones", "ver"),
+  async (_req, res): Promise<void> => {
   const locations = await db
     .select()
     .from(ubicacionesTable)
@@ -41,7 +35,8 @@ router.get("/locations", async (req, res): Promise<void> => {
     )
     .orderBy(ubicacionesTable.id);
   res.json(ListLocationsResponse.parse(locations.map(presentLocation)));
-});
+  },
+);
 
 router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (req, res): Promise<void> => {
   const params = UpdateLocationParams.safeParse(req.params);

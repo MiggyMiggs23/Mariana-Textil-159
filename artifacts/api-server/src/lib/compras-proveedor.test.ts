@@ -124,7 +124,7 @@ async function mkEntrada(
   ubicacionId: number,
   costo: string,
   cantidades: string[] = ["1.0"],
-): Promise<{ entradaId: number; totalCosto: string }> {
+): Promise<{ entradaId: number; totalCosto: string | null }> {
   const result = await db.transaction(async (tx) =>
     crearEntrada(tx, {
       ubicacionId,

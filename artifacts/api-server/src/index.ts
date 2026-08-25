@@ -1,5 +1,10 @@
 import app from "./app";
-import { ensureSalidasSchema, ensureTicketIvaSchema, pool } from "@workspace/db";
+import {
+  ensurePendingCostsSchema,
+  ensureSalidasSchema,
+  ensureTicketIvaSchema,
+  pool,
+} from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
 
@@ -22,6 +27,8 @@ async function startServer() {
   logger.info("Esquema de IVA de tickets verificado");
   await ensureSalidasSchema(pool);
   logger.info("Esquema de Salidas verificado");
+  await ensurePendingCostsSchema(pool);
+  logger.info("Esquema de costos pendientes verificado");
 
   const server = app.listen(port);
   server.on("error", (err) => {

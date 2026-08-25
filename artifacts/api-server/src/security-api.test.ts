@@ -22,13 +22,13 @@
  *   S-06  CAJA can do POS sale (vender) on own-location rollo
  *   S-07  CAJA denied GET /proveedores → 403
  *   S-08  INVENTARIOS GET /proveedores → 200, response has no financial JSON keys
- *   S-09  BODEGA GET /proveedores → 200, no financial keys
+ *   S-09  BODEGA operational entry catalogs allowed; direct catalogs denied
  *   S-10  Financial proveedor routes denied for INVENTARIOS (proveedores_finanzas)
  *   S-11  ADMIN user-override grants INVENTARIOS proveedores_finanzas.ver; route now 200
  *   S-12  ADMIN user-override deny removed → INVENTARIOS inherits role (still denied)
  *   S-13  User override (true) beats role (false): BODEGA clientes 403 → override → 200
  *   S-14  DELETE override → BODEGA clientes reverts to 403
- *   S-15  Deny-by-default: remove BODEGA reportes rol row → 403; restore → 200
+ *   S-15  Deny-by-default: remove BODEGA inventario rol row → 403; restore → 200
  *   S-16  ADMIN cannot be added to the role matrix; access remains full without rows
  *   S-17  ADMIN ignores an inconsistent false override
  *   S-18  Self-modification blocked: admin tries PUT /permisos/usuarios/:ownId → 403
@@ -60,6 +60,9 @@ import {
   productosTable,
   proveedoresTable,
   rollosTable,
+  salidaLineasTable,
+  salidaRollosTable,
+  salidasTable,
   sesionesCajaTable,
   sesionesTable,
   ticketsTable,
@@ -128,6 +131,7 @@ const createdPermisosUsuarioIds: number[] = [];
 const createdClienteIds: number[] = [];
 const createdEntradaIds: number[] = [];
 const createdSesionCajaIds: number[] = [];
+const createdSalidaIds: number[] = [];
 // Rol-level rows we temporarily delete, stored as {rol, modulo, ...original}
 type RolRowBackup = {
   rol: RolUsuario;
@@ -263,7 +267,12 @@ async function mkProducto(): Promise<number> {
 }
 
 // Create rollo via DB engine helper (bypasses HTTP auth)
-async function mkRolloDisponible(ubicacionId: number, productoId: number, adminId: number): Promise<number> {
+async function mkRolloDisponible(
+  ubicacionId: number,
+  productoId: number,
+  adminId: number,
+  pendingCost = false,
+): Promise<number> {
   const result = await db.transaction(async (tx) => {
     const result = await crearEntrada(tx, {
       ubicacionId,
@@ -272,9 +281,10 @@ async function mkRolloDisponible(ubicacionId: number, productoId: number, adminI
       usuarioId: adminId,
       ip: "127.0.0.1",
       uuidCliente: randomUUID(),
+      allowPendingCosts: pendingCost,
       lineas: [{
         productoId,
-        costoUnitario: "100.00",
+        costoUnitario: pendingCost ? null : "100.00",
         cantidades: ["15.000"],
       }],
     });
@@ -599,7 +609,7 @@ await test("S-03D: legacy zero-cost roll is blocked by advance and definitive PO
     .limit(1);
   assert.ok(rollo, "legacy roll fixture must exist");
 
-  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene costo registrado. Contacte al administrador.`;
   const terminalLogin = await login(
     testTerminal.usuario,
     testTerminal.password,
@@ -795,20 +805,133 @@ await test("S-08: INVENTARIOS GET /proveedores → 200, no financial JSON keys",
   }
 });
 
-// S-09: BODEGA GET /proveedores → 200, no financial keys
-await test("S-09: BODEGA GET /proveedores → 200, no financial JSON keys", async () => {
+// S-09: operational entry catalogs do not grant administrative catalog access
+await test("S-09: BODEGA entry catalogs → 200; /productos and /proveedores → 403", async () => {
   const login_r = await login(testBodega.usuario, testBodega.password);
-  const r = await api("GET", "/proveedores", undefined, login_r.cookie);
-  assert.equal(r.status, 200, `Expected 200, got ${r.status}: ${JSON.stringify(r.body)}`);
-  const body = r.body as Record<string, unknown>;
-  const items = body.items as Array<Record<string, unknown>>;
-  assert.ok(Array.isArray(items), "items should be array");
-  const FINANCIAL_KEYS = ["totalCompras", "saldoPendiente", "totalPagado"];
-  for (const item of items) {
-    for (const key of FINANCIAL_KEYS) {
-      assert.ok(!(key in item), `BODEGA response must not include financial key '${key}'`);
-    }
+  const catalogos = await api(
+    "GET",
+    "/inventario/entradas/catalogos",
+    undefined,
+    login_r.cookie,
+  );
+  assert.equal(
+    catalogos.status,
+    200,
+    `Expected 200, got ${catalogos.status}: ${JSON.stringify(catalogos.body)}`,
+  );
+  const body = catalogos.body as {
+    productos: Array<Record<string, unknown>>;
+    proveedores: Array<Record<string, unknown>>;
+  };
+  assert.ok(Array.isArray(body.productos));
+  assert.ok(Array.isArray(body.proveedores));
+  assert.ok(
+    body.productos.some((producto) => producto.id === sharedProductoId),
+    "The active product fixture must be available for entry capture",
+  );
+  for (const producto of body.productos) {
+    assert.deepEqual(
+      Object.keys(producto).sort(),
+      ["activo", "color", "id", "sku", "tela", "unidad"],
+    );
+    assert.equal(producto.activo, true);
   }
+  for (const proveedor of body.proveedores) {
+    assert.deepEqual(
+      Object.keys(proveedor).sort(),
+      ["activo", "id", "nombre"],
+    );
+    assert.equal(proveedor.activo, true);
+  }
+
+  const productos = await api("GET", "/productos", undefined, login_r.cookie);
+  assert.equal(productos.status, 403, JSON.stringify(productos.body));
+  const proveedores = await api(
+    "GET",
+    "/proveedores",
+    undefined,
+    login_r.cookie,
+  );
+  assert.equal(proveedores.status, 403, JSON.stringify(proveedores.body));
+});
+
+await test("S-09A: BODEGA Salidas catalog is least-privilege and null-cost rolls transfer immediately", async () => {
+  const login_r = await login(testBodega.usuario, testBodega.password);
+  const locations = await api(
+    "GET",
+    "/salidas/ubicaciones",
+    undefined,
+    login_r.cookie,
+  );
+  assert.equal(locations.status, 200, JSON.stringify(locations.body));
+  const operational = locations.body as Array<Record<string, unknown>>;
+  assert.ok(
+    operational.some((location) => location.id === seedTienda.id),
+    "Origin must be present in the Salidas operational catalog",
+  );
+  assert.ok(
+    operational.some((location) => location.id === otherTiendaId),
+    "Destination must be present in the Salidas operational catalog",
+  );
+  for (const location of operational) {
+    assert.deepEqual(
+      Object.keys(location).sort(),
+      ["activa", "id", "nombre", "tipo"],
+    );
+    assert.equal(location.activa, true);
+    assert.ok(location.tipo === "TIENDA" || location.tipo === "BODEGA");
+  }
+
+  const direct = await api("GET", "/locations", undefined, login_r.cookie);
+  assert.equal(
+    direct.status,
+    403,
+    "BODEGA must not gain access to the administrative locations endpoint",
+  );
+
+  const productoId = await mkProducto();
+  const rolloId = await mkRolloDisponible(
+    seedTienda.id,
+    productoId,
+    testAdmin.id,
+    true,
+  );
+  const created = await api(
+    "POST",
+    "/salidas",
+    {
+      uuidCliente: randomUUID(),
+      origenId: seedTienda.id,
+      destinoId: otherTiendaId,
+      rolloIds: [rolloId],
+    },
+    login_r.cookie,
+  );
+  assert.equal(created.status, 201, JSON.stringify(created.body));
+  createdSalidaIds.push(Number((created.body as { id: number }).id));
+
+  const [moved] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.ok(moved);
+  assert.equal(moved.ubicacionId, otherTiendaId);
+  assert.equal(moved.estado, "DISPONIBLE");
+  assert.notEqual(moved.estado, "EN_TRANSITO");
+  assert.equal(moved.costoUnitario, null);
+  assert.equal(moved.costoTotal, null);
+
+  const [destinationStock] = await db
+    .select()
+    .from(existenciasTable)
+    .where(
+      and(
+        eq(existenciasTable.productoId, productoId),
+        eq(existenciasTable.ubicacionId, otherTiendaId),
+      ),
+    );
+  assert.ok(destinationStock, "Destination inventory cache must exist");
+  assert.equal(Number(destinationStock.cantidadTotal), 15);
 });
 
 // S-10: Financial proveedor routes denied for INVENTARIOS (no proveedores_finanzas)
@@ -918,27 +1041,27 @@ await test("S-14: DELETE override → BODEGA clientes reverts to role 403", asyn
   assert.equal(r.status, 403, `Expected 403 after deletion, got ${r.status}`);
 });
 
-// S-15: Deny-by-default: temporarily delete BODEGA reportes role row
-await test("S-15: Deny-by-default — BODEGA reportes 200; after row removal → 403; restore → 200", async () => {
+// S-15: Deny-by-default: temporarily delete BODEGA inventario role row
+await test("S-15: Deny-by-default — BODEGA inventario allowed; remove denies; restore allows", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
   const previewBefore = await api("GET", `/permisos/preview/${testBodega.id}`, undefined, adminLogin.cookie);
   assert.equal(previewBefore.status, 200);
   const previewBody = previewBefore.body as Record<string, unknown>;
   const permisos = previewBody.permisos as Array<Record<string, unknown>>;
-  const reportesEntry = permisos.find((p) => p.modulo === "reportes");
-  assert.equal(reportesEntry?.puedeVer, true, "BODEGA should have reportes.puedeVer=true by default");
+  const reportesEntry = permisos.find((p) => p.modulo === "inventario");
+  assert.equal(reportesEntry?.puedeVer, true, "BODEGA should have inventario.puedeVer=true by default");
 
   // Backup and delete the BODEGA/reportes role row
   const [originalRow] = await db
     .select()
     .from(permisosRolTable)
-    .where(and(eq(permisosRolTable.rol, "BODEGA"), eq(permisosRolTable.modulo, "reportes")))
+    .where(and(eq(permisosRolTable.rol, "BODEGA"), eq(permisosRolTable.modulo, "inventario")))
     .limit(1);
-  assert.ok(originalRow, "BODEGA/reportes role row must exist");
+  assert.ok(originalRow, "BODEGA/inventario role row must exist");
 
   deletedRolRows.push({
     rol: "BODEGA",
-    modulo: "reportes",
+    modulo: "inventario",
     puedeVer: originalRow.puedeVer,
     puedeCrear: originalRow.puedeCrear,
     puedeEditar: originalRow.puedeEditar,
@@ -947,20 +1070,20 @@ await test("S-15: Deny-by-default — BODEGA reportes 200; after row removal →
 
   await db
     .delete(permisosRolTable)
-    .where(and(eq(permisosRolTable.rol, "BODEGA"), eq(permisosRolTable.modulo, "reportes")));
+    .where(and(eq(permisosRolTable.rol, "BODEGA"), eq(permisosRolTable.modulo, "inventario")));
 
   // Now preview should show reportes as all false (deny by default since no row)
   const previewAfter = await api("GET", `/permisos/preview/${testBodega.id}`, undefined, adminLogin.cookie);
   const permisosAfter = (previewAfter.body as Record<string, unknown>).permisos as Array<Record<string, unknown>>;
-  const reportesAfter = permisosAfter.find((p) => p.modulo === "reportes");
-  assert.equal(reportesAfter?.puedeVer, false, "Without role row, reportes should be denied");
+  const reportesAfter = permisosAfter.find((p) => p.modulo === "inventario");
+  assert.equal(reportesAfter?.puedeVer, false, "Without role row, inventario should be denied");
 
   // Restore
   await db
     .insert(permisosRolTable)
     .values({
       rol: "BODEGA",
-      modulo: "reportes",
+      modulo: "inventario",
       puedeVer: originalRow.puedeVer,
       puedeCrear: originalRow.puedeCrear,
       puedeEditar: originalRow.puedeEditar,
@@ -971,8 +1094,8 @@ await test("S-15: Deny-by-default — BODEGA reportes 200; after row removal →
   // Preview should be back to true
   const previewRestored = await api("GET", `/permisos/preview/${testBodega.id}`, undefined, adminLogin.cookie);
   const permisosRestored = (previewRestored.body as Record<string, unknown>).permisos as Array<Record<string, unknown>>;
-  const reportesRestored = permisosRestored.find((p) => p.modulo === "reportes");
-  assert.equal(reportesRestored?.puedeVer, true, "After restore, reportes should be puedeVer=true");
+  const reportesRestored = permisosRestored.find((p) => p.modulo === "inventario");
+  assert.equal(reportesRestored?.puedeVer, true, "After restore, inventario should be puedeVer=true");
 });
 
 // S-16: ADMIN is absent from the role matrix and still has full access
@@ -1242,6 +1365,76 @@ await test("S-23: BODEGA alcanceConsulta=TODAS — GET /inventario/rollos?ubicac
   const locationIds = new Set(allItems.map((i) => i.ubicacionId as number));
   // At minimum, own location should be visible (seedTienda.id)
   // We can only assert no scope error occurs
+});
+
+await test("S-23A: operational locations allow TODAS selection; grouped inventory still enforces PROPIA", async () => {
+  const todasLogin = await login(
+    testBodegaTodas.usuario,
+    testBodegaTodas.password,
+  );
+  const locations = await api(
+    "GET",
+    "/inventario/ubicaciones",
+    undefined,
+    todasLogin.cookie,
+  );
+  assert.equal(locations.status, 200, JSON.stringify(locations.body));
+  const operational = locations.body as Array<Record<string, unknown>>;
+  assert.ok(
+    operational.some((location) => location.id === seedTienda.id),
+    "Own active location must be selectable",
+  );
+  assert.ok(
+    operational.some((location) => location.id === otherTiendaId),
+    "A TODAS user must be able to select another active location",
+  );
+  for (const location of operational) {
+    assert.deepEqual(
+      Object.keys(location).sort(),
+      ["activa", "id", "nombre", "tipo"],
+    );
+    assert.equal(location.activa, true);
+  }
+
+  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  const administrative = await api(
+    "GET",
+    "/locations",
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(
+    administrative.status,
+    403,
+    "The administrative location list must remain permission-protected",
+  );
+
+  const ownProductoId = await mkProducto();
+  await mkRolloDisponible(seedTienda.id, ownProductoId, testAdmin.id);
+  const otherProductoId = await mkProducto();
+  await mkRolloDisponible(otherTiendaId, otherProductoId, testAdmin.id);
+
+  const propiaLogin = await login(testBodega.usuario, testBodega.password);
+  const grouped = await api(
+    "GET",
+    `/inventario/existencias/agrupadas?ubicacionId=${otherTiendaId}`,
+    undefined,
+    propiaLogin.cookie,
+  );
+  assert.equal(grouped.status, 200, JSON.stringify(grouped.body));
+  const productIds = new Set(
+    (grouped.body as Array<{ colores: Array<{ productoId: number }> }>)
+      .flatMap((group) => group.colores)
+      .map((product) => product.productoId),
+  );
+  assert.ok(
+    productIds.has(ownProductoId),
+    "PROPIA grouped inventory must use the user's assigned location",
+  );
+  assert.ok(
+    !productIds.has(otherProductoId),
+    "PROPIA grouped inventory must not honor another ubicacionId",
+  );
 });
 
 // S-24: Non-ADMIN mutation on other location → 403; ADMIN same mutation → succeeds
@@ -1849,6 +2042,14 @@ async function cleanup(): Promise<void> {
   }
 
   // Delete rollos (movimientos and existencias cascade or must be done in order)
+  for (const id of createdSalidaIds) {
+    try {
+      await db.delete(salidaRollosTable).where(eq(salidaRollosTable.salidaId, id));
+      await db.delete(salidaLineasTable).where(eq(salidaLineasTable.salidaId, id));
+      await db.delete(salidasTable).where(eq(salidasTable.id, id));
+    } catch { /* best effort */ }
+  }
+
   for (const id of createdRolloIds) {
     try {
       await db.delete(movimientosTable).where(eq(movimientosTable.rolloId, id));

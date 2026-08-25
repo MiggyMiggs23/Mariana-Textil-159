@@ -174,6 +174,7 @@ export async function backfillCompras(): Promise<number> {
     SELECT e.id, e.proveedor_id, e.total_costo, e.fecha, e.usuario_id
     FROM entradas e
     WHERE e.proveedor_id IS NOT NULL
+      AND e.total_costo IS NOT NULL
       AND NOT EXISTS (
         SELECT 1 FROM pagos_proveedor pp
         WHERE pp.entrada_id = e.id AND pp.tipo = 'COMPRA'

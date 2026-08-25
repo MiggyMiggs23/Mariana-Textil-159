@@ -1105,7 +1105,7 @@ await test("T-20B: activación rechaza rollo legado sin costo antes de mutar", a
     .update(rollosTable)
     .set({ costoUnitario: "0.00" })
     .where(eq(rollosTable.id, rollo.id));
-  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene costo registrado. Contacte al administrador.`;
 
   await assert.rejects(
     () =>
@@ -1153,7 +1153,7 @@ await test("T-20C: venta directa rechaza rollo legado sin costo antes de mutar",
     .update(rollosTable)
     .set({ costoUnitario: "0.00" })
     .where(eq(rollosTable.id, rollo.id));
-  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene costo registrado. Contacte al administrador.`;
 
   await assert.rejects(
     () =>

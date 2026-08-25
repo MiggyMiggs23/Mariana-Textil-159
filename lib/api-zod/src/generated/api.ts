@@ -606,8 +606,8 @@ export const ListComprasProveedorQueryParams = zod.object({
   "desde": zod.date().optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
   "hasta": zod.date().optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD'),
   "estado": zod.enum(['Pagada', 'Parcial', 'Pendiente']).optional().describe('Filtrar por estado de pago'),
-  "page": zod.coerce.number().int().min(1).default(listComprasProveedorQueryPageDefault),
-  "pageSize": zod.coerce.number().int().min(1).max(listComprasProveedorQueryPageSizeMax).default(listComprasProveedorQueryPageSizeDefault)
+  "page": zod.coerce.number().min(1).default(listComprasProveedorQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listComprasProveedorQueryPageSizeMax).default(listComprasProveedorQueryPageSizeDefault)
 })
 
 export const ListComprasProveedorResponse = zod.object({
@@ -848,7 +848,7 @@ export const CrearEntradaBody = zod.object({
   "uuidCliente": zod.string(),
   "lineas": zod.array(zod.object({
   "productoId": zod.number(),
-  "costoUnitario": zod.string(),
+  "costoUnitario": zod.string().nullish(),
   "cantidades": zod.array(zod.string()).min(1)
 })).min(1)
 })
@@ -865,7 +865,7 @@ export const CrearEntradaResponse = zod.object({
   "fecha": zod.coerce.date(),
   "observaciones": zod.string().nullable(),
   "totalRollos": zod.number(),
-  "totalCosto": zod.string(),
+  "totalCosto": zod.string().nullable(),
   "uuidCliente": zod.string(),
   "createdAt": zod.coerce.date(),
   "lineas": zod.array(zod.object({
@@ -874,18 +874,18 @@ export const CrearEntradaResponse = zod.object({
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
   "unidadProducto": zod.string(),
-  "costoUnitario": zod.string(),
+  "costoUnitario": zod.string().nullable(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
-  "costoTotal": zod.string()
+  "costoTotal": zod.string().nullable()
 })),
   "rollos": zod.array(zod.object({
   "id": zod.number(),
   "serie": zod.string(),
   "productoId": zod.number(),
   "cantidadInicial": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string()
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable()
 }))
 })
 
@@ -915,12 +915,33 @@ export const ListEntradasResponse = zod.object({
   "nombreUsuario": zod.string(),
   "fecha": zod.coerce.date(),
   "totalRollos": zod.number(),
-  "totalCosto": zod.string(),
+  "totalCosto": zod.string().nullable(),
   "createdAt": zod.coerce.date()
 })),
   "total": zod.number(),
   "page": zod.number(),
   "pageSize": zod.number()
+})
+
+
+/**
+ * Requiere entradas/ver. No devuelve costos, finanzas ni datos por ubicación.
+ * @summary Catálogos operativos activos para capturar entradas
+ */
+export const GetCatalogosEntradaResponse = zod.object({
+  "productos": zod.array(zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "activo": zod.boolean()
+})),
+  "proveedores": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "activo": zod.boolean()
+}))
 })
 
 
@@ -943,7 +964,7 @@ export const GetEntradaResponse = zod.object({
   "fecha": zod.coerce.date(),
   "observaciones": zod.string().nullable(),
   "totalRollos": zod.number(),
-  "totalCosto": zod.string(),
+  "totalCosto": zod.string().nullable(),
   "uuidCliente": zod.string(),
   "createdAt": zod.coerce.date(),
   "lineas": zod.array(zod.object({
@@ -952,19 +973,118 @@ export const GetEntradaResponse = zod.object({
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
   "unidadProducto": zod.string(),
-  "costoUnitario": zod.string(),
+  "costoUnitario": zod.string().nullable(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
-  "costoTotal": zod.string()
+  "costoTotal": zod.string().nullable()
 })),
   "rollos": zod.array(zod.object({
   "id": zod.number(),
   "serie": zod.string(),
   "productoId": zod.number(),
   "cantidadInicial": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string()
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable()
 }))
+})
+
+
+/**
+ * @summary Captura costos pendientes de una entrada (ADMIN)
+ */
+export const CapturarCostosEntradaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const capturarCostosEntradaBodyCostosRollosDefault = [];
+
+export const CapturarCostosEntradaBody = zod.object({
+  "costosProductos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "costoUnitario": zod.string()
+})),
+  "costosRollos": zod.array(zod.object({
+  "rolloId": zod.number(),
+  "costoUnitario": zod.string()
+})).default(capturarCostosEntradaBodyCostosRollosDefault)
+})
+
+export const CapturarCostosEntradaResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "nombreProveedor": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "fecha": zod.coerce.date(),
+  "observaciones": zod.string().nullable(),
+  "totalRollos": zod.number(),
+  "totalCosto": zod.string().nullable(),
+  "uuidCliente": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "rollosCount": zod.number(),
+  "cantidadTotal": zod.string(),
+  "costoTotal": zod.string().nullable()
+})),
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "cantidadInicial": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable()
+}))
+})
+
+
+/**
+ * @summary Cuenta entradas con costos pendientes (ADMIN)
+ */
+export const CountEntradasPendientesCostoResponse = zod.object({
+  "count": zod.number()
+})
+
+
+/**
+ * @summary Lista entradas con costos pendientes, más antiguas primero (ADMIN)
+ */
+export const listEntradasPendientesCostoQueryPageDefault = 1;
+
+export const listEntradasPendientesCostoQueryPageSizeDefault = 20;
+export const listEntradasPendientesCostoQueryPageSizeMax = 200;
+
+
+
+export const ListEntradasPendientesCostoQueryParams = zod.object({
+  "page": zod.coerce.number().min(1).default(listEntradasPendientesCostoQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listEntradasPendientesCostoQueryPageSizeMax).default(listEntradasPendientesCostoQueryPageSizeDefault)
+})
+
+export const ListEntradasPendientesCostoResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "fecha": zod.coerce.date(),
+  "nombreUbicacion": zod.string(),
+  "nombreProveedor": zod.string().nullable(),
+  "rollosPendientes": zod.number(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "nombreUsuario": zod.string(),
+  "overdue48h": zod.boolean()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
 })
 
 
@@ -995,8 +1115,8 @@ export const ActivarRolloResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "historial": zod.array(zod.object({
   "id": zod.number(),
@@ -1088,8 +1208,8 @@ export const SalidaMostradorResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "historial": zod.array(zod.object({
   "id": zod.number(),
@@ -1144,8 +1264,8 @@ export const VenderRolloResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "historial": zod.array(zod.object({
   "id": zod.number(),
@@ -1205,8 +1325,8 @@ export const AjustarRolloResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "historial": zod.array(zod.object({
   "id": zod.number(),
@@ -1262,8 +1382,8 @@ export const RevertirMovimientoResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "historial": zod.array(zod.object({
   "id": zod.number(),
@@ -1313,8 +1433,8 @@ export const GetRolloResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "historial": zod.array(zod.object({
   "id": zod.number(),
@@ -1372,8 +1492,8 @@ export const ListRollosResponse = zod.object({
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
   "cantidadInicial": zod.string(),
   "cantidadActual": zod.string(),
-  "costoUnitario": zod.string(),
-  "costoTotal": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "costoTotal": zod.string().nullable(),
   "notas": zod.string().nullish(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -1408,6 +1528,49 @@ export const GetExistenciasResponse = zod.array(GetExistenciasResponseItem)
 
 
 /**
+ * Requiere inventario/ver. No concede acceso al módulo administrativo de ubicaciones.
+ * @summary Ubicaciones operativas activas para seleccionar alcance de inventario
+ */
+export const GetUbicacionesInventarioResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
+  "activa": zod.boolean()
+})
+export const GetUbicacionesInventarioResponse = zod.array(GetUbicacionesInventarioResponseItem)
+
+
+/**
+ * @summary Existencias actuales agrupadas por tela y color, sin series ni costos
+ */
+export const getExistenciasAgrupadasQueryIncludeSinExistenciaDefault = false;
+
+export const GetExistenciasAgrupadasQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "includeSinExistencia": zod.coerce.boolean().default(getExistenciasAgrupadasQueryIncludeSinExistenciaDefault)
+})
+
+export const GetExistenciasAgrupadasResponseItem = zod.object({
+  "productoKey": zod.string(),
+  "telaProducto": zod.string(),
+  "coloresCount": zod.number(),
+  "rollosCount": zod.number(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "colores": zod.array(zod.object({
+  "productoId": zod.number(),
+  "color": zod.string(),
+  "sku": zod.string(),
+  "rollosCount": zod.number(),
+  "cantidadTotal": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO'])
+}))
+})
+export const GetExistenciasAgrupadasResponse = zod.array(GetExistenciasAgrupadasResponseItem)
+
+
+/**
  * @summary Historial completo de movimientos, filtrable y paginado
  */
 export const getKardexQueryIncluirUbicacionesInactivasDefault = false;
@@ -1427,8 +1590,8 @@ export const GetKardexQueryParams = zod.object({
   "hasta": zod.date().optional(),
   "buscar": zod.coerce.string().optional(),
   "incluirUbicacionesInactivas": zod.coerce.boolean().default(getKardexQueryIncluirUbicacionesInactivasDefault),
-  "page": zod.coerce.number().int().min(1).default(getKardexQueryPageDefault),
-  "pageSize": zod.coerce.number().int().min(1).max(getKardexQueryPageSizeMax).default(getKardexQueryPageSizeDefault)
+  "page": zod.coerce.number().min(1).default(getKardexQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(getKardexQueryPageSizeMax).default(getKardexQueryPageSizeDefault)
 })
 
 export const GetKardexResponse = zod.object({
@@ -2899,6 +3062,19 @@ export const ExportarSalidasQueryParams = zod.object({
 })
 
 export const ExportarSalidasResponse = zod.unknown()
+
+
+/**
+ * Requiere salidas/ver. No concede acceso al módulo administrativo de ubicaciones.
+ * @summary Ubicaciones operativas activas para crear y consultar salidas
+ */
+export const GetUbicacionesSalidaResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
+  "activa": zod.boolean()
+})
+export const GetUbicacionesSalidaResponse = zod.array(GetUbicacionesSalidaResponseItem)
 
 
 /**

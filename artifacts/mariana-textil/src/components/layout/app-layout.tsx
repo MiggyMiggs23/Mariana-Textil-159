@@ -5,12 +5,14 @@ import {
   useLogout,
   Role,
   getGetCurrentUserQueryKey,
-  useListLocations,
-  getListLocationsQueryKey,
+  useGetUbicacionesInventario,
+  getGetUbicacionesInventarioQueryKey,
   useListAjustesPendientes,
   getListAjustesPendientesQueryKey,
   useObtenerSesionCajaActual,
-  getObtenerSesionCajaActualQueryKey
+  getObtenerSesionCajaActualQueryKey,
+  useCountEntradasPendientesCosto,
+  getCountEntradasPendientesCostoQueryKey
 } from "@workspace/api-client-react";
 import { hasPermission, Modules, Module } from "@/lib/permisos";
 import { useQueryClient } from "@tanstack/react-query";
@@ -126,11 +128,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }
   });
 
-  const { selectedLocationId, setSelectedLocationId } = useLocationScope();
-  const { data: locations } = useListLocations({
+  const { data: countPendientesData } = useCountEntradasPendientesCosto({
     query: {
       enabled: user?.rol === Role.ADMIN,
-      queryKey: getListLocationsQueryKey()
+      queryKey: getCountEntradasPendientesCostoQueryKey()
+    }
+  });
+
+  const { selectedLocationId, setSelectedLocationId } = useLocationScope();
+  const { data: locations } = useGetUbicacionesInventario({
+    query: {
+      enabled: user?.alcanceConsulta === "TODAS",
+      queryKey: getGetUbicacionesInventarioQueryKey()
     }
   });
 
@@ -291,7 +300,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
                   <span className="text-sm">{item.name}</span>
-                  {item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
+                  {item.path === "/entradas" && countPendientesData?.count ? (
+                    <span data-testid={`badge-entradas-pendientes`} className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-destructive text-white text-[10px] font-bold rounded-full">
+                      {countPendientesData.count}
+                    </span>
+                  ) : item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
                     <span data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
                       {ajustesPendientes.length}
                     </span>

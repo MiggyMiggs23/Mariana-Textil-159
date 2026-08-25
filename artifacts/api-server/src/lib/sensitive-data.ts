@@ -5,8 +5,8 @@
  * nested entry lines and rollos. It returns a new value and never mutates the
  * object that was validated by the route response schema.
  */
-export function omitTerminalSensitiveFields<T>(value: T, isTerminal: boolean): T {
-  if (!isTerminal) return value;
+export function omitTerminalSensitiveFields<T>(value: T, omitSensitive: boolean): T {
+  if (!omitSensitive) return value;
   return omit(value) as T;
 }
 

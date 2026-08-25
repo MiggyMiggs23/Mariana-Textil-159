@@ -56,8 +56,8 @@ export const rollosTable = pgTable(
     costoUnitario: numeric("costo_unitario", {
       precision: 12,
       scale: 2,
-    }).notNull(),
-    costoTotal: numeric("costo_total", { precision: 12, scale: 2 }).notNull(),
+    }),
+    costoTotal: numeric("costo_total", { precision: 12, scale: 2 }),
     notas: text("notas"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

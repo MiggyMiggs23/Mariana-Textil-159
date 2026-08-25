@@ -483,10 +483,10 @@ paths:
           description: Filtrar por estado de pago
         - in: query
           name: page
-          schema: { type: integer, minimum: 1, default: 1 }
+          schema: { type: number, minimum: 1, default: 1 }
         - in: query
           name: pageSize
-          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+          schema: { type: number, minimum: 1, maximum: 200, default: 20 }
       responses:
         "200":
           description: Lista paginada de compras del proveedor
@@ -729,6 +729,23 @@ paths:
                 $ref: "#/components/schemas/EntradaListResult"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /inventario/entradas/catalogos:
+    get:
+      operationId: getCatalogosEntrada
+      tags: [inventario]
+      summary: Catálogos operativos activos para capturar entradas
+      description: Requiere entradas/ver. No devuelve costos, finanzas ni datos por ubicación.
+      responses:
+        "200":
+          description: Productos y proveedores activos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogosEntrada"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /inventario/entradas/{id}:
     get:
       operationId: getEntrada
@@ -747,6 +764,70 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+  /inventario/entradas/{id}/costos:
+    post:
+      operationId: capturarCostosEntrada
+      tags: [inventario]
+      summary: Captura costos pendientes de una entrada (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/EntradaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CapturarCostosEntradaInput"
+      responses:
+        "200":
+          description: Entrada actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradaDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /inventario/entradas/pendientes-costo/count:
+    get:
+      operationId: countEntradasPendientesCosto
+      tags: [inventario]
+      summary: Cuenta entradas con costos pendientes (ADMIN)
+      responses:
+        "200":
+          description: Conteo
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count]
+                properties:
+                  count: { type: number }
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/entradas/pendientes-costo:
+    get:
+      operationId: listEntradasPendientesCosto
+      tags: [inventario]
+      summary: Lista entradas con costos pendientes, más antiguas primero (ADMIN)
+      parameters:
+        - in: query
+          name: page
+          schema: { type: number, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: number, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradasPendientesCostoResult"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /inventario/rollos/{id}/activar:
     post:
       operationId: activarRollo
@@ -1019,6 +1100,51 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ExistenciaRow"
+  /inventario/ubicaciones:
+    get:
+      operationId: getUbicacionesInventario
+      tags: [inventario]
+      summary: Ubicaciones operativas activas para seleccionar alcance de inventario
+      description: Requiere inventario/ver. No concede acceso al módulo administrativo de ubicaciones.
+      responses:
+        "200":
+          description: Ubicaciones activas sin campos sensibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UbicacionInventario"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/existencias/agrupadas:
+    get:
+      operationId: getExistenciasAgrupadas
+      tags: [inventario]
+      summary: Existencias actuales agrupadas por tela y color, sin series ni costos
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: includeSinExistencia
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Existencias agrupadas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExistenciaAgrupada"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /inventario/kardex:
@@ -1058,10 +1184,10 @@ paths:
           schema: { type: boolean, default: false }
         - in: query
           name: page
-          schema: { type: integer, minimum: 1, default: 1 }
+          schema: { type: number, minimum: 1, default: 1 }
         - in: query
           name: pageSize
-          schema: { type: integer, minimum: 1, maximum: 100, default: 100 }
+          schema: { type: number, minimum: 1, maximum: 100, default: 100 }
       responses:
         "200":
           description: Movimientos del kardex
@@ -2115,6 +2241,25 @@ paths:
               schema: { type: string, format: binary }
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /salidas/ubicaciones:
+    get:
+      operationId: getUbicacionesSalida
+      tags: [salidas]
+      summary: Ubicaciones operativas activas para crear y consultar salidas
+      description: Requiere salidas/ver. No concede acceso al módulo administrativo de ubicaciones.
+      responses:
+        "200":
+          description: Ubicaciones de tienda y bodega activas, sin campos administrativos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UbicacionInventario"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /salidas/rollos/serie/{serie}:
     get:
       operationId: escanearRolloSalida
@@ -3020,8 +3165,8 @@ components:
           $ref: "#/components/schemas/EstadoRollo"
         cantidadInicial: { type: string }
         cantidadActual: { type: string }
-        costoUnitario: { type: string }
-        costoTotal: { type: string }
+        costoUnitario: { type: ["string", "null"] }
+        costoTotal: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
@@ -3094,8 +3239,8 @@ components:
           $ref: "#/components/schemas/EstadoRollo"
         cantidadInicial: { type: string }
         cantidadActual: { type: string }
-        costoUnitario: { type: string }
-        costoTotal: { type: string }
+        costoUnitario: { type: ["string", "null"] }
+        costoTotal: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         historial:
           type: array
@@ -3334,10 +3479,10 @@ components:
         ubicacionId: { type: number }
     EntradaLineaInput:
       type: object
-      required: [productoId, costoUnitario, cantidades]
+      required: [productoId, cantidades]
       properties:
         productoId: { type: number }
-        costoUnitario: { type: string }
+        costoUnitario: { type: ["string", "null"] }
         cantidades:
           type: array
           items: { type: string }
@@ -3364,8 +3509,8 @@ components:
         serie: { type: string }
         productoId: { type: number }
         cantidadInicial: { type: string }
-        costoUnitario: { type: string }
-        costoTotal: { type: string }
+        costoUnitario: { type: ["string", "null"] }
+        costoTotal: { type: ["string", "null"] }
     EntradaLinea:
       type: object
       required:
@@ -3386,10 +3531,10 @@ components:
         telaProducto: { type: string }
         colorProducto: { type: string }
         unidadProducto: { type: string }
-        costoUnitario: { type: string }
+        costoUnitario: { type: ["string", "null"] }
         rollosCount: { type: number }
         cantidadTotal: { type: string }
-        costoTotal: { type: string }
+        costoTotal: { type: ["string", "null"] }
     EntradaDetail:
       type: object
       required:
@@ -3423,7 +3568,7 @@ components:
         fecha: { type: string, format: date-time }
         observaciones: { type: ["string", "null"] }
         totalRollos: { type: number }
-        totalCosto: { type: string }
+        totalCosto: { type: ["string", "null"] }
         uuidCliente: { type: string }
         createdAt: { type: string, format: date-time }
         lineas:
@@ -3434,6 +3579,124 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/EntradaRollo"
+    CatalogoEntradaProducto:
+      type: object
+      required: [id, sku, tela, color, unidad, activo]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
+        activo: { type: boolean }
+    CatalogoEntradaProveedor:
+      type: object
+      required: [id, nombre, activo]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        activo: { type: boolean }
+    CatalogosEntrada:
+      type: object
+      required: [productos, proveedores]
+      properties:
+        productos:
+          type: array
+          items:
+            $ref: "#/components/schemas/CatalogoEntradaProducto"
+        proveedores:
+          type: array
+          items:
+            $ref: "#/components/schemas/CatalogoEntradaProveedor"
+    CapturarCostoProducto:
+      type: object
+      required: [productoId, costoUnitario]
+      properties:
+        productoId: { type: number }
+        costoUnitario: { type: string }
+    CapturarCostoRollo:
+      type: object
+      required: [rolloId, costoUnitario]
+      properties:
+        rolloId: { type: number }
+        costoUnitario: { type: string }
+    CapturarCostosEntradaInput:
+      type: object
+      required: [costosProductos]
+      properties:
+        costosProductos:
+          type: array
+          items:
+            $ref: "#/components/schemas/CapturarCostoProducto"
+        costosRollos:
+          type: array
+          default: []
+          items:
+            $ref: "#/components/schemas/CapturarCostoRollo"
+    EntradaPendienteCosto:
+      type: object
+      required:
+        [id, folio, fecha, nombreUbicacion, nombreProveedor, rollosPendientes,
+         totalMetros, totalKilos, nombreUsuario, overdue48h]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        fecha: { type: string, format: date-time }
+        nombreUbicacion: { type: string }
+        nombreProveedor: { type: ["string", "null"] }
+        rollosPendientes: { type: number }
+        totalMetros: { type: string }
+        totalKilos: { type: string }
+        nombreUsuario: { type: string }
+        overdue48h: { type: boolean }
+    EntradasPendientesCostoResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntradaPendienteCosto"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+    UbicacionInventario:
+      type: object
+      required: [id, nombre, tipo, activa]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        tipo:
+          type: string
+          enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]
+        activa: { type: boolean }
+    ExistenciaAgrupadaHijo:
+      type: object
+      required: [productoId, color, sku, rollosCount, cantidadTotal, unidad]
+      properties:
+        productoId: { type: number }
+        color: { type: string }
+        sku: { type: string }
+        rollosCount: { type: number }
+        cantidadTotal: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+    ExistenciaAgrupada:
+      type: object
+      required:
+        [productoKey, telaProducto, coloresCount, rollosCount, totalMetros,
+         totalKilos, colores]
+      properties:
+        productoKey: { type: string }
+        telaProducto: { type: string }
+        coloresCount: { type: number }
+        rollosCount: { type: number }
+        totalMetros: { type: string }
+        totalKilos: { type: string }
+        colores:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExistenciaAgrupadaHijo"
     EntradaSummary:
       type: object
       required:
@@ -3462,7 +3725,7 @@ components:
         nombreUsuario: { type: string }
         fecha: { type: string, format: date-time }
         totalRollos: { type: number }
-        totalCosto: { type: string }
+        totalCosto: { type: ["string", "null"] }
         createdAt: { type: string, format: date-time }
     EntradaListResult:
       type: object

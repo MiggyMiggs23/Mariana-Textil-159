@@ -263,7 +263,8 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       ticketMap,
       salidaMap,
     );
-    const salidaInmediata = reference.tipo === "SALIDA" &&
+    const salidaInmediata =
+      (reference.tipo === "SALIDA" || reference.tipo === "RECEPCION_SALIDA") &&
       (row.tipo === "TRANSFERENCIA_SALIDA" || row.tipo === "TRANSFERENCIA_ENTRADA");
     return {
       ...row,

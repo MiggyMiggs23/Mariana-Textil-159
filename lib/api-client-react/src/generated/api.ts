@@ -24,6 +24,8 @@ import type {
   AjusteProveedorInput,
   AjusteRolloInput,
   BuscarPosParams,
+  CapturarCostosEntradaInput,
+  CatalogosEntrada,
   Cliente,
   ClienteCompras,
   ClienteCredito,
@@ -39,14 +41,17 @@ import type {
   ConciliacionRow,
   ConflictResponse,
   CorteCaja,
+  CountEntradasPendientesCosto200,
   CurrentUser,
   Dashboard,
   EntradaDetail,
   EntradaInput,
   EntradaListResult,
+  EntradasPendientesCostoResult,
   EscanearRolloSalidaParams,
   EstadisticasProveedorParams,
   EstadoCuentaProveedorParams,
+  ExistenciaAgrupada,
   ExistenciaRow,
   ExportKardexXlsxParams,
   ExportarProveedorXlsxParams,
@@ -54,6 +59,7 @@ import type {
   ForbiddenResponse,
   GetConciliacionParams,
   GetDashboardParams,
+  GetExistenciasAgrupadasParams,
   GetExistenciasParams,
   GetKardexParams,
   HealthStatus,
@@ -65,6 +71,7 @@ import type {
   KardexResult,
   ListComprasProveedorParams,
   ListEntradasParams,
+  ListEntradasPendientesCostoParams,
   ListKardexFiltersParams,
   ListProveedorPagosParams,
   ListRollosParams,
@@ -130,6 +137,7 @@ import type {
   TicketDetalle,
   TicketInput,
   TicketResumen,
+  UbicacionInventario,
   UnauthorizedResponse,
   User,
   UserInput,
@@ -2471,6 +2479,84 @@ export function useListEntradas<TData = Awaited<ReturnType<typeof listEntradas>>
 
 
 
+export const getGetCatalogosEntradaUrl = () => {
+
+
+
+
+  return `/api/inventario/entradas/catalogos`
+}
+
+/**
+ * Requiere entradas/ver. No devuelve costos, finanzas ni datos por ubicación.
+ * @summary Catálogos operativos activos para capturar entradas
+ */
+export const getCatalogosEntrada = async ( options?: Parameters<typeof customFetch>[1]): Promise<CatalogosEntrada> => {
+
+  return customFetch<CatalogosEntrada>(getGetCatalogosEntradaUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCatalogosEntradaQueryKey = () => {
+    return [
+    `/api/inventario/entradas/catalogos`
+    ] as const;
+    }
+
+
+export const getGetCatalogosEntradaQueryOptions = <TData = Awaited<ReturnType<typeof getCatalogosEntrada>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogosEntrada>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCatalogosEntradaQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCatalogosEntrada>>> = ({ signal }) => getCatalogosEntrada({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCatalogosEntrada>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCatalogosEntradaQueryResult = NonNullable<Awaited<ReturnType<typeof getCatalogosEntrada>>>
+export type GetCatalogosEntradaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Catálogos operativos activos para capturar entradas
+ */
+
+export function useGetCatalogosEntrada<TData = Awaited<ReturnType<typeof getCatalogosEntrada>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogosEntrada>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCatalogosEntradaQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getGetEntradaUrl = (id: number,) => {
 
 
@@ -2536,6 +2622,239 @@ export function useGetEntrada<TData = Awaited<ReturnType<typeof getEntrada>>, TE
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetEntradaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCapturarCostosEntradaUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/entradas/${id}/costos`
+}
+
+/**
+ * @summary Captura costos pendientes de una entrada (ADMIN)
+ */
+export const capturarCostosEntrada = async (id: number,
+    capturarCostosEntradaInput: CapturarCostosEntradaInput, options?: Parameters<typeof customFetch>[1]): Promise<EntradaDetail> => {
+
+  return customFetch<EntradaDetail>(getCapturarCostosEntradaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(capturarCostosEntradaInput)
+  }
+);}
+
+
+
+
+
+export const getCapturarCostosEntradaMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof capturarCostosEntrada>>, TError,{id: number;data: BodyType<CapturarCostosEntradaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof capturarCostosEntrada>>, TError,{id: number;data: BodyType<CapturarCostosEntradaInput>}, TContext> => {
+
+const mutationKey = ['capturarCostosEntrada'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof capturarCostosEntrada>>, {id: number;data: BodyType<CapturarCostosEntradaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  capturarCostosEntrada(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CapturarCostosEntradaMutationResult = NonNullable<Awaited<ReturnType<typeof capturarCostosEntrada>>>
+    export type CapturarCostosEntradaMutationBody = BodyType<CapturarCostosEntradaInput>
+    export type CapturarCostosEntradaMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Captura costos pendientes de una entrada (ADMIN)
+ */
+export const useCapturarCostosEntrada = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof capturarCostosEntrada>>, TError,{id: number;data: BodyType<CapturarCostosEntradaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof capturarCostosEntrada>>,
+        TError,
+        {id: number;data: BodyType<CapturarCostosEntradaInput>},
+        TContext
+      > => {
+      return useMutation(getCapturarCostosEntradaMutationOptions(options));
+    }
+
+export const getCountEntradasPendientesCostoUrl = () => {
+
+
+
+
+  return `/api/inventario/entradas/pendientes-costo/count`
+}
+
+/**
+ * @summary Cuenta entradas con costos pendientes (ADMIN)
+ */
+export const countEntradasPendientesCosto = async ( options?: Parameters<typeof customFetch>[1]): Promise<CountEntradasPendientesCosto200> => {
+
+  return customFetch<CountEntradasPendientesCosto200>(getCountEntradasPendientesCostoUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getCountEntradasPendientesCostoQueryKey = () => {
+    return [
+    `/api/inventario/entradas/pendientes-costo/count`
+    ] as const;
+    }
+
+
+export const getCountEntradasPendientesCostoQueryOptions = <TData = Awaited<ReturnType<typeof countEntradasPendientesCosto>>, TError = ErrorType<ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countEntradasPendientesCosto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCountEntradasPendientesCostoQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof countEntradasPendientesCosto>>> = ({ signal }) => countEntradasPendientesCosto({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof countEntradasPendientesCosto>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type CountEntradasPendientesCostoQueryResult = NonNullable<Awaited<ReturnType<typeof countEntradasPendientesCosto>>>
+export type CountEntradasPendientesCostoQueryError = ErrorType<ForbiddenResponse>
+
+
+/**
+ * @summary Cuenta entradas con costos pendientes (ADMIN)
+ */
+
+export function useCountEntradasPendientesCosto<TData = Awaited<ReturnType<typeof countEntradasPendientesCosto>>, TError = ErrorType<ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countEntradasPendientesCosto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getCountEntradasPendientesCostoQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListEntradasPendientesCostoUrl = (params?: ListEntradasPendientesCostoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/entradas/pendientes-costo?${stringifiedParams}` : `/api/inventario/entradas/pendientes-costo`
+}
+
+/**
+ * @summary Lista entradas con costos pendientes, más antiguas primero (ADMIN)
+ */
+export const listEntradasPendientesCosto = async (params?: ListEntradasPendientesCostoParams, options?: Parameters<typeof customFetch>[1]): Promise<EntradasPendientesCostoResult> => {
+
+  return customFetch<EntradasPendientesCostoResult>(getListEntradasPendientesCostoUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEntradasPendientesCostoQueryKey = (params?: ListEntradasPendientesCostoParams,) => {
+    return [
+    `/api/inventario/entradas/pendientes-costo`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListEntradasPendientesCostoQueryOptions = <TData = Awaited<ReturnType<typeof listEntradasPendientesCosto>>, TError = ErrorType<ForbiddenResponse>>(params?: ListEntradasPendientesCostoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEntradasPendientesCosto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEntradasPendientesCostoQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEntradasPendientesCosto>>> = ({ signal }) => listEntradasPendientesCosto(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEntradasPendientesCosto>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEntradasPendientesCostoQueryResult = NonNullable<Awaited<ReturnType<typeof listEntradasPendientesCosto>>>
+export type ListEntradasPendientesCostoQueryError = ErrorType<ForbiddenResponse>
+
+
+/**
+ * @summary Lista entradas con costos pendientes, más antiguas primero (ADMIN)
+ */
+
+export function useListEntradasPendientesCosto<TData = Awaited<ReturnType<typeof listEntradasPendientesCosto>>, TError = ErrorType<ForbiddenResponse>>(
+ params?: ListEntradasPendientesCostoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEntradasPendientesCosto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEntradasPendientesCostoQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -3259,7 +3578,7 @@ export const getGetExistenciasQueryKey = (params?: GetExistenciasParams,) => {
     }
 
 
-export const getGetExistenciasQueryOptions = <TData = Awaited<ReturnType<typeof getExistencias>>, TError = ErrorType<UnauthorizedResponse>>(params?: GetExistenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetExistenciasQueryOptions = <TData = Awaited<ReturnType<typeof getExistencias>>, TError = ErrorType<unknown>>(params?: GetExistenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -3278,19 +3597,181 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetExistenciasQueryResult = NonNullable<Awaited<ReturnType<typeof getExistencias>>>
-export type GetExistenciasQueryError = ErrorType<UnauthorizedResponse>
+export type GetExistenciasQueryError = ErrorType<unknown>
 
 
 /**
  * @summary Existencias por ubicación (con scope de rol)
  */
 
-export function useGetExistencias<TData = Awaited<ReturnType<typeof getExistencias>>, TError = ErrorType<UnauthorizedResponse>>(
+export function useGetExistencias<TData = Awaited<ReturnType<typeof getExistencias>>, TError = ErrorType<unknown>>(
  params?: GetExistenciasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistencias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetExistenciasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetUbicacionesInventarioUrl = () => {
+
+
+
+
+  return `/api/inventario/ubicaciones`
+}
+
+/**
+ * Requiere inventario/ver. No concede acceso al módulo administrativo de ubicaciones.
+ * @summary Ubicaciones operativas activas para seleccionar alcance de inventario
+ */
+export const getUbicacionesInventario = async ( options?: Parameters<typeof customFetch>[1]): Promise<UbicacionInventario[]> => {
+
+  return customFetch<UbicacionInventario[]>(getGetUbicacionesInventarioUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUbicacionesInventarioQueryKey = () => {
+    return [
+    `/api/inventario/ubicaciones`
+    ] as const;
+    }
+
+
+export const getGetUbicacionesInventarioQueryOptions = <TData = Awaited<ReturnType<typeof getUbicacionesInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUbicacionesInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUbicacionesInventarioQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUbicacionesInventario>>> = ({ signal }) => getUbicacionesInventario({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUbicacionesInventario>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUbicacionesInventarioQueryResult = NonNullable<Awaited<ReturnType<typeof getUbicacionesInventario>>>
+export type GetUbicacionesInventarioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Ubicaciones operativas activas para seleccionar alcance de inventario
+ */
+
+export function useGetUbicacionesInventario<TData = Awaited<ReturnType<typeof getUbicacionesInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUbicacionesInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUbicacionesInventarioQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetExistenciasAgrupadasUrl = (params?: GetExistenciasAgrupadasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/existencias/agrupadas?${stringifiedParams}` : `/api/inventario/existencias/agrupadas`
+}
+
+/**
+ * @summary Existencias actuales agrupadas por tela y color, sin series ni costos
+ */
+export const getExistenciasAgrupadas = async (params?: GetExistenciasAgrupadasParams, options?: Parameters<typeof customFetch>[1]): Promise<ExistenciaAgrupada[]> => {
+
+  return customFetch<ExistenciaAgrupada[]>(getGetExistenciasAgrupadasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetExistenciasAgrupadasQueryKey = (params?: GetExistenciasAgrupadasParams,) => {
+    return [
+    `/api/inventario/existencias/agrupadas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetExistenciasAgrupadasQueryOptions = <TData = Awaited<ReturnType<typeof getExistenciasAgrupadas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetExistenciasAgrupadasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistenciasAgrupadas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetExistenciasAgrupadasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getExistenciasAgrupadas>>> = ({ signal }) => getExistenciasAgrupadas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getExistenciasAgrupadas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetExistenciasAgrupadasQueryResult = NonNullable<Awaited<ReturnType<typeof getExistenciasAgrupadas>>>
+export type GetExistenciasAgrupadasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Existencias actuales agrupadas por tela y color, sin series ni costos
+ */
+
+export function useGetExistenciasAgrupadas<TData = Awaited<ReturnType<typeof getExistenciasAgrupadas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetExistenciasAgrupadasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExistenciasAgrupadas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetExistenciasAgrupadasQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -6619,6 +7100,84 @@ export function useExportarSalidas<TData = Awaited<ReturnType<typeof exportarSal
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getExportarSalidasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetUbicacionesSalidaUrl = () => {
+
+
+
+
+  return `/api/salidas/ubicaciones`
+}
+
+/**
+ * Requiere salidas/ver. No concede acceso al módulo administrativo de ubicaciones.
+ * @summary Ubicaciones operativas activas para crear y consultar salidas
+ */
+export const getUbicacionesSalida = async ( options?: Parameters<typeof customFetch>[1]): Promise<UbicacionInventario[]> => {
+
+  return customFetch<UbicacionInventario[]>(getGetUbicacionesSalidaUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUbicacionesSalidaQueryKey = () => {
+    return [
+    `/api/salidas/ubicaciones`
+    ] as const;
+    }
+
+
+export const getGetUbicacionesSalidaQueryOptions = <TData = Awaited<ReturnType<typeof getUbicacionesSalida>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUbicacionesSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUbicacionesSalidaQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUbicacionesSalida>>> = ({ signal }) => getUbicacionesSalida({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUbicacionesSalida>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUbicacionesSalidaQueryResult = NonNullable<Awaited<ReturnType<typeof getUbicacionesSalida>>>
+export type GetUbicacionesSalidaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Ubicaciones operativas activas para crear y consultar salidas
+ */
+
+export function useGetUbicacionesSalida<TData = Awaited<ReturnType<typeof getUbicacionesSalida>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUbicacionesSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUbicacionesSalidaQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

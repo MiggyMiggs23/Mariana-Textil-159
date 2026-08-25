@@ -5,17 +5,13 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ExistenciaAgrupadaHijoUnidad } from './existenciaAgrupadaHijoUnidad';
 
-export interface EntradaLinea {
+export interface ExistenciaAgrupadaHijo {
   productoId: number;
-  skuProducto: string;
-  telaProducto: string;
-  colorProducto: string;
-  unidadProducto: string;
-  /** @nullable */
-  costoUnitario: string | null;
+  color: string;
+  sku: string;
   rollosCount: number;
   cantidadTotal: string;
-  /** @nullable */
-  costoTotal: string | null;
+  unidad: ExistenciaAgrupadaHijoUnidad;
 }

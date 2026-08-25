@@ -3,10 +3,10 @@ import { useLocation, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetCurrentUser,
-  useListLocations,
+  useGetUbicacionesSalida,
   useCrearSalida,
   getGetCurrentUserQueryKey,
-  getListLocationsQueryKey,
+  getGetUbicacionesSalidaQueryKey,
   getEscanearRolloSalidaQueryOptions,
   SalidaRolloEscaneado,
   Role,
@@ -41,7 +41,7 @@ export default function SalidaNueva() {
   const queryClient = useQueryClient();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  const { data: locations } = useListLocations({ query: { queryKey: getListLocationsQueryKey() } });
+  const { data: locations } = useGetUbicacionesSalida({ query: { queryKey: getGetUbicacionesSalidaQueryKey() } });
 
   const createMutation = useCrearSalida();
 

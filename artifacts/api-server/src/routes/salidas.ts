@@ -1,6 +1,6 @@
 import { Router } from "express";
 import ExcelJS from "exceljs";
-import { and, eq, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import {
   CancelarSalidaBody,
   CancelarSalidaParams,
@@ -10,9 +10,10 @@ import {
   EscanearRolloSalidaResponse,
   ExportarSalidasQueryParams,
   GetSalidaParams,
+  GetUbicacionesSalidaResponse,
   ListSalidasQueryParams,
 } from "@workspace/api-zod";
-import { db, productosTable, rollosTable, salidasTable, usuariosTable, type EstadoSalida } from "@workspace/db";
+import { db, productosTable, rollosTable, salidasTable, ubicacionesTable, usuariosTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
@@ -31,6 +32,34 @@ const ESTADOS: EstadoSalida[] = [
   "CERRADA",
   "CANCELADA",
 ];
+
+router.get(
+  "/salidas/ubicaciones",
+  requireSession,
+  requierePermiso("salidas", "ver"),
+  async (_req, res, next) => {
+    try {
+      const ubicaciones = await db
+        .select({
+          id: ubicacionesTable.id,
+          nombre: ubicacionesTable.nombre,
+          tipo: ubicacionesTable.tipo,
+          activa: ubicacionesTable.activa,
+        })
+        .from(ubicacionesTable)
+        .where(
+          and(
+            eq(ubicacionesTable.activa, true),
+            inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+          ),
+        )
+        .orderBy(asc(ubicacionesTable.nombre));
+      res.json(GetUbicacionesSalidaResponse.parse(ubicaciones));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 async function loadHeader(id: number) {
   const [salida] = await db

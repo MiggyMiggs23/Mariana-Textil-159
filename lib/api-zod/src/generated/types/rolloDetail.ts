@@ -23,8 +23,10 @@ export interface RolloDetail {
   estado: EstadoRollo;
   cantidadInicial: string;
   cantidadActual: string;
-  costoUnitario: string;
-  costoTotal: string;
+  /** @nullable */
+  costoUnitario: string | null;
+  /** @nullable */
+  costoTotal: string | null;
   /** @nullable */
   notas?: string | null;
   historial: MovimientoRow[];

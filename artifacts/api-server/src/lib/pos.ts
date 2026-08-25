@@ -322,7 +322,7 @@ export async function validarPrecioPos(
       mensaje: rollWithoutValidUnitCostMessage(rollo.serie),
     };
   }
-  if (precioCents < money(rollo.costoUnitario)) {
+  if (precioCents < money(rollo.costoUnitario!)) {
     return {
       valido: false,
       mensaje: priceBelowCostMessage(rollo.tela, rollo.color, rollo.serie),
@@ -488,16 +488,13 @@ export async function crearTicket(
           "FULL_ROLLO_REQUIRED",
         );
       }
-      if (
-        input.tipo === "NORMAL" &&
-        !isValidUnitCost(rollo.costoUnitario)
-      ) {
+      if (!isValidUnitCost(rollo.costoUnitario)) {
         throw new PosError(
           rollWithoutValidUnitCostMessage(rollo.serie),
           "ROLLO_SIN_COSTO",
         );
       }
-      if (input.tipo === "NORMAL" && precioCents < money(rollo.costoUnitario)) {
+      if (input.tipo === "NORMAL" && precioCents < money(rollo.costoUnitario!)) {
         throw new PosError(
           priceBelowCostMessage(producto.tela, producto.color, rollo.serie),
           "PRICE_BELOW_COST",

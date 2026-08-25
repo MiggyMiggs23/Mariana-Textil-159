@@ -311,7 +311,7 @@ await test("POS-20 rollo legado sin costo falla anticipada y definitivamente con
     .update(rollosTable)
     .set({ costoUnitario: "0.00" })
     .where(eq(rollosTable.id, rollo.id));
-  const expectedMessage = `El rollo serie ${rollo.serie} no tiene un costo unitario válido. Contacta a administración.`;
+  const expectedMessage = `El rollo serie ${rollo.serie} no tiene costo registrado. Contacte al administrador.`;
 
   assert.deepEqual(
     await validarPrecioPos(db, {

@@ -23,7 +23,8 @@ export interface EntradaDetail {
   /** @nullable */
   observaciones: string | null;
   totalRollos: number;
-  totalCosto: string;
+  /** @nullable */
+  totalCosto: string | null;
   uuidCliente: string;
   createdAt: Date;
   lineas: EntradaLinea[];

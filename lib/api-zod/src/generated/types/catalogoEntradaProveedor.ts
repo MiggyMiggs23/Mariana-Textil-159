@@ -6,10 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface EntradaLineaInput {
-  productoId: number;
-  /** @nullable */
-  costoUnitario?: string | null;
-  /** @minItems 1 */
-  cantidades: string[];
+export interface CatalogoEntradaProveedor {
+  id: number;
+  nombre: string;
+  activo: boolean;
 }

@@ -1,6 +1,20 @@
 import { Router } from "express";
 import ExcelJS from "exceljs";
-import { and, count, desc, eq, gte, ilike, inArray, lte } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  countDistinct,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
 import {
   CrearEntradaBody,
   CrearEntradaResponse,
@@ -42,6 +56,16 @@ import {
   RecalcularExistenciasBody,
   RecalcularExistenciasResponse,
   GetFechaServidorResponse,
+  CapturarCostosEntradaParams,
+  CapturarCostosEntradaBody,
+  CapturarCostosEntradaResponse,
+  CountEntradasPendientesCostoResponse,
+  ListEntradasPendientesCostoQueryParams,
+  ListEntradasPendientesCostoResponse,
+  GetExistenciasAgrupadasQueryParams,
+  GetExistenciasAgrupadasResponse,
+  GetCatalogosEntradaResponse,
+  GetUbicacionesInventarioResponse,
 } from "@workspace/api-zod";
 import {
   db,
@@ -64,6 +88,7 @@ import { requierePermiso } from "../lib/permisos";
 import {
   crearEntrada,
   buildEntradaResult,
+  capturarCostosEntrada,
   activarRollo,
   salidaMostrador,
   venderRollo,
@@ -328,7 +353,10 @@ inventarioRouter.post(
             .json({ error: "Cada línea debe incluir al menos una cantidad." });
           return;
         }
-        if (!isValidUnitCost(linea.costoUnitario)) {
+        if (
+          auth.user.rol !== "BODEGA" &&
+          !isValidUnitCost(linea.costoUnitario)
+        ) {
           res
             .status(400)
             .json({ error: "El costo unitario debe ser mayor a cero." });
@@ -406,16 +434,18 @@ inventarioRouter.post(
           uuidCliente: body.uuidCliente,
           lineas: body.lineas.map((l) => ({
             productoId: l.productoId,
-            costoUnitario: l.costoUnitario,
+             costoUnitario:
+               auth.user.rol === "BODEGA" ? null : (l.costoUnitario ?? null),
             cantidades: l.cantidades,
           })),
+           allowPendingCosts: auth.user.rol === "BODEGA",
         }),
       );
 
       const response = CrearEntradaResponse.parse(result);
       res
         .status(201)
-        .json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+        .json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(400).json({ error: e.message });
@@ -533,11 +563,171 @@ inventarioRouter.get(
       res.json(
         omitTerminalSensitiveFields(
           response,
-          auth.user.rol === "TERMINAL",
+           auth.user.rol !== "ADMIN",
         ),
       );
     } catch (e) {
       next(e);
+    }
+  },
+);
+
+// ── Catálogos operativos de Entradas ─────────────────────────────────────────
+// Protected by entradas/ver so BODEGA can capture entries without receiving
+// access to the broader Productos or Proveedores administration modules.
+
+inventarioRouter.get(
+  "/entradas/catalogos",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (_req, res, next) => {
+    try {
+      const [productos, proveedores] = await Promise.all([
+        db
+          .select({
+            id: productosTable.id,
+            sku: productosTable.sku,
+            tela: productosTable.tela,
+            color: productosTable.color,
+            unidad: productosTable.unidad,
+            activo: productosTable.activo,
+          })
+          .from(productosTable)
+          .where(eq(productosTable.activo, true))
+          .orderBy(asc(productosTable.tela), asc(productosTable.color)),
+        db
+          .select({
+            id: proveedoresTable.id,
+            nombre: proveedoresTable.nombre,
+            activo: proveedoresTable.activo,
+          })
+          .from(proveedoresTable)
+          .where(eq(proveedoresTable.activo, true))
+          .orderBy(asc(proveedoresTable.nombre)),
+      ]);
+      res.json(
+        GetCatalogosEntradaResponse.parse({ productos, proveedores }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// ── Entradas con costo pendiente (exclusivo ADMIN) ────────────────────────────
+
+inventarioRouter.get(
+  "/entradas/pendientes-costo/count",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+        return;
+      }
+      const [row] = await db
+        .select({ value: countDistinct(rollosTable.recepcionId) })
+        .from(rollosTable)
+        .where(isNull(rollosTable.costoUnitario));
+      res.json(CountEntradasPendientesCostoResponse.parse({ count: row?.value ?? 0 }));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/entradas/pendientes-costo",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+        return;
+      }
+      const q = ListEntradasPendientesCostoQueryParams.parse(req.query);
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 20;
+      const result = await db.execute(sql`
+        SELECT e.id, e.folio, e.fecha, u.nombre AS nombre_ubicacion,
+               p.nombre AS nombre_proveedor, us.nombre AS nombre_usuario,
+               COUNT(r.id)::int AS rollos_pendientes,
+               COALESCE(SUM(r.cantidad_inicial) FILTER
+                 (WHERE pr.unidad = 'METRO'), 0)::text AS total_metros,
+               COALESCE(SUM(r.cantidad_inicial) FILTER
+                 (WHERE pr.unidad = 'KILO'), 0)::text AS total_kilos,
+               (e.created_at < now() - interval '48 hours') AS overdue_48h,
+               COUNT(*) OVER()::int AS total_rows
+        FROM entradas e
+        JOIN ubicaciones u ON u.id = e.ubicacion_id
+        JOIN usuarios us ON us.id = e.usuario_id
+        LEFT JOIN proveedores p ON p.id = e.proveedor_id
+        JOIN rollos r ON r.recepcion_id = e.id AND r.costo_unitario IS NULL
+        JOIN productos pr ON pr.id = r.producto_id
+        GROUP BY e.id, u.nombre, p.nombre, us.nombre
+        ORDER BY e.created_at ASC, e.id ASC
+        LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
+      `);
+      const rows = result.rows as Array<Record<string, unknown>>;
+      res.json(ListEntradasPendientesCostoResponse.parse({
+        items: rows.map((row) => ({
+          id: Number(row.id),
+          folio: Number(row.folio),
+          fecha: new Date(String(row.fecha)).toISOString(),
+          nombreUbicacion: String(row.nombre_ubicacion),
+          nombreProveedor: row.nombre_proveedor == null ? null : String(row.nombre_proveedor),
+          rollosPendientes: Number(row.rollos_pendientes),
+          totalMetros: String(row.total_metros),
+          totalKilos: String(row.total_kilos),
+          nombreUsuario: String(row.nombre_usuario),
+          overdue48h: Boolean(row.overdue_48h),
+        })),
+        total: Number(rows[0]?.total_rows ?? 0),
+        page,
+        pageSize,
+      }));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.post(
+  "/entradas/:id/costos",
+  requireSession,
+  requierePermiso("entradas", "editar"),
+  async (req, res, next) => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+        return;
+      }
+      const { id } = CapturarCostosEntradaParams.parse(req.params);
+      const body = CapturarCostosEntradaBody.parse(req.body);
+      const detail = await db.transaction((tx) =>
+        capturarCostosEntrada(tx, {
+          entradaId: id,
+          usuarioId: req.auth!.user.id,
+          ip: getRequestIp(req),
+          costosProductos: body.costosProductos,
+          costosRollos: body.costosRollos,
+        }),
+      );
+      res.json(CapturarCostosEntradaResponse.parse(detail));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        const status =
+          error.code === "ENTRADA_NOT_FOUND"
+            ? 404
+            : error.code.includes("ALREADY")
+              ? 409
+              : 400;
+        res.status(status).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
     }
   },
 );
@@ -584,7 +774,7 @@ inventarioRouter.get(
         buildEntradaResult(tx, id),
       );
       const response = GetEntradaResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ENTRADA_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -643,7 +833,7 @@ inventarioRouter.post(
         return;
       }
       const response = ActivarRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -717,7 +907,7 @@ inventarioRouter.post(
         return;
       }
       const response = SalidaMostradorResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -841,7 +1031,7 @@ inventarioRouter.post(
         return;
       }
       const response = AjustarRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {
         res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
@@ -903,7 +1093,7 @@ inventarioRouter.post(
         return;
       }
       const response = RevertirMovimientoResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {
         const status =
@@ -948,7 +1138,7 @@ inventarioRouter.get(
       }
 
       const response = GetRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       next(e);
     }
@@ -1057,7 +1247,7 @@ inventarioRouter.get(
         page,
         pageSize,
       });
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol === "TERMINAL"));
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       next(e);
     }
@@ -1066,6 +1256,124 @@ inventarioRouter.get(
 
 // ── Existencias ───────────────────────────────────────────────────────────────
 // Module: inventario / ver — read scope applied
+
+// Operational active-location catalog. This deliberately uses inventario/ver
+// rather than granting access to the administrative Ubicaciones module.
+inventarioRouter.get(
+  "/ubicaciones",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (_req, res, next) => {
+    try {
+      const ubicaciones = await db
+        .select({
+          id: ubicacionesTable.id,
+          nombre: ubicacionesTable.nombre,
+          tipo: ubicacionesTable.tipo,
+          activa: ubicacionesTable.activa,
+        })
+        .from(ubicacionesTable)
+        .where(eq(ubicacionesTable.activa, true))
+        .orderBy(asc(ubicacionesTable.nombre));
+      res.json(GetUbicacionesInventarioResponse.parse(ubicaciones));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/existencias/agrupadas",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetExistenciasAgrupadasQueryParams.parse(req.query);
+      const { ubicacionId, scopeError } = resolveReadScope(
+        req.auth!,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      const search = q.search?.trim() ? `%${q.search.trim()}%` : null;
+      const result = await db.execute(sql`
+        SELECT p.id AS producto_id, p.sku, p.tela, p.color, p.unidad,
+               COUNT(r.id)::int AS rollos_count,
+               COALESCE(SUM(r.cantidad_actual), 0)::text AS cantidad_total
+        FROM productos p
+        LEFT JOIN rollos r
+          ON r.producto_id = p.id
+         AND r.estado IN ('DISPONIBLE', 'ABIERTO')
+         AND r.cantidad_actual > 0
+         AND (${ubicacionId ?? null}::int IS NULL OR r.ubicacion_id = ${ubicacionId ?? null})
+        WHERE (${search}::text IS NULL
+          OR p.tela ILIKE ${search}
+          OR p.color ILIKE ${search}
+          OR p.sku ILIKE ${search})
+        GROUP BY p.id
+        HAVING ${q.includeSinExistencia ?? false} OR COUNT(r.id) > 0
+        ORDER BY p.tela, p.color, p.sku
+      `);
+      type Child = {
+        productoId: number;
+        color: string;
+        sku: string;
+        rollosCount: number;
+        cantidadTotal: string;
+        unidad: "METRO" | "KILO";
+      };
+      type Parent = {
+        productoKey: string;
+        telaProducto: string;
+        coloresCount: number;
+        rollosCount: number;
+        totalMetros: string;
+        totalKilos: string;
+        colores: Child[];
+      };
+      const parents = new Map<string, Parent>();
+      for (const raw of result.rows as Array<Record<string, unknown>>) {
+        const tela = String(raw.tela);
+        const key = tela.trim().toLocaleLowerCase("es-MX");
+        const parent = parents.get(key) ?? {
+          productoKey: key,
+          telaProducto: tela,
+          coloresCount: 0,
+          rollosCount: 0,
+          totalMetros: "0.000",
+          totalKilos: "0.000",
+          colores: [],
+        };
+        const unidad = String(raw.unidad) as "METRO" | "KILO";
+        const quantity = Number(raw.cantidad_total);
+        const rollosCount = Number(raw.rollos_count);
+        parent.colores.push({
+          productoId: Number(raw.producto_id),
+          color: String(raw.color),
+          sku: String(raw.sku),
+          rollosCount,
+          cantidadTotal: quantity.toFixed(3),
+          unidad,
+        });
+        parent.coloresCount += 1;
+        parent.rollosCount += rollosCount;
+        if (unidad === "METRO") {
+          parent.totalMetros = (Number(parent.totalMetros) + quantity).toFixed(3);
+        } else {
+          parent.totalKilos = (Number(parent.totalKilos) + quantity).toFixed(3);
+        }
+        parents.set(key, parent);
+      }
+      res.json(
+        GetExistenciasAgrupadasResponse.parse(Array.from(parents.values())),
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 inventarioRouter.get(
   "/existencias",
@@ -1134,7 +1442,7 @@ inventarioRouter.get(
       res.json(
         omitTerminalSensitiveFields(
           response,
-          auth.user.rol === "TERMINAL",
+          auth.user.rol !== "ADMIN",
         ),
       );
     } catch (e) {

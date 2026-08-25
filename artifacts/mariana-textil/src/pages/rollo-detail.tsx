@@ -9,9 +9,13 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
+import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/api-client-react";
 
 export default function RolloDetail() {
   const { id } = useParams();
+  const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
+  const isAdmin = user?.rol === Role.ADMIN;
+
   const { data: rollo, isLoading } = useGetRollo(Number(id), {
     query: { enabled: !!id, queryKey: getGetRolloQueryKey(Number(id)) }
   });
@@ -85,15 +89,17 @@ export default function RolloDetail() {
                     </div>
                   )}
                 </div>
-                <div>
-                  <div className="text-sm text-muted-foreground mb-1">Costo Total</div>
-                  <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-500">
-                    ${parseFloat(rollo.costoTotal).toFixed(2)}
+                {isAdmin && (
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Costo Total</div>
+                    <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-500">
+                      {rollo.costoTotal != null ? `$${parseFloat(rollo.costoTotal).toFixed(2)}` : 'Pendiente'}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {rollo.costoUnitario != null ? `$${parseFloat(rollo.costoUnitario).toFixed(2)} / ${rollo.unidadProducto}` : 'Pendiente'}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    ${parseFloat(rollo.costoUnitario).toFixed(2)} / {rollo.unidadProducto}
-                  </div>
-                </div>
+                )}
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Fecha de Ingreso</div>
                   <div className="text-sm font-medium">
@@ -113,11 +119,11 @@ export default function RolloDetail() {
           <div className="space-y-6">
             <Card className="flex flex-col items-center bg-white p-6 shadow-sm">
               <div className="bg-white border rounded-xl overflow-hidden p-2 shadow-sm mb-4">
-                <QRCodeSVG 
-                  value={`${rollo.skuProducto}-${rollo.serie}`} 
-                  size={140} 
-                  level="Q" 
-                  includeMargin={true} 
+                <QRCodeSVG
+                  value={`${rollo.skuProducto}-${rollo.serie}`}
+                  size={140}
+                  level="Q"
+                  includeMargin={true}
                   fgColor="#000000"
                   bgColor="#ffffff"
                 />
@@ -132,7 +138,7 @@ export default function RolloDetail() {
                 </Link>
               </Button>
             </Card>
-            
+
             <Card className="bg-muted/10 border-dashed">
               <CardContent className="p-6 text-center space-y-2">
                 <Box className="w-8 h-8 mx-auto text-muted-foreground opacity-50" />

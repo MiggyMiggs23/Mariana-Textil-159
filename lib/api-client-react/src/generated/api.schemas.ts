@@ -707,8 +707,10 @@ export interface RolloSummary {
   estado: EstadoRollo;
   cantidadInicial: string;
   cantidadActual: string;
-  costoUnitario: string;
-  costoTotal: string;
+  /** @nullable */
+  costoUnitario: string | null;
+  /** @nullable */
+  costoTotal: string | null;
   /** @nullable */
   notas?: string | null;
   createdAt: string;
@@ -760,8 +762,10 @@ export interface RolloDetail {
   estado: EstadoRollo;
   cantidadInicial: string;
   cantidadActual: string;
-  costoUnitario: string;
-  costoTotal: string;
+  /** @nullable */
+  costoUnitario: string | null;
+  /** @nullable */
+  costoTotal: string | null;
   /** @nullable */
   notas?: string | null;
   historial: MovimientoRow[];
@@ -974,7 +978,8 @@ export interface RecalcularInput {
 
 export interface EntradaLineaInput {
   productoId: number;
-  costoUnitario: string;
+  /** @nullable */
+  costoUnitario?: string | null;
   /** @minItems 1 */
   cantidades: string[];
 }
@@ -995,8 +1000,10 @@ export interface EntradaRollo {
   serie: string;
   productoId: number;
   cantidadInicial: string;
-  costoUnitario: string;
-  costoTotal: string;
+  /** @nullable */
+  costoUnitario: string | null;
+  /** @nullable */
+  costoTotal: string | null;
 }
 
 export interface EntradaLinea {
@@ -1005,10 +1012,12 @@ export interface EntradaLinea {
   telaProducto: string;
   colorProducto: string;
   unidadProducto: string;
-  costoUnitario: string;
+  /** @nullable */
+  costoUnitario: string | null;
   rollosCount: number;
   cantidadTotal: string;
-  costoTotal: string;
+  /** @nullable */
+  costoTotal: string | null;
 }
 
 export interface EntradaDetail {
@@ -1026,11 +1035,112 @@ export interface EntradaDetail {
   /** @nullable */
   observaciones: string | null;
   totalRollos: number;
-  totalCosto: string;
+  /** @nullable */
+  totalCosto: string | null;
   uuidCliente: string;
   createdAt: string;
   lineas: EntradaLinea[];
   rollos: EntradaRollo[];
+}
+
+export interface CatalogoEntradaProducto {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  activo: boolean;
+}
+
+export interface CatalogoEntradaProveedor {
+  id: number;
+  nombre: string;
+  activo: boolean;
+}
+
+export interface CatalogosEntrada {
+  productos: CatalogoEntradaProducto[];
+  proveedores: CatalogoEntradaProveedor[];
+}
+
+export interface CapturarCostoProducto {
+  productoId: number;
+  costoUnitario: string;
+}
+
+export interface CapturarCostoRollo {
+  rolloId: number;
+  costoUnitario: string;
+}
+
+export interface CapturarCostosEntradaInput {
+  costosProductos: CapturarCostoProducto[];
+  costosRollos?: CapturarCostoRollo[];
+}
+
+export interface EntradaPendienteCosto {
+  id: number;
+  folio: number;
+  fecha: string;
+  nombreUbicacion: string;
+  /** @nullable */
+  nombreProveedor: string | null;
+  rollosPendientes: number;
+  totalMetros: string;
+  totalKilos: string;
+  nombreUsuario: string;
+  overdue48h: boolean;
+}
+
+export interface EntradasPendientesCostoResult {
+  items: EntradaPendienteCosto[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export type UbicacionInventarioTipo = typeof UbicacionInventarioTipo[keyof typeof UbicacionInventarioTipo];
+
+
+export const UbicacionInventarioTipo = {
+  TIENDA: 'TIENDA',
+  BODEGA: 'BODEGA',
+  TRANSITO: 'TRANSITO',
+  EXTERNO: 'EXTERNO',
+} as const;
+
+export interface UbicacionInventario {
+  id: number;
+  nombre: string;
+  tipo: UbicacionInventarioTipo;
+  activa: boolean;
+}
+
+export type ExistenciaAgrupadaHijoUnidad = typeof ExistenciaAgrupadaHijoUnidad[keyof typeof ExistenciaAgrupadaHijoUnidad];
+
+
+export const ExistenciaAgrupadaHijoUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ExistenciaAgrupadaHijo {
+  productoId: number;
+  color: string;
+  sku: string;
+  rollosCount: number;
+  cantidadTotal: string;
+  unidad: ExistenciaAgrupadaHijoUnidad;
+}
+
+export interface ExistenciaAgrupada {
+  productoKey: string;
+  telaProducto: string;
+  coloresCount: number;
+  rollosCount: number;
+  totalMetros: string;
+  totalKilos: string;
+  colores: ExistenciaAgrupadaHijo[];
 }
 
 export interface EntradaSummary {
@@ -1046,7 +1156,8 @@ export interface EntradaSummary {
   nombreUsuario: string;
   fecha: string;
   totalRollos: number;
-  totalCosto: string;
+  /** @nullable */
+  totalCosto: string | null;
   createdAt: string;
 }
 
@@ -1982,6 +2093,22 @@ page?: number;
 pageSize?: number;
 };
 
+export type CountEntradasPendientesCosto200 = {
+  count: number;
+};
+
+export type ListEntradasPendientesCostoParams = {
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 200
+ */
+pageSize?: number;
+};
+
 export type ListRollosParams = {
 ubicacionId?: number;
 productoId?: number;
@@ -2016,6 +2143,12 @@ productoId?: number;
  * Solo ADMIN; agrega todas las ubicaciones
  */
 consolidado?: boolean;
+};
+
+export type GetExistenciasAgrupadasParams = {
+ubicacionId?: number;
+search?: string;
+includeSinExistencia?: boolean;
 };
 
 export type GetKardexParams = {

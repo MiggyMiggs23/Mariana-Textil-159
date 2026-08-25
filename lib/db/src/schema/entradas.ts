@@ -37,7 +37,8 @@ export const entradasTable = pgTable(
     fecha: timestamp("fecha", { withTimezone: true }).notNull(),
     observaciones: text("observaciones"),
     totalRollos: integer("total_rollos").notNull(),
-    totalCosto: numeric("total_costo", { precision: 12, scale: 2 }).notNull(),
+    /** Null means the entry is pending administrative cost capture. */
+    totalCosto: numeric("total_costo", { precision: 12, scale: 2 }),
     /** Client-supplied UUID for idempotency of the whole entry */
     uuidCliente: uuid("uuid_cliente").notNull().unique(),
     createdAt: timestamp("created_at", { withTimezone: true })

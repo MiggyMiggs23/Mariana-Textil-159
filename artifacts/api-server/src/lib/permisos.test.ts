@@ -185,7 +185,7 @@ await test("P-06: CAJA puede ver cobros_pagos pero no POS", async () => {
   assert.equal((await resolvePermiso(cajaUserId, "CAJA", "pos"))?.puedeVer, false);
 });
 
-await test("P-06B: TERMINAL tiene únicamente la matriz operativa de POS", async () => {
+await test("P-06B: TERMINAL conserva la matriz operativa configurada", async () => {
   const matrix = await buildPermissionMatrix(terminalUserId, "TERMINAL");
   const expected: Record<
     string,
@@ -193,6 +193,7 @@ await test("P-06B: TERMINAL tiene únicamente la matriz operativa de POS", async
   > = {
     dashboard: { ver: true, crear: false, editar: false },
     pos: { ver: true, crear: true, editar: false },
+    salidas: { ver: true, crear: false, editar: false },
     inventario: { ver: true, crear: false, editar: false },
     productos: { ver: true, crear: false, editar: false },
     clientes: { ver: true, crear: true, editar: true },
@@ -316,9 +317,13 @@ await test("P-14: validateAdminInvariants allows any value for non-ADMIN roles",
   assert.equal(err, null, "CAJA role can be restricted");
 });
 
-await test("P-15: buildPermissionMatrix returns all 25 modules", async () => {
+await test("P-15: buildPermissionMatrix returns every configured module", async () => {
   const matrix = await buildPermissionMatrix(adminUserId, "ADMIN");
-  assert.equal(Object.keys(matrix).length, 25, "Should have 25 modules");
+  assert.equal(
+    Object.keys(matrix).length,
+    MODULOS.length,
+    "Should include every configured module",
+  );
   for (const modulo of MODULOS) {
     assert.ok(modulo in matrix, `Module ${modulo} should be in matrix`);
   }
@@ -357,7 +362,7 @@ await test("P-19: CAJA can see clientes_credito", async () => {
 });
 
 await test("P-20: Dynamically updating role matrix affects future permission checks", async () => {
-  // Create a temporary role permission override for BODEGA/reportes
+  // reportes is denied by default, but remains live-configurable.
   // First get current value
   const [existing] = await db
     .select()
@@ -373,10 +378,10 @@ await test("P-20: Dynamically updating role matrix affects future permission che
   assert.ok(existing, "BODEGA/reportes should exist in seed");
   const originalVer = existing.puedeVer;
 
-  // Update it to deny
+  // Grant it live.
   await db
     .update(permisosRolTable)
-    .set({ puedeVer: false, puedeCrear: false, puedeEditar: false, puedeAutorizar: false })
+    .set({ puedeVer: true, puedeCrear: false, puedeEditar: false, puedeAutorizar: false })
     .where(
       and(
         eq(permisosRolTable.rol, "BODEGA"),
@@ -385,7 +390,7 @@ await test("P-20: Dynamically updating role matrix affects future permission che
     );
 
   const p = await resolvePermiso(bodegaUserId, "BODEGA", "reportes");
-  assert.equal(p?.puedeVer, false, "Should be denied after matrix update");
+  assert.equal(p?.puedeVer, true, "Should be granted after matrix update");
 
   // Restore
   await db
@@ -408,10 +413,27 @@ await test("P-21: BODEGA cannot see proveedores_finanzas", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-22: BODEGA can see proveedores (operativo)", async () => {
-  const p = await resolvePermiso(bodegaUserId, "BODEGA", "proveedores");
-  assert.ok(p);
-  assert.equal(p.puedeVer, true);
+await test("P-22: BODEGA has exactly the PROMPT 8 baseline", async () => {
+  const matrix = await buildPermissionMatrix(bodegaUserId, "BODEGA");
+  const expected: Record<string, { ver: boolean; crear: boolean; editar: boolean }> = {
+    dashboard: { ver: true, crear: false, editar: false },
+    inventario: { ver: true, crear: false, editar: false },
+    entradas: { ver: true, crear: true, editar: false },
+    salidas: { ver: true, crear: true, editar: false },
+    movimientos: { ver: true, crear: false, editar: false },
+    ajustes: { ver: true, crear: true, editar: false },
+  };
+  for (const modulo of MODULOS) {
+    const permission = matrix[modulo];
+    const wanted = expected[modulo] ?? { ver: false, crear: false, editar: false };
+    assert.equal(permission.puedeVer, wanted.ver, `${modulo}.ver`);
+    assert.equal(permission.puedeCrear, wanted.crear, `${modulo}.crear`);
+    assert.equal(permission.puedeEditar, wanted.editar, `${modulo}.editar`);
+    assert.equal(permission.puedeAutorizar, false, `${modulo}.autorizar`);
+  }
+  for (const modulo of ["productos", "proveedores", "contenedores", "reportes"]) {
+    assert.equal(matrix[modulo].puedeVer, false, `${modulo} must be revoked`);
+  }
 });
 
 await test("P-23: CAJA cannot see clientes_precios", async () => {
