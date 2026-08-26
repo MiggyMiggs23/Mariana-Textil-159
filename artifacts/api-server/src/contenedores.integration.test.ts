@@ -459,6 +459,11 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
         [created.users],
       );
       await pool.query("UPDATE contenedores SET entrada_id=NULL,estado='EN_TRANSITO',fecha_real_llegada=NULL WHERE usuario_id=ANY($1::int[])", [created.users]);
+      await pool.query(
+        `DELETE FROM pagos_proveedor WHERE entrada_id IN
+          (SELECT id FROM entradas WHERE usuario_id=ANY($1::int[]))`,
+        [created.users],
+      );
       await pool.query("DELETE FROM entradas WHERE usuario_id=ANY($1::int[])", [created.users]);
       await pool.query("DELETE FROM contenedores WHERE usuario_id=ANY($1::int[])", [created.users]);
       await pool.query("DELETE FROM sesiones WHERE usuario_id=ANY($1::int[])", [created.users]);

@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import ExcelJS from "exceljs";
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import {
   CancelContenedorBody,
   CancelContenedorParams,
@@ -103,8 +103,12 @@ router.get(
           ? and(
               eq(ubicacionesTable.id, user.ubicacionId),
               eq(ubicacionesTable.activa, true),
+              inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
             )
-          : eq(ubicacionesTable.activa, true);
+          : and(
+              eq(ubicacionesTable.activa, true),
+              inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+            );
       const [productos, proveedores, sitios] = await Promise.all([
         db
           .select({

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link, useLocation } from "wouter";
-import { 
-  useListContenedores, 
+import {
+  useListContenedores,
   getListContenedoresQueryKey,
   useGetResumenContenedores,
   getGetResumenContenedoresQueryKey,
@@ -38,7 +38,7 @@ export default function Contenedores() {
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const isAdmin = user?.rol === "ADMIN";
   const canCreate = user?.permisos?.find(p => p.modulo === "contenedores")?.puedeCrear || isAdmin;
-  
+
   const [activeTab, setActiveTab] = useState<ListTab>(EstadoContenedor.EN_TRANSITO);
   const [search, setSearch] = useState("");
   const [filterProveedorId, setFilterProveedorId] = useState<string>("all");
@@ -68,7 +68,7 @@ export default function Contenedores() {
     page,
     pageSize: 20
   }, {
-    query: { 
+    query: {
       queryKey: getListContenedoresQueryKey({
         estado: activeTab === "TODOS" ? undefined : activeTab,
         search: search.length >= 2 ? search : undefined,
@@ -97,7 +97,7 @@ export default function Contenedores() {
 
   const { charts, tables } = useMemo(() => {
     if (!resumen) return { charts: [], tables: [] };
-    
+
     const mesChart: ReporteChart = {
       id: "mes-chart",
       title: "Costo por Mes",
@@ -140,12 +140,10 @@ export default function Contenedores() {
         costoTotal: resumen.porProveedor.reduce((a, b) => a + Number(b.costoTotal || 0), 0)
       }
     };
-    
     if (isAdmin) {
       provTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
     }
 
-    
     const prodTable: ReporteTable = {
       id: "prod-table",
       title: "Desempeño por Producto",
@@ -162,11 +160,18 @@ export default function Contenedores() {
         contenedores: p.contenedores,
         rollos: p.rollos,
         cantidad: Number(p.cantidad),
+        costoUnitarioReal: p.costoUnitarioReal ? Number(p.costoUnitarioReal) : null,
         costoTotal: p.costoTotal ? Number(p.costoTotal) : null
       })),
       totals: {}
     };
-    if (isAdmin) prodTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
+    if (isAdmin) {
+      if (resumen.porProducto.some(p => p.costoUnitarioReal !== undefined && p.costoUnitarioReal !== null)) {
+        prodTable.columns.push({ key: "costoUnitarioReal", label: "Costo Unitario", kind: "money", economic: true });
+      }
+      prodTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
+    }
+
 
     const diffTable: ReporteTable = {
       id: "diff-table",
@@ -204,11 +209,17 @@ export default function Contenedores() {
         rollos: t.rollos,
         metros: Number(t.metros),
         kilos: Number(t.kilos),
+        costoUnitarioReal: t.costoUnitarioReal ? Number(t.costoUnitarioReal) : null,
         costoTotal: t.costoTotal ? Number(t.costoTotal) : null
       })),
       totals: {}
     };
-    if (isAdmin) telaTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
+    if (isAdmin) {
+      if (resumen.porTela.some(t => t.costoUnitarioReal !== undefined && t.costoUnitarioReal !== null)) {
+        telaTable.columns.push({ key: "costoUnitarioReal", label: "Costo Promedio", kind: "money", economic: true });
+      }
+      telaTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
+    }
 
     const colorTable: ReporteTable = {
       id: "color-table",
@@ -226,13 +237,97 @@ export default function Contenedores() {
         rollos: t.rollos,
         metros: Number(t.metros),
         kilos: Number(t.kilos),
+        costoUnitarioReal: t.costoUnitarioReal ? Number(t.costoUnitarioReal) : null,
         costoTotal: t.costoTotal ? Number(t.costoTotal) : null
       })),
       totals: {}
     };
-    if (isAdmin) colorTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
+    if (isAdmin) {
+      if (resumen.porColor.some(t => t.costoUnitarioReal !== undefined && t.costoUnitarioReal !== null)) {
+        colorTable.columns.push({ key: "costoUnitarioReal", label: "Costo Promedio", kind: "money", economic: true });
+      }
+      colorTable.columns.push({ key: "costoTotal", label: "Costo Total", kind: "money", economic: true });
+    }
 
-    return { charts: isAdmin ? [mesChart] : [], tables: [provTable, prodTable, telaTable, colorTable, diffTable] };
+    const allCharts: ReporteChart[] = [];
+    if (isAdmin) allCharts.push(mesChart);
+
+    // Proveedor charts
+    const provMetros = resumen.porProveedor.map(p => ({ proveedor: p.proveedor, metros: Number(p.metros) })).filter(p => p.metros > 0);
+    if (provMetros.length > 0) {
+      allCharts.push({
+        id: "prov-chart-metros",
+        title: "Metros por Proveedor",
+        type: "bar",
+        categoryKey: "proveedor",
+        series: [{ key: "metros", label: "Metros (m)", kind: "count" }],
+        rows: provMetros
+      });
+    }
+
+    const provKilos = resumen.porProveedor.map(p => ({ proveedor: p.proveedor, kilos: Number(p.kilos) })).filter(p => p.kilos > 0);
+    if (provKilos.length > 0) {
+      allCharts.push({
+        id: "prov-chart-kilos",
+        title: "Kilos por Proveedor",
+        type: "bar",
+        categoryKey: "proveedor",
+        series: [{ key: "kilos", label: "Kilos (kg)", kind: "count" }],
+        rows: provKilos
+      });
+    }
+
+    // Tela charts
+    const telaMetros = resumen.porTela.map(t => ({ tela: t.tela || "N/A", metros: Number(t.metros) })).filter(t => t.metros > 0);
+    if (telaMetros.length > 0) {
+      allCharts.push({
+        id: "tela-chart-metros",
+        title: "Metros por Tela",
+        type: "bar",
+        categoryKey: "tela",
+        series: [{ key: "metros", label: "Metros (m)", kind: "count" }],
+        rows: telaMetros
+      });
+    }
+
+    const telaKilos = resumen.porTela.map(t => ({ tela: t.tela || "N/A", kilos: Number(t.kilos) })).filter(t => t.kilos > 0);
+    if (telaKilos.length > 0) {
+      allCharts.push({
+        id: "tela-chart-kilos",
+        title: "Kilos por Tela",
+        type: "bar",
+        categoryKey: "tela",
+        series: [{ key: "kilos", label: "Kilos (kg)", kind: "count" }],
+        rows: telaKilos
+      });
+    }
+
+    // Color charts
+    const colorMetros = resumen.porColor.map(c => ({ color: c.color || "N/A", metros: Number(c.metros) })).filter(c => c.metros > 0);
+    if (colorMetros.length > 0) {
+      allCharts.push({
+        id: "color-chart-metros",
+        title: "Metros por Color",
+        type: "bar",
+        categoryKey: "color",
+        series: [{ key: "metros", label: "Metros (m)", kind: "count" }],
+        rows: colorMetros
+      });
+    }
+
+    const colorKilos = resumen.porColor.map(c => ({ color: c.color || "N/A", kilos: Number(c.kilos) })).filter(c => c.kilos > 0);
+    if (colorKilos.length > 0) {
+      allCharts.push({
+        id: "color-chart-kilos",
+        title: "Kilos por Color",
+        type: "bar",
+        categoryKey: "color",
+        series: [{ key: "kilos", label: "Kilos (kg)", kind: "count" }],
+        rows: colorKilos
+      });
+    }
+
+    return { charts: allCharts, tables: [provTable, prodTable, telaTable, colorTable, diffTable] };
   }, [resumen, isAdmin]);
 
   const handleExportPdf = async () => {
@@ -276,7 +371,7 @@ export default function Contenedores() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
-        
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
@@ -308,7 +403,7 @@ export default function Contenedores() {
                   })}
                 </SelectContent>
               </Select>
-              
+
               <Select value={selectedSemester} onValueChange={v => {
                 setSelectedSemester(v);
                 if (v !== "all") setSelectedQuarter("all");
@@ -339,7 +434,7 @@ export default function Contenedores() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleExportPdf} disabled={isExporting}>
                 <FileText className="w-4 h-4 mr-2" /> PDF
@@ -408,7 +503,7 @@ export default function Contenedores() {
                 </CardContent>
               </Card>
             </div>
-            
+
             <div className="bg-muted/20 border border-border/50 rounded-xl p-4">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Resumen del Periodo</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -456,17 +551,17 @@ export default function Contenedores() {
                 )}
               </div>
             </div>
-            
+
             {charts.length > 0 && (
               <div className="pt-4 grid grid-cols-1 gap-6">
                 <ReportCharts charts={charts} />
               </div>
             )}
-            
+
             {tables.length > 0 && (
               <div className="pt-4 grid grid-cols-1 xl:grid-cols-2 gap-6">
                 {tables.map(t => (
-                  <div key={t.id} className={t.id === "prov-table" ? "xl:col-span-2" : ""}>
+                  <div key={t.id} className={`min-w-0 ${t.id === "prov-table" ? "xl:col-span-2" : ""}`}>
                     <ReportTable block={t} hasEconomicAccess={isAdmin} />
                   </div>
                 ))}
@@ -487,11 +582,11 @@ export default function Contenedores() {
                   <TabsTrigger value="TODOS" className="rounded-md">Todos</TabsTrigger>
                 </TabsList>
               </Tabs>
-              
+
               <div className="relative w-full md:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Buscar proveedor, ref..." 
+                <Input
+                  placeholder="Buscar proveedor, ref..."
                   className="pl-9 bg-background border-muted-foreground/20 focus-visible:ring-sidebar"
                   value={search}
                   onChange={e => { setSearch(e.target.value); setPage(1); }}
@@ -523,9 +618,9 @@ export default function Contenedores() {
                   ))}
                 </SelectContent>
               </Select>
-              
+
               <div className="w-[200px]">
-                <ProductCombobox 
+                <ProductCombobox
                   products={(catalogos?.productos as any) || []}
                   value={filterProductoId}
                   onValueChange={v => { setFilterProductoId(v); setPage(1); }}
@@ -534,18 +629,18 @@ export default function Contenedores() {
               </div>
 
               <div className="flex items-center gap-2">
-                <Input 
-                  type="date" 
-                  className="h-8 text-xs w-[130px] bg-background" 
-                  value={filterFechaDesde} 
-                  onChange={e => { setFilterFechaDesde(e.target.value); setPage(1); }} 
+                <Input
+                  type="date"
+                  className="h-8 text-xs w-[130px] bg-background"
+                  value={filterFechaDesde}
+                  onChange={e => { setFilterFechaDesde(e.target.value); setPage(1); }}
                 />
                 <span className="text-xs text-muted-foreground">-</span>
-                <Input 
-                  type="date" 
-                  className="h-8 text-xs w-[130px] bg-background" 
-                  value={filterFechaHasta} 
-                  onChange={e => { setFilterFechaHasta(e.target.value); setPage(1); }} 
+                <Input
+                  type="date"
+                  className="h-8 text-xs w-[130px] bg-background"
+                  value={filterFechaHasta}
+                  onChange={e => { setFilterFechaHasta(e.target.value); setPage(1); }}
                 />
               </div>
             </div>
@@ -585,10 +680,10 @@ export default function Contenedores() {
                     listResult?.items.map(item => {
                       const isOverdue = item.estado === EstadoContenedor.EN_TRANSITO && item.diasParaLlegar < 0;
                       const isUrgent = item.estado === EstadoContenedor.EN_TRANSITO && item.diasParaLlegar >= 0 && item.diasParaLlegar <= 7;
-                      
+
                       return (
-                        <TableRow 
-                          key={item.id} 
+                        <TableRow
+                          key={item.id}
                           className="cursor-pointer hover:bg-muted/40 transition-colors group"
                           onClick={() => setLocation(`/contenedores/${item.id}`)}
                         >
@@ -606,8 +701,8 @@ export default function Contenedores() {
                           <TableCell>
                             <div className="flex items-center gap-2">
                               <span className={cn(
-                                "text-sm", 
-                                isOverdue ? "text-destructive font-bold" : 
+                                "text-sm",
+                                isOverdue ? "text-destructive font-bold" :
                                 isUrgent ? "text-amber-600 font-bold" : "font-medium"
                               )}>
                                 {format(parseISO(item.fechaEstimadaLlegada), "d MMM yyyy", { locale: es })}
@@ -650,7 +745,7 @@ export default function Contenedores() {
               </Table>
             </div>
           </Card>
-          
+
           {listResult && listResult.total > listResult.pageSize && (
             <div className="flex justify-center pt-4">
               <div className="flex gap-2">

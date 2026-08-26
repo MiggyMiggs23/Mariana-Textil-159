@@ -60,7 +60,9 @@ export function ProductCombobox({
   const filtered = useMemo(() => {
     const needle = normalizeSearch(query.trim());
     return products
-      .filter((product) => !activeOnly || product.activo)
+      // Some catalog endpoints already return only active products and omit
+      // the `activo` field. Exclude only an explicit false value.
+      .filter((product) => !activeOnly || product.activo !== false)
       .filter((product) => {
         if (!needle) return true;
         return normalizeSearch(

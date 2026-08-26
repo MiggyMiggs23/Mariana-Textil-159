@@ -104,7 +104,7 @@ async function validateInput(tx: Tx, input: ContenedorInput): Promise<void> {
       "INVALID_PROVIDER",
     );
   }
-  if (!site?.activa || site.tipo === "TRANSITO" || site.tipo === "EXTERNO") {
+  if (!site?.activa || (site.tipo !== "TIENDA" && site.tipo !== "BODEGA")) {
     throw new ContenedorError("Sitio inválido o inactivo.", "INVALID_SITE");
   }
   if (
@@ -660,6 +660,7 @@ export async function getContenedoresSummary(
     ]);
   const c = current.rows[0] as Record<string, unknown>;
   const p = period.rows[0] as Record<string, unknown>;
+  const nextRow = next.rows[0] as Record<string, unknown> | undefined;
   const response: Record<string, unknown> = {
     actual: {
       enTransito: Number(c.en_transito),
@@ -667,7 +668,14 @@ export async function getContenedoresSummary(
       metrosPorLlegar: Number(c.metros).toFixed(3),
       kilosPorLlegar: Number(c.kilos).toFixed(3),
       retrasados: Number(c.retrasados),
-      proximo: next.rows[0] ?? null,
+      proximo: nextRow
+        ? {
+            folio: Number(nextRow.folio),
+            proveedor: String(nextRow.proveedor),
+            fechaEstimadaLlegada: String(nextRow.fecha_estimada_llegada),
+            dias: Number(nextRow.dias),
+          }
+        : null,
     },
     periodo: {
       contenedores: Number(p.contenedores),

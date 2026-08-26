@@ -139,6 +139,18 @@ test("list and upcoming KPI contracts expose line count and calendar date", () =
   );
   assert.match(source, /lineas: Number\(row\.lineas\)/);
   assert.match(source, /p\.nombre proveedor,c\.fecha_estimada_llegada/);
+  assert.match(source, /fechaEstimadaLlegada: String\(nextRow\.fecha_estimada_llegada\)/);
   assert.match(contract, /ContenedorResumenKpisProximo:/);
   assert.match(contract, /fechaEstimadaLlegada: \{ \$ref: "#\/components\/schemas\/CalendarDate" \}/);
+});
+
+test("container destination catalogs and validation allow only active stores or warehouses", () => {
+  const domain = readFileSync(new URL("./contenedores.ts", import.meta.url), "utf8");
+  const route = readFileSync(
+    new URL("../routes/contenedores.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(domain, /site\.tipo !== "TIENDA" && site\.tipo !== "BODEGA"/);
+  assert.match(route, /inArray\(ubicacionesTable\.tipo, \["TIENDA", "BODEGA"\]\)/);
+  assert.match(route, /eq\(ubicacionesTable\.activa, true\)/);
 });
