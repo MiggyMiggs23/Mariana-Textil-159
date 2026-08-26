@@ -1,0 +1,250 @@
+# PROMPT — Precios, Supervisor, Auditoría, Protecciones y Existencias por producto
+
+Este prompt tiene **cinco bloques independientes**. Ejecútalos en orden, con un commit por bloque. No pidas aprobación entre bloques. Ante cualquier ambigüedad, toma la decisión conservadora y anótala en `replit.md`.
+
+**Reglas del proyecto que aplican a todo lo que sigue:**
+
+- El kardex es la fuente de verdad. Las existencias son un caché recalculado desde movimientos, nunca un acumulado sumado a mano.
+- Nada se borra. Toda corrección es un movimiento inverso.
+- ADMIN tiene bypass incondicional en `resolvePermiso`, en la primera línea, sin consultar tablas.
+- Metros y kilos nunca se suman entre sí. Son unidades distintas y se reportan por separado.
+- Formato numérico con la función compartida `es-MX`: coma de miles, dinero con 2 decimales, metros y kilos con 3 decimales, conteos sin decimales, folios y años sin comas. El redondeo es solo de presentación, nunca antes de calcular.
+- El margen siempre se calcula sobre el subtotal, nunca sobre el total con IVA.
+- Nunca dejes la aplicación sin compilar ni caída.
+
+---
+
+## BLOQUE 1 — Módulo de Precios
+
+Nueva pantalla **Precios**, dentro de la sección INVENTARIO de la barra lateral, después de Etiquetas.
+
+**Visible y accesible únicamente para ADMIN.** Ningún otro rol la ve en la barra lateral ni puede llamar sus endpoints. El middleware del servidor debe rechazar cualquier otro rol con 403, no solo ocultar la opción en el cliente.
+
+### Lista
+
+Tabla con todos los productos del catálogo:
+
+- SKU
+- Tela
+- Color
+- Unidad (metros o kilos)
+- Costo promedio actual por unidad, calculado desde los rollos con existencia disponible en cualquier sitio
+- Precio de lista vigente
+- Margen resultante, en porcentaje, sobre el subtotal
+- Semáforo del margen: verde si es mayor o igual a 30%, ámbar entre 15% y 30%, rojo por debajo de 15%
+- Fecha del último cambio de precio
+
+Buscador por SKU, tela y color. Filtros por unidad y por color de semáforo, para que se pueda encontrar rápido todo lo que está en rojo.
+
+### Edición
+
+**Producto por producto. No implementes cambios masivos, ni por porcentaje, ni por selección múltiple, ni importación de archivo.** Es una decisión del negocio, no una limitación técnica.
+
+Al editar un producto se abre un panel con:
+
+- El precio vigente y el costo promedio actual, en modo lectura
+- Campo del precio nuevo
+- Cálculo en vivo, conforme se escribe: margen resultante en porcentaje y en pesos por unidad, con el semáforo actualizado
+- Campo de motivo del cambio, obligatorio, texto libre de mínimo 5 caracteres
+
+**Vista previa obligatoria antes de guardar.** Un segundo paso que muestra: precio anterior, precio nuevo, diferencia absoluta y porcentual, margen anterior y margen nuevo. El botón de confirmar solo aparece en ese segundo paso.
+
+Si el precio nuevo queda por debajo del costo promedio, muestra una advertencia clara en rojo en la vista previa. **Permite guardarlo de todas formas**, porque ADMIN puede tener razones para hacerlo, pero deja constancia de la advertencia en el registro del cambio.
+
+### Historial
+
+Cada producto tiene su historial de precios. Se registra: precio anterior, precio nuevo, costo promedio al momento del cambio, margen resultante, motivo, usuario y fecha con hora.
+
+En la ficha del producto, muestra una **gráfica de línea** con la evolución del precio en el tiempo, junto con la evolución del costo promedio en una segunda línea, para que se vea de un vistazo cuándo el costo se acercó al precio.
+
+Debajo de la gráfica, la tabla del historial completo, del cambio más reciente al más antiguo.
+
+### Efecto sobre las ventas
+
+El cambio de precio afecta a las ventas futuras. **No modifica ningún ticket ya emitido, ni recalcula márgenes históricos.** El precio con el que se vendió cada rollo quedó congelado en su movimiento y ahí se queda.
+
+Recuerda que el POS permite precio libre con piso al costo del rollo específico. El precio de lista es la sugerencia que aparece precargada, no un tope.
+
+---
+
+## BLOQUE 2 — Renombrar INVENTARIOS a SUPERVISOR
+
+El rol que hoy se llama INVENTARIOS pasa a llamarse **SUPERVISOR**, en la base, en el código, en la interfaz y en la pantalla de Usuarios y Permisos. Haz la migración de datos correspondiente para que los usuarios que ya tengan el rol lo conserven con el nombre nuevo. No crees un rol nuevo ni dejes el viejo conviviendo.
+
+### Matriz de permisos por defecto
+
+**Sí tiene, con crear y editar:**
+
+- Inventario
+- Productos
+- Entradas
+- Salidas
+- Movimientos
+- Ajustes
+- Etiquetas
+- Contenedores
+- Proveedores, en modo operativo
+- Clientes, en modo operativo
+
+**Sí tiene, solo lectura:**
+
+- Reportes
+
+**No tiene, en absoluto:**
+
+- Caja, cobros, cortes y cuentas
+- POS
+- Precios
+- Usuarios, permisos, sitios y conciliación
+
+### Modo operativo, sin finanzas
+
+Esto es lo que define el rol. **El supervisor mueve mercancía y opera, pero no ve el dinero.**
+
+- En Proveedores: ve nombre, contacto, condiciones de entrega y el historial de qué llegó. **No ve costos, ni saldos, ni pagos, ni facturas.**
+- En Clientes: ve nombre, contacto, direcciones y el historial de qué se le entregó. **No ve saldos, ni crédito disponible, ni plazos, ni cobros, ni INE.**
+- En Entradas: registra rollos **sin campo de costo**, igual que BODEGA. Los rollos quedan con `costo_unitario` en NULL y no son vendibles hasta que ADMIN capture el costo. Sí se pueden mover por salida.
+- En Reportes: ve todas las pestañas de movimiento, existencias y rotación. **No ve utilidad, ni margen, ni ninguna columna de dinero.** Si una pestaña es enteramente financiera, no se la muestres.
+- En Inventario y Vista Global: ve rollos, metros, kilos y ubicaciones. **No ve valor del inventario ni costo por rollo.**
+
+### Alcance
+
+**Todas las ubicaciones**, las 7, para consulta y para operación. Es el punto que lo distingue de BODEGA, que está limitado a su sitio.
+
+Este filtro se aplica **en el servidor**, no solo en la interfaz.
+
+### Verificación obligatoria
+
+Antes de cerrar el bloque, recorre **todos** los endpoints que puede alcanzar un SUPERVISOR y confirma que ninguna respuesta incluya campos de dinero, aunque el cliente no los pinte. **El filtrado se hace en el servidor, sacando los campos de la respuesta, no ocultándolos con CSS.** Deja la lista de endpoints revisados en el commit.
+
+---
+
+## BLOQUE 3 — Bitácora de auditoría consultable
+
+Los datos de auditoría ya se están registrando. Falta la pantalla para consultarlos.
+
+Nueva entrada **Auditoría** en la sección CONFIGURACIÓN de la barra lateral, después de Conciliación. **Solo ADMIN.**
+
+### Tabla
+
+Columnas: fecha y hora, usuario, rol al momento del hecho, acción, módulo, entidad afectada con su identificador, sitio y dirección IP si está disponible.
+
+Ordenada de lo más reciente a lo más antiguo. Paginada, no cargues todo de una vez.
+
+### Filtros
+
+- Rango de fechas, con atajos de hoy, últimos 7 días, últimos 30 días y mes en curso
+- Usuario
+- Módulo
+- Tipo de acción
+- Sitio
+- Buscador de texto libre sobre la entidad afectada, para poder rastrear un folio o una serie específica
+
+### Detalle
+
+Al abrir un registro, muestra el antes y el después de lo que cambió, campo por campo, en dos columnas comparables. Si la acción fue una creación, muestra solo el después. Si fue una eliminación lógica, solo el antes.
+
+### Qué debe estar registrándose
+
+Verifica que estas acciones estén generando registro. Si alguna no lo está, agrégala:
+
+- Altas, bajas y cambios de usuarios
+- Cambios de permisos y de roles
+- Cambios de precios
+- Consultas de INE de clientes
+- Ajustes de inventario
+- Movimientos inversos y correcciones
+- Cancelaciones de tickets
+- Cambios en cuentas y cortes de caja
+- Reimpresiones de etiquetas
+- Cambios en la configuración de sitios
+- Inicios de sesión fallidos
+
+### Exportación
+
+Botón para exportar el resultado filtrado a Excel. Nada más.
+
+**La bitácora es de solo lectura, sin excepciones.** No expongas ningún endpoint que permita editar o borrar registros de auditoría, ni siquiera para ADMIN. Si existe alguno hoy, quítalo.
+
+---
+
+## BLOQUE 4 — Confirmaciones reforzadas y protección contra dejarse fuera
+
+### Confirmaciones reforzadas
+
+Para las acciones destructivas o de alto impacto, el diálogo de confirmación debe pedir que el usuario **escriba una palabra o un dato exacto**, no solo que oprima aceptar.
+
+Aplica a:
+
+- Desactivar un usuario — escribir el nombre de usuario
+- Cambiar el rol de un usuario — escribir el nombre de usuario
+- Cancelar un ticket ya cobrado — escribir el folio del ticket
+- Ajuste de inventario mayor a 10 rollos en una sola operación — escribir la palabra AJUSTE
+- Borrar un cliente — escribir el nombre del cliente
+- Desactivar un sitio — escribir el nombre del sitio
+- Cualquier operación del script de reinicio
+
+El diálogo debe decir con claridad qué va a pasar y qué no se puede deshacer. El botón de confirmar permanece deshabilitado hasta que el texto coincida exactamente.
+
+### Protección contra dejarse fuera
+
+Son tres personas de la misma familia y no hay soporte externo. Un error aquí deja el sistema inaccesible.
+
+Implementa estas reglas **en el servidor**:
+
+1. **No se puede desactivar al último ADMIN activo.** Si la operación dejaría cero ADMIN activos, rechaza con un mensaje explícito.
+2. **Un ADMIN no puede quitarse a sí mismo el rol de ADMIN.** Otro ADMIN sí puede hacerlo, siempre que quede al menos uno.
+3. **Un usuario no puede modificar sus propios permisos**, ni ampliarlos ni reducirlos.
+4. **No se puede eliminar el rol ADMIN del catálogo de roles**, ni renombrarlo, ni vaciar su matriz de permisos.
+5. Antes de guardar cualquier cambio en Usuarios o Permisos, **valida en el servidor que después del cambio siga existiendo al menos un ADMIN activo con acceso completo.** Si no, rechaza toda la operación en una sola transacción, sin aplicar cambios parciales.
+
+Cada uno de estos rechazos debe generar su registro en la bitácora de auditoría.
+
+### Prueba
+
+Escribe pruebas que intenten cada uno de los cinco escenarios y confirmen que el sistema los rechaza. **No crees usuarios ADMIN temporales con `executeSql` para probar esto.** Sigue el procedimiento de rama Neon desechable que está documentado en `replit.md`.
+
+---
+
+## BLOQUE 5 — Existencias por producto en Inventario, Productos
+
+En la pantalla de **Productos**, dentro de la sección INVENTARIO, hoy solo se ven los datos del catálogo y los precios. **No se ve cuánto hay de cada producto.** Eso hace la pantalla casi inútil para el día a día. Corrígelo.
+
+Recuerda que un producto es la combinación de tela y color, con su SKU propio. Lo que se necesita ver es **cuánto hay de cada color**, no un total de la tela.
+
+### En la lista
+
+Agrega estas columnas a cada renglón:
+
+- Rollos disponibles, conteo entero
+- Cantidad total disponible, con la unidad del producto: metros con 3 decimales, o kilos con 3 decimales
+- Número de sitios donde hay existencia
+
+Si el producto tiene cero, muestra el renglón en gris tenue con un cero explícito. **No lo escondas.** Que se vea que existe en catálogo y está agotado es información valiosa.
+
+Agrega un filtro rápido con tres opciones: todos, solo con existencia, solo agotados.
+
+### Al abrir el producto
+
+Un desglose por sitio, con las 7 ubicaciones más "En tránsito" y "Externo" cuando apliquen:
+
+| Sitio | Rollos | Cantidad |
+|---|---|---|
+
+Y debajo, la lista de los rollos individuales con su serie, su cantidad y su estado, para poder llegar hasta el rollo concreto.
+
+### De dónde salen los números
+
+Las existencias se leen del caché de existencias, que se recalcula desde el kardex. **No las sumes desde ninguna otra tabla ni las calcules en el cliente.**
+
+Cuenta únicamente los rollos **disponibles**. Los rollos en estado ABIERTO, que ya salieron a mostrador, son terminales y no cuentan como existencia. Los rollos en tránsito se muestran en su propio renglón de sitio, claramente identificados, y no se suman al inventario de ninguna tienda.
+
+### Verificación
+
+Después de implementarlo, **compara los totales de esta pantalla contra los de Vista Global y contra los de Inventario para al menos 10 productos**, incluyendo alguno que tenga rollos en tránsito. Los números tienen que coincidir exactamente. Si no coinciden, la falla está en el caché de existencias y hay que arreglarla ahí, no maquillar la vista. Reporta el resultado de esa comparación.
+
+---
+
+## Al terminar
+
+Deja en `replit.md` una nota corta de qué se agregó en cada bloque y cualquier decisión conservadora que hayas tomado por tu cuenta.
