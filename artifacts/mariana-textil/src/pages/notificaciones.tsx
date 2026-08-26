@@ -39,10 +39,21 @@ export default function Notificaciones() {
   return <AppLayout>
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div><h1 className="text-2xl font-bold text-sidebar">Notificaciones de crédito</h1><p className="text-sm text-muted-foreground">Ventas a crédito y alertas calculadas con el saldo actual.</p></div>
+        <div><h1 className="text-2xl font-bold text-sidebar">Notificaciones</h1><p className="text-sm text-muted-foreground">Avisos operativos, ventas a crédito y alertas calculadas con el saldo actual.</p></div>
         <div className="flex gap-2"><Button variant="outline" onClick={() => notifications.refetch()}><RefreshCw className="mr-2 h-4 w-4" />Actualizar</Button><Button onClick={() => markAll.mutate()} disabled={markAll.isPending}><Check className="mr-2 h-4 w-4" />Marcar todas leídas</Button></div>
       </div>
       {notifications.isLoading ? <div className="py-16 text-center text-muted-foreground">Cargando notificaciones…</div> : null}
+      <section className="space-y-3">
+        <h2 className="flex items-center gap-2 text-lg font-semibold"><AlertTriangle className="h-5 w-5 text-amber-600" />Avisos operativos</h2>
+        {!data?.sistema.length ? <Card><CardContent className="p-6 text-muted-foreground">No hay avisos operativos.</CardContent></Card> : data.sistema.map((item) =>
+          <Card key={item.id} className={item.leidaAt ? "opacity-70" : "border-amber-300 bg-amber-50/40"}>
+            <CardContent className="space-y-1 p-4">
+              <p className="font-semibold">{item.titulo}</p>
+              <p className="text-sm text-muted-foreground">{item.mensaje}</p>
+              <p className="text-xs text-muted-foreground">{new Date(item.createdAt).toLocaleString("es-MX")}</p>
+            </CardContent>
+          </Card>,
+        )}</section>
       <section className="space-y-3">
         <h2 className="flex items-center gap-2 text-lg font-semibold"><Bell className="h-5 w-5" />Ventas a crédito</h2>
         {!data?.notificaciones.length ? <Card><CardContent className="p-6 text-muted-foreground">No hay notificaciones de crédito.</CardContent></Card> : data.notificaciones.map((item) =>

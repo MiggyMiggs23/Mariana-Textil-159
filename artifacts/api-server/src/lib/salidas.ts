@@ -16,6 +16,7 @@ import {
 import {
   db,
   auditoriaTable,
+  notificacionesSistemaTable,
   productosTable,
   rollosTable,
   salidaFolioTable,
@@ -27,7 +28,6 @@ import {
   type EstadoSalida,
 } from "@workspace/db";
 import {
-  ajustarRollo,
   InventarioError,
   moverRollo,
   recibirTransferencia,
@@ -56,13 +56,9 @@ type EnviarSalidaInput = {
 type RecibirSalidaInput = {
   salidaId: number;
   usuarioId: number;
-  notaRecepcion?: string | null;
-  rollos: Array<{
-    rolloId: number;
-    recibido: boolean;
-    cantidadRecibida?: string | null;
-    notaDiferencia?: string | null;
-  }>;
+  completa: boolean;
+  nota?: string | null;
+  ip: string;
 };
 
 type SalidaHeader = typeof salidasTable.$inferSelect;
@@ -459,7 +455,7 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   return requireSalidaDetail(tx, salida.id);
 }
 
-async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
+export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   requireState(salida, ["EN_TRANSITO"], "recibir");
   const salidaRollos = await tx
@@ -467,62 +463,28 @@ async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
     .from(salidaRollosTable)
     .where(eq(salidaRollosTable.salidaId, salida.id))
     .for("update");
-  const byRolloId = new Map(salidaRollos.map((item) => [item.rolloId, item]));
-  if (new Set(input.rollos.map((item) => item.rolloId)).size !== input.rollos.length) {
-    throw new InventarioError("Un rollo no puede recibirse dos veces.", "DUPLICATE_ROLL");
+  if (!salidaRollos.length) {
+    throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
   }
-  if (input.rollos.length !== salidaRollos.length) {
-    throw new InventarioError("La recepción inicial debe confirmar todos los rollos enviados.", "INCOMPLETE_RECEIPT");
-  }
-  for (const item of input.rollos) {
-    const salidaRollo = byRolloId.get(item.rolloId);
-    if (!salidaRollo || salidaRollo.recibido) {
+  const note = input.nota?.trim() || null;
+  for (const salidaRollo of salidaRollos) {
+    if (salidaRollo.recibido) {
       throw new InventarioError("El rollo no está pendiente en esta salida.", "ROLLO_NOT_PENDING");
     }
-    const note = item.notaDiferencia?.trim() || null;
-    if (!item.recibido) {
-      if (!note || note.length < 10) {
-        throw new InventarioError("Un rollo no recibido requiere una nota de al menos 10 caracteres.", "DIFFERENCE_NOTE_REQUIRED");
-      }
-      await tx
-        .update(salidaRollosTable)
-        .set({ recibido: false, cantidadRecibida: null, notaDiferencia: note })
-        .where(eq(salidaRollosTable.id, salidaRollo.id));
-      continue;
-    }
-    const received = Number(item.cantidadRecibida);
-    if (!Number.isFinite(received) || received <= 0) {
-      throw new InventarioError("La cantidad recibida debe ser mayor a cero.", "INVALID_RECEIVED_QUANTITY");
-    }
-    const sent = Number(salidaRollo.cantidadEnviada);
-    if (received !== sent && (!note || note.length < 10)) {
-      throw new InventarioError("Toda diferencia requiere una nota de al menos 10 caracteres.", "DIFFERENCE_NOTE_REQUIRED");
-    }
     await recibirTransferencia(tx, {
-      rolloId: item.rolloId,
+      rolloId: salidaRollo.rolloId,
       ubicacionDestinoId: salida.destinoId,
       usuarioId: input.usuarioId,
       justificacion: `Recepción de salida ${salida.folio}.`,
       documentoTipo: "RECEPCION_SALIDA",
       documentoId: String(salida.id),
     });
-    if (received !== sent) {
-      await ajustarRollo(tx, {
-        rolloId: item.rolloId,
-        cantidadNueva: received.toFixed(3),
-        justificacion: `Diferencia en recepción de salida ${salida.folio}: ${note}`,
-        usuarioId: input.usuarioId,
-        documentoTipo: "RECEPCION_SALIDA",
-        documentoId: String(salida.id),
-        revisado: true,
-      });
-    }
     await tx
       .update(salidaRollosTable)
       .set({
         recibido: true,
-        cantidadRecibida: received.toFixed(3),
-        notaDiferencia: note,
+        cantidadRecibida: salidaRollo.cantidadEnviada,
+        notaDiferencia: input.completa ? null : note,
       })
       .where(eq(salidaRollosTable.id, salidaRollo.id));
   }
@@ -533,9 +495,34 @@ async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       estado: "RECIBIDA",
       usuarioRecibeId: input.usuarioId,
       recibidaAt: new Date(),
-      notaRecepcion: input.notaRecepcion?.trim() || null,
+      notaRecepcion: note,
     })
     .where(eq(salidasTable.id, salida.id));
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    accion: "RECIBIR",
+    entidad: "salidas",
+    entidadId: String(salida.id),
+    datosDespues: {
+      folio: salida.folio,
+      origenId: salida.origenId,
+      destinoId: salida.destinoId,
+      completa: input.completa,
+      nota: note,
+    },
+    ip: input.ip,
+  });
+  if (!input.completa) {
+    await tx.insert(notificacionesSistemaTable).values({
+      tipo: "SALIDA_INCOMPLETA",
+      titulo: `Salida ${salida.folio} reportada incompleta`,
+      mensaje: note
+        ? `La recepción fue marcada incompleta. Nota: ${note}`
+        : "La recepción fue marcada incompleta sin nota.",
+      entidad: "salidas",
+      entidadId: String(salida.id),
+    });
+  }
   return requireSalidaDetail(tx, salida.id);
 }
 

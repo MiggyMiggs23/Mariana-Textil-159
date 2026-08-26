@@ -4,6 +4,7 @@ import {
   integer,
   jsonb,
   pgTable,
+  serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
@@ -30,6 +31,29 @@ export const auditoriaTable = pgTable(
     index("auditoria_entidad_idx").on(table.entidad, table.entidadId),
     index("auditoria_usuario_created_idx").on(
       table.usuarioId,
+      table.createdAt,
+    ),
+  ],
+);
+
+/** Generic persistent administrator notifications emitted by operational flows. */
+export const notificacionesSistemaTable = pgTable(
+  "notificaciones_sistema",
+  {
+    id: serial("id").primaryKey(),
+    tipo: text("tipo").notNull(),
+    titulo: text("titulo").notNull(),
+    mensaje: text("mensaje").notNull(),
+    entidad: text("entidad").notNull(),
+    entidadId: text("entidad_id").notNull(),
+    leidaAt: timestamp("leida_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("notificaciones_sistema_leida_created_idx").on(
+      table.leidaAt,
       table.createdAt,
     ),
   ],

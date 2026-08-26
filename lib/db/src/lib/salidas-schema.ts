@@ -126,6 +126,17 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         ultimo_folio integer NOT NULL DEFAULT 499
       );
 
+      CREATE TABLE IF NOT EXISTS notificaciones_sistema (
+        id serial PRIMARY KEY,
+        tipo text NOT NULL,
+        titulo text NOT NULL,
+        mensaje text NOT NULL,
+        entidad text NOT NULL,
+        entidad_id text NOT NULL,
+        leida_at timestamptz,
+        created_at timestamptz NOT NULL DEFAULT now()
+      );
+
       CREATE INDEX IF NOT EXISTS salidas_origen_estado_idx ON salidas (origen_id, estado);
       CREATE INDEX IF NOT EXISTS salidas_destino_estado_idx ON salidas (destino_id, estado);
       CREATE INDEX IF NOT EXISTS salidas_estado_idx ON salidas (estado);
@@ -137,6 +148,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       CREATE INDEX IF NOT EXISTS salida_rollos_salida_idx ON salida_rollos (salida_id);
       CREATE INDEX IF NOT EXISTS salida_rollos_linea_idx ON salida_rollos (linea_id);
       CREATE INDEX IF NOT EXISTS salida_rollos_rollo_idx ON salida_rollos (rollo_id);
+      CREATE INDEX IF NOT EXISTS notificaciones_sistema_leida_created_idx
+        ON notificaciones_sistema (leida_at, created_at);
 
       INSERT INTO salida_folio (id, ultimo_folio)
       VALUES (1, 499)

@@ -115,6 +115,15 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Se conservaron `transportista` y `notaEnvio`. Las columnas históricas del esquema físico se mantienen para no destruir metadatos de instalaciones con filas migradas, pero se retiraron del contrato y del flujo activo.
 - Decisión conservadora: el endpoint de recepción no se expone todavía; su interfaz y reglas de sitio pertenecen al Bloque 3. El núcleo existente queda adaptado a `EN_TRANSITO → RECIBIDA`.
 
+## Parte 1.5, Bloque 3 — Recepción por QR
+
+- La hoja foliada imprime un QR grande con una URL del origen relativo desplegado hacia `Salidas → Recepción`, incluyendo el folio. El login conserva esa ruta de retorno.
+- Recepción es una pestaña interna de Salidas. Usa `CampoEscaneo` para teclado, pistola o cámara por el mismo callback y acepta tanto la URL del QR como un folio numérico.
+- El servidor lista y permite recibir únicamente salidas `EN_TRANSITO` destinadas al sitio asignado. La única excepción es ADMIN con alcance `TODAS`; cualquier rol con sitio asignado puede ejecutar la recepción.
+- Una confirmación aterriza todos los rollos mediante `recibirTransferencia`. Una segunda confirmación se rechaza por estado. La casilla “¿Llegó completo?” inicia marcada; si se desmarca, la nota sigue siendo opcional y se crea una notificación operativa persistente para ADMIN.
+- Cada recepción registra en auditoría usuario, instante, IP, origen, destino, indicador de recepción completa y nota.
+- Decisión conservadora: “incompleta” describe la condición reportada de la entrega, pero no deja rollos varados ni abre recepción rollo por rollo; todos aterrizan con la cantidad enviada y la incidencia queda en auditoría/notificación.
+
 
 ## Permission modules (24 total)
 

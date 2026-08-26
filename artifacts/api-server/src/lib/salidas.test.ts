@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
-import { db, ensureSalidasSchema, existenciasTable, movimientosTable, pool, productosTable, rollosTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
+import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { crearRollo, InventarioError } from "./inventario";
-import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas } from "./salidas";
+import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas, recibirSalida } from "./salidas";
 
 if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   test("salidas DB suite is guarded", { skip: "TEST_DATABASE_URL required" }, () => {});
@@ -71,6 +71,49 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     await db.transaction((tx) => enviarSalida(tx, { salidaId: s2.id, usuarioId: user, transportista: "Prueba" }));
     await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s2.id, user, "Motivo válido de cancelación")), (e: unknown) => e instanceof InventarioError && e.code === "INVALID_SALIDA_STATE");
   });
+  test("one-step reception lands every roll, rejects duplicates, audits, and alerts ADMIN when incomplete", async () => {
+    const f = await fx();
+    const rs = await Promise.all(["14", "16"].map((q) => roll(f.productoId, f.origenId, q)));
+    const salida = await create(f.origenId, f.destinoId, rs.map((r) => r.id));
+    await db.transaction((tx) => enviarSalida(tx, {
+      salidaId: salida.id,
+      usuarioId: user,
+      transportista: "Prueba",
+    }));
+    const received = await db.transaction((tx) => recibirSalida(tx, {
+      salidaId: salida.id,
+      usuarioId: user,
+      completa: false,
+      nota: "Caja exterior dañada",
+      ip: "127.0.0.1",
+    }));
+    assert.equal(received.estado, "RECIBIDA");
+    assert.equal(received.totalCantidadRecibida, received.totalCantidadEnviada);
+    const landed = await db.select().from(rollosTable).where(inArray(rollosTable.id, rs.map((r) => r.id)));
+    assert.ok(landed.every((r) => r.ubicacionId === f.destinoId && r.estado === "DISPONIBLE"));
+    await assert.rejects(
+      db.transaction((tx) => recibirSalida(tx, {
+        salidaId: salida.id,
+        usuarioId: user,
+        completa: true,
+        ip: "127.0.0.1",
+      })),
+      (error: unknown) =>
+        error instanceof InventarioError && error.code === "INVALID_SALIDA_STATE",
+    );
+    const [audit] = await db.select().from(auditoriaTable).where(and(
+      eq(auditoriaTable.entidad, "salidas"),
+      eq(auditoriaTable.entidadId, String(salida.id)),
+      eq(auditoriaTable.accion, "RECIBIR"),
+    ));
+    assert.equal(audit?.ip, "127.0.0.1");
+    assert.equal(audit?.datosDespues?.completa, false);
+    const [notification] = await db.select().from(notificacionesSistemaTable).where(and(
+      eq(notificacionesSistemaTable.entidad, "salidas"),
+      eq(notificacionesSistemaTable.entidadId, String(salida.id)),
+    ));
+    assert.equal(notification?.tipo, "SALIDA_INCOMPLETA");
+  });
   test("new states remain readable and ARMANDO totals split metres/kilos", async () => {
     const m = await fx("METRO"), k = await fx("KILO"); const rm = await roll(m.productoId, m.origenId, "7"), rk = await roll(k.productoId, k.origenId, "3");
     const sm = await create(m.origenId, m.destinoId, [rm.id]); const sk = await create(k.origenId, k.destinoId, [rk.id]);
@@ -80,7 +123,19 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     assert.ok((await listarSalidas({ page: 1, pageSize: 100 })).items.some((x) => x.id === sm.id));
   });
   after(async () => { await db.transaction(async (tx) => {
-    if (docs.length) { await tx.delete(salidaRollosTable).where(inArray(salidaRollosTable.salidaId, docs)); await tx.delete(salidaLineasTable).where(inArray(salidaLineasTable.salidaId, docs)); await tx.delete(salidasTable).where(inArray(salidasTable.id, docs)); }
+    if (docs.length) {
+      await tx.delete(notificacionesSistemaTable).where(and(
+        eq(notificacionesSistemaTable.entidad, "salidas"),
+        inArray(notificacionesSistemaTable.entidadId, docs.map(String)),
+      ));
+      await tx.delete(auditoriaTable).where(and(
+        eq(auditoriaTable.entidad, "salidas"),
+        inArray(auditoriaTable.entidadId, docs.map(String)),
+      ));
+      await tx.delete(salidaRollosTable).where(inArray(salidaRollosTable.salidaId, docs));
+      await tx.delete(salidaLineasTable).where(inArray(salidaLineasTable.salidaId, docs));
+      await tx.delete(salidasTable).where(inArray(salidasTable.id, docs));
+    }
     if (rolls.length) { await tx.delete(movimientosTable).where(inArray(movimientosTable.rolloId, rolls)); await tx.delete(rollosTable).where(inArray(rollosTable.id, rolls)); }
     if (products.length) { await tx.delete(existenciasTable).where(inArray(existenciasTable.productoId, products)); await tx.delete(productosTable).where(inArray(productosTable.id, products)); }
     if (locations.length) await tx.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, locations));

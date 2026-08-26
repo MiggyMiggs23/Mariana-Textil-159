@@ -2860,6 +2860,41 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /salidas/recepcion:
+    get:
+      operationId: listSalidasRecepcion
+      tags: [salidas]
+      summary: Lista salidas en tránsito que el usuario puede recibir en su sitio
+      responses:
+        "200":
+          description: Salidas pendientes de recepción
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SalidaResumen" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /salidas/recepcion/{folio}:
+    get:
+      operationId: getSalidaRecepcion
+      tags: [salidas]
+      summary: Obtiene por folio una salida en tránsito que el usuario puede recibir
+      parameters:
+        - in: path
+          name: folio
+          required: true
+          schema: { type: number }
+      responses:
+        "200":
+          description: Resumen de la salida pendiente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SalidaDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /salidas/rollos/serie/{serie}:
     get:
       operationId: escanearRolloSalida
@@ -2952,6 +2987,27 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /salidas/{id}/recibir:
+    post:
+      operationId: recibirSalida
+      tags: [salidas]
+      summary: Recibe en un paso todos los rollos de una salida en tránsito
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecepcionSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /admin/dashboard/realtime:
     get:
       operationId: getAdminRealtimeDashboard
@@ -4857,11 +4913,14 @@ components:
         count: { type: number }
     NotificacionesPanel:
       type: object
-      required: [notificaciones, porVencer, vencidas, clientesConMultiplesVencidas]
+      required: [notificaciones, sistema, porVencer, vencidas, clientesConMultiplesVencidas]
       properties:
         notificaciones:
           type: array
           items: { $ref: "#/components/schemas/NotificacionCredito" }
+        sistema:
+          type: array
+          items: { $ref: "#/components/schemas/NotificacionSistema" }
         porVencer:
           type: array
           items: { $ref: "#/components/schemas/AlertaCredito" }
@@ -5958,6 +6017,12 @@ components:
       properties:
         transportista: { type: string, minLength: 1 }
         notaEnvio: { type: ["string", "null"] }
+    RecepcionSalidaInput:
+      type: object
+      required: [completa]
+      properties:
+        completa: { type: boolean }
+        nota: { type: ["string", "null"], maxLength: 2000 }
     SalidaResumen:
       type: object
       required:
@@ -6081,6 +6146,18 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/SalidaRollo"
+    NotificacionSistema:
+      type: object
+      required: [id, tipo, titulo, mensaje, entidad, entidadId, leidaAt, createdAt]
+      properties:
+        id: { type: number }
+        tipo: { type: string }
+        titulo: { type: string }
+        mensaje: { type: string }
+        entidad: { type: string }
+        entidadId: { type: string }
+        leidaAt: { type: ["string", "null"], format: date-time }
+        createdAt: { type: string, format: date-time }
     TipoPagoProveedor:
       type: string
       enum: [COMPRA, PAGO, AJUSTE]

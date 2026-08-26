@@ -13,14 +13,20 @@ import {
   EnviarSalidaResponse,
   ExportarSalidasQueryParams,
   GetSalidaParams,
+  GetSalidaRecepcionParams,
+  GetSalidaRecepcionResponse,
   GetUbicacionesSalidaResponse,
+  ListSalidasRecepcionResponse,
   ListSalidasQueryParams,
+  RecibirSalidaBody,
+  RecibirSalidaParams,
+  RecibirSalidaResponse,
 } from "@workspace/api-zod";
 import { db, productosTable, rollosTable, salidasTable, ubicacionesTable, usuariosTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
-import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas } from "../lib/salidas";
+import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas, recibirSalida } from "../lib/salidas";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   EXCEL_NUMBER_FORMAT,
@@ -94,6 +100,23 @@ function canOperate(auth: AuthContext, ubicacionId: number): boolean {
     auth.user.rol === "ADMIN" ||
     auth.user.rol === "SUPERVISOR" ||
     auth.user.ubicacionId === ubicacionId
+  );
+}
+
+function canReceiveAtDestination(auth: AuthContext, destinoId: number): boolean {
+  return (
+    (auth.user.rol === "ADMIN" && auth.user.alcanceConsulta === "TODAS") ||
+    (auth.user.ubicacionId != null && auth.user.ubicacionId === destinoId)
+  );
+}
+
+function requireReceivingSite(auth: AuthContext, destinoId: number): void {
+  if (canReceiveAtDestination(auth, destinoId)) return;
+  throw new InventarioError(
+    auth.user.ubicacionId == null
+      ? "No tienes una ubicación asignada para recibir salidas."
+      : "Esta salida está destinada a otra ubicación y no puedes recibirla.",
+    "SALIDA_LOCATION_FORBIDDEN",
   );
 }
 
@@ -314,6 +337,64 @@ router.get(
 );
 
 router.get(
+  "/salidas/recepcion",
+  requireSession,
+  async (req, res, next) => {
+    try {
+      const auth = req.auth!;
+      const canReceiveAll =
+        auth.user.rol === "ADMIN" && auth.user.alcanceConsulta === "TODAS";
+      if (!canReceiveAll && auth.user.ubicacionId == null) {
+        throw new InventarioError(
+          "No tienes una ubicación asignada para recibir salidas.",
+          "SALIDA_LOCATION_FORBIDDEN",
+        );
+      }
+      const result = await listarSalidas({
+        estados: ["EN_TRANSITO"],
+        destinoId: canReceiveAll ? undefined : auth.user.ubicacionId!,
+        page: 1,
+        pageSize: 100,
+      });
+      res.json(ListSalidasRecepcionResponse.parse(result.items));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.get(
+  "/salidas/recepcion/:folio",
+  requireSession,
+  async (req, res, next) => {
+    try {
+      const { folio } = GetSalidaRecepcionParams.parse(req.params);
+      const [header] = await db
+        .select()
+        .from(salidasTable)
+        .where(eq(salidasTable.folio, folio))
+        .limit(1);
+      if (!header) {
+        throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+      }
+      requireReceivingSite(req.auth!, header.destinoId);
+      if (header.estado !== "EN_TRANSITO") {
+        throw new InventarioError(
+          header.estado === "RECIBIDA"
+            ? "Esta salida ya fue recibida."
+            : `Solo se pueden recibir salidas EN_TRANSITO; esta salida está ${header.estado}.`,
+          "INVALID_SALIDA_STATE",
+        );
+      }
+      const detail = await buildSalidaDetail(db, header.id);
+      res.json(GetSalidaRecepcionResponse.parse(detail));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.get(
   "/salidas/rollos/serie/:serie",
   requireSession,
   requierePermiso("salidas", "crear"),
@@ -376,6 +457,34 @@ router.post(
         }),
       );
       res.json(EnviarSalidaResponse.parse(result));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.post(
+  "/salidas/:id/recibir",
+  requireSession,
+  async (req, res, next) => {
+    try {
+      const { id } = RecibirSalidaParams.parse(req.params);
+      const body = RecibirSalidaBody.parse(req.body);
+      const header = await loadHeader(id);
+      if (!header) {
+        throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+      }
+      requireReceivingSite(req.auth!, header.destinoId);
+      const detail = await db.transaction((tx) =>
+        recibirSalida(tx, {
+          salidaId: id,
+          usuarioId: req.auth!.user.id,
+          completa: body.completa,
+          nota: body.nota,
+          ip: req.ip || req.socket.remoteAddress || "desconocida",
+        }),
+      );
+      res.json(RecibirSalidaResponse.parse(detail));
     } catch (error) {
       if (!sendError(error, res)) next(error);
     }

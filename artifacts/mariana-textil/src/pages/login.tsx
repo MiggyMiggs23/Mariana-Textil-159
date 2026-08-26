@@ -33,6 +33,10 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const [, setLocation] = useLocation();
+  const requestedReturn = new URLSearchParams(window.location.search).get("returnTo");
+  const returnTo = requestedReturn?.startsWith("/") && !requestedReturn.startsWith("//")
+    ? requestedReturn
+    : "/";
   const queryClient = useQueryClient();
   const { data: user, isLoading: isChecking } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
@@ -51,9 +55,9 @@ export default function Login() {
 
   useEffect(() => {
     if (user && !isChecking) {
-      setLocation("/");
+      setLocation(returnTo);
     }
-  }, [user, isChecking, setLocation]);
+  }, [user, isChecking, returnTo, setLocation]);
 
   const onSubmit = (data: LoginForm) => {
     login.mutate(
@@ -61,7 +65,7 @@ export default function Login() {
       {
         onSuccess: () => {
           queryClient.invalidateQueries();
-          setLocation("/");
+          setLocation(returnTo);
         },
         onError: (err: any) => {
           toast.error("Error de acceso", {

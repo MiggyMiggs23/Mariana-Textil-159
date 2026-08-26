@@ -3327,6 +3327,16 @@ export const ListNotificacionesResponse = zod.object({
   "leidaAt": zod.coerce.date().nullable(),
   "createdAt": zod.coerce.date()
 })),
+  "sistema": zod.array(zod.object({
+  "id": zod.number(),
+  "tipo": zod.string(),
+  "titulo": zod.string(),
+  "mensaje": zod.string(),
+  "entidad": zod.string(),
+  "entidadId": zod.string(),
+  "leidaAt": zod.coerce.date().nullable(),
+  "createdAt": zod.coerce.date()
+})),
   "porVencer": zod.array(zod.object({
   "movimientoId": zod.number(),
   "ticketId": zod.number().nullable(),
@@ -4296,6 +4306,121 @@ export const GetUbicacionesSalidaResponse = zod.array(GetUbicacionesSalidaRespon
 
 
 /**
+ * @summary Lista salidas en tránsito que el usuario puede recibir en su sitio
+ */
+export const ListSalidasRecepcionResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number(),
+  "nombreDestino": zod.string(),
+  "armadoPorId": zod.number(),
+  "nombreArmadoPor": zod.string(),
+  "fechaArmado": zod.coerce.date(),
+  "totalProductos": zod.number(),
+  "totalCantidadSolicitada": zod.string(),
+  "totalCantidadEnviada": zod.string(),
+  "totalCantidadRecibida": zod.string(),
+  "totalRollos": zod.number().optional(),
+  "totalMetros": zod.string().optional(),
+  "totalKilos": zod.string().optional(),
+  "usuarioId": zod.number().nullish(),
+  "nombreUsuario": zod.string().nullish(),
+  "transportista": zod.string().nullish(),
+  "observaciones": zod.string().nullish(),
+  "diferenciasPendientes": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListSalidasRecepcionResponse = zod.array(ListSalidasRecepcionResponseItem)
+
+
+/**
+ * @summary Obtiene por folio una salida en tránsito que el usuario puede recibir
+ */
+export const GetSalidaRecepcionParams = zod.object({
+  "folio": zod.coerce.number()
+})
+
+export const GetSalidaRecepcionResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number(),
+  "nombreDestino": zod.string(),
+  "armadoPorId": zod.number(),
+  "nombreArmadoPor": zod.string(),
+  "fechaArmado": zod.coerce.date(),
+  "totalProductos": zod.number(),
+  "totalCantidadSolicitada": zod.string(),
+  "totalCantidadEnviada": zod.string(),
+  "totalCantidadRecibida": zod.string(),
+  "totalRollos": zod.number().optional(),
+  "totalMetros": zod.string().optional(),
+  "totalKilos": zod.string().optional(),
+  "usuarioId": zod.number().nullish(),
+  "nombreUsuario": zod.string().nullish(),
+  "transportista": zod.string().nullable(),
+  "observaciones": zod.string().nullish(),
+  "diferenciasPendientes": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}).and(zod.object({
+  "uuidCliente": zod.string(),
+  "enviadoPorId": zod.number().nullable(),
+  "nombreEnviadoPor": zod.string().nullable(),
+  "fechaEnvio": zod.coerce.date().nullable(),
+  "transportista": zod.string().nullable(),
+  "notaEnvio": zod.string().nullable(),
+  "recibidoPorId": zod.number().nullable(),
+  "nombreRecibidoPor": zod.string().nullable(),
+  "fechaRecepcion": zod.coerce.date().nullable(),
+  "notaRecepcion": zod.string().nullable(),
+  "canceladoPorId": zod.number().nullable(),
+  "nombreCanceladoPor": zod.string().nullable(),
+  "fechaCancelacion": zod.coerce.date().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "cantidadSolicitada": zod.string(),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string(),
+  "rollosSolicitados": zod.number().nullable(),
+  "rollosEnviados": zod.number(),
+  "rollosRecibidos": zod.number(),
+  "nota": zod.string().nullish()
+})),
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "lineaId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string().nullish(),
+  "recibido": zod.boolean().nullable(),
+  "diferencia": zod.string().nullable(),
+  "notaDiferencia": zod.string().nullish(),
+  "cantidadActual": zod.string().optional(),
+  "productoId": zod.number().optional(),
+  "sku": zod.string().optional(),
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO']).optional()
+}))
+}))
+
+
+/**
  * @summary Consulta una serie exacta disponible en el origen
  */
 export const EscanearRolloSalidaParams = zod.object({
@@ -4512,6 +4637,98 @@ export const EnviarSalidaBody = zod.object({
 })
 
 export const EnviarSalidaResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number(),
+  "nombreDestino": zod.string(),
+  "armadoPorId": zod.number(),
+  "nombreArmadoPor": zod.string(),
+  "fechaArmado": zod.coerce.date(),
+  "totalProductos": zod.number(),
+  "totalCantidadSolicitada": zod.string(),
+  "totalCantidadEnviada": zod.string(),
+  "totalCantidadRecibida": zod.string(),
+  "totalRollos": zod.number().optional(),
+  "totalMetros": zod.string().optional(),
+  "totalKilos": zod.string().optional(),
+  "usuarioId": zod.number().nullish(),
+  "nombreUsuario": zod.string().nullish(),
+  "transportista": zod.string().nullable(),
+  "observaciones": zod.string().nullish(),
+  "diferenciasPendientes": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}).and(zod.object({
+  "uuidCliente": zod.string(),
+  "enviadoPorId": zod.number().nullable(),
+  "nombreEnviadoPor": zod.string().nullable(),
+  "fechaEnvio": zod.coerce.date().nullable(),
+  "transportista": zod.string().nullable(),
+  "notaEnvio": zod.string().nullable(),
+  "recibidoPorId": zod.number().nullable(),
+  "nombreRecibidoPor": zod.string().nullable(),
+  "fechaRecepcion": zod.coerce.date().nullable(),
+  "notaRecepcion": zod.string().nullable(),
+  "canceladoPorId": zod.number().nullable(),
+  "nombreCanceladoPor": zod.string().nullable(),
+  "fechaCancelacion": zod.coerce.date().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "cantidadSolicitada": zod.string(),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string(),
+  "rollosSolicitados": zod.number().nullable(),
+  "rollosEnviados": zod.number(),
+  "rollosRecibidos": zod.number(),
+  "nota": zod.string().nullish()
+})),
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "lineaId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'ABIERTO', 'VENDIDO', 'BAJA']),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string().nullish(),
+  "recibido": zod.boolean().nullable(),
+  "diferencia": zod.string().nullable(),
+  "notaDiferencia": zod.string().nullish(),
+  "cantidadActual": zod.string().optional(),
+  "productoId": zod.number().optional(),
+  "sku": zod.string().optional(),
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO']).optional()
+}))
+}))
+
+
+/**
+ * @summary Recibe en un paso todos los rollos de una salida en tránsito
+ */
+export const RecibirSalidaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const recibirSalidaBodyNotaMax = 2000;
+
+
+
+export const RecibirSalidaBody = zod.object({
+  "completa": zod.boolean(),
+  "nota": zod.string().max(recibirSalidaBodyNotaMax).nullish()
+})
+
+export const RecibirSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),

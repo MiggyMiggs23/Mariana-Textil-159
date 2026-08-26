@@ -91,9 +91,10 @@ function ProtectedRoute({ component: Component, allowedModule, allowedAction = "
 
   useEffect(() => {
     if (error) {
-      setLocation('/login');
+      const returnTo = location.startsWith("/") ? location : "/";
+      setLocation(`/login?returnTo=${encodeURIComponent(returnTo)}`);
     }
-  }, [error, setLocation]);
+  }, [error, location, setLocation]);
 
   useEffect(() => {
     if (user && location === "/") {
@@ -184,7 +185,7 @@ function Router() {
         <Route path="/entradas/:id/documento" component={() => <ProtectedRoute component={EntradaDocumento} allowedModule={Modules.ENTRADAS} />} />
         <Route path="/entradas/:id/etiquetas" component={() => <ProtectedRoute component={EntradaEtiquetas} allowedModule={Modules.ENTRADAS} />} />
 
-        <Route path="/salidas" component={() => <ProtectedRoute component={Salidas} allowedModule={Modules.SALIDAS} />} />
+        <Route path="/salidas" component={() => <ProtectedRoute component={Salidas} />} />
         <Route path="/salidas/nueva" component={() => <ProtectedRoute component={SalidaNueva} allowedModule={Modules.SALIDAS} allowedAction="crear" />} />
         <Route path="/salidas/:id/documento/salida" component={() => <ProtectedRoute component={SalidaDocumento} allowedModule={Modules.SALIDAS} />} />
         <Route path="/salidas/:id" component={() => <ProtectedRoute component={SalidaDetail} allowedModule={Modules.SALIDAS} />} />

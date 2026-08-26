@@ -1568,8 +1568,21 @@ export interface NotificacionesNoLeidasCount {
   count: number;
 }
 
+export interface NotificacionSistema {
+  id: number;
+  tipo: string;
+  titulo: string;
+  mensaje: string;
+  entidad: string;
+  entidadId: string;
+  /** @nullable */
+  leidaAt: string | null;
+  createdAt: string;
+}
+
 export interface NotificacionesPanel {
   notificaciones: NotificacionCredito[];
+  sistema: NotificacionSistema[];
   porVencer: AlertaCredito[];
   vencidas: AlertaCredito[];
   clientesConMultiplesVencidas: ClienteConNotasVencidas[];
@@ -2522,6 +2535,15 @@ export interface EnvioSalidaInput {
   transportista: string;
   /** @nullable */
   notaEnvio?: string | null;
+}
+
+export interface RecepcionSalidaInput {
+  completa: boolean;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  nota?: string | null;
 }
 
 export interface SalidaResumen {

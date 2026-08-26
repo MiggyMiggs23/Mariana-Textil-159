@@ -10,6 +10,7 @@ import {
 import {
   db,
   notificacionesCreditoTable,
+  notificacionesSistemaTable,
   pool,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
@@ -49,10 +50,16 @@ function serializeNotificationDates<T extends {
 router.get("/notificaciones", async (req, res, next): Promise<void> => {
   try {
     if (!requireLiteralAdmin(req, res)) return;
-    const notifications = await db
-      .select()
-      .from(notificacionesCreditoTable)
-      .orderBy(asc(notificacionesCreditoTable.leidaAt), desc(notificacionesCreditoTable.createdAt));
+    const [notifications, systemNotifications] = await Promise.all([
+      db
+        .select()
+        .from(notificacionesCreditoTable)
+        .orderBy(asc(notificacionesCreditoTable.leidaAt), desc(notificacionesCreditoTable.createdAt)),
+      db
+        .select()
+        .from(notificacionesSistemaTable)
+        .orderBy(asc(notificacionesSistemaTable.leidaAt), desc(notificacionesSistemaTable.createdAt)),
+    ]);
 
     // Aging is intentionally computed from the ledger's current FIFO balance.
     // These are not notification records and therefore change as payments and
@@ -89,6 +96,11 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
     `);
     const parsed = ListNotificacionesResponse.parse({
         notificaciones: notifications.map(present),
+        sistema: systemNotifications.map((row) => ({
+          ...row,
+          leidaAt: row.leidaAt?.toISOString() ?? null,
+          createdAt: row.createdAt.toISOString(),
+        })),
         porVencer: all.filter((row) => row.estado === "POR_VENCER"),
         vencidas: overdue,
         clientesConMultiplesVencidas: multiples.rows.map((row) => ({
@@ -110,11 +122,19 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
 router.get("/notificaciones/no-leidas/count", async (req, res, next): Promise<void> => {
   try {
     if (!requireLiteralAdmin(req, res)) return;
-    const [row] = await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(notificacionesCreditoTable)
-      .where(isNull(notificacionesCreditoTable.leidaAt));
-    res.json(CountNotificacionesNoLeidasResponse.parse({ count: row?.count ?? 0 }));
+    const [[credit], [system]] = await Promise.all([
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(notificacionesCreditoTable)
+        .where(isNull(notificacionesCreditoTable.leidaAt)),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(notificacionesSistemaTable)
+        .where(isNull(notificacionesSistemaTable.leidaAt)),
+    ]);
+    res.json(CountNotificacionesNoLeidasResponse.parse({
+      count: (credit?.count ?? 0) + (system?.count ?? 0),
+    }));
   } catch (error) {
     next(error);
   }
@@ -123,10 +143,16 @@ router.get("/notificaciones/no-leidas/count", async (req, res, next): Promise<vo
 router.post("/notificaciones/leer-todas", async (req, res, next): Promise<void> => {
   try {
     if (!requireLiteralAdmin(req, res)) return;
-    await db
-      .update(notificacionesCreditoTable)
-      .set({ leidaAt: new Date() })
-      .where(isNull(notificacionesCreditoTable.leidaAt));
+    await db.transaction(async (tx) => {
+      await tx
+        .update(notificacionesCreditoTable)
+        .set({ leidaAt: new Date() })
+        .where(isNull(notificacionesCreditoTable.leidaAt));
+      await tx
+        .update(notificacionesSistemaTable)
+        .set({ leidaAt: new Date() })
+        .where(isNull(notificacionesSistemaTable.leidaAt));
+    });
     res.json(MarkAllNotificacionesReadResponse.parse({ count: 0 }));
   } catch (error) {
     next(error);

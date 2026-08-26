@@ -8,9 +8,11 @@
 import type { AlertaCredito } from './alertaCredito';
 import type { ClienteConNotasVencidas } from './clienteConNotasVencidas';
 import type { NotificacionCredito } from './notificacionCredito';
+import type { NotificacionSistema } from './notificacionSistema';
 
 export interface NotificacionesPanel {
   notificaciones: NotificacionCredito[];
+  sistema: NotificacionSistema[];
   porVencer: AlertaCredito[];
   vencidas: AlertaCredito[];
   clientesConMultiplesVencidas: ClienteConNotasVencidas[];

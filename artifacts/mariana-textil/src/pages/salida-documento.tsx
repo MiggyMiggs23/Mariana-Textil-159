@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, MapPin, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@workspace/number-format";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function SalidaDocumento() {
   const { id } = useParams();
@@ -32,6 +33,8 @@ export default function SalidaDocumento() {
   const isAvailable = true; // or just remove the check
 
   const dateObj = new Date(salida.createdAt);
+  const receptionPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&folio=${salida.folio}`;
+  const receptionUrl = new URL(receptionPath, window.location.origin).toString();
 
   // Pagination logic: max 12 rolls per page for better landscape fit
   const rollosPerPage = 12;
@@ -84,6 +87,16 @@ export default function SalidaDocumento() {
                 </div>
               </div>
               <div className="flex items-center gap-6">
+                <div className="flex flex-col items-center gap-1">
+                  <QRCodeSVG
+                    value={receptionUrl}
+                    size={112}
+                    level="M"
+                    includeMargin
+                    aria-label={`QR para recibir salida ${salida.folio}`}
+                  />
+                  <span className="text-[9px] font-bold uppercase">Escanear para recibir</span>
+                </div>
                 <div className="text-right">
                   <div className="text-gray-500 font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
                   <div className="text-sm font-semibold mt-1">Página {formatNumber(pageIndex + 1, { kind: "count" })} de {formatNumber(totalPages, { kind: "count" })}</div>

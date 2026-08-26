@@ -182,6 +182,7 @@ import type {
   ProveedoresResumen,
   RateLimitedResponse,
   RecalcularInput,
+  RecepcionSalidaInput,
   ReporteSeccion,
   ReportesCatalogos,
   RevertirMovimientoInput,
@@ -194,6 +195,7 @@ import type {
   SalidaInput,
   SalidaListResult,
   SalidaMostradorInput,
+  SalidaResumen,
   SalidaRolloEscaneado,
   ServerTime,
   SesionCaja,
@@ -9835,6 +9837,160 @@ export function useGetUbicacionesSalida<TData = Awaited<ReturnType<typeof getUbi
 
 
 
+export const getListSalidasRecepcionUrl = () => {
+
+
+
+
+  return `/api/salidas/recepcion`
+}
+
+/**
+ * @summary Lista salidas en tránsito que el usuario puede recibir en su sitio
+ */
+export const listSalidasRecepcion = async ( options?: Parameters<typeof customFetch>[1]): Promise<SalidaResumen[]> => {
+
+  return customFetch<SalidaResumen[]>(getListSalidasRecepcionUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSalidasRecepcionQueryKey = () => {
+    return [
+    `/api/salidas/recepcion`
+    ] as const;
+    }
+
+
+export const getListSalidasRecepcionQueryOptions = <TData = Awaited<ReturnType<typeof listSalidasRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSalidasRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSalidasRecepcionQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSalidasRecepcion>>> = ({ signal }) => listSalidasRecepcion({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSalidasRecepcion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSalidasRecepcionQueryResult = NonNullable<Awaited<ReturnType<typeof listSalidasRecepcion>>>
+export type ListSalidasRecepcionQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista salidas en tránsito que el usuario puede recibir en su sitio
+ */
+
+export function useListSalidasRecepcion<TData = Awaited<ReturnType<typeof listSalidasRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSalidasRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSalidasRecepcionQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetSalidaRecepcionUrl = (folio: number,) => {
+
+
+
+
+  return `/api/salidas/recepcion/${folio}`
+}
+
+/**
+ * @summary Obtiene por folio una salida en tránsito que el usuario puede recibir
+ */
+export const getSalidaRecepcion = async (folio: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+
+  return customFetch<SalidaDetail>(getGetSalidaRecepcionUrl(folio),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSalidaRecepcionQueryKey = (folio: number,) => {
+    return [
+    `/api/salidas/recepcion/${folio}`
+    ] as const;
+    }
+
+
+export const getGetSalidaRecepcionQueryOptions = <TData = Awaited<ReturnType<typeof getSalidaRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(folio: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSalidaRecepcionQueryKey(folio);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSalidaRecepcion>>> = ({ signal }) => getSalidaRecepcion(folio, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: folio !== null && folio !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSalidaRecepcionQueryResult = NonNullable<Awaited<ReturnType<typeof getSalidaRecepcion>>>
+export type GetSalidaRecepcionQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+
+/**
+ * @summary Obtiene por folio una salida en tránsito que el usuario puede recibir
+ */
+
+export function useGetSalidaRecepcion<TData = Awaited<ReturnType<typeof getSalidaRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(
+ folio: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSalidaRecepcionQueryOptions(folio,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getEscanearRolloSalidaUrl = (serie: string,
     params: EscanearRolloSalidaParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -10143,6 +10299,78 @@ export const useEnviarSalida = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getEnviarSalidaMutationOptions(options));
+    }
+
+export const getRecibirSalidaUrl = (id: number,) => {
+
+
+
+
+  return `/api/salidas/${id}/recibir`
+}
+
+/**
+ * @summary Recibe en un paso todos los rollos de una salida en tránsito
+ */
+export const recibirSalida = async (id: number,
+    recepcionSalidaInput: RecepcionSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
+
+  return customFetch<SalidaDetailResponseResponse>(getRecibirSalidaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(recepcionSalidaInput)
+  }
+);}
+
+
+
+
+
+export const getRecibirSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirSalida>>, TError,{id: number;data: BodyType<RecepcionSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recibirSalida>>, TError,{id: number;data: BodyType<RecepcionSalidaInput>}, TContext> => {
+
+const mutationKey = ['recibirSalida'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recibirSalida>>, {id: number;data: BodyType<RecepcionSalidaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  recibirSalida(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecibirSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof recibirSalida>>>
+    export type RecibirSalidaMutationBody = BodyType<RecepcionSalidaInput>
+    export type RecibirSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Recibe en un paso todos los rollos de una salida en tránsito
+ */
+export const useRecibirSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirSalida>>, TError,{id: number;data: BodyType<RecepcionSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recibirSalida>>,
+        TError,
+        {id: number;data: BodyType<RecepcionSalidaInput>},
+        TContext
+      > => {
+      return useMutation(getRecibirSalidaMutationOptions(options));
     }
 
 export const getGetAdminRealtimeDashboardUrl = (params?: GetAdminRealtimeDashboardParams,) => {
