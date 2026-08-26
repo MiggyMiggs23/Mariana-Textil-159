@@ -3119,8 +3119,139 @@ paths:
                   threshold: { type: number, const: 3 }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/catalogos:
+    get:
+      operationId: getReportesCatalogos
+      tags: [reportes]
+      summary: Catálogos disponibles para filtros de reportes
+      responses:
+        "200":
+          description: Catálogos visibles dentro del alcance del usuario
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReportesCatalogos" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/{seccion}:
+    get:
+      operationId: getReporteSeccion
+      tags: [reportes]
+      summary: Reporte analítico de sólo lectura
+      parameters:
+        - name: seccion
+          in: path
+          required: true
+          schema: { type: string, enum: [ventas, utilidad, inventario, mapas-calor, color, compras, clientes] }
+        - $ref: "#/components/parameters/ReportePeriodo"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/ReporteUbicacionIds"
+        - $ref: "#/components/parameters/ReporteProductoIds"
+        - $ref: "#/components/parameters/ReporteTelas"
+        - $ref: "#/components/parameters/ReporteColores"
+        - $ref: "#/components/parameters/ReporteUnidades"
+        - $ref: "#/components/parameters/ReporteUsuarioIds"
+        - $ref: "#/components/parameters/ReporteClienteIds"
+        - $ref: "#/components/parameters/ReporteProveedorIds"
+        - $ref: "#/components/parameters/ReporteFormasPago"
+        - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteMargenUmbral"
+        - $ref: "#/components/parameters/ReporteCoberturaCritico"
+        - $ref: "#/components/parameters/ReporteCoberturaBajo"
+        - $ref: "#/components/parameters/ReporteCoberturaNormal"
+        - $ref: "#/components/parameters/ReporteCoberturaExceso"
+      responses:
+        "200":
+          description: Bloques data-driven del reporte
+          content: { application/json: { schema: { $ref: "#/components/schemas/ReporteSeccion" } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/{seccion}/export.xlsx:
+    get:
+      operationId: exportReporteSeccionXlsx
+      tags: [reportes]
+      summary: Exporta un reporte a XLSX
+      parameters:
+        - name: seccion
+          in: path
+          required: true
+          schema: { type: string, enum: [ventas, utilidad, inventario, mapas-calor, color, compras, clientes] }
+        - $ref: "#/components/parameters/ReportePeriodo"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/ReporteUbicacionIds"
+        - $ref: "#/components/parameters/ReporteProductoIds"
+        - $ref: "#/components/parameters/ReporteTelas"
+        - $ref: "#/components/parameters/ReporteColores"
+        - $ref: "#/components/parameters/ReporteUnidades"
+        - $ref: "#/components/parameters/ReporteUsuarioIds"
+        - $ref: "#/components/parameters/ReporteClienteIds"
+        - $ref: "#/components/parameters/ReporteProveedorIds"
+        - $ref: "#/components/parameters/ReporteFormasPago"
+        - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteMargenUmbral"
+        - $ref: "#/components/parameters/ReporteCoberturaCritico"
+        - $ref: "#/components/parameters/ReporteCoberturaBajo"
+        - $ref: "#/components/parameters/ReporteCoberturaNormal"
+        - $ref: "#/components/parameters/ReporteCoberturaExceso"
+      responses:
+        "200": { description: Archivo XLSX, content: { application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: { schema: { type: string, format: binary } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/{seccion}/export.pdf:
+    get:
+      operationId: exportReporteSeccionPdf
+      tags: [reportes]
+      summary: Exporta un reporte a PDF
+      parameters:
+        - name: seccion
+          in: path
+          required: true
+          schema: { type: string, enum: [ventas, utilidad, inventario, mapas-calor, color, compras, clientes] }
+        - $ref: "#/components/parameters/ReportePeriodo"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/ReporteUbicacionIds"
+        - $ref: "#/components/parameters/ReporteProductoIds"
+        - $ref: "#/components/parameters/ReporteTelas"
+        - $ref: "#/components/parameters/ReporteColores"
+        - $ref: "#/components/parameters/ReporteUnidades"
+        - $ref: "#/components/parameters/ReporteUsuarioIds"
+        - $ref: "#/components/parameters/ReporteClienteIds"
+        - $ref: "#/components/parameters/ReporteProveedorIds"
+        - $ref: "#/components/parameters/ReporteFormasPago"
+        - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteMargenUmbral"
+        - $ref: "#/components/parameters/ReporteCoberturaCritico"
+        - $ref: "#/components/parameters/ReporteCoberturaBajo"
+        - $ref: "#/components/parameters/ReporteCoberturaNormal"
+        - $ref: "#/components/parameters/ReporteCoberturaExceso"
+      responses:
+        "200": { description: Archivo PDF, content: { application/pdf: { schema: { type: string, format: binary } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 components:
   parameters:
+    ReportePeriodo:
+      name: periodo
+      in: query
+      schema: { type: string, enum: [diario, semanal, mensual, trimestral, semestral, anual, personalizado], default: mensual }
+    ReporteUbicacionIds: { name: ubicacionIds, in: query, schema: { type: string } }
+    ReporteProductoIds: { name: productoIds, in: query, schema: { type: string } }
+    ReporteTelas: { name: telas, in: query, schema: { type: string } }
+    ReporteColores: { name: colores, in: query, schema: { type: string } }
+    ReporteUnidades: { name: unidades, in: query, schema: { type: string } }
+    ReporteUsuarioIds: { name: usuarioIds, in: query, schema: { type: string } }
+    ReporteClienteIds: { name: clienteIds, in: query, schema: { type: string } }
+    ReporteProveedorIds: { name: proveedorIds, in: query, schema: { type: string } }
+    ReporteFormasPago: { name: formasPago, in: query, schema: { type: string } }
+    ReporteFacturado: { name: facturado, in: query, schema: { type: boolean } }
+    ReporteMargenUmbral: { name: margenUmbral, in: query, schema: { type: number, default: 15 } }
+    ReporteCoberturaCritico: { name: coberturaCritico, in: query, schema: { type: number, default: 7 } }
+    ReporteCoberturaBajo: { name: coberturaBajo, in: query, schema: { type: number, default: 15 } }
+    ReporteCoberturaNormal: { name: coberturaNormal, in: query, schema: { type: number, default: 60 } }
+    ReporteCoberturaExceso: { name: coberturaExceso, in: query, schema: { type: number, default: 90 } }
     AnalyticsDesde:
       name: desde
       in: query
@@ -3251,6 +3382,66 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    ReportePrimitive:
+      oneOf: [{ type: string }, { type: number }, { type: boolean }, { type: "null" }]
+    ReporteKpi:
+      type: object
+      required: [id, label, value, kind]
+      properties:
+        id: { type: string }
+        label: { type: string }
+        value: { $ref: "#/components/schemas/ReportePrimitive" }
+        kind: { type: string, enum: [money, quantity, count, percentage, days] }
+        unit: { type: string }
+        comparisonPrevious: { type: number }
+        comparisonYearAgo: { type: number }
+        estimated: { type: boolean }
+        economic: { type: boolean }
+    ReporteChart:
+      type: object
+      required: [id, title, type, categoryKey, series, rows]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        type: { type: string, enum: [line, bar, stacked-bar, heatmap, treemap, scatter] }
+        categoryKey: { type: string }
+        series: { type: array, items: { type: object, required: [key, label], properties: { key: { type: string }, label: { type: string }, kind: { type: string }, economic: { type: boolean }, estimated: { type: boolean } } } }
+        rows: { type: array, items: { type: object, additionalProperties: { $ref: "#/components/schemas/ReportePrimitive" } } }
+    ReporteTable:
+      type: object
+      required: [id, title, columns, rows, totals]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        columns: { type: array, items: { type: object, required: [key, label, kind], properties: { key: { type: string }, label: { type: string }, kind: { type: string }, economic: { type: boolean }, estimated: { type: boolean } } } }
+        rows: { type: array, items: { type: object, additionalProperties: { $ref: "#/components/schemas/ReportePrimitive" } } }
+        totals: { type: object, additionalProperties: { $ref: "#/components/schemas/ReportePrimitive" } }
+    ReporteSeccion:
+      type: object
+      required: [section, generatedAt, hasEconomicAccess, range, activeFilters, warnings, kpis, charts, tables]
+      properties:
+        section: { type: string }
+        generatedAt: { type: string, format: date-time }
+        hasEconomicAccess: { type: boolean }
+        range: { type: object, required: [desde, hasta, previousDesde, previousHasta, yearAgoDesde, yearAgoHasta], properties: { desde: { type: string, format: date-time }, hasta: { type: string, format: date-time }, previousDesde: { type: string, format: date-time }, previousHasta: { type: string, format: date-time }, yearAgoDesde: { type: string, format: date-time }, yearAgoHasta: { type: string, format: date-time } } }
+        activeFilters: { type: array, items: { type: string } }
+        warnings: { type: array, items: { type: string } }
+        kpis: { type: array, items: { $ref: "#/components/schemas/ReporteKpi" } }
+        charts: { type: array, items: { $ref: "#/components/schemas/ReporteChart" } }
+        tables: { type: array, items: { $ref: "#/components/schemas/ReporteTable" } }
+    ReportesCatalogos:
+      type: object
+      required: [sites, products, fabrics, colors, units, users, clients, suppliers, paymentMethods]
+      properties:
+        sites: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        products: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        fabrics: { type: array, items: { type: string } }
+        colors: { type: array, items: { type: string } }
+        units: { type: array, items: { type: string } }
+        users: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        clients: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        suppliers: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        paymentMethods: { type: array, items: { type: string } }
     RolloEtiqueta:
       type: object
       required: [id, serie, productoId, producto, sku, cantidad, unidad, sitioId, sitio, estado, createdAt, reimpresionesCount, alertaReimpresiones]

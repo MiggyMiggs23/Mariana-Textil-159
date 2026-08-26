@@ -5,6 +5,140 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export type ReportePrimitive = string | number | boolean | null;
+
+export type ReporteKpiKind = typeof ReporteKpiKind[keyof typeof ReporteKpiKind];
+
+
+export const ReporteKpiKind = {
+  money: 'money',
+  quantity: 'quantity',
+  count: 'count',
+  percentage: 'percentage',
+  days: 'days',
+} as const;
+
+export interface ReporteKpi {
+  id: string;
+  label: string;
+  value: ReportePrimitive;
+  kind: ReporteKpiKind;
+  unit?: string;
+  comparisonPrevious?: number;
+  comparisonYearAgo?: number;
+  estimated?: boolean;
+  economic?: boolean;
+}
+
+export type ReporteChartType = typeof ReporteChartType[keyof typeof ReporteChartType];
+
+
+export const ReporteChartType = {
+  line: 'line',
+  bar: 'bar',
+  'stacked-bar': 'stacked-bar',
+  heatmap: 'heatmap',
+  treemap: 'treemap',
+  scatter: 'scatter',
+} as const;
+
+export type ReporteChartSeriesItem = {
+  key: string;
+  label: string;
+  kind?: string;
+  economic?: boolean;
+  estimated?: boolean;
+};
+
+export type ReporteChartRowsItem = {[key: string]: ReportePrimitive};
+
+export interface ReporteChart {
+  id: string;
+  title: string;
+  type: ReporteChartType;
+  categoryKey: string;
+  series: ReporteChartSeriesItem[];
+  rows: ReporteChartRowsItem[];
+}
+
+export type ReporteTableColumnsItem = {
+  key: string;
+  label: string;
+  kind: string;
+  economic?: boolean;
+  estimated?: boolean;
+};
+
+export type ReporteTableRowsItem = {[key: string]: ReportePrimitive};
+
+export type ReporteTableTotals = {[key: string]: ReportePrimitive};
+
+export interface ReporteTable {
+  id: string;
+  title: string;
+  columns: ReporteTableColumnsItem[];
+  rows: ReporteTableRowsItem[];
+  totals: ReporteTableTotals;
+}
+
+export type ReporteSeccionRange = {
+  desde: string;
+  hasta: string;
+  previousDesde: string;
+  previousHasta: string;
+  yearAgoDesde: string;
+  yearAgoHasta: string;
+};
+
+export interface ReporteSeccion {
+  section: string;
+  generatedAt: string;
+  hasEconomicAccess: boolean;
+  range: ReporteSeccionRange;
+  activeFilters: string[];
+  warnings: string[];
+  kpis: ReporteKpi[];
+  charts: ReporteChart[];
+  tables: ReporteTable[];
+}
+
+export type ReportesCatalogosSitesItem = {
+  id: number;
+  label: string;
+};
+
+export type ReportesCatalogosProductsItem = {
+  id: number;
+  label: string;
+};
+
+export type ReportesCatalogosUsersItem = {
+  id: number;
+  label: string;
+};
+
+export type ReportesCatalogosClientsItem = {
+  id: number;
+  label: string;
+};
+
+export type ReportesCatalogosSuppliersItem = {
+  id: number;
+  label: string;
+};
+
+export interface ReportesCatalogos {
+  sites: ReportesCatalogosSitesItem[];
+  products: ReportesCatalogosProductsItem[];
+  fabrics: string[];
+  colors: string[];
+  units: string[];
+  users: ReportesCatalogosUsersItem[];
+  clients: ReportesCatalogosClientsItem[];
+  suppliers: ReportesCatalogosSuppliersItem[];
+  paymentMethods: string[];
+}
+
 export type RolloEtiquetaUnidad = typeof RolloEtiquetaUnidad[keyof typeof RolloEtiquetaUnidad];
 
 
@@ -2961,6 +3095,49 @@ export type ConflictResponse = Error;
  */
 export type RateLimitedResponse = Error;
 
+export type ReportePeriodoParameter = typeof ReportePeriodoParameter[keyof typeof ReportePeriodoParameter];
+
+
+export const ReportePeriodoParameter = {
+  diario: 'diario',
+  semanal: 'semanal',
+  mensual: 'mensual',
+  trimestral: 'trimestral',
+  semestral: 'semestral',
+  anual: 'anual',
+  personalizado: 'personalizado',
+} as const;
+
+export type ReporteUbicacionIdsParameter = string;
+
+export type ReporteProductoIdsParameter = string;
+
+export type ReporteTelasParameter = string;
+
+export type ReporteColoresParameter = string;
+
+export type ReporteUnidadesParameter = string;
+
+export type ReporteUsuarioIdsParameter = string;
+
+export type ReporteClienteIdsParameter = string;
+
+export type ReporteProveedorIdsParameter = string;
+
+export type ReporteFormasPagoParameter = string;
+
+export type ReporteFacturadoParameter = boolean;
+
+export type ReporteMargenUmbralParameter = number;
+
+export type ReporteCoberturaCriticoParameter = number;
+
+export type ReporteCoberturaBajoParameter = number;
+
+export type ReporteCoberturaNormalParameter = number;
+
+export type ReporteCoberturaExcesoParameter = number;
+
 /**
  * Día inicial en America/Mexico_City
  */
@@ -3547,5 +3724,92 @@ productoId?: number;
 export type ContarAlertasEtiquetas200 = {
   count: number;
   threshold: 3;
+};
+
+export type GetReporteSeccionParams = {
+periodo?: ReportePeriodoParameter;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionIds?: ReporteUbicacionIdsParameter;
+productoIds?: ReporteProductoIdsParameter;
+telas?: ReporteTelasParameter;
+colores?: ReporteColoresParameter;
+unidades?: ReporteUnidadesParameter;
+usuarioIds?: ReporteUsuarioIdsParameter;
+clienteIds?: ReporteClienteIdsParameter;
+proveedorIds?: ReporteProveedorIdsParameter;
+formasPago?: ReporteFormasPagoParameter;
+facturado?: ReporteFacturadoParameter;
+margenUmbral?: ReporteMargenUmbralParameter;
+coberturaCritico?: ReporteCoberturaCriticoParameter;
+coberturaBajo?: ReporteCoberturaBajoParameter;
+coberturaNormal?: ReporteCoberturaNormalParameter;
+coberturaExceso?: ReporteCoberturaExcesoParameter;
+};
+
+export type ExportReporteSeccionXlsxParams = {
+periodo?: ReportePeriodoParameter;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionIds?: ReporteUbicacionIdsParameter;
+productoIds?: ReporteProductoIdsParameter;
+telas?: ReporteTelasParameter;
+colores?: ReporteColoresParameter;
+unidades?: ReporteUnidadesParameter;
+usuarioIds?: ReporteUsuarioIdsParameter;
+clienteIds?: ReporteClienteIdsParameter;
+proveedorIds?: ReporteProveedorIdsParameter;
+formasPago?: ReporteFormasPagoParameter;
+facturado?: ReporteFacturadoParameter;
+margenUmbral?: ReporteMargenUmbralParameter;
+coberturaCritico?: ReporteCoberturaCriticoParameter;
+coberturaBajo?: ReporteCoberturaBajoParameter;
+coberturaNormal?: ReporteCoberturaNormalParameter;
+coberturaExceso?: ReporteCoberturaExcesoParameter;
+};
+
+export type ExportReporteSeccionPdfParams = {
+periodo?: ReportePeriodoParameter;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionIds?: ReporteUbicacionIdsParameter;
+productoIds?: ReporteProductoIdsParameter;
+telas?: ReporteTelasParameter;
+colores?: ReporteColoresParameter;
+unidades?: ReporteUnidadesParameter;
+usuarioIds?: ReporteUsuarioIdsParameter;
+clienteIds?: ReporteClienteIdsParameter;
+proveedorIds?: ReporteProveedorIdsParameter;
+formasPago?: ReporteFormasPagoParameter;
+facturado?: ReporteFacturadoParameter;
+margenUmbral?: ReporteMargenUmbralParameter;
+coberturaCritico?: ReporteCoberturaCriticoParameter;
+coberturaBajo?: ReporteCoberturaBajoParameter;
+coberturaNormal?: ReporteCoberturaNormalParameter;
+coberturaExceso?: ReporteCoberturaExcesoParameter;
 };
 

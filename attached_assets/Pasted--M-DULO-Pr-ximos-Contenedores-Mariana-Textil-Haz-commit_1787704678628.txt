@@ -1,0 +1,286 @@
+# MÓDULO — Próximos Contenedores
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# PARA QUÉ SIRVE
+
+Registrar la mercancía que viene en camino, principalmente de importación, antes de que llegue físicamente.
+
+Sirve para dos cosas:
+
+1. **Saber qué está por llegar** y cuándo, para planear espacio en bodega y anticipar disponibilidad
+2. **Llevar el control anual de compras por contenedor**: cuánto se compró, de qué productos, en qué cantidades y a qué costo real
+
+**Mantenlo simple.** No es un sistema de logística ni de seguimiento de embarques. Es un registro de lo que viene y su enlace con la entrada cuando llegue.
+
+**Respeta el motor.** Este módulo **no toca inventario** mientras el contenedor esté en tránsito. Los rollos se crean hasta que se registra la entrada, con el flujo que ya existe.
+
+---
+
+# PARTE 1 — Registrar un contenedor
+
+## Datos del contenedor
+
+- **Folio** — consecutivo automático, iniciando en 1
+- **Proveedor** (obligatorio) — selector de proveedores activos
+- **Referencia** (opcional) — número de contenedor, de embarque o de pedido, como texto libre
+- **Fecha de pedido** — cuándo se hizo el pedido
+- **Fecha estimada de llegada a puerto** (obligatoria)
+- **Sitio destino** (obligatorio) — a qué bodega o tienda va a llegar
+- **Notas** (opcional)
+
+## Productos que trae
+
+Lista de líneas, una por producto y color:
+
+| Producto | Color | SKU | Cantidad esperada | Unidad | Rollos esperados |
+
+- Buscador de producto por tela, color o SKU, con filtrado en vivo
+- La unidad se toma del producto: metro o kilo
+- **Rollos esperados** es opcional; a veces el packing list solo dice la cantidad total
+- Se pueden agregar cuantas líneas hagan falta
+- Cada línea se puede editar o eliminar mientras el contenedor no haya llegado
+
+**Totales al pie:** número de líneas, total de rollos esperados, total de metros y total de kilos, siempre separados.
+
+## Estados
+
+| Estado | Cuándo |
+|---|---|
+| **En tránsito** | Registrado, aún no llega |
+| **Recibido** | Ya llegó y se ligó a una entrada |
+| **Cancelado** | El pedido se canceló |
+
+Un contenedor **en tránsito** se puede editar libremente. Uno **recibido** ya no.
+
+Cancelar requiere motivo obligatorio de al menos 10 caracteres.
+
+---
+
+# PARTE 2 — Enlace con la entrada
+
+**Un contenedor llega en una sola entrada.**
+
+## Cómo funciona
+
+Cuando la mercancía llega, se registra la entrada con el flujo que ya existe: se capturan los rollos con sus metrajes reales, sus costos, y se generan las etiquetas.
+
+En la pantalla de Entrada, agrega un campo opcional: **"Contenedor"**, con un selector de los contenedores en tránsito cuyo sitio destino coincida con el sitio de la entrada.
+
+Al seleccionarlo:
+- La entrada queda ligada a ese contenedor
+- Al guardar la entrada, el contenedor pasa automáticamente a estado **Recibido**
+- Se registra la **fecha real de llegada**
+
+**Un contenedor solo se puede ligar a una entrada.** Si ya está recibido, no aparece en el selector.
+
+## Comparativo esperado contra recibido
+
+Una vez recibido, el detalle del contenedor muestra la comparación:
+
+| Producto | Color | Esperado | **Recibido** | **Diferencia** | Rollos esperados | Rollos recibidos |
+
+- Las diferencias se resaltan: en rojo si llegó menos, en amarillo si llegó más
+- **Días en tránsito**: entre la fecha de pedido y la fecha real de llegada
+- **Diferencia contra la fecha estimada**: si llegó antes o después, y cuántos días
+
+Con el costo real de la entrada, muestra también:
+- **Costo total del contenedor**
+- **Costo por unidad de cada producto**
+
+Estos datos vienen de la entrada, no se capturan aquí.
+
+## Base de datos
+
+**`contenedores`**
+- id (serial, PK)
+- folio (int, único, consecutivo desde 1)
+- proveedor_id (int, FK)
+- referencia (text, nullable)
+- fecha_pedido (date, nullable)
+- fecha_estimada_llegada (date)
+- fecha_real_llegada (date, nullable)
+- sitio_destino_id (int, FK a ubicaciones)
+- entrada_id (int, FK a entradas, nullable, único)
+- estado (enum: EN_TRANSITO, RECIBIDO, CANCELADO)
+- notas (text, nullable)
+- motivo_cancelacion (text, nullable)
+- usuario_id (int, FK), created_at, updated_at
+- Índices en (estado), (proveedor_id), (fecha_estimada_llegada)
+
+**`contenedor_lineas`**
+- id, contenedor_id (FK), producto_id (FK)
+- cantidad_esperada (decimal 10,3)
+- rollos_esperados (int, nullable)
+- nota (text, nullable)
+
+Las cantidades recibidas **no se guardan aquí**: se leen de la entrada ligada. Así no hay dos versiones de la misma verdad.
+
+---
+
+# PARTE 3 — Listado
+
+Pantalla principal del módulo. Pestañas por estado:
+
+- **En tránsito** — lo que viene en camino
+- **Recibidos**
+- **Todos**
+
+Tabla ordenada por fecha estimada de llegada, la más próxima primero:
+
+| Folio | Proveedor | Referencia | Fecha estimada | **Días para llegar** | Sitio destino | Líneas | Rollos | Metros | Kilos | Estado |
+
+**Alertas visuales:**
+- Contenedor que llega en **7 días o menos**: resaltado
+- Contenedor cuya fecha estimada **ya pasó** y sigue en tránsito: en rojo, con los días de retraso
+
+Filtros por proveedor, sitio destino, rango de fechas y producto. Buscador por folio o referencia.
+
+## Detalle
+
+- Encabezado con folio, proveedor, referencia, estado, fechas y sitio destino
+- Tabla de líneas con lo esperado, y si ya llegó, el comparativo contra lo recibido
+- Enlace a la entrada, si está ligada
+- Notas
+- Botones de editar, cancelar y ligar entrada, según el estado y el permiso
+
+---
+
+# PARTE 4 — Resumen y control anual
+
+Pestaña **Resumen** dentro del módulo.
+
+## Situación actual
+
+Tarjetas:
+- **Contenedores en tránsito** ahora mismo
+- **Rollos por llegar**
+- **Metros por llegar** y **kilos por llegar**, separados
+- **Próximo en llegar**: folio, proveedor y en cuántos días
+- **Contenedores retrasados**: cuántos pasaron su fecha estimada
+
+## Control anual
+
+Con selector de año, y también de trimestre y semestre.
+
+**Resumen del periodo:**
+- Contenedores recibidos
+- **Costo total** de todos ellos
+- Costo promedio por contenedor
+- Rollos, metros y kilos totales recibidos
+- Días promedio en tránsito
+- Cumplimiento de fecha: cuántos llegaron a tiempo, antes o después de lo estimado
+
+**Por proveedor:**
+
+| Proveedor | Contenedores | Costo total | Participación | Rollos | Metros | Kilos | Días promedio en tránsito | Cumplimiento de fecha |
+
+Con gráfica de barras.
+
+**Por producto:**
+
+| Producto | Color | SKU | Contenedores en que vino | Rollos | Cantidad total | Costo total | **Costo por unidad** |
+
+Ordenable. Responde: **qué se importa más y a qué costo real.**
+
+**Por tela y por color:** las mismas dos tablas agrupadas, con gráficas. El análisis por color sirve para saber qué se pide más de cada tono.
+
+**Evolución mensual:** gráfica de barras con el costo de los contenedores recibidos cada mes del año, y comparativo contra el año anterior.
+
+**Diferencias acumuladas:** cuánto se pidió contra cuánto llegó en el periodo, por producto. Un proveedor que sistemáticamente manda menos de lo declarado se detecta aquí.
+
+Todo exportable a Excel y PDF.
+
+---
+
+# PARTE 5 — Permisos
+
+Módulo `contenedores`:
+
+| Rol | Ver | Crear | Editar | Autorizar (cancelar) |
+|---|---|---|---|---|
+| ADMIN | acceso total por bypass | | | |
+| INVENTARIOS | sí | sí | sí | no |
+| BODEGA | sí | no | no | no |
+| TERMINAL | no | no | no | no |
+| CAJA | no | no | no | no |
+
+- **Los datos de costo** solo se muestran a ADMIN. Se omiten de la respuesta JSON para los demás roles.
+- BODEGA ve qué viene en camino a su sitio, pero no los costos
+- Ligar una entrada a un contenedor requiere el mismo permiso que crear la entrada
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No toques inventario mientras el contenedor esté en tránsito
+- No crees rollos ni movimientos desde este módulo
+- No guardes las cantidades recibidas en las líneas del contenedor: se leen de la entrada
+- No permitas ligar un contenedor a más de una entrada
+- No permitas editar un contenedor ya recibido
+- No muestres costos a roles distintos de ADMIN
+- No sumes metros con kilos
+- No construyas seguimiento de embarque, aduanas ni logística: solo el registro
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Registro:**
+1. Se crea un contenedor con proveedor, fecha estimada, sitio destino y varias líneas
+2. Los totales separan metros de kilos
+3. Un contenedor en tránsito se puede editar
+4. Cancelar sin motivo suficiente: **se rechaza**
+
+**Enlace con entrada:**
+5. Al registrar una entrada, el selector muestra solo contenedores en tránsito del mismo sitio
+6. Al guardar la entrada ligada, el contenedor pasa a Recibido con su fecha real
+7. Un contenedor recibido ya no aparece en el selector
+8. Un contenedor recibido no se puede editar
+9. El comparativo muestra correctamente esperado, recibido y diferencia
+10. Los días en tránsito y la diferencia contra la fecha estimada se calculan bien
+11. El costo del contenedor viene de la entrada, no se captura aparte
+
+**Listado:**
+12. Los contenedores se ordenan por fecha estimada, el más próximo primero
+13. Un contenedor que llega en 5 días aparece resaltado
+14. Uno con fecha vencida aparece en rojo con sus días de retraso
+
+**Resumen:**
+15. Las tarjetas de situación actual muestran los totales correctos
+16. El control anual suma bien costos, rollos y cantidades
+17. El análisis por producto muestra el costo por unidad real
+18. El análisis por color agrupa correctamente
+19. Las diferencias acumuladas detectan lo pedido contra lo llegado
+
+**Permisos:**
+20. BODEGA ve los contenedores de su sitio **sin costos** en la respuesta JSON
+21. TERMINAL y CAJA: **403** en cualquier endpoint del módulo
+22. INVENTARIOS puede crear y editar pero no cancelar: **403**
+
+**Inventario:**
+23. Registrar un contenedor **no genera** movimientos ni rollos
+24. Las existencias no cambian hasta que se registra la entrada
+
+**Regresión:**
+25. Las 12 pruebas del motor siguen pasando
+26. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos con su módulo y acción de permiso
+5. Confirmación de que el módulo no toca inventario
+6. Salida completa de la corrida de pruebas
+7. Confirmación de que las pruebas corrieron en base aislada
+8. Cómo pruebo el flujo completo: registrar un contenedor, ligarlo a una entrada y ver el comparativo

@@ -30,6 +30,8 @@
     "test:admin-alertas-integration": "NODE_ENV=test tsx --test src/admin-alertas.integration.test.ts",
     "test:etiquetas": "NODE_ENV=test tsx --test src/etiquetas-api.test.ts",
     "test:etiquetas-integration": "NODE_ENV=test tsx --test src/etiquetas-api.integration.test.ts"
+    ,"test:reportes": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-postgres://reportes-test-guard@localhost/reportes_test} tsx --test src/lib/reportes.test.ts",
+    "test:reportes-integration": "tsx --test src/reportes.integration.test.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^8.0.1",

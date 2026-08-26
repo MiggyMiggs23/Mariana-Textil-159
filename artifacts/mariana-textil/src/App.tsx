@@ -200,13 +200,13 @@ function Router() {
 
         <Route path="/caja/tiempo-real" component={() => <ProtectedRoute component={CajaTiempoReal} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
         <Route path="/caja/cortes" component={() => <ProtectedRoute component={CajaCortes} allowedModule={Modules.COBROS_PAGOS} />} />
-        <Route path="/caja/diferencias" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
+        <Route path="/caja/diferencias" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
         <Route path="/caja/cuentas-destino" component={() => <ProtectedRoute component={CajaCuentasDestino} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
-        <Route path="/caja/comparativo" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
+        <Route path="/caja/comparativo" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
         <Route path="/alertas" component={() => <ProtectedRoute component={Alertas} adminOnly />} />
         <Route path="/notificaciones" component={() => <ProtectedRoute component={Notificaciones} adminOnly />} />
-        <Route path="/reportes" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
-        <Route path="/reportes/:tab" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} adminOnly />} />
+        <Route path="/reportes" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
+        <Route path="/reportes/:tab" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
 
         <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} />} />
         

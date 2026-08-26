@@ -82,6 +82,8 @@ import type {
   ExportAdminCuentasDestinoPdfParams,
   ExportAdminCuentasDestinoXlsxParams,
   ExportKardexXlsxParams,
+  ExportReporteSeccionPdfParams,
+  ExportReporteSeccionXlsxParams,
   ExportarHistorialEtiquetasXlsxParams,
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
@@ -100,6 +102,7 @@ import type {
   GetExistenciasAgrupadasParams,
   GetExistenciasParams,
   GetKardexParams,
+  GetReporteSeccionParams,
   HealthStatus,
   ImportConfirmInput,
   ImportFileInput,
@@ -161,6 +164,8 @@ import type {
   RateLimitedResponse,
   RecalcularInput,
   RecibirTransferenciaInput,
+  ReporteSeccion,
+  ReportesCatalogos,
   RetiredTransferResponse,
   RevertirMovimientoInput,
   Role,
@@ -10803,3 +10808,354 @@ export function useContarAlertasEtiquetas<TData = Awaited<ReturnType<typeof cont
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
+
+export const getGetReportesCatalogosUrl = () => {
+
+
+
+
+  return `/api/reportes/catalogos`
+}
+
+/**
+ * @summary Catálogos disponibles para filtros de reportes
+ */
+export const getReportesCatalogos = async ( options?: Parameters<typeof customFetch>[1]): Promise<ReportesCatalogos> => {
+
+  return customFetch<ReportesCatalogos>(getGetReportesCatalogosUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetReportesCatalogosQueryKey = () => {
+    return [
+    `/api/reportes/catalogos`
+    ] as const;
+    }
+
+
+export const getGetReportesCatalogosQueryOptions = <TData = Awaited<ReturnType<typeof getReportesCatalogos>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReportesCatalogos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReportesCatalogosQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReportesCatalogos>>> = ({ signal }) => getReportesCatalogos({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReportesCatalogos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReportesCatalogosQueryResult = NonNullable<Awaited<ReturnType<typeof getReportesCatalogos>>>
+export type GetReportesCatalogosQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Catálogos disponibles para filtros de reportes
+ */
+
+export function useGetReportesCatalogos<TData = Awaited<ReturnType<typeof getReportesCatalogos>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReportesCatalogos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetReportesCatalogosQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetReporteSeccionUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: GetReporteSeccionParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reportes/${seccion}?${stringifiedParams}` : `/api/reportes/${seccion}`
+}
+
+/**
+ * @summary Reporte analítico de sólo lectura
+ */
+export const getReporteSeccion = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: GetReporteSeccionParams, options?: Parameters<typeof customFetch>[1]): Promise<ReporteSeccion> => {
+
+  return customFetch<ReporteSeccion>(getGetReporteSeccionUrl(seccion,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetReporteSeccionQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: GetReporteSeccionParams,) => {
+    return [
+    `/api/reportes/${seccion}`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetReporteSeccionQueryOptions = <TData = Awaited<ReturnType<typeof getReporteSeccion>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: GetReporteSeccionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReporteSeccion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReporteSeccionQueryKey(seccion,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReporteSeccion>>> = ({ signal }) => getReporteSeccion(seccion,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: seccion !== null && seccion !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReporteSeccion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReporteSeccionQueryResult = NonNullable<Awaited<ReturnType<typeof getReporteSeccion>>>
+export type GetReporteSeccionQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Reporte analítico de sólo lectura
+ */
+
+export function useGetReporteSeccion<TData = Awaited<ReturnType<typeof getReporteSeccion>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: GetReporteSeccionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReporteSeccion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetReporteSeccionQueryOptions(seccion,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportReporteSeccionXlsxUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reportes/${seccion}/export.xlsx?${stringifiedParams}` : `/api/reportes/${seccion}/export.xlsx`
+}
+
+/**
+ * @summary Exporta un reporte a XLSX
+ */
+export const exportReporteSeccionXlsx = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportReporteSeccionXlsxUrl(seccion,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportReporteSeccionXlsxQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionXlsxParams,) => {
+    return [
+    `/api/reportes/${seccion}/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportReporteSeccionXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportReporteSeccionXlsxQueryKey(seccion,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>> = ({ signal }) => exportReporteSeccionXlsx(seccion,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: seccion !== null && seccion !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportReporteSeccionXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>>
+export type ExportReporteSeccionXlsxQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta un reporte a XLSX
+ */
+
+export function useExportReporteSeccionXlsx<TData = Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportReporteSeccionXlsxQueryOptions(seccion,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportReporteSeccionPdfUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionPdfParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reportes/${seccion}/export.pdf?${stringifiedParams}` : `/api/reportes/${seccion}/export.pdf`
+}
+
+/**
+ * @summary Exporta un reporte a PDF
+ */
+export const exportReporteSeccionPdf = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportReporteSeccionPdfUrl(seccion,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportReporteSeccionPdfQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionPdfParams,) => {
+    return [
+    `/api/reportes/${seccion}/export.pdf`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportReporteSeccionPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportReporteSeccionPdfQueryKey(seccion,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportReporteSeccionPdf>>> = ({ signal }) => exportReporteSeccionPdf(seccion,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: seccion !== null && seccion !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportReporteSeccionPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportReporteSeccionPdf>>>
+export type ExportReporteSeccionPdfQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta un reporte a PDF
+ */
+
+export function useExportReporteSeccionPdf<TData = Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes',
+    params?: ExportReporteSeccionPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportReporteSeccionPdfQueryOptions(seccion,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+

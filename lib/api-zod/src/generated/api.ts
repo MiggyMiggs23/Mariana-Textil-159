@@ -4680,3 +4680,206 @@ export const ContarAlertasEtiquetasResponse = zod.object({
 })
 
 
+/**
+ * @summary Catálogos disponibles para filtros de reportes
+ */
+export const GetReportesCatalogosResponse = zod.object({
+  "sites": zod.array(zod.object({
+  "id": zod.number(),
+  "label": zod.string()
+})),
+  "products": zod.array(zod.object({
+  "id": zod.number(),
+  "label": zod.string()
+})),
+  "fabrics": zod.array(zod.string()),
+  "colors": zod.array(zod.string()),
+  "units": zod.array(zod.string()),
+  "users": zod.array(zod.object({
+  "id": zod.number(),
+  "label": zod.string()
+})),
+  "clients": zod.array(zod.object({
+  "id": zod.number(),
+  "label": zod.string()
+})),
+  "suppliers": zod.array(zod.object({
+  "id": zod.number(),
+  "label": zod.string()
+})),
+  "paymentMethods": zod.array(zod.string())
+})
+
+
+/**
+ * @summary Reporte analítico de sólo lectura
+ */
+export const GetReporteSeccionParams = zod.object({
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes'])
+})
+
+export const getReporteSeccionQueryPeriodoDefault = `mensual`;
+export const getReporteSeccionQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getReporteSeccionQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getReporteSeccionQueryMargenUmbralDefault = 15;
+export const getReporteSeccionQueryCoberturaCriticoDefault = 7;
+export const getReporteSeccionQueryCoberturaBajoDefault = 15;
+export const getReporteSeccionQueryCoberturaNormalDefault = 60;
+export const getReporteSeccionQueryCoberturaExcesoDefault = 90;
+
+export const GetReporteSeccionQueryParams = zod.object({
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']).default(getReporteSeccionQueryPeriodoDefault),
+  "desde": zod.coerce.string().regex(getReporteSeccionQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getReporteSeccionQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionIds": zod.coerce.string().optional(),
+  "productoIds": zod.coerce.string().optional(),
+  "telas": zod.coerce.string().optional(),
+  "colores": zod.coerce.string().optional(),
+  "unidades": zod.coerce.string().optional(),
+  "usuarioIds": zod.coerce.string().optional(),
+  "clienteIds": zod.coerce.string().optional(),
+  "proveedorIds": zod.coerce.string().optional(),
+  "formasPago": zod.coerce.string().optional(),
+  "facturado": zod.coerce.boolean().optional(),
+  "margenUmbral": zod.coerce.number().default(getReporteSeccionQueryMargenUmbralDefault),
+  "coberturaCritico": zod.coerce.number().default(getReporteSeccionQueryCoberturaCriticoDefault),
+  "coberturaBajo": zod.coerce.number().default(getReporteSeccionQueryCoberturaBajoDefault),
+  "coberturaNormal": zod.coerce.number().default(getReporteSeccionQueryCoberturaNormalDefault),
+  "coberturaExceso": zod.coerce.number().default(getReporteSeccionQueryCoberturaExcesoDefault)
+})
+
+export const GetReporteSeccionResponse = zod.object({
+  "section": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "hasEconomicAccess": zod.boolean(),
+  "range": zod.object({
+  "desde": zod.coerce.date(),
+  "hasta": zod.coerce.date(),
+  "previousDesde": zod.coerce.date(),
+  "previousHasta": zod.coerce.date(),
+  "yearAgoDesde": zod.coerce.date(),
+  "yearAgoHasta": zod.coerce.date()
+}),
+  "activeFilters": zod.array(zod.string()),
+  "warnings": zod.array(zod.string()),
+  "kpis": zod.array(zod.object({
+  "id": zod.string(),
+  "label": zod.string(),
+  "value": zod.union([zod.string(),zod.number(),zod.boolean(),zod.null()]),
+  "kind": zod.enum(['money', 'quantity', 'count', 'percentage', 'days']),
+  "unit": zod.string().optional(),
+  "comparisonPrevious": zod.number().optional(),
+  "comparisonYearAgo": zod.number().optional(),
+  "estimated": zod.boolean().optional(),
+  "economic": zod.boolean().optional()
+})),
+  "charts": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "type": zod.enum(['line', 'bar', 'stacked-bar', 'heatmap', 'treemap', 'scatter']),
+  "categoryKey": zod.string(),
+  "series": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "kind": zod.string().optional(),
+  "economic": zod.boolean().optional(),
+  "estimated": zod.boolean().optional()
+})),
+  "rows": zod.array(zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.null()])))
+})),
+  "tables": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "columns": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "kind": zod.string(),
+  "economic": zod.boolean().optional(),
+  "estimated": zod.boolean().optional()
+})),
+  "rows": zod.array(zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.null()]))),
+  "totals": zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.null()]))
+}))
+})
+
+
+/**
+ * @summary Exporta un reporte a XLSX
+ */
+export const ExportReporteSeccionXlsxParams = zod.object({
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes'])
+})
+
+export const exportReporteSeccionXlsxQueryPeriodoDefault = `mensual`;
+export const exportReporteSeccionXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteSeccionXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteSeccionXlsxQueryMargenUmbralDefault = 15;
+export const exportReporteSeccionXlsxQueryCoberturaCriticoDefault = 7;
+export const exportReporteSeccionXlsxQueryCoberturaBajoDefault = 15;
+export const exportReporteSeccionXlsxQueryCoberturaNormalDefault = 60;
+export const exportReporteSeccionXlsxQueryCoberturaExcesoDefault = 90;
+
+export const ExportReporteSeccionXlsxQueryParams = zod.object({
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']).default(exportReporteSeccionXlsxQueryPeriodoDefault),
+  "desde": zod.coerce.string().regex(exportReporteSeccionXlsxQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportReporteSeccionXlsxQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionIds": zod.coerce.string().optional(),
+  "productoIds": zod.coerce.string().optional(),
+  "telas": zod.coerce.string().optional(),
+  "colores": zod.coerce.string().optional(),
+  "unidades": zod.coerce.string().optional(),
+  "usuarioIds": zod.coerce.string().optional(),
+  "clienteIds": zod.coerce.string().optional(),
+  "proveedorIds": zod.coerce.string().optional(),
+  "formasPago": zod.coerce.string().optional(),
+  "facturado": zod.coerce.boolean().optional(),
+  "margenUmbral": zod.coerce.number().default(exportReporteSeccionXlsxQueryMargenUmbralDefault),
+  "coberturaCritico": zod.coerce.number().default(exportReporteSeccionXlsxQueryCoberturaCriticoDefault),
+  "coberturaBajo": zod.coerce.number().default(exportReporteSeccionXlsxQueryCoberturaBajoDefault),
+  "coberturaNormal": zod.coerce.number().default(exportReporteSeccionXlsxQueryCoberturaNormalDefault),
+  "coberturaExceso": zod.coerce.number().default(exportReporteSeccionXlsxQueryCoberturaExcesoDefault)
+})
+
+export const ExportReporteSeccionXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta un reporte a PDF
+ */
+export const ExportReporteSeccionPdfParams = zod.object({
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes'])
+})
+
+export const exportReporteSeccionPdfQueryPeriodoDefault = `mensual`;
+export const exportReporteSeccionPdfQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteSeccionPdfQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteSeccionPdfQueryMargenUmbralDefault = 15;
+export const exportReporteSeccionPdfQueryCoberturaCriticoDefault = 7;
+export const exportReporteSeccionPdfQueryCoberturaBajoDefault = 15;
+export const exportReporteSeccionPdfQueryCoberturaNormalDefault = 60;
+export const exportReporteSeccionPdfQueryCoberturaExcesoDefault = 90;
+
+export const ExportReporteSeccionPdfQueryParams = zod.object({
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']).default(exportReporteSeccionPdfQueryPeriodoDefault),
+  "desde": zod.coerce.string().regex(exportReporteSeccionPdfQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportReporteSeccionPdfQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionIds": zod.coerce.string().optional(),
+  "productoIds": zod.coerce.string().optional(),
+  "telas": zod.coerce.string().optional(),
+  "colores": zod.coerce.string().optional(),
+  "unidades": zod.coerce.string().optional(),
+  "usuarioIds": zod.coerce.string().optional(),
+  "clienteIds": zod.coerce.string().optional(),
+  "proveedorIds": zod.coerce.string().optional(),
+  "formasPago": zod.coerce.string().optional(),
+  "facturado": zod.coerce.boolean().optional(),
+  "margenUmbral": zod.coerce.number().default(exportReporteSeccionPdfQueryMargenUmbralDefault),
+  "coberturaCritico": zod.coerce.number().default(exportReporteSeccionPdfQueryCoberturaCriticoDefault),
+  "coberturaBajo": zod.coerce.number().default(exportReporteSeccionPdfQueryCoberturaBajoDefault),
+  "coberturaNormal": zod.coerce.number().default(exportReporteSeccionPdfQueryCoberturaNormalDefault),
+  "coberturaExceso": zod.coerce.number().default(exportReporteSeccionPdfQueryCoberturaExcesoDefault)
+})
+
+export const ExportReporteSeccionPdfResponse = zod.unknown()
+
+

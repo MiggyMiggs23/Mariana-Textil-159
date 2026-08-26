@@ -114,7 +114,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     items: [
-      { name: "Reportes", path: "/reportes", icon: BarChart3, module: Modules.REPORTES, isClickable: true, adminOnly: true },
+      { name: "Reportes", path: "/reportes", icon: BarChart3, module: Modules.REPORTES, isClickable: true },
     ]
   },
   {
