@@ -2537,27 +2537,13 @@ export interface SalidaInput {
   rolloIds: number[];
 }
 
-export interface MotivoSalidaInput {
-  /** @minLength 10 */
-  motivo: string;
-  adminUsuario?: string;
-  adminPassword?: string;
-}
-
-export interface EnvioSalidaInput {
+export interface AgregarRolloBorradorSalidaInput {
   /** @minLength 1 */
-  transportista: string;
-  /** @nullable */
-  notaEnvio?: string | null;
-}
-
-export interface RecepcionSalidaInput {
-  completa: boolean;
-  /**
-     * @maxLength 2000
-     * @nullable
-     */
-  nota?: string | null;
+  uuidCliente: string;
+  origenId: number;
+  destinoId: number;
+  /** @minLength 1 */
+  serie: string;
 }
 
 export interface SalidaResumen {
@@ -2589,13 +2575,6 @@ export interface SalidaResumen {
   diferenciasPendientes: boolean;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface SalidaListResult {
-  items: SalidaResumen[];
-  total: number;
-  page: number;
-  pageSize: number;
 }
 
 export interface SalidaLinea {
@@ -2639,19 +2618,6 @@ export interface SalidaRollo {
   unidad?: UnidadProducto;
 }
 
-export interface SalidaRolloEscaneado {
-  id: number;
-  serie: string;
-  estado: EstadoRollo;
-  ubicacionId: number;
-  cantidadActual: string;
-  productoId: number;
-  sku: string;
-  tela: string;
-  color: string;
-  unidad: UnidadProducto;
-}
-
 export type SalidaDetail = SalidaResumen & ({
   uuidCliente: string;
   /** @nullable */
@@ -2683,6 +2649,40 @@ export type SalidaDetail = SalidaResumen & ({
   lineas: SalidaLinea[];
   rollos: SalidaRollo[];
 });
+
+export interface BorradorSalidaResult {
+  salida: SalidaDetail | null;
+}
+
+export interface MotivoSalidaInput {
+  /** @minLength 10 */
+  motivo: string;
+  adminUsuario?: string;
+  adminPassword?: string;
+}
+
+export interface EnvioSalidaInput {
+  /** @minLength 1 */
+  transportista: string;
+  /** @nullable */
+  notaEnvio?: string | null;
+}
+
+export interface RecepcionSalidaInput {
+  completa: boolean;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  nota?: string | null;
+}
+
+export interface SalidaListResult {
+  items: SalidaResumen[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
 
 export type FormaPagoProveedor = typeof FormaPagoProveedor[keyof typeof FormaPagoProveedor];
 
@@ -3964,6 +3964,10 @@ page?: number;
 pageSize?: number;
 };
 
+export type GetBorradorSalidaParams = {
+origenId: number;
+};
+
 export type ExportarSalidasParams = {
 fechaDesde?: string;
 fechaHasta?: string;
@@ -3976,10 +3980,6 @@ estado?: EstadoSalida;
  * Folio exacto o serie de rollo exacta/parcial
  */
 search?: string;
-};
-
-export type EscanearRolloSalidaParams = {
-origenId: number;
 };
 
 export type GetAdminRealtimeDashboardParams = {

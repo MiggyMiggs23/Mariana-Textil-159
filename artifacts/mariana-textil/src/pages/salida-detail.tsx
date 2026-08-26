@@ -4,7 +4,6 @@ import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetSalida,
   useCancelarSalida,
-  useEnviarSalida,
   getGetSalidaQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
@@ -25,7 +24,6 @@ import {
   Lock,
   User,
   Truck,
-  Send,
   FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,15 +75,11 @@ export default function SalidaDetail() {
   });
 
   const cancelMutation = useCancelarSalida();
-  const sendMutation = useEnviarSalida();
-
   const [dialogState, setDialogState] = useState<{
-    type: 'cancel' | 'send' | null;
+    type: 'cancel' | null;
   }>({ type: null });
 
   const [motivo, setMotivo] = useState("");
-  const [transportistaEnvio, setTransportistaEnvio] = useState("");
-  const [notaEnvio, setNotaEnvio] = useState("");
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
@@ -117,7 +111,6 @@ export default function SalidaDetail() {
   const isAdmin = user?.rol === Role.ADMIN;
   const isCaja = user?.rol === Role.CAJA;
   const canAuthorize = hasPermission(user, Modules.SALIDAS, 'autorizar');
-  const canEdit = hasPermission(user, Modules.SALIDAS, 'editar');
 
   const atOrigin = isAdmin || user?.ubicacion?.id === salida.origenId;
   const atDestination = isAdmin || user?.ubicacion?.id === salida.destinoId;
@@ -150,7 +143,7 @@ export default function SalidaDetail() {
       }, new Map<number, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
 
   const canCancel = !isCaja && salida.estado === 'ARMANDO' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
-  const canSend = !isCaja && canEdit && salida.estado === 'ARMANDO' && atOrigin;
+  const canPrint = salida.estado === 'EN_TRANSITO' || salida.estado === 'RECIBIDA';
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) });
@@ -177,24 +170,6 @@ export default function SalidaDetail() {
         invalidate();
       },
       onError: (err) => toast({ title: "Error", description: getApiErrorMessage(err), variant: "destructive" })
-    });
-  };
-
-  const onSend = () => {
-    if (!transportistaEnvio.trim()) {
-      toast({ title: "Atención", description: "El transportista es obligatorio", variant: "destructive" });
-      return;
-    }
-    sendMutation.mutate({
-      id,
-      data: { transportista: transportistaEnvio.trim(), notaEnvio: notaEnvio.trim() || null },
-    }, {
-      onSuccess: () => {
-        toast({ title: "Salida enviada" });
-        setDialogState({ type: null });
-        invalidate();
-      },
-      onError: (err) => toast({ title: "Error", description: getApiErrorMessage(err), variant: "destructive" }),
     });
   };
 
@@ -230,20 +205,28 @@ export default function SalidaDetail() {
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto sm:justify-end">
-          {canSend && (
-            <Button data-testid="btn-action-send" onClick={() => {
-              setTransportistaEnvio(salida.transportista ?? "");
-              setNotaEnvio(salida.notaEnvio ?? "");
-              setDialogState({ type: 'send' });
-            }} className="gap-2">
-              <Send className="w-4 h-4" /> Enviar salida
-            </Button>
+          {canPrint && (
+            <Link href={`/salidas/${salida.id}/documento/salida`} className="w-full sm:w-auto">
+              <Button data-testid="btn-print-salida" variant="outline" className="w-full gap-2 bg-white sm:w-auto">
+                <Printer className="w-4 h-4" /> Imprimir Documento
+              </Button>
+            </Link>
           )}
-          <Link href={`/salidas/${salida.id}/documento/salida`}>
-            <Button data-testid="btn-print-salida" variant="outline" className="gap-2 bg-white">
-              <Printer className="w-4 h-4" /> Imprimir Documento
-            </Button>
-          </Link>
+          {salida.estado === 'ARMANDO' && (
+            <div className="w-full sm:w-auto">
+              <Button
+                data-testid="btn-print-salida-disabled"
+                variant="outline"
+                disabled
+                className="w-full gap-2 sm:w-auto"
+              >
+                <Printer className="w-4 h-4" /> Imprimir Documento
+              </Button>
+              <p data-testid="print-salida-help" className="mt-1 max-w-xs text-xs text-slate-500">
+                La hoja de traslado estará disponible cuando la mercancía esté en tránsito.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -432,7 +415,7 @@ export default function SalidaDetail() {
         <DialogContent>
           <DialogHeader><DialogTitle>Cancelar Salida</DialogTitle></DialogHeader>
           <div className="space-y-4 pt-4">
-            <p className="text-sm text-slate-500">¿Estás seguro de cancelar esta salida? Los rollos regresarán a estar disponibles en el origen.</p>
+            <p className="text-sm text-slate-500">¿Estás seguro de cancelar esta salida? Los rollos seguirán disponibles en el origen.</p>
             <Textarea data-testid="input-cancel-motivo" placeholder="Motivo de la cancelación (Mínimo 10 caracteres)..." value={motivo} onChange={e => setMotivo(e.target.value)} />
 
             {!isAdmin && (
@@ -465,36 +448,6 @@ export default function SalidaDetail() {
             <Button data-testid="btn-submit-cancel" variant="destructive" onClick={onCancel} disabled={cancelMutation.isPending || motivo.length < 10 || (!isAdmin && (!adminUsername || !adminPassword))}>
               {cancelMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Confirmar Cancelación
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={dialogState.type === 'send'} onOpenChange={(open) => {
-        if (!open) setDialogState({ type: null });
-      }}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Enviar salida</DialogTitle></DialogHeader>
-          <div className="space-y-4 pt-4">
-            <p className="text-sm text-slate-500">Al confirmar, todos los rollos saldrán del origen y quedarán en tránsito.</p>
-            <Input
-              data-testid="input-send-transportista"
-              placeholder="Transportista"
-              value={transportistaEnvio}
-              onChange={(event) => setTransportistaEnvio(event.target.value)}
-            />
-            <Textarea
-              data-testid="input-send-nota"
-              placeholder="Nota de envío (opcional)"
-              value={notaEnvio}
-              onChange={(event) => setNotaEnvio(event.target.value)}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogState({ type: null })}>Cerrar</Button>
-            <Button data-testid="btn-submit-send" onClick={onSend} disabled={sendMutation.isPending || !transportistaEnvio.trim()}>
-              {sendMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Confirmar envío
             </Button>
           </DialogFooter>
         </DialogContent>

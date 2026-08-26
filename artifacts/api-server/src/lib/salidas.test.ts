@@ -4,7 +4,17 @@ import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
 import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { crearRollo, InventarioError } from "./inventario";
-import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas, recibirSalida } from "./salidas";
+import {
+  agregarRolloBorradorSalida,
+  buildSalidaDetail,
+  cancelarSalida,
+  crearSalida,
+  enviarSalida,
+  listarSalidas,
+  obtenerBorradorSalida,
+  quitarRolloBorradorSalida,
+  recibirSalida,
+} from "./salidas";
 
 if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   test("salidas DB suite is guarded", { skip: "TEST_DATABASE_URL required" }, () => {});
@@ -33,6 +43,131 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     if (!docs.includes(r.id)) docs.push(r.id);
     return r;
   }
+  async function add(
+    origenId: number,
+    destinoId: number,
+    serie: string,
+    uuidCliente: string,
+  ) {
+    const result = await db.transaction((tx) =>
+      agregarRolloBorradorSalida(tx, {
+        origenId,
+        destinoId,
+        serie,
+        uuidCliente,
+        usuarioId: user,
+      }),
+    );
+    if (!docs.includes(result.id)) docs.push(result.id);
+    return result;
+  }
+  test("scan persists, retries are idempotent, removal is immediate, and own draft resumes", async () => {
+    const f = await fx();
+    const first = await roll(f.productoId, f.origenId, "8");
+    const second = await roll(f.productoId, f.origenId, "9");
+    const uuid = randomUUID();
+
+    const created = await add(f.origenId, f.destinoId, first.serie, uuid);
+    assert.equal(created.estado, "ARMANDO");
+    assert.equal(created.totalRollos, 1);
+    assert.equal(created.totalCantidadSolicitada, "8.000");
+
+    const retried = await add(f.origenId, f.destinoId, first.serie, uuid);
+    assert.equal(retried.id, created.id);
+    assert.equal(retried.totalRollos, 1);
+
+    const resumed = await obtenerBorradorSalida(db, user, f.origenId);
+    assert.equal(resumed?.id, created.id);
+    assert.equal(resumed?.destinoId, f.destinoId);
+
+    const expanded = await add(f.origenId, f.destinoId, second.serie, uuid);
+    assert.equal(expanded.totalRollos, 2);
+    assert.equal(expanded.totalCantidadSolicitada, "17.000");
+
+    const reduced = await db.transaction((tx) =>
+      quitarRolloBorradorSalida(tx, created.id, first.id, user),
+    );
+    assert.equal(reduced.totalRollos, 1);
+    assert.equal(reduced.rollos[0]?.rolloId, second.id);
+    assert.equal(reduced.totalCantidadSolicitada, "9.000");
+    const [removedAssociation] = await db
+      .select({ id: salidaRollosTable.id })
+      .from(salidaRollosTable)
+      .where(
+        and(
+          eq(salidaRollosTable.salidaId, created.id),
+          eq(salidaRollosTable.rolloId, first.id),
+        ),
+      );
+    assert.equal(removedAssociation, undefined);
+  });
+  test("inactive drafts hide by default, remain recoverable, and failed send leaves no partial movement", async () => {
+    const old = await fx();
+    const oldRoll = await roll(old.productoId, old.origenId, "5");
+    const oldDraft = await add(
+      old.origenId,
+      old.destinoId,
+      oldRoll.serie,
+      randomUUID(),
+    );
+    await db
+      .update(salidasTable)
+      .set({ actividadAt: new Date(Date.now() - 25 * 60 * 60 * 1000) })
+      .where(eq(salidasTable.id, oldDraft.id));
+    const defaultList = await listarSalidas({ page: 1, pageSize: 100 });
+    assert.ok(!defaultList.items.some((item) => item.id === oldDraft.id));
+    const explicitDrafts = await listarSalidas({
+      estados: ["ARMANDO"],
+      page: 1,
+      pageSize: 100,
+    });
+    assert.ok(explicitDrafts.items.some((item) => item.id === oldDraft.id));
+    assert.equal(
+      (await obtenerBorradorSalida(db, user, old.origenId))?.id,
+      oldDraft.id,
+    );
+
+    const f = await fx();
+    const first = await roll(f.productoId, f.origenId, "6");
+    const second = await roll(f.productoId, f.origenId, "7");
+    const uuid = randomUUID();
+    const draft = await add(f.origenId, f.destinoId, first.serie, uuid);
+    await add(f.origenId, f.destinoId, second.serie, uuid);
+    await db
+      .update(rollosTable)
+      .set({ estado: "BAJA" })
+      .where(eq(rollosTable.id, second.id));
+
+    await assert.rejects(
+      db.transaction((tx) =>
+        enviarSalida(tx, {
+          salidaId: draft.id,
+          usuarioId: user,
+          transportista: "Prueba",
+        }),
+      ),
+      (error: unknown) =>
+        error instanceof InventarioError &&
+        error.code === "INVALID_TRANSITION",
+    );
+    const [untouchedFirst] = await db
+      .select()
+      .from(rollosTable)
+      .where(eq(rollosTable.id, first.id));
+    assert.equal(untouchedFirst?.estado, "DISPONIBLE");
+    assert.equal(untouchedFirst?.ubicacionId, f.origenId);
+    const failedMovements = await db
+      .select()
+      .from(movimientosTable)
+      .where(
+        and(
+          eq(movimientosTable.documentoTipo, "SALIDA"),
+          eq(movimientosTable.documentoId, String(draft.id)),
+        ),
+      );
+    assert.equal(failedMovements.length, 0);
+    assert.equal((await buildSalidaDetail(db, draft.id))?.estado, "ARMANDO");
+  });
   test("creation stays ARMANDO without moving inventory; sending moves every roll to TRANSITO", async () => {
     const f = await fx(); const rs = await Promise.all(["40", "45", "50", "50"].map((q) => roll(f.productoId, f.origenId, q)));
     const salida = await create(f.origenId, f.destinoId, rs.map((r) => r.id));
@@ -53,13 +188,49 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.origenId)?.cantidadTotal), 0);
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.destinoId)?.cantidadTotal ?? 0), 0);
   });
-  test("uuid is idempotent; concurrent same roll has exactly one winner; valid parallel docs receive distinct folios", async () => {
-    const f = await fx(); const a = await roll(f.productoId, f.origenId, "10"), b = await roll(f.productoId, f.origenId, "11"), c = await roll(f.productoId, f.origenId, "12");
-    const uuid = randomUUID(); const [x, y] = await Promise.all([create(f.origenId, f.destinoId, [a.id], uuid), create(f.origenId, f.destinoId, [a.id], uuid)]);
+  test("uuid is idempotent; concurrent drafts are unique per user/origin; independent origins receive distinct folios", async () => {
+    const first = await fx();
+    const a = await roll(first.productoId, first.origenId, "10");
+    const uuid = randomUUID();
+    const [x, y] = await Promise.all([
+      create(first.origenId, first.destinoId, [a.id], uuid),
+      create(first.origenId, first.destinoId, [a.id], uuid),
+    ]);
     assert.equal(x.id, y.id);
-    const race = await Promise.allSettled([create(f.origenId, f.destinoId, [b.id]), create(f.origenId, f.destinoId, [b.id])]);
+
+    const raced = await fx();
+    const [b, c] = await Promise.all([
+      roll(raced.productoId, raced.origenId, "11"),
+      roll(raced.productoId, raced.origenId, "12"),
+    ]);
+    const race = await Promise.allSettled([
+      create(raced.origenId, raced.destinoId, [b.id]),
+      create(raced.origenId, raced.destinoId, [c.id]),
+    ]);
     assert.equal(race.filter((r) => r.status === "fulfilled").length, 1);
-    const [one, two] = await Promise.all([create(f.origenId, f.destinoId, [c.id]), create(f.origenId, f.destinoId, [await roll(f.productoId, f.origenId, "13").then(r => r.id)])]);
+    assert.ok(
+      race.some(
+        (result) =>
+          result.status === "rejected" &&
+          result.reason instanceof InventarioError &&
+          result.reason.code === "DRAFT_ALREADY_EXISTS",
+      ),
+    );
+
+    const parallelOne = await fx();
+    const parallelTwo = await fx();
+    const [one, two] = await Promise.all([
+      create(
+        parallelOne.origenId,
+        parallelOne.destinoId,
+        [await roll(parallelOne.productoId, parallelOne.origenId, "13").then((r) => r.id)],
+      ),
+      create(
+        parallelTwo.origenId,
+        parallelTwo.destinoId,
+        [await roll(parallelTwo.productoId, parallelTwo.origenId, "14").then((r) => r.id)],
+      ),
+    ]);
     assert.notEqual(one.folio, two.folio);
   });
   test("only ARMANDO can be cancelled and cancellation never moves inventory", async () => {
@@ -67,6 +238,22 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s.id, user, "corto")), (e: unknown) => e instanceof InventarioError && e.code === "REASON_REQUIRED");
     await db.transaction((tx) => cancelarSalida(tx, s.id, user, "Motivo válido de cancelación"));
     const [back] = await db.select().from(rollosTable).where(eq(rollosTable.id, r.id)); assert.equal(back!.ubicacionId, f.origenId);
+    const stale = await roll(f.productoId, f.origenId, "22"); const staleDraft = await create(f.origenId, f.destinoId, [stale.id]);
+    await db.update(rollosTable).set({ ubicacionId: f.destinoId }).where(eq(rollosTable.id, stale.id));
+    const cancelledStale = await db.transaction((tx) => cancelarSalida(tx, staleDraft.id, user, "Cancelar asociación obsoleta"));
+    assert.equal(cancelledStale.estado, "CANCELADA");
+    const [staleRollo] = await db.select().from(rollosTable).where(eq(rollosTable.id, stale.id));
+    assert.equal(staleRollo!.ubicacionId, f.destinoId);
+    assert.equal(
+      await db.$count(
+        movimientosTable,
+        and(
+          eq(movimientosTable.documentoTipo, "SALIDA"),
+          eq(movimientosTable.documentoId, String(staleDraft.id)),
+        ),
+      ),
+      0,
+    );
     const changed = await roll(f.productoId, f.origenId, "21"); const s2 = await create(f.origenId, f.destinoId, [changed.id]);
     await db.transaction((tx) => enviarSalida(tx, { salidaId: s2.id, usuarioId: user, transportista: "Prueba" }));
     await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s2.id, user, "Motivo válido de cancelación")), (e: unknown) => e instanceof InventarioError && e.code === "INVALID_SALIDA_STATE");

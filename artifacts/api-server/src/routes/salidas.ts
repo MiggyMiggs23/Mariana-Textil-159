@@ -2,31 +2,45 @@ import { Router } from "express";
 import ExcelJS from "exceljs";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import {
+  AgregarRolloBorradorSalidaBody,
+  AgregarRolloBorradorSalidaResponse,
   CancelarSalidaBody,
   CancelarSalidaParams,
   CancelarSalidaResponse,
-  CrearSalidaBody,
-  EscanearRolloSalidaParams,
-  EscanearRolloSalidaResponse,
   EnviarSalidaBody,
   EnviarSalidaParams,
   EnviarSalidaResponse,
   ExportarSalidasQueryParams,
+  GetBorradorSalidaQueryParams,
+  GetBorradorSalidaResponse,
+  GetDocumentoSalidaParams,
+  GetDocumentoSalidaResponse,
   GetSalidaParams,
   GetSalidaRecepcionParams,
   GetSalidaRecepcionResponse,
   GetUbicacionesSalidaResponse,
   ListSalidasRecepcionResponse,
   ListSalidasQueryParams,
+  QuitarRolloBorradorSalidaParams,
+  QuitarRolloBorradorSalidaResponse,
   RecibirSalidaBody,
   RecibirSalidaParams,
   RecibirSalidaResponse,
 } from "@workspace/api-zod";
-import { db, productosTable, rollosTable, salidasTable, ubicacionesTable, usuariosTable, type EstadoSalida } from "@workspace/db";
+import { db, salidasTable, ubicacionesTable, usuariosTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
-import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas, recibirSalida } from "../lib/salidas";
+import {
+  agregarRolloBorradorSalida,
+  buildSalidaDetail,
+  cancelarSalida,
+  enviarSalida,
+  listarSalidas,
+  obtenerBorradorSalida,
+  quitarRolloBorradorSalida,
+  recibirSalida,
+} from "../lib/salidas";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   EXCEL_NUMBER_FORMAT,
@@ -158,10 +172,14 @@ function errorStatus(error: InventarioError): number {
       "ROLLO_RESERVED",
       "ROLLO_NOT_PENDING",
       "PENDING_ROLLOS",
+      "DRAFT_DESTINATION_MISMATCH",
+      "DRAFT_ROLL_CHANGED",
+      "SALIDA_HAS_MOVEMENTS",
     ].includes(error.code)
   ) {
     return 409;
   }
+  if (error.code === "SALIDA_DRAFT_OWNER_REQUIRED") return 403;
   return 400;
 }
 
@@ -241,40 +259,64 @@ router.get(
   },
 );
 
-router.post(
-  "/salidas",
+router.get(
+  "/salidas/borrador",
   requireSession,
   requierePermiso("salidas", "crear"),
   async (req, res, next) => {
     try {
-      const body = CrearSalidaBody.parse(req.body);
+      const { origenId } = GetBorradorSalidaQueryParams.parse(req.query);
       const auth = req.auth!;
       if (rejectCajaMutation(auth)) {
-        res.status(403).json({ error: "El rol CAJA solo puede consultar salidas recibidas." });
+        res.status(403).json({ error: "El rol CAJA no puede armar salidas." });
         return;
       }
-      let origenId = body.origenId;
-      if (auth.user.rol !== "ADMIN" && auth.user.rol !== "SUPERVISOR") {
-        if (auth.user.ubicacionId == null) {
-          res.status(403).json({ error: "No tienes una ubicación asignada." });
-          return;
-        }
-        if (origenId !== auth.user.ubicacionId) {
-          throw new InventarioError("El origen debe ser tu ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
-        }
-        origenId = auth.user.ubicacionId;
+      if (!canOperate(auth, origenId)) {
+        throw new InventarioError(
+          "No puedes operar desde ese origen.",
+          "SALIDA_LOCATION_FORBIDDEN",
+        );
       }
-      const result = await db.transaction((tx) =>
-        crearSalida(tx, {
+      const salida = await obtenerBorradorSalida(
+        db,
+        auth.user.id,
+        origenId,
+      );
+      res.json(GetBorradorSalidaResponse.parse({ salida }));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.post(
+  "/salidas/borrador/rollos",
+  requireSession,
+  requierePermiso("salidas", "crear"),
+  async (req, res, next) => {
+    try {
+      const body = AgregarRolloBorradorSalidaBody.parse(req.body);
+      const auth = req.auth!;
+      if (rejectCajaMutation(auth)) {
+        res.status(403).json({ error: "El rol CAJA no puede armar salidas." });
+        return;
+      }
+      if (!canOperate(auth, body.origenId)) {
+        throw new InventarioError(
+          "No puedes operar desde ese origen.",
+          "SALIDA_LOCATION_FORBIDDEN",
+        );
+      }
+      const codigo = interpretarCodigoEscaneado(body.serie);
+      const serie = codigo.serie ?? codigo.textoOriginal.trim();
+      const detail = await db.transaction((tx) =>
+        agregarRolloBorradorSalida(tx, {
           ...body,
-          origenId,
-          usuarioSolicitaId: auth.user.id,
-          rolloIds: body.rolloIds,
-          transportista: body.transportista,
-          observaciones: body.observaciones,
+          serie,
+          usuarioId: auth.user.id,
         }),
       );
-      res.status(201).json(result);
+      res.json(AgregarRolloBorradorSalidaResponse.parse(detail));
     } catch (error) {
       if (!sendError(error, res)) next(error);
     }
@@ -396,33 +438,6 @@ router.get(
 );
 
 router.get(
-  "/salidas/rollos/serie/:serie",
-  requireSession,
-  requierePermiso("salidas", "crear"),
-  async (req, res, next) => {
-    try {
-      const origenId = Number(req.query.origenId);
-      if (!Number.isInteger(origenId)) throw new InventarioError("origenId es obligatorio.", "VALIDATION_ERROR");
-      const { serie: codigoRecibido } = EscanearRolloSalidaParams.parse(req.params);
-      const codigo = interpretarCodigoEscaneado(codigoRecibido);
-      const serie = codigo.serie ?? codigo.textoOriginal.trim();
-      if (!canOperate(req.auth!, origenId)) throw new InventarioError("No puedes operar desde ese origen.", "SALIDA_LOCATION_FORBIDDEN");
-      const [rollo] = await db.select({
-        id: rollosTable.id, serie: rollosTable.serie, estado: rollosTable.estado,
-        ubicacionId: rollosTable.ubicacionId, cantidadActual: rollosTable.cantidadActual,
-        productoId: productosTable.id, sku: productosTable.sku, tela: productosTable.tela,
-        color: productosTable.color, unidad: productosTable.unidad,
-      }).from(rollosTable).innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
-        .where(eq(rollosTable.serie, serie)).limit(1);
-      if (!rollo) throw new InventarioError("Serie no encontrada.", "ROLLO_NOT_FOUND");
-      if (rollo.ubicacionId !== origenId) throw new InventarioError(`La serie ${rollo.serie} está en la ubicación ${rollo.ubicacionId}.`, "LOCATION_MISMATCH");
-      if (rollo.estado !== "DISPONIBLE") throw new InventarioError(`La serie ${rollo.serie} no está DISPONIBLE.`, "ROLLO_UNAVAILABLE");
-      res.json(EscanearRolloSalidaResponse.parse(rollo));
-    } catch (error) { if (!sendError(error, res)) next(error); }
-  },
-);
-
-router.get(
   "/salidas/:id",
   requireSession,
   requierePermiso("salidas", "ver"),
@@ -438,10 +453,54 @@ router.get(
   },
 );
 
+router.get(
+  "/salidas/:id/documento",
+  requireSession,
+  requierePermiso("salidas", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetDocumentoSalidaParams.parse(req.params);
+      const header = await requireSalidaAccess(req.auth!, id, "read");
+      if (!["EN_TRANSITO", "RECIBIDA"].includes(header.estado)) {
+        throw new InventarioError(
+          "El documento solo se puede imprimir cuando la salida está enviada o recibida.",
+          "INVALID_SALIDA_STATE",
+        );
+      }
+      const detail = await buildSalidaDetail(db, id);
+      res.json(GetDocumentoSalidaResponse.parse(detail));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.delete(
+  "/salidas/:id/rollos/:rolloId",
+  requireSession,
+  requierePermiso("salidas", "crear"),
+  async (req, res, next) => {
+    try {
+      const { id, rolloId } = QuitarRolloBorradorSalidaParams.parse(req.params);
+      if (rejectCajaMutation(req.auth!)) {
+        res.status(403).json({ error: "El rol CAJA no puede modificar salidas." });
+        return;
+      }
+      await requireSalidaAccess(req.auth!, id, "origin");
+      const detail = await db.transaction((tx) =>
+        quitarRolloBorradorSalida(tx, id, rolloId, req.auth!.user.id),
+      );
+      res.json(QuitarRolloBorradorSalidaResponse.parse(detail));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
 router.post(
   "/salidas/:id/enviar",
   requireSession,
-  requierePermiso("salidas", "editar"),
+  requierePermiso("salidas", "crear"),
   async (req, res, next) => {
     try {
       const { id } = EnviarSalidaParams.parse(req.params);

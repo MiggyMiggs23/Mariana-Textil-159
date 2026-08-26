@@ -133,12 +133,22 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     FROM information_schema.columns
     WHERE table_schema = 'public'
       AND table_name = 'salidas'
-       AND column_name IN ('usuario_cancela_id', 'cancelada_at', 'autorizado_por_id')
+       AND column_name IN ('usuario_cancela_id', 'cancelada_at', 'autorizado_por_id', 'actividad_at')
     ORDER BY column_name;
   `);
   assert.deepEqual(
     cancellationColumns.rows.map((row) => row.column_name),
-    ["autorizado_por_id", "cancelada_at", "usuario_cancela_id"],
+    ["actividad_at", "autorizado_por_id", "cancelada_at", "usuario_cancela_id"],
+  );
+  const draftIndex = await pool.query<{ indexdef: string }>(`
+    SELECT indexdef
+    FROM pg_indexes
+    WHERE schemaname = 'public'
+      AND indexname = 'salidas_borrador_usuario_origen_uidx';
+  `);
+  assert.match(
+    draftIndex.rows[0]?.indexdef ?? "",
+    /UNIQUE INDEX[\s\S]*usuario_solicita_id[\s\S]*origen_id[\s\S]*ARMANDO/i,
   );
   const enumValues = await pool.query<{ enumlabel: string }>(`
     SELECT enumlabel FROM pg_enum WHERE enumtypid = 'estado_salida'::regtype

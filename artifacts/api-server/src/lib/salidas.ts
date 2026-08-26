@@ -10,12 +10,14 @@ import {
   gte,
   inArray,
   lte,
+  ne,
   or,
   sql,
 } from "drizzle-orm";
 import {
   db,
   auditoriaTable,
+  movimientosTable,
   notificacionesSistemaTable,
   productosTable,
   rollosTable,
@@ -51,6 +53,14 @@ type EnviarSalidaInput = {
   usuarioId: number;
   transportista: string;
   notaEnvio?: string | null;
+};
+
+export type AgregarRolloBorradorSalidaInput = {
+  origenId: number;
+  destinoId: number;
+  usuarioId: number;
+  uuidCliente: string;
+  serie: string;
 };
 
 type RecibirSalidaInput = {
@@ -243,11 +253,7 @@ export async function buildSalidaDetail(
     transportista: salida.transportista ?? null,
     uuidCliente: salida.uuidCliente,
     createdAt: salida.createdAt.toISOString(),
-    updatedAt:
-      iso(salida.recibidaAt) ??
-      iso(salida.enviadaAt) ??
-      iso(salida.solicitadaAt) ??
-      salida.createdAt.toISOString(),
+    updatedAt: salida.actividadAt.toISOString(),
     totalProductos: lineas.length,
     totalRollos,
     totalMetros,
@@ -297,6 +303,9 @@ async function requireSalidaDetail(database: ReadDb, salidaId: number) {
 
 export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   const rolloIds = input.rolloIds ?? [];
+  await tx.execute(
+    sql`SELECT pg_advisory_xact_lock(hashtextextended(${`salida-borrador:${input.usuarioSolicitaId}:${input.origenId}`}, 0))`,
+  );
   // Serialize retries for the same client UUID before the read/insert pair.
   // This makes concurrent duplicates return the first document instead of a
   // unique-constraint error.
@@ -309,6 +318,24 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
     .where(eq(salidasTable.uuidCliente, input.uuidCliente))
     .limit(1);
   if (duplicate) return requireSalidaDetail(tx, duplicate.id);
+
+  const [activeDraft] = await tx
+    .select({ id: salidasTable.id })
+    .from(salidasTable)
+    .where(
+      and(
+        eq(salidasTable.estado, "ARMANDO"),
+        eq(salidasTable.usuarioSolicitaId, input.usuarioSolicitaId),
+        eq(salidasTable.origenId, input.origenId),
+      ),
+    )
+    .limit(1);
+  if (activeDraft) {
+    throw new InventarioError(
+      "Ya existe un borrador activo para este usuario y origen.",
+      "DRAFT_ALREADY_EXISTS",
+    );
+  }
 
   if (input.origenId === input.destinoId) {
     throw new InventarioError("El origen y el destino deben ser diferentes.", "SAME_LOCATION");
@@ -388,6 +415,329 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   return requireSalidaDetail(tx, salida!.id);
 }
 
+async function validateOperationalLocations(
+  tx: Tx,
+  origenId: number,
+  destinoId: number,
+): Promise<void> {
+  if (origenId === destinoId) {
+    throw new InventarioError(
+      "El origen y el destino deben ser diferentes.",
+      "SAME_LOCATION",
+    );
+  }
+  const locations = await tx
+    .select()
+    .from(ubicacionesTable)
+    .where(inArray(ubicacionesTable.id, [origenId, destinoId]));
+  if (
+    locations.length !== 2 ||
+    locations.some(
+      (location) =>
+        !location.activa || ["TRANSITO", "EXTERNO"].includes(location.tipo),
+    )
+  ) {
+    throw new InventarioError(
+      "El origen o destino no es una ubicación operativa activa.",
+      "INVALID_LOCATION",
+    );
+  }
+}
+
+export async function obtenerBorradorSalida(
+  database: ReadDb,
+  usuarioId: number,
+  origenId: number,
+) {
+  const [draft] = await database
+    .select({ id: salidasTable.id })
+    .from(salidasTable)
+    .where(
+      and(
+        eq(salidasTable.estado, "ARMANDO"),
+        eq(salidasTable.usuarioSolicitaId, usuarioId),
+        eq(salidasTable.origenId, origenId),
+      ),
+    )
+    .orderBy(desc(salidasTable.actividadAt))
+    .limit(1);
+  return draft ? requireSalidaDetail(database, draft.id) : null;
+}
+
+async function recomputeDraftLine(
+  tx: Tx,
+  salidaId: number,
+  lineaId: number,
+): Promise<void> {
+  const [totals] = await tx
+    .select({
+      cantidad:
+        sql<string>`COALESCE(SUM(${salidaRollosTable.cantidadEnviada}), 0)::text`,
+      rollos: count(),
+    })
+    .from(salidaRollosTable)
+    .where(
+      and(
+        eq(salidaRollosTable.salidaId, salidaId),
+        eq(salidaRollosTable.lineaId, lineaId),
+      ),
+    );
+  if (!totals || totals.rollos === 0) {
+    await tx
+      .delete(salidaLineasTable)
+      .where(
+        and(
+          eq(salidaLineasTable.id, lineaId),
+          eq(salidaLineasTable.salidaId, salidaId),
+        ),
+      );
+    return;
+  }
+  await tx
+    .update(salidaLineasTable)
+    .set({
+      cantidadSolicitada: Number(totals.cantidad).toFixed(3),
+      cantidadEnviada: "0",
+      cantidadRecibida: "0",
+      rollosSolicitados: totals.rollos,
+    })
+    .where(eq(salidaLineasTable.id, lineaId));
+}
+
+export async function agregarRolloBorradorSalida(
+  tx: Tx,
+  input: AgregarRolloBorradorSalidaInput,
+) {
+  await tx.execute(
+    sql`SELECT pg_advisory_xact_lock(hashtextextended(${`salida-borrador:${input.usuarioId}:${input.origenId}`}, 0))`,
+  );
+  await validateOperationalLocations(tx, input.origenId, input.destinoId);
+
+  const [rollo] = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.serie, input.serie))
+    .for("update")
+    .limit(1);
+  if (!rollo) {
+    throw new InventarioError("Serie no encontrada.", "ROLLO_NOT_FOUND");
+  }
+  if (rollo.ubicacionId !== input.origenId) {
+    throw new InventarioError(
+      `La serie ${rollo.serie} está en otra ubicación.`,
+      "LOCATION_MISMATCH",
+    );
+  }
+  if (rollo.estado !== "DISPONIBLE") {
+    throw new InventarioError(
+      `La serie ${rollo.serie} no está DISPONIBLE.`,
+      "ROLLO_UNAVAILABLE",
+    );
+  }
+
+  let [salida] = await tx
+    .select()
+    .from(salidasTable)
+    .where(
+      and(
+        eq(salidasTable.estado, "ARMANDO"),
+        eq(salidasTable.usuarioSolicitaId, input.usuarioId),
+        eq(salidasTable.origenId, input.origenId),
+      ),
+    )
+    .orderBy(desc(salidasTable.actividadAt))
+    .for("update")
+    .limit(1);
+
+  if (salida && salida.destinoId !== input.destinoId) {
+    throw new InventarioError(
+      "El borrador activo pertenece a otro destino. Retómalo antes de escanear.",
+      "DRAFT_DESTINATION_MISMATCH",
+    );
+  }
+
+  if (salida) {
+    const [sameAssociation] = await tx
+      .select({ id: salidaRollosTable.id })
+      .from(salidaRollosTable)
+      .where(
+        and(
+          eq(salidaRollosTable.salidaId, salida.id),
+          eq(salidaRollosTable.rolloId, rollo.id),
+        ),
+      )
+      .limit(1);
+    if (sameAssociation) {
+      await tx
+        .update(salidasTable)
+        .set({ actividadAt: new Date() })
+        .where(eq(salidasTable.id, salida.id));
+      return requireSalidaDetail(tx, salida.id);
+    }
+  } else {
+    await tx.execute(
+      sql`SELECT pg_advisory_xact_lock(hashtextextended(${input.uuidCliente}, 0))`,
+    );
+    const [duplicateUuid] = await tx
+      .select({ id: salidasTable.id })
+      .from(salidasTable)
+      .where(eq(salidasTable.uuidCliente, input.uuidCliente))
+      .limit(1);
+    if (duplicateUuid) {
+      throw new InventarioError(
+        "El identificador de esta captura ya fue utilizado.",
+        "UUID_ALREADY_USED",
+      );
+    }
+  }
+
+  const [reservation] = await tx
+    .select({ salidaId: salidaRollosTable.salidaId })
+    .from(salidaRollosTable)
+    .innerJoin(salidasTable, eq(salidaRollosTable.salidaId, salidasTable.id))
+    .where(
+      and(
+        eq(salidaRollosTable.rolloId, rollo.id),
+        inArray(salidasTable.estado, ["ARMANDO", "EN_TRANSITO"]),
+        ...(salida ? [ne(salidasTable.id, salida.id)] : []),
+      ),
+    )
+    .limit(1);
+  if (reservation) {
+    throw new InventarioError(
+      `El rollo ${rollo.serie} ya pertenece a otra salida activa.`,
+      "ROLLO_RESERVED",
+    );
+  }
+
+  if (!salida) {
+    const folio = await reserveSalidaFolio(tx);
+    const [created] = await tx
+      .insert(salidasTable)
+      .values({
+        folio,
+        origenId: input.origenId,
+        destinoId: input.destinoId,
+        usuarioSolicitaId: input.usuarioId,
+        estado: "ARMANDO",
+        uuidCliente: input.uuidCliente,
+        solicitadaAt: new Date(),
+        actividadAt: new Date(),
+      })
+      .returning();
+    salida = created!;
+    await tx.insert(auditoriaTable).values({
+      usuarioId: input.usuarioId,
+      accion: "CREAR",
+      entidad: "salidas",
+      entidadId: String(salida.id),
+      datosDespues: {
+        folio,
+        origenId: input.origenId,
+        destinoId: input.destinoId,
+      },
+      ip: "desconocida",
+    });
+  }
+
+  let [linea] = await tx
+    .select()
+    .from(salidaLineasTable)
+    .where(
+      and(
+        eq(salidaLineasTable.salidaId, salida.id),
+        eq(salidaLineasTable.productoId, rollo.productoId),
+      ),
+    )
+    .for("update")
+    .limit(1);
+  if (!linea) {
+    [linea] = await tx
+      .insert(salidaLineasTable)
+      .values({
+        salidaId: salida.id,
+        productoId: rollo.productoId,
+        cantidadSolicitada: "0",
+        cantidadEnviada: "0",
+        cantidadRecibida: "0",
+        rollosSolicitados: 0,
+      })
+      .returning();
+  }
+  await tx.insert(salidaRollosTable).values({
+    salidaId: salida.id,
+    lineaId: linea!.id,
+    rolloId: rollo.id,
+    cantidadEnviada: rollo.cantidadActual,
+    cantidadRecibida: null,
+    recibido: false,
+  });
+  await recomputeDraftLine(tx, salida.id, linea!.id);
+  await tx
+    .update(salidasTable)
+    .set({ actividadAt: new Date() })
+    .where(eq(salidasTable.id, salida.id));
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    accion: "AGREGAR_ROLLO",
+    entidad: "salidas",
+    entidadId: String(salida.id),
+    datosDespues: { rolloId: rollo.id, serie: rollo.serie },
+    ip: "desconocida",
+  });
+  return requireSalidaDetail(tx, salida.id);
+}
+
+export async function quitarRolloBorradorSalida(
+  tx: Tx,
+  salidaId: number,
+  rolloId: number,
+  usuarioId: number,
+) {
+  const salida = await getSalidaForUpdate(tx, salidaId);
+  requireState(salida, ["ARMANDO"], "modificar");
+  if (salida.usuarioSolicitaId !== usuarioId) {
+    throw new InventarioError(
+      "Solo quien inició el borrador puede modificarlo.",
+      "SALIDA_DRAFT_OWNER_REQUIRED",
+    );
+  }
+  const [association] = await tx
+    .select()
+    .from(salidaRollosTable)
+    .where(
+      and(
+        eq(salidaRollosTable.salidaId, salida.id),
+        eq(salidaRollosTable.rolloId, rolloId),
+      ),
+    )
+    .for("update")
+    .limit(1);
+  if (!association) {
+    throw new InventarioError(
+      "El rollo no pertenece a este borrador.",
+      "ROLLO_NOT_IN_DRAFT",
+    );
+  }
+  await tx
+    .delete(salidaRollosTable)
+    .where(eq(salidaRollosTable.id, association.id));
+  await recomputeDraftLine(tx, salida.id, association.lineaId);
+  await tx
+    .update(salidasTable)
+    .set({ actividadAt: new Date() })
+    .where(eq(salidasTable.id, salida.id));
+  await tx.insert(auditoriaTable).values({
+    usuarioId,
+    accion: "QUITAR_ROLLO",
+    entidad: "salidas",
+    entidadId: String(salida.id),
+    datosAntes: { rolloId },
+    ip: "desconocida",
+  });
+  return requireSalidaDetail(tx, salida.id);
+}
+
 async function recomputeLineTotals(tx: Tx, salidaId: number): Promise<void> {
   const lineas = await tx
     .select({ id: salidaLineasTable.id })
@@ -411,6 +761,12 @@ async function recomputeLineTotals(tx: Tx, salidaId: number): Promise<void> {
 export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   requireState(salida, ["ARMANDO"], "enviar");
+  if (salida.usuarioSolicitaId !== input.usuarioId) {
+    throw new InventarioError(
+      "Solo quien inició el borrador puede finalizarlo.",
+      "SALIDA_DRAFT_OWNER_REQUIRED",
+    );
+  }
   if (!input.transportista.trim()) {
     throw new InventarioError("El transportista es obligatorio.", "TRANSPORT_REQUIRED");
   }
@@ -450,6 +806,7 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
       enviadaAt: new Date(),
       transportista: input.transportista.trim(),
       notaEnvio: input.notaEnvio?.trim() || null,
+      actividadAt: new Date(),
     })
     .where(eq(salidasTable.id, salida.id));
   return requireSalidaDetail(tx, salida.id);
@@ -496,6 +853,7 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       usuarioRecibeId: input.usuarioId,
       recibidaAt: new Date(),
       notaRecepcion: note,
+      actividadAt: new Date(),
     })
     .where(eq(salidasTable.id, salida.id));
   await tx.insert(auditoriaTable).values({
@@ -537,6 +895,22 @@ export async function cancelarSalida(
   if (motivo.trim().length < 10) {
     throw new InventarioError("El motivo de cancelación debe tener al menos 10 caracteres.", "REASON_REQUIRED");
   }
+  const [movement] = await tx
+    .select({ id: movimientosTable.id })
+    .from(movimientosTable)
+    .where(
+      and(
+        eq(movimientosTable.documentoTipo, "SALIDA"),
+        eq(movimientosTable.documentoId, String(salida.id)),
+      ),
+    )
+    .limit(1);
+  if (movement) {
+    throw new InventarioError(
+      "No se puede cancelar un borrador con movimientos de inventario.",
+      "SALIDA_HAS_MOVEMENTS",
+    );
+  }
   await tx
     .update(salidasTable)
     .set({
@@ -544,6 +918,7 @@ export async function cancelarSalida(
       usuarioCancelaId: usuarioId,
       canceladaAt: new Date(),
       motivoCancelacion: motivo.trim(),
+      actividadAt: new Date(),
     })
     .where(eq(salidasTable.id, salida.id));
   await tx.insert(auditoriaTable).values({
@@ -568,8 +943,22 @@ export type ListSalidasInput = {
   visibleUbicacionId?: number | null;
 };
 
+// Borradores anteriores a esta ventana dejan de mostrarse por defecto, pero no se eliminan.
+const SALIDA_DRAFT_VISIBILITY_WINDOW_HOURS = 24;
+
 export async function listarSalidas(input: ListSalidasInput) {
   const conditions = [];
+  if (!input.estados?.length) {
+    const activeDraftCutoff = new Date(
+      Date.now() - SALIDA_DRAFT_VISIBILITY_WINDOW_HOURS * 60 * 60 * 1000,
+    );
+    conditions.push(
+      or(
+        ne(salidasTable.estado, "ARMANDO"),
+        gte(salidasTable.actividadAt, activeDraftCutoff),
+      ),
+    );
+  }
   if (input.estados?.length) conditions.push(inArray(salidasTable.estado, input.estados));
   if (input.folio) conditions.push(eq(salidasTable.folio, input.folio));
   if (input.origenId) conditions.push(eq(salidasTable.origenId, input.origenId));

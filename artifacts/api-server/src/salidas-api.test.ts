@@ -9,30 +9,39 @@ import { readFile } from "node:fs/promises";
 
 const root = new URL("../../..", import.meta.url);
 const routeFile = new URL("artifacts/api-server/src/routes/salidas.ts", root);
+const serviceFile = new URL("artifacts/api-server/src/lib/salidas.ts", root);
 const specFile = new URL("lib/api-spec/openapi.yaml", root);
 const schemaUpgradeFile = new URL("lib/db/src/lib/salidas-schema.ts", root);
 const listPageFile = new URL("artifacts/mariana-textil/src/pages/salidas.tsx", root);
 const detailPageFile = new URL("artifacts/mariana-textil/src/pages/salida-detail.tsx", root);
 const createPageFile = new URL("artifacts/mariana-textil/src/pages/salida-nueva.tsx", root);
 
-test("Block 2 contract exposes two-step creation and sending without legacy workflow", async () => {
+test("Salida capture persists its draft roll-by-roll and finalizes in one action", async () => {
   const [route, spec] = await Promise.all([readFile(routeFile, "utf8"), readFile(specFile, "utf8")]);
   assert.match(route, /"\/salidas\/exportar"/);
-  assert.match(route, /"\/salidas\/rollos\/serie\/:serie"/);
+  assert.match(route, /"\/salidas\/borrador"/);
+  assert.match(route, /"\/salidas\/borrador\/rollos"/);
+  assert.doesNotMatch(route, /router\.post\(\s*"\/salidas",/);
+  assert.match(route, /"\/salidas\/:id\/rollos\/:rolloId"/);
   assert.match(route, /requierePermiso\("salidas", "crear"\)/);
-  assert.match(route, /El origen debe ser tu ubicación asignada/);
+  assert.match(route, /No puedes operar desde ese origen/);
   assert.doesNotMatch(route, /"\/salidas\/:id\/(aceptar|rechazar|preparar|cerrar)"/);
   assert.match(route, /"\/salidas\/:id\/enviar"/);
   assert.doesNotMatch(route, /pendientes-count/);
   assert.match(spec, /\/salidas\/exportar:/);
-  assert.match(spec, /\/salidas\/rollos\/serie\/\{serie\}:/);
+  assert.match(spec, /operationId: getBorradorSalida/);
+  assert.match(spec, /operationId: agregarRolloBorradorSalida/);
+  assert.doesNotMatch(spec, /operationId: crearSalida/);
+  assert.match(spec, /operationId: quitarRolloBorradorSalida/);
+  assert.match(spec, /operationId: getDocumentoSalida/);
+  assert.doesNotMatch(spec, /operationId: escanearRolloSalida/);
   assert.doesNotMatch(spec, /operationId: (aceptarSalida|rechazarSalida|prepararSalida|cerrarSalida|getSalidasPendientesCount)/);
   assert.match(spec, /operationId: enviarSalida/);
   assert.match(spec, /enum: \[ARMANDO, EN_TRANSITO, RECIBIDA, CANCELADA\]/);
-  for (const obsolete of ["SalidaLineaInput", "PrepararSalidaInput", "PrepararSalidaLineaInput", "EnviarSalidaInput", "RecibirSalidaInput", "RecibirSalidaRolloInput", "PendientesCount"]) {
+  for (const obsolete of ["SalidaLineaInput", "PrepararSalidaInput", "PrepararSalidaLineaInput", "RecibirSalidaRolloInput", "PendientesCount"]) {
     assert.doesNotMatch(spec, new RegExp(`^    ${obsolete}:`, "m"));
   }
-  const exportContract = spec.slice(spec.indexOf("/salidas/exportar:"), spec.indexOf("/salidas/rollos/serie/"));
+  const exportContract = spec.slice(spec.indexOf("/salidas/exportar:"), spec.indexOf("/salidas/ubicaciones:"));
   for (const filter of ["fechaDesde", "fechaHasta", "origenId", "destinoId", "productoId", "usuarioId", "estado", "search"]) {
     assert.match(exportContract, new RegExp(`name: ${filter}`));
   }
@@ -41,7 +50,6 @@ test("Block 2 contract exposes two-step creation and sending without legacy work
 test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven", async () => {
   const receptionPageFile = new URL("artifacts/mariana-textil/src/components/recepcion-salidas.tsx", root);
   const documentPageFile = new URL("artifacts/mariana-textil/src/pages/salida-documento.tsx", root);
-  const serviceFile = new URL("artifacts/api-server/src/lib/salidas.ts", root);
   const [route, spec, listPage, receptionPage, documentPage, service] = await Promise.all([
     readFile(routeFile, "utf8"),
     readFile(specFile, "utf8"),
@@ -68,7 +76,7 @@ test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven"
   assert.match(documentPage, /tab=recepcion&folio=/);
 });
 
-test("Block 2 frontend only presents the four states and explicit send action", async () => {
+test("Frontend finalizes from Salida Nueva and detail has no second send action", async () => {
   const [listPage, detailPage, createPage] = await Promise.all([
     readFile(listPageFile, "utf8"),
     readFile(detailPageFile, "utf8"),
@@ -79,9 +87,20 @@ test("Block 2 frontend only presents the four states and explicit send action", 
     assert.match(source, /EN_TRANSITO/);
     assert.doesNotMatch(source, /SOLICITADA|ACEPTADA|RECHAZADA|PREPARADA|ENVIADA|CERRADA/);
   }
-  assert.match(detailPage, /useEnviarSalida/);
-  assert.match(detailPage, /salida\.estado === 'ARMANDO'/);
+  assert.doesNotMatch(detailPage, /useEnviarSalida|Enviar salida|btn-action-send/);
+  assert.match(detailPage, /salida\.estado === 'EN_TRANSITO' \|\| salida\.estado === 'RECIBIDA'/);
+  assert.match(detailPage, /btn-print-salida-disabled/);
+  assert.match(detailPage, /La hoja de traslado estará disponible cuando la mercancía esté en tránsito/);
   assert.match(createPage, /El inventario no se moverá hasta enviarla/);
+  assert.match(createPage, /useAgregarRolloBorradorSalida/);
+  assert.match(createPage, /useQuitarRolloBorradorSalida/);
+  assert.match(createPage, /useGetBorradorSalida/);
+  assert.match(createPage, /Guardar y enviar/);
+  assert.match(createPage, /setLocation\(`\/salidas\/\$\{data\.id\}`\)/);
+  assert.doesNotMatch(createPage, /Ver detalle/);
+  assert.match(createPage, /draftQuery\.isFetching/);
+  assert.match(createPage, /queryClient\.cancelQueries/);
+  assert.doesNotMatch(createPage, /Guardar armado/);
 });
 
 test("schema migration replaces the PostgreSQL enum with the exact four states", async () => {
@@ -92,6 +111,12 @@ test("schema migration replaces the PostgreSQL enum with the exact four states",
   assert.ok(createType >= 0 && arming > createType && tableDefault > arming);
   assert.match(source, /ALTER COLUMN estado TYPE estado_salida_replacement/);
   assert.match(source, /'REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'PREPARADA', 'ARMANDO'/);
+  assert.match(source, /actividad_at timestamptz NOT NULL DEFAULT now\(\)/);
+  assert.match(source, /salidas_estado_actividad_idx/);
+  assert.match(source, /salidas_borrador_usuario_origen_uidx/);
+  const service = await readFile(serviceFile, "utf8");
+  assert.match(service, /const SALIDA_DRAFT_VISIBILITY_WINDOW_HOURS = 24/);
+  assert.match(service, /Borradores anteriores a esta ventana dejan de mostrarse por defecto/);
 });
 
 if (!process.env.TEST_DATABASE_URL) {

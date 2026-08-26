@@ -248,7 +248,7 @@ export default function TicketDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
-      <div className="flex items-center justify-between no-print">
+      <div className="flex flex-col gap-4 no-print sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Link href={returnPath}>
             <Button variant="outline" size="icon">
@@ -264,9 +264,9 @@ export default function TicketDetailPage() {
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {canCancel && ticket.estado !== EstadoTicket.CANCELADO && (
-            <Button variant="destructive" onClick={() => {
+            <Button className="w-full sm:w-auto" variant="destructive" onClick={() => {
               setMotivo("");
               setAdminUser("");
               setAdminPass("");
@@ -276,10 +276,10 @@ export default function TicketDetailPage() {
               <Ban className="h-4 w-4 mr-2" /> Cancelar Ticket
             </Button>
           )}
-          <Button variant="outline" onClick={handlePrintCarta}>
+          <Button className="w-full sm:w-auto" variant="outline" onClick={handlePrintCarta}>
             <Printer className="h-4 w-4 mr-2" /> Imprimir Media Carta
           </Button>
-          <Button onClick={handlePrint80mm}>
+          <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
             <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
           </Button>
         </div>
@@ -287,7 +287,7 @@ export default function TicketDetailPage() {
 
       {/* Visor de Ticket (Pantalla / Carta) */}
       <Card className="no-print shadow-md">
-        <CardHeader className="bg-sidebar/5 border-b flex flex-row items-start justify-between">
+        <CardHeader className="flex flex-col items-start justify-between gap-4 border-b bg-sidebar/5 sm:flex-row">
           <div>
             <CardTitle>Detalle de Operación</CardTitle>
             <CardDescription>
@@ -302,7 +302,7 @@ export default function TicketDetailPage() {
               {showRolls ? "Ver agrupado" : "Ver rollos"}
             </Button>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <div
               className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
                 ticket.estado === EstadoTicket.CANCELADO
@@ -339,8 +339,8 @@ export default function TicketDetailPage() {
             )}
           </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <table className="w-full text-sm text-left">
+        <CardContent className="overflow-x-auto p-0">
+          <table className="min-w-[700px] w-full text-left text-sm">
             <thead className="bg-muted/50 text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 font-semibold">Producto</th>

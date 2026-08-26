@@ -1062,7 +1062,7 @@ await test("S-09: BODEGA entry catalogs → 200; /productos and /proveedores →
   assert.equal(proveedores.status, 403, JSON.stringify(proveedores.body));
 });
 
-await test("S-09A: BODEGA Salidas catalog is least-privilege and null-cost rolls transfer immediately", async () => {
+await test("S-09A: BODEGA stages, owns, and sends a null-cost roll in one final action", async () => {
   const login_r = await login(testBodega.usuario, testBodega.password);
   const locations = await api(
     "GET",
@@ -1103,72 +1103,157 @@ await test("S-09A: BODEGA Salidas catalog is least-privilege and null-cost rolls
     testAdmin.id,
     true,
   );
-  const created = await api(
+  const [rollo] = await db
+    .select({ serie: rollosTable.serie })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.ok(rollo);
+
+  const staged = await api(
     "POST",
-    "/salidas",
+    "/salidas/borrador/rollos",
     {
       uuidCliente: randomUUID(),
       origenId: seedTienda.id,
       destinoId: otherTiendaId,
-      rolloIds: [rolloId],
+      serie: rollo.serie,
     },
     login_r.cookie,
   );
-  assert.equal(created.status, 201, JSON.stringify(created.body));
-  createdSalidaIds.push(Number((created.body as { id: number }).id));
+  assert.equal(staged.status, 200, JSON.stringify(staged.body));
+  const salidaId = Number((staged.body as { id: number }).id);
+  createdSalidaIds.push(salidaId);
+
+  const [reserved] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.ok(reserved);
+  assert.equal(reserved.ubicacionId, seedTienda.id);
+  assert.equal(reserved.estado, "DISPONIBLE");
+
+  const otherOwnerLogin = await login(
+    testBodegaTodas.usuario,
+    testBodegaTodas.password,
+  );
+  const forbiddenRemoval = await api(
+    "DELETE",
+    `/salidas/${salidaId}/rollos/${rolloId}`,
+    undefined,
+    otherOwnerLogin.cookie,
+  );
+  assert.equal(forbiddenRemoval.status, 403, JSON.stringify(forbiddenRemoval.body));
+  const forbiddenSend = await api(
+    "POST",
+    `/salidas/${salidaId}/enviar`,
+    { transportista: "Intento ajeno" },
+    otherOwnerLogin.cookie,
+  );
+  assert.equal(forbiddenSend.status, 403, JSON.stringify(forbiddenSend.body));
+  const forbiddenDocument = await api(
+    "GET",
+    `/salidas/${salidaId}/documento`,
+    undefined,
+    login_r.cookie,
+  );
+  assert.equal(forbiddenDocument.status, 409, JSON.stringify(forbiddenDocument.body));
+
+  const sent = await api(
+    "POST",
+    `/salidas/${salidaId}/enviar`,
+    { transportista: "Transportista de prueba" },
+    login_r.cookie,
+  );
+  assert.equal(sent.status, 200, JSON.stringify(sent.body));
 
   const [moved] = await db
     .select()
     .from(rollosTable)
     .where(eq(rollosTable.id, rolloId));
   assert.ok(moved);
-  assert.equal(moved.ubicacionId, otherTiendaId);
-  assert.equal(moved.estado, "DISPONIBLE");
-  assert.notEqual(moved.estado, "EN_TRANSITO");
+  const [transitLocation] = await db
+    .select({ tipo: ubicacionesTable.tipo })
+    .from(ubicacionesTable)
+    .where(eq(ubicacionesTable.id, moved.ubicacionId));
+  assert.equal(transitLocation?.tipo, "TRANSITO");
+  assert.equal(moved.estado, "EN_TRANSITO");
   assert.equal(moved.costoUnitario, null);
   assert.equal(moved.costoTotal, null);
 
-  const [destinationStock] = await db
+  const stock = await db
     .select()
     .from(existenciasTable)
-    .where(
-      and(
-        eq(existenciasTable.productoId, productoId),
-        eq(existenciasTable.ubicacionId, otherTiendaId),
-      ),
-    );
-  assert.ok(destinationStock, "Destination inventory cache must exist");
-  assert.equal(Number(destinationStock.cantidadTotal), 15);
+    .where(eq(existenciasTable.productoId, productoId));
+  assert.equal(
+    Number(stock.find((row) => row.ubicacionId === seedTienda.id)?.cantidadTotal),
+    0,
+  );
+  assert.equal(
+    Number(
+      stock.find((row) => row.ubicacionId === otherTiendaId)?.cantidadTotal ?? 0,
+    ),
+    0,
+  );
 });
 
 await test("S-09B: CAJA only lists and opens outputs received at its assigned store", async () => {
   const ownBodegaLogin = await login(testBodega.usuario, testBodega.password);
   const otherBodegaLogin = await login(testBodegaOtherLoc.usuario, testBodegaOtherLoc.password);
+  const stageAndSend = async (
+    cookie: string,
+    origenId: number,
+    destinoId: number,
+    rolloId: number,
+    transportista: string,
+  ) => {
+    const [rollo] = await db
+      .select({ serie: rollosTable.serie })
+      .from(rollosTable)
+      .where(eq(rollosTable.id, rolloId));
+    assert.ok(rollo);
+    const staged = await api(
+      "POST",
+      "/salidas/borrador/rollos",
+      {
+        uuidCliente: randomUUID(),
+        origenId,
+        destinoId,
+        serie: rollo.serie,
+      },
+      cookie,
+    );
+    assert.equal(staged.status, 200, JSON.stringify(staged.body));
+    const salidaId = Number((staged.body as { id: number }).id);
+    const sent = await api(
+      "POST",
+      `/salidas/${salidaId}/enviar`,
+      { transportista },
+      cookie,
+    );
+    assert.equal(sent.status, 200, JSON.stringify(sent.body));
+    return salidaId;
+  };
 
   const outboundProductId = await mkProducto();
   const outboundRolloId = await mkRolloDisponible(seedTienda.id, outboundProductId, testAdmin.id);
-  const outbound = await api("POST", "/salidas", {
-    uuidCliente: randomUUID(),
-    origenId: seedTienda.id,
-    destinoId: otherTiendaId,
-    transportista: "Transportista salida",
-    rolloIds: [outboundRolloId],
-  }, ownBodegaLogin.cookie);
-  assert.equal(outbound.status, 201, JSON.stringify(outbound.body));
-  const outboundId = Number((outbound.body as { id: number }).id);
+  const outboundId = await stageAndSend(
+    ownBodegaLogin.cookie,
+    seedTienda.id,
+    otherTiendaId,
+    outboundRolloId,
+    "Transportista salida",
+  );
   createdSalidaIds.push(outboundId);
 
   const inboundProductId = await mkProducto();
   const inboundRolloId = await mkRolloDisponible(otherTiendaId, inboundProductId, testAdmin.id);
-  const inbound = await api("POST", "/salidas", {
-    uuidCliente: randomUUID(),
-    origenId: otherTiendaId,
-    destinoId: seedTienda.id,
-    transportista: "Transportista entrada",
-    rolloIds: [inboundRolloId],
-  }, otherBodegaLogin.cookie);
-  assert.equal(inbound.status, 201, JSON.stringify(inbound.body));
-  const inboundId = Number((inbound.body as { id: number }).id);
+  const inboundId = await stageAndSend(
+    otherBodegaLogin.cookie,
+    otherTiendaId,
+    seedTienda.id,
+    inboundRolloId,
+    "Transportista entrada",
+  );
   createdSalidaIds.push(inboundId);
 
   const cajaLogin = await login(testCaja.usuario, testCaja.password);
@@ -1189,11 +1274,11 @@ await test("S-09B: CAJA only lists and opens outputs received at its assigned st
   const outboundDetail = await api("GET", `/salidas/${outboundId}`, undefined, cajaLogin.cookie);
   assert.equal(outboundDetail.status, 403, JSON.stringify(outboundDetail.body));
 
-  const forbiddenCreate = await api("POST", "/salidas", {
+  const forbiddenCreate = await api("POST", "/salidas/borrador/rollos", {
     uuidCliente: randomUUID(),
     origenId: seedTienda.id,
     destinoId: otherTiendaId,
-    rolloIds: [],
+    serie: "ROLLO-NO-PERMITIDO",
   }, cajaLogin.cookie);
   assert.equal(forbiddenCreate.status, 403, JSON.stringify(forbiddenCreate.body));
 

@@ -23,8 +23,8 @@ test("Salidas, Etiquetas y Ajustes interpretan los códigos en servidor", async 
     source("artifacts/api-server/src/routes/inventario.ts"),
   ]);
 
-  assert.match(salidas, /interpretarCodigoEscaneado\(codigoRecibido\)/);
-  assert.match(salidas, /eq\(rollosTable\.serie, serie\)/);
+  assert.match(salidas, /interpretarCodigoEscaneado\(body\.serie\)/);
+  assert.match(salidas, /agregarRolloBorradorSalida\(tx,[\s\S]*serie,/);
   assert.match(etiquetas, /interpretarCodigoEscaneado\(term\)/);
   assert.match(etiquetas, /codigo\.serie[\s\S]*sql`r\.serie = \$\{codigo\.serie\}`/);
   assert.match(etiquetas, /r\.serie ILIKE/);

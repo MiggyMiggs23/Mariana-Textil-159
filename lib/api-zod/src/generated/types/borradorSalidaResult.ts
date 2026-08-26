@@ -5,7 +5,8 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { SalidaDetail } from './salidaDetail';
 
-export type EscanearRolloSalidaParams = {
-origenId: number;
-};
+export interface BorradorSalidaResult {
+  salida: SalidaDetail | null;
+}

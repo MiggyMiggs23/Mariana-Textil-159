@@ -7,8 +7,10 @@ import {
   serial,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { estadoSalidaEnum } from "./enums";
 import { ubicacionesTable } from "./locations";
 import { productosTable } from "./productos";
@@ -71,6 +73,9 @@ export const salidasTable = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    actividadAt: timestamp("actividad_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [
     index("salidas_origen_estado_idx").on(table.origenId, table.estado),
@@ -78,6 +83,12 @@ export const salidasTable = pgTable(
     index("salidas_estado_idx").on(table.estado),
     index("salidas_folio_idx").on(table.folio),
     index("salidas_created_at_idx").on(table.createdAt),
+    index("salidas_estado_actividad_idx").on(table.estado, table.actividadAt),
+    uniqueIndex("salidas_borrador_usuario_origen_uidx")
+      .on(table.usuarioSolicitaId, table.origenId)
+      .where(
+        sql`${table.estado} = 'ARMANDO' AND ${table.usuarioSolicitaId} IS NOT NULL`,
+      ),
   ],
 );
 

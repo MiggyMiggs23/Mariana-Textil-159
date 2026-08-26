@@ -1,5 +1,5 @@
 import { useParams, Link } from "wouter";
-import { useGetSalida, getGetSalidaQueryKey } from "@workspace/api-client-react";
+import { useGetDocumentoSalida, getGetDocumentoSalidaQueryKey } from "@workspace/api-client-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, MapPin, ArrowLeft, AlertCircle } from "lucide-react";
@@ -9,8 +9,8 @@ import { QRCodeSVG } from "qrcode.react";
 
 export default function SalidaDocumento() {
   const { id } = useParams();
-  const { data: salida, isLoading } = useGetSalida(Number(id), {
-    query: { enabled: !!id, queryKey: getGetSalidaQueryKey(Number(id)) }
+  const { data: salida, isLoading, error } = useGetDocumentoSalida(Number(id), {
+    query: { enabled: !!id, queryKey: getGetDocumentoSalidaQueryKey(Number(id)), retry: false }
   });
 
   if (isLoading) {
@@ -21,16 +21,22 @@ export default function SalidaDocumento() {
     );
   }
 
-  if (!salida) {
+  if (error || !salida) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center p-4 bg-white">
-        <p className="text-muted-foreground">Documento no encontrado</p>
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center gap-4 p-4 bg-white text-center">
+        <AlertCircle className="h-10 w-10 text-amber-600" />
+        <div>
+          <h1 className="text-lg font-bold text-slate-900">Documento no disponible</h1>
+          <p className="mt-1 max-w-md text-sm text-muted-foreground">
+            La salida debe estar enviada o recibida antes de poder imprimirse.
+          </p>
+        </div>
+        <Link href={`/salidas/${id}`}>
+          <Button variant="outline">Volver al detalle</Button>
+        </Link>
       </div>
     );
   }
-
-  // We allow printing even if cancelled
-  const isAvailable = true; // or just remove the check
 
   const dateObj = new Date(salida.createdAt);
   const receptionPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&folio=${salida.folio}`;

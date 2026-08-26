@@ -62,7 +62,7 @@ export default function RolloDetail() {
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link href="/inventario" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver a inventario
@@ -72,23 +72,23 @@ export default function RolloDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 border-t-4 border-t-primary">
             <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-3xl font-bold text-sidebar flex items-center gap-2 mb-2">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between">
+                <div className="min-w-0">
+                  <CardTitle className="mb-2 flex flex-wrap items-center gap-2 text-3xl font-bold text-sidebar">
                     {rollo.telaProducto} <span className="text-muted-foreground font-normal">/</span> {rollo.colorProducto}
                   </CardTitle>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                     <span className="font-mono bg-muted/50 px-2 py-0.5 rounded border">SKU: {rollo.skuProducto}</span>
                     <span className="flex items-center"><MapPin className="w-4 h-4 mr-1" /> {rollo.nombreUbicacion}</span>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-sm bg-background">
+                <Badge variant="outline" className="shrink-0 text-sm bg-background">
                   {rollo.estado}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y">
+              <div className="grid grid-cols-1 gap-6 border-y py-6 sm:grid-cols-2 md:grid-cols-4">
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Cantidad Actual</div>
                   <div className="text-3xl font-bold tracking-tight text-foreground">
@@ -179,11 +179,11 @@ export default function RolloDetail() {
               Trazabilidad completa desde el alta hasta el estado actual.
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-0">
+          <CardContent className="overflow-x-auto p-0">
             {rollo.historial.length === 0 ? (
               <div className="p-8 text-center text-muted-foreground">No hay movimientos registrados.</div>
             ) : (
-              <Table>
+              <Table className="min-w-[700px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Fecha</TableHead>

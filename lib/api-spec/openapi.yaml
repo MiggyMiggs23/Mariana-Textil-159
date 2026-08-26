@@ -2779,19 +2779,43 @@ paths:
                 $ref: "#/components/schemas/SalidaListResult"
         "401":
           $ref: "#/components/responses/Unauthorized"
-    post:
-      operationId: crearSalida
+  /salidas/borrador:
+    get:
+      operationId: getBorradorSalida
       tags: [salidas]
-      summary: Crea una salida en armado sin mover inventario
+      summary: Retoma el borrador propio del usuario para un origen
+      parameters:
+        - in: query
+          name: origenId
+          required: true
+          schema: { type: number }
+      responses:
+        "200":
+          description: Borrador activo o null cuando todavía no existe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BorradorSalidaResult"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /salidas/borrador/rollos:
+    post:
+      operationId: agregarRolloBorradorSalida
+      tags: [salidas]
+      summary: Valida y guarda un rollo en el borrador propio en una sola operación
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SalidaInput"
+              $ref: "#/components/schemas/AgregarRolloBorradorSalidaInput"
       responses:
-        "201":
-          description: Salida creada
+        "200":
+          description: Borrador actualizado
           content:
             application/json:
               schema:
@@ -2802,6 +2826,10 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
   /salidas/exportar:
     get:
       operationId: exportarSalidas
@@ -2895,28 +2923,6 @@ paths:
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
-  /salidas/rollos/serie/{serie}:
-    get:
-      operationId: escanearRolloSalida
-      tags: [salidas]
-      summary: Consulta una serie exacta disponible en el origen
-      parameters:
-        - in: path
-          name: serie
-          required: true
-          schema: { type: string }
-        - in: query
-          name: origenId
-          required: true
-          schema: { type: number }
-      responses:
-        "200":
-          description: Rollo escaneado
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/SalidaRolloEscaneado" }
-        "404": { $ref: "#/components/responses/NotFound" }
-        "409": { $ref: "#/components/responses/Conflict" }
   /salidas/{id}:
     get:
       operationId: getSalida
@@ -2935,6 +2941,54 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+  /salidas/{id}/documento:
+    get:
+      operationId: getDocumentoSalida
+      tags: [salidas]
+      summary: Obtiene una salida imprimible enviada o recibida
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      responses:
+        "200":
+          description: Documento de salida imprimible
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/rollos/{rolloId}:
+    delete:
+      operationId: quitarRolloBorradorSalida
+      tags: [salidas]
+      summary: Quita inmediatamente un rollo del borrador propio
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+        - in: path
+          name: rolloId
+          required: true
+          schema: { type: number }
+      responses:
+        "200":
+          description: Borrador actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
   /salidas/{id}/cancelar:
     post:
       operationId: cancelarSalida
@@ -6022,6 +6076,22 @@ components:
           type: array
           minItems: 1
           items: { type: number }
+    AgregarRolloBorradorSalidaInput:
+      type: object
+      required: [uuidCliente, origenId, destinoId, serie]
+      properties:
+        uuidCliente: { type: string, minLength: 1 }
+        origenId: { type: number }
+        destinoId: { type: number }
+        serie: { type: string, minLength: 1 }
+    BorradorSalidaResult:
+      type: object
+      required: [salida]
+      properties:
+        salida:
+          anyOf:
+            - $ref: "#/components/schemas/SalidaDetail"
+            - type: "null"
     MotivoSalidaInput:
       type: object
       required: [motivo]
@@ -6115,20 +6185,6 @@ components:
         recibido: { type: ["boolean", "null"] }
         diferencia: { type: ["string", "null"] }
         notaDiferencia: { type: ["string", "null"] }
-        cantidadActual: { type: string }
-        productoId: { type: number }
-        sku: { type: string }
-        tela: { type: string }
-        color: { type: string }
-        unidad: { $ref: "#/components/schemas/UnidadProducto" }
-    SalidaRolloEscaneado:
-      type: object
-      required: [id, serie, estado, ubicacionId, cantidadActual, productoId, sku, tela, color, unidad]
-      properties:
-        id: { type: number }
-        serie: { type: string }
-        estado: { $ref: "#/components/schemas/EstadoRollo" }
-        ubicacionId: { type: number }
         cantidadActual: { type: string }
         productoId: { type: number }
         sku: { type: string }

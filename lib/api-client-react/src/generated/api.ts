@@ -28,11 +28,13 @@ import type {
   AdminDiferencias,
   AdminPendingSummary,
   AdminRealtimeDashboard,
+  AgregarRolloBorradorSalidaInput,
   AjusteProveedorInput,
   AjusteRolloInput,
   AnaliticaGlobalProveedores,
   BajaCliente200,
   BajaClienteBody,
+  BorradorSalidaResult,
   BuscarPosParams,
   BuscarRollosEtiquetas200,
   BuscarRollosEtiquetasParams,
@@ -82,7 +84,6 @@ import type {
   EntradasPendientesCostoResult,
   EnvioSalidaInput,
   Error,
-  EscanearRolloSalidaParams,
   EstadisticasProveedorParams,
   EstadoCuentaProveedorParams,
   ExistenciaAgrupada,
@@ -105,6 +106,7 @@ import type {
   GetAdminDiferenciasParams,
   GetAdminRealtimeDashboardParams,
   GetAdminRealtimePendingParams,
+  GetBorradorSalidaParams,
   GetClienteAnaliticaParams,
   GetClienteComprasParams,
   GetClienteEstadoCuentaParams,
@@ -192,11 +194,9 @@ import type {
   RolloListResult,
   SalidaDetail,
   SalidaDetailResponseResponse,
-  SalidaInput,
   SalidaListResult,
   SalidaMostradorInput,
   SalidaResumen,
-  SalidaRolloEscaneado,
   ServerTime,
   SesionCaja,
   SesionCajaActual,
@@ -9604,25 +9604,32 @@ export function useListSalidas<TData = Awaited<ReturnType<typeof listSalidas>>, 
 
 
 
-export const getCrearSalidaUrl = () => {
+export const getGetBorradorSalidaUrl = (params: GetBorradorSalidaParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/salidas`
+  return stringifiedParams.length > 0 ? `/api/salidas/borrador?${stringifiedParams}` : `/api/salidas/borrador`
 }
 
 /**
- * @summary Crea una salida en armado sin mover inventario
+ * @summary Retoma el borrador propio del usuario para un origen
  */
-export const crearSalida = async (salidaInput: SalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+export const getBorradorSalida = async (params: GetBorradorSalidaParams, options?: Parameters<typeof customFetch>[1]): Promise<BorradorSalidaResult> => {
 
-  return customFetch<SalidaDetail>(getCrearSalidaUrl(),
+  return customFetch<BorradorSalidaResult>(getGetBorradorSalidaUrl(params),
   {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(salidaInput)
+    method: 'GET'
+
+
   }
 );}
 
@@ -9630,11 +9637,88 @@ export const crearSalida = async (salidaInput: SalidaInput, options?: Parameters
 
 
 
-export const getCrearSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalida>>, TError,{data: BodyType<SalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof crearSalida>>, TError,{data: BodyType<SalidaInput>}, TContext> => {
+export const getGetBorradorSalidaQueryKey = (params?: GetBorradorSalidaParams,) => {
+    return [
+    `/api/salidas/borrador`, ...(params ? [params] : [])
+    ] as const;
+    }
 
-const mutationKey = ['crearSalida'];
+
+export const getGetBorradorSalidaQueryOptions = <TData = Awaited<ReturnType<typeof getBorradorSalida>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: GetBorradorSalidaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBorradorSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBorradorSalidaQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBorradorSalida>>> = ({ signal }) => getBorradorSalida(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBorradorSalida>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBorradorSalidaQueryResult = NonNullable<Awaited<ReturnType<typeof getBorradorSalida>>>
+export type GetBorradorSalidaQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Retoma el borrador propio del usuario para un origen
+ */
+
+export function useGetBorradorSalida<TData = Awaited<ReturnType<typeof getBorradorSalida>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: GetBorradorSalidaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBorradorSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetBorradorSalidaQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getAgregarRolloBorradorSalidaUrl = () => {
+
+
+
+
+  return `/api/salidas/borrador/rollos`
+}
+
+/**
+ * @summary Valida y guarda un rollo en el borrador propio en una sola operación
+ */
+export const agregarRolloBorradorSalida = async (agregarRolloBorradorSalidaInput: AgregarRolloBorradorSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+
+  return customFetch<SalidaDetail>(getAgregarRolloBorradorSalidaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(agregarRolloBorradorSalidaInput)
+  }
+);}
+
+
+
+
+
+export const getAgregarRolloBorradorSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof agregarRolloBorradorSalida>>, TError,{data: BodyType<AgregarRolloBorradorSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof agregarRolloBorradorSalida>>, TError,{data: BodyType<AgregarRolloBorradorSalidaInput>}, TContext> => {
+
+const mutationKey = ['agregarRolloBorradorSalida'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -9644,10 +9728,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearSalida>>, {data: BodyType<SalidaInput>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof agregarRolloBorradorSalida>>, {data: BodyType<AgregarRolloBorradorSalidaInput>}> = (props) => {
           const {data} = props ?? {};
 
-          return  crearSalida(data,requestOptions)
+          return  agregarRolloBorradorSalida(data,requestOptions)
         }
 
 
@@ -9657,22 +9741,22 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CrearSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof crearSalida>>>
-    export type CrearSalidaMutationBody = BodyType<SalidaInput>
-    export type CrearSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+    export type AgregarRolloBorradorSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof agregarRolloBorradorSalida>>>
+    export type AgregarRolloBorradorSalidaMutationBody = BodyType<AgregarRolloBorradorSalidaInput>
+    export type AgregarRolloBorradorSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
- * @summary Crea una salida en armado sin mover inventario
+ * @summary Valida y guarda un rollo en el borrador propio en una sola operación
  */
-export const useCrearSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalida>>, TError,{data: BodyType<SalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const useAgregarRolloBorradorSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof agregarRolloBorradorSalida>>, TError,{data: BodyType<AgregarRolloBorradorSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
-        Awaited<ReturnType<typeof crearSalida>>,
+        Awaited<ReturnType<typeof agregarRolloBorradorSalida>>,
         TError,
-        {data: BodyType<SalidaInput>},
+        {data: BodyType<AgregarRolloBorradorSalidaInput>},
         TContext
       > => {
-      return useMutation(getCrearSalidaMutationOptions(options));
+      return useMutation(getAgregarRolloBorradorSalidaMutationOptions(options));
     }
 
 export const getExportarSalidasUrl = (params?: ExportarSalidasParams,) => {
@@ -9991,95 +10075,6 @@ export function useGetSalidaRecepcion<TData = Awaited<ReturnType<typeof getSalid
 
 
 
-export const getEscanearRolloSalidaUrl = (serie: string,
-    params: EscanearRolloSalidaParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/salidas/rollos/serie/${serie}?${stringifiedParams}` : `/api/salidas/rollos/serie/${serie}`
-}
-
-/**
- * @summary Consulta una serie exacta disponible en el origen
- */
-export const escanearRolloSalida = async (serie: string,
-    params: EscanearRolloSalidaParams, options?: Parameters<typeof customFetch>[1]): Promise<SalidaRolloEscaneado> => {
-
-  return customFetch<SalidaRolloEscaneado>(getEscanearRolloSalidaUrl(serie,params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getEscanearRolloSalidaQueryKey = (serie: string,
-    params?: EscanearRolloSalidaParams,) => {
-    return [
-    `/api/salidas/rollos/serie/${serie}`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getEscanearRolloSalidaQueryOptions = <TData = Awaited<ReturnType<typeof escanearRolloSalida>>, TError = ErrorType<NotFoundResponse | ConflictResponse>>(serie: string,
-    params: EscanearRolloSalidaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof escanearRolloSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getEscanearRolloSalidaQueryKey(serie,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof escanearRolloSalida>>> = ({ signal }) => escanearRolloSalida(serie,params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: serie !== null && serie !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof escanearRolloSalida>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type EscanearRolloSalidaQueryResult = NonNullable<Awaited<ReturnType<typeof escanearRolloSalida>>>
-export type EscanearRolloSalidaQueryError = ErrorType<NotFoundResponse | ConflictResponse>
-
-
-/**
- * @summary Consulta una serie exacta disponible en el origen
- */
-
-export function useEscanearRolloSalida<TData = Awaited<ReturnType<typeof escanearRolloSalida>>, TError = ErrorType<NotFoundResponse | ConflictResponse>>(
- serie: string,
-    params: EscanearRolloSalidaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof escanearRolloSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getEscanearRolloSalidaQueryOptions(serie,params,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-
 export const getGetSalidaUrl = (id: number,) => {
 
 
@@ -10156,6 +10151,156 @@ export function useGetSalida<TData = Awaited<ReturnType<typeof getSalida>>, TErr
 
 
 
+
+export const getGetDocumentoSalidaUrl = (id: number,) => {
+
+
+
+
+  return `/api/salidas/${id}/documento`
+}
+
+/**
+ * @summary Obtiene una salida imprimible enviada o recibida
+ */
+export const getDocumentoSalida = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+
+  return customFetch<SalidaDetail>(getGetDocumentoSalidaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDocumentoSalidaQueryKey = (id: number,) => {
+    return [
+    `/api/salidas/${id}/documento`
+    ] as const;
+    }
+
+
+export const getGetDocumentoSalidaQueryOptions = <TData = Awaited<ReturnType<typeof getDocumentoSalida>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDocumentoSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDocumentoSalidaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDocumentoSalida>>> = ({ signal }) => getDocumentoSalida(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDocumentoSalida>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDocumentoSalidaQueryResult = NonNullable<Awaited<ReturnType<typeof getDocumentoSalida>>>
+export type GetDocumentoSalidaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+
+/**
+ * @summary Obtiene una salida imprimible enviada o recibida
+ */
+
+export function useGetDocumentoSalida<TData = Awaited<ReturnType<typeof getDocumentoSalida>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDocumentoSalida>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDocumentoSalidaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getQuitarRolloBorradorSalidaUrl = (id: number,
+    rolloId: number,) => {
+
+
+
+
+  return `/api/salidas/${id}/rollos/${rolloId}`
+}
+
+/**
+ * @summary Quita inmediatamente un rollo del borrador propio
+ */
+export const quitarRolloBorradorSalida = async (id: number,
+    rolloId: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+
+  return customFetch<SalidaDetail>(getQuitarRolloBorradorSalidaUrl(id,rolloId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getQuitarRolloBorradorSalidaMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof quitarRolloBorradorSalida>>, TError,{id: number;rolloId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof quitarRolloBorradorSalida>>, TError,{id: number;rolloId: number}, TContext> => {
+
+const mutationKey = ['quitarRolloBorradorSalida'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof quitarRolloBorradorSalida>>, {id: number;rolloId: number}> = (props) => {
+          const {id,rolloId} = props ?? {};
+
+          return  quitarRolloBorradorSalida(id,rolloId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type QuitarRolloBorradorSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof quitarRolloBorradorSalida>>>
+
+    export type QuitarRolloBorradorSalidaMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Quita inmediatamente un rollo del borrador propio
+ */
+export const useQuitarRolloBorradorSalida = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof quitarRolloBorradorSalida>>, TError,{id: number;rolloId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof quitarRolloBorradorSalida>>,
+        TError,
+        {id: number;rolloId: number},
+        TContext
+      > => {
+      return useMutation(getQuitarRolloBorradorSalidaMutationOptions(options));
+    }
 
 export const getCancelarSalidaUrl = (id: number,) => {
 

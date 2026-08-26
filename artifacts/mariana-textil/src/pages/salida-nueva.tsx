@@ -5,11 +5,15 @@ import { CampoEscaneo } from "@/components/campo-escaneo";
 import {
   useGetCurrentUser,
   useGetUbicacionesSalida,
-  useCrearSalida,
+  useGetBorradorSalida,
+  useAgregarRolloBorradorSalida,
+  useQuitarRolloBorradorSalida,
+  useEnviarSalida,
   getGetCurrentUserQueryKey,
   getGetUbicacionesSalidaQueryKey,
-  getEscanearRolloSalidaQueryOptions,
-  SalidaRolloEscaneado,
+  getGetBorradorSalidaQueryKey,
+  getListSalidasQueryKey,
+  SalidaDetail,
   Role,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,7 +23,6 @@ import {
   CheckCircle2,
   Loader2,
   Package,
-  Printer,
   Trash2,
   MapPin,
   Clock,
@@ -50,23 +53,32 @@ export default function SalidaNueva() {
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const { data: locations } = useGetUbicacionesSalida({ query: { queryKey: getGetUbicacionesSalidaQueryKey() } });
 
-  const createMutation = useCrearSalida();
-
   const [origenId, setOrigenId] = useState<number | "">("");
   const [destinoId, setDestinoId] = useState<number | "">("");
   const [transportista, setTransportista] = useState("");
-  const [observaciones, setObservaciones] = useState("");
+  const [notaEnvio, setNotaEnvio] = useState("");
 
   const [serieInput, setSerieInput] = useState("");
   const [isScanning, setIsScanning] = useState(false);
-  const [scannedRolls, setScannedRolls] = useState<SalidaRolloEscaneado[]>([]);
+  const [draft, setDraft] = useState<SalidaDetail | null>(null);
   const scannerInputRef = useRef<HTMLInputElement>(null);
-
-  const [successFolio, setSuccessFolio] = useState<number | null>(null);
-  const [successId, setSuccessId] = useState<number | null>(null);
+  const uuidClienteRef = useRef<string>(crypto.randomUUID());
 
   const isAdmin = user?.rol === Role.ADMIN;
   const validDestinations = locations?.filter(l => (l.tipo === 'TIENDA' || l.tipo === 'BODEGA') && l.activa && l.id !== origenId) || [];
+  const draftQuery = useGetBorradorSalida(
+    { origenId: Number(origenId) || 0 },
+    {
+      query: {
+        enabled: Boolean(origenId),
+        queryKey: getGetBorradorSalidaQueryKey({ origenId: Number(origenId) || 0 }),
+      },
+    },
+  );
+  const addRollMutation = useAgregarRolloBorradorSalida();
+  const removeRollMutation = useQuitarRolloBorradorSalida();
+  const sendMutation = useEnviarSalida();
+  const scannedRolls = draft?.rollos ?? [];
 
   // Init origen based on role
   useEffect(() => {
@@ -75,15 +87,25 @@ export default function SalidaNueva() {
     }
   }, [user, isAdmin]);
 
+  useEffect(() => {
+    if (!origenId || !draftQuery.isSuccess) return;
+    const resumed = draftQuery.data.salida;
+    setDraft(resumed);
+    if (resumed) {
+      uuidClienteRef.current = resumed.uuidCliente;
+      setDestinoId(resumed.destinoId);
+    }
+  }, [draftQuery.data, draftQuery.isSuccess, origenId]);
+
   // Keep scanner focused
   useEffect(() => {
     const interval = setInterval(() => {
-      if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA' && !successFolio) {
+      if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
         scannerInputRef.current?.focus();
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [successFolio]);
+  }, []);
 
   const playSound = (type: 'success' | 'error') => {
     try {
@@ -116,9 +138,13 @@ export default function SalidaNueva() {
     const serie = (codigo.serie ?? scannedValue).trim().toUpperCase();
     if (!serie) return;
 
-    if (!origenId) {
-      toast({ title: "Atención", description: "Selecciona un origen primero", variant: "destructive" });
+    if (!origenId || !destinoId) {
+      toast({ title: "Atención", description: "Selecciona origen y destino antes de escanear", variant: "destructive" });
       playSound('error');
+      return;
+    }
+    if (draftQuery.isFetching) {
+      toast({ title: "Espera un momento", description: "Estamos verificando si tienes una salida en armado." });
       return;
     }
 
@@ -131,20 +157,32 @@ export default function SalidaNueva() {
 
     setIsScanning(true);
     try {
-      const options = getEscanearRolloSalidaQueryOptions(serie, { origenId: Number(origenId) });
-      const roll = await queryClient.fetchQuery({
-        ...options,
-        staleTime: 0,
+      await queryClient.cancelQueries({
+        queryKey: getGetBorradorSalidaQueryKey({ origenId: Number(origenId) }),
+      });
+      const updatedDraft = await addRollMutation.mutateAsync({
+        data: {
+          uuidCliente: uuidClienteRef.current,
+          origenId: Number(origenId),
+          destinoId: Number(destinoId),
+          serie,
+        },
       });
 
-      const warning = advertenciaSkuEscaneado(codigo, roll.sku);
+      const roll = updatedDraft.rollos.find((item) => item.serie === serie);
+      const warning = advertenciaSkuEscaneado(codigo, roll?.sku ?? "");
       if (warning) {
         toast({
           title: "Verifica la etiqueta",
           description: warning,
         });
       }
-      setScannedRolls(prev => [roll, ...prev]);
+      setDraft(updatedDraft);
+      uuidClienteRef.current = updatedDraft.uuidCliente;
+      queryClient.setQueryData(
+        getGetBorradorSalidaQueryKey({ origenId: Number(origenId) }),
+        { salida: updatedDraft },
+      );
       setSerieInput("");
       playSound('success');
     } catch (error: any) {
@@ -161,9 +199,27 @@ export default function SalidaNueva() {
     }
   };
 
-  const handleRemoveRoll = (serie: string) => {
-    setScannedRolls(prev => prev.filter(r => r.serie !== serie));
-    scannerInputRef.current?.focus();
+  const handleRemoveRoll = async (rolloId: number) => {
+    if (!draft) return;
+    try {
+      const updatedDraft = await removeRollMutation.mutateAsync({
+        id: draft.id,
+        rolloId,
+      });
+      setDraft(updatedDraft);
+      queryClient.setQueryData(
+        getGetBorradorSalidaQueryKey({ origenId: draft.origenId }),
+        { salida: updatedDraft },
+      );
+    } catch (error) {
+      toast({
+        title: "No se pudo quitar el rollo",
+        description: getApiErrorMessage(error),
+        variant: "destructive",
+      });
+    } finally {
+      scannerInputRef.current?.focus();
+    }
   };
 
   const handleConfirm = () => {
@@ -171,27 +227,29 @@ export default function SalidaNueva() {
       toast({ title: "Atención", description: "Origen y destino son requeridos", variant: "destructive" });
       return;
     }
-    if (scannedRolls.length === 0) {
+    if (!draft || scannedRolls.length === 0) {
       toast({ title: "Atención", description: "No hay rollos escaneados", variant: "destructive" });
       return;
     }
-
-    const uuidCliente = crypto.randomUUID();
-
-    createMutation.mutate({
+    if (!transportista.trim()) {
+      toast({ title: "Atención", description: "El transportista es obligatorio", variant: "destructive" });
+      return;
+    }
+    sendMutation.mutate({
+      id: draft.id,
       data: {
-        uuidCliente,
-        origenId: Number(origenId),
-        destinoId: Number(destinoId),
-        transportista: transportista || null,
-        observaciones: observaciones || null,
-        rolloIds: scannedRolls.map(r => r.id)
+        transportista: transportista.trim(),
+        notaEnvio: notaEnvio.trim() || null,
       }
     }, {
       onSuccess: (data) => {
-        setSuccessFolio(data.folio);
-        setSuccessId(data.id);
-        setScannedRolls([]);
+        setDraft(null);
+        queryClient.setQueryData(
+          getGetBorradorSalidaQueryKey({ origenId: draft.origenId }),
+          { salida: null },
+        );
+        queryClient.invalidateQueries({ queryKey: getListSalidasQueryKey() });
+        setLocation(`/salidas/${data.id}`);
       },
       onError: (error) => {
         toast({ title: "Error al registrar", description: getApiErrorMessage(error), variant: "destructive" });
@@ -206,13 +264,13 @@ export default function SalidaNueva() {
   }, { metros: 0, kilos: 0 });
 
   const productSummary = Array.from(scannedRolls.reduce((acc, roll) => {
-    const key = `${roll.sku}-${roll.tela}-${roll.color}-${roll.unidad}`;
+    const key = `${roll.sku ?? ""}-${roll.tela ?? ""}-${roll.color ?? ""}-${roll.unidad ?? ""}`;
     if (!acc.has(key)) {
       acc.set(key, {
-        sku: roll.sku,
-        tela: roll.tela,
-        color: roll.color,
-        unidad: roll.unidad,
+        sku: roll.sku ?? "N/A",
+        tela: roll.tela ?? "N/A",
+        color: roll.color ?? "N/A",
+        unidad: roll.unidad ?? "",
         rollos: 0,
         cantidad: 0
       });
@@ -222,44 +280,6 @@ export default function SalidaNueva() {
     current.cantidad += Number(roll.cantidadActual);
     return acc;
   }, new Map<string, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
-
-  if (successFolio && successId) {
-    return (
-      <AppLayout>
-        <div className="max-w-2xl mx-auto pt-16 flex flex-col items-center animate-in fade-in zoom-in duration-500">
-          <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
-            <CheckCircle2 className="w-12 h-12" />
-          </div>
-          <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Salida en armado</h1>
-          <p className="text-xl text-slate-500 mb-8 font-medium">Folio: <span className="text-primary font-bold">{String(successFolio).padStart(6, '0')}</span></p>
-
-          <div className="flex gap-4 w-full justify-center">
-            <Button size="lg" variant="outline" onClick={() => setLocation("/salidas")} className="w-48 text-base">
-              Ir al Historial
-            </Button>
-            <Link href={`/salidas/${successId}/documento/salida`}>
-              <Button size="lg" className="w-48 text-base bg-primary hover:bg-primary/90">
-                <Printer className="w-5 h-5 mr-2" />
-                Imprimir Documento
-              </Button>
-            </Link>
-          </div>
-
-          <Button variant="ghost" onClick={() => {
-            setSuccessFolio(null);
-            setSuccessId(null);
-            setDestinoId("");
-            setTransportista("");
-            setObservaciones("");
-            if (!isAdmin && user?.ubicacion?.id) setOrigenId(user.ubicacion.id);
-            else setOrigenId("");
-          }} className="mt-8 text-slate-500 hover:text-slate-900">
-            Capturar nueva salida
-          </Button>
-        </div>
-      </AppLayout>
-    );
-  }
 
   return (
     <AppLayout>
@@ -300,8 +320,13 @@ export default function SalidaNueva() {
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Origen</label>
                   <Select
                     value={String(origenId)}
-                    onValueChange={v => setOrigenId(Number(v))}
-                    disabled={!isAdmin}
+                    onValueChange={v => {
+                      setOrigenId(Number(v));
+                      setDestinoId("");
+                      setDraft(null);
+                      uuidClienteRef.current = crypto.randomUUID();
+                    }}
+                    disabled={!isAdmin || Boolean(draft)}
                   >
                     <SelectTrigger className="bg-white">
                       <SelectValue placeholder="Seleccione origen" />
@@ -319,7 +344,7 @@ export default function SalidaNueva() {
                   <Select
                     value={String(destinoId)}
                     onValueChange={v => setDestinoId(Number(v))}
-                    disabled={!origenId}
+                     disabled={!origenId || Boolean(draft)}
                   >
                     <SelectTrigger className="bg-white">
                       <SelectValue placeholder="Seleccione destino" />
@@ -333,7 +358,7 @@ export default function SalidaNueva() {
                 </div>
 
                 <div className="space-y-1.5 pt-2">
-                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Transportista (Opcional)</label>
+                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Transportista</label>
                   <div className="relative">
                     <Truck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
@@ -346,12 +371,12 @@ export default function SalidaNueva() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Observaciones (Opcional)</label>
+                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Nota de envío (Opcional)</label>
                   <div className="relative">
                     <FileText className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
                     <Textarea
-                      value={observaciones}
-                      onChange={e => setObservaciones(e.target.value)}
+                     value={notaEnvio}
+                     onChange={e => setNotaEnvio(e.target.value)}
                       placeholder="Notas del envío..."
                       className="pl-9 bg-white min-h-[80px]"
                     />
@@ -378,10 +403,10 @@ export default function SalidaNueva() {
                     className="h-16 pl-16 text-xl font-bold bg-white border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-normal placeholder:text-base placeholder:text-slate-400"
                     containerClassName="min-w-0 flex-1"
                     autoFocus
-                    disabled={isScanning || createMutation.isPending}
+                     disabled={draftQuery.isFetching || isScanning || addRollMutation.isPending || removeRollMutation.isPending || sendMutation.isPending || !origenId || !destinoId}
                   />
                   <div>
-                    <Button type="button" onClick={() => void handleScan(serieInput)} disabled={!serieInput.trim() || isScanning} size="sm" className="h-10 px-4">
+                    <Button type="button" onClick={() => void handleScan(serieInput)} disabled={!serieInput.trim() || draftQuery.isFetching || isScanning} size="sm" className="h-10 px-4">
                       {isScanning ? <Loader2 className="w-5 h-5 animate-spin" /> : "Agregar"}
                     </Button>
                   </div>
@@ -427,7 +452,8 @@ export default function SalidaNueva() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleRemoveRoll(roll.serie)}
+                                   onClick={() => void handleRemoveRoll(roll.rolloId)}
+                                   disabled={removeRollMutation.isPending || sendMutation.isPending}
                                   className="text-slate-400 hover:text-red-500 hover:bg-red-50 shrink-0"
                                 >
                                   <Trash2 className="w-4 h-4" />
@@ -487,10 +513,10 @@ export default function SalidaNueva() {
                     <Button
                       className="w-full h-12 text-base font-bold bg-green-600 hover:bg-green-700 text-white shadow-sm"
                       onClick={handleConfirm}
-                      disabled={scannedRolls.length === 0 || !origenId || !destinoId || createMutation.isPending}
+                       disabled={scannedRolls.length === 0 || !origenId || !destinoId || !transportista.trim() || sendMutation.isPending || addRollMutation.isPending || removeRollMutation.isPending}
                     >
-                      {createMutation.isPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}
-                      Guardar armado
+                       {sendMutation.isPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}
+                       Guardar y enviar
                     </Button>
                   </CardFooter>
                 </Card>

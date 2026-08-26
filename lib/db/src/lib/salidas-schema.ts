@@ -90,14 +90,54 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         nota_recepcion text,
         transportista text,
         uuid_cliente uuid NOT NULL UNIQUE,
-        created_at timestamptz NOT NULL DEFAULT now()
+        created_at timestamptz NOT NULL DEFAULT now(),
+        actividad_at timestamptz NOT NULL DEFAULT now()
       );
 
       ALTER TABLE salidas
         ALTER COLUMN estado SET DEFAULT 'ARMANDO',
         ADD COLUMN IF NOT EXISTS usuario_cancela_id integer REFERENCES usuarios(id),
         ADD COLUMN IF NOT EXISTS cancelada_at timestamptz,
-        ADD COLUMN IF NOT EXISTS autorizado_por_id integer REFERENCES usuarios(id);
+        ADD COLUMN IF NOT EXISTS autorizado_por_id integer REFERENCES usuarios(id),
+        ADD COLUMN IF NOT EXISTS actividad_at timestamptz;
+
+      UPDATE salidas
+         SET actividad_at = COALESCE(
+           recibida_at,
+           enviada_at,
+           cancelada_at,
+           preparada_at,
+           solicitada_at,
+           created_at,
+           now()
+         )
+       WHERE actividad_at IS NULL;
+
+      ALTER TABLE salidas
+        ALTER COLUMN actividad_at SET DEFAULT now(),
+        ALTER COLUMN actividad_at SET NOT NULL;
+
+      WITH duplicate_drafts AS (
+        SELECT id,
+               row_number() OVER (
+                 PARTITION BY usuario_solicita_id, origen_id
+                 ORDER BY actividad_at DESC, id DESC
+               ) AS position
+          FROM salidas
+         WHERE estado = 'ARMANDO'
+           AND usuario_solicita_id IS NOT NULL
+      )
+      UPDATE salidas AS s
+         SET estado = 'CANCELADA',
+             cancelada_at = now(),
+             actividad_at = now(),
+             motivo_cancelacion = COALESCE(
+               s.motivo_cancelacion,
+               'Borrador duplicado cerrado durante actualización'
+             )
+        FROM duplicate_drafts AS d
+       WHERE s.id = d.id
+         AND d.position > 1;
 
       CREATE TABLE IF NOT EXISTS salida_lineas (
         id serial PRIMARY KEY,
@@ -142,6 +182,10 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       CREATE INDEX IF NOT EXISTS salidas_estado_idx ON salidas (estado);
       CREATE INDEX IF NOT EXISTS salidas_folio_idx ON salidas (folio);
       CREATE INDEX IF NOT EXISTS salidas_created_at_idx ON salidas (created_at);
+      CREATE INDEX IF NOT EXISTS salidas_estado_actividad_idx ON salidas (estado, actividad_at);
+      CREATE UNIQUE INDEX IF NOT EXISTS salidas_borrador_usuario_origen_uidx
+        ON salidas (usuario_solicita_id, origen_id)
+        WHERE estado = 'ARMANDO' AND usuario_solicita_id IS NOT NULL;
       CREATE INDEX IF NOT EXISTS salida_rollos_rollo_salida_idx ON salida_rollos (rollo_id, salida_id);
       CREATE INDEX IF NOT EXISTS salida_lineas_salida_idx ON salida_lineas (salida_id);
       CREATE INDEX IF NOT EXISTS salida_lineas_producto_idx ON salida_lineas (producto_id);
