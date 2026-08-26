@@ -8,7 +8,7 @@ import { EXCEL_NUMBER_FORMAT, toExcelNumber } from "@workspace/number-format";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { createTextPdf } from "../lib/pdf";
-import { buildReport, getCatalogs, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
+import { buildReport, getCatalogs, parseReportBooleanQuery, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
 
 const router: IRouter = Router();
 router.use("/reportes", requireSession, requierePermiso("reportes", "ver"));
@@ -31,7 +31,12 @@ function formatFor(kind: string) {
 }
 async function report(req: any) {
   const params = GetReporteSeccionParams.parse(req.params);
-  const query = GetReporteSeccionQueryParams.parse(req.query);
+  const { facturado: rawFacturado, ...rawQuery } = req.query;
+  const facturado = parseReportBooleanQuery(rawFacturado);
+  const query = {
+    ...GetReporteSeccionQueryParams.parse(rawQuery),
+    ...(facturado === undefined ? {} : { facturado }),
+  };
   return buildReport(params.seccion, query, scopedLocations(req), req.auth!.user.rol === "ADMIN");
 }
 function error(error: unknown, res: any) {
@@ -84,7 +89,7 @@ router.get("/reportes/:seccion/export.pdf", async (req, res, next): Promise<void
     const data = await report(req);
     const lines = [`Periodo: ${JSON.stringify(data.range)}`, `Filtros: ${JSON.stringify(data.activeFilters)}`];
     for (const item of reportRows(data)) {
-      lines.push(item.title, ...item.rows.slice(0, 100).map((row) => item.columns.map((c) => `${c.label}: ${row[c.key] ?? ""}`).join(" | ")), `Totales: ${JSON.stringify(item.totals)}`);
+      lines.push(item.title, ...item.rows.map((row) => item.columns.map((c) => `${c.label}: ${row[c.key] ?? ""}`).join(" | ")), `Totales: ${JSON.stringify(item.totals)}`);
     }
     res.setHeader("Server-Timing", `reportes;dur=${(performance.now() - started).toFixed(1)}`);
     res.type("application/pdf"); res.attachment(`${data.section}.pdf`); res.send(createTextPdf(`Reporte ${data.section}`, lines));

@@ -14,8 +14,15 @@ const csv = (value: unknown) => typeof value === "string" ? value.split(",").map
 const ids = (value: unknown) => csv(value).map(Number).filter(Number.isInteger);
 const columns = (items: Array<[string, string, string, boolean?, boolean?]>) =>
   items.map(([key, label, kind, economic, estimated]) => ({ key, label, kind, ...(economic ? { economic: true } : {}), ...(estimated ? { estimated: true } : {}) }));
-const table = (id: string, title: string, cols: Array<[string, string, string, boolean?, boolean?]>, rows: Row[]) =>
-  ({ id, title, columns: columns(cols), rows, totals: {} });
+const table = (id: string, title: string, cols: Array<[string, string, string, boolean?, boolean?]>, rows: Row[], sumKeys: string[] = []) => {
+  const resolvedColumns = columns(cols);
+  const units = new Set(rows.map((row) => row.unidad).filter((unit) => unit != null));
+  const totals = Object.fromEntries(resolvedColumns.flatMap((column) => {
+    if (!sumKeys.includes(column.key) || (column.kind === "quantity" && units.size !== 1)) return [];
+    return [[column.key, rows.reduce((sum, row) => sum + number(row[column.key]), 0)]];
+  }));
+  return { id, title, columns: resolvedColumns, rows, totals };
+};
 
 export function classifyCoverage(days: number | null, critical = 7, low = 15, normal = 45, excess = 90): string {
   if (days === null || !Number.isFinite(days)) return "SIN_VENTAS";
@@ -71,6 +78,7 @@ function salesScope(ctx: DomainReportContext) {
   const clauses = ["t.created_at >= $1", "t.created_at <= $2", "t.estado='VENDIDO'", base.text.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 2}`)];
   const add = (column: string, value: unknown[], cast = "int[]") => { if (value.length) { values.push(value); clauses.push(`${column}=ANY($${values.length}::${cast})`); } };
   add("t.usuario_terminal_id", ids(ctx.input.usuarioIds)); add("t.cliente_id", ids(ctx.input.clienteIds));
+  add("r.proveedor_id", ids(ctx.input.proveedorIds));
   if (typeof ctx.input.facturado === "boolean") { values.push(ctx.input.facturado); clauses.push(`t.facturado=$${values.length}`); }
   const pay = csv(ctx.input.formasPago); if (pay.length) { values.push(pay); clauses.push(`EXISTS (SELECT 1 FROM ticket_pagos tp WHERE tp.ticket_id=t.id AND tp.forma_pago::text=ANY($${values.length}::text[]))`); }
   return { text: clauses.join(" AND "), values };
@@ -90,7 +98,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     const buckets = monthBuckets(ctx.range.desde, ctx.range.hasta, minimum);
     const q = await pool.query(`SELECT to_char(date_trunc('month',t.created_at AT TIME ZONE '${zone}'),'YYYY-MM') mes,p.sku,p.tela,p.color,p.unidad,u.nombre sitio,
       SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas,SUM(l.importe-l.costo_total_congelado)::float utilidad
-      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id JOIN ubicaciones u ON u.id=t.ubicacion_id
+      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
       WHERE ${sales.text} GROUP BY mes,p.sku,p.tela,p.color,p.unidad,u.nombre`, sales.values);
     const make = (id: string, key: "sku" | "color" | "tela" | "sitio") => ({ id, title: `Mes × ${key}`, type: "heatmap", categoryKey: "mes",
       series: [{ key, label: key, kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }, { key: "ventas", label: "Ventas", kind: "money", economic: true }, { key: "utilidad", label: "Utilidad", kind: "money", economic: true }],
@@ -100,14 +108,14 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   if (section === "color") {
     const scope = productScope(ctx, "p", "m.ubicacion_id");
     const salesRows = await pool.query(`SELECT p.color,p.tela,p.unidad,u.nombre sitio,SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas
-      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id JOIN ubicaciones u ON u.id=t.ubicacion_id
+      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
       WHERE ${sales.text} GROUP BY p.color,p.tela,p.unidad,u.nombre`, sales.values);
     const noMove = await pool.query(`SELECT p.color,p.tela,p.unidad,MAX(m.created_at) ultimo FROM productos p LEFT JOIN movimientos m ON m.producto_id=p.id
       WHERE ${scope.text} GROUP BY p.id HAVING MAX(m.created_at) IS NULL OR MAX(m.created_at) < $${scope.values.length + 1}`, [...scope.values, new Date(ctx.range.hasta.getTime() - 90 * 86400000)]);
     const current = salesRows.rows.map(r => ({ color: r.color, tela: r.tela, unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), ventas: number(r.ventas) }));
     return { kpis: [], charts: [{ id: "color-tela", title: "Color × tela", type: "heatmap", categoryKey: "color", series: [{ key: "tela", label: "Tela", kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: current }],
-      tables: [table("ranking-color", "Ranking color por tela y unidad", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["ventas", "Ventas", "money", true]], current),
-        table("color-sitio", "Color por sitio", [["color", "Color", "text"], ["sitio", "Sitio", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"]], current),
+      tables: [table("ranking-color", "Ranking color por tela y unidad", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["ventas", "Ventas", "money", true]], current, ["cantidad", "ventas"]),
+        table("color-sitio", "Color por sitio", [["color", "Color", "text"], ["sitio", "Sitio", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"]], current, ["cantidad"]),
         table("sin-movimiento-90", "Sin movimiento ≥90 días", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["ultimo", "Último movimiento", "text"]], noMove.rows.map(r => ({ color: r.color, tela: r.tela, unidad: r.unidad, ultimo: r.ultimo ? new Date(r.ultimo).toISOString() : null })))], warnings };
   }
   const scope = productScope(ctx, "p", "e.ubicacion_id");
@@ -115,7 +123,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     COALESCE(SUM(r.cantidad_actual*r.costo_unitario) FILTER(WHERE r.estado IN ('DISPONIBLE','EN_TRANSITO')),0)::float valor
     FROM existencias e JOIN productos p ON p.id=e.producto_id JOIN ubicaciones u ON u.id=e.ubicacion_id LEFT JOIN rollos r ON r.producto_id=e.producto_id AND r.ubicacion_id=e.ubicacion_id
     WHERE ${scope.text} GROUP BY p.id,e.ubicacion_id,u.nombre,e.cantidad_total,e.rollos_count`, scope.values);
-  const sold = await pool.query(`SELECT p.id,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id WHERE ${sales.text} GROUP BY p.id`, sales.values);
+  const sold = await pool.query(`SELECT p.id,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${sales.text} GROUP BY p.id`, sales.values);
   const soldByProduct = new Map(sold.rows.map(r => [Number(r.id), number(r.cantidad)]));
   const days = Math.max(1, Math.ceil((ctx.range.hasta.getTime() - ctx.range.desde.getTime() + 1) / 86400000));
   const critical = number(ctx.input.coberturaCritico ?? 7), low = number(ctx.input.coberturaBajo ?? 15), normal = number(ctx.input.coberturaNormal ?? 45), excess = number(ctx.input.coberturaExceso ?? 90);
@@ -166,8 +174,8 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   return { kpis: Object.entries(totals).flatMap(([unidad, x]) => [{ id: `existencia-${unidad}`, label: `Existencia ${unidad}`, value: x.cantidad, kind: "quantity" }, { id: `rollos-${unidad}`, label: `Rollos ${unidad}`, value: x.rollos, kind: "count" }, { id: `valor-${unidad}`, label: `Valor ${unidad}`, value: x.valor, kind: "money", economic: true },
     { id: `perdida-estimada-${unidad}`, label: `Pérdida estimada ${unidad}`, value: lostRows.filter(r => r.unidad === unidad).reduce((s, r) => s + r.perdidaCantidadEstimada, 0), kind: "quantity", estimated: true }]),
     charts: [{ id: "existencia-producto", title: "Existencia por producto", type: "treemap", categoryKey: "sku", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows }, ...(unreconciled.length ? [] : [{ id: "cierres-diarios", title: "Cierre diario de inventario", type: "line", categoryKey: "dia", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: closeRows }])],
-    tables: [table("existencia-actual", "Existencia actual", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoPeriodo", "Vendido", "quantity"], ["coberturaDias", "Cobertura días", "number"], ["clasificacion", "Clasificación", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows),
-      table("comprado-vendido", "Comprado vs vendido", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["comprado", "Comprado", "quantity"], ["vendido", "Vendido", "quantity"], ["ajusteNegativo", "Ajuste negativo", "quantity"]], activity.rows.map(r => ({ sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, comprado: number(r.comprado), vendido: number(r.vendido), ajusteNegativo: number(r.ajuste_negativo) }))),
+    tables: [table("existencia-actual", "Existencia actual", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoPeriodo", "Vendido", "quantity"], ["coberturaDias", "Cobertura días", "number"], ["clasificacion", "Clasificación", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows, ["cantidad", "valor", "vendidoPeriodo", "perdidaCantidadEstimada", "perdidaValorEstimada"]),
+      table("comprado-vendido", "Comprado vs vendido", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["comprado", "Comprado", "quantity"], ["vendido", "Vendido", "quantity"], ["ajusteNegativo", "Ajuste negativo", "quantity"]], activity.rows.map(r => ({ sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, comprado: number(r.comprado), vendido: number(r.vendido), ajusteNegativo: number(r.ajuste_negativo) })), ["comprado", "vendido", "ajusteNegativo"]),
       table("sin-movimiento", "Sin movimiento", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["ultimoMovimiento", "Último movimiento", "text"], ["banda", "Banda", "text"]], noMovement.rows.map(r => { const last = r.ultimo_movimiento ? new Date(r.ultimo_movimiento) : null; const age = last ? Math.floor((ctx.range.hasta.getTime() - last.getTime()) / 86400000) : null; return { sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, ultimoMovimiento: last?.toISOString() ?? null, banda: classifyNoMovement(age) }; })),
-      table("rollos-abiertos", "Rollos abiertos", [["serie", "Rollo", "text"], ["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Remanente", "quantity"], ["antiguedad", "Antigüedad (días)", "count"]], openRolls.rows.map(r => ({ serie: r.serie, sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), antiguedad: number(r.antiguedad) })))], warnings };
+      table("rollos-abiertos", "Rollos abiertos", [["serie", "Rollo", "text"], ["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Remanente", "quantity"], ["antiguedad", "Antigüedad (días)", "count"]], openRolls.rows.map(r => ({ serie: r.serie, sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), antiguedad: number(r.antiguedad) })), ["cantidad"])], warnings };
 }

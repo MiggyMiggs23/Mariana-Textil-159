@@ -19,13 +19,17 @@ const cols = (items: ColumnInput[]) => items.map((item) => {
   const [key, label, kind, economic, estimated] = item;
   return { key, label, kind, ...(economic ? { economic: true } : {}), ...(estimated ? { estimated: true } : {}) };
 });
-const table = (id: string, title: string, columns: ColumnInput[], rows: Row[]) => ({
-  id,
-  title,
-  columns: cols(columns),
-  rows,
-  totals: {},
-});
+const table = (id: string, title: string, columns: ColumnInput[], rows: Row[], sumKeys: string[] = []) => {
+  const resolvedColumns = cols(columns) as Array<Record<string, unknown>>;
+  const units = new Set(rows.map((row) => row.unidad).filter((unit) => unit != null));
+  const totals = Object.fromEntries(resolvedColumns.flatMap((column) => {
+    const kind = String(column.kind);
+    const key = String(column.key);
+    if (!sumKeys.includes(key) || (kind === "quantity" && units.size !== 1)) return [];
+    return [[key, rows.reduce((sum, row) => sum + number(row[key]), 0)]];
+  }));
+  return { id, title, columns: resolvedColumns, rows, totals };
+};
 const chart = (id: string, title: string, type: string, categoryKey: string, series: any[], rows: Row[]) => ({ id, title, type, categoryKey, series, rows });
 
 /** Percentage change with an explicit, stable zero-denominator convention. */
@@ -111,7 +115,8 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
        COUNT(DISTINCT t.id)::int tickets ${joins} WHERE ${salesWhere} ${extra}
       GROUP BY ${group} ORDER BY ventas DESC LIMIT 250`, normal.values);
     return table(id, title, [["dimension", title, "text"], ["cantidad", "Cantidad", "quantity"], ["tickets", "Tickets", "count"], ["ventas", "Ventas", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]],
-      result.rows.map((r) => ({ dimension: r.dimension == null ? "Sin dato" : String(r.dimension), cantidad: number(r.cantidad), tickets: number(r.tickets), ventas: number(r.ventas), costo: number(r.costo), utilidad: number(r.utilidad), margenPct: number(r.denominador) ? number(r.utilidad) / number(r.denominador) * 100 : 0 })));
+      result.rows.map((r) => ({ dimension: r.dimension == null ? "Sin dato" : String(r.dimension), cantidad: number(r.cantidad), tickets: number(r.tickets), ventas: number(r.ventas), costo: number(r.costo), utilidad: number(r.utilidad), margenPct: number(r.denominador) ? number(r.utilidad) / number(r.denominador) * 100 : 0 })),
+      ["cantidad", "ventas", "costo", "utilidad"]);
   };
 
   if (section === "ventas") {
@@ -131,7 +136,7 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
       FROM filtered_tickets ft JOIN ticket_pagos fp ON fp.ticket_id=ft.id
       GROUP BY fp.forma_pago ORDER BY ventas DESC`, normal.values);
     const paymentTable = table("por-pago", "Forma de pago", [["dimension", "Forma de pago", "text"], ["tickets", "Tickets", "count"], ["ventas", "Importe cobrado", "money", true]],
-      pay.rows.map((r) => ({ dimension: String(r.dimension), tickets: number(r.tickets), ventas: number(r.ventas) })));
+      pay.rows.map((r) => ({ dimension: String(r.dimension), tickets: number(r.tickets), ventas: number(r.ventas) })), ["ventas"]);
     const ranked = product.rows as Row[];
     const total = ranked.reduce((sum, row) => sum + number(row.ventas), 0);
     let accumulated = 0;

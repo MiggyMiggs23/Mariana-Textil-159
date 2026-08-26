@@ -24,6 +24,13 @@ const MIN_REPORT_DATE = new Date("1900-01-01T00:00:00.000Z");
 const MAX_REPORT_DATE = new Date("2999-12-31T23:59:59.999Z");
 const MAX_REPORT_RANGE_MS = 100 * 366 * 24 * 60 * 60 * 1000;
 
+export function parseReportBooleanQuery(value: unknown): boolean | undefined {
+  if (value === undefined) return undefined;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  throw new ReportInputError("El filtro facturado debe ser true o false.");
+}
+
 function localDate(date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: TIME_ZONE,
@@ -163,9 +170,18 @@ export async function getCatalogs(locations?: number[]) {
        FROM productos p LEFT JOIN rollos r ON r.producto_id=p.id${scope} ORDER BY label`,
       values,
     ),
-    pool.query("SELECT id,nombre label FROM usuarios WHERE activo ORDER BY nombre"),
-    pool.query("SELECT id,nombre label FROM clientes WHERE activo ORDER BY nombre"),
-    pool.query("SELECT id,nombre label FROM proveedores WHERE activo ORDER BY nombre"),
+    pool.query(
+      `SELECT id,nombre label FROM usuarios WHERE activo${locations?.length ? " AND ubicacion_id=ANY($1::int[])" : ""} ORDER BY nombre`,
+      values,
+    ),
+    pool.query(
+      `SELECT c.id,c.nombre label FROM clientes c WHERE c.activo${locations?.length ? " AND EXISTS (SELECT 1 FROM tickets t WHERE t.cliente_id=c.id AND t.estado='VENDIDO' AND t.ubicacion_id=ANY($1::int[]))" : ""} ORDER BY c.nombre`,
+      values,
+    ),
+    pool.query(
+      `SELECT pr.id,pr.nombre label FROM proveedores pr WHERE pr.activo${locations?.length ? " AND EXISTS (SELECT 1 FROM entradas e WHERE e.proveedor_id=pr.id AND e.ubicacion_id=ANY($1::int[]))" : ""} ORDER BY pr.nombre`,
+      values,
+    ),
     pool.query(
       `SELECT DISTINCT p.tela FROM productos p LEFT JOIN rollos r ON r.producto_id=p.id${scope} ORDER BY p.tela`,
       values,
@@ -174,7 +190,10 @@ export async function getCatalogs(locations?: number[]) {
       `SELECT DISTINCT p.color FROM productos p LEFT JOIN rollos r ON r.producto_id=p.id${scope} ORDER BY p.color`,
       values,
     ),
-    pool.query("SELECT DISTINCT unidad FROM productos ORDER BY unidad"),
+    pool.query(
+      `SELECT DISTINCT p.unidad FROM productos p LEFT JOIN rollos r ON r.producto_id=p.id${scope} ORDER BY p.unidad`,
+      values,
+    ),
   ]);
 
   return {

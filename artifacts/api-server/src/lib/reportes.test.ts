@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { redactEconomic, reportRange } from "./reportes";
+import { parseReportBooleanQuery, redactEconomic, reportRange } from "./reportes";
 
 test("report ranges use Mexico City inclusive day bounds and equal prior period", () => {
   const range = reportRange({ periodo: "personalizado", desde: "2024-02-01", hasta: "2024-02-29" });
@@ -14,6 +14,13 @@ test("report ranges reject dates outside the supported decision window", () => {
     () => reportRange({ periodo: "personalizado", desde: "0002-01-01", hasta: "2026-08-25" }),
     /no exceder 100 años/,
   );
+});
+
+test("report boolean query preserves literal false", () => {
+  assert.equal(parseReportBooleanQuery("true"), true);
+  assert.equal(parseReportBooleanQuery("false"), false);
+  assert.equal(parseReportBooleanQuery(undefined), undefined);
+  assert.throws(() => parseReportBooleanQuery("1"), /true o false/);
 });
 
 test("economic redaction physically removes sensitive keys and columns", () => {
