@@ -27,12 +27,14 @@ test("entry and exit folio views consume the formatted API folio", async () => {
   );
 });
 
-test("exit reception accepts formatted or numeric folios", async () => {
+test("exit reception resolves QR by internal id and manual formatted or numeric folios", async () => {
   const source = await readFile(
     new URL("../components/recepcion-salidas.tsx", import.meta.url),
     "utf8",
   );
 
-  assert.match(source, /\^\(\?:\[A-Za-z\]\+\[-\\s\]\?\)\?\(\\d\+\)\$/);
+  assert.match(source, /searchParams\.get\("id"\)/);
+  assert.match(source, /salida\.folioFormateado\.toLocaleUpperCase\(\) === manualFolio/);
+  assert.match(source, /String\(salida\.folio\) === manualFolio/);
   assert.match(source, /folioFormateado/);
 });

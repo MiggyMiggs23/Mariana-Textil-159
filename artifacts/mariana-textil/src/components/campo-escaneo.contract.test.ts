@@ -79,7 +79,7 @@ test("SKU mismatch warnings are visible and do not block roll operations", async
   assert.match(ajustes, /skuWarning[\s\S]*role="alert"/);
   assert.match(
     salida,
-    /const warning = advertenciaSkuEscaneado[\s\S]*if \(warning\)[\s\S]*toast\([\s\S]*setScannedRolls/,
+    /const warning = advertenciaSkuEscaneado[\s\S]*if \(warning\)[\s\S]*toast\([\s\S]*(?:setScannedRolls|setDraft)/,
   );
   assert.doesNotMatch(
     salida,

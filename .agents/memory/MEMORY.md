@@ -11,3 +11,4 @@
 - [E2E autenticadas aisladas](temporary-e2e-admins.md) — nunca crear o limpiar usuarios en la base de la app; usar una rama Neon desechable y eliminar solo la rama.
 - [Autoajuste tipográfico de impresión](print-font-autofit.md) — recalcular tras cargar fuentes y antes de imprimir; ResizeObserver no detecta cambios de métricas.
 - [Identidad de base en E2E](e2e-database-identity.md) — verificar current_database() tras cada reinicio; una rama o archivo temporal no garantiza aislamiento.
+- [Migración de folios por sitio](site-folio-migrations.md) — retirar unicidad global antes de renumerar y reparar referencias desde relaciones internas estables.
