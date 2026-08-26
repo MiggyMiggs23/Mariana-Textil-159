@@ -45,13 +45,9 @@ import { Calendar } from "@/components/ui/calendar";
 
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; class: string }> = {
-    SOLICITADA: { label: "Solicitada", class: "bg-blue-100 text-blue-800 border-blue-200" },
-    ACEPTADA: { label: "Aceptada", class: "bg-indigo-100 text-indigo-800 border-indigo-200" },
-    RECHAZADA: { label: "Rechazada", class: "bg-red-100 text-red-800 border-red-200" },
-    PREPARADA: { label: "Preparada", class: "bg-purple-100 text-purple-800 border-purple-200" },
-    ENVIADA: { label: "Enviada", class: "bg-amber-100 text-amber-800 border-amber-200" },
+    ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
+    EN_TRANSITO: { label: "En tránsito", class: "bg-amber-100 text-amber-800 border-amber-200" },
     RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
-    CERRADA: { label: "Cerrada", class: "bg-green-100 text-green-800 border-green-200" },
     CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
   };
   const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
@@ -274,7 +270,7 @@ export default function Salidas() {
                 </Select>
               </div>}
               {!isCaja && <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Usuario (Solicitante)</label>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Usuario que armó</label>
                 <Select value={usuarioId} onValueChange={(val) => { setUsuarioId(val); setPage(1); }}>
                   <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Usuario (Todos)" /></SelectTrigger>
                   <SelectContent>
@@ -412,7 +408,7 @@ export default function Salidas() {
                             {format(new Date(salida.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
                           </span>
                           <span>•</span>
-                          <span className="truncate">{salida.nombreSolicitadoPor}</span>
+                          <span className="truncate">{salida.nombreArmadoPor}</span>
                         </div>
                       </div>
 

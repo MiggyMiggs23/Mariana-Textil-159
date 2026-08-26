@@ -99,7 +99,7 @@ export default function SalidaDocumento() {
                 <div className="flex items-center border-b border-gray-300 pb-1">
                   <User className="w-4 h-4 text-gray-400 mr-2" />
                   <span className="font-bold w-32 text-xs uppercase text-gray-500 tracking-wider">Solicitante</span>
-                  <span className="font-medium text-sm text-black">{salida.nombreSolicitadoPor || "N/A"}</span>
+                  <span className="font-medium text-sm text-black">{salida.nombreArmadoPor || "N/A"}</span>
                 </div>
                 <div className="flex items-center border-b border-gray-300 pb-1">
                   <MapPin className="w-4 h-4 text-gray-400 mr-2" />
@@ -185,7 +185,7 @@ export default function SalidaDocumento() {
                   <div className="w-[35%] bg-gray-50 border border-gray-200 rounded-md p-3 h-24">
                     <div className="text-[10px] font-bold text-gray-500 uppercase mb-1">Observaciones / Notas</div>
                     <div className="text-xs text-black italic leading-tight">
-                      {salida.observaciones || salida.notaSolicitud || "Sin observaciones."}
+                      {salida.notaEnvio || salida.observaciones || "Sin observaciones."}
                       {salida.estado === 'CANCELADA' && (
                         <div className="mt-2 text-red-600 font-bold">
                           MOTIVO CANCELACIÓN: {salida.motivoCancelacion}

@@ -225,14 +225,9 @@ Inventory routes enforce the following effective permissions on the server:
 | `GET /api/inventario/entradas` | `entradas` | `ver` |
 | `GET /api/inventario/entradas/:id` | `entradas` | `ver` |
 | `POST /api/inventario/rollos/:id/activar` | `entradas` | `editar` |
-| `POST /api/salidas` | `salidas` | `crear` |
-| `POST /api/salidas/:id/aceptar` | `salidas` | `editar` + ubicación origen |
-| `POST /api/salidas/:id/rechazar` | `salidas` | `editar` + ubicación origen |
-| `POST /api/salidas/:id/preparar` | `salidas` | `editar` + ubicación origen |
-| `POST /api/salidas/:id/enviar` | `salidas` | `editar` + ubicación origen |
-| `POST /api/salidas/:id/recibir` | `salidas` | `editar` + ubicación destino |
-| `POST /api/salidas/:id/cerrar` | `salidas` | `autorizar` + ubicación destino |
-| `POST /api/salidas/:id/cancelar` | `salidas` | `autorizar` + ubicación relacionada |
+| `POST /api/salidas` | `salidas` | `crear`; crea en `ARMANDO` sin mover inventario |
+| `POST /api/salidas/:id/enviar` | `salidas` | `editar` + ubicación origen; `ARMANDO → EN_TRANSITO` |
+| `POST /api/salidas/:id/cancelar` | `salidas` | `autorizar` + ubicación relacionada; solo `ARMANDO` |
 | `POST /api/inventario/rollos/:id/salida-mostrador` | `salidas` | `crear` |
 | `POST /api/inventario/rollos/:id/vender` | `pos` | `crear` |
 | `POST /api/inventario/rollos/:id/ajustar` | `ajustes` | `crear` |

@@ -11,21 +11,64 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
   try {
     await client.query("BEGIN");
     await client.query(`
-      DO $$ BEGIN
-        CREATE TYPE estado_salida AS ENUM (
-          'REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'RECHAZADA', 'PREPARADA',
-          'ENVIADA', 'RECIBIDA', 'CERRADA', 'CANCELADA'
-        );
-      EXCEPTION WHEN duplicate_object THEN NULL;
-      END $$;
-      ALTER TYPE estado_salida ADD VALUE IF NOT EXISTS 'REGISTRADA';
+      DO $migration$
+      DECLARE
+        unknown_state text;
+        current_values text[];
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_salida') THEN
+          CREATE TYPE estado_salida AS ENUM ('ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA');
+        ELSE
+          SELECT array_agg(e.enumlabel ORDER BY e.enumsortorder)
+            INTO current_values
+            FROM pg_enum e
+            JOIN pg_type t ON t.oid = e.enumtypid
+           WHERE t.typname = 'estado_salida';
+
+          IF current_values <> ARRAY['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA'] THEN
+            IF to_regclass('public.salidas') IS NOT NULL THEN
+              SELECT estado::text INTO unknown_state
+                FROM salidas
+               WHERE estado::text NOT IN (
+                 'REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'PREPARADA',
+                 'ENVIADA', 'RECIBIDA', 'CERRADA', 'RECHAZADA', 'CANCELADA',
+                 'ARMANDO', 'EN_TRANSITO'
+               )
+               LIMIT 1;
+              IF unknown_state IS NOT NULL THEN
+                RAISE EXCEPTION 'Estado de salida sin mapeo: %', unknown_state;
+              END IF;
+            END IF;
+
+            DROP TYPE IF EXISTS estado_salida_replacement;
+            CREATE TYPE estado_salida_replacement AS ENUM (
+              'ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA'
+            );
+            IF to_regclass('public.salidas') IS NOT NULL THEN
+              ALTER TABLE salidas ALTER COLUMN estado DROP DEFAULT;
+              ALTER TABLE salidas ALTER COLUMN estado TYPE estado_salida_replacement
+                USING (
+                  CASE
+                    WHEN estado::text IN ('REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'PREPARADA', 'ARMANDO') THEN 'ARMANDO'
+                    WHEN estado::text IN ('ENVIADA', 'EN_TRANSITO') THEN 'EN_TRANSITO'
+                    WHEN estado::text IN ('RECIBIDA', 'CERRADA') THEN 'RECIBIDA'
+                    WHEN estado::text IN ('RECHAZADA', 'CANCELADA') THEN 'CANCELADA'
+                  END
+                )::estado_salida_replacement;
+            END IF;
+            DROP TYPE estado_salida;
+            ALTER TYPE estado_salida_replacement RENAME TO estado_salida;
+          END IF;
+        END IF;
+      END
+      $migration$;
 
       CREATE TABLE IF NOT EXISTS salidas (
         id serial PRIMARY KEY,
         folio integer NOT NULL UNIQUE,
         origen_id integer NOT NULL REFERENCES ubicaciones(id),
         destino_id integer NOT NULL REFERENCES ubicaciones(id),
-        estado estado_salida NOT NULL DEFAULT 'REGISTRADA',
+        estado estado_salida NOT NULL DEFAULT 'ARMANDO',
         usuario_solicita_id integer REFERENCES usuarios(id),
         usuario_acepta_id integer REFERENCES usuarios(id),
         usuario_prepara_id integer REFERENCES usuarios(id),
@@ -51,6 +94,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       );
 
       ALTER TABLE salidas
+        ALTER COLUMN estado SET DEFAULT 'ARMANDO',
         ADD COLUMN IF NOT EXISTS usuario_cancela_id integer REFERENCES usuarios(id),
         ADD COLUMN IF NOT EXISTS cancelada_at timestamptz,
         ADD COLUMN IF NOT EXISTS autorizado_por_id integer REFERENCES usuarios(id);

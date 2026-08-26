@@ -143,7 +143,10 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
   const enumValues = await pool.query<{ enumlabel: string }>(`
     SELECT enumlabel FROM pg_enum WHERE enumtypid = 'estado_salida'::regtype
   `);
-  assert.ok(enumValues.rows.some((row) => row.enumlabel === "REGISTRADA"));
+  assert.deepEqual(
+    enumValues.rows.map((row) => row.enumlabel),
+    ["ARMANDO", "EN_TRANSITO", "RECIBIDA", "CANCELADA"],
+  );
 
   const folio = await pool.query<{ ultimo_folio: number }>(
     "SELECT ultimo_folio FROM salida_folio WHERE id = 1",

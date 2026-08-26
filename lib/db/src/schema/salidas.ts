@@ -16,9 +16,7 @@ import { rollosTable } from "./rollos";
 import { usuariosTable } from "./users";
 
 /**
- * Inter-location exit request and its complete execution audit trail.
- * A salida is requested by product; the physical rolls are attached later,
- * while it is prepared.
+ * Two-step inter-location exit: assembled at origin, then sent through transit.
  */
 export const salidasTable = pgTable(
   "salidas",
@@ -31,7 +29,7 @@ export const salidasTable = pgTable(
     destinoId: integer("destino_id")
       .notNull()
       .references(() => ubicacionesTable.id),
-    estado: estadoSalidaEnum("estado").notNull().default("REGISTRADA"),
+    estado: estadoSalidaEnum("estado").notNull().default("ARMANDO"),
     usuarioSolicitaId: integer("usuario_solicita_id").references(
       () => usuariosTable.id,
     ),

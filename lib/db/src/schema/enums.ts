@@ -88,14 +88,9 @@ export const estadoSesionCajaEnum = pgEnum("estado_sesion_caja", [
 
 /** Workflow states for an inter-location inventory exit. */
 export const estadoSalidaEnum = pgEnum("estado_salida", [
-  "REGISTRADA",
-  "SOLICITADA",
-  "ACEPTADA",
-  "RECHAZADA",
-  "PREPARADA",
-  "ENVIADA",
+  "ARMANDO",
+  "EN_TRANSITO",
   "RECIBIDA",
-  "CERRADA",
   "CANCELADA",
 ]);
 

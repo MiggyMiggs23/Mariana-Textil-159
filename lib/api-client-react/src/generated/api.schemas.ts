@@ -2492,14 +2492,9 @@ export type EstadoSalida = typeof EstadoSalida[keyof typeof EstadoSalida];
 
 
 export const EstadoSalida = {
-  REGISTRADA: 'REGISTRADA',
-  SOLICITADA: 'SOLICITADA',
-  ACEPTADA: 'ACEPTADA',
-  RECHAZADA: 'RECHAZADA',
-  PREPARADA: 'PREPARADA',
-  ENVIADA: 'ENVIADA',
+  ARMANDO: 'ARMANDO',
+  EN_TRANSITO: 'EN_TRANSITO',
   RECIBIDA: 'RECIBIDA',
-  CERRADA: 'CERRADA',
   CANCELADA: 'CANCELADA',
 } as const;
 
@@ -2522,6 +2517,13 @@ export interface MotivoSalidaInput {
   adminPassword?: string;
 }
 
+export interface EnvioSalidaInput {
+  /** @minLength 1 */
+  transportista: string;
+  /** @nullable */
+  notaEnvio?: string | null;
+}
+
 export interface SalidaResumen {
   id: number;
   folio: number;
@@ -2530,9 +2532,9 @@ export interface SalidaResumen {
   nombreOrigen: string;
   destinoId: number;
   nombreDestino: string;
-  solicitadoPorId: number;
-  nombreSolicitadoPor: string;
-  fechaSolicitud: string;
+  armadoPorId: number;
+  nombreArmadoPor: string;
+  fechaArmado: string;
   totalProductos: number;
   totalCantidadSolicitada: string;
   totalCantidadEnviada: string;
@@ -2617,28 +2619,6 @@ export interface SalidaRolloEscaneado {
 export type SalidaDetail = SalidaResumen & ({
   uuidCliente: string;
   /** @nullable */
-  notaSolicitud: string | null;
-  /** @nullable */
-  aceptadoPorId: number | null;
-  /** @nullable */
-  nombreAceptadoPor: string | null;
-  /** @nullable */
-  fechaAceptacion: string | null;
-  /** @nullable */
-  rechazadoPorId: number | null;
-  /** @nullable */
-  nombreRechazadoPor: string | null;
-  /** @nullable */
-  fechaRechazo: string | null;
-  /** @nullable */
-  motivoRechazo: string | null;
-  /** @nullable */
-  preparadoPorId: number | null;
-  /** @nullable */
-  nombrePreparadoPor: string | null;
-  /** @nullable */
-  fechaPreparacion: string | null;
-  /** @nullable */
   enviadoPorId: number | null;
   /** @nullable */
   nombreEnviadoPor: string | null;
@@ -2656,12 +2636,6 @@ export type SalidaDetail = SalidaResumen & ({
   fechaRecepcion: string | null;
   /** @nullable */
   notaRecepcion: string | null;
-  /** @nullable */
-  cerradoPorId: number | null;
-  /** @nullable */
-  nombreCerradoPor: string | null;
-  /** @nullable */
-  fechaCierre: string | null;
   /** @nullable */
   canceladoPorId: number | null;
   /** @nullable */

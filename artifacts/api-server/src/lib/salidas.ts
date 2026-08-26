@@ -31,21 +31,10 @@ import {
   InventarioError,
   moverRollo,
   recibirTransferencia,
-  transferirRolloInmediato,
   type Tx,
 } from "./inventario";
 
 const SALIDA_FOLIO_ROW_ID = 1;
-const ACTIVE_RESERVATION_STATES: EstadoSalida[] = [
-  "PREPARADA",
-  "ENVIADA",
-  "RECIBIDA",
-];
-const CANCELLABLE_STATES: EstadoSalida[] = [
-  "SOLICITADA",
-  "ACEPTADA",
-  "PREPARADA",
-];
 
 export type CrearSalidaInput = {
   origenId: number;
@@ -55,14 +44,6 @@ export type CrearSalidaInput = {
   transportista?: string | null;
   observaciones?: string | null;
   rolloIds?: number[];
-  /** Legacy request shape retained only for source compatibility; no new flow uses it. */
-  lineas?: Array<{ productoId: number; cantidadSolicitada: string; rollosSolicitados?: number | null; nota?: string | null }>;
-};
-
-type PrepararSalidaInput = {
-  salidaId: number;
-  usuarioId: number;
-  lineas: Array<{ lineaId: number; rolloIds: number[] }>;
 };
 
 type EnviarSalidaInput = {
@@ -142,11 +123,8 @@ async function getEntityMaps(database: ReadDb, salida: SalidaHeader) {
   const locationIds = [salida.origenId, salida.destinoId];
   const userIds = [
     salida.usuarioSolicitaId,
-    salida.usuarioAceptaId,
-    salida.usuarioPreparaId,
     salida.usuarioEnviaId,
     salida.usuarioRecibeId,
-    salida.usuarioCierraId,
     salida.usuarioCancelaId,
   ].filter((id): id is number => id != null);
   const locations = await database
@@ -226,13 +204,6 @@ export async function buildSalidaDetail(
   const total = (field: "cantidadSolicitada" | "cantidadEnviada" | "cantidadRecibida") =>
     lineas.reduce((sum, linea) => sum + Number(linea[field]), 0).toFixed(3);
   const requestedById = salida.usuarioSolicitaId ?? 0;
-  const accepted = salida.estado === "ACEPTADA" || [
-    "PREPARADA",
-    "ENVIADA",
-    "RECIBIDA",
-    "CERRADA",
-  ].includes(salida.estado);
-  const rejected = salida.estado === "RECHAZADA";
   const rollsPerLine = new Map<number, { sent: number; received: number }>();
   for (const rollo of rollos) {
     const current = rollsPerLine.get(rollo.lineaId) ?? { sent: 0, received: 0 };
@@ -258,44 +229,27 @@ export async function buildSalidaDetail(
     nombreOrigen: locations.get(salida.origenId) ?? "Ubicación eliminada",
     nombreDestino: locations.get(salida.destinoId) ?? "Ubicación eliminada",
     estado: salida.estado,
-    solicitadoPorId: requestedById,
-    nombreSolicitadoPor: users.get(requestedById) ?? "Usuario eliminado",
-    fechaSolicitud: iso(salida.solicitadaAt) ?? salida.createdAt.toISOString(),
-    aceptadoPorId: accepted ? (salida.usuarioAceptaId ?? null) : null,
-    nombreAceptadoPor: accepted && salida.usuarioAceptaId ? (users.get(salida.usuarioAceptaId) ?? null) : null,
-    fechaAceptacion: accepted ? iso(salida.aceptadaAt) : null,
-    rechazadoPorId: rejected ? (salida.usuarioAceptaId ?? null) : null,
-    nombreRechazadoPor: rejected && salida.usuarioAceptaId ? (users.get(salida.usuarioAceptaId) ?? null) : null,
-    fechaRechazo: rejected ? iso(salida.aceptadaAt) : null,
-    preparadoPorId: salida.usuarioPreparaId ?? null,
-    nombrePreparadoPor: salida.usuarioPreparaId ? (users.get(salida.usuarioPreparaId) ?? null) : null,
-    fechaPreparacion: iso(salida.preparadaAt),
+    armadoPorId: requestedById,
+    nombreArmadoPor: users.get(requestedById) ?? "Usuario eliminado",
+    fechaArmado: iso(salida.solicitadaAt) ?? salida.createdAt.toISOString(),
     enviadoPorId: salida.usuarioEnviaId ?? null,
     nombreEnviadoPor: salida.usuarioEnviaId ? (users.get(salida.usuarioEnviaId) ?? null) : null,
     fechaEnvio: iso(salida.enviadaAt),
     recibidoPorId: salida.usuarioRecibeId ?? null,
     nombreRecibidoPor: salida.usuarioRecibeId ? (users.get(salida.usuarioRecibeId) ?? null) : null,
     fechaRecepcion: iso(salida.recibidaAt),
-    cerradoPorId: salida.usuarioCierraId ?? null,
-    nombreCerradoPor: salida.usuarioCierraId ? (users.get(salida.usuarioCierraId) ?? null) : null,
-    fechaCierre: iso(salida.cerradaAt),
     canceladoPorId: salida.usuarioCancelaId ?? null,
     nombreCanceladoPor: salida.usuarioCancelaId ? (users.get(salida.usuarioCancelaId) ?? null) : null,
     fechaCancelacion: iso(salida.canceladaAt),
-    motivoRechazo: salida.motivoRechazo ?? null,
     motivoCancelacion: salida.motivoCancelacion ?? null,
-    notaSolicitud: salida.notaSolicitud ?? null,
     notaEnvio: salida.notaEnvio ?? null,
     notaRecepcion: salida.notaRecepcion ?? null,
     transportista: salida.transportista ?? null,
     uuidCliente: salida.uuidCliente,
     createdAt: salida.createdAt.toISOString(),
     updatedAt:
-      iso(salida.cerradaAt) ??
       iso(salida.recibidaAt) ??
       iso(salida.enviadaAt) ??
-      iso(salida.preparadaAt) ??
-      iso(salida.aceptadaAt) ??
       iso(salida.solicitadaAt) ??
       salida.createdAt.toISOString(),
     totalProductos: lineas.length,
@@ -385,6 +339,20 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
       throw new InventarioError(`El rollo ${rollo.serie} no está DISPONIBLE.`, "ROLLO_UNAVAILABLE");
     }
   }
+  const reserved = await tx
+    .select({ rolloId: salidaRollosTable.rolloId })
+    .from(salidaRollosTable)
+    .innerJoin(salidasTable, eq(salidaRollosTable.salidaId, salidasTable.id))
+    .where(
+      and(
+        inArray(salidaRollosTable.rolloId, rolloIds),
+        inArray(salidasTable.estado, ["ARMANDO", "EN_TRANSITO"]),
+      ),
+    )
+    .limit(1);
+  if (reserved.length) {
+    throw new InventarioError("Uno de los rollos ya pertenece a una salida activa.", "ROLLO_RESERVED");
+  }
 
   // Folio allocation is intentionally after every validation and row lock.
   const folio = await reserveSalidaFolio(tx);
@@ -395,7 +363,7 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
       origenId: input.origenId,
       destinoId: input.destinoId,
       usuarioSolicitaId: input.usuarioSolicitaId,
-      estado: "REGISTRADA",
+      estado: "ARMANDO",
       notaSolicitud: input.observaciones?.trim() || null,
       transportista: input.transportista?.trim() || null,
       uuidCliente: input.uuidCliente,
@@ -407,129 +375,21 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   const lineas = await tx.insert(salidaLineasTable).values([...groups.entries()].map(([productoId, rs]) => ({
     salidaId: salida!.id, productoId,
     cantidadSolicitada: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
-    cantidadEnviada: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
-    cantidadRecibida: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
+    cantidadEnviada: "0",
+    cantidadRecibida: "0",
     rollosSolicitados: rs.length,
   }))).returning();
   const lineByProduct = new Map(lineas.map((linea) => [linea.productoId, linea]));
   await tx.insert(salidaRollosTable).values(rollos.map((rollo) => ({
     salidaId: salida!.id, lineaId: lineByProduct.get(rollo.productoId)!.id, rolloId: rollo.id,
-    cantidadEnviada: rollo.cantidadActual, cantidadRecibida: rollo.cantidadActual, recibido: true,
+    cantidadEnviada: rollo.cantidadActual, cantidadRecibida: null, recibido: false,
   })));
-  for (const rollo of rollos) {
-    await transferirRolloInmediato(tx, {
-      rolloId: rollo.id, ubicacionOrigenId: input.origenId, ubicacionDestinoId: input.destinoId,
-      usuarioId: input.usuarioSolicitaId, documentoTipo: "SALIDA", documentoId: String(salida!.id),
-      justificacion: `Salida ${folio} a ubicación ${input.destinoId}.`,
-      uuidCliente: `${input.uuidCliente}:${rollo.id}`,
-    });
-  }
   await tx.insert(auditoriaTable).values({
     usuarioId: input.usuarioSolicitaId, accion: "CREAR", entidad: "salidas", entidadId: String(salida!.id),
     datosDespues: { folio, origenId: input.origenId, destinoId: input.destinoId, rolloIds },
     ip: "desconocida",
   });
   return requireSalidaDetail(tx, salida!.id);
-}
-
-async function aceptarSalida(tx: Tx, salidaId: number, usuarioId: number) {
-  const salida = await getSalidaForUpdate(tx, salidaId);
-  requireState(salida, ["SOLICITADA"], "aceptar");
-  await tx
-    .update(salidasTable)
-    .set({ estado: "ACEPTADA", usuarioAceptaId: usuarioId, aceptadaAt: new Date() })
-    .where(eq(salidasTable.id, salidaId));
-  return requireSalidaDetail(tx, salidaId);
-}
-
-async function rechazarSalida(
-  tx: Tx,
-  salidaId: number,
-  usuarioId: number,
-  motivo: string,
-) {
-  const salida = await getSalidaForUpdate(tx, salidaId);
-  requireState(salida, ["SOLICITADA"], "rechazar");
-  if (motivo.trim().length < 10) {
-    throw new InventarioError("El motivo de rechazo debe tener al menos 10 caracteres.", "REASON_REQUIRED");
-  }
-  await tx
-    .update(salidasTable)
-    .set({ estado: "RECHAZADA", usuarioAceptaId: usuarioId, aceptadaAt: new Date(), motivoRechazo: motivo.trim() })
-    .where(eq(salidasTable.id, salidaId));
-  return requireSalidaDetail(tx, salidaId);
-}
-
-async function prepararSalida(tx: Tx, input: PrepararSalidaInput) {
-  const salida = await getSalidaForUpdate(tx, input.salidaId);
-  requireState(salida, ["ACEPTADA"], "preparar");
-  const selected = input.lineas.flatMap((linea) =>
-    linea.rolloIds.map((rolloId) => ({ lineaId: linea.lineaId, rolloId })),
-  );
-  if (!selected.length) {
-    throw new InventarioError("Selecciona al menos un rollo para preparar.", "EMPTY_PREPARATION");
-  }
-  if (new Set(selected.map((item) => item.rolloId)).size !== selected.length) {
-    throw new InventarioError("Un rollo no puede repetirse en la preparación.", "DUPLICATE_ROLL");
-  }
-
-  const lineas = await tx
-    .select()
-    .from(salidaLineasTable)
-    .where(eq(salidaLineasTable.salidaId, salida.id));
-  const lineMap = new Map(lineas.map((linea) => [linea.id, linea]));
-  for (const item of selected) {
-    if (!lineMap.has(item.lineaId)) {
-      throw new InventarioError("La línea no pertenece a esta salida.", "LINE_MISMATCH");
-    }
-    await tx.execute(sql`SELECT pg_advisory_xact_lock(91017, ${item.rolloId})`);
-  }
-
-  const rolloIds = selected.map((item) => item.rolloId);
-  const rollos = await tx
-    .select()
-    .from(rollosTable)
-    .where(inArray(rollosTable.id, rolloIds))
-    .for("update");
-  if (rollos.length !== rolloIds.length) {
-    throw new InventarioError("Uno de los rollos ya no existe.", "ROLLO_NOT_FOUND");
-  }
-  const rolloMap = new Map(rollos.map((rollo) => [rollo.id, rollo]));
-  for (const item of selected) {
-    const rollo = rolloMap.get(item.rolloId)!;
-    const line = lineMap.get(item.lineaId)!;
-    if (rollo.productoId !== line.productoId || rollo.ubicacionId !== salida.origenId || rollo.estado !== "DISPONIBLE") {
-      throw new InventarioError("El rollo no está disponible para esta salida.", "ROLLO_UNAVAILABLE");
-    }
-  }
-
-  const existingReservation = await tx
-    .select({ rolloId: salidaRollosTable.rolloId })
-    .from(salidaRollosTable)
-    .innerJoin(salidasTable, eq(salidaRollosTable.salidaId, salidasTable.id))
-    .where(
-      and(
-        inArray(salidaRollosTable.rolloId, rolloIds),
-        inArray(salidasTable.estado, ACTIVE_RESERVATION_STATES),
-      ),
-    );
-  if (existingReservation.length) {
-    throw new InventarioError("Uno de los rollos ya está preparado para otra salida.", "ROLLO_RESERVED");
-  }
-
-  await tx.insert(salidaRollosTable).values(
-    selected.map((item) => ({
-      salidaId: salida.id,
-      lineaId: item.lineaId,
-      rolloId: item.rolloId,
-      cantidadEnviada: rolloMap.get(item.rolloId)!.cantidadActual,
-    })),
-  );
-  await tx
-    .update(salidasTable)
-    .set({ estado: "PREPARADA", usuarioPreparaId: input.usuarioId, preparadaAt: new Date() })
-    .where(eq(salidasTable.id, salida.id));
-  return requireSalidaDetail(tx, salida.id);
 }
 
 async function recomputeLineTotals(tx: Tx, salidaId: number): Promise<void> {
@@ -552,9 +412,9 @@ async function recomputeLineTotals(tx: Tx, salidaId: number): Promise<void> {
   }
 }
 
-async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
+export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
-  requireState(salida, ["PREPARADA"], "enviar");
+  requireState(salida, ["ARMANDO"], "enviar");
   if (!input.transportista.trim()) {
     throw new InventarioError("El transportista es obligatorio.", "TRANSPORT_REQUIRED");
   }
@@ -589,7 +449,7 @@ async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   await tx
     .update(salidasTable)
     .set({
-      estado: "ENVIADA",
+      estado: "EN_TRANSITO",
       usuarioEnviaId: input.usuarioId,
       enviadaAt: new Date(),
       transportista: input.transportista.trim(),
@@ -601,7 +461,7 @@ async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
 
 async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
-  requireState(salida, ["ENVIADA", "RECIBIDA"], "recibir");
+  requireState(salida, ["EN_TRANSITO"], "recibir");
   const salidaRollos = await tx
     .select()
     .from(salidaRollosTable)
@@ -611,7 +471,7 @@ async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   if (new Set(input.rollos.map((item) => item.rolloId)).size !== input.rollos.length) {
     throw new InventarioError("Un rollo no puede recibirse dos veces.", "DUPLICATE_ROLL");
   }
-  if (salida.estado === "ENVIADA" && input.rollos.length !== salidaRollos.length) {
+  if (input.rollos.length !== salidaRollos.length) {
     throw new InventarioError("La recepción inicial debe confirmar todos los rollos enviados.", "INCOMPLETE_RECEIPT");
   }
   for (const item of input.rollos) {
@@ -667,36 +527,14 @@ async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       .where(eq(salidaRollosTable.id, salidaRollo.id));
   }
   await recomputeLineTotals(tx, salida.id);
-  const firstReceipt = salida.estado === "ENVIADA";
   await tx
     .update(salidasTable)
     .set({
       estado: "RECIBIDA",
-      ...(firstReceipt
-        ? {
-            usuarioRecibeId: input.usuarioId,
-            recibidaAt: new Date(),
-            notaRecepcion: input.notaRecepcion?.trim() || null,
-          }
-        : {}),
+      usuarioRecibeId: input.usuarioId,
+      recibidaAt: new Date(),
+      notaRecepcion: input.notaRecepcion?.trim() || null,
     })
-    .where(eq(salidasTable.id, salida.id));
-  return requireSalidaDetail(tx, salida.id);
-}
-
-async function cerrarSalida(tx: Tx, salidaId: number, usuarioId: number) {
-  const salida = await getSalidaForUpdate(tx, salidaId);
-  requireState(salida, ["RECIBIDA"], "cerrar");
-  const [pending] = await tx
-    .select({ total: count() })
-    .from(salidaRollosTable)
-    .where(and(eq(salidaRollosTable.salidaId, salida.id), eq(salidaRollosTable.recibido, false)));
-  if ((pending?.total ?? 0) > 0) {
-    throw new InventarioError("No se puede cerrar: hay rollos que siguen en tránsito.", "PENDING_ROLLOS");
-  }
-  await tx
-    .update(salidasTable)
-    .set({ estado: "CERRADA", usuarioCierraId: usuarioId, cerradaAt: new Date() })
     .where(eq(salidasTable.id, salida.id));
   return requireSalidaDetail(tx, salida.id);
 }
@@ -708,24 +546,9 @@ export async function cancelarSalida(
   motivo: string,
 ) {
   const salida = await getSalidaForUpdate(tx, salidaId);
-  requireState(salida, ["REGISTRADA"], "cancelar");
+  requireState(salida, ["ARMANDO"], "cancelar");
   if (motivo.trim().length < 10) {
     throw new InventarioError("El motivo de cancelación debe tener al menos 10 caracteres.", "REASON_REQUIRED");
-  }
-  const selected = await tx.select().from(salidaRollosTable)
-    .where(eq(salidaRollosTable.salidaId, salida.id)).for("update");
-  for (const item of selected) {
-    const [rollo] = await tx.select().from(rollosTable).where(eq(rollosTable.id, item.rolloId)).for("update").limit(1);
-    if (!rollo || rollo.estado !== "DISPONIBLE" || rollo.ubicacionId !== salida.destinoId ||
-      Number(rollo.cantidadActual) !== Number(item.cantidadEnviada)) {
-      throw new InventarioError(`No se puede cancelar: el rollo ${rollo?.serie ?? item.rolloId} ya cambió.`, "CANCEL_ROLLO_CHANGED");
-    }
-    await transferirRolloInmediato(tx, {
-      rolloId: rollo.id, ubicacionOrigenId: salida.destinoId, ubicacionDestinoId: salida.origenId,
-      usuarioId, documentoTipo: "SALIDA", documentoId: String(salida.id),
-      justificacion: `Cancelación de salida ${salida.folio}: ${motivo.trim()}`,
-      uuidCliente: `cancelacion:${salida.id}:${rollo.id}`,
-    });
   }
   await tx
     .update(salidasTable)
@@ -797,19 +620,4 @@ export async function listarSalidas(input: ListSalidasInput) {
   ]);
   const items = await Promise.all(rows.map((row) => buildSalidaDetail(db, row.id)));
   return { items: items.filter((item): item is NonNullable<typeof item> => item != null), total: totalRows[0]?.total ?? 0, page: input.page, pageSize: input.pageSize };
-}
-
-async function countSalidasPendientes(visibleUbicacionId?: number | null) {
-  const originStates: EstadoSalida[] = ["SOLICITADA", "ACEPTADA", "PREPARADA"];
-  const destinationStates: EstadoSalida[] = ["ENVIADA", "RECIBIDA"];
-  const conditions = visibleUbicacionId == null
-    ? [or(inArray(salidasTable.estado, originStates), inArray(salidasTable.estado, destinationStates))]
-    : [
-        or(
-          and(eq(salidasTable.origenId, visibleUbicacionId), inArray(salidasTable.estado, originStates)),
-          and(eq(salidasTable.destinoId, visibleUbicacionId), inArray(salidasTable.estado, destinationStates)),
-        ),
-      ];
-  const [row] = await db.select({ total: count() }).from(salidasTable).where(and(...conditions));
-  return { total: row?.total ?? 0 };
 }

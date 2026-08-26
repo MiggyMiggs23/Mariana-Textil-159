@@ -173,6 +173,7 @@ export * from "./generated/types/entradaPendienteCosto";
 export * from "./generated/types/entradaRollo";
 export * from "./generated/types/entradaSummary";
 export * from "./generated/types/entradasPendientesCostoResult";
+export * from "./generated/types/envioSalidaInput";
 export * from "./generated/types/error";
 export * from "./generated/types/estadisticasPorColor";
 export * from "./generated/types/estadisticasPorMes";

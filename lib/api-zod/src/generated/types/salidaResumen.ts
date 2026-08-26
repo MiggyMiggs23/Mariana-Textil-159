@@ -15,9 +15,9 @@ export interface SalidaResumen {
   nombreOrigen: string;
   destinoId: number;
   nombreDestino: string;
-  solicitadoPorId: number;
-  nombreSolicitadoPor: string;
-  fechaSolicitud: Date;
+  armadoPorId: number;
+  nombreArmadoPor: string;
+  fechaArmado: Date;
   totalProductos: number;
   totalCantidadSolicitada: string;
   totalCantidadEnviada: string;

@@ -34,7 +34,7 @@ tags:
   - name: caja
     description: Apertura, cobro y corte de caja
   - name: salidas
-    description: Solicitud, preparación y recepción de salidas entre ubicaciones
+    description: Armado, envío y recepción de salidas entre ubicaciones
   - name: admin-analytics
     description: Analítica financiera y operativa exclusiva para ADMIN
   - name: notificaciones
@@ -2782,7 +2782,7 @@ paths:
     post:
       operationId: crearSalida
       tags: [salidas]
-      summary: Registra una salida inmediata entre sitios
+      summary: Crea una salida en armado sin mover inventario
       requestBody:
         required: true
         content:
@@ -2913,6 +2913,32 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/MotivoSalidaInput"
+      responses:
+        "200":
+          $ref: "#/components/responses/SalidaDetailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /salidas/{id}/enviar:
+    post:
+      operationId: enviarSalida
+      tags: [salidas]
+      summary: Envía una salida armada y mueve sus rollos al tránsito
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnvioSalidaInput"
       responses:
         "200":
           $ref: "#/components/responses/SalidaDetailResponse"
@@ -5905,7 +5931,7 @@ components:
         pageSize: { type: number }
     EstadoSalida:
       type: string
-      enum: [REGISTRADA, SOLICITADA, ACEPTADA, RECHAZADA, PREPARADA, ENVIADA, RECIBIDA, CERRADA, CANCELADA]
+      enum: [ARMANDO, EN_TRANSITO, RECIBIDA, CANCELADA]
     SalidaInput:
       type: object
       required: [uuidCliente, origenId, destinoId, rolloIds]
@@ -5926,10 +5952,16 @@ components:
         motivo: { type: string, minLength: 10 }
         adminUsuario: { type: string }
         adminPassword: { type: string }
+    EnvioSalidaInput:
+      type: object
+      required: [transportista]
+      properties:
+        transportista: { type: string, minLength: 1 }
+        notaEnvio: { type: ["string", "null"] }
     SalidaResumen:
       type: object
       required:
-        [id, folio, estado, origenId, nombreOrigen, destinoId, nombreDestino, solicitadoPorId, nombreSolicitadoPor, fechaSolicitud, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
+        [id, folio, estado, origenId, nombreOrigen, destinoId, nombreDestino, armadoPorId, nombreArmadoPor, fechaArmado, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -5939,9 +5971,9 @@ components:
         nombreOrigen: { type: string }
         destinoId: { type: number }
         nombreDestino: { type: string }
-        solicitadoPorId: { type: number }
-        nombreSolicitadoPor: { type: string }
-        fechaSolicitud: { type: string, format: date-time }
+        armadoPorId: { type: number }
+        nombreArmadoPor: { type: string }
+        fechaArmado: { type: string, format: date-time }
         totalProductos: { type: number }
         totalCantidadSolicitada: { type: string }
         totalCantidadEnviada: { type: string }
@@ -6025,20 +6057,9 @@ components:
         - $ref: "#/components/schemas/SalidaResumen"
         - type: object
           required:
-            [uuidCliente, notaSolicitud, aceptadoPorId, nombreAceptadoPor, fechaAceptacion, rechazadoPorId, nombreRechazadoPor, fechaRechazo, motivoRechazo, preparadoPorId, nombrePreparadoPor, fechaPreparacion, enviadoPorId, nombreEnviadoPor, fechaEnvio, transportista, notaEnvio, recibidoPorId, nombreRecibidoPor, fechaRecepcion, notaRecepcion, cerradoPorId, nombreCerradoPor, fechaCierre, canceladoPorId, nombreCanceladoPor, fechaCancelacion, motivoCancelacion, lineas, rollos]
+            [uuidCliente, enviadoPorId, nombreEnviadoPor, fechaEnvio, transportista, notaEnvio, recibidoPorId, nombreRecibidoPor, fechaRecepcion, notaRecepcion, canceladoPorId, nombreCanceladoPor, fechaCancelacion, motivoCancelacion, lineas, rollos]
           properties:
             uuidCliente: { type: string }
-            notaSolicitud: { type: ["string", "null"] }
-            aceptadoPorId: { type: ["number", "null"] }
-            nombreAceptadoPor: { type: ["string", "null"] }
-            fechaAceptacion: { type: ["string", "null"], format: date-time }
-            rechazadoPorId: { type: ["number", "null"] }
-            nombreRechazadoPor: { type: ["string", "null"] }
-            fechaRechazo: { type: ["string", "null"], format: date-time }
-            motivoRechazo: { type: ["string", "null"] }
-            preparadoPorId: { type: ["number", "null"] }
-            nombrePreparadoPor: { type: ["string", "null"] }
-            fechaPreparacion: { type: ["string", "null"], format: date-time }
             enviadoPorId: { type: ["number", "null"] }
             nombreEnviadoPor: { type: ["string", "null"] }
             fechaEnvio: { type: ["string", "null"], format: date-time }
@@ -6048,9 +6069,6 @@ components:
             nombreRecibidoPor: { type: ["string", "null"] }
             fechaRecepcion: { type: ["string", "null"], format: date-time }
             notaRecepcion: { type: ["string", "null"] }
-            cerradoPorId: { type: ["number", "null"] }
-            nombreCerradoPor: { type: ["string", "null"] }
-            fechaCierre: { type: ["string", "null"], format: date-time }
             canceladoPorId: { type: ["number", "null"] }
             nombreCanceladoPor: { type: ["string", "null"] }
             fechaCancelacion: { type: ["string", "null"], format: date-time }

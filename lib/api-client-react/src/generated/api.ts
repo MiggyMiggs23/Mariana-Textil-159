@@ -80,6 +80,7 @@ import type {
   EntradaInput,
   EntradaListResult,
   EntradasPendientesCostoResult,
+  EnvioSalidaInput,
   Error,
   EscanearRolloSalidaParams,
   EstadisticasProveedorParams,
@@ -9610,7 +9611,7 @@ export const getCrearSalidaUrl = () => {
 }
 
 /**
- * @summary Registra una salida inmediata entre sitios
+ * @summary Crea una salida en armado sin mover inventario
  */
 export const crearSalida = async (salidaInput: SalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
 
@@ -9659,7 +9660,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CrearSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
 
     /**
- * @summary Registra una salida inmediata entre sitios
+ * @summary Crea una salida en armado sin mover inventario
  */
 export const useCrearSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalida>>, TError,{data: BodyType<SalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -10070,6 +10071,78 @@ export const useCancelarSalida = <TError = ErrorType<ValidationErrorResponse | U
         TContext
       > => {
       return useMutation(getCancelarSalidaMutationOptions(options));
+    }
+
+export const getEnviarSalidaUrl = (id: number,) => {
+
+
+
+
+  return `/api/salidas/${id}/enviar`
+}
+
+/**
+ * @summary Envía una salida armada y mueve sus rollos al tránsito
+ */
+export const enviarSalida = async (id: number,
+    envioSalidaInput: EnvioSalidaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
+
+  return customFetch<SalidaDetailResponseResponse>(getEnviarSalidaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(envioSalidaInput)
+  }
+);}
+
+
+
+
+
+export const getEnviarSalidaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enviarSalida>>, TError,{id: number;data: BodyType<EnvioSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof enviarSalida>>, TError,{id: number;data: BodyType<EnvioSalidaInput>}, TContext> => {
+
+const mutationKey = ['enviarSalida'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof enviarSalida>>, {id: number;data: BodyType<EnvioSalidaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  enviarSalida(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EnviarSalidaMutationResult = NonNullable<Awaited<ReturnType<typeof enviarSalida>>>
+    export type EnviarSalidaMutationBody = BodyType<EnvioSalidaInput>
+    export type EnviarSalidaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Envía una salida armada y mueve sus rollos al tránsito
+ */
+export const useEnviarSalida = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enviarSalida>>, TError,{id: number;data: BodyType<EnvioSalidaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof enviarSalida>>,
+        TError,
+        {id: number;data: BodyType<EnvioSalidaInput>},
+        TContext
+      > => {
+      return useMutation(getEnviarSalidaMutationOptions(options));
     }
 
 export const getGetAdminRealtimeDashboardUrl = (params?: GetAdminRealtimeDashboardParams,) => {

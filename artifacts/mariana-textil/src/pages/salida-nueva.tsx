@@ -214,7 +214,7 @@ export default function SalidaNueva() {
           <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
             <CheckCircle2 className="w-12 h-12" />
           </div>
-          <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Salida Registrada</h1>
+          <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Salida en armado</h1>
           <p className="text-xl text-slate-500 mb-8 font-medium">Folio: <span className="text-primary font-bold">{String(successFolio).padStart(6, '0')}</span></p>
 
           <div className="flex gap-4 w-full justify-center">
@@ -255,8 +255,8 @@ export default function SalidaNueva() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Nueva Salida Directa</h1>
-            <p className="text-muted-foreground mt-1 text-sm">Escanea los rollos y confirma el envío en un solo paso.</p>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Nueva Salida</h1>
+            <p className="text-muted-foreground mt-1 text-sm">Escanea los rollos para armarla. El inventario no se moverá hasta enviarla.</p>
           </div>
         </div>
 
@@ -474,7 +474,7 @@ export default function SalidaNueva() {
                       disabled={scannedRolls.length === 0 || !origenId || !destinoId || createMutation.isPending}
                     >
                       {createMutation.isPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}
-                      Confirmar Salida
+                      Guardar armado
                     </Button>
                   </CardFooter>
                 </Card>

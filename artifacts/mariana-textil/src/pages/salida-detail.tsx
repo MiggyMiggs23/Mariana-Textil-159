@@ -4,6 +4,7 @@ import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetSalida,
   useCancelarSalida,
+  useEnviarSalida,
   getGetSalidaQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
@@ -24,6 +25,7 @@ import {
   Lock,
   User,
   Truck,
+  Send,
   FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -47,13 +49,9 @@ import {
 
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; class: string }> = {
-    SOLICITADA: { label: "Solicitada", class: "bg-blue-100 text-blue-800 border-blue-200" },
-    ACEPTADA: { label: "Aceptada", class: "bg-indigo-100 text-indigo-800 border-indigo-200" },
-    RECHAZADA: { label: "Rechazada", class: "bg-red-100 text-red-800 border-red-200" },
-    PREPARADA: { label: "Preparada", class: "bg-purple-100 text-purple-800 border-purple-200" },
-    ENVIADA: { label: "Enviada", class: "bg-amber-100 text-amber-800 border-amber-200" },
+    ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
+    EN_TRANSITO: { label: "En tránsito", class: "bg-amber-100 text-amber-800 border-amber-200" },
     RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
-    CERRADA: { label: "Cerrada", class: "bg-green-100 text-green-800 border-green-200" },
     CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
   };
   const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
@@ -79,12 +77,15 @@ export default function SalidaDetail() {
   });
 
   const cancelMutation = useCancelarSalida();
+  const sendMutation = useEnviarSalida();
 
   const [dialogState, setDialogState] = useState<{
-    type: 'cancel' | null;
+    type: 'cancel' | 'send' | null;
   }>({ type: null });
 
   const [motivo, setMotivo] = useState("");
+  const [transportistaEnvio, setTransportistaEnvio] = useState("");
+  const [notaEnvio, setNotaEnvio] = useState("");
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
@@ -116,6 +117,7 @@ export default function SalidaDetail() {
   const isAdmin = user?.rol === Role.ADMIN;
   const isCaja = user?.rol === Role.CAJA;
   const canAuthorize = hasPermission(user, Modules.SALIDAS, 'autorizar');
+  const canEdit = hasPermission(user, Modules.SALIDAS, 'editar');
 
   const atOrigin = isAdmin || user?.ubicacion?.id === salida.origenId;
   const atDestination = isAdmin || user?.ubicacion?.id === salida.destinoId;
@@ -147,9 +149,8 @@ export default function SalidaDetail() {
         return acc;
       }, new Map<number, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
 
-  // New exits created via one-step capture will go straight to ENVIADA or CERRADA (if completed) or might use a different state flow.
-  // We allow cancellation if authorized and state is not already canceled.
-  const canCancel = !isCaja && salida.estado !== 'CANCELADA' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
+  const canCancel = !isCaja && salida.estado === 'ARMANDO' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
+  const canSend = !isCaja && canEdit && salida.estado === 'ARMANDO' && atOrigin;
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) });
@@ -179,6 +180,24 @@ export default function SalidaDetail() {
     });
   };
 
+  const onSend = () => {
+    if (!transportistaEnvio.trim()) {
+      toast({ title: "Atención", description: "El transportista es obligatorio", variant: "destructive" });
+      return;
+    }
+    sendMutation.mutate({
+      id,
+      data: { transportista: transportistaEnvio.trim(), notaEnvio: notaEnvio.trim() || null },
+    }, {
+      onSuccess: () => {
+        toast({ title: "Salida enviada" });
+        setDialogState({ type: null });
+        invalidate();
+      },
+      onError: (err) => toast({ title: "Error", description: getApiErrorMessage(err), variant: "destructive" }),
+    });
+  };
+
   return (
     <AppLayout>
     <div className="space-y-6 max-w-6xl mx-auto pb-12 animate-in fade-in duration-300">
@@ -204,13 +223,22 @@ export default function SalidaDetail() {
             <span>•</span>
             <span className="flex items-center gap-1">
               <User className="w-4 h-4" />
-              {salida.nombreSolicitadoPor}
+              {salida.nombreArmadoPor}
             </span>
           </div>
         </div>
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto sm:justify-end">
+          {canSend && (
+            <Button data-testid="btn-action-send" onClick={() => {
+              setTransportistaEnvio(salida.transportista ?? "");
+              setNotaEnvio(salida.notaEnvio ?? "");
+              setDialogState({ type: 'send' });
+            }} className="gap-2">
+              <Send className="w-4 h-4" /> Enviar salida
+            </Button>
+          )}
           <Link href={`/salidas/${salida.id}/documento/salida`}>
             <Button data-testid="btn-print-salida" variant="outline" className="gap-2 bg-white">
               <Printer className="w-4 h-4" /> Imprimir Documento
@@ -337,7 +365,7 @@ export default function SalidaDetail() {
                 </div>
               </div>
 
-              {(salida.transportista || salida.observaciones || salida.notaSolicitud) && (
+              {(salida.transportista || salida.observaciones || salida.notaEnvio) && (
                 <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
                   {salida.transportista && (
                     <div className="flex items-start gap-2 text-sm">
@@ -348,12 +376,12 @@ export default function SalidaDetail() {
                       </div>
                     </div>
                   )}
-                  {(salida.observaciones || salida.notaSolicitud) && (
+                  {(salida.observaciones || salida.notaEnvio) && (
                     <div className="flex items-start gap-2 text-sm">
                       <FileText className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
                       <div>
                         <span className="font-semibold block text-slate-700">Observaciones:</span>
-                        <span className="text-slate-600 italic">{salida.observaciones || salida.notaSolicitud}</span>
+                        <span className="text-slate-600 italic">{salida.notaEnvio || salida.observaciones}</span>
                       </div>
                     </div>
                   )}
@@ -437,6 +465,36 @@ export default function SalidaDetail() {
             <Button data-testid="btn-submit-cancel" variant="destructive" onClick={onCancel} disabled={cancelMutation.isPending || motivo.length < 10 || (!isAdmin && (!adminUsername || !adminPassword))}>
               {cancelMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Confirmar Cancelación
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={dialogState.type === 'send'} onOpenChange={(open) => {
+        if (!open) setDialogState({ type: null });
+      }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Enviar salida</DialogTitle></DialogHeader>
+          <div className="space-y-4 pt-4">
+            <p className="text-sm text-slate-500">Al confirmar, todos los rollos saldrán del origen y quedarán en tránsito.</p>
+            <Input
+              data-testid="input-send-transportista"
+              placeholder="Transportista"
+              value={transportistaEnvio}
+              onChange={(event) => setTransportistaEnvio(event.target.value)}
+            />
+            <Textarea
+              data-testid="input-send-nota"
+              placeholder="Nota de envío (opcional)"
+              value={notaEnvio}
+              onChange={(event) => setNotaEnvio(event.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDialogState({ type: null })}>Cerrar</Button>
+            <Button data-testid="btn-submit-send" onClick={onSend} disabled={sendMutation.isPending || !transportistaEnvio.trim()}>
+              {sendMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Confirmar envío
             </Button>
           </DialogFooter>
         </DialogContent>

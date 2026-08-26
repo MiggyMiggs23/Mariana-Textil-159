@@ -175,6 +175,7 @@ export * from './entradaPendienteCosto';
 export * from './entradaRollo';
 export * from './entradasPendientesCostoResult';
 export * from './entradaSummary';
+export * from './envioSalidaInput';
 export * from './error';
 export * from './escanearRolloSalidaParams';
 export * from './estadisticasPorColor';

@@ -12,28 +12,6 @@ import type { SalidaRollo } from './salidaRollo';
 export type SalidaDetail = SalidaResumen & ({
   uuidCliente: string;
   /** @nullable */
-  notaSolicitud: string | null;
-  /** @nullable */
-  aceptadoPorId: number | null;
-  /** @nullable */
-  nombreAceptadoPor: string | null;
-  /** @nullable */
-  fechaAceptacion: Date | null;
-  /** @nullable */
-  rechazadoPorId: number | null;
-  /** @nullable */
-  nombreRechazadoPor: string | null;
-  /** @nullable */
-  fechaRechazo: Date | null;
-  /** @nullable */
-  motivoRechazo: string | null;
-  /** @nullable */
-  preparadoPorId: number | null;
-  /** @nullable */
-  nombrePreparadoPor: string | null;
-  /** @nullable */
-  fechaPreparacion: Date | null;
-  /** @nullable */
   enviadoPorId: number | null;
   /** @nullable */
   nombreEnviadoPor: string | null;
@@ -51,12 +29,6 @@ export type SalidaDetail = SalidaResumen & ({
   fechaRecepcion: Date | null;
   /** @nullable */
   notaRecepcion: string | null;
-  /** @nullable */
-  cerradoPorId: number | null;
-  /** @nullable */
-  nombreCerradoPor: string | null;
-  /** @nullable */
-  fechaCierre: Date | null;
   /** @nullable */
   canceladoPorId: number | null;
   /** @nullable */

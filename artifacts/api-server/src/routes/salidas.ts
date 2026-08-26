@@ -8,6 +8,9 @@ import {
   CrearSalidaBody,
   EscanearRolloSalidaParams,
   EscanearRolloSalidaResponse,
+  EnviarSalidaBody,
+  EnviarSalidaParams,
+  EnviarSalidaResponse,
   ExportarSalidasQueryParams,
   GetSalidaParams,
   GetUbicacionesSalidaResponse,
@@ -17,7 +20,7 @@ import { db, productosTable, rollosTable, salidasTable, ubicacionesTable, usuari
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
-import { buildSalidaDetail, cancelarSalida, crearSalida, listarSalidas } from "../lib/salidas";
+import { buildSalidaDetail, cancelarSalida, crearSalida, enviarSalida, listarSalidas } from "../lib/salidas";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   EXCEL_NUMBER_FORMAT,
@@ -27,14 +30,9 @@ import {
 const router = Router();
 
 const ESTADOS: EstadoSalida[] = [
-  "REGISTRADA",
-  "SOLICITADA",
-  "ACEPTADA",
-  "RECHAZADA",
-  "PREPARADA",
-  "ENVIADA",
+  "ARMANDO",
+  "EN_TRANSITO",
   "RECIBIDA",
-  "CERRADA",
   "CANCELADA",
 ];
 
@@ -350,6 +348,34 @@ router.get(
       await requireSalidaAccess(req.auth!, id, "read");
       const detail = await buildSalidaDetail(db, id);
       res.json(detail);
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.post(
+  "/salidas/:id/enviar",
+  requireSession,
+  requierePermiso("salidas", "editar"),
+  async (req, res, next) => {
+    try {
+      const { id } = EnviarSalidaParams.parse(req.params);
+      const body = EnviarSalidaBody.parse(req.body);
+      if (rejectCajaMutation(req.auth!)) {
+        res.status(403).json({ error: "El rol CAJA no puede enviar salidas." });
+        return;
+      }
+      await requireSalidaAccess(req.auth!, id, "origin");
+      const result = await db.transaction((tx) =>
+        enviarSalida(tx, {
+          salidaId: id,
+          usuarioId: req.auth!.user.id,
+          transportista: body.transportista,
+          notaEnvio: body.notaEnvio,
+        }),
+      );
+      res.json(EnviarSalidaResponse.parse(result));
     } catch (error) {
       if (!sendError(error, res)) next(error);
     }

@@ -10,13 +10,8 @@ export type EstadoSalida = typeof EstadoSalida[keyof typeof EstadoSalida];
 
 
 export const EstadoSalida = {
-  REGISTRADA: 'REGISTRADA',
-  SOLICITADA: 'SOLICITADA',
-  ACEPTADA: 'ACEPTADA',
-  RECHAZADA: 'RECHAZADA',
-  PREPARADA: 'PREPARADA',
-  ENVIADA: 'ENVIADA',
+  ARMANDO: 'ARMANDO',
+  EN_TRANSITO: 'EN_TRANSITO',
   RECIBIDA: 'RECIBIDA',
-  CERRADA: 'CERRADA',
   CANCELADA: 'CANCELADA',
 } as const;
