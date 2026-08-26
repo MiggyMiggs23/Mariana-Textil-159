@@ -1,0 +1,130 @@
+# CORRECCIÓN — Intérprete de códigos escaneados
+
+Tarea única y acotada. **No adelantes trabajo de la Parte 2.** Si encuentras algo que pertenece a otra parte, anótalo en `replit.md` y sigue.
+
+Un solo commit. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## El problema
+
+El QR de la etiqueta de rollo contiene `${sku}-${serie}` — por ejemplo `TAF-BLA-1002874`. Está en `components/label-print.tsx` línea 75.
+
+Pero todas las pantallas que escanean buscan por serie. Cuando el escáner entrega `TAF-BLA-1002874`, la búsqueda no encuentra nada y el usuario ve "No se encontraron resultados".
+
+Falla con las tres formas de escaneo —pistola, smartphone con escáner y cámara— porque las tres entregan el mismo texto. **El escaneo funciona bien; lo que falta es interpretar lo escaneado.**
+
+## La solución
+
+**La etiqueta y el QR no se tocan.** Siguen diciendo `TAF-BLA-1002874`, y eso es deseable: debajo del código va impreso el mismo texto, y una persona puede leerlo y saber qué tela es sin escanear.
+
+Lo que se agrega es un intérprete: una sola función que recibe lo escaneado y extrae la serie.
+
+---
+
+## BLOQUE 1 — La función
+
+Crea una función compartida, en un módulo que puedan usar tanto el cliente como el servidor. Nómbrala de forma explícita, por ejemplo `interpretarCodigoEscaneado`.
+
+### La regla
+
+**La serie son los últimos 7 dígitos consecutivos del texto.**
+
+Está garantizado por el diseño: la serie es global, de 7 dígitos, desde 1000001.
+
+Casos que debe resolver:
+
+| Entrada | Serie | SKU detectado |
+|---|---|---|
+| `TAF-BLA-1002874` | `1002874` | `TAF-BLA` |
+| `GABMET-BAS-1002874` | `1002874` | `GABMET-BAS` |
+| `1002874` | `1002874` | ninguno |
+| `  TAF-BLA-1002874  ` | `1002874` | `TAF-BLA` |
+| `taf-bla-1002874` | `1002874` | `TAF-BLA` |
+| `gabardina azul` | ninguna | ninguno |
+| `TAF-BLA` | ninguna | ninguno |
+| `100287` (6 dígitos) | ninguna | ninguno |
+
+### Lo que devuelve
+
+Un objeto con:
+
+- `serie` — la serie encontrada, o nulo si no hay
+- `sku` — el prefijo antes de la serie, en mayúsculas y sin el guion final, o nulo
+- `textoOriginal` — lo que llegó, tal cual
+
+### Reglas importantes
+
+- **Si no encuentra una serie, devuelve nulo y no inventa nada.** El texto original se usa entonces para la búsqueda normal por texto.
+- Normaliza a mayúsculas y quita espacios de los extremos. **No quites guiones internos ni cambies nada más.**
+- No asumas una cantidad fija de guiones ni de letras. Los SKU tienen forma variable: `TAF-AMA` y `GABMET-BAS` son los dos válidos.
+- Escribe pruebas unitarias para **todos** los casos de la tabla de arriba, y para el caso de una cadena vacía.
+
+---
+
+## BLOQUE 2 — Conectarlo en el cliente
+
+En `components/campo-escaneo.tsx`, aplica el intérprete en el camino de entrega — el que ya comparten el teclado y la cámara.
+
+**No crees un camino paralelo.** El valor interpretado tiene que salir por la misma función que hoy entrega el valor, para que pistola, smartphone con escáner y cámara se comporten idénticamente.
+
+Si el intérprete encuentra una serie, entrega la serie. Si no encuentra ninguna, **entrega el texto original sin modificar.**
+
+Ese último punto es crítico: hoy en Etiquetas se puede buscar escribiendo "gabardina" o "azul", y eso tiene que seguir funcionando igual. La regla solo actúa cuando hay 7 dígitos al final.
+
+---
+
+## BLOQUE 3 — Conectarlo en el servidor
+
+Aplica el mismo intérprete en los endpoints que reciben un valor escaneado, para que no dependa solo de que el cliente lo limpie bien:
+
+- `/pos/buscar` (`lib/pos.ts`, `buscarPos`, línea 1597)
+- El escaneo de rollo de Salida Nueva
+- La búsqueda de Etiquetas
+- El escaneo de Ajustes
+- La captura de rollos de Entradas
+- La recepción de salidas
+
+En `buscarPos`, ojo: hoy hace `ILIKE '%término%'` contra serie, SKU, tela y color. Si el intérprete devuelve una serie, la búsqueda de rollos debe ser **exacta contra la serie**, no un `ILIKE` parcial. Un escaneo tiene que dar un resultado único, no una lista.
+
+Si el intérprete no devuelve serie, el comportamiento actual de búsqueda por texto se queda tal cual.
+
+Recorre el servidor y confirma que no quedó ningún punto de escaneo sin el intérprete. **Deja la lista en el commit.**
+
+---
+
+## BLOQUE 4 — Verificación del SKU
+
+Como el texto escaneado ya trae el SKU, aprovéchalo.
+
+Cuando el intérprete devuelva un SKU y el rollo encontrado por serie tenga un SKU distinto, **muestra una advertencia visible pero no bloquees la operación**:
+
+> Esta etiqueta dice TAF-BLA, pero el rollo 1002874 corresponde a GABMET-AZU. Verifica la etiqueta.
+
+**La serie manda siempre.** El SKU solo verifica. Si un rollo se reetiquetó o se corrigió su SKU, la etiqueta vieja puede traer el dato desactualizado, y en ese caso el rollo correcto es el de la serie.
+
+La advertencia no debe frenar al usuario ni requerir confirmación. Es información, no un candado.
+
+---
+
+## BLOQUE 5 — Verificación
+
+Reporta esto:
+
+- Las pruebas unitarias del intérprete, con todos los casos de la tabla
+- Escanear `TAF-BLA-1002874` en el POS encuentra el rollo 1002874
+- Escanear `1002874` pelón encuentra el mismo rollo
+- Escribir "gabardina" en Etiquetas sigue devolviendo resultados por texto
+- Escanear un QR cuyo SKU no coincide muestra la advertencia y **permite continuar**
+- Lista de pantallas y endpoints donde se conectó el intérprete
+- Una pistola escanea diez rollos seguidos en Salida Nueva sin perder el foco ni dejar texto en el campo
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`, bajo decisiones de arquitectura:
+
+> El QR de la etiqueta contiene `SKU-SERIE`. La serie son los últimos 7 dígitos. Todo punto de escaneo pasa por `interpretarCodigoEscaneado`. La serie manda; el SKU solo verifica y genera advertencia si no coincide.
