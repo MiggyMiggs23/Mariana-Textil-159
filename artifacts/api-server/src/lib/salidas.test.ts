@@ -46,9 +46,9 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     const moved = await db.select().from(rollosTable).where(inArray(rollosTable.id, rs.map((r) => r.id)));
     assert.ok(moved.every((r) => r.estado === "EN_TRANSITO"));
     const movs = await db.select().from(movimientosTable).where(and(inArray(movimientosTable.rolloId, rs.map((r) => r.id)), eq(movimientosTable.documentoId, String(salida.id))));
-    assert.equal(movs.length, 4); assert.ok(movs.every((m) => m.documentoTipo === "SALIDA"));
+    assert.equal(movs.length, 8); assert.ok(movs.every((m) => m.documentoTipo === "SALIDA"));
     assert.equal(movs.filter((m) => m.tipo === "TRANSFERENCIA_SALIDA").length, 4);
-    assert.equal(movs.filter((m) => m.tipo === "TRANSFERENCIA_ENTRADA").length, 0);
+    assert.equal(movs.filter((m) => m.tipo === "TRANSFERENCIA_ENTRADA").length, 4);
     const cache = await db.select().from(existenciasTable).where(eq(existenciasTable.productoId, f.productoId));
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.origenId)?.cantidadTotal), 0);
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.destinoId)?.cantidadTotal ?? 0), 0);

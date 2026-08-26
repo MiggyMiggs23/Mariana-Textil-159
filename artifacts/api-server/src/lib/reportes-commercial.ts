@@ -62,6 +62,12 @@ export function agingBucket(dueDate: string | null, today: string): string {
   return days <= 0 ? "Vigente" : days <= 30 ? "1-30" : days <= 60 ? "31-60" : days <= 90 ? "61-90" : "91+";
 }
 
+function calendarDate(value: unknown): string | null {
+  if (value == null) return null;
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return String(value).slice(0, 10);
+}
+
 function purchaseWhere(ctx: DomainReportContext) {
   const values: unknown[] = [ctx.range.desde, ctx.range.hasta];
   const where = ["e.fecha >= $1", "e.fecha <= $2"];
@@ -189,7 +195,7 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
   for (const [clientId, entries] of movementsByClient) {
     const charges: Array<{ amount: number; fechaVencimiento: string | null; notas: string | null }> = entries
       .filter((r) => r.tipo === "VENTA_CREDITO" && !r.es_incobrable)
-      .map((r) => ({ amount: number(r.importe), fechaVencimiento: r.fecha_vencimiento ?? null, notas: r.notas ?? null }));
+      .map((r) => ({ amount: number(r.importe), fechaVencimiento: calendarDate(r.fecha_vencimiento), notas: r.notas ?? null }));
     const offsets = -entries.filter((r) => r.tipo !== "VENTA_CREDITO").reduce((sum, r) => sum + Math.min(0, number(r.importe)), 0);
     for (const row of fifoAllocateAging(charges, offsets)) { const due = row.fechaVencimiento; const bucket = agingBucket(due, now); aged.push({ clienteId:number(clientId), fechaVencimiento:due, saldo:row.outstanding, cubeta:bucket, vencida:["1-30","31-60","61-90","91+"].includes(bucket), notas:row.notas }); }
   }
