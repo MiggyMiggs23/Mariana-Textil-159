@@ -301,7 +301,11 @@ async function mkUbicacion(): Promise<number> {
   const tag = `${RUN}_${++userSeq}`;
   const [row] = await db
     .insert(ubicacionesTable)
-    .values({ nombre: `UbSAT ${tag}`.slice(0, 120), tipo: "TIENDA" })
+    .values({
+      nombre: `UbSAT ${tag}`.slice(0, 120),
+      iniciales: `S${String.fromCharCode(65 + (userSeq % 26))}`,
+      tipo: "TIENDA",
+    })
     .returning({ id: ubicacionesTable.id });
   createdUbicacionIds.push(row!.id);
   return row!.id;

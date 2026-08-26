@@ -8,6 +8,7 @@ export { ensureClientesSchema } from "./lib/clientes-schema";
 export { ensureAdminAnalyticsSchema } from "./lib/admin-analytics-schema";
 export { ensureEtiquetasSchema } from "./lib/etiquetas-schema";
 export { ensureSupervisorRole } from "./lib/role-migration";
+export { ensureDocumentFoliosSchema } from "./lib/document-folios-schema";
 
 const { Pool } = pg;
 

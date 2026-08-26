@@ -99,9 +99,9 @@ before(async () => {
   const locations = await db
     .insert(ubicacionesTable)
     .values([
-      { nombre: `Propia ${run}`, tipo: "BODEGA", activa: true },
-      { nombre: `Otra ${run}`, tipo: "TIENDA", activa: true },
-      { nombre: `Inactiva ${run}`, tipo: "TIENDA", activa: false },
+      { nombre: `Propia ${run}`, iniciales: "KP", tipo: "BODEGA", activa: true },
+      { nombre: `Otra ${run}`, iniciales: "KO", tipo: "TIENDA", activa: true },
+      { nombre: `Inactiva ${run}`, iniciales: "KI", tipo: "TIENDA", activa: false },
     ])
     .returning();
   ids.locations.push(...locations.map(({ id }) => id));

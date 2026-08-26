@@ -30,7 +30,11 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   async function fx(unidad: "METRO" | "KILO" = "METRO") {
     const n = `${tag}-${products.length}`;
     const [p] = await db.insert(productosTable).values({ sku: n, tela: n, color: "Azul", unidad, precioSugerido: "10" }).returning();
-    const [o, d] = await db.insert(ubicacionesTable).values([{ nombre: `O-${n}`, tipo: "BODEGA" }, { nombre: `D-${n}`, tipo: "TIENDA" }]).returning();
+    const suffix = String.fromCharCode(65 + (products.length % 26));
+    const [o, d] = await db.insert(ubicacionesTable).values([
+      { nombre: `O-${n}`, iniciales: `S${suffix}`, tipo: "BODEGA" },
+      { nombre: `D-${n}`, iniciales: `T${suffix}`, tipo: "TIENDA" },
+    ]).returning();
     products.push(p!.id); locations.push(o!.id, d!.id);
     return { productoId: p!.id, origenId: o!.id, destinoId: d!.id };
   }

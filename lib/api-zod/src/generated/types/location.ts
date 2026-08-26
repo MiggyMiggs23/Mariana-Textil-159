@@ -10,6 +10,8 @@ import type { LocationType } from './locationType';
 export interface Location {
   id: number;
   nombre: string;
+  /** @pattern ^[A-Z]{2,3}$ */
+  iniciales: string;
   tipo: LocationType;
   activa: boolean;
   esSistema: boolean;

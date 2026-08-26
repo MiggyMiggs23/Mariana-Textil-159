@@ -70,6 +70,7 @@ async function makeLocation() {
     .insert(ubicacionesTable)
     .values({
       nombre: `${RUN} Tienda ${++seq}`,
+      iniciales: `P${String.fromCharCode(65 + (seq % 26))}`,
       tipo: "TIENDA",
     })
     .returning();

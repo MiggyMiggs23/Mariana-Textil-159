@@ -12,5 +12,7 @@ export interface LocationUpdate {
      * @maxLength 120
      */
   nombre?: string;
+  /** @pattern ^[A-Z]{2,3}$ */
+  iniciales?: string;
   activa?: boolean;
 }

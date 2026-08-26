@@ -783,7 +783,7 @@ export const getUpdateLocationUrl = (id: number,) => {
 }
 
 /**
- * @summary Edita el nombre o estado de una ubicación
+ * @summary Edita el nombre, iniciales o estado de una ubicación
  */
 export const updateLocation = async (id: number,
     locationUpdate: LocationUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Location> => {
@@ -833,7 +833,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type UpdateLocationMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Edita el nombre o estado de una ubicación
+ * @summary Edita el nombre, iniciales o estado de una ubicación
  */
 export const useUpdateLocation = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLocation>>, TError,{id: number;data: BodyType<LocationUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}

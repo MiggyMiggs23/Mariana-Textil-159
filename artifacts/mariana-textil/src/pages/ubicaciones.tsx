@@ -32,8 +32,10 @@ export default function Ubicaciones() {
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
   const [creating, setCreating] = useState(false);
   const [createName, setCreateName] = useState("");
+  const [createInitials, setCreateInitials] = useState("");
   const [createType, setCreateType] = useState<LocationInputTipo>(LocationInputTipo.TIENDA);
   const [editName, setEditName] = useState("");
+  const [editInitials, setEditInitials] = useState("");
   const [editActive, setEditActive] = useState(false);
   const canCreate = hasPermission(user, Modules.UBICACIONES, "crear");
   const canEdit = hasPermission(user, Modules.UBICACIONES, "editar");
@@ -41,6 +43,7 @@ export default function Ubicaciones() {
   const openEdit = (loc: Location) => {
     setEditingLocation(loc);
     setEditName(loc.nombre);
+    setEditInitials(loc.iniciales);
     setEditActive(loc.activa);
   };
 
@@ -51,7 +54,8 @@ export default function Ubicaciones() {
       { 
         id: editingLocation.id, 
         data: { 
-          nombre: editName,
+           nombre: editName,
+           iniciales: editInitials,
           activa: editActive
         } 
       },
@@ -69,12 +73,13 @@ export default function Ubicaciones() {
   };
 
   const handleCreate = () => {
-    if (!createName.trim()) return;
-    createLocation.mutate({ data: { nombre: createName.trim(), tipo: createType } }, {
+    if (!createName.trim() || !/^[A-Z]{2,3}$/.test(createInitials)) return;
+    createLocation.mutate({ data: { nombre: createName.trim(), iniciales: createInitials, tipo: createType } }, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: getListLocationsQueryKey() });
         toast.success("Sitio creado correctamente");
         setCreateName("");
+         setCreateInitials("");
         setCreateType(LocationInputTipo.TIENDA);
         setCreating(false);
       },
@@ -114,6 +119,7 @@ export default function Ubicaciones() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Nombre</TableHead>
+                   <TableHead>Iniciales</TableHead>
                   <TableHead>Tipo</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead className="text-right">Acciones</TableHead>
@@ -126,6 +132,7 @@ export default function Ubicaciones() {
                       {loc.nombre}
                       {loc.esSistema && <Badge variant="secondary" className="ml-2 text-[10px]">SISTEMA</Badge>}
                     </TableCell>
+                    <TableCell className="font-mono font-semibold">{loc.iniciales}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{loc.tipo}</Badge>
                     </TableCell>
@@ -146,7 +153,7 @@ export default function Ubicaciones() {
                 ))}
                 {(!locations || locations.length === 0) && (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                    <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
                       No hay sitios registrados.
                     </TableCell>
                   </TableRow>
@@ -163,6 +170,16 @@ export default function Ubicaciones() {
           <div className="space-y-4 py-4">
             <div className="space-y-2"><Label>Nombre *</Label><Input value={createName} onChange={(event) => setCreateName(event.target.value)} /></div>
             <div className="space-y-2">
+              <Label>Iniciales *</Label>
+              <Input
+                value={createInitials}
+                onChange={(event) => setCreateInitials(event.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))}
+                placeholder="MA"
+                maxLength={3}
+              />
+              <p className="text-xs text-muted-foreground">2 o 3 letras mayúsculas, únicas por sitio.</p>
+            </div>
+            <div className="space-y-2">
               <Label>Tipo</Label>
               <select className="h-10 w-full rounded-md border bg-background px-3" value={createType} onChange={(event) => setCreateType(event.target.value as LocationInputTipo)}>
                 <option value={LocationInputTipo.TIENDA}>Tienda</option>
@@ -172,7 +189,7 @@ export default function Ubicaciones() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreating(false)}>Cancelar</Button>
-            <Button onClick={handleCreate} disabled={!createName.trim() || createLocation.isPending}>Guardar</Button>
+            <Button onClick={handleCreate} disabled={!createName.trim() || !/^[A-Z]{2,3}$/.test(createInitials) || createLocation.isPending}>Guardar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>}
@@ -191,6 +208,16 @@ export default function Ubicaciones() {
                 placeholder="Nombre del sitio"
               />
             </div>
+            <div className="space-y-2">
+              <Label>Iniciales</Label>
+              <Input
+                value={editInitials}
+                onChange={(event) => setEditInitials(event.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))}
+                placeholder="MA"
+                maxLength={3}
+              />
+              <p className="text-xs text-muted-foreground">2 o 3 letras mayúsculas, únicas por sitio.</p>
+            </div>
             <div className="flex items-center space-x-2">
               <input 
                 type="checkbox" 
@@ -204,7 +231,7 @@ export default function Ubicaciones() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingLocation(null)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={updateLocation.isPending || !editName.trim()}>
+            <Button onClick={handleSave} disabled={updateLocation.isPending || !editName.trim() || !/^[A-Z]{2,3}$/.test(editInitials)}>
               {updateLocation.isPending ? "Guardando..." : "Guardar cambios"}
             </Button>
           </DialogFooter>

@@ -13,5 +13,7 @@ export interface LocationInput {
      * @maxLength 120
      */
   nombre: string;
+  /** @pattern ^[A-Z]{2,3}$ */
+  iniciales: string;
   tipo: LocationInputTipo;
 }

@@ -5,6 +5,7 @@ export function presentLocation(location: Ubicacion) {
   return {
     id: location.id,
     nombre: location.nombre,
+    iniciales: location.iniciales,
     tipo: location.tipo,
     activa: location.activa,
     esSistema:

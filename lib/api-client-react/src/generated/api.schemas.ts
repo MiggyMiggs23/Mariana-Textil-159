@@ -1032,6 +1032,8 @@ export const LocationType = {
 export interface Location {
   id: number;
   nombre: string;
+  /** @pattern ^[A-Z]{2,3}$ */
+  iniciales: string;
   tipo: LocationType;
   activa: boolean;
   esSistema: boolean;
@@ -1051,6 +1053,8 @@ export interface LocationInput {
      * @maxLength 120
      */
   nombre: string;
+  /** @pattern ^[A-Z]{2,3}$ */
+  iniciales: string;
   tipo: LocationInputTipo;
 }
 
@@ -1060,6 +1064,8 @@ export interface LocationUpdate {
      * @maxLength 120
      */
   nombre?: string;
+  /** @pattern ^[A-Z]{2,3}$ */
+  iniciales?: string;
   activa?: boolean;
 }
 

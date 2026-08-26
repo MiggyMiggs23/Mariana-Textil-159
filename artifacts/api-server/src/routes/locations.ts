@@ -44,6 +44,10 @@ router.post(
   "/locations",
   requierePermiso("ubicaciones", "crear"),
   async (req, res): Promise<void> => {
+    if (req.auth!.user.rol !== "ADMIN") {
+      res.status(403).json({ error: "Crear sitios requiere rol ADMIN." });
+      return;
+    }
     const body = CreateLocationBody.safeParse(req.body);
     if (!body.success) {
       res.status(400).json({ error: "Datos de ubicación inválidos." });
@@ -53,7 +57,11 @@ router.post(
       const created = await db.transaction(async (tx) => {
         const [row] = await tx
           .insert(ubicacionesTable)
-          .values({ nombre: body.data.nombre.trim(), tipo: body.data.tipo })
+          .values({
+            nombre: body.data.nombre.trim(),
+            iniciales: body.data.iniciales,
+            tipo: body.data.tipo,
+          })
           .returning();
         await tx.insert(auditoriaTable).values({
           usuarioId: req.auth!.user.id,
@@ -68,7 +76,7 @@ router.post(
       res.status(201).json(CreateLocationResponse.parse(presentLocation(created)));
     } catch (error) {
       if ((error as { code?: string }).code === "23505") {
-        res.status(400).json({ error: "Ya existe una ubicación con ese nombre." });
+        res.status(400).json({ error: "Ya existe un sitio con ese nombre o iniciales." });
         return;
       }
       throw error;
@@ -77,6 +85,10 @@ router.post(
 );
 
 router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (req, res): Promise<void> => {
+  if (req.auth!.user.rol !== "ADMIN") {
+    res.status(403).json({ error: "Editar sitios requiere rol ADMIN." });
+    return;
+  }
   const params = UpdateLocationParams.safeParse(req.params);
   const body = UpdateLocationBody.safeParse(req.body);
   if (!params.success || !body.success || Object.keys(body.data).length === 0) {
@@ -102,7 +114,10 @@ router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (
     const updated = await db.transaction(async (tx) => {
       const [after] = await tx
         .update(ubicacionesTable)
-        .set(body.data)
+        .set({
+          ...body.data,
+          nombre: body.data.nombre?.trim(),
+        })
         .where(
           and(
             eq(ubicacionesTable.id, params.data.id),
@@ -123,8 +138,8 @@ router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (
     });
     res.json(UpdateLocationResponse.parse(presentLocation(updated)));
   } catch (error) {
-    if ((error as { code?: string }).code === "23505") {
-      res.status(400).json({ error: "Ya existe una ubicación con ese nombre." });
+      if ((error as { code?: string }).code === "23505") {
+        res.status(400).json({ error: "Ya existe un sitio con ese nombre o iniciales." });
       return;
     }
     throw error;

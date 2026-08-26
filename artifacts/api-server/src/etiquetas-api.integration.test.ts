@@ -127,8 +127,8 @@ before(async () => {
   const locations = await db
     .insert(ubicacionesTable)
     .values([
-      { nombre: `Sitio propio ${run}`, tipo: "BODEGA", activa: true },
-      { nombre: `Sitio ajeno ${run}`, tipo: "TIENDA", activa: true },
+      { nombre: `Sitio propio ${run}`, iniciales: "EP", tipo: "BODEGA", activa: true },
+      { nombre: `Sitio ajeno ${run}`, iniciales: "EA", tipo: "TIENDA", activa: true },
     ])
     .returning({ id: ubicacionesTable.id });
   assert.equal(locations.length, 2);

@@ -30,6 +30,9 @@ export const LoginBody = zod.object({
   "password": zod.string().min(1).max(loginBodyPasswordMax)
 })
 
+export const loginResponseUbicacionOneInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
 export const LoginResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -38,6 +41,7 @@ export const LoginResponse = zod.object({
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(loginResponseUbicacionOneInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -62,6 +66,9 @@ export const LogoutResponse = zod.void()
 /**
  * @summary Obtiene la sesión actual
  */
+export const getCurrentUserResponseUbicacionOneInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
 export const GetCurrentUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -70,6 +77,7 @@ export const GetCurrentUserResponse = zod.object({
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(getCurrentUserResponseUbicacionOneInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -109,9 +117,13 @@ export const GetDashboardResponse = zod.object({
 /**
  * @summary Lista ubicaciones reales para administración
  */
+export const listLocationsResponseInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
 export const ListLocationsResponseItem = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(listLocationsResponseInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -124,16 +136,22 @@ export const ListLocationsResponse = zod.array(ListLocationsResponseItem)
  */
 export const createLocationBodyNombreMax = 120;
 
+export const createLocationBodyInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
 
 
 export const CreateLocationBody = zod.object({
   "nombre": zod.string().min(1).max(createLocationBodyNombreMax),
+  "iniciales": zod.string().regex(createLocationBodyInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA'])
 })
+
+export const createLocationResponseInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
 
 export const CreateLocationResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(createLocationResponseInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -141,7 +159,7 @@ export const CreateLocationResponse = zod.object({
 
 
 /**
- * @summary Edita el nombre o estado de una ubicación
+ * @summary Edita el nombre, iniciales o estado de una ubicación
  */
 export const UpdateLocationParams = zod.object({
   "id": zod.coerce.number()
@@ -149,16 +167,22 @@ export const UpdateLocationParams = zod.object({
 
 export const updateLocationBodyNombreMax = 120;
 
+export const updateLocationBodyInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
 
 
 export const UpdateLocationBody = zod.object({
   "nombre": zod.string().min(1).max(updateLocationBodyNombreMax).optional(),
+  "iniciales": zod.string().regex(updateLocationBodyInicialesRegExp).optional(),
   "activa": zod.boolean().optional()
 })
+
+export const updateLocationResponseInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
 
 export const UpdateLocationResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(updateLocationResponseInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -168,6 +192,9 @@ export const UpdateLocationResponse = zod.object({
 /**
  * @summary Lista usuarios
  */
+export const listUsersResponseUbicacionOneInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
 export const ListUsersResponseItem = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -176,6 +203,7 @@ export const ListUsersResponseItem = zod.object({
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(listUsersResponseUbicacionOneInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -210,6 +238,9 @@ export const CreateUserBody = zod.object({
   "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional()
 })
 
+export const createUserResponseUbicacionOneInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
 export const CreateUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -218,6 +249,7 @@ export const CreateUserResponse = zod.object({
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(createUserResponseUbicacionOneInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()
@@ -256,6 +288,9 @@ export const UpdateUserBody = zod.object({
   "password": zod.string().min(updateUserBodyPasswordMin).max(updateUserBodyPasswordMax).optional()
 })
 
+export const updateUserResponseUbicacionOneInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
 export const UpdateUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -264,6 +299,7 @@ export const UpdateUserResponse = zod.object({
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "iniciales": zod.string().regex(updateUserResponseUbicacionOneInicialesRegExp),
   "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
   "activa": zod.boolean(),
   "esSistema": zod.boolean()

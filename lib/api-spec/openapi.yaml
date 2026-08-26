@@ -166,7 +166,7 @@ paths:
     patch:
       operationId: updateLocation
       tags: [locations]
-      summary: Edita el nombre o estado de una ubicación
+      summary: Edita el nombre, iniciales o estado de una ubicación
       parameters:
         - $ref: "#/components/parameters/LocationId"
       requestBody:
@@ -4536,19 +4536,25 @@ components:
       enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]
     Location:
       type: object
-      required: [id, nombre, tipo, activa, esSistema]
+      required: [id, nombre, iniciales, tipo, activa, esSistema]
       properties:
         id: { type: number }
         nombre: { type: string }
+        iniciales:
+          type: string
+          pattern: "^[A-Z]{2,3}$"
         tipo:
           $ref: "#/components/schemas/LocationType"
         activa: { type: boolean }
         esSistema: { type: boolean }
     LocationInput:
       type: object
-      required: [nombre, tipo]
+      required: [nombre, iniciales, tipo]
       properties:
         nombre: { type: string, minLength: 1, maxLength: 120 }
+        iniciales:
+          type: string
+          pattern: "^[A-Z]{2,3}$"
         tipo:
           type: string
           enum: [TIENDA, BODEGA]
@@ -4556,6 +4562,9 @@ components:
       type: object
       properties:
         nombre: { type: string, minLength: 1, maxLength: 120 }
+        iniciales:
+          type: string
+          pattern: "^[A-Z]{2,3}$"
         activa: { type: boolean }
     AlcanceConsulta:
       type: string

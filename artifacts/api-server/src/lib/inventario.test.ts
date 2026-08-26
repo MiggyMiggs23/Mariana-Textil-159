@@ -79,7 +79,11 @@ async function mkUbicacion(): Promise<number> {
   const tag = `${RUN}-${++seq}`;
   const [row] = await db
     .insert(ubicacionesTable)
-    .values({ nombre: `UbTst ${tag}`.slice(0, 120), tipo: "BODEGA" as const })
+    .values({
+      nombre: `UbTst ${tag}`.slice(0, 120),
+      iniciales: `I${String.fromCharCode(65 + (seq % 26))}`,
+      tipo: "BODEGA" as const,
+    })
     .returning();
   createdUbicacionIds.push(row!.id);
   return row!.id;
