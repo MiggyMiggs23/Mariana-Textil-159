@@ -19,6 +19,8 @@ tags:
     description: Administración de usuarios
   - name: productos
     description: Catálogo de productos/telas
+  - name: precios
+    description: Administración de precios de lista exclusiva para ADMIN
   - name: proveedores
     description: Administración de proveedores
   - name: clientes
@@ -294,6 +296,63 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /precios:
+    get:
+      operationId: listPrecios
+      tags: [precios]
+      summary: Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+      parameters:
+        - { in: query, name: search, schema: { type: string } }
+        - { in: query, name: unidad, schema: { $ref: "#/components/schemas/UnidadProducto" } }
+        - { in: query, name: semaforo, schema: { $ref: "#/components/schemas/SemaforoPrecio" } }
+      responses:
+        "200":
+          description: Catálogo de precios, incluidos productos inactivos
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/PrecioProducto" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /precios/{id}:
+    get:
+      operationId: getPrecio
+      tags: [precios]
+      summary: Detalle, historial y puntos cronológicos de precio (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/ProductoId"
+      responses:
+        "200":
+          description: Detalle de precio
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PrecioProductoDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /precios/{id}/cambiar:
+    post:
+      operationId: changePrecio
+      tags: [precios]
+      summary: Cambia el precio de lista y registra su historial inmutable (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/ProductoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CambiarPrecioInput" }
+      responses:
+        "200":
+          description: Precio actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PrecioCambioResultado" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /productos/{id}:
     get:
       operationId: getProducto
@@ -5095,6 +5154,65 @@ components:
         notas:
           type: ["string", "null"]
         activo: { type: boolean }
+    SemaforoPrecio:
+      type: string
+      enum: [VERDE, AMBAR, ROJO, SIN_COSTO]
+    PrecioProducto:
+      type: object
+      required: [id, sku, tela, color, unidad, activo, costoUnitarioPonderado, precioLista, margenPesosUnidad, margenPorcentajeSubtotal, semaforo, ultimoCambioPrecio]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { $ref: "#/components/schemas/UnidadProducto" }
+        activo: { type: boolean }
+        costoUnitarioPonderado: { type: ["string", "null"] }
+        precioLista: { type: string }
+        margenPesosUnidad: { type: ["string", "null"] }
+        margenPorcentajeSubtotal: { type: ["string", "null"] }
+        semaforo: { $ref: "#/components/schemas/SemaforoPrecio" }
+        ultimoCambioPrecio: { type: ["string", "null"], format: date-time }
+    PrecioHistorialItem:
+      type: object
+      required: [id, precioListaAnterior, precioListaNuevo, costoUnitarioPonderado, margenPesosUnidad, margenPorcentajeSubtotal, motivo, advertenciaBajoCosto, usuarioId, createdAt]
+      properties:
+        id: { type: number }
+        precioListaAnterior: { type: string }
+        precioListaNuevo: { type: string }
+        costoUnitarioPonderado: { type: ["string", "null"] }
+        margenPesosUnidad: { type: ["string", "null"] }
+        margenPorcentajeSubtotal: { type: ["string", "null"] }
+        motivo: { type: string }
+        advertenciaBajoCosto: { type: boolean }
+        usuarioId: { type: number }
+        createdAt: { type: string, format: date-time }
+    PrecioProductoDetail:
+      allOf:
+        - $ref: "#/components/schemas/PrecioProducto"
+        - type: object
+          required: [historial, puntosGrafica]
+          properties:
+            historial:
+              type: array
+              description: Orden descendente, más reciente primero
+              items: { $ref: "#/components/schemas/PrecioHistorialItem" }
+            puntosGrafica:
+              type: array
+              description: Orden cronológico ascendente
+              items: { $ref: "#/components/schemas/PrecioHistorialItem" }
+    CambiarPrecioInput:
+      type: object
+      required: [precioListaNuevo, motivo]
+      properties:
+        precioListaNuevo: { type: string, description: Importe positivo con máximo dos decimales }
+        motivo: { type: string, minLength: 5 }
+    PrecioCambioResultado:
+      type: object
+      required: [producto, cambio]
+      properties:
+        producto: { $ref: "#/components/schemas/PrecioProducto" }
+        cambio: { $ref: "#/components/schemas/PrecioHistorialItem" }
     ImportFileInput:
       type: object
       required: [fileName, content]

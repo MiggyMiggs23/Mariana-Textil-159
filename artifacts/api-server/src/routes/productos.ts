@@ -557,6 +557,16 @@ router.patch(
       res.status(404).json({ error: "Producto no encontrado." });
       return;
     }
+    if (
+      body.data.precioSugerido !== undefined &&
+      body.data.precioSugerido !== before.precioSugerido
+    ) {
+      res.status(400).json({
+        error:
+          "El precio de lista debe cambiarse mediante el módulo de Precios.",
+      });
+      return;
+    }
 
     // Normalize tela/color if provided
     const newTela =
@@ -601,8 +611,6 @@ router.patch(
     if (newColor !== undefined) updates.color = newColor;
     if (body.data.unidad !== undefined)
       updates.unidad = body.data.unidad as UnidadProducto;
-    if (body.data.precioSugerido !== undefined)
-      updates.precioSugerido = body.data.precioSugerido;
     if ("notas" in body.data) updates.notas = body.data.notas ?? null;
     if (body.data.activo !== undefined) updates.activo = body.data.activo;
 

@@ -280,12 +280,17 @@ export default function ProductoDetail() {
                 </div>
                 
                 <div className="space-y-1">
-                  <Label className="text-muted-foreground">Precio Sugerido</Label>
-                  {isEditing ? (
-                    <Input type="number" step="0.01" value={formData.precioSugerido} onChange={e => setFormData({...formData, precioSugerido: e.target.value})} data-testid="input-edit-precio" />
-                  ) : (
-                    <div className="font-medium text-lg text-emerald-700 h-10 flex items-center">{formatNumber(product.precioSugerido, { kind: "money" })}</div>
-                  )}
+                  <Label className="text-muted-foreground">Precio de Lista</Label>
+                  <div className="font-medium text-lg text-emerald-700 h-10 flex items-center justify-between">
+                    {formatNumber(product.precioSugerido, { kind: "money" })}
+                    {isAdmin && !isEditing && (
+                      <Link href={`/precios/${product.id}`}>
+                        <Button variant="outline" size="sm" className="h-7 text-xs ml-4" data-testid="button-go-precios">
+                          Gestionar Precio
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </div>
 
                 {isEditing && !isBlocked && (

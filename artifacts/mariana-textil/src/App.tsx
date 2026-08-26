@@ -51,6 +51,8 @@ import Reportes from '@/pages/reportes';
 import Contenedores from '@/pages/contenedores/index';
 import ContenedorNuevo from '@/pages/contenedores/nuevo';
 import ContenedorDetail from '@/pages/contenedores/detail';
+import PreciosList from '@/pages/precios/index';
+import PrecioDetail from '@/pages/precios/detail';
 import { LocationScopeProvider } from '@/lib/location-scope';
 import { Modules, hasPermission } from '@/lib/permisos';
 
@@ -198,6 +200,8 @@ function Router() {
         <Route path="/productos" component={() => <ProtectedRoute component={Productos} allowedModule={Modules.PRODUCTOS} />} />
         <Route path="/productos/:id" component={() => <ProtectedRoute component={ProductoDetail} allowedModule={Modules.PRODUCTOS} />} />
         
+        <Route path="/precios" component={() => <ProtectedRoute component={PreciosList} adminOnly />} />
+        <Route path="/precios/:id" component={() => <ProtectedRoute component={PrecioDetail} adminOnly />} />
         <Route path="/pos" component={() => <ProtectedRoute component={PosWithLayout} allowedModule={Modules.POS} />} />
         <Route path="/cobros" component={() => <ProtectedRoute component={Cobros} allowedModule={Modules.COBROS_PAGOS} />} />
 

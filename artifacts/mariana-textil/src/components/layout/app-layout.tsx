@@ -85,6 +85,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Vista Global", path: "/inventario/vista-global", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
       { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
       { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
+      { name: "Precios", path: "/precios", icon: Banknote, module: Modules.PRECIOS, isClickable: true, adminOnly: true },
     ]
   },
   {

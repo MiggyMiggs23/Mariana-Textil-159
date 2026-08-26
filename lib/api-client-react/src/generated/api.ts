@@ -36,6 +36,7 @@ import type {
   BuscarPosParams,
   BuscarRollosEtiquetas200,
   BuscarRollosEtiquetasParams,
+  CambiarPrecioInput,
   CapturarCostosEntradaInput,
   CatalogosEntrada,
   Cliente,
@@ -130,6 +131,7 @@ import type {
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
   ListKardexFiltersParams,
+  ListPreciosParams,
   ListProveedorPagosParams,
   ListRollosParams,
   ListSalidasParams,
@@ -161,6 +163,9 @@ import type {
   PosBusquedaResult,
   PosPrecioValidationInput,
   PosPrecioValidationResult,
+  PrecioCambioResultado,
+  PrecioProducto,
+  PrecioProductoDetail,
   Producto,
   ProductoDetail,
   ProductoInput,
@@ -1206,6 +1211,239 @@ export const useCreateProducto = <TError = ErrorType<ValidationErrorResponse | U
         TContext
       > => {
       return useMutation(getCreateProductoMutationOptions(options));
+    }
+
+export const getListPreciosUrl = (params?: ListPreciosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/precios?${stringifiedParams}` : `/api/precios`
+}
+
+/**
+ * @summary Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+ */
+export const listPrecios = async (params?: ListPreciosParams, options?: Parameters<typeof customFetch>[1]): Promise<PrecioProducto[]> => {
+
+  return customFetch<PrecioProducto[]>(getListPreciosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPreciosQueryKey = (params?: ListPreciosParams,) => {
+    return [
+    `/api/precios`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPreciosQueryOptions = <TData = Awaited<ReturnType<typeof listPrecios>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListPreciosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrecios>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPreciosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPrecios>>> = ({ signal }) => listPrecios(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPrecios>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPreciosQueryResult = NonNullable<Awaited<ReturnType<typeof listPrecios>>>
+export type ListPreciosQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+ */
+
+export function useListPrecios<TData = Awaited<ReturnType<typeof listPrecios>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListPreciosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrecios>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPreciosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetPrecioUrl = (id: number,) => {
+
+
+
+
+  return `/api/precios/${id}`
+}
+
+/**
+ * @summary Detalle, historial y puntos cronológicos de precio (ADMIN)
+ */
+export const getPrecio = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<PrecioProductoDetail> => {
+
+  return customFetch<PrecioProductoDetail>(getGetPrecioUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPrecioQueryKey = (id: number,) => {
+    return [
+    `/api/precios/${id}`
+    ] as const;
+    }
+
+
+export const getGetPrecioQueryOptions = <TData = Awaited<ReturnType<typeof getPrecio>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPrecio>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPrecioQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPrecio>>> = ({ signal }) => getPrecio(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPrecio>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPrecioQueryResult = NonNullable<Awaited<ReturnType<typeof getPrecio>>>
+export type GetPrecioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Detalle, historial y puntos cronológicos de precio (ADMIN)
+ */
+
+export function useGetPrecio<TData = Awaited<ReturnType<typeof getPrecio>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPrecio>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPrecioQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getChangePrecioUrl = (id: number,) => {
+
+
+
+
+  return `/api/precios/${id}/cambiar`
+}
+
+/**
+ * @summary Cambia el precio de lista y registra su historial inmutable (ADMIN)
+ */
+export const changePrecio = async (id: number,
+    cambiarPrecioInput: CambiarPrecioInput, options?: Parameters<typeof customFetch>[1]): Promise<PrecioCambioResultado> => {
+
+  return customFetch<PrecioCambioResultado>(getChangePrecioUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(cambiarPrecioInput)
+  }
+);}
+
+
+
+
+
+export const getChangePrecioMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePrecio>>, TError,{id: number;data: BodyType<CambiarPrecioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof changePrecio>>, TError,{id: number;data: BodyType<CambiarPrecioInput>}, TContext> => {
+
+const mutationKey = ['changePrecio'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changePrecio>>, {id: number;data: BodyType<CambiarPrecioInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  changePrecio(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangePrecioMutationResult = NonNullable<Awaited<ReturnType<typeof changePrecio>>>
+    export type ChangePrecioMutationBody = BodyType<CambiarPrecioInput>
+    export type ChangePrecioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Cambia el precio de lista y registra su historial inmutable (ADMIN)
+ */
+export const useChangePrecio = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePrecio>>, TError,{id: number;data: BodyType<CambiarPrecioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof changePrecio>>,
+        TError,
+        {id: number;data: BodyType<CambiarPrecioInput>},
+        TContext
+      > => {
+      return useMutation(getChangePrecioMutationOptions(options));
     }
 
 export const getGetProductoUrl = (id: number,) => {

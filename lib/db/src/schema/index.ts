@@ -8,6 +8,7 @@ export * from "./etiquetas";
 export * from "./enums";
 export * from "./locations";
 export * from "./pagos-proveedor";
+export * from "./precio-historial";
 export * from "./pos";
 export * from "./permisos";
 export * from "./productos";

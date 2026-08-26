@@ -329,6 +329,126 @@ export const CreateProductoResponse = zod.object({
 
 
 /**
+ * @summary Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+ */
+export const ListPreciosQueryParams = zod.object({
+  "search": zod.coerce.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO']).optional(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']).optional()
+})
+
+export const ListPreciosResponseItem = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "activo": zod.boolean(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "precioLista": zod.string(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
+  "ultimoCambioPrecio": zod.coerce.date().nullable()
+})
+export const ListPreciosResponse = zod.array(ListPreciosResponseItem)
+
+
+/**
+ * @summary Detalle, historial y puntos cronológicos de precio (ADMIN)
+ */
+export const GetPrecioParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetPrecioResponse = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "activo": zod.boolean(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "precioLista": zod.string(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
+  "ultimoCambioPrecio": zod.coerce.date().nullable()
+}).and(zod.object({
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "precioListaAnterior": zod.string(),
+  "precioListaNuevo": zod.string(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "motivo": zod.string(),
+  "advertenciaBajoCosto": zod.boolean(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date()
+})).describe('Orden descendente, más reciente primero'),
+  "puntosGrafica": zod.array(zod.object({
+  "id": zod.number(),
+  "precioListaAnterior": zod.string(),
+  "precioListaNuevo": zod.string(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "motivo": zod.string(),
+  "advertenciaBajoCosto": zod.boolean(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date()
+})).describe('Orden cronológico ascendente')
+}))
+
+
+/**
+ * @summary Cambia el precio de lista y registra su historial inmutable (ADMIN)
+ */
+export const ChangePrecioParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const changePrecioBodyMotivoMin = 5;
+
+
+
+export const ChangePrecioBody = zod.object({
+  "precioListaNuevo": zod.string().describe('Importe positivo con máximo dos decimales'),
+  "motivo": zod.string().min(changePrecioBodyMotivoMin)
+})
+
+export const ChangePrecioResponse = zod.object({
+  "producto": zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "activo": zod.boolean(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "precioLista": zod.string(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
+  "ultimoCambioPrecio": zod.coerce.date().nullable()
+}),
+  "cambio": zod.object({
+  "id": zod.number(),
+  "precioListaAnterior": zod.string(),
+  "precioListaNuevo": zod.string(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "motivo": zod.string(),
+  "advertenciaBajoCosto": zod.boolean(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+})
+
+
+/**
  * @summary Obtiene el detalle de un producto
  */
 export const GetProductoParams = zod.object({

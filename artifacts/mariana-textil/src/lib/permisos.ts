@@ -26,6 +26,7 @@ export const Modules = {
   REPORTES: 'reportes',
   CONCILIACION: 'conciliacion',
   AUDITORIA: 'auditoria',
+  PRECIOS: 'precios',
 } as const;
 
 export type Module = typeof Modules[keyof typeof Modules];

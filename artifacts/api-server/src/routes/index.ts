@@ -19,6 +19,7 @@ import etiquetasRouter from "./etiquetas";
 import adminAlertasRouter from "./admin-alertas";
 import reportesRouter from "./reportes";
 import contenedoresRouter from "./contenedores";
+import preciosRouter from "./precios";
 
 const router: IRouter = Router();
 
@@ -28,6 +29,7 @@ router.use(dashboardRouter);
 router.use(locationsRouter);
 router.use(usersRouter);
 router.use(productosRouter);
+router.use(preciosRouter);
 router.use(proveedoresRouter);
 router.use(clientesAdminRouter);
 router.use(clienteDocumentosRouter);

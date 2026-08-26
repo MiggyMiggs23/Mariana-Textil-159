@@ -1840,6 +1840,70 @@ export interface ProductoUpdate {
   activo?: boolean;
 }
 
+export type SemaforoPrecio = typeof SemaforoPrecio[keyof typeof SemaforoPrecio];
+
+
+export const SemaforoPrecio = {
+  VERDE: 'VERDE',
+  AMBAR: 'AMBAR',
+  ROJO: 'ROJO',
+  SIN_COSTO: 'SIN_COSTO',
+} as const;
+
+export interface PrecioProducto {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  activo: boolean;
+  /** @nullable */
+  costoUnitarioPonderado: string | null;
+  precioLista: string;
+  /** @nullable */
+  margenPesosUnidad: string | null;
+  /** @nullable */
+  margenPorcentajeSubtotal: string | null;
+  semaforo: SemaforoPrecio;
+  /** @nullable */
+  ultimoCambioPrecio: string | null;
+}
+
+export interface PrecioHistorialItem {
+  id: number;
+  precioListaAnterior: string;
+  precioListaNuevo: string;
+  /** @nullable */
+  costoUnitarioPonderado: string | null;
+  /** @nullable */
+  margenPesosUnidad: string | null;
+  /** @nullable */
+  margenPorcentajeSubtotal: string | null;
+  motivo: string;
+  advertenciaBajoCosto: boolean;
+  usuarioId: number;
+  createdAt: string;
+}
+
+export type PrecioProductoDetail = PrecioProducto & {
+  /** Orden descendente, más reciente primero */
+  historial: PrecioHistorialItem[];
+  /** Orden cronológico ascendente */
+  puntosGrafica: PrecioHistorialItem[];
+};
+
+export interface CambiarPrecioInput {
+  /** Importe positivo con máximo dos decimales */
+  precioListaNuevo: string;
+  /** @minLength 5 */
+  motivo: string;
+}
+
+export interface PrecioCambioResultado {
+  producto: PrecioProducto;
+  cambio: PrecioHistorialItem;
+}
+
 export interface ImportFileInput {
   fileName: string;
   /** Contenido del archivo en base64 */
@@ -3516,6 +3580,12 @@ export type GetDashboardParams = {
  * Filtro opcional disponible únicamente para ADMIN
  */
 ubicacionId?: number;
+};
+
+export type ListPreciosParams = {
+search?: string;
+unidad?: UnidadProducto;
+semaforo?: SemaforoPrecio;
 };
 
 export type ListComprasProveedorParams = {

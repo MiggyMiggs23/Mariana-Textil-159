@@ -29,7 +29,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 ## Where things live
 
 - `lib/api-spec/openapi.yaml` — contrato de la API
-- `lib/db/src/schema/` — esquema Drizzle (incluye `permisos.ts`, `clientes.ts`)
+- `lib/db/src/schema/` — esquema Drizzle (incluye permisos, clientes e historial inmutable de precios)
 - `lib/db/src/seed.mjs` — datos iniciales con matriz de permisos por rol
 - `artifacts/api-server/src/routes/` — endpoints
 - `artifacts/api-server/src/middlewares/auth.ts` — sesión e inactividad
@@ -51,6 +51,8 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - **Permisos:** ADMIN tiene acceso total a los 24 módulos sin consultar tablas. Para CAJA, INVENTARIOS y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
+- **Gobierno de precios:** `/precios` exige rol ADMIN directamente en el servidor. El costo actual es ponderado por cantidad disponible y unidad; sin costos válidos permanece pendiente (`null`), nunca cero.
+- **Historial comercial:** todo cambio de precio bloquea el producto, captura costo/margen del momento y escribe historial más auditoría en la misma transacción. Nunca recalcula tickets existentes.
 
 ## Permission modules (24 total)
 
@@ -67,6 +69,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Matriz efectiva de permisos incluida en login y /auth/me
 - Catálogo operativo de clientes (sin datos financieros en el listado)
 - Módulos de clientes y proveedores divididos: operativo vs. financiero
+- Módulo ADMIN de Precios con filtros, semáforo, margen, vista previa obligatoria, gráfica e historial por producto
 
 ## Gotchas
 
@@ -75,4 +78,5 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
 - Toda E2E que necesite crear usuarios, sesiones o datos debe usar una rama Neon desechable con una base vacía, esquema y seed actuales. `TEST_DATABASE_URL` debe existir y ser distinta de `DATABASE_URL`.
 - Está prohibido crear ADMIN temporales o limpiar usuarios/sesiones mediante `executeSql({ environment: "development" })`. La limpieza E2E consiste en eliminar únicamente la rama Neon desechable.
+- Los precios existentes solo se modifican por `/precios`; `PATCH /productos/:id` rechaza cualquier intento de evadir el historial. El precio inicial al crear producto sí está permitido.
 - Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.

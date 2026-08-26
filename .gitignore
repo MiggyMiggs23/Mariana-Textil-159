@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# User-provided implementation prompts are inputs, not source code.
+attached_assets/Pasted--PROMPT-Precios-Supervisor-Auditor-a-Protecciones-y-Exi_1787713622072.txt
