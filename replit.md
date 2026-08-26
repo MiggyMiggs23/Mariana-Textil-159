@@ -84,9 +84,11 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Se retienen las funciones de núcleo `moverRollo` y `recibirTransferencia`, porque el ciclo activo de Salidas las invoca. También se retienen las rutas e interfaz de Salidas, los enums del kardex y todo el ciclo de vida e interfaz de Contenedores.
 - El único alcance retirado fue el HTTP tombstone y su contrato generado; no se modificaron las superficies de Contenedores.
 
-## Pendiente de partes siguientes
+## Parte 1, Bloque 4 — Retiro futuro de `ABIERTO`
 
-> `ABIERTO` se elimina en la Parte 2. Nota: `salidaMostrador` deja `rollos.cantidad_actual` sin tocar mientras inserta el movimiento negativo completo. Es inconsistente pero ya no afecta la existencia. Se resuelve al eliminar el estado.
+- `ABIERTO` se elimina en la Parte 2 junto con `SALIDA_MOSTRADOR`; el plan completo y sus dependencias están en `docs/abierto-retirement.md`.
+- Inconsistencia temporal exacta: `salidaMostrador` deja `rollos.cantidad_actual = Q`, cambia el estado a `ABIERTO` e inserta un movimiento de `-Q`. El caché ya retiró Q, pero la fila del rollo todavía lo muestra.
+- No se cambió comportamiento en el Bloque 4. El POS metrado, la ruta, los filtros, el diagnóstico, los enums, contratos generados y pruebas permanecen hasta la migración integral de la Parte 2.
 
 
 ## Permission modules (24 total)

@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:inventario": "tsx src/lib/inventario.test.ts",
     "test:transferencias-block3": "tsx --test src/transferencias-block3-architecture.test.ts",
+    "test:abierto-block4": "tsx --test src/abierto-block4-documentation.test.ts",
     "test:entradas": "tsx src/lib/entradas.test.ts",
     "test:proveedores": "tsx src/lib/compras-proveedor.test.ts",
     "test:pos": "tsx src/lib/pos.test.ts",

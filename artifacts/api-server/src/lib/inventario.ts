@@ -1407,6 +1407,10 @@ export type SalidaMostradorInput = {
 /**
  * DISPONIBLE → ABIERTO (terminal). Records SALIDA_MOSTRADOR (negative).
  * An ABIERTO roll can never return to inventory.
+ *
+ * Temporary legacy behavior: the state changes but cantidad_actual remains Q,
+ * while the ledger records -Q. ABIERTO and this operation must be removed
+ * together in Parte 2; see docs/abierto-retirement.md.
  */
 export async function salidaMostrador(
   tx: Tx,
