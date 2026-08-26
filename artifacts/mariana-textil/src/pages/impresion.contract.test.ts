@@ -48,3 +48,11 @@ test("Replit development banner is hidden from every print medium", async () => 
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   assert.match(css, /@media print\s*\{[\s\S]*#replit-dev-banner,[\s\S]*\[data-replit-dev-banner\][\s\S]*display:\s*none !important;/);
 });
+
+test("Thermal label uses spacing instead of vertical dividers and enlarges logo and QR", async () => {
+  const label = await readFile(new URL("artifacts/mariana-textil/src/components/label-print.tsx", root), "utf8");
+  assert.doesNotMatch(label, /border-l border-gray-400/);
+  assert.match(label, /gap-\[2mm\]/);
+  assert.match(label, /max-w-\[30mm\]/);
+  assert.match(label, /width="29mm"/);
+});

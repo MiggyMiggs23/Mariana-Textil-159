@@ -91,7 +91,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
 
       <div className="border-b-[1.2mm] border-black w-full flex-shrink-0"></div>
 
-      <div className="grid grid-cols-[35%_30%_35%] flex-1 min-h-0 pt-[2.5mm]">
+      <div className="grid grid-cols-[34%_32%_34%] gap-[2mm] flex-1 min-h-0 pt-[2.5mm]">
         <div className="flex flex-col min-w-0 pr-[3mm]">
           <div className="flex-1 border-b border-gray-400 flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">SKU</div>
@@ -120,22 +120,22 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           </div>
         </div>
 
-        <div className="border-l border-gray-400 flex min-w-0 flex-col items-center justify-center px-0">
-          <MonochromeBrandLogo className="h-auto max-h-[38mm] w-full max-w-[28mm]" />
+        <div className="flex min-w-0 flex-col items-center justify-center px-0">
+          <MonochromeBrandLogo className="h-auto max-h-[40mm] w-full max-w-[30mm]" />
           <div className="mt-[0.5mm] w-full whitespace-nowrap text-center text-[10px] font-black leading-none tracking-[-0.03em] text-black">
             MARIANA TEXTIL
           </div>
         </div>
 
-        <div className="border-l border-gray-400 flex flex-col items-center justify-center pl-[3mm] relative min-w-0">
+        <div className="flex flex-col items-center justify-center relative min-w-0">
           <div className="bg-white border border-black rounded-[2mm] p-[1mm] flex-none">
             <QRCodeSVG 
               value={qrPayload} 
               size={256}
-              width="27mm"
-              height="27mm"
+              width="29mm"
+              height="29mm"
               className="block shrink-0"
-              style={{ width: "27mm", height: "27mm", minWidth: "27mm", minHeight: "27mm", flexShrink: 0 }}
+              style={{ width: "29mm", height: "29mm", minWidth: "29mm", minHeight: "29mm", flexShrink: 0 }}
               level="Q" 
               includeMargin={true} 
               fgColor="#000000"
