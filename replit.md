@@ -90,6 +90,13 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Inconsistencia temporal exacta: `salidaMostrador` deja `rollos.cantidad_actual = Q`, cambia el estado a `ABIERTO` e inserta un movimiento de `-Q`. El caché ya retiró Q, pero la fila del rollo todavía lo muestra.
 - No se cambió comportamiento en el Bloque 4. El POS metrado, la ruta, los filtros, el diagnóstico, los enums, contratos generados y pruebas permanecen hasta la migración integral de la Parte 2.
 
+## Parte 1, Bloque 5 — Verificación integral de seis vistas
+
+- Se añadió un arnés HTTP opt-in que confronta inventario agrupado, las dos entradas visuales de Dashboard/Vista Global, catálogo, los diez detalles de producto y reporte con una única matriz de diez productos etiquetados.
+- El arnés cubre ADMIN/TODAS y BODEGA/PROPIA, intentos de forzar otra ubicación, filtros de disponibilidad, ceros de catálogo, unidades separadas y el KPI aislado de EN_TRANSITO.
+- La prueba exige `NODE_ENV=test` y `TEST_DATABASE_URL`, rechaza la base de la aplicación por URL y por `current_database()`, reconstruye el caché dos veces y limpia únicamente sus IDs en `finally`.
+- Resultado aislado: 1 prueba aprobada, 0 fallidas; 36 respuestas HTTP y diez productos coincidieron bajo ADMIN/TODAS y BODEGA/PROPIA. Matriz y resultados: `reports/inventory-truth-part1-validation-2026-08-26.md`.
+
 
 ## Permission modules (24 total)
 
