@@ -120,8 +120,9 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   }
   const scope = productScope(ctx, "p", "e.ubicacion_id");
   const inv = await pool.query(`SELECT p.id,e.ubicacion_id,p.sku,p.tela,p.color,p.unidad,u.nombre sitio,e.cantidad_total cantidad,e.rollos_count rollos,
-    COALESCE(SUM(r.cantidad_actual*r.costo_unitario) FILTER(WHERE r.estado IN ('DISPONIBLE','EN_TRANSITO')),0)::float valor
-    FROM existencias e JOIN productos p ON p.id=e.producto_id JOIN ubicaciones u ON u.id=e.ubicacion_id LEFT JOIN rollos r ON r.producto_id=e.producto_id AND r.ubicacion_id=e.ubicacion_id
+    COALESCE(SUM(r.cantidad_actual*r.costo_unitario),0)::float valor
+    FROM existencias e JOIN productos p ON p.id=e.producto_id JOIN ubicaciones u ON u.id=e.ubicacion_id
+    LEFT JOIN rollos r ON r.producto_id=e.producto_id AND r.ubicacion_id=e.ubicacion_id AND r.estado='DISPONIBLE'
     WHERE ${scope.text} GROUP BY p.id,e.ubicacion_id,u.nombre,e.cantidad_total,e.rollos_count`, scope.values);
   const sold = await pool.query(`SELECT p.id,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${sales.text} GROUP BY p.id`, sales.values);
   const soldByProduct = new Map(sold.rows.map(r => [Number(r.id), number(r.cantidad)]));
@@ -131,7 +132,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   const totals = rows.reduce((m, r) => { m[r.unidad] ??= { cantidad: 0, rollos: 0, valor: 0 }; m[r.unidad].cantidad += r.cantidad; m[r.unidad].rollos += r.rollos; m[r.unidad].valor += r.valor; return m; }, {} as Record<string, { cantidad: number; rollos: number; valor: number }>);
   const rollScope = productScope(ctx, "p", "r.ubicacion_id");
   const activeRolls = await pool.query(`SELECT r.producto_id,r.ubicacion_id,COALESCE(SUM(r.cantidad_actual),0)::float cantidad
-    FROM rollos r JOIN productos p ON p.id=r.producto_id WHERE r.estado IN ('DISPONIBLE','EN_TRANSITO') AND ${rollScope.text}
+    FROM rollos r JOIN productos p ON p.id=r.producto_id WHERE r.estado='DISPONIBLE' AND ${rollScope.text}
     GROUP BY r.producto_id,r.ubicacion_id`, rollScope.values);
   const activeByPair = new Map(activeRolls.rows.map(r => [`${r.producto_id}:${r.ubicacion_id}`, number(r.cantidad)]));
   const validPairs = new Set(rows.filter(r => reconciles(r.cantidad, activeByPair.get(`${r.productoId}:${r.ubicacionId}`) ?? 0)).map(r => `${r.productoId}:${r.ubicacionId}`));
@@ -171,8 +172,24 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   const openRolls = await pool.query(`SELECT r.serie,p.sku,p.tela,p.color,p.unidad,u.nombre sitio,r.cantidad_actual::float cantidad,
     EXTRACT(day FROM now()-r.created_at)::int antiguedad FROM rollos r JOIN productos p ON p.id=r.producto_id JOIN ubicaciones u ON u.id=r.ubicacion_id
     WHERE r.estado='ABIERTO' AND ${rollScope.text} ORDER BY r.created_at`, rollScope.values);
-  return { kpis: Object.entries(totals).flatMap(([unidad, x]) => [{ id: `existencia-${unidad}`, label: `Existencia ${unidad}`, value: x.cantidad, kind: "quantity" }, { id: `rollos-${unidad}`, label: `Rollos ${unidad}`, value: x.rollos, kind: "count" }, { id: `valor-${unidad}`, label: `Valor ${unidad}`, value: x.valor, kind: "money", economic: true },
+  // Transit rolls are visibility-only: they are deliberately queried and
+  // presented apart from physical existence and never enter availability totals.
+  const containerScope = productScope(ctx, "p", "r.ubicacion_id");
+  const containerRolls = await pool.query(`SELECT p.unidad,
+    COALESCE(SUM(r.cantidad_actual),0)::float cantidad,
+    COALESCE(SUM(r.cantidad_actual*r.costo_unitario),0)::float valor
+    FROM rollos r
+    JOIN productos p ON p.id=r.producto_id
+    WHERE r.estado='EN_TRANSITO' AND ${containerScope.text}
+    GROUP BY p.unidad`, containerScope.values);
+  const containerByUnit = new Map(containerRolls.rows.map(r => [String(r.unidad), { cantidad: number(r.cantidad), valor: number(r.valor) }]));
+  const containerKpis = ["METRO", "KILO"].flatMap(unidad => [
+    { id: `en-contenedor-cantidad-${unidad}`, label: `En contenedor cantidad ${unidad}`, value: containerByUnit.get(unidad)?.cantidad ?? 0, kind: "quantity" },
+    { id: `en-contenedor-valor-${unidad}`, label: `En contenedor valor ${unidad}`, value: containerByUnit.get(unidad)?.valor ?? 0, kind: "money", economic: true },
+  ]);
+  return { kpis: [...Object.entries(totals).flatMap(([unidad, x]) => [{ id: `existencia-${unidad}`, label: `Existencia ${unidad}`, value: x.cantidad, kind: "quantity" }, { id: `rollos-${unidad}`, label: `Rollos ${unidad}`, value: x.rollos, kind: "count" }, { id: `valor-${unidad}`, label: `Valor ${unidad}`, value: x.valor, kind: "money", economic: true },
     { id: `perdida-estimada-${unidad}`, label: `Pérdida estimada ${unidad}`, value: lostRows.filter(r => r.unidad === unidad).reduce((s, r) => s + r.perdidaCantidadEstimada, 0), kind: "quantity", estimated: true }]),
+    ...containerKpis],
     charts: [{ id: "existencia-producto", title: "Existencia por producto", type: "treemap", categoryKey: "sku", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows }, ...(unreconciled.length ? [] : [{ id: "cierres-diarios", title: "Cierre diario de inventario", type: "line", categoryKey: "dia", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: closeRows }])],
     tables: [table("existencia-actual", "Existencia actual", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoPeriodo", "Vendido", "quantity"], ["coberturaDias", "Cobertura días", "number"], ["clasificacion", "Clasificación", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows, ["cantidad", "valor", "vendidoPeriodo", "perdidaCantidadEstimada", "perdidaValorEstimada"]),
       table("comprado-vendido", "Comprado vs vendido", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["comprado", "Comprado", "quantity"], ["vendido", "Vendido", "quantity"], ["ajusteNegativo", "Ajuste negativo", "quantity"]], activity.rows.map(r => ({ sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, comprado: number(r.comprado), vendido: number(r.vendido), ajusteNegativo: number(r.ajuste_negativo) })), ["comprado", "vendido", "ajusteNegativo"]),

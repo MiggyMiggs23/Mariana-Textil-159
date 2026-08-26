@@ -140,7 +140,7 @@ export const movimientosTable = pgTable(
 // ── Existencias ──────────────────────────────────────────────────────────────
 // Materialized cache: (producto_id, ubicacion_id) composite PK.
 // cantidad_total MUST equal SUM(movimientos.cantidad) for that pair.
-// rollos_count is the count of DISPONIBLE + EN_TRANSITO rolls.
+// rollos_count is the count of DISPONIBLE rolls physically on hand.
 
 export const existenciasTable = pgTable(
   "existencias",

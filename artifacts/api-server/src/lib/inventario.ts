@@ -5,7 +5,8 @@
  *  - Every function that mutates rollos / movimientos / existencias accepts
  *    `tx` as its first argument. Callers (routes, batch handlers) open the
  *    transaction and pass it in – the engine never opens its own.
- *  - Read-only maintenance functions (conciliarTodo, recalcularExistencias)
+ *  - Maintenance functions (conciliarTodo, recalcularExistencias,
+ *    reconstruirCacheExistencias)
  *    may own their transactions because they only need consistent snapshots or
  *    sequential repair passes.
  *  - No route handler may write these tables directly.
@@ -132,8 +133,9 @@ async function reserveFolio(tx: Tx): Promise<number> {
 // ── Cache helpers ─────────────────────────────────────────────────────────────
 
 /**
- * Recompute (producto, ubicacion) cache from movements and DISPONIBLE/EN_TRANSITO
- * roll counts. Must be called inside the same tx as the mutation.
+ * Recompute (producto, ubicacion) cache from the signed movement sum and the
+ * count of DISPONIBLE rolls at that location. Must be called inside the same tx
+ * as the mutation.
  */
 async function refreshCache(
   tx: Tx,
@@ -153,7 +155,7 @@ async function refreshCache(
       ),
     );
 
-  // rollos_count = count of rolls in countable states at this location
+  // rollos_count = count of DISPONIBLE rolls physically on hand at this location
   const [cntRow] = await tx
     .select({ cnt: sql<number>`COUNT(*)::int` })
     .from(rollosTable)
@@ -161,7 +163,7 @@ async function refreshCache(
       and(
         eq(rollosTable.productoId, productoId),
         eq(rollosTable.ubicacionId, ubicacionId),
-        sql`${rollosTable.estado} IN ('DISPONIBLE','EN_TRANSITO')`,
+        eq(rollosTable.estado, "DISPONIBLE"),
       ),
     );
 
@@ -1937,7 +1939,7 @@ export async function conciliarTodo(
       const movTotalF = formatQuantityThousandths(movTotal);
       const cacheTotalF = formatQuantityThousandths(cacheTotal);
 
-      // rollosMovimientos = count of DISPONIBLE/EN_TRANSITO rolls
+      // rollosMovimientos = count of DISPONIBLE rolls physically on hand
       const [cntRow] = await tx
         .select({ cnt: sql<number>`COUNT(*)::int` })
         .from(rollosTable)
@@ -1945,7 +1947,7 @@ export async function conciliarTodo(
           and(
             eq(rollosTable.productoId, pId),
             eq(rollosTable.ubicacionId, uId),
-            sql`${rollosTable.estado} IN ('DISPONIBLE','EN_TRANSITO')`,
+            eq(rollosTable.estado, "DISPONIBLE"),
           ),
         );
 
@@ -1981,6 +1983,48 @@ export async function recalcularExistencias(
   });
 }
 
+/**
+ * Rebuild every existing cache pair in one all-or-nothing transaction.
+ *
+ * The key set is the union of cache, kardex and roll pairs so stale cache rows
+ * are reset to zero rather than silently retained. cantidad_total deliberately
+ * remains the signed kardex SUM; only rollos_count comes from DISPONIBLE rolls.
+ */
+export async function reconstruirCacheExistencias(): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx.execute(sql`
+      WITH pairs AS (
+        SELECT producto_id, ubicacion_id FROM existencias
+        UNION
+        SELECT producto_id, ubicacion_id FROM movimientos
+        UNION
+        SELECT producto_id, ubicacion_id FROM rollos
+      ),
+      movement_totals AS (
+        SELECT producto_id, ubicacion_id, COALESCE(SUM(cantidad), 0) AS cantidad_total
+        FROM movimientos
+        GROUP BY producto_id, ubicacion_id
+      ),
+      available_rolls AS (
+        SELECT producto_id, ubicacion_id, COUNT(*)::int AS rollos_count
+        FROM rollos
+        WHERE estado = 'DISPONIBLE'
+        GROUP BY producto_id, ubicacion_id
+      )
+      INSERT INTO existencias (producto_id, ubicacion_id, cantidad_total, rollos_count)
+      SELECT pairs.producto_id, pairs.ubicacion_id,
+             COALESCE(movement_totals.cantidad_total, 0),
+             COALESCE(available_rolls.rollos_count, 0)
+      FROM pairs
+      LEFT JOIN movement_totals USING (producto_id, ubicacion_id)
+      LEFT JOIN available_rolls USING (producto_id, ubicacion_id)
+      ON CONFLICT (producto_id, ubicacion_id) DO UPDATE
+      SET cantidad_total = EXCLUDED.cantidad_total,
+          rollos_count = EXCLUDED.rollos_count
+    `);
+  });
+}
+
 // ── Dashboard helper ──────────────────────────────────────────────────────────
 
 export type InventarioUbicacionSummary = {
@@ -2000,10 +2044,10 @@ export async function getInventarioPorUbicacion(
   const whereClause =
     ubicacionIds && ubicacionIds.length > 0
       ? and(
-          sql`${rollosTable.estado} IN ('DISPONIBLE','EN_TRANSITO')`,
+          eq(rollosTable.estado, "DISPONIBLE"),
           inArray(rollosTable.ubicacionId, ubicacionIds),
         )
-      : sql`${rollosTable.estado} IN ('DISPONIBLE','EN_TRANSITO')`;
+      : eq(rollosTable.estado, "DISPONIBLE");
 
   const rows = await db
     .select({

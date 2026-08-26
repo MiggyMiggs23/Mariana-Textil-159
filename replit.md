@@ -53,6 +53,29 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 - **Gobierno de precios:** `/precios` exige rol ADMIN directamente en el servidor. El costo actual es ponderado por cantidad disponible y unidad; sin costos válidos permanece pendiente (`null`), nunca cero.
 - **Historial comercial:** todo cambio de precio bloquea el producto, captura costo/margen del momento y escribe historial más auditoría en la misma transacción. Nunca recalcula tickets existentes.
+- **Definición de existencia:** Existencia de un producto en un sitio = lo que se puede tocar y vender ahí hoy. Solo rollos en estado `DISPONIBLE` en esa ubicación. Nada más se suma a ese número: ni `ABIERTO`, ni `EN_TRANSITO`, ni rollos que vienen en contenedor.
+
+## Parte 1, Bloque 1 — Unificación de existencia
+
+- `existencias.cantidad_total` conserva exactamente la suma firmada del kardex; `rollos_count` cuenta solo rollos `DISPONIBLE`.
+- Se agregó `reconstruirCacheExistencias`, que recompone en una sola transacción todos los pares de la unión de `existencias`, `movimientos` y `rollos`.
+- Inventario agrupado, conciliación, reportes y Vista Global usan solo `DISPONIBLE` para existencia física. Reportes presenta aparte cantidad y valor de rollos `EN_TRANSITO` ligados a contenedor; esos KPI nunca se agregan a existencia, rollos o valor disponible.
+- Decisión conservadora: `contenedores.entrada_id` solo se asigna al recibir y `crearEntrada` crea rollos `DISPONIBLE`, por lo que no existe un vínculo de contenedor que pueda identificar inventario en tránsito. El KPI separado muestra todos los rollos `EN_TRANSITO` por su ubicación; los creadores de transferencias de dos fases están muertos y se eliminarán en el Bloque 3.
+
+### Archivos revisados para existencia física (Bloque 1.4)
+
+- Cambiados: `lib/inventario.ts` (`refreshCache`, `conciliarTodo`, `reconstruirCacheExistencias`, `getInventarioPorUbicacion`); `routes/inventario.ts` (`GET /existencias/agrupadas`); `lib/reportes-inventory.ts` (`buildInventoryReport`).
+- Sin cambio: `routes/dashboard.ts:12-137` (`GET /dashboard`, consume `getInventarioPorUbicacion`); `routes/precios.ts:37` (`currentCost`, delega al filtro `DISPONIBLE` de `weightedCurrentUnitCost`); `lib/precios.ts:21` (`weightedCurrentUnitCost`, ya era solo `DISPONIBLE`).
+- Sin cambio por ser listados, diagnósticos o historial y no existencia actual: `routes/inventario.ts:260` (`getRolloDetail`), `:1179` (`GET /rollos`) y `:642` (costos pendientes); `routes/etiquetas.ts:83,147,289` (listado, detalle e historial); `routes/productos.ts:468` (`GET /productos/:id`, compras por entrada); `lib/compras-proveedor.ts:1142` (`analiticaGlobalProveedores`, costos históricos).
+- Sin cambio por ser puertas operativas: `routes/salidas.ts:318` (`GET /salidas/rollos/serie/:serie`); `lib/pos.ts:322,490` (validaciones de estado para venta); transiciones y ajustes de `lib/inventario.ts:1198-1665`.
+- Sin cambio por pertenecer al dominio separado de contenedores: `lib/contenedores.ts:242` (`getContenedorDetail`) y `:509` (`getContenedoresSummary`), y `lib/contenedores-helpers.ts:88` (`canEditContenedor`).
+
+## Pendiente de partes siguientes
+
+> `ABIERTO` se elimina en la Parte 2. Nota: `salidaMostrador` deja `rollos.cantidad_actual` sin tocar mientras inserta el movimiento negativo completo. Es inconsistente pero ya no afecta la existencia. Se resuelve al eliminar el estado.
+
+- Parte 1 Bloque 2: campos y filtro de existencia del catálogo de Productos.
+- Parte 1 Bloque 3: limpieza de transferencias muertas, sin tocar el tránsito de Contenedores.
 
 ## Permission modules (24 total)
 

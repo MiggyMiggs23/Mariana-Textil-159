@@ -1350,8 +1350,7 @@ inventarioRouter.get(
         FROM productos p
         LEFT JOIN rollos r
           ON r.producto_id = p.id
-         AND r.estado IN ('DISPONIBLE', 'ABIERTO')
-         AND r.cantidad_actual > 0
+         AND r.estado = 'DISPONIBLE'
          AND (${ubicacionId ?? null}::int IS NULL OR r.ubicacion_id = ${ubicacionId ?? null})
         WHERE (${search}::text IS NULL
           OR p.tela ILIKE ${search}
