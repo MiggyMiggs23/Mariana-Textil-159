@@ -130,6 +130,15 @@
 }
 
 @media print {
+  #replit-dev-banner,
+  .replit-dev-banner,
+  [data-replit-dev-banner],
+  replit-dev-banner,
+  iframe[src*="replit.com"][src*="banner"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
   @page label {
     size: 100mm 70mm;
     margin: 0;

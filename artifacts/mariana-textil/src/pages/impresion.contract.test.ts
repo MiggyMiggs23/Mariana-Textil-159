@@ -38,3 +38,8 @@ test("Labels have exact physical size without padding", async () => {
   assert.match(css, /body\.printing-labels\s*\{[\s\S]*margin:\s*0;[\s\S]*padding:\s*0;/);
   assert.match(css, /body\.printing-labels \.etiquetas-print\s*\{[\s\S]*position:\s*absolute;[\s\S]*left:\s*0;[\s\S]*top:\s*0;/);
 });
+
+test("Replit development banner is hidden from every print medium", async () => {
+  const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
+  assert.match(css, /@media print\s*\{[\s\S]*#replit-dev-banner,[\s\S]*\[data-replit-dev-banner\][\s\S]*display:\s*none !important;/);
+});
