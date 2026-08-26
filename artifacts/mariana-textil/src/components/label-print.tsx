@@ -120,8 +120,11 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           </div>
         </div>
 
-        <div className="border-l border-gray-400 flex flex-col items-center justify-center px-[3mm] min-w-0">
-          <MonochromeBrandLogo className="h-[34mm] w-[28mm] max-h-full max-w-full" />
+        <div className="border-l border-gray-400 flex min-w-0 flex-col items-center justify-center px-0">
+          <MonochromeBrandLogo className="h-auto max-h-[38mm] w-full max-w-[28mm]" />
+          <div className="mt-[0.5mm] w-full whitespace-nowrap text-center text-[10px] font-black leading-none tracking-[-0.03em] text-black">
+            MARIANA TEXTIL
+          </div>
         </div>
 
         <div className="border-l border-gray-400 flex flex-col items-center justify-center pl-[3mm] relative min-w-0">
