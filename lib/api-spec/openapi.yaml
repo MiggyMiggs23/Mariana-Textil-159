@@ -3046,7 +3046,7 @@ paths:
     get:
       operationId: getAdminAlertas
       tags: [admin-analytics]
-      summary: Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+      summary: Alertas vivas de cobro pendiente, crédito y salidas en tránsito sin recibir
       description: Calcula el estado actual sin consultar ni crear registros de notificaciones.
       responses:
         "200":
@@ -4198,20 +4198,38 @@ components:
         diasRestantes:
           type: number
           description: Días firmados contra hoy en Ciudad de México; negativo significa vencido.
+    AdminAlertaSalida:
+      type: object
+      required: [id, folio, enviadaAt, horasEnTransito, origenId, nombreOrigen, destinoId, nombreDestino]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        enviadaAt: { type: string, format: date-time }
+        horasEnTransito:
+          type: number
+          description: Horas completas transcurridas desde el envío.
+        origenId: { type: number }
+        nombreOrigen: { type: string }
+        destinoId: { type: number }
+        nombreDestino: { type: string }
     AdminAlertas:
       type: object
-      required: [generatedAt, total, ticketsPendientes, creditos]
+      required: [generatedAt, total, ticketsPendientes, creditos, salidasEnTransito]
       properties:
         generatedAt: { type: string, format: date-time }
         total:
           type: number
-          description: Suma de ticketsPendientes y creditos.
+          description: Suma de ticketsPendientes, creditos y salidasEnTransito.
         ticketsPendientes:
           type: array
           items: { $ref: "#/components/schemas/AdminAlertaTicket" }
         creditos:
           type: array
           items: { $ref: "#/components/schemas/AdminAlertaCredito" }
+        salidasEnTransito:
+          type: array
+          description: Salidas EN_TRANSITO que superan el umbral operativo sin recepción.
+          items: { $ref: "#/components/schemas/AdminAlertaSalida" }
     AdminCorteRow:
       type: object
       required: [id, ubicacionId, nombreUbicacion, usuarioId, nombreUsuario, abiertaAt, cerradaAt, estado, fondoInicial, vendido, totalCobrado, efectivoEsperado, efectivoContado, diferencia, ticketsCobrados, ticketsCancelados]

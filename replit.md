@@ -124,6 +124,12 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Cada recepción registra en auditoría usuario, instante, IP, origen, destino, indicador de recepción completa y nota.
 - Decisión conservadora: “incompleta” describe la condición reportada de la entrega, pero no deja rollos varados ni abre recepción rollo por rollo; todos aterrizan con la cantidad enviada y la incidencia queda en auditoría/notificación.
 
+## Parte 1.5, Bloque 4 — Alertas y tránsito separado
+
+- Alertas ADMIN incluye salidas `EN_TRANSITO` sin recibir que superan `SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS` (24 horas). La constante está nombrada y comentada en `lib/admin-alertas.ts`; el límite es estricto, por lo que exactamente 24 horas aún no alerta.
+- Reportes separa la visibilidad de rollos `EN_TRANSITO`: **En contenedor** excluye todo rollo ligado a una salida activa `EN_TRANSITO`; **En tránsito entre sitios** incluye exclusivamente esos rollos de `salida_rollos`. `EXISTS`/`NOT EXISTS` contra la salida activa es el criterio autoritativo y evita doble conteo.
+- Ambos indicadores son solo visibilidad y no se agregan a existencia física, rollos disponibles ni valor disponible. Las exportaciones XLSX/PDF ahora incluyen los KPI del reporte, incluidos estos indicadores.
+
 
 ## Permission modules (24 total)
 

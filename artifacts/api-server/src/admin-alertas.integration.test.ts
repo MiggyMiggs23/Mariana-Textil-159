@@ -29,6 +29,7 @@ if (!testUrl) {
       movements: [] as number[],
       notifications: [] as number[],
       sessions: [] as string[],
+      salidas: [] as number[],
     };
     let server: Server | undefined;
     let baseUrl = "";
@@ -71,8 +72,22 @@ if (!testUrl) {
           [sessionId, userId, tag],
         );
       }
-
       let folio = 1_700_000_000 + Math.floor(Math.random() * 100_000_000);
+      const addTransitExit = async (age: "old" | "recent") => {
+        const interval = age === "old" ? "25 hours" : "23 hours 59 minutes";
+        const row = await one(
+          `INSERT INTO salidas(
+             folio,origen_id,destino_id,estado,usuario_envia_id,enviada_at,uuid_cliente
+           ) VALUES($1,$2,$2,'EN_TRANSITO',$3,now()-$4::interval,gen_random_uuid())
+           RETURNING id,folio`,
+          [folio++, location.id, ids.users[0], interval],
+        );
+        ids.salidas.push(Number(row.id));
+        return row;
+      };
+      const overdueExit = await addTransitExit("old");
+      await addTransitExit("recent");
+
       const addTicket = async (
         ageMinutes: number,
         state: "VENDIDO" | "CANCELADO" = "VENDIDO",
@@ -190,8 +205,16 @@ if (!testUrl) {
           fechaVencimiento: string;
           diasRestantes: number;
         }>;
+        salidasEnTransito: Array<{
+          id: number;
+          folio: number;
+          horasEnTransito: number;
+          nombreOrigen: string;
+          nombreDestino: string;
+          enviadaAt: string;
+        }>;
       };
-      assert.equal(body.total, body.ticketsPendientes.length + body.creditos.length);
+       assert.equal(body.total, body.ticketsPendientes.length + body.creditos.length + body.salidasEnTransito.length);
       const fixtureTickets = body.ticketsPendientes.filter(({ id }) =>
         ids.tickets.includes(id),
       );
@@ -218,6 +241,13 @@ if (!testUrl) {
       assert.equal(fixtureCredit[1]!.diasRestantes, 2);
       assert.equal(fixtureCredit[1]!.nota, `${tag} próxima`);
       assert.match(fixtureCredit[0]!.fechaVencimiento, /^\d{4}-\d{2}-\d{2}$/);
+       const fixtureTransit = body.salidasEnTransito.filter(({ id }) => ids.salidas.includes(id));
+       assert.deepEqual(fixtureTransit.map(({ id }) => id), [Number(overdueExit.id)]);
+       assert.equal(fixtureTransit[0]!.folio, Number(overdueExit.folio));
+       assert.ok(fixtureTransit[0]!.horasEnTransito >= 25);
+       assert.equal(fixtureTransit[0]!.nombreOrigen, `${tag} Tienda`);
+       assert.equal(fixtureTransit[0]!.nombreDestino, `${tag} Tienda`);
+       assert.match(fixtureTransit[0]!.enviadaAt, /^\d{4}-\d{2}-\d{2}T/);
       assert.equal(
         Number((await one("SELECT COUNT(*)::int count FROM notificaciones_credito")).count),
         notificationsBefore,
@@ -276,6 +306,9 @@ if (!testUrl) {
       if (ids.tickets.length) {
         await pool.query("DELETE FROM tickets WHERE id=ANY($1::int[])", [ids.tickets]);
       }
+       if (ids.salidas.length) {
+         await pool.query("DELETE FROM salidas WHERE id=ANY($1::int[])", [ids.salidas]);
+       }
       if (ids.sessions.length) {
         await pool.query("DELETE FROM sesiones WHERE id=ANY($1::uuid[])", [ids.sessions]);
       }

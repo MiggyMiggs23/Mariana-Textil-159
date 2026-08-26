@@ -10,6 +10,7 @@ export * from "./generated/types/activarRolloInput";
 export * from "./generated/types/adminAlert";
 export * from "./generated/types/adminAlertTipo";
 export * from "./generated/types/adminAlertaCredito";
+export * from "./generated/types/adminAlertaSalida";
 export * from "./generated/types/adminAlertaTicket";
 export * from "./generated/types/adminAlertas";
 export * from "./generated/types/adminComparacionTiendas";

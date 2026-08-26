@@ -27,6 +27,9 @@ function reportRows(report: Report) {
   const tables = report.tables as Array<{ title: string; columns: Array<{ key: string; label: string; kind: string }>; rows: Record<string, unknown>[]; totals: Record<string, unknown> }>;
   return tables;
 }
+function reportKpis(report: Report) {
+  return report.kpis as Array<{ label: string; value: string | number; kind: string }>;
+}
 function numeric(kind: string) { return kind === "money" || kind === "quantity" || kind === "count" || kind === "percentage" || kind === "days"; }
 function formatFor(kind: string) {
   if (kind === "money") return EXCEL_NUMBER_FORMAT.money;
@@ -77,6 +80,12 @@ router.get("/reportes/:seccion/export.xlsx", async (req, res, next): Promise<voi
     const data = await report(req); const workbook = new ExcelJS.Workbook();
     const meta = workbook.addWorksheet("Periodo");
     meta.addRows([["Reporte", data.section], ["Generado", data.generatedAt], ["Periodo", JSON.stringify(data.range)], ["Filtros", JSON.stringify(data.activeFilters)]]);
+    const kpis = workbook.addWorksheet("Indicadores");
+    kpis.columns = [{ header: "Indicador", key: "label", width: 38 }, { header: "Valor", key: "value", width: 18 }];
+    for (const item of reportKpis(data)) {
+      kpis.addRow({ label: item.label, value: numeric(item.kind) ? toExcelNumber(item.value) : item.value });
+      if (numeric(item.kind)) kpis.getCell(`B${kpis.rowCount}`).numFmt = formatFor(item.kind);
+    }
     for (const item of reportRows(data)) {
       const sheet = workbook.addWorksheet(item.title.slice(0, 31));
       sheet.columns = item.columns.map((column) => ({ header: column.label, key: column.key, width: Math.max(14, column.label.length + 3) }));
@@ -94,7 +103,7 @@ router.get("/reportes/:seccion/export.pdf", async (req, res, next): Promise<void
   const started = performance.now();
   try {
     const data = await report(req);
-    const lines = [`Periodo: ${JSON.stringify(data.range)}`, `Filtros: ${JSON.stringify(data.activeFilters)}`];
+    const lines = [`Periodo: ${JSON.stringify(data.range)}`, `Filtros: ${JSON.stringify(data.activeFilters)}`, "Indicadores:", ...reportKpis(data).map((item) => `${item.label}: ${item.value}`)];
     for (const item of reportRows(data)) {
       lines.push(item.title, ...item.rows.map((row) => item.columns.map((c) => `${c.label}: ${row[c.key] ?? ""}`).join(" | ")), `Totales: ${JSON.stringify(item.totals)}`);
     }

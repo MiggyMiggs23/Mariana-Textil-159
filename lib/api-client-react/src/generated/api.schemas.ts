@@ -734,12 +734,26 @@ export interface AdminAlertaCredito {
   diasRestantes: number;
 }
 
+export interface AdminAlertaSalida {
+  id: number;
+  folio: number;
+  enviadaAt: string;
+  /** Horas completas transcurridas desde el envío. */
+  horasEnTransito: number;
+  origenId: number;
+  nombreOrigen: string;
+  destinoId: number;
+  nombreDestino: string;
+}
+
 export interface AdminAlertas {
   generatedAt: string;
-  /** Suma de ticketsPendientes y creditos. */
+  /** Suma de ticketsPendientes, creditos y salidasEnTransito. */
   total: number;
   ticketsPendientes: AdminAlertaTicket[];
   creditos: AdminAlertaCredito[];
+  /** Salidas EN_TRANSITO que superan el umbral operativo sin recepción. */
+  salidasEnTransito: AdminAlertaSalida[];
 }
 
 export type AdminCorteRowEstado = typeof AdminCorteRowEstado[keyof typeof AdminCorteRowEstado];

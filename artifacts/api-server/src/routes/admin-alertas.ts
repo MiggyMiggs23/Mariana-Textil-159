@@ -23,6 +23,10 @@ router.get(
         ...credito,
         fechaVencimiento: credito.fechaVencimiento.toISOString().slice(0, 10),
       })),
+      salidasEnTransito: parsed.salidasEnTransito.map((salida) => ({
+        ...salida,
+        enviadaAt: salida.enviadaAt.toISOString(),
+      })),
     });
   },
 );

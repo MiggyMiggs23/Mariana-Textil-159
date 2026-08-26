@@ -45,6 +45,22 @@ export function reconciles(existence: number, activeRollQuantity: number, ledger
   return Math.abs(existence - activeRollQuantity) <= tolerance &&
     (ledger == null || Math.abs(existence - ledger) <= tolerance);
 }
+type TransitTotals = { cantidad: number; valor: number };
+/**
+ * Transit visibility is appended separately from physical KPIs. Callers must
+ * never fold these values into existence, available rolls, or availability.
+ */
+export function buildTransitVisibilityKpis(
+  containerByUnit: Map<string, TransitTotals>,
+  interSiteTransitByUnit: Map<string, TransitTotals>,
+) {
+  return ["METRO", "KILO"].flatMap(unidad => [
+    { id: `en-contenedor-cantidad-${unidad}`, label: `En contenedor cantidad ${unidad}`, value: containerByUnit.get(unidad)?.cantidad ?? 0, kind: "quantity" },
+    { id: `en-contenedor-valor-${unidad}`, label: `En contenedor valor ${unidad}`, value: containerByUnit.get(unidad)?.valor ?? 0, kind: "money", economic: true },
+    { id: `en-transito-entre-sitios-cantidad-${unidad}`, label: `En tránsito entre sitios cantidad ${unidad}`, value: interSiteTransitByUnit.get(unidad)?.cantidad ?? 0, kind: "quantity" },
+    { id: `en-transito-entre-sitios-valor-${unidad}`, label: `En tránsito entre sitios valor ${unidad}`, value: interSiteTransitByUnit.get(unidad)?.valor ?? 0, kind: "money", economic: true },
+  ]);
+}
 export type DailyMovement = { day: string; quantity: number };
 /** Rebuild close balances from today's balance by undoing later movements. */
 export function reverseDailyCloses(current: number, movements: DailyMovement[], days: string[]): Array<{ day: string; quantity: number }> {
@@ -181,15 +197,34 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     FROM rollos r
     JOIN productos p ON p.id=r.producto_id
     WHERE r.estado='EN_TRANSITO' AND ${containerScope.text}
+      AND NOT EXISTS (
+        SELECT 1
+        FROM salida_rollos sr
+        JOIN salidas s ON s.id = sr.salida_id
+        WHERE sr.rollo_id = r.id AND s.estado = 'EN_TRANSITO'
+      )
+    GROUP BY p.unidad`, containerScope.values);
+  const interSiteTransitRolls = await pool.query(`SELECT p.unidad,
+    COALESCE(SUM(r.cantidad_actual),0)::float cantidad,
+    COALESCE(SUM(r.cantidad_actual*r.costo_unitario),0)::float valor
+    FROM rollos r
+    JOIN productos p ON p.id=r.producto_id
+    WHERE r.estado='EN_TRANSITO' AND ${containerScope.text}
+      AND EXISTS (
+        SELECT 1
+        FROM salida_rollos sr
+        JOIN salidas s ON s.id = sr.salida_id
+        WHERE sr.rollo_id = r.id AND s.estado = 'EN_TRANSITO'
+      )
     GROUP BY p.unidad`, containerScope.values);
   const containerByUnit = new Map(containerRolls.rows.map(r => [String(r.unidad), { cantidad: number(r.cantidad), valor: number(r.valor) }]));
-  const containerKpis = ["METRO", "KILO"].flatMap(unidad => [
-    { id: `en-contenedor-cantidad-${unidad}`, label: `En contenedor cantidad ${unidad}`, value: containerByUnit.get(unidad)?.cantidad ?? 0, kind: "quantity" },
-    { id: `en-contenedor-valor-${unidad}`, label: `En contenedor valor ${unidad}`, value: containerByUnit.get(unidad)?.valor ?? 0, kind: "money", economic: true },
-  ]);
+  const interSiteTransitByUnit = new Map(interSiteTransitRolls.rows.map(r => [String(r.unidad), { cantidad: number(r.cantidad), valor: number(r.valor) }]));
+  // Both transit groups are visibility-only and deliberately remain outside
+  // physical availability totals, roll counts, and their reconciliation.
+  const transitKpis = buildTransitVisibilityKpis(containerByUnit, interSiteTransitByUnit);
   return { kpis: [...Object.entries(totals).flatMap(([unidad, x]) => [{ id: `existencia-${unidad}`, label: `Existencia ${unidad}`, value: x.cantidad, kind: "quantity" }, { id: `rollos-${unidad}`, label: `Rollos ${unidad}`, value: x.rollos, kind: "count" }, { id: `valor-${unidad}`, label: `Valor ${unidad}`, value: x.valor, kind: "money", economic: true },
     { id: `perdida-estimada-${unidad}`, label: `Pérdida estimada ${unidad}`, value: lostRows.filter(r => r.unidad === unidad).reduce((s, r) => s + r.perdidaCantidadEstimada, 0), kind: "quantity", estimated: true }]),
-    ...containerKpis],
+    ...transitKpis],
     charts: [{ id: "existencia-producto", title: "Existencia por producto", type: "treemap", categoryKey: "sku", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows }, ...(unreconciled.length ? [] : [{ id: "cierres-diarios", title: "Cierre diario de inventario", type: "line", categoryKey: "dia", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: closeRows }])],
     tables: [table("existencia-actual", "Existencia actual", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoPeriodo", "Vendido", "quantity"], ["coberturaDias", "Cobertura días", "number"], ["clasificacion", "Clasificación", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows, ["cantidad", "valor", "vendidoPeriodo", "perdidaCantidadEstimada", "perdidaValorEstimada"]),
       table("comprado-vendido", "Comprado vs vendido", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["comprado", "Comprado", "quantity"], ["vendido", "Vendido", "quantity"], ["ajusteNegativo", "Ajuste negativo", "quantity"]], activity.rows.map(r => ({ sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, comprado: number(r.comprado), vendido: number(r.vendido), ajusteNegativo: number(r.ajuste_negativo) })), ["comprado", "vendido", "ajusteNegativo"]),

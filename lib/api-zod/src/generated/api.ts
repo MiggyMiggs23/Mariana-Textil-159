@@ -4938,11 +4938,11 @@ export const GetAdminRealtimePendingResponse = zod.object({
 
 /**
  * Calcula el estado actual sin consultar ni crear registros de notificaciones.
- * @summary Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+ * @summary Alertas vivas de cobro pendiente, crédito y salidas en tránsito sin recibir
  */
 export const GetAdminAlertasResponse = zod.object({
   "generatedAt": zod.coerce.date(),
-  "total": zod.number().describe('Suma de ticketsPendientes y creditos.'),
+  "total": zod.number().describe('Suma de ticketsPendientes, creditos y salidasEnTransito.'),
   "ticketsPendientes": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -4965,7 +4965,17 @@ export const GetAdminAlertasResponse = zod.object({
   "importe": zod.string().describe('Saldo vigente de la fila después de aplicar pagos FIFO.'),
   "fechaVencimiento": zod.coerce.date(),
   "diasRestantes": zod.number().describe('Días firmados contra hoy en Ciudad de México; negativo significa vencido.')
-}))
+})),
+  "salidasEnTransito": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "enviadaAt": zod.coerce.date(),
+  "horasEnTransito": zod.number().describe('Horas completas transcurridas desde el envío.'),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number(),
+  "nombreDestino": zod.string()
+})).describe('Salidas EN_TRANSITO que superan el umbral operativo sin recepción.')
 })
 
 

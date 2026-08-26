@@ -1,6 +1,17 @@
 import { pool } from "@workspace/db";
 
 const MEXICO_CITY_TIME_ZONE = "America/Mexico_City";
+/**
+ * Operational threshold for an inter-site exit to be considered overdue.
+ * Keep this named value here so the business can tune it without changing SQL.
+ */
+export const SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS = 24;
+
+/** Strict boundary rule shared by focused tests; exactly 24 hours is not overdue. */
+export function isSalidaEnTransitoOverdue(enviadaAt: Date, now = new Date()): boolean {
+  return now.getTime() - enviadaAt.getTime() >
+    SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS * 60 * 60 * 1000;
+}
 
 function money(value: unknown): string {
   return Number(value ?? 0).toFixed(2);
@@ -16,7 +27,7 @@ function calendarDate(value: string | Date): string {
  * credit-notification review queue.
  */
 export async function getAdminAlertas() {
-  const [pendingResult, creditResult] = await Promise.all([
+  const [pendingResult, creditResult, transitResult] = await Promise.all([
     pool.query(`
       SELECT t.id, t.folio, t.created_at AS "createdAt",
         FLOOR(EXTRACT(EPOCH FROM (now() - t.created_at)) / 60)::int AS "minutosTranscurridos",
@@ -50,6 +61,19 @@ export async function getAdminAlertas() {
           (now() AT TIME ZONE '${MEXICO_CITY_TIME_ZONE}')::date + 3
       ORDER BY aging.due_at ASC, aging.created_at ASC, aging.movimiento_id ASC
     `),
+    pool.query(`
+      SELECT s.id, s.folio, s.enviada_at AS "enviadaAt",
+        FLOOR(EXTRACT(EPOCH FROM (now() - s.enviada_at)) / 3600)::int
+          AS "horasEnTransito",
+        origen.id AS "origenId", origen.nombre AS "nombreOrigen",
+        destino.id AS "destinoId", destino.nombre AS "nombreDestino"
+      FROM salidas s
+      JOIN ubicaciones origen ON origen.id = s.origen_id
+      JOIN ubicaciones destino ON destino.id = s.destino_id
+      WHERE s.estado = 'EN_TRANSITO'
+        AND s.enviada_at < now() - ($1::int * interval '1 hour')
+      ORDER BY s.enviada_at ASC, s.id ASC
+    `, [SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS]),
   ]);
 
   const ticketsPendientes = pendingResult.rows.map((row) => ({
@@ -72,11 +96,21 @@ export async function getAdminAlertas() {
     fechaVencimiento: calendarDate(row.fechaVencimiento),
     diasRestantes: Number(row.diasRestantes),
   }));
+  const salidasEnTransito = transitResult.rows.map((row) => ({
+    ...row,
+    id: Number(row.id),
+    folio: Number(row.folio),
+    enviadaAt: new Date(row.enviadaAt).toISOString(),
+    horasEnTransito: Number(row.horasEnTransito),
+    origenId: Number(row.origenId),
+    destinoId: Number(row.destinoId),
+  }));
 
   return {
     generatedAt: new Date().toISOString(),
-    total: ticketsPendientes.length + creditos.length,
+    total: ticketsPendientes.length + creditos.length + salidasEnTransito.length,
     ticketsPendientes,
     creditos,
+    salidasEnTransito,
   };
 }

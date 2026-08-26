@@ -10,6 +10,7 @@ export * from './activarRolloInput';
 export * from './adminAlert';
 export * from './adminAlertaCredito';
 export * from './adminAlertas';
+export * from './adminAlertaSalida';
 export * from './adminAlertaTicket';
 export * from './adminAlertTipo';
 export * from './adminComparacionTiendas';

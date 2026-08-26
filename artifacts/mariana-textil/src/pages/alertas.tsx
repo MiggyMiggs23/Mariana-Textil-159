@@ -4,7 +4,7 @@ import {
   useGetAdminAlertas,
   getGetAdminAlertasQueryKey,
 } from "@workspace/api-client-react";
-import { Clock, AlertTriangle, RefreshCw, Loader2, ArrowRight, Store, UserSquare2, Ticket, CircleX } from "lucide-react";
+import { Clock, AlertTriangle, RefreshCw, Loader2, ArrowRight, Store, UserSquare2, Ticket, CircleX, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -25,6 +25,12 @@ function dueLabel(days: number): string {
   return `Vence en ${days} ${days === 1 ? "día" : "días"}`;
 }
 
+function transitAgeLabel(hours: number): string {
+  const days = Math.floor(hours / 24);
+  const remainingHours = hours % 24;
+  return days > 0 ? `${days} ${days === 1 ? "día" : "días"} y ${remainingHours} h` : `${hours} h`;
+}
+
 export default function Alertas() {
   const [typeFilter, setTypeFilter] = useState("todas");
   const [dueFilter, setDueFilter] = useState("todos");
@@ -34,14 +40,17 @@ export default function Alertas() {
       refetchInterval: 30000,
     }
   });
-  const visibleTickets = typeFilter === "creditos" ? [] : alertas?.ticketsPendientes ?? [];
+  const visibleTickets = typeFilter === "creditos" || typeFilter === "salidas" ? [] : alertas?.ticketsPendientes ?? [];
   const visibleCredits = useMemo(() => {
-    if (typeFilter === "tickets") return [];
+    if (typeFilter === "tickets" || typeFilter === "salidas") return [];
     const creditos = alertas?.creditos ?? [];
     if (dueFilter === "vencidos") return creditos.filter(({ diasRestantes }) => diasRestantes < 0);
     if (dueFilter === "por-vencer") return creditos.filter(({ diasRestantes }) => diasRestantes >= 0);
     return creditos;
   }, [alertas?.creditos, dueFilter, typeFilter]);
+  const visibleTransitExits = typeFilter === "tickets" || typeFilter === "creditos"
+    ? []
+    : alertas?.salidasEnTransito ?? [];
 
   return (
     <AppLayout>
@@ -53,7 +62,7 @@ export default function Alertas() {
               Alertas en Tiempo Real
             </h1>
             <p className="text-muted-foreground mt-1">
-              Monitoreo de tickets sin cobrar y pagos de clientes por vencer o vencidos.
+              Monitoreo de tickets sin cobrar, pagos de clientes y salidas sin recibir.
             </p>
           </div>
           <div className="flex items-center gap-4 text-sm">
@@ -73,9 +82,10 @@ export default function Alertas() {
               <SelectItem value="todas">Todos los tipos</SelectItem>
               <SelectItem value="tickets">Tickets sin cobrar</SelectItem>
               <SelectItem value="creditos">Pagos de clientes</SelectItem>
+              <SelectItem value="salidas">Salidas sin recibir</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={dueFilter} onValueChange={setDueFilter} disabled={typeFilter === "tickets"}>
+          <Select value={dueFilter} onValueChange={setDueFilter} disabled={typeFilter === "tickets" || typeFilter === "salidas"}>
             <SelectTrigger className="w-[220px]" aria-label="Filtrar vencimiento">
               <SelectValue />
             </SelectTrigger>
@@ -108,7 +118,7 @@ export default function Alertas() {
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             {/* Tickets Section */}
-            {typeFilter !== "creditos" && <div className="space-y-4">
+            {typeFilter !== "creditos" && typeFilter !== "salidas" && <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-sidebar flex items-center gap-2">
                   <Clock className="h-5 w-5 text-amber-600" />
@@ -162,7 +172,7 @@ export default function Alertas() {
             </div>}
 
             {/* Créditos Section */}
-            {typeFilter !== "tickets" && <div className="space-y-4">
+            {typeFilter !== "tickets" && typeFilter !== "salidas" && <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-sidebar flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-destructive" />
@@ -217,6 +227,54 @@ export default function Alertas() {
                             Estado de cuenta <ArrowRight className="h-3 w-3" />
                           </Link>
                         </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>}
+
+            {typeFilter !== "tickets" && typeFilter !== "creditos" && <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-sidebar flex items-center gap-2">
+                  <Truck className="h-5 w-5 text-destructive" />
+                  Salidas sin recibir (&gt;24 h)
+                  <span className="ml-2 rounded-full bg-destructive/10 text-destructive px-2 py-0.5 text-xs font-bold">
+                    {visibleTransitExits.length}
+                  </span>
+                </h2>
+              </div>
+              {visibleTransitExits.length === 0 ? (
+                <Card className="bg-muted/20 border-dashed">
+                  <CardContent className="p-8 text-center text-muted-foreground">
+                    No hay salidas en tránsito sin recibir por más de 24 horas.
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid gap-3">
+                  {visibleTransitExits.map((salida) => (
+                    <Card key={salida.id} className="border-l-4 border-l-destructive hover:bg-muted/30 transition-colors shadow-sm">
+                      <CardContent className="p-4 flex items-center justify-between gap-4">
+                        <div className="space-y-1.5 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-base">Salida {salida.folio}</span>
+                            <span className="text-destructive bg-destructive/10 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                              {transitAgeLabel(salida.horasEnTransito)} en tránsito
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Store className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate">{salida.nombreOrigen}</span>
+                            <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate">{salida.nombreDestino}</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            Enviada a las {ticketTime(salida.enviadaAt)}
+                          </div>
+                        </div>
+                        <Link href={`/salidas?folio=${salida.folio}`} className="text-primary hover:underline text-sm font-medium flex items-center gap-1 shrink-0">
+                          Revisar <ArrowRight className="h-3 w-3" />
+                        </Link>
                       </CardContent>
                     </Card>
                   ))}

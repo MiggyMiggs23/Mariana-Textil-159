@@ -10551,7 +10551,7 @@ export const getGetAdminAlertasUrl = () => {
 
 /**
  * Calcula el estado actual sin consultar ni crear registros de notificaciones.
- * @summary Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+ * @summary Alertas vivas de cobro pendiente, crédito y salidas en tránsito sin recibir
  */
 export const getAdminAlertas = async ( options?: Parameters<typeof customFetch>[1]): Promise<AdminAlertas> => {
 
@@ -10598,7 +10598,7 @@ export type GetAdminAlertasQueryError = ErrorType<UnauthorizedResponse | Forbidd
 
 
 /**
- * @summary Alertas vivas de cobro pendiente y antigüedad FIFO de crédito
+ * @summary Alertas vivas de cobro pendiente, crédito y salidas en tránsito sin recibir
  */
 
 export function useGetAdminAlertas<TData = Awaited<ReturnType<typeof getAdminAlertas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(

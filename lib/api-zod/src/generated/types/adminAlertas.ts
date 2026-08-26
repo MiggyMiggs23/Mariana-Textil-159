@@ -6,12 +6,15 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminAlertaCredito } from './adminAlertaCredito';
+import type { AdminAlertaSalida } from './adminAlertaSalida';
 import type { AdminAlertaTicket } from './adminAlertaTicket';
 
 export interface AdminAlertas {
   generatedAt: Date;
-  /** Suma de ticketsPendientes y creditos. */
+  /** Suma de ticketsPendientes, creditos y salidasEnTransito. */
   total: number;
   ticketsPendientes: AdminAlertaTicket[];
   creditos: AdminAlertaCredito[];
+  /** Salidas EN_TRANSITO que superan el umbral operativo sin recepción. */
+  salidasEnTransito: AdminAlertaSalida[];
 }
