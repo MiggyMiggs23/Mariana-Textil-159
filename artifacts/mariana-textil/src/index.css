@@ -134,8 +134,16 @@
     size: 100mm 70mm;
     margin: 0;
   }
+  @page entrada-page {
+    size: 216mm 279mm;
+    margin: 0;
+  }
+  @page salida-page {
+    size: 216mm 140mm;
+    margin: 0;
+  }
   @page document {
-    size: 5.5in 8.5in;
+    size: letter portrait;
     margin: 8mm;
   }
   @page label-sheet {
@@ -145,6 +153,23 @@
 
   body.printing-labels {
     background: transparent;
+    margin: 0;
+    padding: 0;
+  }
+
+  body.printing-labels * {
+    visibility: hidden;
+  }
+
+  body.printing-labels .etiquetas-print,
+  body.printing-labels .etiquetas-print * {
+    visibility: visible;
+  }
+
+  body.printing-labels .etiquetas-print {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   body.print-80mm {
@@ -236,15 +261,34 @@
   .label-page {
     page: label;
     page-break-after: always;
+    page-break-inside: avoid;
     width: 100mm;
     height: 70mm;
     margin: 0;
     overflow: hidden;
   }
 
+  .entrada-page-print {
+    page: entrada-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .salida-page-print {
+    page: salida-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .entrada-page-print:last-child,
+  .salida-page-print:last-child {
+    page-break-after: auto;
+  }
+
   .etiquetas-print {
     width: 100mm;
     margin: 0;
+    display: block !important;
   }
 
   .etiquetas-print .label-page:last-child {

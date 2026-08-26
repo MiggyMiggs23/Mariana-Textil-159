@@ -251,6 +251,17 @@ export default function Etiquetas() {
     setFechaDesde(""); setFechaHasta(""); setFolioEntrada("");
   };
 
+  useEffect(() => {
+    if (printMode === 'thermal') {
+      document.body.classList.add('printing-labels');
+    } else {
+      document.body.classList.remove('printing-labels');
+    }
+    return () => {
+      document.body.classList.remove('printing-labels');
+    };
+  }, [printMode]);
+
   return (
     <AppLayout>
       <div className="no-print mx-auto max-w-[1500px] space-y-6">

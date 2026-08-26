@@ -8,7 +8,9 @@
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:campo-escaneo": "tsx --test src/components/campo-escaneo.contract.test.ts"
+    "test:campo-escaneo": "tsx --test src/components/campo-escaneo.contract.test.ts",
+    "test:impresion": "tsx --test src/pages/impresion.contract.test.ts",
+    "test": "tsx --test src/**/*.contract.test.ts"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
