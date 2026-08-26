@@ -2905,16 +2905,13 @@ paths:
                 items: { $ref: "#/components/schemas/SalidaResumen" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-  /salidas/recepcion/{folio}:
+  /salidas/recepcion/{id}:
     get:
       operationId: getSalidaRecepcion
       tags: [salidas]
-      summary: Obtiene por folio una salida en tránsito que el usuario puede recibir
+      summary: Obtiene por id interno una salida en tránsito que el usuario puede recibir
       parameters:
-        - in: path
-          name: folio
-          required: true
-          schema: { type: number }
+        - $ref: "#/components/parameters/SalidaId"
       responses:
         "200":
           description: Resumen de la salida pendiente

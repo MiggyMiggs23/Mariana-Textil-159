@@ -16,6 +16,9 @@ test("Entrada page specifies 216x279mm and has exactly 20 rows for pagination", 
   assert.match(entrada, /RECIBIDO POR/i);
   assert.match(entrada, /REVISADO POR/i);
   assert.match(entrada, /AUTORIZADO POR/i);
+  assert.match(entrada, /QRCodeSVG/);
+  assert.match(entrada, /\/entradas\/\$\{entrada\.id\}\/documento/);
+  assert.match(entrada, /ESCANEAR PARA VER/);
 });
 
 test("Salida page specifies 216x140mm exactly and has correct signatures", async () => {
@@ -28,6 +31,8 @@ test("Salida page specifies 216x140mm exactly and has correct signatures", async
   assert.match(salida, /ENTREGA/);
   assert.match(salida, /TRANSPORTA/);
   assert.match(salida, /RECIBE/);
+  assert.match(salida, /tab=recepcion&id=\$\{salida\.id\}/);
+  assert.match(salida, /ESCANEAR PARA RECIBIR/);
   assert.match(css, /\.salida-page-print:last-child\s*\{[\s\S]*page-break-after:\s*auto;/);
 });
 

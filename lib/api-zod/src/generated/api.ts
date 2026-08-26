@@ -4476,10 +4476,10 @@ export const ListSalidasRecepcionResponse = zod.array(ListSalidasRecepcionRespon
 
 
 /**
- * @summary Obtiene por folio una salida en tránsito que el usuario puede recibir
+ * @summary Obtiene por id interno una salida en tránsito que el usuario puede recibir
  */
 export const GetSalidaRecepcionParams = zod.object({
-  "folio": zod.coerce.number()
+  "id": zod.coerce.number()
 })
 
 export const GetSalidaRecepcionResponse = zod.object({

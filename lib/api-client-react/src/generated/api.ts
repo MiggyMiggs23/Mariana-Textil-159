@@ -9998,20 +9998,20 @@ export function useListSalidasRecepcion<TData = Awaited<ReturnType<typeof listSa
 
 
 
-export const getGetSalidaRecepcionUrl = (folio: number,) => {
+export const getGetSalidaRecepcionUrl = (id: number,) => {
 
 
 
 
-  return `/api/salidas/recepcion/${folio}`
+  return `/api/salidas/recepcion/${id}`
 }
 
 /**
- * @summary Obtiene por folio una salida en tránsito que el usuario puede recibir
+ * @summary Obtiene por id interno una salida en tránsito que el usuario puede recibir
  */
-export const getSalidaRecepcion = async (folio: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+export const getSalidaRecepcion = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
 
-  return customFetch<SalidaDetail>(getGetSalidaRecepcionUrl(folio),
+  return customFetch<SalidaDetail>(getGetSalidaRecepcionUrl(id),
   {
     ...options,
     method: 'GET'
@@ -10024,29 +10024,29 @@ export const getSalidaRecepcion = async (folio: number, options?: Parameters<typ
 
 
 
-export const getGetSalidaRecepcionQueryKey = (folio: number,) => {
+export const getGetSalidaRecepcionQueryKey = (id: number,) => {
     return [
-    `/api/salidas/recepcion/${folio}`
+    `/api/salidas/recepcion/${id}`
     ] as const;
     }
 
 
-export const getGetSalidaRecepcionQueryOptions = <TData = Awaited<ReturnType<typeof getSalidaRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(folio: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetSalidaRecepcionQueryOptions = <TData = Awaited<ReturnType<typeof getSalidaRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSalidaRecepcionQueryKey(folio);
+  const queryKey =  queryOptions?.queryKey ?? getGetSalidaRecepcionQueryKey(id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSalidaRecepcion>>> = ({ signal }) => getSalidaRecepcion(folio, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSalidaRecepcion>>> = ({ signal }) => getSalidaRecepcion(id, { signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: folio !== null && folio !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData> & { queryKey: QueryKey }
 }
 
 export type GetSalidaRecepcionQueryResult = NonNullable<Awaited<ReturnType<typeof getSalidaRecepcion>>>
@@ -10054,15 +10054,15 @@ export type GetSalidaRecepcionQueryError = ErrorType<UnauthorizedResponse | Forb
 
 
 /**
- * @summary Obtiene por folio una salida en tránsito que el usuario puede recibir
+ * @summary Obtiene por id interno una salida en tránsito que el usuario puede recibir
  */
 
 export function useGetSalidaRecepcion<TData = Awaited<ReturnType<typeof getSalidaRecepcion>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(
- folio: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSalidaRecepcion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetSalidaRecepcionQueryOptions(folio,options)
+  const queryOptions = getGetSalidaRecepcionQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

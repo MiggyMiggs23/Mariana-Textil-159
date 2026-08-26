@@ -407,15 +407,15 @@ router.get(
 );
 
 router.get(
-  "/salidas/recepcion/:folio",
+  "/salidas/recepcion/:id",
   requireSession,
   async (req, res, next) => {
     try {
-      const { folio } = GetSalidaRecepcionParams.parse(req.params);
+      const { id } = GetSalidaRecepcionParams.parse(req.params);
       const [header] = await db
         .select()
         .from(salidasTable)
-        .where(eq(salidasTable.folio, folio))
+        .where(eq(salidasTable.id, id))
         .limit(1);
       if (!header) {
         throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");

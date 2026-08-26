@@ -39,7 +39,7 @@ export default function SalidaDocumento() {
   }
 
   const dateObj = new Date(salida.createdAt);
-  const receptionPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&folio=${salida.folio}`;
+  const receptionPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&id=${salida.id}`;
   const receptionUrl = new URL(receptionPath, window.location.origin).toString();
 
   // Pagination logic: max 6 rolls per page for half letter landscape fit
@@ -94,9 +94,9 @@ export default function SalidaDocumento() {
                     size={64}
                     level="M"
                     includeMargin
-                    aria-label={`QR para recibir salida ${salida.folio}`}
+                    aria-label={`QR para recibir salida ${salida.folioFormateado}`}
                   />
-                  <span className="text-[8px] font-bold uppercase">Escanear para recibir</span>
+                  <span className="text-[8px] font-bold uppercase">ESCANEAR PARA RECIBIR</span>
                 </div>
                 <div className="text-right">
                   <div className="text-gray-500 text-xs font-medium">MARIANA TEXTIL S.A. DE C.V.</div>

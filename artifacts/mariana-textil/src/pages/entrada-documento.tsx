@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@workspace/number-format";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function EntradaDocumento() {
   const { id } = useParams();
@@ -30,6 +31,8 @@ export default function EntradaDocumento() {
 
   const createdAt = new Date(entrada.createdAt);
   const totalQty = entrada.lineas.reduce((sum, line) => sum + parseFloat(line.cantidadTotal), 0);
+  const documentPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/entradas/${entrada.id}/documento`;
+  const documentUrl = new URL(documentPath, window.location.origin).toString();
 
   const rowsPerPage = 20;
   const totalPages = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
@@ -59,6 +62,16 @@ export default function EntradaDocumento() {
                 </div>
               </div>
               <div className="flex items-center gap-6">
+                <div className="flex flex-col items-center gap-1">
+                  <QRCodeSVG
+                    value={documentUrl}
+                    size={64}
+                    level="M"
+                    includeMargin
+                    aria-label={`QR para ver entrada ${entrada.folioFormateado}`}
+                  />
+                  <span className="text-[8px] font-bold uppercase">ESCANEAR PARA VER</span>
+                </div>
                 <div className="text-right">
                   <div className="text-gray-500 font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
                   <div className="text-sm font-semibold mt-1">Página {pageIndex + 1} de {totalPages}</div>

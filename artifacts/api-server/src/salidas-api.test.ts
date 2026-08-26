@@ -72,8 +72,15 @@ test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven"
   assert.match(receptionPage, /CampoEscaneo/);
   assert.match(receptionPage, /¿Llegó completo\?/);
   assert.match(receptionPage, /Confirmar recepción de todos los rollos/);
+  assert.match(route, /"\/salidas\/recepcion\/:id"/);
+  assert.match(route, /\.where\(eq\(salidasTable\.id, id\)\)/);
+  assert.match(spec, /\/salidas\/recepcion\/\{id\}:/);
+  assert.match(spec, /Obtiene por id interno una salida/);
   assert.match(documentPage, /QRCodeSVG/);
-  assert.match(documentPage, /tab=recepcion&folio=/);
+  assert.match(documentPage, /tab=recepcion&id=\$\{salida\.id\}/);
+  assert.match(documentPage, /ESCANEAR PARA RECIBIR/);
+  assert.match(receptionPage, /setSalidaId\(salida\.id\)/);
+  assert.match(receptionPage, /salida\.folioFormateado/);
 });
 
 test("Frontend finalizes from Salida Nueva and detail has no second send action", async () => {

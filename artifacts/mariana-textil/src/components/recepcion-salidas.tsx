@@ -19,27 +19,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 
-function folioFromScan(raw: string): number | null {
+function idFromScanUrl(raw: string): number | null {
   const value = raw.trim();
   try {
     const url = new URL(value, window.location.origin);
-    const queryFolio = url.searchParams.get("folio");
-    if (queryFolio) return folioFromScan(queryFolio);
+    const queryId = url.searchParams.get("id");
+    if (queryId && /^\d+$/.test(queryId)) return Number(queryId);
   } catch {
-    // Plain folios are handled below.
+    // Manual folios are resolved against pending departures below.
   }
-  const match = /^(?:[A-Za-z]+[-\s]?)?(\d+)$/.exec(value);
-  return match ? Number(match[1]) : null;
+  return null;
 }
 
 export function RecepcionSalidas() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const initialFolio = folioFromScan(
-    new URLSearchParams(window.location.search).get("folio") ?? "",
-  );
+  const initialId = idFromScanUrl(window.location.href);
   const [scan, setScan] = useState("");
-  const [folio, setFolio] = useState<number | null>(initialFolio);
+  const [salidaId, setSalidaId] = useState<number | null>(initialId);
   const [completa, setCompleta] = useState(true);
   const [nota, setNota] = useState("");
   const pendientes = useListSalidasRecepcion({
@@ -48,10 +45,10 @@ export function RecepcionSalidas() {
       refetchInterval: 30_000,
     },
   });
-  const detalle = useGetSalidaRecepcion(folio ?? 0, {
+  const detalle = useGetSalidaRecepcion(salidaId ?? 0, {
     query: {
-      enabled: folio != null,
-      queryKey: getGetSalidaRecepcionQueryKey(folio ?? 0),
+      enabled: salidaId != null,
+      queryKey: getGetSalidaRecepcionQueryKey(salidaId ?? 0),
       retry: false,
     },
   });
@@ -62,7 +59,7 @@ export function RecepcionSalidas() {
           title: "Salida recibida",
           description: `El folio ${received.folioFormateado} y todos sus rollos ya están en el destino.`,
         });
-        setFolio(null);
+        setSalidaId(null);
         setCompleta(true);
         setNota("");
         await queryClient.invalidateQueries({
@@ -81,19 +78,29 @@ export function RecepcionSalidas() {
   useEffect(() => {
     setCompleta(true);
     setNota("");
-  }, [folio]);
+  }, [salidaId]);
 
   const selectScan = (raw: string) => {
-    const parsed = folioFromScan(raw);
-    if (parsed == null) {
+    const scannedId = idFromScanUrl(raw);
+    if (scannedId != null) {
+      setSalidaId(scannedId);
+      return;
+    }
+    const manualFolio = raw.trim().toLocaleUpperCase();
+    const pending = pendientes.data?.find(
+      (salida) =>
+        salida.folioFormateado.toLocaleUpperCase() === manualFolio ||
+        String(salida.folio) === manualFolio,
+    );
+    if (!pending) {
       toast({
         title: "Código no válido",
-        description: "Escanea el QR de la hoja o escribe únicamente el folio.",
+        description: "Escanea el QR de la hoja o escribe/elige un folio de la lista de salidas pendientes.",
         variant: "destructive",
       });
       return;
     }
-    setFolio(parsed);
+    setSalidaId(pending.id);
   };
 
   return (
@@ -207,7 +214,7 @@ export function RecepcionSalidas() {
             <button
               key={salida.id}
               type="button"
-              onClick={() => setFolio(salida.folio)}
+              onClick={() => setSalidaId(salida.id)}
               className="flex w-full flex-wrap items-center justify-between gap-2 rounded-md border p-3 text-left hover:bg-muted"
             >
               <span className="font-semibold">Folio {salida.folioFormateado}</span>
