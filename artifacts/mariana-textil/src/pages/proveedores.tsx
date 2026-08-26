@@ -75,7 +75,7 @@ export default function Proveedores() {
   const [sortOrder, setSortOrder] = useState<"AZ" | "SALDO">("AZ");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
-  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver');
+  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== "SUPERVISOR";
   const { data: analitica, isLoading: isAnaliticaLoading } = useGetAnaliticaGlobalProveedores({
     query: { enabled: canViewFinanzas, queryKey: getGetAnaliticaGlobalProveedoresQueryKey() }
   });

@@ -34,7 +34,7 @@ const DEFAULT_QUERY_SCOPE: Record<RolUsuario, AlcanceConsulta> = {
   ADMIN: "TODAS",
   TERMINAL: "PROPIA",
   CAJA: "TODAS",
-  INVENTARIOS: "TODAS",
+  SUPERVISOR: "TODAS",
   BODEGA: "PROPIA",
 };
 
@@ -100,7 +100,7 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
   }
   const location = await findRealLocation(parsed.data.ubicacionId);
   const alcanceConsulta =
-    role === "ADMIN"
+    role === "ADMIN" || role === "SUPERVISOR"
       ? "TODAS"
       : ((parsed.data.alcanceConsulta as AlcanceConsulta | undefined) ??
         DEFAULT_QUERY_SCOPE[role]);
@@ -225,7 +225,7 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   if (body.data.activo !== undefined) updates.activo = body.data.activo;
   updates.ubicacionId = finalRole === "ADMIN" ? null : location!.id;
   updates.alcanceConsulta =
-    finalRole === "ADMIN"
+    finalRole === "ADMIN" || finalRole === "SUPERVISOR"
       ? "TODAS"
       : ((body.data.alcanceConsulta as AlcanceConsulta | undefined) ??
         beforeRow.user.alcanceConsulta ??

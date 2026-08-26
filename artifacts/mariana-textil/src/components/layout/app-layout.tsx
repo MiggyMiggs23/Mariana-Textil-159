@@ -101,7 +101,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "CAJA",
     items: [
       { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+      { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
     ]

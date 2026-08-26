@@ -42,8 +42,8 @@ export default function Clientes() {
   const [analyticsMonths, setAnalyticsMonths] = useState("12");
   const [createOpen, setCreateOpen] = useState(false);
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver");
-  const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver");
+  const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") && user?.rol !== "SUPERVISOR";
+  const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver") && user?.rol !== "SUPERVISOR";
   const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
   const clientsQuery = useListClientes({ query: { queryKey: getListClientesQueryKey() } });
   const summaryQuery = useGetClientesResumen({
@@ -87,10 +87,10 @@ export default function Clientes() {
           )}
         </div>
         <Tabs defaultValue="clientes">
-          <TabsList className="grid w-full grid-cols-4 sm:w-[580px]">
+          <TabsList className="flex w-full flex-wrap sm:w-auto">
             <TabsTrigger value="clientes" data-testid="tab-clientes">Clientes</TabsTrigger>
-            <TabsTrigger value="cartera" disabled={!canFinances} data-testid="tab-cartera">Cartera</TabsTrigger>
-            <TabsTrigger value="analisis" disabled={!canFinances} data-testid="tab-analysis">Análisis</TabsTrigger>
+            {canFinances && <TabsTrigger value="cartera" data-testid="tab-cartera">Cartera</TabsTrigger>}
+            {canFinances && <TabsTrigger value="analisis" data-testid="tab-analysis">Análisis</TabsTrigger>}
             {user?.rol === "ADMIN" && <TabsTrigger value="incobrables" data-testid="tab-incobrables">Incobrables</TabsTrigger>}
           </TabsList>
           <TabsContent value="clientes" className="space-y-4">
@@ -166,7 +166,7 @@ export default function Clientes() {
           )}
         </Tabs>
       </div>
-      {canCreate && <CreateClienteDialog open={createOpen} onClose={() => setCreateOpen(false)} />}
+      {canCreate && <CreateClienteDialog open={createOpen} onClose={() => setCreateOpen(false)} canCredit={canCredit} />}
     </AppLayout>
   );
 }
@@ -209,7 +209,7 @@ function duplicateClientId(error: unknown): number | null {
     : null;
 }
 
-function CreateClienteDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+function CreateClienteDialog({ open, onClose, canCredit }: { open: boolean; onClose: () => void; canCredit: boolean }) {
   const [form, setForm] = useState<ClientForm>(emptyClientForm);
   const [existingId, setExistingId] = useState<number | null>(null);
   const create = useCreateCliente();
@@ -309,8 +309,12 @@ function CreateClienteDialog({ open, onClose }: { open: boolean; onClose: () => 
           </div>
 
           <ClientField label="Nombre de contacto" value={form.contactoNombre} onChange={(value) => set("contactoNombre", value)} />
-          <ClientField label="Límite de crédito" value={form.limiteCredito} onChange={(value) => set("limiteCredito", value)} type="number" />
-          <ClientField label={`Días de crédito${form.limiteCredito.trim() ? " *" : ""}`} value={form.diasCredito} onChange={(value) => set("diasCredito", value)} type="number" />
+          {canCredit && (
+            <>
+              <ClientField label="Límite de crédito" value={form.limiteCredito} onChange={(value) => set("limiteCredito", value)} type="number" />
+              <ClientField label={`Días de crédito${form.limiteCredito.trim() ? " *" : ""}`} value={form.diasCredito} onChange={(value) => set("diasCredito", value)} type="number" />
+            </>
+          )}
           <div className="sm:col-span-2">
             <ClientField label="Notas" value={form.notas} onChange={(value) => set("notas", value)} />
           </div>

@@ -142,7 +142,7 @@ function resolveReadScope(
   const assigned = auth.user.ubicacionId;
 
   // ADMIN is always unrestricted; alcanceConsulta never limits this role.
-  if (auth.user.rol === "ADMIN") {
+  if (auth.user.rol === "ADMIN" || auth.user.rol === "SUPERVISOR") {
     return { ubicacionId: requestedUbicacionId, scopeError: null };
   }
 
@@ -182,7 +182,7 @@ function checkOperationalScope(
   auth: AuthContext,
   ubicacionIds: number[],
 ): string | null {
-  if (auth.user.rol === "ADMIN") return null;
+  if (auth.user.rol === "ADMIN" || auth.user.rol === "SUPERVISOR") return null;
 
   const assigned = auth.user.ubicacionId;
   if (assigned == null) {
@@ -338,7 +338,11 @@ inventarioRouter.post(
       }
       // For non-ADMIN, override with their assigned location to be safe even if
       // checkOperationalScope passed (assigned === body.ubicacionId).
-      if (auth.user.rol !== "ADMIN" && auth.user.ubicacionId != null) {
+      if (
+        auth.user.rol !== "ADMIN" &&
+        auth.user.rol !== "SUPERVISOR" &&
+        auth.user.ubicacionId != null
+      ) {
         ubicacionId = auth.user.ubicacionId;
       }
 
@@ -367,6 +371,7 @@ inventarioRouter.post(
         }
         if (
           auth.user.rol !== "BODEGA" &&
+          auth.user.rol !== "SUPERVISOR" &&
           !isValidUnitCost(linea.costoUnitario)
         ) {
           res
@@ -448,10 +453,15 @@ inventarioRouter.post(
           lineas: body.lineas.map((l) => ({
             productoId: l.productoId,
              costoUnitario:
-               auth.user.rol === "BODEGA" ? null : (l.costoUnitario ?? null),
+                auth.user.rol === "BODEGA" ||
+                auth.user.rol === "SUPERVISOR"
+                  ? null
+                  : (l.costoUnitario ?? null),
             cantidades: l.cantidades,
           })),
-           allowPendingCosts: auth.user.rol === "BODEGA",
+            allowPendingCosts:
+              auth.user.rol === "BODEGA" ||
+              auth.user.rol === "SUPERVISOR",
         }),
       );
 

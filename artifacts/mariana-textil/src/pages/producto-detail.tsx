@@ -132,7 +132,7 @@ export default function ProductoDetail() {
         tela: product.tela,
         color: product.color,
         unidad: product.unidad,
-        precioSugerido: product.precioSugerido,
+        precioSugerido: product.precioSugerido ?? "",
         notas: product.notas || "",
         activo: product.activo,
         sku: product.sku,
@@ -142,7 +142,9 @@ export default function ProductoDetail() {
   }, [product]);
 
   const isAdmin = user?.rol === Role.ADMIN;
-  const canViewPurchaseCosts = user != null && user.rol !== Role.TERMINAL;
+  const isSupervisor = user?.rol === Role.SUPERVISOR;
+  const canViewPurchaseCosts = user != null && user.rol !== Role.TERMINAL && !isSupervisor;
+  const canViewPrices = user != null && !isSupervisor;
   const isBlocked = product?.skuBloqueado === true;
 
   const autoSku = generateSKU(formData.tela, formData.color);
@@ -279,19 +281,21 @@ export default function ProductoDetail() {
                   )}
                 </div>
                 
-                <div className="space-y-1">
-                  <Label className="text-muted-foreground">Precio de Lista</Label>
-                  <div className="font-medium text-lg text-emerald-700 h-10 flex items-center justify-between">
-                    {formatNumber(product.precioSugerido, { kind: "money" })}
-                    {isAdmin && !isEditing && (
-                      <Link href={`/precios/${product.id}`}>
-                        <Button variant="outline" size="sm" className="h-7 text-xs ml-4" data-testid="button-go-precios">
-                          Gestionar Precio
-                        </Button>
-                      </Link>
-                    )}
+                {canViewPrices && (
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Precio de Lista</Label>
+                    <div className="font-medium text-lg text-emerald-700 h-10 flex items-center justify-between">
+                      {formatNumber(product.precioSugerido ?? 0, { kind: "money" })}
+                      {isAdmin && !isEditing && (
+                        <Link href={`/precios/${product.id}`}>
+                          <Button variant="outline" size="sm" className="h-7 text-xs ml-4" data-testid="button-go-precios">
+                            Gestionar Precio
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {isEditing && !isBlocked && (
                   <div className="col-span-2 space-y-2 p-4 bg-muted/30 border rounded-lg">
@@ -394,19 +398,19 @@ export default function ProductoDetail() {
                 <div>
                   <div className="text-sm text-muted-foreground">Costo por {product.unidad.toLowerCase()}</div>
                   <div className="text-2xl font-bold text-primary">
-                    {formatNumber(product.comprasResumen.costoPorUnidad, { kind: "money" })}
+                    {formatNumber(product.comprasResumen?.costoPorUnidad ?? 0, { kind: "money" })}
                   </div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Cantidad comprada</div>
                   <div className="text-xl font-semibold">
-                    {formatNumber(product.comprasResumen.totalCantidad, { kind: "quantity" })} {product.unidad}
+                    {formatNumber(product.comprasResumen?.totalCantidad ?? 0, { kind: "quantity" })} {product.unidad}
                   </div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Total comprado</div>
-                  <div className="text-xl font-semibold">{formatNumber(product.comprasResumen.totalCosto, { kind: "money" })}</div>
-                  <div className="text-xs text-muted-foreground">{formatNumber(product.comprasResumen.totalRollos, { kind: "count" })} rollos</div>
+                  <div className="text-xl font-semibold">{formatNumber(product.comprasResumen?.totalCosto ?? 0, { kind: "money" })}</div>
+                  <div className="text-xs text-muted-foreground">{formatNumber(product.comprasResumen?.totalRollos ?? 0, { kind: "count" })} rollos</div>
                 </div>
               </div>
 
@@ -423,7 +427,7 @@ export default function ProductoDetail() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {product.comprasHistorial.length === 0 ? (
+                    {!product.comprasHistorial || product.comprasHistorial.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="h-20 text-center text-muted-foreground">
                           No hay compras registradas.
@@ -441,11 +445,11 @@ export default function ProductoDetail() {
                         </TableCell>
                         <TableCell>{compra.proveedorNombre || "Sin proveedor"}</TableCell>
                         <TableCell className="text-right">
-                           {formatNumber(compra.totalCantidad, { kind: "quantity" })} {product.unidad}
-                           <div className="text-xs text-muted-foreground">{formatNumber(compra.totalRollos, { kind: "count" })} rollos</div>
+                           {formatNumber(compra.totalCantidad ?? 0, { kind: "quantity" })} {product.unidad}
+                           <div className="text-xs text-muted-foreground">{formatNumber(compra.totalRollos ?? 0, { kind: "count" })} rollos</div>
                         </TableCell>
-                         <TableCell className="text-right font-semibold">{formatNumber(compra.costoPorUnidad, { kind: "money" })}</TableCell>
-                         <TableCell className="text-right">{formatNumber(compra.totalCosto, { kind: "money" })}</TableCell>
+                         <TableCell className="text-right font-semibold">{formatNumber(compra.costoPorUnidad ?? 0, { kind: "money" })}</TableCell>
+                         <TableCell className="text-right">{formatNumber(compra.totalCosto ?? 0, { kind: "money" })}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

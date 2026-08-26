@@ -28,7 +28,7 @@ export interface Cliente {
   /** @nullable */
   contactoNombre?: string | null;
   /** @minimum 0 */
-  diasCredito: number;
+  diasCredito?: number;
   createdAt: Date;
   updatedAt: Date;
 }

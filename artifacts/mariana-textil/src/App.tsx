@@ -215,7 +215,7 @@ function Router() {
         <Route path="/reportes" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
         <Route path="/reportes/:tab" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
 
-        <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} />} />
+        <Route path="/tickets/:id" component={() => <ProtectedRoute component={TicketDetail} allowedModule={Modules.COBROS_PAGOS} />} />
         
         <Route path="/proveedores" component={() => <ProtectedRoute component={Proveedores} allowedModule={Modules.PROVEEDORES} />} />
         <Route path="/proveedores/:id" component={() => <ProtectedRoute component={ProveedorDetail} allowedModule={Modules.PROVEEDORES} />} />

@@ -80,7 +80,7 @@ export default function Entradas() {
   const queryClient = useQueryClient();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  const showCost = user?.rol === Role.ADMIN || user?.rol === Role.INVENTARIOS;
+  const showCost = user?.rol === Role.ADMIN;
 
   const {
     data: catalogos,

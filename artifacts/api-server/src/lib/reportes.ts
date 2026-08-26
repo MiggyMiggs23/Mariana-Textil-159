@@ -23,6 +23,21 @@ const TIME_ZONE = "America/Mexico_City";
 const MIN_REPORT_DATE = new Date("1900-01-01T00:00:00.000Z");
 const MAX_REPORT_DATE = new Date("2999-12-31T23:59:59.999Z");
 const MAX_REPORT_RANGE_MS = 100 * 366 * 24 * 60 * 60 * 1000;
+const ECONOMIC_TEXT = /costo|margen|utilidad|ganancia|venta|importe|precio|capital|ahorro|saldo|cobrar|valor|pago|credito|balance|moneda|facturado/i;
+
+/**
+ * Non-economic roles may submit the full report query schema, but financial
+ * controls are not part of their report domain. Remove them before builders
+ * see the input, so they cannot alter an operational export or be serialized
+ * in its filter metadata.
+ */
+export function omitEconomicReportFilters(
+  input: Record<string, unknown>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(input).filter(([key]) => !ECONOMIC_TEXT.test(key)),
+  );
+}
 
 export function parseReportBooleanQuery(value: unknown): boolean | undefined {
   if (value === undefined) return undefined;
@@ -105,13 +120,27 @@ export function redactEconomic(report: Report): Report {
 
     const clean: Record<string, unknown> = {};
     for (const [key, child] of Object.entries(source)) {
-      if (hidden.has(key) || /costo|margen|utilidad|venta|importe|precio|capital|ahorro|saldo|cobrar|valor/i.test(key)) {
+      if (hidden.has(key) || ECONOMIC_TEXT.test(key)) {
         continue;
       }
       if (key === "columns") {
-        clean[key] = columns.filter((item) => item.economic !== true).map((item) => scrub(item, hidden));
+        clean[key] = columns
+          .filter(
+            (item) =>
+              item.economic !== true &&
+              !ECONOMIC_TEXT.test(String(item.key ?? "")) &&
+              !ECONOMIC_TEXT.test(String(item.label ?? "")),
+          )
+          .map((item) => scrub(item, hidden));
       } else if (key === "series") {
-        clean[key] = series.filter((item) => item.economic !== true).map((item) => scrub(item, hidden));
+        clean[key] = series
+          .filter(
+            (item) =>
+              item.economic !== true &&
+              !ECONOMIC_TEXT.test(String(item.key ?? "")) &&
+              !ECONOMIC_TEXT.test(String(item.label ?? "")),
+          )
+          .map((item) => scrub(item, hidden));
       } else {
         clean[key] = scrub(child, hidden);
       }
@@ -128,14 +157,15 @@ export async function buildReport(
   locations: number[] | undefined,
   economic: boolean,
 ): Promise<Report> {
-  const range = reportRange(input);
-  const context = { input, locations, range };
+  const reportInput = economic ? input : omitEconomicReportFilters(input);
+  const range = reportRange(reportInput);
+  const context = { input: reportInput, locations, range };
   const content = section === "ventas" || section === "utilidad"
     ? await buildSalesReport(section, context)
     : section === "inventario" || section === "mapas-calor" || section === "color"
       ? await buildInventoryReport(section, context)
       : await buildCommercialReport(section, context);
-  const activeFilters = Object.entries(input)
+  const activeFilters = Object.entries(reportInput)
     .filter(([, value]) => value !== undefined && value !== "")
     .map(([key, value]) => `${key}=${String(value)}`);
 
@@ -157,7 +187,7 @@ export async function buildReport(
   return economic ? report : redactEconomic(report);
 }
 
-export async function getCatalogs(locations?: number[]) {
+export async function getCatalogs(locations?: number[], economic = true) {
   const scope = locations?.length ? " WHERE ubicacion_id=ANY($1::int[])" : "";
   const values = locations?.length ? [locations] : [];
   const [sites, products, users, clients, suppliers, fabrics, colors, units] = await Promise.all([
@@ -205,6 +235,8 @@ export async function getCatalogs(locations?: number[]) {
     users: users.rows.map((row) => ({ id: Number(row.id), label: row.label })),
     clients: clients.rows.map((row) => ({ id: Number(row.id), label: row.label })),
     suppliers: suppliers.rows.map((row) => ({ id: Number(row.id), label: row.label })),
-    paymentMethods: ["EFECTIVO", "TRANSFERENCIA", "CREDITO"],
+    // Payment methods are financial report controls, not operational catalog
+    // data. Keep the response shape stable while withholding their labels.
+    paymentMethods: economic ? ["EFECTIVO", "TRANSFERENCIA", "CREDITO"] : [],
   };
 }

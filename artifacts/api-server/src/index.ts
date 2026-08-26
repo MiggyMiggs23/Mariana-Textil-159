@@ -6,6 +6,7 @@ import {
   ensureTicketIvaSchema,
   ensureAdminAnalyticsSchema,
   ensureEtiquetasSchema,
+  ensureSupervisorRole,
   pool,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
@@ -26,6 +27,8 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 async function startServer() {
+  await ensureSupervisorRole(pool);
+  logger.info("Rol SUPERVISOR verificado");
   await ensureClientesSchema(pool);
   logger.info("Esquema de clientes verificado");
   await ensureTicketIvaSchema(pool);

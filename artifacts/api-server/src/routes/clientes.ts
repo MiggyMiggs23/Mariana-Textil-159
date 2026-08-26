@@ -171,6 +171,17 @@ router.post(
       const direccionParticularInput =
         direccionParticular !== undefined ? direccionParticular : direccion;
 
+      if (
+        req.auth!.user.rol === "SUPERVISOR" &&
+        (diasCredito !== undefined || limiteCredito !== undefined)
+      ) {
+        res.status(403).json({
+          error:
+            "El rol SUPERVISOR no puede capturar términos financieros del cliente.",
+        });
+        return;
+      }
+
       if (typeof nombre !== "string" || nombre.trim().length < 1) {
         res.status(400).json({ error: "El nombre es obligatorio." });
         return;

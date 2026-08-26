@@ -152,10 +152,10 @@ before(async () => {
 
   admin = await actor("ADMIN", ownSite, "TODAS");
   bodega = await actor("BODEGA", ownSite, "PROPIA");
-  inventarios = await actor("INVENTARIOS", ownSite, "PROPIA");
+  inventarios = await actor("SUPERVISOR", ownSite, "TODAS");
   terminal = await actor("TERMINAL", ownSite, "PROPIA");
   caja = await actor("CAJA", ownSite, "PROPIA");
-  nonAdminAuthorizer = await actor("INVENTARIOS", ownSite, "PROPIA");
+  nonAdminAuthorizer = await actor("SUPERVISOR", ownSite, "TODAS");
   await db.insert(permisosUsuarioTable).values([
     {
       usuarioId: bodega.id,
@@ -395,7 +395,7 @@ test("Etiquetas HTTP + DB: casos obligatorios 1-24", async (t) => {
       .where(sql`${reimpresionesEtiquetaTable.rolloId}=${ownRolls[2]!.id}`);
     assert.equal(rows.at(-1)?.autorizadoPor, admin.id);
   });
-  await t.test("14 API directa INVENTARIOS sin credenciales devuelve 403", async () => {
+  await t.test("14 API directa SUPERVISOR sin credenciales devuelve 403", async () => {
     const result = await api("POST", "/etiquetas/reimpresiones", inventarios, {
       rolloIds: [ownRolls[3]!.id],
       motivo: validReason,

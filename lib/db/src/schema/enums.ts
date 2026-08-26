@@ -11,7 +11,7 @@ export const rolUsuarioEnum = pgEnum("rol_usuario", [
   "ADMIN",
   "TERMINAL",
   "CAJA",
-  "INVENTARIOS",
+  "SUPERVISOR",
   "BODEGA",
 ]);
 

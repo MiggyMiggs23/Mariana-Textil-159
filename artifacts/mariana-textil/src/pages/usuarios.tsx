@@ -272,7 +272,17 @@ export default function Usuarios() {
                 <Select
                   value={formData.rol}
                   disabled={!!editingUser && editingUser.id === currentUser?.id}
-                  onValueChange={(val) => setFormData({...formData, rol: val as Role})}
+                  onValueChange={(val) => {
+                    const rol = val as Role;
+                    setFormData({
+                      ...formData,
+                      rol,
+                      alcanceConsulta:
+                        rol === Role.ADMIN || rol === Role.SUPERVISOR
+                          ? "TODAS"
+                          : formData.alcanceConsulta,
+                    });
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona un rol" />
@@ -281,14 +291,21 @@ export default function Usuarios() {
                     {isAdmin && <SelectItem value={Role.ADMIN}>Administrador</SelectItem>}
                     <SelectItem value={Role.TERMINAL}>Terminal</SelectItem>
                     <SelectItem value={Role.CAJA}>Caja</SelectItem>
-                    <SelectItem value={Role.INVENTARIOS}>Inventarios</SelectItem>
+                    <SelectItem value={Role.SUPERVISOR}>Supervisor</SelectItem>
                     <SelectItem value={Role.BODEGA}>Bodega</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>Alcance de Consulta</Label>
-                <Select value={formData.alcanceConsulta} onValueChange={(val) => setFormData({...formData, alcanceConsulta: val as "PROPIA" | "TODAS"})}>
+                <Select
+                  value={formData.alcanceConsulta}
+                  disabled={
+                    formData.rol === Role.ADMIN ||
+                    formData.rol === Role.SUPERVISOR
+                  }
+                  onValueChange={(val) => setFormData({...formData, alcanceConsulta: val as "PROPIA" | "TODAS"})}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="PROPIA" />
                   </SelectTrigger>

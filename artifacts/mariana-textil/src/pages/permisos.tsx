@@ -162,7 +162,7 @@ export default function Permisos() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={Role.CAJA}>Caja</SelectItem>
-                      <SelectItem value={Role.INVENTARIOS}>Inventarios</SelectItem>
+                      <SelectItem value={Role.SUPERVISOR}>Supervisor</SelectItem>
                       <SelectItem value={Role.BODEGA}>Bodega</SelectItem>
                     </SelectContent>
                   </Select>

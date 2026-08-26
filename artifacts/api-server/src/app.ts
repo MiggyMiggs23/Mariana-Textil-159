@@ -5,6 +5,7 @@ import pinoHttp from "pino-http";
 import { ZodError } from "zod";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { omitSupervisorSensitiveFields } from "./lib/sensitive-data";
 
 const app: Express = express();
 
@@ -31,6 +32,17 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  const json = res.json.bind(res);
+  res.json = ((body: unknown) =>
+    json(
+      omitSupervisorSensitiveFields(
+        body,
+        req.auth?.user.rol === "SUPERVISOR",
+      ),
+    )) as typeof res.json;
+  next();
+});
 
 app.use("/api", router);
 

@@ -1001,7 +1001,7 @@ export const Role = {
   ADMIN: 'ADMIN',
   TERMINAL: 'TERMINAL',
   CAJA: 'CAJA',
-  INVENTARIOS: 'INVENTARIOS',
+  SUPERVISOR: 'SUPERVISOR',
   BODEGA: 'BODEGA',
 } as const;
 
@@ -1153,7 +1153,7 @@ export interface Cliente {
   /** @nullable */
   contactoNombre?: string | null;
   /** @minimum 0 */
-  diasCredito: number;
+  diasCredito?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -1770,7 +1770,7 @@ export interface Producto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  precioSugerido?: string;
   /** @nullable */
   notas: string | null;
   activo: boolean;
@@ -1786,7 +1786,7 @@ export interface ProductoDetail {
   tela: string;
   color: string;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  precioSugerido?: string;
   /** @nullable */
   notas: string | null;
   activo: boolean;
@@ -1795,8 +1795,8 @@ export interface ProductoDetail {
   skuBloqueado: boolean;
   unidadBloqueada: boolean;
   inventarioPorUbicacion: ProductoInventarioUbicacion[];
-  comprasResumen: ProductoComprasResumen;
-  comprasHistorial: ProductoCompraHistorial[];
+  comprasResumen?: ProductoComprasResumen;
+  comprasHistorial?: ProductoCompraHistorial[];
   createdAt: string;
   updatedAt: string;
 }
@@ -2036,9 +2036,9 @@ export interface RolloSummary {
   cantidadInicial: string;
   cantidadActual: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
   /** @nullable */
   notas?: string | null;
   createdAt: string;
@@ -2091,9 +2091,9 @@ export interface RolloDetail {
   cantidadInicial: string;
   cantidadActual: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
   /** @nullable */
   notas?: string | null;
   historial: MovimientoRow[];
@@ -2331,9 +2331,9 @@ export interface EntradaRollo {
   productoId: number;
   cantidadInicial: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
 }
 
 export interface EntradaLinea {
@@ -2343,11 +2343,11 @@ export interface EntradaLinea {
   colorProducto: string;
   unidadProducto: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   rollosCount: number;
   cantidadTotal: string;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
 }
 
 export interface EntradaDetail {
@@ -2366,7 +2366,7 @@ export interface EntradaDetail {
   observaciones: string | null;
   totalRollos: number;
   /** @nullable */
-  totalCosto: string | null;
+  totalCosto?: string | null;
   uuidCliente: string;
   createdAt: string;
   lineas: EntradaLinea[];
@@ -2487,7 +2487,7 @@ export interface EntradaSummary {
   fecha: string;
   totalRollos: number;
   /** @nullable */
-  totalCosto: string | null;
+  totalCosto?: string | null;
   createdAt: string;
 }
 

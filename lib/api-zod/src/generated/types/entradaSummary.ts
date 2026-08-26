@@ -20,6 +20,6 @@ export interface EntradaSummary {
   fecha: Date;
   totalRollos: number;
   /** @nullable */
-  totalCosto: string | null;
+  totalCosto?: string | null;
   createdAt: Date;
 }

@@ -90,9 +90,9 @@ export default function ClienteDetail() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver");
-  const canPrices = hasPermission(user, Modules.CLIENTES_PRECIOS, "ver");
-  const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver");
+  const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver") && user?.rol !== "SUPERVISOR";
+  const canPrices = hasPermission(user, Modules.CLIENTES_PRECIOS, "ver") && user?.rol !== "SUPERVISOR";
+  const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") && user?.rol !== "SUPERVISOR";
   const canCreatePayment = hasPermission(user, Modules.CLIENTES_FINANZAS, "crear");
   const canAdjust = hasPermission(user, Modules.CLIENTES_FINANZAS, "autorizar");
   const canEditCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "editar");

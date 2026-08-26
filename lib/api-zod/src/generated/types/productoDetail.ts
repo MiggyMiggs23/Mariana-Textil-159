@@ -16,7 +16,7 @@ export interface ProductoDetail {
   tela: string;
   color: string;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  precioSugerido?: string;
   /** @nullable */
   notas: string | null;
   activo: boolean;
@@ -25,8 +25,8 @@ export interface ProductoDetail {
   skuBloqueado: boolean;
   unidadBloqueada: boolean;
   inventarioPorUbicacion: ProductoInventarioUbicacion[];
-  comprasResumen: ProductoComprasResumen;
-  comprasHistorial: ProductoCompraHistorial[];
+  comprasResumen?: ProductoComprasResumen;
+  comprasHistorial?: ProductoCompraHistorial[];
   createdAt: Date;
   updatedAt: Date;
 }

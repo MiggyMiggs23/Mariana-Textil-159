@@ -83,7 +83,7 @@ export async function ensureEtiquetasSchema(pool: Pool): Promise<void> {
       INSERT INTO permisos_rol
         (rol, modulo, puede_ver, puede_crear, puede_editar, puede_autorizar)
       VALUES
-        ('INVENTARIOS', 'etiquetas', true, true, false, false),
+        ('SUPERVISOR', 'etiquetas', true, true, false, false),
         ('BODEGA', 'etiquetas', true, true, false, false),
         ('TERMINAL', 'etiquetas', false, false, false, false),
         ('CAJA', 'etiquetas', false, false, false, false)

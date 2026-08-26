@@ -15,7 +15,11 @@ router.use("/reportes", requireSession, requierePermiso("reportes", "ver"));
 
 function scopedLocations(req: Parameters<IRouter["get"]>[1] extends (...args: infer A) => unknown ? A[0] : never): number[] | undefined {
   const user = req.auth!.user;
-  if (user.rol === "ADMIN" || user.alcanceConsulta === "TODAS") return undefined;
+  if (
+    user.rol === "ADMIN" ||
+    user.rol === "SUPERVISOR" ||
+    user.alcanceConsulta === "TODAS"
+  ) return undefined;
   if (user.ubicacionId == null) throw new ReportInputError("El usuario no tiene una ubicación asignada.");
   return [user.ubicacionId];
 }
@@ -49,7 +53,10 @@ function error(error: unknown, res: any) {
 router.get("/reportes/catalogos", async (req, res, next): Promise<void> => {
   const started = performance.now();
   try {
-    const catalogs = await getCatalogs(scopedLocations(req));
+    const catalogs = await getCatalogs(
+      scopedLocations(req),
+      req.auth!.user.rol === "ADMIN",
+    );
     res.setHeader("Server-Timing", `reportes;dur=${(performance.now() - started).toFixed(1)}`);
     res.json(GetReportesCatalogosResponse.parse(catalogs));
   }

@@ -4408,7 +4408,7 @@ components:
           type: string
     Role:
       type: string
-      enum: [ADMIN, TERMINAL, CAJA, INVENTARIOS, BODEGA]
+      enum: [ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA]
     LocationType:
       type: string
       enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]
@@ -4529,7 +4529,7 @@ components:
         $ref: "#/components/schemas/ModulePermission"
     Cliente:
       type: object
-      required: [id, nombre, activo, esSistema, diasCredito, createdAt, updatedAt]
+      required: [id, nombre, activo, esSistema, createdAt, updatedAt]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -5054,7 +5054,6 @@ components:
           tela,
           color,
           unidad,
-          precioSugerido,
           notas,
           activo,
           rollos,
@@ -5086,7 +5085,6 @@ components:
           tela,
           color,
           unidad,
-          precioSugerido,
           notas,
           activo,
           rollos,
@@ -5094,8 +5092,6 @@ components:
           skuBloqueado,
           unidadBloqueada,
           inventarioPorUbicacion,
-          comprasResumen,
-          comprasHistorial,
           createdAt,
           updatedAt,
         ]
@@ -5356,8 +5352,6 @@ components:
           estado,
           cantidadInicial,
           cantidadActual,
-          costoUnitario,
-          costoTotal,
           createdAt,
           updatedAt,
         ]
@@ -5428,8 +5422,6 @@ components:
           estado,
           cantidadInicial,
           cantidadActual,
-          costoUnitario,
-          costoTotal,
           historial,
           createdAt,
           updatedAt,
@@ -5714,7 +5706,7 @@ components:
     EntradaRollo:
       type: object
       required:
-        [id, serie, productoId, cantidadInicial, costoUnitario, costoTotal]
+        [id, serie, productoId, cantidadInicial]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -5731,10 +5723,8 @@ components:
           telaProducto,
           colorProducto,
           unidadProducto,
-          costoUnitario,
           rollosCount,
           cantidadTotal,
-          costoTotal,
         ]
       properties:
         productoId: { type: number }
@@ -5761,7 +5751,6 @@ components:
           fecha,
           observaciones,
           totalRollos,
-          totalCosto,
           uuidCliente,
           createdAt,
           lineas,
@@ -5922,7 +5911,6 @@ components:
           nombreUsuario,
           fecha,
           totalRollos,
-          totalCosto,
           createdAt,
         ]
       properties:

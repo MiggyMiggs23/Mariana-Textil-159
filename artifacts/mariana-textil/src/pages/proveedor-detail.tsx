@@ -129,7 +129,7 @@ export default function ProveedorDetail() {
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'editar');
   const canToggleActive = user?.rol === Role.ADMIN; // Admins only for active status? Or keep based on rule
   const isAdmin = user?.rol === Role.ADMIN;
-  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver');
+  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== "SUPERVISOR";
 
   const handleSave = () => {
     if (!proveedor) return;

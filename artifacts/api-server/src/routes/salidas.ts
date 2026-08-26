@@ -79,7 +79,11 @@ function canRead(auth: AuthContext, origenId: number, destinoId: number): boolea
   if (auth.user.rol === "CAJA") {
     return auth.user.ubicacionId != null && auth.user.ubicacionId === destinoId;
   }
-  if (auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS") return true;
+  if (
+    auth.user.rol === "ADMIN" ||
+    auth.user.rol === "SUPERVISOR" ||
+    auth.user.alcanceConsulta === "TODAS"
+  ) return true;
   return auth.user.ubicacionId === origenId || auth.user.ubicacionId === destinoId;
 }
 
@@ -88,7 +92,11 @@ function rejectCajaMutation(auth: AuthContext): boolean {
 }
 
 function canOperate(auth: AuthContext, ubicacionId: number): boolean {
-  return auth.user.rol === "ADMIN" || auth.user.ubicacionId === ubicacionId;
+  return (
+    auth.user.rol === "ADMIN" ||
+    auth.user.rol === "SUPERVISOR" ||
+    auth.user.ubicacionId === ubicacionId
+  );
 }
 
 async function requireSalidaAccess(
@@ -105,7 +113,8 @@ async function requireSalidaAccess(
         ? canOperate(auth, salida.origenId)
         : stage === "destination"
           ? canOperate(auth, salida.destinoId)
-          : auth.user.rol === "ADMIN" ||
+           : auth.user.rol === "ADMIN" ||
+             auth.user.rol === "SUPERVISOR" ||
             auth.user.ubicacionId === salida.origenId ||
             auth.user.ubicacionId === salida.destinoId;
   if (!allowed) {
@@ -164,12 +173,18 @@ router.get(
         return;
       }
       const auth = req.auth!;
-      if (auth.user.rol !== "ADMIN" && auth.user.ubicacionId == null) {
+      if (
+        auth.user.rol !== "ADMIN" &&
+        auth.user.rol !== "SUPERVISOR" &&
+        auth.user.ubicacionId == null
+      ) {
         res.status(403).json({ error: "No tienes una ubicación asignada." });
         return;
       }
       const visibleUbicacionId =
-        auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS"
+        auth.user.rol === "ADMIN" ||
+        auth.user.rol === "SUPERVISOR" ||
+        auth.user.alcanceConsulta === "TODAS"
           ? undefined
           : auth.user.ubicacionId;
       if (visibleUbicacionId === null) {
@@ -217,7 +232,7 @@ router.post(
         return;
       }
       let origenId = body.origenId;
-      if (auth.user.rol !== "ADMIN") {
+      if (auth.user.rol !== "ADMIN" && auth.user.rol !== "SUPERVISOR") {
         if (auth.user.ubicacionId == null) {
           res.status(403).json({ error: "No tienes una ubicación asignada." });
           return;
@@ -257,9 +272,16 @@ router.get(
         fechaHasta: typeof raw.fechaHasta === "string" ? new Date(raw.fechaHasta) : undefined,
       });
       const auth = req.auth!;
-      const visibleUbicacionId = auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS"
+      const visibleUbicacionId =
+        auth.user.rol === "ADMIN" ||
+        auth.user.rol === "SUPERVISOR" ||
+        auth.user.alcanceConsulta === "TODAS"
         ? undefined : auth.user.ubicacionId;
-      if (visibleUbicacionId == null && auth.user.rol !== "ADMIN") throw new InventarioError("No tienes una ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
+      if (
+        visibleUbicacionId == null &&
+        auth.user.rol !== "ADMIN" &&
+        auth.user.rol !== "SUPERVISOR"
+      ) throw new InventarioError("No tienes una ubicación asignada.", "SALIDA_LOCATION_FORBIDDEN");
       const estados = query.estado ? [query.estado] : undefined;
       const result = await listarSalidas({
         estados, origenId: query.origenId,

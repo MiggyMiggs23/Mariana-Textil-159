@@ -16,6 +16,12 @@ import {
   permisosUsuarioTable,
   type RolUsuario,
 } from "@workspace/db";
+import {
+  SUPERVISOR_PERMISSION_CEILING,
+  supervisorAllows,
+} from "./supervisor-policy";
+
+export { SUPERVISOR_PERMISSION_CEILING, supervisorAllows };
 
 export type AccionPermiso = "ver" | "crear" | "editar" | "autorizar";
 
@@ -70,6 +76,26 @@ const FULL_ACCESS = {
   puedeEditar: true,
   puedeAutorizar: true,
 } as const;
+
+/**
+ * SUPERVISOR is a deliberately non-financial, operational role.  These are
+ * ceilings, not defaults: database rows may further restrict access, but can
+ * never broaden it.  Keeping the ceiling here makes user overrides unable to
+ * turn a supervisor into a cashier or administrator.
+ */
+function applySupervisorCeiling(
+  permission: ModulePermission,
+): ModulePermission {
+  const actions = SUPERVISOR_PERMISSION_CEILING[permission.modulo as ModuloId];
+  return {
+    modulo: permission.modulo,
+    puedeVer: permission.puedeVer && actions?.has("ver") === true,
+    puedeCrear: permission.puedeCrear && actions?.has("crear") === true,
+    puedeEditar: permission.puedeEditar && actions?.has("editar") === true,
+    puedeAutorizar:
+      permission.puedeAutorizar && actions?.has("autorizar") === true,
+  };
+}
 
 /**
  * Resolve the effective permission for a single (userId, rol, modulo).
@@ -132,13 +158,16 @@ export async function resolvePermiso(
       ? userRow.puedeAutorizar
       : (rolRow?.puedeAutorizar ?? false);
 
-  return {
+  const permission = {
     modulo,
     puedeVer,
     puedeCrear,
     puedeEditar,
     puedeAutorizar,
   };
+  return rol === "SUPERVISOR"
+    ? applySupervisorCeiling(permission)
+    : permission;
 }
 
 /**
@@ -197,13 +226,17 @@ export async function buildPermissionMatrix(
         ? userRow.puedeAutorizar
         : (rolRow?.puedeAutorizar ?? false);
 
-    matrix[modulo] = {
+    const permission = {
       modulo,
       puedeVer,
       puedeCrear,
       puedeEditar,
       puedeAutorizar,
     };
+    matrix[modulo] =
+      rol === "SUPERVISOR"
+        ? applySupervisorCeiling(permission)
+        : permission;
   }
 
   return matrix;

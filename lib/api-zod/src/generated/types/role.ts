@@ -13,6 +13,6 @@ export const Role = {
   ADMIN: 'ADMIN',
   TERMINAL: 'TERMINAL',
   CAJA: 'CAJA',
-  INVENTARIOS: 'INVENTARIOS',
+  SUPERVISOR: 'SUPERVISOR',
   BODEGA: 'BODEGA',
 } as const;

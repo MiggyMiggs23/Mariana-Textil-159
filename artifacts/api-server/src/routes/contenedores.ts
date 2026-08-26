@@ -236,9 +236,10 @@ router.get(
         req.query,
       );
       const user = req.auth!.user;
-      const siteId =
-        user.rol === "ADMIN" ? query.ubicacionId : user.ubicacionId;
-      if (siteId == null || (user.rol !== "ADMIN" && siteId !== query.ubicacionId)) {
+      const unrestricted =
+        user.rol === "ADMIN" || user.rol === "SUPERVISOR";
+      const siteId = unrestricted ? query.ubicacionId : user.ubicacionId;
+      if (siteId == null || (!unrestricted && siteId !== query.ubicacionId)) {
         res.status(403).json({ error: "Sitio fuera de tu alcance." });
         return;
       }

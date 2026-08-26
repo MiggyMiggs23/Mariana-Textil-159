@@ -41,7 +41,7 @@ test("9 respuesta conserva serie y agrega REIMPRESA", () => {
   assert.match(route, /marca: "REIMPRESA"/);
 });
 test("10 BODEGA está entre los únicos roles autorizados", () =>
-  assert.match(route, /\["ADMIN", "BODEGA", "INVENTARIOS"\]/));
+  assert.match(route, /\["ADMIN", "BODEGA", "SUPERVISOR"\]/));
 test("11 credenciales incorrectas producen 403", () =>
   assert.match(route, /Credenciales inválidas[\s\S]*status\(403\)/));
 test("12 el autorizador debe tener rol ADMIN", () =>

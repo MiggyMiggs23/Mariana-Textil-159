@@ -61,7 +61,7 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
 let adminUserId = 0;
 let terminalUserId = 0;
 let cajaUserId = 0;
-let inventariosUserId = 0;
+let supervisorUserId = 0;
 let bodegaUserId = 0;
 
 // Find a location for non-admin users
@@ -118,15 +118,15 @@ createdUserIds.push(cajaUserId);
 const [inv] = await db
   .insert(usuariosTable)
   .values({
-    nombre: "Test Inventarios Permisos",
+    nombre: "Test Supervisor Permisos",
     usuario: `test_inv_perms_${Date.now()}`,
     passwordHash: "hash",
-    rol: "INVENTARIOS" as RolUsuario,
+    rol: "SUPERVISOR" as RolUsuario,
     ubicacionId: tienda.id,
   })
   .returning({ id: usuariosTable.id });
-inventariosUserId = inv.id;
-createdUserIds.push(inventariosUserId);
+supervisorUserId = inv.id;
+createdUserIds.push(supervisorUserId);
 
 const [bodega] = await db
   .insert(usuariosTable)
@@ -238,6 +238,33 @@ await test("P-06B: TERMINAL conserva la matriz operativa configurada", async () 
   }
 });
 
+await test("P-06C: SUPERVISOR conserva exactamente sus permisos base", async () => {
+  const matrix = await buildPermissionMatrix(supervisorUserId, "SUPERVISOR");
+  const expected: Record<string, [boolean, boolean, boolean]> = {
+    dashboard: [true, false, false],
+    entradas: [true, true, true],
+    salidas: [true, true, true],
+    movimientos: [true, false, false],
+    etiquetas: [true, true, false],
+    inventario: [true, false, false],
+    productos: [true, false, false],
+    ajustes: [true, true, false],
+    clientes: [true, false, false],
+    proveedores: [true, false, false],
+    contenedores: [true, true, true],
+    reportes: [true, false, false],
+  };
+
+  for (const modulo of MODULOS) {
+    const permission = matrix[modulo];
+    const [ver, crear, editar] = expected[modulo] ?? [false, false, false];
+    assert.equal(permission.puedeVer, ver, `${modulo}.ver`);
+    assert.equal(permission.puedeCrear, crear, `${modulo}.crear`);
+    assert.equal(permission.puedeEditar, editar, `${modulo}.editar`);
+    assert.equal(permission.puedeAutorizar, false, `${modulo}.autorizar`);
+  }
+});
+
 await test("P-07: módulo sin fila en ninguna tabla → denegar (null)", async () => {
   // Use a non-existent module name
   const p = await resolvePermiso(cajaUserId, "CAJA", "modulo_inexistente_xyz");
@@ -272,7 +299,7 @@ await test("P-09: null override means inherit from role", async () => {
   const [override] = await db
     .insert(permisosUsuarioTable)
     .values({
-      usuarioId: inventariosUserId,
+      usuarioId: supervisorUserId,
       modulo: "clientes",
       puedeVer: null,
       puedeCrear: null,
@@ -282,10 +309,10 @@ await test("P-09: null override means inherit from role", async () => {
     .returning({ id: permisosUsuarioTable.id });
   createdPermisosUsuarioIds.push(override.id);
 
-  // INVENTARIOS role has puedeVer=false for clientes
-  const p = await resolvePermiso(inventariosUserId, "INVENTARIOS", "clientes");
+  // SUPERVISOR role can view clientes by default
+  const p = await resolvePermiso(supervisorUserId, "SUPERVISOR", "clientes");
   assert.ok(p);
-  assert.equal(p.puedeVer, false, "Null override should inherit role value");
+  assert.equal(p.puedeVer, true, "Null override should inherit role value");
 });
 
 await test("P-10: ADMIN cannot be configured in permisos_rol", async () => {
@@ -446,6 +473,7 @@ await test("P-22: BODEGA has exactly the operational baseline including etiqueta
     movimientos: { ver: true, crear: false, editar: false },
     ajustes: { ver: true, crear: true, editar: false },
     etiquetas: { ver: true, crear: true, editar: false },
+    contenedores: { ver: true, crear: false, editar: false },
   };
   for (const modulo of MODULOS) {
     const permission = matrix[modulo];
@@ -455,7 +483,7 @@ await test("P-22: BODEGA has exactly the operational baseline including etiqueta
     assert.equal(permission.puedeEditar, wanted.editar, `${modulo}.editar`);
     assert.equal(permission.puedeAutorizar, false, `${modulo}.autorizar`);
   }
-  for (const modulo of ["productos", "proveedores", "contenedores", "reportes"]) {
+  for (const modulo of ["productos", "proveedores", "reportes"]) {
     assert.equal(matrix[modulo].puedeVer, false, `${modulo} must be revoked`);
   }
 });

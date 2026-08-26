@@ -194,7 +194,7 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
     const contView: [boolean, boolean, boolean, boolean] = [true, false, false, false];
     const denied: [boolean, boolean, boolean, boolean] = [false, false, false, false];
     admin = await actor("ADMIN", ownSite, {});
-    inventarios = await actor("INVENTARIOS", ownSite, {
+    inventarios = await actor("SUPERVISOR", ownSite, {
       contenedores: contEdit,
       entradas: [true, true, false, false],
     });
@@ -280,7 +280,7 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
       assert.equal((await api("POST", "/contenedores", admin, invalid)).status, 400);
     });
 
-    await t.test("INVENTARIOS creates and edits but cannot cancel", async () => {
+    await t.test("SUPERVISOR creates and edits but cannot cancel", async () => {
       const made = await api("POST", "/contenedores", inventarios,
         containerBody(providerId, ownSite, [{ productoId: meterExpected, cantidadEsperada: "3" }], `${tag}-inv`));
       assert.equal(made.status, 201);

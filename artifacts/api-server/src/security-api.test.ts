@@ -7,7 +7,7 @@
  *
  * Run:
  *   cd /home/runner/workspace/artifacts/api-server
- *   DATABASE_URL="<url>" pnpm tsx src/security-api.test.ts
+ *   TEST_DATABASE_URL="<isolated-url>" pnpm tsx src/security-api.test.ts
  *
  * Zero extra dependencies — uses only node:http, node:assert, node:crypto
  * and the workspace DB package for setup/teardown helpers.
@@ -23,11 +23,11 @@
  *   S-05B Concurrent normalized client creates return one 201 and one conflict
  *   S-06  CAJA can do POS sale (vender) on own-location rollo
  *   S-07  CAJA denied GET /proveedores → 403
- *   S-08  INVENTARIOS GET /proveedores → 200, response has no financial JSON keys
+ *   S-08  SUPERVISOR GET /proveedores → 200, response has no financial JSON keys
  *   S-09  BODEGA operational entry catalogs allowed; direct catalogs denied
- *   S-10  Financial proveedor routes denied for INVENTARIOS (proveedores_finanzas)
- *   S-11  ADMIN user-override grants INVENTARIOS proveedores_finanzas.ver; route now 200
- *   S-12  ADMIN user-override deny removed → INVENTARIOS inherits role (still denied)
+ *   S-10  Financial proveedor routes denied for SUPERVISOR (proveedores_finanzas)
+ *   S-11  Malicious SUPERVISOR finance override remains denied by role ceiling
+ *   S-12  ADMIN user-override deny removed → SUPERVISOR inherits role (still denied)
  *   S-13  User override (true) beats role (false): BODEGA clientes 403 → override → 200
  *   S-14  DELETE override → BODEGA clientes reverts to 403
  *   S-15  Deny-by-default: remove BODEGA inventario rol row → 403; restore → 200
@@ -57,6 +57,7 @@ import {
   entradasTable,
   ensureClientesSchema,
   ensureSalidasSchema,
+  ensureSupervisorRole,
   existenciasTable,
   movimientosTable,
   permisosRolTable,
@@ -77,6 +78,7 @@ import {
   type RolUsuario,
 } from "@workspace/db";
 import { MODULOS } from "./lib/permisos";
+import { isSupervisorSensitiveKey } from "./lib/sensitive-data";
 import app from "./app";
 import { crearEntrada, crearRollo } from "./lib/inventario";
 import ExcelJS from "exceljs";
@@ -106,6 +108,7 @@ let server: Server;
 let BASE: string;
 
 async function startServer(): Promise<void> {
+  await ensureSupervisorRole(pool);
   await ensureClientesSchema(pool);
   await ensureSalidasSchema(pool);
   return new Promise((resolve, reject) => {
@@ -199,6 +202,17 @@ async function login(usuario: string, password: string): Promise<FetchResult> {
   return api("POST", "/auth/login", { usuario, password });
 }
 
+async function download(path: string, cookie: string) {
+  const response = await fetch(`${BASE}${path}`, {
+    headers: { Cookie: cookie },
+  });
+  return {
+    status: response.status,
+    contentType: response.headers.get("content-type") ?? "",
+    bytes: Buffer.from(await response.arrayBuffer()),
+  };
+}
+
 function assertNoTerminalSensitiveKeys(
   value: unknown,
   path = "response",
@@ -226,6 +240,29 @@ function assertNoTerminalSensitiveKeys(
       `TERMINAL response must omit sensitive key ${path}.${key}`,
     );
     assertNoTerminalSensitiveKeys(nested, `${path}.${key}`);
+  }
+}
+
+function assertNoSupervisorSensitiveKeys(
+  value: unknown,
+  path = "response",
+): void {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) =>
+      assertNoSupervisorSensitiveKeys(item, `${path}[${index}]`),
+    );
+    return;
+  }
+  if (value === null || typeof value !== "object") return;
+  for (const [key, nested] of Object.entries(
+    value as Record<string, unknown>,
+  )) {
+    assert.equal(
+      isSupervisorSensitiveKey(key),
+      false,
+      `SUPERVISOR response leaked sensitive key ${path}.${key}`,
+    );
+    assertNoSupervisorSensitiveKeys(nested, `${path}.${key}`);
   }
 }
 
@@ -340,7 +377,7 @@ if (!seedAdminRow) throw new Error("Usuario admin no encontrado. Ejecuta el seed
 const testAdmin = await mkUser("ADMIN", null);
 const testTerminal = await mkUser("TERMINAL", seedTienda.id);
 const testCaja = await mkUser("CAJA", seedTienda.id);
-const testInventarios = await mkUser("INVENTARIOS", seedTienda.id);
+const testSupervisor = await mkUser("SUPERVISOR", seedTienda.id);
 const testBodega = await mkUser("BODEGA", seedTienda.id, { alcanceConsulta: "PROPIA" });
 // Second BODEGA with TODAS scope for S-23
 const testBodegaTodas = await mkUser("BODEGA", seedTienda.id, { alcanceConsulta: "TODAS" });
@@ -359,7 +396,7 @@ await startServer();
 
 // S-01: All four roles can log in; response has permisos matrix
 await test("S-01: All four roles login → 200 + permisos array present", async () => {
-  for (const { usuario, password } of [testAdmin, testTerminal, testCaja, testInventarios, testBodega]) {
+  for (const { usuario, password } of [testAdmin, testTerminal, testCaja, testSupervisor, testBodega]) {
     const r = await login(usuario, password);
     assert.equal(r.status, 200, `login failed for ${usuario}: ${JSON.stringify(r.body)}`);
     const body = r.body as Record<string, unknown>;
@@ -855,9 +892,9 @@ await test("S-07: CAJA GET /proveedores → 403", async () => {
   assert.equal(r.status, 403, `Expected 403, got ${r.status}: ${JSON.stringify(r.body)}`);
 });
 
-// S-08: INVENTARIOS GET /proveedores → 200, no financial keys in response
-await test("S-08: INVENTARIOS GET /proveedores → 200, no financial JSON keys", async () => {
-  const login_r = await login(testInventarios.usuario, testInventarios.password);
+// S-08: SUPERVISOR GET /proveedores → 200, no financial keys in response
+await test("S-08: SUPERVISOR GET /proveedores → 200, no financial JSON keys", async () => {
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
   const r = await api("GET", "/proveedores", undefined, login_r.cookie);
   assert.equal(r.status, 200, `Expected 200, got ${r.status}: ${JSON.stringify(r.body)}`);
   const body = r.body as Record<string, unknown>;
@@ -870,13 +907,109 @@ await test("S-08: INVENTARIOS GET /proveedores → 200, no financial JSON keys",
   ];
   for (const item of items) {
     for (const key of FINANCIAL_KEYS) {
-      assert.ok(!(key in item), `INVENTARIOS response must not include financial key '${key}'`);
+      assert.ok(!(key in item), `SUPERVISOR response must not include financial key '${key}'`);
     }
   }
   // Also check the top-level body keys
   for (const key of FINANCIAL_KEYS) {
-    assert.ok(!(key in body), `INVENTARIOS response body must not include '${key}'`);
+    assert.ok(!(key in body), `SUPERVISOR response body must not include '${key}'`);
   }
+  assertNoSupervisorSensitiveKeys(body);
+});
+
+await test("S-08A: SUPERVISOR operational JSON is recursively redacted", async () => {
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
+  for (const path of [
+    "/productos",
+    `/productos/${sharedProductoId}`,
+    "/inventario/rollos",
+    `/inventario/rollos/${sharedRolloId}`,
+    "/inventario/entradas",
+    "/inventario/existencias",
+    "/dashboard",
+    "/reportes/inventario",
+  ]) {
+    const response = await api("GET", path, undefined, login_r.cookie);
+    assert.equal(response.status, 200, `${path}: ${JSON.stringify(response.body)}`);
+    assertNoSupervisorSensitiveKeys(response.body, path);
+  }
+});
+
+await test("S-08B: SUPERVISOR creates a pending-cost entry at any real location", async () => {
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
+  const response = await api(
+    "POST",
+    "/inventario/entradas",
+    {
+      ubicacionId: otherTiendaId,
+      proveedorId: null,
+      observaciones: `SUPERVISOR ${RUN}`,
+      uuidCliente: randomUUID(),
+      lineas: [
+        {
+          productoId: sharedProductoId,
+          costoUnitario: "987654.32",
+          cantidades: ["3.000"],
+        },
+      ],
+    },
+    login_r.cookie,
+  );
+  assert.equal(response.status, 201, JSON.stringify(response.body));
+  assertNoSupervisorSensitiveKeys(response.body);
+  const entryId = Number((response.body as Record<string, unknown>).id);
+  createdEntradaIds.push(entryId);
+  const rolls = await db
+    .select({
+      id: rollosTable.id,
+      ubicacionId: rollosTable.ubicacionId,
+      costoUnitario: rollosTable.costoUnitario,
+      costoTotal: rollosTable.costoTotal,
+    })
+    .from(rollosTable)
+    .where(eq(rollosTable.recepcionId, entryId));
+  assert.ok(rolls.length > 0);
+  createdRolloIds.push(...rolls.map((roll) => roll.id));
+  assert.ok(rolls.every((roll) => roll.ubicacionId === otherTiendaId));
+  assert.ok(
+    rolls.every(
+      (roll) => roll.costoUnitario === null && roll.costoTotal === null,
+    ),
+    "SUPERVISOR-provided costs must never be stored",
+  );
+});
+
+await test("S-08C: SUPERVISOR XLSX/PDF exports contain no financial fields or sentinel", async () => {
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
+  const forbiddenText =
+    /(costo|precio|margen|utilidad|ganancia|saldo|importe|pago|987654\.32)/i;
+  const xlsx = await download(
+    "/reportes/inventario/export.xlsx?margenUmbral=987654.32",
+    login_r.cookie,
+  );
+  assert.equal(xlsx.status, 200);
+  assert.match(
+    xlsx.contentType,
+    /application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/,
+  );
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(xlsx.bytes as unknown as ArrayBuffer);
+  const workbookValues: string[] = [];
+  workbook.eachSheet((sheet) => {
+    sheet.eachRow((row) => {
+      row.eachCell((cell) => workbookValues.push(String(cell.value ?? "")));
+    });
+  });
+  const workbookText = workbookValues.join("\n");
+  assert.doesNotMatch(workbookText, forbiddenText);
+
+  const pdf = await download(
+    "/reportes/inventario/export.pdf?margenUmbral=987654.32",
+    login_r.cookie,
+  );
+  assert.equal(pdf.status, 200);
+  assert.match(pdf.contentType, /application\/pdf/);
+  assert.doesNotMatch(pdf.bytes.toString("latin1"), forbiddenText);
 });
 
 // S-09: operational entry catalogs do not grant administrative catalog access
@@ -1070,22 +1203,91 @@ await test("S-09B: CAJA only lists and opens outputs received at its assigned st
   assert.equal(forbiddenCancel.status, 403, JSON.stringify(forbiddenCancel.body));
 });
 
-// S-10: Financial proveedor routes denied for INVENTARIOS (no proveedores_finanzas)
-await test("S-10: INVENTARIOS GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied)", async () => {
-  const login_r = await login(testInventarios.usuario, testInventarios.password);
-  const r = await api("GET", "/proveedores/resumen", undefined, login_r.cookie);
-  assert.equal(r.status, 403, `Expected 403, got ${r.status}: ${JSON.stringify(r.body)}`);
+// S-10: Financial proveedor routes denied for SUPERVISOR (no proveedores_finanzas)
+await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied)", async () => {
+  const maliciousModules = [
+    "pos",
+    "ubicaciones",
+    "usuarios",
+    "permisos",
+    "resumen_caja",
+    "cortes",
+    "cobros_pagos",
+    "conciliacion",
+    "auditoria",
+    "clientes_credito",
+    "clientes_precios",
+    "clientes_finanzas",
+    "productos",
+  ];
+  const overrides = await db
+    .insert(permisosUsuarioTable)
+    .values(
+      maliciousModules.map((modulo) => ({
+        usuarioId: testSupervisor.id,
+        modulo,
+        puedeVer: true,
+        puedeCrear: true,
+        puedeEditar: true,
+        puedeAutorizar: true,
+      })),
+    )
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(...overrides.map((row) => row.id));
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
+  const forbidden: Array<[string, string]> = [
+    ["GET", "/proveedores/resumen"],
+    ["GET", "/proveedores/analitica-global"],
+    ["GET", "/proveedores/1/compras"],
+    ["GET", "/proveedores/1/pagos"],
+    ["POST", "/proveedores/1/pagos"],
+    ["GET", "/proveedores/1/estado-cuenta"],
+    ["GET", "/clientes/resumen"],
+    ["GET", "/clientes/cartera"],
+    ["GET", "/clientes/analitica"],
+    ["GET", "/clientes/1/credito"],
+    ["GET", "/clientes/1/precios"],
+    ["GET", "/clientes/1/estado-cuenta"],
+    ["GET", "/clientes/1/pagos"],
+    ["POST", "/clientes/1/pagos"],
+    ["GET", "/pos/buscar"],
+    ["GET", "/tickets/1"],
+    ["GET", "/caja/tickets"],
+    ["GET", "/sesiones-caja/actual"],
+    ["GET", "/precios"],
+    ["GET", "/locations"],
+    ["GET", "/users"],
+    ["GET", "/permisos/roles"],
+    ["GET", "/inventario/conciliacion"],
+    ["GET", "/inventario/entradas/pendientes-costo"],
+    ["POST", "/inventario/entradas/1/costos"],
+    ["GET", "/clientes/1/documentos"],
+    ["POST", "/productos"],
+  ];
+  for (const [method, path] of forbidden) {
+    const response = await api(
+      method,
+      path,
+      method === "GET" ? undefined : {},
+      login_r.cookie,
+    );
+    assert.equal(
+      response.status,
+      403,
+      `${method} ${path} must be 403, got ${response.status}: ${JSON.stringify(response.body)}`,
+    );
+  }
 });
 
-// S-11: ADMIN grants INVENTARIOS proveedores_finanzas.ver → route now 200
-await test("S-11: Override grants INVENTARIOS proveedores_finanzas.ver → resumen 200", async () => {
+// S-11: a malicious permissive override cannot exceed the SUPERVISOR ceiling
+await test("S-11: SUPERVISOR finance override remains denied by immutable ceiling", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
   assert.equal(adminLogin.status, 200);
 
-  // PUT override for testInventarios
+  // PUT override for testSupervisor
   const putR = await api(
     "PUT",
-    `/permisos/usuarios/${testInventarios.id}/proveedores_finanzas`,
+    `/permisos/usuarios/${testSupervisor.id}/proveedores_finanzas`,
     { puedeVer: true, puedeCrear: false, puedeEditar: false, puedeAutorizar: false },
     adminLogin.cookie,
   );
@@ -1093,26 +1295,30 @@ await test("S-11: Override grants INVENTARIOS proveedores_finanzas.ver → resum
   const overrideRow = putR.body as Record<string, unknown>;
   createdPermisosUsuarioIds.push(overrideRow.id as number);
 
-  // Now INVENTARIOS should have access
-  const login_r = await login(testInventarios.usuario, testInventarios.password);
+  // The raw override exists, but the effective policy must still deny access.
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
   const r = await api("GET", "/proveedores/resumen", undefined, login_r.cookie);
-  assert.equal(r.status, 200, `Expected 200 after override, got ${r.status}: ${JSON.stringify(r.body)}`);
+  assert.equal(r.status, 403, `Expected 403 after malicious override, got ${r.status}: ${JSON.stringify(r.body)}`);
 
   // Verify matrix via /auth/me
   const me = await api("GET", "/auth/me", undefined, login_r.cookie);
   const permisos = (me.body as Record<string, unknown>).permisos as Array<Record<string, unknown>>;
   const finanzasEntry = permisos.find((p) => p.modulo === "proveedores_finanzas");
-  assert.equal(finanzasEntry?.puedeVer, true, "Matrix should reflect override");
+  assert.equal(
+    finanzasEntry?.puedeVer,
+    false,
+    "Effective matrix must apply the SUPERVISOR ceiling",
+  );
 });
 
-// S-12: Remove override (DELETE) → INVENTARIOS reverts to role (still denied)
-await test("S-12: DELETE override → INVENTARIOS reverts to role default (403)", async () => {
+// S-12: Remove override (DELETE) → SUPERVISOR reverts to role (still denied)
+await test("S-12: DELETE override → SUPERVISOR reverts to role default (403)", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
 
   // Remove the override created in S-11
   const delR = await api(
     "DELETE",
-    `/permisos/usuarios/${testInventarios.id}/proveedores_finanzas`,
+    `/permisos/usuarios/${testSupervisor.id}/proveedores_finanzas`,
     undefined,
     adminLogin.cookie,
   );
@@ -1123,8 +1329,8 @@ await test("S-12: DELETE override → INVENTARIOS reverts to role default (403)"
   );
   if (idx !== -1) createdPermisosUsuarioIds.splice(idx, 1);
 
-  // INVENTARIOS should now be denied again
-  const login_r = await login(testInventarios.usuario, testInventarios.password);
+  // SUPERVISOR should now be denied again
+  const login_r = await login(testSupervisor.usuario, testSupervisor.password);
   const r = await api("GET", "/proveedores/resumen", undefined, login_r.cookie);
   assert.equal(r.status, 403, `Expected 403 after override removal, got ${r.status}`);
 });

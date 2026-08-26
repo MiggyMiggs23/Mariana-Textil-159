@@ -29,7 +29,7 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
   await pool.query(`
     UPDATE permisos_rol
     SET puede_autorizar = false
-    WHERE rol = 'INVENTARIOS' AND modulo = 'salidas'
+    WHERE rol = 'SUPERVISOR' AND modulo = 'salidas'
   `);
   await pool.query(`
     UPDATE permisos_rol
@@ -70,12 +70,12 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
   }>(`
     SELECT puede_ver, puede_crear, puede_editar, puede_autorizar
     FROM permisos_rol
-    WHERE rol = 'INVENTARIOS' AND modulo = 'salidas';
+    WHERE rol = 'SUPERVISOR' AND modulo = 'salidas';
   `);
   assert.deepEqual(defaultInventoryPermission.rows, [{
     puede_ver: true,
     puede_crear: true,
-    puede_editar: false,
+    puede_editar: true,
     puede_autorizar: false,
   }]);
 

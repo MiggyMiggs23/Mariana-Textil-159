@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { omitTerminalSensitiveFields } from "./sensitive-data";
+import {
+  isSupervisorSensitiveKey,
+  omitSupervisorSensitiveFields,
+  omitTerminalSensitiveFields,
+} from "./sensitive-data";
 
 const payload = {
   costoUnitario: "10.00",
@@ -36,4 +40,28 @@ assert.strictEqual(
   omitTerminalSensitiveFields(payload, false),
   payload,
   "non-TERMINAL payload must be unchanged",
+);
+
+const supervisorPayload = {
+  precioSugerido: "99.00",
+  limiteCredito: "1000.00",
+  diasCredito: 30,
+  pagos: [{ importe: "20.00", formaPago: "EFECTIVO" }],
+  documentoIneUrl: "secret",
+  saldoPosterior: "12.500",
+  documentoTipo: "SALIDA",
+  totalRollos: 2,
+  nested: { costoPorUnidad: "5.00", cantidad: "12.500" },
+};
+assert.deepEqual(omitSupervisorSensitiveFields(supervisorPayload, true), {
+  saldoPosterior: "12.500",
+  documentoTipo: "SALIDA",
+  totalRollos: 2,
+  nested: { cantidad: "12.500" },
+});
+assert.equal(isSupervisorSensitiveKey("precio_negociado"), true);
+assert.equal(isSupervisorSensitiveKey("saldoPosterior"), false);
+assert.strictEqual(
+  omitSupervisorSensitiveFields(supervisorPayload, false),
+  supervisorPayload,
 );

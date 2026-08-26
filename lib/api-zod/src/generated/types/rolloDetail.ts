@@ -24,9 +24,9 @@ export interface RolloDetail {
   cantidadInicial: string;
   cantidadActual: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
   /** @nullable */
   notas?: string | null;
   historial: MovimientoRow[];

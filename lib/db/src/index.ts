@@ -7,6 +7,7 @@ export { ensurePendingCostsSchema } from "./lib/pending-costs-schema";
 export { ensureClientesSchema } from "./lib/clientes-schema";
 export { ensureAdminAnalyticsSchema } from "./lib/admin-analytics-schema";
 export { ensureEtiquetasSchema } from "./lib/etiquetas-schema";
+export { ensureSupervisorRole } from "./lib/role-migration";
 
 const { Pool } = pg;
 

@@ -2,6 +2,81 @@
 
 Every non-public endpoint requires authentication (`requireSession`) **and** a specific module + action via `requierePermiso(modulo, accion)`.
 
+## SUPERVISOR: authoritative ceiling and redaction
+
+`SUPERVISOR` has a server-side permission ceiling applied after role rows and
+`permisos_usuario` overrides. An override can restrict this role, but can never
+grant access outside this inventory:
+
+- Read: `dashboard`, `inventario`, `productos`, `entradas`, `salidas`,
+  `movimientos`, `ajustes`, `etiquetas`, `contenedores`, `clientes`,
+  `proveedores`, `reportes`.
+- Mutations are limited to the configured operational actions for `entradas`,
+  `salidas`, `ajustes`, `etiquetas`, `contenedores`, `clientes` and
+  `proveedores`. Products are always read-only.
+- All operational reads and mutations above use all real locations; the
+  assigned user location and `alcanceConsulta` do not restrict SUPERVISOR.
+
+The following endpoint families are an absolute 403 for SUPERVISOR, including
+when a role row or user override says `true`:
+
+- `/api/pos/**`, `/api/tickets/**`, `/api/caja/**` (POS, tickets, payments,
+  collections, cash sessions, summaries and cuts).
+- `/api/precios/**`.
+- `/api/locations/**`, `/api/users/**`, `/api/permisos/**`.
+- `/api/inventario/conciliacion/**`, `/api/admin/**`, `/api/auditoria/**`.
+- Every route protected by `clientes_credito`, `clientes_precios`,
+  `clientes_finanzas` or `proveedores_finanzas`, including their JSON, XLSX and
+  PDF exports.
+- `/api/cliente-documentos/**` and operational customer routes that manage
+  credit terms, documents or INE.
+- `/api/inventario/entradas/pendientes-costo/**` and
+  `/api/inventario/entradas/:id/costos`.
+
+Exact forbidden route inventory (all supported HTTP methods on each listed
+path are forbidden):
+
+- POS/tickets/caja: `/api/pos/buscar`, `/api/pos/validar-precio`,
+  `/api/tickets`, `/api/tickets/pendientes`, `/api/tickets/:id`,
+  `/api/tickets/:id/cancelar`, `/api/tickets/:id/cobrar`,
+  `/api/caja/tickets`, `/api/sesiones-caja/actual`,
+  `/api/sesiones-caja`, `/api/sesiones-caja/abrir`,
+  `/api/sesiones-caja/:id/corte`, `/api/sesiones-caja/:id/cerrar`.
+- Prices: `/api/precios`, `/api/precios/:id`,
+  `/api/precios/:id/cambiar`.
+- Customer restricted data: `/api/clientes/resumen`,
+  `/api/clientes/cartera`, `/api/clientes/cartera.xlsx`,
+  `/api/clientes/cartera.pdf`, `/api/clientes/analitica`,
+  `/api/clientes/analitica.xlsx`, `/api/clientes/:id/credito`,
+  `/api/clientes/:id/precios`, `/api/clientes/:id/estado-cuenta`,
+  `/api/clientes/:id/estado-cuenta/imprimir`,
+  `/api/clientes/:id/estado-cuenta.xlsx`,
+  `/api/clientes/:id/estado-cuenta.pdf`, `/api/clientes/:id/compras`,
+  `/api/clientes/:id/analitica`, `/api/clientes/:id/estadisticas`,
+  `/api/clientes/:id/pagos`, `/api/clientes/:id/ajustes`,
+  `/api/clientes/:id/documentos`, `/api/clientes/:id/documentos/:lado`,
+  `/api/cliente-documentos/:publicId/ver` and
+  `/api/cliente-documentos/:publicId/descargar`.
+- Supplier finance: `/api/proveedores/resumen`,
+  `/api/proveedores/analitica-global`, `/api/proveedores/:id/compras`,
+  `/api/proveedores/:id/pagos`, `/api/proveedores/:id/estado-cuenta`,
+  `/api/proveedores/:id/ajustes`, `/api/proveedores/:id/estadisticas`,
+  `/api/proveedores/:id/exportar`.
+- Administration: `/api/locations`, `/api/locations/:id`, `/api/users`,
+  `/api/users/:id`, every `/api/permisos/**`, every `/api/admin/**`,
+  every `/api/auditoria/**`, `/api/inventario/conciliacion` and
+  `/api/inventario/conciliacion/recalcular`.
+
+Reachable JSON responses are recursively filtered on the server. Economic and
+sensitive keys are physically absent (never `null` or a synthetic zero):
+purchase/sale costs and prices, inventory values, balances and credit terms,
+payment amounts/mixes, INE/document storage metadata, and
+margin/profit/utility. The same rule is applied by report/container builders
+before XLSX/PDF creation. Product responses omit `precioSugerido`,
+`comprasResumen` and `comprasHistorial`. SUPERVISOR entries always create
+pending-cost rolls: submitted unit costs are discarded and no cost-capture API
+is reachable.
+
 Public exceptions (no auth, no permission check):
 - `GET /api/healthz`
 - `POST /api/auth/login`
@@ -175,7 +250,7 @@ Inventory routes enforce the following effective permissions on the server:
 
 ## Default Role Matrix
 
-| Módulo | ADMIN | CAJA | INVENTARIOS | BODEGA |
+| Módulo | ADMIN | CAJA | SUPERVISOR | BODEGA |
 |--------|-------|------|-------------|--------|
 | dashboard | total | ver | ver | ver |
 | pos | total | ver/crear/editar | — | — |
@@ -208,9 +283,11 @@ Inventory routes enforce the following effective permissions on the server:
 
 ## Permission Resolution
 
-1. `permisos_usuario` row for (usuario_id, modulo) with non-null value → wins
-2. `permisos_rol` row for (rol, modulo)
-3. No row exists → **deny (403)** — never allow by omission
+1. ADMIN bypasses tables with full access.
+2. `permisos_usuario` row for (usuario_id, modulo) with non-null value wins.
+3. Otherwise use `permisos_rol`; no row means deny.
+4. Apply the immutable SUPERVISOR ceiling last. This final step can only
+   remove access and therefore defeats permissive role rows and overrides.
 
 ## Protected Invariants
 

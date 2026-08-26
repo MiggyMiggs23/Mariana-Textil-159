@@ -13,7 +13,7 @@ export interface Producto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  precioSugerido?: string;
   /** @nullable */
   notas: string | null;
   activo: boolean;

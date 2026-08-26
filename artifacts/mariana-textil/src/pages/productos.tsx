@@ -166,6 +166,8 @@ export default function Productos() {
   };
 
   const canCreate = hasPermission(user, Modules.PRODUCTOS, "crear");
+  const isSupervisor = user?.rol === "SUPERVISOR";
+  const canViewPrices = user != null && !isSupervisor;
 
   return (
     <AppLayout>
@@ -298,7 +300,7 @@ export default function Productos() {
                                   <TableHead className="w-[100px]">Color</TableHead>
                                   <TableHead>SKU</TableHead>
                                   <TableHead>Unidad</TableHead>
-                                  <TableHead className="text-right">Precio</TableHead>
+                                  {canViewPrices && <TableHead className="text-right">Precio</TableHead>}
                                   <TableHead className="text-right">Rollos</TableHead>
                                   <TableHead className="text-right">Cantidad</TableHead>
                                   <TableHead className="text-right">Estado</TableHead>
@@ -321,7 +323,7 @@ export default function Productos() {
                                     <TableCell>
                                       <Badge variant="outline" className="text-[10px]">{p.unidad}</Badge>
                                     </TableCell>
-                                    <TableCell className="text-right">{formatNumber(p.precioSugerido, { kind: "money" })}</TableCell>
+                                    {canViewPrices && <TableCell className="text-right">{formatNumber(p.precioSugerido ?? 0, { kind: "money" })}</TableCell>}
                                     <TableCell className="text-right font-medium">{formatNumber(p.rollos, { kind: "count" })}</TableCell>
                                     <TableCell className="text-right font-medium">{formatNumber(p.cantidad, { kind: "quantity" })}</TableCell>
                                     <TableCell className="text-right">
@@ -360,18 +362,20 @@ export default function Productos() {
           onClose={() => setIsCreateOpen(false)} 
           initialTela={createTelaPreFill}
           existingProducts={productos}
+          canViewPrices={canViewPrices}
         />
       )}
       
       <ImportProductsDialog
         open={isImportOpen}
         onClose={() => setIsImportOpen(false)}
+        canViewPrices={canViewPrices}
       />
     </AppLayout>
   );
 }
 
-function CreateProductDialog({ open, onClose, initialTela, existingProducts }: { open: boolean, onClose: () => void, initialTela: string, existingProducts: Producto[] }) {
+function CreateProductDialog({ open, onClose, initialTela, existingProducts, canViewPrices }: { open: boolean, onClose: () => void, initialTela: string, existingProducts: Producto[], canViewPrices: boolean }) {
   const createProducto = useCreateProducto();
   const queryClient = useQueryClient();
   
@@ -493,17 +497,19 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts }: {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Precio Sugerido</Label>
-              <Input 
-                type="number" 
-                step="0.01"
-                min="0"
-                value={formData.precioSugerido}
-                onChange={e => setFormData({ ...formData, precioSugerido: e.target.value })}
-                data-testid="input-product-precio"
-              />
-            </div>
+            {canViewPrices && (
+              <div className="space-y-2">
+                <Label>Precio Sugerido</Label>
+                <Input 
+                  type="number" 
+                  step="0.01"
+                  min="0"
+                  value={formData.precioSugerido}
+                  onChange={e => setFormData({ ...formData, precioSugerido: e.target.value })}
+                  data-testid="input-product-precio"
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2 p-3 bg-muted/30 border rounded-md">
@@ -559,7 +565,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts }: {
   );
 }
 
-function ImportProductsDialog({ open, onClose }: { open: boolean, onClose: () => void }) {
+function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean, onClose: () => void, canViewPrices: boolean }) {
   const queryClient = useQueryClient();
   const previewImport = usePreviewImportProductos();
   const confirmImport = useConfirmImportProductos();
@@ -632,7 +638,8 @@ function ImportProductsDialog({ open, onClose }: { open: boolean, onClose: () =>
         <DialogHeader>
           <DialogTitle>Importar Productos (Excel/CSV)</DialogTitle>
           <DialogDescription>
-            Columnas requeridas: <strong>tela</strong>, <strong>color</strong>, <strong>unidad</strong>, <strong>precio_sugerido</strong>. <br/>
+            Columnas requeridas: <strong>tela</strong>, <strong>color</strong>, <strong>unidad</strong>
+            {canViewPrices && <>, <strong>precio_sugerido</strong></>}. <br/>
             <span className="text-xs text-muted-foreground">(Opcional: notas, sku)</span>
           </DialogDescription>
         </DialogHeader>
@@ -700,7 +707,10 @@ function ImportProductsDialog({ open, onClose }: { open: boolean, onClose: () =>
                         <TableCell className="text-center text-xs text-muted-foreground">{row.rowIndex}</TableCell>
                         <TableCell>
                           <div className="font-semibold text-sm">{row.tela} - {row.color}</div>
-                          <div className="text-[10px] text-muted-foreground">{row.unidad} | {formatNumber(row.precioSugerido, { kind: "money" })}</div>
+                          <div className="text-[10px] text-muted-foreground">
+                            {row.unidad}
+                            {canViewPrices && ` | ${formatNumber(row.precioSugerido, { kind: "money" })}`}
+                          </div>
                         </TableCell>
                         <TableCell className="font-mono text-xs">{row.sku || "Auto"}</TableCell>
                         <TableCell>

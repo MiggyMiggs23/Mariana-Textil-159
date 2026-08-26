@@ -60,7 +60,7 @@ router.put(
         return;
       }
 
-      const validRoles: RolUsuario[] = ["CAJA", "INVENTARIOS", "BODEGA"];
+      const validRoles: RolUsuario[] = ["CAJA", "SUPERVISOR", "BODEGA"];
       if (!validRoles.includes(rol as RolUsuario)) {
         res.status(400).json({ error: "Rol inválido." });
         return;

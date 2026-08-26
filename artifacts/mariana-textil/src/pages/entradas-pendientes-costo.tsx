@@ -68,7 +68,7 @@ function CaptureCostDialog({
     if (!entrada) return { cost: 0 };
     let total = 0;
     entrada.rollos.forEach(rollo => {
-      if (rollo.costoUnitario !== null && rollo.costoTotal !== null) {
+      if (rollo.costoUnitario != null && rollo.costoTotal != null) {
         total += parseFloat(rollo.costoTotal);
       } else {
         const unitCost = parseFloat(costosRollos[rollo.id] || costosProductos[rollo.productoId] || "0");
@@ -171,7 +171,7 @@ function CaptureCostDialog({
 
                       let lineTotal = 0;
                       entrada.rollos.filter(r => r.productoId === linea.productoId).forEach(r => {
-                        if (r.costoUnitario !== null && r.costoTotal !== null) {
+                        if (r.costoUnitario != null && r.costoTotal != null) {
                            lineTotal += parseFloat(r.costoTotal);
                         } else {
                            const unit = parseFloat(costosRollos[r.id] || costosProductos[linea.productoId] || "0");

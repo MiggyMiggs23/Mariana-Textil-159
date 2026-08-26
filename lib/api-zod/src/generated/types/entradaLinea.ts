@@ -13,9 +13,9 @@ export interface EntradaLinea {
   colorProducto: string;
   unidadProducto: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   rollosCount: number;
   cantidadTotal: string;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
 }

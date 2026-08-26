@@ -121,7 +121,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
           VALUES
             ('TERMINAL', 'salidas', true, false, false, false),
             ('CAJA', 'salidas', true, false, false, false),
-            ('INVENTARIOS', 'salidas', true, true, false, false),
+      ('SUPERVISOR', 'salidas', true, true, true, false),
             ('BODEGA', 'salidas', true, true, false, false)
           ON CONFLICT (rol, modulo) DO UPDATE SET
             puede_ver = EXCLUDED.puede_ver,

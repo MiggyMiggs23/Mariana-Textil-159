@@ -44,7 +44,11 @@ const reprintBody = z.object({
 type DbRow = Record<string, unknown>;
 
 function scopedSite(auth: NonNullable<Express.Request["auth"]>, requested?: number) {
-  if (auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS") return requested;
+  if (
+    auth.user.rol === "ADMIN" ||
+    auth.user.rol === "SUPERVISOR" ||
+    auth.user.alcanceConsulta === "TODAS"
+  ) return requested;
   if (auth.user.ubicacionId == null) throw new Error("SCOPE_WITHOUT_SITE");
   return auth.user.ubicacionId;
 }
@@ -188,7 +192,7 @@ router.post(
     try {
       const body = reprintBody.parse(req.body);
       const auth = req.auth!;
-      if (!["ADMIN", "BODEGA", "INVENTARIOS"].includes(auth.user.rol)) {
+      if (!["ADMIN", "BODEGA", "SUPERVISOR"].includes(auth.user.rol)) {
         res.status(403).json({ error: "Tu rol no puede reimprimir etiquetas." }); return;
       }
       let autorizador: { id: number; nombre: string; usuario: string } | null = null;
@@ -225,7 +229,10 @@ router.post(
         const rows = selected.rows as DbRow[];
         if (rows.length !== ids.length) throw new Error("ROLLO_NOT_FOUND");
         const ownSite = auth.user.ubicacionId;
-        if (auth.user.rol !== "ADMIN" && auth.user.alcanceConsulta === "PROPIA" &&
+        if (
+            auth.user.rol !== "ADMIN" &&
+            auth.user.rol !== "SUPERVISOR" &&
+            auth.user.alcanceConsulta === "PROPIA" &&
             (ownSite == null || rows.some((row) => Number(row.ubicacion_id) !== ownSite))) {
           throw new Error("OUT_OF_SCOPE");
         }

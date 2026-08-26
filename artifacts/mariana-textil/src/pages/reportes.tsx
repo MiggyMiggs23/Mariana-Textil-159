@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CajaComparativo from "@/pages/caja/comparativo";
 import CajaDiferencias from "@/pages/caja/diferencias";
 
-import { useGetReportesCatalogos, useGetReporteSeccion, getGetReporteSeccionQueryKey } from "@workspace/api-client-react";
+import { useGetReportesCatalogos, useGetReporteSeccion, getGetReporteSeccionQueryKey, useGetCurrentUser } from "@workspace/api-client-react";
 
 import { ReportFilterBar, FilterState, DEFAULT_FILTERS } from "@/components/reportes/report-filter-bar";
 import { ReportKpis } from "@/components/reportes/report-kpis";
@@ -41,17 +41,32 @@ function hasValidDateRange(filters: FilterState): boolean {
 }
 
 export default function Reportes() {
+  const { data: user } = useGetCurrentUser();
+  const isAdmin = user?.rol === "ADMIN";
   const [location, setLocation] = useLocation();
   const searchString = useSearch();
 
+  const allowedTabs = TABS.filter(tab => {
+    if (!isAdmin) {
+      if (["utilidad", "compras", "clientes", "comparativo", "diferencias"].includes(tab.id)) {
+        return false;
+      }
+    }
+    return true;
+  });
+
   // Extract tab from URL or default to "ventas"
   let activeTab = "ventas";
+  if (!isAdmin && activeTab === "ventas") {
+    // supervisor sees ventas? let's keep it but backend removes money
+    // wait, if "ventas" is allowed, we keep it.
+  }
   const pathParts = location.split('/');
   const lastPart = pathParts[pathParts.length - 1];
-  if (TABS.some(t => t.id === lastPart)) {
+  if (allowedTabs.some(t => t.id === lastPart)) {
     activeTab = lastPart;
-  } else {
-    // If just /reportes, wait for next render to redirect, but locally assume "ventas"
+  } else if (!allowedTabs.some(t => t.id === activeTab)) {
+    activeTab = allowedTabs[0]?.id || "inventario";
   }
 
   // Parse initial state from URL search string
@@ -180,7 +195,7 @@ export default function Reportes() {
         >
           <div className="overflow-x-auto pb-2 custom-scrollbar">
             <TabsList className="h-10 inline-flex w-auto justify-start min-w-max">
-              {TABS.map(tab => (
+              {allowedTabs.map(tab => (
                 <TabsTrigger key={tab.id} value={tab.id} data-testid={`tab-${tab.id}`}>
                   {tab.label}
                 </TabsTrigger>

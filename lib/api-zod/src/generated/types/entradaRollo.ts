@@ -12,7 +12,7 @@ export interface EntradaRollo {
   productoId: number;
   cantidadInicial: string;
   /** @nullable */
-  costoUnitario: string | null;
+  costoUnitario?: string | null;
   /** @nullable */
-  costoTotal: string | null;
+  costoTotal?: string | null;
 }
