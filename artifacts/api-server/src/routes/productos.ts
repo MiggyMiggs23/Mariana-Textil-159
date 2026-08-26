@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, eq, ilike, ne, or, sql } from "drizzle-orm";
+import { and, eq, ilike, inArray, ne, or, sql } from "drizzle-orm";
 import {
   CreateProductoBody,
   CreateProductoResponse,
@@ -7,6 +7,7 @@ import {
   ConfirmImportProductosResponse,
   GetProductoParams,
   GetProductoResponse,
+  ListProductosQueryParams,
   ListProductosResponse,
   PreviewImportProductosBody,
   PreviewImportProductosResponse,
@@ -17,7 +18,9 @@ import {
 import {
   auditoriaTable,
   db,
+  existenciasTable,
   productosTable,
+  rollosTable,
   ubicacionesTable,
   type UnidadProducto,
 } from "@workspace/db";
@@ -26,6 +29,7 @@ import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
+import { resolveReadScope } from "./inventario";
 import {
   parseFileBase64,
   buildPreview,
@@ -75,32 +79,76 @@ function normalizeCustomSku(raw: string): string | null {
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
-/** Fetch the 7 real TIENDA/BODEGA location rows from DB. */
-async function getRealLocations() {
-  return db
+/** Fetch real, active inventory locations, constrained by the resolved read scope. */
+async function getRealLocations(ubicacionId?: number | null) {
+  const locations = await db
     .select({ id: ubicacionesTable.id, nombre: ubicacionesTable.nombre })
     .from(ubicacionesTable)
     .where(
-      or(
-        eq(ubicacionesTable.tipo, "TIENDA"),
-        eq(ubicacionesTable.tipo, "BODEGA"),
+      and(
+        eq(ubicacionesTable.activa, true),
+        or(
+          eq(ubicacionesTable.tipo, "TIENDA"),
+          eq(ubicacionesTable.tipo, "BODEGA"),
+        ),
+        ubicacionId == null
+          ? undefined
+          : eq(ubicacionesTable.id, ubicacionId),
       ),
     )
     .orderBy(ubicacionesTable.id);
+  return locations;
 }
 
-function emptyInventario(
-  locations: { id: number; nombre: string }[],
+type ExistenciasTotals = {
+  rollos: number;
+  cantidad: string;
+  sitiosConExistencia: number;
+};
+
+async function getCacheByProducto(
+  ubicacionIds: number[],
+  productoId?: number,
+): Promise<Map<number, ExistenciasTotals & { porUbicacion: Map<number, { rollos: number; cantidad: string }> }>> {
+  const totals = new Map<number, ExistenciasTotals & {
+    porUbicacion: Map<number, { rollos: number; cantidad: string }>;
+  }>();
+  if (!ubicacionIds.length) return totals;
+  const conditions = [inArray(existenciasTable.ubicacionId, ubicacionIds)];
+  if (productoId !== undefined) conditions.push(eq(existenciasTable.productoId, productoId));
+  const rows = await db
+    .select({
+      productoId: existenciasTable.productoId,
+      ubicacionId: existenciasTable.ubicacionId,
+      rollos: existenciasTable.rollosCount,
+      cantidad: existenciasTable.cantidadTotal,
+    })
+    .from(existenciasTable)
+    .where(and(...conditions));
+  for (const row of rows) {
+    const current = totals.get(row.productoId) ?? {
+      rollos: 0,
+      cantidad: "0.000",
+      sitiosConExistencia: 0,
+      porUbicacion: new Map(),
+    };
+    const cantidad = Number(row.cantidad);
+    current.rollos += row.rollos;
+    current.cantidad = (Number(current.cantidad) + cantidad).toFixed(3);
+    if (row.rollos > 0 || cantidad > 0) current.sitiosConExistencia += 1;
+    current.porUbicacion.set(row.ubicacionId, {
+      rollos: row.rollos,
+      cantidad: cantidad.toFixed(3),
+    });
+    totals.set(row.productoId, current);
+  }
+  return totals;
+}
+
+function presentProducto(
+  row: typeof productosTable.$inferSelect,
+  totals: ExistenciasTotals = { rollos: 0, cantidad: "0.000", sitiosConExistencia: 0 },
 ) {
-  return locations.map((loc) => ({
-    ubicacionId: loc.id,
-    nombre: loc.nombre,
-    rollos: 0,
-    cantidad: "0.000",
-  }));
-}
-
-function presentProducto(row: typeof productosTable.$inferSelect) {
   return {
     id: row.id,
     sku: row.sku,
@@ -110,8 +158,7 @@ function presentProducto(row: typeof productosTable.$inferSelect) {
     precioSugerido: row.precioSugerido,
     notas: row.notas,
     activo: row.activo,
-    rollos: 0,
-    cantidad: "0.000",
+    ...totals,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
@@ -120,6 +167,11 @@ function presentProducto(row: typeof productosTable.$inferSelect) {
 function presentProductoDetail(
   row: typeof productosTable.$inferSelect,
   locations: { id: number; nombre: string }[],
+  totals: ExistenciasTotals & { porUbicacion: Map<number, { rollos: number; cantidad: string }> },
+  rollosDisponibles: {
+    id: number; serie: string; ubicacionId: number; ubicacionNombre: string;
+    cantidad: string; estado: "DISPONIBLE";
+  }[],
   compras: {
     entrada_id: number;
     folio: number;
@@ -164,10 +216,16 @@ function presentProductoDetail(
     0,
   );
   return {
-    ...presentProducto(row),
+    ...presentProducto(row, totals),
     skuBloqueado: false,
     unidadBloqueada: false,
-    inventarioPorUbicacion: emptyInventario(locations),
+    inventarioPorUbicacion: locations.map((location) => ({
+      ubicacionId: location.id,
+      nombre: location.nombre,
+      rollos: totals.porUbicacion.get(location.id)?.rollos ?? 0,
+      cantidad: totals.porUbicacion.get(location.id)?.cantidad ?? "0.000",
+    })),
+    rollosDisponibles,
     comprasResumen: {
       totalCosto: totalCosto.toFixed(2),
       totalCantidad: totalCantidad.toFixed(3),
@@ -182,11 +240,27 @@ function presentProductoDetail(
 // ── list ───────────────────────────────────────────────────────────────────
 
 router.get("/productos", requierePermiso("productos", "ver"), async (req, res): Promise<void> => {
+  const query = ListProductosQueryParams.safeParse(req.query);
+  if (!query.success) {
+    res.status(400).json({ error: "Filtros de productos inválidos." });
+    return;
+  }
+  const { ubicacionId, scopeError } = resolveReadScope(req.auth!, query.data.ubicacionId);
+  if (scopeError) {
+    res.status(403).json({ error: scopeError });
+    return;
+  }
+  const locations = await getRealLocations(ubicacionId);
+  const totalsByProducto = await getCacheByProducto(locations.map((location) => location.id));
   const rows = await db
     .select()
     .from(productosTable)
     .orderBy(productosTable.tela, productosTable.color);
-  const response = ListProductosResponse.parse(rows.map(presentProducto));
+  const response = ListProductosResponse.parse(rows
+    .map((row) => presentProducto(row, totalsByProducto.get(row.id)))
+    .filter((row) => query.data.existencia === "TODOS"
+      || (query.data.existencia === "CON_EXISTENCIA" && row.sitiosConExistencia > 0)
+      || (query.data.existencia === "AGOTADOS" && row.sitiosConExistencia === 0)));
   res.json(
     omitTerminalSensitiveFields(
       response,
@@ -483,7 +557,38 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
     return;
   }
 
-  const locations = await getRealLocations();
+  const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+  if (scopeError) {
+    res.status(403).json({ error: scopeError });
+    return;
+  }
+  const locations = await getRealLocations(ubicacionId);
+  const locationIds = locations.map((location) => location.id);
+  const totals = (await getCacheByProducto(locationIds, producto.id)).get(producto.id) ?? {
+    rollos: 0,
+    cantidad: "0.000",
+    sitiosConExistencia: 0,
+    porUbicacion: new Map(),
+  };
+  const rollosDisponibles = locationIds.length
+    ? await db
+      .select({
+        id: rollosTable.id,
+        serie: rollosTable.serie,
+        ubicacionId: rollosTable.ubicacionId,
+        ubicacionNombre: ubicacionesTable.nombre,
+        cantidad: rollosTable.cantidadActual,
+        estado: rollosTable.estado,
+      })
+      .from(rollosTable)
+      .innerJoin(ubicacionesTable, eq(rollosTable.ubicacionId, ubicacionesTable.id))
+      .where(and(
+        eq(rollosTable.productoId, producto.id),
+        eq(rollosTable.estado, "DISPONIBLE"),
+        inArray(rollosTable.ubicacionId, locationIds),
+      ))
+      .orderBy(ubicacionesTable.nombre, rollosTable.serie)
+    : [];
   const comprasRows = await db.execute<{
     entrada_id: number;
     folio: number;
@@ -511,7 +616,11 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
     ORDER BY e.fecha DESC, e.id DESC
   `);
   const response = GetProductoResponse.parse(
-    presentProductoDetail(producto, locations, comprasRows.rows as Array<{
+    presentProductoDetail(producto, locations, totals, rollosDisponibles.map((rollo) => ({
+      ...rollo,
+      cantidad: Number(rollo.cantidad).toFixed(3),
+      estado: "DISPONIBLE" as const,
+    })), comprasRows.rows as Array<{
       entrada_id: number;
       folio: number;
       fecha: Date | string;

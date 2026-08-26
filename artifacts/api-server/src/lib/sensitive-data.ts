@@ -99,6 +99,7 @@ function isTerminalSensitiveKey(key: string): boolean {
   const normalized = key.replace(/[_\-\s]/g, "").toLowerCase();
   return (
     normalized.includes("costo") ||
+    normalized.includes("precio") ||
     normalized.includes("margen") ||
     normalized.includes("utilidad")
   );

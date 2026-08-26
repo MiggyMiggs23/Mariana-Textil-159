@@ -134,7 +134,7 @@ export const inventarioRouter = Router();
  * - If the user has no assigned location and scope is PROPIA, returns null
  *   (caller should return an empty set or 400).
  */
-function resolveReadScope(
+export function resolveReadScope(
   auth: AuthContext,
   requestedUbicacionId?: number,
 ): { ubicacionId: number | null | undefined; scopeError: string | null } {

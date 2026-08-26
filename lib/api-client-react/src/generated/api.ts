@@ -132,6 +132,7 @@ import type {
   ListEntradasPendientesCostoParams,
   ListKardexFiltersParams,
   ListPreciosParams,
+  ListProductosParams,
   ListProveedorPagosParams,
   ListRollosParams,
   ListSalidasParams,
@@ -1065,20 +1066,27 @@ export const useUpdateUser = <TError = ErrorType<ValidationErrorResponse | Unaut
       return useMutation(getUpdateUserMutationOptions(options));
     }
 
-export const getListProductosUrl = () => {
+export const getListProductosUrl = (params?: ListProductosParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/productos`
+  return stringifiedParams.length > 0 ? `/api/productos?${stringifiedParams}` : `/api/productos`
 }
 
 /**
  * @summary Lista productos del catálogo
  */
-export const listProductos = async ( options?: Parameters<typeof customFetch>[1]): Promise<Producto[]> => {
+export const listProductos = async (params?: ListProductosParams, options?: Parameters<typeof customFetch>[1]): Promise<Producto[]> => {
 
-  return customFetch<Producto[]>(getListProductosUrl(),
+  return customFetch<Producto[]>(getListProductosUrl(params),
   {
     ...options,
     method: 'GET'
@@ -1091,23 +1099,23 @@ export const listProductos = async ( options?: Parameters<typeof customFetch>[1]
 
 
 
-export const getListProductosQueryKey = () => {
+export const getListProductosQueryKey = (params?: ListProductosParams,) => {
     return [
-    `/api/productos`
+    `/api/productos`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getListProductosQueryOptions = <TData = Awaited<ReturnType<typeof listProductos>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getListProductosQueryOptions = <TData = Awaited<ReturnType<typeof listProductos>>, TError = ErrorType<UnauthorizedResponse>>(params?: ListProductosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListProductosQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getListProductosQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProductos>>> = ({ signal }) => listProductos({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProductos>>> = ({ signal }) => listProductos(params, { signal, ...requestOptions });
 
 
 
@@ -1125,11 +1133,11 @@ export type ListProductosQueryError = ErrorType<UnauthorizedResponse>
  */
 
 export function useListProductos<TData = Awaited<ReturnType<typeof listProductos>>, TError = ErrorType<UnauthorizedResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: ListProductosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProductos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getListProductosQueryOptions(options)
+  const queryOptions = getListProductosQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

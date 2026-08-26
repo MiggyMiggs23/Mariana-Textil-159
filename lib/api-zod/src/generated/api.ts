@@ -277,6 +277,13 @@ export const UpdateUserResponse = zod.object({
 /**
  * @summary Lista productos del catálogo
  */
+export const listProductosQueryExistenciaDefault = `TODOS`;
+
+export const ListProductosQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().optional().describe('Limita existencias a una ubicación permitida por el alcance de consulta.'),
+  "existencia": zod.enum(['TODOS', 'CON_EXISTENCIA', 'AGOTADOS']).default(listProductosQueryExistenciaDefault).describe('Filtra el catálogo según las existencias cacheadas en las ubicaciones permitidas.')
+})
+
 export const ListProductosResponseItem = zod.object({
   "id": zod.number(),
   "sku": zod.string(),
@@ -288,6 +295,7 @@ export const ListProductosResponseItem = zod.object({
   "activo": zod.boolean(),
   "rollos": zod.number(),
   "cantidad": zod.string(),
+  "sitiosConExistencia": zod.number(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -323,6 +331,7 @@ export const CreateProductoResponse = zod.object({
   "activo": zod.boolean(),
   "rollos": zod.number(),
   "cantidad": zod.string(),
+  "sitiosConExistencia": zod.number(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -466,6 +475,7 @@ export const GetProductoResponse = zod.object({
   "activo": zod.boolean(),
   "rollos": zod.number(),
   "cantidad": zod.string(),
+  "sitiosConExistencia": zod.number(),
   "skuBloqueado": zod.boolean(),
   "unidadBloqueada": zod.boolean(),
   "inventarioPorUbicacion": zod.array(zod.object({
@@ -473,6 +483,14 @@ export const GetProductoResponse = zod.object({
   "nombre": zod.string(),
   "rollos": zod.number(),
   "cantidad": zod.string()
+})),
+  "rollosDisponibles": zod.array(zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "cantidad": zod.string(),
+  "estado": zod.enum(['DISPONIBLE'])
 })),
   "comprasResumen": zod.object({
   "totalCosto": zod.string(),
@@ -530,6 +548,7 @@ export const UpdateProductoResponse = zod.object({
   "activo": zod.boolean(),
   "rollos": zod.number(),
   "cantidad": zod.string(),
+  "sitiosConExistencia": zod.number(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })

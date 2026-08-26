@@ -70,11 +70,17 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Sin cambio por ser puertas operativas: `routes/salidas.ts:318` (`GET /salidas/rollos/serie/:serie`); `lib/pos.ts:322,490` (validaciones de estado para venta); transiciones y ajustes de `lib/inventario.ts:1198-1665`.
 - Sin cambio por pertenecer al dominio separado de contenedores: `lib/contenedores.ts:242` (`getContenedorDetail`) y `:509` (`getContenedoresSummary`), y `lib/contenedores-helpers.ts:88` (`canEditContenedor`).
 
+## Parte 1, Bloque 2 — Catálogo de Productos
+
+- `GET /productos` sigue devolviendo el arreglo completo del catálogo y acepta `ubicacionId` y `existencia` (`TODOS`, `CON_EXISTENCIA`, `AGOTADOS`).
+- Sus totales, los sitios con existencia y el desglose del detalle se leen exclusivamente de `existencias`; los productos sin fila de cache permanecen visibles con cero.
+- El alcance de lectura reutiliza `resolveReadScope` de Inventario. El detalle lista solo ubicaciones TIENDA/BODEGA activas permitidas y expone enlaces de rollos únicamente `DISPONIBLE`, sin derivar los totales de esos enlaces.
+- Decisión conservadora: una ubicación inactiva o que no sea TIENDA/BODEGA no participa en el catálogo aunque tenga una fila histórica de cache.
+
 ## Pendiente de partes siguientes
 
 > `ABIERTO` se elimina en la Parte 2. Nota: `salidaMostrador` deja `rollos.cantidad_actual` sin tocar mientras inserta el movimiento negativo completo. Es inconsistente pero ya no afecta la existencia. Se resuelve al eliminar el estado.
 
-- Parte 1 Bloque 2: campos y filtro de existencia del catálogo de Productos.
 - Parte 1 Bloque 3: limpieza de transferencias muertas, sin tocar el tránsito de Contenedores.
 
 ## Permission modules (24 total)

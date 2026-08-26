@@ -1735,6 +1735,22 @@ export interface ProductoInventarioUbicacion {
   cantidad: string;
 }
 
+export type ProductoRolloDisponibleEstado = typeof ProductoRolloDisponibleEstado[keyof typeof ProductoRolloDisponibleEstado];
+
+
+export const ProductoRolloDisponibleEstado = {
+  DISPONIBLE: 'DISPONIBLE',
+} as const;
+
+export interface ProductoRolloDisponible {
+  id: number;
+  serie: string;
+  ubicacionId: number;
+  ubicacionNombre: string;
+  cantidad: string;
+  estado: ProductoRolloDisponibleEstado;
+}
+
 export interface ProductoComprasResumen {
   totalCosto: string;
   totalCantidad: string;
@@ -1776,6 +1792,7 @@ export interface Producto {
   activo: boolean;
   rollos: number;
   cantidad: string;
+  sitiosConExistencia: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -1792,9 +1809,11 @@ export interface ProductoDetail {
   activo: boolean;
   rollos: number;
   cantidad: string;
+  sitiosConExistencia: number;
   skuBloqueado: boolean;
   unidadBloqueada: boolean;
   inventarioPorUbicacion: ProductoInventarioUbicacion[];
+  rollosDisponibles: ProductoRolloDisponible[];
   comprasResumen?: ProductoComprasResumen;
   comprasHistorial?: ProductoCompraHistorial[];
   createdAt: string;
@@ -3581,6 +3600,26 @@ export type GetDashboardParams = {
  */
 ubicacionId?: number;
 };
+
+export type ListProductosParams = {
+/**
+ * Limita existencias a una ubicación permitida por el alcance de consulta.
+ */
+ubicacionId?: number;
+/**
+ * Filtra el catálogo según las existencias cacheadas en las ubicaciones permitidas.
+ */
+existencia?: ListProductosExistencia;
+};
+
+export type ListProductosExistencia = typeof ListProductosExistencia[keyof typeof ListProductosExistencia];
+
+
+export const ListProductosExistencia = {
+  TODOS: 'TODOS',
+  CON_EXISTENCIA: 'CON_EXISTENCIA',
+  AGOTADOS: 'AGOTADOS',
+} as const;
 
 export type ListPreciosParams = {
 search?: string;

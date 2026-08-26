@@ -8,6 +8,7 @@
 import type { ProductoCompraHistorial } from './productoCompraHistorial';
 import type { ProductoComprasResumen } from './productoComprasResumen';
 import type { ProductoInventarioUbicacion } from './productoInventarioUbicacion';
+import type { ProductoRolloDisponible } from './productoRolloDisponible';
 import type { UnidadProducto } from './unidadProducto';
 
 export interface ProductoDetail {
@@ -22,9 +23,11 @@ export interface ProductoDetail {
   activo: boolean;
   rollos: number;
   cantidad: string;
+  sitiosConExistencia: number;
   skuBloqueado: boolean;
   unidadBloqueada: boolean;
   inventarioPorUbicacion: ProductoInventarioUbicacion[];
+  rollosDisponibles: ProductoRolloDisponible[];
   comprasResumen?: ProductoComprasResumen;
   comprasHistorial?: ProductoCompraHistorial[];
   createdAt: Date;

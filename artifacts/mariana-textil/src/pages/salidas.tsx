@@ -71,7 +71,7 @@ export default function Salidas() {
   const isCaja = user?.rol === "CAJA";
   const { data: locations } = useGetUbicacionesSalida({ query: { queryKey: getGetUbicacionesSalidaQueryKey() } });
   const { data: users } = useListUsers({ query: { enabled: !isCaja, queryKey: getListUsersQueryKey() } });
-  const { data: products } = useListProductos({ query: { enabled: !isCaja, queryKey: getListProductosQueryKey() } });
+  const { data: products } = useListProductos(undefined, { query: { enabled: !isCaja, queryKey: getListProductosQueryKey() } });
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");

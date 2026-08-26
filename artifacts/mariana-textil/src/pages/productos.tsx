@@ -12,7 +12,8 @@ import {
   Producto,
   UnidadProducto,
   ImportPreviewRow,
-  ImportPreviewRowEstado
+  ImportPreviewRowEstado,
+  ListProductosExistencia
 } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -88,8 +89,14 @@ export default function Productos() {
     query: { queryKey: getGetCurrentUserQueryKey() }
   });
   
-  const { data: productos, isLoading } = useListProductos({
-    query: { queryKey: getListProductosQueryKey() }
+  const [filterExistencia, setFilterExistencia] = useState<ListProductosExistencia>(ListProductosExistencia.TODOS);
+
+  const queryParams = useMemo(() => ({
+    existencia: filterExistencia !== "TODOS" ? filterExistencia : undefined
+  }), [filterExistencia]);
+
+  const { data: productos, isLoading } = useListProductos(queryParams, {
+    query: { queryKey: getListProductosQueryKey(queryParams) }
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -205,7 +212,17 @@ export default function Productos() {
                 data-testid="input-search-product"
               />
             </div>
-            <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
+              <Select value={filterExistencia} onValueChange={(v: ListProductosExistencia) => setFilterExistencia(v)}>
+                <SelectTrigger className="w-[150px] bg-background" data-testid="filter-existencia">
+                  <SelectValue placeholder="Existencia" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ListProductosExistencia.TODOS}>Todos los prod.</SelectItem>
+                  <SelectItem value={ListProductosExistencia.CON_EXISTENCIA}>Con existencia</SelectItem>
+                  <SelectItem value={ListProductosExistencia.AGOTADOS}>Agotados</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={filterUnidad} onValueChange={setFilterUnidad}>
                 <SelectTrigger className="w-[140px] bg-background">
                   <SelectValue placeholder="Unidad" />
@@ -253,8 +270,6 @@ export default function Productos() {
                 <div className="w-full">
                   {grouped.map(([tela, groupProducts]) => {
                     const isExpanded = expandedTelas.has(tela);
-                    const totalRollos = groupProducts.reduce((acc, p) => acc + (p.rollos || 0), 0);
-                    const totalCantidad = groupProducts.reduce((acc, p) => acc + parseFloat(p.cantidad || "0"), 0);
 
                     return (
                       <div key={tela} className="border-b last:border-0">
@@ -271,14 +286,6 @@ export default function Productos() {
                             <Badge variant="secondary" className="ml-2">{groupProducts.length} colores</Badge>
                           </div>
                           <div className="flex items-center gap-6 text-sm">
-                            <div className="text-right hidden sm:block">
-                              <span className="text-muted-foreground">Rollos: </span>
-                              <span className="font-semibold text-sidebar">{formatNumber(totalRollos, { kind: "count" })}</span>
-                            </div>
-                            <div className="text-right hidden sm:block w-24">
-                              <span className="text-muted-foreground">Total: </span>
-                              <span className="font-semibold text-sidebar">{formatNumber(totalCantidad, { kind: "quantity" })}</span>
-                            </div>
                             {canCreate && (
                               <Button 
                                 variant="ghost" 
@@ -303,14 +310,17 @@ export default function Productos() {
                                   {canViewPrices && <TableHead className="text-right">Precio</TableHead>}
                                   <TableHead className="text-right">Rollos</TableHead>
                                   <TableHead className="text-right">Cantidad</TableHead>
+                                  <TableHead className="text-right">Sitios</TableHead>
                                   <TableHead className="text-right">Estado</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
-                                {groupProducts.map(p => (
+                                {groupProducts.map(p => {
+                                  const isZeroStock = p.rollos === 0 && parseFloat(p.cantidad) === 0;
+                                  return (
                                   <TableRow 
                                     key={p.id} 
-                                    className="cursor-pointer hover:bg-muted/40 transition-colors"
+                                    className={`cursor-pointer transition-colors ${isZeroStock ? "opacity-60 bg-muted/20 hover:bg-muted/40" : "hover:bg-muted/40"}`}
                                     onClick={() => setLocation(`/productos/${p.id}`)}
                                     data-testid={`row-product-${p.id}`}
                                   >
@@ -323,19 +333,22 @@ export default function Productos() {
                                     <TableCell>
                                       <Badge variant="outline" className="text-[10px]">{p.unidad}</Badge>
                                     </TableCell>
-                                    {canViewPrices && <TableCell className="text-right">{formatNumber(p.precioSugerido ?? 0, { kind: "money" })}</TableCell>}
-                                    <TableCell className="text-right font-medium">{formatNumber(p.rollos, { kind: "count" })}</TableCell>
-                                    <TableCell className="text-right font-medium">{formatNumber(p.cantidad, { kind: "quantity" })}</TableCell>
+                                    {canViewPrices && <TableCell className={`text-right ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.precioSugerido ?? 0, { kind: "money" })}</TableCell>}
+                                    <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.rollos, { kind: "count" })}</TableCell>
+                                    <TableCell className={`text-right font-medium tabular-nums ${isZeroStock ? "text-muted-foreground" : ""}`}>
+                                      {formatNumber(p.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{p.unidad}</span>
+                                    </TableCell>
+                                    <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.sitiosConExistencia, { kind: "count" })}</TableCell>
                                     <TableCell className="text-right">
                                       <Badge variant={p.activo ? "default" : "secondary"} className={p.activo ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20" : ""}>
                                         {p.activo ? "Activo" : "Inactivo"}
                                       </Badge>
                                     </TableCell>
                                   </TableRow>
-                                ))}
+                                )})}
                                 {canCreate && (
                                   <TableRow>
-                                    <TableCell colSpan={7} className="p-2">
+                                    <TableCell colSpan={8} className="p-2">
                                       <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-primary h-8" onClick={() => openCreate(tela)}>
                                         <Plus className="w-4 h-4 mr-2" /> Agregar color a {tela}
                                       </Button>

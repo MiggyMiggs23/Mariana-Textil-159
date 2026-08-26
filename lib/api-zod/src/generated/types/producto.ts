@@ -19,6 +19,7 @@ export interface Producto {
   activo: boolean;
   rollos: number;
   cantidad: string;
+  sitiosConExistencia: number;
   createdAt: Date;
   updatedAt: Date;
 }

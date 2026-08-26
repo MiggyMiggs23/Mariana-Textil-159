@@ -262,6 +262,18 @@ paths:
       operationId: listProductos
       tags: [productos]
       summary: Lista productos del catálogo
+      parameters:
+        - in: query
+          name: ubicacionId
+          description: Limita existencias a una ubicación permitida por el alcance de consulta.
+          schema: { type: number }
+        - in: query
+          name: existencia
+          description: Filtra el catálogo según las existencias cacheadas en las ubicaciones permitidas.
+          schema:
+            type: string
+            enum: [TODOS, CON_EXISTENCIA, AGOTADOS]
+            default: TODOS
       responses:
         "200":
           description: Lista de productos
@@ -5005,6 +5017,16 @@ components:
         nombre: { type: string }
         rollos: { type: number }
         cantidad: { type: string }
+    ProductoRolloDisponible:
+      type: object
+      required: [id, serie, ubicacionId, ubicacionNombre, cantidad, estado]
+      properties:
+        id: { type: number }
+        serie: { type: string }
+        ubicacionId: { type: number }
+        ubicacionNombre: { type: string }
+        cantidad: { type: string }
+        estado: { type: string, enum: [DISPONIBLE] }
     ProductoComprasResumen:
       type: object
       required: [totalCosto, totalCantidad, totalRollos, costoPorUnidad]
@@ -5058,6 +5080,7 @@ components:
           activo,
           rollos,
           cantidad,
+          sitiosConExistencia,
           createdAt,
           updatedAt,
         ]
@@ -5074,6 +5097,7 @@ components:
         activo: { type: boolean }
         rollos: { type: number }
         cantidad: { type: string }
+        sitiosConExistencia: { type: number }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
     ProductoDetail:
@@ -5089,9 +5113,11 @@ components:
           activo,
           rollos,
           cantidad,
+          sitiosConExistencia,
           skuBloqueado,
           unidadBloqueada,
           inventarioPorUbicacion,
+          rollosDisponibles,
           createdAt,
           updatedAt,
         ]
@@ -5108,12 +5134,17 @@ components:
         activo: { type: boolean }
         rollos: { type: number }
         cantidad: { type: string }
+        sitiosConExistencia: { type: number }
         skuBloqueado: { type: boolean }
         unidadBloqueada: { type: boolean }
         inventarioPorUbicacion:
           type: array
           items:
             $ref: "#/components/schemas/ProductoInventarioUbicacion"
+        rollosDisponibles:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductoRolloDisponible"
         comprasResumen:
           $ref: "#/components/schemas/ProductoComprasResumen"
         comprasHistorial:

@@ -89,7 +89,7 @@ export default function Etiquetas() {
   }, []);
 
   const { data: locations } = useListLocations({ query: { queryKey: getListLocationsQueryKey() } });
-  const { data: products } = useListProductos({ query: { queryKey: getListProductosQueryKey() } });
+  const { data: products } = useListProductos(undefined, { query: { queryKey: getListProductosQueryKey() } });
   const { data: users } = useListUsers({ query: { enabled: isAdmin, queryKey: getListUsersQueryKey() } });
 
   const searchParams = {

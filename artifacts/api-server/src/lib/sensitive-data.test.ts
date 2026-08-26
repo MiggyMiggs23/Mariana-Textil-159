@@ -6,6 +6,7 @@ import {
 } from "./sensitive-data";
 
 const payload = {
+  precioSugerido: "25.00",
   costoUnitario: "10.00",
   costo_total: "20.00",
   costo_unitario_congelado: "10.00",
@@ -21,6 +22,7 @@ const payload = {
 
 const terminal = omitTerminalSensitiveFields(payload, true) as Record<string, unknown>;
 for (const key of [
+  "precioSugerido",
   "costoUnitario",
   "costo_total",
   "costo_unitario_congelado",

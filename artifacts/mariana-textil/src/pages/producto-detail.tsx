@@ -366,24 +366,89 @@ export default function ProductoDetail() {
                 <div className="divide-y">
                   {product.inventarioPorUbicacion.length === 0 ? (
                     <div className="p-6 text-center text-sm text-muted-foreground">
-                      No hay inventario registrado en ningún sitio.
+                      No hay ubicaciones configuradas.
                     </div>
                   ) : (
-                    product.inventarioPorUbicacion.map(inv => (
-                      <div key={inv.ubicacionId} className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors">
-                        <div className="font-medium text-sm">{inv.nombre}</div>
+                    product.inventarioPorUbicacion.map(inv => {
+                      const isZero = inv.rollos === 0 && parseFloat(inv.cantidad) === 0;
+                      return (
+                      <div key={inv.ubicacionId} className={`p-4 flex items-center justify-between hover:bg-muted/30 transition-colors ${isZero ? 'opacity-60 bg-muted/10' : ''}`}>
+                        <div className={`font-medium text-sm ${isZero ? 'text-muted-foreground' : ''}`}>{inv.nombre}</div>
                         <div className="text-right">
-                          <div className="font-bold text-foreground">{formatNumber(inv.cantidad, { kind: "quantity" })} <span className="text-xs font-normal text-muted-foreground">{product.unidad}</span></div>
+                          <div className={`font-bold tabular-nums ${isZero ? 'text-muted-foreground' : 'text-foreground'}`}>{formatNumber(inv.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{product.unidad}</span></div>
                           <div className="text-xs text-muted-foreground">{formatNumber(inv.rollos, { kind: "count" })} rollos</div>
                         </div>
                       </div>
-                    ))
+                    )})
                   )}
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
+
+        {/* Rollos Disponibles Section */}
+        <Card className="border-t-4 border-t-sidebar-primary">
+          <CardHeader>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <Package className="w-5 h-5 text-sidebar-primary" />
+              Rollos disponibles en almacén
+            </CardTitle>
+            <CardDescription>
+              Rollos disponibles que forman parte de la existencia actual.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            {product.rollosDisponibles.length === 0 ? (
+              <div className="p-12 text-center text-muted-foreground flex flex-col items-center">
+                <Package className="w-12 h-12 mb-4 opacity-20" />
+                <p>No hay rollos disponibles actualmente.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/10 hover:bg-muted/10">
+                      <TableHead>Serie</TableHead>
+                      <TableHead>Ubicación</TableHead>
+                      <TableHead className="text-right">Cantidad</TableHead>
+                      <TableHead className="text-right">Estado</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {product.rollosDisponibles.map(rollo => (
+                      <TableRow key={rollo.id} className="hover:bg-muted/30">
+                        <TableCell>
+                          <Link
+                            href={`/inventario/rollos/${rollo.id}`}
+                            className="font-mono font-medium text-primary hover:underline flex items-center gap-1"
+                            data-testid={`link-rollo-${rollo.id}`}
+                          >
+                            {rollo.serie}
+                          </Link>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {rollo.ubicacionNombre}
+                        </TableCell>
+                        <TableCell className="text-right font-medium tabular-nums">
+                          {formatNumber(rollo.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{product.unidad}</span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge
+                            variant="outline"
+                            className="bg-emerald-100 text-emerald-800 border-emerald-200"
+                          >
+                            {rollo.estado.replace('_', ' ')}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {canViewPurchaseCosts && product.comprasResumen && (
           <Card className="border-t-4 border-t-primary">
