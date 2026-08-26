@@ -12,6 +12,8 @@ export interface EntradaInput {
   /** @nullable */
   proveedorId?: number | null;
   /** @nullable */
+  contenedorId?: number | null;
+  /** @nullable */
   observaciones?: string | null;
   uuidCliente: string;
   /** @minItems 1 */

@@ -119,7 +119,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     items: [
-      { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: false },
+      { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: true },
     ]
   },
   {

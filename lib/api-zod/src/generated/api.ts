@@ -957,6 +957,550 @@ export const ExportarProveedorXlsxResponse = zod.unknown()
 
 
 /**
+ * @summary Catálogos activos para capturar contenedores
+ */
+export const GetCatalogosContenedoresResponse = zod.object({
+  "productos": zod.array(zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO'])
+})),
+  "proveedores": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})),
+  "sitios": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}))
+})
+
+
+/**
+ * @summary Lista paginada de contenedores
+ */
+export const listContenedoresQueryFechaDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContenedoresQueryFechaHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContenedoresQueryPageDefault = 1;
+
+export const listContenedoresQueryPageSizeDefault = 20;
+export const listContenedoresQueryPageSizeMax = 200;
+
+
+
+export const ListContenedoresQueryParams = zod.object({
+  "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']).optional(),
+  "proveedorId": zod.coerce.number().optional(),
+  "sitioDestinoId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional(),
+  "fechaDesde": zod.coerce.string().regex(listContenedoresQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(listContenedoresQueryFechaHastaRegExp).optional(),
+  "search": zod.coerce.string().optional(),
+  "page": zod.coerce.number().min(1).default(listContenedoresQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listContenedoresQueryPageSizeMax).default(listContenedoresQueryPageSizeDefault)
+})
+
+export const listContenedoresResponseItemsItemFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const ListContenedoresResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "referencia": zod.string().nullable(),
+  "fechaEstimadaLlegada": zod.string().regex(listContenedoresResponseItemsItemFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "sitioDestinoId": zod.number(),
+  "sitioDestino": zod.string(),
+  "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']),
+  "diasParaLlegar": zod.number(),
+  "lineas": zod.number(),
+  "totales": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN')
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Registra mercancía en tránsito sin tocar inventario
+ */
+export const createContenedorBodyFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContenedorBodyFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContenedorBodyLineasItemCantidadEsperadaRegExp = new RegExp('^\\d+(\\.\\d{1,3})?$');
+
+
+
+
+export const CreateContenedorBody = zod.object({
+  "proveedorId": zod.number(),
+  "referencia": zod.string().nullish(),
+  "fechaPedido": zod.union([zod.string().regex(createContenedorBodyFechaPedidoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]).optional(),
+  "fechaEstimadaLlegada": zod.string().regex(createContenedorBodyFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "sitioDestinoId": zod.number(),
+  "notas": zod.string().nullish(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "cantidadEsperada": zod.string().regex(createContenedorBodyLineasItemCantidadEsperadaRegExp),
+  "rollosEsperados": zod.number().min(1).nullish(),
+  "nota": zod.string().nullish()
+})).min(1)
+})
+
+export const createContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const CreateContenedorResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "referencia": zod.string().nullable(),
+  "fechaPedido": zod.union([zod.string().regex(createContenedorResponseFechaPedidoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "fechaEstimadaLlegada": zod.string().regex(createContenedorResponseFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "fechaRealLlegada": zod.union([zod.string().regex(createContenedorResponseFechaRealLlegadaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "sitioDestinoId": zod.number(),
+  "sitioDestino": zod.string(),
+  "entradaId": zod.number().nullable(),
+  "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']),
+  "notas": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "diasTransito": zod.number().nullable(),
+  "diferenciaFechaEstimada": zod.number().nullable(),
+  "totalesEsperados": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "totalesRecibidos": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "lineas": zod.array(zod.object({
+  "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidadEsperada": zod.string(),
+  "rollosEsperados": zod.number().nullable(),
+  "nota": zod.string().nullable(),
+  "cantidadRecibida": zod.string(),
+  "rollosRecibidos": zod.number(),
+  "diferencia": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo presente para ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Costo ponderado por cantidad; solo presente para ADMIN')
+})),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN')
+})
+
+
+/**
+ * @summary Situación actual y analítica del periodo
+ */
+export const getResumenContenedoresQueryYearMin = 2000;
+export const getResumenContenedoresQueryYearMax = 2200;
+
+export const getResumenContenedoresQueryQuarterMax = 4;
+
+export const getResumenContenedoresQuerySemesterMax = 2;
+
+
+
+export const GetResumenContenedoresQueryParams = zod.object({
+  "year": zod.coerce.number().min(getResumenContenedoresQueryYearMin).max(getResumenContenedoresQueryYearMax),
+  "quarter": zod.coerce.number().min(1).max(getResumenContenedoresQueryQuarterMax).optional(),
+  "semester": zod.coerce.number().min(1).max(getResumenContenedoresQuerySemesterMax).optional(),
+  "sitioDestinoId": zod.coerce.number().optional()
+})
+
+export const getResumenContenedoresResponseActualProximoOneFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetResumenContenedoresResponse = zod.object({
+  "actual": zod.object({
+  "enTransito": zod.number(),
+  "rollosPorLlegar": zod.number(),
+  "metrosPorLlegar": zod.string(),
+  "kilosPorLlegar": zod.string(),
+  "retrasados": zod.number(),
+  "proximo": zod.union([zod.object({
+  "folio": zod.number(),
+  "proveedor": zod.string(),
+  "fechaEstimadaLlegada": zod.string().regex(getResumenContenedoresResponseActualProximoOneFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "dias": zod.number()
+}),zod.null()])
+}),
+  "periodo": zod.object({
+  "contenedores": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "diasPromedio": zod.string().nullable(),
+  "antes": zod.number(),
+  "aTiempo": zod.number(),
+  "despues": zod.number(),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN; null cuando hay costos pendientes'),
+  "costoPromedio": zod.string().nullish().describe('Solo ADMIN; null cuando hay costos pendientes')
+}),
+  "porProveedor": zod.array(zod.object({
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "contenedores": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "diasPromedioTransito": zod.string().nullable(),
+  "antes": zod.number(),
+  "aTiempo": zod.number(),
+  "despues": zod.number(),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN'),
+  "participacion": zod.string().nullish().describe('Solo ADMIN')
+})),
+  "porProducto": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "contenedores": zod.number(),
+  "rollos": zod.number(),
+  "cantidad": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Solo ADMIN')
+})),
+  "porTela": zod.array(zod.object({
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "contenedores": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Solo ADMIN')
+})),
+  "porColor": zod.array(zod.object({
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "contenedores": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Solo ADMIN')
+})),
+  "porMes": zod.array(zod.object({
+  "mes": zod.number(),
+  "costoActual": zod.string().nullish().describe('Solo ADMIN; null cuando hay costos pendientes'),
+  "costoAnioAnterior": zod.string().nullish().describe('Solo ADMIN; null cuando hay costos pendientes')
+})),
+  "diferencias": zod.array(zod.object({
+  "producto_id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "esperado": zod.string(),
+  "recibido": zod.string()
+}))
+})
+
+
+/**
+ * @summary Exporta el control completo a XLSX
+ */
+export const exportContenedoresXlsxQueryQuarterMax = 4;
+
+export const exportContenedoresXlsxQuerySemesterMax = 2;
+
+
+
+export const ExportContenedoresXlsxQueryParams = zod.object({
+  "year": zod.coerce.number(),
+  "quarter": zod.coerce.number().min(1).max(exportContenedoresXlsxQueryQuarterMax).optional(),
+  "semester": zod.coerce.number().min(1).max(exportContenedoresXlsxQuerySemesterMax).optional()
+})
+
+export const ExportContenedoresXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta el control completo a PDF
+ */
+export const exportContenedoresPdfQueryQuarterMax = 4;
+
+export const exportContenedoresPdfQuerySemesterMax = 2;
+
+
+
+export const ExportContenedoresPdfQueryParams = zod.object({
+  "year": zod.coerce.number(),
+  "quarter": zod.coerce.number().min(1).max(exportContenedoresPdfQueryQuarterMax).optional(),
+  "semester": zod.coerce.number().min(1).max(exportContenedoresPdfQuerySemesterMax).optional()
+})
+
+export const ExportContenedoresPdfResponse = zod.unknown()
+
+
+/**
+ * @summary Contenedores EN_TRANSITO del sitio resuelto para una entrada
+ */
+export const ListContenedoresDisponiblesEntradaQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number()
+})
+
+export const listContenedoresDisponiblesEntradaResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const ListContenedoresDisponiblesEntradaResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "referencia": zod.string().nullable(),
+  "fechaEstimadaLlegada": zod.string().regex(listContenedoresDisponiblesEntradaResponseFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.')
+})
+export const ListContenedoresDisponiblesEntradaResponse = zod.array(ListContenedoresDisponiblesEntradaResponseItem)
+
+
+export const GetContenedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const getContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetContenedorResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "referencia": zod.string().nullable(),
+  "fechaPedido": zod.union([zod.string().regex(getContenedorResponseFechaPedidoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "fechaEstimadaLlegada": zod.string().regex(getContenedorResponseFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "fechaRealLlegada": zod.union([zod.string().regex(getContenedorResponseFechaRealLlegadaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "sitioDestinoId": zod.number(),
+  "sitioDestino": zod.string(),
+  "entradaId": zod.number().nullable(),
+  "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']),
+  "notas": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "diasTransito": zod.number().nullable(),
+  "diferenciaFechaEstimada": zod.number().nullable(),
+  "totalesEsperados": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "totalesRecibidos": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "lineas": zod.array(zod.object({
+  "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidadEsperada": zod.string(),
+  "rollosEsperados": zod.number().nullable(),
+  "nota": zod.string().nullable(),
+  "cantidadRecibida": zod.string(),
+  "rollosRecibidos": zod.number(),
+  "diferencia": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo presente para ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Costo ponderado por cantidad; solo presente para ADMIN')
+})),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN')
+})
+
+
+/**
+ * @summary Actualiza exclusivamente un contenedor EN_TRANSITO
+ */
+export const UpdateContenedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const updateContenedorBodyOneFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContenedorBodyOneFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContenedorBodyOneLineasItemCantidadEsperadaRegExp = new RegExp('^\\d+(\\.\\d{1,3})?$');
+
+
+
+
+export const UpdateContenedorBody = zod.object({
+  "proveedorId": zod.number(),
+  "referencia": zod.string().nullish(),
+  "fechaPedido": zod.union([zod.string().regex(updateContenedorBodyOneFechaPedidoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]).optional(),
+  "fechaEstimadaLlegada": zod.string().regex(updateContenedorBodyOneFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "sitioDestinoId": zod.number(),
+  "notas": zod.string().nullish(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "cantidadEsperada": zod.string().regex(updateContenedorBodyOneLineasItemCantidadEsperadaRegExp),
+  "rollosEsperados": zod.number().min(1).nullish(),
+  "nota": zod.string().nullish()
+})).min(1)
+})
+
+export const updateContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const UpdateContenedorResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "referencia": zod.string().nullable(),
+  "fechaPedido": zod.union([zod.string().regex(updateContenedorResponseFechaPedidoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "fechaEstimadaLlegada": zod.string().regex(updateContenedorResponseFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "fechaRealLlegada": zod.union([zod.string().regex(updateContenedorResponseFechaRealLlegadaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "sitioDestinoId": zod.number(),
+  "sitioDestino": zod.string(),
+  "entradaId": zod.number().nullable(),
+  "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']),
+  "notas": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "diasTransito": zod.number().nullable(),
+  "diferenciaFechaEstimada": zod.number().nullable(),
+  "totalesEsperados": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "totalesRecibidos": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "lineas": zod.array(zod.object({
+  "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidadEsperada": zod.string(),
+  "rollosEsperados": zod.number().nullable(),
+  "nota": zod.string().nullable(),
+  "cantidadRecibida": zod.string(),
+  "rollosRecibidos": zod.number(),
+  "diferencia": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo presente para ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Costo ponderado por cantidad; solo presente para ADMIN')
+})),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN')
+})
+
+
+export const CancelContenedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const cancelContenedorBodyMotivoMin = 10;
+
+
+
+export const CancelContenedorBody = zod.object({
+  "motivo": zod.string().min(cancelContenedorBodyMotivoMin)
+})
+
+export const cancelContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const cancelContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const cancelContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const CancelContenedorResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "referencia": zod.string().nullable(),
+  "fechaPedido": zod.union([zod.string().regex(cancelContenedorResponseFechaPedidoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "fechaEstimadaLlegada": zod.string().regex(cancelContenedorResponseFechaEstimadaLlegadaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "fechaRealLlegada": zod.union([zod.string().regex(cancelContenedorResponseFechaRealLlegadaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "sitioDestinoId": zod.number(),
+  "sitioDestino": zod.string(),
+  "entradaId": zod.number().nullable(),
+  "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']),
+  "notas": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "diasTransito": zod.number().nullable(),
+  "diferenciaFechaEstimada": zod.number().nullable(),
+  "totalesEsperados": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "totalesRecibidos": zod.object({
+  "lineas": zod.number(),
+  "rollos": zod.number(),
+  "metros": zod.string(),
+  "kilos": zod.string()
+}),
+  "lineas": zod.array(zod.object({
+  "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidadEsperada": zod.string(),
+  "rollosEsperados": zod.number().nullable(),
+  "nota": zod.string().nullable(),
+  "cantidadRecibida": zod.string(),
+  "rollosRecibidos": zod.number(),
+  "diferencia": zod.string(),
+  "costoTotal": zod.string().nullish().describe('Solo presente para ADMIN'),
+  "costoUnitarioReal": zod.string().nullish().describe('Costo ponderado por cantidad; solo presente para ADMIN')
+})),
+  "costoTotal": zod.string().nullish().describe('Solo ADMIN')
+})
+
+
+/**
  * @summary Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
  */
 
@@ -966,6 +1510,7 @@ export const ExportarProveedorXlsxResponse = zod.unknown()
 export const CrearEntradaBody = zod.object({
   "ubicacionId": zod.number(),
   "proveedorId": zod.number().nullish(),
+  "contenedorId": zod.number().nullish(),
   "observaciones": zod.string().nullish(),
   "uuidCliente": zod.string(),
   "lineas": zod.array(zod.object({

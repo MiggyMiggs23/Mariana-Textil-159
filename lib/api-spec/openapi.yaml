@@ -39,6 +39,8 @@ tags:
     description: Notificaciones y alertas de crédito exclusivas para ADMIN
   - name: etiquetas
     description: Búsqueda y reimpresión controlada de etiquetas de rollos
+  - name: contenedores
+    description: Próximos contenedores y control anual de compras
 paths:
   /healthz:
     get:
@@ -715,6 +717,175 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /contenedores/catalogos:
+    get:
+      operationId: getCatalogosContenedores
+      tags: [contenedores]
+      summary: Catálogos activos para capturar contenedores
+      responses:
+        "200":
+          description: Productos, proveedores y sitios activos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorCatalogos" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /contenedores:
+    get:
+      operationId: listContenedores
+      tags: [contenedores]
+      summary: Lista paginada de contenedores
+      parameters:
+        - { in: query, name: estado, schema: { $ref: "#/components/schemas/EstadoContenedor" } }
+        - { in: query, name: proveedorId, schema: { type: number } }
+        - { in: query, name: sitioDestinoId, schema: { type: number } }
+        - { in: query, name: productoId, schema: { type: number } }
+        - { in: query, name: fechaDesde, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - { in: query, name: fechaHasta, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - { in: query, name: search, schema: { type: string } }
+        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 200, default: 20 } }
+      responses:
+        "200":
+          description: Resultado paginado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorListResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createContenedor
+      tags: [contenedores]
+      summary: Registra mercancía en tránsito sin tocar inventario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContenedorInput" }
+      responses:
+        "201":
+          description: Contenedor creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorDetail" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /contenedores/resumen:
+    get:
+      operationId: getResumenContenedores
+      tags: [contenedores]
+      summary: Situación actual y analítica del periodo
+      parameters:
+        - { in: query, name: year, required: true, schema: { type: number, minimum: 2000, maximum: 2200 } }
+        - { in: query, name: quarter, schema: { type: number, minimum: 1, maximum: 4 } }
+        - { in: query, name: semester, schema: { type: number, minimum: 1, maximum: 2 } }
+        - { in: query, name: sitioDestinoId, schema: { type: number } }
+      responses:
+        "200":
+          description: Resumen; costos solo están presentes para ADMIN
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorResumen" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /contenedores/export.xlsx:
+    get:
+      operationId: exportContenedoresXlsx
+      tags: [contenedores]
+      summary: Exporta el control completo a XLSX
+      parameters:
+        - { in: query, name: year, required: true, schema: { type: number } }
+        - { in: query, name: quarter, schema: { type: number, minimum: 1, maximum: 4 } }
+        - { in: query, name: semester, schema: { type: number, minimum: 1, maximum: 2 } }
+      responses:
+        "200":
+          description: Libro XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /contenedores/export.pdf:
+    get:
+      operationId: exportContenedoresPdf
+      tags: [contenedores]
+      summary: Exporta el control completo a PDF
+      parameters:
+        - { in: query, name: year, required: true, schema: { type: number } }
+        - { in: query, name: quarter, schema: { type: number, minimum: 1, maximum: 4 } }
+        - { in: query, name: semester, schema: { type: number, minimum: 1, maximum: 2 } }
+      responses:
+        "200":
+          description: Documento PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /contenedores/disponibles-entrada:
+    get:
+      operationId: listContenedoresDisponiblesEntrada
+      tags: [contenedores]
+      summary: Contenedores EN_TRANSITO del sitio resuelto para una entrada
+      parameters:
+        - { in: query, name: ubicacionId, required: true, schema: { type: number } }
+      responses:
+        "200":
+          description: Opciones disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ContenedorEntradaOption" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /contenedores/{id}:
+    get:
+      operationId: getContenedor
+      tags: [contenedores]
+      parameters:
+        - { $ref: "#/components/parameters/ContenedorId" }
+      responses:
+        "200":
+          description: Comparativo esperado contra recibido
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorDetail" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      operationId: updateContenedor
+      tags: [contenedores]
+      summary: Actualiza exclusivamente un contenedor EN_TRANSITO
+      parameters:
+        - { $ref: "#/components/parameters/ContenedorId" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContenedorUpdate" }
+      responses:
+        "200":
+          description: Contenedor actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorDetail" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /contenedores/{id}/cancelar:
+    post:
+      operationId: cancelContenedor
+      tags: [contenedores]
+      parameters:
+        - { $ref: "#/components/parameters/ContenedorId" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContenedorCancelacion" }
+      responses:
+        "200":
+          description: Contenedor cancelado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContenedorDetail" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /inventario/entradas:
     post:
       operationId: crearEntrada
@@ -3308,6 +3479,12 @@ components:
       required: true
       schema:
         type: number
+    ContenedorId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
     SalidaId:
       name: id
       in: path
@@ -3382,6 +3559,278 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    CalendarDate:
+      type: string
+      pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+      description: Calendar day in YYYY-MM-DD; never coerced to an instant.
+    EstadoContenedor:
+      type: string
+      enum: [EN_TRANSITO, RECIBIDO, CANCELADO]
+    ContenedorCatalogoProducto:
+      type: object
+      required: [id, sku, tela, color, unidad]
+      properties:
+        id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+    ContenedorCatalogoSimple:
+      type: object
+      required: [id, nombre]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+    ContenedorCatalogos:
+      type: object
+      required: [productos, proveedores, sitios]
+      properties:
+        productos:
+          type: array
+          items: { $ref: "#/components/schemas/ContenedorCatalogoProducto" }
+        proveedores:
+          type: array
+          items: { $ref: "#/components/schemas/ContenedorCatalogoSimple" }
+        sitios:
+          type: array
+          items: { $ref: "#/components/schemas/ContenedorCatalogoSimple" }
+    ContenedorLineaInput:
+      type: object
+      required: [productoId, cantidadEsperada]
+      properties:
+        productoId: { type: number }
+        cantidadEsperada: { type: string, pattern: "^\\d+(\\.\\d{1,3})?$" }
+        rollosEsperados: { type: ["number", "null"], minimum: 1 }
+        nota: { type: ["string", "null"] }
+    ContenedorInput:
+      type: object
+      required: [proveedorId, fechaEstimadaLlegada, sitioDestinoId, lineas]
+      properties:
+        proveedorId: { type: number }
+        referencia: { type: ["string", "null"] }
+        fechaPedido: { anyOf: [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }] }
+        fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
+        sitioDestinoId: { type: number }
+        notas: { type: ["string", "null"] }
+        lineas:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/ContenedorLineaInput" }
+    ContenedorUpdate:
+      allOf:
+        - { $ref: "#/components/schemas/ContenedorInput" }
+    ContenedorCancelacion:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 10 }
+    ContenedorLinea:
+      type: object
+      required: [id, productoId, sku, tela, color, unidad, cantidadEsperada, rollosEsperados, nota, cantidadRecibida, rollosRecibidos, diferencia]
+      properties:
+        id: { type: ["number", "null"], description: Null when the product was received but was not expected }
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        cantidadEsperada: { type: string }
+        rollosEsperados: { type: ["number", "null"] }
+        nota: { type: ["string", "null"] }
+        cantidadRecibida: { type: string }
+        rollosRecibidos: { type: number }
+        diferencia: { type: string }
+        costoTotal:
+          type: ["string", "null"]
+          description: Solo presente para ADMIN
+        costoUnitarioReal:
+          type: ["string", "null"]
+          description: Costo ponderado por cantidad; solo presente para ADMIN
+    ContenedorTotals:
+      type: object
+      required: [lineas, rollos, metros, kilos]
+      properties:
+        lineas: { type: number }
+        rollos: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+    ContenedorListItem:
+      type: object
+      required: [id, folio, proveedorId, proveedor, referencia, fechaEstimadaLlegada, sitioDestinoId, sitioDestino, estado, diasParaLlegar, lineas, totales]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        proveedorId: { type: number }
+        proveedor: { type: string }
+        referencia: { type: ["string", "null"] }
+        fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
+        sitioDestinoId: { type: number }
+        sitioDestino: { type: string }
+        estado: { $ref: "#/components/schemas/EstadoContenedor" }
+        diasParaLlegar: { type: number }
+        lineas: { type: number }
+        totales: { $ref: "#/components/schemas/ContenedorTotals" }
+        costoTotal: { type: ["string", "null"], description: Solo ADMIN }
+    ContenedorListResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/ContenedorListItem" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+    ContenedorDetail:
+      type: object
+      required: [id, folio, proveedorId, proveedor, referencia, fechaPedido, fechaEstimadaLlegada, fechaRealLlegada, sitioDestinoId, sitioDestino, entradaId, estado, notas, motivoCancelacion, usuarioId, createdAt, updatedAt, diasTransito, diferenciaFechaEstimada, totalesEsperados, totalesRecibidos, lineas]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        proveedorId: { type: number }
+        proveedor: { type: string }
+        referencia: { type: ["string", "null"] }
+        fechaPedido: { anyOf: [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }] }
+        fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
+        fechaRealLlegada: { anyOf: [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }] }
+        sitioDestinoId: { type: number }
+        sitioDestino: { type: string }
+        entradaId: { type: ["number", "null"] }
+        estado: { $ref: "#/components/schemas/EstadoContenedor" }
+        notas: { type: ["string", "null"] }
+        motivoCancelacion: { type: ["string", "null"] }
+        usuarioId: { type: number }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        diasTransito: { type: ["number", "null"] }
+        diferenciaFechaEstimada: { type: ["number", "null"] }
+        totalesEsperados: { $ref: "#/components/schemas/ContenedorTotals" }
+        totalesRecibidos: { $ref: "#/components/schemas/ContenedorTotals" }
+        lineas:
+          type: array
+          items: { $ref: "#/components/schemas/ContenedorLinea" }
+        costoTotal: { type: ["string", "null"], description: Solo ADMIN }
+    ContenedorEntradaOption:
+      type: object
+      required: [id, folio, proveedorId, proveedor, referencia, fechaEstimadaLlegada]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        proveedorId: { type: number }
+        proveedor: { type: string }
+        referencia: { type: ["string", "null"] }
+        fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
+    ContenedorResumenKpis:
+      type: object
+      required: [enTransito, rollosPorLlegar, metrosPorLlegar, kilosPorLlegar, retrasados, proximo]
+      properties:
+        enTransito: { type: number }
+        rollosPorLlegar: { type: number }
+        metrosPorLlegar: { type: string }
+        kilosPorLlegar: { type: string }
+        retrasados: { type: number }
+        proximo:
+          anyOf:
+            - $ref: "#/components/schemas/ContenedorResumenKpisProximo"
+            - { type: "null" }
+    ContenedorResumenKpisProximo:
+      type: object
+      required: [folio, proveedor, fechaEstimadaLlegada, dias]
+      properties:
+        folio: { type: number }
+        proveedor: { type: string }
+        fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
+        dias: { type: number }
+    ContenedorAnaliticaRow:
+      type: object
+      additionalProperties: true
+    ContenedorProveedorResumen:
+      type: object
+      required: [proveedorId, proveedor, contenedores, rollos, metros, kilos, diasPromedioTransito, antes, aTiempo, despues]
+      properties:
+        proveedorId: { type: number }
+        proveedor: { type: string }
+        contenedores: { type: number }
+        rollos: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+        diasPromedioTransito: { type: ["string", "null"] }
+        antes: { type: number }
+        aTiempo: { type: number }
+        despues: { type: number }
+        costoTotal: { type: ["string", "null"], description: Solo ADMIN }
+        participacion: { type: ["string", "null"], description: Solo ADMIN }
+    ContenedorPeriodoResumen:
+      type: object
+      required: [contenedores, rollos, metros, kilos, diasPromedio, antes, aTiempo, despues]
+      properties:
+        contenedores: { type: number }
+        rollos: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+        diasPromedio: { type: ["string", "null"] }
+        antes: { type: number }
+        aTiempo: { type: number }
+        despues: { type: number }
+        costoTotal: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
+        costoPromedio: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
+    ContenedorProductoResumen:
+      type: object
+      required: [productoId, sku, tela, color, unidad, contenedores, rollos, cantidad]
+      properties:
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        contenedores: { type: number }
+        rollos: { type: number }
+        cantidad: { type: string }
+        costoTotal: { type: ["string", "null"], description: Solo ADMIN }
+        costoUnitarioReal: { type: ["string", "null"], description: Solo ADMIN }
+    ContenedorGrupoResumen:
+      type: object
+      required: [unidad, contenedores, rollos, metros, kilos]
+      properties:
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        contenedores: { type: number }
+        rollos: { type: number }
+        metros: { type: string }
+        kilos: { type: string }
+        costoTotal: { type: ["string", "null"], description: Solo ADMIN }
+        costoUnitarioReal: { type: ["string", "null"], description: Solo ADMIN }
+    ContenedorMesResumen:
+      type: object
+      required: [mes]
+      properties:
+        mes: { type: number }
+        costoActual: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
+        costoAnioAnterior: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
+    ContenedorDiferenciaResumen:
+      type: object
+      required: [producto_id, sku, tela, color, unidad, esperado, recibido]
+      properties:
+        producto_id: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        esperado: { type: string }
+        recibido: { type: string }
+    ContenedorResumen:
+      type: object
+      required: [actual, periodo, porProveedor, porProducto, porTela, porColor, porMes, diferencias]
+      properties:
+        actual: { $ref: "#/components/schemas/ContenedorResumenKpis" }
+        periodo: { $ref: "#/components/schemas/ContenedorPeriodoResumen" }
+        porProveedor: { type: array, items: { $ref: "#/components/schemas/ContenedorProveedorResumen" } }
+        porProducto: { type: array, items: { $ref: "#/components/schemas/ContenedorProductoResumen" } }
+        porTela: { type: array, items: { $ref: "#/components/schemas/ContenedorGrupoResumen" } }
+        porColor: { type: array, items: { $ref: "#/components/schemas/ContenedorGrupoResumen" } }
+        porMes: { type: array, items: { $ref: "#/components/schemas/ContenedorMesResumen" } }
+        diferencias: { type: array, items: { $ref: "#/components/schemas/ContenedorDiferenciaResumen" } }
     ReportePrimitive:
       oneOf: [{ type: string }, { type: number }, { type: boolean }, { type: "null" }]
     ReporteKpi:
@@ -5136,6 +5585,7 @@ components:
       properties:
         ubicacionId: { type: number }
         proveedorId: { type: ["number", "null"] }
+        contenedorId: { type: ["number", "null"] }
         observaciones: { type: ["string", "null"] }
         uuidCliente: { type: string }
         lineas:

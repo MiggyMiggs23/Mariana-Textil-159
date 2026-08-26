@@ -19,6 +19,11 @@ import {
   getListEntradasPendientesCostoQueryKey,
   useCountEntradasPendientesCosto,
   getCountEntradasPendientesCostoQueryKey,
+  useListContenedoresDisponiblesEntrada,
+  getListContenedoresDisponiblesEntradaQueryKey,
+  getListContenedoresQueryKey,
+  getGetResumenContenedoresQueryKey,
+  getGetContenedorQueryKey,
   Role,
   EntradaDetail
 } from "@workspace/api-client-react";
@@ -104,6 +109,22 @@ export default function Entradas() {
     },
   });
 
+  const [ubicacionId, setUbicacionId] = useState<string>("");
+  const [proveedorId, setProveedorId] = useState<string>("none");
+  const [contenedorId, setContenedorId] = useState<string>("none");
+  const [autoDerivedProveedorId, setAutoDerivedProveedorId] = useState<string | null>(null);
+  const [observaciones, setObservaciones] = useState<string>("");
+
+  const { data: contenedoresDisponibles } = useListContenedoresDisponiblesEntrada(
+    { ubicacionId: Number(ubicacionId) },
+    {
+      query: {
+        enabled: !!ubicacionId,
+        queryKey: getListContenedoresDisponiblesEntradaQueryKey({ ubicacionId: Number(ubicacionId) })
+      }
+    }
+  );
+
   const crearEntrada = useCrearEntrada();
 
   // General data (draft wide)
@@ -113,9 +134,6 @@ export default function Entradas() {
   const [productoId, setProductoId] = useState<string>("");
   const [costoUnitario, setCostoUnitario] = useState<string>("");
   const [declaredCount, setDeclaredCount] = useState<string>("");
-  const [ubicacionId, setUbicacionId] = useState<string>("");
-  const [proveedorId, setProveedorId] = useState<string>("none");
-  const [observaciones, setObservaciones] = useState<string>("");
 
   const [lineas, setLineas] = useState<DraftLinea[]>([]);
   const [selectedLines, setSelectedLines] = useState<Set<string>>(new Set());
@@ -169,6 +187,44 @@ export default function Entradas() {
       setTimeout(() => qtyInputRef.current?.focus(), 100);
     }
   }, [isCaptureModalOpen]);
+
+  const handleUbicacionChange = (value: string) => {
+    setUbicacionId(value);
+    setContenedorId("none");
+    if (proveedorId !== "none" && proveedorId === autoDerivedProveedorId) {
+      setProveedorId("none");
+    }
+    setAutoDerivedProveedorId(null);
+  };
+
+  const handleProveedorChange = (value: string) => {
+    setProveedorId(value);
+    if (contenedorId !== "none" && contenedoresDisponibles) {
+      const selectedCont = contenedoresDisponibles.find(c => c.id.toString() === contenedorId);
+      if (selectedCont && selectedCont.proveedorId.toString() !== value) {
+        setContenedorId("none");
+        toast.info("El contenedor seleccionado se ha desvinculado porque no coincide con el nuevo proveedor.");
+      }
+    }
+    setAutoDerivedProveedorId(null); // Manual change overrides auto-derivation
+  };
+
+  const handleContenedorChange = (value: string) => {
+    setContenedorId(value);
+    if (value !== "none") {
+      const selectedCont = contenedoresDisponibles?.find(c => c.id.toString() === value);
+      if (selectedCont) {
+        const provIdStr = selectedCont.proveedorId.toString();
+        setProveedorId(provIdStr);
+        setAutoDerivedProveedorId(provIdStr);
+      }
+    } else {
+      if (proveedorId === autoDerivedProveedorId) {
+        setProveedorId("none");
+      }
+      setAutoDerivedProveedorId(null);
+    }
+  };
 
   const handleStartCapture = () => {
     if (!productoId || !declaredCount || !ubicacionId) {
@@ -526,10 +582,30 @@ export default function Entradas() {
       return;
     }
 
+    if (contenedorId && contenedorId !== "none") {
+      const isAvailable = contenedoresDisponibles?.some(c => c.id.toString() === contenedorId);
+      if (!isAvailable) {
+        setContenedorId("none");
+        toast.error("El contenedor seleccionado ya no está disponible para esta ubicación.", {
+          description: "Se ha desvinculado la entrada del contenedor. Revisa tu selección."
+        });
+        return;
+      }
+      const selectedCont = contenedoresDisponibles?.find(c => c.id.toString() === contenedorId);
+      if (selectedCont && selectedCont.proveedorId.toString() !== proveedorId) {
+        setContenedorId("none");
+        toast.error("El proveedor seleccionado no coincide con el proveedor del contenedor", {
+          description: "Se ha desvinculado el contenedor. Revisa tu selección."
+        });
+        return;
+      }
+    }
+
     crearEntrada.mutate({
       data: {
         ubicacionId: Number(ubicacionId),
         proveedorId: proveedorId === "none" ? undefined : Number(proveedorId),
+        contenedorId: contenedorId === "none" ? undefined : Number(contenedorId),
         observaciones: observaciones || null,
         uuidCliente,
         lineas: lineas.map(l => ({
@@ -552,6 +628,14 @@ export default function Entradas() {
         queryClient.invalidateQueries({ queryKey: getGetDashboardQueryKey() });
         queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetExistenciasQueryKey() });
+        if (ubicacionId) {
+          queryClient.invalidateQueries({ queryKey: getListContenedoresDisponiblesEntradaQueryKey({ ubicacionId: Number(ubicacionId) }) });
+        }
+        queryClient.invalidateQueries({ queryKey: getListContenedoresQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getGetResumenContenedoresQueryKey() });
+        if (contenedorId && contenedorId !== "none") {
+          queryClient.invalidateQueries({ queryKey: getGetContenedorQueryKey(Number(contenedorId)) });
+        }
         if (!showCost) {
           queryClient.invalidateQueries({ queryKey: getListEntradasPendientesCostoQueryKey({ page: 1, pageSize: 100 }) });
           queryClient.invalidateQueries({ queryKey: getCountEntradasPendientesCostoQueryKey() });
@@ -733,7 +817,7 @@ export default function Entradas() {
                 <div className="space-y-2">
                   <Label>Sitio <span className="text-destructive">*</span></Label>
                   {user?.rol === Role.ADMIN ? (
-                    <Select value={ubicacionId} onValueChange={setUbicacionId}>
+                    <Select value={ubicacionId} onValueChange={handleUbicacionChange}>
                       <SelectTrigger data-testid="select-entrada-ubicacion">
                         <SelectValue placeholder="Selecciona..." />
                       </SelectTrigger>
@@ -750,7 +834,7 @@ export default function Entradas() {
 
                 <div className="space-y-2">
                   <Label>Proveedor</Label>
-                  <Select value={proveedorId} onValueChange={setProveedorId}>
+                  <Select value={proveedorId} onValueChange={handleProveedorChange}>
                     <SelectTrigger data-testid="select-entrada-proveedor">
                       <SelectValue placeholder="Sin proveedor" />
                     </SelectTrigger>
@@ -762,6 +846,25 @@ export default function Entradas() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {ubicacionId && contenedoresDisponibles && contenedoresDisponibles.length > 0 && (
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Contenedor Asociado (Opcional)</Label>
+                    <Select value={contenedorId} onValueChange={handleContenedorChange}>
+                      <SelectTrigger className="bg-blue-50/50 border-blue-200">
+                        <SelectValue placeholder="Selecciona un contenedor esperado..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Ninguno</SelectItem>
+                        {contenedoresDisponibles.map(c => (
+                          <SelectItem key={c.id} value={c.id.toString()}>
+                            Contenedor #{c.folio.toString().padStart(5, '0')} · {c.proveedor} {c.referencia ? `(${c.referencia})` : ""}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
                 <div className="space-y-2 md:col-span-2">
                   <Label>Notas</Label>

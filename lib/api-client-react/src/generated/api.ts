@@ -60,6 +60,14 @@ import type {
   ConciliacionRow,
   ConflictResponse,
   ContarAlertasEtiquetas200,
+  ContenedorCancelacion,
+  ContenedorCatalogos,
+  ContenedorDetail,
+  ContenedorEntradaOption,
+  ContenedorInput,
+  ContenedorListResult,
+  ContenedorResumen,
+  ContenedorUpdate,
   CorteCaja,
   CountEntradasPendientesCosto200,
   CrearReimpresionEtiquetas201,
@@ -81,6 +89,8 @@ import type {
   ExportAdminCortesXlsxParams,
   ExportAdminCuentasDestinoPdfParams,
   ExportAdminCuentasDestinoXlsxParams,
+  ExportContenedoresPdfParams,
+  ExportContenedoresXlsxParams,
   ExportKardexXlsxParams,
   ExportReporteSeccionPdfParams,
   ExportReporteSeccionXlsxParams,
@@ -103,6 +113,7 @@ import type {
   GetExistenciasParams,
   GetKardexParams,
   GetReporteSeccionParams,
+  GetResumenContenedoresParams,
   HealthStatus,
   ImportConfirmInput,
   ImportFileInput,
@@ -112,6 +123,8 @@ import type {
   KardexResult,
   ListAdminCortesParams,
   ListComprasProveedorParams,
+  ListContenedoresDisponiblesEntradaParams,
+  ListContenedoresParams,
   ListCuentasIncobrables200,
   ListCuentasIncobrablesParams,
   ListEntradasParams,
@@ -297,6 +310,13 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
+
 export const getLoginUrl = () => {
 
 
@@ -2518,6 +2538,783 @@ export function useExportarProveedorXlsx<TData = Awaited<ReturnType<typeof expor
 
 
 
+
+export const getGetCatalogosContenedoresUrl = () => {
+
+
+
+
+  return `/api/contenedores/catalogos`
+}
+
+/**
+ * @summary Catálogos activos para capturar contenedores
+ */
+export const getCatalogosContenedores = async ( options?: Parameters<typeof customFetch>[1]): Promise<ContenedorCatalogos> => {
+
+  return customFetch<ContenedorCatalogos>(getGetCatalogosContenedoresUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCatalogosContenedoresQueryKey = () => {
+    return [
+    `/api/contenedores/catalogos`
+    ] as const;
+    }
+
+
+export const getGetCatalogosContenedoresQueryOptions = <TData = Awaited<ReturnType<typeof getCatalogosContenedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogosContenedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCatalogosContenedoresQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCatalogosContenedores>>> = ({ signal }) => getCatalogosContenedores({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCatalogosContenedores>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCatalogosContenedoresQueryResult = NonNullable<Awaited<ReturnType<typeof getCatalogosContenedores>>>
+export type GetCatalogosContenedoresQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Catálogos activos para capturar contenedores
+ */
+
+export function useGetCatalogosContenedores<TData = Awaited<ReturnType<typeof getCatalogosContenedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCatalogosContenedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCatalogosContenedoresQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListContenedoresUrl = (params?: ListContenedoresParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/contenedores?${stringifiedParams}` : `/api/contenedores`
+}
+
+/**
+ * @summary Lista paginada de contenedores
+ */
+export const listContenedores = async (params?: ListContenedoresParams, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorListResult> => {
+
+  return customFetch<ContenedorListResult>(getListContenedoresUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListContenedoresQueryKey = (params?: ListContenedoresParams,) => {
+    return [
+    `/api/contenedores`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListContenedoresQueryOptions = <TData = Awaited<ReturnType<typeof listContenedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListContenedoresParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listContenedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListContenedoresQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listContenedores>>> = ({ signal }) => listContenedores(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listContenedores>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListContenedoresQueryResult = NonNullable<Awaited<ReturnType<typeof listContenedores>>>
+export type ListContenedoresQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista paginada de contenedores
+ */
+
+export function useListContenedores<TData = Awaited<ReturnType<typeof listContenedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListContenedoresParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listContenedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListContenedoresQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateContenedorUrl = () => {
+
+
+
+
+  return `/api/contenedores`
+}
+
+/**
+ * @summary Registra mercancía en tránsito sin tocar inventario
+ */
+export const createContenedor = async (contenedorInput: ContenedorInput, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorDetail> => {
+
+  return customFetch<ContenedorDetail>(getCreateContenedorUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(contenedorInput)
+  }
+);}
+
+
+
+
+
+export const getCreateContenedorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createContenedor>>, TError,{data: BodyType<ContenedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createContenedor>>, TError,{data: BodyType<ContenedorInput>}, TContext> => {
+
+const mutationKey = ['createContenedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createContenedor>>, {data: BodyType<ContenedorInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createContenedor(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateContenedorMutationResult = NonNullable<Awaited<ReturnType<typeof createContenedor>>>
+    export type CreateContenedorMutationBody = BodyType<ContenedorInput>
+    export type CreateContenedorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Registra mercancía en tránsito sin tocar inventario
+ */
+export const useCreateContenedor = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createContenedor>>, TError,{data: BodyType<ContenedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createContenedor>>,
+        TError,
+        {data: BodyType<ContenedorInput>},
+        TContext
+      > => {
+      return useMutation(getCreateContenedorMutationOptions(options));
+    }
+
+export const getGetResumenContenedoresUrl = (params: GetResumenContenedoresParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/contenedores/resumen?${stringifiedParams}` : `/api/contenedores/resumen`
+}
+
+/**
+ * @summary Situación actual y analítica del periodo
+ */
+export const getResumenContenedores = async (params: GetResumenContenedoresParams, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorResumen> => {
+
+  return customFetch<ContenedorResumen>(getGetResumenContenedoresUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetResumenContenedoresQueryKey = (params?: GetResumenContenedoresParams,) => {
+    return [
+    `/api/contenedores/resumen`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetResumenContenedoresQueryOptions = <TData = Awaited<ReturnType<typeof getResumenContenedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params: GetResumenContenedoresParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getResumenContenedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetResumenContenedoresQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getResumenContenedores>>> = ({ signal }) => getResumenContenedores(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getResumenContenedores>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetResumenContenedoresQueryResult = NonNullable<Awaited<ReturnType<typeof getResumenContenedores>>>
+export type GetResumenContenedoresQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Situación actual y analítica del periodo
+ */
+
+export function useGetResumenContenedores<TData = Awaited<ReturnType<typeof getResumenContenedores>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params: GetResumenContenedoresParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getResumenContenedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetResumenContenedoresQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportContenedoresXlsxUrl = (params: ExportContenedoresXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/contenedores/export.xlsx?${stringifiedParams}` : `/api/contenedores/export.xlsx`
+}
+
+/**
+ * @summary Exporta el control completo a XLSX
+ */
+export const exportContenedoresXlsx = async (params: ExportContenedoresXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportContenedoresXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportContenedoresXlsxQueryKey = (params?: ExportContenedoresXlsxParams,) => {
+    return [
+    `/api/contenedores/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportContenedoresXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportContenedoresXlsx>>, TError = ErrorType<ForbiddenResponse>>(params: ExportContenedoresXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportContenedoresXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportContenedoresXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportContenedoresXlsx>>> = ({ signal }) => exportContenedoresXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportContenedoresXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportContenedoresXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportContenedoresXlsx>>>
+export type ExportContenedoresXlsxQueryError = ErrorType<ForbiddenResponse>
+
+
+/**
+ * @summary Exporta el control completo a XLSX
+ */
+
+export function useExportContenedoresXlsx<TData = Awaited<ReturnType<typeof exportContenedoresXlsx>>, TError = ErrorType<ForbiddenResponse>>(
+ params: ExportContenedoresXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportContenedoresXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportContenedoresXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportContenedoresPdfUrl = (params: ExportContenedoresPdfParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/contenedores/export.pdf?${stringifiedParams}` : `/api/contenedores/export.pdf`
+}
+
+/**
+ * @summary Exporta el control completo a PDF
+ */
+export const exportContenedoresPdf = async (params: ExportContenedoresPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportContenedoresPdfUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportContenedoresPdfQueryKey = (params?: ExportContenedoresPdfParams,) => {
+    return [
+    `/api/contenedores/export.pdf`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportContenedoresPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportContenedoresPdf>>, TError = ErrorType<ForbiddenResponse>>(params: ExportContenedoresPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportContenedoresPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportContenedoresPdfQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportContenedoresPdf>>> = ({ signal }) => exportContenedoresPdf(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportContenedoresPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportContenedoresPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportContenedoresPdf>>>
+export type ExportContenedoresPdfQueryError = ErrorType<ForbiddenResponse>
+
+
+/**
+ * @summary Exporta el control completo a PDF
+ */
+
+export function useExportContenedoresPdf<TData = Awaited<ReturnType<typeof exportContenedoresPdf>>, TError = ErrorType<ForbiddenResponse>>(
+ params: ExportContenedoresPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportContenedoresPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportContenedoresPdfQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListContenedoresDisponiblesEntradaUrl = (params: ListContenedoresDisponiblesEntradaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/contenedores/disponibles-entrada?${stringifiedParams}` : `/api/contenedores/disponibles-entrada`
+}
+
+/**
+ * @summary Contenedores EN_TRANSITO del sitio resuelto para una entrada
+ */
+export const listContenedoresDisponiblesEntrada = async (params: ListContenedoresDisponiblesEntradaParams, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorEntradaOption[]> => {
+
+  return customFetch<ContenedorEntradaOption[]>(getListContenedoresDisponiblesEntradaUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListContenedoresDisponiblesEntradaQueryKey = (params?: ListContenedoresDisponiblesEntradaParams,) => {
+    return [
+    `/api/contenedores/disponibles-entrada`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListContenedoresDisponiblesEntradaQueryOptions = <TData = Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>, TError = ErrorType<ForbiddenResponse>>(params: ListContenedoresDisponiblesEntradaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListContenedoresDisponiblesEntradaQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>> = ({ signal }) => listContenedoresDisponiblesEntrada(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListContenedoresDisponiblesEntradaQueryResult = NonNullable<Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>>
+export type ListContenedoresDisponiblesEntradaQueryError = ErrorType<ForbiddenResponse>
+
+
+/**
+ * @summary Contenedores EN_TRANSITO del sitio resuelto para una entrada
+ */
+
+export function useListContenedoresDisponiblesEntrada<TData = Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>, TError = ErrorType<ForbiddenResponse>>(
+ params: ListContenedoresDisponiblesEntradaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listContenedoresDisponiblesEntrada>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListContenedoresDisponiblesEntradaQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetContenedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/contenedores/${id}`
+}
+
+export const getContenedor = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorDetail> => {
+
+  return customFetch<ContenedorDetail>(getGetContenedorUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetContenedorQueryKey = (id: number,) => {
+    return [
+    `/api/contenedores/${id}`
+    ] as const;
+    }
+
+
+export const getGetContenedorQueryOptions = <TData = Awaited<ReturnType<typeof getContenedor>>, TError = ErrorType<NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContenedor>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetContenedorQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getContenedor>>> = ({ signal }) => getContenedor(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getContenedor>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetContenedorQueryResult = NonNullable<Awaited<ReturnType<typeof getContenedor>>>
+export type GetContenedorQueryError = ErrorType<NotFoundResponse>
+
+
+
+export function useGetContenedor<TData = Awaited<ReturnType<typeof getContenedor>>, TError = ErrorType<NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContenedor>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetContenedorQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateContenedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/contenedores/${id}`
+}
+
+/**
+ * @summary Actualiza exclusivamente un contenedor EN_TRANSITO
+ */
+export const updateContenedor = async (id: number,
+    contenedorUpdate: ContenedorUpdate, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorDetail> => {
+
+  return customFetch<ContenedorDetail>(getUpdateContenedorUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(contenedorUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateContenedorMutationOptions = <TError = ErrorType<ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateContenedor>>, TError,{id: number;data: BodyType<ContenedorUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateContenedor>>, TError,{id: number;data: BodyType<ContenedorUpdate>}, TContext> => {
+
+const mutationKey = ['updateContenedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateContenedor>>, {id: number;data: BodyType<ContenedorUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateContenedor(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateContenedorMutationResult = NonNullable<Awaited<ReturnType<typeof updateContenedor>>>
+    export type UpdateContenedorMutationBody = BodyType<ContenedorUpdate>
+    export type UpdateContenedorMutationError = ErrorType<ConflictResponse>
+
+    /**
+ * @summary Actualiza exclusivamente un contenedor EN_TRANSITO
+ */
+export const useUpdateContenedor = <TError = ErrorType<ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateContenedor>>, TError,{id: number;data: BodyType<ContenedorUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateContenedor>>,
+        TError,
+        {id: number;data: BodyType<ContenedorUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateContenedorMutationOptions(options));
+    }
+
+export const getCancelContenedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/contenedores/${id}/cancelar`
+}
+
+export const cancelContenedor = async (id: number,
+    contenedorCancelacion: ContenedorCancelacion, options?: Parameters<typeof customFetch>[1]): Promise<ContenedorDetail> => {
+
+  return customFetch<ContenedorDetail>(getCancelContenedorUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(contenedorCancelacion)
+  }
+);}
+
+
+
+
+
+export const getCancelContenedorMutationOptions = <TError = ErrorType<ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelContenedor>>, TError,{id: number;data: BodyType<ContenedorCancelacion>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cancelContenedor>>, TError,{id: number;data: BodyType<ContenedorCancelacion>}, TContext> => {
+
+const mutationKey = ['cancelContenedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelContenedor>>, {id: number;data: BodyType<ContenedorCancelacion>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  cancelContenedor(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CancelContenedorMutationResult = NonNullable<Awaited<ReturnType<typeof cancelContenedor>>>
+    export type CancelContenedorMutationBody = BodyType<ContenedorCancelacion>
+    export type CancelContenedorMutationError = ErrorType<ConflictResponse>
+
+    export const useCancelContenedor = <TError = ErrorType<ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelContenedor>>, TError,{id: number;data: BodyType<ContenedorCancelacion>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cancelContenedor>>,
+        TError,
+        {id: number;data: BodyType<ContenedorCancelacion>},
+        TContext
+      > => {
+      return useMutation(getCancelContenedorMutationOptions(options));
+    }
 
 export const getCrearEntradaUrl = () => {
 

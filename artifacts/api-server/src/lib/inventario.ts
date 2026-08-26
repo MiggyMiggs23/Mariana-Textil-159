@@ -20,6 +20,7 @@ import { createHash } from "node:crypto";
 import { and, eq, sql, desc, count, gte, inArray, lte } from "drizzle-orm";
 import {
   auditoriaTable,
+  contenedoresTable,
   db,
   entradasTable,
   entradaFolioTable,
@@ -413,6 +414,7 @@ export type CrearEntradaInput = {
   usuarioId: number;
   ip?: string | null;
   uuidCliente: string;
+  contenedorId?: number | null;
   lineas: CrearEntradaLineaInput[];
   /** Server-owned capability; routes may enable it only for BODEGA. */
   allowPendingCosts?: boolean;
@@ -483,6 +485,12 @@ export async function crearEntrada(
   tx: Tx,
   input: CrearEntradaInput,
 ): Promise<EntradaResult> {
+  // Serialize retries of the same client id before checking idempotency. This
+  // prevents two concurrent requests from both observing no entrada and trying
+  // to link the same container.
+  await tx.execute(
+    sql`SELECT pg_advisory_xact_lock(hashtext(${input.uuidCliente}))`,
+  );
   // Idempotency by entry uuid_cliente
   const [dup] = await tx
     .select()
@@ -491,6 +499,44 @@ export async function crearEntrada(
     .limit(1);
   if (dup) {
     return buildEntradaResult(tx, dup.id);
+  }
+
+  let contenedor: typeof contenedoresTable.$inferSelect | null = null;
+  if (input.contenedorId != null) {
+    const [locked] = await tx
+      .select()
+      .from(contenedoresTable)
+      .where(eq(contenedoresTable.id, input.contenedorId))
+      .for("update")
+      .limit(1);
+    if (!locked) {
+      throw new InventarioError(
+        "Contenedor no encontrado.",
+        "CONTENEDOR_NOT_FOUND",
+      );
+    }
+    if (locked.estado !== "EN_TRANSITO" || locked.entradaId != null) {
+      throw new InventarioError(
+        "El contenedor ya no está disponible.",
+        "CONTENEDOR_NOT_AVAILABLE",
+      );
+    }
+    if (locked.sitioDestinoId !== input.ubicacionId) {
+      throw new InventarioError(
+        "El contenedor pertenece a otro sitio.",
+        "CONTENEDOR_SITE_MISMATCH",
+      );
+    }
+    if (
+      input.proveedorId == null ||
+      locked.proveedorId !== input.proveedorId
+    ) {
+      throw new InventarioError(
+        "El proveedor de la entrada no coincide con el contenedor.",
+        "CONTENEDOR_PROVIDER_MISMATCH",
+      );
+    }
+    contenedor = locked;
   }
 
   const hasPendingCosts = input.lineas.some(
@@ -643,6 +689,36 @@ export async function crearEntrada(
         usuarioId: input.usuarioId,
       })
       .onConflictDoNothing();
+  }
+
+  if (contenedor) {
+    const fechaRealLlegada = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Mexico_City",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(fechaServidor);
+    const [received] = await tx
+      .update(contenedoresTable)
+      .set({
+        estado: "RECIBIDO",
+        entradaId: entrada!.id,
+        fechaRealLlegada,
+        updatedAt: fechaServidor,
+      })
+      .where(
+        and(
+          eq(contenedoresTable.id, contenedor.id),
+          eq(contenedoresTable.estado, "EN_TRANSITO"),
+        ),
+      )
+      .returning({ id: contenedoresTable.id });
+    if (!received) {
+      throw new InventarioError(
+        "El contenedor ya no está disponible.",
+        "CONTENEDOR_NOT_AVAILABLE",
+      );
+    }
   }
 
   return buildEntradaResult(tx, entrada!.id);

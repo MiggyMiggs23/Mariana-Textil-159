@@ -5,6 +5,365 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+/**
+ * Calendar day in YYYY-MM-DD; never coerced to an instant.
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+export type CalendarDate = string;
+
+export type EstadoContenedor = typeof EstadoContenedor[keyof typeof EstadoContenedor];
+
+
+export const EstadoContenedor = {
+  EN_TRANSITO: 'EN_TRANSITO',
+  RECIBIDO: 'RECIBIDO',
+  CANCELADO: 'CANCELADO',
+} as const;
+
+export type ContenedorCatalogoProductoUnidad = typeof ContenedorCatalogoProductoUnidad[keyof typeof ContenedorCatalogoProductoUnidad];
+
+
+export const ContenedorCatalogoProductoUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ContenedorCatalogoProducto {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: ContenedorCatalogoProductoUnidad;
+}
+
+export interface ContenedorCatalogoSimple {
+  id: number;
+  nombre: string;
+}
+
+export interface ContenedorCatalogos {
+  productos: ContenedorCatalogoProducto[];
+  proveedores: ContenedorCatalogoSimple[];
+  sitios: ContenedorCatalogoSimple[];
+}
+
+export interface ContenedorLineaInput {
+  productoId: number;
+  /** @pattern ^\d+(\.\d{1,3})?$ */
+  cantidadEsperada: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  rollosEsperados?: number | null;
+  /** @nullable */
+  nota?: string | null;
+}
+
+export interface ContenedorInput {
+  proveedorId: number;
+  /** @nullable */
+  referencia?: string | null;
+  fechaPedido?: CalendarDate | null;
+  fechaEstimadaLlegada: CalendarDate;
+  sitioDestinoId: number;
+  /** @nullable */
+  notas?: string | null;
+  /** @minItems 1 */
+  lineas: ContenedorLineaInput[];
+}
+
+export type ContenedorUpdate = ContenedorInput;
+
+export interface ContenedorCancelacion {
+  /** @minLength 10 */
+  motivo: string;
+}
+
+export type ContenedorLineaUnidad = typeof ContenedorLineaUnidad[keyof typeof ContenedorLineaUnidad];
+
+
+export const ContenedorLineaUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ContenedorLinea {
+  /**
+     * Null when the product was received but was not expected
+     * @nullable
+     */
+  id: number | null;
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: ContenedorLineaUnidad;
+  cantidadEsperada: string;
+  /** @nullable */
+  rollosEsperados: number | null;
+  /** @nullable */
+  nota: string | null;
+  cantidadRecibida: string;
+  rollosRecibidos: number;
+  diferencia: string;
+  /**
+     * Solo presente para ADMIN
+     * @nullable
+     */
+  costoTotal?: string | null;
+  /**
+     * Costo ponderado por cantidad; solo presente para ADMIN
+     * @nullable
+     */
+  costoUnitarioReal?: string | null;
+}
+
+export interface ContenedorTotals {
+  lineas: number;
+  rollos: number;
+  metros: string;
+  kilos: string;
+}
+
+export interface ContenedorListItem {
+  id: number;
+  folio: number;
+  proveedorId: number;
+  proveedor: string;
+  /** @nullable */
+  referencia: string | null;
+  fechaEstimadaLlegada: CalendarDate;
+  sitioDestinoId: number;
+  sitioDestino: string;
+  estado: EstadoContenedor;
+  diasParaLlegar: number;
+  lineas: number;
+  totales: ContenedorTotals;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoTotal?: string | null;
+}
+
+export interface ContenedorListResult {
+  items: ContenedorListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContenedorDetail {
+  id: number;
+  folio: number;
+  proveedorId: number;
+  proveedor: string;
+  /** @nullable */
+  referencia: string | null;
+  fechaPedido: CalendarDate | null;
+  fechaEstimadaLlegada: CalendarDate;
+  fechaRealLlegada: CalendarDate | null;
+  sitioDestinoId: number;
+  sitioDestino: string;
+  /** @nullable */
+  entradaId: number | null;
+  estado: EstadoContenedor;
+  /** @nullable */
+  notas: string | null;
+  /** @nullable */
+  motivoCancelacion: string | null;
+  usuarioId: number;
+  createdAt: string;
+  updatedAt: string;
+  /** @nullable */
+  diasTransito: number | null;
+  /** @nullable */
+  diferenciaFechaEstimada: number | null;
+  totalesEsperados: ContenedorTotals;
+  totalesRecibidos: ContenedorTotals;
+  lineas: ContenedorLinea[];
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoTotal?: string | null;
+}
+
+export interface ContenedorEntradaOption {
+  id: number;
+  folio: number;
+  proveedorId: number;
+  proveedor: string;
+  /** @nullable */
+  referencia: string | null;
+  fechaEstimadaLlegada: CalendarDate;
+}
+
+export interface ContenedorResumenKpisProximo {
+  folio: number;
+  proveedor: string;
+  fechaEstimadaLlegada: CalendarDate;
+  dias: number;
+}
+
+export interface ContenedorResumenKpis {
+  enTransito: number;
+  rollosPorLlegar: number;
+  metrosPorLlegar: string;
+  kilosPorLlegar: string;
+  retrasados: number;
+  proximo: ContenedorResumenKpisProximo | null;
+}
+
+export interface ContenedorAnaliticaRow { [key: string]: unknown }
+
+export interface ContenedorProveedorResumen {
+  proveedorId: number;
+  proveedor: string;
+  contenedores: number;
+  rollos: number;
+  metros: string;
+  kilos: string;
+  /** @nullable */
+  diasPromedioTransito: string | null;
+  antes: number;
+  aTiempo: number;
+  despues: number;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoTotal?: string | null;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  participacion?: string | null;
+}
+
+export interface ContenedorPeriodoResumen {
+  contenedores: number;
+  rollos: number;
+  metros: string;
+  kilos: string;
+  /** @nullable */
+  diasPromedio: string | null;
+  antes: number;
+  aTiempo: number;
+  despues: number;
+  /**
+     * Solo ADMIN; null cuando hay costos pendientes
+     * @nullable
+     */
+  costoTotal?: string | null;
+  /**
+     * Solo ADMIN; null cuando hay costos pendientes
+     * @nullable
+     */
+  costoPromedio?: string | null;
+}
+
+export type ContenedorProductoResumenUnidad = typeof ContenedorProductoResumenUnidad[keyof typeof ContenedorProductoResumenUnidad];
+
+
+export const ContenedorProductoResumenUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ContenedorProductoResumen {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: ContenedorProductoResumenUnidad;
+  contenedores: number;
+  rollos: number;
+  cantidad: string;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoTotal?: string | null;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoUnitarioReal?: string | null;
+}
+
+export type ContenedorGrupoResumenUnidad = typeof ContenedorGrupoResumenUnidad[keyof typeof ContenedorGrupoResumenUnidad];
+
+
+export const ContenedorGrupoResumenUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ContenedorGrupoResumen {
+  tela?: string;
+  color?: string;
+  unidad: ContenedorGrupoResumenUnidad;
+  contenedores: number;
+  rollos: number;
+  metros: string;
+  kilos: string;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoTotal?: string | null;
+  /**
+     * Solo ADMIN
+     * @nullable
+     */
+  costoUnitarioReal?: string | null;
+}
+
+export interface ContenedorMesResumen {
+  mes: number;
+  /**
+     * Solo ADMIN; null cuando hay costos pendientes
+     * @nullable
+     */
+  costoActual?: string | null;
+  /**
+     * Solo ADMIN; null cuando hay costos pendientes
+     * @nullable
+     */
+  costoAnioAnterior?: string | null;
+}
+
+export type ContenedorDiferenciaResumenUnidad = typeof ContenedorDiferenciaResumenUnidad[keyof typeof ContenedorDiferenciaResumenUnidad];
+
+
+export const ContenedorDiferenciaResumenUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ContenedorDiferenciaResumen {
+  producto_id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: ContenedorDiferenciaResumenUnidad;
+  esperado: string;
+  recibido: string;
+}
+
+export interface ContenedorResumen {
+  actual: ContenedorResumenKpis;
+  periodo: ContenedorPeriodoResumen;
+  porProveedor: ContenedorProveedorResumen[];
+  porProducto: ContenedorProductoResumen[];
+  porTela: ContenedorGrupoResumen[];
+  porColor: ContenedorGrupoResumen[];
+  porMes: ContenedorMesResumen[];
+  diferencias: ContenedorDiferenciaResumen[];
+}
+
 export type ReportePrimitive = string | number | boolean | null;
 
 export type ReporteKpiKind = typeof ReporteKpiKind[keyof typeof ReporteKpiKind];
@@ -1894,6 +2253,8 @@ export interface EntradaInput {
   /** @nullable */
   proveedorId?: number | null;
   /** @nullable */
+  contenedorId?: number | null;
+  /** @nullable */
   observaciones?: string | null;
   uuidCliente: string;
   /** @minItems 1 */
@@ -3226,6 +3587,76 @@ desde?: string;
  * Fecha fin, formato YYYY-MM-DD
  */
 hasta?: string;
+};
+
+export type ListContenedoresParams = {
+estado?: EstadoContenedor;
+proveedorId?: number;
+sitioDestinoId?: number;
+productoId?: number;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
+search?: string;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 200
+ */
+pageSize?: number;
+};
+
+export type GetResumenContenedoresParams = {
+/**
+ * @minimum 2000
+ * @maximum 2200
+ */
+year: number;
+/**
+ * @minimum 1
+ * @maximum 4
+ */
+quarter?: number;
+/**
+ * @minimum 1
+ * @maximum 2
+ */
+semester?: number;
+sitioDestinoId?: number;
+};
+
+export type ExportContenedoresXlsxParams = {
+year: number;
+/**
+ * @minimum 1
+ * @maximum 4
+ */
+quarter?: number;
+/**
+ * @minimum 1
+ * @maximum 2
+ */
+semester?: number;
+};
+
+export type ExportContenedoresPdfParams = {
+year: number;
+/**
+ * @minimum 1
+ * @maximum 4
+ */
+quarter?: number;
+/**
+ * @minimum 1
+ * @maximum 2
+ */
+semester?: number;
+};
+
+export type ListContenedoresDisponiblesEntradaParams = {
+ubicacionId: number;
 };
 
 export type ListEntradasParams = {

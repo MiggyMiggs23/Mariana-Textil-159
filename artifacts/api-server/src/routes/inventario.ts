@@ -444,6 +444,7 @@ inventarioRouter.post(
           usuarioId,
           ip: getRequestIp(req),
           uuidCliente: body.uuidCliente,
+           contenedorId: body.contenedorId ?? null,
           lineas: body.lineas.map((l) => ({
             productoId: l.productoId,
              costoUnitario:
