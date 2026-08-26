@@ -42,6 +42,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 ## Architecture decisions
 
 - El kardex es la fuente de verdad del inventario: toda alteración inserta movimientos con cantidades firmadas.
+- El QR de la etiqueta contiene `SKU-SERIE`. La serie son los últimos 7 dígitos. Todo punto de escaneo pasa por `interpretarCodigoEscaneado`. La serie manda; el SKU solo verifica y genera advertencia si no coincide.
 - Las tablas operativas no usan DELETE; las correcciones son movimientos inversos que referencian el original.
 - Toda operación que modifica datos registra usuario, entidad y valores antes/después en `auditoria`.
 - Cantidades usan `DECIMAL(10,3)` y dinero `DECIMAL(12,2)`; nunca float.
@@ -138,6 +139,14 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Correcciones verificadas en este bloque: una salida enviada con cada rollo transferido escribe **dos** movimientos de kardex (salida y entrada en tránsito); las fechas de vencimiento `Date` de reportes se serializan como `YYYY-MM-DD`.
 - El build raíz solo falló porque `mockup-sandbox` requiere el `PORT` que entrega el workflow fuera de un workflow; los servicios gestionados por workflow son la ruta soportada para build/run.
 - **Aceptación pendiente en dispositivo:** las rutas fuente/contrato y el ciclo de vida seguro para navegador están verificados automáticamente, pero este entorno no puede ejercer físicamente el permiso/detección de cámara de un teléfono ni diez lecturas consecutivas de una pistola real. Es una comprobación obligatoria en dispositivo, no un resultado aprobado.
+
+## Corrección — Intérprete de códigos escaneados
+
+- El intérprete compartido se conecta en el camino único de entrega de `CampoEscaneo`; teclado, pistola y cámara entregan la serie extraída por el mismo callback.
+- Puntos de rollo conectados en cliente y servidor: POS (`/pos/buscar`), Salida Nueva (`/salidas/rollos/serie/:serie`), Etiquetas (`/etiquetas/rollos`) y Ajustes mediante el listado de Inventario (`/rollos`).
+- Cuando hay serie, las consultas de rollos son exactas; cuando no la hay, POS, Etiquetas e Inventario conservan la búsqueda parcial de texto.
+- Decisión conservadora: la captura de Entradas recibe cantidades y la recepción de Salidas recibe URL/folio, no etiquetas de rollo. Ambos pasan por `CampoEscaneo` pero desactivan la sustitución por serie; sus endpoints reciben datos estructurados y no tienen un valor de etiqueta que interpretar.
+- La discrepancia de SKU se muestra sin bloquear en POS, Salida Nueva, Etiquetas y Ajustes. La serie siempre identifica el rollo.
 
 
 ## Permission modules (24 total)

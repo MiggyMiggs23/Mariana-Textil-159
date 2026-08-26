@@ -12,7 +12,9 @@ test("CampoEscaneo keeps keyboard and camera scans on the same delivery path", a
   const source = await readFile(componentFile, "utf8");
 
   assert.match(source, /const deliver = useCallback/);
-  assert.match(source, /await onScan\(scannedValue\)/);
+  assert.match(source, /interpretarCodigoEscaneado\(rawValue\)/);
+  assert.match(source, /codigo\.serie[\s\S]*\? codigo\.serie[\s\S]*: codigo\.textoOriginal/);
+  assert.match(source, /await onScan\(scannedValue, codigo\)/);
   assert.match(source, /const submit = \(\) => \{[\s\S]*deliver\(value\)/);
   assert.match(source, /void deliver\(rawValue\)/);
   assert.match(source, /clearOnScan\) onChange\(""\)/);
@@ -57,4 +59,30 @@ test("CampoEscaneo releases camera resources and every scanning screen uses it",
     assert.match(source, /<CampoEscaneo/, name);
   }
   assert.match(sources[5]!, /onScan=\{selectScan\}/);
+  assert.match(sources[4]!, /interpretRollCode=\{false\}/);
+  assert.match(sources[5]!, /interpretRollCode=\{false\}/);
+});
+
+test("SKU mismatch warnings are visible and do not block roll operations", async () => {
+  const [pos, salida, etiquetas, ajustes] = await Promise.all([
+    readFile(new URL("artifacts/mariana-textil/src/pages/pos.tsx", root), "utf8"),
+    readFile(new URL("artifacts/mariana-textil/src/pages/salida-nueva.tsx", root), "utf8"),
+    readFile(new URL("artifacts/mariana-textil/src/pages/etiquetas.tsx", root), "utf8"),
+    readFile(new URL("artifacts/mariana-textil/src/pages/ajustes.tsx", root), "utf8"),
+  ]);
+
+  for (const source of [pos, salida, etiquetas, ajustes]) {
+    assert.match(source, /advertenciaSkuEscaneado/);
+  }
+  assert.match(pos, /skuWarning[\s\S]*role="alert"/);
+  assert.match(etiquetas, /skuWarning[\s\S]*<Alert/);
+  assert.match(ajustes, /skuWarning[\s\S]*role="alert"/);
+  assert.match(
+    salida,
+    /const warning = advertenciaSkuEscaneado[\s\S]*if \(warning\)[\s\S]*toast\([\s\S]*setScannedRolls/,
+  );
+  assert.doesNotMatch(
+    salida,
+    /if \(warning\) \{[\s\S]{0,300}\breturn\b/,
+  );
 });

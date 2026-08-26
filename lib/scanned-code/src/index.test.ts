@@ -1,0 +1,41 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import {
+  advertenciaSkuEscaneado,
+  interpretarCodigoEscaneado,
+} from "./index";
+
+const cases = [
+  ["TAF-BLA-1002874", "1002874", "TAF-BLA"],
+  ["GABMET-BAS-1002874", "1002874", "GABMET-BAS"],
+  ["1002874", "1002874", null],
+  ["  TAF-BLA-1002874  ", "1002874", "TAF-BLA"],
+  ["taf-bla-1002874", "1002874", "TAF-BLA"],
+  ["gabardina azul", null, null],
+  ["TAF-BLA", null, null],
+  ["100287", null, null],
+  ["", null, null],
+] as const;
+
+for (const [input, serie, sku] of cases) {
+  test(`interpreta ${JSON.stringify(input)}`, () => {
+    assert.deepEqual(interpretarCodigoEscaneado(input), {
+      serie,
+      sku,
+      textoOriginal: input,
+    });
+  });
+}
+
+test("no acepta una serie embebida en una secuencia de ocho dígitos", () => {
+  assert.equal(interpretarCodigoEscaneado("10002874").serie, null);
+});
+
+test("la advertencia de SKU informa sin alterar la serie", () => {
+  const codigo = interpretarCodigoEscaneado("TAF-BLA-1002874");
+  assert.equal(
+    advertenciaSkuEscaneado(codigo, "GABMET-AZU"),
+    "Esta etiqueta dice TAF-BLA, pero el rollo 1002874 corresponde a GABMET-AZU. Verifica la etiqueta.",
+  );
+  assert.equal(advertenciaSkuEscaneado(codigo, "TAF-BLA"), null);
+});

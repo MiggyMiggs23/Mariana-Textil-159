@@ -13,6 +13,7 @@ import {
   CheckCircle,
   HelpCircle,
   Loader2,
+  AlertTriangle,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -61,6 +62,10 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { ClientSelector } from "@/components/client-selector";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { formatNumber } from "@workspace/number-format";
+import {
+  advertenciaSkuEscaneado,
+  type CodigoEscaneadoInterpretado,
+} from "@workspace/scanned-code";
 
 type PriceValidation = {
   status: "idle" | "checking" | "valid" | "invalid" | "error";
@@ -287,6 +292,24 @@ export default function PosPage() {
   const [tipoTicket, setTipoTicket] = useState<TipoTicket>(TipoTicket.NORMAL);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [lastScannedCode, setLastScannedCode] =
+    useState<CodigoEscaneadoInterpretado | null>(null);
+  const [skuWarning, setSkuWarning] = useState<string | null>(null);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+    setLastScannedCode(null);
+    setSkuWarning(null);
+  }, []);
+
+  const handleSearchScan = useCallback(
+    (value: string, codigo: CodigoEscaneadoInterpretado) => {
+      setSearch(value);
+      setLastScannedCode(codigo.sku ? codigo : null);
+      setSkuWarning(null);
+    },
+    [],
+  );
 
   // Timer for debouncing search
   useEffect(() => {
@@ -320,6 +343,24 @@ export default function PosPage() {
       queryKey: getBuscarPosQueryKey(searchParams),
     },
   });
+
+  useEffect(() => {
+    if (
+      isFetching ||
+      !lastScannedCode?.serie ||
+      lastScannedCode.serie !== debouncedSearch ||
+      !searchResults
+    ) {
+      return;
+    }
+    const rollo = searchResults.rollos.find(
+      (item) => item.serie === lastScannedCode.serie,
+    );
+    setSkuWarning(
+      rollo ? advertenciaSkuEscaneado(lastScannedCode, rollo.sku) : null,
+    );
+    setLastScannedCode(null);
+  }, [debouncedSearch, isFetching, lastScannedCode, searchResults]);
 
   const crearTicket = useCrearTicket();
 
@@ -660,8 +701,8 @@ export default function PosPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <CampoEscaneo
                 value={search}
-                onChange={setSearch}
-                onScan={setSearch}
+                onChange={handleSearchChange}
+                onScan={handleSearchScan}
                 clearOnScan={false}
                 placeholder={
                   tipoTicket === TipoTicket.NORMAL
@@ -676,6 +717,15 @@ export default function PosPage() {
                 <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 animate-spin text-muted-foreground" />
               )}
             </div>
+            {skuWarning && (
+              <div
+                className="mt-3 flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
+                role="alert"
+              >
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{skuWarning}</span>
+              </div>
+            )}
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-secondary/20">

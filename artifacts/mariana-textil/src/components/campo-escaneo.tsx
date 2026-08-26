@@ -17,6 +17,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import {
+  interpretarCodigoEscaneado,
+  type CodigoEscaneadoInterpretado,
+} from "@workspace/scanned-code";
 
 type DetectedBarcode = { rawValue: string };
 type BarcodeDetectorInstance = {
@@ -46,8 +50,12 @@ export type CampoEscaneoProps = Omit<
 > & {
   value: string;
   onChange: (value: string) => void;
-  onScan: (value: string) => void | Promise<void>;
+  onScan: (
+    value: string,
+    codigo: CodigoEscaneadoInterpretado,
+  ) => void | Promise<void>;
   clearOnScan?: boolean;
+  interpretRollCode?: boolean;
   containerClassName?: string;
 };
 
@@ -58,6 +66,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
       onChange,
       onScan,
       clearOnScan = true,
+      interpretRollCode = true,
       containerClassName,
       disabled,
       className,
@@ -120,16 +129,20 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
 
     const deliver = useCallback(
       async (rawValue: string) => {
-        const scannedValue = rawValue.trim();
-        if (!scannedValue) return;
+        const codigo = interpretarCodigoEscaneado(rawValue);
+        if (!codigo.textoOriginal.trim()) return;
+        const scannedValue =
+          interpretRollCode && codigo.serie
+            ? codigo.serie
+            : codigo.textoOriginal;
         if (clearOnScan) onChange("");
         try {
-          await onScan(scannedValue);
+          await onScan(scannedValue, codigo);
         } finally {
           window.setTimeout(() => inputRef.current?.focus(), 0);
         }
       },
-      [clearOnScan, onChange, onScan],
+      [clearOnScan, interpretRollCode, onChange, onScan],
     );
 
     useEffect(() => {

@@ -4,6 +4,9 @@
   "files": [],
   "references": [
     {
+      "path": "./lib/scanned-code"
+    },
+    {
       "path": "./lib/number-format"
     },
     {

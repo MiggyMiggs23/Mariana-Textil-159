@@ -26,6 +26,10 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { etiquetasApi, type EtiquetaRollo, type HistorialReimpresion } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import {
+  advertenciaSkuEscaneado,
+  type CodigoEscaneadoInterpretado,
+} from "@workspace/scanned-code";
 
 const ESTADOS = ["DISPONIBLE", "VENDIDO", "ABIERTO", "EN_TRANSITO", "BAJA", "PROGRAMADO"];
 const MOTIVOS = ["Etiqueta dañada", "Etiqueta despegada", "Etiqueta ilegible", "Etiqueta mojada", "Otro"];
@@ -58,6 +62,9 @@ export default function Etiquetas() {
   const [tab, setTab] = useState(initialTab);
   const [searchDraft, setSearchDraft] = useState("");
   const [search, setSearch] = useState("");
+  const [lastScannedCode, setLastScannedCode] =
+    useState<CodigoEscaneadoInterpretado | null>(null);
+  const [skuWarning, setSkuWarning] = useState<string | null>(null);
   const [sitioId, setSitioId] = useState("todos");
   const [estado, setEstado] = useState("todos");
   const [productoId, setProductoId] = useState("todos");
@@ -109,6 +116,45 @@ export default function Etiquetas() {
       : etiquetasApi.buscar(searchParams),
     retry: false,
   });
+
+  useEffect(() => {
+    if (
+      rollosQuery.isFetching ||
+      !lastScannedCode?.serie ||
+      lastScannedCode.serie !== search ||
+      !rollosQuery.data
+    ) {
+      return;
+    }
+    const rollo = rollosQuery.data.items.find(
+      (item) => item.serie === lastScannedCode.serie,
+    );
+    setSkuWarning(
+      rollo ? advertenciaSkuEscaneado(lastScannedCode, rollo.sku) : null,
+    );
+    setLastScannedCode(null);
+  }, [lastScannedCode, rollosQuery.data, rollosQuery.isFetching, search]);
+
+  const handleSearchDraftChange = (value: string) => {
+    setSearchDraft(value);
+    setLastScannedCode(null);
+    setSkuWarning(null);
+  };
+
+  const handleSearchScan = (
+    value: string,
+    codigo: CodigoEscaneadoInterpretado,
+  ) => {
+    setSearch(value.trim());
+    setLastScannedCode(codigo.sku ? codigo : null);
+    setSkuWarning(null);
+  };
+
+  const submitSearch = () => {
+    setSearch(searchDraft.trim());
+    setLastScannedCode(null);
+    setSkuWarning(null);
+  };
 
   useEffect(() => {
     if (preselectedId && rollosQuery.data?.items.some((item) => item.id === preselectedId)) {
@@ -230,11 +276,11 @@ export default function Etiquetas() {
           <TabsContent value="buscar" className="space-y-5">
             <Card className="border-primary/20 shadow-sm">
               <CardContent className="pt-6">
-                <form className="flex gap-2" onSubmit={(event) => { event.preventDefault(); setSearch(searchDraft.trim()); }}>
+                <form className="flex gap-2" onSubmit={(event) => { event.preventDefault(); submitSearch(); }}>
                   <div className="relative flex-1">
                     <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                    <CampoEscaneo ref={searchRef} value={searchDraft} onChange={setSearchDraft}
-                      onScan={(value) => setSearch(value.trim())} clearOnScan={false}
+                    <CampoEscaneo ref={searchRef} value={searchDraft} onChange={handleSearchDraftChange}
+                      onScan={handleSearchScan} clearOnScan={false}
                       className="h-14 pl-12 text-lg" containerClassName="w-full"
                       placeholder="Escanea QR o busca por serie, SKU, tela o color…" autoComplete="off" />
                   </div>
@@ -255,6 +301,13 @@ export default function Etiquetas() {
               </CardContent>
             </Card>
 
+            {skuWarning && (
+              <Alert className="border-amber-300 bg-amber-50 text-amber-900">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Verifica la etiqueta</AlertTitle>
+                <AlertDescription>{skuWarning}</AlertDescription>
+              </Alert>
+            )}
             {rollosQuery.isError && <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>No se pudieron cargar los rollos</AlertTitle><AlertDescription>{getApiErrorMessage(rollosQuery.error)}</AlertDescription></Alert>}
             <Card>
               <CardHeader className="flex-row items-center justify-between">

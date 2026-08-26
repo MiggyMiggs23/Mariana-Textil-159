@@ -32,6 +32,7 @@ import {
   EXCEL_NUMBER_FORMAT,
   toExcelNumber,
 } from "@workspace/number-format";
+import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 
 const router = Router();
 
@@ -402,7 +403,9 @@ router.get(
     try {
       const origenId = Number(req.query.origenId);
       if (!Number.isInteger(origenId)) throw new InventarioError("origenId es obligatorio.", "VALIDATION_ERROR");
-      const { serie } = EscanearRolloSalidaParams.parse(req.params);
+      const { serie: codigoRecibido } = EscanearRolloSalidaParams.parse(req.params);
+      const codigo = interpretarCodigoEscaneado(codigoRecibido);
+      const serie = codigo.serie ?? codigo.textoOriginal.trim();
       if (!canOperate(req.auth!, origenId)) throw new InventarioError("No puedes operar desde ese origen.", "SALIDA_LOCATION_FORBIDDEN");
       const [rollo] = await db.select({
         id: rollosTable.id, serie: rollosTable.serie, estado: rollosTable.estado,

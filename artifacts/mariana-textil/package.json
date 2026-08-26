@@ -51,6 +51,7 @@
     "@vitejs/plugin-react": "catalog:",
     "@workspace/api-client-react": "workspace:*",
     "@workspace/number-format": "workspace:*",
+    "@workspace/scanned-code": "workspace:*",
     "@zxing/browser": "^0.2.1",
     "@zxing/library": "^0.23.0",
     "class-variance-authority": "catalog:",

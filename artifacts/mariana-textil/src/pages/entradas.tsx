@@ -1149,6 +1149,7 @@ export default function Entradas() {
                     value={capCurrentQty}
                     onChange={setCapCurrentQty}
                     onScan={handleAddQty}
+                    interpretRollCode={false}
                     className="text-4xl h-20 font-black text-center pr-16"
                     containerClassName="h-20"
                     data-testid="input-capture-qty"

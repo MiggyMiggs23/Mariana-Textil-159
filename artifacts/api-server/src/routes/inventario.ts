@@ -15,6 +15,7 @@ import {
   or,
   sql,
 } from "drizzle-orm";
+import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 import {
   CrearEntradaBody,
   CrearEntradaResponse,
@@ -1191,7 +1192,14 @@ inventarioRouter.get(
         conditions.push(eq(rollosTable.productoId, q.productoId));
       if (q.estado)
         conditions.push(eq(rollosTable.estado, q.estado as EstadoRollo));
-      if (q.serie) conditions.push(ilike(rollosTable.serie, `%${q.serie}%`));
+      if (q.serie) {
+        const codigo = interpretarCodigoEscaneado(q.serie);
+        conditions.push(
+          codigo.serie
+            ? eq(rollosTable.serie, codigo.serie)
+            : ilike(rollosTable.serie, `%${q.serie}%`),
+        );
+      }
       if (q.soloAbiertos) conditions.push(eq(rollosTable.estado, "ABIERTO"));
 
       const where = conditions.length ? and(...conditions) : undefined;

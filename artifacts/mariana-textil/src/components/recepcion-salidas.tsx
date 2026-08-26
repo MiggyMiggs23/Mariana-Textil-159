@@ -109,6 +109,7 @@ export function RecepcionSalidas() {
             value={scan}
             onChange={setScan}
             onScan={selectScan}
+            interpretRollCode={false}
             autoFocus
             placeholder="Escanea el QR o escribe el folio y presiona Enter"
             aria-label="QR o folio de salida"

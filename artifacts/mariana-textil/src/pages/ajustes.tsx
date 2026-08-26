@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { 
@@ -30,6 +30,10 @@ import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import {
+  advertenciaSkuEscaneado,
+  type CodigoEscaneadoInterpretado,
+} from "@workspace/scanned-code";
 
 export default function Ajustes() {
   const queryClient = useQueryClient();
@@ -41,6 +45,9 @@ export default function Ajustes() {
   // State for search rollos
   const [searchSerie, setSearchSerie] = useState("");
   const debouncedSearch = useDebounce(searchSerie, 500);
+  const [lastScannedCode, setLastScannedCode] =
+    useState<CodigoEscaneadoInterpretado | null>(null);
+  const [skuWarning, setSkuWarning] = useState<string | null>(null);
 
   const {
     data: rollosRes,
@@ -58,6 +65,41 @@ export default function Ajustes() {
       queryKey: getListRollosQueryKey({ serie: debouncedSearch, page: 1, pageSize: 5 })
     }
   });
+
+  useEffect(() => {
+    if (
+      loadingRollos ||
+      !lastScannedCode?.serie ||
+      lastScannedCode.serie !== debouncedSearch ||
+      !rollosRes
+    ) {
+      return;
+    }
+    const rollo = rollosRes.items.find(
+      (item) => item.serie === lastScannedCode.serie,
+    );
+    setSkuWarning(
+      rollo
+        ? advertenciaSkuEscaneado(lastScannedCode, rollo.skuProducto)
+        : null,
+    );
+    setLastScannedCode(null);
+  }, [debouncedSearch, lastScannedCode, loadingRollos, rollosRes]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchSerie(value);
+    setLastScannedCode(null);
+    setSkuWarning(null);
+  };
+
+  const handleScan = (
+    value: string,
+    codigo: CodigoEscaneadoInterpretado,
+  ) => {
+    setSearchSerie(value);
+    setLastScannedCode(codigo.sku ? codigo : null);
+    setSkuWarning(null);
+  };
 
   const [selectedRollo, setSelectedRollo] = useState<any | null>(null);
   
@@ -191,13 +233,22 @@ export default function Ajustes() {
                       <CampoEscaneo
                         placeholder="Escanea o escribe la serie (min 3 chars)..."
                         value={searchSerie}
-                        onChange={setSearchSerie}
-                        onScan={setSearchSerie}
+                        onChange={handleSearchChange}
+                        onScan={handleScan}
                         clearOnScan={false}
                         className="text-lg py-6"
                         data-testid="input-search-serie"
                         autoFocus
                       />
+                      {skuWarning && (
+                        <div
+                          className="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
+                          role="alert"
+                        >
+                          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                          <span>{skuWarning}</span>
+                        </div>
+                      )}
                       
                       {debouncedSearch.length >= 3 && (
                         <div className="border rounded-md divide-y bg-background">

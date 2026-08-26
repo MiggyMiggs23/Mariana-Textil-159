@@ -36,6 +36,11 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber } from "@workspace/number-format";
+import {
+  advertenciaSkuEscaneado,
+  interpretarCodigoEscaneado,
+  type CodigoEscaneadoInterpretado,
+} from "@workspace/scanned-code";
 
 export default function SalidaNueva() {
   const [, setLocation] = useLocation();
@@ -103,8 +108,12 @@ export default function SalidaNueva() {
     }
   };
 
-  const handleScan = async (scannedValue: string) => {
-    const serie = scannedValue.trim().toUpperCase();
+  const handleScan = async (
+    scannedValue: string,
+    codigoEntregado?: CodigoEscaneadoInterpretado,
+  ) => {
+    const codigo = codigoEntregado ?? interpretarCodigoEscaneado(scannedValue);
+    const serie = (codigo.serie ?? scannedValue).trim().toUpperCase();
     if (!serie) return;
 
     if (!origenId) {
@@ -128,6 +137,13 @@ export default function SalidaNueva() {
         staleTime: 0,
       });
 
+      const warning = advertenciaSkuEscaneado(codigo, roll.sku);
+      if (warning) {
+        toast({
+          title: "Verifica la etiqueta",
+          description: warning,
+        });
+      }
       setScannedRolls(prev => [roll, ...prev]);
       setSerieInput("");
       playSound('success');

@@ -4,6 +4,7 @@ import ExcelJS from "exceljs";
 import { sql } from "drizzle-orm";
 import { ZodError, z } from "zod/v4";
 import { db } from "@workspace/db";
+import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { normalizeUsername } from "../lib/auth-identifiers";
@@ -96,11 +97,16 @@ router.get(
       conditions.push(...dateConditions(q, sql.raw("r.created_at")));
       if (q.q) {
         const term = q.q.trim();
-        conditions.push(sql`(
-          r.serie ILIKE ${`%${term}%`} OR p.sku ILIKE ${`%${term}%`} OR
-          p.tela ILIKE ${`%${term}%`} OR p.color ILIKE ${`%${term}%`} OR
-          (p.sku || '-' || r.serie) ILIKE ${term}
-        )`);
+        const codigo = interpretarCodigoEscaneado(term);
+        conditions.push(
+          codigo.serie
+            ? sql`r.serie = ${codigo.serie}`
+            : sql`(
+                r.serie ILIKE ${`%${term}%`} OR p.sku ILIKE ${`%${term}%`} OR
+                p.tela ILIKE ${`%${term}%`} OR p.color ILIKE ${`%${term}%`} OR
+                (p.sku || '-' || r.serie) ILIKE ${term}
+              )`,
+        );
       }
       const where = conditions.length ? sql`WHERE ${sql.join(conditions, sql` AND `)}` : sql``;
       const result = await db.execute(sql`

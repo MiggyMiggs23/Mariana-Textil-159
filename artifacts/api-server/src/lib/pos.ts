@@ -33,6 +33,7 @@ import {
   isCreditTerm,
   type CreditTerm,
 } from "./clientes-aging";
+import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 
 const FOLIO_ROW_ID = 1;
 
@@ -1599,7 +1600,14 @@ export async function buscarPos(
   q: string,
   ubicacionId: number,
 ) {
+  const codigo = interpretarCodigoEscaneado(q);
   const term = `%${q.trim()}%`;
+  const rolloSearch = codigo.serie
+    ? eq(rollosTable.serie, codigo.serie)
+    : sql`(${rollosTable.serie} ILIKE ${term}
+        OR ${productosTable.sku} ILIKE ${term}
+        OR ${productosTable.tela} ILIKE ${term}
+        OR ${productosTable.color} ILIKE ${term})`;
   const rollos = await database
     .select({
       id: rollosTable.id,
@@ -1626,35 +1634,34 @@ export async function buscarPos(
         eq(rollosTable.ubicacionId, ubicacionId),
         eq(rollosTable.estado, "DISPONIBLE"),
         eq(productosTable.activo, true),
-        sql`(${rollosTable.serie} ILIKE ${term}
-          OR ${productosTable.sku} ILIKE ${term}
-          OR ${productosTable.tela} ILIKE ${term}
-          OR ${productosTable.color} ILIKE ${term})`,
+        rolloSearch,
       ),
     )
     .orderBy(desc(rollosTable.id))
     .limit(50);
-  const productos = await database
-    .select({
-      id: productosTable.id,
-      sku: productosTable.sku,
-      tela: productosTable.tela,
-      color: productosTable.color,
-      unidad: productosTable.unidad,
-      precioSugerido: productosTable.precioSugerido,
-      activo: productosTable.activo,
-    })
-    .from(productosTable)
-    .where(
-      and(
-        eq(productosTable.activo, true),
-        sql`(${productosTable.sku} ILIKE ${term}
-          OR ${productosTable.tela} ILIKE ${term}
-          OR ${productosTable.color} ILIKE ${term})`,
-      ),
-    )
-    .orderBy(productosTable.tela, productosTable.color)
-    .limit(25);
+  const productos = codigo.serie
+    ? []
+    : await database
+        .select({
+          id: productosTable.id,
+          sku: productosTable.sku,
+          tela: productosTable.tela,
+          color: productosTable.color,
+          unidad: productosTable.unidad,
+          precioSugerido: productosTable.precioSugerido,
+          activo: productosTable.activo,
+        })
+        .from(productosTable)
+        .where(
+          and(
+            eq(productosTable.activo, true),
+            sql`(${productosTable.sku} ILIKE ${term}
+              OR ${productosTable.tela} ILIKE ${term}
+              OR ${productosTable.color} ILIKE ${term})`,
+          ),
+        )
+        .orderBy(productosTable.tela, productosTable.color)
+        .limit(25);
   return { rollos, productos };
 }
 

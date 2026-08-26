@@ -16,6 +16,9 @@
   },
   "references": [
     {
+      "path": "../../lib/scanned-code"
+    },
+    {
       "path": "../../lib/api-client-react"
     }
   ]
