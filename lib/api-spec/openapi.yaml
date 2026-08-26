@@ -988,7 +988,8 @@ paths:
       parameters:
         - in: query
           name: folio
-          schema: { type: number }
+          description: Folio numérico o formateado como DN-000503.
+          schema: { type: string }
         - in: query
           name: proveedorId
           schema: { type: number }
@@ -2742,7 +2743,8 @@ paths:
           schema: { type: string }
         - in: query
           name: folio
-          schema: { type: number }
+          description: Folio numérico o formateado como DN-000503.
+          schema: { type: string }
         - in: query
           name: origenId
           schema: { type: number }
@@ -5874,6 +5876,8 @@ components:
         [
           id,
           folio,
+          inicialesSitio,
+          folioFormateado,
           ubicacionId,
           nombreUbicacion,
           proveedorId,
@@ -5891,6 +5895,8 @@ components:
       properties:
         id: { type: number }
         folio: { type: number }
+        inicialesSitio: { type: string }
+        folioFormateado: { type: string, example: DN-000001 }
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
         proveedorId: { type: ["number", "null"] }
@@ -5969,11 +5975,13 @@ components:
     EntradaPendienteCosto:
       type: object
       required:
-        [id, folio, fecha, nombreUbicacion, nombreProveedor, rollosPendientes,
+         [id, folio, inicialesSitio, folioFormateado, fecha, nombreUbicacion, nombreProveedor, rollosPendientes,
          totalMetros, totalKilos, nombreUsuario, overdue48h]
       properties:
         id: { type: number }
         folio: { type: number }
+        inicialesSitio: { type: string }
+        folioFormateado: { type: string, example: DN-000001 }
         fecha: { type: string, format: date-time }
         nombreUbicacion: { type: string }
         nombreProveedor: { type: ["string", "null"] }
@@ -6035,6 +6043,8 @@ components:
         [
           id,
           folio,
+          inicialesSitio,
+          folioFormateado,
           ubicacionId,
           nombreUbicacion,
           proveedorId,
@@ -6048,6 +6058,8 @@ components:
       properties:
         id: { type: number }
         folio: { type: number }
+        inicialesSitio: { type: string }
+        folioFormateado: { type: string, example: DN-000001 }
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
         proveedorId: { type: ["number", "null"] }
@@ -6123,10 +6135,12 @@ components:
     SalidaResumen:
       type: object
       required:
-        [id, folio, estado, origenId, nombreOrigen, destinoId, nombreDestino, armadoPorId, nombreArmadoPor, fechaArmado, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
+        [id, folio, inicialesSitio, folioFormateado, estado, origenId, nombreOrigen, destinoId, nombreDestino, armadoPorId, nombreArmadoPor, fechaArmado, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
       properties:
         id: { type: number }
         folio: { type: number }
+        inicialesSitio: { type: string }
+        folioFormateado: { type: string, example: DN-000001 }
         estado:
           $ref: "#/components/schemas/EstadoSalida"
         origenId: { type: number }

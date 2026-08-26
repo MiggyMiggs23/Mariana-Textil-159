@@ -364,7 +364,7 @@ router.get(
         { header: "Transportista", key: "transportista", width: 24 }, { header: "Observaciones", key: "observaciones", width: 35 },
       ];
       for (const item of result.items) sheet.addRow({
-        folio: String(item.folio), estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
+        folio: item.folioFormateado, estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
         usuario: item.nombreUsuario, rollos: toExcelNumber(item.totalRollos), metros: toExcelNumber(item.totalMetros), kilos: toExcelNumber(item.totalKilos),
         transportista: item.transportista, observaciones: item.observaciones,
       });

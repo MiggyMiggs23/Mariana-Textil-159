@@ -1698,6 +1698,8 @@ export const CrearEntradaBody = zod.object({
 export const CrearEntradaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "proveedorId": zod.number().nullable(),
@@ -1736,7 +1738,7 @@ export const CrearEntradaResponse = zod.object({
  * @summary Lista entradas con filtros para búsqueda y reimpresión
  */
 export const ListEntradasQueryParams = zod.object({
-  "folio": zod.coerce.number().optional(),
+  "folio": zod.coerce.string().optional().describe('Folio numérico o formateado como DN-000503.'),
   "proveedorId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "fechaDesde": zod.date().optional(),
@@ -1749,6 +1751,8 @@ export const ListEntradasResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "proveedorId": zod.number().nullable(),
@@ -1797,6 +1801,8 @@ export const GetEntradaParams = zod.object({
 export const GetEntradaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "proveedorId": zod.number().nullable(),
@@ -1854,6 +1860,8 @@ export const CapturarCostosEntradaBody = zod.object({
 export const CapturarCostosEntradaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "proveedorId": zod.number().nullable(),
@@ -1915,6 +1923,8 @@ export const ListEntradasPendientesCostoResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "fecha": zod.coerce.date(),
   "nombreUbicacion": zod.string(),
   "nombreProveedor": zod.string().nullable(),
@@ -4175,7 +4185,7 @@ export const CerrarSesionCajaResponse = zod.object({
  */
 export const ListSalidasQueryParams = zod.object({
   "estados": zod.coerce.string().optional().describe('Estados separados por comas'),
-  "folio": zod.coerce.number().optional(),
+  "folio": zod.coerce.string().optional().describe('Folio numérico o formateado como DN-000503.'),
   "origenId": zod.coerce.number().optional(),
   "destinoId": zod.coerce.number().optional(),
   "productoId": zod.coerce.number().optional(),
@@ -4191,6 +4201,8 @@ export const ListSalidasResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4231,6 +4243,8 @@ export const GetBorradorSalidaResponse = zod.object({
   "salida": zod.union([zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4322,6 +4336,8 @@ export const AgregarRolloBorradorSalidaBody = zod.object({
 export const AgregarRolloBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4431,6 +4447,8 @@ export const GetUbicacionesSalidaResponse = zod.array(GetUbicacionesSalidaRespon
 export const ListSalidasRecepcionResponseItem = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4467,6 +4485,8 @@ export const GetSalidaRecepcionParams = zod.object({
 export const GetSalidaRecepcionResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4550,6 +4570,8 @@ export const GetSalidaParams = zod.object({
 export const GetSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4633,6 +4655,8 @@ export const GetDocumentoSalidaParams = zod.object({
 export const GetDocumentoSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4717,6 +4741,8 @@ export const QuitarRolloBorradorSalidaParams = zod.object({
 export const QuitarRolloBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4810,6 +4836,8 @@ export const CancelarSalidaBody = zod.object({
 export const CancelarSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4901,6 +4929,8 @@ export const EnviarSalidaBody = zod.object({
 export const EnviarSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
@@ -4993,6 +5023,8 @@ export const RecibirSalidaBody = zod.object({
 export const RecibirSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
+  "inicialesSitio": zod.string(),
+  "folioFormateado": zod.string(),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),

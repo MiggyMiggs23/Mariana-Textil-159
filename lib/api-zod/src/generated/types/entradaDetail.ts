@@ -11,6 +11,8 @@ import type { EntradaRollo } from './entradaRollo';
 export interface EntradaDetail {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */

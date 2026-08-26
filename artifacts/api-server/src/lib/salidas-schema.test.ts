@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
 await test("El upgrade de Salidas migra el alias transferencias sin perder su configuración", async () => {
   await ensureSalidasSchema(pool);
   const folioBefore = await pool.query<{ ultimo_folio: number }>(
-    "SELECT ultimo_folio FROM salida_folio WHERE id = 1",
+    "SELECT ultimo_folio FROM salida_folio LIMIT 1",
   );
 
   await pool.query(`
@@ -159,7 +159,7 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
   );
 
   const folio = await pool.query<{ ultimo_folio: number }>(
-    "SELECT ultimo_folio FROM salida_folio WHERE id = 1",
+    "SELECT ultimo_folio FROM salida_folio LIMIT 1",
   );
   assert.equal(
     folio.rows[0]?.ultimo_folio,

@@ -24,7 +24,7 @@ export const salidasTable = pgTable(
   "salidas",
   {
     id: serial("id").primaryKey(),
-    folio: integer("folio").notNull().unique(),
+    folio: integer("folio").notNull(),
     origenId: integer("origen_id")
       .notNull()
       .references(() => ubicacionesTable.id),
@@ -79,6 +79,7 @@ export const salidasTable = pgTable(
   },
   (table) => [
     index("salidas_origen_estado_idx").on(table.origenId, table.estado),
+    uniqueIndex("salidas_origen_folio_uidx").on(table.origenId, table.folio),
     index("salidas_destino_estado_idx").on(table.destinoId, table.estado),
     index("salidas_estado_idx").on(table.estado),
     index("salidas_folio_idx").on(table.folio),
@@ -158,10 +159,12 @@ export const salidaRollosTable = pgTable(
   ],
 );
 
-/** Single row counter; 499 makes the first allocated salida folio 500. */
+/** One counter per origin site; a new site starts with folio 1. */
 export const salidaFolioTable = pgTable("salida_folio", {
-  id: integer("id").primaryKey().default(1),
-  ultimoFolio: integer("ultimo_folio").notNull().default(499),
+  ubicacionId: integer("ubicacion_id")
+    .primaryKey()
+    .references(() => ubicacionesTable.id),
+  ultimoFolio: integer("ultimo_folio").notNull().default(0),
 });
 
 export type Salida = typeof salidasTable.$inferSelect;

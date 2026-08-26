@@ -506,7 +506,21 @@ inventarioRouter.get(
       }
 
       const conditions = [];
-      if (q.folio) conditions.push(eq(entradasTable.folio, q.folio));
+      if (q.folio) {
+        const folioMatch = q.folio.match(/^([A-Z]{2,3}-)?(\d+)$/i);
+        if (folioMatch) {
+          conditions.push(eq(entradasTable.folio, Number(folioMatch[2])));
+          if (folioMatch[1]) {
+            conditions.push(
+              sql`EXISTS (
+                SELECT 1 FROM ubicaciones u
+                 WHERE u.id = ${entradasTable.ubicacionId}
+                   AND u.iniciales = ${folioMatch[1].slice(0, -1).toUpperCase()}
+              )`,
+            );
+          }
+        }
+      }
       if (q.proveedorId)
         conditions.push(eq(entradasTable.proveedorId, q.proveedorId));
 
@@ -539,6 +553,7 @@ inventarioRouter.get(
           folio: entradasTable.folio,
           ubicacionId: entradasTable.ubicacionId,
           nombreUbicacion: ubicacionesTable.nombre,
+          inicialesSitio: ubicacionesTable.iniciales,
           proveedorId: entradasTable.proveedorId,
           nombreProveedor: proveedoresTable.nombre,
           usuarioId: entradasTable.usuarioId,
@@ -566,6 +581,8 @@ inventarioRouter.get(
       const items = rows.map((r) => ({
         id: r.id,
         folio: r.folio,
+        inicialesSitio: r.inicialesSitio,
+        folioFormateado: `${r.inicialesSitio}-${String(r.folio).padStart(6, "0")}`,
         ubicacionId: r.ubicacionId,
         nombreUbicacion: r.nombreUbicacion,
         proveedorId: r.proveedorId ?? null,
@@ -675,7 +692,7 @@ inventarioRouter.get(
       const page = q.page ?? 1;
       const pageSize = q.pageSize ?? 20;
       const result = await db.execute(sql`
-        SELECT e.id, e.folio, e.fecha, u.nombre AS nombre_ubicacion,
+        SELECT e.id, e.folio, u.iniciales AS iniciales_sitio, e.fecha, u.nombre AS nombre_ubicacion,
                p.nombre AS nombre_proveedor, us.nombre AS nombre_usuario,
                COUNT(r.id)::int AS rollos_pendientes,
                COALESCE(SUM(r.cantidad_inicial) FILTER
@@ -699,6 +716,8 @@ inventarioRouter.get(
         items: rows.map((row) => ({
           id: Number(row.id),
           folio: Number(row.folio),
+          inicialesSitio: String(row.iniciales_sitio),
+          folioFormateado: `${String(row.iniciales_sitio)}-${String(row.folio).padStart(6, "0")}`,
           fecha: new Date(String(row.fecha)).toISOString(),
           nombreUbicacion: String(row.nombre_ubicacion),
           nombreProveedor: row.nombre_proveedor == null ? null : String(row.nombre_proveedor),

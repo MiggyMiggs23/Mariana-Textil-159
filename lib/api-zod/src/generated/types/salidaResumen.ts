@@ -10,6 +10,8 @@ import type { EstadoSalida } from './estadoSalida';
 export interface SalidaResumen {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   estado: EstadoSalida;
   origenId: number;
   nombreOrigen: string;

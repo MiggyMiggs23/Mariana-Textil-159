@@ -65,8 +65,6 @@ export class InventarioError extends Error {
 
 /** Single-row control table id for the global series counter. */
 const SERIES_ROW_ID = 1;
-/** Single-row control table id for the global folio counter. */
-const FOLIO_ROW_ID = 1;
 
 /**
  * Atomically reserve the next N global series numbers.
@@ -103,29 +101,25 @@ async function reserveSeries(tx: Tx, quantity: number): Promise<string[]> {
 }
 
 /**
- * Atomically reserve the next global entry folio.
- * Locks the single control row FOR UPDATE. The counter is seeded with 99 so the
- * first folio is 100. Rollback-safe: an aborted transaction never burns a folio.
+ * Atomically reserve the next entry folio at a site. The site counter is
+ * created at zero, so a new site starts at folio 1.
  */
-async function reserveFolio(tx: Tx): Promise<number> {
+async function reserveFolio(tx: Tx, ubicacionId: number): Promise<number> {
+  await tx
+    .insert(entradaFolioTable)
+    .values({ ubicacionId, ultimoFolio: 0 })
+    .onConflictDoNothing();
   const [row] = await tx
     .select()
     .from(entradaFolioTable)
-    .where(eq(entradaFolioTable.id, FOLIO_ROW_ID))
+    .where(eq(entradaFolioTable.ubicacionId, ubicacionId))
     .for("update");
 
-  const next = (row?.ultimoFolio ?? 99) + 1;
-
-  if (row) {
-    await tx
-      .update(entradaFolioTable)
-      .set({ ultimoFolio: next })
-      .where(eq(entradaFolioTable.id, FOLIO_ROW_ID));
-  } else {
-    await tx
-      .insert(entradaFolioTable)
-      .values({ id: FOLIO_ROW_ID, ultimoFolio: next });
-  }
+  const next = row!.ultimoFolio + 1;
+  await tx
+    .update(entradaFolioTable)
+    .set({ ultimoFolio: next })
+    .where(eq(entradaFolioTable.ubicacionId, ubicacionId));
 
   return next;
 }
@@ -446,6 +440,8 @@ export type EntradaLineaResult = {
 export type EntradaResult = {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   ubicacionId: number;
   nombreUbicacion: string;
   proveedorId: number | null;
@@ -595,7 +591,7 @@ export async function crearEntrada(
   const fechaServidor = new Date();
 
   // 1) Rollback-safe folio
-  const folio = await reserveFolio(tx);
+  const folio = await reserveFolio(tx, input.ubicacionId);
 
   // 2) Immutable header
   const [entrada] = await tx
@@ -649,7 +645,7 @@ export async function crearEntrada(
         cantidad,
         usuarioId: input.usuarioId,
         documentoTipo: "ENTRADA",
-        documentoId: String(entrada!.folio),
+        documentoId: String(entrada!.id),
       });
     }
   }
@@ -740,6 +736,7 @@ export async function buildEntradaResult(
       folio: entradasTable.folio,
       ubicacionId: entradasTable.ubicacionId,
       nombreUbicacion: ubicacionesTable.nombre,
+      inicialesSitio: ubicacionesTable.iniciales,
       proveedorId: entradasTable.proveedorId,
       usuarioId: entradasTable.usuarioId,
       fecha: entradasTable.fecha,
@@ -851,6 +848,8 @@ export async function buildEntradaResult(
   return {
     id: entrada.id,
     folio: entrada.folio,
+    inicialesSitio: entrada.inicialesSitio,
+    folioFormateado: `${entrada.inicialesSitio}-${String(entrada.folio).padStart(6, "0")}`,
     ubicacionId: entrada.ubicacionId,
     nombreUbicacion: entrada.nombreUbicacion,
     proveedorId: entrada.proveedorId ?? null,

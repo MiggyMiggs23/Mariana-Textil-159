@@ -139,7 +139,7 @@ function CaptureCostDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <DollarSign className="w-5 h-5 text-primary" />
-            Captura de Costos - Folio #{entrada?.folio.toString().padStart(6, '0') ?? "..."}
+            Captura de Costos - Folio #{entrada?.folioFormateado ?? "..."}
           </DialogTitle>
           <DialogDescription>
             {entrada && `Proveedor: ${entrada.nombreProveedor || "Sin proveedor"} · ${format(new Date(entrada.fecha), "dd MMM yyyy", { locale: es })}`}
@@ -399,7 +399,7 @@ export default function EntradasPendientesCosto() {
                               <AlertTriangle className="w-4 h-4 text-destructive" data-testid={`icon-overdue-${item.id}`} />
                             </span>
                           )}
-                          #{item.folio.toString().padStart(6, '0')}
+                          #{item.folioFormateado}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           {format(new Date(item.fecha), "dd/MM/yyyy")}

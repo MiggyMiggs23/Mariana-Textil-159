@@ -148,7 +148,11 @@ await test(
     // Header totals: 3 rolls, cost = (10+20)*50 + 5*30 = 1500 + 150 = 1650.00
     assert.equal(result.totalRollos, 3, `totalRollos debe ser 3, got ${result.totalRollos}`);
     assert.equal(result.totalCosto, "1650.00", `totalCosto debe ser 1650.00, got ${result.totalCosto}`);
-    assert.ok(result.folio >= 100, `folio debe ser >= 100, got ${result.folio}`);
+    assert.ok(result.folio >= 1, `folio debe ser >= 1, got ${result.folio}`);
+    assert.equal(
+      result.folioFormateado,
+      `${result.inicialesSitio}-${String(result.folio).padStart(6, "0")}`,
+    );
 
     // Lines grouped by product
     assert.equal(result.lineas.length, 2, "Debe haber 2 líneas agrupadas");
@@ -274,9 +278,9 @@ await test("E-03: Rollback → no quema series ni deja filas", async () => {
   const serieAntes = before?.ultimoNumero ?? 1000000;
 
   const [folioBeforeRow] = await db.execute(
-    sql`SELECT ultimo_folio FROM entrada_folio WHERE id = 1`,
+    sql`SELECT ultimo_folio FROM entrada_folio WHERE ubicacion_id = ${ubicacionId}`,
   ).then((r) => (r as unknown as { rows: { ultimo_folio: number }[] }).rows ?? []);
-  const folioAntes = folioBeforeRow?.ultimo_folio ?? 99;
+  const folioAntes = folioBeforeRow?.ultimo_folio ?? 0;
 
   const uuid = randomUUID();
   await assert.rejects(
@@ -310,9 +314,9 @@ await test("E-03: Rollback → no quema series ni deja filas", async () => {
 
   // Folio counter must be unchanged
   const [folioAfterRow] = await db.execute(
-    sql`SELECT ultimo_folio FROM entrada_folio WHERE id = 1`,
+    sql`SELECT ultimo_folio FROM entrada_folio WHERE ubicacion_id = ${ubicacionId}`,
   ).then((r) => (r as unknown as { rows: { ultimo_folio: number }[] }).rows ?? []);
-  const folioDespues = folioAfterRow?.ultimo_folio ?? 99;
+  const folioDespues = folioAfterRow?.ultimo_folio ?? 0;
   assert.equal(
     folioDespues,
     folioAntes,

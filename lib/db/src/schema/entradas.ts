@@ -6,6 +6,7 @@ import {
   serial,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
@@ -24,8 +25,8 @@ export const entradasTable = pgTable(
   "entradas",
   {
     id: serial("id").primaryKey(),
-    /** Human-facing global folio, starts at 100 (allocated atomically) */
-    folio: integer("folio").notNull().unique(),
+    /** Human-facing folio, consecutive within its site. */
+    folio: integer("folio").notNull(),
     ubicacionId: integer("ubicacion_id")
       .notNull()
       .references(() => ubicacionesTable.id),
@@ -46,6 +47,10 @@ export const entradasTable = pgTable(
       .defaultNow(),
   },
   (table) => [
+    uniqueIndex("entradas_ubicacion_folio_uidx").on(
+      table.ubicacionId,
+      table.folio,
+    ),
     index("entradas_folio_idx").on(table.folio),
     index("entradas_ubicacion_idx").on(table.ubicacionId),
     index("entradas_proveedor_idx").on(table.proveedorId),
@@ -55,13 +60,14 @@ export const entradasTable = pgTable(
 );
 
 // ── Folio control ────────────────────────────────────────────────────────────
-// Single-row control table (id = 1) for rollback-safe atomic folio allocation.
-// `ultimoFolio` holds the last folio handed out; the next folio is
-// `ultimoFolio + 1`. Seeded with 99 so the first entry gets folio 100.
+// One rollback-safe atomic folio counter per site. New sites start at zero, so
+// their first entry receives folio 1.
 
 export const entradaFolioTable = pgTable("entrada_folio", {
-  id: integer("id").primaryKey().default(1),
-  ultimoFolio: integer("ultimo_folio").notNull().default(99),
+  ubicacionId: integer("ubicacion_id")
+    .primaryKey()
+    .references(() => ubicacionesTable.id),
+  ultimoFolio: integer("ultimo_folio").notNull().default(0),
 });
 
 export const insertEntradaSchema = createInsertSchema(entradasTable).omit({

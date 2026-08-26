@@ -2376,6 +2376,8 @@ export interface EntradaLinea {
 export interface EntradaDetail {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */
@@ -2434,6 +2436,8 @@ export interface CapturarCostosEntradaInput {
 export interface EntradaPendienteCosto {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   fecha: string;
   nombreUbicacion: string;
   /** @nullable */
@@ -2499,6 +2503,8 @@ export interface ExistenciaAgrupada {
 export interface EntradaSummary {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */
@@ -2555,6 +2561,8 @@ export interface AgregarRolloBorradorSalidaInput {
 export interface SalidaResumen {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   estado: EstadoSalida;
   origenId: number;
   nombreOrigen: string;
@@ -3756,7 +3764,10 @@ ubicacionId: number;
 };
 
 export type ListEntradasParams = {
-folio?: number;
+/**
+ * Folio numérico o formateado como DN-000503.
+ */
+folio?: string;
 proveedorId?: number;
 ubicacionId?: number;
 fechaDesde?: string;
@@ -3958,7 +3969,10 @@ export type ListSalidasParams = {
  * Estados separados por comas
  */
 estados?: string;
-folio?: number;
+/**
+ * Folio numérico o formateado como DN-000503.
+ */
+folio?: string;
 origenId?: number;
 destinoId?: number;
 productoId?: number;

@@ -214,17 +214,30 @@ async function enrichDocuments(rows: JoinedMovement[]) {
     }
     return { tipo: row.documentoTipo, id: row.documentoId };
   });
-  const folios = references
+  const entradaIds = references
     .filter((reference) => reference.tipo === "ENTRADA" && reference.id)
     .map((reference) => Number(reference.id))
     .filter(Number.isSafeInteger);
-  const entradas = folios.length
+  const entradas = entradaIds.length
     ? await db
-        .select({ id: entradasTable.id, folio: entradasTable.folio })
+        .select({
+          id: entradasTable.id,
+          folio: entradasTable.folio,
+          iniciales: ubicacionesTable.iniciales,
+        })
         .from(entradasTable)
-        .where(inArray(entradasTable.folio, folios))
+        .innerJoin(
+          ubicacionesTable,
+          eq(entradasTable.ubicacionId, ubicacionesTable.id),
+        )
+        .where(inArray(entradasTable.id, entradaIds))
     : [];
-  const entradaMap = new Map(entradas.map((entrada) => [entrada.folio, entrada.id]));
+  const entradaMap = new Map(
+    entradas.map((entrada) => [
+      entrada.id,
+      `${entrada.iniciales}-${String(entrada.folio).padStart(6, "0")}`,
+    ]),
+  );
   const ticketIds = references
     .filter((reference) => reference.tipo === "TICKET" && reference.id)
     .map((reference) => Number(reference.id))
@@ -247,13 +260,26 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       : [],
     salidaIds.length
       ? db
-          .select({ id: salidasTable.id, folio: salidasTable.folio })
+          .select({
+            id: salidasTable.id,
+            folio: salidasTable.folio,
+            iniciales: ubicacionesTable.iniciales,
+          })
           .from(salidasTable)
+          .innerJoin(
+            ubicacionesTable,
+            eq(salidasTable.origenId, ubicacionesTable.id),
+          )
           .where(inArray(salidasTable.id, salidaIds))
       : [],
   ]);
   const ticketMap = new Map(tickets.map((ticket) => [ticket.id, ticket.folio]));
-  const salidaMap = new Map(salidas.map((salida) => [salida.id, salida.folio]));
+  const salidaMap = new Map(
+    salidas.map((salida) => [
+      salida.id,
+      `${salida.iniciales}-${String(salida.folio).padStart(6, "0")}`,
+    ]),
+  );
 
   return rows.map((row, index) => {
     const reference = references[index]!;
@@ -286,18 +312,18 @@ async function enrichDocuments(rows: JoinedMovement[]) {
 
 function resolveDocument(
   reference: DocumentReference,
-  entradaMap: Map<number, number>,
+  entradaMap: Map<number, string>,
   ticketMap: Map<number, number>,
-  salidaMap: Map<number, number>,
+  salidaMap: Map<number, string>,
 ): { label: string | null; route: string | null } {
   if (!reference.tipo || !reference.id) return { label: null, route: null };
   if (reference.tipo === "ENTRADA") {
-    const folio = Number(reference.id);
-    const entradaId = entradaMap.get(folio);
-    return entradaId == null
+    const entradaId = Number(reference.id);
+    const folio = entradaMap.get(entradaId);
+    return folio == null
       ? { label: null, route: null }
       : {
-          label: `Entrada ${reference.id}`,
+          label: `Entrada ${folio}`,
           route: `/entradas/${entradaId}/documento`,
         };
   }

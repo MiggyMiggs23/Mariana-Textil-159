@@ -110,9 +110,10 @@ function salesWhere(ctx: DomainReportContext, dates = ctx.range) {
 async function purchases(ctx: DomainReportContext): Promise<CommercialReport> {
   const where = purchaseWhere(ctx);
   const [rollsResult, bySupplier, byProduct, byFabric, byColor, increases] = await Promise.all([
-    pool.query(`SELECT e.folio,e.fecha,pr.nombre proveedor,p.id producto_id,p.sku,p.tela,p.color,p.unidad,r.serie,
+    pool.query(`SELECT e.folio,u.iniciales,e.fecha,pr.nombre proveedor,p.id producto_id,p.sku,p.tela,p.color,p.unidad,r.serie,
       r.cantidad_inicial cantidad,r.costo_unitario costo_unitario,r.costo_total costo_total
       FROM entradas e JOIN rollos r ON r.recepcion_id=e.id JOIN productos p ON p.id=r.producto_id
+       JOIN ubicaciones u ON u.id=e.ubicacion_id
       LEFT JOIN proveedores pr ON pr.id=e.proveedor_id WHERE ${where.text} ORDER BY e.fecha,r.id`, where.values),
     pool.query(`SELECT COALESCE(pr.nombre,'Sin proveedor') proveedor,p.unidad,COALESCE(SUM(r.costo_total),0) costo,COUNT(*)::int rollos
       FROM entradas e JOIN rollos r ON r.recepcion_id=e.id LEFT JOIN proveedores pr ON pr.id=e.proveedor_id
@@ -126,7 +127,7 @@ async function purchases(ctx: DomainReportContext): Promise<CommercialReport> {
        FROM entradas e JOIN rollos r ON r.recepcion_id=e.id JOIN productos p ON p.id=r.producto_id LEFT JOIN proveedores pr ON pr.id=e.proveedor_id)
        SELECT * FROM receipt WHERE fecha >= $1 AND fecha <= $2 AND anterior>0 AND costo_unitario > anterior*1.1 ORDER BY fecha DESC`, [ctx.range.desde, ctx.range.hasta]),
   ]);
-  const rolls = rollsResult.rows.map((r): Row => ({ folio: number(r.folio), fecha: new Date(r.fecha).toISOString(), proveedor: r.proveedor ?? "Sin proveedor", sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, serie: r.serie, cantidad: number(r.cantidad), costoUnitario: number(r.costo_unitario), costoTotal: number(r.costo_total) }));
+  const rolls = rollsResult.rows.map((r): Row => ({ folio: `${r.iniciales}-${String(r.folio).padStart(6, "0")}`, fecha: new Date(r.fecha).toISOString(), proveedor: r.proveedor ?? "Sin proveedor", sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, serie: r.serie, cantidad: number(r.cantidad), costoUnitario: number(r.costo_unitario), costoTotal: number(r.costo_total) }));
   const alternatives = await pool.query(`WITH scoped AS (
       SELECT r.producto_id,p.sku,p.tela,p.color,p.unidad,pr.nombre proveedor,r.costo_unitario
       FROM entradas e JOIN rollos r ON r.recepcion_id=e.id JOIN productos p ON p.id=r.producto_id LEFT JOIN proveedores pr ON pr.id=e.proveedor_id WHERE ${where.text}

@@ -7,7 +7,10 @@
  */
 
 export type ListEntradasParams = {
-folio?: number;
+/**
+ * Folio numérico o formateado como DN-000503.
+ */
+folio?: string;
 proveedorId?: number;
 ubicacionId?: number;
 fechaDesde?: Date;

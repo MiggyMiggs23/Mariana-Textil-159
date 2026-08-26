@@ -666,7 +666,7 @@ export default function Entradas() {
             <CardHeader className="text-center pb-4">
               <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
               <CardTitle className="text-2xl text-emerald-700 dark:text-emerald-400">Entrada Completada</CardTitle>
-              <CardDescription>Folio #{resultado.folio.toString().padStart(6, '0')}</CardDescription>
+              <CardDescription>Folio #{resultado.folioFormateado}</CardDescription>
             </CardHeader>
             <CardContent>
               {!showCost && (

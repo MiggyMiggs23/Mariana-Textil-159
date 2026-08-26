@@ -24,11 +24,12 @@ function folioFromScan(raw: string): number | null {
   try {
     const url = new URL(value, window.location.origin);
     const queryFolio = url.searchParams.get("folio");
-    if (queryFolio && /^\d+$/.test(queryFolio)) return Number(queryFolio);
+    if (queryFolio) return folioFromScan(queryFolio);
   } catch {
     // Plain folios are handled below.
   }
-  return /^\d+$/.test(value) ? Number(value) : null;
+  const match = /^(?:[A-Za-z]+[-\s]?)?(\d+)$/.exec(value);
+  return match ? Number(match[1]) : null;
 }
 
 export function RecepcionSalidas() {
@@ -59,7 +60,7 @@ export function RecepcionSalidas() {
       onSuccess: async (received) => {
         toast({
           title: "Salida recibida",
-          description: `El folio ${received.folio} y todos sus rollos ya están en el destino.`,
+          description: `El folio ${received.folioFormateado} y todos sus rollos ya están en el destino.`,
         });
         setFolio(null);
         setCompleta(true);
@@ -132,7 +133,7 @@ export function RecepcionSalidas() {
       {detalle.data && (
         <Card className="border-primary/30">
           <CardHeader>
-            <CardTitle>Folio {String(detalle.data.folio).padStart(5, "0")}</CardTitle>
+            <CardTitle>Folio {detalle.data.folioFormateado}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -209,7 +210,7 @@ export function RecepcionSalidas() {
               onClick={() => setFolio(salida.folio)}
               className="flex w-full flex-wrap items-center justify-between gap-2 rounded-md border p-3 text-left hover:bg-muted"
             >
-              <span className="font-semibold">Folio {String(salida.folio).padStart(5, "0")}</span>
+              <span className="font-semibold">Folio {salida.folioFormateado}</span>
               <span className="text-sm text-muted-foreground">
                 {salida.nombreOrigen} → {salida.nombreDestino} · {salida.totalRollos ?? 0} rollos
               </span>

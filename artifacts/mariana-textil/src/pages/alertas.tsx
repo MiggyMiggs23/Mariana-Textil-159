@@ -257,7 +257,7 @@ export default function Alertas() {
                       <CardContent className="p-4 flex items-center justify-between gap-4">
                         <div className="space-y-1.5 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-base">Salida {salida.folio}</span>
+                            <span className="font-bold text-base">Salida pendiente</span>
                             <span className="text-destructive bg-destructive/10 px-1.5 py-0.5 rounded text-[10px] font-bold">
                               {transitAgeLabel(salida.horasEnTransito)} en tránsito
                             </span>
@@ -272,7 +272,7 @@ export default function Alertas() {
                             Enviada a las {ticketTime(salida.enviadaAt)}
                           </div>
                         </div>
-                        <Link href={`/salidas?folio=${salida.folio}`} className="text-primary hover:underline text-sm font-medium flex items-center gap-1 shrink-0">
+                        <Link href={`/salidas/${salida.id}`} className="text-primary hover:underline text-sm font-medium flex items-center gap-1 shrink-0">
                           Revisar <ArrowRight className="h-3 w-3" />
                         </Link>
                       </CardContent>

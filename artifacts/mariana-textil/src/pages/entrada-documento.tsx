@@ -83,7 +83,7 @@ export default function EntradaDocumento() {
               <div className="flex items-center border-b border-gray-300 pb-1">
                 <Hash className="w-4 h-4 text-gray-400 mr-2" />
                 <span className="font-bold w-32 text-xs uppercase text-gray-500 tracking-wider">No. Folio</span>
-                <span className="font-bold text-sm text-red-600">{entrada.folio.toString().padStart(6, '0')}</span>
+                <span className="font-bold text-sm text-red-600">{entrada.folioFormateado}</span>
               </div>
               <div className="flex items-center border-b border-gray-300 pb-1">
                 <Truck className="w-4 h-4 text-gray-400 mr-2" />

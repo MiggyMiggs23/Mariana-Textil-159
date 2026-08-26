@@ -30,14 +30,14 @@ if (Number.isNaN(port) || port <= 0) {
 async function startServer() {
   await ensureSupervisorRole(pool);
   logger.info("Rol SUPERVISOR verificado");
-  await ensureDocumentFoliosSchema(pool);
-  logger.info("Iniciales de sitios verificadas");
   await ensureClientesSchema(pool);
   logger.info("Esquema de clientes verificado");
   await ensureTicketIvaSchema(pool);
   logger.info("Esquema de IVA de tickets verificado");
   await ensureSalidasSchema(pool);
   logger.info("Esquema de Salidas verificado");
+  await ensureDocumentFoliosSchema(pool);
+  logger.info("Iniciales y folios por sitio verificados");
   await ensurePendingCostsSchema(pool);
   await ensureAdminAnalyticsSchema(pool);
   await ensureEtiquetasSchema(pool);

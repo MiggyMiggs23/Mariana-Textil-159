@@ -65,7 +65,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
 
       CREATE TABLE IF NOT EXISTS salidas (
         id serial PRIMARY KEY,
-        folio integer NOT NULL UNIQUE,
+         folio integer NOT NULL,
         origen_id integer NOT NULL REFERENCES ubicaciones(id),
         destino_id integer NOT NULL REFERENCES ubicaciones(id),
         estado estado_salida NOT NULL DEFAULT 'ARMANDO',
@@ -161,9 +161,9 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         nota_diferencia text
       );
 
-      CREATE TABLE IF NOT EXISTS salida_folio (
-        id integer PRIMARY KEY DEFAULT 1,
-        ultimo_folio integer NOT NULL DEFAULT 499
+       CREATE TABLE IF NOT EXISTS salida_folio (
+         ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id),
+         ultimo_folio integer NOT NULL DEFAULT 0
       );
 
       CREATE TABLE IF NOT EXISTS notificaciones_sistema (
@@ -195,9 +195,6 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       CREATE INDEX IF NOT EXISTS notificaciones_sistema_leida_created_idx
         ON notificaciones_sistema (leida_at, created_at);
 
-      INSERT INTO salida_folio (id, ultimo_folio)
-      VALUES (1, 499)
-      ON CONFLICT (id) DO NOTHING;
     `);
 
     // Migrate the legacy alias only into rows that were not explicitly

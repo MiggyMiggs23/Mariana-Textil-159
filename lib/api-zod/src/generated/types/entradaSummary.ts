@@ -9,6 +9,8 @@
 export interface EntradaSummary {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */

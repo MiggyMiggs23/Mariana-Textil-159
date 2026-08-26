@@ -83,7 +83,7 @@ export default function EntradaEtiquetas() {
             </Link>
           </Button>
           <div>
-            <h1 className="font-bold">Etiquetas - Folio #{entrada.folio.toString().padStart(6,'0')}</h1>
+            <h1 className="font-bold">Etiquetas - Folio #{entrada.folioFormateado}</h1>
             <p className="text-xs text-muted-foreground">
               {formatNumber(selectedRollos.size, { kind: "count" })} de {formatNumber(entrada.totalRollos, { kind: "count" })} rollos seleccionados
             </p>

@@ -186,7 +186,7 @@ export default function SalidaDetail() {
           <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
             <h1 data-testid="salida-folio" className={`text-3xl font-bold tracking-tight ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900'}`}>
-              Folio {String(salida.folio).padStart(5, '0')}
+              Folio {salida.folioFormateado}
             </h1>
             <span data-testid={`status-${salida.estado.toLowerCase()}`}><EstadoBadge estado={salida.estado} /></span>
           </div>

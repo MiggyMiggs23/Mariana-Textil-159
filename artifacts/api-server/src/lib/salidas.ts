@@ -36,8 +36,6 @@ import {
   type Tx,
 } from "./inventario";
 
-const SALIDA_FOLIO_ROW_ID = 1;
-
 export type CrearSalidaInput = {
   origenId: number;
   destinoId: number;
@@ -47,6 +45,18 @@ export type CrearSalidaInput = {
   observaciones?: string | null;
   rolloIds?: number[];
 };
+
+async function getSalidaFolioFormateado(
+  tx: Tx,
+  salida: { origenId: number; folio: number },
+): Promise<string> {
+  const [origen] = await tx
+    .select({ iniciales: ubicacionesTable.iniciales })
+    .from(ubicacionesTable)
+    .where(eq(ubicacionesTable.id, salida.origenId))
+    .limit(1);
+  return `${origen?.iniciales ?? ""}-${String(salida.folio).padStart(6, "0")}`;
+}
 
 type EnviarSalidaInput = {
   salidaId: number;
@@ -93,22 +103,22 @@ function requireState(
   }
 }
 
-async function reserveSalidaFolio(tx: Tx): Promise<number> {
+async function reserveSalidaFolio(tx: Tx, origenId: number): Promise<number> {
   await tx
     .insert(salidaFolioTable)
-    .values({ id: SALIDA_FOLIO_ROW_ID, ultimoFolio: 499 })
+    .values({ ubicacionId: origenId, ultimoFolio: 0 })
     .onConflictDoNothing();
 
   const [row] = await tx
     .select()
     .from(salidaFolioTable)
-    .where(eq(salidaFolioTable.id, SALIDA_FOLIO_ROW_ID))
+    .where(eq(salidaFolioTable.ubicacionId, origenId))
     .for("update");
   const next = row!.ultimoFolio + 1;
   await tx
     .update(salidaFolioTable)
     .set({ ultimoFolio: next })
-    .where(eq(salidaFolioTable.id, SALIDA_FOLIO_ROW_ID));
+    .where(eq(salidaFolioTable.ubicacionId, origenId));
   return next;
 }
 
@@ -134,7 +144,11 @@ async function getEntityMaps(database: ReadDb, salida: SalidaHeader) {
     salida.usuarioCancelaId,
   ].filter((id): id is number => id != null);
   const locations = await database
-    .select({ id: ubicacionesTable.id, nombre: ubicacionesTable.nombre })
+    .select({
+      id: ubicacionesTable.id,
+      nombre: ubicacionesTable.nombre,
+      iniciales: ubicacionesTable.iniciales,
+    })
     .from(ubicacionesTable)
     .where(inArray(ubicacionesTable.id, locationIds));
   const users = userIds.length
@@ -144,7 +158,7 @@ async function getEntityMaps(database: ReadDb, salida: SalidaHeader) {
         .where(inArray(usuariosTable.id, userIds))
     : [];
   return {
-    locations: new Map(locations.map((row) => [row.id, row.nombre])),
+    locations: new Map(locations.map((row) => [row.id, row])),
     users: new Map(users.map((row) => [row.id, row.nombre])),
   };
 }
@@ -230,10 +244,12 @@ export async function buildSalidaDetail(
   return {
     id: salida.id,
     folio: salida.folio,
+    inicialesSitio: locations.get(salida.origenId)?.iniciales ?? "",
+    folioFormateado: `${locations.get(salida.origenId)?.iniciales ?? ""}-${String(salida.folio).padStart(6, "0")}`,
     origenId: salida.origenId,
     destinoId: salida.destinoId,
-    nombreOrigen: locations.get(salida.origenId) ?? "Ubicación eliminada",
-    nombreDestino: locations.get(salida.destinoId) ?? "Ubicación eliminada",
+    nombreOrigen: locations.get(salida.origenId)?.nombre ?? "Ubicación eliminada",
+    nombreDestino: locations.get(salida.destinoId)?.nombre ?? "Ubicación eliminada",
     estado: salida.estado,
     armadoPorId: requestedById,
     nombreArmadoPor: users.get(requestedById) ?? "Usuario eliminado",
@@ -378,7 +394,7 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   }
 
   // Folio allocation is intentionally after every validation and row lock.
-  const folio = await reserveSalidaFolio(tx);
+  const folio = await reserveSalidaFolio(tx, input.origenId);
   const [salida] = await tx
     .insert(salidasTable)
     .values({
@@ -611,7 +627,7 @@ export async function agregarRolloBorradorSalida(
   }
 
   if (!salida) {
-    const folio = await reserveSalidaFolio(tx);
+    const folio = await reserveSalidaFolio(tx, input.origenId);
     const [created] = await tx
       .insert(salidasTable)
       .values({
@@ -760,6 +776,7 @@ async function recomputeLineTotals(tx: Tx, salidaId: number): Promise<void> {
 
 export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
+  const folioFormateado = await getSalidaFolioFormateado(tx, salida);
   requireState(salida, ["ARMANDO"], "enviar");
   if (salida.usuarioSolicitaId !== input.usuarioId) {
     throw new InventarioError(
@@ -792,7 +809,7 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
       ubicacionOrigenId: salida.origenId,
       ubicacionTransitoId: transito.id,
       usuarioId: input.usuarioId,
-      justificacion: `Salida ${salida.folio} hacia ubicación ${salida.destinoId}.`,
+      justificacion: `Salida ${folioFormateado} hacia ubicación ${salida.destinoId}.`,
       documentoTipo: "SALIDA",
       documentoId: String(salida.id),
     });
@@ -814,6 +831,7 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
 
 export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
+  const folioFormateado = await getSalidaFolioFormateado(tx, salida);
   requireState(salida, ["EN_TRANSITO"], "recibir");
   const salidaRollos = await tx
     .select()
@@ -832,7 +850,7 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       rolloId: salidaRollo.rolloId,
       ubicacionDestinoId: salida.destinoId,
       usuarioId: input.usuarioId,
-      justificacion: `Recepción de salida ${salida.folio}.`,
+      justificacion: `Recepción de salida ${folioFormateado}.`,
       documentoTipo: "RECEPCION_SALIDA",
       documentoId: String(salida.id),
     });
@@ -873,7 +891,7 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   if (!input.completa) {
     await tx.insert(notificacionesSistemaTable).values({
       tipo: "SALIDA_INCOMPLETA",
-      titulo: `Salida ${salida.folio} reportada incompleta`,
+      titulo: `Salida ${folioFormateado} reportada incompleta`,
       mensaje: note
         ? `La recepción fue marcada incompleta. Nota: ${note}`
         : "La recepción fue marcada incompleta sin nota.",
@@ -930,7 +948,7 @@ export async function cancelarSalida(
 
 export type ListSalidasInput = {
   estados?: EstadoSalida[];
-  folio?: number;
+  folio?: string;
   origenId?: number;
   destinoId?: number;
   productoId?: number;
@@ -960,7 +978,21 @@ export async function listarSalidas(input: ListSalidasInput) {
     );
   }
   if (input.estados?.length) conditions.push(inArray(salidasTable.estado, input.estados));
-  if (input.folio) conditions.push(eq(salidasTable.folio, input.folio));
+  if (input.folio) {
+    const folioMatch = input.folio.match(/^([A-Z]{2,3}-)?(\d+)$/i);
+    if (folioMatch) {
+      conditions.push(eq(salidasTable.folio, Number(folioMatch[2])));
+      if (folioMatch[1]) {
+        conditions.push(
+          sql`EXISTS (
+            SELECT 1 FROM ubicaciones u
+             WHERE u.id = ${salidasTable.origenId}
+               AND u.iniciales = ${folioMatch[1].slice(0, -1).toUpperCase()}
+          )`,
+        );
+      }
+    }
+  }
   if (input.origenId) conditions.push(eq(salidasTable.origenId, input.origenId));
   if (input.destinoId) conditions.push(eq(salidasTable.destinoId, input.destinoId));
   if (input.fechaDesde) conditions.push(gte(salidasTable.createdAt, input.fechaDesde));
@@ -976,10 +1008,25 @@ export async function listarSalidas(input: ListSalidasInput) {
   if (input.usuarioId) conditions.push(eq(salidasTable.usuarioSolicitaId, input.usuarioId));
   if (input.search?.trim()) {
     const search = input.search.trim();
-    const folio = Number(search);
+    const folioMatch = search.match(/^([A-Z]{2,3}-)?(\d+)$/i);
+    const folio = folioMatch ? Number(folioMatch[2]) : Number.NaN;
     conditions.push(
       Number.isInteger(folio)
-        ? or(eq(salidasTable.folio, folio), sql`EXISTS (SELECT 1 FROM salida_rollos sr JOIN rollos r ON r.id = sr.rollo_id WHERE sr.salida_id = ${salidasTable.id} AND r.serie ILIKE ${`%${search}%`})`)
+        ? or(
+            and(
+              eq(salidasTable.folio, folio),
+              ...(folioMatch?.[1]
+                ? [
+                    sql`EXISTS (
+                      SELECT 1 FROM ubicaciones u
+                       WHERE u.id = ${salidasTable.origenId}
+                         AND u.iniciales = ${folioMatch[1].slice(0, -1).toUpperCase()}
+                    )`,
+                  ]
+                : []),
+            ),
+            sql`EXISTS (SELECT 1 FROM salida_rollos sr JOIN rollos r ON r.id = sr.rollo_id WHERE sr.salida_id = ${salidasTable.id} AND r.serie ILIKE ${`%${search}%`})`,
+          )
         : sql`EXISTS (SELECT 1 FROM salida_rollos sr JOIN rollos r ON r.id = sr.rollo_id WHERE sr.salida_id = ${salidasTable.id} AND r.serie ILIKE ${`%${search}%`})`,
     );
   }

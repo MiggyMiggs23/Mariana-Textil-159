@@ -230,7 +230,7 @@ export default function Salidas() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
                   data-testid="filter-search"
-                  placeholder="Buscar por folio o serie..."
+                  placeholder="Buscar por folio (prefijo o número) o serie..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9 bg-white border-slate-200"
@@ -380,7 +380,7 @@ export default function Salidas() {
                           data-testid={`row-salida-${salida.id}`}
                           className={`grid min-w-[1050px] grid-cols-[80px_150px_160px_80px_100px_100px_1fr_120px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
                         >
-                          <span className="font-bold">{String(salida.folio).padStart(5, "0")}</span>
+                          <span className="font-bold">{salida.folioFormateado}</span>
                           <span className="text-sm">{format(new Date(salida.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
                           <span className="truncate font-medium">{salida.nombreOrigen}</span>
                           <span className="text-right font-semibold tabular-nums">{formatNumber(salida.totalRollos ?? 0, { kind: "count" })}</span>
@@ -405,7 +405,7 @@ export default function Salidas() {
                     <div className="w-20 shrink-0">
                       <p className="text-xs font-semibold text-slate-500 mb-1">FOLIO</p>
                       <p className={`text-lg font-bold transition-colors ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900 group-hover:text-primary'}`}>
-                        {String(salida.folio).padStart(5, '0')}
+                        {salida.folioFormateado}
                       </p>
                     </div>
 

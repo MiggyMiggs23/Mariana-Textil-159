@@ -9,6 +9,8 @@
 export interface EntradaPendienteCosto {
   id: number;
   folio: number;
+  inicialesSitio: string;
+  folioFormateado: string;
   fecha: Date;
   nombreUbicacion: string;
   /** @nullable */

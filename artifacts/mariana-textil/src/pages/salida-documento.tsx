@@ -143,7 +143,7 @@ export default function SalidaDocumento() {
                 <div className="flex items-center border-b border-gray-300 pb-1">
                   <Hash className="w-4 h-4 text-gray-400 mr-2" />
                   <span className="font-bold w-32 text-xs uppercase text-gray-500 tracking-wider">No. Folio</span>
-                  <span data-testid="doc-folio" className="font-bold text-sm text-red-600">{salida.folio.toString().padStart(6, '0')}</span>
+                  <span data-testid="doc-folio" className="font-bold text-sm text-red-600">{salida.folioFormateado}</span>
                 </div>
                 <div className="flex items-center border-b border-gray-300 pb-1 col-span-2">
                   <Truck className="w-4 h-4 text-gray-400 mr-2" />
