@@ -59,6 +59,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { ClientSelector } from "@/components/client-selector";
+import { CampoEscaneo } from "@/components/campo-escaneo";
 import { formatNumber } from "@workspace/number-format";
 
 type PriceValidation = {
@@ -657,15 +658,18 @@ export default function PosPage() {
           <div className="p-4 border-b bg-muted/20">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
+              <CampoEscaneo
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={setSearch}
+                onScan={setSearch}
+                clearOnScan={false}
                 placeholder={
                   tipoTicket === TipoTicket.NORMAL
                     ? "Buscar por serie de rollo, SKU o tela..."
                     : "Buscar por producto o SKU..."
                 }
                 className="pl-10 h-12 text-lg shadow-sm"
+                containerClassName="w-full"
                 autoFocus
               />
               {isFetching && (

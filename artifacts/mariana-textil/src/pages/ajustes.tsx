@@ -29,6 +29,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
+import { CampoEscaneo } from "@/components/campo-escaneo";
 
 export default function Ajustes() {
   const queryClient = useQueryClient();
@@ -187,10 +188,12 @@ export default function Ajustes() {
                 <CardContent className="space-y-4">
                   {!selectedRollo ? (
                     <div className="space-y-4">
-                      <Input 
+                      <CampoEscaneo
                         placeholder="Escanea o escribe la serie (min 3 chars)..."
                         value={searchSerie}
-                        onChange={(e) => setSearchSerie(e.target.value)}
+                        onChange={setSearchSerie}
+                        onScan={setSearchSerie}
+                        clearOnScan={false}
                         className="text-lg py-6"
                         data-testid="input-search-serie"
                         autoFocus

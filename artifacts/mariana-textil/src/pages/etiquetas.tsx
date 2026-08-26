@@ -25,6 +25,7 @@ import { toast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { etiquetasApi, type EtiquetaRollo, type HistorialReimpresion } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { CampoEscaneo } from "@/components/campo-escaneo";
 
 const ESTADOS = ["DISPONIBLE", "VENDIDO", "ABIERTO", "EN_TRANSITO", "BAJA", "PROGRAMADO"];
 const MOTIVOS = ["Etiqueta dañada", "Etiqueta despegada", "Etiqueta ilegible", "Etiqueta mojada", "Otro"];
@@ -232,8 +233,10 @@ export default function Etiquetas() {
                 <form className="flex gap-2" onSubmit={(event) => { event.preventDefault(); setSearch(searchDraft.trim()); }}>
                   <div className="relative flex-1">
                     <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                    <Input ref={searchRef} value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)}
-                      className="h-14 pl-12 text-lg" placeholder="Escanea QR o busca por serie, SKU, tela o color…" autoComplete="off" />
+                    <CampoEscaneo ref={searchRef} value={searchDraft} onChange={setSearchDraft}
+                      onScan={(value) => setSearch(value.trim())} clearOnScan={false}
+                      className="h-14 pl-12 text-lg" containerClassName="w-full"
+                      placeholder="Escanea QR o busca por serie, SKU, tela o color…" autoComplete="off" />
                   </div>
                   <Button className="h-14 px-6" type="submit">Buscar</Button>
                 </form>

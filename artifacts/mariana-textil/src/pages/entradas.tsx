@@ -52,6 +52,7 @@ import {
 } from "@/lib/roll-capture-state";
 import { Link } from "wouter";
 import { formatNumber } from "@workspace/number-format";
+import { CampoEscaneo } from "@/components/campo-escaneo";
 
 type DraftLinea = {
   id: string;
@@ -342,12 +343,12 @@ export default function Entradas() {
     toast.success(`Se sobrescribieron los ${declared} rollos con ${uniformQty}`);
   };
 
-  const handleAddQty = (e?: React.FormEvent) => {
-    e?.preventDefault();
-    const val = parseFloat(capCurrentQty);
+  const handleAddQty = (scannedValue?: string) => {
+    const capturedValue = scannedValue ?? capCurrentQty;
+    const val = parseFloat(capturedValue);
     const nextBlankIndex = capCantidades.findIndex((qty) => qty.trim() === "");
     if (!isNaN(val) && val > 0 && nextBlankIndex !== -1) {
-      setCapCantidades((previous) => previous.map((qty, index) => index === nextBlankIndex ? capCurrentQty : qty));
+      setCapCantidades((previous) => previous.map((qty, index) => index === nextBlankIndex ? capturedValue : qty));
       setEditedQtyIndexes((previous) => {
         const next = new Set(previous);
         next.add(nextBlankIndex);
@@ -1138,16 +1139,18 @@ export default function Entradas() {
                 )}
               </div>
 
-              <form onSubmit={handleAddQty} className="flex gap-3">
+              <div className="flex gap-3">
                 <div className="relative flex-1">
-                  <Input
+                  <CampoEscaneo
                     ref={qtyInputRef}
                     type="number"
                     step="0.01"
                     placeholder="0.00"
                     value={capCurrentQty}
-                    onChange={e => setCapCurrentQty(e.target.value)}
+                    onChange={setCapCurrentQty}
+                    onScan={handleAddQty}
                     className="text-4xl h-20 font-black text-center pr-16"
+                    containerClassName="h-20"
                     data-testid="input-capture-qty"
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground text-xl">
@@ -1155,7 +1158,8 @@ export default function Entradas() {
                   </div>
                 </div>
                 <Button
-                  type="submit"
+                  type="button"
+                  onClick={() => handleAddQty()}
                   className="h-20 px-8 bg-primary hover:bg-primary/90"
                   disabled={!capCurrentQty || blankRollCount === 0}
                   data-testid="button-add-captured-roll"
@@ -1163,7 +1167,7 @@ export default function Entradas() {
                   <Plus className="w-5 h-5 mr-2" />
                   Siguiente rollo
                 </Button>
-              </form>
+              </div>
             </div>
 
             {/* List area */}
@@ -1365,7 +1369,7 @@ export default function Entradas() {
               ))}
               <Button
                 className="col-span-3 h-16 text-xl font-black rounded-none bg-primary hover:bg-primary/90 text-white"
-                onClick={handleAddQty}
+                onClick={() => handleAddQty()}
                 disabled={!capCurrentQty || blankRollCount === 0}
               >
                 SIGUIENTE ROLLO (ENTER)

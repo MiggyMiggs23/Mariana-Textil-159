@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
+import { CampoEscaneo } from "@/components/campo-escaneo";
 import {
   useGetCurrentUser,
   useGetUbicacionesSalida,
@@ -102,9 +103,8 @@ export default function SalidaNueva() {
     }
   };
 
-  const handleScan = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const serie = serieInput.trim().toUpperCase();
+  const handleScan = async (scannedValue: string) => {
+    const serie = scannedValue.trim().toUpperCase();
     if (!serie) return;
 
     if (!origenId) {
@@ -349,25 +349,27 @@ export default function SalidaNueva() {
           <div className="lg:col-span-8 space-y-6">
             <Card className="border-slate-200 shadow-sm border-2 border-primary/20">
               <CardContent className="p-1">
-                <form onSubmit={handleScan} className="relative flex items-center">
-                  <div className="absolute left-4 flex items-center justify-center bg-primary/10 w-10 h-10 rounded-full">
+                <div className="relative flex items-center gap-2">
+                  <div className="absolute left-4 z-10 flex items-center justify-center bg-primary/10 w-10 h-10 rounded-full">
                     <Barcode className="w-5 h-5 text-primary" />
                   </div>
-                  <Input
+                  <CampoEscaneo
                     ref={scannerInputRef}
                     value={serieInput}
-                    onChange={e => setSerieInput(e.target.value)}
+                    onChange={setSerieInput}
+                    onScan={handleScan}
                     placeholder="Escanea o ingresa la serie del rollo y presiona Enter..."
-                    className="h-16 pl-16 pr-24 text-xl font-bold bg-white border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-normal placeholder:text-base placeholder:text-slate-400"
+                    className="h-16 pl-16 text-xl font-bold bg-white border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-normal placeholder:text-base placeholder:text-slate-400"
+                    containerClassName="min-w-0 flex-1"
                     autoFocus
                     disabled={isScanning || createMutation.isPending}
                   />
-                  <div className="absolute right-3">
-                    <Button type="submit" disabled={!serieInput.trim() || isScanning} size="sm" className="h-10 px-4">
+                  <div>
+                    <Button type="button" onClick={() => void handleScan(serieInput)} disabled={!serieInput.trim() || isScanning} size="sm" className="h-10 px-4">
                       {isScanning ? <Loader2 className="w-5 h-5 animate-spin" /> : "Agregar"}
                     </Button>
                   </div>
-                </form>
+                </div>
               </CardContent>
             </Card>
 
