@@ -1143,50 +1143,6 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-  /inventario/rollos/{id}/mover:
-    post:
-      operationId: moverRollo
-      deprecated: true
-      tags: [inventario]
-      summary: Retirado; use el flujo documentado de Salidas
-      description: Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
-      parameters:
-        - $ref: "#/components/parameters/RolloId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MoverRolloInput"
-      responses:
-        "410":
-          description: La operación directa fue reemplazada por Salidas
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RetiredTransferResponse"
-  /inventario/rollos/{id}/recibir:
-    post:
-      operationId: recibirTransferencia
-      deprecated: true
-      tags: [inventario]
-      summary: Retirado; use el flujo documentado de Salidas
-      description: Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
-      parameters:
-        - $ref: "#/components/parameters/RolloId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RecibirTransferenciaInput"
-      responses:
-        "410":
-          description: La operación directa fue reemplazada por Salidas
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RetiredTransferResponse"
   /inventario/rollos/{id}/salida-mostrador:
     post:
       operationId: salidaMostrador
@@ -5658,27 +5614,6 @@ components:
         cantidadReal: { type: string }
         notas: { type: ["string", "null"] }
         uuidCliente: { type: ["string", "null"] }
-    MoverRolloInput:
-      type: object
-      required: [ubicacionOrigenId, ubicacionTransitoId]
-      properties:
-        ubicacionOrigenId: { type: number }
-        ubicacionTransitoId: { type: number }
-        justificacion: { type: ["string", "null"] }
-        uuidCliente: { type: ["string", "null"] }
-    RecibirTransferenciaInput:
-      type: object
-      required: [ubicacionDestinoId]
-      properties:
-        ubicacionDestinoId: { type: number }
-        justificacion: { type: ["string", "null"] }
-        uuidCliente: { type: ["string", "null"] }
-    RetiredTransferResponse:
-      type: object
-      required: [error, code]
-      properties:
-        error: { type: string }
-        code: { type: string, enum: [SALIDAS_FLOW_REQUIRED] }
     SalidaMostradorInput:
       type: object
       properties:

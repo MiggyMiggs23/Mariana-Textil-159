@@ -2255,35 +2255,6 @@ export interface ActivarRolloInput {
   uuidCliente?: string | null;
 }
 
-export interface MoverRolloInput {
-  ubicacionOrigenId: number;
-  ubicacionTransitoId: number;
-  /** @nullable */
-  justificacion?: string | null;
-  /** @nullable */
-  uuidCliente?: string | null;
-}
-
-export interface RecibirTransferenciaInput {
-  ubicacionDestinoId: number;
-  /** @nullable */
-  justificacion?: string | null;
-  /** @nullable */
-  uuidCliente?: string | null;
-}
-
-export type RetiredTransferResponseCode = typeof RetiredTransferResponseCode[keyof typeof RetiredTransferResponseCode];
-
-
-export const RetiredTransferResponseCode = {
-  SALIDAS_FLOW_REQUIRED: 'SALIDAS_FLOW_REQUIRED',
-} as const;
-
-export interface RetiredTransferResponse {
-  error: string;
-  code: RetiredTransferResponseCode;
-}
-
 export interface SalidaMostradorInput {
   /** @nullable */
   justificacion?: string | null;

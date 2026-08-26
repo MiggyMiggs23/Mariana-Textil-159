@@ -1952,43 +1952,6 @@ export const ActivarRolloResponse = zod.object({
 
 
 /**
- * Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
- * @deprecated
- * @summary Retirado; use el flujo documentado de Salidas
- */
-export const MoverRolloParams = zod.object({
-  "id": zod.coerce.number()
-})
-
-export const MoverRolloBody = zod.object({
-  "ubicacionOrigenId": zod.number(),
-  "ubicacionTransitoId": zod.number(),
-  "justificacion": zod.string().nullish(),
-  "uuidCliente": zod.string().nullish()
-})
-
-export const MoverRolloResponse = zod.void()
-
-
-/**
- * Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
- * @deprecated
- * @summary Retirado; use el flujo documentado de Salidas
- */
-export const RecibirTransferenciaParams = zod.object({
-  "id": zod.coerce.number()
-})
-
-export const RecibirTransferenciaBody = zod.object({
-  "ubicacionDestinoId": zod.number(),
-  "justificacion": zod.string().nullish(),
-  "uuidCliente": zod.string().nullish()
-})
-
-export const RecibirTransferenciaResponse = zod.void()
-
-
-/**
  * @summary Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
  */
 export const SalidaMostradorParams = zod.object({

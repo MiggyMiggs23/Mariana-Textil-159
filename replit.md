@@ -77,11 +77,17 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - El alcance de lectura reutiliza `resolveReadScope` de Inventario. El detalle lista solo ubicaciones TIENDA/BODEGA activas permitidas y expone enlaces de rollos únicamente `DISPONIBLE`, sin derivar los totales de esos enlaces.
 - Decisión conservadora: una ubicación inactiva o que no sea TIENDA/BODEGA no participa en el catálogo aunque tenga una fila histórica de cache.
 
+## Parte 1, Bloque 3 — Auditoría de transferencias
+
+- Se eliminaron exclusivamente las rutas tombstone `POST /inventario/rollos/:id/mover` y `POST /inventario/rollos/:id/recibir`, que solo respondían `410`, junto con sus paths OpenAPI, schemas y hooks/tipos generados.
+- No existen los nombres solicitados `iniciarTransferencia`, `confirmarTransferencia` ni `cancelarTransferencia`. La transferencia directa activa equivalente es `transferirRolloInmediato`; el ajuste activo equivalente es `ajustarRollo`, que admite rollos `EN_TRANSITO`.
+- Se retienen las funciones de núcleo `moverRollo` y `recibirTransferencia`, porque el ciclo activo de Salidas las invoca. También se retienen las rutas e interfaz de Salidas, los enums del kardex y todo el ciclo de vida e interfaz de Contenedores.
+- El único alcance retirado fue el HTTP tombstone y su contrato generado; no se modificaron las superficies de Contenedores.
+
 ## Pendiente de partes siguientes
 
 > `ABIERTO` se elimina en la Parte 2. Nota: `salidaMostrador` deja `rollos.cantidad_actual` sin tocar mientras inserta el movimiento negativo completo. Es inconsistente pero ya no afecta la existencia. Se resuelve al eliminar el estado.
 
-- Parte 1 Bloque 3: limpieza de transferencias muertas, sin tocar el tránsito de Contenedores.
 
 ## Permission modules (24 total)
 

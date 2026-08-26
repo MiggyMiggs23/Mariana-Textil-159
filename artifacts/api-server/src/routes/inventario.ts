@@ -867,22 +867,6 @@ inventarioRouter.post(
   },
 );
 
-// Compatibility tombstones for clients built before the documented Salidas
-// lifecycle. They intentionally never mutate inventory.
-inventarioRouter.post("/rollos/:id/mover", requireSession, (_req, res) => {
-  res.status(410).json({
-    error: "Esta operación fue reemplazada por el flujo documentado de Salidas.",
-    code: "SALIDAS_FLOW_REQUIRED",
-  });
-});
-
-inventarioRouter.post("/rollos/:id/recibir", requireSession, (_req, res) => {
-  res.status(410).json({
-    error: "Esta operación fue reemplazada por el flujo documentado de Salidas.",
-    code: "SALIDAS_FLOW_REQUIRED",
-  });
-});
-
 // ── Salida mostrador (DISPONIBLE → ABIERTO) ───────────────────────────────────
 // Module: salidas / crear — scope: rollo's current location
 

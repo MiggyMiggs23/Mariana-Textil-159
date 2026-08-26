@@ -146,7 +146,6 @@ import type {
   LocationUpdate,
   LoginInput,
   MotivoSalidaInput,
-  MoverRolloInput,
   MovimientoRow,
   NotFoundResponse,
   NotificacionCredito,
@@ -182,10 +181,8 @@ import type {
   ProveedoresResumen,
   RateLimitedResponse,
   RecalcularInput,
-  RecibirTransferenciaInput,
   ReporteSeccion,
   ReportesCatalogos,
-  RetiredTransferResponse,
   RevertirMovimientoInput,
   Role,
   RolloDetail,
@@ -4175,156 +4172,6 @@ export const useActivarRollo = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getActivarRolloMutationOptions(options));
-    }
-
-export const getMoverRolloUrl = (id: number,) => {
-
-
-
-
-  return `/api/inventario/rollos/${id}/mover`
-}
-
-/**
- * Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
- * @deprecated
- * @summary Retirado; use el flujo documentado de Salidas
- */
-export const moverRollo = async (id: number,
-    moverRolloInput: MoverRolloInput, options?: Parameters<typeof customFetch>[1]): Promise<unknown> => {
-
-  return customFetch<unknown>(getMoverRolloUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(moverRolloInput)
-  }
-);}
-
-
-
-
-
-export const getMoverRolloMutationOptions = <TError = ErrorType<RetiredTransferResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moverRollo>>, TError,{id: number;data: BodyType<MoverRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof moverRollo>>, TError,{id: number;data: BodyType<MoverRolloInput>}, TContext> => {
-
-const mutationKey = ['moverRollo'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moverRollo>>, {id: number;data: BodyType<MoverRolloInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  moverRollo(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type MoverRolloMutationResult = NonNullable<Awaited<ReturnType<typeof moverRollo>>>
-    export type MoverRolloMutationBody = BodyType<MoverRolloInput>
-    export type MoverRolloMutationError = ErrorType<RetiredTransferResponse>
-
-    /**
- * @deprecated
- * @summary Retirado; use el flujo documentado de Salidas
- */
-export const useMoverRollo = <TError = ErrorType<RetiredTransferResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moverRollo>>, TError,{id: number;data: BodyType<MoverRolloInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof moverRollo>>,
-        TError,
-        {id: number;data: BodyType<MoverRolloInput>},
-        TContext
-      > => {
-      return useMutation(getMoverRolloMutationOptions(options));
-    }
-
-export const getRecibirTransferenciaUrl = (id: number,) => {
-
-
-
-
-  return `/api/inventario/rollos/${id}/recibir`
-}
-
-/**
- * Esta ruta se conserva temporalmente para clientes antiguos y siempre responde 410 sin modificar inventario.
- * @deprecated
- * @summary Retirado; use el flujo documentado de Salidas
- */
-export const recibirTransferencia = async (id: number,
-    recibirTransferenciaInput: RecibirTransferenciaInput, options?: Parameters<typeof customFetch>[1]): Promise<unknown> => {
-
-  return customFetch<unknown>(getRecibirTransferenciaUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(recibirTransferenciaInput)
-  }
-);}
-
-
-
-
-
-export const getRecibirTransferenciaMutationOptions = <TError = ErrorType<RetiredTransferResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirTransferencia>>, TError,{id: number;data: BodyType<RecibirTransferenciaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof recibirTransferencia>>, TError,{id: number;data: BodyType<RecibirTransferenciaInput>}, TContext> => {
-
-const mutationKey = ['recibirTransferencia'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recibirTransferencia>>, {id: number;data: BodyType<RecibirTransferenciaInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  recibirTransferencia(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RecibirTransferenciaMutationResult = NonNullable<Awaited<ReturnType<typeof recibirTransferencia>>>
-    export type RecibirTransferenciaMutationBody = BodyType<RecibirTransferenciaInput>
-    export type RecibirTransferenciaMutationError = ErrorType<RetiredTransferResponse>
-
-    /**
- * @deprecated
- * @summary Retirado; use el flujo documentado de Salidas
- */
-export const useRecibirTransferencia = <TError = ErrorType<RetiredTransferResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recibirTransferencia>>, TError,{id: number;data: BodyType<RecibirTransferenciaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof recibirTransferencia>>,
-        TError,
-        {id: number;data: BodyType<RecibirTransferenciaInput>},
-        TContext
-      > => {
-      return useMutation(getRecibirTransferenciaMutationOptions(options));
     }
 
 export const getSalidaMostradorUrl = (id: number,) => {

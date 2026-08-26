@@ -225,8 +225,6 @@ Inventory routes enforce the following effective permissions on the server:
 | `GET /api/inventario/entradas` | `entradas` | `ver` |
 | `GET /api/inventario/entradas/:id` | `entradas` | `ver` |
 | `POST /api/inventario/rollos/:id/activar` | `entradas` | `editar` |
-| `POST /api/inventario/rollos/:id/mover` | — | Retirada: responde 410; usar `/api/salidas` |
-| `POST /api/inventario/rollos/:id/recibir` | — | Retirada: responde 410; usar `/api/salidas/:id/recibir` |
 | `POST /api/salidas` | `salidas` | `crear` |
 | `POST /api/salidas/:id/aceptar` | `salidas` | `editar` + ubicación origen |
 | `POST /api/salidas/:id/rechazar` | `salidas` | `editar` + ubicación origen |
