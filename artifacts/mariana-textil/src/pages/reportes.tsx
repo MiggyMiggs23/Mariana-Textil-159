@@ -79,6 +79,9 @@ export default function Reportes() {
 
     const parsed = {
       periodo: params.get("periodo") || DEFAULT_FILTERS.periodo,
+      modalidad: (["ROLLOS", "METRAJE"].includes(params.get("modalidad") || "")
+        ? params.get("modalidad")
+        : "TODO") as FilterState["modalidad"],
       desde: params.get("desde") || undefined,
       hasta: params.get("hasta") || undefined,
       ubicacionIds: parseNumArray("ubicacionIds"),
@@ -109,6 +112,7 @@ export default function Reportes() {
     const params = new URLSearchParams();
 
     if (newFilters.periodo !== "mensual") params.set("periodo", newFilters.periodo);
+    if (newFilters.modalidad !== "TODO") params.set("modalidad", newFilters.modalidad);
     if (newFilters.desde) params.set("desde", newFilters.desde);
     if (newFilters.hasta) params.set("hasta", newFilters.hasta);
 
@@ -157,7 +161,10 @@ export default function Reportes() {
 
   const handleDownload = async (format: "xlsx" | "pdf") => {
     if (!isDateRangeValid) return;
-    const params = new URLSearchParams(searchString);
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(apiParams)) {
+      params.set(key, Array.isArray(value) ? value.join(",") : String(value));
+    }
     setDownloadError(null);
     try {
       const response = await fetch(`/api/reportes/${activeTab}/export.${format}?${params.toString()}`, {

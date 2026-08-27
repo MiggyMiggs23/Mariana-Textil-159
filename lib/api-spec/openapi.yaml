@@ -3509,6 +3509,7 @@ paths:
         - $ref: "#/components/parameters/ReporteProveedorIds"
         - $ref: "#/components/parameters/ReporteFormasPago"
         - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteModalidad"
         - $ref: "#/components/parameters/ReporteMargenUmbral"
         - $ref: "#/components/parameters/ReporteCoberturaCritico"
         - $ref: "#/components/parameters/ReporteCoberturaBajo"
@@ -3544,6 +3545,7 @@ paths:
         - $ref: "#/components/parameters/ReporteProveedorIds"
         - $ref: "#/components/parameters/ReporteFormasPago"
         - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteModalidad"
         - $ref: "#/components/parameters/ReporteMargenUmbral"
         - $ref: "#/components/parameters/ReporteCoberturaCritico"
         - $ref: "#/components/parameters/ReporteCoberturaBajo"
@@ -3576,6 +3578,7 @@ paths:
         - $ref: "#/components/parameters/ReporteProveedorIds"
         - $ref: "#/components/parameters/ReporteFormasPago"
         - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteModalidad"
         - $ref: "#/components/parameters/ReporteMargenUmbral"
         - $ref: "#/components/parameters/ReporteCoberturaCritico"
         - $ref: "#/components/parameters/ReporteCoberturaBajo"
@@ -3601,6 +3604,11 @@ components:
     ReporteProveedorIds: { name: proveedorIds, in: query, schema: { type: string } }
     ReporteFormasPago: { name: formasPago, in: query, schema: { type: string } }
     ReporteFacturado: { name: facturado, in: query, schema: { type: boolean } }
+    ReporteModalidad:
+      name: modalidad
+      in: query
+      description: Modalidad de las líneas de venta; Todo no restringe resultados.
+      schema: { type: string, enum: [TODO, ROLLOS, METRAJE], default: TODO }
     ReporteMargenUmbral: { name: margenUmbral, in: query, schema: { type: number, default: 15 } }
     ReporteCoberturaCritico: { name: coberturaCritico, in: query, schema: { type: number, default: 7 } }
     ReporteCoberturaBajo: { name: coberturaBajo, in: query, schema: { type: number, default: 15 } }

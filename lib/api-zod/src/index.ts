@@ -345,6 +345,7 @@ export * from "./generated/types/reporteFormasPagoParameter";
 export * from "./generated/types/reporteKpi";
 export * from "./generated/types/reporteKpiKind";
 export * from "./generated/types/reporteMargenUmbralParameter";
+export * from "./generated/types/reporteModalidadParameter";
 export * from "./generated/types/reportePeriodoParameter";
 export * from "./generated/types/reportePrimitive";
 export * from "./generated/types/reporteProductoIdsParameter";

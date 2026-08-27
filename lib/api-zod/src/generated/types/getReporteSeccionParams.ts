@@ -16,6 +16,7 @@ import type { ReporteColoresParameter } from './reporteColoresParameter';
 import type { ReporteFacturadoParameter } from './reporteFacturadoParameter';
 import type { ReporteFormasPagoParameter } from './reporteFormasPagoParameter';
 import type { ReporteMargenUmbralParameter } from './reporteMargenUmbralParameter';
+import type { ReporteModalidadParameter } from './reporteModalidadParameter';
 import type { ReportePeriodoParameter } from './reportePeriodoParameter';
 import type { ReporteProductoIdsParameter } from './reporteProductoIdsParameter';
 import type { ReporteProveedorIdsParameter } from './reporteProveedorIdsParameter';
@@ -46,6 +47,10 @@ clienteIds?: ReporteClienteIdsParameter;
 proveedorIds?: ReporteProveedorIdsParameter;
 formasPago?: ReporteFormasPagoParameter;
 facturado?: ReporteFacturadoParameter;
+/**
+ * Modalidad de las líneas de venta; Todo no restringe resultados.
+ */
+modalidad?: ReporteModalidadParameter;
 margenUmbral?: ReporteMargenUmbralParameter;
 coberturaCritico?: ReporteCoberturaCriticoParameter;
 coberturaBajo?: ReporteCoberturaBajoParameter;

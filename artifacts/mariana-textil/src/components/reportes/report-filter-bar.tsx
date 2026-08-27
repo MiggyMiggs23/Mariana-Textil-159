@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 export type FilterState = {
   periodo: string;
+  modalidad: "TODO" | "ROLLOS" | "METRAJE";
   desde?: string;
   hasta?: string;
   ubicacionIds: number[];
@@ -26,6 +27,7 @@ export type FilterState = {
 
 export const DEFAULT_FILTERS: FilterState = {
   periodo: "mensual",
+  modalidad: "TODO",
   ubicacionIds: [],
   productoIds: [],
   telas: [],
@@ -67,6 +69,7 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
   };
 
   const activeCount = 
+    (filters.modalidad !== "TODO" ? 1 : 0) +
     filters.ubicacionIds.length + 
     filters.productoIds.length + 
     filters.telas.length + 
@@ -119,6 +122,20 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
           )}
 
           <div className="h-6 w-px bg-border mx-1" />
+
+          <Select
+            value={filters.modalidad}
+            onValueChange={(modalidad: "TODO" | "ROLLOS" | "METRAJE") => onChange({ ...filters, modalidad })}
+          >
+            <SelectTrigger className="w-[150px] h-9 bg-background" data-testid="filter-modalidad">
+              <SelectValue placeholder="Modalidad" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="TODO">Todo</SelectItem>
+              <SelectItem value="ROLLOS">Solo rollos</SelectItem>
+              <SelectItem value="METRAJE">Solo metraje</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* Facturado Toggle */}
           <Select 

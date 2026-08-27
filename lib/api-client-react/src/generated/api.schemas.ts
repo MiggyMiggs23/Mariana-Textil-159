@@ -3723,6 +3723,15 @@ export type ReporteFormasPagoParameter = string;
 
 export type ReporteFacturadoParameter = boolean;
 
+export type ReporteModalidadParameter = typeof ReporteModalidadParameter[keyof typeof ReporteModalidadParameter];
+
+
+export const ReporteModalidadParameter = {
+  TODO: 'TODO',
+  ROLLOS: 'ROLLOS',
+  METRAJE: 'METRAJE',
+} as const;
+
 export type ReporteMargenUmbralParameter = number;
 
 export type ReporteCoberturaCriticoParameter = number;
@@ -4448,6 +4457,10 @@ clienteIds?: ReporteClienteIdsParameter;
 proveedorIds?: ReporteProveedorIdsParameter;
 formasPago?: ReporteFormasPagoParameter;
 facturado?: ReporteFacturadoParameter;
+/**
+ * Modalidad de las líneas de venta; Todo no restringe resultados.
+ */
+modalidad?: ReporteModalidadParameter;
 margenUmbral?: ReporteMargenUmbralParameter;
 coberturaCritico?: ReporteCoberturaCriticoParameter;
 coberturaBajo?: ReporteCoberturaBajoParameter;
@@ -4477,6 +4490,10 @@ clienteIds?: ReporteClienteIdsParameter;
 proveedorIds?: ReporteProveedorIdsParameter;
 formasPago?: ReporteFormasPagoParameter;
 facturado?: ReporteFacturadoParameter;
+/**
+ * Modalidad de las líneas de venta; Todo no restringe resultados.
+ */
+modalidad?: ReporteModalidadParameter;
 margenUmbral?: ReporteMargenUmbralParameter;
 coberturaCritico?: ReporteCoberturaCriticoParameter;
 coberturaBajo?: ReporteCoberturaBajoParameter;
@@ -4506,6 +4523,10 @@ clienteIds?: ReporteClienteIdsParameter;
 proveedorIds?: ReporteProveedorIdsParameter;
 formasPago?: ReporteFormasPagoParameter;
 facturado?: ReporteFacturadoParameter;
+/**
+ * Modalidad de las líneas de venta; Todo no restringe resultados.
+ */
+modalidad?: ReporteModalidadParameter;
 margenUmbral?: ReporteMargenUmbralParameter;
 coberturaCritico?: ReporteCoberturaCriticoParameter;
 coberturaBajo?: ReporteCoberturaBajoParameter;

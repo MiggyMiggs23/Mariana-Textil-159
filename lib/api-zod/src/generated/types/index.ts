@@ -358,6 +358,7 @@ export * from './reporteFormasPagoParameter';
 export * from './reporteKpi';
 export * from './reporteKpiKind';
 export * from './reporteMargenUmbralParameter';
+export * from './reporteModalidadParameter';
 export * from './reportePeriodoParameter';
 export * from './reportePrimitive';
 export * from './reporteProductoIdsParameter';

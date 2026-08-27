@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { abcClass, exactFrozenMargin, parseFilterValues, priceRange, safePercent, subtotalBeforeTax, trendDirection } from "./reportes-sales";
+import { abcClass, exactFrozenMargin, parseFilterValues, priceRange, reportModality, safePercent, subtotalBeforeTax, trendDirection } from "./reportes-sales";
 
 test("ABC assigns cumulative boundary values deterministically", () => {
   assert.equal(abcClass(0), "A");
@@ -42,4 +42,12 @@ test("combined filter parsing accepts comma strings and arrays while discarding 
   assert.deepEqual(parseFilterValues(" rojo, azul ,, verde "), ["rojo", "azul", "verde"]);
   assert.deepEqual(parseFilterValues(["EFECTIVO", " ", 7]), ["EFECTIVO", "7"]);
   assert.deepEqual(parseFilterValues(undefined), []);
+});
+
+test("report modality is contract-safe and defaults to Todo", () => {
+  assert.equal(reportModality(undefined), "TODO");
+  assert.equal(reportModality("TODO"), "TODO");
+  assert.equal(reportModality("ROLLOS"), "ROLLOS");
+  assert.equal(reportModality("METRAJE"), "METRAJE");
+  assert.equal(reportModality("otra"), "TODO");
 });

@@ -6210,6 +6210,7 @@ export const GetReporteSeccionParams = zod.object({
 export const getReporteSeccionQueryPeriodoDefault = `mensual`;
 export const getReporteSeccionQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getReporteSeccionQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getReporteSeccionQueryModalidadDefault = `TODO`;
 export const getReporteSeccionQueryMargenUmbralDefault = 15;
 export const getReporteSeccionQueryCoberturaCriticoDefault = 7;
 export const getReporteSeccionQueryCoberturaBajoDefault = 15;
@@ -6230,6 +6231,7 @@ export const GetReporteSeccionQueryParams = zod.object({
   "proveedorIds": zod.coerce.string().optional(),
   "formasPago": zod.coerce.string().optional(),
   "facturado": zod.coerce.boolean().optional(),
+  "modalidad": zod.enum(['TODO', 'ROLLOS', 'METRAJE']).default(getReporteSeccionQueryModalidadDefault).describe('Modalidad de las líneas de venta; Todo no restringe resultados.'),
   "margenUmbral": zod.coerce.number().default(getReporteSeccionQueryMargenUmbralDefault),
   "coberturaCritico": zod.coerce.number().default(getReporteSeccionQueryCoberturaCriticoDefault),
   "coberturaBajo": zod.coerce.number().default(getReporteSeccionQueryCoberturaBajoDefault),
@@ -6302,6 +6304,7 @@ export const ExportReporteSeccionXlsxParams = zod.object({
 export const exportReporteSeccionXlsxQueryPeriodoDefault = `mensual`;
 export const exportReporteSeccionXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const exportReporteSeccionXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteSeccionXlsxQueryModalidadDefault = `TODO`;
 export const exportReporteSeccionXlsxQueryMargenUmbralDefault = 15;
 export const exportReporteSeccionXlsxQueryCoberturaCriticoDefault = 7;
 export const exportReporteSeccionXlsxQueryCoberturaBajoDefault = 15;
@@ -6322,6 +6325,7 @@ export const ExportReporteSeccionXlsxQueryParams = zod.object({
   "proveedorIds": zod.coerce.string().optional(),
   "formasPago": zod.coerce.string().optional(),
   "facturado": zod.coerce.boolean().optional(),
+  "modalidad": zod.enum(['TODO', 'ROLLOS', 'METRAJE']).default(exportReporteSeccionXlsxQueryModalidadDefault).describe('Modalidad de las líneas de venta; Todo no restringe resultados.'),
   "margenUmbral": zod.coerce.number().default(exportReporteSeccionXlsxQueryMargenUmbralDefault),
   "coberturaCritico": zod.coerce.number().default(exportReporteSeccionXlsxQueryCoberturaCriticoDefault),
   "coberturaBajo": zod.coerce.number().default(exportReporteSeccionXlsxQueryCoberturaBajoDefault),
@@ -6342,6 +6346,7 @@ export const ExportReporteSeccionPdfParams = zod.object({
 export const exportReporteSeccionPdfQueryPeriodoDefault = `mensual`;
 export const exportReporteSeccionPdfQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const exportReporteSeccionPdfQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteSeccionPdfQueryModalidadDefault = `TODO`;
 export const exportReporteSeccionPdfQueryMargenUmbralDefault = 15;
 export const exportReporteSeccionPdfQueryCoberturaCriticoDefault = 7;
 export const exportReporteSeccionPdfQueryCoberturaBajoDefault = 15;
@@ -6362,6 +6367,7 @@ export const ExportReporteSeccionPdfQueryParams = zod.object({
   "proveedorIds": zod.coerce.string().optional(),
   "formasPago": zod.coerce.string().optional(),
   "facturado": zod.coerce.boolean().optional(),
+  "modalidad": zod.enum(['TODO', 'ROLLOS', 'METRAJE']).default(exportReporteSeccionPdfQueryModalidadDefault).describe('Modalidad de las líneas de venta; Todo no restringe resultados.'),
   "margenUmbral": zod.coerce.number().default(exportReporteSeccionPdfQueryMargenUmbralDefault),
   "coberturaCritico": zod.coerce.number().default(exportReporteSeccionPdfQueryCoberturaCriticoDefault),
   "coberturaBajo": zod.coerce.number().default(exportReporteSeccionPdfQueryCoberturaBajoDefault),
