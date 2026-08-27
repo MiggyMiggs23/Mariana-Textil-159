@@ -22,7 +22,7 @@ import {
   ListAdminCortesQueryParams,
   ListAdminCortesResponse,
 } from "@workspace/api-zod";
-import { EXCEL_NUMBER_FORMAT, formatNumber, toExcelNumber } from "@workspace/number-format";
+import { EXCEL_NUMBER_FORMAT, formatAccountDestination, formatNumber, toExcelNumber } from "@workspace/number-format";
 import { requireRole, requireSession } from "../middlewares/auth";
 import { buildCorteCaja } from "../lib/pos";
 import { db } from "@workspace/db";
@@ -228,7 +228,7 @@ async function destinationsXlsx(req: any, res: any) {
   sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
   sheet.getColumn("operaciones").numFmt = EXCEL_NUMBER_FORMAT.count;
   sheet.addRows(data.resumen.map((row) => ({
-    ...row, importe: toExcelNumber(row.importe), operaciones: toExcelNumber(row.operaciones),
+    ...row, cuentaDestino: formatAccountDestination(row.cuentaDestino), importe: toExcelNumber(row.importe), operaciones: toExcelNumber(row.operaciones),
   })));
   res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   res.attachment("cuentas-destino.xlsx");
@@ -244,7 +244,7 @@ router.get("/admin/cuentas-destino/export.pdf", async (req, res, next): Promise<
     const query = ExportAdminCuentasDestinoPdfQueryParams.parse(req.query);
     const data = await getDestinationAccounts(parseAnalyticsFilters(query));
     const pdf = createTextPdf("Cuentas destino", data.resumen.map((row) =>
-      `${row.cuentaDestino} | ${row.formaPago} | ${formatNumber(row.importe, { kind: "money" })} | ${formatNumber(row.operaciones, { kind: "count" })} operaciones`,
+      `${formatAccountDestination(row.cuentaDestino)} | ${row.formaPago} | ${formatNumber(row.importe, { kind: "money" })} | ${formatNumber(row.operaciones, { kind: "count" })} operaciones`,
     ));
     res.type("application/pdf"); res.attachment("cuentas-destino.pdf"); res.send(pdf);
   } catch (error) { if (!badInput(error, res)) next(error); }
@@ -283,7 +283,7 @@ router.get("/admin/cortes/:id/export.xlsx", async (req, res, next): Promise<void
       { concepto: "Diferencia", importe: corte.diferencia == null ? null : toExcelNumber(corte.diferencia) },
       { concepto: "Margen", importe: margin.margen == null ? "Pendiente" : toExcelNumber(margin.margen) },
       ...corte.formasPago.map((row) => ({ concepto: `Pago ${row.formaPago}`, importe: toExcelNumber(row.importe) })),
-      ...corte.cuentasDestino.map((row) => ({ concepto: row.cuentaDestino, importe: toExcelNumber(row.importe) })),
+      ...corte.cuentasDestino.map((row) => ({ concepto: formatAccountDestination(row.cuentaDestino), importe: toExcelNumber(row.importe) })),
       ...corte.facturacion.flatMap((row) => [
         { concepto: `${row.facturado ? "Facturado" : "No facturado"} total`, importe: toExcelNumber(row.importe) },
         { concepto: `${row.facturado ? "Facturado" : "No facturado"} efectivo`, importe: toExcelNumber(row.efectivo) },
@@ -314,7 +314,7 @@ router.get("/admin/cortes/:id/export.pdf", async (req, res, next): Promise<void>
       `Diferencia: ${formatNumber(corte.diferencia, { kind: "money" })}`,
       `Margen: ${margin.margen == null ? "Pendiente" : formatNumber(margin.margen, { kind: "money" })}`,
       ...corte.formasPago.map((row) => `Pago ${row.formaPago}: ${formatNumber(row.importe, { kind: "money" })}`),
-      ...corte.cuentasDestino.map((row) => `${row.cuentaDestino}: ${formatNumber(row.importe, { kind: "money" })}`),
+      ...corte.cuentasDestino.map((row) => `${formatAccountDestination(row.cuentaDestino)}: ${formatNumber(row.importe, { kind: "money" })}`),
       ...corte.facturacion.map((row) => `${row.facturado ? "Facturado" : "No facturado"}: ${formatNumber(row.importe, { kind: "money" })}; E ${row.efectivo}; T ${row.transferencia}; C ${row.credito}`),
       ...corte.ticketsCobradosDetalle.map((row) => `Cobrado #${row.folio}: ${formatNumber(row.importe, { kind: "money" })} ${row.cobradoAt}`),
       ...corte.cancelaciones.map((row) => `Cancelado #${row.folio}: ${formatNumber(row.importe, { kind: "money" })}; ${row.motivo}; ${row.autor}; ${row.canceladoAt}`),

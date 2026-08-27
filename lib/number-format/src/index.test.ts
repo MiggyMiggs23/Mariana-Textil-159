@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   EXCEL_NUMBER_FORMAT,
+  ACCOUNT_DESTINATION_ORDER,
   formatNumber,
+  formatAccountDestination,
+  normalizeAccountDestination,
   toExcelNumber,
 } from "./index.js";
 
@@ -44,4 +47,23 @@ test("keeps Excel cells numeric and rejects unsafe coercions", () => {
     () => toExcelNumber(String(Number.MAX_SAFE_INTEGER + 2)),
     RangeError,
   );
+});
+
+test("normalizes destination codes and legacy labels at the presentation boundary", () => {
+  assert.deepEqual(ACCOUNT_DESTINATION_ORDER, [
+    "CAJA_FISICA",
+    "CUENTA_NO_FISCAL",
+    "CUENTA_FISCAL",
+    "CUENTAS_POR_COBRAR",
+  ]);
+  assert.equal(normalizeAccountDestination("CAJA_FISICA"), "CAJA_FISICA");
+  assert.equal(normalizeAccountDestination("Caja física"), "CAJA_FISICA");
+  assert.equal(normalizeAccountDestination("Cuenta no fiscal"), "CUENTA_NO_FISCAL");
+  assert.equal(normalizeAccountDestination("Cuentas Fiscales"), "CUENTA_FISCAL");
+  assert.equal(normalizeAccountDestination("Cuentas por cobrar"), "CUENTAS_POR_COBRAR");
+  assert.equal(formatAccountDestination("CAJA_FISICA"), "Efectivo");
+  assert.equal(formatAccountDestination("Cuenta fiscal"), "Cuentas Fiscales");
+  assert.equal(formatAccountDestination("Cuentas por cobrar"), "Ventas a Crédito");
+  assert.equal(formatAccountDestination("OTRA_CUENTA"), "OTRA_CUENTA");
+  assert.equal(formatAccountDestination(null), "—");
 });

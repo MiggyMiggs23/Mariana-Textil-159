@@ -45,6 +45,7 @@ import {
   meteredPriceTier,
   suggestedMeteredPrice,
 } from "@workspace/metered-pricing";
+import { ACCOUNT_DESTINATION_ORDER } from "@workspace/number-format";
 import { meteredReferenceCost } from "./metered-reference-cost";
 
 const FOLIO_ROW_ID = 1;
@@ -1633,22 +1634,22 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     cuentasDestino: [
       {
         formaPago: "EFECTIVO" as const,
-        cuentaDestino: "Caja física",
+        cuentaDestino: ACCOUNT_DESTINATION_ORDER[0],
         importe: decimalMoney(cuentas.CAJA_FISICA),
       },
       {
         formaPago: "TRANSFERENCIA" as const,
-        cuentaDestino: "Cuenta fiscal",
-        importe: decimalMoney(cuentas.CUENTA_FISCAL),
-      },
-      {
-        formaPago: "TRANSFERENCIA" as const,
-        cuentaDestino: "Cuenta no fiscal",
+        cuentaDestino: ACCOUNT_DESTINATION_ORDER[1],
         importe: decimalMoney(cuentas.CUENTA_NO_FISCAL),
       },
       {
+        formaPago: "TRANSFERENCIA" as const,
+        cuentaDestino: ACCOUNT_DESTINATION_ORDER[2],
+        importe: decimalMoney(cuentas.CUENTA_FISCAL),
+      },
+      {
         formaPago: "CREDITO" as const,
-        cuentaDestino: "Cuentas por cobrar",
+        cuentaDestino: ACCOUNT_DESTINATION_ORDER[3],
         importe: decimalMoney(cuentas.CUENTAS_POR_COBRAR),
       },
     ],

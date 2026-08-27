@@ -10,7 +10,7 @@ import {
   getListSolicitudesPagoDirigidoQueryKey,
   SolicitudPagoDirigido,
 } from "@workspace/api-client-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatAccountDestination, formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { useQueryClient } from "@tanstack/react-query";
@@ -153,7 +153,7 @@ export default function PagosDirigidos() {
                         </td>
                         <td className="p-4">
                           <div className="font-black text-sidebar">#{sol.documentoFolio}</div>
-                          <div className="text-xs text-muted-foreground truncate max-w-[150px]">{sol.formaPago} {sol.cuentaDestino ? `· ${sol.cuentaDestino}` : ''}</div>
+                          <div className="text-xs text-muted-foreground truncate max-w-[150px]">{sol.formaPago} {sol.cuentaDestino ? `· ${formatAccountDestination(sol.cuentaDestino)}` : ''}</div>
                         </td>
                         <td className="p-4 text-right font-black text-sidebar text-base tabular-nums">
                           {formatNumber(sol.importe, { kind: "money" })}

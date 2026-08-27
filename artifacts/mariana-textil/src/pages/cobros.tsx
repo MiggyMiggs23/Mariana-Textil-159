@@ -71,7 +71,7 @@ import {
 import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { formatNumber } from "@workspace/number-format";
+import { formatAccountDestination, formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
@@ -1658,7 +1658,7 @@ function CobrosContent() {
                     {corteData.cuentasDestino.map((row) => (
                       <CorteRow
                         key={`${row.formaPago}-${row.cuentaDestino}`}
-                        label={row.cuentaDestino}
+                        label={formatAccountDestination(row.cuentaDestino)}
                         value={row.importe}
                       />
                     ))}
@@ -1818,7 +1818,7 @@ function CorteDetail({ corte }: { corte: CorteCaja }) {
       <p className="text-right text-sm font-semibold">Diferencia: {formatNumber(corte.diferencia, { kind: "money" })}</p>
       <div className="grid gap-4 md:grid-cols-2">
       <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${formatNumber(row.ticketsCount, { kind: "count" })} tickets)`} value={row.importe} />)}</CorteSection>
-        <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={row.cuentaDestino} value={row.importe} />)}</CorteSection>
+        <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={formatAccountDestination(row.cuentaDestino)} value={row.importe} />)}</CorteSection>
         <CorteSection title="Facturación">{corte.facturacion.map((row) => <CorteFiscalRow key={String(row.facturado)} row={row} />)}</CorteSection>
       <CorteSection title="Rollos / Metraje">{corte.metreado.map((row) => <CorteRow key={`${row.tipo}-${row.unidad}`} label={`${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`} value={row.importe} />)}</CorteSection>
       </div>

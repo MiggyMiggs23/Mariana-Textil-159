@@ -1,5 +1,5 @@
 import { CorteCaja, exportAdminCorteXlsx, exportAdminCortePdf } from "@workspace/api-client-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatAccountDestination, formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
@@ -127,7 +127,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
               {corte.cuentasDestino.map((cd, i) => (
                 <TableRow key={i}>
                   <TableCell>
-                    <div className="font-medium">{cd.cuentaDestino}</div>
+                    <div className="font-medium">{formatAccountDestination(cd.cuentaDestino)}</div>
                     <div className="text-[10px] text-muted-foreground">{cd.formaPago}</div>
                   </TableCell>
                   <TableCell className="text-right font-mono">{formatNumber(cd.importe, { kind: "money" })}</TableCell>

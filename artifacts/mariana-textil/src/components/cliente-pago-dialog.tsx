@@ -14,7 +14,7 @@ import {
 } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { formatNumber } from "@workspace/number-format";
+import { formatAccountDestination, formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
 
 type Step = "form" | "preview" | "success";
@@ -216,7 +216,7 @@ export function ClientePagoDialog({
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino</Label>
                 {paymentMethod === "EFECTIVO" ? (
                   <div className="h-12 flex items-center px-3 bg-muted/50 border-2 rounded-md text-muted-foreground font-medium">
-                    CAJA FISICA
+                    {formatAccountDestination("CAJA_FISICA")}
                   </div>
                 ) : (
                   <Select
@@ -232,8 +232,8 @@ export function ClientePagoDialog({
                       <SelectValue placeholder="Selecciona..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="CUENTA_FISCAL" className="font-medium py-3">Cuenta Fiscal</SelectItem>
-                      <SelectItem value="CUENTA_NO_FISCAL" className="font-medium py-3">Cuenta No Fiscal</SelectItem>
+                      <SelectItem value="CUENTA_NO_FISCAL" className="font-medium py-3">{formatAccountDestination("CUENTA_NO_FISCAL")}</SelectItem>
+                      <SelectItem value="CUENTA_FISCAL" className="font-medium py-3">{formatAccountDestination("CUENTA_FISCAL")}</SelectItem>
                     </SelectContent>
                   </Select>
                 )}

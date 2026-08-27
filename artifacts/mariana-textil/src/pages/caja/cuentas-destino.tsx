@@ -21,7 +21,7 @@ import {
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { Download, FileText, Wallet, RefreshCw, Loader2, AlertCircle, ArrowUpRight, ArrowDownRight, Store } from "lucide-react";
-import { formatNumber } from "@workspace/number-format";
+import { ACCOUNT_DESTINATION_ORDER, formatAccountDestination, formatNumber, normalizeAccountDestination } from "@workspace/number-format";
 import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
@@ -91,11 +91,21 @@ export default function CajaCuentasDestino() {
       entry = { fecha: dateStr };
       acc.push(entry);
     }
-    entry[curr.cuentaDestino] = Number(curr.importe);
+    const destination = normalizeAccountDestination(curr.cuentaDestino) ?? curr.cuentaDestino;
+    entry[destination] = Number(curr.importe);
     return acc;
   }, []);
 
-  const keys = Array.from(new Set(data?.tendencia.map(t => t.cuentaDestino) || []));
+  const keys = [
+    ...ACCOUNT_DESTINATION_ORDER.filter((destination) =>
+      data?.tendencia.some((trend) => normalizeAccountDestination(trend.cuentaDestino) === destination),
+    ),
+    ...Array.from(new Set(
+      (data?.tendencia ?? [])
+        .map((trend) => normalizeAccountDestination(trend.cuentaDestino) ?? trend.cuentaDestino)
+        .filter((destination) => !normalizeAccountDestination(destination)),
+    )),
+  ];
   return (
     <AppLayout>
       <div className="max-w-[1600px] mx-auto space-y-6">
@@ -105,7 +115,7 @@ export default function CajaCuentasDestino() {
               <Wallet className="h-6 w-6 text-primary" />
               Cuentas Destino
             </h1>
-            <p className="text-sm text-muted-foreground">Flujos financieros, cuentas fiscales y cajas físicas.</p>
+            <p className="text-sm text-muted-foreground">Flujos financieros por destino.</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -167,7 +177,7 @@ export default function CajaCuentasDestino() {
                       <Wallet className="w-12 h-12" />
                     </div>
                     <CardContent className="pt-6">
-                      <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{row.cuentaDestino}</p>
+                      <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{formatAccountDestination(row.cuentaDestino)}</p>
                       <div className="flex items-end gap-2 mt-2">
                         <h2 className="text-3xl font-black text-sidebar">{formatNumber(row.importe, { kind: "money" })}</h2>
                       </div>
@@ -199,23 +209,23 @@ export default function CajaCuentasDestino() {
                       <div className="h-[350px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                           <BarChart data={chartData} margin={{ top: 10, right: 10, left: 20, bottom: 20 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
                             <XAxis
                               dataKey="fecha"
                               tickLine={false}
-                              axisLine={false}
-                              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                              tickMargin={10}
+                              axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }}
+                              tick={{ fill: 'hsl(var(--report-text-muted))', fontSize: 11, fontWeight: 500 }}
+                              tickMargin={12}
                             />
                             <YAxis
                               tickFormatter={(v) => `$${v / 1000}k`}
                               tickLine={false}
                               axisLine={false}
-                              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                              tick={{ fill: 'hsl(var(--report-text-muted))', fontSize: 11, fontWeight: 500 }}
                               width={60}
                             />
                             <Tooltip
-                              cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
+                              cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }}
                               content={({ active, payload, label }) => {
                                 if (active && payload && payload.length) {
                                   return (
@@ -226,7 +236,7 @@ export default function CajaCuentasDestino() {
                                           <div key={index} className="flex justify-between items-center gap-4">
                                             <div className="flex items-center gap-2">
                                               <div className="w-2.5 h-2.5 rounded-[2px]" style={{ backgroundColor: entry.color }} />
-                                              <span className="text-muted-foreground">{entry.name}</span>
+                                              <span className="text-muted-foreground">{formatAccountDestination(String(entry.name))}</span>
                                             </div>
                                             <span className="font-mono font-bold">{formatNumber(Number(entry.value), { kind: "money" })}</span>
                                           </div>
@@ -326,10 +336,10 @@ export default function CajaCuentasDestino() {
                     <TableHeader>
                       <TableRow className="bg-muted/40">
                         <TableHead>Tienda</TableHead>
-                        <TableHead className="text-right">Caja Física</TableHead>
-                        <TableHead className="text-right">Cuenta Fiscal</TableHead>
-                        <TableHead className="text-right">No Fiscal</TableHead>
-                        <TableHead className="text-right border-l">Por Cobrar</TableHead>
+                         <TableHead className="text-right">{formatAccountDestination("CAJA_FISICA")}</TableHead>
+                         <TableHead className="text-right">{formatAccountDestination("CUENTA_NO_FISCAL")}</TableHead>
+                         <TableHead className="text-right">{formatAccountDestination("CUENTA_FISCAL")}</TableHead>
+                         <TableHead className="text-right border-l">{formatAccountDestination("CUENTAS_POR_COBRAR")}</TableHead>
                         <TableHead className="text-right font-bold border-l">Total General</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -341,8 +351,8 @@ export default function CajaCuentasDestino() {
                             {t.nombreUbicacion}
                           </TableCell>
                           <TableCell className="text-right font-mono">{formatNumber(t.cajaFisica, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-mono text-green-700">{formatNumber(t.cuentaFiscal, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono text-amber-700">{formatNumber(t.cuentaNoFiscal, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-mono text-green-700">{formatNumber(t.cuentaFiscal, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono border-l text-muted-foreground">{formatNumber(t.cuentasPorCobrar, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono font-black border-l text-sidebar">{formatNumber(t.total, { kind: "money" })}</TableCell>
                         </TableRow>

@@ -27,11 +27,11 @@ import {
 } from "@workspace/api-zod";
 
 test("account destinations preserve payment/facturado rules", () => {
-  assert.equal(accountDestination("EFECTIVO", true), "Caja física");
-  assert.equal(accountDestination("EFECTIVO", false), "Caja física");
-  assert.equal(accountDestination("CREDITO", true), "Cuentas por cobrar");
-  assert.equal(accountDestination("TRANSFERENCIA", true), "Cuenta fiscal");
-  assert.equal(accountDestination("TRANSFERENCIA", false), "Cuenta no fiscal");
+  assert.equal(accountDestination("EFECTIVO", true), "CAJA_FISICA");
+  assert.equal(accountDestination("EFECTIVO", false), "CAJA_FISICA");
+  assert.equal(accountDestination("CREDITO", true), "CUENTAS_POR_COBRAR");
+  assert.equal(accountDestination("TRANSFERENCIA", true), "CUENTA_FISCAL");
+  assert.equal(accountDestination("TRANSFERENCIA", false), "CUENTA_NO_FISCAL");
 });
 
 test("margin is pending when any line has no frozen cost", () => {

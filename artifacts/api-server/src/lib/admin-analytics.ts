@@ -1,4 +1,8 @@
 import { pool } from "@workspace/db";
+import {
+  ACCOUNT_DESTINATION_ORDER,
+  type AccountDestinationCode,
+} from "@workspace/number-format";
 import { parseMexicoDateQuery } from "./mexico-date";
 
 export const ANALYTICS_TIME_ZONE = "America/Mexico_City";
@@ -40,20 +44,16 @@ type QueryInput = {
 
 export class AnalyticsInputError extends Error {}
 
-export type AccountDestination =
-  | "Caja física"
-  | "Cuenta fiscal"
-  | "Cuenta no fiscal"
-  | "Cuentas por cobrar";
+export type AccountDestination = AccountDestinationCode;
 
 /** Canonical payment/facturado-derived destination rule, shared by reports. */
 export function accountDestination(
   formaPago: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO",
   facturado: boolean,
 ): AccountDestination {
-  if (formaPago === "EFECTIVO") return "Caja física";
-  if (formaPago === "CREDITO") return "Cuentas por cobrar";
-  return facturado ? "Cuenta fiscal" : "Cuenta no fiscal";
+  if (formaPago === "EFECTIVO") return "CAJA_FISICA";
+  if (formaPago === "CREDITO") return "CUENTAS_POR_COBRAR";
+  return facturado ? "CUENTA_FISCAL" : "CUENTA_NO_FISCAL";
 }
 
 export function calculateFrozenMargin(
@@ -482,12 +482,18 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
     const destination = accountDestination(row.formaPago, row.facturado);
     priorTotals.set(destination, (priorTotals.get(destination) ?? 0) + Number(row.importe));
   }
-  const summary = new Map<string, { cuentaDestino: string; formaPago: string; importe: number; operaciones: number }>([
-    ["Caja física", { cuentaDestino: "Caja física", formaPago: "EFECTIVO", importe: 0, operaciones: 0 }],
-    ["Cuenta fiscal", { cuentaDestino: "Cuenta fiscal", formaPago: "TRANSFERENCIA", importe: 0, operaciones: 0 }],
-    ["Cuenta no fiscal", { cuentaDestino: "Cuenta no fiscal", formaPago: "TRANSFERENCIA", importe: 0, operaciones: 0 }],
-    ["Cuentas por cobrar", { cuentaDestino: "Cuentas por cobrar", formaPago: "CREDITO", importe: 0, operaciones: 0 }],
-  ]);
+  const destinationPaymentMethod: Record<AccountDestination, string> = {
+    CAJA_FISICA: "EFECTIVO",
+    CUENTA_NO_FISCAL: "TRANSFERENCIA",
+    CUENTA_FISCAL: "TRANSFERENCIA",
+    CUENTAS_POR_COBRAR: "CREDITO",
+  };
+  const summary = new Map<string, { cuentaDestino: string; formaPago: string; importe: number; operaciones: number }>(
+    ACCOUNT_DESTINATION_ORDER.map((cuentaDestino) => [
+      cuentaDestino,
+      { cuentaDestino, formaPago: destinationPaymentMethod[cuentaDestino], importe: 0, operaciones: 0 },
+    ]),
+  );
   for (const row of rows) {
     const current = summary.get(row.cuentaDestino) ?? {
       cuentaDestino: row.cuentaDestino,
@@ -531,9 +537,9 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
         cajaFisica: 0, cuentaFiscal: 0, cuentaNoFiscal: 0, cuentasPorCobrar: 0,
       };
       const key = accountDestination(row.formaPago, row.facturado);
-      if (key === "Caja física") item.cajaFisica += Number(row.importe);
-      else if (key === "Cuenta fiscal") item.cuentaFiscal += Number(row.importe);
-      else if (key === "Cuenta no fiscal") item.cuentaNoFiscal += Number(row.importe);
+      if (key === "CAJA_FISICA") item.cajaFisica += Number(row.importe);
+      else if (key === "CUENTA_FISCAL") item.cuentaFiscal += Number(row.importe);
+      else if (key === "CUENTA_NO_FISCAL") item.cuentaNoFiscal += Number(row.importe);
       else item.cuentasPorCobrar += Number(row.importe);
       map.set(item.ubicacionId, item); return map;
     }, new Map<number, { ubicacionId: number; nombreUbicacion: string; cajaFisica: number; cuentaFiscal: number; cuentaNoFiscal: number; cuentasPorCobrar: number }>()).values()]
@@ -794,7 +800,7 @@ export async function compareStores(filters: AnalyticsFilters) {
        WHERE s.ubicacion_id=u.id AND s.estado='CERRADA' AND s.efectivo_contado IS NOT NULL
          AND ($1::timestamptz IS NULL OR s.cerrada_at >= $1)
          AND ($2::timestamptz IS NULL OR s.cerrada_at <= $2)
-     ) cash ON true WHERE u.tipo='TIENDA' AND u.activa
+      ) cash ON true WHERE u.tipo='TIENDA' AND u.activa
      GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,pay.credito,pay.facturado,cash.diferencia
      ORDER BY ventas DESC,u.nombre`,
     condition.values,
@@ -814,7 +820,8 @@ export async function compareStores(filters: AnalyticsFilters) {
       `SELECT (t.created_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
         t.ubicacion_id "ubicacionId",u.nombre "nombreUbicacion",SUM(t.total)::text ventas
        FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
-       WHERE ${condition.text} AND t.estado='VENDIDO'
+        WHERE ${condition.text} AND t.estado='VENDIDO'
+          AND u.tipo='TIENDA' AND u.activa
        GROUP BY fecha,t.ubicacion_id,u.nombre ORDER BY fecha,u.nombre`,
       condition.values,
     ),

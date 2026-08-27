@@ -1,5 +1,70 @@
 export type NumericValue = number | string | bigint | null | undefined;
 
+/** Stable values used in APIs and persistence for where money is deposited. */
+export const ACCOUNT_DESTINATION_CODES = [
+  "CAJA_FISICA",
+  "CUENTA_NO_FISCAL",
+  "CUENTA_FISCAL",
+  "CUENTAS_POR_COBRAR",
+] as const;
+
+export type AccountDestinationCode = (typeof ACCOUNT_DESTINATION_CODES)[number];
+
+/** The required business/presentation sequence; do not derive this from input. */
+export const ACCOUNT_DESTINATION_ORDER = [
+  "CAJA_FISICA",
+  "CUENTA_NO_FISCAL",
+  "CUENTA_FISCAL",
+  "CUENTAS_POR_COBRAR",
+] as const satisfies readonly AccountDestinationCode[];
+
+export const ACCOUNT_DESTINATION_LABELS: Record<AccountDestinationCode, string> = {
+  CAJA_FISICA: "Efectivo",
+  CUENTA_NO_FISCAL: "Cuentas No Fiscales",
+  CUENTA_FISCAL: "Cuentas Fiscales",
+  CUENTAS_POR_COBRAR: "Ventas a Crédito",
+};
+
+const accountDestinationAliases: Record<string, AccountDestinationCode> = {
+  CAJA_FISICA: "CAJA_FISICA",
+  EFECTIVO: "CAJA_FISICA",
+  CUENTA_NO_FISCAL: "CUENTA_NO_FISCAL",
+  CUENTAS_NO_FISCALES: "CUENTA_NO_FISCAL",
+  CUENTA_FISCAL: "CUENTA_FISCAL",
+  CUENTAS_FISCALES: "CUENTA_FISCAL",
+  CUENTAS_POR_COBRAR: "CUENTAS_POR_COBRAR",
+  VENTAS_A_CREDITO: "CUENTAS_POR_COBRAR",
+};
+
+function accountDestinationKey(value: string): string {
+  return value
+    .trim()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toUpperCase()
+    .replace(/[\s-]+/g, "_");
+}
+
+/**
+ * Converts codes plus historical visible labels into a canonical destination.
+ * Unknown values intentionally return null so callers never misclassify money.
+ */
+export function normalizeAccountDestination(
+  value: string | null | undefined,
+): AccountDestinationCode | null {
+  if (!value) return null;
+  return accountDestinationAliases[accountDestinationKey(value)] ?? null;
+}
+
+/** Safe display boundary for destination values returned by old and new APIs. */
+export function formatAccountDestination(
+  value: string | null | undefined,
+  empty = "—",
+): string {
+  const code = normalizeAccountDestination(value);
+  return code ? ACCOUNT_DESTINATION_LABELS[code] : value?.trim() || empty;
+}
+
 export type NumberFormatKind =
   | "money"
   | "quantity"
