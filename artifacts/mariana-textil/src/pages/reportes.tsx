@@ -196,10 +196,15 @@ export default function Reportes() {
           onValueChange={handleTabChange}
           className="space-y-6"
         >
-          <div className="overflow-x-auto pb-2 custom-scrollbar">
+          <div className="relative z-20 overflow-x-auto pb-2 custom-scrollbar">
             <TabsList className="h-10 inline-flex w-auto justify-start min-w-max">
               {allowedTabs.map(tab => (
-                <TabsTrigger key={tab.id} value={tab.id} data-testid={`tab-${tab.id}`}>
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  data-testid={`tab-${tab.id}`}
+                >
                   {tab.label}
                 </TabsTrigger>
               ))}
