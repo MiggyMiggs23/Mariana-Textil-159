@@ -6384,3 +6384,113 @@ export const ExportReporteSeccionPdfQueryParams = zod.object({
 export const ExportReporteSeccionPdfResponse = zod.unknown()
 
 
+/**
+ * @summary Lista la auditoría newest-first (solo ADMIN)
+ */
+export const listAuditoriaQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAuditoriaQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+export const listAuditoriaQueryModuloMax = 80;
+
+export const listAuditoriaQueryAccionMax = 80;
+
+
+export const listAuditoriaQuerySearchMax = 150;
+
+export const listAuditoriaQueryPageDefault = 1;
+
+export const listAuditoriaQueryPageSizeDefault = 50;
+export const listAuditoriaQueryPageSizeMax = 100;
+
+
+
+export const ListAuditoriaQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listAuditoriaQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(listAuditoriaQueryHastaRegExp).optional(),
+  "usuarioId": zod.coerce.number().min(1).optional(),
+  "modulo": zod.coerce.string().max(listAuditoriaQueryModuloMax).optional(),
+  "accion": zod.coerce.string().max(listAuditoriaQueryAccionMax).optional(),
+  "sitioId": zod.coerce.number().min(1).optional(),
+  "search": zod.coerce.string().max(listAuditoriaQuerySearchMax).optional(),
+  "page": zod.coerce.number().min(1).default(listAuditoriaQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listAuditoriaQueryPageSizeMax).default(listAuditoriaQueryPageSizeDefault)
+})
+
+export const ListAuditoriaResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number().nullable(),
+  "usuario": zod.string().nullable(),
+  "rolSnapshot": zod.string().nullable(),
+  "accion": zod.string(),
+  "modulo": zod.string().nullable(),
+  "entidad": zod.string(),
+  "entidadId": zod.string().nullable(),
+  "sitioId": zod.number().nullable(),
+  "sitio": zod.string().nullable(),
+  "ip": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+ */
+export const exportAuditoriaXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAuditoriaXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+export const exportAuditoriaXlsxQueryModuloMax = 80;
+
+export const exportAuditoriaXlsxQueryAccionMax = 80;
+
+
+export const exportAuditoriaXlsxQuerySearchMax = 150;
+
+
+
+export const ExportAuditoriaXlsxQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportAuditoriaXlsxQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(exportAuditoriaXlsxQueryHastaRegExp).optional(),
+  "usuarioId": zod.coerce.number().min(1).optional(),
+  "modulo": zod.coerce.string().max(exportAuditoriaXlsxQueryModuloMax).optional(),
+  "accion": zod.coerce.string().max(exportAuditoriaXlsxQueryAccionMax).optional(),
+  "sitioId": zod.coerce.number().min(1).optional(),
+  "search": zod.coerce.string().max(exportAuditoriaXlsxQuerySearchMax).optional()
+})
+
+export const ExportAuditoriaXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Obtiene detalle y evidencia antes/después (solo ADMIN)
+ */
+
+
+
+export const GetAuditoriaParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetAuditoriaResponse = zod.object({
+  "id": zod.string(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number().nullable(),
+  "usuario": zod.string().nullable(),
+  "rolSnapshot": zod.string().nullable(),
+  "accion": zod.string(),
+  "modulo": zod.string().nullable(),
+  "entidad": zod.string(),
+  "entidadId": zod.string().nullable(),
+  "sitioId": zod.number().nullable(),
+  "sitio": zod.string().nullable(),
+  "ip": zod.string()
+}).and(zod.object({
+  "datosAntes": zod.record(zod.string(), zod.unknown()).nullable(),
+  "datosDespues": zod.record(zod.string(), zod.unknown()).nullable()
+}))
+
+

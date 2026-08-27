@@ -32,6 +32,8 @@ import type {
   AjusteProveedorInput,
   AjusteRolloInput,
   AnaliticaGlobalProveedores,
+  AuditoriaDetail,
+  AuditoriaListResult,
   BajaCliente200,
   BajaClienteBody,
   BorradorSalidaResult,
@@ -92,6 +94,7 @@ import type {
   ExportAdminCortesXlsxParams,
   ExportAdminCuentasDestinoPdfParams,
   ExportAdminCuentasDestinoXlsxParams,
+  ExportAuditoriaXlsxParams,
   ExportContenedoresPdfParams,
   ExportContenedoresXlsxParams,
   ExportKardexXlsxParams,
@@ -126,6 +129,7 @@ import type {
   KardexFilters,
   KardexResult,
   ListAdminCortesParams,
+  ListAuditoriaParams,
   ListComprasProveedorParams,
   ListContenedoresDisponiblesEntradaParams,
   ListContenedoresParams,
@@ -12549,6 +12553,251 @@ export function useExportReporteSeccionPdf<TData = Awaited<ReturnType<typeof exp
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getExportReporteSeccionPdfQueryOptions(seccion,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListAuditoriaUrl = (params?: ListAuditoriaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/auditoria?${stringifiedParams}` : `/api/auditoria`
+}
+
+/**
+ * @summary Lista la auditoría newest-first (solo ADMIN)
+ */
+export const listAuditoria = async (params?: ListAuditoriaParams, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaListResult> => {
+
+  return customFetch<AuditoriaListResult>(getListAuditoriaUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAuditoriaQueryKey = (params?: ListAuditoriaParams,) => {
+    return [
+    `/api/auditoria`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAuditoriaQueryOptions = <TData = Awaited<ReturnType<typeof listAuditoria>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListAuditoriaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAuditoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAuditoriaQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAuditoria>>> = ({ signal }) => listAuditoria(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAuditoria>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAuditoriaQueryResult = NonNullable<Awaited<ReturnType<typeof listAuditoria>>>
+export type ListAuditoriaQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista la auditoría newest-first (solo ADMIN)
+ */
+
+export function useListAuditoria<TData = Awaited<ReturnType<typeof listAuditoria>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListAuditoriaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAuditoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAuditoriaQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAuditoriaXlsxUrl = (params?: ExportAuditoriaXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/auditoria/export.xlsx?${stringifiedParams}` : `/api/auditoria/export.xlsx`
+}
+
+/**
+ * @summary Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+ */
+export const exportAuditoriaXlsx = async (params?: ExportAuditoriaXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAuditoriaXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAuditoriaXlsxQueryKey = (params?: ExportAuditoriaXlsxParams,) => {
+    return [
+    `/api/auditoria/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportAuditoriaXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportAuditoriaXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ExportAuditoriaXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAuditoriaXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAuditoriaXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAuditoriaXlsx>>> = ({ signal }) => exportAuditoriaXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAuditoriaXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAuditoriaXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportAuditoriaXlsx>>>
+export type ExportAuditoriaXlsxQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+ */
+
+export function useExportAuditoriaXlsx<TData = Awaited<ReturnType<typeof exportAuditoriaXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ExportAuditoriaXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAuditoriaXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAuditoriaXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAuditoriaUrl = (id: number,) => {
+
+
+
+
+  return `/api/auditoria/${id}`
+}
+
+/**
+ * @summary Obtiene detalle y evidencia antes/después (solo ADMIN)
+ */
+export const getAuditoria = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaDetail> => {
+
+  return customFetch<AuditoriaDetail>(getGetAuditoriaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAuditoriaQueryKey = (id: number,) => {
+    return [
+    `/api/auditoria/${id}`
+    ] as const;
+    }
+
+
+export const getGetAuditoriaQueryOptions = <TData = Awaited<ReturnType<typeof getAuditoria>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuditoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAuditoriaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuditoria>>> = ({ signal }) => getAuditoria(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuditoria>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAuditoriaQueryResult = NonNullable<Awaited<ReturnType<typeof getAuditoria>>>
+export type GetAuditoriaQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene detalle y evidencia antes/después (solo ADMIN)
+ */
+
+export function useGetAuditoria<TData = Awaited<ReturnType<typeof getAuditoria>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuditoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAuditoriaQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

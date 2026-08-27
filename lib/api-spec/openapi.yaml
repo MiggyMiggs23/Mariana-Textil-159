@@ -43,6 +43,8 @@ tags:
     description: Búsqueda y reimpresión controlada de etiquetas de rollos
   - name: contenedores
     description: Próximos contenedores y control anual de compras
+  - name: auditoria
+    description: Consulta de la bitácora inmutable exclusiva para ADMIN
 paths:
   /healthz:
     get:
@@ -3588,6 +3590,69 @@ paths:
         "200": { description: Archivo PDF, content: { application/pdf: { schema: { type: string, format: binary } } } }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /auditoria:
+    get:
+      operationId: listAuditoria
+      tags: [auditoria]
+      summary: Lista la auditoría newest-first (solo ADMIN)
+      parameters:
+        - { in: query, name: desde, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - { in: query, name: hasta, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - { in: query, name: usuarioId, schema: { type: number, minimum: 1 } }
+        - { in: query, name: modulo, schema: { type: string, maxLength: 80 } }
+        - { in: query, name: accion, schema: { type: string, maxLength: 80 } }
+        - { in: query, name: sitioId, schema: { type: number, minimum: 1 } }
+        - { in: query, name: search, schema: { type: string, maxLength: 150 } }
+        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 100, default: 50 } }
+      responses:
+        "200":
+          description: Resultado paginado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaListResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /auditoria/export.xlsx:
+    get:
+      operationId: exportAuditoriaXlsx
+      tags: [auditoria]
+      summary: Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+      parameters:
+        - { in: query, name: desde, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - { in: query, name: hasta, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - { in: query, name: usuarioId, schema: { type: number, minimum: 1 } }
+        - { in: query, name: modulo, schema: { type: string, maxLength: 80 } }
+        - { in: query, name: accion, schema: { type: string, maxLength: 80 } }
+        - { in: query, name: sitioId, schema: { type: number, minimum: 1 } }
+        - { in: query, name: search, schema: { type: string, maxLength: 150 } }
+      responses:
+        "200":
+          description: Archivo XLSX (máximo 10000 filas)
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /auditoria/{id}:
+    get:
+      operationId: getAuditoria
+      tags: [auditoria]
+      summary: Obtiene detalle y evidencia antes/después (solo ADMIN)
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      responses:
+        "200":
+          description: Detalle de auditoría
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaDetail" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
 components:
   parameters:
     ReportePeriodo:
@@ -3750,6 +3815,40 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    AuditoriaEntry:
+      type: object
+      required: [id, fecha, usuarioId, usuario, rolSnapshot, accion, modulo, entidad, entidadId, sitioId, sitio, ip]
+      properties:
+        id: { type: string }
+        fecha: { type: string, format: date-time }
+        usuarioId: { type: ["number", "null"] }
+        usuario: { type: ["string", "null"] }
+        rolSnapshot: { type: ["string", "null"] }
+        accion: { type: string }
+        modulo: { type: ["string", "null"] }
+        entidad: { type: string }
+        entidadId: { type: ["string", "null"] }
+        sitioId: { type: ["number", "null"] }
+        sitio: { type: ["string", "null"] }
+        ip: { type: string }
+    AuditoriaDetail:
+      allOf:
+        - { $ref: "#/components/schemas/AuditoriaEntry" }
+        - type: object
+          required: [datosAntes, datosDespues]
+          properties:
+            datosAntes: { type: ["object", "null"], additionalProperties: true }
+            datosDespues: { type: ["object", "null"], additionalProperties: true }
+    AuditoriaListResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AuditoriaEntry" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
     CalendarDate:
       type: string
       pattern: "^\\d{4}-\\d{2}-\\d{2}$"

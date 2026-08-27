@@ -13,6 +13,7 @@ export { ensureDocumentFoliosSchema } from "./lib/document-folios-schema";
 export { ensureEstadoRolloSchema } from "./lib/estado-rollo-schema";
 export { ensureProductMeterSchema } from "./lib/product-meter-schema";
 export { ensureProductPricingSchema } from "./lib/product-pricing-schema";
+export { ensureAuditSchema } from "./lib/audit-schema";
 
 const { Pool } = pg;
 

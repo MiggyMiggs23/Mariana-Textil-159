@@ -130,6 +130,7 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
       { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
       { name: "Conciliación", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },
+      { name: "Auditoría", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, isClickable: true, adminOnly: true },
     ]
   }
 ];

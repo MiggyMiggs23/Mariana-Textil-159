@@ -398,7 +398,7 @@ router.delete(
           accion: "ELIMINAR",
           entidad: "permisos_usuario",
           entidadId: `${id}:${modulo}`,
-          datosDespues: { accion: "reset_a_rol", modulo },
+          datosAntes: { accion: "permiso_personalizado", modulo },
           ip: getRequestIp(req),
         });
       });

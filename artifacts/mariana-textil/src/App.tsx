@@ -42,6 +42,7 @@ import TicketDetail from '@/pages/ticket-detail';
 import Ajustes from '@/pages/ajustes';
 import Conciliacion from '@/pages/conciliacion';
 import Permisos from '@/pages/permisos';
+import Auditoria from '@/pages/auditoria/index';
 import Alertas from '@/pages/alertas';
 import CajaTiempoReal from '@/pages/caja/tiempo-real';
 import CajaCortes from '@/pages/caja/cortes';
@@ -224,6 +225,7 @@ function Router() {
         <Route path="/clientes/:id" component={() => <ProtectedRoute component={ClienteDetail} allowedModule={Modules.CLIENTES} />} />
         
         <Route path="/administracion/conciliacion" component={() => <ProtectedRoute component={Conciliacion} allowedModule={Modules.CONCILIACION} />} />
+        <Route path="/auditoria" component={() => <ProtectedRoute component={Auditoria} allowedModule={Modules.AUDITORIA} adminOnly />} />
         
         <Route path="/contenedores" component={() => <ProtectedRoute component={Contenedores} allowedModule={Modules.CONTENEDORES} />} />
         <Route path="/contenedores/nuevo" component={() => <ProtectedRoute component={ContenedorNuevo} allowedModule={Modules.CONTENEDORES} allowedAction="crear" />} />

@@ -5,6 +5,52 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface AuditoriaEntry {
+  id: string;
+  fecha: string;
+  /** @nullable */
+  usuarioId: number | null;
+  /** @nullable */
+  usuario: string | null;
+  /** @nullable */
+  rolSnapshot: string | null;
+  accion: string;
+  /** @nullable */
+  modulo: string | null;
+  entidad: string;
+  /** @nullable */
+  entidadId: string | null;
+  /** @nullable */
+  sitioId: number | null;
+  /** @nullable */
+  sitio: string | null;
+  ip: string;
+}
+
+/**
+ * @nullable
+ */
+export type AuditoriaDetailDatosAntes = { [key: string]: unknown } | null;
+
+/**
+ * @nullable
+ */
+export type AuditoriaDetailDatosDespues = { [key: string]: unknown } | null;
+
+export type AuditoriaDetail = AuditoriaEntry & {
+  /** @nullable */
+  datosAntes: AuditoriaDetailDatosAntes;
+  /** @nullable */
+  datosDespues: AuditoriaDetailDatosDespues;
+};
+
+export interface AuditoriaListResult {
+  items: AuditoriaEntry[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 /**
  * Calendar day in YYYY-MM-DD; never coerced to an instant.
  * @pattern ^\d{4}-\d{2}-\d{2}$
@@ -4555,5 +4601,64 @@ coberturaCritico?: ReporteCoberturaCriticoParameter;
 coberturaBajo?: ReporteCoberturaBajoParameter;
 coberturaNormal?: ReporteCoberturaNormalParameter;
 coberturaExceso?: ReporteCoberturaExcesoParameter;
+};
+
+export type ListAuditoriaParams = {
+desde?: CalendarDate;
+hasta?: CalendarDate;
+/**
+ * @minimum 1
+ */
+usuarioId?: number;
+/**
+ * @maxLength 80
+ */
+modulo?: string;
+/**
+ * @maxLength 80
+ */
+accion?: string;
+/**
+ * @minimum 1
+ */
+sitioId?: number;
+/**
+ * @maxLength 150
+ */
+search?: string;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
+export type ExportAuditoriaXlsxParams = {
+desde?: CalendarDate;
+hasta?: CalendarDate;
+/**
+ * @minimum 1
+ */
+usuarioId?: number;
+/**
+ * @maxLength 80
+ */
+modulo?: string;
+/**
+ * @maxLength 80
+ */
+accion?: string;
+/**
+ * @minimum 1
+ */
+sitioId?: number;
+/**
+ * @maxLength 150
+ */
+search?: string;
 };
 

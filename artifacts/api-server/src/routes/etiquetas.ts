@@ -8,6 +8,7 @@ import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { getRequestIp } from "../lib/request";
 
 const router = Router();
 const id = z.coerce.number().int().positive();
@@ -255,6 +256,21 @@ router.post(
               ${`${String(row.tela)} ${String(row.color)}`},${String(row.tela)},${String(row.color)},
               ${auth.user.nombre},${auth.user.usuario},${autorizador?.nombre ?? null},
               ${autorizador?.usuario ?? null},${String(row.sitio_nombre)},${now})
+          `);
+          await tx.execute(sql`
+            INSERT INTO auditoria
+              (usuario_id, accion, entidad, entidad_id, sitio_id, datos_despues, ip)
+            VALUES (
+              ${auth.user.id}, 'REIMPRIMIR_ETIQUETA', 'reimpresiones_etiqueta',
+              ${String(row.id)}, ${Number(row.ubicacion_id)},
+              ${JSON.stringify({
+                rolloId: Number(row.id),
+                serie: String(row.serie),
+                motivo: body.motivo,
+                autorizadoPor: autorizador?.id ?? null,
+              })}::jsonb,
+              ${getRequestIp(req)}
+            )
           `);
         }
         return { etiquetas: rows.map((row) => label(row, now)), registradoAt: now.toISOString() };

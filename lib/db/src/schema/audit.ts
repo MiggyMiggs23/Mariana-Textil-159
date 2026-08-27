@@ -11,12 +11,17 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usuariosTable } from "./users";
+import { ubicacionesTable } from "./locations";
 
 export const auditoriaTable = pgTable(
   "auditoria",
   {
     id: bigserial("id", { mode: "bigint" }).primaryKey(),
     usuarioId: integer("usuario_id").references(() => usuariosTable.id),
+    rolSnapshot: text("rol_snapshot"),
+    sitioId: integer("sitio_id").references(() => ubicacionesTable.id),
+    sitioSnapshot: text("sitio_snapshot"),
+    modulo: text("modulo"),
     accion: text("accion").notNull(),
     entidad: text("entidad").notNull(),
     entidadId: text("entidad_id"),
