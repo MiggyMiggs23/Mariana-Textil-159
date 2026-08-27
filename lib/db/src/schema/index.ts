@@ -23,3 +23,4 @@ export * from "./series";
 export * from "./sessions";
 export * from "./solicitudes-pago-dirigido";
 export * from "./users";
+export * from "./viajes";

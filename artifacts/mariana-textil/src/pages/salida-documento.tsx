@@ -147,7 +147,7 @@ export default function SalidaDocumento() {
                 <div className="flex items-center border-b border-gray-300 pb-0.5 col-span-2">
                   <Truck className="w-3 h-3 text-gray-400 mr-2" />
                   <span className="font-bold w-[136px] shrink-0 text-[10px] uppercase text-gray-500 tracking-wider">Transportista</span>
-                  <span data-testid="doc-transportista" className="font-medium text-xs text-black">{salida.transportista || "N/A"}</span>
+                  <span data-testid="doc-transportista" className="font-medium text-xs text-black">{salida.viaje ? `${salida.viaje.nombreCamioneta} (${salida.viaje.placasCamioneta}) · ${salida.viaje.nombreChofer}` : salida.transportista || "N/A"}</span>
                 </div>
               </div>
             </div>

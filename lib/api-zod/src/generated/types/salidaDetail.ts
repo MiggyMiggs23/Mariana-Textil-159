@@ -8,6 +8,7 @@
 import type { SalidaLinea } from './salidaLinea';
 import type { SalidaResumen } from './salidaResumen';
 import type { SalidaRollo } from './salidaRollo';
+import type { ViajeSalidaLink } from './viajeSalidaLink';
 
 export type SalidaDetail = SalidaResumen & ({
   uuidCliente: string;
@@ -19,6 +20,9 @@ export type SalidaDetail = SalidaResumen & ({
   fechaEnvio: Date | null;
   /** @nullable */
   transportista: string | null;
+  /** @nullable */
+  transporteEfectivo?: string | null;
+  viaje?: ViajeSalidaLink | null;
   /** @nullable */
   notaEnvio: string | null;
   /** @nullable */

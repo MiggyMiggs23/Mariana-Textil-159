@@ -157,6 +157,8 @@ import type {
   ListRollosParams,
   ListSalidasParams,
   ListSolicitudesPagoDirigidoParams,
+  ListViajesEligibleDocumentsParams,
+  ListViajesParams,
   ListarHistorialEtiquetas200,
   ListarHistorialEtiquetasParams,
   ListarTicketsCajaParams,
@@ -248,7 +250,12 @@ import type {
   UserInput,
   UserUpdate,
   ValidationErrorResponse,
-  VenderRolloInput
+  VenderRolloInput,
+  ViajeDetail,
+  ViajeInput,
+  ViajeSummary,
+  ViajesEligibleDocuments,
+  ViajesOperationalCatalog
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -14578,6 +14585,375 @@ export function useGetAuditoria<TData = Awaited<ReturnType<typeof getAuditoria>>
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetAuditoriaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetViajesOperationalCatalogUrl = () => {
+
+
+
+
+  return `/api/viajes/catalogo-operativo`
+}
+
+/**
+ * @summary Catálogo activo de transporte para crear viajes
+ */
+export const getViajesOperationalCatalog = async ( options?: Parameters<typeof customFetch>[1]): Promise<ViajesOperationalCatalog> => {
+
+  return customFetch<ViajesOperationalCatalog>(getGetViajesOperationalCatalogUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetViajesOperationalCatalogQueryKey = () => {
+    return [
+    `/api/viajes/catalogo-operativo`
+    ] as const;
+    }
+
+
+export const getGetViajesOperationalCatalogQueryOptions = <TData = Awaited<ReturnType<typeof getViajesOperationalCatalog>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getViajesOperationalCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetViajesOperationalCatalogQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getViajesOperationalCatalog>>> = ({ signal }) => getViajesOperationalCatalog({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getViajesOperationalCatalog>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetViajesOperationalCatalogQueryResult = NonNullable<Awaited<ReturnType<typeof getViajesOperationalCatalog>>>
+export type GetViajesOperationalCatalogQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Catálogo activo de transporte para crear viajes
+ */
+
+export function useGetViajesOperationalCatalog<TData = Awaited<ReturnType<typeof getViajesOperationalCatalog>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getViajesOperationalCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetViajesOperationalCatalogQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListViajesEligibleDocumentsUrl = (params?: ListViajesEligibleDocumentsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/viajes/elegibles?${stringifiedParams}` : `/api/viajes/elegibles`
+}
+
+export const listViajesEligibleDocuments = async (params?: ListViajesEligibleDocumentsParams, options?: Parameters<typeof customFetch>[1]): Promise<ViajesEligibleDocuments> => {
+
+  return customFetch<ViajesEligibleDocuments>(getListViajesEligibleDocumentsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListViajesEligibleDocumentsQueryKey = (params?: ListViajesEligibleDocumentsParams,) => {
+    return [
+    `/api/viajes/elegibles`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListViajesEligibleDocumentsQueryOptions = <TData = Awaited<ReturnType<typeof listViajesEligibleDocuments>>, TError = ErrorType<unknown>>(params?: ListViajesEligibleDocumentsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listViajesEligibleDocuments>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListViajesEligibleDocumentsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listViajesEligibleDocuments>>> = ({ signal }) => listViajesEligibleDocuments(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listViajesEligibleDocuments>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListViajesEligibleDocumentsQueryResult = NonNullable<Awaited<ReturnType<typeof listViajesEligibleDocuments>>>
+export type ListViajesEligibleDocumentsQueryError = ErrorType<unknown>
+
+
+
+export function useListViajesEligibleDocuments<TData = Awaited<ReturnType<typeof listViajesEligibleDocuments>>, TError = ErrorType<unknown>>(
+ params?: ListViajesEligibleDocumentsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listViajesEligibleDocuments>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListViajesEligibleDocumentsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListViajesUrl = (params?: ListViajesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/viajes?${stringifiedParams}` : `/api/viajes`
+}
+
+export const listViajes = async (params?: ListViajesParams, options?: Parameters<typeof customFetch>[1]): Promise<ViajeSummary[]> => {
+
+  return customFetch<ViajeSummary[]>(getListViajesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListViajesQueryKey = (params?: ListViajesParams,) => {
+    return [
+    `/api/viajes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListViajesQueryOptions = <TData = Awaited<ReturnType<typeof listViajes>>, TError = ErrorType<unknown>>(params?: ListViajesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listViajes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListViajesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listViajes>>> = ({ signal }) => listViajes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listViajes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListViajesQueryResult = NonNullable<Awaited<ReturnType<typeof listViajes>>>
+export type ListViajesQueryError = ErrorType<unknown>
+
+
+
+export function useListViajes<TData = Awaited<ReturnType<typeof listViajes>>, TError = ErrorType<unknown>>(
+ params?: ListViajesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listViajes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListViajesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateViajeUrl = () => {
+
+
+
+
+  return `/api/viajes`
+}
+
+export const createViaje = async (viajeInput: ViajeInput, options?: Parameters<typeof customFetch>[1]): Promise<ViajeDetail> => {
+
+  return customFetch<ViajeDetail>(getCreateViajeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(viajeInput)
+  }
+);}
+
+
+
+
+
+export const getCreateViajeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createViaje>>, TError,{data: BodyType<ViajeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createViaje>>, TError,{data: BodyType<ViajeInput>}, TContext> => {
+
+const mutationKey = ['createViaje'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createViaje>>, {data: BodyType<ViajeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createViaje(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateViajeMutationResult = NonNullable<Awaited<ReturnType<typeof createViaje>>>
+    export type CreateViajeMutationBody = BodyType<ViajeInput>
+    export type CreateViajeMutationError = ErrorType<unknown>
+
+    export const useCreateViaje = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createViaje>>, TError,{data: BodyType<ViajeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createViaje>>,
+        TError,
+        {data: BodyType<ViajeInput>},
+        TContext
+      > => {
+      return useMutation(getCreateViajeMutationOptions(options));
+    }
+
+export const getGetViajeUrl = (id: number,) => {
+
+
+
+
+  return `/api/viajes/${id}`
+}
+
+export const getViaje = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ViajeDetail> => {
+
+  return customFetch<ViajeDetail>(getGetViajeUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetViajeQueryKey = (id: number,) => {
+    return [
+    `/api/viajes/${id}`
+    ] as const;
+    }
+
+
+export const getGetViajeQueryOptions = <TData = Awaited<ReturnType<typeof getViaje>>, TError = ErrorType<NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getViaje>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetViajeQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getViaje>>> = ({ signal }) => getViaje(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getViaje>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetViajeQueryResult = NonNullable<Awaited<ReturnType<typeof getViaje>>>
+export type GetViajeQueryError = ErrorType<NotFoundResponse>
+
+
+
+export function useGetViaje<TData = Awaited<ReturnType<typeof getViaje>>, TError = ErrorType<NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getViaje>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetViajeQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

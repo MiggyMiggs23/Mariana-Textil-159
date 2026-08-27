@@ -374,6 +374,11 @@ export default function TicketDetailPage() {
                 Entrega: {ticket.direccionEntregaEfectiva}
               </div>
             )}
+            {(ticket as TicketDetalle & { viaje?: { id: number; folio: number } | null }).viaje && (
+              <Link className="mt-1 block text-sm text-primary underline" href={`/viajes/${(ticket as TicketDetalle & { viaje: { id: number } }).viaje.id}`}>
+                En viaje #{(ticket as TicketDetalle & { viaje: { folio: number } }).viaje.folio}
+              </Link>
+            )}
             {ticket.facturado && (
               <div className="mt-2 text-xs font-bold tracking-wider text-primary">
                 FACTURADO

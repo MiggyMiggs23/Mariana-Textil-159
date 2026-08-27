@@ -12,6 +12,7 @@ export const SUPERVISOR_PERMISSION_CEILING: Readonly<
   productos: new Set(["ver"]),
   entradas: new Set(["ver", "crear", "editar"]),
   salidas: new Set(["ver", "crear", "editar", "autorizar"]),
+  viajes: new Set(["ver", "crear"]),
   movimientos: new Set(["ver"]),
   ajustes: new Set(["ver", "crear", "autorizar"]),
   etiquetas: new Set(["ver", "crear"]),

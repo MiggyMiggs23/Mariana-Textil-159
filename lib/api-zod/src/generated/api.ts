@@ -4002,6 +4002,10 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -4576,6 +4580,10 @@ export const CrearTicketResponse = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -4773,6 +4781,10 @@ export const ObtenerTicketResponse = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -4961,6 +4973,10 @@ export const CancelarTicketResponse = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -5071,6 +5087,10 @@ export const CobrarTicketResponse = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -5473,6 +5493,15 @@ export const GetBorradorSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -5567,6 +5596,15 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -5664,6 +5702,15 @@ export const CrearSalidaMostradorResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -5815,6 +5862,15 @@ export const GetSalidaRecepcionResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -5901,6 +5957,15 @@ export const GetSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -5987,6 +6052,15 @@ export const GetDocumentoSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -6074,6 +6148,15 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -6170,6 +6253,15 @@ export const CancelarSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -6264,6 +6356,15 @@ export const EnviarSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -6359,6 +6460,15 @@ export const RecibirSalidaResponse = zod.object({
   "nombreEnviadoPor": zod.string().nullable(),
   "fechaEnvio": zod.coerce.date().nullable(),
   "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
   "notaEnvio": zod.string().nullable(),
   "recibidoPorId": zod.number().nullable(),
   "nombreRecibidoPor": zod.string().nullable(),
@@ -7531,6 +7641,151 @@ export const GetAuditoriaResponse = zod.object({
 }).and(zod.object({
   "datosAntes": zod.record(zod.string(), zod.unknown()).nullable(),
   "datosDespues": zod.record(zod.string(), zod.unknown()).nullable()
+}))
+
+
+/**
+ * @summary Catálogo activo de transporte para crear viajes
+ */
+export const getViajesOperationalCatalogResponseUbicacionesItemInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+
+
+export const GetViajesOperationalCatalogResponse = zod.object({
+  "camionetas": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "placas": zod.string(),
+  "marca": zod.string().nullable(),
+  "modelo": zod.string().nullable(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']),
+  "activa": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})),
+  "choferes": zod.array(zod.object({
+  "id": zod.number(),
+  "nombreCompleto": zod.string(),
+  "telefono": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})),
+  "ubicaciones": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "iniciales": zod.string().regex(getViajesOperationalCatalogResponseUbicacionesItemInicialesRegExp),
+  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
+  "activa": zod.boolean(),
+  "esSistema": zod.boolean()
+}))
+})
+
+
+export const ListViajesEligibleDocumentsQueryParams = zod.object({
+  "origenId": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional()
+})
+
+export const ListViajesEligibleDocumentsResponse = zod.object({
+  "tickets": zod.array(zod.record(zod.string(), zod.unknown())),
+  "salidas": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+export const ListViajesQueryParams = zod.object({
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "camionetaId": zod.coerce.number().optional(),
+  "choferId": zod.coerce.number().optional(),
+  "origenId": zod.coerce.number().optional(),
+  "destino": zod.coerce.string().optional()
+})
+
+export const ListViajesResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "salidaAt": zod.coerce.date(),
+  "camioneta": zod.string(),
+  "chofer": zod.string(),
+  "documentos": zod.number(),
+  "totalRollos": zod.number(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "destinos": zod.array(zod.string())
+})
+export const ListViajesResponse = zod.array(ListViajesResponseItem)
+
+
+
+
+
+export const createViajeBodyObservacionesMax = 2000;
+
+
+export const createViajeBodyTicketIdsDefault = [];
+export const createViajeBodySalidaIdsDefault = [];
+
+export const CreateViajeBody = zod.object({
+  "origenId": zod.number().min(1),
+  "camionetaId": zod.number().min(1),
+  "choferId": zod.number().min(1),
+  "salidaAt": zod.coerce.date(),
+  "observaciones": zod.string().max(createViajeBodyObservacionesMax).nullish(),
+  "ticketIds": zod.array(zod.number().min(1)).default(createViajeBodyTicketIdsDefault),
+  "salidaIds": zod.array(zod.number().min(1)).default(createViajeBodySalidaIdsDefault)
+})
+
+export const CreateViajeResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "salidaAt": zod.coerce.date(),
+  "camioneta": zod.string(),
+  "chofer": zod.string(),
+  "documentos": zod.number(),
+  "totalRollos": zod.number(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "destinos": zod.array(zod.string())
+}).and(zod.object({
+  "observaciones": zod.string().nullable(),
+  "tickets": zod.array(zod.record(zod.string(), zod.unknown())),
+  "salidas": zod.array(zod.record(zod.string(), zod.unknown())),
+  "rollos": zod.array(zod.record(zod.string(), zod.unknown()))
+}))
+
+
+
+
+
+export const GetViajeParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetViajeResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "salidaAt": zod.coerce.date(),
+  "camioneta": zod.string(),
+  "chofer": zod.string(),
+  "documentos": zod.number(),
+  "totalRollos": zod.number(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "destinos": zod.array(zod.string())
+}).and(zod.object({
+  "observaciones": zod.string().nullable(),
+  "tickets": zod.array(zod.record(zod.string(), zod.unknown())),
+  "salidas": zod.array(zod.record(zod.string(), zod.unknown())),
+  "rollos": zod.array(zod.record(zod.string(), zod.unknown()))
 }))
 
 

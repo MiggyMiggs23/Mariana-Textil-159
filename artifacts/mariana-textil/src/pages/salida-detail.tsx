@@ -348,9 +348,16 @@ export default function SalidaDetail() {
                 </div>
               </div>
 
-              {(salida.transportista || salida.observaciones || salida.notaEnvio) && (
+              {(salida.transportista || salida.viaje || salida.observaciones || salida.notaEnvio) && (
                 <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
-                  {salida.transportista && (
+                  {salida.viaje ? (
+                    <div className="flex items-start gap-2 text-sm">
+                      <Truck className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                      <div><span className="font-semibold block text-slate-700">Viaje:</span>
+                        <Link className="text-primary underline" href={`/viajes/${salida.viaje.id}`}>#{salida.viaje.folio} · {salida.viaje.nombreCamioneta} ({salida.viaje.placasCamioneta}) · {salida.viaje.nombreChofer}</Link>
+                      </div>
+                    </div>
+                  ) : salida.transportista && (
                     <div className="flex items-start gap-2 text-sm">
                       <Truck className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
                       <div>

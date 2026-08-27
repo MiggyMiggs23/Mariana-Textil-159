@@ -220,6 +220,9 @@
 }
 
 @media print {
+  body.print-viaje { background: white !important; }
+  body.print-viaje .no-print { display: none !important; }
+  body.print-viaje .viaje-page { width: 216mm !important; min-height: 279mm !important; margin: 0 !important; box-shadow: none !important; }
   #replit-dev-banner,
   .replit-dev-banner,
   [data-replit-dev-banner],

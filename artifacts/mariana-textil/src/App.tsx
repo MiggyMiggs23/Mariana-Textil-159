@@ -57,6 +57,10 @@ import Camionetas from "@/pages/configuracion/camionetas";
 import Choferes from "@/pages/configuracion/choferes";
 import { LocationScopeProvider } from "@/lib/location-scope";
 import { Modules, hasPermission } from "@/lib/permisos";
+import Viajes from "@/pages/viajes";
+import ViajeNuevo from "@/pages/viaje-nuevo";
+import ViajeDetail from "@/pages/viaje-detail";
+import ViajeDocumento from "@/pages/viaje-documento";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -283,6 +287,13 @@ function Router() {
           path="/salidas"
           component={() => <ProtectedRoute component={Salidas} />}
         />
+        <Route
+          path="/viajes"
+          component={() => <ProtectedRoute component={Viajes} allowedModule={Modules.VIAJES} />}
+        />
+        <Route path="/viajes/nuevo" component={() => <ProtectedRoute component={ViajeNuevo} allowedModule={Modules.VIAJES} allowedAction="crear" />} />
+        <Route path="/viajes/:id/documento" component={() => <ProtectedRoute component={ViajeDocumento} allowedModule={Modules.VIAJES} />} />
+        <Route path="/viajes/:id" component={() => <ProtectedRoute component={ViajeDetail} allowedModule={Modules.VIAJES} />} />
         <Route
           path="/salidas/nueva"
           component={() => (

@@ -20,6 +20,7 @@ import {
   ensureSolicitudesPagoDirigidoSchema,
   ensureCamionetasSchema,
   ensureChoferesSchema,
+  ensureViajesSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -42,6 +43,7 @@ async function startServer() {
   await ensureAuditSchema(pool);
   await ensureCamionetasSchema(pool);
   await ensureChoferesSchema(pool);
+  await ensureViajesSchema(pool);
   await ensurePagosProveedorSchema(pool);
   await ensureSolicitudesPagoDirigidoSchema(pool);
   await ensureAplicacionesPagoProveedorSchema(pool);

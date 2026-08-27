@@ -10,6 +10,7 @@ import type { TicketCredito } from './ticketCredito';
 import type { TicketLinea } from './ticketLinea';
 import type { TicketPago } from './ticketPago';
 import type { TicketResumen } from './ticketResumen';
+import type { ViajeTicketLink } from './viajeTicketLink';
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
   documentoTipo: DocumentoTipoTicket;
@@ -21,6 +22,7 @@ export type TicketDetalle = TicketResumen & TicketCredito & ({
   convertidoANotaPorCobro: boolean;
   /** @nullable */
   diasCreditoCliente?: number | null;
+  viaje?: ViajeTicketLink | null;
   lineas: TicketLinea[];
   pagos?: TicketPago[];
 });

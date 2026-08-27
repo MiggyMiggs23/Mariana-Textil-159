@@ -69,6 +69,7 @@ export const MODULOS = [
   "auditoria",
   "camionetas",
   "choferes",
+  "viajes",
 ] as const;
 
 export type ModuloId = (typeof MODULOS)[number];

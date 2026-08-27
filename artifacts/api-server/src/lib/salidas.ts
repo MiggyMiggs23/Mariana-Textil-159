@@ -27,6 +27,10 @@ import {
   salidasTable,
   ubicacionesTable,
   usuariosTable,
+  viajeSalidasTable,
+  viajesTable,
+  camionetasTable,
+  choferesTable,
   type EstadoSalida,
 } from "@workspace/db";
 import {
@@ -232,6 +236,14 @@ export async function buildSalidaDetail(
       .where(eq(salidaRollosTable.salidaId, salida.id))
       .orderBy(salidaRollosTable.id),
   ]);
+  const [viaje] = await database.select({
+    id: viajesTable.id, folio: viajesTable.folio, nombreCamioneta: camionetasTable.nombre,
+    placasCamioneta: camionetasTable.placas, nombreChofer: choferesTable.nombreCompleto,
+    telefonoChofer: choferesTable.telefono,
+  }).from(viajeSalidasTable).innerJoin(viajesTable, eq(viajeSalidasTable.viajeId, viajesTable.id))
+    .innerJoin(camionetasTable, eq(viajesTable.camionetaId, camionetasTable.id))
+    .innerJoin(choferesTable, eq(viajesTable.choferId, choferesTable.id))
+    .where(eq(viajeSalidasTable.salidaId, salidaId)).limit(1);
 
   const total = (field: "cantidadSolicitada" | "cantidadEnviada" | "cantidadRecibida") =>
     lineas.reduce((sum, linea) => sum + Number(linea[field]), 0).toFixed(3);
@@ -283,6 +295,8 @@ export async function buildSalidaDetail(
     notaEnvio: salida.notaEnvio ?? null,
     notaRecepcion: salida.notaRecepcion ?? null,
     transportista: salida.transportista ?? null,
+    viaje: viaje ?? null,
+    transporteEfectivo: viaje ? `${viaje.nombreCamioneta} · ${viaje.placasCamioneta} · ${viaje.nombreChofer}` : salida.transportista ?? null,
     uuidCliente: salida.uuidCliente,
     createdAt: salida.createdAt.toISOString(),
     updatedAt: salida.actividadAt.toISOString(),

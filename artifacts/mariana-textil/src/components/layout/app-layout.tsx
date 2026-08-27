@@ -27,6 +27,7 @@ import {
   ShoppingCart,
   ArrowDownToLine,
   ArrowUpFromLine,
+  Route,
   Activity,
   Package,
   UserSquare2,
@@ -162,6 +163,13 @@ const NAV_GROUPS: NavGroup[] = [
         path: "/salidas",
         icon: ArrowUpFromLine,
         module: Modules.SALIDAS,
+        isClickable: true,
+      },
+      {
+        name: "Viajes",
+        path: "/viajes",
+        icon: Route,
+        module: Modules.VIAJES,
         isClickable: true,
       },
       {

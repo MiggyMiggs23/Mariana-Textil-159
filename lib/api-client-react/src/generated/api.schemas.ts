@@ -1970,6 +1970,14 @@ export const DocumentoTipoTicket = {
   NOTA: 'NOTA',
 } as const;
 
+/**
+ * @nullable
+ */
+export type ViajeTicketLink = {
+  id: number;
+  folio: number;
+} | null;
+
 export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
 
 
@@ -2063,6 +2071,7 @@ export type TicketDetalle = TicketResumen & TicketCredito & ({
   convertidoANotaPorCobro: boolean;
   /** @nullable */
   diasCreditoCliente?: number | null;
+  viaje?: ViajeTicketLink | null;
   lineas: TicketLinea[];
   pagos?: TicketPago[];
 });
@@ -3497,6 +3506,18 @@ export interface SalidaResumen {
   updatedAt: string;
 }
 
+/**
+ * @nullable
+ */
+export type ViajeSalidaLink = {
+  id: number;
+  folio: number;
+  nombreCamioneta: string;
+  placasCamioneta: string;
+  nombreChofer: string;
+  telefonoChofer: string;
+} | null;
+
 export interface SalidaLinea {
   id: number;
   productoId: number;
@@ -3548,6 +3569,9 @@ export type SalidaDetail = SalidaResumen & ({
   fechaEnvio: string | null;
   /** @nullable */
   transportista: string | null;
+  /** @nullable */
+  transporteEfectivo?: string | null;
+  viaje?: ViajeSalidaLink | null;
   /** @nullable */
   notaEnvio: string | null;
   /** @nullable */
@@ -4440,6 +4464,70 @@ export interface CorteCaja {
   margenPorcentaje?: string | null;
   /** Líneas metreadas sin rollo o sin costo, solo para ADMIN */
   lineasExcluidasMargen?: number;
+}
+
+export interface ViajeInput {
+  /** @minimum 1 */
+  origenId: number;
+  /** @minimum 1 */
+  camionetaId: number;
+  /** @minimum 1 */
+  choferId: number;
+  salidaAt: string;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  observaciones?: string | null;
+  /** @items.minimum 1 */
+  ticketIds?: number[];
+  /** @items.minimum 1 */
+  salidaIds?: number[];
+}
+
+export interface ViajeSummary {
+  id: number;
+  folio: number;
+  folioFormateado: string;
+  origenId: number;
+  nombreOrigen: string;
+  salidaAt: string;
+  camioneta: string;
+  chofer: string;
+  documentos: number;
+  totalRollos: number;
+  totalMetros: string;
+  totalKilos: string;
+  destinos: string[];
+}
+
+export type ViajeDetailTicketsItem = { [key: string]: unknown };
+
+export type ViajeDetailSalidasItem = { [key: string]: unknown };
+
+export type ViajeDetailRollosItem = { [key: string]: unknown };
+
+export type ViajeDetail = ViajeSummary & ({
+  /** @nullable */
+  observaciones: string | null;
+  tickets: ViajeDetailTicketsItem[];
+  salidas: ViajeDetailSalidasItem[];
+  rollos: ViajeDetailRollosItem[];
+});
+
+export interface ViajesOperationalCatalog {
+  camionetas: Camioneta[];
+  choferes: Chofer[];
+  ubicaciones: Location[];
+}
+
+export type ViajesEligibleDocumentsTicketsItem = { [key: string]: unknown };
+
+export type ViajesEligibleDocumentsSalidasItem = { [key: string]: unknown };
+
+export interface ViajesEligibleDocuments {
+  tickets: ViajesEligibleDocumentsTicketsItem[];
+  salidas: ViajesEligibleDocumentsSalidasItem[];
 }
 
 /**
@@ -5448,5 +5536,19 @@ sitioId?: number;
  * @maxLength 150
  */
 search?: string;
+};
+
+export type ListViajesEligibleDocumentsParams = {
+origenId?: number;
+search?: string;
+};
+
+export type ListViajesParams = {
+fechaDesde?: string;
+fechaHasta?: string;
+camionetaId?: number;
+choferId?: number;
+origenId?: number;
+destino?: string;
 };
 

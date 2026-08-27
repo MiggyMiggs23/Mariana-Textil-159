@@ -29,7 +29,7 @@ import {
   RecibirSalidaParams,
   RecibirSalidaResponse,
 } from "@workspace/api-zod";
-import { db, salidasTable, ubicacionesTable, usuariosTable, type EstadoSalida } from "@workspace/db";
+import { db, salidasTable, ubicacionesTable, usuariosTable, viajeSalidasTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
@@ -555,6 +555,12 @@ router.post(
       const body = EnviarSalidaBody.parse(req.body);
       if (rejectCajaMutation(req.auth!)) {
         res.status(403).json({ error: "El rol CAJA no puede enviar salidas." });
+        return;
+      }
+      const [viajeLink] = await db.select({ viajeId: viajeSalidasTable.viajeId })
+        .from(viajeSalidasTable).where(eq(viajeSalidasTable.salidaId, id)).limit(1);
+      if (viajeLink) {
+        res.status(409).json({ error: "La salida está ligada a un viaje; el transporte lo determina el viaje." });
         return;
       }
       await requireSalidaAccess(req.auth!, id, "origin");

@@ -16,6 +16,8 @@ import {
   ticketsTable,
   ubicacionesTable,
   usuariosTable,
+  viajeTicketsTable,
+  viajesTable,
   type FormaPagoTicket,
 } from "@workspace/db";
 import {
@@ -287,10 +289,14 @@ export async function buildTicketDetail(
       )
     : [];
   const credit = deriveTicketCreditData(ticketId, pagos, creditMovements);
+  const [viaje] = await database.select({ id: viajesTable.id, folio: viajesTable.folio })
+    .from(viajeTicketsTable).innerJoin(viajesTable, eq(viajeTicketsTable.viajeId, viajesTable.id))
+    .where(eq(viajeTicketsTable.ticketId, ticketId)).limit(1);
 
   return {
     ...ticket,
     ...credit,
+    viaje: viaje ?? null,
     convertidoANotaPorCobro,
     nombreUsuarioCaja: null,
     nombreUsuarioCancelacion: null,

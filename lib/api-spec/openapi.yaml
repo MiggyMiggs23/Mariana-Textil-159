@@ -49,6 +49,8 @@ tags:
     description: Catálogo histórico de camionetas para operaciones de transporte
   - name: choferes
     description: Catálogo histórico de choferes para operaciones de transporte
+  - name: viajes
+    description: Hojas históricas de despacho de documentos
 paths:
   /pagos-dirigidos:
     get:
@@ -4476,6 +4478,57 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
+  /viajes/catalogo-operativo:
+    get:
+      operationId: getViajesOperationalCatalog
+      tags: [viajes]
+      summary: Catálogo activo de transporte para crear viajes
+      responses:
+        "200":
+          description: Vehículos, choferes y sitios operativos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ViajesOperationalCatalog" }
+  /viajes/elegibles:
+    get:
+      operationId: listViajesEligibleDocuments
+      tags: [viajes]
+      parameters:
+        - { in: query, name: origenId, schema: { type: number } }
+        - { in: query, name: search, schema: { type: string } }
+      responses:
+        "200":
+          description: Notas y salidas sin viaje
+          content: { application/json: { schema: { $ref: "#/components/schemas/ViajesEligibleDocuments" } } }
+  /viajes:
+    get:
+      operationId: listViajes
+      tags: [viajes]
+      parameters:
+        - { in: query, name: fechaDesde, schema: { type: string, format: date-time } }
+        - { in: query, name: fechaHasta, schema: { type: string, format: date-time } }
+        - { in: query, name: camionetaId, schema: { type: number } }
+        - { in: query, name: choferId, schema: { type: number } }
+        - { in: query, name: origenId, schema: { type: number } }
+        - { in: query, name: destino, schema: { type: string } }
+      responses:
+        "200": { description: Viajes, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/ViajeSummary" } } } } }
+    post:
+      operationId: createViaje
+      tags: [viajes]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/ViajeInput" } } }
+      responses:
+        "201": { description: Viaje creado, content: { application/json: { schema: { $ref: "#/components/schemas/ViajeDetail" } } } }
+  /viajes/{id}:
+    get:
+      operationId: getViaje
+      tags: [viajes]
+      parameters: [{ name: id, in: path, required: true, schema: { type: number, minimum: 1 } }]
+      responses:
+        "200": { description: Detalle de viaje, content: { application/json: { schema: { $ref: "#/components/schemas/ViajeDetail" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
 components:
   parameters:
     CamionetaId:
@@ -8570,6 +8623,8 @@ components:
             nombreEnviadoPor: { type: ["string", "null"] }
             fechaEnvio: { type: ["string", "null"], format: date-time }
             transportista: { type: ["string", "null"] }
+            transporteEfectivo: { type: ["string", "null"] }
+            viaje: { $ref: "#/components/schemas/ViajeSalidaLink" }
             notaEnvio: { type: ["string", "null"] }
             recibidoPorId: { type: ["number", "null"] }
             nombreRecibidoPor: { type: ["string", "null"] }
@@ -9627,6 +9682,7 @@ components:
               type: boolean
               description: Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.
             diasCreditoCliente: { type: ["number", "null"] }
+            viaje: { $ref: "#/components/schemas/ViajeTicketLink" }
             lineas:
               type: array
               items:
@@ -10022,3 +10078,70 @@ components:
         lineasExcluidasMargen:
           type: number
           description: Líneas metreadas sin rollo o sin costo, solo para ADMIN
+    ViajeTicketLink:
+      type: ["object", "null"]
+      required: [id, folio]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+    ViajeSalidaLink:
+      type: ["object", "null"]
+      required: [id, folio, nombreCamioneta, placasCamioneta, nombreChofer, telefonoChofer]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        nombreCamioneta: { type: string }
+        placasCamioneta: { type: string }
+        nombreChofer: { type: string }
+        telefonoChofer: { type: string }
+    ViajeInput:
+      type: object
+      required: [origenId, camionetaId, choferId, salidaAt]
+      properties:
+        origenId: { type: number, minimum: 1 }
+        camionetaId: { type: number, minimum: 1 }
+        choferId: { type: number, minimum: 1 }
+        salidaAt: { type: string, format: date-time }
+        observaciones: { type: [string, "null"], maxLength: 2000 }
+        ticketIds: { type: array, items: { type: number, minimum: 1 }, default: [] }
+        salidaIds: { type: array, items: { type: number, minimum: 1 }, default: [] }
+    ViajeSummary:
+      type: object
+      required: [id, folio, folioFormateado, origenId, nombreOrigen, salidaAt, camioneta, chofer, documentos, totalRollos, totalMetros, totalKilos, destinos]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        folioFormateado: { type: string }
+        origenId: { type: number }
+        nombreOrigen: { type: string }
+        salidaAt: { type: string, format: date-time }
+        camioneta: { type: string }
+        chofer: { type: string }
+        documentos: { type: number }
+        totalRollos: { type: number }
+        totalMetros: { type: string }
+        totalKilos: { type: string }
+        destinos: { type: array, items: { type: string } }
+    ViajeDetail:
+      allOf:
+        - $ref: "#/components/schemas/ViajeSummary"
+        - type: object
+          required: [observaciones, tickets, salidas, rollos]
+          properties:
+            observaciones: { type: [string, "null"] }
+            tickets: { type: array, items: { type: object, additionalProperties: true } }
+            salidas: { type: array, items: { type: object, additionalProperties: true } }
+            rollos: { type: array, items: { type: object, additionalProperties: true } }
+    ViajesOperationalCatalog:
+      type: object
+      required: [camionetas, choferes, ubicaciones]
+      properties:
+        camionetas: { type: array, items: { $ref: "#/components/schemas/Camioneta" } }
+        choferes: { type: array, items: { $ref: "#/components/schemas/Chofer" } }
+        ubicaciones: { type: array, items: { $ref: "#/components/schemas/Location" } }
+    ViajesEligibleDocuments:
+      type: object
+      required: [tickets, salidas]
+      properties:
+        tickets: { type: array, items: { type: object, additionalProperties: true } }
+        salidas: { type: array, items: { type: object, additionalProperties: true } }

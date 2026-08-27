@@ -299,6 +299,8 @@ export * from "./generated/types/listSalidasParams";
 export * from "./generated/types/listSolicitudesPagoDirigidoEstado";
 export * from "./generated/types/listSolicitudesPagoDirigidoParams";
 export * from "./generated/types/listSolicitudesPagoDirigidoTipo";
+export * from "./generated/types/listViajesEligibleDocumentsParams";
+export * from "./generated/types/listViajesParams";
 export * from "./generated/types/listarHistorialEtiquetas200";
 export * from "./generated/types/listarHistorialEtiquetasParams";
 export * from "./generated/types/listarTicketsCajaParams";
@@ -491,6 +493,18 @@ export * from "./generated/types/userInput";
 export * from "./generated/types/userUpdate";
 export * from "./generated/types/validationErrorResponse";
 export * from "./generated/types/venderRolloInput";
+export * from "./generated/types/viajeDetail";
+export * from "./generated/types/viajeDetailRollosItem";
+export * from "./generated/types/viajeDetailSalidasItem";
+export * from "./generated/types/viajeDetailTicketsItem";
+export * from "./generated/types/viajeInput";
+export * from "./generated/types/viajeSalidaLink";
+export * from "./generated/types/viajeSummary";
+export * from "./generated/types/viajeTicketLink";
+export * from "./generated/types/viajesEligibleDocuments";
+export * from "./generated/types/viajesEligibleDocumentsSalidasItem";
+export * from "./generated/types/viajesEligibleDocumentsTicketsItem";
+export * from "./generated/types/viajesOperationalCatalog";
 
 // ── Colliding Params types re-exported under QueryParams alias ───────────
 // (server uses the Zod versions from api.ts; these TS interfaces are for
