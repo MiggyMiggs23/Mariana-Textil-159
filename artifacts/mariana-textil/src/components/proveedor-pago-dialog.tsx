@@ -135,7 +135,7 @@ export function ProveedorPagoDialog({
             {step === "form" ? "Registrar Pago Global a Proveedor" : step === "preview" ? "Vista Previa de Aplicación (FIFO)" : "Pago Registrado"}
           </DialogTitle>
           <DialogDescription className="text-white/70 mt-2">
-            {step === "form" 
+            {step === "form"
               ? (saldoActual ? `El pago se descontará de la deuda total de ${formatNumber(saldoActual, { kind: "money" })} aplicando primero a las compras más antiguas.` : "El pago se aplicará a las compras más antiguas de manera automática (FIFO).")
               : step === "preview"
               ? "Revisa cómo se repartirá el importe antes de confirmar."
@@ -151,12 +151,12 @@ export function ProveedorPagoDialog({
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Importe a pagar</Label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xl">$</span>
-                  <Input 
-                    type="number" 
-                    min="0.01" 
-                    step="0.01" 
-                    value={amount} 
-                    onChange={(e) => { setAmount(e.target.value); handleInputChange(); }} 
+                  <Input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={amount}
+                    onChange={(e) => { setAmount(e.target.value); handleInputChange(); }}
                     className="pl-9 h-14 text-2xl font-black bg-white border-2 focus-visible:ring-0 focus-visible:border-primary"
                     autoFocus
                   />
@@ -181,10 +181,10 @@ export function ProveedorPagoDialog({
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Fecha Efectiva</Label>
                 <div className="relative">
-                  <Input 
-                    type="date" 
-                    value={effectiveDate} 
-                    onChange={(e) => { setEffectiveDate(e.target.value); handleInputChange(); }} 
+                  <Input
+                    type="date"
+                    value={effectiveDate}
+                    onChange={(e) => { setEffectiveDate(e.target.value); handleInputChange(); }}
                     className="h-12 bg-white border-2 block w-full text-left font-medium text-sidebar"
                   />
                 </div>
@@ -193,9 +193,9 @@ export function ProveedorPagoDialog({
 
             <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
               <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Referencia (Opcional)</Label>
-              <Input 
-                value={reference} 
-                onChange={(e) => { setReference(e.target.value); handleInputChange(); }} 
+              <Input
+                value={reference}
+                onChange={(e) => { setReference(e.target.value); handleInputChange(); }}
                 placeholder="Ej. Terminación 4567, Banco..."
                 className="h-12 bg-white border-2"
               />
@@ -203,9 +203,9 @@ export function ProveedorPagoDialog({
 
             <div className="space-y-2">
               <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Notas (Opcional)</Label>
-              <Textarea 
-                value={paymentNotes} 
-                onChange={(e) => { setPaymentNotes(e.target.value); handleInputChange(); }} 
+              <Textarea
+                value={paymentNotes}
+                onChange={(e) => { setPaymentNotes(e.target.value); handleInputChange(); }}
                 placeholder="Observaciones sobre el pago..."
                 rows={2}
                 className="bg-white border-2 resize-none"
@@ -273,7 +273,7 @@ export function ProveedorPagoDialog({
                 <h3 className="font-black text-xl text-sidebar">¡Pago registrado exitosamente!</h3>
                 <p className="text-muted-foreground text-sm font-medium">Se aplicó {formatNumber(amount, { kind: "money" })} a la cuenta del proveedor.</p>
              </div>
-             
+
              {realResult.aplicaciones && realResult.aplicaciones.length > 0 && (
                <div className="space-y-3">
                  <h4 className="font-bold text-sidebar text-sm uppercase tracking-wider">Resumen de aplicación</h4>
@@ -304,8 +304,8 @@ export function ProveedorPagoDialog({
           {step === "form" && (
             <>
               <Button variant="ghost" onClick={() => onOpenChange(false)} className="font-bold text-muted-foreground">Cancelar</Button>
-              <Button 
-                onClick={handlePreview} 
+              <Button
+                onClick={handlePreview}
                 disabled={!isFormValid || previewPayment.isPending}
                 className="font-bold h-10 px-6"
               >
@@ -320,8 +320,8 @@ export function ProveedorPagoDialog({
               <Button variant="ghost" onClick={() => setStep("form")} className="font-bold text-muted-foreground">
                 <ChevronLeft className="h-4 w-4 mr-2" /> Atrás
               </Button>
-              <Button 
-                onClick={submitPayment} 
+              <Button
+                onClick={submitPayment}
                 disabled={createPayment.isPending}
                 className="font-bold h-10 px-8"
               >

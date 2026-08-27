@@ -175,18 +175,18 @@ export default function PagosDirigidos() {
                         <td className="p-4 text-right">
                           {sol.estado === "PENDIENTE" && isAdmin ? (
                             <div className="flex items-center justify-end gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 className="h-8 border-emerald-500 text-emerald-700 hover:bg-emerald-50"
                                 onClick={() => handleAprobar(sol.id)}
                                 disabled={aprobar.isPending}
                               >
                                 <Check className="w-4 h-4 mr-1" /> Aprobar
                               </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 className="h-8 border-destructive text-destructive hover:bg-destructive/10"
                                 onClick={() => setRechazarDialog({ open: true, solicitud: sol })}
                               >
@@ -225,9 +225,9 @@ export default function PagosDirigidos() {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase">Motivo del rechazo</Label>
-                <Textarea 
-                  value={motivoRechazo} 
-                  onChange={(e) => setMotivoRechazo(e.target.value)} 
+                <Textarea
+                  value={motivoRechazo}
+                  onChange={(e) => setMotivoRechazo(e.target.value)}
                   placeholder="Escriba el motivo (mínimo 10 caracteres)..."
                   className="resize-none h-24 border-2"
                 />
@@ -235,8 +235,8 @@ export default function PagosDirigidos() {
             </div>
             <DialogFooter>
               <Button variant="ghost" onClick={() => setRechazarDialog({ open: false, solicitud: null })}>Cancelar</Button>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 onClick={handleRechazar}
                 disabled={rechazar.isPending || motivoRechazo.trim().length < 10}
               >

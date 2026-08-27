@@ -137,8 +137,8 @@ export function SolicitudPagoDirigidoDialog({
             {step === "form" ? "Pago Dirigido (Excepción FIFO)" : "Resultado de Solicitud"}
           </DialogTitle>
           <DialogDescription className="text-white/70 mt-2">
-            {step === "form" 
-              ? `Aplicar pago directamente al documento #${folio}, ignorando antigüedad.` 
+            {step === "form"
+              ? `Aplicar pago directamente al documento #${folio}, ignorando antigüedad.`
               : "La operación se completó correctamente."}
           </DialogDescription>
         </DialogHeader>
@@ -148,7 +148,7 @@ export function SolicitudPagoDirigidoDialog({
             <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm p-4 rounded-lg flex gap-3 items-start shadow-sm">
               <Info className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
               <p>
-                <strong>Excepción FIFO:</strong> Esta operación no sigue la regla de pagar las deudas más antiguas primero. 
+                <strong>Excepción FIFO:</strong> Esta operación no sigue la regla de pagar las deudas más antiguas primero.
                 Requiere un motivo justificado para aplicarse específicamente a este documento.
               </p>
             </div>
@@ -160,13 +160,13 @@ export function SolicitudPagoDirigidoDialog({
                 </Label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xl">$</span>
-                  <Input 
-                    type="number" 
-                    min="0.01" 
+                  <Input
+                    type="number"
+                    min="0.01"
                     max={Number(saldoPendiente)}
-                    step="0.01" 
-                    value={amount} 
-                    onChange={(e) => setAmount(e.target.value)} 
+                    step="0.01"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
                     className="pl-9 h-12 text-xl font-black bg-white border-2 focus-visible:ring-0 focus-visible:border-primary"
                     autoFocus
                   />
@@ -220,10 +220,10 @@ export function SolicitudPagoDirigidoDialog({
               ) : (
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Fecha Efectiva</Label>
-                  <Input 
-                    type="date" 
-                    value={effectiveDate} 
-                    onChange={(e) => setEffectiveDate(e.target.value)} 
+                  <Input
+                    type="date"
+                    value={effectiveDate}
+                    onChange={(e) => setEffectiveDate(e.target.value)}
                     className="h-12 bg-white border-2 block w-full"
                   />
                 </div>
@@ -236,9 +236,9 @@ export function SolicitudPagoDirigidoDialog({
                   Referencia
                   {tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && paymentMethod === "TRANSFERENCIA" ? " *" : ""}
                 </Label>
-                <Input 
-                  value={reference} 
-                  onChange={(e) => setReference(e.target.value)} 
+                <Input
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
                   placeholder="Ej. Terminación 4567"
                   className="h-12 bg-white border-2"
                 />
@@ -247,10 +247,10 @@ export function SolicitudPagoDirigidoDialog({
               {tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && (
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Fecha Efectiva</Label>
-                  <Input 
-                    type="date" 
-                    value={effectiveDate} 
-                    onChange={(e) => setEffectiveDate(e.target.value)} 
+                  <Input
+                    type="date"
+                    value={effectiveDate}
+                    onChange={(e) => setEffectiveDate(e.target.value)}
                     className="h-12 bg-white border-2 block w-full"
                   />
                 </div>
@@ -259,9 +259,9 @@ export function SolicitudPagoDirigidoDialog({
 
             <div className="space-y-2">
               <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Notas Adicionales</Label>
-              <Textarea 
-                value={paymentNotes} 
-                onChange={(e) => setPaymentNotes(e.target.value)} 
+              <Textarea
+                value={paymentNotes}
+                onChange={(e) => setPaymentNotes(e.target.value)}
                 placeholder="Opcional..."
                 rows={2}
                 className="bg-white border-2 resize-none"
@@ -272,9 +272,9 @@ export function SolicitudPagoDirigidoDialog({
               <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Motivo de Excepción FIFO <span className="text-destructive">*</span>
               </Label>
-              <Textarea 
-                value={motivo} 
-                onChange={(e) => setMotivo(e.target.value)} 
+              <Textarea
+                value={motivo}
+                onChange={(e) => setMotivo(e.target.value)}
                 placeholder="Explique detalladamente por qué este pago no debe seguir el orden FIFO (min. 10 caracteres)..."
                 rows={3}
                 className={`bg-white border-2 resize-none ${motivo.length > 0 && motivo.trim().length < 10 ? 'border-destructive focus-visible:ring-destructive' : ''}`}
@@ -296,7 +296,7 @@ export function SolicitudPagoDirigidoDialog({
                 {resultState === 'APROBADA' ? 'Pago Aplicado' : 'Solicitud Enviada'}
               </h3>
               <p className="text-muted-foreground font-medium max-w-sm mx-auto">
-                {resultState === 'APROBADA' 
+                {resultState === 'APROBADA'
                   ? `El pago dirigido por ${formatNumber(amount, { kind: "money" })} ha sido aprobado y aplicado a la nota #${folio}.`
                   : `Tu solicitud de pago dirigido ha sido enviada y está pendiente de aprobación por un administrador.`}
               </p>
@@ -308,8 +308,8 @@ export function SolicitudPagoDirigidoDialog({
           {step === "form" && (
             <>
               <Button variant="ghost" onClick={() => onOpenChange(false)} className="font-bold text-muted-foreground">Cancelar</Button>
-              <Button 
-                onClick={handleSubmit} 
+              <Button
+                onClick={handleSubmit}
                 disabled={!isFormValid || createSolicitud.isPending}
                 className="font-bold h-10 px-6"
               >

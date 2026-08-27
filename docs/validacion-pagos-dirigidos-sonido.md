@@ -13,7 +13,7 @@ La adición quedó validada para clientes y proveedores. FIFO continúa siendo e
 - Contrato del controlador de audio: activación explícita, `AudioContext`, reproducción serial, deduplicación, Web Lock entre pestañas y Wake Lock exclusivo de Caja.
 - Typecheck de API y frontend.
 - Build de producción del frontend.
-- `git diff --check`.
+- `git diff --check` y búsqueda explícita de espacios al final de línea en los archivos de pago dirigido.
 - Arranque limpio de API y frontend; vista de login renderizada sin errores de aplicación.
 - Revisión arquitectónica final: PASS, sin bloqueos de lanzamiento ni hallazgos serios de seguridad.
 
