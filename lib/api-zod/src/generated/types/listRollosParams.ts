@@ -17,7 +17,6 @@ usuarioId?: number;
 search?: string;
 estado?: ListRollosEstado;
 serie?: string;
-soloAbiertos?: boolean;
 page?: number;
 pageSize?: number;
 };

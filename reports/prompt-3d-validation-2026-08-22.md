@@ -83,7 +83,7 @@ COMANDO: pnpm --filter @workspace/api-server run test:inventario
 
   ✓ T-01: Crear rollo DISPONIBLE → existencias 47.3, rollos_count 1
   ✓ T-02: Crear 3 rollos en 1 tx → total 149.2, rollos_count 3
-  ✓ T-03: salidaMostrador → ABIERTO terminal, existencias decrements
+  ✓ T-03: salidaMostrador → MOSTRADOR terminal, existencias decrements
   ✓ T-04: Transferencia salida → total consolidado invariante
   ✓ T-05: Recibir transferencia → total consolidado invariante
   ✓ T-06: Operaciones concurrentes en mismo rollo → una gana, otra falla
@@ -93,7 +93,7 @@ COMANDO: pnpm --filter @workspace/api-server run test:inventario
   ✓ T-10: SUM(movimientos.cantidad) = cache para todo par
   ✓ T-11: uuid_cliente repetido → no duplica movimiento, retorna original
   ✓ T-12: Rollo PROGRAMADO ausente de existencias; tras activación presente
-  ✓ T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece ABIERTO
+  ✓ T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece MOSTRADOR
   ✓ T-14: Revertir VENTA → rollo DISPONIBLE, existencia restaurada
   ✓ T-15: Revertir ajuste BAJA → rollo DISPONIBLE, cantidad restaurada
   ✓ T-16: Tras reversos, SUM(movimientos) = caché para todo par
@@ -1125,7 +1125,7 @@ COMANDO: pnpm --filter @workspace/api-server run test:security-api
       "statusCode": 200
     }
     [35mresponseTime[39m: 18
-  ✓ S-27: SALIDA_MOSTRADOR reversal fails (ABIERTO stays); VENTA+BAJA revert + cache reconcile
+  ✓ S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA revert + cache reconcile
 [02:04:57.290] [32mINFO[39m (64869): [36mrequest completed[39m
     [35mreq[39m: {
       "id": 95,

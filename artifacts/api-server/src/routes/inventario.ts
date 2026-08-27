@@ -887,7 +887,7 @@ inventarioRouter.post(
   },
 );
 
-// ── Salida mostrador (DISPONIBLE → ABIERTO) ───────────────────────────────────
+// ── Salida mostrador (DISPONIBLE → MOSTRADOR) ─────────────────────────────────
 // Module: salidas / crear — scope: rollo's current location
 
 inventarioRouter.post(
@@ -1219,8 +1219,6 @@ inventarioRouter.get(
             : ilike(rollosTable.serie, `%${q.serie}%`),
         );
       }
-      if (q.soloAbiertos) conditions.push(eq(rollosTable.estado, "ABIERTO"));
-
       const where = conditions.length ? and(...conditions) : undefined;
 
       const [totalRow] = await db

@@ -182,7 +182,7 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     const addRoll = async (
       productIndex: number,
       locationId: number,
-      state: "DISPONIBLE" | "ABIERTO" | "EN_TRANSITO",
+      state: "DISPONIBLE" | "MOSTRADOR" | "EN_TRANSITO",
       quantity: number,
       movements: Array<{ type: string; quantity: number }>,
       forcedCost?: number,
@@ -235,7 +235,7 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     await addRoll(0, ownId, "DISPONIBLE", 15, available(15));
     await addRoll(1, ownId, "DISPONIBLE", 12, available(12));
     await addRoll(1, otherId, "DISPONIBLE", 8, available(8));
-    await addRoll(2, ownId, "ABIERTO", 20, [
+    await addRoll(2, ownId, "MOSTRADOR", 0, [
       { type: "ALTA", quantity: 20 },
       { type: "SALIDA_MOSTRADOR", quantity: -20 },
     ]);
@@ -253,7 +253,7 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     await addRoll(6, otherId, "DISPONIBLE", 4, available(4));
     await addRoll(7, ownId, "DISPONIBLE", 6, available(6));
     await addRoll(7, ownId, "DISPONIBLE", 9, available(9));
-    await addRoll(7, ownId, "ABIERTO", 4, [
+    await addRoll(7, ownId, "MOSTRADOR", 0, [
       { type: "ALTA", quantity: 4 },
       { type: "SALIDA_MOSTRADOR", quantity: -4 },
     ]);

@@ -19,12 +19,12 @@ y BODEGA/PROPIA, y consulta por HTTP las seis superficies:
 |---|---:|---:|---:|---|
 | P1 | METRO | 25 / 2 | 25 / 2 | dos disponibles propios |
 | P2 | METRO | 20 / 2 | 12 / 1 | disponible propio y ajeno |
-| P3 | METRO | 0 / 0 | 0 / 0 | ABIERTO con kardex +20/-20 |
+| P3 | METRO | 0 / 0 | 0 / 0 | MOSTRADOR con kardex +20/-20 |
 | P4 | KILO | 10 / 3 | 10 / 3 | decimales propios |
 | P5 | KILO | 0 / 0 | 0 / 0 | solo EN_TRANSITO |
 | P6 | METRO | 0 / 0 | 0 / 0 | solo catálogo |
 | P7 | KILO | 4 / 1 | 0 / 0 | existencia solo ajena |
-| P8 | METRO | 15 / 2 | 15 / 2 | disponibles más ABIERTO balanceado |
+| P8 | METRO | 15 / 2 | 15 / 2 | disponibles más MOSTRADOR balanceado |
 | P9 | KILO | 6 / 3 | 3 / 2 | decimales propios y ajeno |
 | P10 | METRO | 0 / 0 | 0 / 0 | solo catálogo |
 
@@ -49,7 +49,7 @@ P5 tiene dos rollos EN_TRANSITO (5 y 6 KILO), con costos unitarios únicos 31 y 
 Para ADMIN aparece exclusivamente en los KPI separados **En contenedor**:
 cantidad 11 y valor 347. No altera existencia disponible, conteo de rollos ni
 totales/filas disponibles. PROPIA no puede ver el sitio TRANSITO aunque lo solicite.
-No se modifica el ciclo de vida de contenedores ni el comportamiento de ABIERTO.
+No se modifica el ciclo de vida de contenedores ni el comportamiento de MOSTRADOR.
 
 ## Guardas, aislamiento y limpieza
 

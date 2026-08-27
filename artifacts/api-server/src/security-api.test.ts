@@ -42,7 +42,7 @@
  *   S-24  Non-ADMIN mutation on other location → 403; ADMIN same → succeeds
  *   S-25  GET /clientes/:id — no limiteCredito / saldoCredito in response
  *   S-26  /clientes/:id/credito gated by clientes_credito; /precios by clientes_precios
- *   S-27  SALIDA_MOSTRADOR reversal fails (ABIERTO stays); VENTA+BAJA revert + kardex/cache reconcile
+ *   S-27  SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA revert + kardex/cache reconcile
  *   S-28  Non-ADMIN with delegated usuarios permissions cannot escalate to ADMIN
  *   S-29  Promotion to ADMIN removes overrides and override endpoints reject ADMIN targets
  */
@@ -1937,7 +1937,8 @@ await test("S-24: Non-ADMIN mutation on other-location → 403; ADMIN same → s
     uuidCliente: randomUUID(),
   }, adminLogin.cookie);
   assert.equal(r200.status, 200, `Expected 200 for ADMIN cross-location, got ${r200.status}: ${JSON.stringify(r200.body)}`);
-  assert.equal((r200.body as Record<string, unknown>).estado, "ABIERTO");
+  assert.equal((r200.body as Record<string, unknown>).estado, "MOSTRADOR");
+  assert.equal(Number((r200.body as Record<string, unknown>).cantidadActual), 0);
 });
 
 // S-25: GET /clientes/:id — response does NOT include limiteCredito or saldoCredito
@@ -2185,7 +2186,7 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
 });
 
 // S-27: Inventory reversals and kardex/cache reconciliation
-await test("S-27: SALIDA_MOSTRADOR reversal fails (ABIERTO stays); VENTA+BAJA revert + cache reconcile", async () => {
+await test("S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA revert + cache reconcile", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
 
   // Create a fresh rollo for this test
@@ -2200,7 +2201,8 @@ await test("S-27: SALIDA_MOSTRADOR reversal fails (ABIERTO stays); VENTA+BAJA re
     uuidCliente: randomUUID(),
   }, adminLogin.cookie);
   assert.equal(salidaR.status, 200, `salida-mostrador failed: ${JSON.stringify(salidaR.body)}`);
-  assert.equal((salidaR.body as Record<string, unknown>).estado, "ABIERTO");
+  assert.equal((salidaR.body as Record<string, unknown>).estado, "MOSTRADOR");
+  assert.equal(Number((salidaR.body as Record<string, unknown>).cantidadActual), 0);
 
   // Find the SALIDA_MOSTRADOR movement
   const salidaMovRow = await db
@@ -2221,11 +2223,11 @@ await test("S-27: SALIDA_MOSTRADOR reversal fails (ABIERTO stays); VENTA+BAJA re
   }, adminLogin.cookie);
   assert.equal(revertSalidaR.status, 400, `Expected 400 reverting SALIDA_MOSTRADOR, got ${revertSalidaR.status}: ${JSON.stringify(revertSalidaR.body)}`);
 
-  // Rollo must still be ABIERTO
+  // Rollo must still be MOSTRADOR
   const rolloCheck = await api("GET", `/inventario/rollos/${rolloId}`, undefined, adminLogin.cookie);
   assert.equal(rolloCheck.status, 200);
-  assert.equal((rolloCheck.body as Record<string, unknown>).estado, "ABIERTO",
-    "Rollo must remain ABIERTO after failed reversal");
+  assert.equal((rolloCheck.body as Record<string, unknown>).estado, "MOSTRADOR",
+    "Rollo must remain MOSTRADOR after failed reversal");
 
   // ── Part B: VENTA reversal restores DISPONIBLE with correct quantities ─────
 

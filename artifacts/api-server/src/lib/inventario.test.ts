@@ -202,10 +202,10 @@ await test("T-02: Crear 3 rollos en 1 tx → total 149.2, rollos_count 3", async
 });
 
 // =============================================================================
-// T-03: salidaMostrador → remaining 101.9; roll stays ABIERTO (terminal)
+// T-03: salidaMostrador → remaining 101.9; roll stays MOSTRADOR (terminal)
 // =============================================================================
 
-await test("T-03: salidaMostrador → ABIERTO terminal, existencias decrements", async () => {
+await test("T-03: salidaMostrador → MOSTRADOR terminal, quantity zero, existencias decrements", async () => {
   const { id: productoId } = await mkProducto();
   const ubicacionId = await mkUbicacion();
   const USUARIO = 1;
@@ -233,14 +233,15 @@ await test("T-03: salidaMostrador → ABIERTO terminal, existencias decrements",
 
   // Pull the first roll (47.3) to mostrador
   rolloPulled = rollos[0]!.id;
-  const { rollo: abierto } = await db.transaction(async (tx) =>
+  const { rollo: mostrador } = await db.transaction(async (tx) =>
     salidaMostrador(tx, {
       rolloId: rolloPulled!,
       usuarioId: USUARIO,
     }),
   );
 
-  assert.equal(abierto.estado, "ABIERTO", "Roll must be ABIERTO");
+  assert.equal(mostrador.estado, "MOSTRADOR", "Roll must be MOSTRADOR");
+  assert.equal(Number(mostrador.cantidadActual), 0, "Roll quantity must be zero");
 
   // Remaining: 52.1 + 49.8 = 101.9
   const ex = await readExistencia(productoId, ubicacionId);
@@ -253,7 +254,7 @@ await test("T-03: salidaMostrador → ABIERTO terminal, existencias decrements",
   );
   assert.equal(ex.rollosCount, 2, `rollosCount debe ser 2, got ${ex.rollosCount}`);
 
-  // ABIERTO cannot transition anywhere — salidaMostrador on it must fail
+  // MOSTRADOR cannot transition anywhere — salidaMostrador on it must fail
   await assert.rejects(
     () =>
       db.transaction(async (tx) =>
@@ -266,7 +267,7 @@ await test("T-03: salidaMostrador → ABIERTO terminal, existencias decrements",
       );
       return true;
     },
-    "Re-pulling ABIERTO roll must throw InventarioError",
+    "Re-pulling MOSTRADOR roll must throw InventarioError",
   );
 });
 
@@ -422,13 +423,14 @@ await test("T-06: Operaciones concurrentes en mismo rollo → una gana, otra fal
   assert.equal(wins.length, 1, `Exactly 1 operation should succeed, got ${wins.length}`);
   assert.equal(losses.length, 1, `Exactly 1 operation should fail, got ${losses.length}`);
 
-  // Roll should be ABIERTO
+  // Roll should be MOSTRADOR
   const [r] = await db
     .select()
     .from(rollosTable)
     .where(eq(rollosTable.id, rollo.id))
     .limit(1);
-  assert.equal(r!.estado, "ABIERTO", "Roll must be ABIERTO after the winning operation");
+  assert.equal(r!.estado, "MOSTRADOR", "Roll must be MOSTRADOR after the winning operation");
+  assert.equal(Number(r!.cantidadActual), 0, "Roll quantity must be zero");
 });
 
 // =============================================================================
@@ -765,10 +767,10 @@ await test("T-12: Rollo PROGRAMADO ausente de existencias; tras activación pres
 });
 
 // =============================================================================
-// T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece ABIERTO
+// T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece MOSTRADOR
 // =============================================================================
 
-await test("T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece ABIERTO", async () => {
+await test("T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece MOSTRADOR", async () => {
   const { id: productoId } = await mkProducto();
   const ubicacionId = await mkUbicacion();
   const USUARIO = 1;
@@ -806,21 +808,22 @@ await test("T-13: Revertir SALIDA_MOSTRADOR falla; rollo permanece ABIERTO", asy
       );
       assert.equal(
         (err as InventarioError).code,
-        "ABIERTO_TERMINAL",
-        `Expected ABIERTO_TERMINAL, got ${(err as InventarioError).code}`,
+        "MOSTRADOR_TERMINAL",
+        `Expected MOSTRADOR_TERMINAL, got ${(err as InventarioError).code}`,
       );
       return true;
     },
-    "Reverting SALIDA_MOSTRADOR must throw InventarioError with ABIERTO_TERMINAL",
+    "Reverting SALIDA_MOSTRADOR must throw InventarioError with MOSTRADOR_TERMINAL",
   );
 
-  // Roll must still be ABIERTO
+  // Roll must still be MOSTRADOR
   const [r] = await db
     .select()
     .from(rollosTable)
     .where(eq(rollosTable.id, rollo.id))
     .limit(1);
-  assert.equal(r!.estado, "ABIERTO", "Roll must remain ABIERTO after failed reversal");
+  assert.equal(r!.estado, "MOSTRADOR", "Roll must remain MOSTRADOR after failed reversal");
+  assert.equal(Number(r!.cantidadActual), 0, "Roll quantity must remain zero");
 });
 
 // =============================================================================

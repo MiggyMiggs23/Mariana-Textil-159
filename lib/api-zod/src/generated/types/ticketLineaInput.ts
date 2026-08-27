@@ -7,7 +7,10 @@
  */
 
 export interface TicketLineaInput {
-  /** @nullable */
+  /**
+     * Obligatorio para venta NORMAL de rollo completo; debe ser null en tickets METREADO hasta habilitar el tipo por línea.
+     * @nullable
+     */
   rolloId: number | null;
   productoId: number;
   /** @exclusiveMinimum 0 */

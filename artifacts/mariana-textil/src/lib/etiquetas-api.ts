@@ -12,7 +12,7 @@ export type EtiquetaRollo = {
   unidad: string;
   sitioId: number;
   sitio: string;
-  estado: "DISPONIBLE" | "VENDIDO" | "ABIERTO" | "EN_TRANSITO" | "BAJA" | "PROGRAMADO" | string;
+  estado: "DISPONIBLE" | "VENDIDO" | "MOSTRADOR" | "EN_TRANSITO" | "BAJA" | "PROGRAMADO" | string;
   entradaId?: number | null;
   entradaFolio?: string | number | null;
   fechaAlta: string;

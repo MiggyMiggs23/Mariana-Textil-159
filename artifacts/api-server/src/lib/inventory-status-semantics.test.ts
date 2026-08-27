@@ -13,7 +13,7 @@ test("cache uses signed kardex quantity and only DISPONIBLE roll counts", () => 
   );
   assert.match(refresh, /COALESCE\(SUM\(cantidad\), 0\)::text/);
   assert.match(refresh, /eq\(rollosTable\.estado, "DISPONIBLE"\)/);
-  assert.doesNotMatch(refresh, /EN_TRANSITO|ABIERTO/);
+  assert.doesNotMatch(refresh, /EN_TRANSITO|MOSTRADOR/);
 });
 
 test("full cache rebuild has one transaction and a three-source pair union", () => {
@@ -37,7 +37,7 @@ test("grouped inventory and dashboard physical-on-hand SQL are DISPONIBLE only",
   );
   assert.match(grouped, /resolveReadScope/);
   assert.match(grouped, /r\.estado = 'DISPONIBLE'/);
-  assert.doesNotMatch(grouped, /ABIERTO|EN_TRANSITO/);
+  assert.doesNotMatch(grouped, /MOSTRADOR|EN_TRANSITO/);
   assert.doesNotMatch(grouped, /cantidad_actual\s*>\s*0/);
 
   const inventory = source("./inventario.ts");
@@ -46,7 +46,7 @@ test("grouped inventory and dashboard physical-on-hand SQL are DISPONIBLE only",
     inventory.indexOf("// ── Pending-review count"),
   );
   assert.match(dashboard, /eq\(rollosTable\.estado, "DISPONIBLE"\)/);
-  assert.doesNotMatch(dashboard, /ABIERTO|EN_TRANSITO/);
+  assert.doesNotMatch(dashboard, /MOSTRADOR|EN_TRANSITO/);
 });
 
 test("inventory report separates container KPIs from existence totals", () => {
@@ -57,10 +57,36 @@ test("inventory report separates container KPIs from existence totals", () => {
   assert.doesNotMatch(report, /JOIN contenedores c ON c\.entrada_id=en\.id/);
   assert.match(report, /label: `En contenedor cantidad \$\{unidad\}`/);
   assert.match(report, /label: `En contenedor valor \$\{unidad\}`[\s\S]*economic: true/);
-  assert.match(report, /const containerKpis[\s\S]*return \{ kpis: \[\.\.\.Object\.entries\(totals\)[\s\S]*\.\.\.containerKpis\]/);
+  assert.match(report, /const transitKpis[\s\S]*return \{ kpis: \[\.\.\.Object\.entries\(totals\)[\s\S]*\.\.\.transitKpis\]/);
   assert.doesNotMatch(
-    report.slice(report.indexOf("const totals ="), report.indexOf("const rollScope =")),
+    report.slice(
+      report.indexOf("const totals =", report.indexOf("const rows = inv")),
+      report.indexOf("const rollScope ="),
+    ),
     /container|EN_TRANSITO/,
   );
-  assert.match(report, /r\.estado='ABIERTO'[\s\S]*table\("rollos-abiertos"/);
+  assert.doesNotMatch(report, /rollos-mostrador|Rollos mostrador/);
+});
+
+test("counter exit retires the legacy state repeatably and zeroes roll quantity", () => {
+  const inventory = source("./inventario.ts");
+  const exit = inventory.slice(
+    inventory.indexOf("export async function salidaMostrador"),
+    inventory.indexOf("// ─────────────────", inventory.indexOf("export async function salidaMostrador")),
+  );
+  assert.match(exit, /assertTransition\(rollo\.estado, "MOSTRADOR"\)/);
+  assert.match(exit, /\.set\(\{ estado: "MOSTRADOR", cantidadActual: "0\.000" \}\)/);
+  assert.match(exit, /tipo: "SALIDA_MOSTRADOR"/);
+  assert.match(exit, /cantidad: `-\$\{rollo\.cantidadActual\}`/);
+
+  const migration = source("../../../../lib/db/src/lib/estado-rollo-schema.ts");
+  assert.match(migration, /ALTER TYPE estado_rollo RENAME VALUE/);
+  assert.match(migration, /SET cantidad_actual = 0/);
+  assert.match(migration, /WHERE estado = 'MOSTRADOR'/);
+});
+
+test("metered tickets reject every line that identifies a roll", () => {
+  const pos = source("./pos.ts");
+  assert.match(pos, /input\.tipo === "METREADO" && linea\.rolloId != null/);
+  assert.match(pos, /"METREADO_ROLLO_NOT_ALLOWED"/);
 });

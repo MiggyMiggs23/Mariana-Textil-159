@@ -475,6 +475,13 @@ export async function crearTicket(
     }
     const rollo =
       linea.rolloId == null ? null : (rolloMap.get(linea.rolloId) ?? null);
+    if (input.tipo === "METREADO" && linea.rolloId != null) {
+      throw new PosError(
+        "Los tickets METREADO no pueden incluir un rollo hasta habilitar el tipo por línea.",
+        "METREADO_ROLLO_NOT_ALLOWED",
+        409,
+      );
+    }
     if (linea.rolloId != null && !rollo) {
       throw new PosError("Rollo no encontrado.", "ROLLO_NOT_FOUND", 404);
     }
@@ -488,7 +495,7 @@ export async function crearTicket(
           "ROLLO_SCOPE",
         );
       }
-      const estadoEsperado = input.tipo === "NORMAL" ? "DISPONIBLE" : "ABIERTO";
+      const estadoEsperado = "DISPONIBLE";
       if (rollo.estado !== estadoEsperado) {
         throw new PosError(
           `El rollo serie ${rollo.serie} no está ${estadoEsperado}.`,
@@ -517,12 +524,6 @@ export async function crearTicket(
           "PRICE_BELOW_COST",
         );
       }
-    }
-    if (input.tipo === "METREADO" && linea.rolloId != null && !rollo) {
-      throw new PosError(
-        "El rollo abierto seleccionado no existe.",
-        "ROLLO_NOT_FOUND",
-      );
     }
     const cantidadMilesimas = Math.round(Number(cantidad) * 1000);
     const importeCents = Math.round((cantidadMilesimas * precioCents) / 1000);

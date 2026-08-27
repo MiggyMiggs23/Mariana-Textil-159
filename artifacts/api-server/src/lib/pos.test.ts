@@ -416,6 +416,21 @@ await test("POS-03 concurrencia permite vender el mismo rollo solo una vez", asy
 await test("POS-04 metreado no toca inventario, no factura y solo acepta efectivo", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId);
+  await assert.rejects(
+    () =>
+      sale({
+        ubicacionId,
+        productoId,
+        rolloId: rollo.id,
+        cantidad: "2.5",
+        precio: "40",
+        tipo: "METREADO",
+      }),
+    (error: unknown) =>
+      error instanceof PosError &&
+      error.code === "METREADO_ROLLO_NOT_ALLOWED",
+  );
   const ticket = await sale({
     ubicacionId,
     productoId,

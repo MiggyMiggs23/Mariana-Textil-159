@@ -452,7 +452,7 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
 /**
  * Creates and completes a counter-exit atomically. It has no destination:
  * each roll leaves through the existing salidaMostrador primitive and remains
- * ABIERTO until the later retirement block changes that legacy state.
+ * MOSTRADOR as a terminal state with zero remaining quantity.
  */
 export async function crearSalidaMostrador(
   tx: Tx,

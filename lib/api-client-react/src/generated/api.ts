@@ -4187,7 +4187,7 @@ export const getSalidaMostradorUrl = (id: number,) => {
 }
 
 /**
- * @summary Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+ * @summary Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
  */
 export const salidaMostrador = async (id: number,
     salidaMostradorInput: SalidaMostradorInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
@@ -4237,7 +4237,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type SalidaMostradorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+ * @summary Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
  */
 export const useSalidaMostrador = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}

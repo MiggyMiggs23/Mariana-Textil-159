@@ -29,7 +29,7 @@ export const monedaEnum = pgEnum("moneda", ["MXN", "USD"]);
  * PROGRAMADO  – ordered / not yet received physically
  * DISPONIBLE  – in stock, available for sale
  * EN_TRANSITO – in transit between locations (occupied transit slot)
- * ABIERTO     – pulled from shelf, being cut/measured (terminal for returns)
+ * MOSTRADOR   – removed completely from inventory (terminal)
  * VENDIDO     – sold to a customer
  * BAJA        – written off / scrapped
  */
@@ -37,7 +37,7 @@ export const estadoRolloEnum = pgEnum("estado_rollo", [
   "PROGRAMADO",
   "DISPONIBLE",
   "EN_TRANSITO",
-  "ABIERTO",
+  "MOSTRADOR",
   "VENDIDO",
   "BAJA",
 ]);
@@ -50,7 +50,7 @@ export const estadoRolloEnum = pgEnum("estado_rollo", [
  * DEVOLUCION          – return from customer
  * TRANSFERENCIA_SALIDA  – leaving origin (DISPONIBLE → EN_TRANSITO)
  * TRANSFERENCIA_ENTRADA – arriving at destination (EN_TRANSITO → DISPONIBLE)
- * SALIDA_MOSTRADOR    – pulled from shelf (DISPONIBLE → ABIERTO, terminal)
+ * SALIDA_MOSTRADOR    – removed from inventory (DISPONIBLE → MOSTRADOR, terminal)
  * AJUSTE_POSITIVO     – inventory count found more than recorded
  * AJUSTE_NEGATIVO     – inventory count found less than recorded
  * CANCELACION         – reversal of another movement

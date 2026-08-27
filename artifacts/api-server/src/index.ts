@@ -8,6 +8,7 @@ import {
   ensureEtiquetasSchema,
   ensureSupervisorRole,
   ensureDocumentFoliosSchema,
+  ensureEstadoRolloSchema,
   pool,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
@@ -28,6 +29,8 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 async function startServer() {
+  await ensureEstadoRolloSchema(pool);
+  logger.info("Estado de rollos verificado");
   await ensureSupervisorRole(pool);
   logger.info("Rol SUPERVISOR verificado");
   await ensureClientesSchema(pool);

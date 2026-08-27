@@ -17,7 +17,7 @@ const dateText = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional();
 const searchQuery = z.object({
   q: z.string().trim().max(150).optional(),
   sitioId: optionalId,
-  estado: z.enum(["PROGRAMADO", "DISPONIBLE", "EN_TRANSITO", "ABIERTO", "VENDIDO", "BAJA"]).optional(),
+  estado: z.enum(["PROGRAMADO", "DISPONIBLE", "EN_TRANSITO", "MOSTRADOR", "VENDIDO", "BAJA"]).optional(),
   productoId: optionalId,
   fechaDesde: dateText,
   fechaHasta: dateText,

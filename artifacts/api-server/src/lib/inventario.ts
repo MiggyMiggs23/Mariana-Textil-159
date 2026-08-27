@@ -249,9 +249,9 @@ async function insertMovimiento(
 
 const VALID_TRANSITIONS: Partial<Record<EstadoRollo, EstadoRollo[]>> = {
   PROGRAMADO: ["DISPONIBLE", "BAJA"],
-  DISPONIBLE: ["EN_TRANSITO", "ABIERTO", "VENDIDO", "BAJA", "PROGRAMADO"],
+  DISPONIBLE: ["EN_TRANSITO", "MOSTRADOR", "VENDIDO", "BAJA", "PROGRAMADO"],
   EN_TRANSITO: ["DISPONIBLE", "BAJA"],
-  ABIERTO: [], // terminal – cannot transition back, not even by reversal
+  MOSTRADOR: [], // terminal – cannot transition back, not even by reversal
   VENDIDO: ["DISPONIBLE"], // reversal: cancel sale / register return
   BAJA: ["DISPONIBLE"], // reversal: undo erroneous write-off
 };
@@ -1406,12 +1406,8 @@ export type SalidaMostradorInput = {
 };
 
 /**
- * DISPONIBLE → ABIERTO (terminal). Records SALIDA_MOSTRADOR (negative).
- * An ABIERTO roll can never return to inventory.
- *
- * Temporary legacy behavior: the state changes but cantidad_actual remains Q,
- * while the ledger records -Q. ABIERTO and this operation must be removed
- * together in Parte 2; see docs/abierto-retirement.md.
+ * DISPONIBLE → MOSTRADOR (terminal). Records SALIDA_MOSTRADOR (negative)
+ * and removes the complete quantity from the roll in the same transaction.
  */
 export async function salidaMostrador(
   tx: Tx,
@@ -1440,11 +1436,11 @@ export async function salidaMostrador(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
-  assertTransition(rollo.estado, "ABIERTO");
+  assertTransition(rollo.estado, "MOSTRADOR");
 
   await tx
     .update(rollosTable)
-    .set({ estado: "ABIERTO" })
+    .set({ estado: "MOSTRADOR", cantidadActual: "0.000" })
     .where(eq(rollosTable.id, input.rolloId));
 
   const movimiento = await insertMovimiento(tx, {
@@ -1484,7 +1480,7 @@ export type VenderRolloInput = {
 
 /**
  * DISPONIBLE → VENDIDO. Records VENTA (negative).
- * Must be DISPONIBLE – ABIERTO rolls are already off the shelf.
+ * Must be DISPONIBLE – MOSTRADOR rolls already left inventory.
  */
 export async function venderRollo(
   tx: Tx,
@@ -1753,7 +1749,7 @@ export async function revertirMovimiento(
   const inversaCantidad = (parseFloat(orig.cantidad) * -1).toFixed(3);
 
   // Restore roll state where sensible.
-  // estadoAntesDe throws for SALIDA_MOSTRADOR (ABIERTO is terminal).
+  // estadoAntesDe throws for SALIDA_MOSTRADOR (MOSTRADOR is terminal).
   const estadoAnterior = estadoAntesDe(orig.tipo, rollo.estado);
 
   // Guard: every state change must pass through the transition machine.
@@ -1762,8 +1758,8 @@ export async function revertirMovimiento(
   }
 
   // Only restore cantidadActual when the original movement actually mutated it.
-  // VENTA, SALIDA_MOSTRADOR, TRANSFERENCIA_SALIDA/ENTRADA leave cantidadActual
-  // untouched in the roll row; adding the inverse would corrupt the quantity.
+  // VENTA and TRANSFERENCIA_SALIDA/ENTRADA leave cantidadActual untouched.
+  // SALIDA_MOSTRADOR is rejected by estadoAntesDe before quantity restoration.
   const movsThatChangeCantidad: TipoMovimiento[] = [
     "ALTA",
     "RECEPCION",
@@ -1809,7 +1805,7 @@ export async function revertirMovimiento(
  * Infer what state the roll should return to when cancelling a given
  * movement type from the current state.
  *
- * SALIDA_MOSTRADOR is intentionally not handled: ABIERTO is terminal and
+ * SALIDA_MOSTRADOR is intentionally not reversible: MOSTRADOR is terminal and
  * reverting it is forbidden. Callers must check for this case before calling
  * assertTransition so the error is explicit.
  */
@@ -1821,12 +1817,12 @@ function estadoAntesDe(tipo: TipoMovimiento, estadoActual: EstadoRollo): EstadoR
     case "VENTA":
       return "DISPONIBLE";
     case "SALIDA_MOSTRADOR":
-      // ABIERTO is terminal — reverting a SALIDA_MOSTRADOR is not allowed.
+      // MOSTRADOR is terminal — reverting a SALIDA_MOSTRADOR is not allowed.
       // Throw now so assertTransition never gets a chance to bypass the rule.
       throw new InventarioError(
-        "No se puede revertir una SALIDA_MOSTRADOR: el rollo ya salió a piso (ABIERTO es terminal). " +
+        "No se puede revertir una SALIDA_MOSTRADOR: el rollo ya salió de inventario (MOSTRADOR es terminal). " +
           "Registra un ajuste para dejar rastro.",
-        "ABIERTO_TERMINAL",
+        "MOSTRADOR_TERMINAL",
       );
     case "TRANSFERENCIA_SALIDA":
       return "DISPONIBLE";

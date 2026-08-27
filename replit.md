@@ -54,7 +54,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 - **Gobierno de precios:** `/precios` exige rol ADMIN directamente en el servidor. El costo actual es ponderado por cantidad disponible y unidad; sin costos válidos permanece pendiente (`null`), nunca cero.
 - **Historial comercial:** todo cambio de precio bloquea el producto, captura costo/margen del momento y escribe historial más auditoría en la misma transacción. Nunca recalcula tickets existentes.
-- **Definición de existencia:** Existencia de un producto en un sitio = lo que se puede tocar y vender ahí hoy. Solo rollos en estado `DISPONIBLE` en esa ubicación. Nada más se suma a ese número: ni `ABIERTO`, ni `EN_TRANSITO`, ni rollos que vienen en contenedor.
+- **Definición de existencia:** Existencia de un producto en un sitio = lo que se puede tocar y vender ahí hoy. Solo rollos en estado `DISPONIBLE` en esa ubicación. Nada más se suma a ese número: ni `MOSTRADOR`, ni `EN_TRANSITO`, ni rollos que vienen en contenedor.
 
 ## Parte 1, Bloque 1 — Unificación de existencia
 
@@ -85,11 +85,11 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Se retienen las funciones de núcleo `moverRollo` y `recibirTransferencia`, porque el ciclo activo de Salidas las invoca. También se retienen las rutas e interfaz de Salidas, los enums del kardex y todo el ciclo de vida e interfaz de Contenedores.
 - El único alcance retirado fue el HTTP tombstone y su contrato generado; no se modificaron las superficies de Contenedores.
 
-## Parte 1, Bloque 4 — Retiro futuro de `ABIERTO`
+## Parte 2, Bloque 2 — Salida a mostrador
 
-- `ABIERTO` se elimina en la Parte 2 junto con `SALIDA_MOSTRADOR`; el plan completo y sus dependencias están en `docs/abierto-retirement.md`.
-- Inconsistencia temporal exacta: `salidaMostrador` deja `rollos.cantidad_actual = Q`, cambia el estado a `ABIERTO` e inserta un movimiento de `-Q`. El caché ya retiró Q, pero la fila del rollo todavía lo muestra.
-- No se cambió comportamiento en el Bloque 4. El POS metrado, la ruta, los filtros, el diagnóstico, los enums, contratos generados y pruebas permanecen hasta la migración integral de la Parte 2.
+- `salidaMostrador` cambia `DISPONIBLE → MOSTRADOR`, deja `cantidad_actual = 0` e inserta el movimiento histórico `SALIDA_MOSTRADOR` por la cantidad completa negativa dentro de la misma transacción.
+- `MOSTRADOR` es terminal y `SALIDA_MOSTRADOR` no se puede revertir. La actualización repetible migra las filas del estado legado sin borrar rollos ni movimientos.
+- Como puente hasta el Bloque 3, un ticket `METREADO` que incluya `rolloId` se rechaza; todavía no existe tipo por línea ni POS mixto.
 
 ## Parte 1, Bloque 5 — Verificación integral de seis vistas
 

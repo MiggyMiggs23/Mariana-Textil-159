@@ -105,8 +105,7 @@ export default function Inventario() {
   const { data: rollosRes, isLoading: loadingRollos } = useListRollos({
     ubicacionId: effectiveUbicacionId,
     serie: debouncedSearch ? debouncedSearch : undefined,
-    estado: estadoFilter !== "TODOS" && estadoFilter !== "ABIERTO" ? estadoFilter as ListRollosEstado : undefined,
-    soloAbiertos: estadoFilter === "ABIERTO" ? true : undefined,
+    estado: estadoFilter !== "TODOS" ? estadoFilter as ListRollosEstado : undefined,
     page: 1,
     pageSize: 100
   });
@@ -236,7 +235,7 @@ export default function Inventario() {
                 <SelectContent>
                   <SelectItem value="TODOS">Todos los estados</SelectItem>
                   <SelectItem value="DISPONIBLE">Disponibles</SelectItem>
-                  <SelectItem value="ABIERTO">Abiertos</SelectItem>
+                  <SelectItem value="MOSTRADOR">Mostrador</SelectItem>
                   <SelectItem value="EN_TRANSITO">En Tránsito</SelectItem>
                 </SelectContent>
               </Select>
@@ -262,7 +261,7 @@ export default function Inventario() {
                         <span className="font-mono font-bold text-lg tracking-tight group-hover:text-primary transition-colors">
                           {rollo.serie}
                         </span>
-                        <Badge variant={rollo.estado === 'DISPONIBLE' ? 'default' : rollo.estado === 'ABIERTO' ? 'secondary' : 'outline'}>
+                        <Badge variant={rollo.estado === 'DISPONIBLE' ? 'default' : rollo.estado === 'MOSTRADOR' ? 'secondary' : 'outline'}>
                           {rollo.estado}
                         </Badge>
                       </div>

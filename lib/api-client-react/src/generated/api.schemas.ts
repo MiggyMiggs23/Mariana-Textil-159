@@ -513,7 +513,7 @@ export const EstadoRollo = {
   PROGRAMADO: 'PROGRAMADO',
   DISPONIBLE: 'DISPONIBLE',
   EN_TRANSITO: 'EN_TRANSITO',
-  ABIERTO: 'ABIERTO',
+  MOSTRADOR: 'MOSTRADOR',
   VENDIDO: 'VENDIDO',
   BAJA: 'BAJA',
 } as const;
@@ -3189,7 +3189,10 @@ export interface PosPrecioValidationResult {
 }
 
 export interface TicketLineaInput {
-  /** @nullable */
+  /**
+     * Obligatorio para venta NORMAL de rollo completo; debe ser null en tickets METREADO hasta habilitar el tipo por línea.
+     * @nullable
+     */
   rolloId: number | null;
   productoId: number;
   /** @exclusiveMinimum 0 */
@@ -3828,7 +3831,6 @@ usuarioId?: number;
 search?: string;
 estado?: ListRollosEstado;
 serie?: string;
-soloAbiertos?: boolean;
 page?: number;
 pageSize?: number;
 };
@@ -3840,7 +3842,7 @@ export const ListRollosEstado = {
   PROGRAMADO: 'PROGRAMADO',
   DISPONIBLE: 'DISPONIBLE',
   EN_TRANSITO: 'EN_TRANSITO',
-  ABIERTO: 'ABIERTO',
+  MOSTRADOR: 'MOSTRADOR',
   VENDIDO: 'VENDIDO',
   BAJA: 'BAJA',
 } as const;

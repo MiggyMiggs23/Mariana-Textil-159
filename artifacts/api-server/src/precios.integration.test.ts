@@ -69,7 +69,7 @@ if (!testUrl) {
       );
       ids.products.push(Number(noCostProduct.id));
       // 2×10 + 8×20 => 18.00; all remaining rows must be excluded.
-      for (const [serie, estado, cantidad, costo] of [["1","DISPONIBLE","2","10"], ["2","DISPONIBLE","8","20"], ["3","EN_TRANSITO","7","1"], ["4","ABIERTO","7","1"], ["5","DISPONIBLE","0","99"], ["6","DISPONIBLE","1",null]] as const) {
+      for (const [serie, estado, cantidad, costo] of [["1","DISPONIBLE","2","10"], ["2","DISPONIBLE","8","20"], ["3","EN_TRANSITO","7","1"], ["4","MOSTRADOR","0","1"], ["5","DISPONIBLE","0","99"], ["6","DISPONIBLE","1",null]] as const) {
         const roll = await one(
           "INSERT INTO rollos(serie,producto_id,ubicacion_id,estado,cantidad_inicial,cantidad_actual,costo_unitario) VALUES($1,$2,$3,$4,$5,$5,$6) RETURNING id",
           [`${tag}-${serie}`, product.id, location.id, estado, cantidad, costo],

@@ -1148,7 +1148,7 @@ paths:
     post:
       operationId: salidaMostrador
       tags: [inventario]
-      summary: Salida de mostrador DISPONIBLE → ABIERTO (terminal, SALIDA_MOSTRADOR)
+      summary: Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
       parameters:
         - $ref: "#/components/parameters/RolloId"
       requestBody:
@@ -1159,7 +1159,7 @@ paths:
               $ref: "#/components/schemas/SalidaMostradorInput"
       responses:
         "200":
-          description: Rollo abierto
+          description: Rollo retirado a mostrador
           content:
             application/json:
               schema:
@@ -1297,13 +1297,10 @@ paths:
           name: estado
           schema:
             type: string
-            enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, ABIERTO, VENDIDO, BAJA]
+            enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, MOSTRADOR, VENDIDO, BAJA]
         - in: query
           name: serie
           schema: { type: string }
-        - in: query
-          name: soloAbiertos
-          schema: { type: boolean }
         - in: query
           name: page
           schema: { type: number }
@@ -5501,7 +5498,7 @@ components:
         activo: { type: boolean }
     EstadoRollo:
       type: string
-      enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, ABIERTO, VENDIDO, BAJA]
+      enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, MOSTRADOR, VENDIDO, BAJA]
     TipoMovimiento:
       type: string
       enum:
@@ -6917,7 +6914,9 @@ components:
       type: object
       required: [rolloId, productoId, cantidad, precioUnitario]
       properties:
-        rolloId: { type: ["number", "null"] }
+        rolloId:
+          type: ["number", "null"]
+          description: Obligatorio para venta NORMAL de rollo completo; debe ser null en tickets METREADO hasta habilitar el tipo por línea.
         productoId: { type: number }
         cantidad: { type: number, exclusiveMinimum: 0 }
         precioUnitario: { type: number, minimum: 0 }

@@ -130,7 +130,7 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
     for (const [suffix, locationId, estado, cantidad] of [
       ["DISP-OWN", ownSite.id, "DISPONIBLE", "1.500"],
       ["DISP-OTHER", otherSite.id, "DISPONIBLE", "2.500"],
-      ["OPEN", ownSite.id, "ABIERTO", "99.000"],
+      ["COUNTER", ownSite.id, "MOSTRADOR", "0.000"],
       ["TRANSIT", otherSite.id, "EN_TRANSITO", "88.000"],
     ] as const) {
       const roll = await one(
