@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { buildHeatmapMatrix } from "./report-heatmap";
 
 export interface DomainReportContext {
   input: Record<string, unknown>;
@@ -103,12 +104,40 @@ function salesScope(ctx: DomainReportContext) {
   }
   return { text: clauses.join(" AND "), values };
 }
+const monthInMexicoCity = (date: Date) => {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: zone,
+    year: "numeric",
+    month: "2-digit",
+  }).formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  return `${year}-${month}`;
+};
 const monthBuckets = (from: Date, to: Date, minimum: number) => {
-  const result: string[] = []; const cursor = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), 1));
-  const end = new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), 1));
-  while (cursor <= end || result.length < minimum) { result.push(cursor.toISOString().slice(0, 7)); cursor.setUTCMonth(cursor.getUTCMonth() + 1); }
+  const [fromYear, fromMonth] = monthInMexicoCity(from).split("-").map(Number);
+  const [toYear, toMonth] = monthInMexicoCity(to).split("-").map(Number);
+  const cursor = new Date(Date.UTC(fromYear, fromMonth - 1, 1));
+  const end = new Date(Date.UTC(toYear, toMonth - 1, 1));
+  const result: string[] = [];
+  while (cursor <= end) {
+    result.push(cursor.toISOString().slice(0, 7));
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+  }
+  while (result.length < minimum) {
+    const [year, month] = result[0].split("-").map(Number);
+    result.unshift(
+      new Date(Date.UTC(year, month - 2, 1)).toISOString().slice(0, 7),
+    );
+  }
   return result;
 };
+const formatMonthLabel = (month: string) =>
+  new Intl.DateTimeFormat("es-MX", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${month}-01T00:00:00.000Z`));
 
 export async function buildInventoryReport(section: "inventario" | "mapas-calor" | "color", ctx: DomainReportContext): Promise<{ kpis: any[]; charts: any[]; tables: any[]; warnings: string[] }> {
   const warnings: string[] = [];
@@ -117,14 +146,25 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     warnings.push("Los mapas de calor de ventas respetan el filtro de modalidad aplicado en el servidor.");
     const minimum = (ctx.range.hasta.getTime() - ctx.range.desde.getTime()) / 86400000 >= 548 ? 24 : 12;
     const buckets = monthBuckets(ctx.range.desde, ctx.range.hasta, minimum);
-    const q = await pool.query(`SELECT to_char(date_trunc('month',t.created_at AT TIME ZONE '${zone}'),'YYYY-MM') mes,p.sku,p.tela,p.color,l.tipo,p.unidad,u.nombre sitio,
-      SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas,
-      CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL ELSE SUM(l.importe-l.costo_total_congelado)::float END utilidad
+    const q = await pool.query(`SELECT to_char(date_trunc('month',t.created_at AT TIME ZONE '${zone}'),'YYYY-MM') mes,p.sku,p.tela,p.color,u.nombre sitio,
+      SUM(l.cantidad)::float cantidad
       FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
-      WHERE ${sales.text} GROUP BY mes,p.sku,p.tela,p.color,l.tipo,p.unidad,u.nombre`, sales.values);
-    const make = (id: string, key: "sku" | "color" | "tela" | "sitio") => ({ id, title: `Mes × ${key}`, type: "heatmap", categoryKey: "mes",
-      series: [{ key, label: key, kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }, { key: "ventas", label: "Ventas", kind: "money", economic: true }, { key: "utilidad", label: "Utilidad", kind: "money", economic: true }],
-      rows: q.rows.map(r => ({ mes: r.mes, [key]: r[key], modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: r.unidad, cantidad: number(r.cantidad), ventas: number(r.ventas), utilidad: r.utilidad == null ? null : number(r.utilidad) })) });
+      WHERE ${sales.text} GROUP BY mes,p.sku,p.tela,p.color,u.nombre`, sales.values);
+    const labels = { sku: "SKU", color: "color", tela: "tela", sitio: "sitio" };
+    const make = (id: string, key: "sku" | "color" | "tela" | "sitio") => ({
+      id,
+      title: `Mes × ${labels[key]}`,
+      type: "heatmap",
+      ...buildHeatmapMatrix({
+        rows: q.rows,
+        rowKey: key,
+        columnKey: "mes",
+        valueKey: "cantidad",
+        columns: buckets,
+        kind: "quantity",
+        formatColumnLabel: formatMonthLabel,
+      }),
+    });
     return { kpis: [{ id: "meses", label: "Meses analizados", value: buckets.length, kind: "count" }], charts: [make("mes-producto", "sku"), make("mes-color", "color"), make("mes-tela", "tela"), make("mes-sitio", "sitio")], tables: [], warnings };
   }
   if (section === "color") {
@@ -136,7 +176,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     const noMove = await pool.query(`SELECT p.color,p.color_hex,p.tela,p.unidad,MAX(m.created_at) ultimo FROM productos p LEFT JOIN movimientos m ON m.producto_id=p.id
       WHERE ${scope.text} GROUP BY p.id HAVING MAX(m.created_at) IS NULL OR MAX(m.created_at) < $${scope.values.length + 1}`, [...scope.values, new Date(ctx.range.hasta.getTime() - 90 * 86400000)]);
     const current = salesRows.rows.map(r => ({ color: r.color, colorHex: r.color_hex, tela: r.tela, modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), ventas: number(r.ventas) }));
-    return { kpis: [], charts: [{ id: "color-tela", title: "Color × tela", type: "heatmap", categoryKey: "color", series: [{ key: "tela", label: "Tela", kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: current }],
+    return { kpis: [], charts: [{ id: "color-tela", title: "Color × tela", type: "heatmap", ...buildHeatmapMatrix({ rows: current, rowKey: "color", columnKey: "tela", valueKey: "cantidad", kind: "quantity" }) }],
       tables: [table("ranking-color", "Ranking color por tela, modalidad y unidad", [["color", "Color", "text"], ["tela", "Tela", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["ventas", "Ventas", "money", true]], current, ["cantidad", "ventas"]),
         table("color-sitio", "Color por sitio", [["color", "Color", "text"], ["sitio", "Sitio", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"]], current, ["cantidad"]),
         table("sin-movimiento-90", "Sin movimiento ≥90 días", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["ultimo", "Último movimiento", "text"]], noMove.rows.map(r => ({ color: r.color, colorHex: r.color_hex, tela: r.tela, unidad: r.unidad, ultimo: r.ultimo ? new Date(r.ultimo).toISOString() : null })))], warnings };

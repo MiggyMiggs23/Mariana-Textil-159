@@ -69,8 +69,9 @@ export function ReportCharts({ charts }: { charts: ReporteChart[] }) {
                           {(chart.series || []).map((s) => {
                             const k = s.key;
                             const val = row[k];
-                            const isNull = val == null || val === "";
-                            const num = isNull ? 0 : Number(val);
+                            const parsed = val == null || val === "" ? NaN : Number(val);
+                            const isNull = !Number.isFinite(parsed);
+                            const num = isNull ? 0 : parsed;
 
                             // Normalize intensity between 0.1 and 1.0 based on actual min/max
                             let intensity = 0;
@@ -140,8 +141,16 @@ export function ReportCharts({ charts }: { charts: ReporteChart[] }) {
   );
 }
 
-function ChartRenderer({ chart }: { chart: ReporteChart }) {
-  const xAxisKey = (chart as any).xAxisKey || "name";
+function ChartRenderer({
+  chart,
+  width,
+  height,
+}: {
+  chart: ReporteChart;
+  width?: number;
+  height?: number;
+}) {
+  const xAxisKey = (chart as any).categoryKey || (chart as any).xAxisKey || "name";
   const keys = (chart.series ? chart.series.map((s: any) => s.key) : Object.keys(chart.rows[0] || {})).filter(k => k !== xAxisKey);
   const valueKindStr = String("count");
   const valueKind = valueKindStr as NumberFormatKind;
@@ -155,7 +164,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
   switch (chart.type) {
     case "line":
       return (
-        <LineChart data={chart.rows} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+        <LineChart width={width} height={height} data={chart.rows} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} />
           <XAxis dataKey={xAxisKey} tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={12} tick={axisStyle} />
           <YAxis tickFormatter={v => valueKindStr === 'money' ? `$${v/1000}k` : v} tickLine={false} axisLine={false} width={60} tick={axisStyle} />
@@ -182,7 +191,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
     case "bar":
     case "stacked-bar":
       return (
-        <BarChart data={chart.rows} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+        <BarChart width={width} height={height} data={chart.rows} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} />
           <XAxis dataKey={xAxisKey} tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={12} tick={axisStyle} />
           <YAxis tickFormatter={v => valueKindStr === 'money' ? `$${v/1000}k` : v} tickLine={false} axisLine={false} width={60} tick={axisStyle} />
@@ -207,7 +216,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
       );
     case "scatter":
       return (
-        <ScatterChart margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+        <ScatterChart width={width} height={height} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} />
           <XAxis dataKey={xAxisKey} type="category" allowDuplicatedCategory={false} tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={12} tick={axisStyle} />
           <YAxis dataKey={keys[0] || "value"} tickFormatter={v => valueKindStr === 'money' ? `$${v/1000}k` : v} tickLine={false} axisLine={false} width={60} tick={axisStyle} />
@@ -224,6 +233,8 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
     case "treemap":
       return (
         <Treemap
+          width={width}
+          height={height}
           data={chart.rows.map((row, index) => ({
             ...row,
             name: `${String(row[xAxisKey] ?? row.name ?? "Elemento")} · ${index + 1}`,

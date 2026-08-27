@@ -222,8 +222,20 @@ if (!testUrl) {
         assert.ok(table(inv, "comprado-vendido").rows.some(r => r.ajusteNegativo === 3));
         assert.ok(table(inv, "sin-movimiento").rows.some(r => r.sku === `${tag}-K-VERDE`) === false);
         assert.ok(table(color, "ranking-color").rows.filter(r => r.color === "Rojo").length >= 2, "color ranks across fabrics");
-        assert.ok((color.charts as any[]).some(c => c.id === "color-tela"));
-        assert.ok((heat.charts as any[]).every(c => ["cantidad", "ventas", "utilidad"].every(key => c.series.some((s: any) => s.key === key))));
+        const colorHeatmap = (color.charts as any[]).find(c => c.id === "color-tela");
+        assert.equal(colorHeatmap.categoryKey, "label");
+        assert.ok(colorHeatmap.rows.every((row: any) => typeof row.label === "string"));
+        assert.ok(colorHeatmap.series.every((series: any) => series.kind === "quantity"));
+        const heatmaps = heat.charts as any[];
+        assert.equal(heatmaps.length, 4);
+        assert.ok(heatmaps.every(chart =>
+          chart.categoryKey === "label" &&
+          chart.series.length >= 12 &&
+          chart.series.every((series: any) => /^value_\d+$/.test(series.key) && series.kind === "quantity") &&
+          chart.rows.every((row: any) => typeof row.label === "string") &&
+          chart.rows.some((row: any) => chart.series.some((series: any) => typeof row[series.key] === "number")) &&
+          chart.rows.some((row: any) => chart.series.some((series: any) => row[series.key] === null))
+        ));
         assert.ok(table(purchases, "compras-por-rollo").rows.length === 4);
         assert.ok(table(purchases, "productos").rows.every(r => r.estadoCostoReferencia === "AVERAGE_12_MONTHS"));
         assert.ok(table(clients, "clientes").rows.some(r => Number(r.comprasRollos) > 0 && Number(r.comprasMetraje) > 0));
@@ -243,7 +255,22 @@ if (!testUrl) {
           reports.buildReport("clientes", { ...input, modalidad: "METRAJE" }, undefined, true),
           reports.buildReport("clientes", { ...input, modalidad: "ROLLOS" }, undefined, true),
         ] as Array<Promise<Record<string, any>>>);
-        assert.ok((heatMetered.charts as any[]).every(chart => chart.rows.every((row: any) => row.modalidad === "METRAJE")));
+        const matrixTotal = (chart: any) =>
+          chart.rows.reduce(
+            (total: number, row: any) =>
+              total +
+              chart.series.reduce(
+                (rowTotal: number, series: any) =>
+                  rowTotal +
+                  (typeof row[series.key] === "number" ? row[series.key] : 0),
+                0,
+              ),
+            0,
+          );
+        assert.ok((heatMetered.charts as any[]).every(chart => {
+          const unfiltered = (heat.charts as any[]).find(candidate => candidate.id === chart.id);
+          return matrixTotal(chart) > 0 && matrixTotal(chart) < matrixTotal(unfiltered);
+        }), "heatmap matrix values enforce the METRAJE filter");
         assert.ok(table(colorMetered, "ranking-color").rows.every(r => r.modalidad === "METRAJE"));
         assert.ok(table(clientMetered, "clientes").rows.every(r => Number(r.comprasRollos) === 0));
         assert.equal(table(clientMetered, "formas-pago").rows.reduce((sum, row) => sum + Number(row.importe), 0), 156);

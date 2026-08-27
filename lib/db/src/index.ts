@@ -29,8 +29,11 @@ const isAutomatedTestProcess = process.argv.some((argument) =>
 
 const requiresIsolatedTestDatabase =
   process.env.REQUIRE_ISOLATED_TEST_DATABASE === "1" ||
-  process.env.NODE_ENV === "test" ||
-  isAutomatedTestProcess;
+  Boolean(process.env.TEST_DATABASE_URL);
+const isUnitTestProcess =
+  process.env.NODE_ENV === "test" || isAutomatedTestProcess;
+const disabledUnitTestDatabaseUrl =
+  "postgresql://unit_test_disabled:unit_test_disabled@127.0.0.1:1/unit_test_database_access_is_disabled";
 
 let connectionString = process.env.DATABASE_URL;
 
@@ -45,6 +48,12 @@ if (requiresIsolatedTestDatabase) {
   process.env.APPLICATION_DATABASE_URL = applicationConnectionString;
   process.env.DATABASE_URL = testConnectionString;
   connectionString = testConnectionString;
+} else if (isUnitTestProcess) {
+  // Pure unit suites may import modules that expose db helpers. Point them at
+  // an unreachable local endpoint so an accidental query fails without ever
+  // touching development.
+  process.env.DATABASE_URL = disabledUnitTestDatabaseUrl;
+  connectionString = disabledUnitTestDatabaseUrl;
 }
 
 if (!connectionString) {

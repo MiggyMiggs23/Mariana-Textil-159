@@ -253,6 +253,7 @@ export default function CajaCuentasDestino() {
                               <Bar
                                 key={key}
                                 dataKey={key}
+                                name={formatAccountDestination(key)}
                                 stackId="a"
                                 fill={getAccountDestinationChartColor(key, index)}
                                 radius={index === keys.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}

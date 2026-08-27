@@ -16,3 +16,4 @@
 - [Exclusividad de audio entre pestañas](cross-tab-audio-exclusivity.md) — exigir exclusión real antes de reproducir; sin coordinación segura, fallar cerrado.
 - [Auditoría append-only en pruebas](audit-test-cleanup-boundary.md) — no habilitar bypass de limpieza; conservar registros y eliminar la rama desechable completa.
 - [Pagos dirigidos y evidencia](directed-payment-evidence.md) — dirigir por movimiento exacto; las aplicaciones append-only documentan decisiones, no definen el saldo.
+- [Contrato matricial de mapas de calor](heatmap-matrix-contract.md) — pivotar filas largas antes de renderizar; series son columnas y celdas solo números finitos o ausencia.

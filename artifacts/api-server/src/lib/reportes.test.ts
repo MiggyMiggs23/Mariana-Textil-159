@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { omitEconomicReportFilters, parseReportBooleanQuery, redactEconomic, reportRange } from "./reportes";
+import { buildHeatmapMatrix } from "./report-heatmap";
 
 test("report ranges use Mexico City inclusive day bounds and equal prior period", () => {
   const range = reportRange({ periodo: "personalizado", desde: "2024-02-01", hasta: "2024-02-29" });
@@ -64,6 +65,35 @@ test("economic annotations and modality filters cannot leak or be mistaken for o
     omitEconomicReportFilters({ modalidad: "METRAJE", formasPago: "EFECTIVO" }),
     { modalidad: "METRAJE" },
   );
+});
+
+test("heatmap matrix pivots labels and preserves distinct, zero, and absent values", () => {
+  const matrix = buildHeatmapMatrix({
+    rows: [
+      { month: "2026-06", sku: "SKU-A", quantity: 2 },
+      { month: "2026-06", sku: "SKU-A", quantity: 3 },
+      { month: "2026-07", sku: "SKU-A", quantity: 0 },
+      { month: "2026-06", sku: "SKU-B", quantity: 9 },
+      { month: "2026-07", sku: "SKU-B", quantity: "not-a-number" },
+    ],
+    rowKey: "sku",
+    columnKey: "month",
+    valueKey: "quantity",
+    columns: ["2026-06", "2026-07", "2026-08"],
+  });
+
+  assert.deepEqual(
+    matrix.series.map(({ key, label }) => ({ key, label })),
+    [
+      { key: "value_0", label: "2026-06" },
+      { key: "value_1", label: "2026-07" },
+      { key: "value_2", label: "2026-08" },
+    ],
+  );
+  assert.deepEqual(matrix.rows, [
+    { label: "SKU-A", value_0: 5, value_1: 0, value_2: null },
+    { label: "SKU-B", value_0: 9, value_1: null, value_2: null },
+  ]);
 });
 
 for (const [periodo, desde, hasta] of [
