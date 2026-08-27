@@ -8,7 +8,7 @@
  * - GET  /permisos/preview/:id          – effective permission preview for user
  */
 
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import { and, count, eq, ne } from "drizzle-orm";
 import {
   auditoriaTable,
@@ -19,12 +19,38 @@ import {
   type RolUsuario,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
-import { requierePermiso, buildPermissionMatrix, validateAdminInvariants } from "../lib/permisos";
+import {
+  requierePermiso,
+  buildPermissionMatrix,
+  hasAdminRecoveryAccount,
+  validateAdminInvariants,
+} from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 
 const router: IRouter = Router();
 
 router.use("/permisos", requireSession, requierePermiso("permisos", "ver"));
+
+async function auditRejectedPermissionChange(
+  req: Request,
+  entidad: "permisos_rol" | "permisos_usuario",
+  entidadId: string,
+  motivo: string,
+  datosAntes: Record<string, unknown> | null = null,
+  datosDespues: Record<string, unknown> | null = null,
+): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx.insert(auditoriaTable).values({
+      usuarioId: req.auth?.user.id,
+      accion: "RECHAZAR_INVARIANTE",
+      entidad,
+      entidadId,
+      datosAntes,
+      datosDespues: { ...(datosDespues ?? {}), motivo },
+      ip: getRequestIp(req),
+    });
+  });
+}
 
 // ── GET /permisos/roles ───────────────────────────────────────────────────────
 
@@ -54,6 +80,14 @@ router.put(
       const modulo = (Array.isArray(raw.modulo) ? raw.modulo[0] : raw.modulo) ?? "";
 
       if (rol === "ADMIN") {
+        await auditRejectedPermissionChange(
+          req,
+          "permisos_rol",
+          `ADMIN:${modulo}`,
+          "El rol ADMIN del catálogo no puede modificarse ni vaciarse.",
+          null,
+          req.body as Record<string, unknown>,
+        );
         res.status(403).json({
           error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
         });
@@ -116,6 +150,23 @@ router.put(
         .limit(1);
 
       const updated = await db.transaction(async (tx) => {
+        if (!(await hasAdminRecoveryAccount(tx))) {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            accion: "RECHAZAR_INVARIANTE",
+            entidad: "permisos_rol",
+            entidadId: `${rol}:${modulo}`,
+            datosAntes: before
+              ? {
+                  puedeVer: before.puedeVer, puedeCrear: before.puedeCrear,
+                  puedeEditar: before.puedeEditar, puedeAutorizar: before.puedeAutorizar,
+                }
+              : null,
+            datosDespues: { puedeVer, puedeCrear, puedeEditar, puedeAutorizar, motivo: "Debe conservarse al menos un ADMIN activo con acceso completo." },
+            ip: getRequestIp(req),
+          });
+          return null;
+        }
         const [row] = await tx
           .insert(permisosRolTable)
           .values({
@@ -159,7 +210,10 @@ router.put(
 
         return row;
       });
-
+      if (!updated) {
+        res.status(409).json({ error: "Debe conservarse al menos un ADMIN activo con acceso completo." });
+        return;
+      }
       res.json(updated);
     } catch (e) {
       next(e);
@@ -235,6 +289,14 @@ router.put(
 
       // A user cannot modify their own overrides
       if (req.auth!.user.id === id) {
+        await auditRejectedPermissionChange(
+          req,
+          "permisos_usuario",
+          `${id}:${modulo}`,
+          "Un usuario no puede modificar sus propios permisos.",
+          null,
+          req.body as Record<string, unknown>,
+        );
         res.status(403).json({
           error: "No puedes modificar tus propios permisos.",
         });
@@ -253,6 +315,12 @@ router.put(
       }
 
       if (user.rol === "ADMIN") {
+        await auditRejectedPermissionChange(
+          req,
+          "permisos_usuario",
+          `${id}:${modulo}`,
+          "Un ADMIN no puede tener overrides explícitos.",
+        );
         res.status(403).json({
           error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
         });
@@ -285,6 +353,42 @@ router.put(
         .limit(1);
 
       const updated = await db.transaction(async (tx) => {
+        if (!(await hasAdminRecoveryAccount(tx))) {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            accion: "RECHAZAR_INVARIANTE",
+            entidad: "permisos_usuario",
+            entidadId: `${id}:${modulo}`,
+            datosAntes: before
+              ? {
+                  puedeVer: before.puedeVer, puedeCrear: before.puedeCrear,
+                  puedeEditar: before.puedeEditar, puedeAutorizar: before.puedeAutorizar,
+                }
+              : null,
+            datosDespues: { puedeVer, puedeCrear, puedeEditar, puedeAutorizar, motivo: "Debe conservarse al menos un ADMIN activo con acceso completo." },
+            ip: getRequestIp(req),
+          });
+          return null;
+        }
+        // The initial lookup is only for a useful 404 response. Re-read after
+        // taking the invariant lock so a concurrent promotion cannot receive
+        // an override based on stale role data.
+        const [lockedUser] = await tx
+          .select({ rol: usuariosTable.rol })
+          .from(usuariosTable)
+          .where(eq(usuariosTable.id, id))
+          .limit(1);
+        if (lockedUser?.rol === "ADMIN") {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            accion: "RECHAZAR_INVARIANTE",
+            entidad: "permisos_usuario",
+            entidadId: `${id}:${modulo}`,
+            datosDespues: { motivo: "Un ADMIN no puede tener overrides explícitos." },
+            ip: getRequestIp(req),
+          });
+          return null;
+        }
         const [row] = await tx
           .insert(permisosUsuarioTable)
           .values({
@@ -328,7 +432,10 @@ router.put(
 
         return row;
       });
-
+      if (!updated) {
+        res.status(409).json({ error: "Debe conservarse al menos un ADMIN activo con acceso completo." });
+        return;
+      }
       res.json(updated);
     } catch (e) {
       next(e);
@@ -359,6 +466,14 @@ router.delete(
 
       // A user cannot modify their own overrides
       if (req.auth!.user.id === id) {
+        await auditRejectedPermissionChange(
+          req,
+          "permisos_usuario",
+          `${id}:${modulo}`,
+          "Un usuario no puede modificar sus propios permisos.",
+          null,
+          { accion: "eliminar_override" },
+        );
         res.status(403).json({
           error: "No puedes modificar tus propios permisos.",
         });
@@ -377,13 +492,46 @@ router.delete(
       }
 
       if (user.rol === "ADMIN") {
+        await auditRejectedPermissionChange(
+          req,
+          "permisos_usuario",
+          `${id}:${modulo}`,
+          "Un ADMIN no puede tener overrides explícitos.",
+        );
         res.status(403).json({
           error: "El administrador tiene acceso total a todos los módulos y no puede ser restringido.",
         });
         return;
       }
 
-      await db.transaction(async (tx) => {
+      const deleted = await db.transaction(async (tx) => {
+        if (!(await hasAdminRecoveryAccount(tx))) {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            accion: "RECHAZAR_INVARIANTE",
+            entidad: "permisos_usuario",
+            entidadId: `${id}:${modulo}`,
+            datosDespues: { accion: "eliminar_override", motivo: "Debe conservarse al menos un ADMIN activo con acceso completo." },
+            ip: getRequestIp(req),
+          });
+          return false;
+        }
+        const [lockedUser] = await tx
+          .select({ rol: usuariosTable.rol })
+          .from(usuariosTable)
+          .where(eq(usuariosTable.id, id))
+          .limit(1);
+        if (lockedUser?.rol === "ADMIN") {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            accion: "RECHAZAR_INVARIANTE",
+            entidad: "permisos_usuario",
+            entidadId: `${id}:${modulo}`,
+            datosDespues: { accion: "eliminar_override", motivo: "Un ADMIN no puede tener overrides explícitos." },
+            ip: getRequestIp(req),
+          });
+          return false;
+        }
         await tx
           .delete(permisosUsuarioTable)
           .where(
@@ -401,8 +549,13 @@ router.delete(
           datosAntes: { accion: "permiso_personalizado", modulo },
           ip: getRequestIp(req),
         });
+        return true;
       });
 
+      if (!deleted) {
+        res.status(409).json({ error: "Debe conservarse al menos un ADMIN activo con acceso completo." });
+        return;
+      }
       res.sendStatus(204);
     } catch (e) {
       next(e);

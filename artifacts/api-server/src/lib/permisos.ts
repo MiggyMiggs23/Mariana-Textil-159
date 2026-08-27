@@ -9,7 +9,7 @@
  */
 
 import type { NextFunction, Request, Response } from "express";
-import { and, eq, isNotNull, or } from "drizzle-orm";
+import { and, eq, isNotNull, or, sql } from "drizzle-orm";
 import {
   db,
   permisosRolTable,
@@ -299,4 +299,49 @@ export function validateAdminInvariants(
     return "El administrador tiene acceso total a todos los módulos y no puede ser restringido.";
   }
   return null;
+}
+
+/**
+ * Serializes changes that could affect administrative recovery and verifies
+ * the post-change state without trusting the ADMIN runtime bypass.  An ADMIN
+ * with an explicit false override is deliberately not a recovery account,
+ * even though normal request authorization still grants ADMIN full access.
+ *
+ * `plannedUserId` is omitted for a new user.  When provided, that user's
+ * current row is excluded and represented by `plannedUserHasFullAccess`.
+ */
+export async function hasAdminRecoveryAccount(
+  database: Pick<typeof db, "execute">,
+  plannedUserId?: number,
+  plannedUserHasFullAccess = false,
+): Promise<boolean> {
+  // This same lock is used by both Usuarios and Permisos mutation paths.
+  await database.execute(sql`select pg_advisory_xact_lock(73462026)`);
+
+  if (plannedUserHasFullAccess) return true;
+
+  const targetCondition =
+    plannedUserId == null ? sql`true` : sql`u.id <> ${plannedUserId}`;
+  const result = await database.execute(sql`
+    select exists (
+      select 1
+      from usuarios u
+      where u.rol = 'ADMIN'
+        and u.activo = true
+        and ${targetCondition}
+        and not exists (
+          select 1
+          from permisos_usuario pu
+          where pu.usuario_id = u.id
+            and (
+              pu.puede_ver = false
+              or pu.puede_crear = false
+              or pu.puede_editar = false
+              or pu.puede_autorizar = false
+            )
+        )
+    ) as has_full_access
+  `);
+  return (result.rows[0] as { has_full_access: boolean } | undefined)
+    ?.has_full_access === true;
 }

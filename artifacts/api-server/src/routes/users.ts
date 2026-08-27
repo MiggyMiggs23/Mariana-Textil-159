@@ -1,5 +1,5 @@
-import { Router, type IRouter } from "express";
-import { and, count, eq, inArray, sql, type SQL } from "drizzle-orm";
+import { Router, type IRouter, type Request } from "express";
+import { eq, inArray, sql, type SQL } from "drizzle-orm";
 import {
   CreateUserBody,
   CreateUserResponse,
@@ -22,7 +22,7 @@ import {
   presentUser,
   sanitizeUserForAudit,
 } from "../lib/presenters";
-import { requierePermiso } from "../lib/permisos";
+import { hasAdminRecoveryAccount, requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
 
@@ -37,6 +37,26 @@ const DEFAULT_QUERY_SCOPE: Record<RolUsuario, AlcanceConsulta> = {
   SUPERVISOR: "TODAS",
   BODEGA: "PROPIA",
 };
+
+async function auditRejectedUserChange(
+  req: Request,
+  entidadId: string,
+  motivo: string,
+  datosAntes: Record<string, unknown> | null = null,
+  datosDespues: Record<string, unknown> | null = null,
+): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx.insert(auditoriaTable).values({
+      usuarioId: req.auth?.user.id,
+      accion: "RECHAZAR_INVARIANTE",
+      entidad: "usuarios",
+      entidadId,
+      datosAntes,
+      datosDespues: { ...(datosDespues ?? {}), motivo },
+      ip: getRequestIp(req),
+    });
+  });
+}
 
 async function findRealLocation(id: number | null | undefined) {
   if (id == null) return null;
@@ -112,6 +132,22 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
 
   try {
     const created = await db.transaction(async (tx) => {
+      const recoveryAccountRemains = await hasAdminRecoveryAccount(
+        tx,
+        undefined,
+        role === "ADMIN",
+      );
+      if (!recoveryAccountRemains) {
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id,
+          accion: "RECHAZAR_INVARIANTE",
+          entidad: "usuarios",
+          entidadId: normalizeUsername(parsed.data.usuario),
+          datosDespues: { motivo: "Debe conservarse al menos un ADMIN activo con acceso completo." },
+          ip: getRequestIp(req),
+        });
+        return null;
+      }
       const [user] = await tx
         .insert(usuariosTable)
         .values({
@@ -133,6 +169,10 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
       });
       return user;
     });
+    if (!created) {
+      res.status(409).json({ error: "Debe conservarse al menos un ADMIN activo con acceso completo." });
+      return;
+    }
     res
       .status(201)
       .json(CreateUserResponse.parse(presentUser(created, location ?? null)));
@@ -170,12 +210,25 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   const actor = req.auth!.user;
   const finalRole = (body.data.rol ?? beforeRow.user.rol) as RolUsuario;
   if (actor.rol !== "ADMIN" && beforeRow.user.rol === "ADMIN") {
+    await auditRejectedUserChange(
+      req,
+      String(beforeRow.user.id),
+      "Solo un ADMIN puede modificar una cuenta ADMIN.",
+      sanitizeUserForAudit(beforeRow.user),
+    );
     res.status(403).json({
       error: "Solo un ADMIN puede modificar una cuenta ADMIN.",
     });
     return;
   }
   if (actor.rol !== "ADMIN" && finalRole === "ADMIN") {
+    await auditRejectedUserChange(
+      req,
+      String(beforeRow.user.id),
+      "Solo un ADMIN puede asignar el rol ADMIN.",
+      sanitizeUserForAudit(beforeRow.user),
+      { rol: finalRole },
+    );
     res.status(403).json({
       error: "Solo un ADMIN puede asignar el rol ADMIN.",
     });
@@ -186,6 +239,13 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
     body.data.rol !== undefined &&
     finalRole !== beforeRow.user.rol
   ) {
+    await auditRejectedUserChange(
+      req,
+      String(beforeRow.user.id),
+      "Un ADMIN no puede quitarse su propio rol.",
+      sanitizeUserForAudit(beforeRow.user),
+      { rol: finalRole },
+    );
     res.status(403).json({
       error: "No puedes modificar tu propio rol.",
     });
@@ -193,10 +253,6 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   }
 
   const finalActive = body.data.activo ?? beforeRow.user.activo;
-  const removesActiveAdmin =
-    beforeRow.user.rol === "ADMIN" &&
-    beforeRow.user.activo &&
-    (finalRole !== "ADMIN" || !finalActive);
   const requestedLocationId =
     "ubicacionId" in body.data
       ? body.data.ubicacionId
@@ -236,20 +292,28 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
 
   try {
     const updated = await db.transaction(async (tx) => {
-      if (removesActiveAdmin) {
-        // Serialize ADMIN-removal checks so two concurrent requests cannot both
-        // observe another active ADMIN and deactivate the final two at once.
-        await tx.execute(sql`select pg_advisory_xact_lock(73462026)`);
-        const [{ value: activeAdmins }] = await tx
-          .select({ value: count() })
-          .from(usuariosTable)
-          .where(
-            and(
-              eq(usuariosTable.rol, "ADMIN"),
-              eq(usuariosTable.activo, true),
-            ),
-          );
-        if (activeAdmins <= 1) return null;
+      const recoveryAccountRemains = await hasAdminRecoveryAccount(
+        tx,
+        beforeRow.user.id,
+        finalRole === "ADMIN" && finalActive,
+      );
+      if (!recoveryAccountRemains) {
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id,
+          accion: "RECHAZAR_INVARIANTE",
+          entidad: "usuarios",
+          entidadId: String(beforeRow.user.id),
+          datosAntes: sanitizeUserForAudit(beforeRow.user),
+          datosDespues: {
+            rol: finalRole,
+            activo: finalActive,
+            ubicacionId: finalRole === "ADMIN" ? null : location!.id,
+            alcanceConsulta: updates.alcanceConsulta,
+            motivo: "Debe conservarse al menos un ADMIN activo con acceso completo.",
+          },
+          ip: getRequestIp(req),
+        });
+        return null;
       }
 
       const [user] = await tx
