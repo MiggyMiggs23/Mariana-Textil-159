@@ -182,13 +182,22 @@ if (!testUrl) {
         const [inv, color, heat, purchases, clients] = await Promise.all(["inventario", "color", "mapas-calor", "compras", "clientes"].map(section =>
           reports.buildReport(section as any, { ...input, coberturaMinima: 25, coberturaMaxima: 70 }, undefined, true) as Promise<Record<string, any>>));
         assert.ok(table(inv, "existencia-actual").rows.some(r => r.unidad === "METRO") && table(inv, "existencia-actual").rows.some(r => r.unidad === "KILO"));
+        assert.ok(table(inv, "existencia-actual").rows.some(r => Number(r.vendidoRollos) > 0));
+        assert.ok(table(inv, "existencia-actual").rows.some(r => Number(r.vendidoMetraje) > 0));
         assert.ok(table(inv, "comprado-vendido").rows.some(r => r.ajusteNegativo === 3));
         assert.ok(table(inv, "sin-movimiento").rows.some(r => r.sku === `${tag}-K-VERDE`) === false);
         assert.ok(table(color, "ranking-color").rows.filter(r => r.color === "Rojo").length >= 2, "color ranks across fabrics");
         assert.ok((color.charts as any[]).some(c => c.id === "color-tela"));
         assert.ok((heat.charts as any[]).every(c => ["cantidad", "ventas", "utilidad"].every(key => c.series.some((s: any) => s.key === key))));
         assert.ok(table(purchases, "compras-por-rollo").rows.length === 4);
+        assert.ok(table(purchases, "productos").rows.every(r => r.estadoCostoReferencia === "AVERAGE_12_MONTHS"));
+        assert.ok(table(clients, "clientes").rows.some(r => Number(r.comprasRollos) > 0 && Number(r.comprasMetraje) > 0));
         assert.ok(table(clients, "cuentas-por-cobrar-fifo").rows.some(r => Number(r.saldo) === 75));
+        const [heatMetered, colorMetered, clientMetered] = await Promise.all(["mapas-calor", "color", "clientes"].map(section =>
+          reports.buildReport(section as any, { ...input, modalidad: "METRAJE" }, undefined, true) as Promise<Record<string, any>>));
+        assert.ok((heatMetered.charts as any[]).every(chart => chart.rows.every((row: any) => row.modalidad === "METRAJE")));
+        assert.ok(table(colorMetered, "ranking-color").rows.every(r => r.modalidad === "METRAJE"));
+        assert.ok(table(clientMetered, "clientes").rows.every(r => Number(r.comprasRollos) === 0));
       });
       await t.test("ranges, helper invariants, access redaction, exports and timing", async () => {
         const { GetReporteSeccionResponse } = await import("@workspace/api-zod");

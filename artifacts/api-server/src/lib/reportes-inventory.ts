@@ -97,6 +97,10 @@ function salesScope(ctx: DomainReportContext) {
   add("r.proveedor_id", ids(ctx.input.proveedorIds));
   if (typeof ctx.input.facturado === "boolean") { values.push(ctx.input.facturado); clauses.push(`t.facturado=$${values.length}`); }
   const pay = csv(ctx.input.formasPago); if (pay.length) { values.push(pay); clauses.push(`EXISTS (SELECT 1 FROM ticket_pagos tp WHERE tp.ticket_id=t.id AND tp.forma_pago::text=ANY($${values.length}::text[]))`); }
+  if (ctx.input.modalidad === "ROLLOS" || ctx.input.modalidad === "METRAJE") {
+    values.push(ctx.input.modalidad === "METRAJE" ? "METREADO" : "NORMAL");
+    clauses.push(`l.tipo::text=$${values.length}`);
+  }
   return { text: clauses.join(" AND "), values };
 }
 const monthBuckets = (from: Date, to: Date, minimum: number) => {
@@ -110,6 +114,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   const warnings: string[] = [];
   const sales = salesScope(ctx);
   if (section === "mapas-calor") {
+    warnings.push("Los mapas de calor de ventas respetan el filtro de modalidad aplicado en el servidor.");
     const minimum = (ctx.range.hasta.getTime() - ctx.range.desde.getTime()) / 86400000 >= 548 ? 24 : 12;
     const buckets = monthBuckets(ctx.range.desde, ctx.range.hasta, minimum);
     const q = await pool.query(`SELECT to_char(date_trunc('month',t.created_at AT TIME ZONE '${zone}'),'YYYY-MM') mes,p.sku,p.tela,p.color,l.tipo,p.unidad,u.nombre sitio,
@@ -123,6 +128,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     return { kpis: [{ id: "meses", label: "Meses analizados", value: buckets.length, kind: "count" }], charts: [make("mes-producto", "sku"), make("mes-color", "color"), make("mes-tela", "tela"), make("mes-sitio", "sitio")], tables: [], warnings };
   }
   if (section === "color") {
+    warnings.push("Las ventas del análisis de color respetan el filtro de modalidad aplicado en el servidor; la tabla sin movimiento no tiene modalidad.");
     const scope = productScope(ctx, "p", "m.ubicacion_id");
     const salesRows = await pool.query(`SELECT p.color,p.tela,l.tipo,p.unidad,u.nombre sitio,SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas
       FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
@@ -136,16 +142,27 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
         table("sin-movimiento-90", "Sin movimiento ≥90 días", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["ultimo", "Último movimiento", "text"]], noMove.rows.map(r => ({ color: r.color, tela: r.tela, unidad: r.unidad, ultimo: r.ultimo ? new Date(r.ultimo).toISOString() : null })))], warnings };
   }
   const scope = productScope(ctx, "p", "e.ubicacion_id");
+  warnings.push("La existencia física no tiene modalidad. La rotación muestra por separado salidas por ROLLOS y METRAJE; sus coberturas no se combinan.");
   const inv = await pool.query(`SELECT p.id,e.ubicacion_id,p.sku,p.tela,p.color,p.unidad,u.nombre sitio,e.cantidad_total cantidad,e.rollos_count rollos,
     COALESCE(SUM(r.cantidad_actual*r.costo_unitario),0)::float valor
     FROM existencias e JOIN productos p ON p.id=e.producto_id JOIN ubicaciones u ON u.id=e.ubicacion_id
     LEFT JOIN rollos r ON r.producto_id=e.producto_id AND r.ubicacion_id=e.ubicacion_id AND r.estado='DISPONIBLE'
     WHERE ${scope.text} GROUP BY p.id,e.ubicacion_id,u.nombre,e.cantidad_total,e.rollos_count`, scope.values);
-  const sold = await pool.query(`SELECT p.id,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${sales.text} AND l.tipo='NORMAL' GROUP BY p.id`, sales.values);
-  const soldByProduct = new Map(sold.rows.map(r => [Number(r.id), number(r.cantidad)]));
+  const sold = await pool.query(`SELECT p.id,l.tipo,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${sales.text} GROUP BY p.id,l.tipo`, sales.values);
+  const soldByProduct = new Map<number, { rollos: number; metraje: number }>();
+  for (const r of sold.rows) {
+    const output = soldByProduct.get(Number(r.id)) ?? { rollos: 0, metraje: 0 };
+    if (r.tipo === "METREADO") output.metraje = number(r.cantidad); else output.rollos = number(r.cantidad);
+    soldByProduct.set(Number(r.id), output);
+  }
   const days = Math.max(1, Math.ceil((ctx.range.hasta.getTime() - ctx.range.desde.getTime() + 1) / 86400000));
   const critical = number(ctx.input.coberturaCritico ?? 7), low = number(ctx.input.coberturaBajo ?? 15), normal = number(ctx.input.coberturaNormal ?? 45), excess = number(ctx.input.coberturaExceso ?? 90);
-  const rows = inv.rows.map(r => { const stock = number(r.cantidad), soldQty = soldByProduct.get(Number(r.id)) ?? 0, daily = soldQty / days, coverage = daily > 0 ? stock / daily : null; return { productoId: number(r.id), ubicacionId: number(r.ubicacion_id), sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, cantidad: stock, rollos: number(r.rollos), valor: number(r.valor), vendidoPeriodo: soldQty, coberturaDias: coverage, clasificacion: classifyCoverage(coverage, critical, low, normal, excess) }; });
+  const rows = inv.rows.map(r => {
+    const stock = number(r.cantidad), output = soldByProduct.get(Number(r.id)) ?? { rollos: 0, metraje: 0 };
+    const coverageRollos = output.rollos > 0 ? stock / (output.rollos / days) : null;
+    const coverageMetraje = output.metraje > 0 ? stock / (output.metraje / days) : null;
+    return { productoId: number(r.id), ubicacionId: number(r.ubicacion_id), sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, cantidad: stock, rollos: number(r.rollos), valor: number(r.valor), vendidoPeriodo: output.rollos, vendidoRollos: output.rollos, vendidoMetraje: output.metraje, coberturaDias: coverageRollos, coberturaDiasMetraje: coverageMetraje, clasificacion: classifyCoverage(coverageRollos, critical, low, normal, excess) };
+  });
   const totals = rows.reduce((m, r) => { m[r.unidad] ??= { cantidad: 0, rollos: 0, valor: 0 }; m[r.unidad].cantidad += r.cantidad; m[r.unidad].rollos += r.rollos; m[r.unidad].valor += r.valor; return m; }, {} as Record<string, { cantidad: number; rollos: number; valor: number }>);
   const rollScope = productScope(ctx, "p", "r.ubicacion_id");
   const activeRolls = await pool.query(`SELECT r.producto_id,r.ubicacion_id,COALESCE(SUM(r.cantidad_actual),0)::float cantidad
@@ -224,7 +241,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     { id: `perdida-estimada-${unidad}`, label: `Pérdida estimada ${unidad}`, value: lostRows.filter(r => r.unidad === unidad).reduce((s, r) => s + r.perdidaCantidadEstimada, 0), kind: "quantity", estimated: true }]),
     ...transitKpis],
     charts: [{ id: "existencia-producto", title: "Existencia por producto", type: "treemap", categoryKey: "sku", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows }, ...(unreconciled.length ? [] : [{ id: "cierres-diarios", title: "Cierre diario de inventario", type: "line", categoryKey: "dia", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: closeRows }])],
-    tables: [table("existencia-actual", "Existencia actual", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoPeriodo", "Vendido", "quantity"], ["coberturaDias", "Cobertura días", "number"], ["clasificacion", "Clasificación", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows, ["cantidad", "valor", "vendidoPeriodo", "perdidaCantidadEstimada", "perdidaValorEstimada"]),
+    tables: [table("existencia-actual", "Existencia actual y rotación por modalidad", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoRollos", "Salida ROLLOS", "quantity"], ["vendidoMetraje", "Salida METRAJE", "quantity"], ["coberturaDias", "Cobertura días ROLLOS", "number"], ["coberturaDiasMetraje", "Cobertura días METRAJE", "number"], ["clasificacion", "Clasificación (ROLLOS)", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows, ["cantidad", "valor", "vendidoRollos", "vendidoMetraje", "perdidaCantidadEstimada", "perdidaValorEstimada"]),
       table("comprado-vendido", "Comprado vs vendido", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["comprado", "Comprado", "quantity"], ["vendido", "Vendido", "quantity"], ["ajusteNegativo", "Ajuste negativo", "quantity"]], activity.rows.map(r => ({ sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, comprado: number(r.comprado), vendido: number(r.vendido), ajusteNegativo: number(r.ajuste_negativo) })), ["comprado", "vendido", "ajusteNegativo"]),
       table("sin-movimiento", "Sin movimiento", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["ultimoMovimiento", "Último movimiento", "text"], ["banda", "Banda", "text"]], noMovement.rows.map(r => { const last = r.ultimo_movimiento ? new Date(r.ultimo_movimiento) : null; const age = last ? Math.floor((ctx.range.hasta.getTime() - last.getTime()) / 86400000) : null; return { sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, ultimoMovimiento: last?.toISOString() ?? null, banda: classifyNoMovement(age) }; }))], warnings };
 }
