@@ -137,6 +137,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "CONFIGURACIÓN",
     items: [
       { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
+      { name: "Camionetas", path: "/configuracion/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
       { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
       { name: "Conciliación", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },

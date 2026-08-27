@@ -22,6 +22,7 @@ import contenedoresRouter from "./contenedores";
 import preciosRouter from "./precios";
 import auditoriaRouter from "./auditoria";
 import pagosDirigidosRouter from "./pagos-dirigidos";
+import camionetasRouter from "./camionetas";
 
 const router: IRouter = Router();
 
@@ -48,5 +49,6 @@ router.use(notificacionesRouter);
 router.use(etiquetasRouter);
 router.use(auditoriaRouter);
 router.use(pagosDirigidosRouter);
+router.use(camionetasRouter);
 
 export default router;

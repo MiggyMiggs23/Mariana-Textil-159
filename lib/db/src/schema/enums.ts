@@ -13,6 +13,7 @@ export const rolUsuarioEnum = pgEnum("rol_usuario", [
   "CAJA",
   "SUPERVISOR",
   "BODEGA",
+  "SOPORTE",
 ]);
 
 export const unidadProductoEnum = pgEnum("unidad_producto", ["METRO", "KILO"]);

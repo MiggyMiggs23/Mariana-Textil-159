@@ -158,6 +158,129 @@ export const RechazarSolicitudPagoDirigidoResponse = zod.object({
 
 
 /**
+ * @summary Lista el catálogo histórico de camionetas
+ */
+export const listCamionetasQueryActivaDefault = `all`;
+
+export const ListCamionetasQueryParams = zod.object({
+  "activa": zod.enum(['true', 'false', 'all']).default(listCamionetasQueryActivaDefault).describe('all incluye registros activos e inactivos.')
+})
+
+export const ListCamionetasResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "placas": zod.string(),
+  "marca": zod.string().nullable(),
+  "modelo": zod.string().nullable(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']),
+  "activa": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListCamionetasResponse = zod.array(ListCamionetasResponseItem)
+
+
+/**
+ * @summary Crea una camioneta histórica (ADMIN o SOPORTE)
+ */
+export const createCamionetaBodyNombreMax = 160;
+
+export const createCamionetaBodyPlacasMax = 32;
+
+export const createCamionetaBodyMarcaMax = 80;
+
+export const createCamionetaBodyModeloMax = 80;
+
+export const createCamionetaBodyActivaDefault = true;
+
+export const CreateCamionetaBody = zod.object({
+  "nombre": zod.string().min(1).max(createCamionetaBodyNombreMax),
+  "placas": zod.string().min(1).max(createCamionetaBodyPlacasMax),
+  "marca": zod.string().max(createCamionetaBodyMarcaMax).nullish(),
+  "modelo": zod.string().max(createCamionetaBodyModeloMax).nullish(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']),
+  "activa": zod.boolean().default(createCamionetaBodyActivaDefault)
+})
+
+export const CreateCamionetaResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "placas": zod.string(),
+  "marca": zod.string().nullable(),
+  "modelo": zod.string().nullable(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']),
+  "activa": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Obtiene una camioneta del catálogo histórico
+ */
+
+
+
+export const GetCamionetaParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetCamionetaResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "placas": zod.string(),
+  "marca": zod.string().nullable(),
+  "modelo": zod.string().nullable(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']),
+  "activa": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+ */
+
+
+
+export const UpdateCamionetaParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const updateCamionetaBodyNombreMax = 160;
+
+export const updateCamionetaBodyPlacasMax = 32;
+
+export const updateCamionetaBodyMarcaMax = 80;
+
+export const updateCamionetaBodyModeloMax = 80;
+
+
+
+export const UpdateCamionetaBody = zod.object({
+  "nombre": zod.string().min(1).max(updateCamionetaBodyNombreMax).optional(),
+  "placas": zod.string().min(1).max(updateCamionetaBodyPlacasMax).optional(),
+  "marca": zod.string().max(updateCamionetaBodyMarcaMax).nullish(),
+  "modelo": zod.string().max(updateCamionetaBodyModeloMax).nullish(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']).optional(),
+  "activa": zod.boolean().optional()
+})
+
+export const UpdateCamionetaResponse = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "placas": zod.string(),
+  "marca": zod.string().nullable(),
+  "modelo": zod.string().nullable(),
+  "tipo": zod.enum(['PROPIA', 'CONTRATADA']),
+  "activa": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -186,7 +309,7 @@ export const LoginResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -222,7 +345,7 @@ export const GetCurrentUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -348,7 +471,7 @@ export const ListUsersResponseItem = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -382,7 +505,7 @@ export const CreateUserBody = zod.object({
   "nombre": zod.string().min(createUserBodyNombreMin).max(createUserBodyNombreMax),
   "usuario": zod.string().min(createUserBodyUsuarioMin).max(createUserBodyUsuarioMax),
   "password": zod.string().min(createUserBodyPasswordMin).max(createUserBodyPasswordMax),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "ubicacionId": zod.number().nullish(),
   "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional()
 })
@@ -394,7 +517,7 @@ export const CreateUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -430,7 +553,7 @@ export const updateUserBodyPasswordMax = 128;
 export const UpdateUserBody = zod.object({
   "nombre": zod.string().min(updateUserBodyNombreMin).max(updateUserBodyNombreMax).optional(),
   "usuario": zod.string().min(updateUserBodyUsuarioMin).max(updateUserBodyUsuarioMax).optional(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']).optional(),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']).optional(),
   "ubicacionId": zod.number().nullish(),
   "alcanceConsulta": zod.enum(['PROPIA', 'TODAS']).optional(),
   "activo": zod.boolean().optional(),
@@ -444,7 +567,7 @@ export const UpdateUserResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "usuario": zod.string(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "ubicacion": zod.union([zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
@@ -3963,7 +4086,7 @@ export const ExportClientesCarteraPdfResponse = zod.unknown()
  */
 export const ListPermisosRolesResponseItem = zod.object({
   "id": zod.number(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "modulo": zod.string(),
   "puedeVer": zod.boolean(),
   "puedeCrear": zod.boolean(),
@@ -3979,7 +4102,7 @@ export const ListPermisosRolesResponse = zod.array(ListPermisosRolesResponseItem
  * @summary Actualiza la entrada de un rol/módulo en la matriz
  */
 export const UpdatePermisosRolParams = zod.object({
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "modulo": zod.coerce.string()
 })
 
@@ -3992,7 +4115,7 @@ export const UpdatePermisosRolBody = zod.object({
 
 export const UpdatePermisosRolResponse = zod.object({
   "id": zod.number(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "modulo": zod.string(),
   "puedeVer": zod.boolean(),
   "puedeCrear": zod.boolean(),
@@ -4012,7 +4135,7 @@ export const GetPermisosUsuarioParams = zod.object({
 
 export const GetPermisosUsuarioResponse = zod.object({
   "usuarioId": zod.number(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "overrides": zod.array(zod.object({
   "id": zod.number(),
   "usuarioId": zod.number(),
@@ -4076,7 +4199,7 @@ export const GetPermisosPreviewParams = zod.object({
 export const GetPermisosPreviewResponse = zod.object({
   "usuarioId": zod.number(),
   "nombre": zod.string(),
-  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA']),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SOPORTE']),
   "permisos": zod.array(zod.object({
   "modulo": zod.string(),
   "puedeVer": zod.boolean(),

@@ -18,6 +18,7 @@ import {
   ensureAplicacionesPagoProveedorSchema,
   ensurePagosProveedorSchema,
   ensureSolicitudesPagoDirigidoSchema,
+  ensureCamionetasSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -38,6 +39,7 @@ if (Number.isNaN(port) || port <= 0) {
 
 async function startServer() {
   await ensureAuditSchema(pool);
+  await ensureCamionetasSchema(pool);
   await ensurePagosProveedorSchema(pool);
   await ensureSolicitudesPagoDirigidoSchema(pool);
   await ensureAplicacionesPagoProveedorSchema(pool);

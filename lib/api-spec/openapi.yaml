@@ -45,6 +45,8 @@ tags:
     description: Próximos contenedores y control anual de compras
   - name: auditoria
     description: Consulta de la bitácora inmutable exclusiva para ADMIN
+  - name: camionetas
+    description: Catálogo histórico de camionetas para operaciones de transporte
 paths:
   /pagos-dirigidos:
     get:
@@ -107,6 +109,61 @@ paths:
           content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigido" } } }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /camionetas:
+    get:
+      operationId: listCamionetas
+      tags: [camionetas]
+      summary: Lista el catálogo histórico de camionetas
+      parameters:
+        - in: query
+          name: activa
+          schema: { type: string, enum: ["true", "false", all], default: all }
+          description: all incluye registros activos e inactivos.
+      responses:
+        "200":
+          description: Camionetas visibles en configuración
+          content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Camioneta" } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createCamioneta
+      tags: [camionetas]
+      summary: Crea una camioneta histórica (ADMIN o SOPORTE)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CamionetaInput" } } }
+      responses:
+        "201": { description: Camioneta creada, content: { application/json: { schema: { $ref: "#/components/schemas/Camioneta" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /camionetas/{id}:
+    get:
+      operationId: getCamioneta
+      tags: [camionetas]
+      summary: Obtiene una camioneta del catálogo histórico
+      parameters: [{ $ref: "#/components/parameters/CamionetaId" }]
+      responses:
+        "200": { description: Camioneta, content: { application/json: { schema: { $ref: "#/components/schemas/Camioneta" } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      operationId: updateCamioneta
+      tags: [camionetas]
+      summary: Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+      parameters: [{ $ref: "#/components/parameters/CamionetaId" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CamionetaUpdate" } } }
+      responses:
+        "200": { description: Camioneta actualizada, content: { application/json: { schema: { $ref: "#/components/schemas/Camioneta" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
   /healthz:
     get:
@@ -3953,6 +4010,7 @@ paths:
         "404": { $ref: "#/components/responses/NotFound" }
 components:
   parameters:
+    CamionetaId: { name: id, in: path, required: true, schema: { type: number, minimum: 1 } }
     ReportePeriodo:
       name: periodo
       in: query
@@ -5037,9 +5095,42 @@ components:
           type: string
         code:
           type: string
+    Camioneta:
+      type: object
+      required: [id, nombre, placas, marca, modelo, tipo, activa, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        placas: { type: string }
+        marca: { type: ["string", "null"] }
+        modelo: { type: ["string", "null"] }
+        tipo: { type: string, enum: [PROPIA, CONTRATADA] }
+        activa: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    CamionetaInput:
+      type: object
+      required: [nombre, placas, tipo]
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 160 }
+        placas: { type: string, minLength: 1, maxLength: 32 }
+        marca: { type: ["string", "null"], maxLength: 80 }
+        modelo: { type: ["string", "null"], maxLength: 80 }
+        tipo: { type: string, enum: [PROPIA, CONTRATADA] }
+        activa: { type: boolean, default: true }
+    CamionetaUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 160 }
+        placas: { type: string, minLength: 1, maxLength: 32 }
+        marca: { type: ["string", "null"], maxLength: 80 }
+        modelo: { type: ["string", "null"], maxLength: 80 }
+        tipo: { type: string, enum: [PROPIA, CONTRATADA] }
+        activa: { type: boolean }
     Role:
       type: string
-      enum: [ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA]
+      enum: [ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, SOPORTE]
     LocationType:
       type: string
       enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]

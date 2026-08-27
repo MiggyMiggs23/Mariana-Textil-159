@@ -36,6 +36,7 @@ const DEFAULT_QUERY_SCOPE: Record<RolUsuario, AlcanceConsulta> = {
   CAJA: "TODAS",
   SUPERVISOR: "TODAS",
   BODEGA: "PROPIA",
+  SOPORTE: "TODAS",
 };
 
 async function auditRejectedUserChange(
@@ -79,10 +80,10 @@ function validateAssignment(
   role: RolUsuario,
   location: Awaited<ReturnType<typeof findRealLocation>>,
 ): string | null {
-  if (role === "ADMIN" && location !== null) {
-    return "Los administradores deben tener acceso global.";
+  if ((role === "ADMIN" || role === "SOPORTE") && location !== null) {
+    return "Los roles globales deben tener acceso a todos los sitios.";
   }
-  if (role !== "ADMIN" && !location) {
+  if (role !== "ADMIN" && role !== "SOPORTE" && !location) {
     return "La ubicación es obligatoria para este rol.";
   }
   return null;
@@ -112,15 +113,18 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
   }
 
   const role = parsed.data.rol as RolUsuario;
-  if (role === "ADMIN" && req.auth!.user.rol !== "ADMIN") {
+  if (
+    (role === "ADMIN" || role === "SOPORTE") &&
+    req.auth!.user.rol !== "ADMIN"
+  ) {
     res.status(403).json({
-      error: "Solo un ADMIN puede crear otra cuenta ADMIN.",
+      error: "Solo un ADMIN puede crear cuentas ADMIN o SOPORTE.",
     });
     return;
   }
   const location = await findRealLocation(parsed.data.ubicacionId);
   const alcanceConsulta =
-    role === "ADMIN" || role === "SUPERVISOR"
+    role === "ADMIN" || role === "SUPERVISOR" || role === "SOPORTE"
       ? "TODAS"
       : ((parsed.data.alcanceConsulta as AlcanceConsulta | undefined) ??
         DEFAULT_QUERY_SCOPE[role]);
@@ -155,7 +159,8 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
           usuario: normalizeUsername(parsed.data.usuario),
           passwordHash: sql`crypt(${parsed.data.password}, gen_salt('bf', 12))`,
           rol: role,
-          ubicacionId: role === "ADMIN" ? null : location!.id,
+          ubicacionId:
+            role === "ADMIN" || role === "SOPORTE" ? null : location!.id,
           alcanceConsulta,
         })
         .returning();
@@ -209,28 +214,34 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
 
   const actor = req.auth!.user;
   const finalRole = (body.data.rol ?? beforeRow.user.rol) as RolUsuario;
-  if (actor.rol !== "ADMIN" && beforeRow.user.rol === "ADMIN") {
+  if (
+    actor.rol !== "ADMIN" &&
+    (beforeRow.user.rol === "ADMIN" || beforeRow.user.rol === "SOPORTE")
+  ) {
     await auditRejectedUserChange(
       req,
       String(beforeRow.user.id),
-      "Solo un ADMIN puede modificar una cuenta ADMIN.",
+      "Solo un ADMIN puede modificar una cuenta ADMIN o SOPORTE.",
       sanitizeUserForAudit(beforeRow.user),
     );
     res.status(403).json({
-      error: "Solo un ADMIN puede modificar una cuenta ADMIN.",
+      error: "Solo un ADMIN puede modificar una cuenta ADMIN o SOPORTE.",
     });
     return;
   }
-  if (actor.rol !== "ADMIN" && finalRole === "ADMIN") {
+  if (
+    actor.rol !== "ADMIN" &&
+    (finalRole === "ADMIN" || finalRole === "SOPORTE")
+  ) {
     await auditRejectedUserChange(
       req,
       String(beforeRow.user.id),
-      "Solo un ADMIN puede asignar el rol ADMIN.",
+      "Solo un ADMIN puede asignar los roles ADMIN o SOPORTE.",
       sanitizeUserForAudit(beforeRow.user),
       { rol: finalRole },
     );
     res.status(403).json({
-      error: "Solo un ADMIN puede asignar el rol ADMIN.",
+      error: "Solo un ADMIN puede asignar los roles ADMIN o SOPORTE.",
     });
     return;
   }
@@ -279,9 +290,12 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   }
   if (body.data.rol !== undefined) updates.rol = finalRole;
   if (body.data.activo !== undefined) updates.activo = body.data.activo;
-  updates.ubicacionId = finalRole === "ADMIN" ? null : location!.id;
+  updates.ubicacionId =
+    finalRole === "ADMIN" || finalRole === "SOPORTE" ? null : location!.id;
   updates.alcanceConsulta =
-    finalRole === "ADMIN" || finalRole === "SUPERVISOR"
+    finalRole === "ADMIN" ||
+    finalRole === "SUPERVISOR" ||
+    finalRole === "SOPORTE"
       ? "TODAS"
       : ((body.data.alcanceConsulta as AlcanceConsulta | undefined) ??
         beforeRow.user.alcanceConsulta ??

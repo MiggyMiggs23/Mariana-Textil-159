@@ -41,6 +41,9 @@ import type {
   BuscarRollosEtiquetas200,
   BuscarRollosEtiquetasParams,
   CambiarPrecioInput,
+  Camioneta,
+  CamionetaInput,
+  CamionetaUpdate,
   CapturarCostosEntradaInput,
   CatalogosEntrada,
   Cliente,
@@ -135,6 +138,7 @@ import type {
   KardexResult,
   ListAdminCortesParams,
   ListAuditoriaParams,
+  ListCamionetasParams,
   ListComprasProveedorParams,
   ListContenedoresDisponiblesEntradaParams,
   ListContenedoresParams,
@@ -566,6 +570,310 @@ export const useRechazarSolicitudPagoDirigido = <TError = ErrorType<Unauthorized
         TContext
       > => {
       return useMutation(getRechazarSolicitudPagoDirigidoMutationOptions(options));
+    }
+
+export const getListCamionetasUrl = (params?: ListCamionetasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/camionetas?${stringifiedParams}` : `/api/camionetas`
+}
+
+/**
+ * @summary Lista el catálogo histórico de camionetas
+ */
+export const listCamionetas = async (params?: ListCamionetasParams, options?: Parameters<typeof customFetch>[1]): Promise<Camioneta[]> => {
+
+  return customFetch<Camioneta[]>(getListCamionetasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListCamionetasQueryKey = (params?: ListCamionetasParams,) => {
+    return [
+    `/api/camionetas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListCamionetasQueryOptions = <TData = Awaited<ReturnType<typeof listCamionetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListCamionetasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCamionetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListCamionetasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCamionetas>>> = ({ signal }) => listCamionetas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCamionetas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCamionetasQueryResult = NonNullable<Awaited<ReturnType<typeof listCamionetas>>>
+export type ListCamionetasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista el catálogo histórico de camionetas
+ */
+
+export function useListCamionetas<TData = Awaited<ReturnType<typeof listCamionetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListCamionetasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCamionetas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListCamionetasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateCamionetaUrl = () => {
+
+
+
+
+  return `/api/camionetas`
+}
+
+/**
+ * @summary Crea una camioneta histórica (ADMIN o SOPORTE)
+ */
+export const createCamioneta = async (camionetaInput: CamionetaInput, options?: Parameters<typeof customFetch>[1]): Promise<Camioneta> => {
+
+  return customFetch<Camioneta>(getCreateCamionetaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(camionetaInput)
+  }
+);}
+
+
+
+
+
+export const getCreateCamionetaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCamioneta>>, TError,{data: BodyType<CamionetaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCamioneta>>, TError,{data: BodyType<CamionetaInput>}, TContext> => {
+
+const mutationKey = ['createCamioneta'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCamioneta>>, {data: BodyType<CamionetaInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCamioneta(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCamionetaMutationResult = NonNullable<Awaited<ReturnType<typeof createCamioneta>>>
+    export type CreateCamionetaMutationBody = BodyType<CamionetaInput>
+    export type CreateCamionetaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
+
+    /**
+ * @summary Crea una camioneta histórica (ADMIN o SOPORTE)
+ */
+export const useCreateCamioneta = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCamioneta>>, TError,{data: BodyType<CamionetaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createCamioneta>>,
+        TError,
+        {data: BodyType<CamionetaInput>},
+        TContext
+      > => {
+      return useMutation(getCreateCamionetaMutationOptions(options));
+    }
+
+export const getGetCamionetaUrl = (id: number,) => {
+
+
+
+
+  return `/api/camionetas/${id}`
+}
+
+/**
+ * @summary Obtiene una camioneta del catálogo histórico
+ */
+export const getCamioneta = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Camioneta> => {
+
+  return customFetch<Camioneta>(getGetCamionetaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCamionetaQueryKey = (id: number,) => {
+    return [
+    `/api/camionetas/${id}`
+    ] as const;
+    }
+
+
+export const getGetCamionetaQueryOptions = <TData = Awaited<ReturnType<typeof getCamioneta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCamioneta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCamionetaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCamioneta>>> = ({ signal }) => getCamioneta(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCamioneta>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCamionetaQueryResult = NonNullable<Awaited<ReturnType<typeof getCamioneta>>>
+export type GetCamionetaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene una camioneta del catálogo histórico
+ */
+
+export function useGetCamioneta<TData = Awaited<ReturnType<typeof getCamioneta>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCamioneta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCamionetaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateCamionetaUrl = (id: number,) => {
+
+
+
+
+  return `/api/camionetas/${id}`
+}
+
+/**
+ * @summary Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+ */
+export const updateCamioneta = async (id: number,
+    camionetaUpdate: CamionetaUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Camioneta> => {
+
+  return customFetch<Camioneta>(getUpdateCamionetaUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(camionetaUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateCamionetaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCamioneta>>, TError,{id: number;data: BodyType<CamionetaUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateCamioneta>>, TError,{id: number;data: BodyType<CamionetaUpdate>}, TContext> => {
+
+const mutationKey = ['updateCamioneta'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCamioneta>>, {id: number;data: BodyType<CamionetaUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateCamioneta(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateCamionetaMutationResult = NonNullable<Awaited<ReturnType<typeof updateCamioneta>>>
+    export type UpdateCamionetaMutationBody = BodyType<CamionetaUpdate>
+    export type UpdateCamionetaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+ */
+export const useUpdateCamioneta = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCamioneta>>, TError,{id: number;data: BodyType<CamionetaUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateCamioneta>>,
+        TError,
+        {id: number;data: BodyType<CamionetaUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateCamionetaMutationOptions(options));
     }
 
 export const getHealthCheckUrl = () => {

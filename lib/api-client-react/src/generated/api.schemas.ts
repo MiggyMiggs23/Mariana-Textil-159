@@ -1191,6 +1191,94 @@ export interface Error {
   code?: string;
 }
 
+export type CamionetaTipo = typeof CamionetaTipo[keyof typeof CamionetaTipo];
+
+
+export const CamionetaTipo = {
+  PROPIA: 'PROPIA',
+  CONTRATADA: 'CONTRATADA',
+} as const;
+
+export interface Camioneta {
+  id: number;
+  nombre: string;
+  placas: string;
+  /** @nullable */
+  marca: string | null;
+  /** @nullable */
+  modelo: string | null;
+  tipo: CamionetaTipo;
+  activa: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CamionetaInputTipo = typeof CamionetaInputTipo[keyof typeof CamionetaInputTipo];
+
+
+export const CamionetaInputTipo = {
+  PROPIA: 'PROPIA',
+  CONTRATADA: 'CONTRATADA',
+} as const;
+
+export interface CamionetaInput {
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  nombre: string;
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
+  placas: string;
+  /**
+     * @maxLength 80
+     * @nullable
+     */
+  marca?: string | null;
+  /**
+     * @maxLength 80
+     * @nullable
+     */
+  modelo?: string | null;
+  tipo: CamionetaInputTipo;
+  activa?: boolean;
+}
+
+export type CamionetaUpdateTipo = typeof CamionetaUpdateTipo[keyof typeof CamionetaUpdateTipo];
+
+
+export const CamionetaUpdateTipo = {
+  PROPIA: 'PROPIA',
+  CONTRATADA: 'CONTRATADA',
+} as const;
+
+export interface CamionetaUpdate {
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  nombre?: string;
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
+  placas?: string;
+  /**
+     * @maxLength 80
+     * @nullable
+     */
+  marca?: string | null;
+  /**
+     * @maxLength 80
+     * @nullable
+     */
+  modelo?: string | null;
+  tipo?: CamionetaUpdateTipo;
+  activa?: boolean;
+}
+
 export type Role = typeof Role[keyof typeof Role];
 
 
@@ -1200,6 +1288,7 @@ export const Role = {
   CAJA: 'CAJA',
   SUPERVISOR: 'SUPERVISOR',
   BODEGA: 'BODEGA',
+  SOPORTE: 'SOPORTE',
 } as const;
 
 export type LocationType = typeof LocationType[keyof typeof LocationType];
@@ -4439,6 +4528,22 @@ export const ListSolicitudesPagoDirigidoEstado = {
   PENDIENTE: 'PENDIENTE',
   APROBADA: 'APROBADA',
   RECHAZADA: 'RECHAZADA',
+} as const;
+
+export type ListCamionetasParams = {
+/**
+ * all incluye registros activos e inactivos.
+ */
+activa?: ListCamionetasActiva;
+};
+
+export type ListCamionetasActiva = typeof ListCamionetasActiva[keyof typeof ListCamionetasActiva];
+
+
+export const ListCamionetasActiva = {
+  true: 'true',
+  false: 'false',
+  all: 'all',
 } as const;
 
 export type GetDashboardParams = {

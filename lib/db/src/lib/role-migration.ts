@@ -37,6 +37,13 @@ export async function ensureSupervisorRole(pool: Connectable): Promise<void> {
           ALTER TYPE rol_usuario RENAME VALUE 'INVENTARIOS' TO 'SUPERVISOR';
         END IF;
 
+       IF NOT EXISTS (
+         SELECT 1 FROM pg_type t JOIN pg_enum e ON e.enumtypid = t.oid
+         WHERE t.typname = 'rol_usuario' AND e.enumlabel = 'SOPORTE'
+       ) THEN
+         ALTER TYPE rol_usuario ADD VALUE 'SOPORTE';
+       END IF;
+
         IF EXISTS (
              SELECT 1
              FROM information_schema.columns

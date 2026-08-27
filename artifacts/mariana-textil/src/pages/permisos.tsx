@@ -164,6 +164,7 @@ export default function Permisos() {
                       <SelectItem value={Role.CAJA}>Caja</SelectItem>
                       <SelectItem value={Role.SUPERVISOR}>Supervisor</SelectItem>
                       <SelectItem value={Role.BODEGA}>Bodega</SelectItem>
+                      <SelectItem value={Role.SOPORTE}>Soporte</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
