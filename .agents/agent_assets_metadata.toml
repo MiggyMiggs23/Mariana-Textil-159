@@ -28,3 +28,17 @@ mtime_ms = 1787479857229
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e0b7de5d-2252-4d0e-b82a-4fde2eaf5625/0a842ddb-7f08-462a-a216-fa6216fe452b"
 storage_version_token = "1787479857669120"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "XiEabLfQn-gD3Mk6rI7Xd"
+uri = "file://reports/parte-6-notas-credito-aplicacion-abonos-validation-2026-08-27.md"
+type = "text"
+title = "Informe final — Parte 6"
+description = "Validación completa de notas de crédito, FIFO de abonos y pagos, reversos, E2E y aislamiento Neon."
+logical_id = "7b2c23b8-f1c7-49ed-886f-0e10c6d4ae4c"
+content_hash = "sha256:139a233f30f0afd2322da70320b5f3eba987cc9082c7d04caf16195eb0860f0f"
+size = 5797
+mtime_ms = 1787822909400
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7b2c23b8-f1c7-49ed-886f-0e10c6d4ae4c/4f9087b8-6e7d-430e-a8fb-33ab8e2f216b"
+storage_version_token = "1787822956445315"
+content_type = "text/markdown"

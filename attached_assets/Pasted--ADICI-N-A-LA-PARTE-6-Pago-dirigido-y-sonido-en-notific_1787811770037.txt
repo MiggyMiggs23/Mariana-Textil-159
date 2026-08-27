@@ -1,0 +1,121 @@
+# ADICIÓN A LA PARTE 6 — Pago dirigido y sonido en notificaciones
+
+Se ejecuta junto con la Parte 6 o inmediatamente después. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## BLOQUE 1 — Pago dirigido a una nota específica
+
+La regla del negocio sigue siendo **FIFO por fecha, siempre, por defecto**. Esta es la excepción, y debe costar más trabajo que la regla.
+
+### Cómo funciona
+
+En la pantalla de cobro, además del abono normal, existe la opción de **dirigir el pago a una nota específica**.
+
+Al elegirla:
+
+1. El usuario selecciona la nota y captura el monto
+2. **Motivo obligatorio**, texto libre de mínimo 10 caracteres
+3. Se genera una **solicitud de autorización a ADMIN**, con el mismo mecanismo que ya usan las reimpresiones de etiquetas
+4. El abono **no se aplica** hasta que un ADMIN autoriza
+5. Si se rechaza, el usuario puede registrarlo como abono normal FIFO
+
+### Reglas
+
+- Un ADMIN puede dirigir un pago sin solicitar autorización a nadie, pero **el motivo sigue siendo obligatorio** y queda en la bitácora.
+- La solicitud, la autorización o el rechazo, el motivo y quién intervino quedan **todos** en la bitácora de auditoría.
+- Un pago dirigido nunca deja de ser un movimiento normal del libro: se puede revertir, y al revertirlo las notas vuelven solas a su estado anterior.
+- El pago dirigido aplica igual a **proveedores**, con las mismas condiciones.
+
+### Reporte
+
+Agrega a Reportes, en la sección de Clientes y Crédito, una tabla de **pagos dirigidos**: fecha, cliente o proveedor, nota, monto, motivo, quién lo pidió y quién lo autorizó.
+
+Es el número que va a decir si la excepción se está usando como excepción o se volvió costumbre.
+
+---
+
+## BLOQUE 2 — Sonido en todas las notificaciones
+
+**Todas las notificaciones del sistema suenan, para todos los usuarios y todos los roles.** No hay interruptor para silenciarlas dentro de la aplicación.
+
+### Tres sonidos, no uno
+
+Si todo suena igual, en dos semanas nadie distingue nada y el sonido se vuelve ruido de fondo. Tres familias:
+
+| Familia | Cuándo | Carácter |
+|---|---|---|
+| **Aviso** | Ticket que llega a caja | Dos notas ascendentes, breve y suave. Suena muchas veces al día. |
+| **Solicitud** | Pago dirigido, reimpresión de etiqueta, autorización de ajuste, cualquier cosa que espere respuesta de ADMIN | Tres notas, más presente. Alguien está detenido esperando. |
+| **Alerta** | Ticket sin cobrar más de 30 min, salida sin recibir en 24 h, pago vencido o por vencer, recepción marcada como incompleta | Un patrón que se repite dos veces. No urgente al segundo, pero no ignorable. |
+
+### El carácter del sonido
+
+Timbre de **marimba o campana de madera**: cálido, con cuerpo, sin filo metálico. Medio segundo, máximo uno.
+
+**Evita** campanas metálicas brillantes, que se vuelven insoportables a la décima repetición, y tonos electrónicos planos, que suenan a error de sistema.
+
+Genera o incluye los tres archivos de audio en el repositorio, en formato comprimido y ligero. **No dependas de un servicio externo**: si la tienda se queda sin internet, el sonido tiene que seguir funcionando.
+
+### El ticket que llega a caja
+
+Cuando la terminal cierra una venta y el ticket queda listo para cobrar, **la pantalla de Caja de ese sitio suena**, aunque el cajero esté en otra pestaña de la aplicación.
+
+Es el sonido más importante de todos: es el que conecta las dos mitades de tu operación.
+
+---
+
+## BLOQUE 3 — El problema del navegador
+
+Los navegadores **bloquean el audio hasta que el usuario interactúa con la página.** Si alguien abre la terminal en la mañana y nadie toca la pantalla, la primera notificación llega muda y nadie se entera.
+
+### Qué se hace
+
+- Al iniciar sesión, un paso visible: **"Activar sonido"**, un botón que se toca una vez por sesión y reproduce un sonido corto de prueba para confirmar que funciona.
+- Si el audio está bloqueado, muéstralo con un indicador **permanente y visible** en la barra superior, no un aviso que se cierra. Mientras el sonido no esté activo, tiene que verse.
+- El indicador es tocable y reintenta la activación.
+- **Nunca supongas que el sonido está funcionando.** Verifica el estado real del contexto de audio y refléjalo.
+
+### Otras precauciones
+
+- En la pantalla de Caja, mantén la pantalla despierta mientras esté abierta.
+- Si la pestaña está en segundo plano, el sonido debe seguir sonando. Pruébalo.
+- Si un mismo evento se dispara varias veces seguidas, **no encimes los sonidos.** Un solo sonido, aunque lleguen tres tickets al mismo tiempo.
+
+### Lo que no se puede controlar
+
+Si el usuario silencia el aparato o la pestaña desde el sistema operativo, la aplicación no puede evitarlo. **Deja esto anotado en `replit.md`**, porque va a haber un día en que alguien jure que el sistema no sonó y el problema esté en el volumen del teléfono.
+
+Como respaldo, la campana de notificaciones en la barra superior debe mostrar siempre el conteo de pendientes, visible sin sonido.
+
+---
+
+## BLOQUE 4 — Verificación
+
+**Pago dirigido**
+- Un cajero que dirige un pago genera solicitud y el abono no se aplica hasta autorizarse
+- Sin motivo de 10 caracteres, no se puede enviar
+- Un ADMIN lo hace directo, pero el motivo sigue siendo obligatorio
+- Rechazar la solicitud permite registrarlo como abono FIFO normal
+- Revertir un pago dirigido devuelve las notas a su estado anterior
+- Funciona igual con proveedores
+- La tabla de pagos dirigidos aparece en Reportes
+
+**Sonido**
+- Las tres familias suenan distinto y corresponden a los eventos de la tabla
+- Un ticket cerrado en la terminal hace sonar la Caja de ese sitio
+- Suena con la pestaña en segundo plano
+- Tres eventos simultáneos producen un solo sonido, no tres encimados
+- Sin haber tocado la pantalla, el indicador de audio bloqueado es visible y permanente
+- Tocar el indicador activa el sonido
+- Los archivos de audio están en el repositorio y funcionan sin internet
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> Todas las notificaciones suenan, para todos los usuarios, sin interruptor dentro de la aplicación. Tres familias de sonido: aviso, solicitud y alerta, para que el personal las distinga sin mirar la pantalla. Los navegadores bloquean el audio hasta la primera interacción, por lo que existe un paso de "Activar sonido" al iniciar sesión y un indicador permanente cuando está bloqueado. Un usuario puede silenciar su aparato desde el sistema operativo y la aplicación no puede impedirlo. El pago dirigido a una nota específica es una excepción a la regla FIFO: exige motivo escrito y autorización previa de ADMIN, y queda registrado en un reporte propio.

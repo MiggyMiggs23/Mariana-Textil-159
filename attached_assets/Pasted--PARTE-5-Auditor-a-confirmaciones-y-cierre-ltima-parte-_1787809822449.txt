@@ -1,0 +1,199 @@
+# PARTE 5 — Auditoría, confirmaciones y cierre
+
+Última parte del plan. Cierra los pendientes que quedaron del prompt del 25 de agosto y las correcciones menores de la auditoría.
+
+Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## BLOQUE 1 — Bitácora de auditoría consultable
+
+Los datos ya se están grabando en la tabla `auditoria`, con usuario, acción, entidad, datos antes, datos después, IP y fecha. **Lo que no existe es la pantalla para consultarlos.** Se están acumulando a ciegas desde hace semanas.
+
+No hay `routes/auditoria.ts`, no hay página, y no hay entrada en la barra lateral, aunque el módulo `auditoria` sí está declarado en la lista de permisos.
+
+### La pantalla
+
+Nueva entrada **Auditoría** en la sección CONFIGURACIÓN de la barra lateral, después de Conciliación. **Solo ADMIN**, verificado en el servidor y no solo ocultando la opción.
+
+Tabla con: fecha y hora, usuario, rol al momento del hecho, acción, módulo, entidad afectada con su identificador, sitio e IP.
+
+De lo más reciente a lo más antiguo. **Paginada**; no cargues todo de una vez.
+
+### Filtros
+
+- Rango de fechas, con atajos de hoy, últimos 7 días, últimos 30 días y mes en curso
+- Usuario
+- Módulo
+- Tipo de acción
+- Sitio
+- Buscador de texto libre sobre la entidad afectada, para rastrear un folio o una serie concreta
+
+### Detalle
+
+Al abrir un registro, el antes y el después campo por campo, en dos columnas comparables. Si fue una creación, solo el después. Si fue una eliminación lógica, solo el antes.
+
+### Qué debe estar registrándose
+
+Verifica que estas acciones generen registro. Si alguna no lo hace, agrégala:
+
+- Altas, bajas y cambios de usuarios
+- Cambios de permisos y de roles
+- Cambios de precios, en las tres modalidades
+- Cambios del interruptor `se_vende_por_metro`
+- Consultas de INE de clientes
+- Ajustes de inventario
+- Movimientos inversos y correcciones
+- Cancelaciones de tickets
+- Salidas a mostrador
+- Recepciones de salidas, incluyendo las marcadas como incompletas
+- Cambios en cuentas y cortes de caja
+- Reimpresiones de etiquetas
+- Cambios en la configuración de sitios, incluidas las iniciales
+- Inicios de sesión fallidos
+
+### Exportación
+
+Botón para exportar el resultado filtrado a Excel. Nada más.
+
+### Solo lectura, sin excepciones
+
+**No expongas ningún endpoint que permita editar o borrar registros de auditoría, ni siquiera para ADMIN.** Si existe alguno hoy, quítalo.
+
+Una bitácora que se puede alterar no es una bitácora.
+
+---
+
+## BLOQUE 2 — Confirmaciones reforzadas
+
+No existe hoy ningún componente que pida escribir un texto para confirmar. Desactivar un usuario, cancelar un ticket cobrado o borrar un cliente siguen siendo un solo clic.
+
+Van a operar siete sitios con personal que no conoce el sistema. Un clic de más antes de algo irreversible vale mucho.
+
+### Cómo funciona
+
+Componente reutilizable de confirmación que **exige escribir una palabra o un dato exacto**. El botón de confirmar permanece deshabilitado hasta que el texto coincida exactamente.
+
+El diálogo debe decir con claridad qué va a pasar y qué no se puede deshacer.
+
+### Dónde se aplica
+
+| Acción | Qué se escribe |
+|---|---|
+| Desactivar un usuario | El nombre de usuario |
+| Cambiar el rol de un usuario | El nombre de usuario |
+| Cancelar un ticket ya cobrado | El folio del ticket |
+| Ajuste de inventario de más de 10 rollos en una operación | La palabra AJUSTE |
+| Borrar un cliente | El nombre del cliente |
+| Desactivar un sitio | El nombre del sitio |
+| Salida a mostrador de más de 5 rollos | La palabra MOSTRADOR |
+| Cualquier operación del script de reinicio | Lo que ese script exija |
+
+La salida a mostrador entra en la lista porque **es terminal**: el rollo deja el inventario por completo y no hay vuelta atrás.
+
+---
+
+## BLOQUE 3 — Protección contra dejarse fuera
+
+Buena parte ya está implementada en `routes/users.ts` y `routes/permisos.ts`: la verificación del último ADMIN activo con candado transaccional, el bloqueo de cambiarse el propio rol y el de modificar los propios permisos.
+
+**Verifica que las cinco reglas se cumplan y completa las que falten:**
+
+1. No se puede desactivar al último ADMIN activo
+2. Un ADMIN no puede quitarse a sí mismo el rol de ADMIN; otro sí, si queda al menos uno
+3. Un usuario no puede modificar sus propios permisos
+4. No se puede eliminar, renombrar ni vaciar el rol ADMIN del catálogo
+5. Antes de guardar en Usuarios o Permisos, el servidor valida que después del cambio siga existiendo al menos un ADMIN activo con acceso completo; si no, rechaza toda la operación en una sola transacción, sin cambios parciales
+
+Cada rechazo genera su registro en la bitácora.
+
+Escribe pruebas que intenten los cinco escenarios y confirmen el rechazo.
+
+---
+
+## BLOQUE 4 — La matriz del supervisor
+
+El techo en código (`lib/supervisor-policy.ts`) permite al SUPERVISOR crear y editar clientes y proveedores. Pero la fila del seed solo le da **ver**:
+
+```
+clientes:     [VCE, V, V, N]   ← el supervisor está en la 3a posición
+proveedores:  [N,   N, V, N]
+productos:    [V,   N, V, N]
+```
+
+Como el sistema aplica el más restrictivo de los dos, **el supervisor no puede dar de alta un cliente**, aunque el techo lo permita.
+
+### Qué se hace
+
+- Sube la fila del seed para clientes y proveedores a **ver, crear y editar**, en modo operativo y sin finanzas.
+- **Productos se queda en solo lectura.** Editar un producto toca el precio, y el precio es exclusivo de ADMIN. Es la decisión conservadora correcta; déjala anotada.
+- Verifica que el techo siga impidiendo que la base le dé de más. El techo manda siempre.
+
+Recuerda la regla que define el rol: **el supervisor mueve mercancía y opera, pero no ve el dinero.** Al ampliar sus permisos, confirma que ninguna respuesta del servidor le entregue saldos, crédito, plazos, cobros, costos ni INE.
+
+---
+
+## BLOQUE 5 — Correcciones menores de la auditoría
+
+**`Modules.PRECIOS` existe en el cliente pero no en la lista `MODULOS` del servidor.** Hoy funciona por accidente, porque ADMIN pasa de largo la verificación. Agrégalo al servidor para que sea administrable desde la pantalla de Permisos.
+
+**`notificaciones.ts` monta `requireSession` sin prefijo de ruta.** Hoy no hace daño porque está montado casi al final, pero cualquier router agregado después queda con sesión obligatoria sin que nadie lo decida, y una ruta inexistente devuelve 401 en vez de 404. Ponle su prefijo.
+
+**`replit.md` dice "24 módulos" cuando son 25.** Corrígelo y verifica que la lista esté completa.
+
+**La contraseña del ADMIN inicial.** Fuera de desarrollo ya exige `ADMIN_SEED_PASSWORD`, así que no hay fuga. Deja una nota destacada en `replit.md` recordando cambiarla antes del arranque en producción.
+
+---
+
+## BLOQUE 6 — Base de pruebas permanente
+
+Van tres corridas en las que el agente se atora armando la base de pruebas dentro de una rama Neon desechable. Cada verificación paga el costo de construirla desde cero, y dos veces se detuvo a medias.
+
+### Qué se hace
+
+Deja documentado en `replit.md` un procedimiento para una **base de pruebas permanente**: qué se necesita, cómo se prepara, cómo se refresca y cómo se conecta.
+
+**No la crees todavía.** Requiere una decisión del usuario sobre el plan de Neon y sobre cuánta infraestructura quiere mantener. Solo deja escrito qué haría falta, con sus ventajas y sus costos, para que él decida.
+
+Mientras tanto, el procedimiento de rama desechable sigue vigente y **todas sus reglas se mantienen**: verificar `current_database()` antes de operar, `TEST_DATABASE_URL` distinta de `DATABASE_URL`, prohibido crear ADMIN temporales con `executeSql` en development, y eliminar la rama al terminar.
+
+---
+
+## BLOQUE 7 — Verificación
+
+**Auditoría**
+- La pantalla carga, pagina y filtra por los seis criterios
+- El detalle muestra antes y después campo por campo
+- Cada acción de la lista del Bloque 1 genera registro; reporta cuáles ya lo hacían y cuáles hubo que agregar
+- **No existe ningún endpoint que edite o borre auditoría**
+- La exportación a Excel respeta los filtros
+
+**Confirmaciones**
+- Las ocho acciones exigen escribir el texto exacto
+- El botón permanece deshabilitado hasta que coincide
+- Un texto incorrecto no ejecuta nada
+
+**Protecciones**
+- Los cinco escenarios se rechazan, y cada rechazo queda en la bitácora
+
+**Supervisor**
+- Un supervisor puede dar de alta y editar un cliente y un proveedor
+- Un supervisor **no** puede editar un producto
+- Ninguna respuesta del servidor le entrega saldos, crédito, plazos, cobros, costos ni INE
+
+**Menores**
+- `Modules.PRECIOS` aparece en la pantalla de Permisos
+- Una ruta inexistente devuelve 404, no 401
+- `replit.md` dice 25 módulos
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. El SUPERVISOR opera clientes y proveedores pero solo lee productos, porque editar un producto toca el precio.
+
+Y deja anotado, como cierre del plan de cinco partes, qué quedó pendiente para antes del piloto: salidas extraordinarias, respaldos, toma de inventario físico, script de reinicio, decisión de impresora, cambio de la contraseña inicial y el rol CONTADOR.

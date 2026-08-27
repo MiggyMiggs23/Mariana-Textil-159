@@ -1,0 +1,199 @@
+# PARTE 6 — Notas de crédito y aplicación de abonos
+
+Parte nueva, posterior al plan de cinco. **No adelantes trabajo de otras partes.** Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## Principio que gobierna toda esta parte
+
+Ya existe un libro de movimientos de crédito (`movimientos_credito`) con ventas a crédito, abonos, reversos y ajustes. Y ya existe una asignación FIFO (`allocateCreditFifo` en `lib/clientes-aging.ts`) que reparte los abonos contra las ventas más antiguas — **pero solo al momento de leer, para los reportes de antigüedad.**
+
+Al agregar el estado "pagada" a una nota, hay un riesgo directo: que el estado guardado y el libro de movimientos digan cosas distintas. Es exactamente el problema que ya nos costó caro en el inventario, donde la pantalla mostraba metros que el kardex decía que ya no existían.
+
+> **El libro de movimientos de crédito es la fuente de verdad.**
+> El estado de una nota —pendiente, parcial, pagada— es **derivado**, calculado desde los movimientos. Nunca una marca que alguien enciende a mano.
+
+Nadie "palomea" una nota. Se registra un abono, y si ese abono la cubre, la nota **queda** pagada como consecuencia. Si después ese abono se revierte, la nota vuelve sola a pendiente.
+
+Escribe este principio en `replit.md` antes de empezar.
+
+---
+
+## BLOQUE 1 — La nota de crédito
+
+Cuando un ticket se cobra a crédito, **en lugar del ticket se imprime una nota.**
+
+### Contenido
+
+- Encabezado **NOTA DE CRÉDITO**, con el logo, igual que las demás hojas
+- Folio con el formato por sitio (`INICIALES-FOLIO`)
+- Cliente, con su nombre y datos de contacto
+- Fecha de la venta y **fecha de vencimiento**, según el plazo del cliente (7, 15, 30 o 60 días)
+- Las líneas agrupadas en **ROLLOS** y **METRAJE**, con subtotal cada una, igual que el ticket
+- Subtotal, IVA si está marcada como facturada, y total
+- **Saldo pendiente**, que al emitirse es el total
+- Espacio para firma del cliente
+
+### Dos copias, distintas entre sí
+
+El sistema genera **dos hojas**:
+
+| Copia | Rótulo | QR |
+|---|---|---|
+| Interna | COPIA INTERNA | **Sí** |
+| Cliente | COPIA CLIENTE | **No** |
+
+La copia del cliente **no lleva QR**. Ese papel se va con el cliente, y un QR que apunta al sistema no le sirve de nada —le va a pedir contraseña— y regala la dirección del sistema a alguien de fuera.
+
+### Tamaño
+
+Media carta horizontal, **216 × 140 mm**, la misma que la hoja de salida. Verifica que el diseño y la regla `@page` declaren exactamente la misma medida; es el error que ya partió documentos antes.
+
+---
+
+## BLOQUE 2 — El QR y el cobro
+
+El QR de la copia interna lleva al detalle de esa nota dentro del sistema.
+
+### Lo que pasa al escanear
+
+Se abre **el estado de cuenta del cliente**, con la nota escaneada resaltada, y se ven todas sus notas pendientes ordenadas de la más antigua a la más reciente, con su saldo y su vencimiento.
+
+**No abras solo la nota escaneada, aislada.** El cliente llega a pagar, y quien cobra necesita ver todo lo que debe, no solo el papel que traía en la mano.
+
+### El cobro
+
+Desde ahí se registra el abono: monto, forma de pago y cuenta destino. **No hay un botón de "marcar como pagada".** Se registra dinero, y el estado se acomoda solo.
+
+Si el abono cubre la nota resaltada y sobra, el sobrante sigue su camino según la regla del Bloque 3.
+
+### Dónde vive
+
+Como pestaña dentro de **Cobros**, con un `<CampoEscaneo>` arriba, igual que la recepción de salidas. Funciona con pistola, con smartphone con escáner y con la cámara.
+
+---
+
+## BLOQUE 3 — Aplicación de abonos, clientes
+
+### La regla, exactamente
+
+> **Todo abono se aplica a la nota más antigua por fecha.**
+> Al saldarla, queda pagada y **el sobrante pasa a la siguiente**, también por fecha.
+> Así hasta agotar el abono.
+
+Si después de saldar todas las notas todavía queda dinero, se queda como **saldo a favor** del cliente y se aplica automáticamente a la siguiente venta a crédito.
+
+### Sin excepciones
+
+**El abono no se puede dirigir a una nota específica**, aunque el cliente llegue con ese papel en la mano. La regla es por fecha, siempre.
+
+Si el usuario intenta pagar una nota más nueva teniendo una más vieja pendiente, el sistema aplica FIFO de todas formas y **le muestra en pantalla cómo se repartió**, antes de confirmar.
+
+### Ya existe la lógica
+
+`allocateCreditFifo` en `lib/clientes-aging.ts` ya implementa el reparto y tiene sus pruebas. **Reutilízala.** No escribas un segundo algoritmo que pueda desviarse del primero.
+
+Lo que falta es exponerlo: que el reparto sea visible, que quede registrado qué abono cubrió qué nota, y que el estado de cada nota se derive de ahí.
+
+### La vista previa del reparto
+
+Antes de confirmar el abono, muestra cómo se va a repartir:
+
+```
+Abono de $10,000.00 se aplica a:
+  MA-000101  vence 15/08   saldo $4,200.00   → se salda
+  MA-000108  vence 22/08   saldo $3,500.00   → se salda
+  MA-000115  vence 01/09   saldo $6,000.00   → abona $2,300.00, queda $3,700.00
+```
+
+Que el cajero vea el efecto antes de guardarlo.
+
+---
+
+## BLOQUE 4 — Detalle de la nota
+
+Al abrir una nota, desde la lista o desde el escaneo:
+
+- Sus datos completos y sus líneas, agrupadas por modalidad
+- **Todos los abonos que la han tocado**, con fecha, monto, forma de pago, cuenta destino y quién los registró
+- El saldo pendiente actual
+- Su estado derivado: pendiente, parcial o pagada
+- Si está vencida, cuántos días lleva vencida
+
+Un abono puede haber tocado varias notas y una nota puede haber recibido varios abonos. **Muestra la relación en las dos direcciones**: desde la nota, qué abonos la tocaron; desde el abono, a qué notas se aplicó.
+
+Botón para reimprimir la nota, dejando registro en la bitácora como ya se hace con las etiquetas.
+
+---
+
+## BLOQUE 5 — Abonos a proveedores
+
+La misma regla, del otro lado del mostrador.
+
+> **Todo pago a proveedor se aplica a la compra más antigua por fecha.**
+> Al saldarla, el sobrante pasa a la siguiente.
+
+Existe ya la tabla `pagos_proveedor`. Aplícale el mismo tratamiento:
+
+- Reparto FIFO por fecha
+- Vista previa del reparto antes de confirmar
+- Estado derivado de cada compra: pendiente, parcial, pagada
+- Al abrir una compra, todos los pagos que la han tocado, con su detalle
+- Saldo a favor si sobra después de saldar todo
+
+**Usa el mismo algoritmo de reparto que los clientes**, no una copia. Si hay que generalizarlo para que sirva a los dos, generalízalo.
+
+Que un proveedor y un cliente se comporten distinto ante la misma regla sería un error difícil de detectar y fácil de evitar.
+
+---
+
+## BLOQUE 6 — Cosas que no cambian
+
+- El estado de una nota **nunca** se marca a mano. Siempre se deriva de los movimientos.
+- **Nada se borra.** Un abono equivocado se corrige con un movimiento inverso, y las notas que tocaba vuelven solas a su estado anterior.
+- Formato numérico `es-MX`: dinero con 2 decimales, coma de miles, folios sin comas.
+- El margen y los importes se calculan sobre el subtotal cuando corresponda, nunca sobre el total con IVA.
+- El plazo del cliente lo elige CAJA al momento de la venta, sin preselección, y se notifica a ADMIN. Eso ya está construido y no se toca.
+- La antigüedad se cuenta **desde el vencimiento, no desde la venta.** Ya está corregido; verifica que siga así.
+- Registrar un abono queda en la bitácora de auditoría, con su reparto.
+
+---
+
+## BLOQUE 7 — Verificación
+
+**La nota**
+- Un ticket a crédito imprime nota, no ticket
+- Se generan dos copias; la del cliente **no** trae QR
+- Cabe en una media carta horizontal, en una sola hoja
+- El vencimiento corresponde al plazo del cliente
+
+**El escaneo**
+- Escanear el QR abre el estado de cuenta con esa nota resaltada
+- Se ven todas las notas pendientes del cliente, de la más antigua a la más reciente
+- Funciona con teclado y con cámara
+
+**El reparto, clientes**
+- Un abono que cubre dos notas y parte de una tercera las deja saldadas, saldada y parcial
+- La vista previa muestra el reparto antes de confirmar
+- Un abono mayor al total deja saldo a favor
+- Intentar dirigir un abono a una nota más nueva aplica FIFO de todas formas y lo explica
+- Revertir un abono devuelve las notas a su estado anterior, sin marcas manuales
+
+**El reparto, proveedores**
+- El mismo escenario da el mismo resultado que con clientes
+- Es el mismo algoritmo, no una copia
+
+**El detalle**
+- Desde la nota se ven todos sus abonos
+- Desde el abono se ven todas las notas que tocó
+- El estado siempre coincide con lo que dicen los movimientos
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —pendiente, parcial, pagada— se deriva de los movimientos y nunca se marca a mano. Todo abono, de cliente o a proveedor, se aplica a la nota o compra más antigua por fecha; al saldarla, el sobrante pasa a la siguiente, y lo que sobre al final queda como saldo a favor. Clientes y proveedores usan el mismo algoritmo de reparto. Una venta a crédito imprime nota, no ticket: dos copias, la interna con QR y la del cliente sin él.
