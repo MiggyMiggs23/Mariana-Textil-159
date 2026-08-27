@@ -26,6 +26,14 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
   await ensureAuditSchema(pool);
 
   const tag = `AUDIT-${randomUUID()}`;
+  const uuidHex = tag.slice("AUDIT-".length).replaceAll("-", "");
+  const initialsFromHex = (value: string) =>
+    value
+      .split("")
+      .map((character) => String.fromCharCode(65 + Number.parseInt(character, 16)))
+      .join("");
+  const siteOneInitials = initialsFromHex(uuidHex.slice(0, 3));
+  const siteTwoInitials = initialsFromHex(uuidHex.slice(-3));
   const ids = { sites: [] as number[], users: [] as number[], sessions: [] as string[] };
   let server: Server | undefined;
   try {
@@ -33,11 +41,11 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
       (await pool.query(text, values)).rows[0]!;
     const siteOne = await one(
       `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id`,
-      [`${tag} Uno`, "AUA"],
+      [`${tag} Uno`, siteOneInitials],
     );
     const siteTwo = await one(
       `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'BODEGA',true) RETURNING id`,
-      [`${tag} Dos`, "AUB"],
+      [`${tag} Dos`, siteTwoInitials],
     );
     ids.sites.push(Number(siteOne.id), Number(siteTwo.id));
     const admin = await one(
@@ -50,7 +58,12 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
        VALUES($1,$2,'integration-only','CAJA',$3,true,'PROPIA') RETURNING id`,
       [`${tag} Caja`, `${tag.toLowerCase()}-caja`, siteTwo.id],
     );
-    ids.users.push(Number(admin.id), Number(caja.id));
+    const adminWithoutSite = await one(
+      `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
+       VALUES($1,$2,'integration-only','ADMIN',NULL,true,'TODAS') RETURNING id`,
+      [`${tag} Admin sin sitio`, `${tag.toLowerCase()}-admin-sin-sitio`],
+    );
+    ids.users.push(Number(admin.id), Number(caja.id), Number(adminWithoutSite.id));
 
     const insert = async (
       userId: number,
@@ -70,23 +83,56 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
     const newest = await insert(Number(admin.id), "ACTUALIZAR", tag, "gamma", "2026-08-27T14:00:00Z", { valor: 1 }, { valor: 2 });
 
     const frozen = await one(
-      `SELECT rol_snapshot,sitio_id,sitio_snapshot,modulo FROM auditoria WHERE id=$1`,
+      `SELECT usuario_snapshot,rol_snapshot,sitio_id,sitio_snapshot,modulo FROM auditoria WHERE id=$1`,
       [old.id],
     );
     assert.deepEqual(frozen, {
-      rol_snapshot: "ADMIN", sitio_id: siteOne.id, sitio_snapshot: `${tag} Uno`, modulo: tag,
+      usuario_snapshot: `${tag.toLowerCase()}-admin`, rol_snapshot: "ADMIN", sitio_id: siteOne.id, sitio_snapshot: `${tag} Uno`, modulo: tag,
     });
+    await pool.query(`UPDATE usuarios SET usuario=$1 WHERE id=$2`, [`${tag.toLowerCase()}-renamed`, admin.id]);
+    assert.equal((await getAuditoria(String(old.id)))?.usuario, `${tag.toLowerCase()}-admin`);
+    await assert.rejects(() => pool.query(`UPDATE auditoria SET accion='MUTADA' WHERE id=$1`, [old.id]), /append-only/);
+    await assert.rejects(() => pool.query(`DELETE FROM auditoria WHERE id=$1`, [old.id]), /append-only/);
+    const explicitSiteAudit = await one(
+      `INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,sitio_id,ip)
+       VALUES($1,'REIMPRIMIR_ETIQUETA','reimpresiones_etiqueta',$2,$3,'127.0.0.1')
+       RETURNING id`,
+      [adminWithoutSite.id, `${tag}-rollo`, siteTwo.id],
+    );
+    const explicitSiteFrozen = await one(
+      `SELECT usuario_snapshot,rol_snapshot,sitio_id,sitio_snapshot,modulo
+       FROM auditoria WHERE id=$1`,
+      [explicitSiteAudit.id],
+    );
+    assert.deepEqual(explicitSiteFrozen, {
+      usuario_snapshot: `${tag.toLowerCase()}-admin-sin-sitio`,
+      rol_snapshot: "ADMIN",
+      sitio_id: siteTwo.id,
+      sitio_snapshot: `${tag} Dos`,
+      modulo: "etiquetas",
+    });
+    const explicitSiteResult = await listAuditoria({
+      sitioId: Number(siteTwo.id),
+      search: `${tag}-rollo`,
+    }, 1, 10);
+    assert.equal(explicitSiteResult.total, 1);
+    assert.equal(explicitSiteResult.items[0]?.sitioId, Number(siteTwo.id));
 
     const all = await listAuditoria({ search: tag }, 1, 10);
-    assert.deepEqual(all.items.map((row) => row.entidadId), ["gamma", "beta", "alpha"]);
+    assert.deepEqual(all.items.map((row) => row.entidadId), [
+      "gamma",
+      "beta",
+      "alpha",
+      `${tag}-rollo`,
+    ]);
     const paged = await listAuditoria({ search: tag }, 2, 1);
-    assert.equal(paged.total, 3);
+    assert.equal(paged.total, 4);
     assert.equal(paged.items[0]?.entidadId, "beta");
-    assert.equal((await listAuditoria({ desde: "2026-08-27", hasta: "2026-08-27", search: tag }, 1, 10)).total, 3);
+    assert.equal((await listAuditoria({ desde: "2026-08-27", hasta: "2026-08-27", search: tag }, 1, 10)).total, 4);
     assert.equal((await listAuditoria({ usuarioId: Number(caja.id), search: tag }, 1, 10)).total, 1);
     assert.equal((await listAuditoria({ modulo: tag, search: tag }, 1, 10)).total, 2);
     assert.equal((await listAuditoria({ accion: "OTRA_ACCION", search: tag }, 1, 10)).total, 1);
-    assert.equal((await listAuditoria({ sitioId: Number(siteTwo.id), search: tag }, 1, 10)).total, 1);
+    assert.equal((await listAuditoria({ sitioId: Number(siteTwo.id), search: tag }, 1, 10)).total, 2);
     assert.equal((await listAuditoria({ search: "alpha" }, 1, 10)).total, 1);
 
     const detail = await getAuditoria(String(newest.id));
@@ -126,10 +172,42 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
       const response = await request(method, "/api/auditoria", ids.sessions[0]!);
       assert.ok([404, 405].includes(response.status), `${method} must not mutate audit`);
     }
+    const cleanupClient = await pool.connect();
+    try {
+      assert.equal(
+        (await cleanupClient.query<{ database: string }>("SELECT current_database() AS database")).rows[0]?.database,
+        "parte5_audit_test_20260827",
+      );
+      await cleanupClient.query("BEGIN");
+      await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
+      await cleanupClient.query("DELETE FROM auditoria WHERE id=$1", [old.id]);
+      await cleanupClient.query("COMMIT");
+      assert.equal((await pool.query("SELECT 1 FROM auditoria WHERE id=$1", [old.id])).rowCount, 0);
+    } catch (error) {
+      await cleanupClient.query("ROLLBACK");
+      throw error;
+    } finally {
+      cleanupClient.release();
+    }
   } finally {
     if (server) await new Promise<void>((resolve, reject) => server!.close((error) => error ? reject(error) : resolve()));
     await pool.query(`DELETE FROM sesiones WHERE id = ANY($1::uuid[])`, [ids.sessions]);
-    await pool.query(`DELETE FROM auditoria WHERE entidad LIKE $1`, [`${tag}%`]);
+    const cleanupClient = await pool.connect();
+    try {
+      await cleanupClient.query("BEGIN");
+      await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
+      await cleanupClient.query(
+        `DELETE FROM auditoria
+         WHERE entidad LIKE $1 OR usuario_id = ANY($2::int[])`,
+        [`${tag}%`, ids.users],
+      );
+      await cleanupClient.query("COMMIT");
+    } catch (error) {
+      await cleanupClient.query("ROLLBACK");
+      throw error;
+    } finally {
+      cleanupClient.release();
+    }
     await pool.query(`DELETE FROM usuarios WHERE id = ANY($1::int[])`, [ids.users]);
     await pool.query(`DELETE FROM ubicaciones WHERE id = ANY($1::int[])`, [ids.sites]);
     await pool.end();

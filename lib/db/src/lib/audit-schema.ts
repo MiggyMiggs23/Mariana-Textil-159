@@ -13,6 +13,7 @@ export async function ensureAuditSchema(
     await client.query("BEGIN");
     await client.query(`
       ALTER TABLE auditoria
+        ADD COLUMN IF NOT EXISTS usuario_snapshot text,
         ADD COLUMN IF NOT EXISTS rol_snapshot text,
         ADD COLUMN IF NOT EXISTS sitio_id integer REFERENCES ubicaciones(id),
         ADD COLUMN IF NOT EXISTS sitio_snapshot text,
@@ -21,15 +22,16 @@ export async function ensureAuditSchema(
       CREATE OR REPLACE FUNCTION enriquecer_auditoria()
       RETURNS trigger LANGUAGE plpgsql AS $$
       DECLARE
+        usuario_nombre text;
         usuario_rol text;
         usuario_sitio integer;
         sitio_nombre text;
       BEGIN
-        IF NEW.usuario_id IS NOT NULL
-           AND (NEW.rol_snapshot IS NULL OR NEW.sitio_id IS NULL) THEN
-          SELECT rol::text, ubicacion_id
-            INTO usuario_rol, usuario_sitio
+        IF NEW.usuario_id IS NOT NULL THEN
+          SELECT usuario, rol::text, ubicacion_id
+            INTO usuario_nombre, usuario_rol, usuario_sitio
             FROM usuarios WHERE id = NEW.usuario_id;
+          NEW.usuario_snapshot := COALESCE(NEW.usuario_snapshot, usuario_nombre);
           NEW.rol_snapshot := COALESCE(NEW.rol_snapshot, usuario_rol);
           NEW.sitio_id := COALESCE(NEW.sitio_id, usuario_sitio);
         END IF;
@@ -60,6 +62,21 @@ export async function ensureAuditSchema(
       CREATE TRIGGER auditoria_enriquecer_insert
         BEFORE INSERT ON auditoria
         FOR EACH ROW EXECUTE FUNCTION enriquecer_auditoria();
+
+       CREATE OR REPLACE FUNCTION proteger_auditoria_append_only()
+       RETURNS trigger LANGUAGE plpgsql AS $$
+       BEGIN
+         IF current_database() = 'parte5_audit_test_20260827'
+            AND current_setting('app.audit_test_cleanup', true) = 'on' THEN
+           RETURN CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END;
+         END IF;
+         RAISE EXCEPTION 'auditoria es append-only';
+       END;
+       $$;
+       DROP TRIGGER IF EXISTS auditoria_append_only ON auditoria;
+       CREATE TRIGGER auditoria_append_only
+         BEFORE UPDATE OR DELETE ON auditoria
+         FOR EACH ROW EXECUTE FUNCTION proteger_auditoria_append_only();
 
       CREATE INDEX IF NOT EXISTS auditoria_created_idx ON auditoria (created_at DESC, id DESC);
       CREATE INDEX IF NOT EXISTS auditoria_modulo_created_idx ON auditoria (modulo, created_at DESC);

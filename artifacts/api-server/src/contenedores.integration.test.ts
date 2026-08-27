@@ -468,7 +468,18 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
       await pool.query("DELETE FROM contenedores WHERE usuario_id=ANY($1::int[])", [created.users]);
       await pool.query("DELETE FROM sesiones WHERE usuario_id=ANY($1::int[])", [created.users]);
       await pool.query("DELETE FROM permisos_usuario WHERE usuario_id=ANY($1::int[])", [created.users]);
-      await pool.query("DELETE FROM auditoria WHERE usuario_id=ANY($1::int[])", [created.users]);
+       const cleanupClient = await pool.connect();
+       try {
+         await cleanupClient.query("BEGIN");
+         await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
+         await cleanupClient.query("DELETE FROM auditoria WHERE usuario_id=ANY($1::int[])", [created.users]);
+         await cleanupClient.query("COMMIT");
+       } catch (error) {
+         await cleanupClient.query("ROLLBACK");
+         throw error;
+       } finally {
+         cleanupClient.release();
+       }
       await pool.query("DELETE FROM usuarios WHERE id=ANY($1::int[])", [created.users]);
     }
     if (created.products.length)

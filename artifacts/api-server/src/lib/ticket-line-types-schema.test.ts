@@ -135,11 +135,22 @@ await test("la migración desvincula y audita líneas METREADO legacy antes del 
     );
     assert.equal(oldColumn.rowCount, 0);
   } finally {
-    await pool.query(
-      `DELETE FROM auditoria
-       WHERE entidad = 'ticket_lineas' AND entidad_id = $1`,
-      [String(lineId)],
-    );
+     const cleanupClient = await pool.connect();
+     try {
+       await cleanupClient.query("BEGIN");
+       await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
+       await cleanupClient.query(
+         `DELETE FROM auditoria
+          WHERE entidad = 'ticket_lineas' AND entidad_id = $1`,
+         [String(lineId)],
+       );
+       await cleanupClient.query("COMMIT");
+     } catch (error) {
+       await cleanupClient.query("ROLLBACK");
+       throw error;
+     } finally {
+       cleanupClient.release();
+     }
     await pool.query("DELETE FROM ticket_lineas WHERE id = $1", [lineId]);
     await pool.query("DELETE FROM tickets WHERE id = $1", [ticketId]);
     await pool.query("DELETE FROM rollos WHERE id = $1", [rolloId]);

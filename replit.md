@@ -219,6 +219,20 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 Mientras esta decisión siga pendiente, continúa vigente el procedimiento de rama Neon desechable: base vacía con esquema y seed actuales, `current_database()` confirmado, `TEST_DATABASE_URL` distinta de `DATABASE_URL`, prohibición de crear ADMIN o sesiones de prueba en development y eliminación completa de la rama al terminar.
 
+## Cierre del plan de cinco partes
+
+La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. El SUPERVISOR opera clientes y proveedores pero solo lee productos, porque editar un producto toca el precio.
+
+### Pendientes antes del piloto
+
+- Definir y probar el procedimiento de salidas extraordinarias.
+- Configurar, ejecutar y comprobar respaldos y restauración.
+- Preparar la toma de inventario físico.
+- Construir y validar el script de reinicio, incluida su confirmación textual exacta.
+- Tomar la decisión final de impresora y validar el flujo físico.
+- Cambiar la contraseña inicial antes de producción.
+- Definir el alcance y la matriz del rol CONTADOR.
+
 ## Product
 
 - Login sin registro público ni recuperación de contraseña

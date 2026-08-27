@@ -50,7 +50,16 @@ test("la migración central congela inserciones sin inferir históricos", () => 
     "utf8",
   );
   assert.match(migration, /BEFORE INSERT ON auditoria/);
+  assert.match(migration, /NEW\.usuario_snapshot/);
   assert.match(migration, /NEW\.rol_snapshot/);
   assert.match(migration, /NEW\.sitio_snapshot/);
-  assert.doesNotMatch(migration, /UPDATE\s+auditoria/i);
+  assert.match(migration, /BEFORE UPDATE OR DELETE ON auditoria/);
+  assert.match(migration, /current_database\(\) = 'parte5_audit_test_20260827'/);
+  assert.match(migration, /app\.audit_test_cleanup/);
+});
+
+test("las consultas de auditoría usan exclusivamente snapshots", () => {
+  const presentation = readFileSync(new URL("./lib/auditoria.ts", import.meta.url), "utf8");
+  assert.match(presentation, /a\.usuario_snapshot AS usuario/);
+  assert.doesNotMatch(presentation, /JOIN\s+usuarios/i);
 });

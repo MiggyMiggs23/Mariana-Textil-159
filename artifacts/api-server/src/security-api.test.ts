@@ -299,11 +299,32 @@ async function mkUser(rol: RolUsuario, ubicacionId: number | null, opts?: {
 
 async function mkUbicacion(): Promise<number> {
   const tag = `${RUN}_${++userSeq}`;
+  let initials: string | undefined;
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    const hex = randomUUID().replaceAll("-", "");
+    const candidate = [0, 4, 8]
+      .map((offset) =>
+        String.fromCharCode(
+          65 + (Number.parseInt(hex.slice(offset, offset + 4), 16) % 26),
+        ),
+      )
+      .join("");
+    const [existing] = await db
+      .select({ id: ubicacionesTable.id })
+      .from(ubicacionesTable)
+      .where(eq(ubicacionesTable.iniciales, candidate))
+      .limit(1);
+    if (!existing) {
+      initials = candidate;
+      break;
+    }
+  }
+  assert.ok(initials, "No se encontraron iniciales únicas para la ubicación de prueba");
   const [row] = await db
     .insert(ubicacionesTable)
     .values({
       nombre: `UbSAT ${tag}`.slice(0, 120),
-      iniciales: `S${String.fromCharCode(65 + (userSeq % 26))}`,
+      iniciales: initials,
       tipo: "TIENDA",
     })
     .returning({ id: ubicacionesTable.id });
@@ -2907,7 +2928,10 @@ async function cleanup(): Promise<void> {
 
   for (const id of createdUserIds) {
     try {
-      await db.delete(auditoriaTable).where(eq(auditoriaTable.usuarioId, id));
+       await db.transaction(async (tx) => {
+         await tx.execute(sql`SET LOCAL app.audit_test_cleanup = 'on'`);
+         await tx.delete(auditoriaTable).where(eq(auditoriaTable.usuarioId, id));
+       });
       await db.delete(usuariosTable).where(eq(usuariosTable.id, id));
     } catch { /* best effort */ }
   }

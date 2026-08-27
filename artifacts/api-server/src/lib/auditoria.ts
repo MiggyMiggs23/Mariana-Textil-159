@@ -100,7 +100,7 @@ export function presentAuditoria(
 }
 
 const selection = sql`
-  a.id, a.created_at, a.usuario_id, u.usuario, a.rol_snapshot,
+  a.id, a.created_at, a.usuario_id, a.usuario_snapshot AS usuario, a.rol_snapshot,
   a.accion, a.modulo, a.entidad, a.entidad_id, a.sitio_id,
   a.sitio_snapshot, a.ip, a.datos_antes, a.datos_despues
 `;
@@ -112,7 +112,7 @@ export async function listAuditoria(
 ) {
   const result = await db.execute(sql`
     SELECT ${selection}, COUNT(*) OVER()::int AS total
-    FROM auditoria a LEFT JOIN usuarios u ON u.id = a.usuario_id
+    FROM auditoria a
     ${whereSql(filters)}
     ORDER BY a.created_at DESC, a.id DESC
     LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
@@ -129,7 +129,7 @@ export async function listAuditoria(
 export async function getAuditoria(id: string) {
   const result = await db.execute(sql`
     SELECT ${selection}
-    FROM auditoria a LEFT JOIN usuarios u ON u.id = a.usuario_id
+    FROM auditoria a
     WHERE a.id = ${id}::bigint LIMIT 1
   `);
   const row = result.rows[0] as Row | undefined;
@@ -139,7 +139,7 @@ export async function getAuditoria(id: string) {
 export async function exportAuditoriaRows(filters: AuditoriaFilters) {
   const result = await db.execute(sql`
     SELECT ${selection}
-    FROM auditoria a LEFT JOIN usuarios u ON u.id = a.usuario_id
+    FROM auditoria a
     ${whereSql(filters)}
     ORDER BY a.created_at DESC, a.id DESC
     LIMIT ${AUDIT_EXPORT_LIMIT + 1}

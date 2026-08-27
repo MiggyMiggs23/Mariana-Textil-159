@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaFolioTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { crearRollo, InventarioError } from "./inventario";
 import {
@@ -317,6 +317,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   });
   after(async () => { await db.transaction(async (tx) => {
     if (docs.length) {
+       await tx.execute(sql`SET LOCAL app.audit_test_cleanup = 'on'`);
       await tx.delete(notificacionesSistemaTable).where(and(
         eq(notificacionesSistemaTable.entidad, "salidas"),
         inArray(notificacionesSistemaTable.entidadId, docs.map(String)),

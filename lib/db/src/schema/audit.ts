@@ -18,6 +18,7 @@ export const auditoriaTable = pgTable(
   {
     id: bigserial("id", { mode: "bigint" }).primaryKey(),
     usuarioId: integer("usuario_id").references(() => usuariosTable.id),
+    usuarioSnapshot: text("usuario_snapshot"),
     rolSnapshot: text("rol_snapshot"),
     sitioId: integer("sitio_id").references(() => ubicacionesTable.id),
     sitioSnapshot: text("sitio_snapshot"),

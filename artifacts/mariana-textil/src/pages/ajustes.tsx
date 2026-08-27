@@ -30,6 +30,8 @@ import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
+import { requiereConfirmacionAjuste } from "@/lib/ajuste-confirmacion";
 import {
   advertenciaSkuEscaneado,
   type CodigoEscaneadoInterpretado,
@@ -107,6 +109,7 @@ export default function Ajustes() {
   const [cantidadNueva, setCantidadNueva] = useState("");
   const [justificacion, setJustificacion] = useState("");
   const [isBaja, setIsBaja] = useState(false);
+  const [confirmacionAjusteAbierta, setConfirmacionAjusteAbierta] = useState(false);
 
   const ajustarRollo = useAjustarRollo();
   const revisarAjuste = useRevisarAjuste();
@@ -134,14 +137,9 @@ export default function Ajustes() {
 
   const isFormValid = selectedRollo && justificacion.length >= 10 && (isBaja || (cantidadNueva && parseFloat(cantidadNueva) >= 0));
 
-  const handleSubmitAjuste = () => {
-    if (!isFormValid || !selectedRollo) {
-      toast.error("El ajuste está incompleto", {
-        description: "Selecciona un rollo, captura una cantidad válida y explica el motivo.",
-      });
-      return;
-    }
-    
+  const enviarAjuste = () => {
+    if (!selectedRollo) return;
+
     ajustarRollo.mutate({
       id: selectedRollo.id,
       data: {
@@ -151,6 +149,7 @@ export default function Ajustes() {
     }, {
       onSuccess: () => {
         toast.success(isBaja ? "Rollo dado de baja correctamente" : "Ajuste aplicado y enviado a revisión");
+        setConfirmacionAjusteAbierta(false);
         setSelectedRollo(null);
         setCantidadNueva("");
         setJustificacion("");
@@ -163,6 +162,26 @@ export default function Ajustes() {
         toast.error("Error", { description: msg });
       }
     });
+  };
+
+  const handleSubmitAjuste = () => {
+    if (!isFormValid || !selectedRollo) {
+      toast.error("El ajuste está incompleto", {
+        description: "Selecciona un rollo, captura una cantidad válida y explica el motivo.",
+      });
+      return;
+    }
+
+    if (requiereConfirmacionAjuste({
+      cantidadActual: selectedRollo.cantidadActual,
+      cantidadNueva,
+      isBaja,
+    })) {
+      setConfirmacionAjusteAbierta(true);
+      return;
+    }
+
+    enviarAjuste();
   };
 
   const handleRevisar = (rolloId: number, movimientoId: number, aprobado: boolean) => {
@@ -506,6 +525,17 @@ export default function Ajustes() {
           )}
         </Tabs>
       </div>
+      <ConfirmacionTextoExacto
+        open={confirmacionAjusteAbierta}
+        onOpenChange={setConfirmacionAjusteAbierta}
+        titulo="Confirmar ajuste de inventario"
+        descripcion="Este ajuste modifica más de 10 unidades. Para continuar, confirma la operación."
+        textoRequerido="AJUSTE"
+        etiqueta="Escribe AJUSTE para aplicar el cambio"
+        textoConfirmar="Aplicar ajuste"
+        pendiente={ajustarRollo.isPending}
+        onConfirm={enviarAjuste}
+      />
     </AppLayout>
   );
 }

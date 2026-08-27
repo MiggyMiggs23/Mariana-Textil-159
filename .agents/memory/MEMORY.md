@@ -12,3 +12,4 @@
 - [Autoajuste tipográfico de impresión](print-font-autofit.md) — recalcular tras cargar fuentes y antes de imprimir; ResizeObserver no detecta cambios de métricas.
 - [Identidad de base en E2E](e2e-database-identity.md) — verificar current_database() tras cada reinicio; una rama o archivo temporal no garantiza aislamiento.
 - [Migración de folios por sitio](site-folio-migrations.md) — retirar unicidad global antes de renumerar y reparar referencias desde relaciones internas estables.
+- [Sitio afectado en auditoría](audit-affected-site.md) — conservar el sitio explícito del evento antes de derivar el sitio asignado al actor.

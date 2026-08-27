@@ -191,7 +191,18 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
     }
     await pool.query(`DELETE FROM sesiones WHERE id = ANY($1::uuid[])`, [fixtureSessions]);
     await pool.query(`DELETE FROM permisos_usuario WHERE usuario_id = ANY($1::int[])`, [fixtureUsers]);
-    await pool.query(`DELETE FROM auditoria WHERE usuario_id = ANY($1::int[])`, [fixtureUsers]);
+    const cleanupClient = await pool.connect();
+    try {
+      await cleanupClient.query("BEGIN");
+      await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
+      await cleanupClient.query(`DELETE FROM auditoria WHERE usuario_id = ANY($1::int[])`, [fixtureUsers]);
+      await cleanupClient.query("COMMIT");
+    } catch (error) {
+      await cleanupClient.query("ROLLBACK");
+      throw error;
+    } finally {
+      cleanupClient.release();
+    }
     await pool.query(`DELETE FROM usuarios WHERE id = ANY($1::int[])`, [fixtureUsers]);
     await pool.query(`DELETE FROM ubicaciones WHERE id = ANY($1::int[])`, [fixtureLocations]);
     await pool.end();
