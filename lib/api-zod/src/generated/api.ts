@@ -3683,6 +3683,7 @@ export const CrearTicketResponse = zod.object({
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
   "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoFuente": zod.union([zod.literal('EXACT_ROLL'),zod.literal('AVERAGE_12_MONTHS'),zod.literal('STALE_LAST_KNOWN'),zod.literal('NO_COST'),zod.literal(null)]).nullish().describe('Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico'),
   "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
 })),
   "pagos": zod.array(zod.object({
@@ -3863,6 +3864,7 @@ export const ObtenerTicketResponse = zod.object({
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
   "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoFuente": zod.union([zod.literal('EXACT_ROLL'),zod.literal('AVERAGE_12_MONTHS'),zod.literal('STALE_LAST_KNOWN'),zod.literal('NO_COST'),zod.literal(null)]).nullish().describe('Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico'),
   "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
 })),
   "pagos": zod.array(zod.object({
@@ -3951,6 +3953,7 @@ export const CancelarTicketResponse = zod.object({
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
   "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoFuente": zod.union([zod.literal('EXACT_ROLL'),zod.literal('AVERAGE_12_MONTHS'),zod.literal('STALE_LAST_KNOWN'),zod.literal('NO_COST'),zod.literal(null)]).nullish().describe('Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico'),
   "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
 })),
   "pagos": zod.array(zod.object({
@@ -4046,6 +4049,7 @@ export const CobrarTicketResponse = zod.object({
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
   "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoFuente": zod.union([zod.literal('EXACT_ROLL'),zod.literal('AVERAGE_12_MONTHS'),zod.literal('STALE_LAST_KNOWN'),zod.literal('NO_COST'),zod.literal(null)]).nullish().describe('Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico'),
   "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
 })),
   "pagos": zod.array(zod.object({

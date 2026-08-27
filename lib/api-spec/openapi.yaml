@@ -7121,6 +7121,10 @@ components:
         costoTotalCongelado:
           type: ["string", "null"]
           description: Dato administrativo; puede omitirse para TERMINAL
+        costoFuente:
+          type: ["string", "null"]
+          enum: [EXACT_ROLL, AVERAGE_12_MONTHS, STALE_LAST_KNOWN, NO_COST, null]
+          description: Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
         margen:
           type: ["string", "null"]
           description: Dato administrativo calculado; puede omitirse para TERMINAL

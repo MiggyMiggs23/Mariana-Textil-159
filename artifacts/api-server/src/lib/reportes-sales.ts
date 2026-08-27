@@ -18,6 +18,33 @@ export function reportModality(value: unknown): ReportModality {
   return value === "ROLLOS" || value === "METRAJE" ? value : "TODO";
 }
 const modalityLabel = (type: unknown) => type === "METREADO" ? "METRAJE" : "ROLLOS";
+export type FrozenCostProvenance =
+  | "AVERAGE_12_MONTHS"
+  | "STALE_LAST_KNOWN"
+  | "NO_COST"
+  | null;
+export function costSourceLabel(
+  modality: "ROLLOS" | "METRAJE",
+  provenance: FrozenCostProvenance,
+): string {
+  if (modality === "ROLLOS") return "Costo exacto del rollo vendido";
+  if (provenance === "AVERAGE_12_MONTHS") return "Promedio simple por rollo recibido (12 meses)";
+  if (provenance === "STALE_LAST_KNOWN") return "Último costo conocido (sin recepciones en 12 meses)";
+  if (provenance === "NO_COST") return "Sin costo conocido";
+  return "Proveniencia histórica desconocida";
+}
+export function groupedCostSourceLabel(
+  modality: "ROLLOS" | "METRAJE",
+  staleLines: number,
+  unknownLines: number,
+  noCostLines: number,
+): string {
+  if (modality === "ROLLOS") return costSourceLabel(modality, null);
+  if (noCostLines > 0) return "Sin costo conocido en al menos una línea";
+  if (staleLines > 0) return costSourceLabel(modality, "STALE_LAST_KNOWN");
+  if (unknownLines > 0) return costSourceLabel(modality, null);
+  return costSourceLabel(modality, "AVERAGE_12_MONTHS");
+}
 type ColumnInput = [string, string, string, boolean?, boolean?] | Record<string, unknown>;
 const cols = (items: ColumnInput[]) => items.map((item) => {
   if (!Array.isArray(item)) return item;
@@ -115,7 +142,10 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
     const result = await pool.query(`SELECT l.tipo,COALESCE(SUM(l.importe),0)::float ventas,COUNT(DISTINCT t.id)::int tickets,
       CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.costo_total_congelado),0)::float END costo,
       CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
-      COALESCE(SUM(l.importe),0)::float denominador
+      COALESCE(SUM(l.importe),0)::float denominador,
+      COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado='STALE_LAST_KNOWN')::int lineas_costo_vencido,
+      COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado IS NULL)::int lineas_proveniencia_desconocida,
+      COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado='NO_COST')::int lineas_sin_costo
       ${joins} WHERE ${condition.text} AND t.estado='VENDIDO' GROUP BY l.tipo`, condition.values);
     return new Map(result.rows.map((row) => [modalityLabel(row.tipo), row]));
   };
@@ -155,12 +185,19 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
       CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.costo_total_congelado),0)::float END costo,
       CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
       COALESCE(SUM(l.importe),0)::float denominador,
-       COUNT(DISTINCT t.id)::int tickets ${joins} WHERE ${salesWhere} ${extra}
+       COUNT(DISTINCT t.id)::int tickets,
+       COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado='STALE_LAST_KNOWN')::int lineas_costo_vencido,
+       COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado IS NULL)::int lineas_proveniencia_desconocida,
+       COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado='NO_COST')::int lineas_sin_costo
+       ${joins} WHERE ${salesWhere} ${extra}
       GROUP BY ${group},l.tipo,p.unidad ORDER BY ventas DESC LIMIT 250`, normal.values);
-    return table(id, title, [["dimension", title, "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["tickets", "Tickets", "count"], ["ventas", "Subtotal sin IVA", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]],
+    return table(id, title, [["dimension", title, "text"], ["modalidad", "Modalidad", "text"], ["costoFuente", "Fuente del costo", "text", true], ["lineasCostoVencido", "Líneas con último costo conocido", "count", true], ["lineasProvenienciaDesconocida", "Líneas con fuente histórica desconocida", "count", true], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["tickets", "Tickets", "count"], ["ventas", "Subtotal sin IVA", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]],
       result.rows.map((r) => {
         const utilidad = r.utilidad == null ? null : number(r.utilidad);
-        return { dimension: r.dimension == null ? "Sin dato" : String(r.dimension), modalidad: modalityLabel(r.tipo), unidad: String(r.unidad), cantidad: number(r.cantidad), tickets: number(r.tickets), ventas: number(r.ventas), costo: r.costo == null ? null : number(r.costo), utilidad, margenPct: utilidad == null ? null : (number(r.denominador) ? utilidad / number(r.denominador) * 100 : 0) };
+        const modalidad = modalityLabel(r.tipo);
+        const stale = number(r.lineas_costo_vencido);
+        const unknown = number(r.lineas_proveniencia_desconocida);
+        return { dimension: r.dimension == null ? "Sin dato" : String(r.dimension), modalidad, costoFuente: groupedCostSourceLabel(modalidad, stale, unknown, number(r.lineas_sin_costo)), lineasCostoVencido: stale, lineasProvenienciaDesconocida: unknown, unidad: String(r.unidad), cantidad: number(r.cantidad), tickets: number(r.tickets), ventas: number(r.ventas), costo: r.costo == null ? null : number(r.costo), utilidad, margenPct: utilidad == null ? null : (number(r.denominador) ? utilidad / number(r.denominador) * 100 : 0) };
       }),
       ["cantidad", "ventas", "costo", "utilidad"]);
   };
@@ -216,7 +253,7 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
   const [fabric, product, color, site, seller, evolution, quality, prices, crossSite] = await Promise.all([
     dimensions("utilidad-tela", "Tela", "p.tela"), dimensions("utilidad-producto", "Producto", "p.sku", "p.id,p.sku"), dimensions("utilidad-color", "Color", "p.color"), dimensions("utilidad-sitio", "Sitio", "u.nombre"), dimensions("utilidad-vendedor", "Vendedor", "vendedor.nombre"),
     dimensions("evolucion-margen", "Día", `(t.created_at AT TIME ZONE '${zone}')::date::text`),
-    pool.query(`SELECT l.tipo,CASE WHEN l.costo_total_congelado IS NULL THEN 'Costo pendiente' WHEN l.rollo_id IS NULL THEN 'Sin rollo' WHEN l.costo_unitario_congelado<=0 OR l.costo_total_congelado<=0 THEN 'Costo nulo/cero' ELSE 'Válida' END calidad,COUNT(*)::int lineas FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY l.tipo,calidad`, normal.values),
+    pool.query(`SELECT l.tipo,CASE WHEN l.costo_total_congelado IS NULL THEN 'Costo pendiente' WHEN l.tipo='METREADO' AND l.costo_referencia_estado='STALE_LAST_KNOWN' THEN 'Último costo conocido (vencido)' WHEN l.tipo='METREADO' AND l.costo_referencia_estado IS NULL THEN 'Proveniencia histórica desconocida' WHEN l.costo_unitario_congelado<=0 OR l.costo_total_congelado<=0 THEN 'Costo nulo/cero' ELSE 'Válida' END calidad,COUNT(*)::int lineas FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY l.tipo,calidad`, normal.values),
     pool.query(`SELECT p.sku,p.tela,l.tipo,p.unidad,cliente.nombre cliente,vendedor.nombre vendedor,COUNT(*)::int lineas,MIN(l.precio_unitario)::float minimo,MAX(l.precio_unitario)::float maximo,AVG(l.precio_unitario)::float promedio,CASE WHEN SUM(l.cantidad)=0 THEN 0 ELSE SUM(l.precio_unitario*l.cantidad)/SUM(l.cantidad) END::float promedio_ponderado FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN clientes cliente ON cliente.id=t.cliente_id LEFT JOIN usuarios vendedor ON vendedor.id=t.usuario_terminal_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY p.id,l.tipo,p.unidad,cliente.nombre,vendedor.nombre ORDER BY promedio_ponderado DESC`, normal.values),
     pool.query(`WITH by_site AS (
       SELECT p.sku,l.tipo,p.unidad,u.nombre sitio,AVG(l.precio_unitario)::float precio FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id JOIN ubicaciones u ON u.id=t.ubicacion_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY p.sku,l.tipo,p.unidad,u.nombre
@@ -246,6 +283,8 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
   const discounts = await pool.query(`SELECT p.sku,p.tela,l.tipo,p.unidad,l.precio_unitario::float precio,p.precio_sugerido::float sugerido,((p.precio_sugerido-l.precio_unitario)/NULLIF(p.precio_sugerido,0)*100)::float descuento,((l.importe-l.costo_total_congelado)/NULLIF(l.importe,0)*100)::float margen FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} AND p.precio_sugerido>0 AND ((p.precio_sugerido-l.precio_unitario)/p.precio_sugerido*100>30 OR (l.costo_total_congelado IS NOT NULL AND (l.importe-l.costo_total_congelado)/NULLIF(l.importe,0)*100<$${normal.values.length + 1})) ORDER BY descuento DESC`, [...normal.values, threshold]);
   warnings.push("Los descuentos se calculan contra precio_sugerido ACTUAL de productos; no es un snapshot histórico.");
   warnings.push("Costo, utilidad y margen quedan pendientes cuando cualquier línea del grupo no tiene costo congelado; el margen se calcula contra el subtotal sin IVA.");
+  warnings.push("ROLLOS usa el costo exacto congelado del rollo vendido. METRAJE usa el promedio simple por rollo recibido en 12 meses, congelado al emitir el ticket.");
+  warnings.push("Las líneas de METRAJE marcadas con último costo conocido no tuvieron recepciones en los 12 meses previos; su margen es menos confiable. Las líneas históricas sin proveniencia permanecen como desconocidas y no se infieren.");
   const utilityByModality = visibleModalities.map((modalidad) => {
     const row = currentModalities.get(modalidad);
     const ventas = number(row?.ventas);
@@ -253,6 +292,9 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
     const utilidad = row?.utilidad == null && row ? null : number(row?.utilidad);
     return {
       modalidad,
+      costoFuente: groupedCostSourceLabel(modalidad, number(row?.lineas_costo_vencido), number(row?.lineas_proveniencia_desconocida), number(row?.lineas_sin_costo)),
+      lineasCostoVencido: number(row?.lineas_costo_vencido),
+      lineasProvenienciaDesconocida: number(row?.lineas_proveniencia_desconocida),
       ventas,
       costo,
       utilidad,
@@ -269,9 +311,13 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
     const oldMargin = old?.utilidad == null ? null : (number(old.denominador) ? number(old.utilidad) / number(old.denominador) * 100 : 0);
     const agoMargin = ago?.utilidad == null ? null : (number(ago.denominador) ? number(ago.utilidad) / number(ago.denominador) * 100 : 0);
     return [
-      kpi(`costo-${modalidad.toLowerCase()}`, `Costo · ${modalidad}`, costo, "money", old?.costo, ago?.costo, true),
+      kpi(`costo-${modalidad.toLowerCase()}`, `Costo · ${modalidad} · ${modalidad === "ROLLOS" ? "rollo exacto" : "promedio simple 12 meses"}`, costo, "money", old?.costo, ago?.costo, true),
       kpi(`utilidad-${modalidad.toLowerCase()}`, `Utilidad · ${modalidad}`, utilidad, "money", old?.utilidad, ago?.utilidad, true),
       kpi(`margen-${modalidad.toLowerCase()}`, `Margen · ${modalidad}`, margen, "percentage", oldMargin, agoMargin, true),
+      ...(modalidad === "METRAJE" ? [
+        kpi("lineas-costo-vencido-metraje", "METRAJE · líneas con último costo conocido", number(row?.lineas_costo_vencido), "count", old?.lineas_costo_vencido, ago?.lineas_costo_vencido, true),
+        kpi("lineas-fuente-desconocida-metraje", "METRAJE · fuente histórica desconocida", number(row?.lineas_proveniencia_desconocida), "count", old?.lineas_proveniencia_desconocida, ago?.lineas_proveniencia_desconocida, true),
+      ] : []),
     ];
   });
   return {
@@ -284,14 +330,14 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
       : [kpi("costo-congelado", "Costo total congelado", number(current.costo), "money", previous.costo, yearAgo.costo, true), kpi("utilidad-exacta", "Utilidad total exacta", number(current.utilidad), "money", previous.utilidad, yearAgo.utilidad, true), kpi("margen-exacto", "Margen total exacto", number(current.denominador) ? number(current.utilidad) / number(current.denominador) * 100 : 0, "percentage", previous.utilidad == null ? null : (number(previous.denominador) ? number(previous.utilidad) / number(previous.denominador) * 100 : 0), yearAgo.utilidad == null ? null : (number(yearAgo.denominador) ? number(yearAgo.utilidad) / number(yearAgo.denominador) * 100 : 0), true)])],
     charts: [chart("margen-evolucion", "Evolución de utilidad", "line", "dimension", [{ key: "utilidad", label: "Utilidad", kind: "money", economic: true }], evolution.rows)],
     tables: [
-      table("utilidad-por-modalidad", "Utilidad por modalidad", [["modalidad", "Modalidad", "text"], ["ventas", "Subtotal sin IVA", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]], utilityByModality, ["ventas", "costo", "utilidad"]),
+      table("utilidad-por-modalidad", "Utilidad por modalidad", [["modalidad", "Modalidad", "text"], ["costoFuente", "Fuente del costo", "text", true], ["lineasCostoVencido", "Líneas con último costo conocido", "count", true], ["lineasProvenienciaDesconocida", "Líneas con fuente histórica desconocida", "count", true], ["ventas", "Subtotal sin IVA", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]], utilityByModality, ["ventas", "costo", "utilidad"]),
       fabric, product, color, site, seller,
       table("divergencia-cantidad-utilidad", "Divergencia cantidad vs utilidad", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["utilidad", "Utilidad", "money", true], ["divergencia", "Divergencia", "percentage", true]], divergent),
       table("productos-alza", "Productos en alza", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["utilidadActual", "Utilidad actual", "money", true], ["utilidadAnterior", "Utilidad anterior", "money", true], ["variacion", "Variación", "money", true], ["tendencia", "Tendencia", "text"]], changes.filter((r) => r.tendencia === "rising")),
       table("productos-baja", "Productos en baja", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["utilidadActual", "Utilidad actual", "money", true], ["utilidadAnterior", "Utilidad anterior", "money", true], ["variacion", "Variación", "money", true], ["tendencia", "Tendencia", "text"]], changes.filter((r) => r.tendencia === "falling")),
       table("dispersion-precios", "Dispersión de precios", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cliente", "Cliente", "text"], ["vendedor", "Vendedor", "text"], ["lineas", "Líneas", "count"], ["minimo", "Mínimo", "money", true], ["maximo", "Máximo", "money", true], ["rango", "Rango", "money", true], ["promedio", "Promedio", "money", true], ["promedioPonderado", "Promedio ponderado", "money", true]], prices.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), modalidad: modalityLabel(r.tipo), unidad: String(r.unidad), cliente: r.cliente == null ? "Sin dato" : String(r.cliente), vendedor: r.vendedor == null ? "Sin dato" : String(r.vendedor), lineas: number(r.lineas), minimo: number(r.minimo), maximo: number(r.maximo), rango: priceRange(number(r.minimo), number(r.maximo)), promedio: number(r.promedio), promedioPonderado: number(r.promedio_ponderado) }))),
       table("precios-por-sitio", "Precios por sitio", [["sku", "SKU", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["precio", "Precio promedio", "money", true], ["diferenciaSitios", "Diferencia entre sitios", "money", true]], crossSite.rows.map((r) => ({ sku: String(r.sku), modalidad: modalityLabel(r.tipo), unidad: String(r.unidad), sitio: String(r.sitio), precio: number(r.precio), diferenciaSitios: number(r.diferencia_sitios) }))),
-      table("calidad-costos", "Calidad de costos", [["modalidad", "Modalidad", "text"], ["calidad", "Calidad", "text"], ["lineas", "Líneas", "count"]], quality.rows.map((r) => ({ modalidad: modalityLabel(r.tipo), calidad: String(r.calidad), lineas: number(r.lineas) }))),
+      { ...table("calidad-costos", "Calidad de costos", [["modalidad", "Modalidad", "text"], ["calidad", "Calidad", "text"], ["lineas", "Líneas", "count"]], quality.rows.map((r) => ({ modalidad: modalityLabel(r.tipo), calidad: String(r.calidad), lineas: number(r.lineas) }))), economic: true },
       table("descuentos-y-margen", "Descuentos >30% o margen bajo", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["precio", "Precio", "money", true], ["sugerido", "Precio sugerido actual", "money", true], ["descuento", "Descuento", "percentage", true, true], ["margen", "Margen", "percentage", true]], discounts.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), modalidad: modalityLabel(r.tipo), unidad: String(r.unidad), precio: number(r.precio), sugerido: number(r.sugerido), descuento: number(r.descuento), margen: r.margen == null ? null : number(r.margen) }))),
     ],
     warnings,

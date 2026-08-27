@@ -4,6 +4,8 @@ import type { Pool } from "pg";
  * Moves the legacy ticket-wide sale type onto every line.  It is deliberately
  * repeatable: installations already upgraded no longer have tickets.tipo, so
  * the backfill is only attempted while that legacy column still exists.
+ * Cost provenance is intentionally added nullable and never backfilled:
+ * pre-column metered lines remain explicitly unknown historical evidence.
  */
 export async function ensureTicketLineTypesSchema(pool: Pool): Promise<void> {
   const client = await pool.connect();
@@ -11,7 +13,8 @@ export async function ensureTicketLineTypesSchema(pool: Pool): Promise<void> {
     await client.query("BEGIN");
     await client.query(`
       ALTER TABLE ticket_lineas
-        ADD COLUMN IF NOT EXISTS tipo tipo_ticket;
+        ADD COLUMN IF NOT EXISTS tipo tipo_ticket,
+        ADD COLUMN IF NOT EXISTS costo_referencia_estado text;
 
       DO $$
       BEGIN
@@ -48,7 +51,8 @@ export async function ensureTicketLineTypesSchema(pool: Pool): Promise<void> {
       UPDATE ticket_lineas
       SET rollo_id = NULL,
           costo_unitario_congelado = NULL,
-          costo_total_congelado = NULL
+          costo_total_congelado = NULL,
+          costo_referencia_estado = NULL
       WHERE tipo = 'METREADO'
         AND rollo_id IS NOT NULL;
 
@@ -71,16 +75,24 @@ export async function ensureTicketLineTypesSchema(pool: Pool): Promise<void> {
           (tipo = 'NORMAL'
             AND rollo_id IS NOT NULL
             AND costo_unitario_congelado IS NOT NULL
-            AND costo_total_congelado IS NOT NULL)
+            AND costo_total_congelado IS NOT NULL
+            AND costo_referencia_estado IS NULL)
           OR
           (tipo = 'METREADO'
             AND rollo_id IS NULL
             AND (
               (costo_unitario_congelado IS NULL
-                AND costo_total_congelado IS NULL)
+                AND costo_total_congelado IS NULL
+                AND (costo_referencia_estado IS NULL
+                  OR costo_referencia_estado = 'NO_COST'))
               OR
               (costo_unitario_congelado IS NOT NULL
-                AND costo_total_congelado IS NOT NULL)
+                AND costo_total_congelado IS NOT NULL
+                AND (costo_referencia_estado IS NULL
+                  OR costo_referencia_estado IN (
+                    'AVERAGE_12_MONTHS',
+                    'STALE_LAST_KNOWN'
+                  )))
             ))
         );
 

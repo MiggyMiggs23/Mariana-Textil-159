@@ -398,6 +398,7 @@ export * from "./generated/types/ticketCobroInputDiasPlazo";
 export * from "./generated/types/ticketDetalle";
 export * from "./generated/types/ticketInput";
 export * from "./generated/types/ticketLinea";
+export * from "./generated/types/ticketLineaCostoFuente";
 export * from "./generated/types/ticketLineaInput";
 export * from "./generated/types/ticketPago";
 export * from "./generated/types/ticketPagoInput";

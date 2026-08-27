@@ -3381,6 +3381,20 @@ export interface TicketPago {
   nombreUsuario: string;
 }
 
+/**
+ * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
+ * @nullable
+ */
+export type TicketLineaCostoFuente = typeof TicketLineaCostoFuente[keyof typeof TicketLineaCostoFuente] | null;
+
+
+export const TicketLineaCostoFuente = {
+  EXACT_ROLL: 'EXACT_ROLL',
+  AVERAGE_12_MONTHS: 'AVERAGE_12_MONTHS',
+  STALE_LAST_KNOWN: 'STALE_LAST_KNOWN',
+  NO_COST: 'NO_COST',
+} as const;
+
 export interface TicketLinea {
   id: number;
   ticketId: number;
@@ -3409,6 +3423,11 @@ export interface TicketLinea {
      * @nullable
      */
   costoTotalCongelado?: string | null;
+  /**
+     * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
+     * @nullable
+     */
+  costoFuente?: TicketLineaCostoFuente;
   /**
      * Dato administrativo calculado; puede omitirse para TERMINAL
      * @nullable

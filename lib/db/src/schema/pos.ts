@@ -155,6 +155,7 @@ export const ticketLineasTable = pgTable(
       precision: 12,
       scale: 2,
     }),
+    costoReferenciaEstado: text("costo_referencia_estado"),
   },
   (table) => [
     index("ticket_lineas_ticket_idx").on(table.ticketId),
@@ -166,16 +167,21 @@ export const ticketLineasTable = pgTable(
       sql`(${table.tipo} = 'NORMAL'
           AND ${table.rolloId} IS NOT NULL
           AND ${table.costoUnitarioCongelado} IS NOT NULL
-          AND ${table.costoTotalCongelado} IS NOT NULL)
+          AND ${table.costoTotalCongelado} IS NOT NULL
+          AND ${table.costoReferenciaEstado} IS NULL)
         OR (${table.tipo} = 'METREADO'
           AND ${table.rolloId} IS NULL
           AND (
             (${table.costoUnitarioCongelado} IS NULL
-              AND ${table.costoTotalCongelado} IS NULL)
+              AND ${table.costoTotalCongelado} IS NULL
+              AND (${table.costoReferenciaEstado} IS NULL
+                OR ${table.costoReferenciaEstado} = 'NO_COST'))
             OR
             (${table.costoUnitarioCongelado} IS NOT NULL
               AND ${table.costoTotalCongelado} IS NOT NULL)
-          ))`,
+              AND (${table.costoReferenciaEstado} IS NULL
+                OR ${table.costoReferenciaEstado} IN ('AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN')))
+          )))`,
     ),
   ],
 );

@@ -88,8 +88,10 @@ await test("la migración desvincula y audita líneas METREADO legacy antes del 
       rollo_id: number | null;
       costo_unitario_congelado: string | null;
       costo_total_congelado: string | null;
+      costo_referencia_estado: string | null;
     }>(
-      `SELECT tipo, rollo_id, costo_unitario_congelado, costo_total_congelado
+      `SELECT tipo, rollo_id, costo_unitario_congelado, costo_total_congelado,
+              costo_referencia_estado
        FROM ticket_lineas WHERE id = $1`,
       [lineId],
     );
@@ -98,6 +100,7 @@ await test("la migración desvincula y audita líneas METREADO legacy antes del 
       rollo_id: null,
       costo_unitario_congelado: null,
       costo_total_congelado: null,
+      costo_referencia_estado: null,
     }]);
 
     const audit = await pool.query<{
@@ -115,12 +118,15 @@ await test("la migración desvincula y audita líneas METREADO legacy antes del 
     assert.deepEqual(audit.rows[0]!.datos_antes, { rolloId });
     assert.deepEqual(audit.rows[0]!.datos_despues, { rolloId: null });
 
-    const constraint = await pool.query<{ validated: boolean }>(
-      `SELECT convalidated AS validated
+    const constraint = await pool.query<{ validated: boolean; definition: string }>(
+      `SELECT convalidated AS validated, pg_get_constraintdef(oid) AS definition
        FROM pg_constraint
        WHERE conname = 'ticket_lineas_tipo_rollo_costos_check'`,
     );
-    assert.deepEqual(constraint.rows, [{ validated: true }]);
+    assert.equal(constraint.rows[0]?.validated, true);
+    assert.match(constraint.rows[0]!.definition, /STALE_LAST_KNOWN/);
+    assert.match(constraint.rows[0]!.definition, /AVERAGE_12_MONTHS/);
+    assert.match(constraint.rows[0]!.definition, /NO_COST/);
     const oldColumn = await pool.query(
       `SELECT 1 FROM information_schema.columns
        WHERE table_schema = current_schema()

@@ -26,11 +26,24 @@ test("report boolean query preserves literal false", () => {
 test("economic redaction physically removes sensitive keys and columns", () => {
   const result = redactEconomic({
     hasEconomicAccess: false,
-    kpis: [{ id: "margen", value: 2 }],
-    tables: [{ columns: [{ key: "cantidad" }, { key: "costo", economic: true }], rows: [{ cantidad: 1, costo: 3, utilidad: 1 }], totals: { costo: 3 } }],
+    kpis: [
+      { id: "margen", value: 2 },
+      { id: "stale-lines", economic: true, value: 4, provenanceStatus: "STALE_LAST_KNOWN" },
+    ],
+    tables: [{
+      columns: [
+        { key: "cantidad" },
+        { key: "costo", economic: true },
+        { key: "provenanceStatus", label: "Fuente", economic: true },
+      ],
+      rows: [{ cantidad: 1, costo: 3, utilidad: 1, provenanceStatus: "STALE_LAST_KNOWN" }],
+      totals: { costo: 3 },
+    }],
   });
   assert.equal(JSON.stringify(result).includes("costo"), false);
   assert.equal(JSON.stringify(result).includes("utilidad"), false);
+  assert.equal(JSON.stringify(result).includes("STALE_LAST_KNOWN"), false);
+  assert.equal(JSON.stringify(result).includes("provenanceStatus"), false);
 });
 
 for (const [periodo, desde, hasta] of [

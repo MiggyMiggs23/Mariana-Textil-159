@@ -227,6 +227,7 @@ export async function buildTicketDetail(
       importe: ticketLineasTable.importe,
       costoUnitarioCongelado: ticketLineasTable.costoUnitarioCongelado,
       costoTotalCongelado: ticketLineasTable.costoTotalCongelado,
+      costoReferenciaEstado: ticketLineasTable.costoReferenciaEstado,
     })
     .from(ticketLineasTable)
     .innerJoin(
@@ -285,6 +286,10 @@ export async function buildTicketDetail(
           ...base,
           costoUnitarioCongelado: null,
           costoTotalCongelado: null,
+          costoFuente:
+            linea.tipo === "NORMAL"
+              ? "EXACT_ROLL"
+              : linea.costoReferenciaEstado,
           margen: null,
         };
       }
@@ -294,6 +299,10 @@ export async function buildTicketDetail(
         ...base,
         costoUnitarioCongelado: linea.costoUnitarioCongelado,
         costoTotalCongelado: linea.costoTotalCongelado,
+        costoFuente:
+          linea.tipo === "NORMAL"
+            ? "EXACT_ROLL"
+            : linea.costoReferenciaEstado,
         margen: decimalMoney(importe - costo),
       };
     }),
@@ -611,6 +620,10 @@ export async function crearTicket(
       tipo === "NORMAL"
         ? rollo!.costoUnitario!
         : (meteredCosts.get(linea.productoId)?.cost ?? null);
+    const costoReferenciaEstado =
+      tipo === "METREADO"
+        ? meteredCosts.get(linea.productoId)!.status
+        : null;
     const costoCents =
       costoUnitario == null
         ? null
@@ -629,6 +642,7 @@ export async function crearTicket(
       costoUnitarioCongelado: costoUnitario,
       costoTotalCongelado:
         costoCents == null ? null : decimalMoney(costoCents),
+      costoReferenciaEstado,
       importeCents,
     };
   });
@@ -692,6 +706,7 @@ export async function crearTicket(
       importe: linea.importe,
       costoUnitarioCongelado: linea.costoUnitarioCongelado,
       costoTotalCongelado: linea.costoTotalCongelado,
+      costoReferenciaEstado: linea.costoReferenciaEstado,
     });
   }
 

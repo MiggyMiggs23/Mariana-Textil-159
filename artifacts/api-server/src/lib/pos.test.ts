@@ -495,6 +495,7 @@ await test("POS-04 metreado congela costo, no toca inventario, no factura y solo
   assert.equal(ticket.lineas[0].costoUnitarioCongelado, "50.00");
   assert.ok(ticket.lineas[0] && "costoTotalCongelado" in ticket.lineas[0]);
   assert.equal(ticket.lineas[0].costoTotalCongelado, "125.00");
+  assert.equal(ticket.lineas[0].costoFuente, "AVERAGE_12_MONTHS");
   assert.equal(ticket.lineas[0].margen, "-25.00");
   // A subsequent reception changes future reference costs, never issued lines.
   await makeRollo(productoId, ubicacionId, "10", "80.00");
@@ -576,7 +577,38 @@ await test("POS-04C metreado sin historial de costo conserva ambos costos nulos"
   assert.ok(line && "costoUnitarioCongelado" in line);
   assert.equal(line.costoUnitarioCongelado, null);
   assert.equal(line.costoTotalCongelado, null);
+  assert.equal(line.costoFuente, "NO_COST");
   assert.equal(line.margen, null);
+});
+
+await test("POS-04D metreado congela la proveniencia de último costo conocido vencido", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId, "10", "37.00");
+  const staleReception = new Date();
+  staleReception.setUTCFullYear(staleReception.getUTCFullYear() - 2);
+  await db
+    .update(entradasTable)
+    .set({ fecha: staleReception })
+    .where(eq(entradasTable.id, rollo.recepcionId!));
+
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    cantidad: "1",
+    precio: "40",
+    tipo: "METREADO",
+  });
+  const line = ticket.lineas[0];
+  assert.ok(line && "costoFuente" in line);
+  assert.equal(line.costoUnitarioCongelado, "37.00");
+  assert.equal(line.costoFuente, "STALE_LAST_KNOWN");
+
+  const [persisted] = await db
+    .select({ estado: ticketLineasTable.costoReferenciaEstado })
+    .from(ticketLineasTable)
+    .where(eq(ticketLineasTable.id, line.id));
+  assert.equal(persisted?.estado, "STALE_LAST_KNOWN");
 });
 
 await test("POS-04B metreado se rechaza definitivamente cuando el producto está bloqueado", async () => {

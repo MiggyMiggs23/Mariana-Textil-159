@@ -411,6 +411,7 @@ export * from './ticketCobroInputDiasPlazo';
 export * from './ticketDetalle';
 export * from './ticketInput';
 export * from './ticketLinea';
+export * from './ticketLineaCostoFuente';
 export * from './ticketLineaInput';
 export * from './ticketPago';
 export * from './ticketPagoInput';

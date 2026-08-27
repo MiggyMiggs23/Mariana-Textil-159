@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { abcClass, exactFrozenMargin, parseFilterValues, priceRange, reportModality, safePercent, subtotalBeforeTax, trendDirection } from "./reportes-sales";
+import { abcClass, costSourceLabel, exactFrozenMargin, groupedCostSourceLabel, parseFilterValues, priceRange, reportModality, safePercent, subtotalBeforeTax, trendDirection } from "./reportes-sales";
 
 test("ABC assigns cumulative boundary values deterministically", () => {
   assert.equal(abcClass(0), "A");
@@ -50,4 +50,14 @@ test("report modality is contract-safe and defaults to Todo", () => {
   assert.equal(reportModality("ROLLOS"), "ROLLOS");
   assert.equal(reportModality("METRAJE"), "METRAJE");
   assert.equal(reportModality("otra"), "TODO");
+});
+
+test("frozen cost labels distinguish exact, averaged, stale, absent, and historical unknown sources", () => {
+  assert.equal(costSourceLabel("ROLLOS", null), "Costo exacto del rollo vendido");
+  assert.equal(costSourceLabel("METRAJE", "AVERAGE_12_MONTHS"), "Promedio simple por rollo recibido (12 meses)");
+  assert.equal(costSourceLabel("METRAJE", "STALE_LAST_KNOWN"), "Último costo conocido (sin recepciones en 12 meses)");
+  assert.equal(costSourceLabel("METRAJE", "NO_COST"), "Sin costo conocido");
+  assert.equal(costSourceLabel("METRAJE", null), "Proveniencia histórica desconocida");
+  assert.equal(groupedCostSourceLabel("METRAJE", 0, 0, 2), "Sin costo conocido en al menos una línea");
+  assert.equal(groupedCostSourceLabel("METRAJE", 3, 0, 0), "Último costo conocido (sin recepciones en 12 meses)");
 });

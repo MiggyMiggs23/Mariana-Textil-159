@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { TicketLineaCostoFuente } from './ticketLineaCostoFuente';
 import type { TipoTicket } from './tipoTicket';
 import type { UnidadProducto } from './unidadProducto';
 
@@ -36,6 +37,11 @@ export interface TicketLinea {
      * @nullable
      */
   costoTotalCongelado?: string | null;
+  /**
+     * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
+     * @nullable
+     */
+  costoFuente?: TicketLineaCostoFuente;
   /**
      * Dato administrativo calculado; puede omitirse para TERMINAL
      * @nullable
