@@ -38,8 +38,8 @@
     "test:reportes-integration": "tsx --test src/reportes.integration.test.ts",
     "test:contenedores": "NODE_ENV=test tsx --test src/lib/contenedores.test.ts",
     "test:contenedores-integration": "NODE_ENV=test tsx --test src/contenedores.integration.test.ts",
-    "test:precios": "tsx --test src/lib/precios.test.ts",
-    "test:precios-integration": "TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} NODE_ENV=test tsx --test src/precios.integration.test.ts",
+    "test:precios": "tsx --test src/lib/precios.test.ts src/lib/metered-reference-cost.test.ts",
+    "test:precios-integration": "TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} NODE_ENV=test tsx --test src/precios.integration.test.ts src/metered-reference-cost.integration.test.ts",
     "test:productos-cache-integration": "TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} NODE_ENV=test tsx --test src/productos-cache.integration.test.ts",
     "test:inventory-six-view-integration": "test \"${NODE_ENV:?NODE_ENV must be test}\" = test && TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} NODE_ENV=test tsx --test src/inventory-six-view.integration.test.ts"
   },
