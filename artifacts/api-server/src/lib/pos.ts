@@ -86,7 +86,7 @@ export type PagoTicketInput = {
   referencia?: string | null;
 };
 
-type Reader = Pick<typeof db, "select">;
+type Reader = Pick<typeof db, "select" | "execute">;
 
 function productName(tela: string, color: string): string {
   return `${tela} ${color}`.trim();
@@ -269,23 +269,10 @@ export async function buildTicketDetail(
     .orderBy(asc(ticketPagosTable.id));
 
   const creditMovements = pagos.some((pago) => pago.formaPago === "CREDITO")
-    ? await database
-        .select({
-          id: movimientosCreditoTable.id,
-          ticketId: movimientosCreditoTable.ticketId,
-           movimientoOrigenId: movimientosCreditoTable.movimientoOrigenId,
-          tipo: movimientosCreditoTable.tipo,
-          importe: movimientosCreditoTable.importe,
-          diasPlazo: movimientosCreditoTable.diasPlazo,
-          fechaVencimiento: movimientosCreditoTable.fechaVencimiento,
-          createdAt: movimientosCreditoTable.createdAt,
-        })
-        .from(movimientosCreditoTable)
-        .where(eq(movimientosCreditoTable.clienteId, ticket.clienteId))
-        .orderBy(
-          asc(movimientosCreditoTable.createdAt),
-          asc(movimientosCreditoTable.id),
-        )
+    ? await loadCustomerCreditLedgerInTransaction(
+        Number(ticket.clienteId),
+        database,
+      )
     : [];
   const credit = deriveTicketCreditData(ticketId, pagos, creditMovements);
 

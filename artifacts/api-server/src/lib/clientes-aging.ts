@@ -56,21 +56,22 @@ export function creditStatus(
 
 export type TicketCreditPayment = {
   formaPago: string;
-  importe: string;
+  importe: string | number;
 };
 
 export type TicketCreditMovement = {
   ticketId: number | null;
+  directedMovimientoId?: number | null;
   movimientoOrigenId?: number | null;
   tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
   importe: string;
   diasPlazo: number | null;
-  fechaVencimiento: string | null;
+  fechaVencimiento: string | Date | null;
   createdAt: Date;
   id: number;
 };
 
-function moneyCents(value: string): number {
+function moneyCents(value: string | number): number {
   const amount = Number(value);
   if (!Number.isFinite(amount)) {
     throw new Error("Importe inválido en movimientos de crédito.");
@@ -124,7 +125,12 @@ export function deriveTicketCreditData(
     esCredito: true,
     importeCredito: decimalMoney(creditCents),
     diasPlazo: isCreditTerm(sale?.diasPlazo) ? sale.diasPlazo : null,
-    fechaVencimiento: sale?.fechaVencimiento ?? null,
+    fechaVencimiento:
+      sale?.fechaVencimiento == null
+        ? null
+        : typeof sale.fechaVencimiento === "string"
+          ? sale.fechaVencimiento.slice(0, 10)
+          : sale.fechaVencimiento.toISOString().slice(0, 10),
     saldoPendiente: decimalMoney(outstanding),
   };
 }

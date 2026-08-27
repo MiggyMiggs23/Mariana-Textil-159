@@ -15,6 +15,12 @@ En el aging de crédito, un REVERSO ligado a ticket cancela primero el cargo del
 
 **How to apply:** Toda métrica, semáforo y exportación de cartera debe usar la misma asignación: reverso por ticket, después FIFO para abonos/ajustes negativos, incluyendo ajustes positivos como cargos.
 
+Los detalles de ticket y nota deben leer su pendiente desde el aging autorizado; no pueden reconstruir FIFO a partir del ledger cuando existen aplicaciones dirigidas persistidas. Los reportes de cartera muestran una foto global, no un subtotal del periodo comercial.
+
+**Why:** Un pago dirigido a una venta reciente difiere intencionalmente del FIFO; repetir el reparto en el detalle cambia qué ticket aparece pagado. Acotar cartera por fecha de venta también oculta deuda histórica abierta.
+
+**How to apply:** Consultar el pendiente autorizado por ticket y probar dos ventas con un pago dirigido solo a la más reciente. Comparar detalles por ticket y totales de cartera, alertas y reporte.
+
 La autorización de crédito debe bloquear la fila del cliente antes de leer el ledger y conservar el bloqueo hasta insertar el cargo.
 
 **Why:** Dos cajas con tickets distintos pueden leer simultáneamente el mismo disponible y exceder el límite si la validación no se serializa por cliente.

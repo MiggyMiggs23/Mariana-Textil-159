@@ -15,11 +15,12 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   }
 
-  const [{ db, pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema }, { default: app }, { buildCommercialReport }] =
+  const [{ db, pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema }, { default: app }, { buildCommercialReport }, { getAdminAlertas }] =
     await Promise.all([
       import("@workspace/db"),
       import("./app"),
       import("./lib/reportes-commercial"),
+      import("./lib/admin-alertas"),
     ]);
   const { createTestDatabaseGuard } = await import("@workspace/db");
   const {
@@ -339,6 +340,72 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     );
     assert.equal(directedApplication.importe, "30.00");
 
+    const [oldDetailResponse, newDetailResponse, carteraResponse, alerts, commercial] =
+      await Promise.all([
+        api(adminSession, `/tickets/${oldTicket.id}`),
+        api(adminSession, `/tickets/${newTicket.id}`),
+        api(adminSession, "/clientes/cartera"),
+        getAdminAlertas(),
+        buildCommercialReport("clientes", {
+          input: { clienteIds: String(cliente.id) },
+          range: {
+            desde: new Date(Date.now() - 7 * 86_400_000),
+            hasta: new Date(Date.now() + 7 * 86_400_000),
+            previousDesde: new Date(Date.now() - 21 * 86_400_000),
+            previousHasta: new Date(Date.now() - 14 * 86_400_000),
+            yearAgoDesde: new Date(Date.now() - 372 * 86_400_000),
+            yearAgoHasta: new Date(Date.now() - 358 * 86_400_000),
+          },
+        }),
+      ]);
+    assert.equal(oldDetailResponse.status, 200);
+    assert.equal(newDetailResponse.status, 200);
+    assert.equal(carteraResponse.status, 200);
+    const oldDetail = (await oldDetailResponse.json()) as { saldoPendiente: string };
+    const newDetail = (await newDetailResponse.json()) as { saldoPendiente: string };
+    const projection = await loadCustomerCreditProjection(Number(cliente.id));
+    const projectedByTicket = new Map(
+      projection.allCharges.map((charge) => [
+        Number(charge.ticketId),
+        charge.pendienteCents / 100,
+      ]),
+    );
+    assert.deepEqual(
+      {
+        oldDetail: Number(oldDetail.saldoPendiente),
+        oldProjection: projectedByTicket.get(Number(oldTicket.id)),
+        newDetail: Number(newDetail.saldoPendiente),
+        newProjection: projectedByTicket.get(Number(newTicket.id)),
+      },
+      {
+        oldDetail: 120,
+        oldProjection: 120,
+        newDetail: 60,
+        newProjection: 60,
+      },
+      "El detalle debe respetar el pago dirigido a la venta exacta.",
+    );
+    const cartera = (await carteraResponse.json()) as {
+      clientes: Array<{ id: number; saldoActual: string }>;
+    };
+    const carteraBalance = Number(
+      cartera.clientes.find((row) => row.id === Number(cliente.id))?.saldoActual,
+    );
+    const alertBalance = alerts.creditos
+      .filter((row) => row.clienteId === Number(cliente.id))
+      .reduce((sum, row) => sum + Number(row.importe), 0);
+    const commercialBalance = commercial.tables
+      .find((table) => table.id === "cuentas-por-cobrar-fifo")!
+      .rows.reduce(
+        (sum: number, row: Record<string, unknown>) => sum + Number(row.saldo),
+        0,
+      );
+    assert.deepEqual(
+      { carteraBalance, alertBalance, commercialBalance },
+      { carteraBalance: 180, alertBalance: 180, commercialBalance: 180 },
+      "Cartera, alertas y reporte deben compartir la misma proyección.",
+    );
+
     const rejectedResponse = await post(cajaSession, "/pagos-dirigidos", {
       ...clientBody,
       importe: 10,
@@ -540,8 +607,8 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     const report = await buildCommercialReport("clientes", {
       input: {},
       range: {
-        desde: new Date(Date.now() - 86_400_000),
-        hasta: new Date(Date.now() + 86_400_000),
+        desde: new Date(Date.now() - 7 * 86_400_000),
+        hasta: new Date(Date.now() + 7 * 86_400_000),
         previousDesde: new Date(Date.now() - 3 * 86_400_000),
         previousHasta: new Date(Date.now() - 2 * 86_400_000),
         yearAgoDesde: new Date(Date.now() - 366 * 86_400_000),
