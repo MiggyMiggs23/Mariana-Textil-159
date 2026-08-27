@@ -9,6 +9,12 @@ The Neon project used for isolated tests may not mirror the application’s deve
 
 **How to apply:** Never run database tests against the app database. Use a temporary branch, prepare it with the current schema and seed, run tests with `TEST_DATABASE_URL`, and delete the branch after the suite finishes.
 
+The development seed must run with `NODE_ENV=development` even when its `DATABASE_URL` points to the disposable test database; switch back to `NODE_ENV=test` for the suites.
+
+**Why:** The seed intentionally requires an admin password outside development, while isolated test preparation relies on its non-production bootstrap path.
+
+**How to apply:** Scope `NODE_ENV=development` only to the seed command. Keep the temporary database URL explicit throughout, then run tests with `NODE_ENV=test`.
+
 If a Neon operation's response is blocked by Replit's security scanner, do not assume it had no effect. Verify the branch/database state through the already-authorized test connection before retrying or choosing a recovery action.
 
 **Why:** A blocked response hid a successful database drop while the following recreate step did not run, so blindly retrying the original sequence would have operated on unexpected state.
