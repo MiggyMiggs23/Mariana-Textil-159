@@ -404,7 +404,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="font-bold text-lg">Mariana Textil</span>
             </div>
             <div className="flex items-center gap-1">
-              <NotificationsBell adminOnly={user.rol === Role.ADMIN} mobile />
+              <NotificationsBell isAdmin={user.rol === Role.ADMIN} mobile />
               <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setLogoutDialogOpen(true)}>
                 <LogOut className="w-5 h-5" />
                 <span className="sr-only">Cerrar sesión</span>
@@ -426,7 +426,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="no-print hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
           {renderLocationControl()}
           <div className="h-8 w-px bg-border" />
-          <NotificationsBell adminOnly={user.rol === Role.ADMIN} />
+          <NotificationsBell isAdmin={user.rol === Role.ADMIN} />
           <div className="flex items-center gap-3">
             <div className="grid h-9 w-9 place-items-center rounded-full bg-sidebar text-sm font-bold text-white">
               {user.nombre.charAt(0).toUpperCase()}

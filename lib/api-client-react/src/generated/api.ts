@@ -166,6 +166,7 @@ import type {
   NotificacionCredito,
   NotificacionesNoLeidasCount,
   NotificacionesPanel,
+  NotificationFeed,
   ObtenerSesionCajaActualParams,
   PagoProveedorInput,
   PagoProveedorRow,
@@ -9363,6 +9364,83 @@ export function useListNotificaciones<TData = Awaited<ReturnType<typeof listNoti
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListNotificacionesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetNotificationFeedUrl = () => {
+
+
+
+
+  return `/api/notificaciones/feed`
+}
+
+/**
+ * @summary Devuelve eventos de notificación visibles para la sesión y el sitio actuales
+ */
+export const getNotificationFeed = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificationFeed> => {
+
+  return customFetch<NotificationFeed>(getGetNotificationFeedUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNotificationFeedQueryKey = () => {
+    return [
+    `/api/notificaciones/feed`
+    ] as const;
+    }
+
+
+export const getGetNotificationFeedQueryOptions = <TData = Awaited<ReturnType<typeof getNotificationFeed>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNotificationFeed>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNotificationFeedQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNotificationFeed>>> = ({ signal }) => getNotificationFeed({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNotificationFeed>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNotificationFeedQueryResult = NonNullable<Awaited<ReturnType<typeof getNotificationFeed>>>
+export type GetNotificationFeedQueryError = ErrorType<UnauthorizedResponse>
+
+
+/**
+ * @summary Devuelve eventos de notificación visibles para la sesión y el sitio actuales
+ */
+
+export function useGetNotificationFeed<TData = Awaited<ReturnType<typeof getNotificationFeed>>, TError = ErrorType<UnauthorizedResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNotificationFeed>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNotificationFeedQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

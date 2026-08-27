@@ -2198,6 +2198,45 @@ export interface NotificacionesNoLeidasCount {
   count: number;
 }
 
+export type NotificationFamily = typeof NotificationFamily[keyof typeof NotificationFamily];
+
+
+export const NotificationFamily = {
+  AVISO: 'AVISO',
+  SOLICITUD: 'SOLICITUD',
+  ALERTA: 'ALERTA',
+} as const;
+
+export type NotificationFeedEventKind = typeof NotificationFeedEventKind[keyof typeof NotificationFeedEventKind];
+
+
+export const NotificationFeedEventKind = {
+  TICKET_READY: 'TICKET_READY',
+  DIRECTED_PAYMENT: 'DIRECTED_PAYMENT',
+  CREDIT_DUE: 'CREDIT_DUE',
+  TRANSIT_OVERDUE: 'TRANSIT_OVERDUE',
+  SYSTEM: 'SYSTEM',
+  CREDIT_NOTICE: 'CREDIT_NOTICE',
+} as const;
+
+export interface NotificationFeedEvent {
+  /** Identificador estable del evento para deduplicar sonido entre consultas */
+  id: string;
+  kind: NotificationFeedEventKind;
+  family: NotificationFamily;
+  title: string;
+  message: string;
+  href: string;
+  updatedAt: string;
+  /** @nullable */
+  siteId: number | null;
+}
+
+export interface NotificationFeed {
+  events: NotificationFeedEvent[];
+  generatedAt: string;
+}
+
 export interface NotificacionSistema {
   id: number;
   tipo: string;

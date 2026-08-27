@@ -2,6 +2,7 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import { asc, desc, eq, isNull, sql } from "drizzle-orm";
 import {
   CountNotificacionesNoLeidasResponse,
+  GetNotificationFeedResponse,
   ListNotificacionesResponse,
   MarkAllNotificacionesReadResponse,
   MarkNotificacionReadParams,
@@ -12,8 +13,10 @@ import {
   notificacionesCreditoTable,
   notificacionesSistemaTable,
   pool,
+  solicitudesPagoDirigidoTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
+import { getAdminAlertas } from "../lib/admin-alertas";
 
 const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
@@ -46,6 +49,201 @@ function serializeNotificationDates<T extends {
     fechaVencimiento: calendarDate(value.fechaVencimiento),
   };
 }
+
+type FeedEvent = {
+  id: string;
+  kind: "TICKET_READY" | "DIRECTED_PAYMENT" | "CREDIT_DUE" | "TRANSIT_OVERDUE" | "SYSTEM" | "CREDIT_NOTICE";
+  family: "AVISO" | "SOLICITUD" | "ALERTA";
+  title: string;
+  message: string;
+  href: string;
+  updatedAt: string;
+  siteId: number | null;
+};
+
+function directedPaymentEvent(row: Record<string, unknown>, adminQueue: boolean): FeedEvent {
+  const id = Number(row.id);
+  const estado = String(row.estado);
+  const tipo = String(row.tipo);
+  const importe = Number(row.importe ?? 0).toFixed(2);
+  const contraparte = String(row.contraparteNombre);
+  const documento = String(row.documentoFolio);
+  const updatedAtValue = row.resueltaAt ?? row.createdAt;
+  const updatedAt = new Date(
+    updatedAtValue instanceof Date || typeof updatedAtValue === "string"
+      ? updatedAtValue
+      : Date.now(),
+  ).toISOString();
+  const statusLabel = estado === "APROBADA" ? "aprobado" : estado === "RECHAZADA" ? "rechazado" : "pendiente";
+  return {
+    id: `directed-payment:${id}`,
+    kind: "DIRECTED_PAYMENT",
+    family: "SOLICITUD",
+    title: adminQueue ? "Solicitud de pago dirigido" : `Pago dirigido ${statusLabel}`,
+    message: adminQueue
+      ? `${String(row.solicitanteNombre)} solicita $${importe} para ${contraparte} · ${documento}.`
+      : `$${importe} para ${contraparte} · ${documento}.`,
+    href: "/pagos-dirigidos",
+    updatedAt,
+    siteId: null,
+  };
+}
+
+router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
+  try {
+    res.setHeader("Cache-Control", "private, no-store");
+    const user = req.auth!.user;
+    const events = new Map<string, FeedEvent>();
+
+    const ownDirectedPromise = db
+      .select()
+      .from(solicitudesPagoDirigidoTable)
+      .where(eq(solicitudesPagoDirigidoTable.solicitanteId, user.id))
+      .orderBy(desc(sql`COALESCE(${solicitudesPagoDirigidoTable.resueltaAt}, ${solicitudesPagoDirigidoTable.createdAt})`))
+      .limit(25);
+
+    const cajaTicketsPromise = user.rol === "CAJA" && user.ubicacionId != null
+      ? pool.query(
+          `SELECT t.id, t.folio, t.total::text AS importe, t.created_at AS "createdAt",
+             c.nombre AS "clienteNombre"
+           FROM tickets t
+           JOIN clientes c ON c.id=t.cliente_id
+           WHERE t.estado='VENDIDO' AND NOT t.cobrado AND t.ubicacion_id=$1
+           ORDER BY t.created_at DESC,t.id DESC
+           LIMIT 50`,
+          [user.ubicacionId],
+        )
+      : Promise.resolve({ rows: [] });
+
+    const [ownDirected, cajaTickets] = await Promise.all([ownDirectedPromise, cajaTicketsPromise]);
+
+    for (const row of ownDirected) {
+      const event = directedPaymentEvent(row as unknown as Record<string, unknown>, false);
+      events.set(event.id, event);
+    }
+    for (const row of cajaTickets.rows) {
+      const ticket = row as Record<string, unknown>;
+      const ticketId = Number(ticket.id);
+      const event: FeedEvent = {
+        id: `ticket-ready:${ticketId}`,
+        kind: "TICKET_READY",
+        family: "SOLICITUD",
+        title: `Ticket ${Number(ticket.folio)} listo para cobrar`,
+        message: `${String(ticket.clienteNombre)} · $${Number(ticket.importe).toFixed(2)}`,
+        href: `/cobros?ticketId=${ticketId}`,
+        updatedAt: new Date(ticket.createdAt as string | Date).toISOString(),
+        siteId: user.ubicacionId,
+      };
+      events.set(event.id, event);
+    }
+
+    if (user.rol === "ADMIN") {
+      const [alerts, pendingDirected, systemNotifications, creditNotifications] = await Promise.all([
+        getAdminAlertas(),
+        db
+          .select()
+          .from(solicitudesPagoDirigidoTable)
+          .where(eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"))
+          .orderBy(desc(solicitudesPagoDirigidoTable.createdAt))
+          .limit(50),
+        db
+          .select()
+          .from(notificacionesSistemaTable)
+          .where(isNull(notificacionesSistemaTable.leidaAt))
+          .orderBy(desc(notificacionesSistemaTable.createdAt))
+          .limit(50),
+        db
+          .select()
+          .from(notificacionesCreditoTable)
+          .where(isNull(notificacionesCreditoTable.leidaAt))
+          .orderBy(desc(notificacionesCreditoTable.createdAt))
+          .limit(50),
+      ]);
+
+      for (const row of pendingDirected) {
+        const event = directedPaymentEvent(row as unknown as Record<string, unknown>, true);
+        events.set(event.id, event);
+      }
+      for (const row of systemNotifications) {
+        events.set(`system:${row.id}`, {
+          id: `system:${row.id}`,
+          kind: "SYSTEM",
+          family: row.tipo.includes("INCOMPLETA") ? "ALERTA" : "AVISO",
+          title: row.titulo,
+          message: row.mensaje,
+          href: "/notificaciones",
+          updatedAt: row.createdAt.toISOString(),
+          siteId: null,
+        });
+      }
+      for (const row of creditNotifications) {
+        events.set(`credit-notice:${row.id}`, {
+          id: `credit-notice:${row.id}`,
+          kind: "CREDIT_NOTICE",
+          family: row.urgente ? "ALERTA" : "AVISO",
+          title: `Venta a crédito · Folio ${row.folio}`,
+          message: `${row.clienteNombre} · $${Number(row.importe).toFixed(2)}`,
+          href: `/clientes/${row.clienteId}?tab=estado`,
+          updatedAt: row.createdAt.toISOString(),
+          siteId: row.tiendaId,
+        });
+      }
+      for (const row of alerts.ticketsPendientes) {
+        events.set(`ticket-ready:${row.id}`, {
+          id: `ticket-ready:${row.id}`,
+          kind: "TICKET_READY",
+          family: "ALERTA",
+          title: `Ticket ${row.folio} pendiente de cobro`,
+          message: `${row.nombreUbicacion} · ${row.nombreCliente} · $${row.importe}`,
+          href: `/tickets/${row.id}`,
+          updatedAt: row.createdAt,
+          siteId: row.ubicacionId,
+        });
+      }
+      for (const row of alerts.creditos) {
+        events.set(`credit-due:${row.movimientoId}`, {
+          id: `credit-due:${row.movimientoId}`,
+          kind: "CREDIT_DUE",
+          family: "ALERTA",
+          title: row.diasRestantes < 0 ? "Pago de cliente vencido" : "Pago de cliente por vencer",
+          message: `${row.nombreCliente} · $${row.importe}`,
+          href: `/clientes/${row.clienteId}?tab=estado`,
+          updatedAt: `${row.fechaVencimiento}T12:00:00.000Z`,
+          siteId: null,
+        });
+      }
+      for (const row of alerts.salidasEnTransito) {
+        events.set(`transit-overdue:${row.id}`, {
+          id: `transit-overdue:${row.id}`,
+          kind: "TRANSIT_OVERDUE",
+          family: "ALERTA",
+          title: `Salida ${row.folio} sin recibir`,
+          message: `${row.nombreOrigen} → ${row.nombreDestino} · ${row.horasEnTransito} h`,
+          href: `/salidas/${row.id}`,
+          updatedAt: row.enviadaAt,
+          siteId: row.destinoId,
+        });
+      }
+    }
+
+    const parsed = GetNotificationFeedResponse.parse({
+      events: [...events.values()]
+        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || b.id.localeCompare(a.id))
+        .slice(0, 100),
+      generatedAt: new Date(),
+    });
+    res.json({
+      ...parsed,
+      generatedAt: parsed.generatedAt.toISOString(),
+      events: parsed.events.map((event) => ({
+        ...event,
+        updatedAt: event.updatedAt.toISOString(),
+      })),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get("/notificaciones", async (req, res, next): Promise<void> => {
   try {

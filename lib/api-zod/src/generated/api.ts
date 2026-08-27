@@ -4182,6 +4182,24 @@ export const ListNotificacionesResponse = zod.object({
 
 
 /**
+ * @summary Devuelve eventos de notificación visibles para la sesión y el sitio actuales
+ */
+export const GetNotificationFeedResponse = zod.object({
+  "events": zod.array(zod.object({
+  "id": zod.string().describe('Identificador estable del evento para deduplicar sonido entre consultas'),
+  "kind": zod.enum(['TICKET_READY', 'DIRECTED_PAYMENT', 'CREDIT_DUE', 'TRANSIT_OVERDUE', 'SYSTEM', 'CREDIT_NOTICE']),
+  "family": zod.enum(['AVISO', 'SOLICITUD', 'ALERTA']),
+  "title": zod.string(),
+  "message": zod.string(),
+  "href": zod.string(),
+  "updatedAt": zod.coerce.date(),
+  "siteId": zod.number().nullable()
+})),
+  "generatedAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
  */
 export const CountNotificacionesNoLeidasResponse = zod.object({

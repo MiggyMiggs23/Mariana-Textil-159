@@ -2636,6 +2636,19 @@ paths:
                 $ref: "#/components/schemas/NotificacionesPanel"
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /notificaciones/feed:
+    get:
+      operationId: getNotificationFeed
+      tags: [notificaciones]
+      summary: Devuelve eventos de notificación visibles para la sesión y el sitio actuales
+      responses:
+        "200":
+          description: Feed unificado de notificaciones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationFeed"
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /notificaciones/no-leidas/count:
     get:
       operationId: countNotificacionesNoLeidas
@@ -5579,6 +5592,39 @@ components:
       required: [count]
       properties:
         count: { type: number }
+    NotificationFamily:
+      type: string
+      enum: [AVISO, SOLICITUD, ALERTA]
+    NotificationFeedEvent:
+      type: object
+      required: [id, kind, family, title, message, href, updatedAt, siteId]
+      properties:
+        id:
+          {
+            type: string,
+            description: "Identificador estable del evento para deduplicar sonido entre consultas",
+          }
+        kind:
+          {
+            type: string,
+            enum: [TICKET_READY, DIRECTED_PAYMENT, CREDIT_DUE, TRANSIT_OVERDUE, SYSTEM, CREDIT_NOTICE],
+          }
+        family:
+          $ref: "#/components/schemas/NotificationFamily"
+        title: { type: string }
+        message: { type: string }
+        href: { type: string }
+        updatedAt: { type: string, format: date-time }
+        siteId: { type: ["number", "null"] }
+    NotificationFeed:
+      type: object
+      required: [events, generatedAt]
+      properties:
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotificationFeedEvent"
+        generatedAt: { type: string, format: date-time }
     NotificacionesPanel:
       type: object
       required: [notificaciones, sistema, porVencer, vencidas, clientesConMultiplesVencidas]
