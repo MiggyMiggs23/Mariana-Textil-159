@@ -19,10 +19,11 @@ import {
   type FormaPagoTicket,
 } from "@workspace/db";
 import {
-  allocateCreditFifo,
   centsToMoney,
   moneyToCents,
+  projectCreditLedger,
 } from "./credit-allocation";
+import { loadCustomerCreditLedgerInTransaction } from "./credit-aging-read-model";
 import {
   InventarioError,
   revertirMovimiento,
@@ -1090,15 +1091,16 @@ export async function cobrarTicket(
         "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
       );
     }
-    const [ledger] = await tx
-      .select({
-        saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
-      })
-      .from(movimientosCreditoTable)
-      .where(eq(movimientosCreditoTable.clienteId, clienteId));
+    const ledgerMovements = await loadCustomerCreditLedgerInTransaction(
+      clienteId,
+      tx,
+    );
+    const currentProjection = projectCreditLedger(ledgerMovements);
+    const currentNetCents =
+      currentProjection.balanceCents - currentProjection.overpaymentCents;
     if (
       creditCents > 0 &&
-      money(ledger?.saldo ?? "0") + creditCents >
+      currentNetCents + creditCents >
         money(cliente.limiteCredito) &&
       input.autorizadoPor == null
     ) {
@@ -1127,38 +1129,18 @@ export async function cobrarTicket(
         diasPlazo: diasPlazo!,
         fechaVencimiento: creditDueDate(ticket.createdAt, diasPlazo!),
       }).returning();
-      // A prior overpayment remains a negative ledger balance.  When a new
-      // receivable exists it is consumed automatically, with immutable links
-      // preserving precisely which historical ABONO funded this sale.
-      const availableAbonos = await tx
-        .select({
-          id: movimientosCreditoTable.id,
-          disponible: sql<string>`(-${movimientosCreditoTable.importe} - COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a WHERE a.abono_movimiento_id = ${movimientosCreditoTable.id}), 0))::text`,
-        })
-        .from(movimientosCreditoTable)
-        .where(and(
-          eq(movimientosCreditoTable.clienteId, clienteId),
-          eq(movimientosCreditoTable.tipo, "ABONO"),
-          sql`NOT EXISTS (
-            SELECT 1 FROM movimientos_credito reverso
-            WHERE reverso.tipo = 'REVERSO'
-              AND reverso.movimiento_origen_id = ${movimientosCreditoTable.id}
-          )`,
-        ))
-        .orderBy(asc(movimientosCreditoTable.createdAt), asc(movimientosCreditoTable.id));
-      const allocation = allocateCreditFifo(
-        availableAbonos
-          .map((abono) => ({ id: abono.id, availableCents: Math.max(0, moneyToCents(abono.disponible)) }))
-          .filter((abono) => abono.availableCents > 0),
-        [{
-          id: creditMovement!.id,
-          balanceCents: moneyToCents(creditMovement!.importe),
-          createdAt: creditMovement!.createdAt,
-        }],
-      );
-      if (allocation.allocations.length > 0) {
+      // Project the complete immutable ledger again. Persisted applications are
+      // evidence of links selected by the projection, never input to balances.
+      const projectedMovements = [...ledgerMovements, creditMovement!];
+      const abonoIds = new Set(projectedMovements
+        .filter((movement) => movement.tipo === "ABONO")
+        .map((movement) => movement.id));
+      const allocations = projectCreditLedger(projectedMovements).allocations
+        .filter((item) =>
+          item.targetId === creditMovement!.id && abonoIds.has(item.sourceId));
+      if (allocations.length > 0) {
         await tx.insert(aplicacionesCreditoTable).values(
-          allocation.allocations.map((item) => ({
+          allocations.map((item) => ({
             abonoMovimientoId: item.sourceId,
             ventaMovimientoId: item.targetId,
             importe: centsToMoney(item.appliedCents),
@@ -1188,7 +1170,7 @@ export async function cobrarTicket(
         tiendaId: ticket.ubicacionId,
         tiendaNombre: tienda?.nombre ?? "Tienda eliminada",
         urgente:
-          money(ledger?.saldo ?? "0") + creditCents >
+          currentNetCents + creditCents >
           money(cliente.limiteCredito),
       });
     }

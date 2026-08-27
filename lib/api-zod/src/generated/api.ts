@@ -3692,7 +3692,8 @@ export const previewClientePagoBodyImporteMin = 0.01;
 
 
 export const PreviewClientePagoBody = zod.object({
-  "importe": zod.number().min(previewClientePagoBodyImporteMin)
+  "importe": zod.number().min(previewClientePagoBodyImporteMin),
+  "fechaEfectiva": zod.coerce.date().nullish()
 })
 
 export const PreviewClientePagoResponse = zod.object({

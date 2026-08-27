@@ -79,6 +79,25 @@ test("aplicaciones_credito is append-only and only links customer ABONOs to sale
     assert.equal(assigned.rows[0]?.total, "77.00");
     // 23.00 remains as negative-ledger credit, available to a subsequent sale.
     assert.equal(100 - Number(assigned.rows[0]?.total), 23);
+    const reprojectedAbono = (await write(
+      `INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id,forma_pago,cuenta_destino)
+       VALUES($1,'ABONO','-42.00',$2,'TRANSFERENCIA','CUENTA_FISCAL') RETURNING id`,
+      [clienteId, usuarioId],
+    )).rows[0]!.id;
+    await write(
+      `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
+       VALUES($1,$2,'42.00')`,
+      [reprojectedAbono, saleOne],
+    );
+    assert.equal(
+      (await client.query<{ total: string }>(
+        `SELECT SUM(importe)::text AS total
+         FROM aplicaciones_credito WHERE venta_movimiento_id=$1`,
+        [saleOne],
+      )).rows[0]?.total,
+      "84.00",
+      "Historical link evidence must not cap the sale's current projected balance.",
+    );
     await expectWriteRejects(
         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
          VALUES($1,$2,'0')`,
@@ -116,7 +135,7 @@ test("aplicaciones_credito is append-only and only links customer ABONOs to sale
            WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=ab.id)`,
       [clienteId],
     );
-    assert.equal(availableAfterReverse.rows[0]?.disponible, "0");
+    assert.equal(Number(availableAfterReverse.rows[0]?.disponible), 0);
     await expectWriteRejects(
       `INSERT INTO aplicaciones_credito
          (abono_movimiento_id,venta_movimiento_id,importe)

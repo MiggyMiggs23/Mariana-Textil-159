@@ -13,6 +13,7 @@ import {
 import { requireRole, requireSession } from "../middlewares/auth";
 import { resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { loadCustomerCreditProjectionInTransaction } from "../lib/credit-aging-read-model";
 
 const router: IRouter = Router();
 router.use("/pagos-dirigidos", requireSession);
@@ -34,20 +35,35 @@ async function assertDocumentBalance(tx: any, request: any) {
   const document = await tx.execute(supplier ? sql`
     SELECT p.id,p.importe::text FROM pagos_proveedor p WHERE p.id=${request.documentoMovimientoId}
       AND p.proveedor_id=${request.entidadId} AND p.tipo='COMPRA' FOR UPDATE`
-    : sql`SELECT m.id,m.importe::text FROM movimientos_credito m WHERE m.id=${request.documentoMovimientoId}
+    : sql`SELECT m.id,m.ticket_id,m.importe::text FROM movimientos_credito m WHERE m.id=${request.documentoMovimientoId}
       AND m.cliente_id=${request.entidadId} AND m.tipo='VENTA_CREDITO' FOR UPDATE`);
   const doc = document.rows[0];
   if (!doc) throw new Error("DIRECTED_DOCUMENT_NOT_FOUND");
-  const used = await tx.execute(supplier ? sql`
-    SELECT COALESCE(SUM(a.importe),0)::text total FROM aplicaciones_pago_proveedor a
-    JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
-    WHERE a.compra_proveedor_id=${doc.id} AND NOT EXISTS
-      (SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=p.id)`
-    : sql`SELECT COALESCE(SUM(a.importe),0)::text total FROM aplicaciones_credito a
-    JOIN movimientos_credito m ON m.id=a.abono_movimiento_id
-    WHERE a.venta_movimiento_id=${doc.id} AND NOT EXISTS
-      (SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id)`);
-  const availableCents = Math.round(Number(doc.importe) * 100) - Math.round(Number(used.rows[0]?.total ?? 0) * 100);
+  let availableCents: number;
+  if (supplier) {
+    const used = await tx.execute(sql`
+      SELECT COALESCE(SUM(a.importe),0)::text total
+      FROM aplicaciones_pago_proveedor a
+      JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
+      WHERE a.compra_proveedor_id=${doc.id}
+        AND NOT EXISTS (
+          SELECT 1 FROM pagos_proveedor r
+          WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=p.id
+        )
+    `);
+    availableCents =
+      Math.round(Number(doc.importe) * 100) -
+      Math.round(Number(used.rows[0]?.total ?? 0) * 100);
+  } else {
+    const projection = await loadCustomerCreditProjectionInTransaction(
+      request.entidadId,
+      tx,
+    );
+    availableCents =
+      projection.allCharges.find(
+        (charge) => charge.movimientoId === Number(doc.id),
+      )?.pendienteCents ?? 0;
+  }
   const requestedCents = Math.round(Number(request.importe) * 100);
   if (requestedCents > availableCents) throw new Error("DIRECTED_AMOUNT_EXCEEDS_DOCUMENT");
   return doc;
@@ -60,7 +76,7 @@ async function apply(tx: any, request: any, userId: number) {
   const amount = (requestedCents / 100).toFixed(2);
   const [movement] = supplier
     ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago, referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
-    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago, cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
+    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, ticketId: Number(doc.ticket_id), importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago, cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
   if (supplier) await tx.insert(aplicacionesPagoProveedorTable).values({ pagoProveedorId: movement.id, compraProveedorId: doc.id, importe: amount });
   else await tx.insert(aplicacionesCreditoTable).values({ abonoMovimientoId: movement.id, ventaMovimientoId: doc.id, importe: amount });
   return movement;

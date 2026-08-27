@@ -6,7 +6,7 @@ import {
 } from "@workspace/api-zod";
 import { readFile } from "node:fs/promises";
 
-test("contrato de abono exige cuentaDestino y mantiene preview sin ella", () => {
+test("contrato de abono exige cuentaDestino y preview comparte fecha efectiva", () => {
   assert.equal(
     CreateClientePagoBody.safeParse({
       importe: 125,
@@ -20,7 +20,10 @@ test("contrato de abono exige cuentaDestino y mantiene preview sin ella", () => 
     false,
   );
   assert.equal(
-    PreviewClientePagoBody.safeParse({ importe: 125 }).success,
+    PreviewClientePagoBody.safeParse({
+      importe: 125,
+      fechaEfectiva: "2026-01-03T12:00:00.000Z",
+    }).success,
     true,
   );
 });

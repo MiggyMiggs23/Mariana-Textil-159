@@ -21,16 +21,23 @@ import {
   ticketsTable,
 } from "@workspace/db";
 import {
-  allocateCreditFifo,
   centsToMoney,
   isValidPaymentDestination,
   moneyToCents,
+  projectCreditLedger,
+  type CreditLedgerCharge,
 } from "../lib/credit-allocation";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { createTextPdf } from "../lib/pdf";
-import { canLinkAdjustmentToTicket } from "../lib/clientes-aging";
+import { canLinkAdjustmentToTicket, creditStatus } from "../lib/clientes-aging";
+import {
+  loadCustomerCreditLedger,
+  loadCustomerCreditProjectionInTransaction,
+  loadCustomerCreditProjection,
+  loadCustomerCreditProjections,
+} from "../lib/credit-aging-read-model";
 import {
   isActiveNonSystemNameConflict,
   parseClientCreditTerms,
@@ -112,69 +119,53 @@ function dateOnly(value: unknown): string | null {
     : (value as Date).toISOString().slice(0, 10);
 }
 
-type CreditSale = {
-  id: number;
-  ticketId: number | null;
-  folio: number | null;
-  fechaVencimiento: string | null;
-  createdAt: Date;
-  balanceCents: number;
-  linkedReductionCents: number;
-};
-
-async function outstandingCreditSales(database: any, clienteId: number): Promise<CreditSale[]> {
-  const rows = await database
-    .select({
-      id: movimientosCreditoTable.id,
-      ticketId: movimientosCreditoTable.ticketId,
-      folio: ticketsTable.folio,
-      fechaVencimiento: movimientosCreditoTable.fechaVencimiento,
-      createdAt: movimientosCreditoTable.createdAt,
-      importe: movimientosCreditoTable.importe,
-      aplicado: sql<string>`COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a JOIN movimientos_credito ab ON ab.id=a.abono_movimiento_id WHERE a.venta_movimiento_id = ${movimientosCreditoTable.id} AND NOT EXISTS (SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=ab.id)), 0)::text`,
-      reversado: sql<string>`COALESCE((SELECT SUM(-r.importe) FROM movimientos_credito r WHERE r.cliente_id=${movimientosCreditoTable.clienteId} AND r.tipo='REVERSO' AND r.ticket_id=${movimientosCreditoTable.ticketId}), 0)::text`,
-    })
-    .from(movimientosCreditoTable)
-    .leftJoin(ticketsTable, eq(ticketsTable.id, movimientosCreditoTable.ticketId))
-    .where(and(
-      eq(movimientosCreditoTable.clienteId, clienteId),
-      eq(movimientosCreditoTable.tipo, "VENTA_CREDITO"),
-    ))
-    .orderBy(asc(movimientosCreditoTable.createdAt), asc(movimientosCreditoTable.id));
-  return rows.map((row: any) => ({
-    ...row,
-    balanceCents: Math.max(0, moneyToCents(row.importe) - moneyToCents(row.aplicado)),
-    linkedReductionCents: Math.max(0, moneyToCents(row.reversado)),
-    fechaVencimiento:
-      row.fechaVencimiento == null
-        ? null
-        : typeof row.fechaVencimiento === "string"
-          ? row.fechaVencimiento
-          : row.fechaVencimiento.toISOString().slice(0, 10),
-  })).filter(
-    (row: CreditSale) =>
-      row.balanceCents - row.linkedReductionCents > 0,
-  );
-}
-
 function presentAllocations(
-  sales: CreditSale[],
-  allocations: ReturnType<typeof allocateCreditFifo>["allocations"],
+  charges: CreditLedgerCharge[],
+  allocations: ReturnType<typeof projectCreditLedger>["allocations"],
 ) {
-  const salesById = new Map(sales.map((sale) => [sale.id, sale]));
+  const salesById = new Map(charges.map((charge) => [charge.movimientoId, charge]));
   return allocations.map((allocation) => {
     const sale = salesById.get(allocation.targetId)!;
     return {
       folio: sale.folio,
       ticketId: sale.ticketId,
-      movimientoVentaId: sale.id,
-      vencimiento: sale.fechaVencimiento,
+      movimientoVentaId: sale.movimientoId,
+      vencimiento: sale.dueAt,
       saldoAntes: centsToMoney(allocation.balanceBeforeCents),
       aplicado: centsToMoney(allocation.appliedCents),
       saldoDespues: centsToMoney(allocation.balanceAfterCents),
       resultado: allocation.balanceAfterCents === 0 ? "SALDADA" : "PARCIAL",
     };
   });
+}
+
+function previewPaymentProjection(
+  movements: Parameters<typeof projectCreditLedger>[0],
+  amountCents: number,
+  effectiveAt: Date,
+) {
+  // Database IDs are increasing, so a hypothetical row with the same effective
+  // timestamp as an existing movement must sort after that existing evidence,
+  // exactly as the subsequently inserted row will.
+  const sourceId = Number.MAX_SAFE_INTEGER;
+  const projection = projectCreditLedger([
+    ...movements,
+    {
+      id: sourceId,
+      ticketId: null,
+      tipo: "ABONO" as const,
+      importe: centsToMoney(-amountCents),
+      createdAt: effectiveAt,
+    },
+  ]);
+  const allocations = projection.allocations.filter(
+    (allocation) => allocation.sourceId === sourceId,
+  );
+  const appliedCents = allocations.reduce(
+    (sum, allocation) => sum + allocation.appliedCents,
+    0,
+  );
+  return { projection, allocations, remainingCents: amountCents - appliedCents };
 }
 
 function period(req: { query: Record<string, unknown> }) {
@@ -186,6 +177,39 @@ function period(req: { query: Record<string, unknown> }) {
   }
   return { desde, hasta };
 }
+async function carteraReadModel() {
+  const clients = await pool.query<{ id: number; nombre: string }>(
+    "SELECT id,nombre FROM clientes WHERE activo AND NOT es_sistema",
+  );
+  const projections = await loadCustomerCreditProjections(clients.rows.map((client) => Number(client.id)));
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+  return clients.rows.map((client) => {
+    const charges = projections.get(Number(client.id))!.charges;
+    const sum = (predicate: (due: string | null) => boolean) => charges.filter((charge) => predicate(charge.dueAt))
+      .reduce((total, charge) => total + charge.pendienteCents, 0);
+    const dueDays = (due: string | null) => due == null ? 0 : Math.max(0, Math.floor(
+      (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`)) / 86400000,
+    ));
+    const overdue = charges.filter((charge) => charge.dueAt != null && dueDays(charge.dueAt) > 0)
+      .map((charge) => charge.dueAt!).sort();
+    const oldestDays = overdue[0] == null ? 0 : dueDays(overdue[0]);
+    const age = oldestDays === 0 ? "POR_VENCER"
+      : oldestDays <= 30 ? "1_30"
+      : oldestDays <= 60 ? "31_60"
+      : oldestDays <= 90 ? "61_90" : "MAS_90";
+    return { id: Number(client.id), nombre: client.nombre, saldo: centsToMoney(sum(() => true)), saldoActual: centsToMoney(sum(() => true)),
+      porVencer: centsToMoney(sum((due) => due != null && due >= today)), sinPlazo: centsToMoney(sum((due) => due == null)),
+      "1_30": centsToMoney(sum((due) => dueDays(due) >= 1 && dueDays(due) <= 30)),
+      "31_60": centsToMoney(sum((due) => dueDays(due) >= 31 && dueDays(due) <= 60)),
+      "61_90": centsToMoney(sum((due) => dueDays(due) >= 61 && dueDays(due) <= 90)),
+      mas90: centsToMoney(sum((due) => dueDays(due) > 90)),
+      antiguedad: charges.length && charges.every((charge) => charge.dueAt == null) ? "SIN_PLAZO" : age,
+      diasVencido: overdue[0] ? Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${overdue[0]}T00:00:00Z`)) / 86400000) : 0,
+      vencido: centsToMoney(sum((due) => due != null && due < today)),
+      primerVencimiento: charges.map((charge) => charge.dueAt).filter(Boolean).sort()[0] ?? null,
+    };
+  }).filter((row) => row.saldoActual !== "0.00").sort((a, b) => Number(b.saldoActual) - Number(a.saldoActual));
+}
 
 // ── GET /clientes/resumen ─────────────────────────────────────────────────────
 // Must come BEFORE /:id to avoid Express matching "resumen" as an id.
@@ -196,27 +220,17 @@ router.get(
   requierePermiso("clientes_finanzas", "ver"),
   async (_req, res, next): Promise<void> => {
     try {
-       const result = await pool.query(`
-         WITH saldo AS (
-           SELECT c.id, COALESCE(SUM(m.importe),0) AS total
-           FROM clientes c LEFT JOIN movimientos_credito m ON m.cliente_id=c.id
-           WHERE c.activo GROUP BY c.id
-         ), vencido AS (
-           SELECT c.id, COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < (now() AT TIME ZONE 'America/Mexico_City')::date),0) AS total
-           FROM clientes c LEFT JOIN LATERAL credit_fifo_aging(c.id) a ON true
-           WHERE c.activo GROUP BY c.id
-         )
-         SELECT COUNT(*)::int AS "totalClientes",
-           COUNT(*) FILTER (WHERE s.total > 0)::int AS "clientesConSaldo",
-           COALESCE(SUM(GREATEST(s.total,0)),0)::text AS "totalCartera",
-           COALESCE(SUM(v.total),0)::text AS "totalVencido"
-         FROM saldo s JOIN vencido v ON v.id=s.id`);
-       const row = result.rows[0];
+       const result = await pool.query<{ id: number }>("SELECT id FROM clientes WHERE activo");
+       const projections = await loadCustomerCreditProjections(result.rows.map((row) => Number(row.id)));
+       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+       const balances = [...projections.values()];
       res.json({
-        totalClientes: row?.totalClientes ?? 0,
-        clientesConSaldo: row?.clientesConSaldo ?? 0,
-        totalCartera: row?.totalCartera ?? "0.00",
-        totalVencido: row?.totalVencido ?? "0.00",
+         totalClientes: result.rows.length,
+         clientesConSaldo: balances.filter((projection) => projection.balanceCents > 0).length,
+         totalCartera: centsToMoney(balances.reduce((sum, projection) => sum + projection.balanceCents, 0)),
+         totalVencido: centsToMoney(balances.reduce((sum, projection) => sum + projection.charges
+           .filter((charge) => charge.dueAt != null && charge.dueAt < today)
+           .reduce((subtotal, charge) => subtotal + charge.pendienteCents, 0), 0)),
       });
     } catch (e) {
       if (e instanceof Error && e.message === "INVALID_PERIOD") {
@@ -248,14 +262,8 @@ router.get(
         res.json(rows.map(presentClienteOperativo));
         return;
       }
-      const balances = await db
-        .select({
-          clienteId: movimientosCreditoTable.clienteId,
-          saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
-        })
-        .from(movimientosCreditoTable)
-        .groupBy(movimientosCreditoTable.clienteId);
-      const byId = new Map(balances.map((item) => [item.clienteId, item.saldo]));
+      const projections = await loadCustomerCreditProjections(rows.map((row) => row.id));
+      const byId = new Map([...projections].map(([id, projection]) => [id, centsToMoney(projection.balanceCents)]));
       res.json(
         rows.map((row) => ({
           ...presentClienteOperativo(row),
@@ -385,28 +393,7 @@ router.get(
   requierePermiso("clientes_finanzas", "ver"),
   async (_req, res, next): Promise<void> => {
     try {
-      const result = await pool.query(`
-        WITH cartera AS (
-          SELECT c.id, c.nombre, a.due_at, a.pendiente
-          FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
-          WHERE c.activo AND NOT c.es_sistema
-        )
-        SELECT id, nombre, SUM(pendiente)::text AS "saldoActual",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date),0)::text AS "porVencer",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at IS NULL),0)::text AS "sinPlazo",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date AND due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date-30),0)::text AS "1_30",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date-30 AND due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date-60),0)::text AS "31_60",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date-60 AND due_at >= (now() AT TIME ZONE 'America/Mexico_City')::date-90),0)::text AS "61_90",
-          COALESCE(SUM(pendiente) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date-90),0)::text AS "mas90",
-          CASE WHEN BOOL_AND(due_at IS NULL) THEN 'SIN_PLAZO'
-            WHEN MIN(due_at) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date) IS NULL THEN 'POR_VENCER'
-            WHEN MIN(due_at) >= (now() AT TIME ZONE 'America/Mexico_City')::date-30 THEN '1_30'
-            WHEN MIN(due_at) >= (now() AT TIME ZONE 'America/Mexico_City')::date-60 THEN '31_60'
-            WHEN MIN(due_at) >= (now() AT TIME ZONE 'America/Mexico_City')::date-90 THEN '61_90'
-            ELSE 'MAS_90' END AS antiguedad,
-          GREATEST(0, (now() AT TIME ZONE 'America/Mexico_City')::date-MIN(due_at) FILTER (WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date))::int AS "diasVencido"
-        FROM cartera GROUP BY id,nombre ORDER BY SUM(pendiente) DESC`);
-      res.json({ clientes: result.rows });
+      res.json({ clientes: await carteraReadModel() });
     } catch (error) {
       next(error);
     }
@@ -477,11 +464,24 @@ router.get(
            WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
             GROUP BY p.color,l.tipo,p.unidad ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
         pool.query(
-          `SELECT c.id,c.nombre,MIN(t.created_at) AS "primeraCompra",MAX(t.created_at) AS "ultimaCompra",
-            COALESCE((SELECT SUM(a.pendiente) FROM credit_fifo_aging(c.id) a WHERE a.due_at<(now() AT TIME ZONE 'America/Mexico_City')::date),0)::text vencido
+          `SELECT c.id,c.nombre,MIN(t.created_at) AS "primeraCompra",MAX(t.created_at) AS "ultimaCompra"
            FROM clientes c LEFT JOIN tickets t ON t.cliente_id=c.id AND t.estado='VENDIDO'
            WHERE NOT c.es_sistema GROUP BY c.id,c.nombre`, []),
       ]);
+      const riskProjections = await loadCustomerCreditProjections(
+        riesgo.rows.map((item) => Number(item.id)),
+      );
+      const today = new Date().toLocaleDateString("en-CA", {
+        timeZone: "America/Mexico_City",
+      });
+      const riskRows = riesgo.rows.map((item) => ({
+        ...item,
+        vencido: centsToMoney(
+          (riskProjections.get(Number(item.id))?.charges ?? [])
+            .filter((charge) => charge.dueAt != null && charge.dueAt < today)
+            .reduce((sum, charge) => sum + charge.pendienteCents, 0),
+        ),
+      }));
       res.json({
         periodo: { desde, hasta }, ...result.rows[0],
         topVentas: tops.rows,
@@ -492,9 +492,9 @@ router.get(
         mensual: mensual.rows,
         productos: productosGlobal.rows,
         colores: coloresGlobal.rows,
-        clientesNuevos: riesgo.rows.filter((item) => item.primeraCompra && (!desde || new Date(item.primeraCompra) >= new Date(desde))),
-        clientesRiesgo: riesgo.rows.filter((item) => Number(item.vencido) > 0),
-        clientesInactivos: riesgo.rows.filter((item) => item.ultimaCompra && Date.now()-new Date(item.ultimaCompra).getTime() > 90*86400000),
+        clientesNuevos: riskRows.filter((item) => item.primeraCompra && (!desde || new Date(item.primeraCompra) >= new Date(desde))),
+        clientesRiesgo: riskRows.filter((item) => Number(item.vencido) > 0),
+        clientesInactivos: riskRows.filter((item) => item.ultimaCompra && Date.now()-new Date(item.ultimaCompra).getTime() > 90*86400000),
         distribucionMargen: tops.rows.map((item) => ({ clienteId: item.id, margen: item.margen })),
       });
     } catch (error) {
@@ -565,13 +565,7 @@ router.get(
   requierePermiso("clientes_finanzas", "ver"),
   async (_req, res, next): Promise<void> => {
     try {
-      const result = await pool.query(`
-        SELECT c.nombre, SUM(a.pendiente)::text AS saldo,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at < (now() AT TIME ZONE 'America/Mexico_City')::date),0)::text AS vencido,
-          MIN(a.due_at) AS "primerVencimiento",
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at IS NULL),0)::text AS "sinPlazo"
-        FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
-        WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
+      const result = { rows: await carteraReadModel() };
       const workbook = new ExcelJS.Workbook();
       const sheet = workbook.addWorksheet("Cartera");
       sheet.columns = [
@@ -607,12 +601,7 @@ router.get(
   requierePermiso("clientes_finanzas", "ver"),
   async (_req, res, next): Promise<void> => {
     try {
-      const result = await pool.query(`
-        SELECT c.nombre,SUM(a.pendiente)::text saldo,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at<(now() AT TIME ZONE 'America/Mexico_City')::date),0)::text vencido,
-          COALESCE(SUM(a.pendiente) FILTER (WHERE a.due_at IS NULL),0)::text "sinPlazo"
-        FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
-        WHERE c.activo AND NOT c.es_sistema GROUP BY c.id,c.nombre ORDER BY SUM(a.pendiente) DESC`);
+      const result = { rows: await carteraReadModel() };
       const pdf = createTextPdf(
         "Cartera de clientes",
         result.rows.map(
@@ -663,16 +652,11 @@ router.get(
         res.json(presentClienteOperativo(row));
         return;
       }
-      const [balance] = await db
-        .select({
-          saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
-        })
-        .from(movimientosCreditoTable)
-        .where(eq(movimientosCreditoTable.clienteId, id));
+      const balance = await loadCustomerCreditProjection(id);
       res.json({
         ...presentClienteOperativo(row),
         limiteCredito: row.limiteCredito,
-        saldoActual: balance?.saldo ?? "0.00",
+        saldoActual: centsToMoney(balance.balanceCents),
       });
     } catch (e) {
       next(e);
@@ -808,36 +792,28 @@ router.get(
         return;
       }
 
-      const [balance] = await db
-        .select({
-          saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
-        })
-        .from(movimientosCreditoTable)
-        .where(eq(movimientosCreditoTable.clienteId, id));
+      const balance = await loadCustomerCreditProjection(id);
       const limite = parseFloat(row.limiteCredito ?? "0");
-      const saldo = parseFloat(balance?.saldo ?? "0");
-      const disponible = Math.max(0, limite - saldo);
+      const saldo = balance.balanceCents / 100;
+      const saldoParaLimite =
+        (balance.balanceCents - balance.overpaymentCents) / 100;
+      const disponible = Math.max(0, limite - saldoParaLimite);
       const puedeComprarCredito = disponible > 0;
-      const aging = await pool.query(
-        `SELECT due_at AS "fechaVencimiento",pendiente::text,
-          CASE WHEN due_at IS NULL THEN 0 ELSE GREATEST(0,(now() AT TIME ZONE 'America/Mexico_City')::date-due_at) END::int AS "diasVencido",
-               (due_at IS NULL) AS "sinPlazo",
-               CASE
-            WHEN due_at IS NULL THEN 'SIN_PLAZO'
-            WHEN due_at < (now() AT TIME ZONE 'America/Mexico_City')::date THEN 'VENCIDA'
-            WHEN due_at <= (now() AT TIME ZONE 'America/Mexico_City')::date + 3 THEN 'POR_VENCER'
-            ELSE 'VIGENTE'
-          END AS estado
-         FROM credit_fifo_aging($1) ORDER BY due_at NULLS LAST`,
-        [id],
-      );
+      const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+      const aging = balance.charges.map((charge) => {
+        const diasVencido = charge.dueAt == null ? 0 : Math.max(0,
+          Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${charge.dueAt}T00:00:00Z`)) / 86_400_000));
+        return { fechaVencimiento: charge.dueAt, pendiente: centsToMoney(charge.pendienteCents),
+          diasVencido, sinPlazo: charge.dueAt == null,
+          estado: creditStatus(charge.pendienteCents / 100, charge.dueAt, today) };
+      });
       const activity = await pool.query(
         `SELECT MIN(created_at) FILTER (WHERE estado='VENDIDO') AS "primeraCompra",
           GREATEST(MAX(created_at), (SELECT MAX(created_at) FROM movimientos_credito WHERE cliente_id=$1)) AS "ultimaActividad"
          FROM tickets WHERE cliente_id=$1`,
         [id],
       );
-      const totalVencido = aging.rows
+      const totalVencido = aging
         .filter((item) => item.diasVencido > 0)
         .reduce((sum, item) => sum + Number(item.pendiente), 0);
 
@@ -850,10 +826,10 @@ router.get(
         diasCredito: row.diasCredito,
         utilizacion: limite > 0 ? ((saldo / limite) * 100).toFixed(2) : "0.00",
         totalVencido: totalVencido.toFixed(2),
-        primerVencimiento: aging.rows[0]?.fechaVencimiento ?? null,
+        primerVencimiento: aging[0]?.fechaVencimiento ?? null,
         primeraCompra: activity.rows[0]?.primeraCompra ?? null,
         ultimaActividad: activity.rows[0]?.ultimaActividad ?? null,
-        antiguedad: aging.rows,
+        antiguedad: aging,
       });
     } catch (e) {
       next(e);
@@ -1056,35 +1032,32 @@ router.get(
                 ELSE notas END AS notas,
                forma_pago AS "formaPago", cuenta_destino AS "cuentaDestino", dias_plazo AS "diasPlazo",
               fecha_vencimiento AS "fechaVencimiento",
-              CASE
-                WHEN tipo='VENTA_CREDITO' AND aging.movimiento_id IS NULL THEN 'PAGADA'
-                WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL THEN 'SIN_PLAZO'
-                WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento < (now() AT TIME ZONE 'America/Mexico_City')::date THEN 'VENCIDA'
-                WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento <= (now() AT TIME ZONE 'America/Mexico_City')::date+3 THEN 'POR_VENCER'
-                WHEN tipo='VENTA_CREDITO' THEN 'VIGENTE'
-              END AS estado,
-              CASE WHEN tipo='VENTA_CREDITO'
-                THEN COALESCE(aging.pendiente::text, '0.00')
-                ELSE NULL
-              END AS "saldoPendiente",
+               NULL::text AS estado,
+              CASE WHEN tipo='VENTA_CREDITO' THEN '0.00' ELSE NULL END AS "saldoPendiente",
              referencia, ticket_folio AS "ticketFolio",
              nombre_usuario AS "nombreUsuario", saldo_corrido::text AS "saldoCorrido"
-           FROM ledger
-            LEFT JOIN credit_fifo_aging($1) aging ON aging.movimiento_id=ledger.id
-            WHERE ($2::date IS NULL OR ledger.created_at >= $2::date)
+            FROM ledger
+             WHERE ($2::date IS NULL OR ledger.created_at >= $2::date)
               AND ($3::date IS NULL OR ledger.created_at < $3::date+interval '1 day')
              AND ($4::text IS NULL OR tipo::text=$4)
             ORDER BY ledger.created_at,ledger.id`,
           [id, desde, hasta, tipo],
         ),
-        pool.query<{ saldo: string }>(
-          `SELECT COALESCE(SUM(importe),0)::text AS saldo
-           FROM movimientos_credito WHERE cliente_id=$1`,
-          [id],
-        ),
+        loadCustomerCreditProjection(id),
       ]);
+       const projectedCharges = new Map(balance.allCharges.map((charge) => [charge.movimientoId, charge]));
+       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
        const withBalance = movements.rows.map((movement) => ({
          ...movement,
+          saldoPendiente: movement.tipo === "VENTA_CREDITO"
+             ? centsToMoney(projectedCharges.get(Number(movement.movimientoId))?.pendienteCents ?? 0) : null,
+          estado: movement.tipo === "VENTA_CREDITO"
+            ? creditStatus(
+                (projectedCharges.get(Number(movement.movimientoId))?.pendienteCents ?? 0) / 100,
+                dateOnly(movement.fechaVencimiento),
+                today,
+              )
+            : null,
          fechaVencimiento:
            movement.fechaVencimiento == null
              ? null
@@ -1095,7 +1068,7 @@ router.get(
       res.json({
         clienteId: id,
         movimientos: [...withBalance].reverse(),
-        saldoActual: balance.rows[0]?.saldo ?? "0.00",
+         saldoActual: centsToMoney(balance.balanceCents),
       });
     } catch (e) {
       next(e);
@@ -1121,13 +1094,13 @@ router.get(
         res.status(404).json({ error: "Cliente no encontrado." });
         return;
       }
-      const movements = await pool.query(
+      const [movements, projection] = await Promise.all([pool.query(
         `SELECT created_at, tipo, importe::text, notas,
-           SUM(importe) OVER (ORDER BY created_at, id)::text AS saldo
+           SUM(importe) OVER (ORDER BY created_at, id)::text AS "saldoCorridoHistorico"
          FROM movimientos_credito WHERE cliente_id=$1
          ORDER BY created_at, id`,
         [id],
-      );
+      ), loadCustomerCreditProjection(id)]);
       const escape = (value: unknown) =>
         String(value ?? "")
           .replaceAll("&", "&amp;")
@@ -1136,10 +1109,10 @@ router.get(
       const rows = movements.rows
         .map(
           (item) =>
-            `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldo, { kind: "money" }))}</td><td>${escape(item.notas)}</td></tr>`,
+            `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldoCorridoHistorico, { kind: "money" }))}</td><td>${escape(item.notas)}</td></tr>`,
         )
         .join("");
-      res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+      res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><p>Saldo actual proyectado: ${escape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
     } catch (error) {
       next(error);
     }
@@ -1156,30 +1129,36 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
-      const result = await pool.query(
+      const [result, projection] = await Promise.all([pool.query(
         `SELECT m.created_at AS fecha,m.tipo,m.importe::text AS importe,
           m.forma_pago AS "formaPago",m.referencia,t.folio AS folio,
-          u.nombre AS usuario,SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS saldo
+          u.nombre AS usuario,SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorridoHistorico"
          FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
          JOIN usuarios u ON u.id=m.usuario_id WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
         [id],
-      );
+      ), loadCustomerCreditProjection(id)]);
       const workbook = new ExcelJS.Workbook();
       const sheet = workbook.addWorksheet("Estado de cuenta");
       sheet.columns = [
         { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },
-        { header: "Importe", key: "importe", width: 14 }, { header: "Saldo", key: "saldo", width: 14 },
+        { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
+        { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },
         { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
         { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },
       ];
       sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("saldo").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.addRows(result.rows.map((row) => ({
         ...row,
         folio: row.folio == null ? "" : String(row.folio),
         importe: toExcelNumber(row.importe),
-        saldo: toExcelNumber(row.saldo),
+        saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
       })));
+      const summary = sheet.addRow({
+        tipo: "SALDO ACTUAL PROYECTADO",
+        saldoActualProyectado: toExcelNumber(centsToMoney(projection.balanceCents)),
+      });
+      summary.getCell("saldoActualProyectado").numFmt = EXCEL_NUMBER_FORMAT.money;
       res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.attachment(`estado-cuenta-${id}.xlsx`);
       await workbook.xlsx.write(res);
@@ -1200,17 +1179,17 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
-      const result = await pool.query(
+      const [result, projection] = await Promise.all([pool.query(
         `SELECT m.created_at,m.tipo,m.importe::text,t.folio,
-          SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text saldo
+          SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorridoHistorico"
          FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
          WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
         [id],
-      );
+      ), loadCustomerCreditProjection(id)]);
       const pdf = createTextPdf(
-        `Estado de cuenta - cliente ${id}`,
+        `Estado de cuenta - cliente ${id} - saldo actual proyectado ${formatNumber(centsToMoney(projection.balanceCents), { kind: "money" })}`,
         result.rows.map((row) =>
-          `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo ${formatNumber(row.saldo, { kind: "money" })} | folio ${row.folio ?? "-"}`,
+          `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | folio ${row.folio ?? "-"}`,
         ),
       );
       res.type("application/pdf");
@@ -1460,8 +1439,8 @@ router.get(
   },
 );
 
-// These detail views read the immutable application evidence; they deliberately
-// do not replay FIFO from the current ledger.
+// Application rows remain link evidence; current balances always come from the
+// immutable ledger projection.
 router.get(
   "/clientes/:id/notas/:ticketId",
   requierePermiso("clientes_finanzas", "ver"),
@@ -1473,19 +1452,14 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
-      const sale = await pool.query(
+      const [sale, projection] = await Promise.all([pool.query(
         `SELECT m.id AS "movimientoVentaId",m.importe::text AS "importeOriginal",
-           m.fecha_vencimiento AS "fechaVencimiento",
-            COALESCE(SUM(a.importe) FILTER (WHERE NOT EXISTS (
-              SELECT 1 FROM movimientos_credito r
-              WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.abono_movimiento_id
-            )),0)::text AS aplicado
+           m.fecha_vencimiento AS "fechaVencimiento"
          FROM movimientos_credito m
-         LEFT JOIN aplicaciones_credito a ON a.venta_movimiento_id=m.id
          WHERE m.cliente_id=$1 AND m.ticket_id=$2 AND m.tipo='VENTA_CREDITO'
-         GROUP BY m.id`,
+         ORDER BY m.created_at,m.id LIMIT 1`,
         [clienteId, ticketId],
-      );
+      ), loadCustomerCreditProjection(clienteId)]);
       const movement = sale.rows[0];
       if (!movement) {
         res.status(404).json({ error: "La nota de crédito no corresponde al cliente." });
@@ -1510,10 +1484,10 @@ router.get(
          ORDER BY ab.created_at,a.id`,
         [movement.movimientoVentaId],
       );
-      const saldoActual = centsToMoney(Math.max(
-        0,
-        moneyToCents(movement.importeOriginal) - moneyToCents(movement.aplicado),
-      ));
+      const projectedCharge = projection.allCharges.find(
+        (charge) => charge.movimientoId === Number(movement.movimientoVentaId),
+      );
+      const saldoActual = centsToMoney(projectedCharge?.pendienteCents ?? 0);
       res.json(GetClienteNotaCreditoResponse.parse({
         clienteId,
         ticket,
@@ -1562,35 +1536,37 @@ router.get(
         res.status(404).json({ error: "El abono no corresponde al cliente." });
         return;
       }
-      const applications = await pool.query(
+      const [applications, projection] = await Promise.all([pool.query(
         `SELECT sale.ticket_id AS "ticketId",t.folio,
            sale.id AS "movimientoVentaId",a.importe::text AS aplicado,
-           sale.importe::text AS "importeOriginal",
-           GREATEST(0,sale.importe-COALESCE((
-              SELECT SUM(allocation.importe) FROM aplicaciones_credito allocation
-              WHERE allocation.venta_movimiento_id=sale.id AND NOT EXISTS (
-                SELECT 1 FROM movimientos_credito reversal
-                WHERE reversal.tipo='REVERSO' AND reversal.movimiento_origen_id=allocation.abono_movimiento_id
-              )),0))::text AS "saldoActual"
+            sale.importe::text AS "importeOriginal"
          FROM aplicaciones_credito a
          JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
          JOIN tickets t ON t.id=sale.ticket_id
          WHERE a.abono_movimiento_id=$1 AND sale.cliente_id=$2
          ORDER BY t.folio,a.id`,
         [pagoId, clienteId],
+      ), loadCustomerCreditProjection(clienteId)]);
+      const projectedCharges = new Map(
+        projection.allCharges.map((charge) => [charge.movimientoId, charge]),
       );
       res.json(GetClientePagoDetalleResponse.parse({
         ...abono,
         id: Number(abono.id),
         clienteId: Number(abono.clienteId),
         fecha: new Date(abono.fecha).toISOString(),
-        aplicaciones: applications.rows.map((row) => ({
-          ...row,
+        aplicaciones: applications.rows.map((row) => {
+          const saldoActual = centsToMoney(
+            projectedCharges.get(Number(row.movimientoVentaId))?.pendienteCents ?? 0,
+          );
+          return {
+          ...row, saldoActual,
           ticketId: Number(row.ticketId),
           folio: Number(row.folio),
           movimientoVentaId: Number(row.movimientoVentaId),
-          resultado: moneyState(row.importeOriginal, row.saldoActual),
-        })),
+          resultado: moneyState(row.importeOriginal, saldoActual),
+        };
+        }),
       }));
     } catch (error) {
       next(error);
@@ -1668,26 +1644,29 @@ router.post(
         return;
       }
       const body = PreviewClientePagoBody.parse(req.body);
+      const fechaEfectiva = body.fechaEfectiva
+        ? new Date(body.fechaEfectiva)
+        : new Date();
+      if (Number.isNaN(fechaEfectiva.getTime()) || fechaEfectiva > new Date()) {
+        res.status(400).json({ error: "Fecha efectiva inválida o futura." });
+        return;
+      }
       const [client] = await db.select({ id: clientesTable.id })
         .from(clientesTable).where(eq(clientesTable.id, id)).limit(1);
       if (!client) {
         res.status(404).json({ error: "Cliente no encontrado." });
         return;
       }
-      const sales = await outstandingCreditSales(db, id);
+      const ledger = await loadCustomerCreditLedger(id);
       const amountCents = moneyToCents(body.importe);
-      const allocation = allocateCreditFifo(
-        [{ id: 0, availableCents: amountCents }],
-        sales.map((sale) => ({
-          id: sale.id,
-          balanceCents: sale.balanceCents,
-          linkedReductionCents: sale.linkedReductionCents,
-          createdAt: sale.createdAt,
-        })),
+      const allocation = previewPaymentProjection(
+        ledger,
+        amountCents,
+        fechaEfectiva,
       );
       res.json({
         monto: centsToMoney(amountCents),
-        asignaciones: presentAllocations(sales, allocation.allocations),
+        asignaciones: presentAllocations(allocation.projection.allCharges, allocation.allocations),
         saldoAFavor: centsToMoney(allocation.remainingCents),
       });
     } catch (error) {
@@ -1765,26 +1744,28 @@ router.post(
             }),
           })
           .returning();
-        const sales = await outstandingCreditSales(tx, id);
-        const allocation = allocateCreditFifo(
-          [{ id: created!.id, availableCents: moneyToCents(importe) }],
-          sales.map((sale) => ({
-            id: sale.id,
-            balanceCents: sale.balanceCents,
-            linkedReductionCents: sale.linkedReductionCents,
-            createdAt: sale.createdAt,
-          })),
+        const projection = await loadCustomerCreditProjectionInTransaction(
+          id,
+          tx,
         );
-        if (allocation.allocations.length > 0) {
+        const allocations = projection.allocations.filter(
+          (allocation) => allocation.sourceId === created!.id,
+        );
+        if (allocations.length > 0) {
           await tx.insert(aplicacionesCreditoTable).values(
-            allocation.allocations.map((item) => ({
+            allocations.map((item) => ({
               abonoMovimientoId: item.sourceId,
               ventaMovimientoId: item.targetId,
               importe: centsToMoney(item.appliedCents),
             })),
           );
         }
-        const asignaciones = presentAllocations(sales, allocation.allocations);
+        const asignaciones = presentAllocations(projection.allCharges, allocations);
+        const appliedCents = allocations.reduce(
+          (sum, allocation) => sum + allocation.appliedCents,
+          0,
+        );
+        const sourceRemainderCents = moneyToCents(importe) - appliedCents;
         await tx.insert(auditoriaTable).values({
           usuarioId: req.auth!.user.id,
           accion: "PAGO_CLIENTE",
@@ -1796,11 +1777,11 @@ router.post(
             formaPago: body.formaPago,
             cuentaDestino: body.cuentaDestino,
             asignaciones,
-            saldoAFavor: centsToMoney(allocation.remainingCents),
+            saldoAFavor: centsToMoney(sourceRemainderCents),
           },
           ip: getRequestIp(req),
         });
-        return { created: created!, asignaciones, saldoAFavor: centsToMoney(allocation.remainingCents) };
+        return { created: created!, asignaciones, saldoAFavor: centsToMoney(sourceRemainderCents) };
       });
       if (!result) {
         res.status(404).json({ error: "Cliente no encontrado." });

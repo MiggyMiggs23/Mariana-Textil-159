@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { projectCreditLedger } from "./lib/credit-allocation";
 
 const root = new URL("../../../", import.meta.url);
 
-test("estado de cuenta contracts saldoPendiente from credit_fifo_aging", async () => {
+test("estado de cuenta projects current balances while retaining raw running history", async () => {
   const [spec, route] = await Promise.all([
     readFile(new URL("lib/api-spec/openapi.yaml", root), "utf8"),
     readFile(new URL("artifacts/api-server/src/routes/clientes.ts", root), "utf8"),
@@ -16,10 +17,49 @@ test("estado de cuenta contracts saldoPendiente from credit_fifo_aging", async (
   );
   assert.match(
     route,
-    /LEFT JOIN credit_fifo_aging\(\$1\) aging ON aging\.movimiento_id=ledger\.id/,
+    /loadCustomerCreditProjection\(id\)/,
   );
   assert.match(
     route,
-    /CASE WHEN tipo='VENTA_CREDITO'[\s\S]*?COALESCE\(aging\.pendiente::text, '0\.00'\)[\s\S]*?ELSE NULL[\s\S]*?END AS "saldoPendiente"/,
+    /projectedCharges = new Map\(balance\.allCharges/,
+  );
+  assert.match(
+    route,
+    /saldoPendiente:[\s\S]*?projectedCharges\.get/,
+  );
+  assert.match(
+    route,
+    /SUM\(m\.importe\) OVER \(ORDER BY m\.created_at,m\.id\) AS saldo_corrido/,
+  );
+  assert.match(route, /Saldo corrido histórico/);
+  assert.match(route, /saldo actual proyectado/);
+});
+
+test("overpayment export distinguishes historical running balance from current outstanding", async () => {
+  const route = await readFile(
+    new URL("artifacts/api-server/src/routes/clientes.ts", root),
+    "utf8",
+  );
+  const projection = projectCreditLedger([
+    {
+      id: 1,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-50.00",
+      createdAt: new Date("2026-01-01T12:00:00.000Z"),
+    },
+  ]);
+
+  assert.equal(projection.balanceCents, 0);
+  assert.equal(projection.overpaymentCents, 5_000);
+  assert.match(route, /SALDO ACTUAL PROYECTADO/);
+  assert.match(route, /saldoCorridoHistorico/);
+  assert.match(
+    route,
+    /saldo actual proyectado \$\{formatNumber\(centsToMoney\(projection\.balanceCents\)/,
+  );
+  assert.match(
+    route,
+    /saldo corrido histórico \$\{formatNumber\(row\.saldoCorridoHistorico/,
   );
 });

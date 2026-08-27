@@ -1,5 +1,6 @@
 import { db, pool } from "@workspace/db";
 import { meteredReferenceCost } from "./metered-reference-cost";
+import { loadCustomerCreditProjections } from "./credit-aging-read-model";
 
 type Primitive = string | number | boolean | null;
 type Row = Record<string, Primitive>;
@@ -29,18 +30,6 @@ const table = (id: string, title: string, fields: Array<[string, string, string,
   return { id, title, columns: resolvedColumns, rows, totals };
 };
 
-/** Allocates payments/reversals against oldest credit charges, preserving each charge's due date. */
-export function fifoAllocateAging<T extends { amount: number }>(charges: T[], credits: number): Array<T & { outstanding: number }> {
-  let available = Math.max(0, credits);
-  return charges.flatMap((charge) => {
-    const amount = Math.max(0, charge.amount);
-    const paid = Math.min(amount, available);
-    available -= paid;
-    const outstanding = amount - paid;
-    return outstanding > 0 ? [{ ...charge, outstanding }] : [];
-  });
-}
-
 export function riskFromFrequency(currentTickets: number, previousTickets: number): "SIN_HISTORIAL" | "ESTABLE" | "RIESGO_ALTO" {
   if (previousTickets <= 0) return "SIN_HISTORIAL";
   return currentTickets / previousTickets < 0.5 ? "RIESGO_ALTO" : "ESTABLE";
@@ -61,12 +50,6 @@ export function agingBucket(dueDate: string | null, today: string): string {
   if (!dueDate) return "Sin plazo";
   const days = Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${dueDate}T00:00:00Z`)) / 86400000);
   return days <= 0 ? "Vigente" : days <= 30 ? "1-30" : days <= 60 ? "31-60" : days <= 90 ? "61-90" : "91+";
-}
-
-function calendarDate(value: unknown): string | null {
-  if (value == null) return null;
-  if (value instanceof Date) return value.toISOString().slice(0, 10);
-  return String(value).slice(0, 10);
 }
 
 function purchaseWhere(ctx: DomainReportContext) {
@@ -212,7 +195,7 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
         COALESCE(SUM(tp.importe*fc.component_subtotal/NULLIF(fc.ticket_subtotal,0)),0)::float importe
       FROM filtered_components fc JOIN ticket_pagos tp ON tp.ticket_id=fc.id
       GROUP BY tp.forma_pago,fc.tipo ORDER BY importe DESC`, where.values),
-    pool.query(`SELECT mc.cliente_id,mc.ticket_id,mc.tipo,mc.importe,mc.fecha_vencimiento,mc.es_incobrable,mc.notas,mc.created_at FROM movimientos_credito mc JOIN tickets t ON t.id=mc.ticket_id WHERE ${where.text} ORDER BY mc.cliente_id,mc.created_at,mc.id`, where.values),
+    pool.query(`SELECT mc.id,mc.cliente_id,mc.ticket_id,mc.tipo,mc.importe,mc.fecha_vencimiento,mc.es_incobrable,mc.notas,mc.created_at FROM movimientos_credito mc JOIN tickets t ON t.id=mc.ticket_id WHERE ${where.text} ORDER BY mc.cliente_id,mc.created_at,mc.id`, where.values),
     pool.query(`SELECT COALESCE(s.fecha_efectiva,s.created_at) fecha,s.tipo,s.importe,s.motivo,
         s.solicitante_nombre solicitante,s.autorizador_nombre autorizador,
         s.contraparte_nombre contraparte,s.documento_folio documento
@@ -227,27 +210,23 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
   const clientTable = clientRows.rows.map((r): Row => ({ cliente:r.nombre, tickets:number(r.tickets), ventas:number(r.ventas), comprasRollos:number(r.ventas_rollos), comprasMetraje:number(r.ventas_metraje), utilidad:r.utilidad == null ? null : number(r.utilidad), ticketPromedio:number(r.tickets) ? number(r.ventas)/number(r.tickets) : 0, frecuencia:number(r.tickets), ultimaCompra:r.ultima ? new Date(r.ultima).toISOString() : null, riesgo: riskFromFrequency(number(r.tickets), prior.get(number(r.id)) ?? 0) }));
   const totalSales = number(summary.rows[0]?.ventas); const tickets = number(summary.rows[0]?.tickets);
   const now = new Date().toISOString().slice(0, 10);
-  const aged: Row[] = [];
-  const movementsByClient = new Map<string, typeof credit.rows>();
-  for (const movement of credit.rows) {
-    const clientId = String(movement.cliente_id);
-    const entries = movementsByClient.get(clientId) ?? [];
-    entries.push(movement);
-    movementsByClient.set(clientId, entries);
-  }
-  for (const [clientId, entries] of movementsByClient) {
-    const charges: Array<{ amount: number; fechaVencimiento: string | null; notas: string | null }> = entries
-      .filter((r) => r.tipo === "VENTA_CREDITO" && !r.es_incobrable)
-      .map((r) => ({ amount: number(r.importe), fechaVencimiento: calendarDate(r.fecha_vencimiento), notas: r.notas ?? null }));
-    const offsets = -entries.filter((r) => r.tipo !== "VENTA_CREDITO").reduce((sum, r) => sum + Math.min(0, number(r.importe)), 0);
-    for (const row of fifoAllocateAging(charges, offsets)) { const due = row.fechaVencimiento; const bucket = agingBucket(due, now); aged.push({ clienteId:number(clientId), fechaVencimiento:due, saldo:row.outstanding, cubeta:bucket, vencida:["1-30","31-60","61-90","91+"].includes(bucket), notas:row.notas }); }
-  }
+  const scopedSales = new Set(credit.rows.filter((row) => row.tipo === "VENTA_CREDITO")
+    .map((row) => `${number(row.cliente_id)}:${number(row.ticket_id)}`));
+  const projections = await loadCustomerCreditProjections([...new Set(credit.rows.map((row) => number(row.cliente_id)))]);
+  const notes = new Map(credit.rows.map((row) => [number(row.id), row.notas ?? null]));
+  const aged: Row[] = [...projections].flatMap(([clienteId, projection]) => projection.charges
+    .filter((charge) => charge.ticketId != null && scopedSales.has(`${clienteId}:${charge.ticketId}`))
+    .map((charge) => {
+      const bucket = agingBucket(charge.dueAt, now);
+      return { clienteId, fechaVencimiento:charge.dueAt, saldo:charge.pendienteCents / 100, cubeta:bucket,
+        vencida:["1-30","31-60","61-90","91+"].includes(bucket), notas:notes.get(charge.movimientoId) ?? null };
+    }));
   const firstPurchases = await pool.query(`SELECT DISTINCT t.cliente_id FROM tickets t WHERE ${where.text}
     AND NOT EXISTS (SELECT 1 FROM tickets prior_ticket WHERE prior_ticket.cliente_id=t.cliente_id AND prior_ticket.estado='VENDIDO' AND prior_ticket.created_at<$1)`, where.values);
   const newClients = firstPurchases.rows.length;
   return { kpis: [{ id:"ventas-clientes",label:"Ventas",value:totalSales,kind:"money",economic:true },{ id:"utilidad-clientes",label:"Utilidad exacta",value:summary.rows[0]?.utilidad == null ? null : number(summary.rows[0].utilidad),kind:"money",economic:true},{id:"ticket-promedio",label:"Ticket promedio",value:tickets ? totalSales/tickets : 0,kind:"money",economic:true},{id:"clientes-nuevos",label:"Clientes nuevos",value:newClients,kind:"count"}],
     charts: [{ id:"clientes-top",title:"Ventas por cliente",type:"bar",categoryKey:"cliente",series:[{key:"ventas",label:"Ventas",kind:"money",economic:true}],rows:clientTable }],
-    tables: [table("clientes","Clientes", [["cliente","Cliente","text"],["tickets","Tickets","count"],["ventas","Ventas","money",true],["comprasRollos","Compras ROLLOS","money",true],["comprasMetraje","Compras METRAJE","money",true],["utilidad","Utilidad exacta","money",true],["ticketPromedio","Ticket promedio","money",true],["frecuencia","Frecuencia","count"],["ultimaCompra","Última compra","text"],["riesgo","Riesgo","text"]],clientTable,["ventas","comprasRollos","comprasMetraje","utilidad"]), table("publico-registrado","Público vs registrado",[["tipo","Tipo","text"],["tickets","Tickets","count"],["ventas","Ventas","money",true]],publicRows.rows.map((r):Row=>({tipo:r.es_sistema?"Público":"Registrado",tickets:number(r.tickets),ventas:number(r.ventas)})),["ventas"]),table("formas-pago","Métodos de pago por modalidad",[["formaPago","Forma de pago","text"],["modalidad","Modalidad","text"],["operaciones","Operaciones","count"],["importe","Cobro asignado por subtotal","money",true]],payments.rows.map((r):Row=>({formaPago:r.forma_pago,modalidad:r.tipo==="NORMAL"?"ROLLOS":"METRAJE",operaciones:number(r.operaciones),importe:number(r.importe)})),["importe"]),table("cuentas-por-cobrar-fifo","Cuentas por cobrar FIFO",[["clienteId","Cliente","count"],["fechaVencimiento","Vencimiento","text"],["saldo","Saldo","money",true],["cubeta","Antigüedad","text"],["vencida","Vencida","boolean"],["notas","Notas","text"]],aged,["saldo"]), table("pagos-dirigidos","Pagos dirigidos",[["fecha","Fecha","text"],["tipo","Tipo","text"],["clienteProveedor","Cliente / proveedor","text"],["documento","Nota / compra","text"],["importe","Monto","money",true],["motivo","Motivo","text"],["solicitante","Solicitante","text"],["autorizador","Autorizador","text"]],directedPayments.rows.map((r):Row=>({fecha:new Date(r.fecha).toISOString(),tipo:r.tipo,clienteProveedor:r.contraparte,documento:r.documento,importe:number(r.importe),motivo:r.motivo,solicitante:r.solicitante,autorizador:r.autorizador ?? ""})),["importe"]), table("castigos-y-reversos","Castigos y reversos de crédito",[["clienteId","Cliente","count"],["tipo","Tipo","text"],["importe","Importe","money",true],["notas","Notas","text"],["fecha","Fecha","text"]],credit.rows.filter((r) => r.es_incobrable || r.tipo === "REVERSO").map((r): Row => ({clienteId:number(r.cliente_id),tipo:r.es_incobrable ? "INCOBRABLE" : r.tipo,importe:number(r.importe),notas:r.notas ?? null,fecha:new Date(r.created_at).toISOString()})),["importe"])], warnings:["Las compras de cada cliente se separan por ROLLOS y METRAJE y respetan el filtro de modalidad en el servidor.", "Los filtros de producto, tela, color, unidad y proveedor seleccionan tickets que contienen al menos una línea coincidente. Ventas y utilidad aplican además el corte de modalidad a sus líneas; los pagos de tickets mixtos se asignan proporcionalmente por subtotal de línea. El crédito conserva el ticket completo para no alterar su semántica financiera.", "Las cuentas por cobrar conservan la asignación FIFO y únicamente incluyen movimientos de crédito vinculados a tickets dentro del alcance; los abonos sin ticket no se pueden atribuir a una ubicación o filtro de producto."] };
+    tables: [table("clientes","Clientes", [["cliente","Cliente","text"],["tickets","Tickets","count"],["ventas","Ventas","money",true],["comprasRollos","Compras ROLLOS","money",true],["comprasMetraje","Compras METRAJE","money",true],["utilidad","Utilidad exacta","money",true],["ticketPromedio","Ticket promedio","money",true],["frecuencia","Frecuencia","count"],["ultimaCompra","Última compra","text"],["riesgo","Riesgo","text"]],clientTable,["ventas","comprasRollos","comprasMetraje","utilidad"]), table("publico-registrado","Público vs registrado",[["tipo","Tipo","text"],["tickets","Tickets","count"],["ventas","Ventas","money",true]],publicRows.rows.map((r):Row=>({tipo:r.es_sistema?"Público":"Registrado",tickets:number(r.tickets),ventas:number(r.ventas)})),["ventas"]),table("formas-pago","Métodos de pago por modalidad",[["formaPago","Forma de pago","text"],["modalidad","Modalidad","text"],["operaciones","Operaciones","count"],["importe","Cobro asignado por subtotal","money",true]],payments.rows.map((r):Row=>({formaPago:r.forma_pago,modalidad:r.tipo==="NORMAL"?"ROLLOS":"METRAJE",operaciones:number(r.operaciones),importe:number(r.importe)})),["importe"]),table("cuentas-por-cobrar-fifo","Cuentas por cobrar FIFO",[["clienteId","Cliente","count"],["fechaVencimiento","Vencimiento","text"],["saldo","Saldo","money",true],["cubeta","Antigüedad","text"],["vencida","Vencida","boolean"],["notas","Notas","text"]],aged,["saldo"]), table("pagos-dirigidos","Pagos dirigidos",[["fecha","Fecha","text"],["tipo","Tipo","text"],["clienteProveedor","Cliente / proveedor","text"],["documento","Nota / compra","text"],["importe","Monto","money",true],["motivo","Motivo","text"],["solicitante","Solicitante","text"],["autorizador","Autorizador","text"]],directedPayments.rows.map((r):Row=>({fecha:new Date(r.fecha).toISOString(),tipo:r.tipo,clienteProveedor:r.contraparte,documento:r.documento,importe:number(r.importe),motivo:r.motivo,solicitante:r.solicitante,autorizador:r.autorizador ?? ""})),["importe"]), table("castigos-y-reversos","Castigos y reversos de crédito",[["clienteId","Cliente","count"],["tipo","Tipo","text"],["importe","Importe","money",true],["notas","Notas","text"],["fecha","Fecha","text"]],credit.rows.filter((r) => r.es_incobrable || r.tipo === "REVERSO").map((r): Row => ({clienteId:number(r.cliente_id),tipo:r.es_incobrable ? "INCOBRABLE" : r.tipo,importe:number(r.importe),notas:r.notas ?? null,fecha:new Date(r.created_at).toISOString()})),["importe"])], warnings:["Las compras de cada cliente se separan por ROLLOS y METRAJE y respetan el filtro de modalidad en el servidor.", "Los filtros de producto, tela, color, unidad y proveedor seleccionan tickets que contienen al menos una línea coincidente. Ventas y utilidad aplican además el corte de modalidad a sus líneas; los pagos de tickets mixtos se asignan proporcionalmente por subtotal de línea. El crédito conserva el ticket completo para no alterar su semántica financiera.", "Las cuentas por cobrar usan la asignación FIFO autoritativa y únicamente muestran cargos vinculados a tickets dentro del alcance; los abonos y ajustes globales sí afectan esa asignación, pero no se presentan como cargos atribuibles a una ubicación o filtro de producto."] };
 }
 
 export async function buildCommercialReport(section: "compras" | "clientes", ctx: DomainReportContext): Promise<CommercialReport> {

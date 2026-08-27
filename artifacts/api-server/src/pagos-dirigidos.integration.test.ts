@@ -15,13 +15,17 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   }
 
-  const [{ pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema }, { default: app }, { buildCommercialReport }] =
+  const [{ db, pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema }, { default: app }, { buildCommercialReport }] =
     await Promise.all([
       import("@workspace/db"),
       import("./app"),
       import("./lib/reportes-commercial"),
     ]);
   const { createTestDatabaseGuard } = await import("@workspace/db");
+  const {
+    loadCustomerCreditProjection,
+    loadCustomerCreditProjectionInTransaction,
+  } = await import("./lib/credit-aging-read-model");
   const { assertIsolated } = await createTestDatabaseGuard(
     pool,
     testUrl,
@@ -34,22 +38,39 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
   const tag = `DIRECTED-${randomUUID()}`;
   const one = async (text: string, values: unknown[] = []) =>
     (await pool.query(text, values)).rows[0]!;
+  const unusedLocationInitials = async () => {
+    const row = await one(
+      `SELECT candidate AS iniciales
+       FROM (
+         SELECT chr(first_code) || chr(second_code)
+           || CASE WHEN third_code = 0 THEN '' ELSE chr(third_code) END AS candidate
+         FROM generate_series(65,90) AS first_code
+         CROSS JOIN generate_series(65,90) AS second_code
+         CROSS JOIN generate_series(0,90) AS third_code
+         WHERE third_code = 0 OR third_code >= 65
+       ) AS candidates
+       WHERE NOT EXISTS (
+         SELECT 1 FROM ubicaciones WHERE iniciales = candidates.candidate
+       )
+       ORDER BY length(candidate), candidate
+       LIMIT 1`,
+    );
+    assert.ok(row, "No hay iniciales válidas disponibles para la prueba.");
+    return String(row.iniciales);
+  };
   const admin = await one(
     "SELECT id,nombre FROM usuarios WHERE rol='ADMIN' AND activo ORDER BY id LIMIT 1",
   );
   assert.ok(admin, "El seed aislado debe contener un ADMIN.");
-  const initialLetter = String.fromCharCode(
-    65 + (Number.parseInt(randomUUID().replaceAll("-", "").slice(0, 2), 16) % 26),
-  );
   const location = await one(
     `INSERT INTO ubicaciones(nombre,tipo,activa,iniciales)
      VALUES($1,'TIENDA',true,$2) RETURNING id`,
-    [`${tag} Tienda`, `Q${initialLetter}`],
+    [`${tag} Tienda`, await unusedLocationInitials()],
   );
   const otherLocation = await one(
     `INSERT INTO ubicaciones(nombre,tipo,activa,iniciales)
      VALUES($1,'TIENDA',true,$2) RETURNING id`,
-    [`${tag} Otra`, `R${initialLetter}`],
+    [`${tag} Otra`, await unusedLocationInitials()],
   );
   const caja = await one(
     `INSERT INTO usuarios(
@@ -584,6 +605,110 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
       ).count,
       1,
     );
+
+    const legacyClient = await one(
+      `INSERT INTO clientes(
+         nombre,activo,es_sistema,limite_credito,saldo_credito,dias_credito
+       ) VALUES($1,true,false,1000,0,30) RETURNING id`,
+      [`${tag} Cliente dirigido histórico`],
+    );
+    const legacyOldTicket = await one(
+      `INSERT INTO tickets(
+         folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
+         subtotal,iva,tasa_iva,total,estado,cobrado,facturado,created_at
+       ) VALUES(
+         $1,gen_random_uuid(),$2,$3,$4,100,0,0,100,
+         'VENDIDO',false,false,now()-interval '4 days'
+       ) RETURNING id,folio`,
+      [folio++, location.id, caja.id, legacyClient.id],
+    );
+    const legacyNewTicket = await one(
+      `INSERT INTO tickets(
+         folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
+         subtotal,iva,tasa_iva,total,estado,cobrado,facturado,created_at
+       ) VALUES(
+         $1,gen_random_uuid(),$2,$3,$4,100,0,0,100,
+         'VENDIDO',false,false,now()-interval '3 days'
+       ) RETURNING id,folio`,
+      [folio++, location.id, caja.id, legacyClient.id],
+    );
+    const legacyOldSale = await one(
+      `INSERT INTO movimientos_credito(
+         cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
+       ) VALUES($1,$2,'VENTA_CREDITO','100.00',$3,'CREDITO',now()-interval '4 days')
+       RETURNING id`,
+      [legacyClient.id, legacyOldTicket.id, admin.id],
+    );
+    const legacyNewSale = await one(
+      `INSERT INTO movimientos_credito(
+         cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
+       ) VALUES($1,$2,'VENTA_CREDITO','100.00',$3,'CREDITO',now()-interval '3 days')
+       RETURNING id`,
+      [legacyClient.id, legacyNewTicket.id, admin.id],
+    );
+    const legacyDirectedAbono = await one(
+      `INSERT INTO movimientos_credito(
+         cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,
+         created_at,metadata
+       ) VALUES(
+         $1,NULL,'ABONO','-30.00',$2,'EFECTIVO','CAJA_FISICA',
+         now()-interval '2 days',$3
+       ) RETURNING id`,
+      [
+        legacyClient.id,
+        admin.id,
+        JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: "legacy-test" }),
+      ],
+    );
+    await pool.query(
+      `INSERT INTO solicitudes_pago_dirigido(
+         tipo,entidad_id,documento_movimiento_id,importe,forma_pago,cuenta_destino,
+         motivo,solicitante_id,solicitante_nombre,autorizador_id,autorizador_nombre,
+         contraparte_nombre,documento_folio,movimiento_id,estado,resuelta_at
+       ) VALUES(
+         'CLIENTE',$1,$2,30,'EFECTIVO','CAJA_FISICA',
+         'Reconstrucción de pago dirigido histórico',$3,$4,$3,$4,
+         $5,$6,$7,'APROBADA',now()
+       )`,
+      [
+        legacyClient.id,
+        legacyNewSale.id,
+        admin.id,
+        admin.nombre,
+        `${tag} Cliente dirigido histórico`,
+        String(legacyNewTicket.folio),
+        legacyDirectedAbono.id,
+      ],
+    );
+    await pool.query(
+      `INSERT INTO aplicaciones_credito(
+         abono_movimiento_id,venta_movimiento_id,importe
+       ) VALUES($1,$2,'30.00')`,
+      [legacyDirectedAbono.id, legacyNewSale.id],
+    );
+
+    const legacyReadProjection = await loadCustomerCreditProjection(
+      Number(legacyClient.id),
+    );
+    const legacyTransactionProjection = await db.transaction((tx) =>
+      loadCustomerCreditProjectionInTransaction(Number(legacyClient.id), tx)
+    );
+    for (const projection of [
+      legacyReadProjection,
+      legacyTransactionProjection,
+    ]) {
+      assert.deepEqual(
+        projection.allCharges.map((charge) => [
+          charge.movimientoId,
+          charge.pendienteCents,
+        ]),
+        [
+          [Number(legacyOldSale.id), 10_000],
+          [Number(legacyNewSale.id), 7_000],
+        ],
+        "Historical directed payments must remain targeted in shared reads and POS transactions.",
+      );
+    }
   } finally {
     await new Promise<void>((resolve) => server?.close(() => resolve()));
     await pool.end();

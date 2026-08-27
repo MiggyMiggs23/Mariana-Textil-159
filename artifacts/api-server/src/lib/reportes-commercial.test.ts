@@ -1,11 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { agingBucket, concentration, fifoAllocateAging, isCostRiseOverTenPercent, riskFromFrequency, weightedUnitCost } from "./reportes-commercial";
-
-test("FIFO leaves the newest charge partially outstanding after earlier charges", () => {
-  const aged = fifoAllocateAging([{ id: 1, amount: 100 }, { id: 2, amount: 80 }, { id: 3, amount: 25 }], 145);
-  assert.deepEqual(aged, [{ id: 2, amount: 80, outstanding: 35 }, { id: 3, amount: 25, outstanding: 25 }]);
-});
+import { agingBucket, concentration, isCostRiseOverTenPercent, riskFromFrequency, weightedUnitCost } from "./reportes-commercial";
 test("frequency risk requires a meaningful prior period", () => {
   assert.equal(riskFromFrequency(1, 4), "RIESGO_ALTO");
   assert.equal(riskFromFrequency(2, 4), "ESTABLE");

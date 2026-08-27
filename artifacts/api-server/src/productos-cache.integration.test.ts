@@ -54,12 +54,50 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
   };
   const one = async (text: string, values: unknown[] = []) =>
     (await mutate(text, values)).rows[0]!;
+  const unusedLocationInitials = async () => {
+    const row = await one(
+      `SELECT candidate AS iniciales
+       FROM (
+         SELECT chr(first_code) || chr(second_code)
+           || CASE WHEN third_code = 0 THEN '' ELSE chr(third_code) END AS candidate
+         FROM generate_series(65,90) AS first_code
+         CROSS JOIN generate_series(65,90) AS second_code
+         CROSS JOIN generate_series(0,90) AS third_code
+         WHERE third_code = 0 OR third_code >= 65
+       ) AS candidates
+       WHERE NOT EXISTS (
+         SELECT 1 FROM ubicaciones WHERE iniciales = candidates.candidate
+       )
+       ORDER BY length(candidate), candidate
+       LIMIT 1`,
+    );
+    assert.ok(row, "No valid unused location initials remain.");
+    return String(row.iniciales);
+  };
   const request = async (path: string, session: string) => {
     const response = await fetch(`${baseUrl}${path}`, {
       headers: { cookie: `mariana_session=${session}` },
     });
     const body = await response.json() as unknown;
     assert.equal(response.status, 200, JSON.stringify(body));
+    return body;
+  };
+  const patchProduct = async (
+    productId: number,
+    session: string,
+    colorHex: string | null,
+    expectedStatus: number,
+  ) => {
+    const response = await fetch(`${baseUrl}/api/productos/${productId}`, {
+      method: "PATCH",
+      headers: {
+        cookie: `mariana_session=${session}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ colorHex }),
+    });
+    const body = await response.json() as Record<string, unknown>;
+    assert.equal(response.status, expectedStatus, JSON.stringify(body));
     return body;
   };
   const findProduct = (body: unknown, id: number) => {
@@ -88,20 +126,20 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
 
   try {
     const ownSite = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'BODEGA',true) RETURNING id",
-      [`${tag} propia`],
+      "INSERT INTO ubicaciones(nombre,tipo,activa,iniciales) VALUES($1,'BODEGA',true,$2) RETURNING id",
+      [`${tag} propia`, await unusedLocationInitials()],
     );
     const otherSite = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id",
-      [`${tag} ajena`],
+      "INSERT INTO ubicaciones(nombre,tipo,activa,iniciales) VALUES($1,'TIENDA',true,$2) RETURNING id",
+      [`${tag} ajena`, await unusedLocationInitials()],
     );
     const zeroSite = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id",
-      [`${tag} cero`],
+      "INSERT INTO ubicaciones(nombre,tipo,activa,iniciales) VALUES($1,'TIENDA',true,$2) RETURNING id",
+      [`${tag} cero`, await unusedLocationInitials()],
     );
     const inactiveSite = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'BODEGA',false) RETURNING id",
-      [`${tag} inactiva`],
+      "INSERT INTO ubicaciones(nombre,tipo,activa,iniciales) VALUES($1,'BODEGA',false,$2) RETURNING id",
+      [`${tag} inactiva`, await unusedLocationInitials()],
     );
     created.locations.push(
       Number(ownSite.id),
@@ -111,13 +149,15 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
     );
 
     const stocked = await one(
-      `INSERT INTO productos(sku,tela,color,unidad,precio_sugerido,activo)
-       VALUES($1,$2,$3,'METRO','123.45',true) RETURNING id`,
+      `INSERT INTO productos(
+         sku,tela,color,unidad,precio_sugerido,precio_menudeo,se_vende_por_metro,activo
+       ) VALUES($1,$2,$3,'METRO','123.45','123.45',true,true) RETURNING id`,
       [`${tag}-STOCK`, `${tag} tela stock`, `${tag} azul`],
     );
     const zero = await one(
-      `INSERT INTO productos(sku,tela,color,unidad,precio_sugerido,activo)
-       VALUES($1,$2,$3,'METRO','87.65',true) RETURNING id`,
+      `INSERT INTO productos(
+         sku,tela,color,unidad,precio_sugerido,precio_menudeo,se_vende_por_metro,activo
+       ) VALUES($1,$2,$3,'METRO','87.65','87.65',true,true) RETURNING id`,
       [`${tag}-ZERO`, `${tag} tela cero`, `${tag} gris`],
     );
     created.products.push(Number(stocked.id), Number(zero.id));
@@ -165,8 +205,8 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
         await mutate(
           `INSERT INTO permisos_usuario
             (usuario_id,modulo,puede_ver,puede_crear,puede_editar,puede_autorizar)
-           VALUES($1,'productos',true,false,false,false)`,
-          [user.id],
+           VALUES($1,'productos',true,false,$2,false)`,
+          [user.id, role === "BODEGA"],
         );
       }
       const session = randomUUID();
@@ -195,7 +235,9 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
         sku: `${tag}-STOCK`,
         tela: `${tag} tela stock`,
         color: `${tag} azul`,
+        colorHex: null,
         unidad: "METRO",
+        seVendePorMetro: true,
         precioSugerido: "123.45",
         notas: null,
         activo: true,
@@ -207,6 +249,40 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
       },
     );
     assert.ok(findProduct(todos, Number(zero.id)), "TODOS must retain zero product");
+
+    await patchProduct(
+      Number(stocked.id),
+      actors.BODEGA,
+      "#a1b2c3",
+      403,
+    );
+    assert.equal(
+      (await one("SELECT color_hex FROM productos WHERE id=$1", [stocked.id])).color_hex,
+      null,
+      "A non-ADMIN cannot assign the report swatch even with edit permission.",
+    );
+    const assignedColor = await patchProduct(
+      Number(stocked.id),
+      actors.ADMIN,
+      "#a1b2c3",
+      200,
+    );
+    assert.equal(assignedColor.colorHex, "#A1B2C3");
+    assert.equal(
+      (await one("SELECT color_hex FROM productos WHERE id=$1", [stocked.id])).color_hex,
+      "#A1B2C3",
+    );
+    const clearedColor = await patchProduct(
+      Number(stocked.id),
+      actors.ADMIN,
+      null,
+      200,
+    );
+    assert.equal(clearedColor.colorHex, null);
+    assert.equal(
+      (await one("SELECT color_hex FROM productos WHERE id=$1", [stocked.id])).color_hex,
+      null,
+    );
 
     const agotados = await request("/api/productos?existencia=AGOTADOS", actors.ADMIN);
     assert.ok(findProduct(agotados, Number(zero.id)), "AGOTADOS must retain zero product");
@@ -287,27 +363,6 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
   } finally {
     if (server) {
       await new Promise<void>((resolve) => server!.close(() => resolve()));
-    }
-    if (created.sessions.length) {
-      await mutate("DELETE FROM sesiones WHERE id = ANY($1::uuid[])", [created.sessions]);
-    }
-    if (created.users.length) {
-      await mutate("DELETE FROM permisos_usuario WHERE usuario_id = ANY($1::int[])", [created.users]);
-    }
-    if (created.products.length) {
-      await mutate("DELETE FROM existencias WHERE producto_id = ANY($1::int[])", [created.products]);
-    }
-    if (created.rolls.length) {
-      await mutate("DELETE FROM rollos WHERE id = ANY($1::int[])", [created.rolls]);
-    }
-    if (created.products.length) {
-      await mutate("DELETE FROM productos WHERE id = ANY($1::int[])", [created.products]);
-    }
-    if (created.users.length) {
-      await mutate("DELETE FROM usuarios WHERE id = ANY($1::int[])", [created.users]);
-    }
-    if (created.locations.length) {
-      await mutate("DELETE FROM ubicaciones WHERE id = ANY($1::int[])", [created.locations]);
     }
     await pool.end();
   }

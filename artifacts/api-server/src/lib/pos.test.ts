@@ -6,7 +6,6 @@ import {
   db,
   entradasTable,
   ensureProductMeterSchema,
-  existenciasTable,
   movimientosCreditoTable,
   notificacionesCreditoTable,
   movimientosTable,
@@ -60,12 +59,6 @@ const createdSessionIds: number[] = [];
 
 await ensureProductMeterSchema(pool);
 
-const [folioBefore] = await db
-  .select()
-  .from(ticketFolioTable)
-  .where(eq(ticketFolioTable.id, 1))
-  .limit(1);
-
 async function test(name: string, fn: () => Promise<void>) {
   try {
     await fn();
@@ -86,11 +79,28 @@ await test("POS monetary line totals use exact thousandths times cents arithmeti
 });
 
 async function makeLocation() {
+  const initials = await pool.query<{ iniciales: string }>(
+    `SELECT candidate AS iniciales
+     FROM (
+       SELECT chr(first_code) || chr(second_code)
+         || CASE WHEN third_code = 0 THEN '' ELSE chr(third_code) END AS candidate
+       FROM generate_series(65,90) AS first_code
+       CROSS JOIN generate_series(65,90) AS second_code
+       CROSS JOIN generate_series(0,90) AS third_code
+       WHERE third_code = 0 OR third_code >= 65
+     ) AS candidates
+     WHERE NOT EXISTS (
+       SELECT 1 FROM ubicaciones WHERE iniciales = candidates.candidate
+     )
+     ORDER BY length(candidate), candidate
+     LIMIT 1`,
+  );
+  assert.ok(initials.rows[0], "No hay iniciales válidas disponibles para la prueba.");
   const [row] = await db
     .insert(ubicacionesTable)
     .values({
       nombre: `${RUN} Tienda ${++seq}`,
-      iniciales: `P${String.fromCharCode(65 + Math.floor(seq / 26))}${String.fromCharCode(65 + (seq % 26))}`,
+      iniciales: initials.rows[0].iniciales,
       tipo: "TIENDA",
     })
     .returning();
@@ -1399,95 +1409,6 @@ await test("POS-10 metreado persists per-line Menudeo/Mayoreo suggestions withou
   );
   assert.equal(ticket!.lineas[0]?.precioUnitario, "40.00");
 });
-
-let financialTriggersDisabled = false;
-try {
-  await db.execute(
-    sql`ALTER TABLE movimientos_credito DISABLE TRIGGER USER`,
-  );
-  await db.execute(
-    sql`ALTER TABLE ticket_pagos DISABLE TRIGGER USER`,
-  );
-  financialTriggersDisabled = true;
-  if (createdTicketIds.length > 0) {
-    await db
-      .delete(notificacionesCreditoTable)
-      .where(inArray(notificacionesCreditoTable.ticketId, createdTicketIds));
-    await db
-      .delete(movimientosCreditoTable)
-      .where(inArray(movimientosCreditoTable.ticketId, createdTicketIds));
-    await db
-      .delete(ticketPagosTable)
-      .where(inArray(ticketPagosTable.ticketId, createdTicketIds));
-    await db
-      .delete(ticketLineasTable)
-      .where(inArray(ticketLineasTable.ticketId, createdTicketIds));
-    await db
-      .delete(ticketsTable)
-      .where(inArray(ticketsTable.id, createdTicketIds));
-  }
-  if (createdSessionIds.length > 0) {
-    await db
-      .delete(sesionesCajaTable)
-      .where(inArray(sesionesCajaTable.id, createdSessionIds));
-  }
-  if (createdRolloIds.length > 0) {
-    await db
-      .delete(movimientosTable)
-      .where(inArray(movimientosTable.rolloId, createdRolloIds));
-    await db
-      .delete(rollosTable)
-      .where(inArray(rollosTable.id, createdRolloIds));
-  }
-  if (createdEntryIds.length > 0) {
-    await db
-      .delete(entradasTable)
-      .where(inArray(entradasTable.id, createdEntryIds));
-  }
-  if (createdProductIds.length > 0 && createdLocationIds.length > 0) {
-    await db
-      .delete(existenciasTable)
-      .where(
-        and(
-          inArray(existenciasTable.productoId, createdProductIds),
-          inArray(existenciasTable.ubicacionId, createdLocationIds),
-        ),
-      );
-  }
-  if (createdClientIds.length > 0) {
-    await db
-      .delete(clientesTable)
-      .where(inArray(clientesTable.id, createdClientIds));
-  }
-  if (createdProductIds.length > 0) {
-    await db
-      .delete(productosTable)
-      .where(inArray(productosTable.id, createdProductIds));
-  }
-  if (createdLocationIds.length > 0) {
-    await db
-      .delete(ubicacionesTable)
-      .where(inArray(ubicacionesTable.id, createdLocationIds));
-  }
-  if (folioBefore) {
-    await db
-      .update(ticketFolioTable)
-      .set({ ultimoFolio: folioBefore.ultimoFolio })
-      .where(eq(ticketFolioTable.id, 1));
-  }
-} catch (error) {
-  process.stdout.write(`  ⚠ cleanup: ${(error as Error).message}\n`);
-  failed += 1;
-} finally {
-  if (financialTriggersDisabled) {
-    await db.execute(
-      sql`ALTER TABLE movimientos_credito ENABLE TRIGGER USER`,
-    );
-    await db.execute(
-      sql`ALTER TABLE ticket_pagos ENABLE TRIGGER USER`,
-    );
-  }
-}
 
 process.stdout.write(`\nPOS/caja: ${passed} passed, ${failed} failed\n`);
 if (failed > 0) process.exit(1);

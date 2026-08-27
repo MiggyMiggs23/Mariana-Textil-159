@@ -17,7 +17,7 @@ if (!testUrl) {
     throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL; refusing to mutate the application database.");
   }
   test("reportes build committed, isolated decision reports", async (t) => {
-    const [{ pool }, reports, sales, inventory, commercial, { requierePermiso }, { toExcelNumber }] = await Promise.all([
+    const [{ pool }, reports, sales, inventory, commercial, { requierePermiso }, { toExcelNumber }, { loadCustomerCreditProjection }] = await Promise.all([
       import("@workspace/db"),
       import("./lib/reportes"),
       import("./lib/reportes-sales"),
@@ -25,6 +25,7 @@ if (!testUrl) {
       import("./lib/reportes-commercial"),
       import("./lib/permisos"),
       import("@workspace/number-format"),
+      import("./lib/credit-aging-read-model"),
     ]);
     const { createTestDatabaseGuard } = await import("@workspace/db");
     const { assertIsolated } = await createTestDatabaseGuard(
@@ -175,6 +176,16 @@ if (!testUrl) {
           [ids.clients[0], sold, type, amount, ids.users[0], tag],
         )).id));
       }
+      ids.credit.push(Number((await one(
+        `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,notas,movimiento_origen_id)
+         VALUES($1,$2,'REVERSO',25,$3,$4,$5) RETURNING id`,
+        [ids.clients[0], sold, ids.users[0], `${tag}-reverso-abono`, ids.credit[1]],
+      )).id));
+      ids.credit.push(Number((await one(
+        `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,notas)
+         VALUES($1,$2,'REVERSO',-40,$3,$4) RETURNING id`,
+        [ids.clients[0], sold, ids.users[0], `${tag}-reverso-ticket`],
+      )).id));
 
       const input = { periodo: "personalizado", desde: from.toISOString().slice(0, 10), hasta: now.toISOString().slice(0, 10) };
       await t.test("sales and margin use frozen, valid lines and filter correctly", async () => {
@@ -216,7 +227,13 @@ if (!testUrl) {
         assert.ok(table(purchases, "compras-por-rollo").rows.length === 4);
         assert.ok(table(purchases, "productos").rows.every(r => r.estadoCostoReferencia === "AVERAGE_12_MONTHS"));
         assert.ok(table(clients, "clientes").rows.some(r => Number(r.comprasRollos) > 0 && Number(r.comprasMetraje) > 0));
-        assert.ok(table(clients, "cuentas-por-cobrar-fifo").rows.some(r => Number(r.saldo) === 75));
+        const reportBalance = table(clients, "cuentas-por-cobrar-fifo").rows
+          .filter(r => Number(r.clienteId) === ids.clients[0])
+          .reduce((sum, row) => sum + Number(row.saldo), 0);
+        const authoritativeBalance =
+          (await loadCustomerCreditProjection(ids.clients[0])).balanceCents / 100;
+        assert.equal(authoritativeBalance, 60, "linked ticket reversal reduces the charge and reversed ABONO is excluded");
+        assert.equal(reportBalance, authoritativeBalance, "commercial report uses authoritative FIFO aging");
         const paymentRows = table(clients, "formas-pago").rows;
         assert.deepEqual(paymentRows.map((row) => row.modalidad).sort(), ["METRAJE", "ROLLOS"]);
         assert.equal(paymentRows.reduce((sum, row) => sum + Number(row.importe), 0), 974);
@@ -243,7 +260,6 @@ if (!testUrl) {
         assert.equal(inventory.classifyCoverage(null), "SIN_VENTAS"); assert.equal(inventory.classifyCoverage(10, 7, 15, 45, 90), "BAJO");
         assert.equal(inventory.classifyCoverage(20, 7, 15, 45, 90), "NORMAL"); assert.equal(inventory.classifyCoverage(91, 7, 15, 45, 90), "EXCESO");
         assert.equal(inventory.classifyNoMovement(null), "SIN_MOVIMIENTOS"); assert.ok(inventory.reconciles(10, 10, null));
-        assert.deepEqual(commercial.fifoAllocateAging([{ amount: 100 }], 25)[0].outstanding, 75);
         const timed = await Promise.all(reports.REPORT_SECTIONS.map(async (section: any) => {
           const start = performance.now();
           const value = await reports.buildReport(section, input, undefined, true);
@@ -262,22 +278,6 @@ if (!testUrl) {
         const sheet = new ExcelJS.Workbook().addWorksheet("x"); sheet.columns = [{ header: "Ventas", key: "ventas" }]; sheet.addRow({ ventas: toExcelNumber(kpi(timed[0], "ventas").value) }); assert.equal(typeof sheet.getCell("A2").value, "number");
       });
     } finally {
-      // Finance ledgers may be immutable in production-like schemas; disable only
-      // the known immutability trigger and always restore it.
-      try { await pool.query("ALTER TABLE movimientos_credito DISABLE TRIGGER movimientos_credito_inmutables"); } catch {}
-      try { await pool.query("ALTER TABLE ticket_pagos DISABLE TRIGGER ticket_pagos_inmutables"); } catch {}
-      for (const [sql, values] of [
-        ["DELETE FROM movimientos_credito WHERE id=ANY($1::int[])", ids.credit], ["DELETE FROM ticket_pagos WHERE id=ANY($1::int[])", ids.payments],
-        ["DELETE FROM ticket_lineas WHERE ticket_id=ANY($1::int[])", ids.tickets], ["DELETE FROM tickets WHERE id=ANY($1::int[])", ids.tickets],
-        ["DELETE FROM movimientos WHERE id=ANY($1::int[])", ids.movements],
-        ["DELETE FROM existencias WHERE producto_id=ANY($1::int[])", ids.products],
-        ["DELETE FROM rollos WHERE id=ANY($1::int[])", ids.rolls], ["DELETE FROM entradas WHERE id=ANY($1::int[])", ids.entries],
-        ["DELETE FROM productos WHERE id=ANY($1::int[])", ids.products], ["DELETE FROM proveedores WHERE id=ANY($1::int[])", ids.suppliers],
-        ["DELETE FROM clientes WHERE id=ANY($1::int[])", ids.clients], ["DELETE FROM usuarios WHERE id=ANY($1::int[])", ids.users],
-        ["DELETE FROM ubicaciones WHERE id=ANY($1::int[])", ids.sites],
-      ] as Array<[string, number[]]>) if (values.length) await pool.query(sql, [values]);
-      try { await pool.query("ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables"); } catch {}
-      try { await pool.query("ALTER TABLE ticket_pagos ENABLE TRIGGER ticket_pagos_inmutables"); } catch {}
       await pool.end();
     }
   });

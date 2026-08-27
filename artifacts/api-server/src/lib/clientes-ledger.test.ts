@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ensureClientesSchema, pool } from "@workspace/db";
+import { loadCustomerCreditProjection } from "./credit-aging-read-model";
 
 test("linked legacy negative adjustment keeps ledger and aging consistent", async () => {
   await ensureClientesSchema(pool);
@@ -25,10 +26,10 @@ test("linked legacy negative adjustment keeps ledger and aging consistent", asyn
     const ticket = await client.query<{ id: number }>(
       `INSERT INTO tickets
         (folio, uuid_cliente, ubicacion_id, usuario_terminal_id, cliente_id,
-         tipo, subtotal, iva, tasa_iva, total, facturado)
+          subtotal, iva, tasa_iva, total, facturado)
        VALUES (
          (SELECT COALESCE(MAX(folio), 0) + 100000 FROM tickets),
-         gen_random_uuid(), $1, $2, $3, 'NORMAL', 100, 0, 0, 100, false
+          gen_random_uuid(), $1, $2, $3, 100, 0, 0, 100, false
        ) RETURNING id`,
       [location.rows[0]!.id, user.rows[0]!.id, customerId],
     );
@@ -48,14 +49,10 @@ test("linked legacy negative adjustment keeps ledger and aging consistent", asyn
        FROM movimientos_credito WHERE cliente_id = $1`,
       [customerId],
     );
-    const aging = await client.query<{ total: string }>(
-      `SELECT COALESCE(SUM(pendiente), 0)::text AS total
-       FROM credit_fifo_aging($1)`,
-      [customerId],
-    );
+    const aging = await loadCustomerCreditProjection(customerId, client);
 
     assert.equal(ledger.rows[0]!.total, "60.00");
-    assert.equal(aging.rows[0]!.total, ledger.rows[0]!.total);
+    assert.equal((aging.balanceCents / 100).toFixed(2), ledger.rows[0]!.total);
 
     const filteredStatement = await client.query<{ saldo: string }>(
       `WITH ledger AS (

@@ -4,6 +4,7 @@ import { requireRole, requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { loadCustomerCreditProjection } from "../lib/credit-aging-read-model";
 
 const router: IRouter = Router();
 router.use("/clientes", requireSession);
@@ -65,6 +66,7 @@ router.post(
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
+      await client.query("SELECT pg_advisory_xact_lock(240024,$1)", [id]);
       const locked = await client.query(
         `SELECT id,nombre,activo,es_sistema FROM clientes WHERE id=$1 FOR UPDATE`,
         [id],
@@ -87,11 +89,12 @@ router.post(
         `SELECT
           (SELECT count(*)::int FROM tickets WHERE cliente_id=$1) AS tickets,
           count(m.id)::int AS movimientos,
-          COALESCE(SUM(m.importe),0)::numeric AS saldo
+          0::numeric AS saldo
          FROM movimientos_credito m WHERE m.cliente_id=$1`,
         [id],
       );
-      const saldo = Number(state.rows[0].saldo);
+       const projection = await loadCustomerCreditProjection(id, client);
+      const saldo = projection.balanceCents / 100;
       const tickets = Number(state.rows[0].tickets);
       const movimientos = Number(state.rows[0].movimientos);
       if (saldo <= 0 && tickets === 0 && movimientos === 0) {
@@ -116,14 +119,10 @@ router.post(
         res.json({ clienteId: id, resultado: "DESACTIVADO", saldoAnterior: "0.00", montoIncobrable: "0.00", desdeCuando: null });
         return;
       }
-      const vencido = await client.query(
-        `SELECT COALESCE(SUM(pendiente),0)::numeric AS monto, MIN(due_at) AS desde
-         FROM credit_fifo_aging($1)
-         WHERE due_at < (now() AT TIME ZONE 'America/Mexico_City')::date`,
-        [id],
-      );
-      const montoVencido = Number(vencido.rows[0].monto);
-      const desdeCuando = vencido.rows[0].desde;
+      const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+      const overdue = projection.charges.filter((charge) => charge.dueAt != null && charge.dueAt < today);
+      const montoVencido = overdue.reduce((sum, charge) => sum + charge.pendienteCents, 0) / 100;
+      const desdeCuando = overdue.map((charge) => charge.dueAt).sort()[0] ?? null;
       if (montoVencido <= 0) {
         await client.query("ROLLBACK");
         res.status(409).json({

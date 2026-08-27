@@ -1689,6 +1689,8 @@ export interface ClientePagoPreview {
 export interface ClientePagoPreviewInput {
   /** @minimum 0.01 */
   importe: number;
+  /** @nullable */
+  fechaEfectiva?: string | null;
 }
 
 /**

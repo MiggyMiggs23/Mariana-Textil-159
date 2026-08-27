@@ -1,4 +1,4 @@
-import { allocateCreditFifo } from "./credit-allocation";
+import { projectCreditLedger } from "./credit-allocation";
 
 export const CREDIT_TERMS = [7, 15, 30, 60] as const;
 export type CreditTerm = (typeof CREDIT_TERMS)[number];
@@ -111,66 +111,11 @@ export function deriveTicketCreditData(
     };
   }
 
-  const ordered = [...movements].sort(
-    (left, right) =>
-      left.createdAt.getTime() - right.createdAt.getTime() ||
-      left.id - right.id,
-  );
-  const reversedPaymentIds = new Set(
-    ordered
-      .filter(
-        (movement) =>
-          movement.tipo === "REVERSO" &&
-          movement.movimientoOrigenId != null &&
-          moneyCents(movement.importe) > 0,
-      )
-      .map((movement) => movement.movimientoOrigenId as number),
-  );
-  const reversalsByTicket = new Map<number, number>();
-  let fifoNegativeCents = 0;
-  for (const movement of ordered) {
-    const cents = moneyCents(movement.importe);
-    if (
-      movement.tipo === "REVERSO" &&
-      movement.ticketId != null &&
-      cents < 0
-    ) {
-      reversalsByTicket.set(
-        movement.ticketId,
-        (reversalsByTicket.get(movement.ticketId) ?? 0) - cents,
-      );
-    } else if (
-      (movement.tipo === "ABONO" && !reversedPaymentIds.has(movement.id)) ||
-      (movement.tipo === "AJUSTE" && cents < 0)
-    ) {
-      fifoNegativeCents += Math.max(0, -cents);
-    }
-  }
-
-  const charges = ordered.filter(
-    (movement) =>
-      movement.tipo === "VENTA_CREDITO" ||
-      (movement.tipo === "AJUSTE" && moneyCents(movement.importe) > 0),
-  );
-  const allocation = allocateCreditFifo(
-    [{ id: 0, availableCents: fifoNegativeCents }],
-    charges.map((movement) => ({
-      id: movement.id,
-      balanceCents: moneyCents(movement.importe),
-      createdAt: movement.createdAt,
-      linkedReductionCents:
-        movement.tipo === "VENTA_CREDITO" && movement.ticketId != null
-          ? (reversalsByTicket.get(movement.ticketId) ?? 0)
-          : 0,
-    })),
-  );
-  const chargesById = new Map(charges.map((movement) => [movement.id, movement]));
-  const outstanding = allocation.balances
-    .filter(
-      (balance) => chargesById.get(balance.targetId)?.ticketId === ticketId,
-    )
-    .reduce((sum, balance) => sum + balance.balanceAfterCents, 0);
-  const sale = charges.find(
+  const projection = projectCreditLedger(movements);
+  const outstanding = projection.charges
+    .filter((charge) => charge.ticketId === ticketId)
+    .reduce((sum, charge) => sum + charge.pendienteCents, 0);
+  const sale = movements.find(
     (movement) =>
       movement.tipo === "VENTA_CREDITO" && movement.ticketId === ticketId,
   );

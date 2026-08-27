@@ -35,11 +35,31 @@ if (!testUrl) {
     let baseUrl = "";
     const one = async (text: string, values: unknown[] = []) =>
       (await pool.query(text, values)).rows[0]!;
+    const unusedLocationInitials = async () => {
+      const row = await one(
+        `SELECT candidate AS iniciales
+         FROM (
+           SELECT chr(first_code) || chr(second_code)
+             || CASE WHEN third_code = 0 THEN '' ELSE chr(third_code) END AS candidate
+           FROM generate_series(65,90) AS first_code
+           CROSS JOIN generate_series(65,90) AS second_code
+           CROSS JOIN generate_series(0,90) AS third_code
+           WHERE third_code = 0 OR third_code >= 65
+         ) AS candidates
+         WHERE NOT EXISTS (
+           SELECT 1 FROM ubicaciones WHERE iniciales = candidates.candidate
+         )
+         ORDER BY length(candidate), candidate
+         LIMIT 1`,
+      );
+      assert.ok(row, "No valid unused location initials remain.");
+      return String(row.iniciales);
+    };
 
     try {
       const location = await one(
-        "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id",
-        [`${tag} Tienda`],
+        "INSERT INTO ubicaciones(nombre,tipo,activa,iniciales) VALUES($1,'TIENDA',true,$2) RETURNING id",
+        [`${tag} Tienda`, await unusedLocationInitials()],
       );
       ids.locations.push(Number(location.id));
       for (const role of ["ADMIN", "CAJA"] as const) {
@@ -96,10 +116,10 @@ if (!testUrl) {
         const row = await one(
           `INSERT INTO tickets(
              folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
-             tipo,subtotal,iva,tasa_iva,total,estado,cobrado,cobrado_at,
+              subtotal,iva,tasa_iva,total,estado,cobrado,cobrado_at,
              facturado,created_at
            ) VALUES(
-             $1,gen_random_uuid(),$2,$3,$4,'NORMAL',100,0,0,100,$5,$6,
+              $1,gen_random_uuid(),$2,$3,$4,100,0,0,100,$5,$6,
              CASE WHEN $6 THEN now() ELSE NULL END,false,
              now()-($7::text || ' minutes')::interval
            ) RETURNING id,folio`,
@@ -293,33 +313,11 @@ if (!testUrl) {
           ids.notifications,
         ]);
       }
-      if (ids.movements.length) {
-        await pool.query("ALTER TABLE movimientos_credito DISABLE TRIGGER movimientos_credito_inmutables");
-        try {
-          await pool.query("DELETE FROM movimientos_credito WHERE id=ANY($1::int[])", [
-            ids.movements,
-          ]);
-        } finally {
-          await pool.query("ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables");
-        }
-      }
-      if (ids.tickets.length) {
-        await pool.query("DELETE FROM tickets WHERE id=ANY($1::int[])", [ids.tickets]);
-      }
        if (ids.salidas.length) {
          await pool.query("DELETE FROM salidas WHERE id=ANY($1::int[])", [ids.salidas]);
        }
       if (ids.sessions.length) {
         await pool.query("DELETE FROM sesiones WHERE id=ANY($1::uuid[])", [ids.sessions]);
-      }
-      if (ids.clients.length) {
-        await pool.query("DELETE FROM clientes WHERE id=ANY($1::int[])", [ids.clients]);
-      }
-      if (ids.users.length) {
-        await pool.query("DELETE FROM usuarios WHERE id=ANY($1::int[])", [ids.users]);
-      }
-      if (ids.locations.length) {
-        await pool.query("DELETE FROM ubicaciones WHERE id=ANY($1::int[])", [ids.locations]);
       }
       await pool.end();
     }

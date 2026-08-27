@@ -178,53 +178,6 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
         WHERE activo AND NOT es_sistema;
       CREATE INDEX IF NOT EXISTS tickets_cliente_created_at_idx
         ON tickets (cliente_id, created_at);
-      -- FIFO allocates every negative ledger entry to the oldest credit sale.
-      -- It is the single source for aging in both detail and global cartera.
-      DROP FUNCTION IF EXISTS credit_fifo_aging(integer);
-      CREATE OR REPLACE FUNCTION credit_fifo_aging(p_cliente_id integer)
-      RETURNS TABLE (
-        movimiento_id integer, ticket_id integer, created_at timestamptz,
-        due_at date, original numeric, pendiente numeric
-      ) LANGUAGE sql STABLE AS $$
-        WITH fifo_negatives AS (
-          SELECT COALESCE(SUM(-importe), 0) AS total
-          FROM movimientos_credito
-          WHERE cliente_id = p_cliente_id AND (
-            (tipo = 'ABONO' AND NOT EXISTS (
-              SELECT 1 FROM movimientos_credito reversal
-              WHERE reversal.tipo='REVERSO'
-                AND reversal.movimiento_origen_id=movimientos_credito.id
-            )) OR
-            (tipo = 'AJUSTE' AND importe < 0)
-          )
-        ), cargos AS (
-          SELECT m.id, m.ticket_id, m.created_at,
-            GREATEST(0, m.importe - CASE
-              WHEN m.tipo = 'VENTA_CREDITO' THEN COALESCE((
-                SELECT SUM(-r.importe) FROM movimientos_credito r
-                WHERE r.cliente_id=m.cliente_id AND r.tipo='REVERSO'
-                  AND r.ticket_id=m.ticket_id
-              ),0)
-              ELSE 0
-            END) AS neto,
-            m.fecha_vencimiento
-          FROM movimientos_credito m
-          WHERE m.cliente_id=p_cliente_id AND (
-            m.tipo='VENTA_CREDITO' OR (m.tipo='AJUSTE' AND m.importe > 0)
-          )
-        ), ordenadas AS (
-          SELECT v.*,
-            COALESCE(SUM(v.neto) OVER (
-              ORDER BY v.created_at, v.id ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
-            ), 0) AS antes
-          FROM cargos v
-        )
-        SELECT v.id, v.ticket_id, v.created_at,
-          v.fecha_vencimiento, v.neto,
-          GREATEST(0, v.neto - GREATEST(0, n.total - v.antes))
-        FROM ordenadas v CROSS JOIN fifo_negatives n
-        WHERE GREATEST(0, v.neto - GREATEST(0, n.total - v.antes)) > 0
-      $$;
       CREATE OR REPLACE FUNCTION prevent_financial_record_mutation()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
@@ -260,15 +213,6 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
            OR NEW.importe > -abono.importe - COALESCE((
              SELECT SUM(a.importe) FROM aplicaciones_credito a
              WHERE a.abono_movimiento_id = abono.id
-               AND NOT EXISTS (
-                 SELECT 1 FROM movimientos_credito r
-                 WHERE r.tipo = 'REVERSO'
-                   AND r.movimiento_origen_id = a.abono_movimiento_id
-               )
-           ), 0)
-           OR NEW.importe > venta.importe - COALESCE((
-             SELECT SUM(a.importe) FROM aplicaciones_credito a
-             WHERE a.venta_movimiento_id = venta.id
                AND NOT EXISTS (
                  SELECT 1 FROM movimientos_credito r
                  WHERE r.tipo = 'REVERSO'

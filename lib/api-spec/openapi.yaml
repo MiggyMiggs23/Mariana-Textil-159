@@ -5397,6 +5397,7 @@ components:
       required: [importe]
       properties:
         importe: { type: number, minimum: 0.01 }
+        fechaEfectiva: { type: ["string", "null"], format: date-time }
     ClienteNotaAbono:
       type: object
       required: [movimientoPagoId, fecha, montoAplicado, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador, revertido]

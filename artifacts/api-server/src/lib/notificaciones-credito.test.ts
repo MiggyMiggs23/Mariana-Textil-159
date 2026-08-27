@@ -28,6 +28,27 @@ function cookie(sessionId: string): string {
   return `mariana_session=${sessionId}`;
 }
 
+async function unusedLocationInitials(): Promise<string> {
+  const result = await pool.query<{ iniciales: string }>(
+    `SELECT candidate AS iniciales
+     FROM (
+       SELECT chr(first_code) || chr(second_code)
+         || CASE WHEN third_code = 0 THEN '' ELSE chr(third_code) END AS candidate
+       FROM generate_series(65,90) AS first_code
+       CROSS JOIN generate_series(65,90) AS second_code
+       CROSS JOIN generate_series(0,90) AS third_code
+       WHERE third_code = 0 OR third_code >= 65
+     ) AS candidates
+     WHERE NOT EXISTS (
+       SELECT 1 FROM ubicaciones WHERE iniciales = candidates.candidate
+     )
+     ORDER BY length(candidate), candidate
+     LIMIT 1`,
+  );
+  assert.ok(result.rows[0], "No hay iniciales válidas disponibles para la prueba.");
+  return result.rows[0].iniciales;
+}
+
 async function request(
   path: string,
   sessionId: string,
@@ -45,10 +66,11 @@ async function request(
 before(async () => {
   await ensureClientesSchema(pool);
 
+  const locationInitials = await unusedLocationInitials();
   const location = await pool.query<{ id: number }>(
-    `INSERT INTO ubicaciones (nombre,tipo,activa)
-     VALUES ($1,'TIENDA',true) RETURNING id`,
-    [`Tienda ${run}`],
+    `INSERT INTO ubicaciones (nombre,tipo,activa,iniciales)
+     VALUES ($1,'TIENDA',true,$2) RETURNING id`,
+    [`Tienda ${run}`, locationInitials],
   );
   locationId = location.rows[0]!.id;
 
@@ -89,10 +111,10 @@ before(async () => {
   const ticket = await pool.query<{ id: number }>(
     `INSERT INTO tickets
        (folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
-        tipo,subtotal,iva,tasa_iva,total,facturado)
+         subtotal,iva,tasa_iva,total,facturado)
      VALUES
        ((SELECT COALESCE(MAX(folio),0)+100000 FROM tickets),gen_random_uuid(),
-        $1,$2,$3,'NORMAL',150,0,0,150,false)
+         $1,$2,$3,150,0,0,150,false)
      RETURNING id`,
     [locationId, nonAdminId, customerId],
   );

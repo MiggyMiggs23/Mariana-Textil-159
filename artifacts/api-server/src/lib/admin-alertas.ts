@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { loadCustomerCreditProjections } from "./credit-aging-read-model";
 
 const MEXICO_CITY_TIME_ZONE = "America/Mexico_City";
 /**
@@ -44,23 +45,9 @@ export async function getAdminAlertas() {
         AND t.created_at < now() - interval '30 minutes'
       ORDER BY t.created_at ASC, t.id ASC
     `),
-    pool.query(`
-      SELECT aging.movimiento_id AS "movimientoId",
-        c.id AS "clienteId", c.nombre AS "nombreCliente",
-        movement.notas AS nota, t.folio AS "ticketFolio",
-        aging.pendiente::text AS importe,
-        aging.due_at AS "fechaVencimiento",
-        (aging.due_at - (now() AT TIME ZONE '${MEXICO_CITY_TIME_ZONE}')::date)::int
-          AS "diasRestantes"
-      FROM clientes c
-      JOIN LATERAL credit_fifo_aging(c.id) aging ON true
-      JOIN movimientos_credito movement ON movement.id = aging.movimiento_id
-      LEFT JOIN tickets t ON t.id = aging.ticket_id
-      WHERE aging.due_at IS NOT NULL
-        AND aging.due_at <=
-          (now() AT TIME ZONE '${MEXICO_CITY_TIME_ZONE}')::date + 3
-      ORDER BY aging.due_at ASC, aging.created_at ASC, aging.movimiento_id ASC
-    `),
+    pool.query(`SELECT c.id AS "clienteId",c.nombre AS "nombreCliente",m.id AS "movimientoId",
+      m.notas AS nota,t.folio AS "ticketFolio" FROM clientes c JOIN movimientos_credito m ON m.cliente_id=c.id
+      LEFT JOIN tickets t ON t.id=m.ticket_id WHERE m.tipo IN ('VENTA_CREDITO','AJUSTE')`),
     pool.query(`
       SELECT s.id, s.folio, s.enviada_at AS "enviadaAt",
         FLOOR(EXTRACT(EPOCH FROM (now() - s.enviada_at)) / 3600)::int
@@ -87,15 +74,36 @@ export async function getAdminAlertas() {
     importe: money(row.importe),
     creadorId: Number(row.creadorId),
   }));
-  const creditos = creditResult.rows.map((row) => ({
-    ...row,
-    movimientoId: Number(row.movimientoId),
-    clienteId: Number(row.clienteId),
-    ticketFolio: row.ticketFolio == null ? null : Number(row.ticketFolio),
-    importe: money(row.importe),
-    fechaVencimiento: calendarDate(row.fechaVencimiento),
-    diasRestantes: Number(row.diasRestantes),
-  }));
+  const projections = await loadCustomerCreditProjections([...new Set(creditResult.rows.map((row) => Number(row.clienteId)))]);
+  const byMovement = new Map(creditResult.rows.map((row) => [Number(row.movimientoId), row]));
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: MEXICO_CITY_TIME_ZONE });
+  const creditThreshold = new Date(
+    Date.parse(`${today}T00:00:00Z`) + 3 * 86_400_000,
+  ).toISOString().slice(0, 10);
+  const creditos = [...projections].flatMap(([clienteId, projection]) => projection.charges
+    .filter((charge) => charge.dueAt != null && charge.dueAt <= creditThreshold)
+    .map((charge) => {
+      const row = byMovement.get(charge.movimientoId);
+      if (!row || charge.dueAt == null) {
+        throw new Error(`Missing credit movement metadata: ${charge.movimientoId}`);
+      }
+      return {
+        ...row,
+        movimientoId: charge.movimientoId,
+        clienteId,
+        ticketFolio: row.ticketFolio == null ? null : Number(row.ticketFolio),
+        importe: money(charge.pendienteCents / 100),
+        fechaVencimiento: charge.dueAt,
+        diasRestantes: Math.floor(
+          (Date.parse(`${charge.dueAt}T00:00:00Z`) -
+            Date.parse(`${today}T00:00:00Z`)) / 86_400_000,
+        ),
+      };
+    }))
+    .sort((a, b) =>
+      a.fechaVencimiento.localeCompare(b.fechaVencimiento) ||
+      a.movimientoId - b.movimientoId,
+    );
   const salidasEnTransito = transitResult.rows.map((row) => ({
     ...row,
     id: Number(row.id),

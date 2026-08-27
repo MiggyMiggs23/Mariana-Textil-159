@@ -9,4 +9,6 @@
 export interface ClientePagoPreviewInput {
   /** @minimum 0.01 */
   importe: number;
+  /** @nullable */
+  fechaEfectiva?: Date | null;
 }

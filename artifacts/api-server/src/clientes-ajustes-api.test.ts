@@ -14,6 +14,7 @@ import {
   setPrivateObjectStorageForTests,
   type PrivateObjectStorageAdapter,
 } from "./lib/private-object-storage";
+import { loadCustomerCreditProjection, loadCustomerCreditProjections } from "./lib/credit-aging-read-model";
 
 const RUN = `clientes-ajustes-${Date.now()}`;
 let server: Server;
@@ -71,13 +72,28 @@ before(async () => {
   await ensureClientesSchema(pool);
   setPrivateObjectStorageForTests(memoryStorage);
   const location = await pool.query(
-    `INSERT INTO ubicaciones(nombre,tipo) VALUES($1,'TIENDA') RETURNING id`,
+    `WITH candidate AS (
+       SELECT chr(first_letter) || chr(second_letter) AS iniciales
+       FROM generate_series(65,90) first_letter
+       CROSS JOIN generate_series(65,90) second_letter
+       WHERE NOT EXISTS (
+         SELECT 1 FROM ubicaciones
+         WHERE iniciales = chr(first_letter) || chr(second_letter)
+       )
+       ORDER BY first_letter, second_letter
+       LIMIT 1
+     )
+     INSERT INTO ubicaciones(nombre,iniciales,tipo)
+     SELECT $1,candidate.iniciales,'TIENDA' FROM candidate
+     RETURNING id`,
     [`${RUN} tienda`],
   );
   locationId = Number(location.rows[0].id);
   const product = await pool.query(
-    `INSERT INTO productos(sku,tela,color,unidad,precio_sugerido)
-     VALUES($1,$2,'Azul','METRO',100) RETURNING id`,
+    `INSERT INTO productos(
+       sku,tela,color,unidad,precio_sugerido,se_vende_por_metro,precio_menudeo
+     )
+     VALUES($1,$2,'Azul','METRO',100,true,100) RETURNING id`,
     [`${RUN}-sku`, `${RUN} tela`],
   );
   productId = Number(product.rows[0].id);
@@ -179,10 +195,79 @@ test("baja: elimina sin historial, desactiva historial saldo cero y bloquea sald
   assert.equal(result.body.requiereAutorizacion, false);
 });
 
+test("resúmenes y baja usan aging ante reverso de ticket y ABONO revertido", async () => {
+  const id = await createClient("aging authoritative");
+  const ticket = await pool.query(
+    `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
+       subtotal,iva,total,estado,cobrado,cobrado_at,created_at)
+     VALUES($1,$2,$3,$4,$5,100,0,100,'VENDIDO',true,now(),now()) RETURNING id`,
+    [1_800_000_000 + Math.floor(Math.random() * 100_000_000), randomUUID(), locationId, terminalId, id],
+  );
+  const ticketId = Number(ticket.rows[0].id);
+  const sale = await pool.query(
+    `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,dias_plazo,fecha_vencimiento)
+     VALUES($1,$2,'VENTA_CREDITO',100,$3,30,(now() AT TIME ZONE 'America/Mexico_City')::date+30)
+     RETURNING id`,
+    [id, ticketId, adminId],
+  );
+  const payment = await pool.query(
+    `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id)
+     VALUES($1,$2,'ABONO',-25,$3) RETURNING id`,
+    [id, ticketId, adminId],
+  );
+  await pool.query(
+    `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,movimiento_origen_id)
+     VALUES($1,$2,'REVERSO',25,$3,$4)`,
+    [id, ticketId, adminId, payment.rows[0].id],
+  );
+  await pool.query(
+    `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id)
+     VALUES($1,$2,'REVERSO',-40,$3)`,
+    [id, ticketId, adminId],
+  );
+
+  const authoritative = await loadCustomerCreditProjection(id);
+  assert.equal((authoritative.balanceCents / 100).toFixed(2), "60.00");
+  assert.ok(sale.rows[0].id);
+
+  const [detail, account, creditState, list, summary, baja] = await Promise.all([
+    json(`/clientes/${id}`),
+    json(`/clientes/${id}/estado-cuenta`),
+    json(`/clientes/${id}/credito`),
+    json("/clientes"),
+    json("/clientes/resumen"),
+    json(`/clientes/${id}/baja`, { method: "POST" }),
+  ]);
+  assert.equal(detail.body.saldoActual, "60.00");
+  assert.equal(account.body.saldoActual, "60.00");
+  assert.equal(creditState.body.saldoActual, "60.00");
+  const listed = (list.body as unknown as Array<Record<string, unknown>>).find((item) => item.id === id);
+  assert.equal(listed?.saldoActual, "60.00");
+  const activeClients = await pool.query<{ id: number }>(
+    "SELECT id FROM clientes WHERE activo",
+  );
+  const activePortfolio = await loadCustomerCreditProjections(
+    activeClients.rows.map((row) => Number(row.id)),
+  );
+  const balances = [...activePortfolio.values()];
+  assert.equal(
+    summary.body.totalCartera,
+    (balances.reduce((sum, projection) => sum + projection.balanceCents, 0) / 100).toFixed(2),
+  );
+  assert.equal(
+    summary.body.clientesConSaldo,
+    balances.filter((projection) => projection.balanceCents > 0).length,
+  );
+  assert.equal(baja.response.status, 409);
+  assert.equal(baja.body.code, "CLIENT_BALANCE_PENDING");
+  assert.equal(baja.body.saldo, "60.00");
+});
+
 test("crearTicket y baja se serializan con el mismo lock de cliente", async () => {
   const id = await createClient("concurrent");
   const blocker = await pool.connect();
   await blocker.query("BEGIN");
+  await blocker.query("SELECT pg_advisory_xact_lock(240024,$1)", [id]);
   await blocker.query("SELECT id FROM clientes WHERE id=$1 FOR UPDATE", [id]);
   const ticketPromise = json("/tickets", {
     method: "POST",
@@ -196,6 +281,7 @@ test("crearTicket y baja se serializan con el mismo lock de cliente", async () =
       lineas: [{
         rolloId: null,
         productoId: productId,
+         tipo: "METREADO",
         cantidad: 1,
         precioUnitario: 100,
       }],
@@ -224,8 +310,8 @@ test("baja vencida requiere ADMIN activo/motivo y conserva historial como incobr
   const id = await createClient("overdue");
   await credit(id, "80.00", "2020-01-01");
   await pool.query(
-    `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,tipo,subtotal,total,uuid_cliente)
-     VALUES($1,$2,$3,$4,'NORMAL',80,80,$5)`,
+    `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,total,uuid_cliente)
+     VALUES($1,$2,$3,$4,80,80,$5)`,
     [900000 + id, locationId, terminalId, id, randomUUID()],
   );
   let result = await json(`/clientes/${id}/baja`, {
@@ -325,18 +411,5 @@ test("INE: ADMIN, MIME/tamaño, slots/reemplazo, privacidad y auditoría", async
 after(async () => {
   setPrivateObjectStorageForTests(null);
   await new Promise<void>((resolve) => server.close(() => resolve()));
-  await pool.query("DELETE FROM sesiones WHERE usuario_id IN ($1,$2)", [adminId, terminalId]);
-  await pool.query("DELETE FROM cliente_documentos WHERE cliente_id = ANY($1::int[])", [clientIds]);
-  await pool.query("DELETE FROM ticket_pagos WHERE usuario_id IN ($1,$2)", [adminId, terminalId]);
-  await pool.query(
-    "DELETE FROM ticket_lineas WHERE ticket_id IN (SELECT id FROM tickets WHERE cliente_id = ANY($1::int[]))",
-    [clientIds],
-  );
-  await pool.query("DELETE FROM tickets WHERE cliente_id = ANY($1::int[])", [clientIds]);
-  await pool.query("ALTER TABLE movimientos_credito DISABLE TRIGGER movimientos_credito_inmutables");
-  await pool.query("DELETE FROM movimientos_credito WHERE cliente_id = ANY($1::int[])", [clientIds]);
-  await pool.query("ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables");
-  await pool.query("DELETE FROM clientes WHERE id = ANY($1::int[])", [clientIds]);
-  await pool.query("DELETE FROM productos WHERE id=$1", [productId]);
   await pool.end();
 });

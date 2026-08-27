@@ -18,6 +18,8 @@ import {
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { getAdminAlertas } from "../lib/admin-alertas";
+import { centsToMoney } from "../lib/credit-allocation";
+import { loadCustomerCreditProjections } from "../lib/credit-aging-read-model";
 
 const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
@@ -264,39 +266,78 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
         .orderBy(asc(notificacionesSistemaTable.leidaAt), desc(notificacionesSistemaTable.createdAt)),
     ]);
 
-    // Aging is intentionally computed from the ledger's current FIFO balance.
-    // These are not notification records and therefore change as payments and
-    // calendar dates change.
-    const alerts = await pool.query(`
-      WITH notas AS (
-        SELECT a.movimiento_id AS "movimientoId", a.ticket_id AS "ticketId",
-          c.id AS "clienteId", c.nombre AS "clienteNombre", t.folio,
-          a.pendiente::text, a.due_at AS "fechaVencimiento",
-          GREATEST(0, (now() AT TIME ZONE 'America/Mexico_City')::date - a.due_at)::int AS "diasVencido"
+    // Aging is intentionally projected from the immutable ledger's current
+    // FIFO balance.  Notification records are merely a review queue and must
+    // never determine an outstanding amount.
+    const creditRows = await pool.query<{
+      clienteId: number; clienteNombre: string; movimientoId: number;
+      ticketId: number | null; folio: number | null;
+    }>(`SELECT c.id AS "clienteId", c.nombre AS "clienteNombre",
+          m.id AS "movimientoId", m.ticket_id AS "ticketId", t.folio
         FROM clientes c
-        JOIN LATERAL credit_fifo_aging(c.id) a ON true
-        LEFT JOIN tickets t ON t.id = a.ticket_id
-        WHERE a.due_at IS NOT NULL
-      )
-      SELECT * FROM notas
-      WHERE "fechaVencimiento" <= (now() AT TIME ZONE 'America/Mexico_City')::date + 3
-      ORDER BY "fechaVencimiento" ASC, "movimientoId" ASC
-    `);
-    const all = alerts.rows.map((row) => ({
-      ...row,
-      fechaVencimiento: calendarDate(row.fechaVencimiento as string | Date),
-      diasVencido: Number(row.diasVencido),
-      estado: Number(row.diasVencido) > 0 ? "VENCIDA" : "POR_VENCER",
-    }));
+        JOIN movimientos_credito m ON m.cliente_id=c.id
+        LEFT JOIN tickets t ON t.id=m.ticket_id
+        WHERE m.tipo IN ('VENTA_CREDITO','AJUSTE')`);
+    const projections = await loadCustomerCreditProjections(
+      [...new Set(creditRows.rows.map((row) => Number(row.clienteId)))],
+    );
+    const movementMetadata = new Map(
+      creditRows.rows.map((row) => [Number(row.movimientoId), row]),
+    );
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "America/Mexico_City",
+    });
+    const threshold = new Date(
+      Date.parse(`${today}T00:00:00Z`) + 3 * 86_400_000,
+    ).toISOString().slice(0, 10);
+    const all = [...projections].flatMap(([clienteId, projection]) =>
+      projection.charges
+        .filter((charge) => charge.dueAt != null && charge.dueAt <= threshold)
+        .map((charge) => {
+          const metadata = movementMetadata.get(charge.movimientoId);
+          if (!metadata || charge.dueAt == null) {
+            throw new Error(`Missing credit movement metadata: ${charge.movimientoId}`);
+          }
+          const diasVencido = Math.max(0, Math.floor(
+            (Date.parse(`${today}T00:00:00Z`) -
+              Date.parse(`${charge.dueAt}T00:00:00Z`)) / 86_400_000,
+          ));
+          return {
+            movimientoId: charge.movimientoId,
+            ticketId: charge.ticketId,
+            clienteId,
+            clienteNombre: metadata.clienteNombre,
+            folio: metadata.folio == null ? null : Number(metadata.folio),
+            pendiente: centsToMoney(charge.pendienteCents),
+            fechaVencimiento: charge.dueAt,
+            diasVencido,
+            estado: diasVencido > 0 ? "VENCIDA" as const : "POR_VENCER" as const,
+          };
+        }),
+    ).sort((a, b) =>
+      a.fechaVencimiento.localeCompare(b.fechaVencimiento) ||
+      a.movimientoId - b.movimientoId,
+    );
     const overdue = all.filter((row) => row.estado === "VENCIDA");
-    const multiples = await pool.query(`
-      SELECT c.id AS "clienteId", c.nombre AS "clienteNombre",
-        COUNT(*)::int AS "notasVencidas", SUM(a.pendiente)::text AS "saldoVencido"
-      FROM clientes c JOIN LATERAL credit_fifo_aging(c.id) a ON true
-      WHERE a.due_at < (now() AT TIME ZONE 'America/Mexico_City')::date
-      GROUP BY c.id, c.nombre HAVING COUNT(*) > 1
-      ORDER BY MIN(a.due_at) ASC, c.nombre ASC
-    `);
+    const multiples = [...projections].flatMap(([clienteId, projection]) => {
+      const overdueCharges = projection.charges
+        .filter((charge) => charge.dueAt != null && charge.dueAt < today);
+      if (overdueCharges.length <= 1) return [];
+      const metadata = movementMetadata.get(overdueCharges[0]!.movimientoId);
+      if (!metadata) throw new Error(`Missing credit movement metadata: ${overdueCharges[0]!.movimientoId}`);
+      return [{
+        clienteId,
+        clienteNombre: metadata.clienteNombre,
+        notasVencidas: overdueCharges.length,
+        saldoVencido: centsToMoney(overdueCharges.reduce(
+          (sum, charge) => sum + charge.pendienteCents, 0,
+        )),
+        primerVencimiento: overdueCharges.map((charge) => charge.dueAt!).sort()[0]!,
+      }];
+    }).sort((a, b) =>
+      a.primerVencimiento.localeCompare(b.primerVencimiento) ||
+      a.clienteNombre.localeCompare(b.clienteNombre),
+    );
     const parsed = ListNotificacionesResponse.parse({
         notificaciones: notifications.map(present),
         sistema: systemNotifications.map((row) => ({
@@ -306,10 +347,7 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
         })),
         porVencer: all.filter((row) => row.estado === "POR_VENCER"),
         vencidas: overdue,
-        clientesConMultiplesVencidas: multiples.rows.map((row) => ({
-          ...row,
-          notasVencidas: Number(row.notasVencidas),
-        })),
+        clientesConMultiplesVencidas: multiples.map(({ primerVencimiento: _first, ...row }) => row),
       });
     res.json({
       ...parsed,
