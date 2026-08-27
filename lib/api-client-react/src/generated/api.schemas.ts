@@ -1355,6 +1355,7 @@ export interface Cliente {
   esSistema: boolean;
   /** @nullable */
   contactoNombre?: string | null;
+  recibeNotaSinPrecios: boolean;
   /** @minimum 0 */
   diasCredito?: number;
   createdAt: string;
@@ -1393,6 +1394,7 @@ export interface ClienteInput {
      * @nullable
      */
   diasCredito?: number | null;
+  recibeNotaSinPrecios?: boolean;
 }
 
 export interface ClienteDuplicateError {
@@ -1443,6 +1445,7 @@ export interface ClienteUpdate {
   activo?: boolean;
   /** @nullable */
   contactoNombre?: string | null;
+  recibeNotaSinPrecios?: boolean;
 }
 
 export type ClienteCreditoAntiguedadItem = { [key: string]: unknown };
@@ -1759,6 +1762,7 @@ export interface TicketResumen {
   clienteId: number | null;
   /** @nullable */
   nombreCliente: string | null;
+  notaSinPrecios: boolean;
   /** @nullable */
   direccionEntregaEfectiva?: string | null;
   subtotal: string;
@@ -3993,6 +3997,8 @@ export interface TicketInput {
   /** @minimum 1 */
   clienteId: number;
   documentoTipo?: DocumentoTipoTicket;
+  /** Solo aplica a NOTA; la copia CLIENTE omite estructuralmente los importes. */
+  notaSinPrecios?: boolean;
   /**
      * Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
      * @nullable
@@ -4064,6 +4070,82 @@ export interface TicketCajaResumen {
   cobradoAt: string | null;
   formasPago: FormaPagoTicket[];
 }
+
+export type TicketDocumentoImpresionBaseCopia = typeof TicketDocumentoImpresionBaseCopia[keyof typeof TicketDocumentoImpresionBaseCopia];
+
+
+export const TicketDocumentoImpresionBaseCopia = {
+  INTERNA: 'INTERNA',
+  CLIENTE: 'CLIENTE',
+} as const;
+
+export interface TicketDocumentoImpresionBase {
+  ticketId: number;
+  folio: number;
+  copia: TicketDocumentoImpresionBaseCopia;
+  documentoTipo: DocumentoTipoTicket;
+  notaSinPrecios: boolean;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  createdAt: string;
+  estado: EstadoTicket;
+  clienteId: number;
+  /** @nullable */
+  nombreCliente: string | null;
+  /** @nullable */
+  nombreDestinatario: string | null;
+  /** @nullable */
+  direccionEntregaSnapshot: string | null;
+  /** @nullable */
+  direccionEntregaEfectiva: string | null;
+  /** @nullable */
+  telefonoCliente: string | null;
+  /** @nullable */
+  correoCliente: string | null;
+  /** @nullable */
+  direccionFiscalEfectiva: string | null;
+}
+
+export interface TicketLineaImpresionBase {
+  productoId: number;
+  tipo: TipoTicket;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: UnidadProducto;
+  cantidad: string;
+}
+
+export type TicketLineaImpresionConPrecios = TicketLineaImpresionBase & {
+  precioUnitario: string;
+  precioSugerido: string;
+  importe: string;
+};
+
+export type TicketDocumentoImpresionConPrecios = TicketDocumentoImpresionBase & ({
+  subtotal: string;
+  iva: string;
+  tasaIva: string;
+  total: string;
+  esCredito: boolean;
+  /** @nullable */
+  diasCreditoCliente: number | null;
+  /** @nullable */
+  fechaVencimiento: string | null;
+  saldoPendiente: string;
+  lineas: TicketLineaImpresionConPrecios[];
+});
+
+export type TicketLineaImpresionSinPrecios = TicketLineaImpresionBase;
+
+export type TicketDocumentoImpresionSinPrecios = TicketDocumentoImpresionBase & {
+  copia: 'CLIENTE';
+  documentoTipo: 'NOTA';
+  notaSinPrecios: true;
+  lineas: TicketLineaImpresionSinPrecios[];
+};
+
+export type TicketDocumentoImpresion = TicketDocumentoImpresionConPrecios | TicketDocumentoImpresionSinPrecios;
 
 export interface SesionCajaAperturaInput {
   /** @minimum 0 */
@@ -4732,6 +4814,18 @@ ubicacionId?: number;
 export type ListarTicketsCajaParams = {
 ubicacionId?: number;
 };
+
+export type ObtenerDocumentoImpresionTicketParams = {
+copia: ObtenerDocumentoImpresionTicketCopia;
+};
+
+export type ObtenerDocumentoImpresionTicketCopia = typeof ObtenerDocumentoImpresionTicketCopia[keyof typeof ObtenerDocumentoImpresionTicketCopia];
+
+
+export const ObtenerDocumentoImpresionTicketCopia = {
+  INTERNA: 'INTERNA',
+  CLIENTE: 'CLIENTE',
+} as const;
 
 export type ObtenerSesionCajaActualParams = {
 ubicacionId?: number;

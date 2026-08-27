@@ -27,6 +27,7 @@ export interface Cliente {
   esSistema: boolean;
   /** @nullable */
   contactoNombre?: string | null;
+  recibeNotaSinPrecios: boolean;
   /** @minimum 0 */
   diasCredito?: number;
   createdAt: Date;

@@ -26,6 +26,7 @@ import {
   ListarTicketsResponse,
   ObtenerCorteCajaParams,
   ObtenerCorteCajaResponse,
+  ObtenerDocumentoImpresionTicketQueryParams,
   ObtenerSesionCajaActualQueryParams,
   ObtenerSesionCajaActualResponse,
   ObtenerTicketParams,
@@ -65,6 +66,7 @@ import {
   listarTicketsPendientesCaja,
   listarSesionesCajaHistorial,
   PosError,
+  projectTicketPrintDocument,
   validarPrecioPos,
 } from "../lib/pos";
 import { normalizeUsername } from "../lib/auth-identifiers";
@@ -281,6 +283,17 @@ router.post(
   requierePermiso("pos", "crear"),
   async (req, res, next): Promise<void> => {
     try {
+      const notaSinPrecios = (req.body as Record<string, unknown>)
+        .notaSinPrecios;
+      if (
+        notaSinPrecios !== undefined &&
+        typeof notaSinPrecios !== "boolean"
+      ) {
+        throw new PosError(
+          "notaSinPrecios debe ser booleano.",
+          "INVALID_NOTA_SIN_PRECIOS",
+        );
+      }
       const body = CrearTicketBody.parse(req.body);
       if (body.clienteId == null) {
         throw new PosError(
@@ -299,6 +312,7 @@ router.post(
             usuarioTerminalId: req.auth!.user.id,
             clienteId: body.clienteId,
             documentoTipo: body.documentoTipo,
+            notaSinPrecios: notaSinPrecios === true,
             nombreDestinatario: body.nombreDestinatario,
             direccionEntregaSnapshot: body.direccionEntregaSnapshot,
             tipo: body.tipo,
@@ -364,6 +378,7 @@ router.get(
           nombreUsuarioTerminal: usuariosTable.nombre,
           clienteId: ticketsTable.clienteId,
           nombreCliente: clientesTable.nombre,
+           notaSinPrecios: ticketsTable.notaSinPrecios,
           subtotal: ticketsTable.subtotal,
           iva: ticketsTable.iva,
           tasaIva: ticketsTable.tasaIva,
@@ -492,6 +507,31 @@ router.get(
         sesionCajaId: sesion.id,
       });
       res.json(ListarTicketsCajaResponse.parse(tickets));
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
+router.get(
+  "/tickets/:id/documento-impresion",
+  requiereAlguno([
+    { modulo: "pos", accion: "ver" },
+    { modulo: "cobros_pagos", accion: "ver" },
+  ]),
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = ObtenerTicketParams.parse(req.params);
+      const { copia } = ObtenerDocumentoImpresionTicketQueryParams.parse(
+        req.query,
+      );
+      const ticket = await buildTicketDetail(db, params.id, false);
+      if (!ticket) {
+        res.status(404).json({ error: "Ticket no encontrado." });
+        return;
+      }
+      assertOperationalLocation(req, ticket.ubicacionId);
+      res.json(projectTicketPrintDocument(ticket, copia));
     } catch (error) {
       handlePosError(error, res, next);
     }

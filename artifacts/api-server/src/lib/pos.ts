@@ -74,6 +74,7 @@ export type CrearTicketInput = {
   usuarioTerminalId: number;
   clienteId: number;
   documentoTipo?: "TICKET" | "NOTA";
+  notaSinPrecios?: boolean;
   nombreDestinatario?: string | null;
   direccionEntregaSnapshot?: string | null;
   /** Legacy request default; new callers should send tipo on every line. */
@@ -186,11 +187,13 @@ export async function buildTicketDetail(
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
       documentoTipo: ticketsTable.documentoTipo,
+      notaSinPrecios: ticketsTable.notaSinPrecios,
       nombreDestinatario: ticketsTable.nombreDestinatario,
       direccionEntregaSnapshot: ticketsTable.direccionEntregaSnapshot,
       diasCreditoCliente: clientesTable.diasCredito,
       telefonoCliente: clientesTable.telefono,
       correoCliente: clientesTable.correo,
+      direccionFiscalEfectiva: clientesTable.direccionParticular,
       direccionCliente: sql<string | null>`COALESCE(
         NULLIF(btrim(${clientesTable.direccionEntrega}), ''),
         NULLIF(btrim(${clientesTable.direccionParticular}), '')
@@ -346,6 +349,81 @@ export async function buildTicketDetail(
   };
 }
 
+export type TicketPrintCopy = "INTERNA" | "CLIENTE";
+
+/**
+ * Deliberate, allow-list print projection.  This is separate from the in-app
+ * detail because issued customer copies must never inherit roll serials or,
+ * for a price-less note, any economic field.
+ */
+export function projectTicketPrintDocument(
+  ticket: Awaited<ReturnType<typeof buildTicketDetail>>,
+  copia: TicketPrintCopy,
+) {
+  if (!ticket) return null;
+  const identidad = {
+    ticketId: ticket.id,
+    folio: ticket.folio,
+    copia,
+    documentoTipo: ticket.documentoTipo,
+    notaSinPrecios: ticket.notaSinPrecios,
+    ubicacionId: ticket.ubicacionId,
+    nombreUbicacion: ticket.nombreUbicacion,
+    createdAt: ticket.createdAt,
+    estado: ticket.estado,
+    clienteId: ticket.clienteId,
+    nombreCliente: ticket.nombreCliente,
+    nombreDestinatario: ticket.nombreDestinatario,
+    direccionEntregaSnapshot: ticket.direccionEntregaSnapshot,
+    direccionEntregaEfectiva: ticket.direccionEntregaEfectiva,
+    telefonoCliente: ticket.telefonoCliente,
+    correoCliente: ticket.correoCliente,
+    direccionFiscalEfectiva: ticket.direccionFiscalEfectiva,
+  };
+  const sinPrecios =
+    copia === "CLIENTE" &&
+    ticket.documentoTipo === "NOTA" &&
+    ticket.notaSinPrecios;
+  if (sinPrecios) {
+    return {
+      ...identidad,
+      lineas: ticket.lineas.map((linea) => ({
+        productoId: linea.productoId,
+        tipo: linea.tipo,
+        skuProducto: linea.skuProducto,
+        telaProducto: linea.telaProducto,
+        colorProducto: linea.colorProducto,
+        unidadProducto: linea.unidadProducto,
+        cantidad: linea.cantidad,
+      })),
+    };
+  }
+  const pricedLines = ticket.lineas.map((linea) => ({
+    productoId: linea.productoId,
+    tipo: linea.tipo,
+    skuProducto: linea.skuProducto,
+    telaProducto: linea.telaProducto,
+    colorProducto: linea.colorProducto,
+    unidadProducto: linea.unidadProducto,
+    cantidad: linea.cantidad,
+    precioUnitario: linea.precioUnitario,
+    precioSugerido: linea.precioSugerido,
+    importe: linea.importe,
+  }));
+  return {
+    ...identidad,
+    lineas: pricedLines,
+    subtotal: ticket.subtotal,
+    iva: ticket.iva,
+    tasaIva: ticket.tasaIva,
+    total: ticket.total,
+    esCredito: ticket.esCredito,
+    diasCreditoCliente: ticket.diasCreditoCliente,
+    fechaVencimiento: ticket.fechaVencimiento,
+    saldoPendiente: ticket.saldoPendiente,
+  };
+}
+
 export async function validarPrecioPos(
   database: Reader,
   input: {
@@ -477,6 +555,8 @@ export async function crearTicket(
     throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
   }
   const documentoTipo = input.documentoTipo ?? "TICKET";
+  const notaSinPrecios =
+    documentoTipo === "NOTA" && input.notaSinPrecios === true;
   const nombreDestinatario = input.nombreDestinatario?.trim() || null;
   const direccionEntregaSnapshot =
     input.direccionEntregaSnapshot?.trim() || null;
@@ -725,6 +805,7 @@ export async function crearTicket(
       usuarioTerminalId: input.usuarioTerminalId,
       clienteId: input.clienteId,
       documentoTipo,
+      notaSinPrecios,
       nombreDestinatario,
       direccionEntregaSnapshot,
       subtotal: decimalMoney(subtotalCents),
@@ -776,6 +857,7 @@ export async function crearTicket(
       iva: decimalMoney(ivaCents),
       total: decimalMoney(totalCents),
       documentoTipo,
+       notaSinPrecios,
       nombreDestinatario,
       direccionEntregaSnapshot,
       lineas: input.lineas.length,
@@ -1259,6 +1341,7 @@ export async function listarTicketsPendientesCaja(
       nombreUsuarioTerminal: usuariosTable.nombre,
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
+      notaSinPrecios: ticketsTable.notaSinPrecios,
       subtotal: ticketsTable.subtotal,
       iva: ticketsTable.iva,
       tasaIva: ticketsTable.tasaIva,

@@ -38,4 +38,5 @@ export interface ClienteInput {
      * @nullable
      */
   diasCredito?: number | null;
+  recibeNotaSinPrecios?: boolean;
 }

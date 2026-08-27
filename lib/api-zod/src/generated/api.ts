@@ -3162,6 +3162,7 @@ export const ListCuentasIncobrablesResponse = zod.object({
 /**
  * @summary Lista el catálogo operativo de clientes (sin datos financieros)
  */
+export const listClientesResponseRecibeNotaSinPreciosDefault = false;
 export const listClientesResponseDiasCreditoMin = 0;
 
 
@@ -3179,6 +3180,7 @@ export const ListClientesResponseItem = zod.object({
   "activo": zod.boolean(),
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
+  "recibeNotaSinPrecios": zod.boolean().default(listClientesResponseRecibeNotaSinPreciosDefault),
   "diasCredito": zod.number().min(listClientesResponseDiasCreditoMin).optional(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -3194,7 +3196,7 @@ export const createClienteBodyNombreMax = 200;
 export const createClienteBodyLimiteCreditoRegExp = new RegExp('^\\d+(\\.\\d{1,2})?$');
 export const createClienteBodyDiasCreditoMin = 0;
 
-
+export const createClienteBodyRecibeNotaSinPreciosDefault = false;
 
 export const CreateClienteBody = zod.object({
   "nombre": zod.string().min(1).max(createClienteBodyNombreMax),
@@ -3207,9 +3209,11 @@ export const CreateClienteBody = zod.object({
   "notas": zod.string().nullish(),
   "contactoNombre": zod.string().nullish(),
   "limiteCredito": zod.string().regex(createClienteBodyLimiteCreditoRegExp).nullish(),
-  "diasCredito": zod.number().min(createClienteBodyDiasCreditoMin).nullish()
+  "diasCredito": zod.number().min(createClienteBodyDiasCreditoMin).nullish(),
+  "recibeNotaSinPrecios": zod.boolean().default(createClienteBodyRecibeNotaSinPreciosDefault)
 })
 
+export const createClienteResponseRecibeNotaSinPreciosDefault = false;
 export const createClienteResponseDiasCreditoMin = 0;
 
 
@@ -3227,6 +3231,7 @@ export const CreateClienteResponse = zod.object({
   "activo": zod.boolean(),
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
+  "recibeNotaSinPrecios": zod.boolean().default(createClienteResponseRecibeNotaSinPreciosDefault),
   "diasCredito": zod.number().min(createClienteResponseDiasCreditoMin).optional(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -3292,6 +3297,7 @@ export const GetClienteParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getClienteResponseRecibeNotaSinPreciosDefault = false;
 export const getClienteResponseDiasCreditoMin = 0;
 
 
@@ -3309,6 +3315,7 @@ export const GetClienteResponse = zod.object({
   "activo": zod.boolean(),
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
+  "recibeNotaSinPrecios": zod.boolean().default(getClienteResponseRecibeNotaSinPreciosDefault),
   "diasCredito": zod.number().min(getClienteResponseDiasCreditoMin).optional(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -3336,9 +3343,11 @@ export const UpdateClienteBody = zod.object({
   "rfc": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean().optional(),
-  "contactoNombre": zod.string().nullish()
+  "contactoNombre": zod.string().nullish(),
+  "recibeNotaSinPrecios": zod.boolean().optional()
 })
 
+export const updateClienteResponseRecibeNotaSinPreciosDefault = false;
 export const updateClienteResponseDiasCreditoMin = 0;
 
 
@@ -3356,6 +3365,7 @@ export const UpdateClienteResponse = zod.object({
   "activo": zod.boolean(),
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
+  "recibeNotaSinPrecios": zod.boolean().default(updateClienteResponseRecibeNotaSinPreciosDefault),
   "diasCredito": zod.number().min(updateClienteResponseDiasCreditoMin).optional(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -3735,6 +3745,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -4272,6 +4283,7 @@ export const MarkNotificacionReadResponse = zod.object({
  */
 
 export const crearTicketBodyDocumentoTipoDefault = `TICKET`;
+export const crearTicketBodyNotaSinPreciosDefault = false;
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
 
 export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
@@ -4284,6 +4296,7 @@ export const CrearTicketBody = zod.object({
   "ubicacionId": zod.number(),
   "clienteId": zod.number().min(1),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).default(crearTicketBodyDocumentoTipoDefault).describe('Tipo documental persistido del comprobante de venta.'),
+  "notaSinPrecios": zod.boolean().default(crearTicketBodyNotaSinPreciosDefault).describe('Solo aplica a NOTA; la copia CLIENTE omite estructuralmente los importes.'),
   "nombreDestinatario": zod.string().nullish().describe('Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.'),
   "direccionEntregaSnapshot": zod.string().nullish().describe('Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.'),
   "tipo": zod.enum(['NORMAL', 'METREADO']).optional().describe('Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.'),
@@ -4306,6 +4319,7 @@ export const CrearTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -4395,6 +4409,7 @@ export const ListarTicketsResponseItem = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -4436,6 +4451,7 @@ export const ListarTicketsPendientesResponseItem = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -4500,6 +4516,7 @@ export const ObtenerTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -4571,6 +4588,91 @@ export const ObtenerTicketResponse = zod.object({
 
 
 /**
+ * @summary Obtiene la proyección segura para impresión de un comprobante
+ */
+export const ObtenerDocumentoImpresionTicketParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ObtenerDocumentoImpresionTicketQueryParams = zod.object({
+  "copia": zod.enum(['INTERNA', 'CLIENTE'])
+})
+
+export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "copia": zod.enum(['INTERNA', 'CLIENTE']),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "notaSinPrecios": zod.boolean(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "clienteId": zod.number(),
+  "nombreCliente": zod.string().nullable(),
+  "nombreDestinatario": zod.string().nullable(),
+  "direccionEntregaSnapshot": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullable(),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionFiscalEfectiva": zod.string().nullable()
+}).and(zod.object({
+  "subtotal": zod.string(),
+  "iva": zod.string(),
+  "tasaIva": zod.string(),
+  "total": zod.string(),
+  "esCredito": zod.boolean(),
+  "diasCreditoCliente": zod.number().nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO']),
+  "cantidad": zod.string()
+}).and(zod.object({
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string()
+})))
+})),zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "copia": zod.enum(['INTERNA', 'CLIENTE']),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "notaSinPrecios": zod.boolean(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "clienteId": zod.number(),
+  "nombreCliente": zod.string().nullable(),
+  "nombreDestinatario": zod.string().nullable(),
+  "direccionEntregaSnapshot": zod.string().nullable(),
+  "direccionEntregaEfectiva": zod.string().nullable(),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionFiscalEfectiva": zod.string().nullable()
+}).and(zod.object({
+  "copia": zod.literal("CLIENTE"),
+  "documentoTipo": zod.literal("NOTA"),
+  "notaSinPrecios": zod.literal(true),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO']),
+  "cantidad": zod.string()
+}))
+}))])
+
+
+/**
  * @summary Cancela un ticket y revierte sus movimientos
  */
 export const CancelarTicketParams = zod.object({
@@ -4602,6 +4704,7 @@ export const CancelarTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
@@ -4711,6 +4814,7 @@ export const CobrarTicketResponse = zod.object({
   "nombreUsuarioTerminal": zod.string(),
   "clienteId": zod.number().nullable(),
   "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
   "direccionEntregaEfectiva": zod.string().nullish(),
   "subtotal": zod.string(),
   "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),

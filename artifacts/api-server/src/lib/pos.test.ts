@@ -32,6 +32,7 @@ import {
   listarTicketsCajaOperativa,
   listarTicketsPendientesCaja,
   PosError,
+  projectTicketPrintDocument,
   quantityTimesMoneyCents,
   validarPrecioPos,
 } from "./pos";
@@ -193,6 +194,7 @@ async function sale(input: {
   tipo?: "NORMAL" | "METREADO";
   clienteId?: number | null;
   documentoTipo?: "TICKET" | "NOTA";
+  notaSinPrecios?: boolean;
   nombreDestinatario?: string | null;
   direccionEntregaSnapshot?: string | null;
   facturado?: boolean;
@@ -206,6 +208,7 @@ async function sale(input: {
         usuarioTerminalId: USER_ID,
         clienteId: input.clienteId ?? 1,
         documentoTipo: input.documentoTipo,
+        notaSinPrecios: input.notaSinPrecios,
         nombreDestinatario: input.nombreDestinatario,
         direccionEntregaSnapshot: input.direccionEntregaSnapshot,
         tipo: input.tipo ?? "NORMAL",
@@ -305,6 +308,62 @@ await test("POS documento NOTA de Venta a Público exige instantáneas de entreg
   assert.equal(nota.nombreDestinatario, "Ana Pérez");
   assert.equal(nota.direccionEntregaSnapshot, "Calle Uno 1");
   assert.equal(nota.direccionEntregaEfectiva, "Calle Uno 1");
+});
+
+await test("POS impresión de nota sin precios omite toda economía y la interna la conserva", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId);
+  const nota = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    cantidad: "10",
+    precio: "75",
+    documentoTipo: "NOTA",
+    notaSinPrecios: true,
+    nombreDestinatario: "Ana Pérez",
+    direccionEntregaSnapshot: "Calle Uno 1",
+  });
+  assert.equal(nota.notaSinPrecios, true);
+  const cliente = projectTicketPrintDocument(nota, "CLIENTE")!;
+  const interna = projectTicketPrintDocument(nota, "INTERNA")!;
+  const economicKeys = new Set([
+    "precioUnitario", "precioSugerido", "importe", "subtotal", "iva",
+    "tasaIva", "total", "costoUnitarioCongelado", "costoTotalCongelado",
+    "costoFuente", "margen", "saldoPendiente",
+  ]);
+  const assertNoEconomicKeys = (value: unknown): void => {
+    if (Array.isArray(value)) value.forEach(assertNoEconomicKeys);
+    else if (value && typeof value === "object") {
+      for (const [key, child] of Object.entries(value)) {
+        assert.equal(economicKeys.has(key), false, `Unexpected economic key ${key}`);
+        assertNoEconomicKeys(child);
+      }
+    }
+  };
+  assertNoEconomicKeys(cliente);
+  const assertNoPrivateCostKeys = (value: unknown): void => {
+    if (Array.isArray(value)) value.forEach(assertNoPrivateCostKeys);
+    else if (value && typeof value === "object") {
+      for (const [key, child] of Object.entries(value)) {
+        assert.equal(
+          ["costoUnitarioCongelado", "costoTotalCongelado", "costoFuente", "margen"].includes(key),
+          false,
+          `Unexpected private cost key ${key}`,
+        );
+        assertNoPrivateCostKeys(child);
+      }
+    }
+  };
+  assertNoPrivateCostKeys(interna);
+  assert.equal("serieRollo" in cliente.lineas[0]!, false);
+  assert.equal("subtotal" in interna, true);
+  assert.equal("saldoPendiente" in interna, true);
+  assert.equal("precioUnitario" in interna.lineas[0]!, true);
+  assert.equal("importe" in interna.lineas[0]!, true);
+  assert.equal("costoUnitarioCongelado" in interna.lineas[0]!, false);
+  assert.equal("serieRollo" in interna.lineas[0]!, false);
 });
 
 await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", async () => {

@@ -167,6 +167,7 @@ import type {
   NotificacionesNoLeidasCount,
   NotificacionesPanel,
   NotificationFeed,
+  ObtenerDocumentoImpresionTicketParams,
   ObtenerSesionCajaActualParams,
   PagoProveedorInput,
   PagoProveedorRow,
@@ -229,6 +230,7 @@ import type {
   TicketCancelacionInput,
   TicketCobroInput,
   TicketDetalle,
+  TicketDocumentoImpresion,
   TicketInput,
   TicketResumen,
   UbicacionInventario,
@@ -10060,6 +10062,95 @@ export function useObtenerTicket<TData = Awaited<ReturnType<typeof obtenerTicket
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getObtenerTicketQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getObtenerDocumentoImpresionTicketUrl = (id: number,
+    params: ObtenerDocumentoImpresionTicketParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/tickets/${id}/documento-impresion?${stringifiedParams}` : `/api/tickets/${id}/documento-impresion`
+}
+
+/**
+ * @summary Obtiene la proyección segura para impresión de un comprobante
+ */
+export const obtenerDocumentoImpresionTicket = async (id: number,
+    params: ObtenerDocumentoImpresionTicketParams, options?: Parameters<typeof customFetch>[1]): Promise<TicketDocumentoImpresion> => {
+
+  return customFetch<TicketDocumentoImpresion>(getObtenerDocumentoImpresionTicketUrl(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerDocumentoImpresionTicketQueryKey = (id: number,
+    params?: ObtenerDocumentoImpresionTicketParams,) => {
+    return [
+    `/api/tickets/${id}/documento-impresion`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getObtenerDocumentoImpresionTicketQueryOptions = <TData = Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    params: ObtenerDocumentoImpresionTicketParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerDocumentoImpresionTicketQueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>> = ({ signal }) => obtenerDocumentoImpresionTicket(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerDocumentoImpresionTicketQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>>
+export type ObtenerDocumentoImpresionTicketQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene la proyección segura para impresión de un comprobante
+ */
+
+export function useObtenerDocumentoImpresionTicket<TData = Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number,
+    params: ObtenerDocumentoImpresionTicketParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerDocumentoImpresionTicket>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerDocumentoImpresionTicketQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

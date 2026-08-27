@@ -71,6 +71,7 @@ function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {
     activo: row.activo,
     esSistema: row.esSistema,
     contactoNombre: row.contactoNombre,
+    recibeNotaSinPrecios: row.recibeNotaSinPrecios,
     diasCredito: row.diasCredito,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -288,7 +289,7 @@ router.post(
   requierePermiso("clientes", "crear"),
   async (req, res, next): Promise<void> => {
     try {
-      const { nombre, telefono, correo, direccion, direccionParticular, direccionEntrega, rfc, notas, contactoNombre, diasCredito, limiteCredito } =
+      const { nombre, telefono, correo, direccion, direccionParticular, direccionEntrega, rfc, notas, contactoNombre, recibeNotaSinPrecios, diasCredito, limiteCredito } =
         req.body as Record<string, unknown>;
       const direccionParticularInput =
         direccionParticular !== undefined ? direccionParticular : direccion;
@@ -306,6 +307,13 @@ router.post(
 
       if (typeof nombre !== "string" || nombre.trim().length < 1) {
         res.status(400).json({ error: "El nombre es obligatorio." });
+        return;
+      }
+      if (
+        recibeNotaSinPrecios !== undefined &&
+        typeof recibeNotaSinPrecios !== "boolean"
+      ) {
+        res.status(400).json({ error: "recibeNotaSinPrecios debe ser booleano." });
         return;
       }
       const normalizedName = nombre.trim();
@@ -345,6 +353,7 @@ router.post(
           notas: typeof notas === "string" ? notas.trim() || null : null,
           contactoNombre:
             typeof contactoNombre === "string" ? contactoNombre.trim() || null : null,
+          recibeNotaSinPrecios: recibeNotaSinPrecios === true,
           limiteCredito: creditTerms.limiteCredito,
           diasCredito: creditTerms.diasCredito,
         })
@@ -691,7 +700,7 @@ router.patch(
         return;
       }
 
-      const { nombre, telefono, correo, direccion, direccionParticular, direccionEntrega, rfc, notas, activo, contactoNombre, diasCredito, limiteCredito } =
+      const { nombre, telefono, correo, direccion, direccionParticular, direccionEntrega, rfc, notas, activo, contactoNombre, recibeNotaSinPrecios, diasCredito, limiteCredito } =
         req.body as Record<string, unknown>;
       const direccionParticularInput =
         direccionParticular !== undefined ? direccionParticular : direccion;
@@ -718,6 +727,13 @@ router.patch(
         });
         return;
       }
+      if (
+        recibeNotaSinPrecios !== undefined &&
+        typeof recibeNotaSinPrecios !== "boolean"
+      ) {
+        res.status(400).json({ error: "recibeNotaSinPrecios debe ser booleano." });
+        return;
+      }
 
       const updates: Partial<typeof clientesTable.$inferInsert> = {};
       if (typeof nombre === "string") updates.nombre = nombre.trim();
@@ -735,6 +751,8 @@ router.patch(
         updates.notas = notas as string | null;
       if (typeof contactoNombre === "string" || contactoNombre === null)
         updates.contactoNombre = contactoNombre as string | null;
+      if (typeof recibeNotaSinPrecios === "boolean")
+        updates.recibeNotaSinPrecios = recibeNotaSinPrecios;
 
       if (Object.keys(updates).length === 0) {
         res.status(400).json({ error: "No se enviaron cambios." });

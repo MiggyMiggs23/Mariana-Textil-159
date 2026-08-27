@@ -16,6 +16,8 @@ export interface TicketInput {
   /** @minimum 1 */
   clienteId: number;
   documentoTipo?: DocumentoTipoTicket;
+  /** Solo aplica a NOTA; la copia CLIENTE omite estructuralmente los importes. */
+  notaSinPrecios?: boolean;
   /**
      * Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
      * @nullable

@@ -9,6 +9,11 @@ import {
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
   TicketDetalle,
+  useObtenerDocumentoImpresionTicket,
+  TicketDocumentoImpresion,
+  TicketDocumentoImpresionConPrecios,
+  TicketDocumentoImpresionSinPrecios,
+  getObtenerDocumentoImpresionTicketQueryKey,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +26,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, ArrowLeft, Printer, Ban, ShieldAlert, FileText, Phone, MapPin, Mail, Hash, Calendar, Clock, User } from "lucide-react";
+import { Loader2, ArrowLeft, Printer, Ban, ShieldAlert, FileText, Phone, MapPin, Hash, Calendar, Clock, User } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -37,12 +42,11 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber } from "@workspace/number-format";
-import { groupTicketLinesByModality } from "@/lib/ticket-lines";
+import { groupTicketLinesByModality, groupPrintLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { BrandLogo } from "@/components/brand-logo";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
-import { useGetClienteNotaCredito, getGetClienteNotaCreditoQueryKey } from "@workspace/api-client-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
 
@@ -77,6 +81,22 @@ export default function TicketDetailPage() {
     },
   });
 
+  const isNota = ticket ? (ticket as TicketDetalle).documentoTipo === "NOTA" : false;
+
+  const { data: printInterna, isLoading: printInternaLoading, isError: printInternaError } = useObtenerDocumentoImpresionTicket(
+    ticketId,
+    { copia: 'INTERNA' },
+    { query: { enabled: !!ticket && isNota, staleTime: Infinity, queryKey: getObtenerDocumentoImpresionTicketQueryKey(ticketId, { copia: 'INTERNA' }) } }
+  );
+
+  const { data: printCliente, isLoading: printClienteLoading, isError: printClienteError } = useObtenerDocumentoImpresionTicket(
+    ticketId,
+    { copia: 'CLIENTE' },
+    { query: { enabled: !!ticket && isNota, staleTime: Infinity, queryKey: getObtenerDocumentoImpresionTicketQueryKey(ticketId, { copia: 'CLIENTE' }) } }
+  );
+
+  const isPrintReady = !isNota || (!!printInterna && !!printCliente);
+
   const cancelarTicket = useCancelarTicket();
   const autoPrintStarted = useRef(false);
   const reimprimirNota = useReimprimirClienteNota();
@@ -88,14 +108,14 @@ export default function TicketDetailPage() {
   useEffect(() => {
     if (
       !ticket ||
+      !isPrintReady ||
       autoPrintStarted.current ||
       new URLSearchParams(window.location.search).get("print") !== "3"
     )
       return;
     autoPrintStarted.current = true;
 
-    const esCredito = (ticket as TicketDetalle).esCredito;
-    const printClass = esCredito ? "print-credito" : "print-80mm";
+    const printClass = isNota ? "print-credito" : "print-80mm";
 
     document.body.classList.add(printClass);
     const timers = [250, 900, 1550].map((delay) =>
@@ -108,7 +128,7 @@ export default function TicketDetailPage() {
       }, 2200),
     );
     return () => timers.forEach(window.clearTimeout);
-  }, [ticket]);
+  }, [ticket, isPrintReady, isNota]);
 
   const handlePrint80mm = () => {
     document.body.classList.add("print-80mm");
@@ -126,7 +146,8 @@ export default function TicketDetailPage() {
     }, 1000);
   };
 
-  const handlePrintCredito = () => {
+  const handlePrintNota = () => {
+    if (!isPrintReady) return;
     if (ticket?.clienteId && (ticket as TicketDetalle).esCredito) {
       reimprimirNota.mutate({ id: ticket.clienteId, ticketId }, {
         onSuccess: () => {
@@ -289,9 +310,9 @@ export default function TicketDetailPage() {
               <Ban className="h-4 w-4 mr-2" /> Cancelar Ticket
             </Button>
           )}
-          {(ticket as TicketDetalle).esCredito ? (
-            <Button className="w-full sm:w-auto" onClick={handlePrintCredito}>
-              <FileText className="h-4 w-4 mr-2" /> Imprimir Nota de Crédito
+          {isNota ? (
+            <Button className="w-full sm:w-auto" onClick={handlePrintNota} disabled={!isPrintReady || printInternaLoading || printClienteLoading}>
+              <FileText className="h-4 w-4 mr-2" /> Imprimir Nota
             </Button>
           ) : (
             <>
@@ -818,14 +839,18 @@ export default function TicketDetailPage() {
         </div>
       </div>
 
-      {/* Nota de Crédito */}
+      {/* Nota Print Pages */}
       <div className="hidden print-credito-only w-full max-w-none">
-        {[true, false].map((isInternal, idx) => {
-          const detail = ticket as TicketDetalle;
-          if (!detail.esCredito) return null;
+        {isPrintReady && [printInterna, printCliente].map((printData, idx) => {
+          if (!printData) return null;
 
+          const isInternal = printData.copia === "INTERNA";
           const qrUrl = typeof window !== "undefined" ? new URL(`/cobros?tab=cartera&ticketId=${ticket.id}`, window.location.origin).toString() : "";
-          const pageTitle = "NOTA DE CRÉDITO";
+          const isPriceless = !isInternal && printData.notaSinPrecios;
+          const pageTitle = isPriceless ? "NOTA DE PRODUCTOS" : printData.documentoTipo === "NOTA" ? "NOTA" : "TICKET";
+
+          // Group lines according to the print data
+          const { rollos: projRollos, metraje: projMetraje } = groupPrintLinesByModality(printData.lineas);
 
           return (
             <div
@@ -834,7 +859,7 @@ export default function TicketDetailPage() {
                 idx === 0 ? "page-break" : ""
               }`}
             >
-              {ticket.estado === EstadoTicket.CANCELADO && (
+              {printData.estado === EstadoTicket.CANCELADO && (
                 <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
                   <span className="text-9xl font-black text-red-600 rotate-[-30deg] tracking-widest border-8 border-red-600 p-8 rounded-3xl">
                     CANCELADO
@@ -870,7 +895,7 @@ export default function TicketDetailPage() {
                   )}
                   <div className="text-right">
                     <div className="text-gray-500 text-xs font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
-                    <div className="text-xs font-semibold mt-1">{ticket.nombreUbicacion}</div>
+                    <div className="text-xs font-semibold mt-1">{printData.nombreUbicacion}</div>
                   </div>
                   <div className="w-px h-10 bg-gray-300"></div>
                   <BrandLogo variant="mark" className="w-10 h-10" />
@@ -883,35 +908,44 @@ export default function TicketDetailPage() {
                   <div className="flex items-center border-b border-gray-200 pb-0.5">
                     <User className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Cliente</span>
-                    <span className="font-medium text-xs text-black truncate">{customerName}</span>
+                    <span className="font-medium text-xs text-black truncate">{printData.clienteId === 1 ? "VENTA AL PÚBLICO" : printData.nombreCliente || `Cliente #${printData.clienteId}`}</span>
                   </div>
                   <div className="flex items-center border-b border-gray-200 pb-0.5">
                     <Hash className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Folio Venta</span>
-                    <span className="font-bold text-xs text-red-600">{ticket.folio}</span>
+                    <span className="font-bold text-xs text-red-600">{printData.folio}</span>
                   </div>
                   <div className="flex items-center border-b border-gray-200 pb-0.5">
                     <Phone className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Contacto</span>
-                    <span className="font-medium text-[10px] text-black truncate">{detail.telefonoCliente || detail.correoCliente || "N/A"}</span>
+                    <span className="font-medium text-[10px] text-black truncate">{printData.telefonoCliente || printData.correoCliente || "N/A"}</span>
                   </div>
                   <div className="flex items-center border-b border-gray-200 pb-0.5">
                     <Calendar className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Fecha Venta</span>
-                    <span className="font-medium text-xs text-black">{formattedDate} {formattedTime}</span>
+                    <span className="font-medium text-xs text-black">{new Date(printData.createdAt).toLocaleDateString("es-MX")} {new Date(printData.createdAt).toLocaleTimeString("es-MX", {hour: "2-digit", minute: "2-digit"})}</span>
                   </div>
                   <div className="flex items-center border-b border-gray-200 pb-0.5">
                     <MapPin className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
-                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Dirección</span>
-                    <span className="font-medium text-[10px] text-black truncate">{detail.direccionCliente || "N/A"}</span>
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Destinatario</span>
+                    <span className="font-medium text-[10px] text-black truncate">{printData.nombreDestinatario || "—"}</span>
                   </div>
-                  <div className="flex items-center border-b border-gray-200 pb-0.5 bg-red-50">
-                    <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
-                    <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Vencimiento</span>
-                    <span className="font-bold text-xs text-red-700">
-                      {detail.fechaVencimiento ? new Date(detail.fechaVencimiento).toLocaleDateString("es-MX") : "N/A"}
-                      {detail.diasPlazo ? ` (${detail.diasPlazo} días)` : ""}
-                    </span>
+                  {"esCredito" in printData && printData.esCredito && !isPriceless ? (
+                    <div className="flex items-center border-b border-gray-200 pb-0.5 bg-red-50">
+                      <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
+                      <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Vencimiento</span>
+                      <span className="font-bold text-xs text-red-700">
+                        {printData.fechaVencimiento ? new Date(printData.fechaVencimiento).toLocaleDateString("es-MX") : "N/A"}
+                        {printData.diasCreditoCliente ? ` (${printData.diasCreditoCliente} días)` : ""}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center border-b border-gray-200 pb-0.5"></div>
+                  )}
+                  <div className="flex items-center border-b border-gray-200 pb-0.5 col-span-2">
+                    <MapPin className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Dirección</span>
+                    <span className="font-medium text-[10px] text-black truncate">{printData.direccionEntregaEfectiva || printData.direccionFiscalEfectiva || "—"}</span>
                   </div>
                 </div>
               </div>
@@ -925,15 +959,19 @@ export default function TicketDetailPage() {
                         <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider">Descripción</th>
                         <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-16">Rollos</th>
                         <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-20">Cant.</th>
-                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-20">P. Unit</th>
-                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-24">Importe</th>
+                        {!isPriceless && (
+                          <>
+                            <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-20">P. Unit</th>
+                            <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-24">Importe</th>
+                          </>
+                        )}
                       </tr>
                     </thead>
                     <tbody className="overflow-y-auto block h-full w-full bg-white" style={{ display: "table-row-group" }}>
-                      {printRollos.lines.length > 0 && (
+                      {projRollos.lines.length > 0 && (
                         <>
-                          <tr className="bg-gray-100/80"><td colSpan={5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700">ROLLOS</td></tr>
-                          {printRollos.lines.map(linea => (
+                          <tr className="bg-gray-100/80"><td colSpan={isPriceless ? 3 : 5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700">ROLLOS</td></tr>
+                          {projRollos.lines.map(linea => (
                             <tr key={linea.key} className="border-b border-gray-100 last:border-0">
                               <td className="py-0.5 px-2 text-[10px] text-gray-800">
                                 {linea.telaProducto} {linea.colorProducto}
@@ -941,20 +979,26 @@ export default function TicketDetailPage() {
                               </td>
                               <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
                               <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
+                              {!isPriceless && (
+                                <>
+                                  <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
+                                  <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
+                                </>
+                              )}
                             </tr>
                           ))}
-                          <tr>
-                            <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Rollos</td>
-                            <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(printRollos.subtotal, { kind: "money" })}</td>
-                          </tr>
+                          {!isPriceless && (
+                            <tr>
+                              <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Rollos</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(projRollos.subtotal, { kind: "money" })}</td>
+                            </tr>
+                          )}
                         </>
                       )}
-                      {printMetraje.lines.length > 0 && (
+                      {projMetraje.lines.length > 0 && (
                         <>
-                          <tr className="bg-gray-100/80"><td colSpan={5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700 border-t border-gray-200">METRAJE</td></tr>
-                          {printMetraje.lines.map(linea => (
+                          <tr className="bg-gray-100/80"><td colSpan={isPriceless ? 3 : 5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700 border-t border-gray-200">METRAJE</td></tr>
+                          {projMetraje.lines.map(linea => (
                             <tr key={linea.key} className="border-b border-gray-100 last:border-0">
                               <td className="py-0.5 px-2 text-[10px] text-gray-800">
                                 {linea.telaProducto} {linea.colorProducto}
@@ -962,14 +1006,20 @@ export default function TicketDetailPage() {
                               </td>
                               <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
                               <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
+                              {!isPriceless && (
+                                <>
+                                  <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
+                                  <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
+                                </>
+                              )}
                             </tr>
                           ))}
-                          <tr>
-                            <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Metraje</td>
-                            <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(printMetraje.subtotal, { kind: "money" })}</td>
-                          </tr>
+                          {!isPriceless && (
+                            <tr>
+                              <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Metraje</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(projMetraje.subtotal, { kind: "money" })}</td>
+                            </tr>
+                          )}
                         </>
                       )}
                     </tbody>
@@ -981,41 +1031,45 @@ export default function TicketDetailPage() {
               <div className="px-6 mt-2 mb-2 relative z-10 shrink-0 flex gap-4">
                 <div className="flex-1 flex flex-col justify-end">
                   <div className="text-[8px] text-gray-500 mb-4 pr-4 text-justify">
-                    Debo y pagaré incondicionalmente a la orden de Mariana Textil S.A. de C.V. la cantidad aquí
-                    señalada por concepto de mercancía recibida a mi entera satisfacción. Si no fuere pagadero a su
-                    vencimiento, causará intereses moratorios.
+                    Recibo a mi entera satisfacción la mercancía aquí detallada. Esta nota ampara
+                    exclusivamente los productos mencionados y no constituye un comprobante de pago
+                    ni un documento fiscal válido.
                   </div>
                   <div className="border-t border-black w-48 mx-auto mt-6 mb-1 h-0"></div>
                   <div className="text-[8px] font-bold uppercase text-gray-700 tracking-wider text-center">Firma de Conformidad</div>
-                  <div className="text-[7px] text-gray-500 text-center truncate px-4">{customerName}</div>
+                  <div className="text-[7px] text-gray-500 text-center truncate px-4">{printData.nombreDestinatario || customerName}</div>
                 </div>
 
-                <div className="w-[35%] shrink-0">
-                  <table className="w-full text-xs border-collapse border border-gray-300 bg-white shadow-sm">
-                    <tbody>
-                      {ticket.facturado && (
-                        <>
+                {!isPriceless && "total" in printData && (
+                  <div className="w-[35%] shrink-0">
+                    <table className="w-full text-xs border-collapse border border-gray-300 bg-white shadow-sm">
+                      <tbody>
+                        {"subtotal" in printData && "tasaIva" in printData && "iva" in printData && (
+                          <>
+                            <tr>
+                              <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">Subtotal</td>
+                              <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(printData.subtotal, { kind: "money" })}</td>
+                            </tr>
+                            <tr>
+                              <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">IVA ({formatNumber(printData.tasaIva, { kind: "percentage", percentageInput: "ratio" })})</td>
+                              <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(printData.iva, { kind: "money" })}</td>
+                            </tr>
+                          </>
+                        )}
+                        <tr>
+                          <td className="py-1 px-2 border-b border-gray-300 font-bold text-[#1e3a8a] text-[11px] uppercase bg-blue-50/50">Total Documento</td>
+                          <td className="py-1 px-2 border-b border-gray-300 font-bold text-right text-[12px] text-[#1e3a8a] bg-blue-50/50">{formatNumber(printData.total, { kind: "money" })}</td>
+                        </tr>
+                        {"esCredito" in printData && printData.esCredito && (
                           <tr>
-                            <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">Subtotal</td>
-                            <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(ticket.subtotal, { kind: "money" })}</td>
+                            <td className="py-1 px-2 border-b border-gray-200 font-bold text-red-700 text-[10px] uppercase bg-red-50">Saldo Pendiente</td>
+                            <td className="py-1 px-2 border-b border-gray-200 font-bold text-right text-[12px] text-red-700 bg-red-50">{formatNumber(printData.saldoPendiente, { kind: "money" })}</td>
                           </tr>
-                          <tr>
-                            <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })})</td>
-                            <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(ticket.iva, { kind: "money" })}</td>
-                          </tr>
-                        </>
-                      )}
-                      <tr>
-                        <td className="py-1 px-2 border-b border-gray-300 font-bold text-[#1e3a8a] text-[11px] uppercase bg-blue-50/50">Total Documento</td>
-                        <td className="py-1 px-2 border-b border-gray-300 font-bold text-right text-[12px] text-[#1e3a8a] bg-blue-50/50">{formatNumber(ticket.total, { kind: "money" })}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1 px-2 border-b border-gray-200 font-bold text-red-700 text-[10px] uppercase bg-red-50">Saldo Pendiente</td>
-                        <td className="py-1 px-2 border-b border-gray-200 font-bold text-right text-[12px] text-red-700 bg-red-50">{formatNumber(detail.saldoPendiente, { kind: "money" })}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
 
               <div className="h-1.5 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>

@@ -26,6 +26,9 @@ export const clientesTable = pgTable("clientes", {
   activo: boolean("activo").notNull().default(true),
   esSistema: boolean("es_sistema").notNull().default(false),
   contactoNombre: text("contacto_nombre"),
+  recibeNotaSinPrecios: boolean("recibe_nota_sin_precios")
+    .notNull()
+    .default(false),
   diasCredito: integer("dias_credito").notNull().default(0),
   limiteCredito: decimal("limite_credito", { precision: 14, scale: 2 })
     .notNull()

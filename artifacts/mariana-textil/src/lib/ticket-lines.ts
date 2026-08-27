@@ -1,4 +1,8 @@
-import type { TicketLinea } from "@workspace/api-client-react";
+import type {
+  TicketLinea,
+  TicketLineaImpresionBase,
+  TicketLineaImpresionConPrecios,
+} from "@workspace/api-client-react";
 
 export type GroupedTicketLine = {
   key: string;
@@ -92,7 +96,7 @@ export function groupTicketLinesByModality(lineas: TicketLinea[], showIndividual
             importe: amount,
             costoTotalCongelado: costo,
             margen,
-            serieRollo: null, // grouped doesn't show individual series
+            serieRollo: null,
             lineas: [linea],
           });
         }
@@ -164,7 +168,89 @@ export function groupTicketLinesByModality(lineas: TicketLinea[], showIndividual
   return result;
 }
 
-// Keep original function just in case
+type TicketPrintLine =
+  | TicketLineaImpresionBase
+  | TicketLineaImpresionConPrecios;
+
+export type GroupedTicketPrintLine = {
+  key: string;
+  productoId: number;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: TicketLinea["unidadProducto"];
+  precioUnitario?: string;
+  rollos: number;
+  cantidad: number;
+  importe?: number;
+};
+
+export type PrintModalityGroups = {
+  rollos: { lines: GroupedTicketPrintLine[]; subtotal: number | null };
+  metraje: { lines: GroupedTicketPrintLine[]; subtotal: number | null };
+};
+
+function isPricedPrintLine(
+  linea: TicketPrintLine,
+): linea is TicketLineaImpresionConPrecios {
+  return "precioUnitario" in linea && "importe" in linea;
+}
+
+export function groupPrintLinesByModality(
+  lineas: TicketPrintLine[],
+): PrintModalityGroups {
+  const result: PrintModalityGroups = {
+    rollos: { lines: [], subtotal: null },
+    metraje: { lines: [], subtotal: null },
+  };
+  const rollosGroups = new Map<string, GroupedTicketPrintLine>();
+  const metrajeGroups = new Map<string, GroupedTicketPrintLine>();
+
+  for (const linea of lineas) {
+    const priced = isPricedPrintLine(linea);
+    const amount = priced ? Number(linea.importe) : undefined;
+    const priceKey = priced ? linea.precioUnitario : "SIN_PRECIOS";
+    const key = `${linea.productoId}|${linea.unidadProducto}|${priceKey}`;
+    const section = linea.tipo === "NORMAL" ? result.rollos : result.metraje;
+    const groups = linea.tipo === "NORMAL" ? rollosGroups : metrajeGroups;
+    const existing = groups.get(key);
+
+    if (priced && amount !== undefined) {
+      section.subtotal = (section.subtotal ?? 0) + amount;
+    }
+
+    if (existing) {
+      existing.rollos += linea.tipo === "NORMAL" ? 1 : 0;
+      existing.cantidad += Number(linea.cantidad);
+      if (priced && amount !== undefined) {
+        existing.importe = (existing.importe ?? 0) + amount;
+      }
+      continue;
+    }
+
+    groups.set(key, {
+      key,
+      productoId: linea.productoId,
+      skuProducto: linea.skuProducto,
+      telaProducto: linea.telaProducto,
+      colorProducto: linea.colorProducto,
+      unidadProducto: linea.unidadProducto,
+      ...(priced
+        ? {
+            precioUnitario: linea.precioUnitario,
+            importe: amount,
+          }
+        : {}),
+      rollos: linea.tipo === "NORMAL" ? 1 : 0,
+      cantidad: Number(linea.cantidad),
+    });
+  }
+
+  result.rollos.lines = [...rollosGroups.values()];
+  result.metraje.lines = [...metrajeGroups.values()];
+  return result;
+}
+
 export function groupTicketLines(lineas: TicketLinea[]) {
   const groups = new Map<string, any>();
 

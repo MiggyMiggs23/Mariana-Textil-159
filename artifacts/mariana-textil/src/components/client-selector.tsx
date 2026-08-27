@@ -22,9 +22,12 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { cn } from "@/lib/utils";
 import { hasPermission, Modules } from "@/lib/permisos";
 
+import { Checkbox } from "@/components/ui/checkbox";
+
 const quickClientSchema = z.object({
   nombre: z.string().trim().min(1, "El nombre es obligatorio.").max(200),
   telefono: z.string().trim().max(40).optional(),
+  recibeNotaSinPrecios: z.boolean().default(false),
 });
 
 type QuickClientValues = z.infer<typeof quickClientSchema>;
@@ -55,7 +58,7 @@ export function ClientSelector({
   const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
   const form = useForm<QuickClientValues>({
     resolver: zodResolver(quickClientSchema),
-    defaultValues: { nombre: "", telefono: "" },
+    defaultValues: { nombre: "", telefono: "", recibeNotaSinPrecios: false },
   });
   const selected = useMemo(
     () =>
@@ -77,7 +80,7 @@ export function ClientSelector({
   const submit = (values: QuickClientValues) => {
     setDuplicateId(null);
     createClient.mutate(
-      { data: { nombre: values.nombre, telefono: values.telefono || null } },
+      { data: { nombre: values.nombre, telefono: values.telefono || null, recibeNotaSinPrecios: values.recibeNotaSinPrecios } },
       {
         onSuccess: (client) => {
           queryClient.invalidateQueries({ queryKey: getListClientesQueryKey() });
@@ -183,6 +186,22 @@ export function ClientSelector({
                   <FormLabel>Teléfono</FormLabel>
                   <FormControl><Input {...field} type="tel" data-testid="input-quick-client-phone" /></FormControl>
                   <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="recibeNotaSinPrecios" render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Recibe nota sin precios</FormLabel>
+                    <p className="text-xs text-muted-foreground">
+                      Por defecto, las notas de este cliente se imprimen sin importes (Nota de Productos).
+                    </p>
+                  </div>
                 </FormItem>
               )} />
               {duplicateId && (

@@ -68,15 +68,15 @@ test("Credit Note (ticket-detail) prints exactly 216x140mm in two copies with in
   assert.match(detail, /credito-page-print[\s\S]*w-\[216mm\][\s\S]*h-\[140mm\]/);
 
   // Two copies logic (COPIA INTERNA / COPIA CLIENTE)
-  assert.match(detail, /\[true, false\]\.map\(\(isInternal/);
+  assert.match(detail, /\[printInterna, printCliente\]\.map\(/);
   assert.match(detail, /COPIA INTERNA/);
   assert.match(detail, /COPIA CLIENTE/);
 
   // QR only on internal
   assert.match(detail, /isInternal && \([\s\S]*?<QRCodeSVG/);
 
-  // Auto-print routing based on credit vs thermal
-  assert.match(detail, /const printClass = esCredito \? "print-credito" : "print-80mm";/);
+  // Auto-print routing based on nota vs thermal
+  assert.match(detail, /const printClass = isNota \? "print-credito" : "print-80mm";/);
 
   // Cobros routing to detail with print parameter
   assert.match(cobros, /setLocation\(\`\/tickets\/\$\{printedTicketId\}\?print=3\`\);/);

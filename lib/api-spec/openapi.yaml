@@ -2823,6 +2823,34 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /tickets/{id}/documento-impresion:
+    get:
+      operationId: obtenerDocumentoImpresionTicket
+      tags: [pos]
+      summary: Obtiene la proyección segura para impresión de un comprobante
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+        - in: query
+          name: copia
+          required: true
+          schema:
+            type: string
+            enum: [INTERNA, CLIENTE]
+      responses:
+        "200":
+          description: Documento de impresión; la variante sin precios no contiene campos económicos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDocumentoImpresion"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /tickets/{id}/cancelar:
     post:
       operationId: cancelarTicket
@@ -5141,7 +5169,7 @@ components:
         $ref: "#/components/schemas/ModulePermission"
     Cliente:
       type: object
-      required: [id, nombre, activo, esSistema, createdAt, updatedAt]
+      required: [id, nombre, activo, esSistema, recibeNotaSinPrecios, createdAt, updatedAt]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -5155,6 +5183,7 @@ components:
         activo: { type: boolean }
         esSistema: { type: boolean }
         contactoNombre: { type: ["string", "null"] }
+        recibeNotaSinPrecios: { type: boolean, default: false }
         diasCredito: { type: number, minimum: 0 }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
@@ -5175,6 +5204,7 @@ components:
           type: ["string", "null"]
           pattern: '^\d+(\.\d{1,2})?$'
         diasCredito: { type: ["number", "null"], minimum: 0 }
+        recibeNotaSinPrecios: { type: boolean, default: false }
     ClienteDuplicateError:
       type: object
       required: [error, code, existingClientId]
@@ -5211,6 +5241,7 @@ components:
         notas: { type: ["string", "null"] }
         activo: { type: boolean }
         contactoNombre: { type: ["string", "null"] }
+        recibeNotaSinPrecios: { type: boolean }
     ClienteCredito:
       type: object
       required:
@@ -7683,6 +7714,10 @@ components:
         documentoTipo:
           $ref: "#/components/schemas/DocumentoTipoTicket"
           default: TICKET
+        notaSinPrecios:
+          type: boolean
+          default: false
+          description: Solo aplica a NOTA; la copia CLIENTE omite estructuralmente los importes.
         nombreDestinatario:
           type: ["string", "null"]
           description: Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
@@ -7816,6 +7851,7 @@ components:
           nombreUsuarioTerminal,
           clienteId,
           nombreCliente,
+          notaSinPrecios,
           subtotal,
           iva,
           tasaIva,
@@ -7840,6 +7876,7 @@ components:
         nombreUsuarioTerminal: { type: string }
         clienteId: { type: ["number", "null"] }
         nombreCliente: { type: ["string", "null"] }
+        notaSinPrecios: { type: boolean }
         direccionEntregaEfectiva: { type: ["string", "null"] }
         subtotal: { type: string }
         iva:
@@ -7952,6 +7989,85 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/TicketPago"
+    TicketDocumentoImpresion:
+      oneOf:
+        - $ref: "#/components/schemas/TicketDocumentoImpresionConPrecios"
+        - $ref: "#/components/schemas/TicketDocumentoImpresionSinPrecios"
+    TicketDocumentoImpresionBase:
+      type: object
+      required: [ticketId, folio, copia, documentoTipo, notaSinPrecios, ubicacionId, nombreUbicacion, createdAt, estado, clienteId, nombreCliente, nombreDestinatario, direccionEntregaSnapshot, direccionEntregaEfectiva, telefonoCliente, correoCliente, direccionFiscalEfectiva, lineas]
+      properties:
+        ticketId: { type: number }
+        folio: { type: number }
+        copia: { type: string, enum: [INTERNA, CLIENTE] }
+        documentoTipo: { $ref: "#/components/schemas/DocumentoTipoTicket" }
+        notaSinPrecios: { type: boolean }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        createdAt: { type: string, format: date-time }
+        estado: { $ref: "#/components/schemas/EstadoTicket" }
+        clienteId: { type: number }
+        nombreCliente: { type: ["string", "null"] }
+        nombreDestinatario: { type: ["string", "null"] }
+        direccionEntregaSnapshot: { type: ["string", "null"] }
+        direccionEntregaEfectiva: { type: ["string", "null"] }
+        telefonoCliente: { type: ["string", "null"] }
+        correoCliente: { type: ["string", "null"] }
+        direccionFiscalEfectiva: { type: ["string", "null"] }
+    TicketDocumentoImpresionConPrecios:
+      allOf:
+        - $ref: "#/components/schemas/TicketDocumentoImpresionBase"
+        - type: object
+          required: [subtotal, iva, tasaIva, total, esCredito, diasCreditoCliente, fechaVencimiento, saldoPendiente, lineas]
+          properties:
+            subtotal: { type: string }
+            iva: { type: string }
+            tasaIva: { type: string }
+            total: { type: string }
+            esCredito: { type: boolean }
+            diasCreditoCliente: { type: ["number", "null"] }
+            fechaVencimiento: { type: ["string", "null"], format: date }
+            saldoPendiente: { type: string }
+            lineas:
+              type: array
+              items:
+                $ref: "#/components/schemas/TicketLineaImpresionConPrecios"
+    TicketDocumentoImpresionSinPrecios:
+      allOf:
+        - $ref: "#/components/schemas/TicketDocumentoImpresionBase"
+        - type: object
+          required: [copia, documentoTipo, notaSinPrecios, lineas]
+          properties:
+            copia: { const: CLIENTE }
+            documentoTipo: { const: NOTA }
+            notaSinPrecios: { const: true }
+            lineas:
+              type: array
+              items:
+                $ref: "#/components/schemas/TicketLineaImpresionSinPrecios"
+    TicketLineaImpresionBase:
+      type: object
+      required: [productoId, tipo, skuProducto, telaProducto, colorProducto, unidadProducto, cantidad]
+      properties:
+        productoId: { type: number }
+        tipo: { $ref: "#/components/schemas/TipoTicket" }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { $ref: "#/components/schemas/UnidadProducto" }
+        cantidad: { type: string }
+    TicketLineaImpresionConPrecios:
+      allOf:
+        - $ref: "#/components/schemas/TicketLineaImpresionBase"
+        - type: object
+          required: [precioUnitario, precioSugerido, importe]
+          properties:
+            precioUnitario: { type: string }
+            precioSugerido: { type: string }
+            importe: { type: string }
+    TicketLineaImpresionSinPrecios:
+      allOf:
+        - $ref: "#/components/schemas/TicketLineaImpresionBase"
     SesionCajaAperturaInput:
       type: object
       required: [fondoInicial, ubicacionId]

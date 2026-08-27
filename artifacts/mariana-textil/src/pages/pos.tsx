@@ -379,6 +379,7 @@ export default function PosPage() {
   const [clientId, setClientId] = useState<string>("1");
   const [clientName, setClientName] = useState("Venta a Público");
   const [documentoTipo, setDocumentoTipo] = useState<"TICKET" | "NOTA" | null>(null);
+  const [notaSinPrecios, setNotaSinPrecios] = useState(false);
   const [nombreDestinatario, setNombreDestinatario] = useState("");
   const [direccionEntregaSnapshot, setDireccionEntregaSnapshot] = useState("");
 
@@ -658,6 +659,7 @@ export default function PosPage() {
       clienteId: Number(clientId),
       lineas,
       documentoTipo: documentoTipo as "TICKET" | "NOTA",
+      notaSinPrecios: documentoTipo === "NOTA" ? notaSinPrecios : false,
       nombreDestinatario: documentoTipo === "NOTA" && clientId === "1" ? nombreDestinatario.trim() : undefined,
       direccionEntregaSnapshot: documentoTipo === "NOTA" && clientId === "1" ? direccionEntregaSnapshot.trim() : undefined,
     };
@@ -676,6 +678,7 @@ export default function PosPage() {
           setClientId("1");
           setClientName("Venta a Público");
           setDocumentoTipo(null);
+          setNotaSinPrecios(false);
           setNombreDestinatario("");
           setDireccionEntregaSnapshot("");
           setLocation(`/tickets/${ticket.id}?print=3`);
@@ -801,6 +804,7 @@ export default function PosPage() {
             size="icon"
             onClick={() => {
               setDocumentoTipo(null);
+              setNotaSinPrecios(false);
               setCart([]);
             }}
             className="h-10 w-10 shrink-0 text-muted-foreground hover:text-sidebar"
@@ -1082,6 +1086,9 @@ export default function PosPage() {
                 onChange={(client) => {
                   setClientId(String(client.id));
                   setClientName(client.nombre);
+                  if (documentoTipo === "NOTA") {
+                    setNotaSinPrecios(client.recibeNotaSinPrecios || false);
+                  }
                 }}
               />
               <p className="text-xs text-muted-foreground" data-testid="text-ticket-client">
@@ -1089,30 +1096,64 @@ export default function PosPage() {
               </p>
             </div>
 
-            {documentoTipo === "NOTA" && clientId === "1" && (
+            {documentoTipo === "NOTA" && (
               <div className="space-y-4 pt-4 border-t border-border animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="space-y-2">
-                  <Label htmlFor="nombreDestinatario" className="text-sm font-bold text-sidebar">
-                    Nombre del Destinatario <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="nombreDestinatario"
-                    value={nombreDestinatario}
-                    onChange={(e) => setNombreDestinatario(e.target.value)}
-                    placeholder="Nombre completo de quien recibe"
-                  />
+                  <Label className="text-sm font-bold text-sidebar">Formato de Nota</Label>
+                  <div className="grid grid-cols-2 gap-3 mt-1">
+                    <button
+                      type="button"
+                      onClick={() => setNotaSinPrecios(false)}
+                      className={`flex flex-col items-center justify-center p-3 border rounded-md transition-all ${
+                        !notaSinPrecios
+                          ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
+                          : "border-border bg-card hover:bg-accent/50 text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <span className="font-semibold text-sm">Nota con precios</span>
+                      <span className="text-[10px] mt-1 opacity-80 text-center">Formato estándar</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNotaSinPrecios(true)}
+                      className={`flex flex-col items-center justify-center p-3 border rounded-md transition-all ${
+                        notaSinPrecios
+                          ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
+                          : "border-border bg-card hover:bg-accent/50 text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <span className="font-semibold text-sm">Nota de Productos</span>
+                      <span className="text-[10px] mt-1 opacity-80 text-center">Sin importes ni totales</span>
+                    </button>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="direccionEntrega" className="text-sm font-bold text-sidebar">
-                    Dirección de Entrega <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="direccionEntrega"
-                    value={direccionEntregaSnapshot}
-                    onChange={(e) => setDireccionEntregaSnapshot(e.target.value)}
-                    placeholder="Calle, número, colonia, ciudad..."
-                  />
-                </div>
+
+                {clientId === "1" && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="nombreDestinatario" className="text-sm font-bold text-sidebar">
+                        Nombre del Destinatario <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="nombreDestinatario"
+                        value={nombreDestinatario}
+                        onChange={(e) => setNombreDestinatario(e.target.value)}
+                        placeholder="Nombre completo de quien recibe"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="direccionEntrega" className="text-sm font-bold text-sidebar">
+                        Dirección de Entrega <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="direccionEntrega"
+                        value={direccionEntregaSnapshot}
+                        onChange={(e) => setDireccionEntregaSnapshot(e.target.value)}
+                        placeholder="Calle, número, colonia, ciudad..."
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             )}
 

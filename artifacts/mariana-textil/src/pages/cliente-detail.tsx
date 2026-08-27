@@ -71,7 +71,7 @@ export default function ClienteDetail() {
   const [editForm, setEditForm] = useState({
     nombre: "", telefono: "", correo: "", rfc: "",
     direccionParticular: "", direccionEntrega: "", mismaDireccion: true,
-    contactoNombre: "", notas: ""
+    contactoNombre: "", notas: "", recibeNotaSinPrecios: false
   });
   const [bajaOpen, setBajaOpen] = useState(false);
   const [bajaConfirmationOpen, setBajaConfirmationOpen] = useState(false);
@@ -145,6 +145,7 @@ export default function ClienteDetail() {
         direccionEntrega: editForm.mismaDireccion ? (editForm.direccionParticular.trim() || null) : (editForm.direccionEntrega.trim() || null),
         contactoNombre: editForm.contactoNombre.trim() || null,
         notas: editForm.notas.trim() || null,
+        recibeNotaSinPrecios: editForm.recibeNotaSinPrecios,
       }
     }, {
       onSuccess: () => {
@@ -225,7 +226,8 @@ export default function ClienteDetail() {
                   direccionEntrega: client.direccionEntrega || "",
                   mismaDireccion: !client.direccionEntrega || client.direccionEntrega === client.direccionParticular,
                   contactoNombre: client.contactoNombre || "",
-                  notas: client.notas || ""
+                  notas: client.notas || "",
+                  recibeNotaSinPrecios: client.recibeNotaSinPrecios || false
                 });
                 setEditOpen(true);
               }}>Editar datos</Button>
@@ -257,6 +259,7 @@ export default function ClienteDetail() {
               <Datum label="Teléfono" value={client.telefono} />
               <Datum label="Correo" value={client.correo} />
               <Datum label="RFC" value={client.rfc} />
+              <Datum label="Preferencia de Impresión" value={client.recibeNotaSinPrecios ? "Nota sin precios" : "Nota con precios"} />
               <Datum label="Dirección Particular" value={client.direccionParticular} />
               <Datum label="Dirección de Entrega" value={client.direccionEntrega || client.direccionParticular} />
               <Datum label="Notas" value={client.notas} />

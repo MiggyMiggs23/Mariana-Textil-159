@@ -29,4 +29,5 @@ export interface ClienteUpdate {
   activo?: boolean;
   /** @nullable */
   contactoNombre?: string | null;
+  recibeNotaSinPrecios?: boolean;
 }

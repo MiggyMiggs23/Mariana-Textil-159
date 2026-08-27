@@ -18,6 +18,7 @@ export interface TicketResumen {
   clienteId: number | null;
   /** @nullable */
   nombreCliente: string | null;
+  notaSinPrecios: boolean;
   /** @nullable */
   direccionEntregaEfectiva?: string | null;
   subtotal: string;

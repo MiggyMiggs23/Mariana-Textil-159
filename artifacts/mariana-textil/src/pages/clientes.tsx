@@ -183,6 +183,7 @@ type ClientForm = {
   limiteCredito: string;
   diasCredito: string;
   notas: string;
+  recibeNotaSinPrecios: boolean;
 };
 
 const emptyClientForm: ClientForm = {
@@ -197,6 +198,7 @@ const emptyClientForm: ClientForm = {
   limiteCredito: "",
   diasCredito: "",
   notas: "",
+  recibeNotaSinPrecios: false,
 };
 
 function duplicateClientId(error: unknown): number | null {
@@ -242,6 +244,7 @@ function CreateClienteDialog({ open, onClose, canCredit }: { open: boolean; onCl
         direccionEntrega: form.mismaDireccion ? (form.direccionParticular.trim() || null) : (form.direccionEntrega.trim() || null),
         contactoNombre: form.contactoNombre.trim() || null,
         notas: form.notas.trim() || null,
+        recibeNotaSinPrecios: form.recibeNotaSinPrecios,
         ...(form.limiteCredito.trim()
           ? {
               limiteCredito: form.limiteCredito.trim(),
@@ -317,6 +320,18 @@ function CreateClienteDialog({ open, onClose, canCredit }: { open: boolean; onCl
           )}
           <div className="sm:col-span-2">
             <ClientField label="Notas" value={form.notas} onChange={(value) => set("notas", value)} />
+          </div>
+          <div className="sm:col-span-2 flex items-center space-x-2 rounded-md border p-3">
+            <input
+              type="checkbox"
+              id="create-client-noprices"
+              checked={form.recibeNotaSinPrecios}
+              onChange={(e) => setForm((c) => ({ ...c, recibeNotaSinPrecios: e.target.checked }))}
+              className="rounded border-gray-300"
+            />
+            <label htmlFor="create-client-noprices" className="text-sm text-foreground cursor-pointer">
+              Recibe nota sin precios <span className="text-muted-foreground text-xs font-normal">(Imprime "Nota de Productos" por defecto)</span>
+            </label>
           </div>
         </div>
         {existingId && (

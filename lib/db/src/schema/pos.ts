@@ -90,6 +90,7 @@ export const ticketsTable = pgTable(
       .$type<DocumentoTipoTicket>()
       .notNull()
       .default("TICKET"),
+    notaSinPrecios: boolean("nota_sin_precios").notNull().default(false),
     nombreDestinatario: text("nombre_destinatario"),
     direccionEntregaSnapshot: text("direccion_entrega_snapshot"),
     subtotal: numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
