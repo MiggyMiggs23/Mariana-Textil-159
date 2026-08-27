@@ -181,12 +181,15 @@ function CartLineItem({
     priceValidation.status === "invalid" || priceValidation.status === "error";
 
   return (
-    <div className="border-b py-3 last:border-0">
+    <div className={`border-b py-3 last:border-0 ${isMetreado ? 'bg-amber-50/30' : ''}`}>
       <div className="flex items-center justify-between">
         <div className="flex-1 overflow-hidden">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-sm truncate">
               {item.producto.tela} - {item.producto.color}
+            </span>
+            <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm ${isMetreado ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
+              {isMetreado ? 'Metreado' : 'Rollo'}
             </span>
             {!isMetreado && item.rollo && (
               <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground font-mono">
@@ -364,12 +367,6 @@ export default function PosPage() {
 
   const crearTicket = useCrearTicket();
 
-  // Reset cart when ticket type changes
-  useEffect(() => {
-    setCart([]);
-    setFacturar(false);
-  }, [tipoTicket]);
-
   const addToCart = (item: any) => {
     // Para NORMAL, añadir el rollo
     if (tipoTicket === TipoTicket.NORMAL) {
@@ -394,11 +391,12 @@ export default function PosPage() {
           cantidad: Number(item.cantidadActual),
           precioUnitario: Number(item.precioSugerido),
           priceValidation: { status: "idle" },
+          isMetreado: false,
         },
       ]);
     } else {
       // Para METREADO, añadir producto con cantidad 1 (editable luego)
-      if (cart.find((c) => c.producto.id === item.id)) {
+      if (cart.find((c) => c.producto.id === item.id && c.isMetreado)) {
         toast({
           title: "El producto ya está en el ticket. Ajusta la cantidad.",
           variant: "default",
@@ -413,6 +411,7 @@ export default function PosPage() {
           cantidad: 1,
           precioUnitario: Number(item.precioSugerido),
           priceValidation: { status: "valid" },
+          isMetreado: true,
         },
       ]);
     }
@@ -549,17 +548,18 @@ export default function PosPage() {
     const lineas: TicketLineaInput[] = cart.map((item) => ({
       rolloId: item.rollo?.id || null,
       productoId: item.producto.id,
-      tipo: tipoTicket,
+      tipo: item.isMetreado ? TipoTicket.METREADO : TipoTicket.NORMAL,
       cantidad: Number(item.cantidad),
       precioUnitario: Number(item.precioUnitario),
     }));
 
+    const hasNormal = cart.some((item) => !item.isMetreado);
     const input: TicketInput = {
       uuidCliente: uuid,
       ubicacionId: selectedLocationId,
-      tipo: tipoTicket,
-      facturado: tipoTicket === TipoTicket.NORMAL ? facturar : false,
-       clienteId: Number(clientId),
+      tipo: hasNormal ? TipoTicket.NORMAL : TipoTicket.METREADO,
+      facturado: hasNormal ? facturar : false,
+      clienteId: Number(clientId),
       lineas,
     };
 
@@ -798,7 +798,9 @@ export default function PosPage() {
                   ))}
 
                 {tipoTicket === TipoTicket.METREADO &&
-                  searchResults.productos.map((prod: PosProducto) => (
+                  searchResults.productos
+                    .filter((prod: PosProducto) => prod.unidad === "METRO")
+                    .map((prod: PosProducto) => (
                     <Card
                       key={prod.id}
                       className="overflow-hidden hover:border-primary/50 transition-colors shadow-sm"
@@ -839,10 +841,7 @@ export default function PosPage() {
         <Card className="flex-1 flex flex-col shadow-md border-sidebar-primary/20 bg-white">
           <CardHeader className="bg-sidebar text-white rounded-t-lg pb-4">
             <CardTitle className="flex justify-between items-center text-lg">
-              <span>
-                Ticket{" "}
-                {tipoTicket === TipoTicket.NORMAL ? "Normal" : "Metreado"}
-              </span>
+              <span>Ticket de Venta</span>
               <span className="bg-white/20 text-white px-2 py-0.5 rounded text-sm">
                 {cart.length} líneas
               </span>
@@ -866,7 +865,7 @@ export default function PosPage() {
                     priceValidation={item.priceValidation ?? { status: "idle" }}
                     onPriceValidationChange={updateCartPriceValidation}
                     onRemove={() => removeFromCart(idx)}
-                    isMetreado={tipoTicket === TipoTicket.METREADO}
+                    isMetreado={item.isMetreado}
                     onChangeQuantity={(qty) => updateCartQuantity(idx, qty)}
                     onChangePrice={(price) => updateCartPrice(idx, price)}
                   />
@@ -878,26 +877,24 @@ export default function PosPage() {
           <Separator />
 
           <CardFooter className="flex-col items-stretch p-5 bg-muted/10 gap-4">
-            {tipoTicket === TipoTicket.NORMAL && (
-              <div className="flex items-center space-x-2 bg-secondary/50 p-3 rounded-md">
-                <Checkbox
-                  id="facturar"
-                  checked={facturar}
-                  onCheckedChange={(v) => setFacturar(v as boolean)}
-                />
-                <div>
-                  <Label
-                    htmlFor="facturar"
-                    className="font-semibold cursor-pointer"
-                  >
-                    Requiere Factura
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    El precio negociado es antes de IVA.
-                  </p>
-                </div>
+            <div className="flex items-center space-x-2 bg-secondary/50 p-3 rounded-md">
+              <Checkbox
+                id="facturar"
+                checked={facturar}
+                onCheckedChange={(v) => setFacturar(v as boolean)}
+              />
+              <div>
+                <Label
+                  htmlFor="facturar"
+                  className="font-semibold cursor-pointer"
+                >
+                  Requiere Factura
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  El precio negociado es antes de IVA.
+                </p>
               </div>
-            )}
+            </div>
 
             <div className="space-y-1.5 rounded-lg bg-primary/5 p-4">
               {facturar ? (
