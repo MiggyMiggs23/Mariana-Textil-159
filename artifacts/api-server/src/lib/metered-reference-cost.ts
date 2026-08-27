@@ -47,10 +47,30 @@ function twelveCalendarMonthsBefore(asOf: Date): Date {
   ));
 }
 
-function parsedPositiveCost(value: string | null): number | null {
+/**
+ * Parses NUMERIC(12,2) values as integer cents.  Keeping costs in cents avoids
+ * binary floating-point rounding when reception costs are averaged.
+ */
+function parsedPositiveCost(value: string | null): bigint | null {
   if (value === null) return null;
-  const cost = Number(value);
-  return Number.isFinite(cost) && cost > 0 ? cost : null;
+  const match = /^(\d+)(?:\.(\d{1,2}))?$/.exec(value);
+  if (!match) return null;
+  const cents = BigInt(match[1]!) * 100n + BigInt((match[2] ?? "").padEnd(2, "0"));
+  return cents > 0n ? cents : null;
+}
+
+function formatCents(cents: bigint): string {
+  return `${cents / 100n}.${(cents % 100n).toString().padStart(2, "0")}`;
+}
+
+/**
+ * Rounds a positive integer-cent average to cents using conventional half-up
+ * rounding: an exact half-cent rounds away from zero.
+ */
+function averageCentsHalfUp(total: bigint, count: number): bigint {
+  const divisor = BigInt(count);
+  const quotient = total / divisor;
+  return total % divisor * 2n >= divisor ? quotient + 1n : quotient;
 }
 
 /**
@@ -69,7 +89,7 @@ export function calculateMeteredReferenceCost(
   const validRows = rows
     .map((row) => ({ ...row, parsedCost: parsedPositiveCost(row.costPerUnit) }))
     .filter(
-      (row): row is MeteredCostRow & { parsedCost: number } =>
+      (row): row is MeteredCostRow & { parsedCost: bigint } =>
         row.parsedCost !== null &&
         Number.isFinite(row.receptionDate.getTime()) &&
         row.receptionDate <= asOf,
@@ -77,15 +97,16 @@ export function calculateMeteredReferenceCost(
   const periodRows = validRows.filter((row) => row.receptionDate >= periodStart);
 
   if (periodRows.length > 0) {
-    const average =
-      periodRows.reduce((total, row) => total + row.parsedCost, 0) /
-      periodRows.length;
+    const average = averageCentsHalfUp(
+      periodRows.reduce((total, row) => total + row.parsedCost, 0n),
+      periodRows.length,
+    );
     const latestReceptionDate = periodRows.reduce(
       (latest, row) => (row.receptionDate > latest ? row.receptionDate : latest),
       periodRows[0]!.receptionDate,
     );
     return {
-      cost: average.toFixed(2),
+      cost: formatCents(average),
       status: "AVERAGE_12_MONTHS",
       isOlderThan12Months: false,
       rollsIncluded: periodRows.length,
@@ -105,7 +126,7 @@ export function calculateMeteredReferenceCost(
   );
   if (latestKnown) {
     return {
-      cost: latestKnown.parsedCost.toFixed(2),
+      cost: formatCents(latestKnown.parsedCost),
       status: "STALE_LAST_KNOWN",
       isOlderThan12Months: true,
       rollsIncluded: 1,

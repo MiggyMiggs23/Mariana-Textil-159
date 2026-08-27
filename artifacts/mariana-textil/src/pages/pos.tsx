@@ -506,7 +506,11 @@ export default function PosPage() {
           ? {
               ...item,
               precioUnitario: price,
-              priceValidation: { status: "idle" },
+              // METREADO has no hard price floor: its below-cost signal is
+              // informational, so only roll-linked lines need async validation.
+              priceValidation: item.isMetreado
+                ? { status: "valid" }
+                : { status: "idle" },
             }
           : item,
       ),

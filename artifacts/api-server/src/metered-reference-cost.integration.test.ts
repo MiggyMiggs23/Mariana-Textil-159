@@ -15,6 +15,9 @@ if (!testUrl) {
     const { db, pool } = await import("@workspace/db");
     const expectedDb = decodeURIComponent(new URL(testUrl).pathname.slice(1));
     const tag = `METER-COST-IT-${randomUUID()}`;
+    const initials = [...randomUUID().replaceAll("-", "").slice(0, 3)]
+      .map((digit) => String.fromCharCode(65 + Number.parseInt(digit, 16)))
+      .join("");
     const ids = {
       location: 0,
       user: 0,
@@ -34,8 +37,8 @@ if (!testUrl) {
 
     try {
       const location = await one(
-        "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'BODEGA',true) RETURNING id",
-        [`${tag} location`],
+        "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'BODEGA',true) RETURNING id",
+        [`${tag} location`, initials],
       );
       ids.location = Number(location.id);
       const user = await one(

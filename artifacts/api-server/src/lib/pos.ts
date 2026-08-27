@@ -115,6 +115,28 @@ function decimalQuantity(value: string): string {
   return parsed.toFixed(3);
 }
 
+/**
+ * Multiplies a canonical three-decimal quantity by integer cents and rounds
+ * the resulting fractional cent half-up. BigInt keeps frozen line totals
+ * independent of IEEE-754 binary floating point.
+ */
+export function quantityTimesMoneyCents(quantity: string, cents: number): number {
+  const match = /^(\d+)\.(\d{3})$/.exec(quantity);
+  if (!match || !Number.isSafeInteger(cents) || cents < 0) {
+    throw new PosError("Importe inválido.", "INVALID_AMOUNT");
+  }
+  const thousandths = BigInt(match[1]!) * 1000n + BigInt(match[2]!);
+  const product = thousandths * BigInt(cents);
+  const rounded = product / 1000n + (product % 1000n * 2n >= 1000n ? 1n : 0n);
+  if (
+    rounded > BigInt(Number.MAX_SAFE_INTEGER) ||
+    rounded < BigInt(Number.MIN_SAFE_INTEGER)
+  ) {
+    throw new PosError("Importe inválido.", "INVALID_AMOUNT");
+  }
+  return Number(rounded);
+}
+
 async function reserveTicketFolio(tx: Tx): Promise<number> {
   const [row] = await tx
     .select()
@@ -584,8 +606,7 @@ export async function crearTicket(
         );
       }
     }
-    const cantidadMilesimas = Math.round(Number(cantidad) * 1000);
-    const importeCents = Math.round((cantidadMilesimas * precioCents) / 1000);
+    const importeCents = quantityTimesMoneyCents(cantidad, precioCents);
     const costoUnitario =
       tipo === "NORMAL"
         ? rollo!.costoUnitario!
@@ -593,7 +614,7 @@ export async function crearTicket(
     const costoCents =
       costoUnitario == null
         ? null
-        : Math.round((cantidadMilesimas * money(costoUnitario)) / 1000);
+        : quantityTimesMoneyCents(cantidad, money(costoUnitario));
     return {
       rolloId: rollo?.id ?? null,
       productoId: linea.productoId,

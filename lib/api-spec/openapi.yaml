@@ -317,6 +317,12 @@ paths:
         - { in: query, name: search, schema: { type: string } }
         - { in: query, name: unidad, schema: { $ref: "#/components/schemas/UnidadProducto" } }
         - { in: query, name: semaforo, schema: { $ref: "#/components/schemas/SemaforoPrecio" } }
+        - in: query
+          name: modoPrecio
+          description: Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
+          schema:
+            $ref: "#/components/schemas/ModoPrecio"
+            default: ROLLO
       responses:
         "200":
           description: Catálogo de precios, incluidos productos inactivos

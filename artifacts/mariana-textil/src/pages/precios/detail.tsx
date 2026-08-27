@@ -276,11 +276,27 @@ export default function PrecioDetail() {
 
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12 bg-black/20 p-6 rounded-xl border border-white/10 backdrop-blur-sm">
                     <div>
-                      <p className="text-sm text-sidebar-foreground/60 font-medium mb-1 uppercase tracking-wider flex items-center gap-1">
-                        Costo Base <span title="Costo unitario utilizado como referencia para el margen de este modo de precio."><HelpCircle className="w-3 h-3 opacity-60" /></span>
+                      <p className="text-sm text-sidebar-foreground/60 font-medium uppercase tracking-wider">
+                        Costo base
+                      </p>
+                      <p className="mb-2 max-w-sm text-xs leading-snug text-sidebar-foreground/75">
+                        {activeMode === ModoPrecio.ROLLO
+                          ? "Promedio ponderado de rollos con existencia actual"
+                          : "Promedio simple por rollo recibido en los últimos 12 meses, sin ponderar por cantidad"}
                       </p>
                       <div className="text-2xl font-semibold text-sidebar-primary-foreground/90">
-                        {modeData?.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "Sin costo"}
+                        {activeMode !== ModoPrecio.ROLLO && producto.costoReferenciaMetreado.estado === 'NO_COST' ? (
+                          <span className="text-lg font-semibold bg-white/10 px-3 py-1 rounded">Sin costo</span>
+                        ) : (
+                          <>
+                            {modeData?.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "Sin costo"}
+                            {activeMode !== ModoPrecio.ROLLO && producto.costoReferenciaMetreado.esMayorA12Meses && (
+                              <div className="text-xs text-amber-300 font-medium flex items-center gap-1 mt-1 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
+                                <AlertTriangle className="w-4 h-4" /> Costo obsoleto (&gt;12m). Última vez: {producto.costoReferenciaMetreado.fechaUltimaRecepcion ? format(new Date(producto.costoReferenciaMetreado.fechaUltimaRecepcion), "dd/MM/yyyy") : "N/A"}
+                              </div>
+                            )}
+                          </>
+                        )}
                       </div>
                     </div>
                     <div className="hidden md:block w-px h-12 bg-white/10"></div>

@@ -19,6 +19,9 @@ if (!testUrl) {
     await ensureProductMeterSchema(pool);
     await ensureProductPricingSchema(pool);
     const tag = `PRECIO-IT-${randomUUID()}`;
+    const initials = [...randomUUID().replaceAll("-", "").slice(0, 3)]
+      .map((digit) => String.fromCharCode(65 + Number.parseInt(digit, 16)))
+      .join("");
     const expectedDb = decodeURIComponent(new URL(testUrl).pathname.slice(1));
     let server: Server | undefined;
     const ids: Record<string, number[]> = {
@@ -44,7 +47,10 @@ if (!testUrl) {
     let baseUrl = "";
 
     try {
-      const location = await one("INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id", [`${tag} location`]);
+      const location = await one(
+        "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id",
+        [`${tag} location`, initials],
+      );
       ids.locations.push(Number(location.id));
       for (const role of ["ADMIN", "CAJA"] as const) {
         const user = await one(
@@ -80,13 +86,13 @@ if (!testUrl) {
       const client = await one("INSERT INTO clientes(nombre,activo) VALUES($1,true) RETURNING id", [`${tag} client`]);
       ids.clients.push(Number(client.id));
       const ticket = await one(
-        `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,tipo,subtotal,iva,tasa_iva,total,estado,cobrado,facturado)
-         VALUES($1,gen_random_uuid(),$2,$3,$4,'NORMAL',100,0,0,100,'VENDIDO',false,false) RETURNING id`,
+        `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,tasa_iva,total,estado,cobrado,facturado)
+         VALUES($1,gen_random_uuid(),$2,$3,$4,100,0,0,100,'VENDIDO',false,false) RETURNING id`,
         [1700000000 + Math.floor(Math.random() * 100000000), location.id, ids.users[1], client.id],
       ); ids.tickets.push(Number(ticket.id));
       const line = await one(
-        "INSERT INTO ticket_lineas(ticket_id,producto_id,cantidad,precio_unitario,precio_sugerido,importe,costo_unitario_congelado,costo_total_congelado) VALUES($1,$2,1,100,100,100,10,10) RETURNING id",
-        [ticket.id, product.id],
+        "INSERT INTO ticket_lineas(ticket_id,tipo,rollo_id,producto_id,cantidad,precio_unitario,precio_sugerido,importe,costo_unitario_congelado,costo_total_congelado) VALUES($1,'NORMAL',$3,$2,1,100,100,100,10,10) RETURNING id",
+        [ticket.id, product.id, ids.rolls[0]],
       ); ids.lines.push(Number(line.id));
 
       server = createServer(app); await new Promise<void>((resolve) => server!.listen(0, "127.0.0.1", resolve));
@@ -105,6 +111,13 @@ if (!testUrl) {
       assert.equal(listed.response.status, 200); assert.equal(listed.body[0].costoUnitarioPonderado, "18.00");
       assert.equal(listed.body[0].semaforo, "VERDE");
       assert.equal(listed.body[0].seVendePorMetro, false);
+       // This product has an inventory-backed ROLLO cost but no reception
+       // history, so its ROLLO and MAYOREO semaphores intentionally differ.
+       const mayoreoListed = await request("GET", "/api/precios?search=SKU&modoPrecio=MAYOREO&semaforo=SIN_COSTO", sessions[0]!);
+       assert.equal(mayoreoListed.response.status, 200);
+       assert.equal(mayoreoListed.body.length, 1);
+       assert.equal(mayoreoListed.body[0].preciosPorModo.ROLLO.semaforo, "VERDE");
+       assert.equal(mayoreoListed.body[0].preciosPorModo.MAYOREO.semaforo, "SIN_COSTO");
       const enabled = await request("PATCH", `/api/precios/${product.id}/venta-por-metro`, sessions[0]!, { seVendePorMetro: true });
       assert.equal(enabled.response.status, 200);
       assert.equal(enabled.body.seVendePorMetro, true);
@@ -126,14 +139,14 @@ if (!testUrl) {
         modoPrecio: "MAYOREO", precioListaNuevo: "125.00", motivo: "precio mayoreo",
       });
       assert.equal(wholesale.response.status, 200);
-      assert.equal(wholesale.body.precioLista, "17.00");
-      assert.equal(wholesale.body.precioMayoreo, "125.00");
+      assert.equal(wholesale.body.producto.precioLista, "17.00");
+      assert.equal(wholesale.body.producto.precioMayoreo, "125.00");
       const retail = await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, {
         modoPrecio: "MENUDEO", precioListaNuevo: "150.00", motivo: "precio menudeo",
       });
       assert.equal(retail.response.status, 200);
-      assert.equal(retail.body.precioMayoreo, "125.00");
-      assert.equal(retail.body.precioMenudeo, "150.00");
+      assert.equal(retail.body.producto.precioMayoreo, "125.00");
+      assert.equal(retail.body.producto.precioMenudeo, "150.00");
       assert.equal((await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, { precioListaNuevo: "0", motivo: "no" })).response.status, 400);
       assert.equal((await request("PATCH", `/api/productos/${product.id}`, sessions[0]!, { precioSugerido: "22.00" })).response.status, 400);
       const detail = await request("GET", `/api/precios/${product.id}`, sessions[0]!);

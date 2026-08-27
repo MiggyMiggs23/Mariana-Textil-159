@@ -3776,6 +3776,10 @@ export type ListPreciosParams = {
 search?: string;
 unidad?: UnidadProducto;
 semaforo?: SemaforoPrecio;
+/**
+ * Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
+ */
+modoPrecio?: ModoPrecio;
 };
 
 export type ListComprasProveedorParams = {

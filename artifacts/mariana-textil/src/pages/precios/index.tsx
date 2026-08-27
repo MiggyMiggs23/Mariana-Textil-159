@@ -36,6 +36,7 @@ export default function PreciosList() {
     search: debouncedSearch || undefined,
     unidad: unidad !== "all" ? (unidad as UnidadProducto) : undefined,
     semaforo: semaforo !== "all" ? (semaforo as SemaforoPrecio) : undefined,
+    modoPrecio: activeMode,
   };
 
   const { data: precios, isLoading } = useListPrecios(queryParams, {
@@ -153,7 +154,16 @@ export default function PreciosList() {
                     <TableHead>Producto</TableHead>
                     <TableHead className="w-[80px] text-center">Unidad</TableHead>
                     <TableHead className="w-[190px]">Venta por metro</TableHead>
-                    <TableHead className="text-right">Costo Base</TableHead>
+                    <TableHead className="text-right">
+                      <div className="flex flex-col items-end">
+                        <span>Costo base</span>
+                        <span className="max-w-[220px] text-[10px] font-normal leading-tight text-muted-foreground">
+                          {activeMode === ModoPrecio.ROLLO
+                            ? "Promedio ponderado de rollos con existencia actual"
+                            : "Promedio simple de rollos recibidos en los últimos 12 meses, sin ponderar"}
+                        </span>
+                      </div>
+                    </TableHead>
                     <TableHead className="text-right">Precio Lista</TableHead>
                     <TableHead className="text-right">Margen $</TableHead>
                     <TableHead className="text-right">Margen %</TableHead>
@@ -227,7 +237,22 @@ export default function PreciosList() {
                         ) : (
                           <>
                             <TableCell className="text-right text-muted-foreground">
-                              {modeData.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "—"}
+                              {activeMode !== ModoPrecio.ROLLO ? (
+                                precio.costoReferenciaMetreado.estado === 'NO_COST' ? (
+                                  <span className="text-xs font-semibold text-muted-foreground bg-muted px-2 py-1 rounded">Sin costo</span>
+                                ) : (
+                                  <div className="flex flex-col items-end gap-0.5">
+                                    <span>{modeData.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "—"}</span>
+                                    {precio.costoReferenciaMetreado.esMayorA12Meses && (
+                                      <span className="text-[10px] text-amber-600 font-medium flex items-center gap-1 bg-amber-50 px-1 py-0.5 rounded border border-amber-200">
+                                        <AlertTriangle className="w-3 h-3" /> Costo obsoleto (&gt;12m)
+                                      </span>
+                                    )}
+                                  </div>
+                                )
+                              ) : (
+                                modeData.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "—"
+                              )}
                             </TableCell>
                             <TableCell className="text-right font-bold text-foreground">
                               {modeData.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}

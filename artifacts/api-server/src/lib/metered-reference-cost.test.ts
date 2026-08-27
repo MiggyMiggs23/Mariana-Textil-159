@@ -92,3 +92,29 @@ test("ignores null-cost rolls mixed with valid received rolls", () => {
   assert.equal(result.cost, "13.00");
   assert.equal(result.rollsIncluded, 2);
 });
+
+test("averages integer cents with explicit half-up rounding", () => {
+  const result = calculateMeteredReferenceCost(
+    [
+      row(1, "1.00", "2025-05-01T00:00:00.000Z"),
+      row(2, "1.01", "2025-05-02T00:00:00.000Z"),
+    ],
+    asOf,
+  );
+
+  assert.equal(result.cost, "1.01");
+});
+
+test("does not inherit binary floating-point toFixed rounding", () => {
+  // 2.675 is not represented exactly as a JavaScript Number, where toFixed
+  // can produce 2.67. Exact cents make this half-cent average 2.68.
+  const result = calculateMeteredReferenceCost(
+    [
+      row(1, "2.67", "2025-05-01T00:00:00.000Z"),
+      row(2, "2.68", "2025-05-02T00:00:00.000Z"),
+    ],
+    asOf,
+  );
+
+  assert.equal(result.cost, "2.68");
+});

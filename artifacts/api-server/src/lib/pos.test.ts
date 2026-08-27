@@ -5,6 +5,7 @@ import {
   auditoriaTable,
   clientesTable,
   db,
+  entradasTable,
   ensureProductMeterSchema,
   existenciasTable,
   movimientosCreditoTable,
@@ -32,6 +33,7 @@ import {
   listarTicketsCajaOperativa,
   listarTicketsPendientesCaja,
   PosError,
+  quantityTimesMoneyCents,
   validarPrecioPos,
 } from "./pos";
 
@@ -44,6 +46,7 @@ let seq = 0;
 const createdProductIds: number[] = [];
 const createdLocationIds: number[] = [];
 const createdClientIds: number[] = [];
+const createdEntryIds: number[] = [];
 const createdRolloIds: number[] = [];
 const createdTicketIds: number[] = [];
 const createdSessionIds: number[] = [];
@@ -68,6 +71,12 @@ async function test(name: string, fn: () => Promise<void>) {
     failed += 1;
   }
 }
+
+await test("POS monetary line totals use exact thousandths times cents arithmetic", async () => {
+  // 2.675 × 1.00 = 2.675, which freezes at 2.68 by conventional half-up.
+  assert.equal(quantityTimesMoneyCents("2.675", 100), 268);
+  assert.equal(quantityTimesMoneyCents("1.005", 100), 101);
+});
 
 async function makeLocation() {
   const [row] = await db
@@ -111,17 +120,38 @@ async function makeRollo(
   cantidad = "10.000",
   costo = "50.00",
 ) {
-  const { rollo } = await db.transaction((tx) =>
-    crearRollo(tx, {
+  const { rollo, entryId } = await db.transaction(async (tx) => {
+    const created = await crearRollo(tx, {
       productoId,
       ubicacionId,
       cantidadInicial: cantidad,
       costoUnitario: costo,
       usuarioId: USER_ID,
       estado: "DISPONIBLE",
-    }),
-  );
+    });
+    const [entry] = await tx
+      .insert(entradasTable)
+      .values({
+        folio: 1_800_000_000 + ++seq,
+        ubicacionId,
+        usuarioId: USER_ID,
+        fecha: new Date(),
+        totalRollos: 1,
+        totalCosto: (Number(cantidad) * Number(costo)).toFixed(2),
+        uuidCliente: randomUUID(),
+      })
+      .returning({ id: entradasTable.id });
+    await tx
+      .update(rollosTable)
+      .set({ recepcionId: entry!.id })
+      .where(eq(rollosTable.id, created.rollo.id));
+    return {
+      rollo: { ...created.rollo, recepcionId: entry!.id },
+      entryId: entry!.id,
+    };
+  });
   createdRolloIds.push(rollo.id);
+  createdEntryIds.push(entryId);
   return rollo;
 }
 
@@ -1385,6 +1415,11 @@ try {
     await db
       .delete(rollosTable)
       .where(inArray(rollosTable.id, createdRolloIds));
+  }
+  if (createdEntryIds.length > 0) {
+    await db
+      .delete(entradasTable)
+      .where(inArray(entradasTable.id, createdEntryIds));
   }
   if (createdProductIds.length > 0 && createdLocationIds.length > 0) {
     await db

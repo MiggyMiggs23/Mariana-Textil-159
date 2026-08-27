@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ModoPrecio } from './modoPrecio';
 import type { SemaforoPrecio } from './semaforoPrecio';
 import type { UnidadProducto } from './unidadProducto';
 
@@ -12,4 +13,8 @@ export type ListPreciosParams = {
 search?: string;
 unidad?: UnidadProducto;
 semaforo?: SemaforoPrecio;
+/**
+ * Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
+ */
+modoPrecio?: ModoPrecio;
 };

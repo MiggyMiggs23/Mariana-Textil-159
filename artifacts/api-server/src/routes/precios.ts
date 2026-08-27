@@ -120,6 +120,7 @@ router.get("/precios", requireAdmin, async (req, res): Promise<void> => {
     res.status(400).json({ error: "Filtros de precios inválidos." });
     return;
   }
+  const modoPrecio = query.data.modoPrecio ?? "ROLLO";
   const conditions = [];
   if (query.data.search?.trim()) {
     const search = `%${query.data.search.trim()}%`;
@@ -129,7 +130,9 @@ router.get("/precios", requireAdmin, async (req, res): Promise<void> => {
   const products = await db.select().from(productosTable).where(conditions.length ? and(...conditions) : undefined)
     .orderBy(productosTable.tela, productosTable.color);
   const rows = (await Promise.all(products.map((product) => presentProduct(product)))).filter(
-    (row) => !query.data.semaforo || row.semaforo === query.data.semaforo,
+    (row) =>
+      !query.data.semaforo ||
+      row.preciosPorModo[modoPrecio].semaforo === query.data.semaforo,
   );
   res.json(ListPreciosResponse.parse(rows));
 });

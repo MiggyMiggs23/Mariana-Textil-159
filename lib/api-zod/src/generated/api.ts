@@ -381,7 +381,8 @@ export const CreateProductoResponse = zod.object({
 export const ListPreciosQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
   "unidad": zod.enum(['METRO', 'KILO']).optional(),
-  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']).optional()
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']).optional(),
+  "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']).optional().describe('Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.')
 })
 
 export const ListPreciosResponseItem = zod.object({
