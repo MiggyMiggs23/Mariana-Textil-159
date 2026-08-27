@@ -8604,7 +8604,7 @@ export const getCrearTicketUrl = () => {
 }
 
 /**
- * @summary Crea un ticket normal o de venta metreada sin cobrarlo
+ * @summary Crea un ticket con líneas de rollo, metraje o ambas, sin cobrarlo
  */
 export const crearTicket = async (ticketInput: TicketInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
 
@@ -8653,7 +8653,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CrearTicketMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
- * @summary Crea un ticket normal o de venta metreada sin cobrarlo
+ * @summary Crea un ticket con líneas de rollo, metraje o ambas, sin cobrarlo
  */
 export const useCrearTicket = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearTicket>>, TError,{data: BodyType<TicketInput>}, TContext>, request?: SecondParameter<typeof customFetch>}

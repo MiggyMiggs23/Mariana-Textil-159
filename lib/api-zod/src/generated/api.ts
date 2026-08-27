@@ -3470,7 +3470,7 @@ export const MarkNotificacionReadResponse = zod.object({
 
 
 /**
- * @summary Crea un ticket normal o de venta metreada sin cobrarlo
+ * @summary Crea un ticket con líneas de rollo, metraje o ambas, sin cobrarlo
  */
 
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;

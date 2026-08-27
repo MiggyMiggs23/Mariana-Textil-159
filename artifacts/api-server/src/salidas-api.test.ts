@@ -131,7 +131,7 @@ test("Frontend finalizes from Salida Nueva and detail has no second send action"
   assert.match(detailPage, /salida\.estado === 'EN_TRANSITO' \|\| salida\.estado === 'RECIBIDA'/);
   assert.match(detailPage, /btn-print-salida-disabled/);
   assert.match(detailPage, /La hoja de traslado estará disponible cuando la mercancía esté en tránsito/);
-  assert.match(createPage, /El inventario no se moverá hasta enviarla/);
+  assert.match(createPage, /confirma la salida para enviarlos al destino/);
   assert.match(createPage, /useAgregarRolloBorradorSalida/);
   assert.match(createPage, /useQuitarRolloBorradorSalida/);
   assert.match(createPage, /useGetBorradorSalida/);

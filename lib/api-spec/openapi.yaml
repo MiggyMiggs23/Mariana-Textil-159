@@ -2426,7 +2426,7 @@ paths:
     post:
       operationId: crearTicket
       tags: [pos]
-      summary: Crea un ticket normal o de venta metreada sin cobrarlo
+      summary: Crea un ticket con líneas de rollo, metraje o ambas, sin cobrarlo
       requestBody:
         required: true
         content:

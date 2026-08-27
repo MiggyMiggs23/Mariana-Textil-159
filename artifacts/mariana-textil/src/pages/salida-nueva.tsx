@@ -292,7 +292,9 @@ export default function SalidaNueva() {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Nueva Salida</h1>
-            <p className="text-muted-foreground mt-1 text-sm">Escanea los rollos para armarla. El inventario no se moverá hasta enviarla.</p>
+            <p className="text-muted-foreground mt-1 text-sm">
+              Escanea los rollos y confirma la salida para enviarlos al destino.
+            </p>
           </div>
         </div>
 
