@@ -1,0 +1,204 @@
+# PARTE 2 — Salida a mostrador y ticket mixto
+
+Tercera parte del plan. **No adelantes trabajo de la Parte 3** (las tres pestañas de precios, el promedio de 12 meses, la regla de mayoreo y menudeo). Si encuentras algo que pertenece ahí, anótalo en `replit.md` bajo "Pendiente de partes siguientes" y sigue.
+
+Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## Contexto del negocio
+
+Mariana Textil vende de dos formas:
+
+- **Venta por rollo.** Es el fuerte del negocio, el mayoreo. Se escanea el rollo, sale completo, y se conoce el costo exacto de ese rollo.
+- **Venta metreada.** Se corta tela del mostrador. Es la excepción, no el fuerte.
+
+La decisión de operación, ya tomada: **un rollo que sale a venta por metro deja de existir en el inventario por completo, con todos sus metros.** No se lleva control del retazo que queda en el mostrador. El negocio ha operado así 30 años y no va a cambiar.
+
+De ahí se sigue que **no existe un inventario de rollos abiertos**, y que el POS no puede estar atado a ninguna existencia cuando vende metros.
+
+---
+
+## BLOQUE 1 — Salida a venta por metro
+
+Nueva pestaña dentro de **Salidas**, junto a Historial y Recepción. Nómbrala **"A mostrador"**.
+
+### Cómo funciona
+
+Se escanean rollos con `<CampoEscaneo>`, igual que en Salida Nueva, y al confirmar **el rollo sale del inventario por completo**, con toda su cantidad.
+
+- Origen: el sitio del usuario.
+- Destino: mostrador. No es una ubicación física ni un traslado entre sitios.
+- Es una operación de **un solo paso**. No hay tránsito ni recepción.
+- El movimiento en el kardex es negativo por la cantidad completa del rollo, como ya lo hace `salidaMostrador` en `lib/inventario.ts`.
+
+### Reglas
+
+- Solo rollos `DISPONIBLE` en el sitio del usuario.
+- **Un rollo que salió a mostrador no puede volver a entrar por esta vía.** Es terminal.
+- Genera su propio documento imprimible, con el formato de folio por sitio (`INICIALES-FOLIO`) y su QR, igual que las demás salidas.
+- Queda registrada en la bitácora de auditoría: quién, cuándo, qué rollos y desde qué sitio.
+
+### Permisos
+
+Quien puede crear salidas puede crear salidas a mostrador. Mismo módulo, mismo alcance por sitio.
+
+---
+
+## BLOQUE 2 — Eliminar el estado ABIERTO
+
+Esto quedó pendiente de la Parte 1 y ahora sí se puede hacer, porque el Bloque 1 lo reemplaza.
+
+### Qué se hace
+
+- Elimina `ABIERTO` del enum `estado_rollo`.
+- Elimina la transición `DISPONIBLE → ABIERTO` y cualquier código que la use.
+- `salidaMostrador` ya no cambia el estado del rollo a `ABIERTO`. El rollo pasa a un estado terminal que refleje que salió a mostrador y no vuelve.
+- Corrige la inconsistencia anotada en `replit.md`: `salidaMostrador` inserta el movimiento negativo completo pero deja `rollos.cantidad_actual` sin tocar. **Ahora sí debe quedar en cero**, para que la tabla `rollos` y el kardex digan lo mismo.
+
+### Migración
+
+Cuenta cuántos rollos hay en `ABIERTO` antes de migrar y repórtalo. Aterrízalos en el estado terminal nuevo con su `cantidad_actual` en cero. **Nada se borra.**
+
+Si alguno no encaja limpiamente, detente y anótalo en `replit.md`.
+
+---
+
+## BLOQUE 3 — El tipo de venta baja del ticket a la línea
+
+Hoy `tipo` vive en la tabla `tickets` (`lib/db/src/schema/pos.ts` línea 82), con el enum `tipo_ticket` de `NORMAL` y `METREADO`. Eso obliga a que un ticket entero sea de un solo tipo.
+
+**Bájalo a `ticket_lineas`.** Un mismo ticket va a poder traer líneas de rollo y líneas metreadas.
+
+### Reglas por tipo de línea
+
+**Línea de rollo (`NORMAL`):**
+- Requiere `rolloId`. Se mantiene todo el comportamiento actual: rollo `DISPONIBLE` en el sitio, piso al costo del rollo, costo congelado del rollo específico.
+
+**Línea metreada (`METREADO`):**
+- **No se ata a ningún rollo ni a ninguna existencia.** `rolloId` va nulo siempre.
+- **Sin límite de cantidad.** El vendedor captura los metros que sean.
+- Sin validación contra inventario. No existe inventario de rollos abiertos.
+- **Solo para productos que se venden en metros.** Los productos por kilo se venden únicamente por rollo; rechaza en el servidor cualquier línea metreada de un producto en kilos.
+
+### El costo de la línea metreada
+
+**No lo resuelvas en esta parte.** El costo de la venta metreada se calcula con el promedio de los últimos 12 meses de la tela, y eso se construye en la Parte 3.
+
+Por ahora, deja el campo de costo congelado **nulo** en las líneas metreadas, y que los reportes lo traten como "costo pendiente" en vez de cero.
+
+**Es crítico que no quede en cero.** Un costo en cero produce 100% de margen y ensucia toda la utilidad reportada. Nulo es honesto; cero es una mentira.
+
+### Migración
+
+Los tickets existentes tienen su tipo a nivel de ticket. Al migrar, cada línea hereda el tipo de su ticket. Reporta cuántos tickets y cuántas líneas se migraron, separados por tipo.
+
+Cuando ya no quede ningún uso, elimina la columna `tipo` de `tickets` y el enum `tipo_ticket` si no lo usa nada más.
+
+---
+
+## BLOQUE 4 — El POS con las dos formas en un solo ticket
+
+En `pages/pos.tsx`, hoy hay dos pestañas —"Venta de Rollos (NORMAL)" y "Cortes (METREADO)"— que definen el tipo del ticket completo.
+
+Cámbialo: **las dos formas alimentan el mismo ticket.**
+
+- Escanear un rollo agrega una línea de rollo.
+- Capturar producto y metros agrega una línea metreada.
+- El carrito muestra las dos, claramente distinguidas.
+
+El vendedor no tiene que decidir de antemano qué tipo de venta va a ser. Simplemente agrega lo que el cliente lleva.
+
+### Lo que no cambia
+
+- Precio libre con piso al costo, en las líneas de rollo.
+- Las líneas metreadas siguen usando el precio de lista como sugerencia. La regla de mayoreo y menudeo llega en la Parte 3.
+- TERMINAL sigue sin ver costos ni margen, en ninguna línea.
+
+---
+
+## BLOQUE 5 — El ticket impreso, agrupado
+
+En el papel, las líneas van **agrupadas en dos secciones separadas y rotuladas**, no revueltas en el orden en que se escanearon:
+
+```
+ROLLOS
+  ... líneas de rollo, con su subtotal
+
+METRAJE
+  ... líneas metreadas, con su subtotal
+
+TOTAL
+```
+
+Cada sección lleva su propio subtotal. Al final, el total general con IVA si el ticket está marcado como facturado.
+
+Si el ticket solo trae un tipo, **no muestres la sección vacía ni el encabezado de la otra.** Un ticket de puros rollos debe verse igual que hoy.
+
+Razón: el cliente entiende qué está pagando y el de caja cobra sin confundirse.
+
+Aplica el mismo agrupamiento en el detalle del ticket dentro del sistema, no solo en el papel.
+
+---
+
+## BLOQUE 6 — Reportes por tipo de venta
+
+Separa en Reportes las ventas por rollo de las metreadas. **Nunca las sumes en un solo margen agregado sin distinguirlas.**
+
+- Ventas por rollo: cantidades, importes, costos exactos y márgenes.
+- Ventas metreadas: cantidades e importes. El margen queda pendiente hasta la Parte 3; marca esas líneas como "costo pendiente" en vez de calcular un margen falso.
+
+Un ticket mixto aporta a las dos secciones, cada línea a la suya.
+
+Recuerda que **metros y kilos nunca se suman entre sí**, y que **el margen siempre se calcula sobre el subtotal, nunca sobre el total con IVA.**
+
+---
+
+## BLOQUE 7 — Texto obsoleto en Salida Nueva
+
+En `pages/salida-nueva.tsx` línea 295 dice todavía:
+
+> Escanea los rollos para armarla. El inventario no se moverá hasta enviarla.
+
+Con el botón único esa frase confunde: sugiere un paso posterior que ya no existe. Cámbiala por algo que describa el flujo real —se escanean los rollos y al confirmar la salida se envía— y revisa que no haya otros textos en la interfaz que sigan hablando de armar y enviar como dos pasos.
+
+---
+
+## BLOQUE 8 — Verificación
+
+Reporta esto:
+
+**Salida a mostrador**
+- Un rollo sale a mostrador y desaparece de la existencia en las seis vistas del inventario
+- `rollos.cantidad_actual` queda en cero y coincide con el kardex
+- El mismo rollo no se puede volver a sacar a mostrador
+- El documento se imprime con su folio por sitio y su QR
+
+**Estado ABIERTO**
+- Conteo de rollos migrados desde `ABIERTO` y dónde aterrizaron
+- El enum ya no contiene `ABIERTO` y ninguna transición lo referencia
+
+**Ticket mixto**
+- Un ticket con 2 rollos y 8 metros se crea, se guarda y se cobra correctamente
+- La línea metreada no exige rollo ni valida existencia
+- Vender metros de un producto por kilo se rechaza en el servidor
+- El costo congelado de una línea metreada queda **nulo, no cero**
+- Conteo de tickets y líneas migradas, por tipo
+
+**Ticket impreso**
+- Un ticket mixto muestra las dos secciones con sus subtotales
+- Un ticket de puros rollos no muestra la sección de metraje
+
+**Reportes**
+- Las ventas por rollo y las metreadas aparecen separadas
+- Las metreadas se marcan como costo pendiente, sin margen calculado
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`, bajo decisiones de arquitectura:
+
+> Un rollo que sale a venta por metro deja el inventario por completo, con todos sus metros. No se lleva control del retazo. No existe inventario de rollos abiertos y el estado `ABIERTO` fue eliminado. El tipo de venta vive en la línea del ticket, no en el ticket: un mismo ticket puede traer líneas de rollo y líneas metreadas. Las líneas metreadas no se atan a ningún rollo ni a ninguna existencia, no tienen límite de cantidad, y solo aplican a productos que se venden en metros. Su costo se resuelve en la Parte 3 con el promedio de 12 meses; hasta entonces queda nulo, nunca cero.
