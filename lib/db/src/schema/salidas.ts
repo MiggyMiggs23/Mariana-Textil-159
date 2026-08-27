@@ -17,8 +17,11 @@ import { productosTable } from "./productos";
 import { rollosTable } from "./rollos";
 import { usuariosTable } from "./users";
 
+export type ModalidadSalida = "TRASLADO" | "MOSTRADOR";
+
 /**
- * Two-step inter-location exit: assembled at origin, then sent through transit.
+ * Inventory exit document. Transfers have a physical destination; counter
+ * exits deliberately do not invent one.
  */
 export const salidasTable = pgTable(
   "salidas",
@@ -28,9 +31,11 @@ export const salidasTable = pgTable(
     origenId: integer("origen_id")
       .notNull()
       .references(() => ubicacionesTable.id),
-    destinoId: integer("destino_id")
+    destinoId: integer("destino_id").references(() => ubicacionesTable.id),
+    modalidad: text("modalidad")
+      .$type<ModalidadSalida>()
       .notNull()
-      .references(() => ubicacionesTable.id),
+      .default("TRASLADO"),
     estado: estadoSalidaEnum("estado").notNull().default("ARMANDO"),
     usuarioSolicitaId: integer("usuario_solicita_id").references(
       () => usuariosTable.id,
@@ -88,7 +93,7 @@ export const salidasTable = pgTable(
     uniqueIndex("salidas_borrador_usuario_origen_uidx")
       .on(table.usuarioSolicitaId, table.origenId)
       .where(
-        sql`${table.estado} = 'ARMANDO' AND ${table.usuarioSolicitaId} IS NOT NULL`,
+        sql`${table.estado} = 'ARMANDO' AND ${table.modalidad} = 'TRASLADO' AND ${table.usuarioSolicitaId} IS NOT NULL`,
       ),
   ],
 );

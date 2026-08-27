@@ -1401,6 +1401,8 @@ export type SalidaMostradorInput = {
   usuarioId: number;
   justificacion?: string | null;
   uuidCliente?: string | null;
+  documentoTipo?: string | null;
+  documentoId?: string | null;
 };
 
 /**
@@ -1454,6 +1456,8 @@ export async function salidaMostrador(
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
     uuidCliente: input.uuidCliente ?? null,
+    documentoTipo: input.documentoTipo ?? null,
+    documentoId: input.documentoId ?? null,
   });
 
   await refreshCache(tx, rollo.productoId, rollo.ubicacionId);

@@ -43,6 +43,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { RecepcionSalidas } from "@/components/recepcion-salidas";
+import { SalidaMostrador } from "@/components/salida-mostrador";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function EstadoBadge({ estado }: { estado: string }) {
@@ -64,8 +65,9 @@ export default function Salidas() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { selectedLocationId } = useLocationScope();
-  const initialTab = new URLSearchParams(window.location.search).get("tab") === "recepcion"
-    ? "recepcion"
+  const requestedTab = new URLSearchParams(window.location.search).get("tab");
+  const initialTab = requestedTab === "recepcion" || requestedTab === "mostrador"
+    ? requestedTab
     : "historial";
   const [activeTab, setActiveTab] = useState(initialTab);
 
@@ -219,10 +221,11 @@ export default function Salidas() {
           <TabsList>
             <TabsTrigger value="historial">Historial</TabsTrigger>
             <TabsTrigger value="recepcion">Recepción</TabsTrigger>
+            {canCreate && <TabsTrigger value="mostrador">A mostrador</TabsTrigger>}
           </TabsList>
         </Tabs>
 
-        {activeTab === "recepcion" ? <RecepcionSalidas /> : (
+        {activeTab === "recepcion" ? <RecepcionSalidas /> : activeTab === "mostrador" && canCreate ? <SalidaMostrador /> : (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-4 border-b border-slate-100 bg-slate-50 flex flex-wrap gap-4 items-center justify-between">
             <div className="flex items-center gap-4 flex-1">

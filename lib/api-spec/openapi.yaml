@@ -34,7 +34,7 @@ tags:
   - name: caja
     description: Apertura, cobro y corte de caja
   - name: salidas
-    description: Armado, envío y recepción de salidas entre ubicaciones
+    description: Salidas entre ubicaciones y retiros completos a mostrador
   - name: admin-analytics
     description: Analítica financiera y operativa exclusiva para ADMIN
   - name: notificaciones
@@ -2832,6 +2832,30 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /salidas/mostrador:
+    post:
+      operationId: crearSalidaMostrador
+      tags: [salidas]
+      summary: Confirma en un paso una salida completa de rollos a mostrador
+      description: Requiere salidas/crear y opera en el sitio del usuario; ADMIN puede elegir un sitio operativo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalidaMostradorDocumentoInput"
+      responses:
+        "201":
+          description: Documento de mostrador persistido y rollos retirados
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaDetail"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /salidas/exportar:
     get:
       operationId: exportarSalidas
@@ -6081,6 +6105,23 @@ components:
     EstadoSalida:
       type: string
       enum: [ARMANDO, EN_TRANSITO, RECIBIDA, CANCELADA]
+    ModalidadSalida:
+      type: string
+      enum: [TRASLADO, MOSTRADOR]
+    SalidaMostradorDocumentoInput:
+      type: object
+      required: [uuidCliente, origenId, series]
+      properties:
+        uuidCliente:
+          type: string
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+        origenId: { type: number }
+        series:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, minLength: 1 }
+        observaciones: { type: ["string", "null"], maxLength: 2000 }
     SalidaInput:
       type: object
       required: [uuidCliente, origenId, destinoId, rolloIds]
@@ -6132,17 +6173,19 @@ components:
     SalidaResumen:
       type: object
       required:
-        [id, folio, inicialesSitio, folioFormateado, estado, origenId, nombreOrigen, destinoId, nombreDestino, armadoPorId, nombreArmadoPor, fechaArmado, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
+        [id, folio, inicialesSitio, folioFormateado, modalidad, estado, origenId, nombreOrigen, destinoId, nombreDestino, armadoPorId, nombreArmadoPor, fechaArmado, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
       properties:
         id: { type: number }
         folio: { type: number }
         inicialesSitio: { type: string }
         folioFormateado: { type: string, example: DN-000001 }
+        modalidad:
+          $ref: "#/components/schemas/ModalidadSalida"
         estado:
           $ref: "#/components/schemas/EstadoSalida"
         origenId: { type: number }
         nombreOrigen: { type: string }
-        destinoId: { type: number }
+        destinoId: { type: ["number", "null"] }
         nombreDestino: { type: string }
         armadoPorId: { type: number }
         nombreArmadoPor: { type: string }

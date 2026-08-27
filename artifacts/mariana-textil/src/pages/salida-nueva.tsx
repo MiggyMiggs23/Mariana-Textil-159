@@ -93,7 +93,7 @@ export default function SalidaNueva() {
     setDraft(resumed);
     if (resumed) {
       uuidClienteRef.current = resumed.uuidCliente;
-      setDestinoId(resumed.destinoId);
+      setDestinoId(resumed.destinoId ?? "");
     }
   }, [draftQuery.data, draftQuery.isSuccess, origenId]);
 

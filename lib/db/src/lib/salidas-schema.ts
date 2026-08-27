@@ -67,7 +67,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         id serial PRIMARY KEY,
          folio integer NOT NULL,
         origen_id integer NOT NULL REFERENCES ubicaciones(id),
-        destino_id integer NOT NULL REFERENCES ubicaciones(id),
+        destino_id integer REFERENCES ubicaciones(id),
+        modalidad text NOT NULL DEFAULT 'TRASLADO',
         estado estado_salida NOT NULL DEFAULT 'ARMANDO',
         usuario_solicita_id integer REFERENCES usuarios(id),
         usuario_acepta_id integer REFERENCES usuarios(id),
@@ -96,10 +97,16 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
 
       ALTER TABLE salidas
         ALTER COLUMN estado SET DEFAULT 'ARMANDO',
+        ADD COLUMN IF NOT EXISTS modalidad text NOT NULL DEFAULT 'TRASLADO',
         ADD COLUMN IF NOT EXISTS usuario_cancela_id integer REFERENCES usuarios(id),
         ADD COLUMN IF NOT EXISTS cancelada_at timestamptz,
         ADD COLUMN IF NOT EXISTS autorizado_por_id integer REFERENCES usuarios(id),
         ADD COLUMN IF NOT EXISTS actividad_at timestamptz;
+
+      ALTER TABLE salidas ALTER COLUMN destino_id DROP NOT NULL;
+      ALTER TABLE salidas DROP CONSTRAINT IF EXISTS salidas_modalidad_check;
+      ALTER TABLE salidas ADD CONSTRAINT salidas_modalidad_check
+        CHECK (modalidad IN ('TRASLADO', 'MOSTRADOR'));
 
       UPDATE salidas
          SET actividad_at = COALESCE(
@@ -183,9 +190,11 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       CREATE INDEX IF NOT EXISTS salidas_folio_idx ON salidas (folio);
       CREATE INDEX IF NOT EXISTS salidas_created_at_idx ON salidas (created_at);
       CREATE INDEX IF NOT EXISTS salidas_estado_actividad_idx ON salidas (estado, actividad_at);
-      CREATE UNIQUE INDEX IF NOT EXISTS salidas_borrador_usuario_origen_uidx
+      DROP INDEX IF EXISTS salidas_borrador_usuario_origen_uidx;
+      CREATE UNIQUE INDEX salidas_borrador_usuario_origen_uidx
         ON salidas (usuario_solicita_id, origen_id)
-        WHERE estado = 'ARMANDO' AND usuario_solicita_id IS NOT NULL;
+        WHERE estado = 'ARMANDO' AND modalidad = 'TRASLADO'
+          AND usuario_solicita_id IS NOT NULL;
       CREATE INDEX IF NOT EXISTS salida_rollos_rollo_salida_idx ON salida_rollos (rollo_id, salida_id);
       CREATE INDEX IF NOT EXISTS salida_lineas_salida_idx ON salida_lineas (salida_id);
       CREATE INDEX IF NOT EXISTS salida_lineas_producto_idx ON salida_lineas (producto_id);

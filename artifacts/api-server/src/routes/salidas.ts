@@ -7,6 +7,8 @@ import {
   CancelarSalidaBody,
   CancelarSalidaParams,
   CancelarSalidaResponse,
+  CrearSalidaMostradorBody,
+  CrearSalidaMostradorResponse,
   EnviarSalidaBody,
   EnviarSalidaParams,
   EnviarSalidaResponse,
@@ -35,6 +37,7 @@ import {
   agregarRolloBorradorSalida,
   buildSalidaDetail,
   cancelarSalida,
+  crearSalidaMostrador,
   enviarSalida,
   listarSalidas,
   obtenerBorradorSalida,
@@ -94,7 +97,7 @@ async function loadHeader(id: number) {
   return salida ?? null;
 }
 
-function canRead(auth: AuthContext, origenId: number, destinoId: number): boolean {
+function canRead(auth: AuthContext, origenId: number, destinoId: number | null): boolean {
   if (auth.user.rol === "CAJA") {
     return auth.user.ubicacionId != null && auth.user.ubicacionId === destinoId;
   }
@@ -148,7 +151,7 @@ async function requireSalidaAccess(
       : stage === "origin"
         ? canOperate(auth, salida.origenId)
         : stage === "destination"
-          ? canOperate(auth, salida.destinoId)
+          ? salida.destinoId != null && canOperate(auth, salida.destinoId)
            : auth.user.rol === "ADMIN" ||
              auth.user.rol === "SUPERVISOR" ||
             auth.user.ubicacionId === salida.origenId ||
@@ -290,6 +293,48 @@ router.get(
 );
 
 router.post(
+  "/salidas/mostrador",
+  requireSession,
+  requierePermiso("salidas", "crear"),
+  async (req, res, next) => {
+    try {
+      const body = CrearSalidaMostradorBody.parse(req.body);
+      const auth = req.auth!;
+      if (auth.user.rol === "CAJA") {
+        res.status(403).json({ error: "El rol CAJA no puede crear salidas a mostrador." });
+        return;
+      }
+      const canUseOrigin =
+        auth.user.rol === "ADMIN" ||
+        (auth.user.ubicacionId != null && auth.user.ubicacionId === body.origenId);
+      if (!canUseOrigin) {
+        throw new InventarioError(
+          auth.user.ubicacionId == null
+            ? "No tienes una ubicación asignada."
+            : "No puedes operar desde ese origen.",
+          "SALIDA_LOCATION_FORBIDDEN",
+        );
+      }
+      const series = body.series.map((raw) => {
+        const code = interpretarCodigoEscaneado(raw);
+        return (code.serie ?? code.textoOriginal.trim()).toUpperCase();
+      });
+      const detail = await db.transaction((tx) =>
+        crearSalidaMostrador(tx, {
+          ...body,
+          series,
+          usuarioId: auth.user.id,
+          ip: req.ip || req.socket.remoteAddress || "desconocida",
+        }),
+      );
+      res.status(201).json(CrearSalidaMostradorResponse.parse(detail));
+    } catch (error) {
+      if (!sendError(error, res)) next(error);
+    }
+  },
+);
+
+router.post(
   "/salidas/borrador/rollos",
   requireSession,
   requierePermiso("salidas", "crear"),
@@ -420,6 +465,9 @@ router.get(
       if (!header) {
         throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
       }
+      if (header.destinoId == null) {
+        throw new InventarioError("La salida no tiene un destino de recepción.", "INVALID_SALIDA_STATE");
+      }
       requireReceivingSite(req.auth!, header.destinoId);
       if (header.estado !== "EN_TRANSITO") {
         throw new InventarioError(
@@ -535,6 +583,9 @@ router.post(
       const header = await loadHeader(id);
       if (!header) {
         throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+      }
+      if (header.destinoId == null) {
+        throw new InventarioError("La salida no tiene un destino de recepción.", "INVALID_SALIDA_STATE");
       }
       requireReceivingSite(req.auth!, header.destinoId);
       const detail = await db.transaction((tx) =>

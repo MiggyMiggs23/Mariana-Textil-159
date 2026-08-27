@@ -15,6 +15,8 @@ const schemaUpgradeFile = new URL("lib/db/src/lib/salidas-schema.ts", root);
 const listPageFile = new URL("artifacts/mariana-textil/src/pages/salidas.tsx", root);
 const detailPageFile = new URL("artifacts/mariana-textil/src/pages/salida-detail.tsx", root);
 const createPageFile = new URL("artifacts/mariana-textil/src/pages/salida-nueva.tsx", root);
+const counterPageFile = new URL("artifacts/mariana-textil/src/components/salida-mostrador.tsx", root);
+const salidaSchemaFile = new URL("lib/db/src/schema/salidas.ts", root);
 
 test("Salida capture persists its draft roll-by-roll and finalizes in one action", async () => {
   const [route, spec] = await Promise.all([readFile(routeFile, "utf8"), readFile(specFile, "utf8")]);
@@ -31,7 +33,7 @@ test("Salida capture persists its draft roll-by-roll and finalizes in one action
   assert.match(spec, /\/salidas\/exportar:/);
   assert.match(spec, /operationId: getBorradorSalida/);
   assert.match(spec, /operationId: agregarRolloBorradorSalida/);
-  assert.doesNotMatch(spec, /operationId: crearSalida/);
+  assert.doesNotMatch(spec, /operationId: crearSalida\s*$/m);
   assert.match(spec, /operationId: quitarRolloBorradorSalida/);
   assert.match(spec, /operationId: getDocumentoSalida/);
   assert.doesNotMatch(spec, /operationId: escanearRolloSalida/);
@@ -81,6 +83,37 @@ test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven"
   assert.match(documentPage, /ESCANEAR PARA RECIBIR/);
   assert.match(receptionPage, /setSalidaId\(salida\.id\)/);
   assert.match(receptionPage, /salida\.folioFormateado/);
+});
+
+test("Block 1 counter exit is one-step, site-scoped, persisted and printable", async () => {
+  const documentPageFile = new URL("artifacts/mariana-textil/src/pages/salida-documento.tsx", root);
+  const [route, service, spec, listPage, counterPage, documentPage, schema] =
+    await Promise.all([
+      readFile(routeFile, "utf8"),
+      readFile(serviceFile, "utf8"),
+      readFile(specFile, "utf8"),
+      readFile(listPageFile, "utf8"),
+      readFile(counterPageFile, "utf8"),
+      readFile(documentPageFile, "utf8"),
+      readFile(salidaSchemaFile, "utf8"),
+    ]);
+  assert.match(spec, /\/salidas\/mostrador:/);
+  assert.match(spec, /operationId: crearSalidaMostrador/);
+  assert.match(spec, /enum: \[TRASLADO, MOSTRADOR\]/);
+  assert.match(route, /requierePermiso\("salidas", "crear"\)/);
+  assert.match(route, /auth\.user\.rol === "ADMIN"/);
+  assert.match(route, /auth\.user\.ubicacionId === body\.origenId/);
+  assert.match(service, /modalidad: "MOSTRADOR"/);
+  assert.match(service, /destinoId: null/);
+  assert.match(service, /await salidaMostrador\(tx/);
+  assert.match(service, /accion: "CREAR_MOSTRADOR"/);
+  assert.match(service, /rolloIds: rollos\.map/);
+  assert.match(schema, /"TRASLADO" \| "MOSTRADOR"/);
+  assert.match(listPage, /TabsTrigger value="mostrador">A mostrador/);
+  assert.match(counterPage, /<CampoEscaneo/);
+  assert.match(counterPage, /useCrearSalidaMostrador/);
+  assert.match(documentPage, /salida\.modalidad === "MOSTRADOR"/);
+  assert.match(documentPage, /<QRCodeSVG/);
 });
 
 test("Frontend finalizes from Salida Nueva and detail has no second send action", async () => {

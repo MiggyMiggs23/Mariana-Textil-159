@@ -6,16 +6,19 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { EstadoSalida } from './estadoSalida';
+import type { ModalidadSalida } from './modalidadSalida';
 
 export interface SalidaResumen {
   id: number;
   folio: number;
   inicialesSitio: string;
   folioFormateado: string;
+  modalidad: ModalidadSalida;
   estado: EstadoSalida;
   origenId: number;
   nombreOrigen: string;
-  destinoId: number;
+  /** @nullable */
+  destinoId: number | null;
   nombreDestino: string;
   armadoPorId: number;
   nombreArmadoPor: string;

@@ -33,6 +33,7 @@ import {
   InventarioError,
   moverRollo,
   recibirTransferencia,
+  salidaMostrador,
   type Tx,
 } from "./inventario";
 
@@ -44,6 +45,15 @@ export type CrearSalidaInput = {
   transportista?: string | null;
   observaciones?: string | null;
   rolloIds?: number[];
+};
+
+export type CrearSalidaMostradorInput = {
+  origenId: number;
+  usuarioId: number;
+  uuidCliente: string;
+  series: string[];
+  observaciones?: string | null;
+  ip: string;
 };
 
 async function getSalidaFolioFormateado(
@@ -136,7 +146,9 @@ async function getSalidaForUpdate(tx: Tx, salidaId: number): Promise<SalidaHeade
 }
 
 async function getEntityMaps(database: ReadDb, salida: SalidaHeader) {
-  const locationIds = [salida.origenId, salida.destinoId];
+  const locationIds = [salida.origenId, salida.destinoId].filter(
+    (id): id is number => id != null,
+  );
   const userIds = [
     salida.usuarioSolicitaId,
     salida.usuarioEnviaId,
@@ -243,13 +255,17 @@ export async function buildSalidaDetail(
 
   return {
     id: salida.id,
+    modalidad: salida.modalidad,
     folio: salida.folio,
     inicialesSitio: locations.get(salida.origenId)?.iniciales ?? "",
     folioFormateado: `${locations.get(salida.origenId)?.iniciales ?? ""}-${String(salida.folio).padStart(6, "0")}`,
     origenId: salida.origenId,
-    destinoId: salida.destinoId,
+    destinoId: salida.destinoId ?? null,
     nombreOrigen: locations.get(salida.origenId)?.nombre ?? "Ubicación eliminada",
-    nombreDestino: locations.get(salida.destinoId)?.nombre ?? "Ubicación eliminada",
+    nombreDestino:
+      salida.modalidad === "MOSTRADOR"
+        ? "Mostrador"
+        : locations.get(salida.destinoId!)?.nombre ?? "Ubicación eliminada",
     estado: salida.estado,
     armadoPorId: requestedById,
     nombreArmadoPor: users.get(requestedById) ?? "Usuario eliminado",
@@ -281,7 +297,9 @@ export async function buildSalidaDetail(
     totalCantidadEnviada: total("cantidadEnviada"),
     totalCantidadRecibida: total("cantidadRecibida"),
     diferenciasPendientes:
-      salida.estado === "RECIBIDA" && rollos.some((rollo) => !rollo.recibido),
+      salida.modalidad === "TRASLADO" &&
+      salida.estado === "RECIBIDA" &&
+      rollos.some((rollo) => !rollo.recibido),
     lineas: lineas.map((linea) => ({
       id: linea.id,
       productoId: linea.productoId,
@@ -427,6 +445,164 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
     usuarioId: input.usuarioSolicitaId, accion: "CREAR", entidad: "salidas", entidadId: String(salida!.id),
     datosDespues: { folio, origenId: input.origenId, destinoId: input.destinoId, rolloIds },
     ip: "desconocida",
+  });
+  return requireSalidaDetail(tx, salida!.id);
+}
+
+/**
+ * Creates and completes a counter-exit atomically. It has no destination:
+ * each roll leaves through the existing salidaMostrador primitive and remains
+ * ABIERTO until the later retirement block changes that legacy state.
+ */
+export async function crearSalidaMostrador(
+  tx: Tx,
+  input: CrearSalidaMostradorInput,
+) {
+  const series = input.series.map((serie) => serie.trim().toUpperCase());
+  if (!series.length) {
+    throw new InventarioError("La salida a mostrador debe incluir al menos un rollo.", "EMPTY_SALIDA");
+  }
+  if (series.some((serie) => !serie) || new Set(series).size !== series.length) {
+    throw new InventarioError("Las series deben ser válidas y no pueden repetirse.", "DUPLICATE_ROLL");
+  }
+
+  await tx.execute(
+    sql`SELECT pg_advisory_xact_lock(hashtextextended(${input.uuidCliente}, 0))`,
+  );
+  const [duplicate] = await tx
+    .select({
+      id: salidasTable.id,
+      origenId: salidasTable.origenId,
+      modalidad: salidasTable.modalidad,
+      usuarioId: salidasTable.usuarioSolicitaId,
+    })
+    .from(salidasTable)
+    .where(eq(salidasTable.uuidCliente, input.uuidCliente))
+    .limit(1);
+  if (duplicate) {
+    if (
+      duplicate.origenId !== input.origenId ||
+      duplicate.modalidad !== "MOSTRADOR" ||
+      duplicate.usuarioId !== input.usuarioId
+    ) {
+      throw new InventarioError(
+        "El identificador de esta captura ya fue utilizado.",
+        "UUID_ALREADY_USED",
+      );
+    }
+    return requireSalidaDetail(tx, duplicate.id);
+  }
+
+  const [origen] = await tx
+    .select()
+    .from(ubicacionesTable)
+    .where(eq(ubicacionesTable.id, input.origenId))
+    .limit(1);
+  if (!origen || !origen.activa || !["TIENDA", "BODEGA"].includes(origen.tipo)) {
+    throw new InventarioError("El origen no es una ubicación operativa activa.", "INVALID_LOCATION");
+  }
+
+  const rollos = await tx
+    .select()
+    .from(rollosTable)
+    .where(inArray(rollosTable.serie, series))
+    .for("update");
+  if (rollos.length !== series.length) {
+    throw new InventarioError("Una de las series no existe.", "ROLLO_NOT_FOUND");
+  }
+  for (const rollo of rollos) {
+    if (rollo.ubicacionId !== input.origenId) {
+      throw new InventarioError(`El rollo ${rollo.serie} está en otra ubicación.`, "LOCATION_MISMATCH");
+    }
+    if (rollo.estado !== "DISPONIBLE") {
+      throw new InventarioError(`El rollo ${rollo.serie} no está DISPONIBLE.`, "ROLLO_UNAVAILABLE");
+    }
+  }
+  const [reservation] = await tx
+    .select({ rolloId: salidaRollosTable.rolloId })
+    .from(salidaRollosTable)
+    .innerJoin(salidasTable, eq(salidaRollosTable.salidaId, salidasTable.id))
+    .where(and(
+      inArray(salidaRollosTable.rolloId, rollos.map((rollo) => rollo.id)),
+      inArray(salidasTable.estado, ["ARMANDO", "EN_TRANSITO"]),
+    ))
+    .limit(1);
+  if (reservation) {
+    throw new InventarioError("Uno de los rollos ya pertenece a una salida activa.", "ROLLO_RESERVED");
+  }
+
+  const folio = await reserveSalidaFolio(tx, input.origenId);
+  const now = new Date();
+  const [salida] = await tx
+    .insert(salidasTable)
+    .values({
+      folio,
+      origenId: input.origenId,
+      destinoId: null,
+      modalidad: "MOSTRADOR",
+      estado: "RECIBIDA",
+      usuarioSolicitaId: input.usuarioId,
+      usuarioEnviaId: input.usuarioId,
+      solicitadaAt: now,
+      enviadaAt: now,
+      recibidaAt: now,
+      notaSolicitud: input.observaciones?.trim() || null,
+      uuidCliente: input.uuidCliente,
+      actividadAt: now,
+    })
+    .returning({ id: salidasTable.id });
+
+  const groups = new Map<number, typeof rollos>();
+  for (const rollo of rollos) {
+    groups.set(rollo.productoId, [...(groups.get(rollo.productoId) ?? []), rollo]);
+  }
+  const lineas = await tx
+    .insert(salidaLineasTable)
+    .values([...groups.entries()].map(([productoId, items]) => {
+      const cantidad = items.reduce((sum, item) => sum + Number(item.cantidadActual), 0).toFixed(3);
+      return {
+        salidaId: salida!.id,
+        productoId,
+        cantidadSolicitada: cantidad,
+        cantidadEnviada: cantidad,
+        cantidadRecibida: "0",
+        rollosSolicitados: items.length,
+      };
+    }))
+    .returning();
+  const lineByProduct = new Map(lineas.map((linea) => [linea.productoId, linea.id]));
+  await tx.insert(salidaRollosTable).values(rollos.map((rollo) => ({
+    salidaId: salida!.id,
+    lineaId: lineByProduct.get(rollo.productoId)!,
+    rolloId: rollo.id,
+    cantidadEnviada: rollo.cantidadActual,
+    cantidadRecibida: null,
+    recibido: false,
+  })));
+
+  for (const rollo of rollos) {
+    await salidaMostrador(tx, {
+      rolloId: rollo.id,
+      usuarioId: input.usuarioId,
+      justificacion: `Salida a mostrador ${origen.iniciales}-${String(folio).padStart(6, "0")}.`,
+      documentoTipo: "SALIDA",
+      documentoId: String(salida!.id),
+    });
+  }
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    accion: "CREAR_MOSTRADOR",
+    entidad: "salidas",
+    entidadId: String(salida!.id),
+    datosDespues: {
+      modalidad: "MOSTRADOR",
+      folio,
+      sitioId: input.origenId,
+      rolloIds: rollos.map((rollo) => rollo.id),
+      series,
+      fecha: now.toISOString(),
+    },
+    ip: input.ip,
   });
   return requireSalidaDetail(tx, salida!.id);
 }
@@ -848,7 +1024,7 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
     }
     await recibirTransferencia(tx, {
       rolloId: salidaRollo.rolloId,
-      ubicacionDestinoId: salida.destinoId,
+      ubicacionDestinoId: salida.destinoId!,
       usuarioId: input.usuarioId,
       justificacion: `Recepción de salida ${folioFormateado}.`,
       documentoTipo: "RECEPCION_SALIDA",

@@ -195,6 +195,7 @@ import type {
   SalidaDetail,
   SalidaDetailResponseResponse,
   SalidaListResult,
+  SalidaMostradorDocumentoInput,
   SalidaMostradorInput,
   SalidaResumen,
   ServerTime,
@@ -9757,6 +9758,78 @@ export const useAgregarRolloBorradorSalida = <TError = ErrorType<ValidationError
         TContext
       > => {
       return useMutation(getAgregarRolloBorradorSalidaMutationOptions(options));
+    }
+
+export const getCrearSalidaMostradorUrl = () => {
+
+
+
+
+  return `/api/salidas/mostrador`
+}
+
+/**
+ * Requiere salidas/crear y opera en el sitio del usuario; ADMIN puede elegir un sitio operativo.
+ * @summary Confirma en un paso una salida completa de rollos a mostrador
+ */
+export const crearSalidaMostrador = async (salidaMostradorDocumentoInput: SalidaMostradorDocumentoInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+
+  return customFetch<SalidaDetail>(getCrearSalidaMostradorUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(salidaMostradorDocumentoInput)
+  }
+);}
+
+
+
+
+
+export const getCrearSalidaMostradorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalidaMostrador>>, TError,{data: BodyType<SalidaMostradorDocumentoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof crearSalidaMostrador>>, TError,{data: BodyType<SalidaMostradorDocumentoInput>}, TContext> => {
+
+const mutationKey = ['crearSalidaMostrador'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearSalidaMostrador>>, {data: BodyType<SalidaMostradorDocumentoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  crearSalidaMostrador(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrearSalidaMostradorMutationResult = NonNullable<Awaited<ReturnType<typeof crearSalidaMostrador>>>
+    export type CrearSalidaMostradorMutationBody = BodyType<SalidaMostradorDocumentoInput>
+    export type CrearSalidaMostradorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Confirma en un paso una salida completa de rollos a mostrador
+ */
+export const useCrearSalidaMostrador = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalidaMostrador>>, TError,{data: BodyType<SalidaMostradorDocumentoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof crearSalidaMostrador>>,
+        TError,
+        {data: BodyType<SalidaMostradorDocumentoInput>},
+        TContext
+      > => {
+      return useMutation(getCrearSalidaMostradorMutationOptions(options));
     }
 
 export const getExportarSalidasUrl = (params?: ExportarSalidasParams,) => {

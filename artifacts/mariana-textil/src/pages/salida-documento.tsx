@@ -39,8 +39,10 @@ export default function SalidaDocumento() {
   }
 
   const dateObj = new Date(salida.createdAt);
-  const receptionPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&id=${salida.id}`;
-  const receptionUrl = new URL(receptionPath, window.location.origin).toString();
+  const qrPath = salida.modalidad === "MOSTRADOR"
+    ? `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas/${salida.id}/documento/salida`
+    : `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&id=${salida.id}`;
+  const qrUrl = new URL(qrPath, window.location.origin).toString();
 
   // Pagination logic: max 6 rolls per page for half letter landscape fit
   const rollosPerPage = 6;
@@ -90,13 +92,15 @@ export default function SalidaDocumento() {
               <div className="flex items-center gap-6">
                 <div className="flex flex-col items-center gap-1">
                   <QRCodeSVG
-                    value={receptionUrl}
+                    value={qrUrl}
                     size={64}
                     level="M"
                     includeMargin
-                    aria-label={`QR para recibir salida ${salida.folioFormateado}`}
+                    aria-label={`QR del documento de salida ${salida.folioFormateado}`}
                   />
-                  <span className="text-[8px] font-bold uppercase">ESCANEAR PARA RECIBIR</span>
+                  <span className="text-[8px] font-bold uppercase">
+                    {salida.modalidad === "MOSTRADOR" ? "VER DOCUMENTO" : "ESCANEAR PARA RECIBIR"}
+                  </span>
                 </div>
                 <div className="text-right">
                   <div className="text-gray-500 text-xs font-medium">MARIANA TEXTIL S.A. DE C.V.</div>

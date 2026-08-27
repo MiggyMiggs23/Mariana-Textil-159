@@ -2537,6 +2537,30 @@ export const EstadoSalida = {
   CANCELADA: 'CANCELADA',
 } as const;
 
+export type ModalidadSalida = typeof ModalidadSalida[keyof typeof ModalidadSalida];
+
+
+export const ModalidadSalida = {
+  TRASLADO: 'TRASLADO',
+  MOSTRADOR: 'MOSTRADOR',
+} as const;
+
+export interface SalidaMostradorDocumentoInput {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+  origenId: number;
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  series: string[];
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  observaciones?: string | null;
+}
+
 export interface SalidaInput {
   uuidCliente: string;
   origenId: number;
@@ -2563,10 +2587,12 @@ export interface SalidaResumen {
   folio: number;
   inicialesSitio: string;
   folioFormateado: string;
+  modalidad: ModalidadSalida;
   estado: EstadoSalida;
   origenId: number;
   nombreOrigen: string;
-  destinoId: number;
+  /** @nullable */
+  destinoId: number | null;
   nombreDestino: string;
   armadoPorId: number;
   nombreArmadoPor: string;
