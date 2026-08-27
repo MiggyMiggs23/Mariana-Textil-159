@@ -12,9 +12,12 @@ export interface AnalyticsMoneyTotals {
   pendiente: string;
   subtotal: string;
   iva: string;
-  costo: string;
-  margen: string;
-  margenPorcentaje: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
+  /** @nullable */
+  margenPorcentaje: string | null;
   tickets: number;
   ticketsCobrados: number;
   ticketsPendientes: number;

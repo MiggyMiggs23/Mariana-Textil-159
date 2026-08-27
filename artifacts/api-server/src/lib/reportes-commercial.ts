@@ -170,11 +170,19 @@ async function purchases(ctx: DomainReportContext): Promise<CommercialReport> {
 async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
   const where = salesWhere(ctx); const previous = salesWhere(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta });
   const [summary, clientRows, publicRows, payments, credit] = await Promise.all([
-    pool.query(`SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0) ventas,COALESCE(SUM(x.utilidad),0) utilidad
-      FROM tickets t LEFT JOIN LATERAL (SELECT SUM(l.importe-l.costo_total_congelado) utilidad FROM ticket_lineas l WHERE l.ticket_id=t.id AND l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0 AND l.costo_total_congelado>=0) x ON true WHERE ${where.text}`, where.values),
-    pool.query(`SELECT c.id,c.nombre,c.es_sistema,COUNT(*)::int tickets,COALESCE(SUM(t.total),0) ventas,COALESCE(SUM(x.utilidad),0) utilidad,MAX(t.created_at) ultima
-      FROM tickets t JOIN clientes c ON c.id=t.cliente_id LEFT JOIN LATERAL (SELECT SUM(l.importe-l.costo_total_congelado) utilidad FROM ticket_lineas l WHERE l.ticket_id=t.id AND l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0 AND l.costo_total_congelado>=0) x ON true WHERE ${where.text} GROUP BY c.id ORDER BY ventas DESC`, where.values),
-    pool.query(`SELECT c.es_sistema,COUNT(*)::int tickets,COALESCE(SUM(t.total),0) ventas FROM tickets t JOIN clientes c ON c.id=t.cliente_id WHERE ${where.text} GROUP BY c.es_sistema`, where.values),
+    pool.query(`SELECT COUNT(*)::int tickets,COALESCE(SUM(t.subtotal),0) ventas,
+      CASE WHEN COUNT(*) FILTER (WHERE x.pendientes>0)>0 THEN NULL ELSE COALESCE(SUM(x.utilidad),0) END utilidad
+      FROM tickets t LEFT JOIN LATERAL (SELECT SUM(l.importe-l.costo_total_congelado) utilidad,
+        COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL) pendientes
+        FROM ticket_lineas l WHERE l.ticket_id=t.id) x ON true WHERE ${where.text}`, where.values),
+    pool.query(`SELECT c.id,c.nombre,c.es_sistema,COUNT(*)::int tickets,COALESCE(SUM(t.subtotal),0) ventas,
+      CASE WHEN COUNT(*) FILTER (WHERE x.pendientes>0)>0 THEN NULL ELSE COALESCE(SUM(x.utilidad),0) END utilidad,MAX(t.created_at) ultima
+      FROM tickets t JOIN clientes c ON c.id=t.cliente_id LEFT JOIN LATERAL (
+        SELECT SUM(l.importe-l.costo_total_congelado) utilidad,
+          COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL) pendientes
+        FROM ticket_lineas l WHERE l.ticket_id=t.id
+      ) x ON true WHERE ${where.text} GROUP BY c.id ORDER BY ventas DESC`, where.values),
+    pool.query(`SELECT c.es_sistema,COUNT(*)::int tickets,COALESCE(SUM(t.subtotal),0) ventas FROM tickets t JOIN clientes c ON c.id=t.cliente_id WHERE ${where.text} GROUP BY c.es_sistema`, where.values),
     pool.query(`SELECT tp.forma_pago,COALESCE(SUM(tp.importe),0) importe,COUNT(*)::int operaciones FROM tickets t JOIN ticket_pagos tp ON tp.ticket_id=t.id WHERE ${where.text} GROUP BY tp.forma_pago`, where.values),
     pool.query(`SELECT mc.cliente_id,mc.ticket_id,mc.tipo,mc.importe,mc.fecha_vencimiento,mc.es_incobrable,mc.notas,mc.created_at FROM movimientos_credito mc JOIN tickets t ON t.id=mc.ticket_id WHERE ${where.text} ORDER BY mc.cliente_id,mc.created_at,mc.id`, where.values),
   ]);
@@ -182,7 +190,7 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
   clientRows.rows.forEach((r) => current.set(number(r.id), number(r.tickets)));
   const previousRows = await pool.query(`SELECT t.cliente_id,COUNT(DISTINCT t.id)::int tickets FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id WHERE ${previous.text} GROUP BY t.cliente_id`, previous.values);
   previousRows.rows.forEach((r) => prior.set(number(r.cliente_id), number(r.tickets)));
-  const clientTable = clientRows.rows.map((r): Row => ({ cliente:r.nombre, tickets:number(r.tickets), ventas:number(r.ventas), utilidad:number(r.utilidad), ticketPromedio:number(r.tickets) ? number(r.ventas)/number(r.tickets) : 0, frecuencia:number(r.tickets), ultimaCompra:r.ultima ? new Date(r.ultima).toISOString() : null, riesgo: riskFromFrequency(number(r.tickets), prior.get(number(r.id)) ?? 0) }));
+  const clientTable = clientRows.rows.map((r): Row => ({ cliente:r.nombre, tickets:number(r.tickets), ventas:number(r.ventas), utilidad:r.utilidad == null ? null : number(r.utilidad), ticketPromedio:number(r.tickets) ? number(r.ventas)/number(r.tickets) : 0, frecuencia:number(r.tickets), ultimaCompra:r.ultima ? new Date(r.ultima).toISOString() : null, riesgo: riskFromFrequency(number(r.tickets), prior.get(number(r.id)) ?? 0) }));
   const totalSales = number(summary.rows[0]?.ventas); const tickets = number(summary.rows[0]?.tickets);
   const now = new Date().toISOString().slice(0, 10);
   const aged: Row[] = [];
@@ -203,7 +211,7 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
   const firstPurchases = await pool.query(`SELECT DISTINCT t.cliente_id FROM tickets t WHERE ${where.text}
     AND NOT EXISTS (SELECT 1 FROM tickets prior_ticket WHERE prior_ticket.cliente_id=t.cliente_id AND prior_ticket.estado='VENDIDO' AND prior_ticket.created_at<$1)`, where.values);
   const newClients = firstPurchases.rows.length;
-  return { kpis: [{ id:"ventas-clientes",label:"Ventas",value:totalSales,kind:"money",economic:true },{ id:"utilidad-clientes",label:"Utilidad exacta",value:summary.rows.reduce((s,r)=>s+number(r.utilidad),0),kind:"money",economic:true},{id:"ticket-promedio",label:"Ticket promedio",value:tickets ? totalSales/tickets : 0,kind:"money",economic:true},{id:"clientes-nuevos",label:"Clientes nuevos",value:newClients,kind:"count"}],
+  return { kpis: [{ id:"ventas-clientes",label:"Ventas",value:totalSales,kind:"money",economic:true },{ id:"utilidad-clientes",label:"Utilidad exacta",value:summary.rows[0]?.utilidad == null ? null : number(summary.rows[0].utilidad),kind:"money",economic:true},{id:"ticket-promedio",label:"Ticket promedio",value:tickets ? totalSales/tickets : 0,kind:"money",economic:true},{id:"clientes-nuevos",label:"Clientes nuevos",value:newClients,kind:"count"}],
     charts: [{ id:"clientes-top",title:"Ventas por cliente",type:"bar",categoryKey:"cliente",series:[{key:"ventas",label:"Ventas",kind:"money",economic:true}],rows:clientTable }],
     tables: [table("clientes","Clientes", [["cliente","Cliente","text"],["tickets","Tickets","count"],["ventas","Ventas","money",true],["utilidad","Utilidad exacta","money",true],["ticketPromedio","Ticket promedio","money",true],["frecuencia","Frecuencia","count"],["ultimaCompra","Última compra","text"],["riesgo","Riesgo","text"]],clientTable,["ventas","utilidad"]), table("publico-registrado","Público vs registrado",[["tipo","Tipo","text"],["tickets","Tickets","count"],["ventas","Ventas","money",true]],publicRows.rows.map((r):Row=>({tipo:r.es_sistema?"Público":"Registrado",tickets:number(r.tickets),ventas:number(r.ventas)})),["ventas"]),table("formas-pago","Métodos de pago",[["formaPago","Forma de pago","text"],["operaciones","Operaciones","count"],["importe","Importe","money",true]],payments.rows.map((r):Row=>({formaPago:r.forma_pago,operaciones:number(r.operaciones),importe:number(r.importe)})),["importe"]),table("cuentas-por-cobrar-fifo","Cuentas por cobrar FIFO",[["clienteId","Cliente","count"],["fechaVencimiento","Vencimiento","text"],["saldo","Saldo","money",true],["cubeta","Antigüedad","text"],["vencida","Vencida","boolean"],["notas","Notas","text"]],aged,["saldo"]), table("castigos-y-reversos","Castigos y reversos de crédito",[["clienteId","Cliente","count"],["tipo","Tipo","text"],["importe","Importe","money",true],["notas","Notas","text"],["fecha","Fecha","text"]],credit.rows.filter((r) => r.es_incobrable || r.tipo === "REVERSO").map((r): Row => ({clienteId:number(r.cliente_id),tipo:r.es_incobrable ? "INCOBRABLE" : r.tipo,importe:number(r.importe),notas:r.notas ?? null,fecha:new Date(r.created_at).toISOString()})),["importe"])], warnings:["Los filtros de producto, tela, color, unidad y proveedor en Clientes seleccionan tickets que contienen al menos una línea coincidente; las ventas, utilidad y pagos muestran el ticket completo.", "Las cuentas por cobrar incluyen únicamente movimientos de crédito vinculados a tickets dentro del alcance; los abonos sin ticket no se pueden atribuir a una ubicación o filtro de producto."] };
 }

@@ -9,14 +9,19 @@
 export interface AdminStoreComparisonTotals {
   ventas: string;
   subtotal: string;
-  costo: string;
-  margen: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
   tickets: number;
   ticketPromedio: string;
   cancelaciones: number;
   lineasExcluidasMargen: number;
   metros: string;
   kilos: string;
+  rollosMetros: string;
+  rollosKilos: string;
+  metrajeMetros: string;
   efectivo: string;
   transferencia: string;
   credito: string;

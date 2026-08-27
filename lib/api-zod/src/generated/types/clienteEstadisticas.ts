@@ -12,4 +12,14 @@ export interface ClienteEstadisticas {
   totalCompras?: string | null;
   /** @nullable */
   comprasCount?: number | null;
+  metros?: string;
+  kilos?: string;
+  rollosMetros?: string;
+  rollosKilos?: string;
+  metrajeMetros?: string;
+  /** @nullable */
+  costo?: string | null;
+  /** @nullable */
+  margen?: string | null;
+  lineasSinCosto?: number;
 }

@@ -18,12 +18,15 @@ test("safePercent avoids invented changes when denominator is zero", () => {
   assert.equal(safePercent(Number.NaN, 10), 0);
 });
 
-test("exact margin excludes invalid frozen-cost rows and uses only valid subtotal", () => {
+test("exact margin is pending when any frozen cost is missing", () => {
   assert.deepEqual(exactFrozenMargin([
-    { importe: 120, rolloId: 1, costoUnitarioCongelado: 50, costoTotalCongelado: 50 },
-    { importe: 80, rolloId: null, costoUnitarioCongelado: 40, costoTotalCongelado: 40 },
-    { importe: 60, rolloId: 2, costoUnitarioCongelado: 0, costoTotalCongelado: 0 },
-  ]), { costo: 50, utilidad: 70, denominador: 120 });
+    { importe: 120, costoTotalCongelado: 50 },
+    { importe: 80, costoTotalCongelado: null },
+  ]), { costo: null, utilidad: null, denominador: 200 });
+  assert.deepEqual(exactFrozenMargin([
+    { importe: 120, costoTotalCongelado: 50 },
+    { importe: 80, costoTotalCongelado: 40 },
+  ]), { costo: 90, utilidad: 110, denominador: 200 });
 });
 
 test("subtotal convention, dispersion range, and trend classification are explicit", () => {

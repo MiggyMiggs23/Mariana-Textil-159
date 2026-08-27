@@ -597,15 +597,26 @@ export interface AnalyticsMoneyTotals {
   pendiente: string;
   subtotal: string;
   iva: string;
-  costo: string;
-  margen: string;
-  margenPorcentaje: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
+  /** @nullable */
+  margenPorcentaje: string | null;
   tickets: number;
   ticketsCobrados: number;
   ticketsPendientes: number;
   cancelaciones: number;
   lineasExcluidasMargen: number;
 }
+
+export type AnalyticsQuantityModalidad = typeof AnalyticsQuantityModalidad[keyof typeof AnalyticsQuantityModalidad];
+
+
+export const AnalyticsQuantityModalidad = {
+  ROLLOS: 'ROLLOS',
+  METRAJE: 'METRAJE',
+} as const;
 
 export type AnalyticsQuantityUnidad = typeof AnalyticsQuantityUnidad[keyof typeof AnalyticsQuantityUnidad];
 
@@ -615,7 +626,17 @@ export const AnalyticsQuantityUnidad = {
   KILO: 'KILO',
 } as const;
 
+export type TipoTicket = typeof TipoTicket[keyof typeof TipoTicket];
+
+
+export const TipoTicket = {
+  NORMAL: 'NORMAL',
+  METREADO: 'METREADO',
+} as const;
+
 export interface AnalyticsQuantity {
+  modalidad: AnalyticsQuantityModalidad;
+  tipo: TipoTicket;
   unidad: AnalyticsQuantityUnidad;
   cantidad: string;
 }
@@ -666,9 +687,13 @@ export interface AdminRealtimeStore {
   pendiente: string;
   tickets: number;
   ticketPromedio: string;
-  margen: string;
-  /** Porcentaje en unidades; 15.00 significa 15% */
-  margenPorcentaje: string;
+  /** @nullable */
+  margen: string | null;
+  /**
+     * Porcentaje en unidades; 15.00 significa 15%
+     * @nullable
+     */
+  margenPorcentaje: string | null;
   efectivo: string;
   transferencia: string;
   credito: string;
@@ -687,7 +712,8 @@ export interface AdminRealtimeTicket {
   /** @nullable */
   nombreCliente: string | null;
   importe: string;
-  margen: string;
+  /** @nullable */
+  margen: string | null;
   cobrado: boolean;
 }
 
@@ -926,8 +952,10 @@ export interface AdminStoreComparison {
   nombreUbicacion: string;
   ventas: string;
   subtotal: string;
-  costo: string;
-  margen: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
   tickets: number;
   ticketPromedio: string;
   diferenciaTicketPromedio: string;
@@ -938,6 +966,9 @@ export interface AdminStoreComparison {
   lineasExcluidasMargen: number;
   metros: string;
   kilos: string;
+  rollosMetros: string;
+  rollosKilos: string;
+  metrajeMetros: string;
   efectivo: string;
   transferencia: string;
   credito: string;
@@ -949,14 +980,19 @@ export interface AdminStoreComparison {
 export interface AdminStoreComparisonTotals {
   ventas: string;
   subtotal: string;
-  costo: string;
-  margen: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
   tickets: number;
   ticketPromedio: string;
   cancelaciones: number;
   lineasExcluidasMargen: number;
   metros: string;
   kilos: string;
+  rollosMetros: string;
+  rollosKilos: string;
+  metrajeMetros: string;
   efectivo: string;
   transferencia: string;
   credito: string;
@@ -1371,6 +1407,9 @@ export interface ClienteCompraItem {
   iva?: string;
   metros?: string;
   kilos?: string;
+  rollosMetros?: string;
+  rollosKilos?: string;
+  metrajeMetros?: string;
   /** @nullable */
   margen?: string | null;
   lineasSinCosto?: number;
@@ -1391,6 +1430,16 @@ export interface ClienteEstadisticas {
   totalCompras?: string | null;
   /** @nullable */
   comprasCount?: number | null;
+  metros?: string;
+  kilos?: string;
+  rollosMetros?: string;
+  rollosKilos?: string;
+  metrajeMetros?: string;
+  /** @nullable */
+  costo?: string | null;
+  /** @nullable */
+  margen?: string | null;
+  lineasSinCosto?: number;
 }
 
 export interface ClientePagoItem {
@@ -1513,11 +1562,16 @@ export interface ClientesAnalitica {
   periodo: ClientesAnaliticaPeriodo;
   ventas: string;
   tickets: number;
-  costo: string;
-  margen: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
   lineasSinCosto: number;
   metros: string;
   kilos: string;
+  rollosMetros: string;
+  rollosKilos: string;
+  metrajeMetros: string;
   topVentas?: ClientesAnaliticaTopVentasItem[];
   topMargen?: ClientesAnaliticaTopMargenItem[];
   pareto?: ClientesAnaliticaParetoItem[];
@@ -3098,14 +3152,6 @@ export interface AnaliticaGlobalProveedores {
   antiguedadDeuda: AnaliticaGlobalProveedoresAntiguedadDeuda;
 }
 
-export type TipoTicket = typeof TipoTicket[keyof typeof TipoTicket];
-
-
-export const TipoTicket = {
-  NORMAL: 'NORMAL',
-  METREADO: 'METREADO',
-} as const;
-
 export type EstadoTicket = typeof EstadoTicket[keyof typeof EstadoTicket];
 
 
@@ -3457,6 +3503,7 @@ export interface CorteFacturacion {
 
 export interface CorteMetreado {
   tipo: TipoTicket;
+  unidad: UnidadProducto;
   ticketsCount: number;
   cantidad: string;
   importe: string;
@@ -3467,6 +3514,7 @@ export interface CorteProducto {
   sku: string;
   tela: string;
   color: string;
+  tipo: TipoTicket;
   unidad: UnidadProducto;
   cantidad: string;
   importe: string;
@@ -3520,12 +3568,21 @@ export interface CorteCaja {
   efectivoContado: string | null;
   /** @nullable */
   diferencia: string | null;
-  /** Solo presente en respuestas exclusivas para ADMIN */
-  costo?: string;
-  /** Margen sobre subtotal; solo presente para ADMIN */
-  margen?: string;
-  /** Solo presente para ADMIN */
-  margenPorcentaje?: string;
+  /**
+     * Solo presente en respuestas exclusivas para ADMIN
+     * @nullable
+     */
+  costo?: string | null;
+  /**
+     * Margen sobre subtotal; solo presente para ADMIN
+     * @nullable
+     */
+  margen?: string | null;
+  /**
+     * Solo presente para ADMIN
+     * @nullable
+     */
+  margenPorcentaje?: string | null;
   /** Líneas metreadas sin rollo o sin costo, solo para ADMIN */
   lineasExcluidasMargen?: number;
 }

@@ -112,26 +112,27 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   if (section === "mapas-calor") {
     const minimum = (ctx.range.hasta.getTime() - ctx.range.desde.getTime()) / 86400000 >= 548 ? 24 : 12;
     const buckets = monthBuckets(ctx.range.desde, ctx.range.hasta, minimum);
-    const q = await pool.query(`SELECT to_char(date_trunc('month',t.created_at AT TIME ZONE '${zone}'),'YYYY-MM') mes,p.sku,p.tela,p.color,p.unidad,u.nombre sitio,
-      SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas,SUM(l.importe-l.costo_total_congelado)::float utilidad
+    const q = await pool.query(`SELECT to_char(date_trunc('month',t.created_at AT TIME ZONE '${zone}'),'YYYY-MM') mes,p.sku,p.tela,p.color,l.tipo,p.unidad,u.nombre sitio,
+      SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas,
+      CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL ELSE SUM(l.importe-l.costo_total_congelado)::float END utilidad
       FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
-      WHERE ${sales.text} GROUP BY mes,p.sku,p.tela,p.color,p.unidad,u.nombre`, sales.values);
+      WHERE ${sales.text} GROUP BY mes,p.sku,p.tela,p.color,l.tipo,p.unidad,u.nombre`, sales.values);
     const make = (id: string, key: "sku" | "color" | "tela" | "sitio") => ({ id, title: `Mes × ${key}`, type: "heatmap", categoryKey: "mes",
       series: [{ key, label: key, kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }, { key: "ventas", label: "Ventas", kind: "money", economic: true }, { key: "utilidad", label: "Utilidad", kind: "money", economic: true }],
-      rows: q.rows.map(r => ({ mes: r.mes, [key]: r[key], unidad: r.unidad, cantidad: number(r.cantidad), ventas: number(r.ventas), utilidad: number(r.utilidad) })) });
+      rows: q.rows.map(r => ({ mes: r.mes, [key]: r[key], modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: r.unidad, cantidad: number(r.cantidad), ventas: number(r.ventas), utilidad: r.utilidad == null ? null : number(r.utilidad) })) });
     return { kpis: [{ id: "meses", label: "Meses analizados", value: buckets.length, kind: "count" }], charts: [make("mes-producto", "sku"), make("mes-color", "color"), make("mes-tela", "tela"), make("mes-sitio", "sitio")], tables: [], warnings };
   }
   if (section === "color") {
     const scope = productScope(ctx, "p", "m.ubicacion_id");
-    const salesRows = await pool.query(`SELECT p.color,p.tela,p.unidad,u.nombre sitio,SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas
+    const salesRows = await pool.query(`SELECT p.color,p.tela,l.tipo,p.unidad,u.nombre sitio,SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas
       FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
-      WHERE ${sales.text} GROUP BY p.color,p.tela,p.unidad,u.nombre`, sales.values);
+      WHERE ${sales.text} GROUP BY p.color,p.tela,l.tipo,p.unidad,u.nombre`, sales.values);
     const noMove = await pool.query(`SELECT p.color,p.tela,p.unidad,MAX(m.created_at) ultimo FROM productos p LEFT JOIN movimientos m ON m.producto_id=p.id
       WHERE ${scope.text} GROUP BY p.id HAVING MAX(m.created_at) IS NULL OR MAX(m.created_at) < $${scope.values.length + 1}`, [...scope.values, new Date(ctx.range.hasta.getTime() - 90 * 86400000)]);
-    const current = salesRows.rows.map(r => ({ color: r.color, tela: r.tela, unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), ventas: number(r.ventas) }));
+    const current = salesRows.rows.map(r => ({ color: r.color, tela: r.tela, modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), ventas: number(r.ventas) }));
     return { kpis: [], charts: [{ id: "color-tela", title: "Color × tela", type: "heatmap", categoryKey: "color", series: [{ key: "tela", label: "Tela", kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: current }],
-      tables: [table("ranking-color", "Ranking color por tela y unidad", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["ventas", "Ventas", "money", true]], current, ["cantidad", "ventas"]),
-        table("color-sitio", "Color por sitio", [["color", "Color", "text"], ["sitio", "Sitio", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"]], current, ["cantidad"]),
+      tables: [table("ranking-color", "Ranking color por tela, modalidad y unidad", [["color", "Color", "text"], ["tela", "Tela", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["ventas", "Ventas", "money", true]], current, ["cantidad", "ventas"]),
+        table("color-sitio", "Color por sitio", [["color", "Color", "text"], ["sitio", "Sitio", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"]], current, ["cantidad"]),
         table("sin-movimiento-90", "Sin movimiento ≥90 días", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["ultimo", "Último movimiento", "text"]], noMove.rows.map(r => ({ color: r.color, tela: r.tela, unidad: r.unidad, ultimo: r.ultimo ? new Date(r.ultimo).toISOString() : null })))], warnings };
   }
   const scope = productScope(ctx, "p", "e.ubicacion_id");
@@ -140,7 +141,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     FROM existencias e JOIN productos p ON p.id=e.producto_id JOIN ubicaciones u ON u.id=e.ubicacion_id
     LEFT JOIN rollos r ON r.producto_id=e.producto_id AND r.ubicacion_id=e.ubicacion_id AND r.estado='DISPONIBLE'
     WHERE ${scope.text} GROUP BY p.id,e.ubicacion_id,u.nombre,e.cantidad_total,e.rollos_count`, scope.values);
-  const sold = await pool.query(`SELECT p.id,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${sales.text} GROUP BY p.id`, sales.values);
+  const sold = await pool.query(`SELECT p.id,SUM(l.cantidad)::float cantidad FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${sales.text} AND l.tipo='NORMAL' GROUP BY p.id`, sales.values);
   const soldByProduct = new Map(sold.rows.map(r => [Number(r.id), number(r.cantidad)]));
   const days = Math.max(1, Math.ceil((ctx.range.hasta.getTime() - ctx.range.desde.getTime() + 1) / 86400000));
   const critical = number(ctx.input.coberturaCritico ?? 7), low = number(ctx.input.coberturaBajo ?? 15), normal = number(ctx.input.coberturaNormal ?? 45), excess = number(ctx.input.coberturaExceso ?? 90);

@@ -5,9 +5,13 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { AnalyticsQuantityModalidad } from './analyticsQuantityModalidad';
 import type { AnalyticsQuantityUnidad } from './analyticsQuantityUnidad';
+import type { TipoTicket } from './tipoTicket';
 
 export interface AnalyticsQuantity {
+  modalidad: AnalyticsQuantityModalidad;
+  tipo: TipoTicket;
   unidad: AnalyticsQuantityUnidad;
   cantidad: string;
 }

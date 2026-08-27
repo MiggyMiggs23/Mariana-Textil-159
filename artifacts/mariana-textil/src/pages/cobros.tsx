@@ -1344,11 +1344,11 @@ function CobrosContent() {
                       <CorteFiscalRow key={String(row.facturado)} row={row} />
                     ))}
                   </CorteSection>
-                  <CorteSection title="Normal / Metreado">
+                  <CorteSection title="Rollos / Metraje">
                     {corteData.metreado.map((row) => (
                       <CorteRow
-                        key={row.tipo}
-                        label={`${row.tipo} · ${formatNumber(row.cantidad, { kind: "quantity" })}`}
+                        key={`${row.tipo}-${row.unidad}`}
+                        label={`${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`}
                         value={row.importe}
                       />
                     ))}
@@ -1363,8 +1363,8 @@ function CobrosContent() {
                   ) : (
                     corteData.productos.map((row) => (
                       <CorteRow
-                        key={row.productoId}
-                        label={`${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`}
+                        key={`${row.productoId}-${row.tipo}`}
+                        label={`${row.tipo === "METREADO" ? "METRAJE" : "ROLLO"} · ${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`}
                         value={row.importe}
                       />
                     ))
@@ -1483,7 +1483,7 @@ function CorteDetail({ corte }: { corte: CorteCaja }) {
       <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${formatNumber(row.ticketsCount, { kind: "count" })} tickets)`} value={row.importe} />)}</CorteSection>
         <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={row.cuentaDestino} value={row.importe} />)}</CorteSection>
         <CorteSection title="Facturación">{corte.facturacion.map((row) => <CorteFiscalRow key={String(row.facturado)} row={row} />)}</CorteSection>
-      <CorteSection title="Normal / Metreado">{corte.metreado.map((row) => <CorteRow key={row.tipo} label={`${row.tipo} · ${formatNumber(row.cantidad, { kind: "quantity" })}`} value={row.importe} />)}</CorteSection>
+      <CorteSection title="Rollos / Metraje">{corte.metreado.map((row) => <CorteRow key={`${row.tipo}-${row.unidad}`} label={`${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`} value={row.importe} />)}</CorteSection>
       </div>
       <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
       <CorteSection title={`Tickets pendientes (${formatNumber(corte.pendientes.length, { kind: "count" })})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${formatNumber(row.folio, { kind: "identifier" })} · ${row.nombreCliente || "Venta a Público"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>

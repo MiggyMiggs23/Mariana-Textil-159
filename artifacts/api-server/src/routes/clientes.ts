@@ -309,13 +309,16 @@ router.get(
         `SELECT
           COALESCE(SUM(l.importe), 0)::text AS ventas,
           COUNT(DISTINCT t.id)::int AS tickets,
-          COALESCE(SUM(l.costo_total_congelado)
-            FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado > 0), 0)::text AS costo,
-          COALESCE(SUM(l.importe - l.costo_total_congelado)
-            FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado > 0), 0)::text AS margen,
-          COUNT(*) FILTER (WHERE l.rollo_id IS NULL OR l.costo_total_congelado <= 0)::int AS "lineasSinCosto",
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.costo_total_congelado),0)::text END AS costo,
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END AS margen,
+          COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto",
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad = 'METRO'), 0)::text AS metros,
-          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad = 'KILO'), 0)::text AS kilos
+          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad = 'KILO'), 0)::text AS kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0)::text AS "rollosMetros",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0)::text AS "rollosKilos",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros"
         FROM tickets t
         JOIN ticket_lineas l ON l.ticket_id = t.id
         JOIN productos p ON p.id = l.producto_id
@@ -327,8 +330,8 @@ router.get(
       const [tops, pareto, segmentos, mensual, productosGlobal, coloresGlobal, riesgo] = await Promise.all([
         pool.query(
           `SELECT c.id,c.nombre,SUM(l.importe)::text AS ventas,
-            COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
-              (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado>0),0)::text AS margen
+             CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+               ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END AS margen
            FROM tickets t JOIN clientes c ON c.id=t.cliente_id JOIN ticket_lineas l ON l.ticket_id=t.id
            WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date)
              AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
@@ -344,20 +347,21 @@ router.get(
            GROUP BY c.es_sistema`, [desde, hasta]),
         pool.query(
           `SELECT to_char(t.created_at,'YYYY-MM') mes,SUM(l.importe)::text ventas,
-             COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado>0),0)::text margen
+              CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+                ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
            FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id WHERE t.estado='VENDIDO'
             AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
            GROUP BY mes ORDER BY mes`, [desde, hasta]),
         pool.query(
-          `SELECT p.id,p.sku,p.tela,p.color,p.unidad,SUM(l.cantidad)::text cantidad,SUM(l.importe)::text ventas
+          `SELECT p.id,p.sku,p.tela,p.color,l.tipo,p.unidad,SUM(l.cantidad)::text cantidad,SUM(l.importe)::text ventas
            FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
            WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
-           GROUP BY p.id ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
+            GROUP BY p.id,l.tipo,p.unidad ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
         pool.query(
-          `SELECT p.color,SUM(l.importe)::text ventas,SUM(l.cantidad)::text cantidad
+          `SELECT p.color,l.tipo,p.unidad,SUM(l.importe)::text ventas,SUM(l.cantidad)::text cantidad
            FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
            WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
-           GROUP BY p.color ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
+            GROUP BY p.color,l.tipo,p.unidad ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
         pool.query(
           `SELECT c.id,c.nombre,MIN(t.created_at) AS "primeraCompra",MAX(t.created_at) AS "ultimaCompra",
             COALESCE((SELECT SUM(a.pendiente) FROM credit_fifo_aging(c.id) a WHERE a.due_at<(now() AT TIME ZONE 'America/Mexico_City')::date),0)::text vencido
@@ -367,7 +371,8 @@ router.get(
       res.json({
         periodo: { desde, hasta }, ...result.rows[0],
         topVentas: tops.rows,
-        topMargen: [...tops.rows].sort((a, b) => Number(b.margen) - Number(a.margen)),
+        topMargen: [...tops.rows].sort((a, b) =>
+          a.margen == null ? 1 : b.margen == null ? -1 : Number(b.margen) - Number(a.margen)),
         pareto: pareto.rows,
         publicoVsRegistrado: segmentos.rows,
         mensual: mensual.rows,
@@ -396,8 +401,8 @@ router.get(
       const { desde, hasta } = period(req);
       const result = await pool.query(
         `SELECT c.nombre AS cliente, t.folio, t.created_at AS fecha,
-          t.subtotal::text, p.unidad, l.cantidad::text,
-          CASE WHEN l.rollo_id IS NOT NULL AND l.costo_total_congelado > 0
+          t.subtotal::text,l.tipo,p.unidad,l.cantidad::text,
+          CASE WHEN l.costo_total_congelado IS NOT NULL
             THEN (l.importe - l.costo_total_congelado)::text END AS margen
          FROM tickets t JOIN clientes c ON c.id=t.cliente_id
          JOIN ticket_lineas l ON l.ticket_id=t.id
@@ -415,6 +420,7 @@ router.get(
         { header: "Folio", key: "folio", width: 12 },
         { header: "Fecha", key: "fecha", width: 22 },
         { header: "Subtotal", key: "subtotal", width: 14 },
+        { header: "Modalidad", key: "modalidad", width: 14 },
         { header: "Unidad", key: "unidad", width: 12 },
         { header: "Cantidad", key: "cantidad", width: 14 },
         { header: "Margen", key: "margen", width: 14 },
@@ -424,6 +430,7 @@ router.get(
       sheet.getColumn("margen").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.addRows(result.rows.map((row) => ({
         ...row,
+        modalidad: row.tipo === "METREADO" ? "METRAJE" : "ROLLO",
         folio: row.folio == null ? "" : String(row.folio),
         subtotal: toExcelNumber(row.subtotal),
         cantidad: toExcelNumber(row.cantidad),
@@ -1121,11 +1128,14 @@ router.get(
           t.iva::text, t.total::text,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'), 0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'), 0)::text AS kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0)::text AS "rollosMetros",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0)::text AS "rollosKilos",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros",
           CASE WHEN COUNT(*) FILTER
-            (WHERE l.rollo_id IS NULL OR l.costo_total_congelado <= 0) = 0
+            (WHERE l.costo_total_congelado IS NULL) = 0
             THEN SUM(l.importe-l.costo_total_congelado)::text END AS margen,
           COUNT(*) FILTER
-            (WHERE l.rollo_id IS NULL OR l.costo_total_congelado <= 0)::int AS "lineasSinCosto"
+            (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto"
          FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
          JOIN productos p ON p.id=l.producto_id
          WHERE t.cliente_id=$1 AND t.estado='VENDIDO'
@@ -1163,17 +1173,18 @@ router.get(
       const { desde, hasta } = period(req);
       const args = [id, desde, hasta];
       const [productos, telas, tendencia, pagos, actividad, facturacion, financiero, semana] = await Promise.all([
-        pool.query(`SELECT p.id,p.sku,p.tela,p.color,p.unidad,SUM(l.cantidad)::text cantidad,SUM(l.importe)::text ventas,
+        pool.query(`SELECT p.id,p.sku,p.tela,p.color,l.tipo,p.unidad,SUM(l.cantidad)::text cantidad,SUM(l.importe)::text ventas,
           MAX(t.created_at) AS "ultimaCompra",
           SUM((l.precio_sugerido*l.cantidad)-l.importe)::text AS descuento,
-          COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado>0),0)::text margen
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
           FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
           WHERE t.cliente_id=$1 AND t.estado='VENDIDO' AND ($2::date IS NULL OR t.created_at >= $2::date) AND ($3::date IS NULL OR t.created_at < $3::date+interval '1 day')
-          GROUP BY p.id ORDER BY ventas DESC`, args),
-        pool.query(`SELECT p.tela,p.color,SUM(l.importe)::text ventas,COUNT(DISTINCT t.id)::int tickets
+          GROUP BY p.id,l.tipo,p.unidad ORDER BY ventas DESC`, args),
+        pool.query(`SELECT p.tela,p.color,l.tipo,p.unidad,SUM(l.importe)::text ventas,COUNT(DISTINCT t.id)::int tickets
           FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
           WHERE t.cliente_id=$1 AND t.estado='VENDIDO' AND ($2::date IS NULL OR t.created_at >= $2::date) AND ($3::date IS NULL OR t.created_at < $3::date+interval '1 day')
-          GROUP BY p.tela,p.color ORDER BY ventas DESC`, args),
+          GROUP BY p.tela,p.color,l.tipo,p.unidad ORDER BY ventas DESC`, args),
         pool.query(`SELECT to_char(created_at,'YYYY-MM') mes,COUNT(*)::int tickets,SUM(subtotal)::text ventas
           FROM tickets WHERE cliente_id=$1 AND estado='VENDIDO' AND ($2::date IS NULL OR created_at >= $2::date) AND ($3::date IS NULL OR created_at < $3::date+interval '1 day') GROUP BY mes ORDER BY mes`, args),
         pool.query(`SELECT forma_pago AS forma,COALESCE(SUM(-importe),0)::text importe,COUNT(*)::int movimientos
@@ -1246,12 +1257,15 @@ router.get(
           COUNT(DISTINCT t.id)::int AS "comprasCount",
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'),0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'),0)::text AS kilos,
-          COALESCE(SUM(l.costo_total_congelado) FILTER
-            (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado > 0),0)::text AS costo,
-          COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
-            (WHERE l.rollo_id IS NOT NULL AND l.costo_total_congelado > 0),0)::text AS margen,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0)::text AS "rollosMetros",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0)::text AS "rollosKilos",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros",
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.costo_total_congelado),0)::text END AS costo,
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END AS margen,
           COUNT(*) FILTER
-            (WHERE l.rollo_id IS NULL OR l.costo_total_congelado <= 0)::int AS "lineasSinCosto"
+            (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto"
          FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
          JOIN productos p ON p.id=l.producto_id
          WHERE t.cliente_id=$1 AND t.estado='VENDIDO'

@@ -4145,9 +4145,9 @@ components:
         pendiente: { type: string }
         subtotal: { type: string }
         iva: { type: string }
-        costo: { type: string }
-        margen: { type: string }
-        margenPorcentaje: { type: string }
+        costo: { type: ["string", "null"] }
+        margen: { type: ["string", "null"] }
+        margenPorcentaje: { type: ["string", "null"] }
         tickets: { type: number }
         ticketsCobrados: { type: number }
         ticketsPendientes: { type: number }
@@ -4155,8 +4155,10 @@ components:
         lineasExcluidasMargen: { type: number }
     AnalyticsQuantity:
       type: object
-      required: [unidad, cantidad]
+      required: [modalidad, tipo, unidad, cantidad]
       properties:
+        modalidad: { type: string, enum: [ROLLOS, METRAJE] }
+        tipo: { $ref: "#/components/schemas/TipoTicket" }
         unidad: { type: string, enum: [METRO, KILO] }
         cantidad: { type: string }
     AdminRealtimeDashboard:
@@ -4198,9 +4200,9 @@ components:
         pendiente: { type: string }
         tickets: { type: number }
         ticketPromedio: { type: string }
-        margen: { type: string }
+        margen: { type: ["string", "null"] }
         margenPorcentaje:
-          type: string
+          type: ["string", "null"]
           description: Porcentaje en unidades; 15.00 significa 15%
         efectivo: { type: string }
         transferencia: { type: string }
@@ -4221,7 +4223,7 @@ components:
         nombreUbicacion: { type: string }
         nombreCliente: { type: ["string", "null"] }
         importe: { type: string }
-        margen: { type: string }
+        margen: { type: ["string", "null"] }
         cobrado: { type: boolean }
     AdminPendingSummary:
       type: object
@@ -4451,14 +4453,14 @@ components:
         totalCobrado: { type: string }
     AdminStoreComparison:
       type: object
-      required: [ubicacionId, nombreUbicacion, ventas, subtotal, costo, margen, tickets, ticketPromedio, diferenciaTicketPromedio, tendenciaPorcentaje, mejorDia, peorDia, cancelaciones, lineasExcluidasMargen, metros, kilos, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
+      required: [ubicacionId, nombreUbicacion, ventas, subtotal, costo, margen, tickets, ticketPromedio, diferenciaTicketPromedio, tendenciaPorcentaje, mejorDia, peorDia, cancelaciones, lineasExcluidasMargen, metros, kilos, rollosMetros, rollosKilos, metrajeMetros, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
       properties:
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
         ventas: { type: string }
         subtotal: { type: string }
-        costo: { type: string }
-        margen: { type: string }
+        costo: { type: ["string", "null"] }
+        margen: { type: ["string", "null"] }
         tickets: { type: number }
         ticketPromedio: { type: string }
         diferenciaTicketPromedio: { type: string }
@@ -4469,6 +4471,9 @@ components:
         lineasExcluidasMargen: { type: number }
         metros: { type: string }
         kilos: { type: string }
+        rollosMetros: { type: string }
+        rollosKilos: { type: string }
+        metrajeMetros: { type: string }
         efectivo: { type: string }
         transferencia: { type: string }
         credito: { type: string }
@@ -4496,18 +4501,21 @@ components:
         ventas: { type: string }
     AdminStoreComparisonTotals:
       type: object
-      required: [ventas, subtotal, costo, margen, tickets, ticketPromedio, cancelaciones, lineasExcluidasMargen, metros, kilos, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
+      required: [ventas, subtotal, costo, margen, tickets, ticketPromedio, cancelaciones, lineasExcluidasMargen, metros, kilos, rollosMetros, rollosKilos, metrajeMetros, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
       properties:
         ventas: { type: string }
         subtotal: { type: string }
-        costo: { type: string }
-        margen: { type: string }
+        costo: { type: ["string", "null"] }
+        margen: { type: ["string", "null"] }
         tickets: { type: number }
         ticketPromedio: { type: string }
         cancelaciones: { type: number }
         lineasExcluidasMargen: { type: number }
         metros: { type: string }
         kilos: { type: string }
+        rollosMetros: { type: string }
+        rollosKilos: { type: string }
+        metrajeMetros: { type: string }
         efectivo: { type: string }
         transferencia: { type: string }
         credito: { type: string }
@@ -4843,6 +4851,9 @@ components:
         iva: { type: string }
         metros: { type: string }
         kilos: { type: string }
+        rollosMetros: { type: string }
+        rollosKilos: { type: string }
+        metrajeMetros: { type: string }
         margen: { type: ["string", "null"] }
         lineasSinCosto: { type: number }
     ClienteCompras:
@@ -4863,6 +4874,14 @@ components:
         clienteId: { type: number }
         totalCompras: { type: ["string", "null"] }
         comprasCount: { type: ["number", "null"] }
+        metros: { type: string }
+        kilos: { type: string }
+        rollosMetros: { type: string }
+        rollosKilos: { type: string }
+        metrajeMetros: { type: string }
+        costo: { type: ["string", "null"] }
+        margen: { type: ["string", "null"] }
+        lineasSinCosto: { type: number }
     ClientePagoItem:
       type: object
       properties:
@@ -4947,7 +4966,7 @@ components:
     ClientesAnalitica:
       type: object
       additionalProperties: true
-      required: [periodo, ventas, tickets, costo, margen, lineasSinCosto, metros, kilos]
+      required: [periodo, ventas, tickets, costo, margen, lineasSinCosto, metros, kilos, rollosMetros, rollosKilos, metrajeMetros]
       properties:
         periodo:
           type: object
@@ -4957,11 +4976,14 @@ components:
             hasta: { type: ["string", "null"], format: date }
         ventas: { type: string }
         tickets: { type: number }
-        costo: { type: string }
-        margen: { type: string }
+        costo: { type: ["string", "null"] }
+        margen: { type: ["string", "null"] }
         lineasSinCosto: { type: number }
         metros: { type: string }
         kilos: { type: string }
+        rollosMetros: { type: string }
+        rollosKilos: { type: string }
+        metrajeMetros: { type: string }
         topVentas: { type: array, items: { type: object, additionalProperties: true } }
         topMargen: { type: array, items: { type: object, additionalProperties: true } }
         pareto: { type: array, items: { type: object, additionalProperties: true } }
@@ -7284,21 +7306,25 @@ components:
         credito: { type: string }
     CorteMetreado:
       type: object
-      required: [tipo, ticketsCount, cantidad, importe]
+      required: [tipo, unidad, ticketsCount, cantidad, importe]
       properties:
         tipo:
           $ref: "#/components/schemas/TipoTicket"
+        unidad:
+          $ref: "#/components/schemas/UnidadProducto"
         ticketsCount: { type: number }
         cantidad: { type: string }
         importe: { type: string }
     CorteProducto:
       type: object
-      required: [productoId, sku, tela, color, unidad, cantidad, importe]
+      required: [productoId, sku, tela, color, tipo, unidad, cantidad, importe]
       properties:
         productoId: { type: number }
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
+        tipo:
+          $ref: "#/components/schemas/TipoTicket"
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         cantidad: { type: string }
@@ -7400,13 +7426,13 @@ components:
         efectivoContado: { type: ["string", "null"] }
         diferencia: { type: ["string", "null"] }
         costo:
-          type: string
+          type: ["string", "null"]
           description: Solo presente en respuestas exclusivas para ADMIN
         margen:
-          type: string
+          type: ["string", "null"]
           description: Margen sobre subtotal; solo presente para ADMIN
         margenPorcentaje:
-          type: string
+          type: ["string", "null"]
           description: Solo presente para ADMIN
         lineasExcluidasMargen:
           type: number

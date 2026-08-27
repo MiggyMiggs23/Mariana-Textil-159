@@ -60,6 +60,7 @@ export * from './analyticsDesdeParameter';
 export * from './analyticsHastaParameter';
 export * from './analyticsMoneyTotals';
 export * from './analyticsQuantity';
+export * from './analyticsQuantityModalidad';
 export * from './analyticsQuantityUnidad';
 export * from './analyticsUbicacionIdParameter';
 export * from './bajaCliente200';

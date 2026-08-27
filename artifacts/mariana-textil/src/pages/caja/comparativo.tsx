@@ -268,7 +268,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                         <SortableHead label="Rentabilidad" sortName="margen" align="right" />
                         <SortableHead label="Tickets" sortName="tickets" align="right" />
                         <SortableHead label="Promedio" sortName="ticketPromedio" align="right" />
-                        <SortableHead label="Vol. (mts/kgs)" sortName="metros" align="right" />
+                        <SortableHead label="Rollos / Metraje" sortName="metros" align="right" />
                         <TableHead className="text-right">Medios de Pago</TableHead>
                         <TableHead className="text-right">Mejor / Peor Día</TableHead>
                         <SortableHead label="Facturado %" sortName="porcentajeFacturado" align="right" />
@@ -296,7 +296,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                               </div>
                             </TableCell>
                             <TableCell className="text-right font-mono font-medium text-green-700 dark:text-green-500">
-                              {formatNumber(t.margen, { kind: "money" })}
+                              {t.margen == null ? "Pendiente" : formatNumber(t.margen, { kind: "money" })}
                             </TableCell>
                             <TableCell className="text-right">
                               {formatNumber(t.tickets, { kind: "count" })}
@@ -309,8 +309,9 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                               </div>
                             </TableCell>
                             <TableCell className="text-right font-mono">
-                              <div>{formatNumber(t.metros, { kind: "quantity" })}m</div>
-                              <div className="text-muted-foreground text-[10px]">{formatNumber(t.kilos, { kind: "quantity" })}kg</div>
+                              <div>Rollos: {formatNumber(t.rollosMetros, { kind: "quantity" })} METRO</div>
+                              <div className="text-muted-foreground text-[10px]">Rollos: {formatNumber(t.rollosKilos, { kind: "quantity" })} KILO</div>
+                              <div className="text-muted-foreground text-[10px]">Metraje: {formatNumber(t.metrajeMetros, { kind: "quantity" })} METRO</div>
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="text-[10px] text-muted-foreground">Ef: <span className="font-mono font-medium text-foreground">{formatNumber(t.efectivo, { kind: "money" })}</span></div>
@@ -340,15 +341,16 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                           <TableCell className="text-right">100%</TableCell>
                           <TableCell className="text-right font-black text-sm">{formatNumber(data.totales.ventas, { kind: "money" })}</TableCell>
                           <TableCell></TableCell>
-                          <TableCell className="text-right font-mono text-green-700">{formatNumber(data.totales.margen, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-mono text-green-700">{data.totales.margen == null ? "Pendiente" : formatNumber(data.totales.margen, { kind: "money" })}</TableCell>
                           <TableCell className="text-right">
                             {formatNumber(data.totales.tickets, { kind: "count" })}
                             {data.totales.cancelaciones > 0 && <span className="text-destructive text-[10px] block font-bold">-{data.totales.cancelaciones} canc.</span>}
                           </TableCell>
                           <TableCell className="text-right font-mono">{formatNumber(data.totales.ticketPromedio, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono">
-                            <div>{formatNumber(data.totales.metros, { kind: "quantity" })}m</div>
-                            <div className="text-muted-foreground text-[10px]">{formatNumber(data.totales.kilos, { kind: "quantity" })}kg</div>
+                            <div>Rollos: {formatNumber(data.totales.rollosMetros, { kind: "quantity" })} METRO</div>
+                            <div className="text-muted-foreground text-[10px]">Rollos: {formatNumber(data.totales.rollosKilos, { kind: "quantity" })} KILO</div>
+                            <div className="text-muted-foreground text-[10px]">Metraje: {formatNumber(data.totales.metrajeMetros, { kind: "quantity" })} METRO</div>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="text-[10px] text-muted-foreground">Ef: <span className="font-mono font-medium text-foreground">{formatNumber(data.totales.efectivo, { kind: "money" })}</span></div>

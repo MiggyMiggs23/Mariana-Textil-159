@@ -60,6 +60,7 @@ export * from "./generated/types/analyticsDesdeParameter";
 export * from "./generated/types/analyticsHastaParameter";
 export * from "./generated/types/analyticsMoneyTotals";
 export * from "./generated/types/analyticsQuantity";
+export * from "./generated/types/analyticsQuantityModalidad";
 export * from "./generated/types/analyticsQuantityUnidad";
 export * from "./generated/types/analyticsUbicacionIdParameter";
 export * from "./generated/types/bajaCliente200";

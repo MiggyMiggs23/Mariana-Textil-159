@@ -33,16 +33,25 @@ test("account destinations preserve payment/facturado rules", () => {
   assert.equal(accountDestination("TRANSFERENCIA", false), "Cuenta no fiscal");
 });
 
-test("margin uses subtotal lines and reports unlinked/null-cost exclusions", () => {
+test("margin is pending when any line has no frozen cost", () => {
   assert.deepEqual(calculateFrozenMargin([
     { rolloId: 1, importe: "150.00", costoUnitarioCongelado: "50", costoTotalCongelado: "100" },
     { rolloId: null, importe: "80.00", costoUnitarioCongelado: "0", costoTotalCongelado: "0" },
     { rolloId: 2, importe: "40.00", costoUnitarioCongelado: null, costoTotalCongelado: null },
   ]), {
-    costo: "100.00",
-    margen: "50.00",
-    margenPorcentaje: "18.52",
-    lineasExcluidasMargen: 2,
+    costo: null,
+    margen: null,
+    margenPorcentaje: null,
+    lineasExcluidasMargen: 1,
+  });
+  assert.deepEqual(calculateFrozenMargin([
+    { rolloId: 1, importe: "150.00", costoUnitarioCongelado: "50", costoTotalCongelado: "100" },
+    { rolloId: 2, importe: "50.00", costoUnitarioCongelado: "20", costoTotalCongelado: "20" },
+  ]), {
+    costo: "120.00",
+    margen: "80.00",
+    margenPorcentaje: "40.00",
+    lineasExcluidasMargen: 0,
   });
 });
 

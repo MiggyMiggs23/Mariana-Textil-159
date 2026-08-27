@@ -38,12 +38,21 @@ export interface CorteCaja {
   efectivoContado: string | null;
   /** @nullable */
   diferencia: string | null;
-  /** Solo presente en respuestas exclusivas para ADMIN */
-  costo?: string;
-  /** Margen sobre subtotal; solo presente para ADMIN */
-  margen?: string;
-  /** Solo presente para ADMIN */
-  margenPorcentaje?: string;
+  /**
+     * Solo presente en respuestas exclusivas para ADMIN
+     * @nullable
+     */
+  costo?: string | null;
+  /**
+     * Margen sobre subtotal; solo presente para ADMIN
+     * @nullable
+     */
+  margen?: string | null;
+  /**
+     * Solo presente para ADMIN
+     * @nullable
+     */
+  margenPorcentaje?: string | null;
   /** Líneas metreadas sin rollo o sin costo, solo para ADMIN */
   lineasExcluidasMargen?: number;
 }

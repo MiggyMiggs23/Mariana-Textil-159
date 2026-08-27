@@ -25,7 +25,11 @@ const table = (id: string, title: string, columns: ColumnInput[], rows: Row[], s
   const totals = Object.fromEntries(resolvedColumns.flatMap((column) => {
     const kind = String(column.kind);
     const key = String(column.key);
-    if (!sumKeys.includes(key) || (kind === "quantity" && units.size !== 1)) return [];
+    if (
+      !sumKeys.includes(key) ||
+      (kind === "quantity" && units.size !== 1) ||
+      rows.some((row) => row[key] == null)
+    ) return [];
     return [[key, rows.reduce((sum, row) => sum + number(row[key]), 0)]];
   }));
   return { id, title, columns: resolvedColumns, rows, totals };
@@ -45,14 +49,13 @@ export function abcClass(cumulativePercent: number): "A" | "B" | "C" {
   return "C";
 }
 
-export function exactFrozenMargin(lines: Array<{ importe: number; rolloId: number | null; costoUnitarioCongelado: number; costoTotalCongelado: number }>) {
-  return lines.reduce((result, line) => {
-    if (line.rolloId == null || line.costoUnitarioCongelado <= 0 || line.costoTotalCongelado <= 0) return result;
-    result.costo += line.costoTotalCongelado;
-    result.utilidad += line.importe - line.costoTotalCongelado;
-    result.denominador += line.importe;
-    return result;
-  }, { costo: 0, utilidad: 0, denominador: 0 });
+export function exactFrozenMargin(lines: Array<{ importe: number; costoTotalCongelado: number | null }>) {
+  const subtotal = lines.reduce((sum, line) => sum + line.importe, 0);
+  if (lines.some((line) => line.costoTotalCongelado == null)) {
+    return { costo: null, utilidad: null, denominador: subtotal };
+  }
+  const costo = lines.reduce((sum, line) => sum + line.costoTotalCongelado!, 0);
+  return { costo, utilidad: subtotal - costo, denominador: subtotal };
 }
 
 /** Ticket subtotal is net of IVA; this makes the report's tax convention explicit. */
@@ -83,7 +86,7 @@ function where(ctx: DomainReportContext, range = ctx.range, alias = "t") {
 }
 
 const joins = "FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id JOIN ubicaciones u ON u.id=t.ubicacion_id LEFT JOIN usuarios vendedor ON vendedor.id=t.usuario_terminal_id LEFT JOIN clientes cliente ON cliente.id=t.cliente_id LEFT JOIN rollos r ON r.id=l.rollo_id";
-const marginFilter = "l.rollo_id IS NOT NULL AND l.costo_unitario_congelado > 0 AND l.costo_total_congelado > 0";
+const pendingCost = "l.costo_total_congelado IS NULL";
 
 export async function buildSalesReport(section: "ventas" | "utilidad", ctx: DomainReportContext): Promise<{ kpis: any[]; charts: any[]; tables: any[]; warnings: string[] }> {
   const normal = where(ctx);
@@ -91,10 +94,9 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
   const compare = async (range: { desde: Date; hasta: Date }) => {
     const condition = where(ctx, { ...ctx.range, ...range });
     const result = await pool.query(`SELECT COALESCE(SUM(l.importe),0)::float ventas, COUNT(DISTINCT t.id)::int tickets,
-      COALESCE(SUM(l.cantidad),0)::float cantidad,
-      COALESCE(SUM(l.costo_total_congelado) FILTER (WHERE ${marginFilter}),0)::float costo,
-      COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER (WHERE ${marginFilter}),0)::float utilidad,
-      COALESCE(SUM(l.importe) FILTER (WHERE ${marginFilter}),0)::float denominador
+      CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.costo_total_congelado),0)::float END costo,
+      CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
+      COALESCE(SUM(l.importe),0)::float denominador
       ${joins} WHERE ${condition.text} AND t.estado='VENDIDO'`, condition.values);
     return result.rows[0]!;
   };
@@ -102,20 +104,26 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
     compare(ctx.range), compare({ desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }),
     compare({ desde: ctx.range.yearAgoDesde, hasta: ctx.range.yearAgoHasta }),
   ]);
-  const sales = number(current.ventas), tickets = number(current.tickets), quantity = number(current.cantidad);
-  const kpi = (id: string, label: string, value: number, kind: string, old: unknown, ago: unknown, economic = false) =>
-    ({ id, label, value, kind, ...(economic ? { economic: true } : {}), comparisonPrevious: safePercent(value, number(old)), comparisonYearAgo: safePercent(value, number(ago)) });
+  const sales = number(current.ventas), tickets = number(current.tickets);
+  const kpi = (id: string, label: string, value: number | null, kind: string, old: unknown, ago: unknown, economic = false) =>
+    ({ id, label, value, kind, ...(economic ? { economic: true } : {}),
+      comparisonPrevious: value == null || old == null ? null : safePercent(value, number(old)),
+      comparisonYearAgo: value == null || ago == null ? null : safePercent(value, number(ago)) });
   const warnings: string[] = [];
 
   const dimensions = async (id: string, title: string, expression: string, group = expression, extra = "") => {
-    const result = await pool.query(`SELECT ${expression} dimension,COALESCE(SUM(l.cantidad),0)::float cantidad,
-      COALESCE(SUM(l.importe),0)::float ventas,COALESCE(SUM(l.costo_total_congelado) FILTER (WHERE ${marginFilter}),0)::float costo,
-      COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER (WHERE ${marginFilter}),0)::float utilidad,
-      COALESCE(SUM(l.importe) FILTER (WHERE ${marginFilter}),0)::float denominador,
+    const result = await pool.query(`SELECT ${expression} dimension,l.tipo,p.unidad,COALESCE(SUM(l.cantidad),0)::float cantidad,
+      COALESCE(SUM(l.importe),0)::float ventas,
+      CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.costo_total_congelado),0)::float END costo,
+      CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
+      COALESCE(SUM(l.importe),0)::float denominador,
        COUNT(DISTINCT t.id)::int tickets ${joins} WHERE ${salesWhere} ${extra}
-      GROUP BY ${group} ORDER BY ventas DESC LIMIT 250`, normal.values);
-    return table(id, title, [["dimension", title, "text"], ["cantidad", "Cantidad", "quantity"], ["tickets", "Tickets", "count"], ["ventas", "Ventas", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]],
-      result.rows.map((r) => ({ dimension: r.dimension == null ? "Sin dato" : String(r.dimension), cantidad: number(r.cantidad), tickets: number(r.tickets), ventas: number(r.ventas), costo: number(r.costo), utilidad: number(r.utilidad), margenPct: number(r.denominador) ? number(r.utilidad) / number(r.denominador) * 100 : 0 })),
+      GROUP BY ${group},l.tipo,p.unidad ORDER BY ventas DESC LIMIT 250`, normal.values);
+    return table(id, title, [["dimension", title, "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["tickets", "Tickets", "count"], ["ventas", "Subtotal sin IVA", "money", true], ["costo", "Costo congelado", "money", true], ["utilidad", "Utilidad", "money", true], ["margenPct", "Margen exacto", "percentage", true]],
+      result.rows.map((r) => {
+        const utilidad = r.utilidad == null ? null : number(r.utilidad);
+        return { dimension: r.dimension == null ? "Sin dato" : String(r.dimension), modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: String(r.unidad), cantidad: number(r.cantidad), tickets: number(r.tickets), ventas: number(r.ventas), costo: r.costo == null ? null : number(r.costo), utilidad, margenPct: utilidad == null ? null : (number(r.denominador) ? utilidad / number(r.denominador) * 100 : 0) };
+      }),
       ["cantidad", "ventas", "costo", "utilidad"]);
   };
 
@@ -146,15 +154,17 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
       JOIN tickets t ON t.id=l1.ticket_id JOIN productos p1 ON p1.id=l1.producto_id JOIN productos p2 ON p2.id=l2.producto_id
       JOIN productos p ON p.id=l1.producto_id LEFT JOIN rollos r ON r.id=l1.rollo_id
       WHERE ${salesWhere} GROUP BY p1.sku,p2.sku ORDER BY tickets DESC LIMIT 100`, normal.values);
-    const cancelled = await pool.query(`SELECT t.folio,t.motivo_cancelacion motivo,u.nombre sitio,COALESCE(SUM(l.importe),t.total)::float importe,COUNT(l.id)::int lineas
+    const cancelled = await pool.query(`SELECT t.folio,t.motivo_cancelacion motivo,u.nombre sitio,COALESCE(SUM(l.importe),0)::float importe,COUNT(l.id)::int lineas
       ${joins} WHERE ${normal.text} AND t.estado='CANCELADO' GROUP BY t.id,u.nombre ORDER BY t.created_at DESC`, normal.values);
-    const cancelledProducts = await pool.query(`SELECT p.sku,p.tela,p.color,COUNT(*)::int lineas,COALESCE(SUM(l.cantidad),0)::float cantidad,COALESCE(SUM(l.importe),0)::float importe
-      ${joins} WHERE ${normal.text} AND t.estado='CANCELADO' GROUP BY p.id ORDER BY importe DESC`, normal.values);
+    const cancelledProducts = await pool.query(`SELECT p.sku,p.tela,p.color,l.tipo,p.unidad,COUNT(*)::int lineas,COALESCE(SUM(l.cantidad),0)::float cantidad,COALESCE(SUM(l.importe),0)::float importe
+      ${joins} WHERE ${normal.text} AND t.estado='CANCELADO' GROUP BY p.id,l.tipo,p.unidad ORDER BY importe DESC`, normal.values);
+    const quantities = await pool.query(`SELECT l.tipo,p.unidad,COALESCE(SUM(l.cantidad),0)::float cantidad
+      ${joins} WHERE ${salesWhere} GROUP BY l.tipo,p.unidad ORDER BY l.tipo,p.unidad`, normal.values);
     const cancellationSummary = { tickets: cancelled.rows.length, importe: cancelled.rows.reduce((s, r) => s + number(r.importe), 0) };
     return {
-      kpis: [kpi("ventas", "Ventas", sales, "money", previous.ventas, yearAgo.ventas, true), kpi("tickets", "Tickets", tickets, "count", previous.tickets, yearAgo.tickets), kpi("cantidad", "Cantidad vendida", quantity, "quantity", previous.cantidad, yearAgo.cantidad), kpi("ticket-promedio", "Ticket promedio", tickets ? sales / tickets : 0, "money", number(previous.tickets) ? number(previous.ventas) / number(previous.tickets) : 0, number(yearAgo.tickets) ? number(yearAgo.ventas) / number(yearAgo.tickets) : 0, true)],
+      kpis: [kpi("ventas", "Ventas", sales, "money", previous.ventas, yearAgo.ventas, true), kpi("tickets", "Tickets", tickets, "count", previous.tickets, yearAgo.tickets), ...quantities.rows.map((r) => ({ id: `cantidad-${String(r.tipo).toLowerCase()}-${String(r.unidad).toLowerCase()}`, label: `${r.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} · ${r.unidad}`, value: number(r.cantidad), kind: "quantity", unit: String(r.unidad) })), kpi("ticket-promedio", "Ticket promedio", tickets ? sales / tickets : 0, "money", number(previous.tickets) ? number(previous.ventas) / number(previous.tickets) : 0, number(yearAgo.tickets) ? number(yearAgo.ventas) / number(yearAgo.tickets) : 0, true)],
       charts: [chart("timeline", "Ventas diarias", "line", "dimension", [{ key: "ventas", label: "Ventas", kind: "money", economic: true }], daily.rows), chart("horas", "Ventas por hora", "bar", "dimension", [{ key: "ventas", label: "Ventas", kind: "money", economic: true }], hour.rows), chart("semana", "Ventas por día", "bar", "dimension", [{ key: "ventas", label: "Ventas", kind: "money", economic: true }], weekday.rows)],
-      tables: [daily, weekday, hour, site, product, fabric, color, seller, client, paymentTable, invoice, table("mejores-productos", "Mejores productos", product.columns as any, ranked.slice(0, 20)), table("peores-productos", "Peores productos", product.columns as any, [...ranked].reverse().slice(0, 20)), table("abc-productos", "Clasificación ABC", [["producto", "Producto", "text"], ["ventas", "Ventas", "money", true], ["porcentajeAcumulado", "% acumulado", "percentage"], ["clase", "Clase", "text"]], abcRows), table("canasta-pares", "Pares de productos en canasta", [["productoA", "Producto A", "text"], ["productoB", "Producto B", "text"], ["tickets", "Tickets", "count"]], pairs.rows.map((r) => ({ productoA: String(r.producto_a), productoB: String(r.producto_b), tickets: number(r.tickets) }))), table("resumen-cancelaciones", "Resumen de cancelaciones", [["tickets", "Tickets cancelados", "count"], ["importe", "Importe cancelado", "money", true]], [cancellationSummary]), table("cancelaciones", "Cancelaciones", [["folio", "Folio", "text"], ["motivo", "Motivo", "text"], ["sitio", "Sitio", "text"], ["lineas", "Líneas", "count"], ["importe", "Importe", "money", true]], cancelled.rows.map((r) => ({ folio: String(r.folio), motivo: r.motivo == null ? null : String(r.motivo), sitio: String(r.sitio), lineas: number(r.lineas), importe: number(r.importe) }))), table("productos-cancelados", "Productos cancelados", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["lineas", "Líneas", "count"], ["cantidad", "Cantidad", "quantity"], ["importe", "Importe", "money", true]], cancelledProducts.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), color: String(r.color), lineas: number(r.lineas), cantidad: number(r.cantidad), importe: number(r.importe) })))],
+      tables: [daily, weekday, hour, site, product, fabric, color, seller, client, paymentTable, invoice, table("mejores-productos", "Mejores productos", product.columns as any, ranked.slice(0, 20)), table("peores-productos", "Peores productos", product.columns as any, [...ranked].reverse().slice(0, 20)), table("abc-productos", "Clasificación ABC", [["producto", "Producto", "text"], ["ventas", "Ventas", "money", true], ["porcentajeAcumulado", "% acumulado", "percentage"], ["clase", "Clase", "text"]], abcRows), table("canasta-pares", "Pares de productos en canasta", [["productoA", "Producto A", "text"], ["productoB", "Producto B", "text"], ["tickets", "Tickets", "count"]], pairs.rows.map((r) => ({ productoA: String(r.producto_a), productoB: String(r.producto_b), tickets: number(r.tickets) }))), table("resumen-cancelaciones", "Resumen de cancelaciones", [["tickets", "Tickets cancelados", "count"], ["importe", "Importe cancelado", "money", true]], [cancellationSummary]), table("cancelaciones", "Cancelaciones", [["folio", "Folio", "text"], ["motivo", "Motivo", "text"], ["sitio", "Sitio", "text"], ["lineas", "Líneas", "count"], ["importe", "Importe", "money", true]], cancelled.rows.map((r) => ({ folio: String(r.folio), motivo: r.motivo == null ? null : String(r.motivo), sitio: String(r.sitio), lineas: number(r.lineas), importe: number(r.importe) }))), table("productos-cancelados", "Productos cancelados", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["lineas", "Líneas", "count"], ["cantidad", "Cantidad", "quantity"], ["importe", "Importe", "money", true]], cancelledProducts.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), color: String(r.color), modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: String(r.unidad), lineas: number(r.lineas), cantidad: number(r.cantidad), importe: number(r.importe) })))],
       warnings,
     };
   }
@@ -162,33 +172,46 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
   const [fabric, product, color, site, seller, evolution, quality, prices, crossSite] = await Promise.all([
     dimensions("utilidad-tela", "Tela", "p.tela"), dimensions("utilidad-producto", "Producto", "p.sku", "p.id,p.sku"), dimensions("utilidad-color", "Color", "p.color"), dimensions("utilidad-sitio", "Sitio", "u.nombre"), dimensions("utilidad-vendedor", "Vendedor", "vendedor.nombre"),
     dimensions("evolucion-margen", "Día", `(t.created_at AT TIME ZONE '${zone}')::date::text`),
-    pool.query(`SELECT CASE WHEN l.rollo_id IS NULL THEN 'Sin rollo' WHEN l.costo_unitario_congelado<=0 OR l.costo_total_congelado<=0 THEN 'Costo nulo/cero' ELSE 'Válida' END calidad,COUNT(*)::int lineas FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY calidad`, normal.values),
+    pool.query(`SELECT CASE WHEN l.costo_total_congelado IS NULL THEN 'Costo pendiente' WHEN l.rollo_id IS NULL THEN 'Sin rollo' WHEN l.costo_unitario_congelado<=0 OR l.costo_total_congelado<=0 THEN 'Costo nulo/cero' ELSE 'Válida' END calidad,COUNT(*)::int lineas FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY calidad`, normal.values),
     pool.query(`SELECT p.sku,p.tela,cliente.nombre cliente,vendedor.nombre vendedor,COUNT(*)::int lineas,MIN(l.precio_unitario)::float minimo,MAX(l.precio_unitario)::float maximo,AVG(l.precio_unitario)::float promedio,CASE WHEN SUM(l.cantidad)=0 THEN 0 ELSE SUM(l.precio_unitario*l.cantidad)/SUM(l.cantidad) END::float promedio_ponderado FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN clientes cliente ON cliente.id=t.cliente_id LEFT JOIN usuarios vendedor ON vendedor.id=t.usuario_terminal_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY p.id,cliente.nombre,vendedor.nombre ORDER BY promedio_ponderado DESC`, normal.values),
     pool.query(`WITH by_site AS (
       SELECT p.sku,u.nombre sitio,AVG(l.precio_unitario)::float precio FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id JOIN ubicaciones u ON u.id=t.ubicacion_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY p.sku,u.nombre
     ) SELECT sku,sitio,precio,(MAX(precio) OVER (PARTITION BY sku)-MIN(precio) OVER (PARTITION BY sku))::float diferencia_sitios FROM by_site ORDER BY sku,sitio`, normal.values),
   ]);
-  const prevProduct = await pool.query(`SELECT p.sku,COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER (WHERE ${marginFilter}),0)::float utilidad,COALESCE(SUM(l.cantidad),0)::float cantidad ${joins} WHERE ${where(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }).text} AND t.estado='VENDIDO' GROUP BY p.sku`, where(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }).values);
-  const prior = new Map(prevProduct.rows.map((r) => [String(r.sku), r]));
+  const prevProduct = await pool.query(`SELECT p.sku,l.tipo,p.unidad,
+    CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
+    COALESCE(SUM(l.cantidad),0)::float cantidad ${joins}
+    WHERE ${where(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }).text}
+      AND t.estado='VENDIDO' GROUP BY p.sku,l.tipo,p.unidad`,
+  where(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }).values);
+  const productKey = (sku: unknown, tipo: unknown, unidad: unknown) => `${String(sku)}:${String(tipo)}:${String(unidad)}`;
+  const prior = new Map(prevProduct.rows.map((r) => [productKey(r.sku, r.tipo, r.unidad), r]));
   const divergent = (product.rows as Row[]).map((r) => {
-    const priorRow = prior.get(String(r.dimension));
+    const priorRow = prior.get(productKey(r.dimension, r.modalidad === "METRAJE" ? "METREADO" : "NORMAL", r.unidad));
     const cantidad = number(r.cantidad);
-    const utilidad = number(r.utilidad);
-    return { producto: String(r.dimension), cantidad, utilidad, divergencia: Math.abs(safePercent(cantidad, number(priorRow?.cantidad)) - safePercent(utilidad, number(priorRow?.utilidad))) };
-  }).sort((a, b) => b.divergencia - a.divergencia);
+    const utilidad = r.utilidad == null ? null : number(r.utilidad);
+    return { producto: String(r.dimension), modalidad: r.modalidad, unidad: r.unidad, cantidad, utilidad, divergencia: utilidad == null || priorRow?.utilidad == null ? null : Math.abs(safePercent(cantidad, number(priorRow.cantidad)) - safePercent(utilidad, number(priorRow.utilidad))) };
+  }).sort((a, b) => number(b.divergencia) - number(a.divergencia));
   const changes = (product.rows as Row[]).map((r) => {
-    const utilidadActual = number(r.utilidad);
-    const utilidadAnterior = number(prior.get(String(r.dimension))?.utilidad);
-    return { producto: String(r.dimension), utilidadActual, utilidadAnterior, variacion: utilidadActual - utilidadAnterior, tendencia: trendDirection(utilidadActual, utilidadAnterior) };
-  }).sort((a, b) => b.variacion - a.variacion);
+    const priorRow = prior.get(productKey(r.dimension, r.modalidad === "METRAJE" ? "METREADO" : "NORMAL", r.unidad));
+    const utilidadActual = r.utilidad == null ? null : number(r.utilidad);
+    const utilidadAnterior = priorRow?.utilidad == null ? null : number(priorRow.utilidad);
+    return { producto: String(r.dimension), modalidad: r.modalidad, unidad: r.unidad, utilidadActual, utilidadAnterior, variacion: utilidadActual == null || utilidadAnterior == null ? null : utilidadActual - utilidadAnterior, tendencia: utilidadActual == null || utilidadAnterior == null ? "pendiente" : trendDirection(utilidadActual, utilidadAnterior) };
+  }).sort((a, b) => number(b.variacion) - number(a.variacion));
   const threshold = number(ctx.input.margenUmbral ?? 15);
-  const discounts = await pool.query(`SELECT p.sku,p.tela,l.precio_unitario::float precio,p.precio_sugerido::float sugerido,((p.precio_sugerido-l.precio_unitario)/NULLIF(p.precio_sugerido,0)*100)::float descuento,((l.importe-l.costo_total_congelado)/NULLIF(l.importe,0)*100)::float margen FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} AND p.precio_sugerido>0 AND ((p.precio_sugerido-l.precio_unitario)/p.precio_sugerido*100>30 OR (${marginFilter} AND (l.importe-l.costo_total_congelado)/NULLIF(l.importe,0)*100<$${normal.values.length + 1})) ORDER BY descuento DESC`, [...normal.values, threshold]);
+  const discounts = await pool.query(`SELECT p.sku,p.tela,l.precio_unitario::float precio,p.precio_sugerido::float sugerido,((p.precio_sugerido-l.precio_unitario)/NULLIF(p.precio_sugerido,0)*100)::float descuento,((l.importe-l.costo_total_congelado)/NULLIF(l.importe,0)*100)::float margen FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} AND p.precio_sugerido>0 AND ((p.precio_sugerido-l.precio_unitario)/p.precio_sugerido*100>30 OR (l.costo_total_congelado IS NOT NULL AND (l.importe-l.costo_total_congelado)/NULLIF(l.importe,0)*100<$${normal.values.length + 1})) ORDER BY descuento DESC`, [...normal.values, threshold]);
   warnings.push("Los descuentos se calculan contra precio_sugerido ACTUAL de productos; no es un snapshot histórico.");
-  warnings.push("Costo, utilidad y margen usan exclusivamente líneas con rollo_id y costo unitario y total congelados positivos; el denominador de margen es sólo el importe de esas líneas.");
+  warnings.push("Costo, utilidad y margen quedan pendientes cuando cualquier línea del grupo no tiene costo congelado; el margen se calcula contra el subtotal sin IVA.");
   return {
-    kpis: [kpi("costo-congelado", "Costo congelado", number(current.costo), "money", previous.costo, yearAgo.costo, true), kpi("utilidad-exacta", "Utilidad exacta", number(current.utilidad), "money", previous.utilidad, yearAgo.utilidad, true), kpi("margen-exacto", "Margen exacto", number(current.denominador) ? number(current.utilidad) / number(current.denominador) * 100 : 0, "percentage", number(previous.denominador) ? number(previous.utilidad) / number(previous.denominador) * 100 : 0, number(yearAgo.denominador) ? number(yearAgo.utilidad) / number(yearAgo.denominador) * 100 : 0, true)],
+    kpis: current.costo == null || current.utilidad == null
+      ? [
+          { id: "costo-congelado", label: "Costo congelado", value: null, kind: "money", economic: true },
+          { id: "utilidad-exacta", label: "Utilidad exacta", value: null, kind: "money", economic: true },
+          { id: "margen-exacto", label: "Margen exacto", value: null, kind: "percentage", economic: true },
+        ]
+      : [kpi("costo-congelado", "Costo congelado", number(current.costo), "money", previous.costo, yearAgo.costo, true), kpi("utilidad-exacta", "Utilidad exacta", number(current.utilidad), "money", previous.utilidad, yearAgo.utilidad, true), kpi("margen-exacto", "Margen exacto", number(current.denominador) ? number(current.utilidad) / number(current.denominador) * 100 : 0, "percentage", previous.utilidad == null ? null : (number(previous.denominador) ? number(previous.utilidad) / number(previous.denominador) * 100 : 0), yearAgo.utilidad == null ? null : (number(yearAgo.denominador) ? number(yearAgo.utilidad) / number(yearAgo.denominador) * 100 : 0), true)],
     charts: [chart("margen-evolucion", "Evolución de utilidad", "line", "dimension", [{ key: "utilidad", label: "Utilidad", kind: "money", economic: true }], evolution.rows)],
-    tables: [fabric, product, color, site, seller, table("divergencia-cantidad-utilidad", "Divergencia cantidad vs utilidad", [["producto", "Producto", "text"], ["cantidad", "Cantidad", "quantity"], ["utilidad", "Utilidad", "money", true], ["divergencia", "Divergencia", "percentage", true]], divergent), table("productos-alza", "Productos en alza", [["producto", "Producto", "text"], ["utilidadActual", "Utilidad actual", "money", true], ["utilidadAnterior", "Utilidad anterior", "money", true], ["variacion", "Variación", "money", true], ["tendencia", "Tendencia", "text"]], changes.filter((r) => r.tendencia === "rising")), table("productos-baja", "Productos en baja", [["producto", "Producto", "text"], ["utilidadActual", "Utilidad actual", "money", true], ["utilidadAnterior", "Utilidad anterior", "money", true], ["variacion", "Variación", "money", true], ["tendencia", "Tendencia", "text"]], changes.filter((r) => r.tendencia === "falling")), table("dispersion-precios", "Dispersión de precios", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["cliente", "Cliente", "text"], ["vendedor", "Vendedor", "text"], ["lineas", "Líneas", "count"], ["minimo", "Mínimo", "money", true], ["maximo", "Máximo", "money", true], ["rango", "Rango", "money", true], ["promedio", "Promedio", "money", true], ["promedioPonderado", "Promedio ponderado", "money", true]], prices.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), cliente: r.cliente == null ? "Sin dato" : String(r.cliente), vendedor: r.vendedor == null ? "Sin dato" : String(r.vendedor), lineas: number(r.lineas), minimo: number(r.minimo), maximo: number(r.maximo), rango: priceRange(number(r.minimo), number(r.maximo)), promedio: number(r.promedio), promedioPonderado: number(r.promedio_ponderado) }))), table("precios-por-sitio", "Precios por sitio", [["sku", "SKU", "text"], ["sitio", "Sitio", "text"], ["precio", "Precio promedio", "money", true], ["diferenciaSitios", "Diferencia entre sitios", "money", true]], crossSite.rows.map((r) => ({ sku: String(r.sku), sitio: String(r.sitio), precio: number(r.precio), diferenciaSitios: number(r.diferencia_sitios) }))), table("calidad-costos", "Calidad de costos", [["calidad", "Calidad", "text"], ["lineas", "Líneas", "count"]], quality.rows.map((r) => ({ calidad: String(r.calidad), lineas: number(r.lineas) }))), table("descuentos-y-margen", "Descuentos >30% o margen bajo", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["precio", "Precio", "money", true], ["sugerido", "Precio sugerido actual", "money", true], ["descuento", "Descuento", "percentage", true, true], ["margen", "Margen", "percentage", true]], discounts.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), precio: number(r.precio), sugerido: number(r.sugerido), descuento: number(r.descuento), margen: number(r.margen) })))],
+    tables: [fabric, product, color, site, seller, table("divergencia-cantidad-utilidad", "Divergencia cantidad vs utilidad", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["utilidad", "Utilidad", "money", true], ["divergencia", "Divergencia", "percentage", true]], divergent), table("productos-alza", "Productos en alza", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["utilidadActual", "Utilidad actual", "money", true], ["utilidadAnterior", "Utilidad anterior", "money", true], ["variacion", "Variación", "money", true], ["tendencia", "Tendencia", "text"]], changes.filter((r) => r.tendencia === "rising")), table("productos-baja", "Productos en baja", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["utilidadActual", "Utilidad actual", "money", true], ["utilidadAnterior", "Utilidad anterior", "money", true], ["variacion", "Variación", "money", true], ["tendencia", "Tendencia", "text"]], changes.filter((r) => r.tendencia === "falling")), table("dispersion-precios", "Dispersión de precios", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["cliente", "Cliente", "text"], ["vendedor", "Vendedor", "text"], ["lineas", "Líneas", "count"], ["minimo", "Mínimo", "money", true], ["maximo", "Máximo", "money", true], ["rango", "Rango", "money", true], ["promedio", "Promedio", "money", true], ["promedioPonderado", "Promedio ponderado", "money", true]], prices.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), cliente: r.cliente == null ? "Sin dato" : String(r.cliente), vendedor: r.vendedor == null ? "Sin dato" : String(r.vendedor), lineas: number(r.lineas), minimo: number(r.minimo), maximo: number(r.maximo), rango: priceRange(number(r.minimo), number(r.maximo)), promedio: number(r.promedio), promedioPonderado: number(r.promedio_ponderado) }))), table("precios-por-sitio", "Precios por sitio", [["sku", "SKU", "text"], ["sitio", "Sitio", "text"], ["precio", "Precio promedio", "money", true], ["diferenciaSitios", "Diferencia entre sitios", "money", true]], crossSite.rows.map((r) => ({ sku: String(r.sku), sitio: String(r.sitio), precio: number(r.precio), diferenciaSitios: number(r.diferencia_sitios) }))), table("calidad-costos", "Calidad de costos", [["calidad", "Calidad", "text"], ["lineas", "Líneas", "count"]], quality.rows.map((r) => ({ calidad: String(r.calidad), lineas: number(r.lineas) }))), table("descuentos-y-margen", "Descuentos >30% o margen bajo", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["precio", "Precio", "money", true], ["sugerido", "Precio sugerido actual", "money", true], ["descuento", "Descuento", "percentage", true, true], ["margen", "Margen", "percentage", true]], discounts.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), precio: number(r.precio), sugerido: number(r.sugerido), descuento: number(r.descuento), margen: r.margen == null ? null : number(r.margen) })))],
     warnings,
   };
 }

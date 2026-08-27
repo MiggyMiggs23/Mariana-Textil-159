@@ -16,11 +16,16 @@ export interface ClientesAnalitica {
   periodo: ClientesAnaliticaPeriodo;
   ventas: string;
   tickets: number;
-  costo: string;
-  margen: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  margen: string | null;
   lineasSinCosto: number;
   metros: string;
   kilos: string;
+  rollosMetros: string;
+  rollosKilos: string;
+  metrajeMetros: string;
   topVentas?: ClientesAnaliticaTopVentasItem[];
   topMargen?: ClientesAnaliticaTopMargenItem[];
   pareto?: ClientesAnaliticaParetoItem[];

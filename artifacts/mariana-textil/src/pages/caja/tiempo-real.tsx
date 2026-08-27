@@ -174,14 +174,28 @@ export default function CajaTiempoReal() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-black text-sidebar">
-                    {formatNumber(totals.margen, { kind: "money" })}
+                    {totals.margen == null ? "Pendiente" : formatNumber(totals.margen, { kind: "money" })}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1 font-medium">
-                    Margen {formatNumber(totals.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}
+                    {totals.margenPorcentaje == null ? "Costo pendiente" : <>Margen {formatNumber(totals.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</>}
                   </p>
                 </CardContent>
               </Card>
             </div>
+            {dashboard && (
+              <div className="flex flex-wrap gap-3" data-testid="analytics-quantities">
+                {dashboard.cantidades.map((row) => (
+                  <div
+                    key={`${row.tipo}-${row.unidad}`}
+                    className="rounded-md border bg-card px-4 py-2 text-sm"
+                    data-testid={`quantity-${row.tipo.toLowerCase()}-${row.unidad.toLowerCase()}`}
+                  >
+                    <span className="font-semibold">{row.modalidad}</span>
+                    <span className="ml-2 font-mono">{formatNumber(row.cantidad, { kind: "quantity" })} {row.unidad}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <h3 className="text-xl font-bold tracking-tight text-sidebar mt-10 mb-4">Estado por Tienda</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -240,9 +254,9 @@ export default function CajaTiempoReal() {
                         <div className="flex justify-between items-center mb-1 pb-1 border-b">
                           <span className="font-medium text-muted-foreground">Rentabilidad</span>
                           <span className="font-bold text-sidebar flex items-center gap-2">
-                            {formatNumber(store.margen, { kind: "money" })}
+                            {store.margen == null ? "Pendiente" : formatNumber(store.margen, { kind: "money" })}
                             <span className="text-muted-foreground text-[10px] bg-white dark:bg-black/20 px-1.5 py-0.5 rounded border">
-                              {formatNumber(store.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}
+                              {store.margenPorcentaje == null ? "Costo pendiente" : formatNumber(store.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}
                             </span>
                           </span>
                         </div>
@@ -314,8 +328,8 @@ export default function CajaTiempoReal() {
                             <TableCell className="text-right font-mono">{formatNumber(t.vendido, { kind: "money" })}</TableCell>
                             <TableCell className="text-right font-mono text-green-700">{formatNumber(t.cobrado, { kind: "money" })}</TableCell>
                             <TableCell className="text-right font-mono text-amber-700">{formatNumber(t.pendiente, { kind: "money" })}</TableCell>
-                            <TableCell className="text-right font-mono font-medium">{formatNumber(t.margen, { kind: "money" })}</TableCell>
-                            <TableCell className="text-right font-bold">{formatNumber(t.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</TableCell>
+                            <TableCell className="text-right font-mono font-medium">{t.margen == null ? "Pendiente" : formatNumber(t.margen, { kind: "money" })}</TableCell>
+                            <TableCell className="text-right font-bold">{t.margenPorcentaje == null ? "Pendiente" : formatNumber(t.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</TableCell>
                             <TableCell className="text-right font-mono text-muted-foreground">{formatNumber(t.efectivo, { kind: "money" })}</TableCell>
                             <TableCell className="text-right font-mono text-muted-foreground">{formatNumber(t.transferencia, { kind: "money" })}</TableCell>
                             <TableCell className="text-right font-mono text-muted-foreground">{formatNumber(t.credito, { kind: "money" })}</TableCell>
@@ -329,8 +343,8 @@ export default function CajaTiempoReal() {
                           <TableCell className="text-right font-mono font-bold">{formatNumber(totals.ventas, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono font-bold">{formatNumber(totals.cobrado, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono font-bold">{formatNumber(totals.pendiente, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-mono font-bold">{formatNumber(totals.margen, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-bold">{formatNumber(totals.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</TableCell>
+                          <TableCell className="text-right font-mono font-bold">{totals.margen == null ? "Pendiente" : formatNumber(totals.margen, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-bold">{totals.margenPorcentaje == null ? "Pendiente" : formatNumber(totals.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</TableCell>
                           <TableCell colSpan={3} className="text-right text-muted-foreground font-medium text-[10px]">Distribución en panel superior</TableCell>
                         </TableRow>
                       </TableFooter>
@@ -365,7 +379,7 @@ export default function CajaTiempoReal() {
                           </div>
                           <div className="text-right">
                             <p className="font-mono font-bold text-sm">{formatNumber(t.importe, { kind: "money" })}</p>
-                            <p className="font-mono text-green-600 dark:text-green-500 text-[10px] mt-0.5">{formatNumber(t.margen, { kind: "money" })} marg.</p>
+                            <p className="font-mono text-green-600 dark:text-green-500 text-[10px] mt-0.5">{t.margen == null ? "Margen pendiente" : `${formatNumber(t.margen, { kind: "money" })} marg.`}</p>
                           </div>
                         </div>
                       </Link>

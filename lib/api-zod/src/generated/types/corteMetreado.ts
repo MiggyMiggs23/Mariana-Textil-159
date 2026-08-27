@@ -6,9 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { TipoTicket } from './tipoTicket';
+import type { UnidadProducto } from './unidadProducto';
 
 export interface CorteMetreado {
   tipo: TipoTicket;
+  unidad: UnidadProducto;
   ticketsCount: number;
   cantidad: string;
   importe: string;

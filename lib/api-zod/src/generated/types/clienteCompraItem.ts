@@ -15,6 +15,9 @@ export interface ClienteCompraItem {
   iva?: string;
   metros?: string;
   kilos?: string;
+  rollosMetros?: string;
+  rollosKilos?: string;
+  metrajeMetros?: string;
   /** @nullable */
   margen?: string | null;
   lineasSinCosto?: number;

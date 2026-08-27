@@ -73,7 +73,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
         </div>
       </div>
 
-      {corte.margen && (
+      {corte.lineasExcluidasMargen !== undefined && (
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
           <p className="text-xs uppercase font-bold tracking-wider text-primary mb-2">Rentabilidad del Turno</p>
           <div className="grid grid-cols-3 gap-4">
@@ -83,21 +83,21 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Costo de Mercancía</p>
-              <p className="font-mono font-medium text-destructive">{formatNumber(corte.costo || "0", { kind: "money" })}</p>
+              <p className="font-mono font-medium text-destructive">{corte.costo == null ? "Pendiente" : formatNumber(corte.costo, { kind: "money" })}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Margen Operativo</p>
               <p className="font-mono font-bold text-sidebar">
-                {formatNumber(corte.margen, { kind: "money" })}
+                {corte.margen == null ? "Pendiente" : formatNumber(corte.margen, { kind: "money" })}
                 <span className="text-xs font-normal ml-2 bg-sidebar/10 px-1.5 py-0.5 rounded text-sidebar">
-                  {formatNumber(corte.margenPorcentaje || "0", { kind: "percentage", percentageInput: "percent" })}
+                  {corte.margenPorcentaje == null ? "Pendiente" : formatNumber(corte.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}
                 </span>
               </p>
             </div>
           </div>
           {Number(corte.lineasExcluidasMargen) > 0 && (
             <p className="text-xs text-amber-700 mt-2">
-              * Existen {corte.lineasExcluidasMargen} líneas metreadas/sin rollo excluidas del cálculo de costo.
+               * Costo y margen pendientes por {corte.lineasExcluidasMargen} línea(s) sin costo congelado.
             </p>
           )}
         </div>
@@ -176,12 +176,12 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
         <div>
           <h3 className="font-bold border-b pb-2 mb-3">Tipo de Venta</h3>
           <Table className="text-xs">
-            <TableHeader><TableRow><TableHead>Tipo</TableHead><TableHead className="text-right">Metraje</TableHead><TableHead className="text-right">Importe</TableHead></TableRow></TableHeader>
+            <TableHeader><TableRow><TableHead>Modalidad</TableHead><TableHead className="text-right">Cantidad</TableHead><TableHead className="text-right">Importe</TableHead></TableRow></TableHeader>
             <TableBody>
               {corte.metreado.map((m, i) => (
                 <TableRow key={i}>
-                  <TableCell className="font-medium">{m.tipo}</TableCell>
-                  <TableCell className="text-right font-mono">{formatNumber(m.cantidad, { kind: "quantity" })}</TableCell>
+                  <TableCell className="font-medium">{m.tipo === "METREADO" ? "METRAJE" : "ROLLOS"}</TableCell>
+                  <TableCell className="text-right font-mono">{formatNumber(m.cantidad, { kind: "quantity" })} {m.unidad}</TableCell>
                   <TableCell className="text-right font-mono">{formatNumber(m.importe, { kind: "money" })}</TableCell>
                 </TableRow>
               ))}
@@ -199,7 +199,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
               {corte.productos.map((p, i) => (
                 <TableRow key={i}>
                   <TableCell className="font-mono">{p.sku}</TableCell>
-                  <TableCell>{p.tela} - {p.color}</TableCell>
+                  <TableCell>{p.tipo === "METREADO" ? "METRAJE" : "ROLLO"} · {p.tela} - {p.color}</TableCell>
                   <TableCell className="text-right font-mono">{formatNumber(p.cantidad, { kind: "quantity" })} {p.unidad}</TableCell>
                   <TableCell className="text-right font-mono">{formatNumber(p.importe, { kind: "money" })}</TableCell>
                 </TableRow>

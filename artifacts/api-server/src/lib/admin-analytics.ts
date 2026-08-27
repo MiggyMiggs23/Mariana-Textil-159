@@ -65,26 +65,25 @@ export function calculateFrozenMargin(
   }>,
 ) {
   let costo = 0;
-  let margen = 0;
   const subtotal = lines.reduce((sum, line) => sum + Number(line.importe), 0);
   let lineasExcluidasMargen = 0;
   for (const line of lines) {
     if (
-      line.rolloId == null ||
-      line.costoUnitarioCongelado == null ||
-      Number(line.costoUnitarioCongelado) <= 0 ||
       line.costoTotalCongelado == null
     ) {
       lineasExcluidasMargen += 1;
       continue;
     }
     costo += Number(line.costoTotalCongelado);
-    margen += Number(line.importe) - Number(line.costoTotalCongelado);
   }
+  const complete = lineasExcluidasMargen === 0;
+  const margen = complete ? subtotal - costo : null;
   return {
-    costo: decimal(costo),
-    margen: decimal(margen),
-    margenPorcentaje: decimal(subtotal === 0 ? 0 : (margen / subtotal) * 100),
+    costo: complete ? decimal(costo) : null,
+    margen: margen == null ? null : decimal(margen),
+    margenPorcentaje: margen == null
+      ? null
+      : decimal(subtotal === 0 ? 0 : (margen / subtotal) * 100),
     lineasExcluidasMargen,
   };
 }
@@ -164,11 +163,10 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
        FROM tickets t WHERE ${condition.text}
      ), lines AS (
        SELECT l.ticket_id,
-         COALESCE(SUM(l.costo_total_congelado)
-           FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado > 0),0) costo,
-         COALESCE(SUM(l.importe)
-           FILTER (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado > 0),0) importe_margen,
-         COUNT(*) FILTER (WHERE l.rollo_id IS NULL OR l.costo_unitario_congelado <= 0)::int excluidas
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.costo_total_congelado),0) END costo,
+          COALESCE(SUM(l.importe),0) importe_margen,
+          COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas
        FROM ticket_lineas l JOIN filtered f ON f.id=l.ticket_id
        WHERE f.estado='VENDIDO' GROUP BY l.ticket_id
      )
@@ -178,8 +176,8 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
        COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado),0)::text pendiente,
        COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO'),0)::text subtotal,
        COALESCE(SUM(f.iva) FILTER (WHERE f.estado='VENDIDO'),0)::text iva,
-       COALESCE(SUM(l.costo),0)::text costo,
-       COALESCE(SUM(l.importe_margen-l.costo),0)::text margen,
+        CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.costo),0)::text END costo,
+        CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.importe_margen-l.costo),0)::text END margen,
        COUNT(*) FILTER (WHERE f.estado='VENDIDO')::int tickets,
        COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND f.cobrado)::int "ticketsCobrados",
        COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado)::int "ticketsPendientes",
@@ -190,16 +188,16 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
   );
   const row = result.rows[0]!;
   const subtotal = Number(row.subtotal);
-  const margin = Number(row.margen);
+  const margin = row.margen == null ? null : Number(row.margen);
   return {
     ventas: decimal(row.ventas),
     cobrado: decimal(row.cobrado),
     pendiente: decimal(row.pendiente),
     subtotal: decimal(subtotal),
     iva: decimal(row.iva),
-    costo: decimal(row.costo),
-    margen: decimal(margin),
-    margenPorcentaje: decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
+    costo: row.costo == null ? null : decimal(row.costo),
+    margen: margin == null ? null : decimal(margin),
+    margenPorcentaje: margin == null ? null : decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
     tickets: Number(row.tickets),
     ticketsCobrados: Number(row.ticketsCobrados),
     ticketsPendientes: Number(row.ticketsPendientes),
@@ -211,24 +209,24 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
 export async function getSessionMargin(sesionId: number) {
   const result = await pool.query(
     `SELECT
-       COALESCE(SUM(l.costo_total_congelado) FILTER
-         (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0)::text costo,
-       COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
-         (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0)::text margen,
+       CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+         ELSE COALESCE(SUM(l.costo_total_congelado),0)::text END costo,
+       CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+         ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen,
         COALESCE(SUM(l.importe),0)::text subtotal,
        COUNT(*) FILTER
-         (WHERE l.rollo_id IS NULL OR l.costo_unitario_congelado<=0)::int excluidas
+          (WHERE l.costo_total_congelado IS NULL)::int excluidas
      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
      WHERE t.sesion_caja_id=$1 AND t.estado='VENDIDO'`,
     [sesionId],
   );
   const row = result.rows[0]!;
-  const margin = Number(row.margen);
+  const margin = row.margen == null ? null : Number(row.margen);
   const subtotal = Number(row.subtotal);
   return {
-    costo: decimal(row.costo),
-    margen: decimal(margin),
-    margenPorcentaje: decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
+    costo: row.costo == null ? null : decimal(row.costo),
+    margen: margin == null ? null : decimal(margin),
+    margenPorcentaje: margin == null ? null : decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
     lineasExcluidasMargen: Number(row.excluidas),
   };
 }
@@ -236,18 +234,19 @@ export async function getSessionMargin(sesionId: number) {
 export async function getQuantities(filters: AnalyticsFilters) {
   const condition = where(filters);
   const result = await pool.query(
-    `SELECT p.unidad,COALESCE(SUM(l.cantidad),0)::text cantidad
+    `SELECT l.tipo,p.unidad,COALESCE(SUM(l.cantidad),0)::text cantidad
      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
      JOIN productos p ON p.id=l.producto_id
      WHERE ${condition.text} AND t.estado='VENDIDO'
-     GROUP BY p.unidad ORDER BY p.unidad`,
+      GROUP BY l.tipo,p.unidad ORDER BY l.tipo,p.unidad`,
     condition.values,
   );
-  const byUnit = new Map(result.rows.map((row) => [row.unidad, decimal(row.cantidad, 3)]));
-  return [
-    { unidad: "METRO" as const, cantidad: byUnit.get("METRO") ?? "0.000" },
-    { unidad: "KILO" as const, cantidad: byUnit.get("KILO") ?? "0.000" },
-  ];
+  return result.rows.map((row) => ({
+    modalidad: row.tipo === "METREADO" ? "METRAJE" as const : "ROLLOS" as const,
+    tipo: row.tipo as "NORMAL" | "METREADO",
+    unidad: row.unidad as "METRO" | "KILO",
+    cantidad: decimal(row.cantidad, 3),
+  }));
 }
 
 export async function getPending(filters: AnalyticsFilters) {
@@ -272,8 +271,9 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        SELECT t.* FROM tickets t WHERE ${condition.text}
      ), line_margin AS (
        SELECT l.ticket_id,
-         COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
-           (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0) margen,
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0) END margen,
+          COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas,
           COALESCE(SUM(l.importe),0) subtotal
        FROM ticket_lineas l JOIN filtered t ON t.id=l.ticket_id GROUP BY l.ticket_id
      ), payment AS (
@@ -291,7 +291,8 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND t.cobrado),0)::text cobrado,
        COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado),0)::text pendiente,
        COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
-       COALESCE(SUM(m.margen),0)::text margen,COALESCE(SUM(m.subtotal),0)::text subtotal,
+        CASE WHEN COALESCE(SUM(m.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(m.margen),0)::text END margen,
+        COALESCE(SUM(m.subtotal),0)::text subtotal,
        COALESCE(SUM(p.efectivo),0)::text efectivo,COALESCE(SUM(p.transferencia),0)::text transferencia,
        COALESCE(SUM(p.credito),0)::text credito,
        COUNT(*) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado AND t.created_at < now()-interval '30 minutes')::int "pendientes30Min",
@@ -324,15 +325,15 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
     if (Number(row.pendientes30Min) > 0) alerts.push("PENDIENTE_MAS_30_MIN");
     const mexicoHour = mexicoCityHour();
     if (row.sesionCajaId == null && mexicoHour >= 10) alerts.push("SIN_CAJA_ABIERTA");
-    if (subtotal > 0 && (Number(row.margen) / subtotal) * 100 < 15) alerts.push("MARGEN_BAJO");
+    if (row.margen != null && subtotal > 0 && (Number(row.margen) / subtotal) * 100 < 15) alerts.push("MARGEN_BAJO");
     if (cancellationRate > 10) alerts.push("CANCELACIONES_ALTAS");
     return {
       ...row,
       abiertaAt: row.abiertaAt ? new Date(row.abiertaAt).toISOString() : null,
       vendido: decimal(sold), cobrado: decimal(row.cobrado), pendiente: decimal(row.pendiente),
       ticketPromedio: decimal(tickets === 0 ? 0 : sold / tickets),
-      margen: decimal(row.margen),
-      margenPorcentaje: decimal(subtotal === 0 ? 0 : (Number(row.margen) / subtotal) * 100),
+      margen: row.margen == null ? null : decimal(row.margen),
+      margenPorcentaje: row.margen == null ? null : decimal(subtotal === 0 ? 0 : (Number(row.margen) / subtotal) * 100),
       efectivo: decimal(row.efectivo), transferencia: decimal(row.transferencia), credito: decimal(row.credito),
       tickets, pendientes30Min: Number(row.pendientes30Min),
       cancelaciones: Number(row.cancelaciones), tasaCancelacion: decimal(cancellationRate), alertas: alerts,
@@ -345,8 +346,8 @@ export async function getRealtimeTickets(filters: AnalyticsFilters) {
   const result = await pool.query(
     `SELECT t.id,t.folio,t.created_at "createdAt",u.nombre "nombreUbicacion",c.nombre "nombreCliente",
        t.total::text importe,t.cobrado,
-       COALESCE(SUM(l.importe-l.costo_total_congelado) FILTER
-         (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0)::text margen
+       CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+         ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
      FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
      LEFT JOIN clientes c ON c.id=t.cliente_id LEFT JOIN ticket_lineas l ON l.ticket_id=t.id
      WHERE ${condition.text} GROUP BY t.id,u.nombre,c.nombre
@@ -355,7 +356,7 @@ export async function getRealtimeTickets(filters: AnalyticsFilters) {
   );
   return result.rows.map((row) => ({
     ...row, createdAt: new Date(row.createdAt).toISOString(),
-    importe: decimal(row.importe), margen: decimal(row.margen),
+    importe: decimal(row.importe), margen: row.margen == null ? null : decimal(row.margen),
   }));
 }
 
@@ -740,25 +741,30 @@ export async function compareStores(filters: AnalyticsFilters) {
        FROM tickets t WHERE ${condition.text}
      ), line_data AS (
        SELECT l.ticket_id,
-         COALESCE(SUM(l.costo_total_congelado) FILTER
-           (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0) costo,
-         COALESCE(SUM(l.importe) FILTER
-           (WHERE l.rollo_id IS NOT NULL AND l.costo_unitario_congelado>0),0) margen_base,
-         COUNT(*) FILTER (WHERE l.rollo_id IS NULL OR l.costo_unitario_congelado<=0)::int excluidas,
+          CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+            ELSE COALESCE(SUM(l.costo_total_congelado),0) END costo,
+          COALESCE(SUM(l.importe),0) margen_base,
+          COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas,
          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'),0) metros,
-         COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'),0) kilos
+          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'),0) kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0) rollos_metros,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0) rollos_kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0) metraje_metros
        FROM ticket_lineas l JOIN ticket_data t ON t.id=l.ticket_id
        JOIN productos p ON p.id=l.producto_id WHERE t.estado='VENDIDO' GROUP BY l.ticket_id
      )
      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
        COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0)::text ventas,
        COALESCE(SUM(t.subtotal) FILTER (WHERE t.estado='VENDIDO'),0)::text subtotal,
-       COALESCE(SUM(l.costo),0)::text costo,
-       COALESCE(SUM(l.margen_base-l.costo),0)::text margen,
+        CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.costo),0)::text END costo,
+        CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.margen_base-l.costo),0)::text END margen,
        COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
        COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones,
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen",
-       COALESCE(SUM(l.metros),0)::text metros,COALESCE(SUM(l.kilos),0)::text kilos,
+        COALESCE(SUM(l.metros),0)::text metros,COALESCE(SUM(l.kilos),0)::text kilos,
+        COALESCE(SUM(l.rollos_metros),0)::text "rollosMetros",
+        COALESCE(SUM(l.rollos_kilos),0)::text "rollosKilos",
+        COALESCE(SUM(l.metraje_metros),0)::text "metrajeMetros",
        COALESCE(pay.efectivo,0)::text efectivo,
        COALESCE(pay.transferencia,0)::text transferencia,
        COALESCE(pay.credito,0)::text credito,
@@ -829,8 +835,12 @@ export async function compareStores(filters: AnalyticsFilters) {
     return {
       ...row,
       ventas: decimal(sales), subtotal: decimal(row.subtotal),
-      costo: decimal(row.costo), margen: decimal(row.margen),
+      costo: row.costo == null ? null : decimal(row.costo),
+      margen: row.margen == null ? null : decimal(row.margen),
       metros: decimal(row.metros, 3), kilos: decimal(row.kilos, 3),
+      rollosMetros: decimal(row.rollosMetros, 3),
+      rollosKilos: decimal(row.rollosKilos, 3),
+      metrajeMetros: decimal(row.metrajeMetros, 3),
       ticketPromedio: decimal(average),
       diferenciaTicketPromedio: decimal(average - globalAverage),
       tendenciaPorcentaje: decimal(priorSales === 0 ? (sales === 0 ? 0 : 100) : ((sales - priorSales) / priorSales) * 100),
@@ -855,10 +865,15 @@ export async function compareStores(filters: AnalyticsFilters) {
       nombreUbicacion: row.nombreUbicacion, ventas: decimal(row.ventas),
     })),
     totales: {
-      ventas: decimal(totalSales), subtotal: decimal(sum("subtotal")), costo: decimal(sum("costo")),
-      margen: decimal(sum("margen")), tickets: totalTickets, ticketPromedio: decimal(globalAverage),
+      ventas: decimal(totalSales), subtotal: decimal(sum("subtotal")),
+      costo: result.rows.some((row) => row.costo == null) ? null : decimal(sum("costo")),
+      margen: result.rows.some((row) => row.margen == null) ? null : decimal(sum("margen")),
+      tickets: totalTickets, ticketPromedio: decimal(globalAverage),
       cancelaciones: sum("cancelaciones"), lineasExcluidasMargen: sum("lineasExcluidasMargen"),
       metros: decimal(sum("metros"), 3), kilos: decimal(sum("kilos"), 3),
+      rollosMetros: decimal(sum("rollosMetros"), 3),
+      rollosKilos: decimal(sum("rollosKilos"), 3),
+      metrajeMetros: decimal(sum("metrajeMetros"), 3),
       efectivo: decimal(sum("efectivo")), transferencia: decimal(sum("transferencia")),
       credito: decimal(sum("credito")),
       porcentajeFacturado: decimal(totalSales === 0 ? 0 : (facturado / totalSales) * 100),

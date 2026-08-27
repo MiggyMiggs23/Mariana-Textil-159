@@ -25,9 +25,13 @@ export interface AdminRealtimeStore {
   pendiente: string;
   tickets: number;
   ticketPromedio: string;
-  margen: string;
-  /** Porcentaje en unidades; 15.00 significa 15% */
-  margenPorcentaje: string;
+  /** @nullable */
+  margen: string | null;
+  /**
+     * Porcentaje en unidades; 15.00 significa 15%
+     * @nullable
+     */
+  margenPorcentaje: string | null;
   efectivo: string;
   transferencia: string;
   credito: string;

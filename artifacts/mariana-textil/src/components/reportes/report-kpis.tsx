@@ -29,7 +29,9 @@ export function ReportKpis({ kpis, hasEconomicAccess }: { kpis: ReporteKpi[], ha
               </p>
               <div className="flex items-end gap-2 mt-1">
                 <h3 className="text-2xl font-black text-sidebar tracking-tight">
-                  {typeof kpi.value === "number"
+                  {kpi.value == null
+                    ? "Pendiente"
+                    : typeof kpi.value === "number"
                     ? formatReportValue(kpi.value, kpi.kind)
                     : kpi.value}
                 </h3>

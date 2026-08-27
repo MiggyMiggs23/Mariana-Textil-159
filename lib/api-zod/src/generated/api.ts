@@ -2743,11 +2743,14 @@ export const GetClientesAnaliticaResponse = zod.object({
 }),
   "ventas": zod.string(),
   "tickets": zod.number(),
-  "costo": zod.string(),
-  "margen": zod.string(),
+  "costo": zod.string().nullable(),
+  "margen": zod.string().nullable(),
   "lineasSinCosto": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
+  "rollosMetros": zod.string(),
+  "rollosKilos": zod.string(),
+  "metrajeMetros": zod.string(),
   "topVentas": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
   "topMargen": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
   "pareto": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
@@ -3039,6 +3042,9 @@ export const GetClienteComprasResponse = zod.object({
   "iva": zod.string().optional(),
   "metros": zod.string().optional(),
   "kilos": zod.string().optional(),
+  "rollosMetros": zod.string().optional(),
+  "rollosKilos": zod.string().optional(),
+  "metrajeMetros": zod.string().optional(),
   "margen": zod.string().nullish(),
   "lineasSinCosto": zod.number().optional()
 })),
@@ -3057,7 +3063,15 @@ export const GetClienteEstadisticasParams = zod.object({
 export const GetClienteEstadisticasResponse = zod.object({
   "clienteId": zod.number(),
   "totalCompras": zod.string().nullish(),
-  "comprasCount": zod.number().nullish()
+  "comprasCount": zod.number().nullish(),
+  "metros": zod.string().optional(),
+  "kilos": zod.string().optional(),
+  "rollosMetros": zod.string().optional(),
+  "rollosKilos": zod.string().optional(),
+  "metrajeMetros": zod.string().optional(),
+  "costo": zod.string().nullish(),
+  "margen": zod.string().nullish(),
+  "lineasSinCosto": zod.number().optional()
 })
 
 
@@ -4031,6 +4045,7 @@ export const ObtenerCorteCajaResponse = zod.object({
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['METRO', 'KILO']),
   "ticketsCount": zod.number(),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -4040,6 +4055,7 @@ export const ObtenerCorteCajaResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
   "unidad": zod.enum(['METRO', 'KILO']),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -4072,9 +4088,9 @@ export const ObtenerCorteCajaResponse = zod.object({
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
-  "costo": zod.string().optional().describe('Solo presente en respuestas exclusivas para ADMIN'),
-  "margen": zod.string().optional().describe('Margen sobre subtotal; solo presente para ADMIN'),
-  "margenPorcentaje": zod.string().optional().describe('Solo presente para ADMIN'),
+  "costo": zod.string().nullish().describe('Solo presente en respuestas exclusivas para ADMIN'),
+  "margen": zod.string().nullish().describe('Margen sobre subtotal; solo presente para ADMIN'),
+  "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),
   "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
 })
 
@@ -4130,6 +4146,7 @@ export const CerrarSesionCajaResponse = zod.object({
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['METRO', 'KILO']),
   "ticketsCount": zod.number(),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -4139,6 +4156,7 @@ export const CerrarSesionCajaResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
   "unidad": zod.enum(['METRO', 'KILO']),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -4171,9 +4189,9 @@ export const CerrarSesionCajaResponse = zod.object({
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
-  "costo": zod.string().optional().describe('Solo presente en respuestas exclusivas para ADMIN'),
-  "margen": zod.string().optional().describe('Margen sobre subtotal; solo presente para ADMIN'),
-  "margenPorcentaje": zod.string().optional().describe('Solo presente para ADMIN'),
+  "costo": zod.string().nullish().describe('Solo presente en respuestas exclusivas para ADMIN'),
+  "margen": zod.string().nullish().describe('Margen sobre subtotal; solo presente para ADMIN'),
+  "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),
   "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
 })
 
@@ -5231,9 +5249,9 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "pendiente": zod.string(),
   "subtotal": zod.string(),
   "iva": zod.string(),
-  "costo": zod.string(),
-  "margen": zod.string(),
-  "margenPorcentaje": zod.string(),
+  "costo": zod.string().nullable(),
+  "margen": zod.string().nullable(),
+  "margenPorcentaje": zod.string().nullable(),
   "tickets": zod.number(),
   "ticketsCobrados": zod.number(),
   "ticketsPendientes": zod.number(),
@@ -5241,6 +5259,8 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "lineasExcluidasMargen": zod.number()
 }),
   "cantidades": zod.array(zod.object({
+  "modalidad": zod.enum(['ROLLOS', 'METRAJE']),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
   "unidad": zod.enum(['METRO', 'KILO']),
   "cantidad": zod.string()
 })),
@@ -5266,8 +5286,8 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "pendiente": zod.string(),
   "tickets": zod.number(),
   "ticketPromedio": zod.string(),
-  "margen": zod.string(),
-  "margenPorcentaje": zod.string().describe('Porcentaje en unidades; 15.00 significa 15%'),
+  "margen": zod.string().nullable(),
+  "margenPorcentaje": zod.string().nullable().describe('Porcentaje en unidades; 15.00 significa 15%'),
   "efectivo": zod.string(),
   "transferencia": zod.string(),
   "credito": zod.string(),
@@ -5288,8 +5308,8 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "pendiente": zod.string(),
   "tickets": zod.number(),
   "ticketPromedio": zod.string(),
-  "margen": zod.string(),
-  "margenPorcentaje": zod.string().describe('Porcentaje en unidades; 15.00 significa 15%'),
+  "margen": zod.string().nullable(),
+  "margenPorcentaje": zod.string().nullable().describe('Porcentaje en unidades; 15.00 significa 15%'),
   "efectivo": zod.string(),
   "transferencia": zod.string(),
   "credito": zod.string(),
@@ -5305,7 +5325,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "nombreUbicacion": zod.string(),
   "nombreCliente": zod.string().nullable(),
   "importe": zod.string(),
-  "margen": zod.string(),
+  "margen": zod.string().nullable(),
   "cobrado": zod.boolean()
 })).max(getAdminRealtimeDashboardResponseUltimosTicketsMax)
 })
@@ -5479,6 +5499,7 @@ export const GetAdminCorteResponse = zod.object({
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['METRO', 'KILO']),
   "ticketsCount": zod.number(),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -5488,6 +5509,7 @@ export const GetAdminCorteResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
   "unidad": zod.enum(['METRO', 'KILO']),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -5520,9 +5542,9 @@ export const GetAdminCorteResponse = zod.object({
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
-  "costo": zod.string().optional().describe('Solo presente en respuestas exclusivas para ADMIN'),
-  "margen": zod.string().optional().describe('Margen sobre subtotal; solo presente para ADMIN'),
-  "margenPorcentaje": zod.string().optional().describe('Solo presente para ADMIN'),
+  "costo": zod.string().nullish().describe('Solo presente en respuestas exclusivas para ADMIN'),
+  "margen": zod.string().nullish().describe('Margen sobre subtotal; solo presente para ADMIN'),
+  "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),
   "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
 })
 
@@ -5698,8 +5720,8 @@ export const GetAdminComparacionTiendasResponse = zod.object({
   "nombreUbicacion": zod.string(),
   "ventas": zod.string(),
   "subtotal": zod.string(),
-  "costo": zod.string(),
-  "margen": zod.string(),
+  "costo": zod.string().nullable(),
+  "margen": zod.string().nullable(),
   "tickets": zod.number(),
   "ticketPromedio": zod.string(),
   "diferenciaTicketPromedio": zod.string(),
@@ -5716,6 +5738,9 @@ export const GetAdminComparacionTiendasResponse = zod.object({
   "lineasExcluidasMargen": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
+  "rollosMetros": zod.string(),
+  "rollosKilos": zod.string(),
+  "metrajeMetros": zod.string(),
   "efectivo": zod.string(),
   "transferencia": zod.string(),
   "credito": zod.string(),
@@ -5726,14 +5751,17 @@ export const GetAdminComparacionTiendasResponse = zod.object({
   "totales": zod.object({
   "ventas": zod.string(),
   "subtotal": zod.string(),
-  "costo": zod.string(),
-  "margen": zod.string(),
+  "costo": zod.string().nullable(),
+  "margen": zod.string().nullable(),
   "tickets": zod.number(),
   "ticketPromedio": zod.string(),
   "cancelaciones": zod.number(),
   "lineasExcluidasMargen": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
+  "rollosMetros": zod.string(),
+  "rollosKilos": zod.string(),
+  "metrajeMetros": zod.string(),
   "efectivo": zod.string(),
   "transferencia": zod.string(),
   "credito": zod.string(),

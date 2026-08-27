@@ -75,7 +75,7 @@ export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable,
                         key={col.key} 
                         className={`${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : ''} ${isEconomic ? 'font-mono font-medium' : ''}`}
                       >
-                        {val === undefined || val === null ? "-" : 
+                        {val === undefined || val === null ? (col.economic ? "Pendiente" : "-") :
                           formatReportValue(val, col.kind || "count")}
                       </TableCell>
                     );

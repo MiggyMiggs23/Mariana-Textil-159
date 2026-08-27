@@ -281,7 +281,7 @@ router.get("/admin/cortes/:id/export.xlsx", async (req, res, next): Promise<void
       { concepto: "Total cobrado", importe: toExcelNumber(corte.totalCobrado) },
       { concepto: "Efectivo esperado", importe: toExcelNumber(corte.efectivoEsperado) },
       { concepto: "Diferencia", importe: corte.diferencia == null ? null : toExcelNumber(corte.diferencia) },
-      { concepto: "Margen", importe: toExcelNumber(margin.margen) },
+      { concepto: "Margen", importe: margin.margen == null ? "Pendiente" : toExcelNumber(margin.margen) },
       ...corte.formasPago.map((row) => ({ concepto: `Pago ${row.formaPago}`, importe: toExcelNumber(row.importe) })),
       ...corte.cuentasDestino.map((row) => ({ concepto: row.cuentaDestino, importe: toExcelNumber(row.importe) })),
       ...corte.facturacion.flatMap((row) => [
@@ -292,7 +292,8 @@ router.get("/admin/cortes/:id/export.xlsx", async (req, res, next): Promise<void
       ]),
       ...corte.ticketsCobradosDetalle.map((row) => ({ concepto: `Ticket cobrado #${row.folio} ${row.cobradoAt}`, importe: toExcelNumber(row.importe) })),
       ...corte.cancelaciones.map((row) => ({ concepto: `Cancelado #${row.folio} — ${row.motivo} — ${row.autor} — ${row.canceladoAt}`, importe: toExcelNumber(row.importe) })),
-      ...corte.productos.map((row) => ({ concepto: `Producto ${row.sku} ${row.tela} ${row.color} (${row.cantidad} ${row.unidad})`, importe: toExcelNumber(row.importe) })),
+      ...corte.metreado.map((row) => ({ concepto: `${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} (${row.cantidad} ${row.unidad})`, importe: toExcelNumber(row.importe) })),
+      ...corte.productos.map((row) => ({ concepto: `${row.tipo === "METREADO" ? "METRAJE" : "ROLLO"} ${row.sku} ${row.tela} ${row.color} (${row.cantidad} ${row.unidad})`, importe: toExcelNumber(row.importe) })),
       ...corte.pendientes.map((row) => ({ concepto: `Pendiente #${row.folio}`, importe: toExcelNumber(row.total) })),
     ]);
     res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -311,13 +312,14 @@ router.get("/admin/cortes/:id/export.pdf", async (req, res, next): Promise<void>
       `Tienda: ${corte.sesion.nombreUbicacion}`,
       `Cobrado: ${formatNumber(corte.totalCobrado, { kind: "money" })}`,
       `Diferencia: ${formatNumber(corte.diferencia, { kind: "money" })}`,
-      `Margen: ${formatNumber(margin.margen, { kind: "money" })}`,
+      `Margen: ${margin.margen == null ? "Pendiente" : formatNumber(margin.margen, { kind: "money" })}`,
       ...corte.formasPago.map((row) => `Pago ${row.formaPago}: ${formatNumber(row.importe, { kind: "money" })}`),
       ...corte.cuentasDestino.map((row) => `${row.cuentaDestino}: ${formatNumber(row.importe, { kind: "money" })}`),
       ...corte.facturacion.map((row) => `${row.facturado ? "Facturado" : "No facturado"}: ${formatNumber(row.importe, { kind: "money" })}; E ${row.efectivo}; T ${row.transferencia}; C ${row.credito}`),
       ...corte.ticketsCobradosDetalle.map((row) => `Cobrado #${row.folio}: ${formatNumber(row.importe, { kind: "money" })} ${row.cobradoAt}`),
       ...corte.cancelaciones.map((row) => `Cancelado #${row.folio}: ${formatNumber(row.importe, { kind: "money" })}; ${row.motivo}; ${row.autor}; ${row.canceladoAt}`),
-      ...corte.productos.map((row) => `Producto ${row.sku} ${row.tela} ${row.color}: ${row.cantidad} ${row.unidad}; ${row.importe}`),
+      ...corte.metreado.map((row) => `${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"}: ${row.cantidad} ${row.unidad}; ${row.importe}`),
+      ...corte.productos.map((row) => `${row.tipo === "METREADO" ? "METRAJE" : "ROLLO"} ${row.sku} ${row.tela} ${row.color}: ${row.cantidad} ${row.unidad}; ${row.importe}`),
       ...corte.pendientes.map((row) => `Pendiente #${row.folio}: ${row.total}`),
     ]));
   } catch (error) { next(error); }

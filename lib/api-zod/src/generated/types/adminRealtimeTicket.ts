@@ -14,6 +14,7 @@ export interface AdminRealtimeTicket {
   /** @nullable */
   nombreCliente: string | null;
   importe: string;
-  margen: string;
+  /** @nullable */
+  margen: string | null;
   cobrado: boolean;
 }

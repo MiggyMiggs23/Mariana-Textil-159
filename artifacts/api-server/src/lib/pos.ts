@@ -1319,6 +1319,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       sku: productosTable.sku,
       tela: productosTable.tela,
       color: productosTable.color,
+      tipo: ticketLineasTable.tipo,
       unidad: productosTable.unidad,
       cantidad: sql<string>`SUM(${ticketLineasTable.cantidad})::text`,
       importe: sql<string>`SUM(${ticketLineasTable.importe})::text`,
@@ -1337,6 +1338,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     )
     .groupBy(
       ticketLineasTable.productoId,
+      ticketLineasTable.tipo,
       productosTable.sku,
       productosTable.tela,
       productosTable.color,
@@ -1378,6 +1380,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
   const tipos = await database
     .select({
       tipo: ticketLineasTable.tipo,
+      unidad: productosTable.unidad,
       ticketsCount: sql<number>`COUNT(DISTINCT ${ticketsTable.id})::int`,
       cantidad: sql<string>`COALESCE(SUM(${ticketLineasTable.cantidad}), 0)::text`,
       importe: sql<string>`COALESCE(SUM(${ticketLineasTable.importe}), 0)::text`,
@@ -1387,14 +1390,18 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       ticketLineasTable,
       eq(ticketLineasTable.ticketId, ticketsTable.id),
     )
+    .innerJoin(
+      productosTable,
+      eq(ticketLineasTable.productoId, productosTable.id),
+    )
     .where(
       and(
         eq(ticketsTable.sesionCajaId, sesion.id),
         eq(ticketsTable.estado, "VENDIDO"),
       ),
     )
-    .groupBy(ticketLineasTable.tipo)
-    .orderBy(ticketLineasTable.tipo);
+    .groupBy(ticketLineasTable.tipo, productosTable.unidad)
+    .orderBy(ticketLineasTable.tipo, productosTable.unidad);
 
   const formas = { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 };
   const cuentas = {
@@ -1544,15 +1551,13 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         credito: decimalMoney(facturacionPagos.noFacturado.CREDITO),
       },
     ],
-    metreado: (["NORMAL", "METREADO"] as const).map((tipo) => {
-      const row = tipos.find((item) => item.tipo === tipo);
-      return {
-        tipo,
-        ticketsCount: row?.ticketsCount ?? 0,
-        cantidad: row?.cantidad ?? "0.000",
-        importe: row?.importe ?? "0.00",
-      };
-    }),
+    metreado: tipos.map((row) => ({
+      tipo: row.tipo,
+      unidad: row.unidad,
+      ticketsCount: row.ticketsCount,
+      cantidad: row.cantidad,
+      importe: row.importe,
+    })),
     productos,
     pendientes: pendientes.map((ticket) => ({
       ...ticket,

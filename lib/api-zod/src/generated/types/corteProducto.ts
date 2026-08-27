@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { TipoTicket } from './tipoTicket';
 import type { UnidadProducto } from './unidadProducto';
 
 export interface CorteProducto {
@@ -12,6 +13,7 @@ export interface CorteProducto {
   sku: string;
   tela: string;
   color: string;
+  tipo: TipoTicket;
   unidad: UnidadProducto;
   cantidad: string;
   importe: string;
