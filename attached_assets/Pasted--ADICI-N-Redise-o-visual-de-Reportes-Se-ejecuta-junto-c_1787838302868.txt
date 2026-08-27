@@ -1,0 +1,154 @@
+# ADICIÓN — Rediseño visual de Reportes
+
+Se ejecuta junto con la adición anterior o después. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## El problema
+
+Las tablas de Reportes son planas: encabezado gris, filas blancas, texto negro. Nueve pestañas con decenas de tablas que se ven todas iguales, sin jerarquía y sin nada que ayude a leerlas de un vistazo.
+
+Miguel las va a mirar todos los días. Tienen que verse bien y, más importante, **tienen que dejarse leer rápido.**
+
+---
+
+## Principio antes de empezar
+
+> **El color codifica información, no decora.**
+
+Todo color que agregues debe significar algo: una modalidad, un signo, un rango, una categoría, un estado. Un color puesto porque "se ve bonito" agrega ruido y hace la tabla más lenta de leer, no más rápida.
+
+Si no puedes decir en una frase qué significa un color, no lo pongas.
+
+Escribe este principio en `replit.md` antes de empezar.
+
+---
+
+## BLOQUE 1 — Paleta
+
+El sistema ya tiene una identidad: el azul del logo de Mariana Textil. **Constrúyela desde ahí, no desde una paleta genérica.**
+
+Define en `index.css` un conjunto de variables de color propio de reportes, derivado del azul de la marca, con:
+
+- **Un azul profundo** para encabezados y acentos principales
+- **Un azul medio y uno claro** para jerarquías secundarias y franjas alternas
+- **Un color cálido de contraste** — algo del mundo textil, tierra o cobre — para destacar totales y valores clave. Que no compita con el azul, que lo acompañe.
+- **Verde y rojo sobrios** para positivo y negativo. Nada de semáforo estridente: tonos apagados, legibles sobre blanco y sobre franja.
+- **Un gris neutro cálido**, no azulado, para texto secundario
+
+Cinco o seis valores nombrados, no más. Documenta qué significa cada uno.
+
+**Evita** el degradado azul-morado que aparece en todo tablero genérico, y evita los grises azulados fríos de las plantillas administrativas. Esto es una empresa textil mexicana con 30 años de historia, no una aplicación de tecnología.
+
+---
+
+## BLOQUE 2 — La tabla
+
+En `components/reportes/report-table.tsx`, que hoy es una tabla plana:
+
+### Estructura visual
+
+- **Encabezado** con el azul profundo y texto claro, tipografía de peso alto y espaciado de letra ligeramente abierto. Que se lea como encabezado sin necesitar una línea que lo separe.
+- **Franjas alternas** muy tenues. Suficiente para seguir el renglón con el ojo, no tanto como para que se vean rayas.
+- **Realce al pasar el cursor** sobre el renglón completo.
+- **Fila de totales** claramente distinta: fondo del color cálido en tono muy suave, texto en peso alto, línea superior marcada.
+- Los números **alineados a la derecha**, con tipografía de ancho fijo para las cifras, de modo que las columnas de dinero se lean como columna y no como texto.
+- El texto alineado a la izquierda.
+
+### Densidad
+
+Renglones con más aire del que tienen hoy, pero sin desperdiciar pantalla. Que quepan muchos datos y aun así se pueda leer.
+
+Cuando una tabla tenga más de 15 renglones, **encabezado fijo al desplazar.**
+
+---
+
+## BLOQUE 3 — Color que significa algo
+
+Aplica color solo donde codifique información real:
+
+**Modalidad** — ROLLOS y METRAJE con dos tonos distintos, consistentes en todas las tablas y en todos los KPI del sistema. Que el ojo aprenda el código una vez y le sirva en las nueve pestañas.
+
+**Signo** — utilidad y variaciones positivas en verde sobrio, negativas en rojo sobrio. Solo el número, no todo el renglón.
+
+**Margen** — el mismo criterio del semáforo que ya usa Precios: verde en 30% o más, ámbar entre 15% y 30%, rojo por debajo. Como un punto o una franja discreta, no coloreando la celda entera.
+
+**Estados pendientes** — "Costo pendiente", "Sin costo", "Costo antiguo": en gris con textura o cursiva, nunca en un color de alerta. No es un error, es un dato que falta.
+
+**Clasificación ABC** — tres intensidades del mismo azul, de más oscuro a más claro. La escala es la información.
+
+**Antigüedad de cartera** — las cubetas de vencimiento en una escala de un solo tono que se intensifica con los días. Que se vea de un vistazo dónde está lo viejo.
+
+### Colores de producto
+
+En las tablas de Análisis de Color, usar un color aproximado al color real de la tela sería lo ideal. **Pero hoy la base no guarda ningún valor de color por producto**: solo el nombre en texto.
+
+No inventes una equivalencia adivinando desde el nombre. En su lugar:
+
+- Deja el diseño preparado para recibir un color por producto
+- Agrega a la tabla de productos un campo opcional de color, editable por ADMIN desde el catálogo, con un selector visual
+- Mientras un producto no lo tenga, usa un tono neutro de la paleta
+
+Así el día que Miguel capture los colores, las tablas se llenan solas. Y mientras tanto no se muestra una mentira.
+
+---
+
+## BLOQUE 4 — Los KPI
+
+Las tarjetas de indicadores en `report-kpis.tsx` también son planas.
+
+- Número grande, con la tipografía de cifras
+- Etiqueta pequeña arriba, en mayúsculas y espaciado abierto
+- La comparación contra el periodo anterior con flecha y color de signo
+- Un acento de color al costado según la familia del indicador: dinero, cantidad, conteo
+- Cuando un indicador esté pendiente por falta de costo, que se vea claramente distinto de un cero
+
+---
+
+## BLOQUE 5 — Gráficas
+
+Las gráficas deben usar la misma paleta, no los colores por defecto de la librería.
+
+- ROLLOS y METRAJE con los mismos dos tonos de toda la aplicación
+- Cuadrícula tenue, ejes en gris cálido
+- Etiquetas legibles, sin encimarse
+- Series con nombre siempre visible, sin necesidad de pasar el cursor
+
+---
+
+## BLOQUE 6 — Lo que no se toca
+
+- **El formato numérico `es-MX` no cambia.** Coma de miles, dinero con 2 decimales, metros y kilos con 3, conteos sin decimales, folios y años sin comas.
+- **La censura financiera no cambia.** El SUPERVISOR no recibe campos de dinero desde el servidor; el rediseño no debe introducir ninguna forma de mostrarlos.
+- **Metros y kilos siguen sin sumarse entre sí.**
+- El contenido de las tablas, sus columnas y sus datos no cambian. **Esto es solo presentación.**
+
+### Legibilidad
+
+- Todo texto sobre color debe tener contraste suficiente para leerse sin esfuerzo. Un encabezado azul con texto azul un poco más claro se ve elegante en pantalla grande y es ilegible en un teléfono.
+- **El color nunca puede ser el único portador de la información.** Un dato negativo debe traer su signo, no solo el color rojo. Alguien que no distingue bien los colores tiene que poder leer la tabla igual.
+- Todo debe seguir funcionando en un teléfono, con desplazamiento horizontal donde haga falta y sin desbordarse.
+
+---
+
+## BLOQUE 7 — Verificación
+
+- Captura de pantalla de una tabla de cada pestaña, antes y después
+- Los tonos de ROLLOS y METRAJE son los mismos en las nueve pestañas y en los KPI
+- La fila de totales se distingue sin leerla
+- Una tabla de más de 15 renglones mantiene el encabezado al desplazar
+- Los números se alinean como columna
+- Un valor pendiente se ve distinto de un cero
+- Todo el texto sobre color pasa el contraste mínimo de accesibilidad
+- Ningún dato depende solo del color para entenderse
+- Las nueve pestañas se ven bien en un ancho de teléfono
+- El formato numérico no cambió
+- Un SUPERVISOR sigue sin recibir ningún campo de dinero
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> En Reportes, el color codifica información y nunca decora: modalidad, signo, rango, categoría o estado. Cada color tiene un significado documentado. La paleta se deriva del azul de la marca con un cálido de contraste. El color nunca es el único portador de la información: un dato negativo trae su signo además de su color. Los colores por producto se capturan a mano desde el catálogo; nunca se adivinan desde el nombre del color.
