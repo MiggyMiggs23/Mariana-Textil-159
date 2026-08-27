@@ -178,10 +178,10 @@ export const ticketLineasTable = pgTable(
                 OR ${table.costoReferenciaEstado} = 'NO_COST'))
             OR
             (${table.costoUnitarioCongelado} IS NOT NULL
-              AND ${table.costoTotalCongelado} IS NOT NULL)
+              AND ${table.costoTotalCongelado} IS NOT NULL
               AND (${table.costoReferenciaEstado} IS NULL
                 OR ${table.costoReferenciaEstado} IN ('AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN')))
-          )))`,
+          ))`,
     ),
   ],
 );

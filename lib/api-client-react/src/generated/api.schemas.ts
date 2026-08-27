@@ -383,8 +383,8 @@ export interface ReporteKpi {
   value: ReportePrimitive;
   kind: ReporteKpiKind;
   unit?: string;
-  comparisonPrevious?: number;
-  comparisonYearAgo?: number;
+  comparisonPrevious?: number | null;
+  comparisonYearAgo?: number | null;
   estimated?: boolean;
   economic?: boolean;
 }

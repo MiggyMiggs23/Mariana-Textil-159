@@ -35,9 +35,15 @@ if (!testUrl) {
 
     try {
       for (const name of ["Norte", "Sur"]) {
+        const initials = randomUUID()
+          .replace(/-/g, "")
+          .slice(0, 3)
+          .split("")
+          .map((character) => String.fromCharCode(65 + Number.parseInt(character, 16)))
+          .join("");
         const row = await one(
-          `INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id`,
-          [`${tag}-${name}`],
+          `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id`,
+          [`${tag}-${name}`, initials],
         );
         ids.locations.push(Number(row.id));
       }
@@ -133,10 +139,10 @@ if (!testUrl) {
         const created = input.oldPending ? new Date(now.getTime() - 90 * 60_000) : now;
         const total = input.subtotal + (input.iva ?? 0);
         const ticket = await one(
-          `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,tipo,subtotal,iva,total,
+          `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,
              estado,cobrado,cobrado_at,usuario_caja_id,facturado,sesion_caja_id,uuid_cliente,created_at,
              cancelado_at,cancelado_por,motivo_cancelacion)
-           VALUES($1,$2,$3,$4,'NORMAL',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
            RETURNING id`,
           [folio++, ids.locations[input.store], ids.users[2], ids.clients[0], input.subtotal,
             input.iva ?? 0, total, input.state ?? "VENDIDO", input.paid ?? false,
@@ -148,9 +154,9 @@ if (!testUrl) {
         );
         ids.tickets.push(Number(ticket.id));
         await pool.query(
-          `INSERT INTO ticket_lineas(ticket_id,rollo_id,producto_id,cantidad,precio_unitario,
+          `INSERT INTO ticket_lineas(ticket_id,rollo_id,producto_id,tipo,cantidad,precio_unitario,
              precio_sugerido,importe,costo_unitario_congelado,costo_total_congelado)
-           VALUES($1,$2,$3,$4,$5,$5,$6,50,$7)`,
+            VALUES($1,$2,$3,'NORMAL',$4,$5,$5,$6,50,$7)`,
           [ticket.id, ids.rollos[input.unit ?? input.store], ids.products[input.unit ?? input.store],
             input.unit === 1 ? 2 : 3, input.subtotal / (input.unit === 1 ? 2 : 3),
             input.subtotal, input.subtotal / 2],

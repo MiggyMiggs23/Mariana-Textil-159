@@ -6265,8 +6265,8 @@ export const GetReporteSeccionResponse = zod.object({
   "value": zod.union([zod.string(),zod.number(),zod.boolean(),zod.null()]),
   "kind": zod.enum(['money', 'quantity', 'count', 'percentage', 'days']),
   "unit": zod.string().optional(),
-  "comparisonPrevious": zod.number().optional(),
-  "comparisonYearAgo": zod.number().optional(),
+  "comparisonPrevious": zod.number().nullish(),
+  "comparisonYearAgo": zod.number().nullish(),
   "estimated": zod.boolean().optional(),
   "economic": zod.boolean().optional()
 })),

@@ -73,3 +73,15 @@ test("generated workbook has modality header, filter metadata, pending cells, an
   const redactedHeaders = redacted.getWorksheet("Operativo")!.getRow(1).values;
   assert.equal(Array.isArray(redactedHeaders) && redactedHeaders.includes("Ventas"), false);
 });
+
+test("Excel number formats preserve report precision by kind", () => {
+  const workbook = createReportWorkbook({
+    section: "ventas", generatedAt: "", range: {}, activeFilters: [], kpis: [
+      { label: "Tickets", value: 12, kind: "count" },
+      { label: "Metros", value: 1.234, kind: "quantity" },
+    ], tables: [],
+  });
+  const sheet = workbook.getWorksheet("Indicadores")!;
+  assert.equal(sheet.getCell("B2").numFmt, "#,##0");
+  assert.equal(sheet.getCell("B3").numFmt, "#,##0.000");
+});

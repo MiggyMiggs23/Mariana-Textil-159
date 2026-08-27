@@ -23,7 +23,7 @@ const TIME_ZONE = "America/Mexico_City";
 const MIN_REPORT_DATE = new Date("1900-01-01T00:00:00.000Z");
 const MAX_REPORT_DATE = new Date("2999-12-31T23:59:59.999Z");
 const MAX_REPORT_RANGE_MS = 100 * 366 * 24 * 60 * 60 * 1000;
-const ECONOMIC_TEXT = /costo|margen|utilidad|ganancia|venta|importe|precio|capital|ahorro|saldo|cobrar|valor|pago|credito|balance|moneda|facturado/i;
+const ECONOMIC_TEXT = /costo|margen|utilidad|ganancia|venta|importe|precio|capital|ahorro|saldo|cobrar|valor|pago|credito|balance|moneda|facturado|subtotal|amount|revenue/i;
 
 /**
  * Non-economic roles may submit the full report query schema, but financial
@@ -35,7 +35,7 @@ export function omitEconomicReportFilters(
   input: Record<string, unknown>,
 ): Record<string, unknown> {
   return Object.fromEntries(
-    Object.entries(input).filter(([key]) => !ECONOMIC_TEXT.test(key)),
+    Object.entries(input).filter(([key]) => key === "modalidad" || !ECONOMIC_TEXT.test(key)),
   );
 }
 
@@ -99,15 +99,20 @@ export function reportRange(input: Record<string, unknown>) {
 }
 
 export function redactEconomic(report: Report): Report {
+  const REDACTED = Symbol("redacted economic value");
   const scrub = (value: unknown, inheritedHidden = new Set<string>()): unknown => {
     if (Array.isArray(value)) {
       return value
-        .filter((item) => !(item && typeof item === "object" && (item as Record<string, unknown>).economic === true))
-        .map((item) => scrub(item, inheritedHidden));
+        .map((item) => scrub(item, inheritedHidden))
+        .filter((item) => item !== REDACTED);
     }
     if (!value || typeof value !== "object") return value;
 
     const source = value as Record<string, unknown>;
+    // Economic annotations are authorization boundaries, not presentation hints.
+    // Remove the complete descriptor/row/KPI even if a future field has a name
+    // that is not covered by the conservative key matcher below.
+    if (source.economic === true) return REDACTED;
     const columns = Array.isArray(source.columns)
       ? (source.columns as Array<Record<string, unknown>>)
       : [];
@@ -120,7 +125,7 @@ export function redactEconomic(report: Report): Report {
 
     const clean: Record<string, unknown> = {};
     for (const [key, child] of Object.entries(source)) {
-      if (hidden.has(key) || ECONOMIC_TEXT.test(key)) {
+      if (key === "economic" || hidden.has(key) || ECONOMIC_TEXT.test(key)) {
         continue;
       }
       if (key === "columns") {
@@ -142,7 +147,8 @@ export function redactEconomic(report: Report): Report {
           )
           .map((item) => scrub(item, hidden));
       } else {
-        clean[key] = scrub(child, hidden);
+        const cleanedChild = scrub(child, hidden);
+        if (cleanedChild !== REDACTED) clean[key] = cleanedChild;
       }
     }
     return clean;

@@ -102,7 +102,9 @@ const numeric = (kind: string) =>
 const formatFor = (kind: string) => {
   if (kind === "money") return EXCEL_NUMBER_FORMAT.money;
   if (kind === "percentage") return "0.00%";
-  return "0.000";
+  if (kind === "quantity" || kind === "days") return EXCEL_NUMBER_FORMAT.quantity;
+  if (kind === "count") return EXCEL_NUMBER_FORMAT.count;
+  return EXCEL_NUMBER_FORMAT.identifier;
 };
 
 /** Creates the XLSX document from the already authorized server report. */

@@ -20,6 +20,7 @@ import {
   ticketPagosTable,
   ticketsTable,
   ubicacionesTable,
+  usuariosTable,
 } from "@workspace/db";
 import { crearRollo } from "./inventario";
 import {
@@ -38,7 +39,14 @@ import {
 } from "./pos";
 
 const RUN = `POS${Date.now()}`;
-const USER_ID = 1;
+const [testUser] = await db
+  .select({ id: usuariosTable.id })
+  .from(usuariosTable)
+  .limit(1);
+if (!testUser) {
+  throw new Error("POS tests require at least one seeded user.");
+}
+const USER_ID = testUser.id;
 let passed = 0;
 let failed = 0;
 let seq = 0;

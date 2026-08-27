@@ -118,14 +118,14 @@ if (!testUrl) {
       ids.movements.push(Number(adjustment.id));
 
       const addTicket = async (input: { product: number; site: number; qty: number; price: number; cost: number;
-        state?: "VENDIDO" | "CANCELADO"; roll?: boolean; client?: number; days?: number }) => {
+        state?: "VENDIDO" | "CANCELADO"; roll?: boolean; client?: number; days?: number; facturado?: boolean }) => {
         const subtotal = input.qty * input.price;
         const ticket = await one(
           `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,tasa_iva,total,
             estado,cobrado,cobrado_at,facturado,created_at,cancelado_at,cancelado_por,motivo_cancelacion)
-           VALUES($1,$2,$3,$4,$5,$6,16,0.16,$7,$8,true,$9,false,$9,$10,$11,$12) RETURNING id`,
+            VALUES($1,$2,$3,$4,$5,$6,16,0.16,$7,$8,true,$9,$10,$9,$11,$12,$13) RETURNING id`,
           [folio++, randomUUID(), ids.sites[input.site], ids.users[1], ids.clients[input.client ?? 0], subtotal, subtotal + 16,
-            input.state ?? "VENDIDO", date(input.days ?? -1), input.state === "CANCELADO" ? date(-1) : null,
+            input.state ?? "VENDIDO", date(input.days ?? -1), input.facturado ?? false, input.state === "CANCELADO" ? date(-1) : null,
             input.state === "CANCELADO" ? ids.users[0] : null, input.state === "CANCELADO" ? `${tag}-cancel` : null],
         );
         ids.tickets.push(Number(ticket.id));
@@ -141,7 +141,7 @@ if (!testUrl) {
         ids.payments.push(Number(payment.id));
         return Number(ticket.id);
       };
-      const sold = await addTicket({ product: 0, site: 0, qty: 4, price: 80, cost: 20, days: -1 });
+      const sold = await addTicket({ product: 0, site: 0, qty: 4, price: 80, cost: 20, days: -1, facturado: true });
       await addTicket({ product: 0, site: 1, qty: 2, price: 60, cost: 20, client: 1, days: -1 });
       await addTicket({ product: 2, site: 0, qty: 3, price: 90, cost: 30, days: -2 });
       await addTicket({ product: 1, site: 1, qty: 1, price: 100, cost: 25, roll: false, days: -1 });
@@ -162,6 +162,8 @@ if (!testUrl) {
         assert.equal(kpi(utilidad, "utilidad-exacta").value, null, "missing metered cost keeps utility pending");
         assert.equal(kpi(utilidad, "margen-exacto").value, null, "pending cost never becomes a false margin");
         assert.equal(kpi(utilidad, "margen-rollos").value, 500 / 710 * 100, "roll margin uses line subtotal, not IVA");
+        const facturado = await reports.buildReport("utilidad", { ...input, facturado: true }, undefined, true) as Record<string, any>;
+        assert.equal(kpi(facturado, "margen-rollos").value, 75, "an invoiced ticket margin still uses its 320 subtotal, not its 336 total");
         assert.equal(kpi(utilidad, "margen-metraje").value, null, "metered component remains independently pending");
         assert.deepEqual(table(utilidad, "utilidad-por-modalidad").rows.map(row => row.modalidad).sort(), ["METRAJE", "ROLLOS"]);
         assert.equal(table(utilidad, "calidad-costos").rows.find(r => r.calidad === "Costo pendiente")?.lineas, 1);

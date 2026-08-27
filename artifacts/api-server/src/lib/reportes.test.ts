@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseReportBooleanQuery, redactEconomic, reportRange } from "./reportes";
+import { omitEconomicReportFilters, parseReportBooleanQuery, redactEconomic, reportRange } from "./reportes";
 
 test("report ranges use Mexico City inclusive day bounds and equal prior period", () => {
   const range = reportRange({ periodo: "personalizado", desde: "2024-02-01", hasta: "2024-02-29" });
@@ -44,6 +44,26 @@ test("economic redaction physically removes sensitive keys and columns", () => {
   assert.equal(JSON.stringify(result).includes("utilidad"), false);
   assert.equal(JSON.stringify(result).includes("STALE_LAST_KNOWN"), false);
   assert.equal(JSON.stringify(result).includes("provenanceStatus"), false);
+});
+
+test("economic annotations and modality filters cannot leak or be mistaken for one another", () => {
+  const result = redactEconomic({
+    hasEconomicAccess: false,
+    activeFilters: ["modalidad=METRAJE"],
+    nested: { economic: true, arbitraryFutureMoneyField: 42 },
+    tables: [{
+      columns: [{ key: "cantidad" }, { key: "futureMetric", economic: true }],
+      rows: [{ cantidad: 3, futureMetric: 99 }],
+      totals: { futureMetric: 99 },
+    }],
+  });
+  assert.deepEqual(result.activeFilters, ["modalidad=METRAJE"]);
+  assert.equal(JSON.stringify(result).includes("futureMetric"), false);
+  assert.equal(JSON.stringify(result).includes("\"economic\""), false);
+  assert.deepEqual(
+    omitEconomicReportFilters({ modalidad: "METRAJE", formasPago: "EFECTIVO" }),
+    { modalidad: "METRAJE" },
+  );
 });
 
 for (const [periodo, desde, hasta] of [

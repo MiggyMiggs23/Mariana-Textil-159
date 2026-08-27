@@ -4033,8 +4033,8 @@ components:
         value: { $ref: "#/components/schemas/ReportePrimitive" }
         kind: { type: string, enum: [money, quantity, count, percentage, days] }
         unit: { type: string }
-        comparisonPrevious: { type: number }
-        comparisonYearAgo: { type: number }
+        comparisonPrevious: { type: number, nullable: true }
+        comparisonYearAgo: { type: number, nullable: true }
         estimated: { type: boolean }
         economic: { type: boolean }
     ReporteChart:
