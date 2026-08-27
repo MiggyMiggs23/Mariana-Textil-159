@@ -5,12 +5,20 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { TicketCredito } from './ticketCredito';
 import type { TicketLinea } from './ticketLinea';
 import type { TicketPago } from './ticketPago';
 import type { TicketResumen } from './ticketResumen';
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
+  documentoTipo: DocumentoTipoTicket;
+  /** @nullable */
+  nombreDestinatario?: string | null;
+  /** @nullable */
+  direccionEntregaSnapshot?: string | null;
+  /** Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito. */
+  convertidoANotaPorCobro: boolean;
   /** @nullable */
   diasCreditoCliente?: number | null;
   lineas: TicketLinea[];

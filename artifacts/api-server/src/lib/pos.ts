@@ -73,6 +73,9 @@ export type CrearTicketInput = {
   ubicacionId: number;
   usuarioTerminalId: number;
   clienteId: number;
+  documentoTipo?: "TICKET" | "NOTA";
+  nombreDestinatario?: string | null;
+  direccionEntregaSnapshot?: string | null;
   /** Legacy request default; new callers should send tipo on every line. */
   tipo?: "NORMAL" | "METREADO";
   facturado: boolean;
@@ -170,6 +173,7 @@ export async function buildTicketDetail(
   database: Reader,
   ticketId: number,
   includeCosts: boolean,
+  convertidoANotaPorCobro = false,
 ) {
   const [ticket] = await database
     .select({
@@ -181,6 +185,9 @@ export async function buildTicketDetail(
       nombreUsuarioTerminal: usuariosTable.nombre,
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
+      documentoTipo: ticketsTable.documentoTipo,
+      nombreDestinatario: ticketsTable.nombreDestinatario,
+      direccionEntregaSnapshot: ticketsTable.direccionEntregaSnapshot,
       diasCreditoCliente: clientesTable.diasCredito,
       telefonoCliente: clientesTable.telefono,
       correoCliente: clientesTable.correo,
@@ -189,6 +196,7 @@ export async function buildTicketDetail(
         NULLIF(btrim(${clientesTable.direccionParticular}), '')
       )`,
       direccionEntregaEfectiva: sql<string | null>`COALESCE(
+        NULLIF(btrim(${ticketsTable.direccionEntregaSnapshot}), ''),
         NULLIF(btrim(${clientesTable.direccionEntrega}), ''),
         NULLIF(btrim(${clientesTable.direccionParticular}), '')
       )`,
@@ -280,6 +288,7 @@ export async function buildTicketDetail(
   return {
     ...ticket,
     ...credit,
+    convertidoANotaPorCobro,
     nombreUsuarioCaja: null,
     nombreUsuarioCancelacion: null,
     nombreUsuarioAutorizacion: null,
@@ -455,13 +464,31 @@ export async function crearTicket(
     );
   }
   const [clienteTicket] = await tx
-    .select({ id: clientesTable.id, activo: clientesTable.activo })
+    .select({
+      id: clientesTable.id,
+      activo: clientesTable.activo,
+      esSistema: clientesTable.esSistema,
+    })
     .from(clientesTable)
     .where(eq(clientesTable.id, input.clienteId))
     .for("update")
     .limit(1);
   if (!clienteTicket?.activo) {
     throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
+  }
+  const documentoTipo = input.documentoTipo ?? "TICKET";
+  const nombreDestinatario = input.nombreDestinatario?.trim() || null;
+  const direccionEntregaSnapshot =
+    input.direccionEntregaSnapshot?.trim() || null;
+  if (
+    documentoTipo === "NOTA" &&
+    clienteTicket.esSistema &&
+    (!nombreDestinatario || !direccionEntregaSnapshot)
+  ) {
+    throw new PosError(
+      "La NOTA de Venta a Público requiere nombre del destinatario y dirección de entrega.",
+      "PUBLIC_NOTE_DELIVERY_REQUIRED",
+    );
   }
 
   // Only NORMAL lines participate in roll lookup/locking. METREADO explicitly
@@ -697,6 +724,9 @@ export async function crearTicket(
       ubicacionId: input.ubicacionId,
       usuarioTerminalId: input.usuarioTerminalId,
       clienteId: input.clienteId,
+      documentoTipo,
+      nombreDestinatario,
+      direccionEntregaSnapshot,
       subtotal: decimalMoney(subtotalCents),
       iva: decimalMoney(ivaCents),
       tasaIva: "0.1600",
@@ -745,6 +775,9 @@ export async function crearTicket(
       subtotal: decimalMoney(subtotalCents),
       iva: decimalMoney(ivaCents),
       total: decimalMoney(totalCents),
+      documentoTipo,
+      nombreDestinatario,
+      direccionEntregaSnapshot,
       lineas: input.lineas.length,
     },
     ip: input.ip,
@@ -1174,10 +1207,13 @@ export async function cobrarTicket(
     });
   }
   const now = new Date();
+  const convertidoANotaPorCobro =
+    creditCents > 0 && ticket.documentoTipo === "TICKET";
   await tx
     .update(ticketsTable)
     .set({
       clienteId,
+      documentoTipo: creditCents > 0 ? "NOTA" : ticket.documentoTipo,
       cobrado: true,
       cobradoAt: now,
       usuarioCajaId: input.usuarioId,
@@ -1196,10 +1232,17 @@ export async function cobrarTicket(
         importe: decimalMoney(pago.cents),
       })),
       autorizadoPor: input.autorizadoPor ?? null,
+      documentoTipo: creditCents > 0 ? "NOTA" : ticket.documentoTipo,
+      convertidoANotaPorCobro,
     },
     ip: input.ip,
   });
-  return buildTicketDetail(tx, ticket.id, includeCosts);
+  return buildTicketDetail(
+    tx,
+    ticket.id,
+    includeCosts,
+    convertidoANotaPorCobro,
+  );
 }
 
 export async function listarTicketsPendientesCaja(

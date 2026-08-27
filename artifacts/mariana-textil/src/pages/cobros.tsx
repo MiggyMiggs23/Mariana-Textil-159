@@ -684,8 +684,16 @@ function CobroDialog({
         } as Parameters<typeof cobrarTicket.mutate>[0]["data"],
       },
       {
-        onSuccess: () => {
-          toast({ title: "Ticket cobrado exitosamente" });
+        onSuccess: (data) => {
+          if (data && data.convertidoANotaPorCobro) {
+            toast({
+              title: "Documento actualizado a NOTA",
+              description: "El documento se actualizó a NOTA automáticamente debido a la política de crédito.",
+              variant: "default",
+            });
+          } else {
+            toast({ title: "Ticket cobrado exitosamente" });
+          }
           onCobrado();
           onOpenChange(false);
         },

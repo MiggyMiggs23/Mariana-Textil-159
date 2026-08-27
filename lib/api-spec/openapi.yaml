@@ -7568,6 +7568,10 @@ components:
     EstadoTicket:
       type: string
       enum: [VENDIDO, CANCELADO]
+    DocumentoTipoTicket:
+      type: string
+      description: Tipo documental persistido del comprobante de venta.
+      enum: [TICKET, NOTA]
     FormaPagoTicket:
       type: string
       enum: [EFECTIVO, TRANSFERENCIA, CREDITO]
@@ -7676,6 +7680,15 @@ components:
           }
         ubicacionId: { type: number }
         clienteId: { type: number, minimum: 1 }
+        documentoTipo:
+          $ref: "#/components/schemas/DocumentoTipoTicket"
+          default: TICKET
+        nombreDestinatario:
+          type: ["string", "null"]
+          description: Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
+        direccionEntregaSnapshot:
+          type: ["string", "null"]
+          description: Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.
         tipo:
           $ref: "#/components/schemas/TipoTicket"
           description: Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.
@@ -7921,8 +7934,15 @@ components:
         - $ref: "#/components/schemas/TicketResumen"
         - $ref: "#/components/schemas/TicketCredito"
         - type: object
-          required: [lineas]
+          required: [lineas, documentoTipo, convertidoANotaPorCobro]
           properties:
+            documentoTipo:
+              $ref: "#/components/schemas/DocumentoTipoTicket"
+            nombreDestinatario: { type: ["string", "null"] }
+            direccionEntregaSnapshot: { type: ["string", "null"] }
+            convertidoANotaPorCobro:
+              type: boolean
+              description: Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.
             diasCreditoCliente: { type: ["number", "null"] }
             lineas:
               type: array

@@ -14,6 +14,8 @@ import {
   HelpCircle,
   Loader2,
   AlertTriangle,
+  ArrowLeft,
+  FileText,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -376,6 +378,9 @@ export default function PosPage() {
   const [facturar, setFacturar] = useState(false);
   const [clientId, setClientId] = useState<string>("1");
   const [clientName, setClientName] = useState("Venta a Público");
+  const [documentoTipo, setDocumentoTipo] = useState<"TICKET" | "NOTA" | null>(null);
+  const [nombreDestinatario, setNombreDestinatario] = useState("");
+  const [direccionEntregaSnapshot, setDireccionEntregaSnapshot] = useState("");
 
   const searchParams = useMemo(
     () => ({
@@ -570,6 +575,9 @@ export default function PosPage() {
   const confirmDisabled =
     cart.length === 0 ||
     !clientId ||
+    (documentoTipo === "NOTA" &&
+      clientId === "1" &&
+      (!nombreDestinatario.trim() || !direccionEntregaSnapshot.trim())) ||
     crearTicket.isPending ||
     hasInvalidValues ||
     validatingPrices ||
@@ -621,6 +629,17 @@ export default function PosPage() {
       return;
     }
 
+    if (documentoTipo === "NOTA" && clientId === "1") {
+      if (!nombreDestinatario.trim() || !direccionEntregaSnapshot.trim()) {
+        toast({
+          title: "Faltan datos de entrega",
+          description: "Para Notas de público en general, el nombre del destinatario y la dirección de entrega son obligatorios.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     const uuid = crypto.randomUUID();
     const lineas: TicketLineaInput[] = cart.map((item) => ({
       rolloId: item.rollo?.id || null,
@@ -638,6 +657,9 @@ export default function PosPage() {
       facturado: hasNormal ? facturar : false,
       clienteId: Number(clientId),
       lineas,
+      documentoTipo: documentoTipo as "TICKET" | "NOTA",
+      nombreDestinatario: documentoTipo === "NOTA" && clientId === "1" ? nombreDestinatario.trim() : undefined,
+      direccionEntregaSnapshot: documentoTipo === "NOTA" && clientId === "1" ? direccionEntregaSnapshot.trim() : undefined,
     };
 
     crearTicket.mutate(
@@ -645,7 +667,7 @@ export default function PosPage() {
       {
         onSuccess: (ticket) => {
           toast({
-            title: "Ticket creado correctamente",
+            title: `${documentoTipo} creado correctamente`,
             description: `Folio: ${ticket.folio}`,
           });
           setCart([]);
@@ -653,6 +675,9 @@ export default function PosPage() {
           setFacturar(false);
           setClientId("1");
           setClientName("Venta a Público");
+          setDocumentoTipo(null);
+          setNombreDestinatario("");
+          setDireccionEntregaSnapshot("");
           setLocation(`/tickets/${ticket.id}?print=3`);
         },
         onError: (err: unknown) => {
@@ -743,14 +768,52 @@ export default function PosPage() {
     );
   }
 
+  if (!documentoTipo) {
+    return (
+      <div className="flex h-[calc(100dvh-8rem)] items-center justify-center animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+          <button
+            onClick={() => setDocumentoTipo("TICKET")}
+            className="flex flex-col items-center justify-center p-16 bg-card border-2 border-border rounded-xl hover:border-primary hover:bg-primary/5 transition-all shadow-sm group"
+          >
+            <Receipt className="h-24 w-24 text-muted-foreground group-hover:text-primary mb-6 transition-colors" />
+            <span className="text-4xl font-black tracking-tight text-sidebar group-hover:text-primary transition-colors">TICKET</span>
+          </button>
+          <button
+            onClick={() => setDocumentoTipo("NOTA")}
+            className="flex flex-col items-center justify-center p-16 bg-card border-2 border-border rounded-xl hover:border-primary hover:bg-primary/5 transition-all shadow-sm group"
+          >
+            <FileText className="h-24 w-24 text-muted-foreground group-hover:text-primary mb-6 transition-colors" />
+            <span className="text-4xl font-black tracking-tight text-sidebar group-hover:text-primary transition-colors">NOTA</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col md:flex-row gap-6 h-full max-w-[1600px] mx-auto">
+    <div className="flex flex-col md:flex-row gap-6 h-full max-w-[1600px] mx-auto animate-in fade-in duration-200">
       {/* Left side - Search and Results */}
       <div className="flex-1 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => {
+              setDocumentoTipo(null);
+              setCart([]);
+            }}
+            className="h-10 w-10 shrink-0 text-muted-foreground hover:text-sidebar"
+            title="Cambiar tipo de documento"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-sidebar">
+            <h1 className="text-2xl font-bold tracking-tight text-sidebar flex items-center gap-2">
               Terminal POS
+              <span className="text-muted-foreground font-normal text-lg bg-muted px-2 py-0.5 rounded-md">
+                {documentoTipo}
+              </span>
             </h1>
             <p className="text-muted-foreground text-sm">
               Escanea o busca artículos para la venta.
@@ -1025,6 +1088,33 @@ export default function PosPage() {
                 El ticket se emitirá a nombre de {clientName}.
               </p>
             </div>
+
+            {documentoTipo === "NOTA" && clientId === "1" && (
+              <div className="space-y-4 pt-4 border-t border-border animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="space-y-2">
+                  <Label htmlFor="nombreDestinatario" className="text-sm font-bold text-sidebar">
+                    Nombre del Destinatario <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="nombreDestinatario"
+                    value={nombreDestinatario}
+                    onChange={(e) => setNombreDestinatario(e.target.value)}
+                    placeholder="Nombre completo de quien recibe"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="direccionEntrega" className="text-sm font-bold text-sidebar">
+                    Dirección de Entrega <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="direccionEntrega"
+                    value={direccionEntregaSnapshot}
+                    onChange={(e) => setDireccionEntregaSnapshot(e.target.value)}
+                    placeholder="Calle, número, colonia, ciudad..."
+                  />
+                </div>
+              </div>
+            )}
 
             {(validatingPrices || blockedPrice) && (
               <p

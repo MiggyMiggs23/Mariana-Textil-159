@@ -3766,6 +3766,10 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -4267,6 +4271,7 @@ export const MarkNotificacionReadResponse = zod.object({
  * @summary Crea un ticket con líneas de rollo, metraje o ambas, sin cobrarlo
  */
 
+export const crearTicketBodyDocumentoTipoDefault = `TICKET`;
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
 
 export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
@@ -4278,6 +4283,9 @@ export const CrearTicketBody = zod.object({
   "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
   "ubicacionId": zod.number(),
   "clienteId": zod.number().min(1),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).default(crearTicketBodyDocumentoTipoDefault).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish().describe('Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.'),
+  "direccionEntregaSnapshot": zod.string().nullish().describe('Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.'),
   "tipo": zod.enum(['NORMAL', 'METREADO']).optional().describe('Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.'),
   "facturado": zod.boolean(),
   "lineas": zod.array(zod.object({
@@ -4329,6 +4337,10 @@ export const CrearTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -4519,6 +4531,10 @@ export const ObtenerTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -4617,6 +4633,10 @@ export const CancelarTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -4722,6 +4742,10 @@ export const CobrarTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),

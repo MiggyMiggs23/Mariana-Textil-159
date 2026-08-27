@@ -1829,6 +1829,17 @@ export interface TicketCredito {
   direccionCliente: string | null;
 }
 
+/**
+ * Tipo documental persistido del comprobante de venta.
+ */
+export type DocumentoTipoTicket = typeof DocumentoTipoTicket[keyof typeof DocumentoTipoTicket];
+
+
+export const DocumentoTipoTicket = {
+  TICKET: 'TICKET',
+  NOTA: 'NOTA',
+} as const;
+
 export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
 
 
@@ -1913,6 +1924,13 @@ export interface TicketPago {
 }
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
+  documentoTipo: DocumentoTipoTicket;
+  /** @nullable */
+  nombreDestinatario?: string | null;
+  /** @nullable */
+  direccionEntregaSnapshot?: string | null;
+  /** Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito. */
+  convertidoANotaPorCobro: boolean;
   /** @nullable */
   diasCreditoCliente?: number | null;
   lineas: TicketLinea[];
@@ -3974,6 +3992,17 @@ export interface TicketInput {
   ubicacionId: number;
   /** @minimum 1 */
   clienteId: number;
+  documentoTipo?: DocumentoTipoTicket;
+  /**
+     * Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
+     * @nullable
+     */
+  nombreDestinatario?: string | null;
+  /**
+     * Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.
+     * @nullable
+     */
+  direccionEntregaSnapshot?: string | null;
   /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
   tipo?: TipoTicket;
   facturado: boolean;

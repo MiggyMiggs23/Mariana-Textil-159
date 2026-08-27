@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { TicketLineaInput } from './ticketLineaInput';
 import type { TipoTicket } from './tipoTicket';
 
@@ -14,6 +15,17 @@ export interface TicketInput {
   ubicacionId: number;
   /** @minimum 1 */
   clienteId: number;
+  documentoTipo?: DocumentoTipoTicket;
+  /**
+     * Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
+     * @nullable
+     */
+  nombreDestinatario?: string | null;
+  /**
+     * Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.
+     * @nullable
+     */
+  direccionEntregaSnapshot?: string | null;
   /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
   tipo?: TipoTicket;
   facturado: boolean;

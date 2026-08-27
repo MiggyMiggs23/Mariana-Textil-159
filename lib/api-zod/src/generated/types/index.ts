@@ -197,6 +197,7 @@ export * from './credencialesAdmin';
 export * from './currentUser';
 export * from './dashboard';
 export * from './dashboardInventarioPorUbicacionItem';
+export * from './documentoTipoTicket';
 export * from './entradaDetail';
 export * from './entradaInput';
 export * from './entradaLinea';

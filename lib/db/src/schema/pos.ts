@@ -24,10 +24,14 @@ import {
   tipoMovimientoCreditoEnum,
   tipoTicketEnum,
 } from "./enums";
+
 import { ubicacionesTable } from "./locations";
 import { productosTable } from "./productos";
 import { rollosTable } from "./rollos";
 import { usuariosTable } from "./users";
+
+/** Application-level values stored in tickets.documento_tipo (TEXT). */
+export type DocumentoTipoTicket = "TICKET" | "NOTA";
 
 // A cash session belongs to a location. The partial unique index ensures that
 // concurrent terminals cannot open two active sessions for the same location.
@@ -80,6 +84,14 @@ export const ticketsTable = pgTable(
     clienteId: integer("cliente_id")
       .notNull()
       .references(() => clientesTable.id),
+    // Deliberately text-backed: document types are application-level values,
+    // not a PostgreSQL enum that would complicate upgrades.
+    documentoTipo: text("documento_tipo")
+      .$type<DocumentoTipoTicket>()
+      .notNull()
+      .default("TICKET"),
+    nombreDestinatario: text("nombre_destinatario"),
+    direccionEntregaSnapshot: text("direccion_entrega_snapshot"),
     subtotal: numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
     iva: numeric("iva", { precision: 12, scale: 2 }).notNull().default("0"),
     tasaIva: numeric("tasa_iva", { precision: 5, scale: 4 })

@@ -192,6 +192,9 @@ async function sale(input: {
   precio: string;
   tipo?: "NORMAL" | "METREADO";
   clienteId?: number | null;
+  documentoTipo?: "TICKET" | "NOTA";
+  nombreDestinatario?: string | null;
+  direccionEntregaSnapshot?: string | null;
   facturado?: boolean;
   uuid?: string;
 }) {
@@ -202,6 +205,9 @@ async function sale(input: {
         ubicacionId: input.ubicacionId,
         usuarioTerminalId: USER_ID,
         clienteId: input.clienteId ?? 1,
+        documentoTipo: input.documentoTipo,
+        nombreDestinatario: input.nombreDestinatario,
+        direccionEntregaSnapshot: input.direccionEntregaSnapshot,
         tipo: input.tipo ?? "NORMAL",
         facturado: input.facturado ?? false,
         uuidCliente: input.uuid ?? randomUUID(),
@@ -249,6 +255,8 @@ await test("POS-01 venta normal descuenta inventario e idempotencia conserva fol
   });
   assert.equal(duplicate.id, first.id);
   assert.equal(duplicate.folio, first.folio);
+  assert.equal(first.documentoTipo, "TICKET");
+  assert.equal(first.convertidoANotaPorCobro, false);
   const [updated] = await db
     .select()
     .from(rollosTable)
@@ -264,6 +272,39 @@ await test("POS-01 venta normal descuenta inventario e idempotencia conserva fol
       ),
     );
   assert.equal(ventas.length, 1);
+});
+
+await test("POS documento NOTA de Venta a Público exige instantáneas de entrega", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const rollo = await makeRollo(productoId, ubicacionId);
+  await assert.rejects(
+    () => sale({
+      ubicacionId,
+      productoId,
+      rolloId: rollo.id,
+      cantidad: "10",
+      precio: "75",
+      documentoTipo: "NOTA",
+    }),
+    (error: unknown) =>
+      error instanceof PosError &&
+      error.code === "PUBLIC_NOTE_DELIVERY_REQUIRED",
+  );
+  const nota = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    cantidad: "10",
+    precio: "75",
+    documentoTipo: "NOTA",
+    nombreDestinatario: "  Ana Pérez ",
+    direccionEntregaSnapshot: "  Calle Uno 1 ",
+  });
+  assert.equal(nota.documentoTipo, "NOTA");
+  assert.equal(nota.nombreDestinatario, "Ana Pérez");
+  assert.equal(nota.direccionEntregaSnapshot, "Calle Uno 1");
+  assert.equal(nota.direccionEntregaEfectiva, "Calle Uno 1");
 });
 
 await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", async () => {
@@ -749,7 +790,7 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
     }),
   );
   createdSessionIds.push(session.id);
-  await db.transaction((tx) =>
+  const cobrado = await db.transaction((tx) =>
     cobrarTicket(
       tx,
       {
@@ -768,6 +809,11 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
       true,
     ),
   );
+  assert.equal(cobrado?.documentoTipo, "NOTA");
+  assert.equal(cobrado?.convertidoANotaPorCobro, true);
+  const persisted = await buildTicketDetail(db, ticket.id, true);
+  assert.equal(persisted?.documentoTipo, "NOTA");
+  assert.equal(persisted?.convertidoANotaPorCobro, false);
   const [balance] = await db
     .select({
       saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
