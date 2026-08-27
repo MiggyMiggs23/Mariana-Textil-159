@@ -4,7 +4,10 @@ import { and, asc, desc, eq, sql } from "drizzle-orm";
 import {
   CreateClientePagoBody,
   CreateClientePagoResponse,
+  GetClienteNotaCreditoResponse,
+  GetClientePagoDetalleResponse,
   PreviewClientePagoBody,
+  ReimprimirClienteNotaResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -38,6 +41,7 @@ import {
   toExcelNumber,
 } from "@workspace/number-format";
 import { ordenarEspanol } from "../lib/spanish-order";
+import { buildTicketDetail } from "../lib/pos";
 
 const router: IRouter = Router();
 
@@ -69,6 +73,43 @@ function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {
 function parseId(value: string | string[]): number | null {
   const id = Number(Array.isArray(value) ? value[0] : value);
   return Number.isInteger(id) && id > 0 ? id : null;
+}
+
+function moneyState(importeOriginal: string, saldoActual: string) {
+  const originalCents = moneyToCents(importeOriginal);
+  const balanceCents = Math.max(0, moneyToCents(saldoActual));
+  if (balanceCents === 0) return "PAGADA" as const;
+  return balanceCents < originalCents ? "PARCIAL" as const : "PENDIENTE" as const;
+}
+
+function creditDueDays(fechaVencimiento: unknown): number {
+  if (fechaVencimiento == null) return 0;
+  const due = dateOnly(fechaVencimiento);
+  if (!due) return 0;
+  // A paid note also reports the calendar age at query time; it is evidence,
+  // not a persisted delinquency status.
+  const todayParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const today = Object.fromEntries(
+    todayParts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value]),
+  );
+  const todayCalendar = `${today.year}-${today.month}-${today.day}`;
+  const difference =
+    Date.parse(`${todayCalendar}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`);
+  return Math.max(0, Math.floor(difference / 86_400_000));
+}
+
+function dateOnly(value: unknown): string | null {
+  if (value == null) return null;
+  return typeof value === "string"
+    ? value.slice(0, 10)
+    : (value as Date).toISOString().slice(0, 10);
 }
 
 type CreditSale = {
@@ -1407,6 +1448,185 @@ router.get(
       });
     } catch (e) {
       next(e);
+    }
+  },
+);
+
+// These detail views read the immutable application evidence; they deliberately
+// do not replay FIFO from the current ledger.
+router.get(
+  "/clientes/:id/notas/:ticketId",
+  requierePermiso("clientes_finanzas", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const clienteId = parseId(req.params.id);
+      const ticketId = parseId(req.params.ticketId);
+      if (!clienteId || !ticketId) {
+        res.status(400).json({ error: "ID inválido." });
+        return;
+      }
+      const sale = await pool.query(
+        `SELECT m.id AS "movimientoVentaId",m.importe::text AS "importeOriginal",
+           m.fecha_vencimiento AS "fechaVencimiento",
+           COALESCE(SUM(a.importe),0)::text AS aplicado
+         FROM movimientos_credito m
+         LEFT JOIN aplicaciones_credito a ON a.venta_movimiento_id=m.id
+         WHERE m.cliente_id=$1 AND m.ticket_id=$2 AND m.tipo='VENTA_CREDITO'
+         GROUP BY m.id`,
+        [clienteId, ticketId],
+      );
+      const movement = sale.rows[0];
+      if (!movement) {
+        res.status(404).json({ error: "La nota de crédito no corresponde al cliente." });
+        return;
+      }
+      const ticket = await buildTicketDetail(db, ticketId, true);
+      if (!ticket || ticket.clienteId !== clienteId) {
+        res.status(404).json({ error: "Ticket no encontrado." });
+        return;
+      }
+      const abonos = await pool.query(
+        `SELECT a.abono_movimiento_id AS "movimientoPagoId",ab.created_at AS fecha,
+           a.importe::text AS "montoAplicado",ABS(ab.importe)::text AS "montoTotalAbono",
+           ab.forma_pago AS "formaPago",ab.cuenta_destino AS "cuentaDestino",
+           ab.referencia,u.nombre AS "usuarioRegistrador"
+         FROM aplicaciones_credito a
+         JOIN movimientos_credito ab ON ab.id=a.abono_movimiento_id
+         JOIN usuarios u ON u.id=ab.usuario_id
+         WHERE a.venta_movimiento_id=$1
+         ORDER BY ab.created_at,a.id`,
+        [movement.movimientoVentaId],
+      );
+      const saldoActual = centsToMoney(Math.max(
+        0,
+        moneyToCents(movement.importeOriginal) - moneyToCents(movement.aplicado),
+      ));
+      res.json(GetClienteNotaCreditoResponse.parse({
+        clienteId,
+        ticket,
+        movimientoVentaId: Number(movement.movimientoVentaId),
+        importeOriginal: movement.importeOriginal,
+        saldoActual,
+        estado: moneyState(movement.importeOriginal, saldoActual),
+        fechaVencimiento: dateOnly(movement.fechaVencimiento),
+        diasVencidos: creditDueDays(movement.fechaVencimiento),
+        abonos: abonos.rows.map((row) => ({
+          ...row,
+          movimientoPagoId: Number(row.movimientoPagoId),
+          fecha: new Date(row.fecha).toISOString(),
+        })),
+      }));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.get(
+  "/clientes/:id/pagos/:pagoId",
+  requierePermiso("clientes_finanzas", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const clienteId = parseId(req.params.id);
+      const pagoId = parseId(req.params.pagoId);
+      if (!clienteId || !pagoId) {
+        res.status(400).json({ error: "ID inválido." });
+        return;
+      }
+      const payment = await pool.query(
+        `SELECT m.id,m.cliente_id AS "clienteId",m.created_at AS fecha,
+           ABS(m.importe)::text AS "montoTotalAbono",m.forma_pago AS "formaPago",
+           m.cuenta_destino AS "cuentaDestino",m.referencia,u.nombre AS "usuarioRegistrador"
+         FROM movimientos_credito m JOIN usuarios u ON u.id=m.usuario_id
+         WHERE m.id=$1 AND m.cliente_id=$2 AND m.tipo='ABONO'`,
+        [pagoId, clienteId],
+      );
+      const abono = payment.rows[0];
+      if (!abono) {
+        res.status(404).json({ error: "El abono no corresponde al cliente." });
+        return;
+      }
+      const applications = await pool.query(
+        `SELECT sale.ticket_id AS "ticketId",t.folio,
+           sale.id AS "movimientoVentaId",a.importe::text AS aplicado,
+           sale.importe::text AS "importeOriginal",
+           GREATEST(0,sale.importe-COALESCE((
+             SELECT SUM(allocation.importe) FROM aplicaciones_credito allocation
+             WHERE allocation.venta_movimiento_id=sale.id),0))::text AS "saldoActual"
+         FROM aplicaciones_credito a
+         JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
+         JOIN tickets t ON t.id=sale.ticket_id
+         WHERE a.abono_movimiento_id=$1 AND sale.cliente_id=$2
+         ORDER BY t.folio,a.id`,
+        [pagoId, clienteId],
+      );
+      res.json(GetClientePagoDetalleResponse.parse({
+        ...abono,
+        id: Number(abono.id),
+        clienteId: Number(abono.clienteId),
+        fecha: new Date(abono.fecha).toISOString(),
+        aplicaciones: applications.rows.map((row) => ({
+          ...row,
+          ticketId: Number(row.ticketId),
+          folio: Number(row.folio),
+          movimientoVentaId: Number(row.movimientoVentaId),
+          resultado: moneyState(row.importeOriginal, row.saldoActual),
+        })),
+      }));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.post(
+  "/clientes/:id/notas/:ticketId/reimprimir",
+  requierePermiso("clientes_finanzas", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const clienteId = parseId(req.params.id);
+      const ticketId = parseId(req.params.ticketId);
+      if (!clienteId || !ticketId) {
+        res.status(400).json({ error: "ID inválido." });
+        return;
+      }
+      const note = await pool.query(
+        `SELECT t.folio,t.ubicacion_id AS "sitioId"
+         FROM tickets t JOIN movimientos_credito m ON m.ticket_id=t.id
+         WHERE t.id=$1 AND t.cliente_id=$2 AND m.cliente_id=$2
+           AND m.tipo='VENTA_CREDITO'`,
+        [ticketId, clienteId],
+      );
+      const ticket = note.rows[0];
+      if (!ticket) {
+        res.status(404).json({ error: "La nota de crédito no corresponde al cliente." });
+        return;
+      }
+      const reimpresoAt = new Date();
+      await db.insert(auditoriaTable).values({
+        usuarioId: req.auth!.user.id,
+        sitioId: Number(ticket.sitioId),
+        modulo: "clientes_finanzas",
+        accion: "REIMPRIMIR_NOTA_CREDITO",
+        entidad: "tickets",
+        entidadId: String(ticketId),
+        datosDespues: {
+          clienteId,
+          ticketId,
+          folio: Number(ticket.folio),
+          usuarioId: req.auth!.user.id,
+          sitioId: Number(ticket.sitioId),
+        },
+        ip: getRequestIp(req),
+      });
+      res.status(201).json(ReimprimirClienteNotaResponse.parse({
+        clienteId,
+        ticketId,
+        folio: Number(ticket.folio),
+        reimpresoAt: reimpresoAt.toISOString(),
+      }));
+    } catch (error) {
+      next(error);
     }
   },
 );

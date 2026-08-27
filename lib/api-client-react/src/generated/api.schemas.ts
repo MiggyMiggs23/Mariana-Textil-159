@@ -1586,6 +1586,309 @@ export interface ClientePagoPreviewInput {
   importe: number;
 }
 
+/**
+ * @nullable
+ */
+export type ClienteNotaAbonoFormaPago = typeof ClienteNotaAbonoFormaPago[keyof typeof ClienteNotaAbonoFormaPago] | null;
+
+
+export const ClienteNotaAbonoFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+/**
+ * @nullable
+ */
+export type ClienteNotaAbonoCuentaDestino = typeof ClienteNotaAbonoCuentaDestino[keyof typeof ClienteNotaAbonoCuentaDestino] | null;
+
+
+export const ClienteNotaAbonoCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface ClienteNotaAbono {
+  movimientoPagoId: number;
+  fecha: string;
+  montoAplicado: string;
+  montoTotalAbono: string;
+  /** @nullable */
+  formaPago: ClienteNotaAbonoFormaPago;
+  /** @nullable */
+  cuentaDestino: ClienteNotaAbonoCuentaDestino;
+  /** @nullable */
+  referencia: string | null;
+  usuarioRegistrador: string;
+}
+
+export type ClienteNotaCreditoDetalleEstado = typeof ClienteNotaCreditoDetalleEstado[keyof typeof ClienteNotaCreditoDetalleEstado];
+
+
+export const ClienteNotaCreditoDetalleEstado = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  PAGADA: 'PAGADA',
+} as const;
+
+export type EstadoTicket = typeof EstadoTicket[keyof typeof EstadoTicket];
+
+
+export const EstadoTicket = {
+  VENDIDO: 'VENDIDO',
+  CANCELADO: 'CANCELADO',
+} as const;
+
+export interface TicketResumen {
+  id: number;
+  folio: number;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  usuarioTerminalId: number;
+  nombreUsuarioTerminal: string;
+  /** @nullable */
+  clienteId: number | null;
+  /** @nullable */
+  nombreCliente: string | null;
+  /** @nullable */
+  direccionEntregaEfectiva?: string | null;
+  subtotal: string;
+  /** IVA aplicado al ticket; es 0.00 si no fue facturado */
+  iva: string;
+  /** Tasa de IVA vigente al crear el ticket */
+  tasaIva: string;
+  total: string;
+  estado: EstadoTicket;
+  lineasCount?: number;
+  cobrado?: boolean;
+  /** @nullable */
+  cobradoAt?: string | null;
+  /** @nullable */
+  usuarioCajaId?: number | null;
+  /** @nullable */
+  nombreUsuarioCaja?: string | null;
+  facturado: boolean;
+  /** @nullable */
+  sesionCajaId?: number | null;
+  /** Identificador UUID generado por la terminal */
+  uuidCliente: string;
+  createdAt: string;
+  /** @nullable */
+  canceladoAt: string | null;
+  /** @nullable */
+  canceladoPor: number | null;
+  /** @nullable */
+  nombreUsuarioCancelacion: string | null;
+  /** @nullable */
+  motivoCancelacion: string | null;
+  /** @nullable */
+  autorizadoPor: number | null;
+  /** @nullable */
+  nombreUsuarioAutorizacion: string | null;
+}
+
+/**
+ * @nullable
+ */
+export type TicketCreditoDiasPlazo = typeof TicketCreditoDiasPlazo[keyof typeof TicketCreditoDiasPlazo] | null;
+
+
+export const TicketCreditoDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
+/**
+ * Datos persistidos y saldo de ledger de la porción a crédito del ticket.
+ */
+export interface TicketCredito {
+  esCredito: boolean;
+  importeCredito: string;
+  /** @nullable */
+  diasPlazo: TicketCreditoDiasPlazo;
+  /** @nullable */
+  fechaVencimiento: string | null;
+  /** Saldo FIFO actual de la porción a crédito de esta venta */
+  saldoPendiente: string;
+  /** @nullable */
+  telefonoCliente: string | null;
+  /** @nullable */
+  correoCliente: string | null;
+  /** @nullable */
+  direccionCliente: string | null;
+}
+
+export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
+
+
+export const UnidadProducto = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+/**
+ * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
+ * @nullable
+ */
+export type TicketLineaCostoFuente = typeof TicketLineaCostoFuente[keyof typeof TicketLineaCostoFuente] | null;
+
+
+export const TicketLineaCostoFuente = {
+  EXACT_ROLL: 'EXACT_ROLL',
+  AVERAGE_12_MONTHS: 'AVERAGE_12_MONTHS',
+  STALE_LAST_KNOWN: 'STALE_LAST_KNOWN',
+  NO_COST: 'NO_COST',
+} as const;
+
+export interface TicketLinea {
+  id: number;
+  ticketId: number;
+  /** @nullable */
+  rolloId: number | null;
+  productoId: number;
+  tipo: TipoTicket;
+  cantidad: string;
+  precioUnitario: string;
+  precioSugerido: string;
+  importe: string;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: UnidadProducto;
+  /** @nullable */
+  serieRollo: string | null;
+  nombreUbicacion: string;
+  /**
+     * Dato administrativo; puede omitirse para TERMINAL
+     * @nullable
+     */
+  costoUnitarioCongelado?: string | null;
+  /**
+     * Dato administrativo; puede omitirse para TERMINAL
+     * @nullable
+     */
+  costoTotalCongelado?: string | null;
+  /**
+     * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
+     * @nullable
+     */
+  costoFuente?: TicketLineaCostoFuente;
+  /**
+     * Dato administrativo calculado; puede omitirse para TERMINAL
+     * @nullable
+     */
+  margen?: string | null;
+}
+
+export type FormaPagoTicket = typeof FormaPagoTicket[keyof typeof FormaPagoTicket];
+
+
+export const FormaPagoTicket = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CREDITO: 'CREDITO',
+} as const;
+
+export interface TicketPago {
+  id: number;
+  ticketId: number;
+  formaPago: FormaPagoTicket;
+  importe: string;
+  /** @nullable */
+  referencia: string | null;
+  createdAt: string;
+  usuarioId: number;
+  nombreUsuario: string;
+}
+
+export type TicketDetalle = TicketResumen & TicketCredito & ({
+  /** @nullable */
+  diasCreditoCliente?: number | null;
+  lineas: TicketLinea[];
+  pagos?: TicketPago[];
+});
+
+export interface ClienteNotaCreditoDetalle {
+  clienteId: number;
+  ticket: TicketDetalle;
+  movimientoVentaId: number;
+  importeOriginal: string;
+  saldoActual: string;
+  estado: ClienteNotaCreditoDetalleEstado;
+  /** @nullable */
+  fechaVencimiento: string | null;
+  /** @minimum 0 */
+  diasVencidos: number;
+  abonos: ClienteNotaAbono[];
+}
+
+export type ClientePagoAplicacionDetalleResultado = typeof ClientePagoAplicacionDetalleResultado[keyof typeof ClientePagoAplicacionDetalleResultado];
+
+
+export const ClientePagoAplicacionDetalleResultado = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  PAGADA: 'PAGADA',
+} as const;
+
+export interface ClientePagoAplicacionDetalle {
+  ticketId: number;
+  folio: number;
+  movimientoVentaId: number;
+  aplicado: string;
+  importeOriginal: string;
+  saldoActual: string;
+  resultado: ClientePagoAplicacionDetalleResultado;
+}
+
+/**
+ * @nullable
+ */
+export type ClientePagoDetalleFormaPago = typeof ClientePagoDetalleFormaPago[keyof typeof ClientePagoDetalleFormaPago] | null;
+
+
+export const ClientePagoDetalleFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+/**
+ * @nullable
+ */
+export type ClientePagoDetalleCuentaDestino = typeof ClientePagoDetalleCuentaDestino[keyof typeof ClientePagoDetalleCuentaDestino] | null;
+
+
+export const ClientePagoDetalleCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface ClientePagoDetalle {
+  id: number;
+  clienteId: number;
+  fecha: string;
+  montoTotalAbono: string;
+  /** @nullable */
+  formaPago: ClientePagoDetalleFormaPago;
+  /** @nullable */
+  cuentaDestino: ClientePagoDetalleCuentaDestino;
+  /** @nullable */
+  referencia: string | null;
+  usuarioRegistrador: string;
+  aplicaciones: ClientePagoAplicacionDetalle[];
+}
+
+export interface ReimpresionClienteNota {
+  clienteId: number;
+  ticketId: number;
+  folio: number;
+  reimpresoAt: string;
+}
+
 export type ClientePagoInputFormaPago = typeof ClientePagoInputFormaPago[keyof typeof ClientePagoInputFormaPago];
 
 
@@ -1932,14 +2235,6 @@ export interface Dashboard {
   usuariosActivos: number;
   inventarioPorUbicacion: DashboardInventarioPorUbicacionItem[];
 }
-
-export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
-
-
-export const UnidadProducto = {
-  METRO: 'METRO',
-  KILO: 'KILO',
-} as const;
 
 export type TipoProveedor = typeof TipoProveedor[keyof typeof TipoProveedor];
 
@@ -3356,23 +3651,6 @@ export interface AnaliticaGlobalProveedores {
   antiguedadDeuda: AnaliticaGlobalProveedoresAntiguedadDeuda;
 }
 
-export type EstadoTicket = typeof EstadoTicket[keyof typeof EstadoTicket];
-
-
-export const EstadoTicket = {
-  VENDIDO: 'VENDIDO',
-  CANCELADO: 'CANCELADO',
-} as const;
-
-export type FormaPagoTicket = typeof FormaPagoTicket[keyof typeof FormaPagoTicket];
-
-
-export const FormaPagoTicket = {
-  EFECTIVO: 'EFECTIVO',
-  TRANSFERENCIA: 'TRANSFERENCIA',
-  CREDITO: 'CREDITO',
-} as const;
-
 export type EstadoSesionCaja = typeof EstadoSesionCaja[keyof typeof EstadoSesionCaja];
 
 
@@ -3511,153 +3789,6 @@ export interface TicketCancelacionInput {
   credencialesAdmin?: CredencialesAdmin | null;
 }
 
-export interface TicketPago {
-  id: number;
-  ticketId: number;
-  formaPago: FormaPagoTicket;
-  importe: string;
-  /** @nullable */
-  referencia: string | null;
-  createdAt: string;
-  usuarioId: number;
-  nombreUsuario: string;
-}
-
-/**
- * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
- * @nullable
- */
-export type TicketLineaCostoFuente = typeof TicketLineaCostoFuente[keyof typeof TicketLineaCostoFuente] | null;
-
-
-export const TicketLineaCostoFuente = {
-  EXACT_ROLL: 'EXACT_ROLL',
-  AVERAGE_12_MONTHS: 'AVERAGE_12_MONTHS',
-  STALE_LAST_KNOWN: 'STALE_LAST_KNOWN',
-  NO_COST: 'NO_COST',
-} as const;
-
-export interface TicketLinea {
-  id: number;
-  ticketId: number;
-  /** @nullable */
-  rolloId: number | null;
-  productoId: number;
-  tipo: TipoTicket;
-  cantidad: string;
-  precioUnitario: string;
-  precioSugerido: string;
-  importe: string;
-  skuProducto: string;
-  telaProducto: string;
-  colorProducto: string;
-  unidadProducto: UnidadProducto;
-  /** @nullable */
-  serieRollo: string | null;
-  nombreUbicacion: string;
-  /**
-     * Dato administrativo; puede omitirse para TERMINAL
-     * @nullable
-     */
-  costoUnitarioCongelado?: string | null;
-  /**
-     * Dato administrativo; puede omitirse para TERMINAL
-     * @nullable
-     */
-  costoTotalCongelado?: string | null;
-  /**
-     * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
-     * @nullable
-     */
-  costoFuente?: TicketLineaCostoFuente;
-  /**
-     * Dato administrativo calculado; puede omitirse para TERMINAL
-     * @nullable
-     */
-  margen?: string | null;
-}
-
-export interface TicketResumen {
-  id: number;
-  folio: number;
-  ubicacionId: number;
-  nombreUbicacion: string;
-  usuarioTerminalId: number;
-  nombreUsuarioTerminal: string;
-  /** @nullable */
-  clienteId: number | null;
-  /** @nullable */
-  nombreCliente: string | null;
-  /** @nullable */
-  direccionEntregaEfectiva?: string | null;
-  subtotal: string;
-  /** IVA aplicado al ticket; es 0.00 si no fue facturado */
-  iva: string;
-  /** Tasa de IVA vigente al crear el ticket */
-  tasaIva: string;
-  total: string;
-  estado: EstadoTicket;
-  lineasCount?: number;
-  cobrado?: boolean;
-  /** @nullable */
-  cobradoAt?: string | null;
-  /** @nullable */
-  usuarioCajaId?: number | null;
-  /** @nullable */
-  nombreUsuarioCaja?: string | null;
-  facturado: boolean;
-  /** @nullable */
-  sesionCajaId?: number | null;
-  /** Identificador UUID generado por la terminal */
-  uuidCliente: string;
-  createdAt: string;
-  /** @nullable */
-  canceladoAt: string | null;
-  /** @nullable */
-  canceladoPor: number | null;
-  /** @nullable */
-  nombreUsuarioCancelacion: string | null;
-  /** @nullable */
-  motivoCancelacion: string | null;
-  /** @nullable */
-  autorizadoPor: number | null;
-  /** @nullable */
-  nombreUsuarioAutorizacion: string | null;
-}
-
-/**
- * @nullable
- */
-export type TicketCreditoDiasPlazo = typeof TicketCreditoDiasPlazo[keyof typeof TicketCreditoDiasPlazo] | null;
-
-
-export const TicketCreditoDiasPlazo = {
-  NUMBER_7: 7,
-  NUMBER_15: 15,
-  NUMBER_30: 30,
-  NUMBER_60: 60,
-} as const;
-
-/**
- * Datos persistidos y saldo de ledger de la porción a crédito del ticket.
- */
-export interface TicketCredito {
-  esCredito: boolean;
-  importeCredito: string;
-  /** @nullable */
-  diasPlazo: TicketCreditoDiasPlazo;
-  /** @nullable */
-  fechaVencimiento: string | null;
-  /** Saldo FIFO actual de la porción a crédito de esta venta */
-  saldoPendiente: string;
-  /** @nullable */
-  telefonoCliente: string | null;
-  /** @nullable */
-  correoCliente: string | null;
-  /** @nullable */
-  direccionCliente: string | null;
-}
-
 export interface TicketCajaResumen {
   id: number;
   folio: number;
@@ -3672,13 +3803,6 @@ export interface TicketCajaResumen {
   cobradoAt: string | null;
   formasPago: FormaPagoTicket[];
 }
-
-export type TicketDetalle = TicketResumen & TicketCredito & ({
-  /** @nullable */
-  diasCreditoCliente?: number | null;
-  lineas: TicketLinea[];
-  pagos?: TicketPago[];
-});
 
 export interface SesionCajaAperturaInput {
   /** @minimum 0 */

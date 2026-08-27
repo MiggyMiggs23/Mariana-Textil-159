@@ -54,7 +54,9 @@ import type {
   ClienteEstadisticas,
   ClienteEstadoCuenta,
   ClienteInput,
+  ClienteNotaCreditoDetalle,
   ClientePago,
+  ClientePagoDetalle,
   ClientePagoInput,
   ClientePagoPreview,
   ClientePagoPreviewInput,
@@ -192,6 +194,7 @@ import type {
   RateLimitedResponse,
   RecalcularInput,
   RecepcionSalidaInput,
+  ReimpresionClienteNota,
   ReporteSeccion,
   ReportesCatalogos,
   RevertirMovimientoInput,
@@ -7418,6 +7421,243 @@ export const usePreviewClientePago = <TError = ErrorType<ValidationErrorResponse
         TContext
       > => {
       return useMutation(getPreviewClientePagoMutationOptions(options));
+    }
+
+export const getGetClienteNotaCreditoUrl = (id: number,
+    ticketId: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/notas/${ticketId}`
+}
+
+/**
+ * @summary Detalle financiero derivado de una nota de crédito
+ */
+export const getClienteNotaCredito = async (id: number,
+    ticketId: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteNotaCreditoDetalle> => {
+
+  return customFetch<ClienteNotaCreditoDetalle>(getGetClienteNotaCreditoUrl(id,ticketId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteNotaCreditoQueryKey = (id: number,
+    ticketId: number,) => {
+    return [
+    `/api/clientes/${id}/notas/${ticketId}`
+    ] as const;
+    }
+
+
+export const getGetClienteNotaCreditoQueryOptions = <TData = Awaited<ReturnType<typeof getClienteNotaCredito>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    ticketId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteNotaCredito>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteNotaCreditoQueryKey(id,ticketId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteNotaCredito>>> = ({ signal }) => getClienteNotaCredito(id,ticketId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined && ticketId !== null && ticketId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteNotaCredito>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteNotaCreditoQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteNotaCredito>>>
+export type GetClienteNotaCreditoQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Detalle financiero derivado de una nota de crédito
+ */
+
+export function useGetClienteNotaCredito<TData = Awaited<ReturnType<typeof getClienteNotaCredito>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number,
+    ticketId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteNotaCredito>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteNotaCreditoQueryOptions(id,ticketId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClientePagoDetalleUrl = (id: number,
+    pagoId: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/pagos/${pagoId}`
+}
+
+/**
+ * @summary Detalle de las notas liquidadas por un abono
+ */
+export const getClientePagoDetalle = async (id: number,
+    pagoId: number, options?: Parameters<typeof customFetch>[1]): Promise<ClientePagoDetalle> => {
+
+  return customFetch<ClientePagoDetalle>(getGetClientePagoDetalleUrl(id,pagoId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClientePagoDetalleQueryKey = (id: number,
+    pagoId: number,) => {
+    return [
+    `/api/clientes/${id}/pagos/${pagoId}`
+    ] as const;
+    }
+
+
+export const getGetClientePagoDetalleQueryOptions = <TData = Awaited<ReturnType<typeof getClientePagoDetalle>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    pagoId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientePagoDetalle>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClientePagoDetalleQueryKey(id,pagoId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClientePagoDetalle>>> = ({ signal }) => getClientePagoDetalle(id,pagoId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined && pagoId !== null && pagoId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClientePagoDetalle>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClientePagoDetalleQueryResult = NonNullable<Awaited<ReturnType<typeof getClientePagoDetalle>>>
+export type GetClientePagoDetalleQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Detalle de las notas liquidadas por un abono
+ */
+
+export function useGetClientePagoDetalle<TData = Awaited<ReturnType<typeof getClientePagoDetalle>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number,
+    pagoId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClientePagoDetalle>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClientePagoDetalleQueryOptions(id,pagoId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReimprimirClienteNotaUrl = (id: number,
+    ticketId: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/notas/${ticketId}/reimprimir`
+}
+
+/**
+ * @summary Registra la reimpresión de una nota a crédito sin alterar su ledger
+ */
+export const reimprimirClienteNota = async (id: number,
+    ticketId: number, options?: Parameters<typeof customFetch>[1]): Promise<ReimpresionClienteNota> => {
+
+  return customFetch<ReimpresionClienteNota>(getReimprimirClienteNotaUrl(id,ticketId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getReimprimirClienteNotaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reimprimirClienteNota>>, TError,{id: number;ticketId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reimprimirClienteNota>>, TError,{id: number;ticketId: number}, TContext> => {
+
+const mutationKey = ['reimprimirClienteNota'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reimprimirClienteNota>>, {id: number;ticketId: number}> = (props) => {
+          const {id,ticketId} = props ?? {};
+
+          return  reimprimirClienteNota(id,ticketId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReimprimirClienteNotaMutationResult = NonNullable<Awaited<ReturnType<typeof reimprimirClienteNota>>>
+
+    export type ReimprimirClienteNotaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Registra la reimpresión de una nota a crédito sin alterar su ledger
+ */
+export const useReimprimirClienteNota = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reimprimirClienteNota>>, TError,{id: number;ticketId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reimprimirClienteNota>>,
+        TError,
+        {id: number;ticketId: number},
+        TContext
+      > => {
+      return useMutation(getReimprimirClienteNotaMutationOptions(options));
     }
 
 export const getCreateClienteAjusteUrl = (id: number,) => {

@@ -2128,6 +2128,75 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/{id}/notas/{ticketId}:
+    get:
+      operationId: getClienteNotaCredito
+      tags: [clientes]
+      summary: Detalle financiero derivado de una nota de crédito
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+        - $ref: "#/components/parameters/ClienteTicketId"
+      responses:
+        "200":
+          description: Nota, saldo derivado y abonos aplicados
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteNotaCreditoDetalle"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/pagos/{pagoId}:
+    get:
+      operationId: getClientePagoDetalle
+      tags: [clientes]
+      summary: Detalle de las notas liquidadas por un abono
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+        - $ref: "#/components/parameters/ClientePagoId"
+      responses:
+        "200":
+          description: Abono y sus aplicaciones inmutables
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientePagoDetalle"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /clientes/{id}/notas/{ticketId}/reimprimir:
+    post:
+      operationId: reimprimirClienteNota
+      tags: [clientes]
+      summary: Registra la reimpresión de una nota a crédito sin alterar su ledger
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+        - $ref: "#/components/parameters/ClienteTicketId"
+      responses:
+        "201":
+          description: Reimpresión auditada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReimpresionClienteNota"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /clientes/{id}/ajustes:
     post:
       operationId: createClienteAjuste
@@ -3787,6 +3856,18 @@ components:
       required: true
       schema:
         type: number
+    ClienteTicketId:
+      name: ticketId
+      in: path
+      required: true
+      schema:
+        type: number
+    ClientePagoId:
+      name: pagoId
+      in: path
+      required: true
+      schema:
+        type: number
     SesionCajaId:
       name: id
       in: path
@@ -5080,6 +5161,67 @@ components:
       required: [importe]
       properties:
         importe: { type: number, minimum: 0.01 }
+    ClienteNotaAbono:
+      type: object
+      required: [movimientoPagoId, fecha, montoAplicado, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador]
+      properties:
+        movimientoPagoId: { type: number }
+        fecha: { type: string, format: date-time }
+        montoAplicado: { type: string }
+        montoTotalAbono: { type: string }
+        formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA] }
+        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        referencia: { type: ["string", "null"] }
+        usuarioRegistrador: { type: string }
+    ClienteNotaCreditoDetalle:
+      type: object
+      required: [clienteId, ticket, movimientoVentaId, importeOriginal, saldoActual, estado, fechaVencimiento, diasVencidos, abonos]
+      properties:
+        clienteId: { type: number }
+        ticket: { $ref: "#/components/schemas/TicketDetalle" }
+        movimientoVentaId: { type: number }
+        importeOriginal: { type: string }
+        saldoActual: { type: string }
+        estado: { type: string, enum: [PENDIENTE, PARCIAL, PAGADA] }
+        fechaVencimiento: { type: ["string", "null"], format: date }
+        diasVencidos: { type: number, minimum: 0 }
+        abonos:
+          type: array
+          items: { $ref: "#/components/schemas/ClienteNotaAbono" }
+    ClientePagoAplicacionDetalle:
+      type: object
+      required: [ticketId, folio, movimientoVentaId, aplicado, importeOriginal, saldoActual, resultado]
+      properties:
+        ticketId: { type: number }
+        folio: { type: number }
+        movimientoVentaId: { type: number }
+        aplicado: { type: string }
+        importeOriginal: { type: string }
+        saldoActual: { type: string }
+        resultado: { type: string, enum: [PENDIENTE, PARCIAL, PAGADA] }
+    ClientePagoDetalle:
+      type: object
+      required: [id, clienteId, fecha, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador, aplicaciones]
+      properties:
+        id: { type: number }
+        clienteId: { type: number }
+        fecha: { type: string, format: date-time }
+        montoTotalAbono: { type: string }
+        formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA] }
+        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        referencia: { type: ["string", "null"] }
+        usuarioRegistrador: { type: string }
+        aplicaciones:
+          type: array
+          items: { $ref: "#/components/schemas/ClientePagoAplicacionDetalle" }
+    ReimpresionClienteNota:
+      type: object
+      required: [clienteId, ticketId, folio, reimpresoAt]
+      properties:
+        clienteId: { type: number }
+        ticketId: { type: number }
+        folio: { type: number }
+        reimpresoAt: { type: string, format: date-time }
     ClientePagoInput:
       type: object
       required: [importe, formaPago, cuentaDestino]

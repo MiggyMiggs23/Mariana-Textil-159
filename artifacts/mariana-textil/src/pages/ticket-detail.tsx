@@ -41,7 +41,10 @@ import { groupTicketLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { BrandLogo } from "@/components/brand-logo";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
+import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
+import { useGetClienteNotaCredito, getGetClienteNotaCreditoQueryKey } from "@workspace/api-client-react";
 import { QRCodeSVG } from "qrcode.react";
+import { useReimprimirClienteNota } from "@workspace/api-client-react";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -76,6 +79,7 @@ export default function TicketDetailPage() {
 
   const cancelarTicket = useCancelarTicket();
   const autoPrintStarted = useRef(false);
+  const reimprimirNota = useReimprimirClienteNota();
   const returnPath = user?.rol === Role.CAJA ? "/cobros" : "/pos";
   const canCancel =
     user?.rol === Role.ADMIN ||
@@ -123,11 +127,26 @@ export default function TicketDetailPage() {
   };
 
   const handlePrintCredito = () => {
-    document.body.classList.add("print-credito");
-    window.print();
-    setTimeout(() => {
-      document.body.classList.remove("print-credito");
-    }, 1000);
+    if (ticket?.clienteId && (ticket as TicketDetalle).esCredito) {
+      reimprimirNota.mutate({ id: ticket.clienteId, ticketId }, {
+        onSuccess: () => {
+          document.body.classList.add("print-credito");
+          window.print();
+          setTimeout(() => {
+            document.body.classList.remove("print-credito");
+          }, 1000);
+        },
+        onError: (err) => {
+          toast({ title: "No se pudo auditar reimpresión", description: getApiErrorMessage(err), variant: "destructive" });
+        }
+      });
+    } else {
+      document.body.classList.add("print-credito");
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove("print-credito");
+      }, 1000);
+    }
   };
 
   const handleCancelar = () => {
@@ -525,6 +544,10 @@ export default function TicketDetailPage() {
           </div>
         </CardFooter>
       </Card>
+
+      {ticket.clienteId && (ticket as TicketDetalle).esCredito && (
+        <ClienteNotaCredito clienteId={ticket.clienteId} ticketId={ticket.id} />
+      )}
 
       {/* --- ESTRUCTURAS DE IMPRESIÓN --- */}
 
