@@ -18,11 +18,11 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ComposedChart, Bar, Area } from "recharts";
-import { AlertCircle, TrendingDown, TrendingUp, Search, CheckCircle2, RefreshCw, Loader2, ArrowUpDown } from "lucide-react";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ComposedChart, Bar } from "recharts";
+import { AlertCircle, RefreshCw, Loader2, ArrowUpDown } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
-import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear, parseISO } from "date-fns";
+import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
 
@@ -256,17 +256,17 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Tendencia Neta Acumulada</CardTitle>
+                    <CardTitle>Tendencia de Diferencia Neta</CardTitle>
                     <CardDescription>Diferencias operativas por {agrupacion}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ChartContainer
-                      config={{ importe: { label: "Diferencia ($)", color: "hsl(var(--sidebar-primary))" } }}
+                      config={{ importe: { label: "Diferencia neta", color: "hsl(var(--sidebar-primary))" } }}
                       className="h-[300px] w-full"
                     >
                       <ComposedChart data={data.tendencia.map(d => ({
                         fecha: d.fecha,
-                        valor: Number(d.importe)
+                        importe: Number(d.importe),
                       }))}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
                         <XAxis dataKey="fecha" tickLine={false} axisLine={false} tickMargin={10} tick={{ fontSize: 11 }} />
@@ -274,7 +274,7 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
                         <ChartTooltip content={<ChartTooltipContent valueKind="money" />} />
                         <ReferenceLine y={0} stroke="hsl(var(--foreground))" strokeWidth={1} opacity={0.3} />
                         <Bar
-                          dataKey="valor"
+                          dataKey="importe"
                           fill="hsl(var(--primary))"
                           radius={[4, 4, 0, 0]}
                           barSize={20}
@@ -291,42 +291,38 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
                   <CardContent>
                     <ChartContainer
                       config={{
-                        cortes: { label: "Total Cortes", color: "hsl(var(--muted))" },
-                        exactos: { label: "Exactos", color: "hsl(var(--chart-2))" }
+                        porcentajeExactos: { label: "Exactitud", color: "hsl(var(--chart-2))" },
                       }}
                       className="h-[300px] w-full"
                     >
-                      {/* Fake data mapping for 2nd chart using tendency array just as a placeholder since we don't have exactos trend. Wait, the API only returns tendency as {fecha, importe}. I'll plot just a line for the values if we can't do exactos. Ah, the prompt asks for "two charts for absolute accumulated and percent exact". Wait, if the backend `tendencia` only gives `importe`, how do I plot percent exact over time? Maybe `tendencia` in the new schema gives exactos? Let me check schema. */}
-                      {/* Since I didn't see it, I'll plot absolute value. */}
-                      <ComposedChart data={data.tendencia.map((d, i) => {
-                        let acumulado = 0;
-                        for(let j=0; j<=i; j++) acumulado += Math.abs(Number(data.tendencia[j].diferenciaAbsoluta));
-                        return {
-                          fecha: d.fecha,
-                          acumulado: acumulado,
-                          porcentaje: Number(d.porcentajeExactos)
-                        }
-                      })}>
+                      <ComposedChart data={data.tendencia.map(d => ({
+                        fecha: d.fecha,
+                        porcentajeExactos: Number(d.porcentajeExactos),
+                      }))}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
                         <XAxis dataKey="fecha" tickLine={false} axisLine={false} tickMargin={10} tick={{ fontSize: 11 }} />
-                        <YAxis yAxisId="left" tickFormatter={(v) => `$${v}`} tickLine={false} axisLine={false} width={60} tick={{ fontSize: 11 }} />
-                        <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${v}%`} tickLine={false} axisLine={false} width={40} tick={{ fontSize: 11 }} />
-                        <ChartTooltip content={<ChartTooltipContent valueKind="money" />} />
-                        <Area
-                          yAxisId="left"
-                          type="monotone"
-                          dataKey="acumulado"
-                          name="Descuadre Absoluto Acumulado"
-                          fill="hsl(var(--destructive)/0.2)"
-                          stroke="hsl(var(--destructive))"
-                          strokeWidth={2}
+                        <YAxis
+                          domain={[0, 100]}
+                          tickFormatter={(value) => formatNumber(value, { kind: "percentage", percentageInput: "percent" })}
+                          tickLine={false}
+                          axisLine={false}
+                          width={48}
+                          tick={{ fontSize: 11 }}
                         />
+                        <ChartTooltip content={
+                          <ChartTooltipContent
+                            valueKind="percentage"
+                            formatter={(value) => formatNumber(
+                              Number(Array.isArray(value) ? value[0] : value),
+                              { kind: "percentage", percentageInput: "percent" },
+                            )}
+                          />
+                        } />
                         <Line
-                          yAxisId="right"
                           type="monotone"
-                          dataKey="porcentaje"
-                          name="% Exactitud"
-                          stroke="hsl(var(--green-600))"
+                          dataKey="porcentajeExactos"
+                          name="Exactitud"
+                          stroke="var(--color-porcentajeExactos)"
                           strokeWidth={3}
                           dot={{ r: 4 }}
                         />

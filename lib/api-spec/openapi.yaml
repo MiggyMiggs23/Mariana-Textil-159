@@ -4373,11 +4373,17 @@ components:
         porcentajeExactos: { type: string }
     AdminTrendPoint:
       type: object
-      required: [fecha, importe, diferenciaAbsoluta, porcentajeExactos]
+      required: [fecha, importe, diferenciaAbsoluta, cortes, exactos, porcentajeExactos]
       properties:
         fecha: { type: string, format: date }
         importe: { type: string }
         diferenciaAbsoluta: { type: string }
+        cortes:
+          type: number
+          description: Total de cortes cerrados en el periodo de la tendencia.
+        exactos:
+          type: number
+          description: Cortes sin diferencia en el periodo de la tendencia.
         porcentajeExactos: { type: string }
     AdminAlert:
       type: object

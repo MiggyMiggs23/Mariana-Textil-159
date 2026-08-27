@@ -678,6 +678,8 @@ export async function getDifferences(
       importe: decimal(valuesForPeriod.filter((v) => v < 0).reduce((s, v) => s + Math.abs(v), 0) -
         valuesForPeriod.filter((v) => v > 0).reduce((s, v) => s + v, 0)),
       diferenciaAbsoluta: decimal(valuesForPeriod.reduce((s, v) => s + Math.abs(v), 0)),
+      cortes: valuesForPeriod.length,
+      exactos: valuesForPeriod.filter((v) => v === 0).length,
       porcentajeExactos: decimal(valuesForPeriod.length === 0 ? 0 :
         (valuesForPeriod.filter((v) => v === 0).length / valuesForPeriod.length) * 100),
     })),

@@ -2334,11 +2334,8 @@ await test("S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA 
     justificacion: "baja para test S27 reversal",
     uuidCliente: randomUUID(),
   }, adminLogin.cookie);
-  // A BAJA with null cantidadNueva — check what the API returns
-  // Actually the engine uses cantidadNueva for adjustments; if null it's a BAJA
-  // Let's check the response code and handle both cases
+  // Support deployments where the adjustment endpoint requires a target quantity.
   if (bajaR.status !== 200) {
-    // If the engine requires cantidadNueva let's use a partial amount
     const bajaR2 = await api("POST", `/inventario/rollos/${rolloId3}/ajustar`, {
       cantidadNueva: String((cantidadRollo3 / 2).toFixed(3)),
       justificacion: "ajuste parcial para test S27 reversal",

@@ -20,6 +20,7 @@ import {
   GetAdminComparacionTiendasQueryParams,
   GetAdminCuentasDestinoQueryParams,
   GetAdminDiferenciasQueryParams,
+  GetAdminDiferenciasResponse,
   GetAdminRealtimeDashboardQueryParams,
   GetAdminRealtimePendingQueryParams,
   ListAdminCortesQueryParams,
@@ -88,6 +89,29 @@ test("HTTP query schemas accept ISO date strings before Mexico City conversion",
     }),
     { periodo: "personalizado", ...dateQuery },
   );
+});
+
+test("cash-difference trend contract requires exact and total cut counts", () => {
+  const response = {
+    resumen: {
+      cortes: 3, exactos: 1, faltantes: 1, sobrantes: 1,
+      importeFaltantes: "100.00", importeSobrantes: "50.00",
+      diferenciaNeta: "50.00", diferenciaAbsoluta: "150.00", porcentajeExactos: "33.33",
+    },
+    porCajero: [],
+    porTienda: [],
+    tendencia: [{
+      fecha: "2025-05-05", importe: "50.00", diferenciaAbsoluta: "150.00",
+      cortes: 3, exactos: 1, porcentajeExactos: "33.33",
+    }],
+    alertas: [],
+  };
+  assert.equal(GetAdminDiferenciasResponse.safeParse(response).success, true);
+  const { cortes: _cortes, ...trendWithoutTotal } = response.tendencia[0];
+  assert.equal(GetAdminDiferenciasResponse.safeParse({
+    ...response,
+    tendencia: [trendWithoutTotal],
+  }).success, false);
 });
 
 test("open-cash alert hour is evaluated in Mexico City", () => {

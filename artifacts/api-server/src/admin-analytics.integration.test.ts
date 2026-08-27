@@ -69,7 +69,7 @@ if (!testUrl) {
         ids.rollos.push(Number(roll.id));
       }
 
-      // Two closed cuts in the report window: exact shortage 200 and surplus 150.
+      // Two closed cuts in the report window: shortage 200 and surplus 150.
       const closedA = await one(
         `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,cerrada_at,fondo_inicial,efectivo_contado,estado)
          VALUES($1,$2,$3,$4,100,0,'CERRADA') RETURNING id`,
@@ -81,6 +81,16 @@ if (!testUrl) {
         [ids.locations[1], ids.users[2], new Date(now.getTime() - 3 * 60 * 60_000), new Date(now.getTime() - 2 * 60 * 60_000)],
       );
       ids.sessions.push(Number(closedA.id), Number(closedB.id));
+      // An exact cut in the preceding week makes the trend's numerator and
+      // denominator independently observable.
+      const closedExact = await one(
+        `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,cerrada_at,fondo_inicial,efectivo_contado,estado)
+         VALUES($1,$2,$3,$4,100,100,'CERRADA') RETURNING id`,
+        [ids.locations[0], ids.users[1],
+          new Date(now.getTime() - 9 * 24 * 60 * 60_000),
+          new Date(now.getTime() - 8 * 24 * 60 * 60_000)],
+      );
+      ids.sessions.push(Number(closedExact.id));
 
       // Three additional current-month shortages, deliberately outside the selected report hours.
       const mexicoParts = new Intl.DateTimeFormat("en-US", {
@@ -217,6 +227,29 @@ if (!testUrl) {
       assert.equal(differences.resumen.diferenciaAbsoluta, "350.00");
       assert.ok(differences.alertas.some((alert) => alert.mensaje.includes("más de tres cortes con faltante")));
       assert.ok(differences.tendencia.length > 0);
+      assert.deepEqual(differences.tendencia.map((period) => ({
+        cortes: period.cortes,
+        exactos: period.exactos,
+        porcentajeExactos: period.porcentajeExactos,
+      })), [{ cortes: 2, exactos: 0, porcentajeExactos: "0.00" }]);
+
+      const exactPeriodTrend = await analytics.getDifferences({
+        desde: new Date(now.getTime() - 9 * 24 * 60 * 60_000 - 60 * 60_000),
+        hasta: new Date(now.getTime() - 8 * 24 * 60 * 60_000 + 60 * 60_000),
+        ubicacionId: ids.locations[0],
+      }, { agrupacion: "semana" });
+      const exactPeriod = exactPeriodTrend.tendencia[0];
+      assert.deepEqual(exactPeriod && {
+        cortes: exactPeriod.cortes,
+        exactos: exactPeriod.exactos,
+        porcentajeExactos: exactPeriod.porcentajeExactos,
+      }, { cortes: 1, exactos: 1, porcentajeExactos: "100.00" });
+      for (const period of [...differences.tendencia, ...exactPeriodTrend.tendencia]) {
+        assert.equal(
+          Number(period.porcentajeExactos),
+          period.cortes === 0 ? 0 : (period.exactos / period.cortes) * 100,
+        );
+      }
 
       assert.equal(destinations.resumen.length, 4);
       assert.equal(

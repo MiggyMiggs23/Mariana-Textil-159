@@ -849,6 +849,10 @@ export interface AdminTrendPoint {
   fecha: string;
   importe: string;
   diferenciaAbsoluta: string;
+  /** Total de cortes cerrados en el periodo de la tendencia. */
+  cortes: number;
+  /** Cortes sin diferencia en el periodo de la tendencia. */
+  exactos: number;
   porcentajeExactos: string;
 }
 

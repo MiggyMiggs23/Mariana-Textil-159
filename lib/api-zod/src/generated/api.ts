@@ -5779,6 +5779,8 @@ export const GetAdminDiferenciasResponse = zod.object({
   "fecha": zod.coerce.date(),
   "importe": zod.string(),
   "diferenciaAbsoluta": zod.string(),
+  "cortes": zod.number().describe('Total de cortes cerrados en el periodo de la tendencia.'),
+  "exactos": zod.number().describe('Cortes sin diferencia en el periodo de la tendencia.'),
   "porcentajeExactos": zod.string()
 })),
   "alertas": zod.array(zod.object({

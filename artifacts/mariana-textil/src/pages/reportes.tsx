@@ -57,10 +57,6 @@ export default function Reportes() {
 
   // Extract tab from URL or default to "ventas"
   let activeTab = "ventas";
-  if (!isAdmin && activeTab === "ventas") {
-    // supervisor sees ventas? let's keep it but backend removes money
-    // wait, if "ventas" is allowed, we keep it.
-  }
   const pathParts = location.split('/');
   const lastPart = pathParts[pathParts.length - 1];
   if (allowedTabs.some(t => t.id === lastPart)) {
