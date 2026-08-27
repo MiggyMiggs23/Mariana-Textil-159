@@ -26,4 +26,9 @@ export interface PagoProveedorRow {
   createdAt: Date;
   aplicaciones?: AplicacionPagoProveedor[];
   saldoDisponible?: string;
+  revertido?: boolean;
+  /** @nullable */
+  reversoMovimientoId?: number | null;
+  /** @nullable */
+  motivoReverso?: string | null;
 }

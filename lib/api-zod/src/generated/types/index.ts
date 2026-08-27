@@ -310,6 +310,7 @@ export * from './modalidadSalida';
 export * from './modoPrecio';
 export * from './modulePermission';
 export * from './moneda';
+export * from './motivoReversoInput';
 export * from './motivoSalidaInput';
 export * from './movimientoLedger';
 export * from './movimientoRow';

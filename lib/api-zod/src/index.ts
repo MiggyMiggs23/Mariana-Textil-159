@@ -297,6 +297,7 @@ export * from "./generated/types/modalidadSalida";
 export * from "./generated/types/modoPrecio";
 export * from "./generated/types/modulePermission";
 export * from "./generated/types/moneda";
+export * from "./generated/types/motivoReversoInput";
 export * from "./generated/types/motivoSalidaInput";
 export * from "./generated/types/movimientoLedger";
 export * from "./generated/types/movimientoRow";

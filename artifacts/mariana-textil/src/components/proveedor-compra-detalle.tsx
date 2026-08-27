@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
-import { 
-  useGetProveedorCompraDetalle, 
+import {
+  useGetProveedorCompraDetalle,
   getGetProveedorCompraDetalleQueryKey,
   useGetProveedorPagoDetalle,
   getGetProveedorPagoDetalleQueryKey
@@ -11,6 +11,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, ArrowRightLeft, Ban, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { useGetCurrentUser, useReversarPagoProveedor } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProveedorCompraDetalleProps {
   open: boolean;
@@ -36,6 +41,13 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
   );
 
   const [selectedPagoId, setSelectedPagoId] = useState<number | null>(null);
+  const [reversoPagoId, setReversoPagoId] = useState<number | null>(null);
+  const [reversoMotivo, setReversoMotivo] = useState("");
+  const [reversoConfirm, setReversoConfirm] = useState("");
+  const { data: user } = useGetCurrentUser();
+  const reversarPago = useReversarPagoProveedor();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: pagoDetalle, isLoading: isLoadingPago } = useGetProveedorPagoDetalle(
     proveedorId,
@@ -98,14 +110,26 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                           </div>
                           <div className="text-right flex flex-col items-end gap-1">
                             <span className="font-black text-emerald-600 tabular-nums">-{formatNumber(asig.importe, { kind: "money" })}</span>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="h-6 text-[10px] font-bold px-2 py-0"
-                              onClick={() => setSelectedPagoId(asig.pagoProveedorId)}
-                            >
-                              Ver Reparto
-                            </Button>
+                            <div className="flex gap-1 mt-1">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-6 text-[10px] font-bold px-2 py-0"
+                                onClick={() => setSelectedPagoId(asig.pagoProveedorId)}
+                              >
+                                Ver Reparto
+                              </Button>
+                              {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'autorizar') && (
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  className="h-6 text-[10px] font-bold px-2 py-0"
+                                  onClick={() => setReversoPagoId(asig.pagoProveedorId)}
+                                >
+                                  Reversar
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       ))
@@ -170,6 +194,75 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                 </div>
               </div>
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!reversoPagoId} onOpenChange={(val) => {
+        if (!val) {
+          setReversoPagoId(null);
+          setReversoMotivo("");
+          setReversoConfirm("");
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-destructive flex items-center gap-2">
+              <Ban className="h-5 w-5" /> Reversar Pago a Proveedor
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Esta acción anulará el pago y restaurará la deuda pendiente de todas las compras afectadas por el mismo.
+            </p>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-sidebar uppercase tracking-wider">Motivo del reverso</label>
+              <Input
+                value={reversoMotivo}
+                onChange={(e) => setReversoMotivo(e.target.value)}
+                placeholder="Explica por qué se anula este pago..."
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-sidebar uppercase tracking-wider">
+                Escribe <span className="text-destructive select-all">REVERSAR</span> para confirmar
+              </label>
+              <Input
+                value={reversoConfirm}
+                onChange={(e) => setReversoConfirm(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setReversoPagoId(null)}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              disabled={reversoConfirm !== "REVERSAR" || reversoMotivo.trim().length < 5 || reversarPago.isPending}
+              onClick={() => {
+                if (reversoPagoId) {
+                  reversarPago.mutate(
+                    { id: proveedorId, pagoId: reversoPagoId, data: { motivo: reversoMotivo } },
+                    {
+                      onSuccess: () => {
+                        toast({ title: "Pago reversado exitosamente" });
+                        setReversoPagoId(null);
+                        setReversoMotivo("");
+                        setReversoConfirm("");
+                        queryClient.invalidateQueries({ queryKey: getGetProveedorCompraDetalleQueryKey(proveedorId, compraId) });
+                        queryClient.invalidateQueries({ queryKey: ["listComprasProveedor", proveedorId] });
+                        queryClient.invalidateQueries({ queryKey: ["estadoCuentaProveedor", proveedorId] });
+                      },
+                      onError: (err) => {
+                        toast({ title: "Error al reversar", description: "Ocurrió un problema.", variant: "destructive" });
+                      }
+                    }
+                  );
+                }
+              }}
+            >
+              {reversarPago.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+              Confirmar Reverso
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

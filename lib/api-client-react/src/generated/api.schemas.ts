@@ -1456,6 +1456,8 @@ export interface ClienteMovimiento {
   /** @nullable */
   estado?: ClienteMovimientoEstado;
   sinPlazo?: boolean;
+  /** @nullable */
+  movimientoOrigenId?: number | null;
 }
 
 export interface ClienteEstadoCuenta {
@@ -1528,6 +1530,11 @@ export interface ClientePagoItem {
   formaPago?: string | null;
   /** @nullable */
   cuentaDestino?: ClientePagoItemCuentaDestino;
+  revertido?: boolean;
+  /** @nullable */
+  reversoMovimientoId?: number | null;
+  /** @nullable */
+  motivoReverso?: string | null;
 }
 
 export interface ClientePagos {
@@ -1879,6 +1886,11 @@ export interface ClientePagoDetalle {
   /** @nullable */
   referencia: string | null;
   usuarioRegistrador: string;
+  revertido?: boolean;
+  /** @nullable */
+  reversoMovimientoId?: number | null;
+  /** @nullable */
+  motivoReverso?: string | null;
   aplicaciones: ClientePagoAplicacionDetalle[];
 }
 
@@ -3326,6 +3338,11 @@ export interface PagoProveedorRow {
   createdAt: string;
   aplicaciones?: AplicacionPagoProveedor[];
   saldoDisponible?: string;
+  revertido?: boolean;
+  /** @nullable */
+  reversoMovimientoId?: number | null;
+  /** @nullable */
+  motivoReverso?: string | null;
 }
 
 export interface PagoProveedorInput {
@@ -3357,6 +3374,14 @@ export interface ProveedorPagoDetalle {
   pago: PagoProveedorRow;
   aplicaciones: AplicacionPagoProveedor[];
   saldoDisponible: string;
+}
+
+export interface MotivoReversoInput {
+  /**
+     * Motivo obligatorio del movimiento inverso
+     * @minLength 1
+     */
+  motivo: string;
 }
 
 export interface AjusteProveedorInput {

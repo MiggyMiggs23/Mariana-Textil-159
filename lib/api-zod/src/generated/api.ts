@@ -1170,7 +1170,10 @@ export const RegistrarPagoProveedorResponse = zod.object({
   "fecha": zod.coerce.date().optional(),
   "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
 })).optional(),
-  "saldoDisponible": zod.string().optional()
+  "saldoDisponible": zod.string().optional(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish()
 })
 
 
@@ -1238,7 +1241,10 @@ export const GetProveedorCompraDetalleResponse = zod.object({
   "fecha": zod.coerce.date().optional(),
   "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
 })).optional(),
-  "saldoDisponible": zod.string().optional()
+  "saldoDisponible": zod.string().optional(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish()
 }),
   "aplicaciones": zod.array(zod.object({
   "pagoProveedorId": zod.number(),
@@ -1283,7 +1289,10 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "fecha": zod.coerce.date().optional(),
   "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
 })).optional(),
-  "saldoDisponible": zod.string().optional()
+  "saldoDisponible": zod.string().optional(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish()
 }),
   "aplicaciones": zod.array(zod.object({
   "pagoProveedorId": zod.number(),
@@ -1297,6 +1306,51 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
 })),
   "saldoDisponible": zod.string()
+})
+
+
+/**
+ * @summary Revierte un pago mediante un movimiento inverso inmutable
+ */
+export const ReversarPagoProveedorParams = zod.object({
+  "id": zod.coerce.number(),
+  "pagoId": zod.coerce.number()
+})
+
+
+
+
+export const ReversarPagoProveedorBody = zod.object({
+  "motivo": zod.string().min(1).describe('Motivo obligatorio del movimiento inverso')
+})
+
+export const ReversarPagoProveedorResponse = zod.object({
+  "id": zod.number(),
+  "proveedorId": zod.number(),
+  "entradaId": zod.number().nullish(),
+  "importe": zod.string(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "referencia": zod.string().nullish(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})).optional(),
+  "saldoDisponible": zod.string().optional(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish()
 })
 
 
@@ -1339,7 +1393,10 @@ export const RegistrarAjusteProveedorResponse = zod.object({
   "fecha": zod.coerce.date().optional(),
   "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
 })).optional(),
-  "saldoDisponible": zod.string().optional()
+  "saldoDisponible": zod.string().optional(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish()
 })
 
 
@@ -3292,7 +3349,8 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
   "fechaVencimiento": zod.coerce.date().nullish(),
   "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
-  "sinPlazo": zod.boolean().optional()
+  "sinPlazo": zod.boolean().optional(),
+  "movimientoOrigenId": zod.number().nullish()
 })),
   "saldoActual": zod.string()
 })
@@ -3388,7 +3446,10 @@ export const GetClientePagosResponse = zod.object({
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
   "formaPago": zod.string().nullish(),
-  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish()
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish()
 }))
 })
 
@@ -3586,6 +3647,9 @@ export const GetClientePagoDetalleResponse = zod.object({
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullable(),
   "referencia": zod.string().nullable(),
   "usuarioRegistrador": zod.string(),
+  "revertido": zod.boolean().optional(),
+  "reversoMovimientoId": zod.number().nullish(),
+  "motivoReverso": zod.string().nullish(),
   "aplicaciones": zod.array(zod.object({
   "ticketId": zod.number(),
   "folio": zod.number(),
@@ -3595,6 +3659,42 @@ export const GetClientePagoDetalleResponse = zod.object({
   "saldoActual": zod.string(),
   "resultado": zod.enum(['PENDIENTE', 'PARCIAL', 'PAGADA'])
 }))
+})
+
+
+/**
+ * @summary Revierte un abono con un movimiento inverso inmutable
+ */
+export const ReversarClientePagoParams = zod.object({
+  "id": zod.coerce.number(),
+  "pagoId": zod.coerce.number()
+})
+
+
+
+
+export const ReversarClientePagoBody = zod.object({
+  "motivo": zod.string().min(1).describe('Motivo obligatorio del movimiento inverso')
+})
+
+export const ReversarClientePagoResponse = zod.object({
+  "tipo": zod.string().optional(),
+  "importe": zod.string().optional(),
+  "fecha": zod.coerce.date().optional(),
+  "notas": zod.string().nullish(),
+  "saldoCorrido": zod.string().optional(),
+  "saldoPendiente": zod.string().nullish(),
+  "ticketFolio": zod.number().nullish(),
+  "nombreUsuario": zod.string().optional(),
+  "formaPago": zod.string().nullish(),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish(),
+  "referencia": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().optional(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
+  "fechaVencimiento": zod.coerce.date().nullish(),
+  "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
+  "sinPlazo": zod.boolean().optional(),
+  "movimientoOrigenId": zod.number().nullish()
 })
 
 

@@ -50,6 +50,10 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS es_incobrable boolean NOT NULL DEFAULT false;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS motivo_incobrable text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS autorizado_por integer REFERENCES usuarios(id);
+       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS movimiento_origen_id integer REFERENCES movimientos_credito(id);
+       CREATE UNIQUE INDEX IF NOT EXISTS movimientos_credito_reverso_origen_uidx
+         ON movimientos_credito(movimiento_origen_id)
+         WHERE tipo = 'REVERSO' AND movimiento_origen_id IS NOT NULL;
       CREATE TABLE IF NOT EXISTS cliente_documentos (
         id serial PRIMARY KEY,
         public_id uuid NOT NULL DEFAULT gen_random_uuid() UNIQUE,
@@ -111,7 +115,8 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE movimientos_credito
         ADD CONSTRAINT movimientos_credito_importe_tipo_check CHECK (
           (tipo = 'VENTA_CREDITO' AND importe > 0)
-          OR (tipo IN ('ABONO', 'REVERSO') AND importe < 0)
+          OR (tipo = 'ABONO' AND importe < 0)
+          OR (tipo = 'REVERSO' AND importe <> 0)
           OR (tipo = 'AJUSTE' AND importe <> 0)
         );
        ALTER TABLE movimientos_credito
@@ -185,7 +190,11 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
           SELECT COALESCE(SUM(-importe), 0) AS total
           FROM movimientos_credito
           WHERE cliente_id = p_cliente_id AND (
-            tipo = 'ABONO' OR
+            (tipo = 'ABONO' AND NOT EXISTS (
+              SELECT 1 FROM movimientos_credito reversal
+              WHERE reversal.tipo='REVERSO'
+                AND reversal.movimiento_origen_id=movimientos_credito.id
+            )) OR
             (tipo = 'AJUSTE' AND importe < 0)
           )
         ), cargos AS (
@@ -238,6 +247,23 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
          END IF;
          RETURN NEW;
        END $$;
+       CREATE OR REPLACE FUNCTION validate_credit_reversal()
+       RETURNS trigger LANGUAGE plpgsql AS $$
+       DECLARE origen movimientos_credito%ROWTYPE;
+       BEGIN
+         IF NEW.tipo <> 'REVERSO' THEN RETURN NEW; END IF;
+         IF NEW.movimiento_origen_id IS NULL THEN
+           -- Historical negative sale cancellation remains supported.
+           IF NEW.importe < 0 AND NEW.ticket_id IS NOT NULL THEN RETURN NEW; END IF;
+           RAISE EXCEPTION 'El reverso debe referenciar su movimiento de origen.';
+         END IF;
+         SELECT * INTO origen FROM movimientos_credito WHERE id=NEW.movimiento_origen_id;
+         IF NOT FOUND OR origen.cliente_id <> NEW.cliente_id OR origen.tipo <> 'ABONO'
+           OR origen.importe >= 0 OR NEW.importe <> -origen.importe THEN
+           RAISE EXCEPTION 'Un reverso de abono debe ser positivo, exacto y del mismo cliente.';
+         END IF;
+         RETURN NEW;
+       END $$;
       DROP TRIGGER IF EXISTS movimientos_credito_inmutables ON movimientos_credito;
       CREATE TRIGGER movimientos_credito_inmutables
         BEFORE UPDATE OR DELETE ON movimientos_credito
@@ -254,6 +280,10 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
        CREATE TRIGGER aplicaciones_credito_validas
          BEFORE INSERT ON aplicaciones_credito
          FOR EACH ROW EXECUTE FUNCTION validate_credit_application();
+       DROP TRIGGER IF EXISTS movimientos_credito_reversos_validos ON movimientos_credito;
+       CREATE TRIGGER movimientos_credito_reversos_validos
+         BEFORE INSERT ON movimientos_credito
+         FOR EACH ROW EXECUTE FUNCTION validate_credit_reversal();
     `);
     await pool.query("COMMIT");
   } catch (error) {

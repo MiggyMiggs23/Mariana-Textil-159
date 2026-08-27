@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   boolean,
   check,
   date,
@@ -208,7 +209,8 @@ export const ticketPagosTable = pgTable(
 
 /**
  * Immutable customer-credit ledger. VENTA_CREDITO creates a receivable;
- * ABONO and REVERSO are negative entries and must be inserted, never updated.
+ * ABONO is negative. REVERSO is negative only when cancelling a credit sale,
+ * or positive when it reverses an ABONO; rows are always inserted, never updated.
  */
 export const movimientosCreditoTable = pgTable(
   "movimientos_credito",
@@ -218,6 +220,10 @@ export const movimientosCreditoTable = pgTable(
       .notNull()
       .references(() => clientesTable.id),
     ticketId: integer("ticket_id").references(() => ticketsTable.id),
+    /** Immutable link to the movement this reversal undoes. */
+    movimientoOrigenId: integer("movimiento_origen_id").references(
+      (): AnyPgColumn => movimientosCreditoTable.id,
+    ),
     tipo: tipoMovimientoCreditoEnum("tipo").notNull(),
     importe: numeric("importe", { precision: 12, scale: 2 }).notNull(),
     usuarioId: integer("usuario_id")
@@ -244,10 +250,14 @@ export const movimientosCreditoTable = pgTable(
       table.createdAt,
     ),
     index("movimientos_credito_ticket_idx").on(table.ticketId),
+    uniqueIndex("movimientos_credito_reverso_origen_uidx")
+      .on(table.movimientoOrigenId)
+      .where(sql`${table.tipo} = 'REVERSO' AND ${table.movimientoOrigenId} IS NOT NULL`),
     check(
       "movimientos_credito_importe_tipo_check",
       sql`(${table.tipo} = 'VENTA_CREDITO' AND ${table.importe} > 0)
-        OR (${table.tipo} IN ('ABONO', 'REVERSO') AND ${table.importe} < 0)
+        OR (${table.tipo} = 'ABONO' AND ${table.importe} < 0)
+        OR (${table.tipo} = 'REVERSO' AND ${table.importe} <> 0)
         OR (${table.tipo} = 'AJUSTE' AND ${table.importe} <> 0)`,
     ),
     check(

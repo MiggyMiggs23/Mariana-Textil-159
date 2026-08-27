@@ -15,6 +15,7 @@ export { ensureProductMeterSchema } from "./lib/product-meter-schema";
 export { ensureProductPricingSchema } from "./lib/product-pricing-schema";
 export { ensureAuditSchema } from "./lib/audit-schema";
 export { ensureAplicacionesPagoProveedorSchema } from "./lib/aplicaciones-pago-proveedor-schema";
+export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";
 
 const { Pool } = pg;
 

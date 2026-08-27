@@ -44,6 +44,7 @@ import {
   estadisticasPeriodo,
   registrarPago,
   registrarAjuste,
+  reversarPago,
   previewPagoProveedor,
   resumenProveedores,
   analiticaGlobalProveedores,
@@ -696,6 +697,33 @@ router.post(
   },
 );
 
+router.post(
+  "/proveedores/:id/pagos/:pagoId/reversar",
+  requierePermiso("proveedores_finanzas", "autorizar"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const proveedorId = Number(req.params.id);
+      const pagoId = Number(req.params.pagoId);
+      const motivo = typeof req.body?.motivo === "string" ? req.body.motivo.trim() : "";
+      if (!Number.isInteger(proveedorId) || !Number.isInteger(pagoId) || !motivo) {
+        res.status(400).json({ error: "ID y motivo son obligatorios." }); return;
+      }
+      const reverso = await db.transaction((tx) => reversarPago(tx, {
+        proveedorId, pagoId, motivo, usuarioId: req.auth!.user.id, ip: getRequestIp(req),
+      }));
+      res.status(201).json(reverso);
+    } catch (error) {
+      if (error instanceof Error && error.message === "PAYMENT_NOT_FOUND") {
+        res.status(404).json({ error: "Pago no encontrado." }); return;
+      }
+      if (error instanceof Error && error.message === "PAYMENT_ALREADY_REVERSED") {
+        res.status(409).json({ error: "El pago ya fue revertido." }); return;
+      }
+      next(error);
+    }
+  },
+);
+
 router.get(
   "/proveedores/:id/compras/:compraId",
   requierePermiso("proveedores_finanzas", "ver"),
@@ -728,7 +756,12 @@ router.get(
     try {
       const params = GetProveedorPagoDetalleParams.safeParse(req.params);
       if (!params.success) { res.status(400).json({ error: "ID inválido." }); return; }
-      const pago = await db.execute<any>(sql`SELECT * FROM pagos_proveedor WHERE id=${params.data.pagoId} AND proveedor_id=${params.data.id} AND tipo='PAGO'`);
+      const pago = await db.execute<any>(sql`
+        SELECT p.*,
+          EXISTS(SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=p.id) AS revertido,
+          (SELECT r.id FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=p.id LIMIT 1) AS "reversoMovimientoId",
+          (SELECT r.notas FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=p.id LIMIT 1) AS "motivoReverso"
+        FROM pagos_proveedor p WHERE p.id=${params.data.pagoId} AND p.proveedor_id=${params.data.id} AND p.tipo='PAGO'`);
       if (!pago.rows[0]) { res.status(404).json({ error: "Pago no encontrado." }); return; }
       const apps = await db.execute<any>(sql`
         SELECT a.*,c.entrada_id,e.folio,c.fecha,

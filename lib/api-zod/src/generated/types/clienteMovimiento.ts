@@ -35,4 +35,6 @@ export interface ClienteMovimiento {
   /** @nullable */
   estado?: ClienteMovimientoEstado;
   sinPlazo?: boolean;
+  /** @nullable */
+  movimientoOrigenId?: number | null;
 }

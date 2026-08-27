@@ -61,7 +61,7 @@ export type CompraConEstado = {
 
 export type MovimientoLedger = {
   id: number;
-  tipo: "COMPRA" | "PAGO" | "AJUSTE";
+  tipo: "COMPRA" | "PAGO" | "AJUSTE" | "REVERSO";
   importe: string;
   saldoAcumulado: string;
   fecha: string;
@@ -309,8 +309,8 @@ async function aplicarCreditosProveedor(
     disponible: string; saldo: string;
   }>(sql`
     SELECT pp.id, pp.tipo, pp.importe, pp.fecha,
-      CASE WHEN pp.tipo='PAGO' THEN -pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.pago_proveedor_id=pp.id),0) ELSE 0 END::text disponible,
-      CASE WHEN pp.tipo='COMPRA' THEN pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.compra_proveedor_id=pp.id),0) ELSE 0 END::text saldo
+      CASE WHEN pp.tipo='PAGO' THEN -pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor source ON source.id=a.pago_proveedor_id WHERE a.pago_proveedor_id=pp.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.movimiento_origen_id=source.id AND r.tipo='REVERSO')),0) ELSE 0 END::text disponible,
+      CASE WHEN pp.tipo='COMPRA' THEN pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor source ON source.id=a.pago_proveedor_id WHERE a.compra_proveedor_id=pp.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.movimiento_origen_id=source.id AND r.tipo='REVERSO')),0) ELSE 0 END::text saldo
     FROM pagos_proveedor pp WHERE pp.proveedor_id=${proveedorId}
       AND pp.tipo IN ('PAGO','COMPRA')
       ${compraIds ? sql`AND (pp.tipo='PAGO' OR pp.id = ANY(ARRAY[${sql.raw(compraIds.join(","))}]::int[]))` : sql``}
@@ -338,7 +338,7 @@ export async function previewPagoProveedor(opts: {
   proveedorId: number; importe: number;
 }): Promise<{ asignaciones: Array<AsignacionProveedor & { entradaId: number | null; folio: number | null; fecha: string; resultado: EstadoCompra }>; saldoAFavor: string }> {
   const rows = await db.execute<any>(sql`
-    SELECT pp.id,pp.entrada_id,pp.fecha,pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.compra_proveedor_id=pp.id),0) saldo,e.folio
+    SELECT pp.id,pp.entrada_id,pp.fecha,pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor source ON source.id=a.pago_proveedor_id WHERE a.compra_proveedor_id=pp.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=source.id)),0) saldo,e.folio
     FROM pagos_proveedor pp LEFT JOIN entradas e ON e.id=pp.entrada_id
     WHERE pp.proveedor_id=${opts.proveedorId} AND pp.tipo='COMPRA' ORDER BY pp.fecha,pp.id`);
   const targets = rows.rows.filter((r: any) => moneyToCents(r.saldo) > 0)
@@ -449,6 +449,40 @@ export async function registrarAjuste(
   });
 
   return row!;
+}
+
+/** Insert the exact positive inverse of a supplier PAGO; applications stay immutable. */
+export async function reversarPago(
+  tx: Tx,
+  opts: { proveedorId: number; pagoId: number; motivo: string; usuarioId: number; ip?: string | null },
+): Promise<typeof pagosProveedorTable.$inferSelect> {
+  await tx.execute(sql`SELECT pg_advisory_xact_lock(${opts.proveedorId})`);
+  const original = await tx.execute<any>(sql`
+    SELECT * FROM pagos_proveedor
+    WHERE id=${opts.pagoId} AND proveedor_id=${opts.proveedorId} AND tipo='PAGO'
+    FOR UPDATE`);
+  const pago = original.rows[0];
+  if (!pago) throw new Error("PAYMENT_NOT_FOUND");
+  const existing = await tx.execute(sql`
+    SELECT id FROM pagos_proveedor WHERE movimiento_origen_id=${opts.pagoId} AND tipo='REVERSO'`);
+  if (existing.rows[0]) throw new Error("PAYMENT_ALREADY_REVERSED");
+  const [reverso] = await tx.insert(pagosProveedorTable).values({
+    proveedorId: opts.proveedorId,
+    importe: Math.abs(Number(pago.importe)).toFixed(2),
+    tipo: "REVERSO",
+    movimientoOrigenId: opts.pagoId,
+    fecha: new Date(),
+    usuarioId: opts.usuarioId,
+    notas: opts.motivo,
+  }).returning();
+  await tx.insert(auditoriaTable).values({
+    usuarioId: opts.usuarioId, accion: "REVERSAR_PAGO_PROVEEDOR",
+    entidad: "pagos_proveedor", entidadId: String(reverso!.id),
+    datosAntes: { pagoId: opts.pagoId, importe: pago.importe },
+    datosDespues: { reversoId: reverso!.id, importe: reverso!.importe, motivo: opts.motivo },
+    ip: opts.ip ?? "desconocida",
+  });
+  return reverso!;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -572,7 +606,8 @@ export async function comprasPorProveedor(opts: {
           WHERE old.tipo='PAGO' AND old.entrada_id=c.entrada_id
         ),0))::text AS abonado
       FROM pagos_proveedor c
-      LEFT JOIN aplicaciones_pago_proveedor a ON a.compra_proveedor_id=c.id
+       LEFT JOIN aplicaciones_pago_proveedor a ON a.compra_proveedor_id=c.id
+         AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.movimiento_origen_id=a.pago_proveedor_id AND r.tipo='REVERSO')
       WHERE c.proveedor_id = ${opts.proveedorId} AND c.tipo='COMPRA'
         AND c.entrada_id = ANY(ARRAY[${sql.raw(entradaIds.join(","))}]::int[])
       GROUP BY c.id,c.entrada_id
@@ -696,7 +731,7 @@ export async function estadoCuenta(opts: {
     saldo += parseFloat(r.importe);
     return {
       id: r.id,
-      tipo: r.tipo as "COMPRA" | "PAGO" | "AJUSTE",
+       tipo: r.tipo as "COMPRA" | "PAGO" | "AJUSTE" | "REVERSO",
       importe: r.importe,
       saldoAcumulado: saldo.toFixed(2),
       fecha: r.fecha.toISOString(),

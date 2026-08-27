@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
-import { 
-  useGetClienteNotaCredito, 
+import {
+  useGetClienteNotaCredito,
   getGetClienteNotaCreditoQueryKey,
   useGetClientePagoDetalle,
   getGetClientePagoDetalleQueryKey
@@ -12,6 +12,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, ArrowRightLeft, CalendarClock, Ban, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ClienteNotaCreditoProps {
   clienteId: number;
@@ -35,6 +40,13 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
   );
 
   const [selectedPagoId, setSelectedPagoId] = useState<number | null>(null);
+  const [reversoPagoId, setReversoPagoId] = useState<number | null>(null);
+  const [reversoMotivo, setReversoMotivo] = useState("");
+  const [reversoConfirm, setReversoConfirm] = useState("");
+  const { data: user } = useGetCurrentUser();
+  const reversarPago = useReversarClientePago();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: pagoDetalle, isLoading: isLoadingPago } = useGetClientePagoDetalle(
     clienteId,
@@ -149,14 +161,26 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                       <td className="p-4">{abono.usuarioRegistrador || "—"}</td>
                       <td className="p-4 text-right font-medium tabular-nums">{formatNumber(abono.montoTotalAbono, { kind: "money" })}</td>
                       <td className="p-4 text-center">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-8 text-xs font-bold"
-                          onClick={() => setSelectedPagoId(abono.movimientoPagoId)}
-                        >
-                          Ver Reparto
-                        </Button>
+                        <div className="flex justify-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 text-xs font-bold"
+                            onClick={() => setSelectedPagoId(abono.movimientoPagoId)}
+                          >
+                            Ver Reparto
+                          </Button>
+                          {hasPermission(user, Modules.CLIENTES_FINANZAS, 'autorizar') && (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="h-8 text-xs font-bold"
+                              onClick={() => setReversoPagoId(abono.movimientoPagoId)}
+                            >
+                              <Ban className="h-4 w-4 mr-1" /> Reversar
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -219,6 +243,75 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                 </div>
               </div>
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!reversoPagoId} onOpenChange={(val) => {
+        if (!val) {
+          setReversoPagoId(null);
+          setReversoMotivo("");
+          setReversoConfirm("");
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-destructive flex items-center gap-2">
+              <Ban className="h-5 w-5" /> Reversar Abono
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Esta acción anulará el pago y restaurará los saldos pendientes de todas las notas afectadas por el mismo.
+            </p>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-sidebar uppercase tracking-wider">Motivo del reverso</label>
+              <Input
+                value={reversoMotivo}
+                onChange={(e) => setReversoMotivo(e.target.value)}
+                placeholder="Explica por qué se anula este pago..."
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-sidebar uppercase tracking-wider">
+                Escribe <span className="text-destructive select-all">REVERSAR</span> para confirmar
+              </label>
+              <Input
+                value={reversoConfirm}
+                onChange={(e) => setReversoConfirm(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setReversoPagoId(null)}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              disabled={reversoConfirm !== "REVERSAR" || reversoMotivo.trim().length < 5 || reversarPago.isPending}
+              onClick={() => {
+                if (reversoPagoId) {
+                  reversarPago.mutate(
+                    { id: clienteId, pagoId: reversoPagoId, data: { motivo: reversoMotivo } },
+                    {
+                      onSuccess: () => {
+                        toast({ title: "Abono reversado exitosamente" });
+                        setReversoPagoId(null);
+                        setReversoMotivo("");
+                        setReversoConfirm("");
+                        queryClient.invalidateQueries({ queryKey: getGetClienteNotaCreditoQueryKey(clienteId, ticketId) });
+                        queryClient.invalidateQueries({ queryKey: ["cliente-account", clienteId] });
+                        // También invalidar queries de clientes si es necesario
+                      },
+                      onError: (err) => {
+                        toast({ title: "Error al reversar", description: "Ocurrió un problema.", variant: "destructive" });
+                      }
+                    }
+                  );
+                }
+              }}
+            >
+              {reversarPago.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+              Confirmar Reverso
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

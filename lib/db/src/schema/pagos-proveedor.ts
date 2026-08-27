@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   index,
   integer,
   numeric,
@@ -22,11 +23,13 @@ import { usuariosTable } from "./users";
  * COMPRA  – positivo: deuda generada al recibir mercancía (linked to entrada)
  * PAGO    – negativo: abono en efectivo / transferencia / cheque
  * AJUSTE  – signed:   corrección manual con justificación
+ * REVERSO – positive: exact inverse of a PAGO
  */
 export const tipoPagoProveedorEnum = pgEnum("tipo_pago_proveedor", [
   "COMPRA",
   "PAGO",
   "AJUSTE",
+  "REVERSO",
 ]);
 
 export const formaPagoProveedorEnum = pgEnum("forma_pago_proveedor", [
@@ -69,6 +72,9 @@ export const pagosProveedorTable = pgTable(
       .references(() => proveedoresTable.id),
     /** FK to entradas – non-null only for COMPRA rows */
     entradaId: integer("entrada_id").references(() => entradasTable.id),
+    movimientoOrigenId: integer("movimiento_origen_id").references(
+      (): AnyPgColumn => pagosProveedorTable.id,
+    ),
     /**
      * Signed monetary amount.
      * COMPRA: positive (total cost of the entry)
@@ -102,6 +108,9 @@ export const pagosProveedorTable = pgTable(
     uniqueIndex("pagos_proveedor_entrada_compra_idx")
       .on(table.entradaId)
       .where(sql`tipo = 'COMPRA' AND entrada_id IS NOT NULL`),
+    uniqueIndex("pagos_proveedor_reverso_origen_uidx")
+      .on(table.movimientoOrigenId)
+      .where(sql`tipo = 'REVERSO' AND movimiento_origen_id IS NOT NULL`),
   ],
 );
 

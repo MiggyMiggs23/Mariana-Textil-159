@@ -15,4 +15,9 @@ export interface ClientePagoItem {
   formaPago?: string | null;
   /** @nullable */
   cuentaDestino?: ClientePagoItemCuentaDestino;
+  revertido?: boolean;
+  /** @nullable */
+  reversoMovimientoId?: number | null;
+  /** @nullable */
+  motivoReverso?: string | null;
 }

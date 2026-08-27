@@ -54,6 +54,7 @@ import type {
   ClienteEstadisticas,
   ClienteEstadoCuenta,
   ClienteInput,
+  ClienteMovimiento,
   ClienteNotaCreditoDetalle,
   ClientePago,
   ClientePagoDetalle,
@@ -156,6 +157,7 @@ import type {
   LocationInput,
   LocationUpdate,
   LoginInput,
+  MotivoReversoInput,
   MotivoSalidaInput,
   MovimientoRow,
   NotFoundResponse,
@@ -2843,6 +2845,80 @@ export function useGetProveedorPagoDetalle<TData = Awaited<ReturnType<typeof get
 
 
 
+
+export const getReversarPagoProveedorUrl = (id: number,
+    pagoId: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}/pagos/${pagoId}/reversar`
+}
+
+/**
+ * @summary Revierte un pago mediante un movimiento inverso inmutable
+ */
+export const reversarPagoProveedor = async (id: number,
+    pagoId: number,
+    motivoReversoInput: MotivoReversoInput, options?: Parameters<typeof customFetch>[1]): Promise<PagoProveedorRow> => {
+
+  return customFetch<PagoProveedorRow>(getReversarPagoProveedorUrl(id,pagoId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(motivoReversoInput)
+  }
+);}
+
+
+
+
+
+export const getReversarPagoProveedorMutationOptions = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext> => {
+
+const mutationKey = ['reversarPagoProveedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reversarPagoProveedor>>, {id: number;pagoId: number;data: BodyType<MotivoReversoInput>}> = (props) => {
+          const {id,pagoId,data} = props ?? {};
+
+          return  reversarPagoProveedor(id,pagoId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReversarPagoProveedorMutationResult = NonNullable<Awaited<ReturnType<typeof reversarPagoProveedor>>>
+    export type ReversarPagoProveedorMutationBody = BodyType<MotivoReversoInput>
+    export type ReversarPagoProveedorMutationError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Revierte un pago mediante un movimiento inverso inmutable
+ */
+export const useReversarPagoProveedor = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reversarPagoProveedor>>,
+        TError,
+        {id: number;pagoId: number;data: BodyType<MotivoReversoInput>},
+        TContext
+      > => {
+      return useMutation(getReversarPagoProveedorMutationOptions(options));
+    }
 
 export const getRegistrarAjusteProveedorUrl = (id: number,) => {
 
@@ -7813,6 +7889,80 @@ export function useGetClientePagoDetalle<TData = Awaited<ReturnType<typeof getCl
 
 
 
+
+export const getReversarClientePagoUrl = (id: number,
+    pagoId: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/pagos/${pagoId}/reversar`
+}
+
+/**
+ * @summary Revierte un abono con un movimiento inverso inmutable
+ */
+export const reversarClientePago = async (id: number,
+    pagoId: number,
+    motivoReversoInput: MotivoReversoInput, options?: Parameters<typeof customFetch>[1]): Promise<ClienteMovimiento> => {
+
+  return customFetch<ClienteMovimiento>(getReversarClientePagoUrl(id,pagoId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(motivoReversoInput)
+  }
+);}
+
+
+
+
+
+export const getReversarClientePagoMutationOptions = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext> => {
+
+const mutationKey = ['reversarClientePago'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reversarClientePago>>, {id: number;pagoId: number;data: BodyType<MotivoReversoInput>}> = (props) => {
+          const {id,pagoId,data} = props ?? {};
+
+          return  reversarClientePago(id,pagoId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReversarClientePagoMutationResult = NonNullable<Awaited<ReturnType<typeof reversarClientePago>>>
+    export type ReversarClientePagoMutationBody = BodyType<MotivoReversoInput>
+    export type ReversarClientePagoMutationError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Revierte un abono con un movimiento inverso inmutable
+ */
+export const useReversarClientePago = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reversarClientePago>>,
+        TError,
+        {id: number;pagoId: number;data: BodyType<MotivoReversoInput>},
+        TContext
+      > => {
+      return useMutation(getReversarClientePagoMutationOptions(options));
+    }
 
 export const getReimprimirClienteNotaUrl = (id: number,
     ticketId: number,) => {

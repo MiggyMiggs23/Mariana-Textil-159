@@ -130,7 +130,7 @@ async function outstandingCreditSales(database: any, clienteId: number): Promise
       fechaVencimiento: movimientosCreditoTable.fechaVencimiento,
       createdAt: movimientosCreditoTable.createdAt,
       importe: movimientosCreditoTable.importe,
-      aplicado: sql<string>`COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a WHERE a.venta_movimiento_id = ${movimientosCreditoTable.id}), 0)::text`,
+      aplicado: sql<string>`COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a JOIN movimientos_credito ab ON ab.id=a.abono_movimiento_id WHERE a.venta_movimiento_id = ${movimientosCreditoTable.id} AND NOT EXISTS (SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=ab.id)), 0)::text`,
     })
     .from(movimientosCreditoTable)
     .leftJoin(ticketsTable, eq(ticketsTable.id, movimientosCreditoTable.ticketId))
@@ -1433,6 +1433,8 @@ router.get(
           referencia: movimientosCreditoTable.referencia,
           ticketId: movimientosCreditoTable.ticketId,
           notas: movimientosCreditoTable.notas,
+           reversoMovimientoId: sql<number | null>`(SELECT r.id FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=${movimientosCreditoTable.id} LIMIT 1)`,
+           motivoReverso: sql<string | null>`(SELECT r.notas FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=${movimientosCreditoTable.id} LIMIT 1)`,
         })
         .from(movimientosCreditoTable)
         .where(
@@ -1444,7 +1446,7 @@ router.get(
         .orderBy(desc(movimientosCreditoTable.createdAt));
       res.json({
         clienteId: id,
-        pagos: rows,
+        pagos: rows.map((row) => ({ ...row, revertido: row.reversoMovimientoId != null })),
       });
     } catch (e) {
       next(e);
@@ -1468,7 +1470,10 @@ router.get(
       const sale = await pool.query(
         `SELECT m.id AS "movimientoVentaId",m.importe::text AS "importeOriginal",
            m.fecha_vencimiento AS "fechaVencimiento",
-           COALESCE(SUM(a.importe),0)::text AS aplicado
+            COALESCE(SUM(a.importe) FILTER (WHERE NOT EXISTS (
+              SELECT 1 FROM movimientos_credito r
+              WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.abono_movimiento_id
+            )),0)::text AS aplicado
          FROM movimientos_credito m
          LEFT JOIN aplicaciones_credito a ON a.venta_movimiento_id=m.id
          WHERE m.cliente_id=$1 AND m.ticket_id=$2 AND m.tipo='VENTA_CREDITO'
@@ -1534,9 +1539,12 @@ router.get(
         return;
       }
       const payment = await pool.query(
-        `SELECT m.id,m.cliente_id AS "clienteId",m.created_at AS fecha,
+         `SELECT m.id,m.cliente_id AS "clienteId",m.created_at AS fecha,
            ABS(m.importe)::text AS "montoTotalAbono",m.forma_pago AS "formaPago",
-           m.cuenta_destino AS "cuentaDestino",m.referencia,u.nombre AS "usuarioRegistrador"
+            m.cuenta_destino AS "cuentaDestino",m.referencia,u.nombre AS "usuarioRegistrador",
+            EXISTS(SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id) AS revertido,
+            (SELECT r.id FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id LIMIT 1) AS "reversoMovimientoId",
+            (SELECT r.notas FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id LIMIT 1) AS "motivoReverso"
          FROM movimientos_credito m JOIN usuarios u ON u.id=m.usuario_id
          WHERE m.id=$1 AND m.cliente_id=$2 AND m.tipo='ABONO'`,
         [pagoId, clienteId],
@@ -1551,8 +1559,11 @@ router.get(
            sale.id AS "movimientoVentaId",a.importe::text AS aplicado,
            sale.importe::text AS "importeOriginal",
            GREATEST(0,sale.importe-COALESCE((
-             SELECT SUM(allocation.importe) FROM aplicaciones_credito allocation
-             WHERE allocation.venta_movimiento_id=sale.id),0))::text AS "saldoActual"
+              SELECT SUM(allocation.importe) FROM aplicaciones_credito allocation
+              WHERE allocation.venta_movimiento_id=sale.id AND NOT EXISTS (
+                SELECT 1 FROM movimientos_credito reversal
+                WHERE reversal.tipo='REVERSO' AND reversal.movimiento_origen_id=allocation.abono_movimiento_id
+              )),0))::text AS "saldoActual"
          FROM aplicaciones_credito a
          JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
          JOIN tickets t ON t.id=sale.ticket_id
@@ -1801,6 +1812,61 @@ router.post(
         return;
       }
       next(e);
+    }
+  },
+);
+
+// A mistaken ABONO is never edited or deleted: the exact inverse is appended
+// and its historical FIFO applications simply cease to be active.
+router.post(
+  "/clientes/:id/pagos/:pagoId/reversar",
+  requierePermiso("clientes_finanzas", "autorizar"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const clienteId = parseId(req.params.id);
+      const pagoId = parseId(req.params.pagoId);
+      const motivo = typeof req.body?.motivo === "string" ? req.body.motivo.trim() : "";
+      if (!clienteId || !pagoId || !motivo) {
+        res.status(400).json({ error: "ID y motivo son obligatorios." }); return;
+      }
+      const reverso = await db.transaction(async (tx) => {
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(240024, ${clienteId})`);
+        const original = await tx.execute<any>(sql`
+          SELECT * FROM movimientos_credito
+          WHERE id=${pagoId} AND cliente_id=${clienteId} AND tipo='ABONO' FOR UPDATE`);
+        const abono = original.rows[0];
+        if (!abono) throw new Error("PAYMENT_NOT_FOUND");
+        const prior = await tx.execute(sql`
+          SELECT id FROM movimientos_credito
+          WHERE tipo='REVERSO' AND movimiento_origen_id=${pagoId}`);
+        if (prior.rows[0]) throw new Error("PAYMENT_ALREADY_REVERSED");
+        const apps = await tx.execute(sql`
+          SELECT venta_movimiento_id, importe::text AS importe FROM aplicaciones_credito
+          WHERE abono_movimiento_id=${pagoId} ORDER BY id`);
+        const [created] = await tx.insert(movimientosCreditoTable).values({
+          clienteId, tipo: "REVERSO", importe: Math.abs(Number(abono.importe)).toFixed(2),
+          movimientoOrigenId: pagoId, usuarioId: req.auth!.user.id, notas: motivo,
+          createdAt: new Date(),
+          metadata: JSON.stringify({ origen: "REVERSO_ABONO", motivo }),
+        }).returning();
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id, accion: "REVERSAR_PAGO_CLIENTE",
+          entidad: "movimientos_credito", entidadId: String(created!.id),
+          datosAntes: { pagoId, importe: abono.importe, asignaciones: apps.rows },
+          datosDespues: { reversoId: created!.id, importe: created!.importe, motivo, asignaciones: apps.rows },
+          ip: getRequestIp(req),
+        });
+        return created!;
+      });
+      res.status(201).json(reverso);
+    } catch (error) {
+      if (error instanceof Error && error.message === "PAYMENT_NOT_FOUND") {
+        res.status(404).json({ error: "El abono no corresponde al cliente." }); return;
+      }
+      if (error instanceof Error && error.message === "PAYMENT_ALREADY_REVERSED") {
+        res.status(409).json({ error: "El abono ya fue revertido." }); return;
+      }
+      next(error);
     }
   },
 );

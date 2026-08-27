@@ -21,5 +21,10 @@ export interface ClientePagoDetalle {
   /** @nullable */
   referencia: string | null;
   usuarioRegistrador: string;
+  revertido?: boolean;
+  /** @nullable */
+  reversoMovimientoId?: number | null;
+  /** @nullable */
+  motivoReverso?: string | null;
   aplicaciones: ClientePagoAplicacionDetalle[];
 }

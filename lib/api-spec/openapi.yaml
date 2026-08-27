@@ -781,6 +781,29 @@ paths:
           description: Pago y compras aplicadas
           content: { application/json: { schema: { $ref: "#/components/schemas/ProveedorPagoDetalle" } } }
         "404": { $ref: "#/components/responses/NotFound" }
+  /proveedores/{id}/pagos/{pagoId}/reversar:
+    post:
+      operationId: reversarPagoProveedor
+      tags: [proveedores]
+      summary: Revierte un pago mediante un movimiento inverso inmutable
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: path
+          name: pagoId
+          required: true
+          schema: { type: number }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MotivoReversoInput" }
+      responses:
+        "201":
+          description: Reverso registrado
+          content: { application/json: { schema: { $ref: "#/components/schemas/PagoProveedorRow" } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /proveedores/{id}/ajustes:
     post:
       operationId: registrarAjusteProveedor
@@ -2226,6 +2249,28 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/{id}/pagos/{pagoId}/reversar:
+    post:
+      operationId: reversarClientePago
+      tags: [clientes]
+      summary: Revierte un abono con un movimiento inverso inmutable
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+        - $ref: "#/components/parameters/ClientePagoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MotivoReversoInput" }
+      responses:
+        "201":
+          description: Reverso registrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ClienteMovimiento" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /clientes/{id}/notas/{ticketId}/reimprimir:
     post:
       operationId: reimprimirClienteNota
@@ -5106,6 +5151,7 @@ components:
         fechaVencimiento: { type: ["string", "null"], format: date }
         estado: { type: ["string", "null"], enum: [VIGENTE, POR_VENCER, VENCIDA, PAGADA, SIN_PLAZO] }
         sinPlazo: { type: boolean }
+        movimientoOrigenId: { type: ["number", "null"] }
     ClienteEstadoCuenta:
       type: object
       required: [clienteId, movimientos, saldoActual]
@@ -5166,6 +5212,9 @@ components:
         fecha: { type: string, format: date-time }
         formaPago: { type: ["string", "null"] }
         cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        revertido: { type: boolean }
+        reversoMovimientoId: { type: ["number", "null"] }
+        motivoReverso: { type: ["string", "null"] }
     ClientePagos:
       type: object
       required: [clienteId, pagos]
@@ -5263,6 +5312,9 @@ components:
         cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         referencia: { type: ["string", "null"] }
         usuarioRegistrador: { type: string }
+        revertido: { type: boolean }
+        reversoMovimientoId: { type: ["number", "null"] }
+        motivoReverso: { type: ["string", "null"] }
         aplicaciones:
           type: array
           items: { $ref: "#/components/schemas/ClientePagoAplicacionDetalle" }
@@ -6759,6 +6811,9 @@ components:
           type: array
           items: { $ref: "#/components/schemas/AplicacionPagoProveedor" }
         saldoDisponible: { type: string }
+        revertido: { type: boolean }
+        reversoMovimientoId: { type: ["number", "null"] }
+        motivoReverso: { type: ["string", "null"] }
     PagoProveedorInput:
       type: object
       required: [importe, formaPago]
@@ -6817,6 +6872,14 @@ components:
           type: array
           items: { $ref: "#/components/schemas/AplicacionPagoProveedor" }
         saldoDisponible: { type: string }
+    MotivoReversoInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo:
+          type: string
+          minLength: 1
+          description: Motivo obligatorio del movimiento inverso
     AjusteProveedorInput:
       type: object
       required: [importe, notas]
