@@ -54,6 +54,12 @@ router.post(
   "/clientes/:id/baja",
   requierePermiso("clientes", "editar"),
   async (req, res, next): Promise<void> => {
+    if (req.auth!.user.rol === "SUPERVISOR") {
+      res.status(403).json({
+        error: "El rol SUPERVISOR no puede dar de baja clientes.",
+      });
+      return;
+    }
     const id = idParam(req.params.id);
     if (!id) { res.status(400).json({ error: "ID inválido." }); return; }
     const client = await pool.connect();
@@ -200,6 +206,12 @@ router.post(
   "/clientes/:id/reactivar",
   requierePermiso("clientes", "editar"),
   async (req, res, next): Promise<void> => {
+    if (req.auth!.user.rol === "SUPERVISOR") {
+      res.status(403).json({
+        error: "El rol SUPERVISOR no puede reactivar clientes.",
+      });
+      return;
+    }
     const id = idParam(req.params.id);
     if (!id) { res.status(400).json({ error: "ID inválido." }); return; }
     const client = await pool.connect();

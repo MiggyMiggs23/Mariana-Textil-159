@@ -50,6 +50,11 @@ const supervisorPayload = {
   diasCredito: 30,
   pagos: [{ importe: "20.00", formaPago: "EFECTIVO" }],
   documentoIneUrl: "secret",
+  saldo: "12.500",
+  credito: "100.00",
+  plazoPago: 30,
+  cobro: "10.00",
+  ine: "secret",
   saldoPosterior: "12.500",
   documentoTipo: "SALIDA",
   totalRollos: 2,
@@ -62,6 +67,9 @@ assert.deepEqual(omitSupervisorSensitiveFields(supervisorPayload, true), {
   nested: { cantidad: "12.500" },
 });
 assert.equal(isSupervisorSensitiveKey("precio_negociado"), true);
+for (const key of ["saldo", "credito", "plazoPago", "cobro", "ine"]) {
+  assert.equal(isSupervisorSensitiveKey(key), true, `${key} must be redacted`);
+}
 assert.equal(isSupervisorSensitiveKey("saldoPosterior"), false);
 assert.strictEqual(
   omitSupervisorSensitiveFields(supervisorPayload, false),

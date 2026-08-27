@@ -269,7 +269,7 @@ function assertNoSupervisorSensitiveKeys(
 // ─── DB setup helpers ──────────────────────────────────────────────────────────
 
 let userSeq = 0;
-const RUN = `SA${Date.now()}`;
+const RUN = `SA${randomUUID()}`;
 
 /** Create a test user via direct DB insert (uses crypt for password). */
 async function mkUser(rol: RolUsuario, ubicacionId: number | null, opts?: {
@@ -937,6 +937,146 @@ await test("S-08A: SUPERVISOR operational JSON is recursively redacted", async (
     const response = await api("GET", path, undefined, login_r.cookie);
     assert.equal(response.status, 200, `${path}: ${JSON.stringify(response.body)}`);
     assertNoSupervisorSensitiveKeys(response.body, path);
+  }
+});
+
+await test("S-08AA: SUPERVISOR creates and edits clients/providers without sensitive data", async () => {
+  const loginR = await login(testSupervisor.usuario, testSupervisor.password);
+  assert.equal(loginR.status, 200);
+
+  const clienteNombre = `Cliente supervisor ${RUN}`;
+  const clienteCreado = await api(
+    "POST",
+    "/clientes",
+    {
+      nombre: clienteNombre,
+      telefono: "5550101010",
+      contactoNombre: "Contacto supervisor",
+    },
+    loginR.cookie,
+  );
+  assert.equal(clienteCreado.status, 201, JSON.stringify(clienteCreado.body));
+  assertNoSupervisorSensitiveKeys(clienteCreado.body, "POST /clientes");
+  const clienteId = Number((clienteCreado.body as Record<string, unknown>).id);
+  assert.ok(Number.isInteger(clienteId) && clienteId > 0);
+  createdClienteIds.push(clienteId);
+
+  const clienteEditado = await api(
+    "PATCH",
+    `/clientes/${clienteId}`,
+    { telefono: "5550202020", notas: "Actualizado por supervisor" },
+    loginR.cookie,
+  );
+  assert.equal(clienteEditado.status, 200, JSON.stringify(clienteEditado.body));
+  assertNoSupervisorSensitiveKeys(clienteEditado.body, "PATCH /clientes/:id");
+
+  const bajaCliente = await api(
+    "POST",
+    `/clientes/${clienteId}/baja`,
+    {},
+    loginR.cookie,
+  );
+  assert.equal(bajaCliente.status, 403, JSON.stringify(bajaCliente.body));
+  assertNoSupervisorSensitiveKeys(bajaCliente.body, "POST /clientes/:id/baja");
+
+  const proveedorCreado = await api(
+    "POST",
+    "/proveedores",
+    {
+      nombre: `Proveedor supervisor ${RUN}`,
+      tipo: "NACIONAL",
+      contactoNombre: "Contacto proveedor",
+    },
+    loginR.cookie,
+  );
+  assert.equal(proveedorCreado.status, 201, JSON.stringify(proveedorCreado.body));
+  assertNoSupervisorSensitiveKeys(proveedorCreado.body, "POST /proveedores");
+  const proveedorId = Number((proveedorCreado.body as Record<string, unknown>).id);
+  assert.ok(Number.isInteger(proveedorId) && proveedorId > 0);
+  createdProveedorIds.push(proveedorId);
+
+  const proveedorEditado = await api(
+    "PATCH",
+    `/proveedores/${proveedorId}`,
+    { telefono: "5550303030", notas: "Actualizado por supervisor" },
+    loginR.cookie,
+  );
+  assert.equal(proveedorEditado.status, 200, JSON.stringify(proveedorEditado.body));
+  assertNoSupervisorSensitiveKeys(proveedorEditado.body, "PATCH /proveedores/:id");
+});
+
+await test("S-08AB: raw DB grants cannot exceed the SUPERVISOR ceiling", async () => {
+  const modules = ["productos", "clientes", "proveedores"] as const;
+  const originals = await Promise.all(
+    modules.map(async (modulo) => {
+      const [row] = await db
+        .select()
+        .from(permisosRolTable)
+        .where(
+          and(
+            eq(permisosRolTable.rol, "SUPERVISOR"),
+            eq(permisosRolTable.modulo, modulo),
+          ),
+        )
+        .limit(1);
+      assert.ok(row, `SUPERVISOR/${modulo} role row must exist`);
+      return row;
+    }),
+  );
+
+  try {
+    for (const modulo of modules) {
+      await db
+        .update(permisosRolTable)
+        .set({
+          puedeVer: true,
+          puedeCrear: true,
+          puedeEditar: true,
+          puedeAutorizar: true,
+        })
+        .where(
+          and(
+            eq(permisosRolTable.rol, "SUPERVISOR"),
+            eq(permisosRolTable.modulo, modulo),
+          ),
+        );
+    }
+
+    const loginR = await login(testSupervisor.usuario, testSupervisor.password);
+    assert.equal(loginR.status, 200);
+    const me = await api("GET", "/auth/me", undefined, loginR.cookie);
+    assert.equal(me.status, 200);
+    const permisos = (me.body as Record<string, unknown>).permisos as Array<
+      Record<string, unknown>
+    >;
+    for (const modulo of modules) {
+      const permiso = permisos.find((item) => item.modulo === modulo);
+      assert.equal(permiso?.puedeAutorizar, false, `${modulo}.autorizar`);
+    }
+    const producto = permisos.find((item) => item.modulo === "productos");
+    assert.equal(producto?.puedeCrear, false, "productos.crear must be capped");
+    assert.equal(producto?.puedeEditar, false, "productos.editar must be capped");
+
+    const productPatch = await api(
+      "PATCH",
+      `/productos/${sharedProductoId}`,
+      { tela: `Cambio denegado ${RUN}` },
+      loginR.cookie,
+    );
+    assert.equal(productPatch.status, 403, JSON.stringify(productPatch.body));
+    assertNoSupervisorSensitiveKeys(productPatch.body, "PATCH /productos/:id");
+  } finally {
+    for (const row of originals) {
+      await db
+        .update(permisosRolTable)
+        .set({
+          puedeVer: row!.puedeVer,
+          puedeCrear: row!.puedeCrear,
+          puedeEditar: row!.puedeEditar,
+          puedeAutorizar: row!.puedeAutorizar,
+        })
+        .where(eq(permisosRolTable.id, row!.id));
+    }
   }
 });
 
@@ -2710,6 +2850,13 @@ async function cleanup(): Promise<void> {
     try {
       const { clientesTable } = await import("@workspace/db");
       await db.delete(clientesTable).where(eq(clientesTable.id, id));
+    } catch { /* best effort */ }
+  }
+
+  // Delete only suppliers created by this test run.
+  for (const id of createdProveedorIds) {
+    try {
+      await db.delete(proveedoresTable).where(eq(proveedoresTable.id, id));
     } catch { /* best effort */ }
   }
 

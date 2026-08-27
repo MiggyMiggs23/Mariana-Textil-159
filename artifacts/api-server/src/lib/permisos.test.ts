@@ -249,8 +249,8 @@ await test("P-06C: SUPERVISOR conserva exactamente sus permisos base", async () 
     inventario: [true, false, false],
     productos: [true, false, false],
     ajustes: [true, true, false],
-    clientes: [true, false, false],
-    proveedores: [true, false, false],
+    clientes: [true, true, true],
+    proveedores: [true, true, true],
     contenedores: [true, true, true],
     reportes: [true, false, false],
   };

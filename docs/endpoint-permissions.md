@@ -256,11 +256,11 @@ Inventory routes enforce the following effective permissions on the server:
 | inventario | total | ver | ver | ver |
 | productos | total | ver | ver | ver |
 | ajustes | total | — | ver/crear | ver/crear |
-| clientes | total | ver/crear/editar | — | — |
+| clientes | total | ver/crear/editar | ver/crear/editar | — |
 | clientes_credito | total | ver | — | — |
 | clientes_precios | total | ver | — | — |
 | clientes_finanzas | total | — | — | — |
-| proveedores | total | — | ver | ver |
+| proveedores | total | — | ver/crear/editar | ver |
 | proveedores_finanzas | total | — | — | — |
 | contenedores | total | — | ver | ver |
 | ubicaciones | total | — | — | — |

@@ -33,6 +33,12 @@ for (const modulo of forbidden) {
 assert.equal(supervisorAllows("productos", "ver"), true);
 assert.equal(supervisorAllows("productos", "crear"), false);
 assert.equal(supervisorAllows("productos", "editar"), false);
+assert.equal(supervisorAllows("clientes", "crear"), true);
+assert.equal(supervisorAllows("clientes", "editar"), true);
+assert.equal(supervisorAllows("clientes", "autorizar"), false);
+assert.equal(supervisorAllows("proveedores", "crear"), true);
+assert.equal(supervisorAllows("proveedores", "editar"), true);
+assert.equal(supervisorAllows("proveedores", "autorizar"), false);
 assert.equal(supervisorAllows("entradas", "crear"), true);
 assert.equal(supervisorAllows("salidas", "editar"), true);
 assert.equal(supervisorAllows("contenedores", "crear"), true);

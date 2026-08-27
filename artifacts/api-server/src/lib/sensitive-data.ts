@@ -30,8 +30,12 @@ export function isSupervisorSensitiveKey(key: string): boolean {
     normalized.includes("inventariovalor") ||
     normalized.includes("valorinventario") ||
     normalized.includes("valormercancia") ||
+    normalized === "saldo" ||
+    normalized.includes("saldos") ||
     normalized.includes("limitecredito") ||
+    normalized === "credito" ||
     normalized.includes("diascredito") ||
+    normalized.includes("plazo") ||
     normalized.includes("creditodisponible") ||
     normalized.includes("saldocredito") ||
     normalized.includes("balance") ||
@@ -57,6 +61,7 @@ export function isSupervisorSensitiveKey(key: string): boolean {
     normalized.includes("mezclapago") ||
     normalized === "pagos" ||
     normalized === "pago" ||
+    normalized === "cobro" ||
     normalized === "cobros" ||
     normalized.includes("efectivo") ||
     normalized.includes("tarjeta") ||
@@ -64,6 +69,8 @@ export function isSupervisorSensitiveKey(key: string): boolean {
     normalized.includes("moneda") ||
     normalized.includes("estadocredito") ||
     normalized.includes("puedecomprarcredito") ||
+    normalized === "ine" ||
+    normalized.startsWith("ine") ||
     normalized.includes("documentoine") ||
     normalized.includes("ineurl") ||
     normalized.includes("inearchivo") ||
