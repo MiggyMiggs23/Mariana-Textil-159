@@ -12,6 +12,12 @@ export interface Producto {
   sku: string;
   tela: string;
   color: string;
+  /**
+     * Color hexadecimal capturado manualmente; no se deriva del nombre del color
+     * @nullable
+     * @pattern ^#[0-9A-F]{6}$
+     */
+  colorHex: string | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;

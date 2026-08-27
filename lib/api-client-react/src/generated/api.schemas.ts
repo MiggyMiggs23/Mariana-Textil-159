@@ -2462,6 +2462,12 @@ export interface Producto {
   sku: string;
   tela: string;
   color: string;
+  /**
+     * Color hexadecimal capturado manualmente; no se deriva del nombre del color
+     * @nullable
+     * @pattern ^#[0-9A-F]{6}$
+     */
+  colorHex: string | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;
@@ -2480,6 +2486,12 @@ export interface ProductoDetail {
   sku: string;
   tela: string;
   color: string;
+  /**
+     * Color hexadecimal capturado manualmente; no se deriva del nombre del color
+     * @nullable
+     * @pattern ^#[0-9A-F]{6}$
+     */
+  colorHex: string | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;
@@ -2512,6 +2524,12 @@ export interface ProductoInput {
      * @maxLength 100
      */
   color: string;
+  /**
+     * Color hexadecimal opcional; únicamente ADMIN puede capturarlo
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+  colorHex?: string | null;
   unidad: UnidadProducto;
   precioSugerido: string;
   /** @nullable */
@@ -2531,6 +2549,12 @@ export interface ProductoUpdate {
      * @maxLength 100
      */
   color?: string;
+  /**
+     * Establece o limpia el color hexadecimal; únicamente ADMIN puede editarlo
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+  colorHex?: string | null;
   unidad?: UnidadProducto;
   precioSugerido?: string;
   /** @nullable */

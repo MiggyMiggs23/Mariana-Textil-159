@@ -20,6 +20,12 @@ export interface ProductoInput {
      * @maxLength 100
      */
   color: string;
+  /**
+     * Color hexadecimal opcional; únicamente ADMIN puede capturarlo
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+  colorHex?: string | null;
   unidad: UnidadProducto;
   precioSugerido: string;
   /** @nullable */

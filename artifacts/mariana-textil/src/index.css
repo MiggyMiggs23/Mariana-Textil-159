@@ -56,6 +56,15 @@
   --color-report-positive: hsl(var(--report-positive));
   --color-report-negative: hsl(var(--report-negative));
   --color-report-text-muted: hsl(var(--report-text-muted));
+
+  --color-report-modality-rollos: hsl(var(--report-modality-rollos));
+  --color-report-modality-metraje: hsl(var(--report-modality-metraje));
+  --color-report-margin-high: hsl(var(--report-margin-high));
+  --color-report-margin-medium: hsl(var(--report-margin-medium));
+  --color-report-margin-low: hsl(var(--report-margin-low));
+  --color-report-abc-a: hsl(var(--report-abc-a));
+  --color-report-abc-b: hsl(var(--report-abc-b));
+  --color-report-abc-c: hsl(var(--report-abc-c));
 }
 
 :root {
@@ -99,6 +108,17 @@
   --report-negative: 350 45% 45%; /* Rojo sobrio */
   --report-text-muted: 30 15% 45%; /* Gris neutro cálido */
 
+  /* Semantic Aliases */
+  --report-modality-rollos: 226 72% 47%; /* Azul primario Mariana */
+  --report-modality-metraje: 25 70% 50%; /* Cobre/tierra */
+  --report-margin-high: 150 40% 35%; /* Verde */
+  --report-margin-medium: 35 90% 50%; /* Ambar */
+  --report-margin-low: 350 45% 45%; /* Rojo */
+  --report-abc-a: 228 51% 25%; /* Azul intenso */
+  --report-abc-b: 228 51% 45%; /* Azul medio */
+  --report-abc-c: 228 51% 65%; /* Azul claro */
+  --report-aging: 350 45%; /* HSL hue and saturation for aging, lightness varies */
+
   --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --radius: 0.375rem; /* Firm, slightly rounded */
 }
@@ -135,14 +155,25 @@
   --sidebar-ring: 228 69% 55%;
 
   /* Reportes Palette (Dark Mode) */
-  --report-header: 228 40% 12%; 
+  --report-header: 228 40% 12%;
   --report-header-foreground: 0 0% 100%;
-  --report-stripe: 226 20% 8%; 
+  --report-stripe: 226 20% 8%;
   --report-accent-warm: 25 65% 55%;
-  --report-accent-warm-bg: 25 40% 12%; 
+  --report-accent-warm-bg: 25 40% 12%;
   --report-positive: 150 40% 45%;
   --report-negative: 350 45% 55%;
   --report-text-muted: 30 15% 65%;
+
+  /* Semantic Aliases (Dark Mode) */
+  --report-modality-rollos: 228 69% 55%;
+  --report-modality-metraje: 25 65% 55%;
+  --report-margin-high: 150 40% 45%;
+  --report-margin-medium: 35 90% 60%;
+  --report-margin-low: 350 45% 55%;
+  --report-abc-a: 228 51% 85%;
+  --report-abc-b: 228 51% 65%;
+  --report-abc-c: 228 51% 45%;
+  --report-aging: 350 45%;
 }
 
 @layer base {

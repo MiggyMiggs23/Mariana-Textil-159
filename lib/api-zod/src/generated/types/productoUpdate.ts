@@ -20,6 +20,12 @@ export interface ProductoUpdate {
      * @maxLength 100
      */
   color?: string;
+  /**
+     * Establece o limpia el color hexadecimal; únicamente ADMIN puede editarlo
+     * @nullable
+     * @pattern ^#[0-9A-Fa-f]{6}$
+     */
+  colorHex?: string | null;
   unidad?: UnidadProducto;
   precioSugerido?: string;
   /** @nullable */

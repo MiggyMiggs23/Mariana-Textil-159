@@ -29,7 +29,8 @@ test("producto contracts retain zero catalog rows and expose scoped detail links
   const now = new Date();
   const list = ListProductosResponse.parse([{
     id: 1, sku: "CERO", tela: "Tela", color: "Sin stock", unidad: "METRO",
-    precioSugerido: "10.00", notas: null, activo: true, rollos: 0,
+    colorHex: null, seVendePorMetro: false, precioSugerido: "10.00",
+    notas: null, activo: true, rollos: 0,
     cantidad: "0.000", sitiosConExistencia: 0, createdAt: now, updatedAt: now,
   }]);
   assert.equal(list[0]?.sitiosConExistencia, 0);

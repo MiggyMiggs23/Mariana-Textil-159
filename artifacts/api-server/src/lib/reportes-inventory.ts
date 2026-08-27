@@ -130,16 +130,16 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
   if (section === "color") {
     warnings.push("Las ventas del análisis de color respetan el filtro de modalidad aplicado en el servidor; la tabla sin movimiento no tiene modalidad.");
     const scope = productScope(ctx, "p", "m.ubicacion_id");
-    const salesRows = await pool.query(`SELECT p.color,p.tela,l.tipo,p.unidad,u.nombre sitio,SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas
+    const salesRows = await pool.query(`SELECT p.color,p.color_hex,p.tela,l.tipo,p.unidad,u.nombre sitio,SUM(l.cantidad)::float cantidad,SUM(l.importe)::float ventas
       FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id JOIN ubicaciones u ON u.id=t.ubicacion_id
-      WHERE ${sales.text} GROUP BY p.color,p.tela,l.tipo,p.unidad,u.nombre`, sales.values);
-    const noMove = await pool.query(`SELECT p.color,p.tela,p.unidad,MAX(m.created_at) ultimo FROM productos p LEFT JOIN movimientos m ON m.producto_id=p.id
+      WHERE ${sales.text} GROUP BY p.color,p.color_hex,p.tela,l.tipo,p.unidad,u.nombre`, sales.values);
+    const noMove = await pool.query(`SELECT p.color,p.color_hex,p.tela,p.unidad,MAX(m.created_at) ultimo FROM productos p LEFT JOIN movimientos m ON m.producto_id=p.id
       WHERE ${scope.text} GROUP BY p.id HAVING MAX(m.created_at) IS NULL OR MAX(m.created_at) < $${scope.values.length + 1}`, [...scope.values, new Date(ctx.range.hasta.getTime() - 90 * 86400000)]);
-    const current = salesRows.rows.map(r => ({ color: r.color, tela: r.tela, modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), ventas: number(r.ventas) }));
+    const current = salesRows.rows.map(r => ({ color: r.color, colorHex: r.color_hex, tela: r.tela, modalidad: r.tipo === "METREADO" ? "METRAJE" : "ROLLOS", unidad: r.unidad, sitio: r.sitio, cantidad: number(r.cantidad), ventas: number(r.ventas) }));
     return { kpis: [], charts: [{ id: "color-tela", title: "Color × tela", type: "heatmap", categoryKey: "color", series: [{ key: "tela", label: "Tela", kind: "text" }, { key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: current }],
       tables: [table("ranking-color", "Ranking color por tela, modalidad y unidad", [["color", "Color", "text"], ["tela", "Tela", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"], ["ventas", "Ventas", "money", true]], current, ["cantidad", "ventas"]),
         table("color-sitio", "Color por sitio", [["color", "Color", "text"], ["sitio", "Sitio", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["cantidad", "Cantidad", "quantity"]], current, ["cantidad"]),
-        table("sin-movimiento-90", "Sin movimiento ≥90 días", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["ultimo", "Último movimiento", "text"]], noMove.rows.map(r => ({ color: r.color, tela: r.tela, unidad: r.unidad, ultimo: r.ultimo ? new Date(r.ultimo).toISOString() : null })))], warnings };
+        table("sin-movimiento-90", "Sin movimiento ≥90 días", [["color", "Color", "text"], ["tela", "Tela", "text"], ["unidad", "Unidad", "text"], ["ultimo", "Último movimiento", "text"]], noMove.rows.map(r => ({ color: r.color, colorHex: r.color_hex, tela: r.tela, unidad: r.unidad, ultimo: r.ultimo ? new Date(r.ultimo).toISOString() : null })))], warnings };
   }
   const scope = productScope(ctx, "p", "e.ubicacion_id");
   warnings.push("La existencia física no tiene modalidad. La rotación muestra por separado salidas por ROLLOS y METRAJE; sus coberturas no se combinan.");

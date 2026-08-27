@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
-  useGetProducto, 
+import {
+  useGetProducto,
   useUpdateProducto,
   useGetKardex,
   getGetProductoQueryKey,
@@ -73,11 +73,11 @@ export default function ProductoDetail() {
     page: kardexPage,
     pageSize: 100
   };
-  const { data: kardexRes, isLoading: loadingKardex } = useGetKardex(kardexParams, { 
-    query: { 
+  const { data: kardexRes, isLoading: loadingKardex } = useGetKardex(kardexParams, {
+    query: {
       enabled: !!id,
       queryKey: getGetKardexQueryKey(kardexParams)
-    } 
+    }
   });
 
   const handleExportCsv = () => {
@@ -112,6 +112,7 @@ export default function ProductoDetail() {
     activo: boolean;
     sku: string;
     isCustomSku: boolean;
+    colorHex?: string | null;
   }>({
     tela: "",
     color: "",
@@ -120,7 +121,8 @@ export default function ProductoDetail() {
     notas: "",
     activo: true,
     sku: "",
-    isCustomSku: false
+    isCustomSku: false,
+    colorHex: null
   });
 
   const initializedForId = useRef<number | null>(null);
@@ -136,7 +138,8 @@ export default function ProductoDetail() {
         notas: product.notas || "",
         activo: product.activo,
         sku: product.sku,
-        isCustomSku: true // start with exact SKU
+        isCustomSku: true, // start with exact SKU
+        colorHex: product.colorHex || null
       });
     }
   }, [product]);
@@ -152,7 +155,7 @@ export default function ProductoDetail() {
 
   const handleSave = () => {
     if (!product) return;
-    
+
     updateProducto.mutate({
       id: product.id,
       data: {
@@ -162,7 +165,8 @@ export default function ProductoDetail() {
         precioSugerido: formData.precioSugerido,
         notas: formData.notas || null,
         activo: formData.activo,
-        sku: isBlocked ? undefined : displaySku
+        sku: isBlocked ? undefined : displaySku,
+        colorHex: formData.colorHex
       }
     }, {
       onSuccess: () => {
@@ -280,7 +284,7 @@ export default function ProductoDetail() {
                     </div>
                   )}
                 </div>
-                
+
                 {canViewPrices && (
                   <div className="space-y-1">
                     <Label className="text-muted-foreground">Precio de Lista</Label>
@@ -319,6 +323,45 @@ export default function ProductoDetail() {
                     </div>
                   )}
                 </div>
+
+                {isAdmin && (
+                  <div className="col-span-2 space-y-1 p-4 border rounded-lg bg-background">
+                    <Label className="text-muted-foreground">Color (Muestrario Reportes)</Label>
+                    <div className="flex items-center gap-4 mt-1">
+                      {isEditing ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="color"
+                            value={formData.colorHex || "#cccccc"}
+                            onChange={e => setFormData({...formData, colorHex: e.target.value})}
+                            className="w-14 h-10 p-1 cursor-pointer"
+                            title="Seleccionar color"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setFormData({...formData, colorHex: null})}
+                            disabled={!formData.colorHex}
+                            type="button"
+                          >
+                            Limpiar
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-8 h-8 rounded border shadow-sm"
+                            style={{ backgroundColor: product.colorHex || 'hsl(var(--report-text-muted))' }}
+                          />
+                          <span className="text-sm font-medium">
+                            {product.colorHex ? product.colorHex.toUpperCase() : "Sin color asignado"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">Color representativo usado visualmente en las tablas de reportes (solo ADMIN).</p>
+                  </div>
+                )}
 
                 {isEditing && (
                   <div className="col-span-2 flex items-center space-x-2 p-4 border rounded-lg bg-background">
@@ -536,7 +579,7 @@ export default function ProductoDetail() {
                 Historial detallado de todas las operaciones de este producto.
               </CardDescription>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={handleExportCsv} disabled={!kardexRes || kardexRes.movimientos.length === 0}>
                 <Download className="w-4 h-4 mr-2" /> Exportar a Excel
@@ -626,7 +669,7 @@ export default function ProductoDetail() {
                     })}
                   </TableBody>
                 </Table>
-                
+
                 {kardexRes.total > kardexRes.pageSize && (
                   <div className="p-4 border-t flex items-center justify-between bg-muted/10">
                     <div className="text-sm text-muted-foreground">

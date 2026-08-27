@@ -469,11 +469,15 @@ export const ListProductosQueryParams = zod.object({
   "existencia": zod.enum(['TODOS', 'CON_EXISTENCIA', 'AGOTADOS']).default(listProductosQueryExistenciaDefault).describe('Filtra el catálogo según las existencias cacheadas en las ubicaciones permitidas.')
 })
 
+export const listProductosResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+
+
 export const ListProductosResponseItem = zod.object({
   "id": zod.number(),
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "colorHex": zod.string().regex(listProductosResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
@@ -495,22 +499,28 @@ export const createProductoBodyTelaMax = 200;
 
 export const createProductoBodyColorMax = 100;
 
+export const createProductoBodyColorHexRegExp = new RegExp('^#[0-9A-Fa-f]{6}$');
 
 
 export const CreateProductoBody = zod.object({
   "sku": zod.string().optional().describe('SKU personalizado; se genera automáticamente si se omite'),
   "tela": zod.string().min(1).max(createProductoBodyTelaMax),
   "color": zod.string().min(1).max(createProductoBodyColorMax),
+  "colorHex": zod.string().regex(createProductoBodyColorHexRegExp).nullish().describe('Color hexadecimal opcional; únicamente ADMIN puede capturarlo'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "precioSugerido": zod.string(),
   "notas": zod.string().nullish()
 })
+
+export const createProductoResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+
 
 export const CreateProductoResponse = zod.object({
   "id": zod.number(),
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "colorHex": zod.string().regex(createProductoResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
@@ -831,11 +841,15 @@ export const GetProductoParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getProductoResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+
+
 export const GetProductoResponse = zod.object({
   "id": zod.number(),
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "colorHex": zod.string().regex(getProductoResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
@@ -893,23 +907,29 @@ export const updateProductoBodyTelaMax = 200;
 
 export const updateProductoBodyColorMax = 100;
 
+export const updateProductoBodyColorHexRegExp = new RegExp('^#[0-9A-Fa-f]{6}$');
 
 
 export const UpdateProductoBody = zod.object({
   "sku": zod.string().optional().describe('SKU personalizado; sólo permitido cuando skuBloqueado es false'),
   "tela": zod.string().min(1).max(updateProductoBodyTelaMax).optional(),
   "color": zod.string().min(1).max(updateProductoBodyColorMax).optional(),
+  "colorHex": zod.string().regex(updateProductoBodyColorHexRegExp).nullish().describe('Establece o limpia el color hexadecimal; únicamente ADMIN puede editarlo'),
   "unidad": zod.enum(['METRO', 'KILO']).optional(),
   "precioSugerido": zod.string().optional(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean().optional()
 })
 
+export const updateProductoResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+
+
 export const UpdateProductoResponse = zod.object({
   "id": zod.number(),
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
+  "colorHex": zod.string().regex(updateProductoResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),

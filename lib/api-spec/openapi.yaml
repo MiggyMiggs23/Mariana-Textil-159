@@ -5835,6 +5835,7 @@ components:
           sku,
           tela,
           color,
+          colorHex,
           unidad,
           seVendePorMetro,
           notas,
@@ -5850,6 +5851,10 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
+        colorHex:
+          type: ["string", "null"]
+          pattern: "^#[0-9A-F]{6}$"
+          description: Color hexadecimal capturado manualmente; no se deriva del nombre del color
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         seVendePorMetro: { type: boolean }
@@ -5870,6 +5875,7 @@ components:
           sku,
           tela,
           color,
+          colorHex,
           unidad,
           seVendePorMetro,
           notas,
@@ -5889,6 +5895,10 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
+        colorHex:
+          type: ["string", "null"]
+          pattern: "^#[0-9A-F]{6}$"
+          description: Color hexadecimal capturado manualmente; no se deriva del nombre del color
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         seVendePorMetro: { type: boolean }
@@ -5926,6 +5936,10 @@ components:
           description: SKU personalizado; se genera automáticamente si se omite
         tela: { type: string, minLength: 1, maxLength: 200 }
         color: { type: string, minLength: 1, maxLength: 100 }
+        colorHex:
+          type: ["string", "null"]
+          pattern: "^#[0-9A-Fa-f]{6}$"
+          description: Color hexadecimal opcional; únicamente ADMIN puede capturarlo
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         precioSugerido: { type: string }
@@ -5939,6 +5953,10 @@ components:
           description: SKU personalizado; sólo permitido cuando skuBloqueado es false
         tela: { type: string, minLength: 1, maxLength: 200 }
         color: { type: string, minLength: 1, maxLength: 100 }
+        colorHex:
+          type: ["string", "null"]
+          pattern: "^#[0-9A-Fa-f]{6}$"
+          description: Establece o limpia el color hexadecimal; únicamente ADMIN puede editarlo
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         precioSugerido: { type: string }

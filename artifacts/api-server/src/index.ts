@@ -12,6 +12,7 @@ import {
   ensureEstadoRolloSchema,
   ensureProductMeterSchema,
   ensureProductPricingSchema,
+  ensureProductColorSchema,
   pool,
   ensureAuditSchema,
   ensureAplicacionesPagoProveedorSchema,
@@ -44,6 +45,7 @@ async function startServer() {
   await ensureEstadoRolloSchema(pool);
   await ensureProductMeterSchema(pool);
   await ensureProductPricingSchema(pool);
+  await ensureProductColorSchema(pool);
   logger.info("Interruptores de venta por metro verificados");
   logger.info("Estado de rollos verificado");
   await ensureSupervisorRole(pool);

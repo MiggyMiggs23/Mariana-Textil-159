@@ -21,6 +21,7 @@ export const productosTable = pgTable(
     sku: text("sku").notNull().unique(),
     tela: text("tela").notNull(),
     color: text("color").notNull(),
+    colorHex: text("color_hex"),
     unidad: unidadProductoEnum("unidad").notNull(),
     precioSugerido: numeric("precio_sugerido", {
       precision: 12,
@@ -52,6 +53,10 @@ export const productosTable = pgTable(
     check(
       "productos_kilo_no_venta_metro_check",
       sql`${table.unidad} <> 'KILO' OR ${table.seVendePorMetro} = false`,
+    ),
+    check(
+      "productos_color_hex_check",
+      sql`${table.colorHex} IS NULL OR ${table.colorHex} ~ '^#[0-9A-F]{6}$'`,
     ),
   ],
 );

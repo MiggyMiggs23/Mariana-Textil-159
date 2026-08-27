@@ -35,6 +35,10 @@ import {
   buildPreview,
   type PreviewRow,
 } from "../lib/catalog-import";
+import {
+  canEditProductColorHex,
+  normalizeProductColorHex,
+} from "../lib/product-color";
 
 const router: IRouter = Router();
 
@@ -154,6 +158,7 @@ function presentProducto(
     sku: row.sku,
     tela: row.tela,
     color: row.color,
+    colorHex: row.colorHex,
     unidad: row.unidad,
     seVendePorMetro: row.seVendePorMetro,
     precioSugerido: row.precioSugerido,
@@ -285,6 +290,15 @@ router.post(
 
     const tela = normalizeVariantText(parsed.data.tela);
     const color = normalizeVariantText(parsed.data.color);
+    if ("colorHex" in parsed.data && !canEditProductColorHex(req.auth!.user.rol)) {
+      res.status(403).json({
+        error: "Solo ADMIN puede capturar el color hexadecimal del producto.",
+      });
+      return;
+    }
+    const colorHex = parsed.data.colorHex === undefined
+      ? undefined
+      : normalizeProductColorHex(parsed.data.colorHex);
 
     // Validate custom SKU (if provided) before opening the transaction.
     let customSku: string | undefined;
@@ -324,6 +338,7 @@ router.post(
             sku,
             tela,
             color,
+            colorHex,
             unidad: parsed.data.unidad as UnidadProducto,
             precioSugerido: parsed.data.precioSugerido,
             notas: parsed.data.notas ?? null,
@@ -656,6 +671,12 @@ router.patch(
       res.status(400).json({ error: "Datos del producto inválidos." });
       return;
     }
+    if ("colorHex" in body.data && !canEditProductColorHex(req.auth!.user.rol)) {
+      res.status(403).json({
+        error: "Solo ADMIN puede editar el color hexadecimal del producto.",
+      });
+      return;
+    }
 
     const [before] = await db
       .select()
@@ -694,6 +715,9 @@ router.patch(
       body.data.color !== undefined
         ? normalizeVariantText(body.data.color)
         : undefined;
+    const newColorHex = body.data.colorHex === undefined
+      ? undefined
+      : normalizeProductColorHex(body.data.colorHex);
 
     // Validate and normalize custom SKU if provided (cheap check before txn).
     let newSku: string | undefined;
@@ -717,6 +741,7 @@ router.patch(
       sku?: string;
       tela?: string;
       color?: string;
+      colorHex?: string | null;
       unidad?: UnidadProducto;
       precioSugerido?: string;
       notas?: string | null;
@@ -726,6 +751,9 @@ router.patch(
     if (newSku !== undefined) updates.sku = newSku;
     if (newTela !== undefined) updates.tela = newTela;
     if (newColor !== undefined) updates.color = newColor;
+    if (newColorHex !== undefined || body.data.colorHex === null) {
+      updates.colorHex = newColorHex ?? null;
+    }
     if (body.data.unidad !== undefined)
       updates.unidad = body.data.unidad as UnidadProducto;
     if ("notas" in body.data) updates.notas = body.data.notas ?? null;
