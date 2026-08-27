@@ -5,6 +5,7 @@ import {
   canLinkAdjustmentToTicket,
   creditDueDate,
   creditStatus,
+  deriveTicketCreditData,
   isCreditTerm,
   mexicoCityDate,
 } from "./clientes-aging";
@@ -86,6 +87,107 @@ test("only the four explicit credit terms are accepted", () => {
   for (const invalid of [undefined, null, 0, 14, 45, "30"]) {
     assert.equal(isCreditTerm(invalid), false);
   }
+});
+
+test("cash ticket does not infer credit from unrelated customer ledger", () => {
+  const credit = deriveTicketCreditData(
+    20,
+    [{ formaPago: "EFECTIVO", importe: "150.00" }],
+    [
+      {
+        id: 1,
+        ticketId: 10,
+        tipo: "VENTA_CREDITO",
+        importe: "300.00",
+        diasPlazo: 30,
+        fechaVencimiento: "2026-09-30",
+        createdAt: new Date("2026-08-31T12:00:00Z"),
+      },
+    ],
+  );
+  assert.deepEqual(credit, {
+    esCredito: false,
+    importeCredito: "0.00",
+    diasPlazo: null,
+    fechaVencimiento: null,
+    saldoPendiente: "0.00",
+  });
+});
+
+test("mixed ticket reports only its credit portion and persisted terms", () => {
+  const credit = deriveTicketCreditData(
+    20,
+    [
+      { formaPago: "EFECTIVO", importe: "75.00" },
+      { formaPago: "CREDITO", importe: "125.00" },
+    ],
+    [
+      {
+        id: 1,
+        ticketId: 20,
+        tipo: "VENTA_CREDITO",
+        importe: "125.00",
+        diasPlazo: 15,
+        fechaVencimiento: "2026-09-14",
+        createdAt: new Date("2026-08-30T12:00:00Z"),
+      },
+    ],
+  );
+  assert.deepEqual(credit, {
+    esCredito: true,
+    importeCredito: "125.00",
+    diasPlazo: 15,
+    fechaVencimiento: "2026-09-14",
+    saldoPendiente: "125.00",
+  });
+});
+
+test("ticket credit balance uses FIFO abonos and linked reversals", () => {
+  const credit = deriveTicketCreditData(
+    20,
+    [{ formaPago: "CREDITO", importe: "80.00" }],
+    [
+      {
+        id: 1,
+        ticketId: 10,
+        tipo: "VENTA_CREDITO",
+        importe: "100.00",
+        diasPlazo: 7,
+        fechaVencimiento: "2026-09-06",
+        createdAt: new Date("2026-08-30T12:00:00Z"),
+      },
+      {
+        id: 2,
+        ticketId: 20,
+        tipo: "VENTA_CREDITO",
+        importe: "80.00",
+        diasPlazo: 30,
+        fechaVencimiento: "2026-09-30",
+        createdAt: new Date("2026-08-31T12:00:00Z"),
+      },
+      {
+        id: 3,
+        ticketId: null,
+        tipo: "ABONO",
+        importe: "-110.00",
+        diasPlazo: null,
+        fechaVencimiento: null,
+        createdAt: new Date("2026-09-01T12:00:00Z"),
+      },
+      {
+        id: 4,
+        ticketId: 20,
+        tipo: "REVERSO",
+        importe: "-20.00",
+        diasPlazo: null,
+        fechaVencimiento: null,
+        createdAt: new Date("2026-09-02T12:00:00Z"),
+      },
+    ],
+  );
+  assert.equal(credit.importeCredito, "80.00");
+  assert.equal(credit.saldoPendiente, "50.00");
+  assert.equal(credit.fechaVencimiento, "2026-09-30");
 });
 
 test("aging examples remain current until due date and age only afterward", () => {

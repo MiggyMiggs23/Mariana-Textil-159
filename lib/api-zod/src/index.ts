@@ -402,6 +402,8 @@ export * from "./generated/types/ticketCajaResumen";
 export * from "./generated/types/ticketCancelacionInput";
 export * from "./generated/types/ticketCobroInput";
 export * from "./generated/types/ticketCobroInputDiasPlazo";
+export * from "./generated/types/ticketCredito";
+export * from "./generated/types/ticketCreditoDiasPlazo";
 export * from "./generated/types/ticketDetalle";
 export * from "./generated/types/ticketInput";
 export * from "./generated/types/ticketLinea";

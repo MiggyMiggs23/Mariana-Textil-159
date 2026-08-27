@@ -56,3 +56,28 @@ test("Thermal label uses spacing instead of vertical dividers and enlarges logo 
   assert.match(label, /max-w-\[30mm\]/);
   assert.match(label, /width="29mm"/);
 });
+
+test("Credit Note (ticket-detail) prints exactly 216x140mm in two copies with internal QR", async () => {
+  const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+  const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
+
+  // CSS constraints
+  assert.match(css, /@page credito-page\s*\{[\s\S]*size:\s*216mm 140mm;/);
+  assert.match(css, /\.credito-page-print\s*\{[\s\S]*page:\s*credito-page;/);
+  assert.match(detail, /credito-page-print[\s\S]*w-\[216mm\][\s\S]*h-\[140mm\]/);
+
+  // Two copies logic (COPIA INTERNA / COPIA CLIENTE)
+  assert.match(detail, /\[true, false\]\.map\(\(isInternal/);
+  assert.match(detail, /COPIA INTERNA/);
+  assert.match(detail, /COPIA CLIENTE/);
+
+  // QR only on internal
+  assert.match(detail, /isInternal && \([\s\S]*?<QRCodeSVG/);
+
+  // Auto-print routing based on credit vs thermal
+  assert.match(detail, /const printClass = esCredito \? "print-credito" : "print-80mm";/);
+
+  // Cobros routing to detail with print parameter
+  assert.match(cobros, /setLocation\(\`\/tickets\/\$\{printedTicketId\}\?print=3\`\);/);
+});

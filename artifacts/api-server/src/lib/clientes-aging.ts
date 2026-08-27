@@ -73,6 +73,120 @@ export function allocateCreditFifo(
   });
 }
 
+export type TicketCreditPayment = {
+  formaPago: string;
+  importe: string;
+};
+
+export type TicketCreditMovement = {
+  ticketId: number | null;
+  tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
+  importe: string;
+  diasPlazo: number | null;
+  fechaVencimiento: string | null;
+  createdAt: Date;
+  id: number;
+};
+
+function moneyCents(value: string): number {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) {
+    throw new Error("Importe inválido en movimientos de crédito.");
+  }
+  return Math.round((amount + Number.EPSILON) * 100);
+}
+
+function decimalMoney(cents: number): string {
+  return (cents / 100).toFixed(2);
+}
+
+/**
+ * Derives the credit-note fields from immutable payments and the same FIFO
+ * allocation used by customer aging. Customer defaults and invoice flags are
+ * deliberately absent from this function.
+ */
+export function deriveTicketCreditData(
+  ticketId: number,
+  payments: TicketCreditPayment[],
+  movements: TicketCreditMovement[],
+): {
+  esCredito: boolean;
+  importeCredito: string;
+  diasPlazo: CreditTerm | null;
+  fechaVencimiento: string | null;
+  saldoPendiente: string;
+} {
+  const creditCents = payments
+    .filter((payment) => payment.formaPago === "CREDITO")
+    .reduce((sum, payment) => sum + moneyCents(payment.importe), 0);
+  if (creditCents <= 0) {
+    return {
+      esCredito: false,
+      importeCredito: "0.00",
+      diasPlazo: null,
+      fechaVencimiento: null,
+      saldoPendiente: "0.00",
+    };
+  }
+
+  const ordered = [...movements].sort(
+    (left, right) =>
+      left.createdAt.getTime() - right.createdAt.getTime() ||
+      left.id - right.id,
+  );
+  const reversalsByTicket = new Map<number, number>();
+  let fifoNegativeCents = 0;
+  for (const movement of ordered) {
+    const cents = moneyCents(movement.importe);
+    if (
+      movement.tipo === "REVERSO" &&
+      movement.ticketId != null &&
+      cents < 0
+    ) {
+      reversalsByTicket.set(
+        movement.ticketId,
+        (reversalsByTicket.get(movement.ticketId) ?? 0) - cents,
+      );
+    } else if (
+      movement.tipo === "ABONO" ||
+      (movement.tipo === "AJUSTE" && cents < 0)
+    ) {
+      fifoNegativeCents += Math.max(0, -cents);
+    }
+  }
+
+  const charges = ordered.filter(
+    (movement) =>
+      movement.tipo === "VENTA_CREDITO" ||
+      (movement.tipo === "AJUSTE" && moneyCents(movement.importe) > 0),
+  );
+  const outstanding = allocateCreditFifo(
+    charges.map((movement) => ({
+      ticketId: movement.ticketId,
+      amount: moneyCents(movement.importe),
+      linkedReversal:
+        movement.tipo === "VENTA_CREDITO" && movement.ticketId != null
+          ? (reversalsByTicket.get(movement.ticketId) ?? 0)
+          : 0,
+    })),
+    fifoNegativeCents,
+  )
+    .filter((portion) => portion.ticketId === ticketId)
+    .reduce((sum, portion) => sum + portion.outstanding, 0);
+  const sale = charges.find(
+    (movement) =>
+      movement.tipo === "VENTA_CREDITO" && movement.ticketId === ticketId,
+  );
+
+  return {
+    esCredito: true,
+    importeCredito: decimalMoney(creditCents),
+    diasPlazo: isCreditTerm(sale?.diasPlazo) ? sale.diasPlazo : null,
+    fechaVencimiento: sale?.fechaVencimiento ?? null,
+    saldoPendiente: decimalMoney(outstanding),
+  };
+}
+
 export function canLinkAdjustmentToTicket(
   amount: number,
   ticketId: number | null,

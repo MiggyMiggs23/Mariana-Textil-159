@@ -3533,6 +3533,39 @@ export interface TicketResumen {
   nombreUsuarioAutorizacion: string | null;
 }
 
+/**
+ * @nullable
+ */
+export type TicketCreditoDiasPlazo = typeof TicketCreditoDiasPlazo[keyof typeof TicketCreditoDiasPlazo] | null;
+
+
+export const TicketCreditoDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
+/**
+ * Datos persistidos y saldo de ledger de la porción a crédito del ticket.
+ */
+export interface TicketCredito {
+  esCredito: boolean;
+  importeCredito: string;
+  /** @nullable */
+  diasPlazo: TicketCreditoDiasPlazo;
+  /** @nullable */
+  fechaVencimiento: string | null;
+  /** Saldo FIFO actual de la porción a crédito de esta venta */
+  saldoPendiente: string;
+  /** @nullable */
+  telefonoCliente: string | null;
+  /** @nullable */
+  correoCliente: string | null;
+  /** @nullable */
+  direccionCliente: string | null;
+}
+
 export interface TicketCajaResumen {
   id: number;
   folio: number;
@@ -3548,7 +3581,7 @@ export interface TicketCajaResumen {
   formasPago: FormaPagoTicket[];
 }
 
-export type TicketDetalle = TicketResumen & ({
+export type TicketDetalle = TicketResumen & TicketCredito & ({
   /** @nullable */
   diasCreditoCliente?: number | null;
   lineas: TicketLinea[];

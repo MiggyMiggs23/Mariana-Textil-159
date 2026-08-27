@@ -415,6 +415,8 @@ export * from './ticketCajaResumen';
 export * from './ticketCancelacionInput';
 export * from './ticketCobroInput';
 export * from './ticketCobroInputDiasPlazo';
+export * from './ticketCredito';
+export * from './ticketCreditoDiasPlazo';
 export * from './ticketDetalle';
 export * from './ticketInput';
 export * from './ticketLinea';

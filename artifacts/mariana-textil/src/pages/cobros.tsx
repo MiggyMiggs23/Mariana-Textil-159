@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
@@ -869,6 +870,7 @@ function CobroDialog({
 
 function CobrosContent() {
   const { selectedLocationId } = useLocationScope();
+  const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [cobroOpen, setCobroOpen] = useState(false);
@@ -1218,6 +1220,7 @@ function CobrosContent() {
         }}
         onCobrado={() => {
           setCobroOpen(false);
+          const printedTicketId = selectedTicketId;
           setSelectedTicketId(null);
           queryClient.invalidateQueries({
             queryKey: getListarTicketsCajaQueryKey({
@@ -1227,6 +1230,9 @@ function CobrosContent() {
           queryClient.invalidateQueries({
             queryKey: getObtenerCorteCajaQueryKey(sesionId),
           });
+          if (printedTicketId) {
+            setLocation(`/tickets/${printedTicketId}?print=3`);
+          }
         }}
       />
 

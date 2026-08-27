@@ -223,6 +223,10 @@ Mientras esta decisión siga pendiente, continúa vigente el procedimiento de ra
 
 La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. El SUPERVISOR opera clientes y proveedores pero solo lee productos, porque editar un producto toca el precio.
 
+## Fuente de verdad del crédito
+
+El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —pendiente, parcial, pagada— se deriva de los movimientos y nunca se marca a mano. Ninguna pantalla, endpoint o tarea puede guardar ese estado como una marca independiente.
+
 ### Pendientes antes del piloto
 
 - Definir y probar el procedimiento de salidas extraordinarias.

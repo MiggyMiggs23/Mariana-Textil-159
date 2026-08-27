@@ -5,11 +5,12 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { TicketCredito } from './ticketCredito';
 import type { TicketLinea } from './ticketLinea';
 import type { TicketPago } from './ticketPago';
 import type { TicketResumen } from './ticketResumen';
 
-export type TicketDetalle = TicketResumen & ({
+export type TicketDetalle = TicketResumen & TicketCredito & ({
   /** @nullable */
   diasCreditoCliente?: number | null;
   lineas: TicketLinea[];

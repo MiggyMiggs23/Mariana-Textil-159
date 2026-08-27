@@ -151,6 +151,10 @@
     size: 216mm 140mm;
     margin: 0;
   }
+  @page credito-page {
+    size: 216mm 140mm;
+    margin: 0;
+  }
   @page document {
     size: letter portrait;
     margin: 8mm;
@@ -189,16 +193,12 @@
     background: white;
   }
 
-  body.print-corte {
+  body.print-credito {
     background: white;
   }
 
-  body.print-80mm .print-80mm-only {
-    display: block !important;
-  }
-  
-  body.print-carta .print-carta-only {
-    display: block !important;
+  body.print-corte {
+    background: white;
   }
 
   body.print-corte * {
@@ -245,6 +245,7 @@
     position: absolute;
     left: 0;
     top: 0;
+    display: block !important;
   }
 
   body.print-carta * {
@@ -254,19 +255,33 @@
     visibility: visible;
   }
   body.print-carta .print-carta-only {
+    display: block !important;
     position: absolute;
     left: 0;
     top: 0;
   }
-  
+
+  body.print-credito * {
+    visibility: hidden;
+  }
+  body.print-credito .print-credito-only, body.print-credito .print-credito-only * {
+    visibility: visible;
+  }
+  body.print-credito .print-credito-only {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
   .print-only {
     display: block !important;
   }
-  
+
   .no-print {
     display: none !important;
   }
-  
+
   .label-page {
     page: label;
     page-break-after: always;
@@ -289,8 +304,21 @@
     page-break-inside: avoid;
   }
 
-  .entrada-page-print:last-child,
+  .credito-page-print {
+    page: credito-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .entrada-page-print:last-child {
+    page-break-after: auto;
+  }
+
   .salida-page-print:last-child {
+    page-break-after: auto;
+  }
+
+  .credito-page-print:last-child {
     page-break-after: auto;
   }
 
@@ -330,7 +358,7 @@
     font-size: 7pt;
     text-align: center;
   }
-  
+
   .document-page {
     page: document;
   }

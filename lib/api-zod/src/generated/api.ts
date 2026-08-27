@@ -3664,6 +3664,15 @@ export const CrearTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "esCredito": zod.boolean(),
+  "importeCredito": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionCliente": zod.string().nullable()
+}).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -3845,6 +3854,15 @@ export const ObtenerTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "esCredito": zod.boolean(),
+  "importeCredito": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionCliente": zod.string().nullable()
+}).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -3934,6 +3952,15 @@ export const CancelarTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "esCredito": zod.boolean(),
+  "importeCredito": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionCliente": zod.string().nullable()
+}).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
@@ -4030,6 +4057,15 @@ export const CobrarTicketResponse = zod.object({
   "autorizadoPor": zod.number().nullable(),
   "nombreUsuarioAutorizacion": zod.string().nullable()
 }).and(zod.object({
+  "esCredito": zod.boolean(),
+  "importeCredito": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionCliente": zod.string().nullable()
+}).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "diasCreditoCliente": zod.number().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),

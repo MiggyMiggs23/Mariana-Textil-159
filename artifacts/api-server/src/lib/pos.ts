@@ -28,6 +28,7 @@ import {
   rollWithoutValidUnitCostMessage,
 } from "./unit-cost";
 import {
+  deriveTicketCreditData,
   creditDueDate,
   isCreditTerm,
   type CreditTerm,
@@ -173,6 +174,12 @@ export async function buildTicketDetail(
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
       diasCreditoCliente: clientesTable.diasCredito,
+      telefonoCliente: clientesTable.telefono,
+      correoCliente: clientesTable.correo,
+      direccionCliente: sql<string | null>`COALESCE(
+        NULLIF(btrim(${clientesTable.direccionEntrega}), ''),
+        NULLIF(btrim(${clientesTable.direccionParticular}), '')
+      )`,
       direccionEntregaEfectiva: sql<string | null>`COALESCE(
         NULLIF(btrim(${clientesTable.direccionEntrega}), ''),
         NULLIF(btrim(${clientesTable.direccionParticular}), '')
@@ -254,8 +261,29 @@ export async function buildTicketDetail(
     .where(eq(ticketPagosTable.ticketId, ticketId))
     .orderBy(asc(ticketPagosTable.id));
 
+  const creditMovements = pagos.some((pago) => pago.formaPago === "CREDITO")
+    ? await database
+        .select({
+          id: movimientosCreditoTable.id,
+          ticketId: movimientosCreditoTable.ticketId,
+          tipo: movimientosCreditoTable.tipo,
+          importe: movimientosCreditoTable.importe,
+          diasPlazo: movimientosCreditoTable.diasPlazo,
+          fechaVencimiento: movimientosCreditoTable.fechaVencimiento,
+          createdAt: movimientosCreditoTable.createdAt,
+        })
+        .from(movimientosCreditoTable)
+        .where(eq(movimientosCreditoTable.clienteId, ticket.clienteId))
+        .orderBy(
+          asc(movimientosCreditoTable.createdAt),
+          asc(movimientosCreditoTable.id),
+        )
+    : [];
+  const credit = deriveTicketCreditData(ticketId, pagos, creditMovements);
+
   return {
     ...ticket,
+    ...credit,
     nombreUsuarioCaja: null,
     nombreUsuarioCancelacion: null,
     nombreUsuarioAutorizacion: null,

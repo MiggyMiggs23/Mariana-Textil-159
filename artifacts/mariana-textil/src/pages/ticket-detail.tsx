@@ -8,6 +8,7 @@ import {
   Role,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
+  TicketDetalle,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, ArrowLeft, Printer, Ban, ShieldAlert } from "lucide-react";
+import { Loader2, ArrowLeft, Printer, Ban, ShieldAlert, FileText, Phone, MapPin, Mail, Hash, Calendar, Clock, User } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +39,9 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber } from "@workspace/number-format";
 import { groupTicketLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
+import { BrandLogo } from "@/components/brand-logo";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -86,13 +89,17 @@ export default function TicketDetailPage() {
     )
       return;
     autoPrintStarted.current = true;
-    document.body.classList.add("print-80mm");
+
+    const esCredito = (ticket as TicketDetalle).esCredito;
+    const printClass = esCredito ? "print-credito" : "print-80mm";
+
+    document.body.classList.add(printClass);
     const timers = [250, 900, 1550].map((delay) =>
       window.setTimeout(() => window.print(), delay),
     );
     timers.push(
       window.setTimeout(() => {
-        document.body.classList.remove("print-80mm");
+        document.body.classList.remove(printClass);
         window.history.replaceState({}, "", `/tickets/${ticket.id}`);
       }, 2200),
     );
@@ -100,8 +107,6 @@ export default function TicketDetailPage() {
   }, [ticket]);
 
   const handlePrint80mm = () => {
-    // Usamos window.print() pero con una clase especial en el body si se requiere.
-    // CSS en index.css debería ocultar layout y mostrar solo el área de impresión
     document.body.classList.add("print-80mm");
     window.print();
     setTimeout(() => {
@@ -114,6 +119,14 @@ export default function TicketDetailPage() {
     window.print();
     setTimeout(() => {
       document.body.classList.remove("print-carta");
+    }, 1000);
+  };
+
+  const handlePrintCredito = () => {
+    document.body.classList.add("print-credito");
+    window.print();
+    setTimeout(() => {
+      document.body.classList.remove("print-credito");
     }, 1000);
   };
 
@@ -257,12 +270,20 @@ export default function TicketDetailPage() {
               <Ban className="h-4 w-4 mr-2" /> Cancelar Ticket
             </Button>
           )}
-          <Button className="w-full sm:w-auto" variant="outline" onClick={handlePrintCarta}>
-            <Printer className="h-4 w-4 mr-2" /> Imprimir Media Carta
-          </Button>
-          <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
-            <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
-          </Button>
+          {(ticket as TicketDetalle).esCredito ? (
+            <Button className="w-full sm:w-auto" onClick={handlePrintCredito}>
+              <FileText className="h-4 w-4 mr-2" /> Imprimir Nota de Crédito
+            </Button>
+          ) : (
+            <>
+              <Button className="w-full sm:w-auto" variant="outline" onClick={handlePrintCarta}>
+                <Printer className="h-4 w-4 mr-2" /> Imprimir Media Carta
+              </Button>
+              <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
+                <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -772,6 +793,212 @@ export default function TicketDetailPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Nota de Crédito */}
+      <div className="hidden print-credito-only w-full max-w-none">
+        {[true, false].map((isInternal, idx) => {
+          const detail = ticket as TicketDetalle;
+          if (!detail.esCredito) return null;
+
+          const qrUrl = typeof window !== "undefined" ? new URL(`/tickets/${ticket.id}`, window.location.origin).toString() : "";
+          const pageTitle = "NOTA DE CRÉDITO";
+
+          return (
+            <div
+              key={idx}
+              className={`credito-page-print bg-white print:shadow-none w-[216mm] h-[140mm] relative box-border flex flex-col overflow-hidden shrink-0 ${
+                idx === 0 ? "page-break" : ""
+              }`}
+            >
+              {ticket.estado === EstadoTicket.CANCELADO && (
+                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
+                  <span className="text-9xl font-black text-red-600 rotate-[-30deg] tracking-widest border-8 border-red-600 p-8 rounded-3xl">
+                    CANCELADO
+                  </span>
+                </div>
+              )}
+              {/* Header */}
+              <div className="flex justify-between items-center p-4 border-b shrink-0">
+                <div className="flex items-center gap-4">
+                  <div className="w-2 h-12 bg-[#1e3a8a] mr-2"></div>
+                  <div className="flex flex-col">
+                    <h1 className="text-2xl font-black text-[#1e3a8a] tracking-tighter uppercase leading-none">
+                      {pageTitle}
+                    </h1>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">
+                      {isInternal ? "COPIA INTERNA" : "COPIA CLIENTE"}
+                    </span>
+                  </div>
+                  <div className="ml-4 text-[#1e3a8a] font-bold text-lg leading-tight border-l-2 pl-4 border-gray-300">
+                    MARIANA<br />TEXTIL
+                  </div>
+                </div>
+                <div className="flex items-center gap-6">
+                  {isInternal && (
+                    <div className="flex flex-col items-center gap-1">
+                      <QRCodeSVG
+                        value={qrUrl}
+                        size={64}
+                        level="M"
+                        includeMargin
+                      />
+                    </div>
+                  )}
+                  <div className="text-right">
+                    <div className="text-gray-500 text-xs font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
+                    <div className="text-xs font-semibold mt-1">{ticket.nombreUbicacion}</div>
+                  </div>
+                  <div className="w-px h-10 bg-gray-300"></div>
+                  <BrandLogo variant="mark" className="w-10 h-10" />
+                </div>
+              </div>
+
+              {/* Info section */}
+              <div className="px-6 py-2 shrink-0 bg-gray-50/50">
+                <div className="grid grid-cols-2 gap-x-12 gap-y-1.5">
+                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                    <User className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Cliente</span>
+                    <span className="font-medium text-xs text-black truncate">{customerName}</span>
+                  </div>
+                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                    <Hash className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Folio Venta</span>
+                    <span className="font-bold text-xs text-red-600">{ticket.folio}</span>
+                  </div>
+                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                    <Phone className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Contacto</span>
+                    <span className="font-medium text-[10px] text-black truncate">{detail.telefonoCliente || detail.correoCliente || "N/A"}</span>
+                  </div>
+                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                    <Calendar className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Fecha Venta</span>
+                    <span className="font-medium text-xs text-black">{formattedDate} {formattedTime}</span>
+                  </div>
+                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                    <MapPin className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Dirección</span>
+                    <span className="font-medium text-[10px] text-black truncate">{detail.direccionCliente || "N/A"}</span>
+                  </div>
+                  <div className="flex items-center border-b border-gray-200 pb-0.5 bg-red-50">
+                    <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
+                    <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Vencimiento</span>
+                    <span className="font-bold text-xs text-red-700">
+                      {detail.fechaVencimiento ? new Date(detail.fechaVencimiento).toLocaleDateString("es-MX") : "N/A"}
+                      {detail.diasPlazo ? ` (${detail.diasPlazo} días)` : ""}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Items Table */}
+              <div className="px-6 mt-1 flex-1 relative z-10 flex flex-col min-h-0">
+                <div className="flex-1 overflow-hidden border border-gray-200 flex flex-col">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="sticky top-0 bg-[#1e3a8a] text-white">
+                      <tr>
+                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider">Descripción</th>
+                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-16">Rollos</th>
+                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-20">Cant.</th>
+                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-20">P. Unit</th>
+                        <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider text-right w-24">Importe</th>
+                      </tr>
+                    </thead>
+                    <tbody className="overflow-y-auto block h-full w-full bg-white" style={{ display: "table-row-group" }}>
+                      {printRollos.lines.length > 0 && (
+                        <>
+                          <tr className="bg-gray-100/80"><td colSpan={5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700">ROLLOS</td></tr>
+                          {printRollos.lines.map(linea => (
+                            <tr key={linea.key} className="border-b border-gray-100 last:border-0">
+                              <td className="py-0.5 px-2 text-[10px] text-gray-800">
+                                {linea.telaProducto} {linea.colorProducto}
+                                <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
+                              </td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
+                            </tr>
+                          ))}
+                          <tr>
+                            <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Rollos</td>
+                            <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(printRollos.subtotal, { kind: "money" })}</td>
+                          </tr>
+                        </>
+                      )}
+                      {printMetraje.lines.length > 0 && (
+                        <>
+                          <tr className="bg-gray-100/80"><td colSpan={5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700 border-t border-gray-200">METRAJE</td></tr>
+                          {printMetraje.lines.map(linea => (
+                            <tr key={linea.key} className="border-b border-gray-100 last:border-0">
+                              <td className="py-0.5 px-2 text-[10px] text-gray-800">
+                                {linea.telaProducto} {linea.colorProducto}
+                                <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
+                              </td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
+                            </tr>
+                          ))}
+                          <tr>
+                            <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Metraje</td>
+                            <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(printMetraje.subtotal, { kind: "money" })}</td>
+                          </tr>
+                        </>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Totals & Signatures */}
+              <div className="px-6 mt-2 mb-2 relative z-10 shrink-0 flex gap-4">
+                <div className="flex-1 flex flex-col justify-end">
+                  <div className="text-[8px] text-gray-500 mb-4 pr-4 text-justify">
+                    Debo y pagaré incondicionalmente a la orden de Mariana Textil S.A. de C.V. la cantidad aquí
+                    señalada por concepto de mercancía recibida a mi entera satisfacción. Si no fuere pagadero a su
+                    vencimiento, causará intereses moratorios.
+                  </div>
+                  <div className="border-t border-black w-48 mx-auto mt-6 mb-1 h-0"></div>
+                  <div className="text-[8px] font-bold uppercase text-gray-700 tracking-wider text-center">Firma de Conformidad</div>
+                  <div className="text-[7px] text-gray-500 text-center truncate px-4">{customerName}</div>
+                </div>
+
+                <div className="w-[35%] shrink-0">
+                  <table className="w-full text-xs border-collapse border border-gray-300 bg-white shadow-sm">
+                    <tbody>
+                      {ticket.facturado && (
+                        <>
+                          <tr>
+                            <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">Subtotal</td>
+                            <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(ticket.subtotal, { kind: "money" })}</td>
+                          </tr>
+                          <tr>
+                            <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })})</td>
+                            <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(ticket.iva, { kind: "money" })}</td>
+                          </tr>
+                        </>
+                      )}
+                      <tr>
+                        <td className="py-1 px-2 border-b border-gray-300 font-bold text-[#1e3a8a] text-[11px] uppercase bg-blue-50/50">Total Documento</td>
+                        <td className="py-1 px-2 border-b border-gray-300 font-bold text-right text-[12px] text-[#1e3a8a] bg-blue-50/50">{formatNumber(ticket.total, { kind: "money" })}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 px-2 border-b border-gray-200 font-bold text-red-700 text-[10px] uppercase bg-red-50">Saldo Pendiente</td>
+                        <td className="py-1 px-2 border-b border-gray-200 font-bold text-right text-[12px] text-red-700 bg-red-50">{formatNumber(detail.saldoPendiente, { kind: "money" })}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="h-1.5 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
+            </div>
+          );
+        })}
       </div>
 
       <Dialog open={cancelOpen} onOpenChange={(open) => {

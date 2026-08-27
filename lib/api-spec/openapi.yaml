@@ -7300,6 +7300,33 @@ components:
         motivoCancelacion: { type: ["string", "null"] }
         autorizadoPor: { type: ["number", "null"] }
         nombreUsuarioAutorizacion: { type: ["string", "null"] }
+    TicketCredito:
+      type: object
+      description: Datos persistidos y saldo de ledger de la porción a crédito del ticket.
+      required:
+        [
+          esCredito,
+          importeCredito,
+          diasPlazo,
+          fechaVencimiento,
+          saldoPendiente,
+          telefonoCliente,
+          correoCliente,
+          direccionCliente,
+        ]
+      properties:
+        esCredito: { type: boolean }
+        importeCredito: { type: string }
+        diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
+        fechaVencimiento: { type: ["string", "null"], format: date }
+        saldoPendiente:
+          {
+            type: string,
+            description: Saldo FIFO actual de la porción a crédito de esta venta, después de abonos y reversos,
+          }
+        telefonoCliente: { type: ["string", "null"] }
+        correoCliente: { type: ["string", "null"] }
+        direccionCliente: { type: ["string", "null"] }
     TicketCajaResumen:
       type: object
       required:
@@ -7334,6 +7361,7 @@ components:
     TicketDetalle:
       allOf:
         - $ref: "#/components/schemas/TicketResumen"
+        - $ref: "#/components/schemas/TicketCredito"
         - type: object
           required: [lineas]
           properties:
