@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { ReporteTable } from "@workspace/api-client-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpDown } from "lucide-react";
 import { formatReportValue } from "./report-format";
 
@@ -38,42 +38,63 @@ export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable,
     }
   };
 
+  const isSticky = sortedData.length > 15;
+
   return (
-    <Card data-testid={`report-table-${block.id}`}>
-      {(block.title) && (
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">{block.title}</CardTitle>
+    <Card className="border-border shadow-sm overflow-hidden" data-testid={`report-table-${block.id}`}>
+      {block.title && (
+        <CardHeader className="py-4 px-5">
+          <CardTitle className="text-lg font-semibold tracking-tight text-report-header">
+            {block.title}
+          </CardTitle>
         </CardHeader>
       )}
       <CardContent className="p-0">
-        <div className="overflow-x-auto w-full custom-scrollbar">
-          <Table className="text-sm">
-            <TableHeader>
-              <TableRow className="bg-muted/40 hover:bg-muted/40 whitespace-nowrap">
-                {visibleColumns.map((col: any) => (
-                  <TableHead 
-                    key={col.key} 
-                    className={`${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : ''} ${col.sortable !== false ? 'cursor-pointer hover:bg-muted/60 select-none' : ''}`}
-                    onClick={() => handleSort(col.key, col.sortable)}
-                    data-testid={`th-${col.key}`}
-                  >
-                    <div className={`flex items-center gap-1 ${col.align === 'right' ? 'justify-end' : col.align === 'center' ? 'justify-center' : ''}`}>
-                      {col.label || col.key} {col.sortable !== false && <ArrowUpDown className="w-3 h-3 opacity-50" />}
-                    </div>
-                  </TableHead>
-                ))}
+        <div 
+          className={`w-full overflow-x-auto custom-scrollbar ${isSticky ? "max-h-[600px] overflow-y-auto" : ""}`}
+        >
+          <Table className="text-[14px] w-full">
+            <TableHeader className={isSticky ? "sticky top-0 z-20" : ""}>
+              <TableRow 
+                className="whitespace-nowrap border-b-0 hover:bg-report-header bg-report-header text-report-header-foreground shadow-sm"
+              >
+                {visibleColumns.map((col: any) => {
+                  const isNumeric = col.kind === "money" || col.kind === "percentage" || col.kind === "count" || col.kind === "quantity" || col.kind === "days";
+                  const alignRight = col.align === 'right' || (isNumeric && col.align !== 'left' && col.align !== 'center');
+                  const alignCenter = col.align === 'center';
+                  
+                  return (
+                    <TableHead 
+                      key={col.key} 
+                      className={`h-11 px-4 font-semibold tracking-wide text-report-header-foreground ${alignRight ? 'text-right' : alignCenter ? 'text-center' : 'text-left'} ${col.sortable !== false ? 'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 select-none' : ''}`}
+                      onClick={() => handleSort(col.key, col.sortable)}
+                      data-testid={`th-${col.key}`}
+                    >
+                      <div className={`flex items-center gap-1.5 ${alignRight ? 'justify-end' : alignCenter ? 'justify-center' : 'justify-start'}`}>
+                        {col.label || col.key} {col.sortable !== false && <ArrowUpDown className="w-3.5 h-3.5 opacity-60" />}
+                      </div>
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             </TableHeader>
             <TableBody>
               {sortedData.map((row: any, idx) => (
-                <TableRow key={row.id || idx} className="hover:bg-muted/30 whitespace-nowrap" data-testid={`tr-${idx}`}>
+                <TableRow 
+                  key={row.id || idx} 
+                  className="whitespace-nowrap border-b-0 transition-colors even:bg-report-stripe hover:bg-black/5 dark:hover:bg-white/10"
+                  data-testid={`tr-${idx}`}
+                >
                   {visibleColumns.map((col: any) => {
                     const val = row[col.key];
-                    const isEconomic = col.kind === "money";
+                    const isNumeric = col.kind === "money" || col.kind === "percentage" || col.kind === "count" || col.kind === "quantity" || col.kind === "days";
+                    const alignRight = col.align === 'right' || (isNumeric && col.align !== 'left' && col.align !== 'center');
+                    const alignCenter = col.align === 'center';
+
                     return (
                       <TableCell 
                         key={col.key} 
-                        className={`${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : ''} ${isEconomic ? 'font-mono font-medium' : ''}`}
+                        className={`py-2.5 px-4 ${alignRight ? 'text-right' : alignCenter ? 'text-center' : 'text-left'} ${isNumeric ? 'font-mono' : ''}`}
                       >
                         {val === undefined || val === null ? (col.economic ? "Pendiente" : "-") :
                           formatReportValue(val, col.kind || "count")}
@@ -84,22 +105,27 @@ export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable,
               ))}
               {sortedData.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={visibleColumns.length} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={visibleColumns.length} className="text-center py-10 text-report-text-muted">
                     No hay datos disponibles
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
             {block.totals && sortedData.length > 0 && (
-              <TableFooter>
-                <TableRow className="whitespace-nowrap font-bold bg-sidebar/5">
+              <TableFooter className={isSticky ? "sticky bottom-0 z-20" : ""}>
+                <TableRow 
+                  className="whitespace-nowrap hover:bg-report-accent-warm-bg bg-report-accent-warm-bg text-report-accent-warm border-t-2 border-t-report-accent-warm"
+                >
                   {visibleColumns.map((col: any, idx) => {
                     const val = (block.totals as any)[col.key];
-                    const isEconomic = col.kind === "money";
+                    const isNumeric = col.kind === "money" || col.kind === "percentage" || col.kind === "count" || col.kind === "quantity" || col.kind === "days";
+                    const alignRight = col.align === 'right' || (isNumeric && col.align !== 'left' && col.align !== 'center');
+                    const alignCenter = col.align === 'center';
+
                     return (
                       <TableCell 
                         key={col.key}
-                        className={`${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : ''} ${isEconomic ? 'font-mono' : ''}`}
+                        className={`py-3 px-4 font-bold ${alignRight ? 'text-right' : alignCenter ? 'text-center' : 'text-left'} ${isNumeric ? 'font-mono' : ''}`}
                       >
                         {val === undefined || val === null ? (idx === 0 ? "Totales" : "") : 
                           formatReportValue(val, col.kind || "count")}
