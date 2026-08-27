@@ -19,12 +19,16 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ComposedChart, Bar } from "recharts";
+import { Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ComposedChart, Bar, Cell } from "recharts";
 import { AlertCircle, RefreshCw, Loader2, ArrowUpDown } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
 import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
+import {
+  REPORT_NEGATIVE_COLOR,
+  REPORT_POSITIVE_COLOR,
+} from "@/lib/report-chart-colors";
 
 type SortKey = "nombre" | "cortes" | "exactos" | "porcentajeExactos" | "diferencia";
 
@@ -260,25 +264,32 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
                     <CardDescription>Diferencias operativas por {agrupacion}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ChartContainer
-                      config={{ importe: { label: "Diferencia neta", color: "hsl(var(--sidebar-primary))" } }}
+                      <ChartContainer
+                      config={{ importe: { label: "Diferencia neta", color: REPORT_POSITIVE_COLOR } }}
                       className="h-[300px] w-full"
                     >
                       <ComposedChart data={data.tendencia.map(d => ({
                         fecha: d.fecha,
                         importe: Number(d.importe),
                       }))}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
-                        <XAxis dataKey="fecha" tickLine={false} axisLine={false} tickMargin={10} tick={{ fontSize: 11 }} />
-                        <YAxis tickFormatter={(v) => `$${v}`} tickLine={false} axisLine={false} width={60} tick={{ fontSize: 11 }} />
-                        <ChartTooltip content={<ChartTooltipContent valueKind="money" />} />
-                        <ReferenceLine y={0} stroke="hsl(var(--foreground))" strokeWidth={1} opacity={0.3} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                        <XAxis dataKey="fecha" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={10} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }} />
+                        <YAxis tickFormatter={(v) => `$${v}`} tickLine={false} axisLine={false} width={60} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }} />
+                        <ChartTooltip content={<ChartTooltipContent valueKind="money" />} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} />
+                        <ReferenceLine y={0} stroke="hsl(var(--report-header))" strokeWidth={1} opacity={0.3} />
                         <Bar
                           dataKey="importe"
-                          fill="hsl(var(--primary))"
+                          fill={REPORT_POSITIVE_COLOR}
                           radius={[4, 4, 0, 0]}
                           barSize={20}
-                        />
+                        >
+                          {data.tendencia.map((item) => (
+                            <Cell
+                              key={item.fecha}
+                              fill={Number(item.importe) < 0 ? REPORT_NEGATIVE_COLOR : REPORT_POSITIVE_COLOR}
+                            />
+                          ))}
+                        </Bar>
                       </ComposedChart>
                     </ChartContainer>
                   </CardContent>
@@ -291,7 +302,7 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
                   <CardContent>
                     <ChartContainer
                       config={{
-                        porcentajeExactos: { label: "Exactitud", color: "hsl(var(--chart-2))" },
+                        porcentajeExactos: { label: "Exactitud", color: REPORT_POSITIVE_COLOR },
                       }}
                       className="h-[300px] w-full"
                     >
@@ -299,15 +310,15 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
                         fecha: d.fecha,
                         porcentajeExactos: Number(d.porcentajeExactos),
                       }))}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
-                        <XAxis dataKey="fecha" tickLine={false} axisLine={false} tickMargin={10} tick={{ fontSize: 11 }} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                        <XAxis dataKey="fecha" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={10} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }} />
                         <YAxis
                           domain={[0, 100]}
                           tickFormatter={(value) => formatNumber(value, { kind: "percentage", percentageInput: "percent" })}
                           tickLine={false}
                           axisLine={false}
                           width={48}
-                          tick={{ fontSize: 11 }}
+                          tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }}
                         />
                         <ChartTooltip content={
                           <ChartTooltipContent
@@ -322,9 +333,10 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
                           type="monotone"
                           dataKey="porcentajeExactos"
                           name="Exactitud"
-                          stroke="var(--color-porcentajeExactos)"
+                          stroke={REPORT_POSITIVE_COLOR}
                           strokeWidth={3}
-                          dot={{ r: 4 }}
+                          dot={{ r: 4, strokeWidth: 2, fill: 'var(--background)' }}
+                          activeDot={{ r: 6, strokeWidth: 0 }}
                         />
                       </ComposedChart>
                     </ChartContainer>

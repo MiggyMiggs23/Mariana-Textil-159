@@ -40,6 +40,10 @@ import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, W
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { formatNumber } from "@workspace/number-format";
+import {
+  getCategoricalChartColor,
+  REPORT_NEGATIVE_COLOR,
+} from "@/lib/report-chart-colors";
 import { ProveedorPagoDialog } from "@/components/proveedor-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { ProveedorCompraDetalle } from "@/components/proveedor-compra-detalle";
@@ -741,7 +745,7 @@ export default function ProveedorDetail() {
                       <ResponsiveContainer width="100%" height="100%"><BarChart data={[
                         { periodo: `Alto · ${estadisticas.estacionalidad.mesMayor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMayor?.total ?? 0) },
                         { periodo: `Bajo · ${estadisticas.estacionalidad.mesMenor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMenor?.total ?? 0) },
-                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="periodo" tick={{fontSize:10}}/><YAxis/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })}/><Bar dataKey="total" fill="hsl(var(--primary))"/></BarChart></ResponsiveContainer>
+                      ]}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5}/><XAxis dataKey="periodo" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}/><Bar dataKey="total" fill={getCategoricalChartColor(0)} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
                     </CardContent></Card>
                     <Card><CardHeader><CardTitle className="text-lg">Antigüedad de deuda</CardTitle></CardHeader><CardContent className="h-48">
                       <ResponsiveContainer width="100%" height="100%"><BarChart data={[
@@ -749,7 +753,7 @@ export default function ProveedorDetail() {
                         { rango:"31–60", saldo:Number(estadisticas.antiguedadDeuda.de31a60) },
                         { rango:"61–90", saldo:Number(estadisticas.antiguedadDeuda.de61a90) },
                         { rango:"90+", saldo:Number(estadisticas.antiguedadDeuda.mas90) },
-                      ]}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })}/><Bar dataKey="saldo" fill="hsl(var(--destructive))"/></BarChart></ResponsiveContainer>
+                      ]}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5}/><XAxis dataKey="rango" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}/><Bar dataKey="saldo" fill={REPORT_NEGATIVE_COLOR} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
                     </CardContent></Card>
                   </div>
 
@@ -762,11 +766,11 @@ export default function ProveedorDetail() {
                        {estadisticas.porMes.length > 0 ? (
                          <ResponsiveContainer width="100%" height="100%">
                            <BarChart data={estadisticas.porMes}>
-                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                             <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                              <YAxis tickFormatter={(val) => formatNumber(val, { kind: "money" })} axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                              <Tooltip formatter={(value: any) => formatNumber(value, { kind: "money" })} />
-                             <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                             <XAxis dataKey="mes" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                              <YAxis tickFormatter={(v) => `$${v / 1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                              <Tooltip formatter={(value: any) => formatNumber(value, { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
+                             <Bar dataKey="total" fill={getCategoricalChartColor(1)} radius={[4, 4, 0, 0]} />
                            </BarChart>
                          </ResponsiveContainer>
                        ) : (
@@ -825,7 +829,7 @@ export default function ProveedorDetail() {
                                <TableCell colSpan={6}>
                                  <div className="grid md:grid-cols-2 gap-4 py-2 text-xs">
                                    <div><b>Historial real por compra</b>
-                                      {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${prod.unidad.toLowerCase()}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke="hsl(var(--primary))" strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}
+                                      {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--report-stripe))"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${prod.unidad.toLowerCase()}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke={getCategoricalChartColor(0)} strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}
                                    </div>
                                     <div><b>Comparación:</b> {prod.comparacionProveedores.map(c => `${c.proveedor}: ${formatNumber(c.costoUnitario, { kind: "money" })}`).join(" · ") || "Sin comparación"}<br/>Más barato: <b>{prod.proveedorMasBarato ?? "—"}</b> · Ahorro potencial: <b>{formatNumber(prod.ahorroPotencial, { kind: "money" })}</b></div>
                                  </div>

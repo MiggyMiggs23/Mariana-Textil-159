@@ -24,6 +24,10 @@ import { formatNumber } from "@workspace/number-format";
 import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
+import {
+  getCategoricalChartColor,
+  REPORT_CATEGORICAL_COLORS,
+} from "@/lib/report-chart-colors";
 
 type SortKey = "nombreUbicacion" | "participacion" | "ventas" | "margen" | "tickets" | "ticketPromedio" | "metros" | "efectivo" | "transferencia" | "credito" | "diferenciaCaja" | "porcentajeFacturado";
 
@@ -96,8 +100,6 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
   }, []);
 
   const keys = Array.from(new Set(data?.ventasPorFecha.map(t => t.nombreUbicacion) || []));
-  const colors = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))", "hsl(var(--chart-5))"];
-
   const pieData = sortedTiendas.map(t => ({
     name: t.nombreUbicacion,
     value: Number(t.ventas)
@@ -176,23 +178,24 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                   <div className="h-[300px] w-full">
                     <ResponsiveContainer>
                       <LineChart data={trendData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
-                        <XAxis dataKey="fecha" tickLine={false} axisLine={false} tickMargin={10} tick={{ fontSize: 11 }} />
-                        <YAxis tickFormatter={v => `$${v/1000}k`} tickLine={false} axisLine={false} width={50} tick={{ fontSize: 11 }} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                        <XAxis dataKey="fecha" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={12} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                        <YAxis tickFormatter={v => `$${v/1000}k`} tickLine={false} axisLine={false} width={50} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
                         <RechartsTooltip
                           formatter={(value: number) => formatNumber(value, { kind: "money" })}
-                          contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
+                          contentStyle={{ borderRadius: '8px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                          labelStyle={{ fontWeight: 'bold', color: 'hsl(var(--report-header))', marginBottom: '4px' }}
                         />
-                        <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                        <Legend wrapperStyle={{ fontSize: '13px', paddingTop: '15px', fontWeight: 500 }} iconType="circle" />
                         {keys.map((key, i) => (
                           <Line
                             key={key}
                             type="monotone"
                             dataKey={key}
-                            stroke={colors[i % colors.length]}
-                            strokeWidth={2}
-                            dot={{ r: 3, strokeWidth: 1 }}
-                            activeDot={{ r: 5 }}
+                            stroke={getCategoricalChartColor(i)}
+                            strokeWidth={3}
+                            dot={{ r: 4, strokeWidth: 2, fill: 'var(--background)' }}
+                            activeDot={{ r: 6, strokeWidth: 0 }}
                           />
                         ))}
                       </LineChart>
@@ -220,11 +223,14 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                           dataKey="value"
                         >
                           {pieData.map((_, index) => (
-                            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                            <Cell key={`cell-${index}`} fill={getCategoricalChartColor(index)} />
                           ))}
                         </Pie>
-                        <RechartsTooltip formatter={(value: number) => formatNumber(value, { kind: "money" })} />
-                        <Legend wrapperStyle={{ fontSize: '12px' }} />
+                        <RechartsTooltip
+                          formatter={(value: number) => formatNumber(value, { kind: "money" })}
+                          contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '13px', fontWeight: 500, paddingTop: '15px' }} iconType="circle" />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -240,15 +246,19 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
               <CardContent>
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer>
-                    <BarChart data={mixData} layout="vertical" margin={{ left: 20, right: 20 }}>
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.5} />
-                      <XAxis type="number" tickFormatter={v => `$${v/1000}k`} tick={{ fontSize: 11 }} />
-                      <YAxis dataKey="name" type="category" tick={{ fontSize: 11 }} width={100} />
-                      <RechartsTooltip formatter={(value: number) => formatNumber(value, { kind: "money" })} />
-                      <Legend />
-                      <Bar dataKey="Efectivo" stackId="a" fill="hsl(var(--chart-1))" />
-                      <Bar dataKey="Transferencia" stackId="a" fill="hsl(var(--chart-2))" />
-                      <Bar dataKey="Credito" stackId="a" fill="hsl(var(--chart-3))" />
+                    <BarChart data={mixData} layout="vertical" margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                      <XAxis type="number" tickFormatter={v => `$${v/1000}k`} tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={12} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                      <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} width={100} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                      <RechartsTooltip
+                        formatter={(value: number) => formatNumber(value, { kind: "money" })}
+                        contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                        cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: '13px', paddingTop: '15px', fontWeight: 500 }} iconType="circle" />
+                      <Bar dataKey="Efectivo" stackId="a" fill={REPORT_CATEGORICAL_COLORS[0]} radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="Transferencia" stackId="a" fill={REPORT_CATEGORICAL_COLORS[1]} radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="Credito" stackId="a" fill={REPORT_CATEGORICAL_COLORS[3]} radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

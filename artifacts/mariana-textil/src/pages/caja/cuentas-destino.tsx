@@ -26,6 +26,7 @@ import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear
 import { es } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { getAccountDestinationChartColor } from "@/lib/report-chart-colors";
 
 export default function CajaCuentasDestino() {
   const { selectedLocationId } = useLocationScope();
@@ -95,14 +96,6 @@ export default function CajaCuentasDestino() {
   }, []);
 
   const keys = Array.from(new Set(data?.tendencia.map(t => t.cuentaDestino) || []));
-  const colors = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
-  ];
-
   return (
     <AppLayout>
       <div className="max-w-[1600px] mx-auto space-y-6">
@@ -251,7 +244,7 @@ export default function CajaCuentasDestino() {
                                 key={key}
                                 dataKey={key}
                                 stackId="a"
-                                fill={colors[index % colors.length]}
+                                fill={getAccountDestinationChartColor(key, index)}
                                 radius={index === keys.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
                                 barSize={30}
                               />

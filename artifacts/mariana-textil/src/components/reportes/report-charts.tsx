@@ -2,26 +2,10 @@ import { ReporteChart } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, BarChart, Bar, ScatterChart, Scatter, Treemap } from "recharts";
 import { formatNumber, NumberFormatKind } from "@workspace/number-format";
-
-// We'll use the CSS variables we defined
-const CHART_COLORS = [
-  "hsl(var(--report-header))",
-  "hsl(var(--report-modality-metraje))", // Warm accent
-  "hsl(var(--report-abc-b))", // Medium blue
-  "hsl(var(--report-positive))", // Green
-  "hsl(var(--report-abc-c))", // Light blue
-  "hsl(var(--report-modality-rollos))",
-  "hsl(var(--report-negative))", // Red
-];
-
-// Special colors for known series keys
-const getSeriesColor = (key: string, index: number) => {
-  const k = key.toUpperCase();
-  if (k.includes('ROLLOS')) return "hsl(var(--report-modality-rollos))";
-  if (k.includes('METRAJE') || k.includes('METROS')) return "hsl(var(--report-modality-metraje))";
-  if (k.includes('UTILIDAD') && !k.includes('MARGEN')) return "hsl(var(--report-positive))";
-  return CHART_COLORS[index % CHART_COLORS.length];
-};
+import {
+  getCategoricalChartColor,
+  getReportSeriesColor,
+} from "@/lib/report-chart-colors";
 
 export function ReportCharts({ charts }: { charts: ReporteChart[] }) {
   if (!charts || charts.length === 0) return null;
@@ -123,7 +107,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
               name={key}
               type="monotone"
               dataKey={key}
-              stroke={getSeriesColor(key, i)}
+              stroke={getReportSeriesColor(key, i)}
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2, fill: 'var(--background)' }}
               activeDot={{ r: 6, strokeWidth: 0 }}
@@ -150,7 +134,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
               key={key}
               name={key}
               dataKey={key}
-              fill={getSeriesColor(key, i)}
+              fill={getReportSeriesColor(key, i)}
               radius={chart.type === "stacked-bar" ? [0, 0, 0, 0] : [4, 4, 0, 0]}
               stackId={chart.type === "stacked-bar" ? "a" : undefined}
             />
@@ -169,7 +153,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
           />
           <Legend wrapperStyle={{ fontSize: '13px', paddingTop: '15px', fontWeight: 500 }} iconType="circle" />
           {keys.map((key, i) => (
-            <Scatter key={key} name={key} data={chart.rows} fill={getSeriesColor(key, i)} />
+            <Scatter key={key} name={key} data={chart.rows} fill={getReportSeriesColor(key, i)} />
           ))}
         </ScatterChart>
       );
@@ -183,7 +167,7 @@ function ChartRenderer({ chart }: { chart: ReporteChart }) {
           dataKey={keys[0] || "value"}
           aspectRatio={4 / 3}
           stroke="var(--background)"
-          fill="hsl(var(--report-header))"
+          fill={getCategoricalChartColor(0)}
         >
           <RechartsTooltip
             contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}

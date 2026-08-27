@@ -65,6 +65,15 @@
   --color-report-abc-a: hsl(var(--report-abc-a));
   --color-report-abc-b: hsl(var(--report-abc-b));
   --color-report-abc-c: hsl(var(--report-abc-c));
+  --color-report-category-blue: hsl(var(--report-category-blue));
+  --color-report-category-copper: hsl(var(--report-category-copper));
+  --color-report-category-green: hsl(var(--report-category-green));
+  --color-report-category-violet: hsl(var(--report-category-violet));
+  --color-report-category-teal: hsl(var(--report-category-teal));
+  --color-report-category-amber: hsl(var(--report-category-amber));
+  --color-report-category-red: hsl(var(--report-category-red));
+  --color-report-category-sky: hsl(var(--report-category-sky));
+  --color-report-category-rose: hsl(var(--report-category-rose));
 }
 
 :root {
@@ -118,6 +127,17 @@
   --report-abc-b: 228 51% 45%; /* Azul medio */
   --report-abc-c: 228 51% 65%; /* Azul claro */
   --report-aging: 350 45%; /* HSL hue and saturation for aging, lightness varies */
+
+  /* Categorical chart fills: lighter than report headers and distinct at a glance. */
+  --report-category-blue: 220 62% 55%;
+  --report-category-copper: 25 65% 58%;
+  --report-category-green: 150 38% 45%;
+  --report-category-violet: 270 38% 58%;
+  --report-category-teal: 185 44% 42%;
+  --report-category-amber: 42 75% 52%;
+  --report-category-red: 350 42% 55%;
+  --report-category-sky: 205 60% 64%;
+  --report-category-rose: 330 42% 62%;
 
   --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --radius: 0.375rem; /* Firm, slightly rounded */
@@ -174,6 +194,16 @@
   --report-abc-b: 228 51% 65%;
   --report-abc-c: 228 51% 45%;
   --report-aging: 350 45%;
+
+  --report-category-blue: 220 62% 64%;
+  --report-category-copper: 25 65% 64%;
+  --report-category-green: 150 38% 56%;
+  --report-category-violet: 270 40% 68%;
+  --report-category-teal: 185 44% 55%;
+  --report-category-amber: 42 75% 62%;
+  --report-category-red: 350 42% 65%;
+  --report-category-sky: 205 60% 70%;
+  --report-category-rose: 330 42% 70%;
 }
 
 @layer base {

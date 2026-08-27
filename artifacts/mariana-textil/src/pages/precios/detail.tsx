@@ -327,44 +327,46 @@ export default function PrecioDetail() {
               </CardHeader>
               <CardContent className="flex-1 p-6">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RechartsLineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                  <RechartsLineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
                     <XAxis
                       dataKey="date"
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                      tickMargin={10}
-                      axisLine={false}
                       tickLine={false}
+                      axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }}
+                      tick={{ fontSize: 11, fill: "hsl(var(--report-text-muted))", fontWeight: 500 }}
+                      tickMargin={12}
                     />
                     <YAxis
                       tickFormatter={(value) => `$${value}`}
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                      tickMargin={10}
-                      axisLine={false}
                       tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 11, fill: "hsl(var(--report-text-muted))", fontWeight: 500 }}
+                      width={60}
                     />
                     <RechartsTooltip
                       formatter={(value: number) => formatNumber(value, { kind: "money" })}
-                      contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                      labelStyle={{ fontWeight: 'bold', color: 'hsl(var(--report-header))', marginBottom: '4px' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '14px' }} />
+                    <Legend wrapperStyle={{ fontSize: '13px', paddingTop: '15px', fontWeight: 500 }} iconType="circle" />
                     <Line
                       type="stepAfter"
                       dataKey="precio"
                       name={`Precio Lista (${activeMode})`}
-                      stroke="hsl(var(--primary))"
+                      stroke="hsl(var(--report-modality-metraje))"
                       strokeWidth={3}
-                      dot={{ r: 4, fill: "hsl(var(--background))", strokeWidth: 2 }}
-                      activeDot={{ r: 6 }}
+                      dot={{ r: 4, strokeWidth: 2, fill: 'var(--background)' }}
+                      activeDot={{ r: 6, strokeWidth: 0 }}
                     />
                     <Line
                       type="monotone"
                       dataKey="costo"
                       name="Costo Base"
-                      stroke="hsl(var(--muted-foreground))"
+                      stroke="hsl(var(--report-modality-rollos))"
                       strokeWidth={2}
                       strokeDasharray="4 4"
-                      dot={{ r: 3 }}
+                      dot={{ r: 4, strokeWidth: 2, fill: 'var(--background)' }}
+                      activeDot={{ r: 6, strokeWidth: 0 }}
                     />
                   </RechartsLineChart>
                 </ResponsiveContainer>
