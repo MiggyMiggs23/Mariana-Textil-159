@@ -13,3 +13,4 @@
 - [Identidad de base en E2E](e2e-database-identity.md) — verificar current_database() tras cada reinicio; una rama o archivo temporal no garantiza aislamiento.
 - [Migración de folios por sitio](site-folio-migrations.md) — retirar unicidad global antes de renumerar y reparar referencias desde relaciones internas estables.
 - [Sitio afectado en auditoría](audit-affected-site.md) — conservar el sitio explícito del evento antes de derivar el sitio asignado al actor.
+- [Exclusividad de audio entre pestañas](cross-tab-audio-exclusivity.md) — exigir exclusión real antes de reproducir; sin coordinación segura, fallar cerrado.

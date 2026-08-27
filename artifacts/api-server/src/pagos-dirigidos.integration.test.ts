@@ -1,0 +1,475 @@
+import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
+import { createServer, type Server } from "node:http";
+import test from "node:test";
+
+const testUrl = process.env.TEST_DATABASE_URL;
+const applicationUrl = process.env.DATABASE_URL;
+const expectedDatabase = "parte6_credit_test_20260827";
+
+test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte", async (t) => {
+  if (!testUrl) {
+    t.skip("TEST_DATABASE_URL no está configurada.");
+    return;
+  }
+  if (testUrl === applicationUrl) {
+    throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
+  }
+
+  const [{ pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema }, { default: app }, { buildCommercialReport }] =
+    await Promise.all([
+      import("@workspace/db"),
+      import("./app"),
+      import("./lib/reportes-commercial"),
+    ]);
+  const identity = await pool.query<{ database: string }>(
+    "SELECT current_database() AS database",
+  );
+  assert.equal(
+    identity.rows[0]?.database,
+    expectedDatabase,
+    "La integración se negó a escribir fuera de la base temporal autorizada.",
+  );
+  await ensureClientesSchema(pool);
+  await ensureSolicitudesPagoDirigidoSchema(pool);
+
+  const tag = `DIRECTED-${randomUUID()}`;
+  const one = async (text: string, values: unknown[] = []) =>
+    (await pool.query(text, values)).rows[0]!;
+  const admin = await one(
+    "SELECT id,nombre FROM usuarios WHERE rol='ADMIN' AND activo ORDER BY id LIMIT 1",
+  );
+  assert.ok(admin, "El seed aislado debe contener un ADMIN.");
+  const initialLetter = String.fromCharCode(
+    65 + (Number.parseInt(randomUUID().replaceAll("-", "").slice(0, 2), 16) % 26),
+  );
+  const location = await one(
+    `INSERT INTO ubicaciones(nombre,tipo,activa,iniciales)
+     VALUES($1,'TIENDA',true,$2) RETURNING id`,
+    [`${tag} Tienda`, `Q${initialLetter}`],
+  );
+  const otherLocation = await one(
+    `INSERT INTO ubicaciones(nombre,tipo,activa,iniciales)
+     VALUES($1,'TIENDA',true,$2) RETURNING id`,
+    [`${tag} Otra`, `R${initialLetter}`],
+  );
+  const caja = await one(
+    `INSERT INTO usuarios(
+       nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta
+     ) VALUES($1,$2,'integration-only','CAJA',$3,true,'PROPIA')
+     RETURNING id,nombre`,
+    [`${tag} Caja`, `${tag.toLowerCase()}-caja`, location.id],
+  );
+  for (const modulo of ["clientes_finanzas", "proveedores_finanzas"]) {
+    await pool.query(
+      `INSERT INTO permisos_usuario(
+         usuario_id,modulo,puede_ver,puede_crear,puede_editar,puede_autorizar,updated_por
+       ) VALUES($1,$2,true,true,false,false,$3)`,
+      [caja.id, modulo, admin.id],
+    );
+  }
+  const adminSession = randomUUID();
+  const cajaSession = randomUUID();
+  for (const [sessionId, userId] of [
+    [adminSession, admin.id],
+    [cajaSession, caja.id],
+  ]) {
+    await pool.query(
+      `INSERT INTO sesiones(id,usuario_id,expira_at,ip,user_agent)
+       VALUES($1,$2,now()+interval '2 hours','127.0.0.1',$3)`,
+      [sessionId, userId, tag],
+    );
+  }
+
+  const cliente = await one(
+    `INSERT INTO clientes(
+       nombre,activo,es_sistema,limite_credito,saldo_credito,dias_credito
+     ) VALUES($1,true,false,1000,0,30) RETURNING id`,
+    [`${tag} Cliente`],
+  );
+  let folio = 1_800_000_000 + Math.floor(Math.random() * 90_000_000);
+  const ticket = async (siteId: number, amount: number) =>
+    one(
+      `INSERT INTO tickets(
+         folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
+         subtotal,iva,tasa_iva,total,estado,cobrado,facturado,created_at
+       ) VALUES(
+         $1,gen_random_uuid(),$2,$3,$4,$5,0,0,$5,
+         'VENDIDO',false,false,now()
+       ) RETURNING id,folio`,
+      [folio++, siteId, caja.id, cliente.id, amount],
+    );
+  const oldTicket = await ticket(location.id, 120);
+  const newTicket = await ticket(location.id, 90);
+  const otherSiteTicket = await ticket(otherLocation.id, 70);
+  const oldSale = await one(
+    `INSERT INTO movimientos_credito(
+       cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
+     ) VALUES($1,$2,'VENTA_CREDITO','120.00',$3,'CREDITO',now()-interval '2 days')
+     RETURNING id`,
+    [cliente.id, oldTicket.id, admin.id],
+  );
+  const newSale = await one(
+    `INSERT INTO movimientos_credito(
+       cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
+     ) VALUES($1,$2,'VENTA_CREDITO','90.00',$3,'CREDITO',now()-interval '1 day')
+     RETURNING id`,
+    [cliente.id, newTicket.id, admin.id],
+  );
+
+  const proveedor = await one(
+    `INSERT INTO proveedores(nombre,tipo,moneda_default,activo)
+     VALUES($1,'NACIONAL','MXN',true) RETURNING id`,
+    [`${tag} Proveedor`],
+  );
+  let entradaFolio = 800_000 + Math.floor(Math.random() * 90_000);
+  const compra = async (amount: number, age: string) => {
+    const entrada = await one(
+      `INSERT INTO entradas(
+         folio,ubicacion_id,proveedor_id,usuario_id,fecha,total_rollos,total_costo,uuid_cliente
+       ) VALUES($1,$2,$3,$4,now()-$5::interval,0,$6,gen_random_uuid())
+       RETURNING id,folio`,
+      [entradaFolio++, location.id, proveedor.id, admin.id, age, amount],
+    );
+    return one(
+      `INSERT INTO pagos_proveedor(
+         proveedor_id,entrada_id,tipo,importe,fecha,usuario_id
+       ) VALUES($1,$2,'COMPRA',$3,now()-$4::interval,$5) RETURNING id`,
+      [proveedor.id, entrada.id, amount, age, admin.id],
+    );
+  };
+  const oldPurchase = await compra(150, "2 days");
+  const newPurchase = await compra(100, "1 day");
+
+  let server: Server | undefined;
+  try {
+    server = createServer(app);
+    const baseUrl = await new Promise<string>((resolve) => {
+      server!.listen(0, "127.0.0.1", () => {
+        const address = server!.address();
+        assert.ok(address && typeof address !== "string");
+        resolve(`http://127.0.0.1:${address.port}/api`);
+      });
+    });
+    const api = async (
+      sessionId: string,
+      path: string,
+      init: RequestInit = {},
+    ) =>
+      fetch(`${baseUrl}${path}`, {
+        ...init,
+        headers: {
+          Cookie: `mariana_session=${sessionId}`,
+          "Content-Type": "application/json",
+          ...init.headers,
+        },
+      });
+    const post = (
+      sessionId: string,
+      path: string,
+      body: Record<string, unknown>,
+    ) => api(sessionId, path, { method: "POST", body: JSON.stringify(body) });
+
+    const clientBody = {
+      tipo: "CLIENTE",
+      entidadId: Number(cliente.id),
+      documentoMovimientoId: Number(newSale.id),
+      importe: 30,
+      formaPago: "EFECTIVO",
+      cuentaDestino: "CAJA_FISICA",
+      motivo: "Pago separado autorizado por la gerencia",
+    };
+    assert.equal(
+      (await post(cajaSession, "/pagos-dirigidos", {
+        ...clientBody,
+        motivo: "muy corto",
+      })).status,
+      400,
+    );
+    assert.equal(
+      (await post(cajaSession, "/pagos-dirigidos", {
+        ...clientBody,
+        importe: 500,
+      })).status,
+      409,
+      "La solicitud debe validar el saldo antes de quedar pendiente.",
+    );
+    const beforePending = Number(
+      (await one(
+        "SELECT COUNT(*)::int count FROM movimientos_credito WHERE cliente_id=$1 AND tipo='ABONO'",
+        [cliente.id],
+      )).count,
+    );
+    const pendingResponse = await post(cajaSession, "/pagos-dirigidos", clientBody);
+    assert.equal(pendingResponse.status, 201);
+    const pending = (await pendingResponse.json()) as {
+      id: number;
+      estado: string;
+      movimientoId: number | null;
+    };
+    assert.equal(pending.estado, "PENDIENTE");
+    assert.equal(pending.movimientoId, null);
+    assert.equal(
+      Number(
+        (await one(
+          "SELECT COUNT(*)::int count FROM movimientos_credito WHERE cliente_id=$1 AND tipo='ABONO'",
+          [cliente.id],
+        )).count,
+      ),
+      beforePending,
+      "Una solicitud no ADMIN no debe tocar el ledger.",
+    );
+
+    const cajaFeedResponse = await api(cajaSession, "/notificaciones/feed");
+    assert.equal(cajaFeedResponse.status, 200);
+    const cajaFeed = (await cajaFeedResponse.json()) as {
+      sessionKey: string;
+      events: Array<{
+        id: string;
+        family: string;
+        kind: string;
+        siteId: number | null;
+      }>;
+    };
+    assert.match(cajaFeed.sessionKey, /^[a-f0-9]{24}$/);
+    assert.ok(
+      cajaFeed.events.some(
+        (event) =>
+          event.id === `directed-payment:${pending.id}` &&
+          event.family === "SOLICITUD",
+      ),
+    );
+    assert.ok(
+      cajaFeed.events.some(
+        (event) =>
+          event.id === `ticket-ready:${oldTicket.id}` &&
+          event.family === "AVISO" &&
+          event.siteId === Number(location.id),
+      ),
+    );
+    assert.ok(
+      !cajaFeed.events.some(
+        (event) => event.id === `ticket-ready:${otherSiteTicket.id}`,
+      ),
+      "Caja no debe recibir tickets de otro sitio.",
+    );
+
+    const adminFeedResponse = await api(adminSession, "/notificaciones/feed");
+    assert.equal(adminFeedResponse.status, 200);
+    const adminFeed = (await adminFeedResponse.json()) as {
+      sessionKey: string;
+      events: Array<{ id: string; family: string }>;
+    };
+    assert.notEqual(adminFeed.sessionKey, cajaFeed.sessionKey);
+    assert.ok(
+      adminFeed.events.some(
+        (event) =>
+          event.id === `directed-payment:${pending.id}` &&
+          event.family === "SOLICITUD",
+      ),
+    );
+
+    const approvalResponse = await post(
+      adminSession,
+      `/pagos-dirigidos/${pending.id}/aprobar`,
+      {},
+    );
+    assert.equal(approvalResponse.status, 201);
+    const approval = (await approvalResponse.json()) as { movimientoId: number };
+    assert.equal(
+      (await post(
+        adminSession,
+        `/pagos-dirigidos/${pending.id}/aprobar`,
+        {},
+      )).status,
+      409,
+    );
+    const directedApplication = await one(
+      `SELECT importe::text
+       FROM aplicaciones_credito
+       WHERE abono_movimiento_id=$1 AND venta_movimiento_id=$2`,
+      [approval.movimientoId, newSale.id],
+    );
+    assert.equal(directedApplication.importe, "30.00");
+
+    const rejectedResponse = await post(cajaSession, "/pagos-dirigidos", {
+      ...clientBody,
+      importe: 10,
+      motivo: "El cliente pidió separar este segundo abono",
+    });
+    assert.equal(rejectedResponse.status, 201);
+    const rejected = (await rejectedResponse.json()) as { id: number };
+    assert.equal(
+      (
+        await post(
+          adminSession,
+          `/pagos-dirigidos/${rejected.id}/rechazar`,
+          { motivoRechazo: "Debe mantenerse el orden normal del adeudo" },
+        )
+      ).status,
+      200,
+    );
+    const fifoResponse = await post(
+      cajaSession,
+      `/clientes/${cliente.id}/pagos`,
+      {
+        importe: 50,
+        formaPago: "EFECTIVO",
+        cuentaDestino: "CAJA_FISICA",
+      },
+    );
+    assert.equal(fifoResponse.status, 201);
+    const fifoPayment = (await fifoResponse.json()) as {
+      id: number;
+      asignaciones: Array<{ movimientoVentaId: number; aplicado: string }>;
+    };
+    assert.equal(
+      fifoPayment.asignaciones[0]?.movimientoVentaId,
+      Number(oldSale.id),
+    );
+    assert.equal(fifoPayment.asignaciones[0]?.aplicado, "50.00");
+
+    const directAdminResponse = await post(adminSession, "/pagos-dirigidos", {
+      ...clientBody,
+      importe: 15,
+      formaPago: "TRANSFERENCIA",
+      cuentaDestino: "CUENTA_FISCAL",
+      referencia: `${tag}-TRANSFER`,
+      motivo: "Aplicación excepcional revisada por administración",
+    });
+    assert.equal(directAdminResponse.status, 201);
+    const directAdmin = (await directAdminResponse.json()) as {
+      estado: string;
+      movimientoId: number;
+    };
+    assert.equal(directAdmin.estado, "APROBADA");
+
+    const supplierPendingResponse = await post(
+      cajaSession,
+      "/pagos-dirigidos",
+      {
+        tipo: "PROVEEDOR",
+        entidadId: Number(proveedor.id),
+        documentoMovimientoId: Number(newPurchase.id),
+        importe: 30,
+        formaPago: "TRANSFERENCIA",
+        referencia: `${tag}-SUPPLIER`,
+        motivo: "Pago específico solicitado por compras urgentes",
+      },
+    );
+    assert.equal(supplierPendingResponse.status, 201);
+    const supplierPending = (await supplierPendingResponse.json()) as {
+      id: number;
+      movimientoId: number | null;
+    };
+    assert.equal(supplierPending.movimientoId, null);
+    const supplierApprovalResponse = await post(
+      adminSession,
+      `/pagos-dirigidos/${supplierPending.id}/aprobar`,
+      {},
+    );
+    assert.equal(supplierApprovalResponse.status, 201);
+    const supplierApproval = (await supplierApprovalResponse.json()) as {
+      movimientoId: number;
+    };
+    assert.equal(
+      (
+        await one(
+          `SELECT importe::text
+           FROM aplicaciones_pago_proveedor
+           WHERE pago_proveedor_id=$1 AND compra_proveedor_id=$2`,
+          [supplierApproval.movimientoId, newPurchase.id],
+        )
+      ).importe,
+      "30.00",
+    );
+
+    const supplierFifoResponse = await post(
+      adminSession,
+      `/proveedores/${proveedor.id}/pagos`,
+      { importe: 40, formaPago: "EFECTIVO" },
+    );
+    assert.equal(supplierFifoResponse.status, 201);
+    const supplierFifo = (await supplierFifoResponse.json()) as {
+      id: number;
+      aplicaciones: Array<{ compraProveedorId: number; importe: string }>;
+    };
+    assert.equal(
+      supplierFifo.aplicaciones[0]?.compraProveedorId,
+      Number(oldPurchase.id),
+    );
+    assert.equal(supplierFifo.aplicaciones[0]?.importe, "40.00");
+
+    const report = await buildCommercialReport("clientes", {
+      input: {},
+      range: {
+        desde: new Date(Date.now() - 86_400_000),
+        hasta: new Date(Date.now() + 86_400_000),
+        previousDesde: new Date(Date.now() - 3 * 86_400_000),
+        previousHasta: new Date(Date.now() - 2 * 86_400_000),
+        yearAgoDesde: new Date(Date.now() - 366 * 86_400_000),
+        yearAgoHasta: new Date(Date.now() - 365 * 86_400_000),
+      },
+    });
+    const directedTable = report.tables.find(
+      (table) => table.id === "pagos-dirigidos",
+    );
+    assert.ok(directedTable);
+    assert.ok(
+      directedTable.rows.some(
+        (row: Record<string, unknown>) =>
+          row.motivo === clientBody.motivo &&
+          row.clienteProveedor === `${tag} Cliente` &&
+          row.solicitante === `${tag} Caja` &&
+          row.autorizador === admin.nombre,
+      ),
+      "Reportes debe conservar contraparte, documento, motivo y actores.",
+    );
+
+    assert.equal(
+      (
+        await post(
+          adminSession,
+          `/clientes/${cliente.id}/pagos/${approval.movimientoId}/reversar`,
+          { motivo: "Reverso de verificación del pago dirigido" },
+        )
+      ).status,
+      201,
+    );
+    assert.equal(
+      (
+        await one(
+          `SELECT COUNT(*)::int count
+           FROM movimientos_credito
+           WHERE tipo='REVERSO' AND movimiento_origen_id=$1`,
+          [approval.movimientoId],
+        )
+      ).count,
+      1,
+    );
+    assert.equal(
+      (
+        await post(
+          adminSession,
+          `/proveedores/${proveedor.id}/pagos/${supplierApproval.movimientoId}/reversar`,
+          { motivo: "Reverso de verificación del pago dirigido" },
+        )
+      ).status,
+      201,
+    );
+    assert.equal(
+      (
+        await one(
+          `SELECT COUNT(*)::int count
+           FROM pagos_proveedor
+           WHERE tipo='REVERSO' AND movimiento_origen_id=$1`,
+          [supplierApproval.movimientoId],
+        )
+      ).count,
+      1,
+    );
+  } finally {
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+    await pool.end();
+  }
+});

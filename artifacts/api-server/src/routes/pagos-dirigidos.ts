@@ -26,9 +26,11 @@ function parsePayment(body: unknown): Payment | null {
   return { ...parsed.data, motivo: parsed.data.motivo.trim(), referencia: parsed.data.referencia ?? null, notas: parsed.data.notas ?? null, cuentaDestino: parsed.data.cuentaDestino ?? null, fechaEfectiva: parsed.data.fechaEfectiva ?? null };
 }
 
-async function apply(tx: any, request: any, userId: number) {
+async function assertDocumentBalance(tx: any, request: any) {
   const supplier = request.tipo === "PROVEEDOR";
-  await tx.execute(sql`SELECT pg_advisory_xact_lock(${supplier ? 240025 : 240024}, ${request.entidadId})`);
+  await tx.execute(supplier
+    ? sql`SELECT pg_advisory_xact_lock(${request.entidadId})`
+    : sql`SELECT pg_advisory_xact_lock(240024, ${request.entidadId})`);
   const document = await tx.execute(supplier ? sql`
     SELECT p.id,p.importe::text FROM pagos_proveedor p WHERE p.id=${request.documentoMovimientoId}
       AND p.proveedor_id=${request.entidadId} AND p.tipo='COMPRA' FOR UPDATE`
@@ -48,6 +50,13 @@ async function apply(tx: any, request: any, userId: number) {
   const availableCents = Math.round(Number(doc.importe) * 100) - Math.round(Number(used.rows[0]?.total ?? 0) * 100);
   const requestedCents = Math.round(Number(request.importe) * 100);
   if (requestedCents > availableCents) throw new Error("DIRECTED_AMOUNT_EXCEEDS_DOCUMENT");
+  return doc;
+}
+
+async function apply(tx: any, request: any, userId: number) {
+  const supplier = request.tipo === "PROVEEDOR";
+  const doc = await assertDocumentBalance(tx, request);
+  const requestedCents = Math.round(Number(request.importe) * 100);
   const amount = (requestedCents / 100).toFixed(2);
   const [movement] = supplier
     ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago, referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
@@ -85,7 +94,7 @@ function present(row: any) {
   };
 }
 
-router.get("/", async (req, res, next): Promise<void> => {
+router.get("/pagos-dirigidos", async (req, res, next): Promise<void> => {
   try {
     const raw = req.query as Record<string, unknown>;
     const entityId = raw.entidadId == null ? undefined : positiveId(raw.entidadId);
@@ -112,7 +121,7 @@ router.get("/", async (req, res, next): Promise<void> => {
   } catch (error) { next(error); }
 });
 
-router.post("/", async (req, res, next): Promise<void> => {
+router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
   try {
     const data = parsePayment(req.body);
     if (!data) { res.status(400).json({ error: "Datos inválidos; motivo de al menos 10 caracteres es obligatorio." }); return; }
@@ -128,6 +137,19 @@ router.post("/", async (req, res, next): Promise<void> => {
     if (!valid || (data.tipo === "CLIENTE" && data.formaPago === "TRANSFERENCIA" && !data.referencia)) { res.status(400).json({ error: "Forma de pago, cuenta destino o referencia inválida." }); return; }
     const result = await db.transaction(async (tx) => {
       const isAdmin = req.auth!.user.rol === "ADMIN";
+      if (!isAdmin && req.auth!.user.alcanceConsulta !== "TODAS") {
+        const site = await tx.execute(data.tipo === "CLIENTE" ? sql`
+          SELECT t.ubicacion_id FROM movimientos_credito m
+          JOIN tickets t ON t.id=m.ticket_id
+          WHERE m.id=${data.documentoMovimientoId} AND m.cliente_id=${data.entidadId}`
+          : sql`SELECT e.ubicacion_id FROM pagos_proveedor p
+          JOIN entradas e ON e.id=p.entrada_id
+          WHERE p.id=${data.documentoMovimientoId} AND p.proveedor_id=${data.entidadId}`);
+        if (Number(site.rows[0]?.ubicacion_id) !== req.auth!.user.ubicacionId) {
+          throw new Error("DIRECTED_DOCUMENT_OUT_OF_SCOPE");
+        }
+      }
+      await assertDocumentBalance(tx, data);
       const snapshot = await snapshots(tx, data, req.auth!.user.id);
       const [request] = await tx.insert(solicitudesPagoDirigidoTable).values({
         ...data, importe: data.importe.toFixed(2), solicitanteId: req.auth!.user.id,
@@ -145,12 +167,13 @@ router.post("/", async (req, res, next): Promise<void> => {
     res.status(201).json(CreateSolicitudPagoDirigidoResponse.parse(present(result.request)));
   } catch (error) {
     if (error instanceof Error && error.message === "DIRECTED_DOCUMENT_NOT_FOUND") { res.status(404).json({ error: "Documento no encontrado." }); return; }
+    if (error instanceof Error && error.message === "DIRECTED_DOCUMENT_OUT_OF_SCOPE") { res.status(403).json({ error: "El documento no pertenece a tu sitio." }); return; }
     if (error instanceof Error && error.message === "DIRECTED_AMOUNT_EXCEEDS_DOCUMENT") { res.status(409).json({ error: "El monto excede el saldo del documento." }); return; }
     next(error);
   }
 });
 
-router.post("/:id/aprobar", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
+router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
   try {
     const params = AprobarSolicitudPagoDirigidoParams.safeParse(req.params); if (!params.success) { res.status(400).json({ error: params.error.message }); return; } const id = params.data.id;
     const result = await db.transaction(async (tx) => {
@@ -173,7 +196,7 @@ router.post("/:id/aprobar", requireRole("ADMIN"), async (req, res, next): Promis
   }
 });
 
-router.post("/:id/rechazar", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
+router.post("/pagos-dirigidos/:id/rechazar", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
   try {
     const params = RechazarSolicitudPagoDirigidoParams.safeParse(req.params); if (!params.success) { res.status(400).json({ error: params.error.message }); return; } const id = params.data.id;
     const body = RechazarSolicitudPagoDirigidoBody.safeParse(req.body);

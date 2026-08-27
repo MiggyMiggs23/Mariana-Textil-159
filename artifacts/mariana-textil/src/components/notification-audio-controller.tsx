@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   getGetNotificationFeedQueryKey,
   NotificationFamily,
@@ -26,7 +27,6 @@ const SOUND_FILES: Record<NotificationFamily, string> = {
   SOLICITUD: "solicitud.ogg",
   ALERTA: "alerta.ogg",
 };
-const LEADER_LEASE_MS = 7_000;
 const MAX_SEEN_KEYS = 500;
 
 function eventKey(event: { id: string; updatedAt: string }): string {
@@ -68,6 +68,10 @@ export function NotificationAudioController({
   const [audioState, setAudioState] = useState<AudioState>("inactive");
   const [activated, setActivated] = useState(false);
   const [isLeader, setIsLeader] = useState(false);
+  const [headerTargets, setHeaderTargets] = useState<{
+    mobile: HTMLElement | null;
+    desktop: HTMLElement | null;
+  }>({ mobile: null, desktop: null });
   const audioContextRef = useRef<AudioContext | null>(null);
   const buffersRef = useRef(new Map<NotificationFamily, AudioBuffer>());
   const queueRef = useRef<QueueItem[]>([]);
@@ -78,18 +82,10 @@ export function NotificationAudioController({
   const leaderRef = useRef(false);
   const activatedRef = useRef(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
-  const tabIdRef = useRef(
-    typeof crypto.randomUUID === "function"
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-  );
 
   const sessionKey = data?.sessionKey;
   const seenStorageKey = sessionKey
     ? `mariana:notification-audio:seen:${userId}:${sessionKey}`
-    : null;
-  const leaderStorageKey = sessionKey
-    ? `mariana:notification-audio:leader:${userId}:${sessionKey}`
     : null;
 
   const markPlayed = useCallback((key: string) => {
@@ -184,46 +180,44 @@ export function NotificationAudioController({
   }, [seenStorageKey, sessionKey, userId]);
 
   useEffect(() => {
-    if (!leaderStorageKey || !sessionKey || !activated) {
+    setHeaderTargets({
+      mobile: document.getElementById("notification-audio-mobile-slot"),
+      desktop: document.getElementById("notification-audio-desktop-slot"),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!sessionKey || !activated) {
       setIsLeader(false);
       return;
     }
-    const claim = () => {
-      try {
-        const now = Date.now();
-        const raw = localStorage.getItem(leaderStorageKey);
-        const current = raw ? JSON.parse(raw) as { tabId?: string; expiresAt?: number } : null;
-        if (!current?.tabId || !current.expiresAt || current.expiresAt <= now || current.tabId === tabIdRef.current) {
-          localStorage.setItem(leaderStorageKey, JSON.stringify({
-            tabId: tabIdRef.current,
-            expiresAt: now + LEADER_LEASE_MS,
-          }));
-          setIsLeader(true);
-          return;
-        }
-        setIsLeader(false);
-      } catch {
+    const lockManager = navigator.locks;
+    if (!lockManager) {
+      // Fail closed: without an exclusive cross-tab primitive, silence is safer
+      // than allowing two tabs to emit the same notification.
+      setIsLeader(false);
+      return;
+    }
+    let cancelled = false;
+    let release: (() => void) | null = null;
+    void lockManager.request(
+      `mariana-notification-audio:${userId}:${sessionKey}`,
+      { mode: "exclusive" },
+      async () => {
+        if (cancelled) return;
         setIsLeader(true);
-      }
-    };
-    claim();
-    const interval = window.setInterval(claim, 2_000);
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === leaderStorageKey) claim();
-    };
-    window.addEventListener("storage", onStorage);
+        await new Promise<void>((resolve) => {
+          release = resolve;
+        });
+        setIsLeader(false);
+      },
+    );
     return () => {
-      window.clearInterval(interval);
-      window.removeEventListener("storage", onStorage);
-      try {
-        const current = JSON.parse(localStorage.getItem(leaderStorageKey) ?? "{}") as { tabId?: string };
-        if (current.tabId === tabIdRef.current) localStorage.removeItem(leaderStorageKey);
-      } catch {
-        // Ignore unavailable storage during cleanup.
-      }
+      cancelled = true;
+      release?.();
       setIsLeader(false);
     };
-  }, [activated, leaderStorageKey, sessionKey]);
+  }, [activated, sessionKey, userId]);
 
   useEffect(() => {
     if (!sessionKey || !seenStorageKey || !data) return;
@@ -309,6 +303,12 @@ export function NotificationAudioController({
       if (context.state !== "running") throw new Error("El navegador mantuvo el audio suspendido.");
       setActivated(true);
       setAudioState("running");
+      if (data?.sessionKey) {
+        sessionStorage.setItem(
+          `mariana:notification-audio:activated:${data.sessionKey}`,
+          "1",
+        );
+      }
       await playFamily(NotificationFamily.AVISO);
       toast({ title: "Sonido activado", description: "Las nuevas notificaciones usarán audio local." });
       void drainQueue();
@@ -323,20 +323,38 @@ export function NotificationAudioController({
     }
   };
 
+  useEffect(() => {
+    if (
+      data?.sessionKey &&
+      !activated &&
+      sessionStorage.getItem(
+        `mariana:notification-audio:activated:${data.sessionKey}`,
+      ) === "1"
+    ) {
+      void activateAudio();
+    }
+  }, [activated, data?.sessionKey]);
+
   if (audioState === "running") return null;
 
-  return (
-    <div className="no-print fixed bottom-4 right-4 z-[70]">
+  const activationButton = (mobile: boolean) => (
       <Button
         type="button"
         onClick={activateAudio}
-        className="gap-2 shadow-lg"
-        variant={audioState === "unavailable" ? "destructive" : "default"}
+        className={mobile ? "text-white hover:bg-sidebar-accent" : "gap-2"}
+        size={mobile ? "icon" : "sm"}
+        variant={mobile ? "ghost" : audioState === "unavailable" ? "destructive" : "outline"}
         data-testid="button-enable-notification-sound"
       >
         {audioState === "unavailable" ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-        Activar sonido
+        {mobile ? <span className="sr-only">Activar sonido</span> : "Activar sonido"}
       </Button>
-    </div>
+  );
+
+  return (
+    <>
+      {headerTargets.mobile && createPortal(activationButton(true), headerTargets.mobile)}
+      {headerTargets.desktop && createPortal(activationButton(false), headerTargets.desktop)}
+    </>
   );
 }

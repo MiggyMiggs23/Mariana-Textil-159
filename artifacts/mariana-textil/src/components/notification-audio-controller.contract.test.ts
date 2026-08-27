@@ -13,7 +13,8 @@ test("notification audio requires activation and serializes deduplicated events"
   assert.match(source, /`\$\{event\.id\}:\$\{event\.updatedAt\}`/);
   assert.match(source, /sessionStorage\.setItem/);
   assert.match(source, /new BroadcastChannel/);
-  assert.match(source, /mariana:notification-audio:leader/);
+  assert.match(source, /lockManager\.request/);
+  assert.match(source, /Fail closed/);
   assert.match(source, /while \(queueRef\.current\.length/);
   assert.match(source, /await playFamily\(item\.family\)/);
   assert.match(source, /role !== Role\.CAJA/);

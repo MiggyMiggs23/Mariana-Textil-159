@@ -128,7 +128,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
       const event: FeedEvent = {
         id: `ticket-ready:${ticketId}`,
         kind: "TICKET_READY",
-        family: "SOLICITUD",
+        family: "AVISO",
         title: `Ticket ${Number(ticket.folio)} listo para cobrar`,
         message: `${String(ticket.clienteNombre)} · $${Number(ticket.importe).toFixed(2)}`,
         href: `/cobros?ticketId=${ticketId}`,
