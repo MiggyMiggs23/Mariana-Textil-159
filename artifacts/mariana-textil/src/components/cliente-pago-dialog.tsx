@@ -19,11 +19,12 @@ import { format } from "date-fns";
 
 type Step = "form" | "preview" | "success";
 
-interface ClientePagoDialogProps {
+export interface ClientePagoDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   clienteId: number;
   saldoActual?: string;
+  defaultAmount?: string;
   onSuccess?: () => void;
 }
 
@@ -32,6 +33,7 @@ export function ClientePagoDialog({
   onOpenChange,
   clienteId,
   saldoActual,
+  defaultAmount,
   onSuccess
 }: ClientePagoDialogProps) {
   const [step, setStep] = useState<Step>("form");
@@ -53,7 +55,7 @@ export function ClientePagoDialog({
   useEffect(() => {
     if (open) {
       setStep("form");
-      setAmount("");
+      setAmount(defaultAmount || "");
       setPaymentMethod("EFECTIVO");
       setDestinationAccount("CAJA_FISICA");
       setReference("");
@@ -65,7 +67,7 @@ export function ClientePagoDialog({
       const formatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       setEffectiveDate(formatted);
     }
-  }, [open]);
+  }, [open, defaultAmount]);
 
   // Effect to reset destination account when payment method changes
   useEffect(() => {

@@ -47,6 +47,7 @@ import Alertas from '@/pages/alertas';
 import CajaTiempoReal from '@/pages/caja/tiempo-real';
 import CajaCortes from '@/pages/caja/cortes';
 import CajaCuentasDestino from '@/pages/caja/cuentas-destino';
+import PagosDirigidos from '@/pages/pagos-dirigidos';
 import Notificaciones from '@/pages/notificaciones';
 import Reportes from '@/pages/reportes';
 import Contenedores from '@/pages/contenedores/index';
@@ -209,6 +210,7 @@ function Router() {
 
         <Route path="/caja/tiempo-real" component={() => <ProtectedRoute component={CajaTiempoReal} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
         <Route path="/caja/cortes" component={() => <ProtectedRoute component={CajaCortes} allowedModule={Modules.COBROS_PAGOS} />} />
+        <Route path="/pagos-dirigidos" component={() => <ProtectedRoute component={PagosDirigidos} />} />
         <Route path="/caja/diferencias" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />
         <Route path="/caja/cuentas-destino" component={() => <ProtectedRoute component={CajaCuentasDestino} allowedModule={Modules.COBROS_PAGOS} adminOnly />} />
         <Route path="/caja/comparativo" component={() => <ProtectedRoute component={Reportes} allowedModule={Modules.REPORTES} />} />

@@ -5,6 +5,103 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface MotivoRechazoPagoDirigidoInput {
+  /** @minLength 10 */
+  motivoRechazo: string;
+}
+
+export type SolicitudPagoDirigidoTipo = typeof SolicitudPagoDirigidoTipo[keyof typeof SolicitudPagoDirigidoTipo];
+
+
+export const SolicitudPagoDirigidoTipo = {
+  CLIENTE: 'CLIENTE',
+  PROVEEDOR: 'PROVEEDOR',
+} as const;
+
+export type SolicitudPagoDirigidoEstado = typeof SolicitudPagoDirigidoEstado[keyof typeof SolicitudPagoDirigidoEstado];
+
+
+export const SolicitudPagoDirigidoEstado = {
+  PENDIENTE: 'PENDIENTE',
+  APROBADA: 'APROBADA',
+  RECHAZADA: 'RECHAZADA',
+} as const;
+
+export interface SolicitudPagoDirigido {
+  id: number;
+  tipo: SolicitudPagoDirigidoTipo;
+  entidadId: number;
+  documentoMovimientoId: number;
+  importe: string;
+  formaPago: string;
+  /** @nullable */
+  cuentaDestino?: string | null;
+  /** @nullable */
+  fechaEfectiva?: string | null;
+  /** @nullable */
+  referencia?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  motivo: string;
+  /** @nullable */
+  motivoRechazo?: string | null;
+  solicitanteId: number;
+  solicitanteNombre: string;
+  /** @nullable */
+  autorizadorId?: number | null;
+  /** @nullable */
+  autorizadorNombre?: string | null;
+  contraparteNombre: string;
+  documentoFolio: string;
+  /** @nullable */
+  movimientoId?: number | null;
+  estado: SolicitudPagoDirigidoEstado;
+  createdAt: string;
+}
+
+export interface SolicitudesPagoDirigidoResult {
+  solicitudes: SolicitudPagoDirigido[];
+}
+
+export type SolicitudPagoDirigidoInputTipo = typeof SolicitudPagoDirigidoInputTipo[keyof typeof SolicitudPagoDirigidoInputTipo];
+
+
+export const SolicitudPagoDirigidoInputTipo = {
+  CLIENTE: 'CLIENTE',
+  PROVEEDOR: 'PROVEEDOR',
+} as const;
+
+export interface SolicitudPagoDirigidoInput {
+  tipo: SolicitudPagoDirigidoInputTipo;
+  /** @minimum 1 */
+  entidadId: number;
+  /** @minimum 1 */
+  documentoMovimientoId: number;
+  /** @exclusiveMinimum 0 */
+  importe: number;
+  /** @minLength 1 */
+  formaPago: string;
+  cuentaDestino?: string;
+  fechaEfectiva?: string;
+  referencia?: string;
+  notas?: string;
+  /** @minLength 10 */
+  motivo: string;
+}
+
+export type SolicitudPagoDirigidoAplicadaEstado = typeof SolicitudPagoDirigidoAplicadaEstado[keyof typeof SolicitudPagoDirigidoAplicadaEstado];
+
+
+export const SolicitudPagoDirigidoAplicadaEstado = {
+  APROBADA: 'APROBADA',
+} as const;
+
+export interface SolicitudPagoDirigidoAplicada {
+  solicitudId: number;
+  movimientoId: number;
+  estado: SolicitudPagoDirigidoAplicadaEstado;
+}
+
 export interface AuditoriaEntry {
   id: string;
   fecha: string;
@@ -1431,6 +1528,7 @@ export const ClienteMovimientoEstado = {
 } as const;
 
 export interface ClienteMovimiento {
+  movimientoId?: number;
   tipo?: string;
   importe?: string;
   fecha?: string;
@@ -3462,6 +3560,8 @@ export const CompraConEstadoEstado = {
 } as const;
 
 export interface CompraConEstado {
+  /** Identificador del movimiento COMPRA en el ledger del proveedor */
+  movimientoId: number;
   entradaId: number;
   folio: number;
   fecha: string;
@@ -4136,6 +4236,32 @@ export type AnalyticsDesdeParameter = string;
 export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
+
+export type ListSolicitudesPagoDirigidoParams = {
+tipo?: ListSolicitudesPagoDirigidoTipo;
+/**
+ * @minimum 1
+ */
+entidadId?: number;
+estado?: ListSolicitudesPagoDirigidoEstado;
+};
+
+export type ListSolicitudesPagoDirigidoTipo = typeof ListSolicitudesPagoDirigidoTipo[keyof typeof ListSolicitudesPagoDirigidoTipo];
+
+
+export const ListSolicitudesPagoDirigidoTipo = {
+  CLIENTE: 'CLIENTE',
+  PROVEEDOR: 'PROVEEDOR',
+} as const;
+
+export type ListSolicitudesPagoDirigidoEstado = typeof ListSolicitudesPagoDirigidoEstado[keyof typeof ListSolicitudesPagoDirigidoEstado];
+
+
+export const ListSolicitudesPagoDirigidoEstado = {
+  PENDIENTE: 'PENDIENTE',
+  APROBADA: 'APROBADA',
+  RECHAZADA: 'RECHAZADA',
+} as const;
 
 export type GetDashboardParams = {
 /**

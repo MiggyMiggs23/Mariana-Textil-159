@@ -79,11 +79,16 @@ export default function ClienteDetail() {
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
   const requestedTab = new URLSearchParams(search).get("tab");
+  const initialPaymentAmount = new URLSearchParams(search).get("importe") ?? "";
   const [activeTab, setActiveTab] = useState(requestedTab === "estado" ? "estado" : "datos");
 
   useEffect(() => {
     if (requestedTab === "estado") setActiveTab("estado");
   }, [requestedTab]);
+
+  useEffect(() => {
+    if (initialPaymentAmount && Number(initialPaymentAmount) > 0) setPaymentOpen(true);
+  }, [initialPaymentAmount]);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -279,6 +284,7 @@ export default function ClienteDetail() {
           onOpenChange={setPaymentOpen}
           clienteId={id}
           saldoActual={account.data?.saldoActual}
+          defaultAmount={initialPaymentAmount}
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: ["cliente-account", id] });
             queryClient.invalidateQueries({ queryKey: getGetClientePagosQueryKey(id) });

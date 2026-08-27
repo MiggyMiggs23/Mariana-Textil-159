@@ -8,6 +8,8 @@
 import type { CompraConEstadoEstado } from './compraConEstadoEstado';
 
 export interface CompraConEstado {
+  /** Identificador del movimiento COMPRA en el ledger del proveedor */
+  movimientoId: number;
   entradaId: number;
   folio: number;
   fecha: Date;

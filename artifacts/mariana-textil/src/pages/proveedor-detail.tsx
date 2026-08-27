@@ -41,6 +41,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { hasPermission, Modules } from "@/lib/permisos";
 import { formatNumber } from "@workspace/number-format";
 import { ProveedorPagoDialog } from "@/components/proveedor-pago-dialog";
+import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { ProveedorCompraDetalle } from "@/components/proveedor-compra-detalle";
 
 // Helper for generic API errors
@@ -184,12 +185,17 @@ export default function ProveedorDetail() {
   );
 
   // ----- PAGOS TAB -----
+  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const initialImporte = searchParams.get("importe");
+
   const { data: estadoCuenta, isLoading: isEstadoCuentaLoading } = useEstadoCuentaProveedor(provId, {}, {
     query: { enabled: !!provId && canViewFinanzas, queryKey: getEstadoCuentaProveedorQueryKey(provId, {}) }
   });
 
-  const [isPagoOpen, setIsPagoOpen] = useState(false);
+  const [isPagoOpen, setIsPagoOpen] = useState(!!initialImporte);
   const [detalleCompraId, setDetalleCompraId] = useState<number | null>(null);
+
+  const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; compra?: NonNullable<typeof comprasData>["items"][number] }>({ open: false });
 
   const [isAjusteOpen, setIsAjusteOpen] = useState(false);
 
@@ -501,7 +507,7 @@ export default function ProveedorDetail() {
                       <TableHead className="text-right">Abonado</TableHead>
                       <TableHead className="text-right">Saldo</TableHead>
                       <TableHead>Estado</TableHead>
-                      {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && <TableHead className="w-[100px]"></TableHead>}
+                      {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && <TableHead className="w-[100px] text-right no-print">Acciones</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -555,7 +561,20 @@ export default function ProveedorDetail() {
                               {compra.estado}
                             </Badge>
                           </TableCell>
-
+                          {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
+                            <TableCell className="text-right no-print">
+                              {parseFloat(compra.saldoPendiente) > 0 && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 text-[10px] uppercase font-bold"
+                                  onClick={(e) => { e.stopPropagation(); setDirigidoDialog({ open: true, compra }); }}
+                                >
+                                  Dirigido
+                                </Button>
+                              )}
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))
                     )}
@@ -1014,11 +1033,28 @@ export default function ProveedorDetail() {
           onOpenChange={setIsPagoOpen}
           proveedorId={provId}
           saldoActual={estadoCuenta?.saldoActual}
+          defaultAmount={initialImporte || ""}
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: getListComprasProveedorQueryKey(provId) });
             queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(provId) });
           }}
         />
+
+        {dirigidoDialog.compra && (
+          <SolicitudPagoDirigidoDialog
+            open={dirigidoDialog.open}
+            onOpenChange={(val) => !val && setDirigidoDialog({ open: false })}
+            tipo="PROVEEDOR"
+            entidadId={provId}
+            documentoMovimientoId={dirigidoDialog.compra.movimientoId}
+            folio={dirigidoDialog.compra.folio || "—"}
+            saldoPendiente={dirigidoDialog.compra.saldoPendiente}
+            onSuccess={() => {
+               queryClient.invalidateQueries({ queryKey: getListComprasProveedorQueryKey(provId) });
+               queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(provId) });
+            }}
+          />
+        )}
         <ProveedorCompraDetalle
           open={!!detalleCompraId}
           onOpenChange={(val) => !val && setDetalleCompraId(null)}

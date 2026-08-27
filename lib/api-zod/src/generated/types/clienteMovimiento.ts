@@ -10,6 +10,7 @@ import type { ClienteMovimientoDiasPlazo } from './clienteMovimientoDiasPlazo';
 import type { ClienteMovimientoEstado } from './clienteMovimientoEstado';
 
 export interface ClienteMovimiento {
+  movimientoId?: number;
   tipo?: string;
   importe?: string;
   fecha?: Date;

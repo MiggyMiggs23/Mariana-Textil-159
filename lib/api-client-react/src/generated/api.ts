@@ -148,6 +148,7 @@ import type {
   ListProveedorPagosParams,
   ListRollosParams,
   ListSalidasParams,
+  ListSolicitudesPagoDirigidoParams,
   ListarHistorialEtiquetas200,
   ListarHistorialEtiquetasParams,
   ListarTicketsCajaParams,
@@ -157,6 +158,7 @@ import type {
   LocationInput,
   LocationUpdate,
   LoginInput,
+  MotivoRechazoPagoDirigidoInput,
   MotivoReversoInput,
   MotivoSalidaInput,
   MovimientoRow,
@@ -218,6 +220,10 @@ import type {
   SesionCajaAperturaInput,
   SesionCajaCierreInput,
   SesionCajaHistorialItem,
+  SolicitudPagoDirigido,
+  SolicitudPagoDirigidoAplicada,
+  SolicitudPagoDirigidoInput,
+  SolicitudesPagoDirigidoResult,
   TicketCajaResumen,
   TicketCancelacionInput,
   TicketCobroInput,
@@ -260,6 +266,304 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getListSolicitudesPagoDirigidoUrl = (params?: ListSolicitudesPagoDirigidoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pagos-dirigidos?${stringifiedParams}` : `/api/pagos-dirigidos`
+}
+
+/**
+ * @summary Lista la cola de pagos dirigidos según el alcance del usuario
+ */
+export const listSolicitudesPagoDirigido = async (params?: ListSolicitudesPagoDirigidoParams, options?: Parameters<typeof customFetch>[1]): Promise<SolicitudesPagoDirigidoResult> => {
+
+  return customFetch<SolicitudesPagoDirigidoResult>(getListSolicitudesPagoDirigidoUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSolicitudesPagoDirigidoQueryKey = (params?: ListSolicitudesPagoDirigidoParams,) => {
+    return [
+    `/api/pagos-dirigidos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSolicitudesPagoDirigidoQueryOptions = <TData = Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>, TError = ErrorType<UnauthorizedResponse>>(params?: ListSolicitudesPagoDirigidoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSolicitudesPagoDirigidoQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>> = ({ signal }) => listSolicitudesPagoDirigido(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSolicitudesPagoDirigidoQueryResult = NonNullable<Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>>
+export type ListSolicitudesPagoDirigidoQueryError = ErrorType<UnauthorizedResponse>
+
+
+/**
+ * @summary Lista la cola de pagos dirigidos según el alcance del usuario
+ */
+
+export function useListSolicitudesPagoDirigido<TData = Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>, TError = ErrorType<UnauthorizedResponse>>(
+ params?: ListSolicitudesPagoDirigidoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSolicitudesPagoDirigido>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSolicitudesPagoDirigidoQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateSolicitudPagoDirigidoUrl = () => {
+
+
+
+
+  return `/api/pagos-dirigidos`
+}
+
+/**
+ * @summary Solicita una excepción de aplicación FIFO; ADMIN la aplica inmediatamente
+ */
+export const createSolicitudPagoDirigido = async (solicitudPagoDirigidoInput: SolicitudPagoDirigidoInput, options?: Parameters<typeof customFetch>[1]): Promise<SolicitudPagoDirigido> => {
+
+  return customFetch<SolicitudPagoDirigido>(getCreateSolicitudPagoDirigidoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(solicitudPagoDirigidoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateSolicitudPagoDirigidoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSolicitudPagoDirigido>>, TError,{data: BodyType<SolicitudPagoDirigidoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSolicitudPagoDirigido>>, TError,{data: BodyType<SolicitudPagoDirigidoInput>}, TContext> => {
+
+const mutationKey = ['createSolicitudPagoDirigido'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSolicitudPagoDirigido>>, {data: BodyType<SolicitudPagoDirigidoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSolicitudPagoDirigido(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSolicitudPagoDirigidoMutationResult = NonNullable<Awaited<ReturnType<typeof createSolicitudPagoDirigido>>>
+    export type CreateSolicitudPagoDirigidoMutationBody = BodyType<SolicitudPagoDirigidoInput>
+    export type CreateSolicitudPagoDirigidoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Solicita una excepción de aplicación FIFO; ADMIN la aplica inmediatamente
+ */
+export const useCreateSolicitudPagoDirigido = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSolicitudPagoDirigido>>, TError,{data: BodyType<SolicitudPagoDirigidoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createSolicitudPagoDirigido>>,
+        TError,
+        {data: BodyType<SolicitudPagoDirigidoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateSolicitudPagoDirigidoMutationOptions(options));
+    }
+
+export const getAprobarSolicitudPagoDirigidoUrl = (id: number,) => {
+
+
+
+
+  return `/api/pagos-dirigidos/${id}/aprobar`
+}
+
+/**
+ * @summary Aprueba y aplica una solicitud de pago dirigido (ADMIN)
+ */
+export const aprobarSolicitudPagoDirigido = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SolicitudPagoDirigidoAplicada> => {
+
+  return customFetch<SolicitudPagoDirigidoAplicada>(getAprobarSolicitudPagoDirigidoUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getAprobarSolicitudPagoDirigidoMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['aprobarSolicitudPagoDirigido'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  aprobarSolicitudPagoDirigido(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AprobarSolicitudPagoDirigidoMutationResult = NonNullable<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>>
+
+    export type AprobarSolicitudPagoDirigidoMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Aprueba y aplica una solicitud de pago dirigido (ADMIN)
+ */
+export const useAprobarSolicitudPagoDirigido = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getAprobarSolicitudPagoDirigidoMutationOptions(options));
+    }
+
+export const getRechazarSolicitudPagoDirigidoUrl = (id: number,) => {
+
+
+
+
+  return `/api/pagos-dirigidos/${id}/rechazar`
+}
+
+/**
+ * @summary Rechaza una solicitud, conservando sus datos para captura FIFO posterior (ADMIN)
+ */
+export const rechazarSolicitudPagoDirigido = async (id: number,
+    motivoRechazoPagoDirigidoInput: MotivoRechazoPagoDirigidoInput, options?: Parameters<typeof customFetch>[1]): Promise<SolicitudPagoDirigido> => {
+
+  return customFetch<SolicitudPagoDirigido>(getRechazarSolicitudPagoDirigidoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(motivoRechazoPagoDirigidoInput)
+  }
+);}
+
+
+
+
+
+export const getRechazarSolicitudPagoDirigidoMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rechazarSolicitudPagoDirigido>>, TError,{id: number;data: BodyType<MotivoRechazoPagoDirigidoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof rechazarSolicitudPagoDirigido>>, TError,{id: number;data: BodyType<MotivoRechazoPagoDirigidoInput>}, TContext> => {
+
+const mutationKey = ['rechazarSolicitudPagoDirigido'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rechazarSolicitudPagoDirigido>>, {id: number;data: BodyType<MotivoRechazoPagoDirigidoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  rechazarSolicitudPagoDirigido(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RechazarSolicitudPagoDirigidoMutationResult = NonNullable<Awaited<ReturnType<typeof rechazarSolicitudPagoDirigido>>>
+    export type RechazarSolicitudPagoDirigidoMutationBody = BodyType<MotivoRechazoPagoDirigidoInput>
+    export type RechazarSolicitudPagoDirigidoMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
+
+    /**
+ * @summary Rechaza una solicitud, conservando sus datos para captura FIFO posterior (ADMIN)
+ */
+export const useRechazarSolicitudPagoDirigido = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rechazarSolicitudPagoDirigido>>, TError,{id: number;data: BodyType<MotivoRechazoPagoDirigidoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof rechazarSolicitudPagoDirigido>>,
+        TError,
+        {id: number;data: BodyType<MotivoRechazoPagoDirigidoInput>},
+        TContext
+      > => {
+      return useMutation(getRechazarSolicitudPagoDirigidoMutationOptions(options));
+    }
 
 export const getHealthCheckUrl = () => {
 

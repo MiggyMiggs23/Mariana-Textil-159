@@ -9,6 +9,155 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Lista la cola de pagos dirigidos según el alcance del usuario
+ */
+
+
+
+export const ListSolicitudesPagoDirigidoQueryParams = zod.object({
+  "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']).optional(),
+  "entidadId": zod.coerce.number().min(1).optional(),
+  "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']).optional()
+})
+
+export const ListSolicitudesPagoDirigidoResponse = zod.object({
+  "solicitudes": zod.array(zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
+  "entidadId": zod.number(),
+  "documentoMovimientoId": zod.number(),
+  "importe": zod.string(),
+  "formaPago": zod.string(),
+  "cuentaDestino": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().nullish(),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "motivo": zod.string(),
+  "motivoRechazo": zod.string().nullish(),
+  "solicitanteId": zod.number(),
+  "solicitanteNombre": zod.string(),
+  "autorizadorId": zod.number().nullish(),
+  "autorizadorNombre": zod.string().nullish(),
+  "contraparteNombre": zod.string(),
+  "documentoFolio": zod.string(),
+  "movimientoId": zod.number().nullish(),
+  "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
+  "createdAt": zod.coerce.date()
+}))
+})
+
+
+/**
+ * @summary Solicita una excepción de aplicación FIFO; ADMIN la aplica inmediatamente
+ */
+
+
+export const createSolicitudPagoDirigidoBodyImporteExclusiveMin = 0;
+
+
+export const createSolicitudPagoDirigidoBodyMotivoMin = 10;
+
+
+
+export const CreateSolicitudPagoDirigidoBody = zod.object({
+  "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
+  "entidadId": zod.number().min(1),
+  "documentoMovimientoId": zod.number().min(1),
+  "importe": zod.number().gt(createSolicitudPagoDirigidoBodyImporteExclusiveMin),
+  "formaPago": zod.string().min(1),
+  "cuentaDestino": zod.string().optional(),
+  "fechaEfectiva": zod.coerce.date().optional(),
+  "referencia": zod.string().optional(),
+  "notas": zod.string().optional(),
+  "motivo": zod.string().min(createSolicitudPagoDirigidoBodyMotivoMin)
+})
+
+export const CreateSolicitudPagoDirigidoResponse = zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
+  "entidadId": zod.number(),
+  "documentoMovimientoId": zod.number(),
+  "importe": zod.string(),
+  "formaPago": zod.string(),
+  "cuentaDestino": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().nullish(),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "motivo": zod.string(),
+  "motivoRechazo": zod.string().nullish(),
+  "solicitanteId": zod.number(),
+  "solicitanteNombre": zod.string(),
+  "autorizadorId": zod.number().nullish(),
+  "autorizadorNombre": zod.string().nullish(),
+  "contraparteNombre": zod.string(),
+  "documentoFolio": zod.string(),
+  "movimientoId": zod.number().nullish(),
+  "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Aprueba y aplica una solicitud de pago dirigido (ADMIN)
+ */
+
+
+
+export const AprobarSolicitudPagoDirigidoParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const AprobarSolicitudPagoDirigidoResponse = zod.object({
+  "solicitudId": zod.number(),
+  "movimientoId": zod.number(),
+  "estado": zod.enum(['APROBADA'])
+})
+
+
+/**
+ * @summary Rechaza una solicitud, conservando sus datos para captura FIFO posterior (ADMIN)
+ */
+
+
+
+export const RechazarSolicitudPagoDirigidoParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const rechazarSolicitudPagoDirigidoBodyMotivoRechazoMin = 10;
+
+
+
+export const RechazarSolicitudPagoDirigidoBody = zod.object({
+  "motivoRechazo": zod.string().min(rechazarSolicitudPagoDirigidoBodyMotivoRechazoMin)
+})
+
+export const RechazarSolicitudPagoDirigidoResponse = zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
+  "entidadId": zod.number(),
+  "documentoMovimientoId": zod.number(),
+  "importe": zod.string(),
+  "formaPago": zod.string(),
+  "cuentaDestino": zod.string().nullish(),
+  "fechaEfectiva": zod.coerce.date().nullish(),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "motivo": zod.string(),
+  "motivoRechazo": zod.string().nullish(),
+  "solicitanteId": zod.number(),
+  "solicitanteNombre": zod.string(),
+  "autorizadorId": zod.number().nullish(),
+  "autorizadorNombre": zod.string().nullish(),
+  "contraparteNombre": zod.string(),
+  "documentoFolio": zod.string(),
+  "movimientoId": zod.number().nullish(),
+  "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -1042,6 +1191,7 @@ export const ListComprasProveedorQueryParams = zod.object({
 
 export const ListComprasProveedorResponse = zod.object({
   "items": zod.array(zod.object({
+  "movimientoId": zod.number().describe('Identificador del movimiento COMPRA en el ledger del proveedor'),
   "entradaId": zod.number(),
   "folio": zod.number(),
   "fecha": zod.coerce.date(),
@@ -3350,6 +3500,7 @@ export const GetClienteEstadoCuentaQueryParams = zod.object({
 export const GetClienteEstadoCuentaResponse = zod.object({
   "clienteId": zod.number(),
   "movimientos": zod.array(zod.object({
+  "movimientoId": zod.number().optional(),
   "tipo": zod.string().optional(),
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
@@ -3695,6 +3846,7 @@ export const ReversarClientePagoBody = zod.object({
 })
 
 export const ReversarClientePagoResponse = zod.object({
+  "movimientoId": zod.number().optional(),
   "tipo": zod.string().optional(),
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),

@@ -62,6 +62,7 @@ type NavItem = {
   path: string;
   icon: any;
   module: Module;
+  anyModules?: Module[];
   isClickable: boolean;
   adminOnly?: boolean;
 };
@@ -103,6 +104,14 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
       { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      {
+        name: "Pagos Dirigidos",
+        path: "/pagos-dirigidos",
+        icon: Activity,
+        module: Modules.COBROS_PAGOS,
+        anyModules: [Modules.CLIENTES_FINANZAS, Modules.PROVEEDORES_FINANZAS],
+        isClickable: true,
+      },
       { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
     ]
   },
@@ -291,6 +300,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     ? [{
         items: [
           { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
+          { name: "Pagos Dirigidos", path: "/pagos-dirigidos", icon: Activity, module: Modules.COBROS_PAGOS, anyModules: [Modules.CLIENTES_FINANZAS], isClickable: true },
           { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true },
           { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
           { name: "Salidas", path: "/salidas", icon: ArrowDownToLine, module: Modules.SALIDAS, isClickable: true },
@@ -302,7 +312,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="py-4 flex flex-col gap-6">
       {navGroups.map((group) => {
         const allowedItems = group.items.filter(item =>
-          hasPermission(user, item.module, 'ver') &&
+          (item.anyModules
+            ? item.anyModules.some((module) => hasPermission(user, module, "ver") || hasPermission(user, module, "crear"))
+            : hasPermission(user, item.module, "ver")) &&
           (!item.adminOnly || user.rol === Role.ADMIN)
         );
         

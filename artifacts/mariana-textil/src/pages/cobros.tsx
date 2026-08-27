@@ -74,6 +74,7 @@ import { es } from "date-fns/locale";
 import { formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
+import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -89,6 +90,7 @@ function CarteraContent() {
   const [location, setLocation] = useLocation();
   const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
   const initialTicketId = searchParams.get("ticketId");
+  const initialImporte = searchParams.get("importe");
 
   useEffect(() => {
     if (initialTicketId) {
@@ -160,7 +162,9 @@ function CarteraContent() {
     ?.filter((m) => m.tipo === "VENTA_CREDITO" && m.estado !== "PAGADA")
     .sort((a, b) => new Date(a.fecha!).getTime() - new Date(b.fecha!).getTime()) || [];
 
-  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(!!initialImporte);
+  const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; nota?: (typeof notas)[number] }>({ open: false });
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -259,6 +263,7 @@ function CarteraContent() {
                           <th className="p-4 font-bold">Vencimiento</th>
                           <th className="p-4 font-bold text-right">Importe Orig.</th>
                           <th className="p-4 font-bold text-right">Saldo Pendiente</th>
+                          {canCreatePayment && <th className="p-4 font-bold text-right no-print">Acciones</th>}
                         </tr>
                       </thead>
                       <tbody className="divide-y border-b">
@@ -316,6 +321,18 @@ function CarteraContent() {
                               <td className="p-4 text-right font-bold text-destructive tabular-nums">
                                 {nota.saldoPendiente ? formatNumber(nota.saldoPendiente, { kind: "money" }) : "—"}
                               </td>
+                              {canCreatePayment && (
+                                <td className="p-4 text-right no-print">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 text-[10px] uppercase font-bold"
+                                    onClick={(e) => { e.stopPropagation(); setDirigidoDialog({ open: true, nota }); }}
+                                  >
+                                    Dirigido
+                                  </Button>
+                                </td>
+                              )}
                             </tr>
                           );
                         })}
@@ -339,12 +356,30 @@ function CarteraContent() {
         onOpenChange={setPaymentOpen}
         clienteId={clienteId || 0}
         saldoActual={cuenta?.saldoActual}
+        defaultAmount={initialImporte || ""}
         onSuccess={() => {
           if (clienteId) {
             queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(clienteId) });
           }
         }}
       />
+
+      {dirigidoDialog.nota && (
+        <SolicitudPagoDirigidoDialog
+          open={dirigidoDialog.open}
+          onOpenChange={(val) => !val && setDirigidoDialog({ open: false })}
+          tipo="CLIENTE"
+          entidadId={clienteId || 0}
+          documentoMovimientoId={dirigidoDialog.nota.movimientoId!}
+          folio={dirigidoDialog.nota.ticketFolio || "—"}
+          saldoPendiente={dirigidoDialog.nota.saldoPendiente ?? "0"}
+          onSuccess={() => {
+             if (clienteId) {
+               queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(clienteId) });
+             }
+          }}
+        />
+      )}
     </div>
   );
 }

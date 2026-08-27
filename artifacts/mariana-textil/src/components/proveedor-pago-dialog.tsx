@@ -13,11 +13,12 @@ import { formatNumber } from "@workspace/number-format";
 
 type Step = "form" | "preview" | "success";
 
-interface ProveedorPagoDialogProps {
+export interface ProveedorPagoDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   proveedorId: number;
   saldoActual?: string;
+  defaultAmount?: string;
   onSuccess?: () => void;
 }
 
@@ -26,6 +27,7 @@ export function ProveedorPagoDialog({
   onOpenChange,
   proveedorId,
   saldoActual,
+  defaultAmount,
   onSuccess
 }: ProveedorPagoDialogProps) {
   const [step, setStep] = useState<Step>("form");
@@ -45,18 +47,18 @@ export function ProveedorPagoDialog({
   useEffect(() => {
     if (open) {
       setStep("form");
-      setAmount("");
+      setAmount(defaultAmount || "");
       setPaymentMethod(FormaPagoProveedor.TRANSFERENCIA);
       setReference("");
       setPaymentNotes("");
       setPreviewData(null);
       setRealResult(null);
-      
+
       const today = new Date();
       const formatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       setEffectiveDate(formatted);
     }
-  }, [open]);
+  }, [open, defaultAmount]);
 
   const handleInputChange = () => {
     if (step === "preview") {

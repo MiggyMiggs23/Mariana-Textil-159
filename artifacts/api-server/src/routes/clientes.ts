@@ -1043,7 +1043,7 @@ router.get(
              JOIN usuarios u ON u.id=m.usuario_id
              WHERE m.cliente_id=$1
            )
-           SELECT id, tipo, importe::text, ledger.created_at AS fecha,
+           SELECT id AS "movimientoId", tipo, importe::text, ledger.created_at AS fecha,
               ledger.created_at AS "fechaEfectiva",
               CASE WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL
                 THEN CONCAT_WS(' · ', notas, 'Sin plazo definido (crédito legado)')
@@ -1068,7 +1068,7 @@ router.get(
             WHERE ($2::date IS NULL OR ledger.created_at >= $2::date)
               AND ($3::date IS NULL OR ledger.created_at < $3::date+interval '1 day')
              AND ($4::text IS NULL OR tipo::text=$4)
-            ORDER BY ledger.created_at,id`,
+            ORDER BY ledger.created_at,ledger.id`,
           [id, desde, hasta, tipo],
         ),
         pool.query<{ saldo: string }>(

@@ -41,6 +41,7 @@ import { allocateCreditFifo, centsToMoney, moneyToCents } from "./credit-allocat
 export type EstadoCompra = "PAGADA" | "PARCIAL" | "PENDIENTE";
 
 export type CompraConEstado = {
+  movimientoId: number;
   entradaId: number;
   folio: number;
   fecha: string;
@@ -629,6 +630,7 @@ export async function comprasPorProveedor(opts: {
     const costoKilos = parseFloat(c.costo_kilos ?? "0");
     const totalRollos = parseInt(c.total_rollos ?? "0", 10);
     return {
+      movimientoId: Number(c.pp_id),
       entradaId: c.entrada_id ?? 0,
       folio: c.folio ?? 0,
       fecha: fechaDate.toISOString(),

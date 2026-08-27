@@ -46,6 +46,68 @@ tags:
   - name: auditoria
     description: Consulta de la bitácora inmutable exclusiva para ADMIN
 paths:
+  /pagos-dirigidos:
+    get:
+      operationId: listSolicitudesPagoDirigido
+      tags: [clientes, proveedores]
+      summary: Lista la cola de pagos dirigidos según el alcance del usuario
+      parameters:
+        - { in: query, name: tipo, schema: { type: string, enum: [CLIENTE, PROVEEDOR] } }
+        - { in: query, name: entidadId, schema: { type: number, minimum: 1 } }
+        - { in: query, name: estado, schema: { type: string, enum: [PENDIENTE, APROBADA, RECHAZADA] } }
+      responses:
+        "200":
+          description: Solicitudes visibles
+          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudesPagoDirigidoResult" } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      operationId: createSolicitudPagoDirigido
+      tags: [clientes, proveedores]
+      summary: Solicita una excepción de aplicación FIFO; ADMIN la aplica inmediatamente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SolicitudPagoDirigidoInput" }
+      responses:
+        "201":
+          description: Solicitud creada o aplicada
+          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigido" } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /pagos-dirigidos/{id}/aprobar:
+    post:
+      operationId: aprobarSolicitudPagoDirigido
+      tags: [clientes, proveedores]
+      summary: Aprueba y aplica una solicitud de pago dirigido (ADMIN)
+      parameters: [{ in: path, name: id, required: true, schema: { type: number, minimum: 1 } }]
+      responses:
+        "201":
+          description: Aplicación creada
+          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigidoAplicada" } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /pagos-dirigidos/{id}/rechazar:
+    post:
+      operationId: rechazarSolicitudPagoDirigido
+      tags: [clientes, proveedores]
+      summary: Rechaza una solicitud, conservando sus datos para captura FIFO posterior (ADMIN)
+      parameters: [{ in: path, name: id, required: true, schema: { type: number, minimum: 1 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MotivoRechazoPagoDirigidoInput" }
+      responses:
+        "200":
+          description: Solicitud rechazada
+          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigido" } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /healthz:
     get:
       operationId: healthCheck
@@ -4022,6 +4084,64 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    MotivoRechazoPagoDirigidoInput:
+      type: object
+      required: [motivoRechazo]
+      properties:
+        motivoRechazo: { type: string, minLength: 10 }
+    SolicitudesPagoDirigidoResult:
+      type: object
+      required: [solicitudes]
+      properties:
+        solicitudes:
+          type: array
+          items: { $ref: "#/components/schemas/SolicitudPagoDirigido" }
+    SolicitudPagoDirigidoInput:
+      type: object
+      required: [tipo, entidadId, documentoMovimientoId, importe, formaPago, motivo]
+      properties:
+        tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
+        entidadId: { type: number, minimum: 1 }
+        documentoMovimientoId: { type: number, minimum: 1 }
+        importe: { type: number, exclusiveMinimum: 0 }
+        formaPago: { type: string, minLength: 1 }
+        cuentaDestino: { type: string }
+        fechaEfectiva: { type: string, format: date-time }
+        referencia: { type: string }
+        notas: { type: string }
+        motivo: { type: string, minLength: 10 }
+    SolicitudPagoDirigido:
+      type: object
+      required: [id, tipo, entidadId, documentoMovimientoId, importe, formaPago, motivo, solicitanteId, solicitanteNombre, contraparteNombre, documentoFolio, estado, createdAt]
+      properties:
+        id: { type: number }
+        tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
+        entidadId: { type: number }
+        documentoMovimientoId: { type: number }
+        importe: { type: string }
+        formaPago: { type: string }
+        cuentaDestino: { type: ["string", "null"] }
+        fechaEfectiva: { type: ["string", "null"], format: date-time }
+        referencia: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        motivo: { type: string }
+        motivoRechazo: { type: ["string", "null"] }
+        solicitanteId: { type: number }
+        solicitanteNombre: { type: string }
+        autorizadorId: { type: ["number", "null"] }
+        autorizadorNombre: { type: ["string", "null"] }
+        contraparteNombre: { type: string }
+        documentoFolio: { type: string }
+        movimientoId: { type: ["number", "null"] }
+        estado: { type: string, enum: [PENDIENTE, APROBADA, RECHAZADA] }
+        createdAt: { type: string, format: date-time }
+    SolicitudPagoDirigidoAplicada:
+      type: object
+      required: [solicitudId, movimientoId, estado]
+      properties:
+        solicitudId: { type: number }
+        movimientoId: { type: number }
+        estado: { type: string, enum: [APROBADA] }
     AuditoriaEntry:
       type: object
       required: [id, fecha, usuarioId, usuario, rolSnapshot, accion, modulo, entidad, entidadId, sitioId, sitio, ip]
@@ -5136,6 +5256,7 @@ components:
     ClienteMovimiento:
       type: object
       properties:
+        movimientoId: { type: number }
         tipo: { type: string }
         importe: { type: string }
         fecha: { type: string, format: date-time }
@@ -6995,6 +7116,7 @@ components:
       type: object
       required:
         [
+          movimientoId,
           entradaId,
           folio,
           fecha,
@@ -7013,6 +7135,11 @@ components:
           costoPorKilo,
         ]
       properties:
+        movimientoId:
+          {
+            type: number,
+            description: "Identificador del movimiento COMPRA en el ledger del proveedor",
+          }
         entradaId: { type: number }
         folio: { type: number }
         fecha: { type: string, format: date-time }
