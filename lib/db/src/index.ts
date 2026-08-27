@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
+import { assertIsolatedTestDatabaseUrls } from "./lib/test-database-guard";
 export { ensureTicketIvaSchema } from "./lib/ticket-iva-schema";
 export { ensureTicketLineTypesSchema } from "./lib/ticket-line-types-schema";
 export { ensureSalidasSchema } from "./lib/salidas-schema";
@@ -26,22 +27,25 @@ const isAutomatedTestProcess = process.argv.some((argument) =>
   /\.test\.[cm]?[jt]s$/.test(argument),
 );
 
-if (isAutomatedTestProcess) {
-  const testConnectionString = process.env.TEST_DATABASE_URL;
-  if (!testConnectionString) {
-    throw new Error(
-      "TEST_DATABASE_URL must be set before running database tests. Refusing to use the application database.",
-    );
-  }
-  if (testConnectionString === process.env.DATABASE_URL) {
-    throw new Error(
-      "TEST_DATABASE_URL must point to a database different from DATABASE_URL.",
-    );
-  }
-  process.env.DATABASE_URL = testConnectionString;
-}
+const requiresIsolatedTestDatabase =
+  process.env.REQUIRE_ISOLATED_TEST_DATABASE === "1" ||
+  process.env.NODE_ENV === "test" ||
+  isAutomatedTestProcess;
 
-const connectionString = process.env.DATABASE_URL;
+let connectionString = process.env.DATABASE_URL;
+
+if (requiresIsolatedTestDatabase) {
+  const testConnectionString = process.env.TEST_DATABASE_URL;
+  const applicationConnectionString =
+    process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
+  await assertIsolatedTestDatabaseUrls(
+    testConnectionString,
+    applicationConnectionString,
+  );
+  process.env.APPLICATION_DATABASE_URL = applicationConnectionString;
+  process.env.DATABASE_URL = testConnectionString;
+  connectionString = testConnectionString;
+}
 
 if (!connectionString) {
   throw new Error("DATABASE_URL must be set.");

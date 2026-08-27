@@ -794,7 +794,7 @@ export async function compareStores(filters: AnalyticsFilters) {
        WHERE s.ubicacion_id=u.id AND s.estado='CERRADA' AND s.efectivo_contado IS NOT NULL
          AND ($1::timestamptz IS NULL OR s.cerrada_at >= $1)
          AND ($2::timestamptz IS NULL OR s.cerrada_at <= $2)
-     ) cash ON true WHERE u.tipo='TIENDA'
+     ) cash ON true WHERE u.tipo='TIENDA' AND u.activa
      GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,pay.credito,pay.facturado,cash.diferencia
      ORDER BY ventas DESC,u.nombre`,
     condition.values,
@@ -804,7 +804,9 @@ export async function compareStores(filters: AnalyticsFilters) {
   const [priorRows, dailyRows] = await Promise.all([
     pool.query(
       `SELECT t.ubicacion_id "ubicacionId",COALESCE(SUM(t.total),0)::text ventas
-       FROM tickets t WHERE ${priorWhere.text} AND t.estado='VENDIDO'
+       FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
+       WHERE ${priorWhere.text} AND t.estado='VENDIDO'
+         AND u.tipo='TIENDA' AND u.activa
        GROUP BY t.ubicacion_id`,
       priorWhere.values,
     ),
