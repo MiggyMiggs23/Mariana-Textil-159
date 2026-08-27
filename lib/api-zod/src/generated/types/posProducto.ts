@@ -14,5 +14,6 @@ export interface PosProducto {
   color: string;
   unidad: UnidadProducto;
   precioSugerido: string;
+  seVendePorMetro: boolean;
   activo: boolean;
 }

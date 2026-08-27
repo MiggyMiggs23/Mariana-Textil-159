@@ -294,6 +294,7 @@ export * from "./generated/types/precioCambioResultado";
 export * from "./generated/types/precioHistorialItem";
 export * from "./generated/types/precioProducto";
 export * from "./generated/types/precioProductoDetail";
+export * from "./generated/types/precioVentaPorMetroUpdate";
 export * from "./generated/types/producto";
 export * from "./generated/types/productoCompraHistorial";
 export * from "./generated/types/productoComprasResumen";

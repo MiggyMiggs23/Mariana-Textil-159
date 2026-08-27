@@ -5,11 +5,13 @@ import {
   auditoriaTable,
   clientesTable,
   db,
+  ensureProductMeterSchema,
   existenciasTable,
   movimientosCreditoTable,
   notificacionesCreditoTable,
   movimientosTable,
   productosTable,
+  pool,
   rollosTable,
   sesionesCajaTable,
   ticketFolioTable,
@@ -46,6 +48,8 @@ const createdRolloIds: number[] = [];
 const createdTicketIds: number[] = [];
 const createdSessionIds: number[] = [];
 
+await ensureProductMeterSchema(pool);
+
 const [folioBefore] = await db
   .select()
   .from(ticketFolioTable)
@@ -78,7 +82,11 @@ async function makeLocation() {
   return row!.id;
 }
 
-async function makeProduct(precioSugerido = "100.00", unidad: "METRO" | "KILO" = "METRO") {
+async function makeProduct(
+  precioSugerido = "100.00",
+  unidad: "METRO" | "KILO" = "METRO",
+  seVendePorMetro = unidad === "METRO",
+) {
   const tag = `${RUN}-${++seq}`;
   const [row] = await db
     .insert(productosTable)
@@ -88,6 +96,7 @@ async function makeProduct(precioSugerido = "100.00", unidad: "METRO" | "KILO" =
       color: `Color ${tag}`,
       unidad,
       precioSugerido,
+      seVendePorMetro,
     })
     .returning();
   createdProductIds.push(row!.id);
@@ -510,6 +519,34 @@ await test("POS-04 metreado no toca inventario, no factura y solo acepta efectiv
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.totalCobrado, "100.00");
   assert.equal(corte?.efectivoEsperado, "200.00");
+});
+
+await test("POS-04B metreado se rechaza definitivamente cuando el producto está bloqueado", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "METRO", false);
+  const uuid = randomUUID();
+  await assert.rejects(
+    () =>
+      sale({
+        ubicacionId,
+        productoId,
+        cantidad: "2.5",
+        precio: "40",
+        tipo: "METREADO",
+        uuid,
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof PosError);
+      assert.equal(error.code, "METREADO_NO_HABILITADO");
+      assert.match(error.message, /venta por metro no está habilitada/i);
+      return true;
+    },
+  );
+  const rejected = await db
+    .select()
+    .from(ticketsTable)
+    .where(eq(ticketsTable.uuidCliente, uuid));
+  assert.equal(rejected.length, 0);
 });
 
 await test("POS-04A ticket mixto con 2 rollos y 8 metros se crea, guarda y cobra", async () => {

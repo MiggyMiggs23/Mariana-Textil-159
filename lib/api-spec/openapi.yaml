@@ -365,6 +365,28 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
+  /precios/{id}/venta-por-metro:
+    patch:
+      operationId: updatePrecioVentaPorMetro
+      tags: [precios]
+      summary: Habilita o bloquea la venta metreada de un producto (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/ProductoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PrecioVentaPorMetroUpdate" }
+      responses:
+        "200":
+          description: Interruptor actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PrecioProducto" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /productos/{id}:
     get:
       operationId: getProducto
@@ -5212,6 +5234,7 @@ components:
           tela,
           color,
           unidad,
+          seVendePorMetro,
           notas,
           activo,
           rollos,
@@ -5227,6 +5250,7 @@ components:
         color: { type: string }
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
+        seVendePorMetro: { type: boolean }
         precioSugerido: { type: string }
         notas:
           type: ["string", "null"]
@@ -5245,6 +5269,7 @@ components:
           tela,
           color,
           unidad,
+          seVendePorMetro,
           notas,
           activo,
           rollos,
@@ -5264,6 +5289,7 @@ components:
         color: { type: string }
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
+        seVendePorMetro: { type: boolean }
         precioSugerido: { type: string }
         notas:
           type: ["string", "null"]
@@ -5322,13 +5348,14 @@ components:
       enum: [VERDE, AMBAR, ROJO, SIN_COSTO]
     PrecioProducto:
       type: object
-      required: [id, sku, tela, color, unidad, activo, costoUnitarioPonderado, precioLista, margenPesosUnidad, margenPorcentajeSubtotal, semaforo, ultimoCambioPrecio]
+      required: [id, sku, tela, color, unidad, seVendePorMetro, activo, costoUnitarioPonderado, precioLista, margenPesosUnidad, margenPorcentajeSubtotal, semaforo, ultimoCambioPrecio]
       properties:
         id: { type: number }
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
         unidad: { $ref: "#/components/schemas/UnidadProducto" }
+        seVendePorMetro: { type: boolean }
         activo: { type: boolean }
         costoUnitarioPonderado: { type: ["string", "null"] }
         precioLista: { type: string }
@@ -5336,6 +5363,11 @@ components:
         margenPorcentajeSubtotal: { type: ["string", "null"] }
         semaforo: { $ref: "#/components/schemas/SemaforoPrecio" }
         ultimoCambioPrecio: { type: ["string", "null"], format: date-time }
+    PrecioVentaPorMetroUpdate:
+      type: object
+      required: [seVendePorMetro]
+      properties:
+        seVendePorMetro: { type: boolean }
     PrecioHistorialItem:
       type: object
       required: [id, precioListaAnterior, precioListaNuevo, costoUnitarioPonderado, margenPesosUnidad, margenPorcentajeSubtotal, motivo, advertenciaBajoCosto, usuarioId, createdAt]
@@ -6861,7 +6893,7 @@ components:
         precioSugerido: { type: string }
     PosProducto:
       type: object
-      required: [id, sku, tela, color, unidad, precioSugerido, activo]
+      required: [id, sku, tela, color, unidad, precioSugerido, seVendePorMetro, activo]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -6870,6 +6902,7 @@ components:
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         precioSugerido: { type: string }
+        seVendePorMetro: { type: boolean }
         activo: { type: boolean }
     PosBusquedaResult:
       type: object

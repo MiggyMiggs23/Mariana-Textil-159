@@ -1873,6 +1873,7 @@ export interface Producto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
+  seVendePorMetro: boolean;
   precioSugerido?: string;
   /** @nullable */
   notas: string | null;
@@ -1890,6 +1891,7 @@ export interface ProductoDetail {
   tela: string;
   color: string;
   unidad: UnidadProducto;
+  seVendePorMetro: boolean;
   precioSugerido?: string;
   /** @nullable */
   notas: string | null;
@@ -1962,6 +1964,7 @@ export interface PrecioProducto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
+  seVendePorMetro: boolean;
   activo: boolean;
   /** @nullable */
   costoUnitarioPonderado: string | null;
@@ -1973,6 +1976,10 @@ export interface PrecioProducto {
   semaforo: SemaforoPrecio;
   /** @nullable */
   ultimoCambioPrecio: string | null;
+}
+
+export interface PrecioVentaPorMetroUpdate {
+  seVendePorMetro: boolean;
 }
 
 export interface PrecioHistorialItem {
@@ -3204,6 +3211,7 @@ export interface PosProducto {
   color: string;
   unidad: UnidadProducto;
   precioSugerido: string;
+  seVendePorMetro: boolean;
   activo: boolean;
 }
 

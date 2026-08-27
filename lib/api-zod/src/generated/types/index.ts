@@ -307,6 +307,7 @@ export * from './precioCambioResultado';
 export * from './precioHistorialItem';
 export * from './precioProducto';
 export * from './precioProductoDetail';
+export * from './precioVentaPorMetroUpdate';
 export * from './producto';
 export * from './productoCompraHistorial';
 export * from './productoComprasResumen';

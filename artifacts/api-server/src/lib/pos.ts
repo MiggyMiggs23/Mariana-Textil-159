@@ -492,6 +492,12 @@ export async function crearTicket(
         "METREADO_UNIT_REQUIRED",
       );
     }
+    if (tipo === "METREADO" && !producto.seVendePorMetro) {
+      throw new PosError(
+        `La venta por metro no está habilitada para ${productName(producto.tela, producto.color)}.`,
+        "METREADO_NO_HABILITADO",
+      );
+    }
     const rollo =
       linea.rolloId == null ? null : (rolloMap.get(linea.rolloId) ?? null);
     if (tipo === "METREADO" && linea.rolloId != null) {
@@ -1689,6 +1695,7 @@ export async function buscarPos(
           color: productosTable.color,
           unidad: productosTable.unidad,
           precioSugerido: productosTable.precioSugerido,
+          seVendePorMetro: productosTable.seVendePorMetro,
           activo: productosTable.activo,
         })
         .from(productosTable)

@@ -326,6 +326,7 @@ export const ListProductosResponseItem = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
@@ -362,6 +363,7 @@ export const CreateProductoResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
@@ -388,6 +390,7 @@ export const ListPreciosResponseItem = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
   "precioLista": zod.string(),
@@ -412,6 +415,7 @@ export const GetPrecioResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
   "precioLista": zod.string(),
@@ -470,6 +474,7 @@ export const ChangePrecioResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
   "precioLista": zod.string(),
@@ -494,6 +499,34 @@ export const ChangePrecioResponse = zod.object({
 
 
 /**
+ * @summary Habilita o bloquea la venta metreada de un producto (ADMIN)
+ */
+export const UpdatePrecioVentaPorMetroParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdatePrecioVentaPorMetroBody = zod.object({
+  "seVendePorMetro": zod.boolean()
+})
+
+export const UpdatePrecioVentaPorMetroResponse = zod.object({
+  "id": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
+  "activo": zod.boolean(),
+  "costoUnitarioPonderado": zod.string().nullable(),
+  "precioLista": zod.string(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
+  "ultimoCambioPrecio": zod.coerce.date().nullable()
+})
+
+
+/**
  * @summary Obtiene el detalle de un producto
  */
 export const GetProductoParams = zod.object({
@@ -506,6 +539,7 @@ export const GetProductoResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
@@ -579,6 +613,7 @@ export const UpdateProductoResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
+  "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
@@ -3283,6 +3318,7 @@ export const BuscarPosResponse = zod.object({
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
   "precioSugerido": zod.string(),
+  "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean()
 }))
 })

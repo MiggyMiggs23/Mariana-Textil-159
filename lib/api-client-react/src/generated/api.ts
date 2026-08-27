@@ -169,6 +169,7 @@ import type {
   PrecioCambioResultado,
   PrecioProducto,
   PrecioProductoDetail,
+  PrecioVentaPorMetroUpdate,
   Producto,
   ProductoDetail,
   ProductoInput,
@@ -1452,6 +1453,78 @@ export const useChangePrecio = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getChangePrecioMutationOptions(options));
+    }
+
+export const getUpdatePrecioVentaPorMetroUrl = (id: number,) => {
+
+
+
+
+  return `/api/precios/${id}/venta-por-metro`
+}
+
+/**
+ * @summary Habilita o bloquea la venta metreada de un producto (ADMIN)
+ */
+export const updatePrecioVentaPorMetro = async (id: number,
+    precioVentaPorMetroUpdate: PrecioVentaPorMetroUpdate, options?: Parameters<typeof customFetch>[1]): Promise<PrecioProducto> => {
+
+  return customFetch<PrecioProducto>(getUpdatePrecioVentaPorMetroUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(precioVentaPorMetroUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdatePrecioVentaPorMetroMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>, TError,{id: number;data: BodyType<PrecioVentaPorMetroUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>, TError,{id: number;data: BodyType<PrecioVentaPorMetroUpdate>}, TContext> => {
+
+const mutationKey = ['updatePrecioVentaPorMetro'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>, {id: number;data: BodyType<PrecioVentaPorMetroUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updatePrecioVentaPorMetro(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePrecioVentaPorMetroMutationResult = NonNullable<Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>>
+    export type UpdatePrecioVentaPorMetroMutationBody = BodyType<PrecioVentaPorMetroUpdate>
+    export type UpdatePrecioVentaPorMetroMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Habilita o bloquea la venta metreada de un producto (ADMIN)
+ */
+export const useUpdatePrecioVentaPorMetro = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>, TError,{id: number;data: BodyType<PrecioVentaPorMetroUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>,
+        TError,
+        {id: number;data: BodyType<PrecioVentaPorMetroUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdatePrecioVentaPorMetroMutationOptions(options));
     }
 
 export const getGetProductoUrl = (id: number,) => {

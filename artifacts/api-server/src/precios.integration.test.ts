@@ -12,10 +12,11 @@ if (!testUrl) {
   throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
 } else {
   test("precios is ADMIN-only and changes only catalog price/history", async () => {
-    const [{ pool }, { default: app }] = await Promise.all([
+    const [{ pool, ensureProductMeterSchema }, { default: app }] = await Promise.all([
       import("@workspace/db"),
       import("./app"),
     ]);
+    await ensureProductMeterSchema(pool);
     const tag = `PRECIO-IT-${randomUUID()}`;
     const expectedDb = decodeURIComponent(new URL(testUrl).pathname.slice(1));
     let server: Server | undefined;
@@ -91,12 +92,30 @@ if (!testUrl) {
       const address = server.address(); assert(address && typeof address !== "string");
       baseUrl = `http://127.0.0.1:${address.port}`;
       // Non-admin has no permission-table escape hatch: every endpoint is 403.
-      for (const [method, path] of [["GET","/api/precios"], ["GET",`/api/precios/${product.id}`], ["POST",`/api/precios/${product.id}/cambiar`]] as const) {
-        assert.equal((await request(method, path, sessions[1]!, method === "POST" ? { precioListaNuevo: "90.00", motivo: "blocked" } : undefined)).response.status, 403);
+      for (const [method, path, body] of [
+        ["GET","/api/precios", undefined],
+        ["GET",`/api/precios/${product.id}`, undefined],
+        ["POST",`/api/precios/${product.id}/cambiar`, { precioListaNuevo: "90.00", motivo: "blocked" }],
+        ["PATCH",`/api/precios/${product.id}/venta-por-metro`, { seVendePorMetro: true }],
+      ] as const) {
+        assert.equal((await request(method, path, sessions[1]!, body)).response.status, 403);
       }
       const listed = await request("GET", "/api/precios?search=SKU&unidad=METRO&semaforo=VERDE", sessions[0]!);
       assert.equal(listed.response.status, 200); assert.equal(listed.body[0].costoUnitarioPonderado, "18.00");
       assert.equal(listed.body[0].semaforo, "VERDE");
+      assert.equal(listed.body[0].seVendePorMetro, false);
+      const enabled = await request("PATCH", `/api/precios/${product.id}/venta-por-metro`, sessions[0]!, { seVendePorMetro: true });
+      assert.equal(enabled.response.status, 200);
+      assert.equal(enabled.body.seVendePorMetro, true);
+      const kiloRejected = await request("PATCH", `/api/precios/${noCostProduct.id}/venta-por-metro`, sessions[0]!, { seVendePorMetro: true });
+      assert.equal(kiloRejected.response.status, 400);
+      assert.equal(kiloRejected.body.code, "KILO_VENTA_POR_METRO_NO_PERMITIDA");
+      const kiloInvariant = await pool.query("SELECT se_vende_por_metro FROM productos WHERE id=$1", [noCostProduct.id]);
+      assert.equal(kiloInvariant.rows[0]?.se_vende_por_metro, false);
+      await assert.rejects(
+        mutate("UPDATE productos SET se_vende_por_metro=true WHERE id=$1", [noCostProduct.id]),
+        (error: any) => error?.code === "23514",
+      );
       const noCost = await request("GET", "/api/precios?search=NOCOST", sessions[0]!);
       assert.equal(noCost.body[0].costoUnitarioPonderado, null);
       assert.equal(noCost.body[0].semaforo, "SIN_COSTO");

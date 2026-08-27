@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { 
   useListPrecios, 
+  useUpdatePrecioVentaPorMetro,
   getListPreciosQueryKey,
   UnidadProducto,
   SemaforoPrecio,
@@ -17,8 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Tag, Filter, CheckCircle2, AlertCircle, AlertTriangle, AlertOctagon, HelpCircle } from "lucide-react";
 import { format } from "date-fns";
+import { Switch } from "@/components/ui/switch";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function PreciosList() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [unidad, setUnidad] = useState<string>("all");
@@ -35,6 +40,28 @@ export default function PreciosList() {
       queryKey: getListPreciosQueryKey(queryParams)
     }
   });
+  const updateVentaPorMetro = useUpdatePrecioVentaPorMetro();
+
+  const setVentaPorMetro = (product: PrecioProducto, checked: boolean) => {
+    updateVentaPorMetro.mutate(
+      { id: product.id, data: { seVendePorMetro: checked } },
+      {
+        onSuccess: () => {
+          toast.success(
+            checked
+              ? "Venta por metro habilitada"
+              : "Venta por metro deshabilitada",
+          );
+          queryClient.invalidateQueries({ queryKey: getListPreciosQueryKey() });
+        },
+        onError: (error: any) => {
+          toast.error("No se pudo actualizar el interruptor", {
+            description: error?.data?.error ?? error?.message,
+          });
+        },
+      },
+    );
+  };
 
   const getSemaforoBadge = (s: SemaforoPrecio) => {
     switch (s) {
@@ -112,6 +139,7 @@ export default function PreciosList() {
                     <TableHead className="w-[120px]">SKU</TableHead>
                     <TableHead>Producto</TableHead>
                     <TableHead className="w-[80px] text-center">Unidad</TableHead>
+                    <TableHead className="w-[190px]">Venta por metro</TableHead>
                     <TableHead className="text-right">Costo Pond.</TableHead>
                     <TableHead className="text-right">Precio Lista</TableHead>
                     <TableHead className="text-right">Margen $</TableHead>
@@ -123,13 +151,13 @@ export default function PreciosList() {
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
                         Cargando precios...
                       </TableCell>
                     </TableRow>
                   ) : !precios || precios.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
                         No se encontraron productos con precios para los filtros seleccionados.
                       </TableCell>
                     </TableRow>
@@ -147,6 +175,30 @@ export default function PreciosList() {
                         </TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground font-medium uppercase">
                           {precio.unidad}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Switch
+                              checked={precio.seVendePorMetro}
+                              disabled={
+                                precio.unidad === UnidadProducto.KILO ||
+                                (updateVentaPorMetro.isPending &&
+                                  updateVentaPorMetro.variables?.id === precio.id)
+                              }
+                              onCheckedChange={(checked) =>
+                                setVentaPorMetro(precio, checked)
+                              }
+                              aria-label={`Venta por metro de ${precio.tela} ${precio.color}`}
+                              data-testid={`switch-venta-metro-${precio.sku}`}
+                            />
+                            <span className="text-xs text-muted-foreground">
+                              {precio.unidad === UnidadProducto.KILO
+                                ? "No disponible: los kilos solo se venden por rollo."
+                                : precio.seVendePorMetro
+                                  ? "Habilitada"
+                                  : "Mayoreo y menudeo bloqueados"}
+                            </span>
+                          </div>
                         </TableCell>
                         <TableCell className="text-right text-muted-foreground">
                           {precio.costoUnitarioPonderado ? formatNumber(precio.costoUnitarioPonderado, { kind: "money" }) : "—"}

@@ -8,6 +8,9 @@ import {
   GetPrecioResponse,
   ListPreciosQueryParams,
   ListPreciosResponse,
+  UpdatePrecioVentaPorMetroBody,
+  UpdatePrecioVentaPorMetroParams,
+  UpdatePrecioVentaPorMetroResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -76,6 +79,7 @@ async function presentProduct(product: Product, database: Pick<typeof db, "selec
     tela: product.tela,
     color: product.color,
     unidad: product.unidad,
+    seVendePorMetro: product.seVendePorMetro,
     activo: product.activo,
     precioLista: product.precioSugerido,
     ...metrics,
@@ -160,6 +164,55 @@ router.post("/precios/:id/cambiar", requireAdmin, async (req, res): Promise<void
   }
   const product = await presentProduct(result.product);
   res.json(ChangePrecioResponse.parse({ producto: { ...product, ultimoCambioPrecio: result.change.createdAt }, cambio: presentHistory(result.change) }));
+});
+
+router.patch("/precios/:id/venta-por-metro", requireAdmin, async (req, res): Promise<void> => {
+  const params = UpdatePrecioVentaPorMetroParams.safeParse(req.params);
+  const body = UpdatePrecioVentaPorMetroBody.safeParse(req.body);
+  if (!params.success || !body.success) {
+    res.status(400).json({ error: "Valor del interruptor inválido." });
+    return;
+  }
+
+  const result = await db.transaction(async (tx) => {
+    const [before] = await tx
+      .select()
+      .from(productosTable)
+      .where(eq(productosTable.id, params.data.id))
+      .for("update")
+      .limit(1);
+    if (!before) return { kind: "not-found" } as const;
+    if (before.unidad === "KILO") {
+      return { kind: "kilo" } as const;
+    }
+    const [updated] = await tx
+      .update(productosTable)
+      .set({ seVendePorMetro: body.data.seVendePorMetro })
+      .where(eq(productosTable.id, before.id))
+      .returning();
+    await tx.insert(auditoriaTable).values({
+      usuarioId: req.auth!.user.id,
+      accion: "CAMBIAR_VENTA_POR_METRO",
+      entidad: "productos",
+      entidadId: String(before.id),
+      datosAntes: { seVendePorMetro: before.seVendePorMetro },
+      datosDespues: { seVendePorMetro: updated!.seVendePorMetro },
+      ip: getRequestIp(req),
+    });
+    return { kind: "updated", product: updated! } as const;
+  });
+  if (result.kind === "not-found") {
+    res.status(404).json({ error: "Producto no encontrado." });
+    return;
+  }
+  if (result.kind === "kilo") {
+    res.status(400).json({
+      error: "Los productos por KILO nunca pueden habilitarse para venta por metro.",
+      code: "KILO_VENTA_POR_METRO_NO_PERMITIDA",
+    });
+    return;
+  }
+  res.json(UpdatePrecioVentaPorMetroResponse.parse(await presentProduct(result.product)));
 });
 
 export default router;

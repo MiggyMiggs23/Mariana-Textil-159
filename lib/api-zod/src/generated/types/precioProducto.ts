@@ -14,6 +14,7 @@ export interface PrecioProducto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
+  seVendePorMetro: boolean;
   activo: boolean;
   /** @nullable */
   costoUnitarioPonderado: string | null;

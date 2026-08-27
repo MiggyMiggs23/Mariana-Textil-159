@@ -1,5 +1,6 @@
 import {
   boolean,
+  check,
   index,
   numeric,
   pgTable,
@@ -8,6 +9,7 @@ import {
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { unidadProductoEnum } from "./enums";
@@ -26,6 +28,7 @@ export const productosTable = pgTable(
     }).notNull(),
     notas: text("notas"),
     activo: boolean("activo").notNull().default(true),
+    seVendePorMetro: boolean("se_vende_por_metro").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -38,6 +41,10 @@ export const productosTable = pgTable(
     unique("productos_tela_color_unique").on(table.tela, table.color),
     index("productos_tela_color_idx").on(table.tela, table.color),
     index("productos_sku_idx").on(table.sku),
+    check(
+      "productos_kilo_no_venta_metro_check",
+      sql`${table.unidad} <> 'KILO' OR ${table.seVendePorMetro} = false`,
+    ),
   ],
 );
 

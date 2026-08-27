@@ -13,6 +13,7 @@ export interface Producto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
+  seVendePorMetro: boolean;
   precioSugerido?: string;
   /** @nullable */
   notas: string | null;

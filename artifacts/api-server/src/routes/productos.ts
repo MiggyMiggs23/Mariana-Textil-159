@@ -155,6 +155,7 @@ function presentProducto(
     tela: row.tela,
     color: row.color,
     unidad: row.unidad,
+    seVendePorMetro: row.seVendePorMetro,
     precioSugerido: row.precioSugerido,
     notas: row.notas,
     activo: row.activo,
@@ -673,6 +674,13 @@ router.patch(
       res.status(400).json({
         error:
           "El precio de lista debe cambiarse mediante el módulo de Precios.",
+      });
+      return;
+    }
+    if (body.data.unidad === "KILO" && before.seVendePorMetro) {
+      res.status(400).json({
+        error:
+          "Deshabilita primero la venta por metro desde el módulo de Precios.",
       });
       return;
     }

@@ -17,6 +17,7 @@ export interface ProductoDetail {
   tela: string;
   color: string;
   unidad: UnidadProducto;
+  seVendePorMetro: boolean;
   precioSugerido?: string;
   /** @nullable */
   notas: string | null;
