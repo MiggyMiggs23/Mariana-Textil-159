@@ -2342,13 +2342,6 @@ export interface ActivarRolloInput {
   uuidCliente?: string | null;
 }
 
-export interface SalidaMostradorInput {
-  /** @nullable */
-  justificacion?: string | null;
-  /** @nullable */
-  uuidCliente?: string | null;
-}
-
 export interface VenderRolloInput {
   /** @nullable */
   justificacion?: string | null;

@@ -70,7 +70,7 @@ async function makeLocation() {
     .insert(ubicacionesTable)
     .values({
       nombre: `${RUN} Tienda ${++seq}`,
-      iniciales: `P${String.fromCharCode(65 + (seq % 26))}`,
+      iniciales: `P${String.fromCharCode(65 + Math.floor(seq / 26))}${String.fromCharCode(65 + (seq % 26))}`,
       tipo: "TIENDA",
     })
     .returning();
@@ -512,11 +512,12 @@ await test("POS-04 metreado no toca inventario, no factura y solo acepta efectiv
   assert.equal(corte?.efectivoEsperado, "200.00");
 });
 
-await test("POS-04A tipo por línea permite ticket mixto y rechaza KILO metreado", async () => {
+await test("POS-04A ticket mixto con 2 rollos y 8 metros se crea, guarda y cobra", async () => {
   const ubicacionId = await makeLocation();
   const productoMetroId = await makeProduct();
   const productoKiloId = await makeProduct("100.00", "KILO");
-  const rollo = await makeRollo(productoMetroId, ubicacionId, "3", "20");
+  const primerRollo = await makeRollo(productoMetroId, ubicacionId, "3", "20");
+  const segundoRollo = await makeRollo(productoMetroId, ubicacionId, "5", "20");
   const mixto = await db.transaction((tx) =>
     crearTicket(
       tx,
@@ -527,8 +528,9 @@ await test("POS-04A tipo por línea permite ticket mixto y rechaza KILO metreado
         facturado: false,
         uuidCliente: randomUUID(),
         lineas: [
-          { rolloId: rollo.id, productoId: productoMetroId, tipo: "NORMAL", cantidad: "3", precioUnitario: "30" },
-          { rolloId: null, productoId: productoMetroId, tipo: "METREADO", cantidad: "2", precioUnitario: "40" },
+          { rolloId: primerRollo.id, productoId: productoMetroId, tipo: "NORMAL", cantidad: "3", precioUnitario: "30" },
+          { rolloId: segundoRollo.id, productoId: productoMetroId, tipo: "NORMAL", cantidad: "5", precioUnitario: "30" },
+          { rolloId: null, productoId: productoMetroId, tipo: "METREADO", cantidad: "8", precioUnitario: "40" },
         ],
         ip: "127.0.0.1",
       },
@@ -537,11 +539,37 @@ await test("POS-04A tipo por línea permite ticket mixto y rechaza KILO metreado
   );
   assert.ok(mixto);
   createdTicketIds.push(mixto!.id);
-  assert.deepEqual(mixto!.lineas.map((linea) => linea.tipo), ["NORMAL", "METREADO"]);
+  assert.deepEqual(mixto!.lineas.map((linea) => linea.tipo), ["NORMAL", "NORMAL", "METREADO"]);
   assert.ok(
-    mixto!.lineas[1] && "costoUnitarioCongelado" in mixto!.lineas[1],
+    mixto!.lineas[2] && "costoUnitarioCongelado" in mixto!.lineas[2],
   );
-  assert.equal(mixto!.lineas[1].costoUnitarioCongelado, null);
+  assert.equal(mixto!.lineas[2].costoUnitarioCongelado, null);
+  assert.equal(mixto!.lineas[2].costoTotalCongelado, null);
+  const session = await db.transaction((tx) =>
+    abrirSesionCaja(tx, {
+      ubicacionId,
+      usuarioId: USER_ID,
+      fondoInicial: "0",
+      ip: "127.0.0.1",
+    }),
+  );
+  createdSessionIds.push(session.id);
+  const cobrado = await db.transaction((tx) =>
+    cobrarTicket(
+      tx,
+      {
+        ticketId: mixto!.id,
+        sesionCajaId: session.id,
+        usuarioId: USER_ID,
+        pagos: [{ formaPago: "EFECTIVO", importe: "560" }],
+        ip: "127.0.0.1",
+      },
+      true,
+    ),
+  );
+  assert.ok(cobrado);
+  assert.equal(cobrado.estado, "VENDIDO");
+  assert.equal(cobrado.total, "560.00");
   await assert.rejects(
     () => sale({
       ubicacionId,

@@ -1144,34 +1144,6 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-  /inventario/rollos/{id}/salida-mostrador:
-    post:
-      operationId: salidaMostrador
-      tags: [inventario]
-      summary: Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
-      parameters:
-        - $ref: "#/components/parameters/RolloId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SalidaMostradorInput"
-      responses:
-        "200":
-          description: Rollo retirado a mostrador
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RolloDetail"
-        "400":
-          $ref: "#/components/responses/ValidationError"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
   /inventario/rollos/{id}/vender:
     post:
       operationId: venderRollo
@@ -5821,11 +5793,6 @@ components:
       properties:
         cantidadReal: { type: string }
         notas: { type: ["string", "null"] }
-        uuidCliente: { type: ["string", "null"] }
-    SalidaMostradorInput:
-      type: object
-      properties:
-        justificacion: { type: ["string", "null"] }
         uuidCliente: { type: ["string", "null"] }
     VenderRolloInput:
       type: object

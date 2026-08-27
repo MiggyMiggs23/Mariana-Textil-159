@@ -196,7 +196,6 @@ import type {
   SalidaDetailResponseResponse,
   SalidaListResult,
   SalidaMostradorDocumentoInput,
-  SalidaMostradorInput,
   SalidaResumen,
   ServerTime,
   SesionCaja,
@@ -4176,78 +4175,6 @@ export const useActivarRollo = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getActivarRolloMutationOptions(options));
-    }
-
-export const getSalidaMostradorUrl = (id: number,) => {
-
-
-
-
-  return `/api/inventario/rollos/${id}/salida-mostrador`
-}
-
-/**
- * @summary Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
- */
-export const salidaMostrador = async (id: number,
-    salidaMostradorInput: SalidaMostradorInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
-
-  return customFetch<RolloDetail>(getSalidaMostradorUrl(id),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(salidaMostradorInput)
-  }
-);}
-
-
-
-
-
-export const getSalidaMostradorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext> => {
-
-const mutationKey = ['salidaMostrador'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salidaMostrador>>, {id: number;data: BodyType<SalidaMostradorInput>}> = (props) => {
-          const {id,data} = props ?? {};
-
-          return  salidaMostrador(id,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SalidaMostradorMutationResult = NonNullable<Awaited<ReturnType<typeof salidaMostrador>>>
-    export type SalidaMostradorMutationBody = BodyType<SalidaMostradorInput>
-    export type SalidaMostradorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
-
-    /**
- * @summary Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
- */
-export const useSalidaMostrador = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salidaMostrador>>, TError,{id: number;data: BodyType<SalidaMostradorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof salidaMostrador>>,
-        TError,
-        {id: number;data: BodyType<SalidaMostradorInput>},
-        TContext
-      > => {
-      return useMutation(getSalidaMostradorMutationOptions(options));
     }
 
 export const getVenderRolloUrl = (id: number,) => {

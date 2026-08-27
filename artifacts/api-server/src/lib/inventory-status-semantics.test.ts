@@ -87,6 +87,6 @@ test("counter exit retires the legacy state repeatably and zeroes roll quantity"
 
 test("metered tickets reject every line that identifies a roll", () => {
   const pos = source("./pos.ts");
-  assert.match(pos, /input\.tipo === "METREADO" && linea\.rolloId != null/);
+  assert.match(pos, /tipo === "METREADO" && linea\.rolloId != null/);
   assert.match(pos, /"METREADO_ROLLO_NOT_ALLOWED"/);
 });

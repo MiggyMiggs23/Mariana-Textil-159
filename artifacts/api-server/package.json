@@ -17,6 +17,7 @@
     "test:clientes-ledger": "tsx --test src/lib/clientes-ledger.test.ts",
     "test:clientes-create": "tsx --test src/lib/clientes-create.test.ts",
     "test:ticket-iva-schema": "tsx src/lib/ticket-iva-schema.test.ts",
+    "test:ticket-line-types-schema": "NODE_ENV=test tsx --test src/lib/ticket-line-types-schema.test.ts",
     "test:pending-costs-schema": "NODE_ENV=test tsx --test src/lib/pending-costs-schema.test.ts",
     "test:salidas-schema": "tsx src/lib/salidas-schema.test.ts",
     "test:salidas": "tsx src/lib/salidas.test.ts",

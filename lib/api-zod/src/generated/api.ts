@@ -1998,62 +1998,6 @@ export const ActivarRolloResponse = zod.object({
 
 
 /**
- * @summary Salida de mostrador DISPONIBLE → MOSTRADOR con cantidad cero (terminal, SALIDA_MOSTRADOR)
- */
-export const SalidaMostradorParams = zod.object({
-  "id": zod.coerce.number()
-})
-
-export const SalidaMostradorBody = zod.object({
-  "justificacion": zod.string().nullish(),
-  "uuidCliente": zod.string().nullish()
-})
-
-export const SalidaMostradorResponse = zod.object({
-  "id": zod.number(),
-  "serie": zod.string(),
-  "productoId": zod.number(),
-  "skuProducto": zod.string().optional(),
-  "telaProducto": zod.string().optional(),
-  "colorProducto": zod.string().optional(),
-  "unidadProducto": zod.string().optional(),
-  "ubicacionId": zod.number(),
-  "nombreUbicacion": zod.string().optional(),
-  "proveedorId": zod.number().nullish(),
-  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
-  "cantidadInicial": zod.string(),
-  "cantidadActual": zod.string(),
-  "costoUnitario": zod.string().nullish(),
-  "costoTotal": zod.string().nullish(),
-  "notas": zod.string().nullish(),
-  "historial": zod.array(zod.object({
-  "id": zod.number(),
-  "rolloId": zod.number(),
-  "serie": zod.string().optional(),
-  "productoId": zod.number(),
-  "skuProducto": zod.string().optional(),
-  "ubicacionId": zod.number(),
-  "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
-  "cantidad": zod.string(),
-  "saldoPosterior": zod.string(),
-  "documentoTipo": zod.string().nullish(),
-  "documentoId": zod.string().nullish(),
-  "movimientoOrigenId": zod.number().nullish(),
-  "usuarioId": zod.number(),
-  "justificacion": zod.string().nullish(),
-  "revisado": zod.boolean(),
-  "revisadoPor": zod.number().nullish(),
-  "revisadoAt": zod.coerce.date().nullish(),
-  "uuidCliente": zod.string().nullish(),
-  "createdAt": zod.coerce.date()
-})),
-  "createdAt": zod.coerce.date(),
-  "updatedAt": zod.coerce.date()
-})
-
-
-/**
  * @summary Venta directa DISPONIBLE → VENDIDO (VENTA negativo)
  */
 export const VenderRolloParams = zod.object({

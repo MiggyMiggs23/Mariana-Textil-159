@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
-import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
+import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaFolioTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { crearRollo, InventarioError } from "./inventario";
 import {
   agregarRolloBorradorSalida,
@@ -192,7 +192,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.origenId)?.cantidadTotal), 0);
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.destinoId)?.cantidadTotal ?? 0), 0);
   });
-  test("uuid is idempotent; concurrent drafts are unique per user/origin; independent origins receive distinct folios", async () => {
+  test("uuid is idempotent; concurrent drafts are unique per user/origin; independent origins receive site folios", async () => {
     const first = await fx();
     const a = await roll(first.productoId, first.origenId, "10");
     const uuid = randomUUID();
@@ -235,7 +235,9 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
         [await roll(parallelTwo.productoId, parallelTwo.origenId, "14").then((r) => r.id)],
       ),
     ]);
-    assert.notEqual(one.folio, two.folio);
+    assert.notEqual(one.origenId, two.origenId);
+    assert.ok(one.folio > 0);
+    assert.ok(two.folio > 0);
   });
   test("only ARMANDO can be cancelled and cancellation never moves inventory", async () => {
     const f = await fx(); const r = await roll(f.productoId, f.origenId, "20"); const s = await create(f.origenId, f.destinoId, [r.id]);
@@ -329,6 +331,9 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     }
     if (rolls.length) { await tx.delete(movimientosTable).where(inArray(movimientosTable.rolloId, rolls)); await tx.delete(rollosTable).where(inArray(rollosTable.id, rolls)); }
     if (products.length) { await tx.delete(existenciasTable).where(inArray(existenciasTable.productoId, products)); await tx.delete(productosTable).where(inArray(productosTable.id, products)); }
-    if (locations.length) await tx.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, locations));
+    if (locations.length) {
+      await tx.delete(salidaFolioTable).where(inArray(salidaFolioTable.ubicacionId, locations));
+      await tx.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, locations));
+    }
   }); });
 }

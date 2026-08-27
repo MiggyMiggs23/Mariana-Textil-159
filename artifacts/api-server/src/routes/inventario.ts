@@ -26,9 +26,6 @@ import {
   ActivarRolloParams,
   ActivarRolloBody,
   ActivarRolloResponse,
-  SalidaMostradorParams,
-  SalidaMostradorBody,
-  SalidaMostradorResponse,
   VenderRolloParams,
   VenderRolloBody,
   VenderRolloResponse,
@@ -91,7 +88,6 @@ import {
   buildEntradaResult,
   capturarCostosEntrada,
   activarRollo,
-  salidaMostrador,
   venderRollo,
   ajustarRollo,
   revertirMovimiento,
@@ -876,64 +872,6 @@ inventarioRouter.post(
         return;
       }
       const response = ActivarRolloResponse.parse(detail);
-      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
-    } catch (e) {
-      if (e instanceof InventarioError) {
-        res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
-        return;
-      }
-      next(e);
-    }
-  },
-);
-
-// ── Salida mostrador (DISPONIBLE → MOSTRADOR) ─────────────────────────────────
-// Module: salidas / crear — scope: rollo's current location
-
-inventarioRouter.post(
-  "/rollos/:id/salida-mostrador",
-  requireSession,
-  requierePermiso("salidas", "crear"),
-  async (req, res, next) => {
-    try {
-      const { id } = SalidaMostradorParams.parse(req.params);
-      const body = SalidaMostradorBody.parse(req.body);
-      const auth = req.auth!;
-      const usuarioId = auth.user.id;
-
-      // Fetch rollo location before mutating
-      const [rolloCheck] = await db
-        .select({ ubicacionId: rollosTable.ubicacionId })
-        .from(rollosTable)
-        .where(eq(rollosTable.id, id))
-        .limit(1);
-
-      if (!rolloCheck) {
-        res.status(404).json({ error: "Rollo no encontrado" });
-        return;
-      }
-
-      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
-      if (scopeErr) {
-        res.status(403).json({ error: scopeErr });
-        return;
-      }
-
-      const result = await db.transaction(async (tx) =>
-        salidaMostrador(tx, {
-          rolloId: id,
-          usuarioId,
-          justificacion: body.justificacion ?? null,
-          uuidCliente: body.uuidCliente ?? null,
-        }),
-      );
-
-      const detail = await getRolloDetail(result.rollo.id);
-      if (!detail) {
-        res.status(404).json({ error: "Rollo no encontrado" });
-        return;
-      }
-      const response = SalidaMostradorResponse.parse(detail);
       res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
     } catch (e) {
       if (e instanceof InventarioError) {

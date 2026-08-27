@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 
 const root = new URL("../../..", import.meta.url);
 const routeFile = new URL("artifacts/api-server/src/routes/salidas.ts", root);
+const inventoryRouteFile = new URL("artifacts/api-server/src/routes/inventario.ts", root);
 const serviceFile = new URL("artifacts/api-server/src/lib/salidas.ts", root);
 const specFile = new URL("lib/api-spec/openapi.yaml", root);
 const schemaUpgradeFile = new URL("lib/db/src/lib/salidas-schema.ts", root);
@@ -87,9 +88,10 @@ test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven"
 
 test("Block 1 counter exit is one-step, site-scoped, persisted and printable", async () => {
   const documentPageFile = new URL("artifacts/mariana-textil/src/pages/salida-documento.tsx", root);
-  const [route, service, spec, listPage, counterPage, documentPage, schema] =
+  const [route, inventoryRoute, service, spec, listPage, counterPage, documentPage, schema] =
     await Promise.all([
       readFile(routeFile, "utf8"),
+      readFile(inventoryRouteFile, "utf8"),
       readFile(serviceFile, "utf8"),
       readFile(specFile, "utf8"),
       readFile(listPageFile, "utf8"),
@@ -99,6 +101,8 @@ test("Block 1 counter exit is one-step, site-scoped, persisted and printable", a
     ]);
   assert.match(spec, /\/salidas\/mostrador:/);
   assert.match(spec, /operationId: crearSalidaMostrador/);
+  assert.doesNotMatch(spec, /\/inventario\/rollos\/\{id\}\/salida-mostrador:/);
+  assert.doesNotMatch(inventoryRoute, /"\/rollos\/:id\/salida-mostrador"/);
   assert.match(spec, /enum: \[TRASLADO, MOSTRADOR\]/);
   assert.match(route, /requierePermiso\("salidas", "crear"\)/);
   assert.match(route, /auth\.user\.rol === "ADMIN"/);

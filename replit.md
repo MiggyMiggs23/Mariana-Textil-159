@@ -89,7 +89,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 - `salidaMostrador` cambia `DISPONIBLE → MOSTRADOR`, deja `cantidad_actual = 0` e inserta el movimiento histórico `SALIDA_MOSTRADOR` por la cantidad completa negativa dentro de la misma transacción.
 - `MOSTRADOR` es terminal y `SALIDA_MOSTRADOR` no se puede revertir. La actualización repetible migra las filas del estado legado sin borrar rollos ni movimientos.
-- Como puente hasta el Bloque 3, un ticket `METREADO` que incluya `rolloId` se rechaza; todavía no existe tipo por línea ni POS mixto.
+- El retiro a mostrador es total: el rollo deja de pertenecer al inventario controlado y no se conserva retazo, existencia abierta ni saldo parcial. La modalidad comercial vive en cada `ticket_linea`, por lo que un mismo ticket puede mezclar rollos `NORMAL` con producto `METREADO`; las líneas metreadas no se ligan a rollo ni existencia y conservan costo pendiente (`null`) hasta la Parte 3, nunca costo cero.
 
 ## Parte 1, Bloque 5 — Verificación integral de seis vistas
 

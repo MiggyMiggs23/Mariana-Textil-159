@@ -386,7 +386,6 @@ export * from './salidaInput';
 export * from './salidaLinea';
 export * from './salidaListResult';
 export * from './salidaMostradorDocumentoInput';
-export * from './salidaMostradorInput';
 export * from './salidaResumen';
 export * from './salidaRollo';
 export * from './semaforoPrecio';

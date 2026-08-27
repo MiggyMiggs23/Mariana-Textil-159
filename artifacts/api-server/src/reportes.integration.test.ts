@@ -45,9 +45,16 @@ if (!testUrl) {
       report.kpis.find((item: { id: string }) => item.id === id) as { value: number };
 
     try {
-      for (const name of ["Norte", "Sur"]) {
+      for (const [index, name] of ["Norte", "Sur"].entries()) {
+        const initials = randomUUID()
+          .replace(/-/g, "")
+          .slice(0, 3)
+          .split("")
+          .map((character) => String.fromCharCode(65 + Number.parseInt(character, 16)))
+          .join("");
         ids.sites.push(Number((await one(
-          "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id", [`${tag}-${name}`],
+          "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id",
+          [`${tag}-${name}`, initials],
         )).id));
       }
       for (const [index, role] of ["ADMIN", "CAJA"].entries()) {
@@ -114,19 +121,20 @@ if (!testUrl) {
         state?: "VENDIDO" | "CANCELADO"; roll?: boolean; client?: number; days?: number }) => {
         const subtotal = input.qty * input.price;
         const ticket = await one(
-          `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,tipo,subtotal,iva,tasa_iva,total,
+          `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,tasa_iva,total,
             estado,cobrado,cobrado_at,facturado,created_at,cancelado_at,cancelado_por,motivo_cancelacion)
-           VALUES($1,$2,$3,$4,$5,'NORMAL',$6,16,0.16,$7,$8,true,$9,false,$9,$10,$11,$12) RETURNING id`,
+           VALUES($1,$2,$3,$4,$5,$6,16,0.16,$7,$8,true,$9,false,$9,$10,$11,$12) RETURNING id`,
           [folio++, randomUUID(), ids.sites[input.site], ids.users[1], ids.clients[input.client ?? 0], subtotal, subtotal + 16,
             input.state ?? "VENDIDO", date(input.days ?? -1), input.state === "CANCELADO" ? date(-1) : null,
             input.state === "CANCELADO" ? ids.users[0] : null, input.state === "CANCELADO" ? `${tag}-cancel` : null],
         );
         ids.tickets.push(Number(ticket.id));
         await pool.query(
-          `INSERT INTO ticket_lineas(ticket_id,rollo_id,producto_id,cantidad,precio_unitario,precio_sugerido,importe,costo_unitario_congelado,costo_total_congelado)
-           VALUES($1,$2,$3,$4,$5,100,$6,$7,$8)`,
-          [ticket.id, input.roll === false ? null : ids.rolls[input.product], ids.products[input.product], input.qty, input.price,
-            subtotal, input.roll === false ? 0 : input.cost, input.roll === false ? 0 : input.cost * input.qty],
+          `INSERT INTO ticket_lineas(ticket_id,rollo_id,producto_id,tipo,cantidad,precio_unitario,precio_sugerido,importe,costo_unitario_congelado,costo_total_congelado)
+           VALUES($1,$2,$3,$4,$5,$6,100,$7,$8,$9)`,
+          [ticket.id, input.roll === false ? null : ids.rolls[input.product], ids.products[input.product],
+            input.roll === false ? "METREADO" : "NORMAL", input.qty, input.price, subtotal,
+            input.roll === false ? null : input.cost, input.roll === false ? null : input.cost * input.qty],
         );
         const payment = await one("INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at) VALUES($1,'EFECTIVO',$2,$3,$4) RETURNING id",
           [ticket.id, subtotal + 16, ids.users[1], date(input.days ?? -1)]);
@@ -151,10 +159,12 @@ if (!testUrl) {
         const ventas = await reports.buildReport("ventas", input, undefined, true) as Record<string, any>;
         const utilidad = await reports.buildReport("utilidad", input, undefined, true) as Record<string, any>;
         assert.equal(kpi(ventas, "ventas").value, 810, "cancelled sale excluded; unlinked sale remains");
-        assert.equal(kpi(utilidad, "utilidad-exacta").value, 500, "frozen costs only");
-        assert.equal(kpi(utilidad, "margen-exacto").value, 500 / 710 * 100, "IVA is not denominator");
-        assert.equal(table(utilidad, "calidad-costos").rows.find(r => r.calidad === "Sin rollo")?.lineas, 1);
-        assert.equal(table(ventas, "por-sitio").rows.length, 2);
+        assert.equal(kpi(utilidad, "utilidad-exacta").value, null, "missing metered cost keeps utility pending");
+        assert.equal(kpi(utilidad, "margen-exacto").value, null, "pending cost never becomes a false margin");
+        assert.equal(table(utilidad, "calidad-costos").rows.find(r => r.calidad === "Costo pendiente")?.lineas, 1);
+        const porSitio = table(ventas, "por-sitio").rows;
+        assert.equal(new Set(porSitio.map((row) => row.dimension)).size, 2);
+        assert.ok(porSitio.every((row) => row.modalidad && row.unidad));
         const red = await reports.buildReport("ventas", { ...input, colores: "Rojo", unidades: "METRO", ubicacionIds: String(ids.sites[0]) }, undefined, true) as Record<string, any>;
         assert.equal(kpi(red, "ventas").value, 320, "combined transversal color/site/unit filters");
         assert.deepEqual((await reports.buildReport("ventas", { ...input, colores: "" }, undefined, true) as Record<string, any>).activeFilters.includes("colores="), false);
@@ -205,6 +215,7 @@ if (!testUrl) {
       // Finance ledgers may be immutable in production-like schemas; disable only
       // the known immutability trigger and always restore it.
       try { await pool.query("ALTER TABLE movimientos_credito DISABLE TRIGGER movimientos_credito_inmutables"); } catch {}
+      try { await pool.query("ALTER TABLE ticket_pagos DISABLE TRIGGER ticket_pagos_inmutables"); } catch {}
       for (const [sql, values] of [
         ["DELETE FROM movimientos_credito WHERE id=ANY($1::int[])", ids.credit], ["DELETE FROM ticket_pagos WHERE id=ANY($1::int[])", ids.payments],
         ["DELETE FROM ticket_lineas WHERE ticket_id=ANY($1::int[])", ids.tickets], ["DELETE FROM tickets WHERE id=ANY($1::int[])", ids.tickets],
@@ -216,6 +227,7 @@ if (!testUrl) {
         ["DELETE FROM ubicaciones WHERE id=ANY($1::int[])", ids.sites],
       ] as Array<[string, number[]]>) if (values.length) await pool.query(sql, [values]);
       try { await pool.query("ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables"); } catch {}
+      try { await pool.query("ALTER TABLE ticket_pagos ENABLE TRIGGER ticket_pagos_inmutables"); } catch {}
       await pool.end();
     }
   });

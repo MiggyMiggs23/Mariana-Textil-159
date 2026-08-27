@@ -373,7 +373,6 @@ export * from "./generated/types/salidaInput";
 export * from "./generated/types/salidaLinea";
 export * from "./generated/types/salidaListResult";
 export * from "./generated/types/salidaMostradorDocumentoInput";
-export * from "./generated/types/salidaMostradorInput";
 export * from "./generated/types/salidaResumen";
 export * from "./generated/types/salidaRollo";
 export * from "./generated/types/semaforoPrecio";

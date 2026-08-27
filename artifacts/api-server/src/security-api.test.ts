@@ -577,6 +577,7 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
         {
           rolloId: offScopeRolloId,
           productoId: sharedProductoId,
+          tipo: "NORMAL",
           cantidad: 15,
           precioUnitario: 100,
         },
@@ -625,6 +626,7 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
         {
           rolloId: sharedRolloId,
           productoId: sharedProductoId,
+          tipo: "NORMAL",
           cantidad: 15,
           precioUnitario: 99,
         },
@@ -734,6 +736,7 @@ await test("S-03D: legacy zero-cost roll is blocked by advance and definitive PO
         {
           rolloId,
           productoId,
+          tipo: "NORMAL",
           cantidad: 15,
           precioUnitario: 150,
         },
@@ -1919,24 +1922,40 @@ await test("S-24: Non-ADMIN mutation on other-location → 403; ADMIN same → s
   // Create a rollo at seedTienda — bodegaOtherLoc should be forbidden to do salida there
   const productoId = await mkProducto();
   const rolloId = await mkRolloDisponible(seedTienda.id, productoId, testAdmin.id);
+  const [rollo] = await db
+    .select({ serie: rollosTable.serie })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.ok(rollo);
 
-  // BODEGA from otherTienda tries salida-mostrador on rollo in seedTienda → 403
+  // BODEGA from otherTienda tries a documented counter exit from seedTienda → 403
   const bodegaLogin = await login(testBodegaOtherLoc.usuario, testBodegaOtherLoc.password);
-  const r403 = await api("POST", `/inventario/rollos/${rolloId}/salida-mostrador`, {
-    justificacion: "test cross-location attempt",
+  const r403 = await api("POST", "/salidas/mostrador", {
+    origenId: seedTienda.id,
+    series: [rollo.serie],
+    observaciones: "test cross-location attempt",
     uuidCliente: randomUUID(),
   }, bodegaLogin.cookie);
   assert.equal(r403.status, 403, `Expected 403 for cross-location mutation, got ${r403.status}: ${JSON.stringify(r403.body)}`);
 
   // ADMIN can do the same mutation on any location
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
-  const r200 = await api("POST", `/inventario/rollos/${rolloId}/salida-mostrador`, {
-    justificacion: "admin cross-location test",
+  const r200 = await api("POST", "/salidas/mostrador", {
+    origenId: seedTienda.id,
+    series: [rollo.serie],
+    observaciones: "admin cross-location test",
     uuidCliente: randomUUID(),
   }, adminLogin.cookie);
-  assert.equal(r200.status, 200, `Expected 200 for ADMIN cross-location, got ${r200.status}: ${JSON.stringify(r200.body)}`);
-  assert.equal((r200.body as Record<string, unknown>).estado, "MOSTRADOR");
-  assert.equal(Number((r200.body as Record<string, unknown>).cantidadActual), 0);
+  assert.equal(r200.status, 201, `Expected 201 for ADMIN cross-location, got ${r200.status}: ${JSON.stringify(r200.body)}`);
+  assert.equal((r200.body as Record<string, unknown>).modalidad, "MOSTRADOR");
+  assert.equal((r200.body as Record<string, unknown>).destinoId, null);
+  createdSalidaIds.push(Number((r200.body as Record<string, unknown>).id));
+  const [retired] = await db
+    .select({ estado: rollosTable.estado, cantidadActual: rollosTable.cantidadActual })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.equal(retired?.estado, "MOSTRADOR");
+  assert.equal(Number(retired?.cantidadActual), 0);
 });
 
 // S-25: GET /clientes/:id — response does NOT include limiteCredito or saldoCredito
@@ -2065,24 +2084,26 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   await db.insert(ticketLineasTable).values({
     ticketId: analyticsTicket!.id,
     productoId: analyticsProductId,
-    tipo: "NORMAL",
+    tipo: "METREADO",
     cantidad: "12.345",
     precioUnitario: "101.26",
     precioSugerido: "101.26",
     importe: "1250.00",
-    costoUnitarioCongelado: "0.00",
-    costoTotalCongelado: "0.00",
+    costoUnitarioCongelado: null,
+    costoTotalCongelado: null,
   });
 
   const analyticsWorkbook = await loadWorkbook("/clientes/analitica.xlsx");
   const analyticsSheet = analyticsWorkbook.getWorksheet("Analítica");
   assert.ok(analyticsSheet);
   assert.equal(typeof analyticsSheet.getCell("D2").value, "number");
-  assert.equal(typeof analyticsSheet.getCell("F2").value, "number");
+  assert.equal(typeof analyticsSheet.getCell("F2").value, "string");
+  assert.equal(typeof analyticsSheet.getCell("G2").value, "number");
+  assert.equal(analyticsSheet.getCell("H2").value, null);
   assert.equal(typeof analyticsSheet.getCell("B2").value, "string");
   assert.equal(analyticsSheet.getColumn(4).numFmt, '"$"#,##0.00');
-  assert.equal(analyticsSheet.getColumn(6).numFmt, "#,##0.000");
-  assert.equal(analyticsSheet.getColumn(7).numFmt, '"$"#,##0.00');
+  assert.equal(analyticsSheet.getColumn(7).numFmt, "#,##0.000");
+  assert.equal(analyticsSheet.getColumn(8).numFmt, '"$"#,##0.00');
   await db
     .delete(ticketLineasTable)
     .where(eq(ticketLineasTable.ticketId, analyticsTicket!.id));
@@ -2190,17 +2211,29 @@ await test("S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA 
   // Create a fresh rollo for this test
   const productoId = await mkProducto();
   const rolloId = await mkRolloDisponible(seedTienda.id, productoId, testAdmin.id);
+  const [rollo] = await db
+    .select({ serie: rollosTable.serie })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.ok(rollo);
 
   // ── Part A: SALIDA_MOSTRADOR then attempt reversal ─────────────────────────
 
-  // Do salida-mostrador
-  const salidaR = await api("POST", `/inventario/rollos/${rolloId}/salida-mostrador`, {
-    justificacion: "salida S27 test",
+  // Do the documented salida-mostrador flow, which must persist its document.
+  const salidaR = await api("POST", "/salidas/mostrador", {
+    origenId: seedTienda.id,
+    series: [rollo.serie],
+    observaciones: "salida S27 test",
     uuidCliente: randomUUID(),
   }, adminLogin.cookie);
-  assert.equal(salidaR.status, 200, `salida-mostrador failed: ${JSON.stringify(salidaR.body)}`);
-  assert.equal((salidaR.body as Record<string, unknown>).estado, "MOSTRADOR");
-  assert.equal(Number((salidaR.body as Record<string, unknown>).cantidadActual), 0);
+  assert.equal(salidaR.status, 201, `salida-mostrador failed: ${JSON.stringify(salidaR.body)}`);
+  createdSalidaIds.push(Number((salidaR.body as Record<string, unknown>).id));
+  const [retired] = await db
+    .select({ estado: rollosTable.estado, cantidadActual: rollosTable.cantidadActual })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rolloId));
+  assert.equal(retired?.estado, "MOSTRADOR");
+  assert.equal(Number(retired?.cantidadActual), 0);
 
   // Find the SALIDA_MOSTRADOR movement
   const salidaMovRow = await db

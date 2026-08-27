@@ -81,7 +81,7 @@ async function mkUbicacion(): Promise<number> {
     .insert(ubicacionesTable)
     .values({
       nombre: `UbTst ${tag}`.slice(0, 120),
-      iniciales: `I${String.fromCharCode(65 + (seq % 26))}`,
+      iniciales: `T${String.fromCharCode(65 + Math.floor(seq / 26))}${String.fromCharCode(65 + (seq % 26))}`,
       tipo: "BODEGA" as const,
     })
     .returning();
