@@ -3133,6 +3133,7 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "fecha": zod.coerce.date().optional(),
   "notas": zod.string().nullish(),
   "saldoCorrido": zod.string().optional(),
+  "saldoPendiente": zod.string().nullish(),
   "ticketFolio": zod.number().nullish(),
   "nombreUsuario": zod.string().optional(),
   "formaPago": zod.string().nullish(),

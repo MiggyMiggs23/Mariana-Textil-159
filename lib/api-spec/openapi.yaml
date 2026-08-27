@@ -4934,6 +4934,7 @@ components:
         fecha: { type: string, format: date-time }
         notas: { type: ["string", "null"] }
         saldoCorrido: { type: string }
+        saldoPendiente: { type: ["string", "null"] }
         ticketFolio: { type: ["number", "null"] }
         nombreUsuario: { type: string }
         formaPago: { type: ["string", "null"] }

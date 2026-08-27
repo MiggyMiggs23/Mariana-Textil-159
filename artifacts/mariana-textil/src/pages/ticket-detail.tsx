@@ -801,7 +801,7 @@ export default function TicketDetailPage() {
           const detail = ticket as TicketDetalle;
           if (!detail.esCredito) return null;
 
-          const qrUrl = typeof window !== "undefined" ? new URL(`/tickets/${ticket.id}`, window.location.origin).toString() : "";
+          const qrUrl = typeof window !== "undefined" ? new URL(`/cobros?tab=cartera&ticketId=${ticket.id}`, window.location.origin).toString() : "";
           const pageTitle = "NOTA DE CRÉDITO";
 
           return (

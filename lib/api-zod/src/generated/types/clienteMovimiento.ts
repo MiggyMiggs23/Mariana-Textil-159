@@ -16,6 +16,8 @@ export interface ClienteMovimiento {
   notas?: string | null;
   saldoCorrido?: string;
   /** @nullable */
+  saldoPendiente?: string | null;
+  /** @nullable */
   ticketFolio?: number | null;
   nombreUsuario?: string;
   /** @nullable */

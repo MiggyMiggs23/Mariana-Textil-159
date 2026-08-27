@@ -18,6 +18,12 @@ import {
   getObtenerCorteCajaQueryKey,
   getListarSesionesCajaQueryKey,
   FormaPagoTicket,
+  useListarTickets,
+  getListarTicketsQueryKey,
+  useGetClienteEstadoCuenta,
+  getGetClienteEstadoCuentaQueryKey,
+  useCreateClientePago,
+  TicketDetalle,
 } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { useLocationScope } from "@/lib/location-scope";
@@ -45,6 +51,7 @@ import {
   XCircle,
   ArrowRightLeft,
   CheckCircle,
+  Search,
 } from "lucide-react";
 import {
   Select,
@@ -65,6 +72,376 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber } from "@workspace/number-format";
+import { CampoEscaneo } from "@/components/campo-escaneo";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { Textarea } from "@/components/ui/textarea";
+
+function CarteraContent() {
+  const [scannedInput, setScannedInput] = useState("");
+  const [resolvedTicketId, setResolvedTicketId] = useState<number | null>(null);
+  const [searchFolio, setSearchFolio] = useState<number | null>(null);
+
+  const { data: currentUser } = useGetCurrentUser();
+  const canViewFinances = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");
+  const canCreatePayment = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "crear");
+
+  const [location, setLocation] = useLocation();
+  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const initialTicketId = searchParams.get("ticketId");
+
+  useEffect(() => {
+    if (initialTicketId) {
+      setResolvedTicketId(Number(initialTicketId));
+    }
+  }, [initialTicketId]);
+
+  const { data: searchResults, isFetching: isSearchingFolio } = useListarTickets(
+    { folio: searchFolio || 0 },
+    {
+      query: {
+        enabled: !!searchFolio,
+        queryKey: getListarTicketsQueryKey({ folio: searchFolio || 0 }),
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (searchFolio && searchResults) {
+      if (searchResults.length > 0) {
+        setResolvedTicketId(searchResults[0].id);
+      }
+      setSearchFolio(null);
+    }
+  }, [searchResults, searchFolio]);
+
+  const { data: ticket, isLoading: isLoadingTicket } = useObtenerTicket(resolvedTicketId || 0, {
+    query: {
+      enabled: !!resolvedTicketId,
+      queryKey: getObtenerTicketQueryKey(resolvedTicketId || 0),
+    },
+  });
+
+  const clienteId = ticket?.clienteId;
+
+  const { data: cuenta, isLoading: isLoadingCuenta } = useGetClienteEstadoCuenta(
+    clienteId || 0,
+    undefined,
+    {
+      query: {
+        enabled: !!clienteId && canViewFinances,
+        queryKey: getGetClienteEstadoCuentaQueryKey(clienteId || 0),
+        retry: false,
+      },
+    }
+  );
+
+  const handleScan = (value: string) => {
+    setScannedInput(value);
+    let extractedId: number | null = null;
+    try {
+      const url = new URL(value, window.location.origin);
+      if (url.pathname.startsWith("/tickets/")) {
+        extractedId = parseInt(url.pathname.split("/")[2] || "", 10);
+      } else if (url.pathname === "/cobros" && url.searchParams.get("ticketId")) {
+        extractedId = parseInt(url.searchParams.get("ticketId") || "", 10);
+      }
+    } catch {}
+
+    if (extractedId && !isNaN(extractedId)) {
+      setResolvedTicketId(extractedId);
+      setLocation(`/cobros?tab=cartera&ticketId=${extractedId}`, { replace: true });
+    } else if (/^\d+$/.test(value)) {
+      setSearchFolio(parseInt(value, 10));
+    }
+  };
+
+  const notas = cuenta?.movimientos
+    ?.filter((m) => m.tipo === "VENTA_CREDITO" && m.estado !== "PAGADA")
+    .sort((a, b) => new Date(a.fecha!).getTime() - new Date(b.fecha!).getTime()) || [];
+
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("EFECTIVO");
+  const [reference, setReference] = useState("");
+  const [paymentNotes, setPaymentNotes] = useState("");
+
+  const createPayment = useCreateClientePago();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const submitPayment = () => {
+    if (!clienteId) return;
+    createPayment.mutate(
+      {
+        id: clienteId,
+        data: {
+          importe: Number(amount),
+          formaPago: paymentMethod,
+          referencia: reference || null,
+          notas: paymentNotes || null,
+          fechaEfectiva: new Date().toISOString().split("T")[0],
+          ticketId: null, // NO se asocia al ticket directamente
+        },
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(clienteId) });
+          setPaymentOpen(false);
+          setAmount("");
+          setReference("");
+          setPaymentNotes("");
+          toast({ title: "Pago registrado exitosamente" });
+        },
+        onError: (error) =>
+          toast({
+            title: "Error al registrar pago",
+            description: getApiErrorMessage(error, "Intenta de nuevo"),
+            variant: "destructive",
+          }),
+      }
+    );
+  };
+
+  return (
+    <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6">
+      <Card className="shadow-md border-primary/20">
+        <CardHeader className="bg-primary/5 pb-4 border-b border-primary/10">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Wallet className="h-5 w-5 text-primary" />
+            Estado de Cuenta
+          </CardTitle>
+          <CardDescription>
+            Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="max-w-md mx-auto mb-6">
+            <Label className="mb-2 block font-semibold text-sidebar">Escáner / Folio de Nota</Label>
+            <CampoEscaneo
+              value={scannedInput}
+              onChange={setScannedInput}
+              onScan={handleScan}
+              interpretRollCode={false}
+              clearOnScan={false}
+              placeholder="Ej. https://... o folio"
+              containerClassName="h-12"
+            />
+          </div>
+
+          {!canViewFinances && resolvedTicketId ? (
+            <div className="text-center py-10 bg-destructive/5 rounded-lg border border-destructive/20">
+              <AlertCircle className="h-10 w-10 text-destructive mx-auto mb-3 opacity-80" />
+              <h3 className="font-bold text-lg text-destructive">Acceso Restringido</h3>
+              <p className="text-destructive/80 text-sm max-w-sm mx-auto mt-2">
+                No tienes permisos suficientes para visualizar o modificar los saldos de clientes.
+              </p>
+            </div>
+          ) : isSearchingFolio || isLoadingTicket || isLoadingCuenta ? (
+            <div className="flex h-40 flex-col items-center justify-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm font-medium text-primary/60">Consultando información...</p>
+            </div>
+          ) : resolvedTicketId && !ticket ? (
+            <div className="text-center py-10 bg-muted/20 rounded-lg border border-dashed text-destructive">
+              <p className="font-medium">Ticket o Nota no encontrada.</p>
+            </div>
+          ) : ticket && !clienteId ? (
+            <div className="text-center py-10 bg-amber-50 rounded-lg border border-amber-200 text-amber-700">
+              <AlertCircle className="h-8 w-8 mx-auto mb-3 opacity-80" />
+              <p className="font-semibold">El ticket #{ticket.folio} no está asociado a un cliente de crédito.</p>
+            </div>
+          ) : ticket && cuenta ? (
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-primary p-6 rounded-xl text-primary-foreground shadow-lg">
+                <div>
+                  <div className="text-primary-foreground/70 text-xs font-bold uppercase tracking-wider mb-1">
+                    Cliente de Crédito
+                  </div>
+                  <h3 className="font-black text-2xl">
+                    {ticket.nombreCliente || `Cliente #${clienteId}`}
+                  </h3>
+                </div>
+                <div className="text-left sm:text-right bg-black/10 px-5 py-3 rounded-lg border border-white/10">
+                  <div className="text-xs font-bold text-primary-foreground/70 uppercase tracking-wider mb-1">
+                    Saldo Global
+                  </div>
+                  <div className="text-3xl font-black tabular-nums">
+                    {formatNumber(cuenta.saldoActual, { kind: "money" })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+                <div className="flex items-center justify-between p-5 border-b bg-muted/30">
+                  <h4 className="font-bold text-sidebar text-lg">Notas pendientes de pago ({notas.length})</h4>
+                  {canCreatePayment && (
+                    <Button size="sm" onClick={() => setPaymentOpen(true)} className="font-bold">
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Registrar Abono
+                    </Button>
+                  )}
+                </div>
+
+                {notas.length === 0 ? (
+                  <div className="text-center py-16 text-muted-foreground">
+                    <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-20 text-emerald-500" />
+                    <p className="font-medium text-lg text-emerald-700">El cliente no tiene notas pendientes.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm border-collapse text-left">
+                      <thead>
+                        <tr className="border-b bg-muted/50 text-muted-foreground">
+                          <th className="p-4 font-bold">Folio</th>
+                          <th className="p-4 font-bold">Fecha Venta</th>
+                          <th className="p-4 font-bold">Vencimiento</th>
+                          <th className="p-4 font-bold text-right">Importe Orig.</th>
+                          <th className="p-4 font-bold text-right">Saldo Pendiente</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y border-b">
+                        {notas.map((nota, index) => {
+                          const isHighlighted = nota.ticketFolio === ticket.folio;
+
+                          const parseDate = (dString: string) =>
+                            new Date(dString.includes('T') ? dString : `${dString}T12:00:00`);
+
+                          const isVencida = nota.fechaVencimiento ? parseDate(nota.fechaVencimiento) < new Date() : false;
+
+                          return (
+                            <tr
+                              key={nota.ticketFolio ? `nota-folio-${nota.ticketFolio}` : `nota-idx-${index}`}
+                              className={`transition-colors ${isHighlighted ? "bg-primary/10 border-primary/20 relative" : "hover:bg-muted/30"}`}
+                            >
+                              <td className="p-4 font-black text-sidebar">
+                                {isHighlighted && (
+                                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+                                )}
+                                #{nota.ticketFolio}
+                                {isHighlighted && (
+                                  <span className="ml-3 inline-flex items-center rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
+                                    ESCANEADA
+                                  </span>
+                                )}
+                              </td>
+                              <td className="p-4 text-muted-foreground font-medium">
+                                {nota.fecha ? format(parseDate(nota.fecha), "dd/MM/yyyy") : "N/A"}
+                              </td>
+                              <td className="p-4">
+                                {nota.fechaVencimiento ? (
+                                  <span className={`font-bold ${isVencida ? "text-destructive" : "text-muted-foreground"}`}>
+                                    {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}
+                                    {isVencida && " (Vencida)"}
+                                  </span>
+                                ) : "N/A"}
+                              </td>
+                              <td className="p-4 text-right font-bold text-sidebar tabular-nums">
+                                {formatNumber(nota.importe, { kind: "money" })}
+                              </td>
+                              <td className="p-4 text-right font-bold text-destructive tabular-nums">
+                                {nota.saldoPendiente ? formatNumber(nota.saldoPendiente, { kind: "money" }) : "—"}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-20 rounded-xl bg-muted/20 border-2 border-dashed border-muted">
+              <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground/30" />
+              <p className="text-muted-foreground font-medium text-lg">Escanea una nota de crédito para cargar el estado de cuenta.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={paymentOpen} onOpenChange={(open) => {
+        setPaymentOpen(open);
+        if (!open) {
+          setAmount("");
+          setReference("");
+          setPaymentNotes("");
+        }
+      }}>
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+          <DialogHeader className="bg-sidebar p-6 text-white pb-6">
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Wallet className="h-5 w-5" /> Registrar Abono Global
+            </DialogTitle>
+            <DialogDescription className="text-white/70 mt-2">
+              El abono se descontará del saldo total de {formatNumber(cuenta?.saldoActual, { kind: "money" })} aplicando primero a las notas más antiguas (FIFO).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-5 p-6 bg-secondary/10">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Importe a abonar</Label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xl">$</span>
+                <Input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="pl-9 h-14 text-2xl font-black bg-white border-2 focus-visible:ring-0 focus-visible:border-primary"
+                  autoFocus
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Forma de Pago</Label>
+              <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                <SelectTrigger className="h-12 bg-white border-2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>
+                  <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {paymentMethod === "TRANSFERENCIA" && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino / Referencia</Label>
+                <Input
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  placeholder="Ej. Terminación 4567, Banco..."
+                  className="h-12 bg-white border-2"
+                />
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Notas (Opcional)</Label>
+              <Textarea
+                value={paymentNotes}
+                onChange={(e) => setPaymentNotes(e.target.value)}
+                placeholder="Observaciones sobre el pago..."
+                rows={2}
+                className="bg-white border-2 resize-none"
+              />
+            </div>
+          </div>
+          <DialogFooter className="p-4 border-t bg-white">
+            <Button variant="ghost" onClick={() => setPaymentOpen(false)} className="font-bold text-muted-foreground">Cancelar</Button>
+            <Button
+              onClick={submitPayment}
+              disabled={!Number(amount) || createPayment.isPending}
+              className="font-bold h-10 px-8"
+            >
+              {createPayment.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Aplicar Abono
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
 
 const CREDIT_TERMS = [7, 15, 30, 60] as const;
 type CreditTerm = (typeof CREDIT_TERMS)[number];
@@ -1451,18 +1828,31 @@ function CobrosContent() {
 export default function CobrosPage() {
   const { data: currentUser } = useGetCurrentUser();
   const isAdmin = currentUser?.rol === Role.ADMIN;
-  const [view, setView] = useState<"operativa" | "historial">("operativa");
+
+  const [location] = useLocation();
+  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : "");
+  const defaultTab: "operativa" | "historial" | "cartera" = searchParams.get("tab") === "cartera" ? "cartera" : "operativa";
+
+  const [view, setView] = useState<"operativa" | "historial" | "cartera">(defaultTab);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "cartera") {
+      setView("cartera");
+    }
+  }, [location]);
 
   return (
     <AppLayout>
       <div className="space-y-6">
-        {isAdmin && (
-          <div className="flex w-fit rounded-lg border bg-muted/30 p-1">
-            <Button variant={view === "operativa" ? "default" : "ghost"} size="sm" onClick={() => setView("operativa")}>Caja operativa</Button>
+        <div className="flex w-fit rounded-lg border bg-muted/30 p-1">
+          <Button variant={view === "operativa" ? "default" : "ghost"} size="sm" onClick={() => setView("operativa")}>Caja operativa</Button>
+          <Button variant={view === "cartera" ? "default" : "ghost"} size="sm" onClick={() => setView("cartera")}>Cartera / Estado de cuenta</Button>
+          {isAdmin && (
             <Button variant={view === "historial" ? "default" : "ghost"} size="sm" onClick={() => setView("historial")}>Historial de cortes</Button>
-          </div>
-        )}
-        {isAdmin && view === "historial" ? <HistorialCortes /> : <CobrosContent />}
+          )}
+        </div>
+        {view === "cartera" ? <CarteraContent /> : (isAdmin && view === "historial" ? <HistorialCortes /> : <CobrosContent />)}
       </div>
     </AppLayout>
   );

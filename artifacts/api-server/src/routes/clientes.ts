@@ -935,29 +935,32 @@ router.get(
              JOIN usuarios u ON u.id=m.usuario_id
              WHERE m.cliente_id=$1
            )
-           SELECT id, tipo, importe::text, created_at AS fecha,
-              created_at AS "fechaEfectiva",
+           SELECT id, tipo, importe::text, ledger.created_at AS fecha,
+              ledger.created_at AS "fechaEfectiva",
               CASE WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL
                 THEN CONCAT_WS(' · ', notas, 'Sin plazo definido (crédito legado)')
                 ELSE notas END AS notas,
               forma_pago AS "formaPago", dias_plazo AS "diasPlazo",
               fecha_vencimiento AS "fechaVencimiento",
               CASE
-                WHEN tipo='VENTA_CREDITO' AND NOT EXISTS (
-                  SELECT 1 FROM credit_fifo_aging($1) a WHERE a.movimiento_id=ledger.id
-                ) THEN 'PAGADA'
+                WHEN tipo='VENTA_CREDITO' AND aging.movimiento_id IS NULL THEN 'PAGADA'
                 WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL THEN 'SIN_PLAZO'
                 WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento < (now() AT TIME ZONE 'America/Mexico_City')::date THEN 'VENCIDA'
                 WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento <= (now() AT TIME ZONE 'America/Mexico_City')::date+3 THEN 'POR_VENCER'
                 WHEN tipo='VENTA_CREDITO' THEN 'VIGENTE'
               END AS estado,
+              CASE WHEN tipo='VENTA_CREDITO'
+                THEN COALESCE(aging.pendiente::text, '0.00')
+                ELSE NULL
+              END AS "saldoPendiente",
              referencia, ticket_folio AS "ticketFolio",
              nombre_usuario AS "nombreUsuario", saldo_corrido::text AS "saldoCorrido"
            FROM ledger
-           WHERE ($2::date IS NULL OR created_at >= $2::date)
-             AND ($3::date IS NULL OR created_at < $3::date+interval '1 day')
+            LEFT JOIN credit_fifo_aging($1) aging ON aging.movimiento_id=ledger.id
+            WHERE ($2::date IS NULL OR ledger.created_at >= $2::date)
+              AND ($3::date IS NULL OR ledger.created_at < $3::date+interval '1 day')
              AND ($4::text IS NULL OR tipo::text=$4)
-           ORDER BY created_at,id`,
+            ORDER BY ledger.created_at,id`,
           [id, desde, hasta, tipo],
         ),
         pool.query<{ saldo: string }>(
