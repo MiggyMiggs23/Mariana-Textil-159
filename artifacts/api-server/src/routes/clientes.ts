@@ -119,6 +119,7 @@ type CreditSale = {
   fechaVencimiento: string | null;
   createdAt: Date;
   balanceCents: number;
+  linkedReductionCents: number;
 };
 
 async function outstandingCreditSales(database: any, clienteId: number): Promise<CreditSale[]> {
@@ -131,6 +132,7 @@ async function outstandingCreditSales(database: any, clienteId: number): Promise
       createdAt: movimientosCreditoTable.createdAt,
       importe: movimientosCreditoTable.importe,
       aplicado: sql<string>`COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a JOIN movimientos_credito ab ON ab.id=a.abono_movimiento_id WHERE a.venta_movimiento_id = ${movimientosCreditoTable.id} AND NOT EXISTS (SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=ab.id)), 0)::text`,
+      reversado: sql<string>`COALESCE((SELECT SUM(-r.importe) FROM movimientos_credito r WHERE r.cliente_id=${movimientosCreditoTable.clienteId} AND r.tipo='REVERSO' AND r.ticket_id=${movimientosCreditoTable.ticketId}), 0)::text`,
     })
     .from(movimientosCreditoTable)
     .leftJoin(ticketsTable, eq(ticketsTable.id, movimientosCreditoTable.ticketId))
@@ -142,13 +144,17 @@ async function outstandingCreditSales(database: any, clienteId: number): Promise
   return rows.map((row: any) => ({
     ...row,
     balanceCents: Math.max(0, moneyToCents(row.importe) - moneyToCents(row.aplicado)),
+    linkedReductionCents: Math.max(0, moneyToCents(row.reversado)),
     fechaVencimiento:
       row.fechaVencimiento == null
         ? null
         : typeof row.fechaVencimiento === "string"
           ? row.fechaVencimiento
           : row.fechaVencimiento.toISOString().slice(0, 10),
-  })).filter((row: CreditSale) => row.balanceCents > 0);
+  })).filter(
+    (row: CreditSale) =>
+      row.balanceCents - row.linkedReductionCents > 0,
+  );
 }
 
 function presentAllocations(
@@ -1672,7 +1678,12 @@ router.post(
       const amountCents = moneyToCents(body.importe);
       const allocation = allocateCreditFifo(
         [{ id: 0, availableCents: amountCents }],
-        sales.map((sale) => ({ id: sale.id, balanceCents: sale.balanceCents, createdAt: sale.createdAt })),
+        sales.map((sale) => ({
+          id: sale.id,
+          balanceCents: sale.balanceCents,
+          linkedReductionCents: sale.linkedReductionCents,
+          createdAt: sale.createdAt,
+        })),
       );
       res.json({
         monto: centsToMoney(amountCents),
@@ -1757,7 +1768,12 @@ router.post(
         const sales = await outstandingCreditSales(tx, id);
         const allocation = allocateCreditFifo(
           [{ id: created!.id, availableCents: moneyToCents(importe) }],
-          sales.map((sale) => ({ id: sale.id, balanceCents: sale.balanceCents, createdAt: sale.createdAt })),
+          sales.map((sale) => ({
+            id: sale.id,
+            balanceCents: sale.balanceCents,
+            linkedReductionCents: sale.linkedReductionCents,
+            createdAt: sale.createdAt,
+          })),
         );
         if (allocation.allocations.length > 0) {
           await tx.insert(aplicacionesCreditoTable).values(

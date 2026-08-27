@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  allocateCreditFifo,
   canLinkAdjustmentToTicket,
   creditDueDate,
   creditStatus,
@@ -9,39 +8,100 @@ import {
   isCreditTerm,
   mexicoCityDate,
 } from "./clientes-aging";
+import { allocateCreditFifo } from "./credit-allocation";
 import { createTextPdf } from "./pdf";
 
 test("linked REVERSO cancels its own later ticket before ABONO FIFO", () => {
   const result = allocateCreditFifo(
+    [{ id: 1, availableCents: 25 }],
     [
-      { ticketId: 10, amount: 100, linkedReversal: 0 },
-      { ticketId: 20, amount: 80, linkedReversal: 80 },
+      { id: 10, balanceCents: 100, linkedReductionCents: 0, createdAt: new Date(1) },
+      { id: 20, balanceCents: 80, linkedReductionCents: 80, createdAt: new Date(2) },
     ],
-    25,
   );
-  assert.deepEqual(result, [{ ticketId: 10, outstanding: 75 }]);
+  assert.deepEqual(
+    result.balances.filter((item) => item.balanceAfterCents > 0)
+      .map((item) => [item.targetId, item.balanceAfterCents]),
+    [[10, 75]],
+  );
 });
 
 test("unlinked negative amount applies oldest sale first", () => {
   const result = allocateCreditFifo(
+    [{ id: 1, availableCents: 120 }],
     [
-      { ticketId: 10, amount: 100, linkedReversal: 0 },
-      { ticketId: 20, amount: 80, linkedReversal: 0 },
+      { id: 10, balanceCents: 100, createdAt: new Date(1) },
+      { id: 20, balanceCents: 80, createdAt: new Date(2) },
     ],
-    120,
   );
-  assert.deepEqual(result, [{ ticketId: 20, outstanding: 60 }]);
+  assert.deepEqual(
+    result.balances.filter((item) => item.balanceAfterCents > 0)
+      .map((item) => [item.targetId, item.balanceAfterCents]),
+    [[20, 60]],
+  );
 });
 
 test("positive adjustment remains as an aged receivable", () => {
   const result = allocateCreditFifo(
+    [{ id: 1, availableCents: 100 }],
     [
-      { ticketId: 10, amount: 100, linkedReversal: 0 },
-      { ticketId: null, amount: 30, linkedReversal: 0 },
+      { id: 10, balanceCents: 100, createdAt: new Date(1) },
+      { id: 20, balanceCents: 30, createdAt: new Date(2) },
     ],
-    100,
   );
-  assert.deepEqual(result, [{ ticketId: null, outstanding: 30 }]);
+  assert.deepEqual(
+    result.balances.filter((item) => item.balanceAfterCents > 0)
+      .map((item) => [item.targetId, item.balanceAfterCents]),
+    [[20, 30]],
+  );
+});
+
+test("aging and payment application report the same balances with a linked reversal", () => {
+  const movements = [
+    { id: 1, ticketId: 10, amount: 10_000, createdAt: new Date(1), linkedReductionCents: 0 },
+    { id: 2, ticketId: 20, amount: 8_000, createdAt: new Date(2), linkedReductionCents: 2_000 },
+  ];
+  const applied = allocateCreditFifo(
+    [{ id: 3, availableCents: 11_000 }],
+    movements.map((movement) => ({
+      id: movement.id,
+      balanceCents: movement.amount,
+      linkedReductionCents: movement.linkedReductionCents,
+      createdAt: movement.createdAt,
+    })),
+  );
+  const appliedBalances = new Map(
+    applied.balances.map((balance) => [
+      movements.find((movement) => movement.id === balance.targetId)!.ticketId,
+      balance.balanceAfterCents,
+    ]),
+  );
+  const agingTicket20 = deriveTicketCreditData(
+    20,
+    [{ formaPago: "CREDITO", importe: "80.00" }],
+    [
+      { id: 1, ticketId: 10, tipo: "VENTA_CREDITO", importe: "100.00", diasPlazo: 30, fechaVencimiento: "2026-02-01", createdAt: new Date(1) },
+      { id: 2, ticketId: 20, tipo: "VENTA_CREDITO", importe: "80.00", diasPlazo: 30, fechaVencimiento: "2026-02-02", createdAt: new Date(2) },
+      { id: 3, ticketId: null, tipo: "ABONO", importe: "-110.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(3) },
+      { id: 4, ticketId: 20, tipo: "REVERSO", importe: "-20.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(4) },
+    ],
+  );
+  assert.equal(Number(agingTicket20.saldoPendiente) * 100, appliedBalances.get(20));
+  assert.equal(appliedBalances.get(20), 5_000);
+});
+
+test("reversing an ABONO restores the ticket balance", () => {
+  const credit = deriveTicketCreditData(
+    10,
+    [{ formaPago: "CREDITO", importe: "100.00" }],
+    [
+      { id: 1, ticketId: 10, tipo: "VENTA_CREDITO", importe: "100.00", diasPlazo: 30, fechaVencimiento: "2026-02-01", createdAt: new Date(1) },
+      { id: 2, ticketId: null, tipo: "ABONO", importe: "-100.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(2) },
+      { id: 3, ticketId: null, movimientoOrigenId: 2, tipo: "REVERSO", importe: "100.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(3) },
+    ],
+  );
+
+  assert.equal(credit.saldoPendiente, "100.00");
 });
 
 test("negative adjustment cannot be linked to a ticket and bypass FIFO", () => {

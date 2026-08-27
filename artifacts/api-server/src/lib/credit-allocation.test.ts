@@ -35,6 +35,25 @@ test("a later sale consumes historic remaining abono, not a directed ticket", ()
   assert.equal(result.remainingCents, 0);
 });
 
+test("linked reduction cancels its target before FIFO allocation", () => {
+  const result = allocateCreditFifo(
+    [{ id: 10, availableCents: 2500 }],
+    [
+      { id: 1, balanceCents: 10_000, createdAt: at(1) },
+      {
+        id: 2,
+        balanceCents: 8_000,
+        linkedReductionCents: 8_000,
+        createdAt: at(2),
+      },
+    ],
+  );
+  assert.deepEqual(result.balances, [
+    { targetId: 1, balanceBeforeCents: 10_000, balanceAfterCents: 7_500 },
+    { targetId: 2, balanceBeforeCents: 0, balanceAfterCents: 0 },
+  ]);
+});
+
 test("validates payment destination against its payment method", () => {
   assert.equal(isValidPaymentDestination("EFECTIVO", "CAJA_FISICA"), true);
   assert.equal(isValidPaymentDestination("TRANSFERENCIA", "CUENTA_FISCAL"), true);

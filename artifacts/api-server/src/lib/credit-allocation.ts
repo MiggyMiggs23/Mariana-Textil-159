@@ -8,6 +8,7 @@ export type CreditAllocationTarget = {
   id: number;
   balanceCents: number;
   createdAt: Date;
+  linkedReductionCents?: number;
 };
 export type CreditAllocation = {
   sourceId: number;
@@ -16,20 +17,42 @@ export type CreditAllocation = {
   balanceBeforeCents: number;
   balanceAfterCents: number;
 };
+export type CreditAllocationBalance = {
+  targetId: number;
+  balanceBeforeCents: number;
+  balanceAfterCents: number;
+};
 
 export function allocateCreditFifo(
   sources: CreditAllocationSource[],
   targets: CreditAllocationTarget[],
-): { allocations: CreditAllocation[]; remainingCents: number } {
-  const orderedTargets = [...targets].sort(
+): {
+  allocations: CreditAllocation[];
+  balances: CreditAllocationBalance[];
+  remainingCents: number;
+} {
+  const orderedTargets = targets.map((target) => ({
+    ...target,
+    balanceCents: Math.max(
+      0,
+      target.balanceCents - Math.max(0, target.linkedReductionCents ?? 0),
+    ),
+  })).sort(
     (a, b) => a.createdAt.getTime() - b.createdAt.getTime() || a.id - b.id,
   );
   let remainingCents = sources.reduce((sum, source) => sum + source.availableCents, 0);
   const allocations: CreditAllocation[] = [];
+  const balances: CreditAllocationBalance[] = [];
   for (const target of orderedTargets) {
-    if (remainingCents <= 0) break;
     const appliedCents = Math.min(remainingCents, target.balanceCents);
-    if (appliedCents <= 0) continue;
+    if (appliedCents <= 0) {
+      balances.push({
+        targetId: target.id,
+        balanceBeforeCents: target.balanceCents,
+        balanceAfterCents: target.balanceCents,
+      });
+      continue;
+    }
     // Sources are consumed in their supplied (ledger) order.
     let left = appliedCents;
     for (const source of sources) {
@@ -47,8 +70,13 @@ export function allocateCreditFifo(
       left -= amount;
       remainingCents -= amount;
     }
+    balances.push({
+      targetId: target.id,
+      balanceBeforeCents: target.balanceCents,
+      balanceAfterCents: target.balanceCents - appliedCents,
+    });
   }
-  return { allocations, remainingCents };
+  return { allocations, balances, remainingCents };
 }
 
 export function moneyToCents(value: string | number): number {

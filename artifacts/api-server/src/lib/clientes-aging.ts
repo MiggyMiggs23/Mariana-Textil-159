@@ -1,8 +1,4 @@
-export type CreditSalePortion = {
-  ticketId: number | null;
-  amount: number;
-  linkedReversal: number;
-};
+import { allocateCreditFifo } from "./credit-allocation";
 
 export const CREDIT_TERMS = [7, 15, 30, 60] as const;
 export type CreditTerm = (typeof CREDIT_TERMS)[number];
@@ -58,21 +54,6 @@ export function creditStatus(
   return "VIGENTE";
 }
 
-/** Reference implementation used to verify the SQL FIFO allocation contract. */
-export function allocateCreditFifo(
-  sales: CreditSalePortion[],
-  fifoNegativeAmount: number,
-): Array<{ ticketId: number | null; outstanding: number }> {
-  let available = Math.max(0, fifoNegativeAmount);
-  return sales.flatMap((sale) => {
-    const net = Math.max(0, sale.amount - sale.linkedReversal);
-    const applied = Math.min(net, available);
-    available -= applied;
-    const outstanding = net - applied;
-    return outstanding > 0 ? [{ ticketId: sale.ticketId, outstanding }] : [];
-  });
-}
-
 export type TicketCreditPayment = {
   formaPago: string;
   importe: string;
@@ -80,6 +61,7 @@ export type TicketCreditPayment = {
 
 export type TicketCreditMovement = {
   ticketId: number | null;
+  movimientoOrigenId?: number | null;
   tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
   importe: string;
   diasPlazo: number | null;
@@ -134,6 +116,16 @@ export function deriveTicketCreditData(
       left.createdAt.getTime() - right.createdAt.getTime() ||
       left.id - right.id,
   );
+  const reversedPaymentIds = new Set(
+    ordered
+      .filter(
+        (movement) =>
+          movement.tipo === "REVERSO" &&
+          movement.movimientoOrigenId != null &&
+          moneyCents(movement.importe) > 0,
+      )
+      .map((movement) => movement.movimientoOrigenId as number),
+  );
   const reversalsByTicket = new Map<number, number>();
   let fifoNegativeCents = 0;
   for (const movement of ordered) {
@@ -148,7 +140,7 @@ export function deriveTicketCreditData(
         (reversalsByTicket.get(movement.ticketId) ?? 0) - cents,
       );
     } else if (
-      movement.tipo === "ABONO" ||
+      (movement.tipo === "ABONO" && !reversedPaymentIds.has(movement.id)) ||
       (movement.tipo === "AJUSTE" && cents < 0)
     ) {
       fifoNegativeCents += Math.max(0, -cents);
@@ -160,19 +152,24 @@ export function deriveTicketCreditData(
       movement.tipo === "VENTA_CREDITO" ||
       (movement.tipo === "AJUSTE" && moneyCents(movement.importe) > 0),
   );
-  const outstanding = allocateCreditFifo(
+  const allocation = allocateCreditFifo(
+    [{ id: 0, availableCents: fifoNegativeCents }],
     charges.map((movement) => ({
-      ticketId: movement.ticketId,
-      amount: moneyCents(movement.importe),
-      linkedReversal:
+      id: movement.id,
+      balanceCents: moneyCents(movement.importe),
+      createdAt: movement.createdAt,
+      linkedReductionCents:
         movement.tipo === "VENTA_CREDITO" && movement.ticketId != null
           ? (reversalsByTicket.get(movement.ticketId) ?? 0)
           : 0,
     })),
-    fifoNegativeCents,
-  )
-    .filter((portion) => portion.ticketId === ticketId)
-    .reduce((sum, portion) => sum + portion.outstanding, 0);
+  );
+  const chargesById = new Map(charges.map((movement) => [movement.id, movement]));
+  const outstanding = allocation.balances
+    .filter(
+      (balance) => chargesById.get(balance.targetId)?.ticketId === ticketId,
+    )
+    .reduce((sum, balance) => sum + balance.balanceAfterCents, 0);
   const sale = charges.find(
     (movement) =>
       movement.tipo === "VENTA_CREDITO" && movement.ticketId === ticketId,

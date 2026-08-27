@@ -272,6 +272,7 @@ export async function buildTicketDetail(
         .select({
           id: movimientosCreditoTable.id,
           ticketId: movimientosCreditoTable.ticketId,
+           movimientoOrigenId: movimientosCreditoTable.movimientoOrigenId,
           tipo: movimientosCreditoTable.tipo,
           importe: movimientosCreditoTable.importe,
           diasPlazo: movimientosCreditoTable.diasPlazo,

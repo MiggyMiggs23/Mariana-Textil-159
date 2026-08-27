@@ -116,6 +116,34 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
      RETURNING id`,
     [cliente.id, newTicket.id, admin.id],
   );
+  const reversalClient = await one(
+    `INSERT INTO clientes(
+       nombre,activo,es_sistema,limite_credito,saldo_credito,dias_credito
+     ) VALUES($1,true,false,1000,0,30) RETURNING id`,
+    [`${tag} Cliente reverso`],
+  );
+  const reversalTicket = await one(
+    `INSERT INTO tickets(
+       folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
+       subtotal,iva,tasa_iva,total,estado,cobrado,facturado,created_at
+     ) VALUES(
+       $1,gen_random_uuid(),$2,$3,$4,100,0,0,100,
+       'VENDIDO',false,false,now()
+     ) RETURNING id,folio`,
+    [folio++, location.id, caja.id, reversalClient.id],
+  );
+  const reversalSale = await one(
+    `INSERT INTO movimientos_credito(
+       cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
+     ) VALUES($1,$2,'VENTA_CREDITO','100.00',$3,'CREDITO',now())
+     RETURNING id`,
+    [reversalClient.id, reversalTicket.id, admin.id],
+  );
+  await pool.query(
+    `INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at)
+     VALUES($1,'CREDITO','100.00',$2,now())`,
+    [reversalTicket.id, admin.id],
+  );
 
   const proveedor = await one(
     `INSERT INTO proveedores(nombre,tipo,moneda_default,activo)
@@ -328,6 +356,96 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
       Number(oldSale.id),
     );
     assert.equal(fifoPayment.asignaciones[0]?.aplicado, "50.00");
+
+    const isolatedPaymentResponse = await post(
+      cajaSession,
+      `/clientes/${reversalClient.id}/pagos`,
+      {
+        importe: 100,
+        formaPago: "EFECTIVO",
+        cuentaDestino: "CAJA_FISICA",
+      },
+    );
+    assert.equal(isolatedPaymentResponse.status, 201);
+    const isolatedPayment = (await isolatedPaymentResponse.json()) as {
+      id: number;
+    };
+    const reverseFifoResponse = await post(
+      adminSession,
+      `/clientes/${reversalClient.id}/pagos/${isolatedPayment.id}/reversar`,
+      { motivo: "Corrección de abono aplicado por error" },
+    );
+    assert.equal(reverseFifoResponse.status, 201);
+    const restoredTicketResponse = await api(
+      adminSession,
+      `/tickets/${reversalTicket.id}`,
+    );
+    assert.equal(restoredTicketResponse.status, 200);
+    const restoredTicket = (await restoredTicketResponse.json()) as {
+      saldoPendiente: string;
+    };
+    assert.equal(
+      restoredTicket.saldoPendiente,
+      "100.00",
+      "El detalle debe restaurar el saldo al revertir el ABONO.",
+    );
+    const restoredPreviewResponse = await post(
+      cajaSession,
+      `/clientes/${reversalClient.id}/pagos/vista-previa`,
+      { importe: 50 },
+    );
+    assert.equal(restoredPreviewResponse.status, 200);
+    const restoredPreview = (await restoredPreviewResponse.json()) as {
+      asignaciones: Array<{
+        movimientoVentaId: number;
+        ticketId: number;
+        aplicado: string;
+      }>;
+    };
+    assert.equal(
+      restoredPreview.asignaciones[0]?.movimientoVentaId,
+      Number(reversalSale.id),
+    );
+    assert.equal(
+      restoredPreview.asignaciones[0]?.ticketId,
+      Number(reversalTicket.id),
+    );
+    assert.equal(restoredPreview.asignaciones[0]?.aplicado, "50.00");
+
+    await pool.query(
+      `INSERT INTO movimientos_credito(
+         cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
+       ) VALUES($1,$2,'REVERSO','-60.00',$3,'EFECTIVO',now())`,
+      [cliente.id, oldTicket.id, admin.id],
+    );
+    const paymentAfterLinkedReversalResponse = await post(
+      cajaSession,
+      `/clientes/${cliente.id}/pagos`,
+      {
+        importe: 20,
+        formaPago: "EFECTIVO",
+        cuentaDestino: "CAJA_FISICA",
+      },
+    );
+    assert.equal(paymentAfterLinkedReversalResponse.status, 201);
+    const paymentAfterLinkedReversal =
+      (await paymentAfterLinkedReversalResponse.json()) as {
+        asignaciones: Array<{
+          movimientoVentaId: number;
+          aplicado: string;
+        }>;
+      };
+    assert.deepEqual(
+      paymentAfterLinkedReversal.asignaciones.map((item) => [
+        item.movimientoVentaId,
+        item.aplicado,
+      ]),
+      [
+        [Number(oldSale.id), "10.00"],
+        [Number(newSale.id), "10.00"],
+      ],
+      "El cobro real debe descontar el reverso ligado antes de continuar FIFO.",
+    );
 
     const directAdminResponse = await post(adminSession, "/pagos-dirigidos", {
       ...clientBody,
