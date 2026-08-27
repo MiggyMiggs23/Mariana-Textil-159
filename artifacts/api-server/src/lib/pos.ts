@@ -1,6 +1,7 @@
 import { and, asc, count, desc, eq, inArray, or, sql } from "drizzle-orm";
 import {
   auditoriaTable,
+  aplicacionesCreditoTable,
   clientesTable,
   db,
   movimientosCreditoTable,
@@ -17,6 +18,11 @@ import {
   usuariosTable,
   type FormaPagoTicket,
 } from "@workspace/db";
+import {
+  allocateCreditFifo,
+  centsToMoney,
+  moneyToCents,
+} from "./credit-allocation";
 import {
   InventarioError,
   revertirMovimiento,
@@ -1104,7 +1110,7 @@ export async function cobrarTicket(
       );
     }
     if (creditCents > 0) {
-      await tx.insert(movimientosCreditoTable).values({
+      const [creditMovement] = await tx.insert(movimientosCreditoTable).values({
         clienteId,
         ticketId: ticket.id,
         tipo: "VENTA_CREDITO",
@@ -1121,7 +1127,40 @@ export async function cobrarTicket(
         }),
         diasPlazo: diasPlazo!,
         fechaVencimiento: creditDueDate(ticket.createdAt, diasPlazo!),
-      });
+      }).returning();
+      // A prior overpayment remains a negative ledger balance.  When a new
+      // receivable exists it is consumed automatically, with immutable links
+      // preserving precisely which historical ABONO funded this sale.
+      const availableAbonos = await tx
+        .select({
+          id: movimientosCreditoTable.id,
+          disponible: sql<string>`(-${movimientosCreditoTable.importe} - COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a WHERE a.abono_movimiento_id = ${movimientosCreditoTable.id}), 0))::text`,
+        })
+        .from(movimientosCreditoTable)
+        .where(and(
+          eq(movimientosCreditoTable.clienteId, clienteId),
+          eq(movimientosCreditoTable.tipo, "ABONO"),
+        ))
+        .orderBy(asc(movimientosCreditoTable.createdAt), asc(movimientosCreditoTable.id));
+      const allocation = allocateCreditFifo(
+        availableAbonos
+          .map((abono) => ({ id: abono.id, availableCents: Math.max(0, moneyToCents(abono.disponible)) }))
+          .filter((abono) => abono.availableCents > 0),
+        [{
+          id: creditMovement!.id,
+          balanceCents: moneyToCents(creditMovement!.importe),
+          createdAt: creditMovement!.createdAt,
+        }],
+      );
+      if (allocation.allocations.length > 0) {
+        await tx.insert(aplicacionesCreditoTable).values(
+          allocation.allocations.map((item) => ({
+            abonoMovimientoId: item.sourceId,
+            ventaMovimientoId: item.targetId,
+            importe: centsToMoney(item.appliedCents),
+          })),
+        );
+      }
       const [cajero] = await tx
         .select({ nombre: usuariosTable.nombre })
         .from(usuariosTable)

@@ -42,6 +42,7 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS contacto_nombre text;
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS dias_credito integer NOT NULL DEFAULT 0;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS forma_pago forma_pago_ticket;
+       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS cuenta_destino text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS referencia text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS metadata text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS dias_plazo integer;
@@ -89,6 +90,17 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
          ON notificaciones_credito (leida_at, created_at);
        CREATE INDEX IF NOT EXISTS notificaciones_credito_cliente_idx
          ON notificaciones_credito (cliente_id);
+       CREATE TABLE IF NOT EXISTS aplicaciones_credito (
+         id serial PRIMARY KEY,
+         abono_movimiento_id integer NOT NULL REFERENCES movimientos_credito(id),
+         venta_movimiento_id integer NOT NULL REFERENCES movimientos_credito(id),
+         importe numeric(12,2) NOT NULL CHECK (importe > 0),
+         created_at timestamptz NOT NULL DEFAULT now(),
+         CONSTRAINT aplicaciones_credito_abono_venta_uidx
+           UNIQUE (abono_movimiento_id, venta_movimiento_id)
+       );
+       CREATE INDEX IF NOT EXISTS aplicaciones_credito_venta_idx
+         ON aplicaciones_credito (venta_movimiento_id);
       ALTER TABLE movimientos_credito DROP CONSTRAINT IF EXISTS movimientos_credito_plazo_check;
       ALTER TABLE movimientos_credito ADD CONSTRAINT movimientos_credito_plazo_check CHECK (
         (dias_plazo IS NULL AND fecha_vencimiento IS NULL)
@@ -102,6 +114,13 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
           OR (tipo IN ('ABONO', 'REVERSO') AND importe < 0)
           OR (tipo = 'AJUSTE' AND importe <> 0)
         );
+       ALTER TABLE movimientos_credito
+         DROP CONSTRAINT IF EXISTS movimientos_credito_cuenta_destino_check;
+       ALTER TABLE movimientos_credito
+         ADD CONSTRAINT movimientos_credito_cuenta_destino_check CHECK (
+           cuenta_destino IS NULL OR cuenta_destino IN
+             ('CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL')
+         );
     `);
     await pool.query(`
       -- Do not overwrite a historical customer that happened to use id=1.
@@ -202,6 +221,23 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       BEGIN
         RAISE EXCEPTION 'Los pagos y movimientos financieros son inmutables; registre un reverso o ajuste.';
       END $$;
+       CREATE OR REPLACE FUNCTION validate_credit_application()
+       RETURNS trigger LANGUAGE plpgsql AS $$
+       DECLARE abono_cliente integer;
+       DECLARE venta_cliente integer;
+       DECLARE abono_tipo tipo_movimiento_credito;
+       DECLARE venta_tipo tipo_movimiento_credito;
+       BEGIN
+         SELECT cliente_id, tipo INTO abono_cliente, abono_tipo
+           FROM movimientos_credito WHERE id = NEW.abono_movimiento_id;
+         SELECT cliente_id, tipo INTO venta_cliente, venta_tipo
+           FROM movimientos_credito WHERE id = NEW.venta_movimiento_id;
+         IF abono_tipo <> 'ABONO' OR venta_tipo <> 'VENTA_CREDITO'
+           OR abono_cliente IS DISTINCT FROM venta_cliente THEN
+           RAISE EXCEPTION 'Una aplicación debe enlazar un ABONO y una VENTA_CREDITO del mismo cliente.';
+         END IF;
+         RETURN NEW;
+       END $$;
       DROP TRIGGER IF EXISTS movimientos_credito_inmutables ON movimientos_credito;
       CREATE TRIGGER movimientos_credito_inmutables
         BEFORE UPDATE OR DELETE ON movimientos_credito
@@ -210,6 +246,14 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       CREATE TRIGGER ticket_pagos_inmutables
         BEFORE UPDATE OR DELETE ON ticket_pagos
         FOR EACH ROW EXECUTE FUNCTION prevent_financial_record_mutation();
+       DROP TRIGGER IF EXISTS aplicaciones_credito_inmutables ON aplicaciones_credito;
+       CREATE TRIGGER aplicaciones_credito_inmutables
+         BEFORE UPDATE OR DELETE ON aplicaciones_credito
+         FOR EACH ROW EXECUTE FUNCTION prevent_financial_record_mutation();
+       DROP TRIGGER IF EXISTS aplicaciones_credito_validas ON aplicaciones_credito;
+       CREATE TRIGGER aplicaciones_credito_validas
+         BEFORE INSERT ON aplicaciones_credito
+         FOR EACH ROW EXECUTE FUNCTION validate_credit_application();
     `);
     await pool.query("COMMIT");
   } catch (error) {

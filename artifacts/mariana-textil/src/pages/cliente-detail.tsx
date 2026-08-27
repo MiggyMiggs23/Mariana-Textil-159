@@ -39,7 +39,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { createAdjustment, downloadClientFile, getAccount, getClientAnalytics, getPortfolio, getPurchases, getStats, updateCreditTerms } from "@/lib/clientes-api";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
@@ -60,12 +61,7 @@ export default function ClienteDetail() {
   const [movementTo, setMovementTo] = useState("");
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [adjustmentOpen, setAdjustmentOpen] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("EFECTIVO");
-  const [reference, setReference] = useState("");
-  const [paymentDate, setPaymentDate] = useState("");
-  const [paymentNotes, setPaymentNotes] = useState("");
-  const [paymentTicketId, setPaymentTicketId] = useState("");
+  const [adjustmentAmount, setAdjustmentAmount] = useState("");
   const [reason, setReason] = useState("");
   const [creditOpen, setCreditOpen] = useState(false);
   const [creditLimit, setCreditLimit] = useState("");
@@ -125,10 +121,8 @@ export default function ClienteDetail() {
     return Array.from(months, ([month, total]) => ({ month, total })).reverse();
   }, [filteredPurchases]);
 
-  const createPayment = useCreateClientePago();
-  const adjustment = useMutation({ mutationFn: () => createAdjustment(id, { importe: Number(amount), motivo: reason }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["cliente-account", id] }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); setAdjustmentOpen(false); setAmount(""); setReason(""); toast({ title: "Ajuste registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el ajuste", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
+  const adjustment = useMutation({ mutationFn: () => createAdjustment(id, { importe: Number(adjustmentAmount), motivo: reason }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["cliente-account", id] }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); setAdjustmentOpen(false); setAdjustmentAmount(""); setReason(""); toast({ title: "Ajuste registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el ajuste", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
   const creditUpdate = useMutation({ mutationFn: () => updateCreditTerms(id, { limiteCredito: Number(creditLimit), diasCredito: Number(creditDays) }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) }); setCreditOpen(false); toast({ title: "Crédito actualizado" }); }, onError: (error) => toast({ title: "No se pudo actualizar", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
-  const submitPayment = () => createPayment.mutate({ id, data: { importe: Number(amount), formaPago: paymentMethod, referencia: reference || null, notas: paymentNotes || null, fechaEfectiva: paymentDate || null, ticketId: paymentTicketId ? Number(paymentTicketId) : null } }, { onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["cliente-account", id] }); queryClient.invalidateQueries({ queryKey: getGetClientePagosQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); setPaymentOpen(false); setAmount(""); setReference(""); setPaymentDate(""); setPaymentNotes(""); setPaymentTicketId(""); toast({ title: "Pago registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el pago", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
 
   const updateClient = useUpdateCliente();
   const reactivateClient = useReactivarCliente();
@@ -279,8 +273,20 @@ export default function ClienteDetail() {
           {(canFinances || canPrices) && <TabsContent value="analitica" className="space-y-4"><Period value={period} onChange={setPeriod} />{canFinances && <QueryState query={stats}><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Compra acumulada" value={formatNumber(stats.data?.totalCompras, { kind: "money" })} /><Kpi label="Tickets" value={formatNumber(stats.data?.comprasCount, { kind: "count" })} /><Kpi label="Ticket promedio" value={formatNumber(Number(stats.data?.totalCompras ?? 0) / Math.max(1, stats.data?.comprasCount ?? 0), { kind: "money" })} /><Kpi label="Metros" value={formatNumber(stats.data?.metros, { kind: "quantity" })} /><Kpi label="Kilos" value={formatNumber(stats.data?.kilos, { kind: "quantity" })} /><Kpi label="Costo identificable" value={formatNumber(stats.data?.costo, { kind: "money" })} /><Kpi label="Margen identificable" value={formatNumber(stats.data?.margen, { kind: "money" })} /></div>{(stats.data?.lineasSinCosto ?? 0) > 0 && <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Margen parcial: {formatNumber(stats.data?.lineasSinCosto, { kind: "count" })} línea(s) no tienen costo congelado.</p>}<Card className="mt-4"><CardHeader><CardTitle>Compras por mes</CardTitle></CardHeader><CardContent>{chartData.length ? <div className="h-72" data-testid="chart-client-purchases"><ResponsiveContainer width="100%" height="100%"><BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="month" /><YAxis /><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} /><Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div> : <p className="py-12 text-center text-muted-foreground">Sin datos para graficar en este periodo.</p>}</CardContent></Card></QueryState>}{canPrices && <QueryState query={prices}><Card className="mt-4"><CardHeader><CardTitle>Precios negociados recientes</CardTitle></CardHeader><CardContent><ResponsiveTable headers={["Fecha", "SKU", "Precio", "Promedio últimas 3"]} rows={(prices.data?.precios ?? []).map((item, index) => [date(item.fecha), item.sku, formatNumber(item.precioUnitario, { kind: "money" }), formatNumber(item.promedio3, { kind: "money" }), String(index)])} empty="No hay precios registrados." /></CardContent></Card></QueryState>}{canFinances && payments.data?.pagos?.length ? <p className="text-sm text-muted-foreground">{formatNumber(payments.data.pagos.length, { kind: "count" })} pago(s) registrados en el historial.</p> : null}</TabsContent>}
           {canFinances && <ClientAnalyticsBlocks query={analytics} />}
         </Tabs>
-        <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}><DialogContent><DialogHeader><DialogTitle>Registrar pago</DialogTitle></DialogHeader><div className="space-y-3"><Label>Importe</Label><Input type="number" min="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} /><Label>Forma de pago</Label><Select value={paymentMethod} onValueChange={setPaymentMethod}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="EFECTIVO">Efectivo</SelectItem><SelectItem value="TRANSFERENCIA">Transferencia</SelectItem></SelectContent></Select><Label>Fecha efectiva</Label><Input type="date" value={paymentDate} onChange={(e) => setPaymentDate(e.target.value)} /><Label>Ticket relacionado (opcional)</Label><Input type="number" min="1" value={paymentTicketId} onChange={(e) => setPaymentTicketId(e.target.value)} /><Label>Referencia</Label><Input value={reference} onChange={(e) => setReference(e.target.value)} /><Label>Notas</Label><Textarea value={paymentNotes} onChange={(e) => setPaymentNotes(e.target.value)} /></div><DialogFooter><Button onClick={submitPayment} disabled={!Number(amount) || createPayment.isPending}>Guardar pago</Button></DialogFooter></DialogContent></Dialog>
-        <Dialog open={adjustmentOpen} onOpenChange={setAdjustmentOpen}><DialogContent><DialogHeader><DialogTitle>Ajuste de saldo</DialogTitle></DialogHeader><div className="space-y-3"><Label>Importe (positivo o negativo)</Label><Input type="number" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} /><Label>Motivo (mínimo 10 caracteres)</Label><Textarea value={reason} onChange={(e) => setReason(e.target.value)} /></div><DialogFooter><Button onClick={() => adjustment.mutate()} disabled={!Number(amount) || reason.trim().length < 10 || adjustment.isPending}>Registrar ajuste</Button></DialogFooter></DialogContent></Dialog>
+
+        <ClientePagoDialog
+          open={paymentOpen}
+          onOpenChange={setPaymentOpen}
+          clienteId={id}
+          saldoActual={account.data?.saldoActual}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ["cliente-account", id] });
+            queryClient.invalidateQueries({ queryKey: getGetClientePagosQueryKey(id) });
+            queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) });
+          }}
+        />
+
+        <Dialog open={adjustmentOpen} onOpenChange={setAdjustmentOpen}><DialogContent><DialogHeader><DialogTitle>Ajuste de saldo</DialogTitle></DialogHeader><div className="space-y-3"><Label>Importe (positivo o negativo)</Label><Input type="number" step="0.01" value={adjustmentAmount} onChange={(e) => setAdjustmentAmount(e.target.value)} /><Label>Motivo (mínimo 10 caracteres)</Label><Textarea value={reason} onChange={(e) => setReason(e.target.value)} /></div><DialogFooter><Button onClick={() => adjustment.mutate()} disabled={!Number(adjustmentAmount) || reason.trim().length < 10 || adjustment.isPending}>Registrar ajuste</Button></DialogFooter></DialogContent></Dialog>
         <Dialog open={creditOpen} onOpenChange={setCreditOpen}><DialogContent><DialogHeader><DialogTitle>Editar términos de crédito</DialogTitle></DialogHeader><div className="space-y-3"><Label>Límite de crédito</Label><Input type="number" min="0" value={creditLimit} onChange={(e) => setCreditLimit(e.target.value)} /><Label>Días de crédito</Label><Input type="number" min="0" step="1" value={creditDays} onChange={(e) => setCreditDays(e.target.value)} /></div><DialogFooter><Button onClick={() => creditUpdate.mutate()} disabled={Number(creditLimit) < 0 || Number(creditDays) < 0 || creditUpdate.isPending}>Guardar términos</Button></DialogFooter></DialogContent></Dialog>
       </div>
 

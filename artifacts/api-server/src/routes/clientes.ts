@@ -4,9 +4,11 @@ import { and, asc, desc, eq, sql } from "drizzle-orm";
 import {
   CreateClientePagoBody,
   CreateClientePagoResponse,
+  PreviewClientePagoBody,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
+  aplicacionesCreditoTable,
   clientesTable,
   db,
   movimientosCreditoTable,
@@ -15,6 +17,12 @@ import {
   ticketLineasTable,
   ticketsTable,
 } from "@workspace/db";
+import {
+  allocateCreditFifo,
+  centsToMoney,
+  isValidPaymentDestination,
+  moneyToCents,
+} from "../lib/credit-allocation";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
@@ -61,6 +69,65 @@ function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {
 function parseId(value: string | string[]): number | null {
   const id = Number(Array.isArray(value) ? value[0] : value);
   return Number.isInteger(id) && id > 0 ? id : null;
+}
+
+type CreditSale = {
+  id: number;
+  ticketId: number | null;
+  folio: number | null;
+  fechaVencimiento: string | null;
+  createdAt: Date;
+  balanceCents: number;
+};
+
+async function outstandingCreditSales(database: any, clienteId: number): Promise<CreditSale[]> {
+  const rows = await database
+    .select({
+      id: movimientosCreditoTable.id,
+      ticketId: movimientosCreditoTable.ticketId,
+      folio: ticketsTable.folio,
+      fechaVencimiento: movimientosCreditoTable.fechaVencimiento,
+      createdAt: movimientosCreditoTable.createdAt,
+      importe: movimientosCreditoTable.importe,
+      aplicado: sql<string>`COALESCE((SELECT SUM(a.importe) FROM aplicaciones_credito a WHERE a.venta_movimiento_id = ${movimientosCreditoTable.id}), 0)::text`,
+    })
+    .from(movimientosCreditoTable)
+    .leftJoin(ticketsTable, eq(ticketsTable.id, movimientosCreditoTable.ticketId))
+    .where(and(
+      eq(movimientosCreditoTable.clienteId, clienteId),
+      eq(movimientosCreditoTable.tipo, "VENTA_CREDITO"),
+    ))
+    .orderBy(asc(movimientosCreditoTable.createdAt), asc(movimientosCreditoTable.id));
+  return rows.map((row: any) => ({
+    ...row,
+    balanceCents: Math.max(0, moneyToCents(row.importe) - moneyToCents(row.aplicado)),
+    fechaVencimiento:
+      row.fechaVencimiento == null
+        ? null
+        : typeof row.fechaVencimiento === "string"
+          ? row.fechaVencimiento
+          : row.fechaVencimiento.toISOString().slice(0, 10),
+  })).filter((row: CreditSale) => row.balanceCents > 0);
+}
+
+function presentAllocations(
+  sales: CreditSale[],
+  allocations: ReturnType<typeof allocateCreditFifo>["allocations"],
+) {
+  const salesById = new Map(sales.map((sale) => [sale.id, sale]));
+  return allocations.map((allocation) => {
+    const sale = salesById.get(allocation.targetId)!;
+    return {
+      folio: sale.folio,
+      ticketId: sale.ticketId,
+      movimientoVentaId: sale.id,
+      vencimiento: sale.fechaVencimiento,
+      saldoAntes: centsToMoney(allocation.balanceBeforeCents),
+      aplicado: centsToMoney(allocation.appliedCents),
+      saldoDespues: centsToMoney(allocation.balanceAfterCents),
+      resultado: allocation.balanceAfterCents === 0 ? "SALDADA" : "PARCIAL",
+    };
+  });
 }
 
 function period(req: { query: Record<string, unknown> }) {
@@ -940,7 +1007,7 @@ router.get(
               CASE WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL
                 THEN CONCAT_WS(' · ', notas, 'Sin plazo definido (crédito legado)')
                 ELSE notas END AS notas,
-              forma_pago AS "formaPago", dias_plazo AS "diasPlazo",
+               forma_pago AS "formaPago", cuenta_destino AS "cuentaDestino", dias_plazo AS "diasPlazo",
               fecha_vencimiento AS "fechaVencimiento",
               CASE
                 WHEN tipo='VENTA_CREDITO' AND aging.movimiento_id IS NULL THEN 'PAGADA'
@@ -1321,6 +1388,7 @@ router.get(
           importe: movimientosCreditoTable.importe,
           fecha: movimientosCreditoTable.createdAt,
           formaPago: movimientosCreditoTable.formaPago,
+          cuentaDestino: movimientosCreditoTable.cuentaDestino,
           referencia: movimientosCreditoTable.referencia,
           ticketId: movimientosCreditoTable.ticketId,
           notas: movimientosCreditoTable.notas,
@@ -1347,6 +1415,44 @@ router.get(
 // clientes_finanzas module + crear
 
 router.post(
+  "/clientes/:id/pagos/vista-previa",
+  requierePermiso("clientes_finanzas", "crear"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const id = parseId(req.params.id);
+      if (!id) {
+        res.status(400).json({ error: "ID inválido." });
+        return;
+      }
+      if (req.body?.ticketId != null) {
+        res.status(400).json({ error: "Un abono no puede dirigirse a un ticket; se aplica FIFO." });
+        return;
+      }
+      const body = PreviewClientePagoBody.parse(req.body);
+      const [client] = await db.select({ id: clientesTable.id })
+        .from(clientesTable).where(eq(clientesTable.id, id)).limit(1);
+      if (!client) {
+        res.status(404).json({ error: "Cliente no encontrado." });
+        return;
+      }
+      const sales = await outstandingCreditSales(db, id);
+      const amountCents = moneyToCents(body.importe);
+      const allocation = allocateCreditFifo(
+        [{ id: 0, availableCents: amountCents }],
+        sales.map((sale) => ({ id: sale.id, balanceCents: sale.balanceCents, createdAt: sale.createdAt })),
+      );
+      res.json({
+        monto: centsToMoney(amountCents),
+        asignaciones: presentAllocations(sales, allocation.allocations),
+        saldoAFavor: centsToMoney(allocation.remainingCents),
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.post(
   "/clientes/:id/pagos",
   requierePermiso("clientes_finanzas", "crear"),
   async (req, res, next): Promise<void> => {
@@ -1365,6 +1471,10 @@ router.post(
         res.status(400).json({ error: "Forma de pago inválida." });
         return;
       }
+      if (!isValidPaymentDestination(body.formaPago, body.cuentaDestino)) {
+        res.status(400).json({ error: "La cuenta destino no corresponde a la forma de pago." });
+        return;
+      }
       const fechaEfectiva = body.fechaEfectiva
         ? new Date(body.fechaEfectiva)
         : new Date();
@@ -1373,6 +1483,7 @@ router.post(
         return;
       }
       const result = await db.transaction(async (tx) => {
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(240024, ${id})`);
         const [client] = await tx
           .select()
           .from(clientesTable)
@@ -1381,35 +1492,14 @@ router.post(
           .limit(1);
         if (!client) return null;
         if (!client.activo) throw new Error("INACTIVE_CLIENT");
-        if (body.ticketId != null) {
-          const [ticket] = await tx
-            .select({ id: ticketsTable.id })
-            .from(ticketsTable)
-            .where(
-              and(
-                eq(ticketsTable.id, body.ticketId),
-                eq(ticketsTable.clienteId, id),
-              ),
-            )
-            .limit(1);
-          if (!ticket) throw new Error("INVALID_PAYMENT_TICKET");
-        }
+        if (req.body?.ticketId != null) throw new Error("DIRECTED_PAYMENT");
         const importe = body.importe.toFixed(2);
         if (client.esSistema) throw new Error("SYSTEM_CLIENT_CREDIT");
-        const [balance] = await tx
-          .select({
-            saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
-          })
-          .from(movimientosCreditoTable)
-          .where(eq(movimientosCreditoTable.clienteId, id));
-        if (Number(importe) > Number(balance?.saldo ?? "0")) {
-          throw new Error("PAYMENT_EXCEEDS_BALANCE");
-        }
         const [created] = await tx
           .insert(movimientosCreditoTable)
           .values({
             clienteId: id,
-            ticketId: body.ticketId ?? null,
+            ticketId: null,
             tipo: "ABONO",
             importe: `-${importe}`,
             usuarioId: req.auth!.user.id,
@@ -1421,6 +1511,7 @@ router.post(
               .filter(Boolean)
               .join(" · "),
             formaPago: body.formaPago as "EFECTIVO" | "TRANSFERENCIA",
+            cuentaDestino: body.cuentaDestino,
             referencia: body.referencia ?? null,
             createdAt: fechaEfectiva,
             metadata: JSON.stringify({
@@ -1430,6 +1521,21 @@ router.post(
             }),
           })
           .returning();
+        const sales = await outstandingCreditSales(tx, id);
+        const allocation = allocateCreditFifo(
+          [{ id: created!.id, availableCents: moneyToCents(importe) }],
+          sales.map((sale) => ({ id: sale.id, balanceCents: sale.balanceCents, createdAt: sale.createdAt })),
+        );
+        if (allocation.allocations.length > 0) {
+          await tx.insert(aplicacionesCreditoTable).values(
+            allocation.allocations.map((item) => ({
+              abonoMovimientoId: item.sourceId,
+              ventaMovimientoId: item.targetId,
+              importe: centsToMoney(item.appliedCents),
+            })),
+          );
+        }
+        const asignaciones = presentAllocations(sales, allocation.allocations);
         await tx.insert(auditoriaTable).values({
           usuarioId: req.auth!.user.id,
           accion: "PAGO_CLIENTE",
@@ -1439,10 +1545,13 @@ router.post(
             movimientoCreditoId: created!.id,
             importe,
             formaPago: body.formaPago,
+            cuentaDestino: body.cuentaDestino,
+            asignaciones,
+            saldoAFavor: centsToMoney(allocation.remainingCents),
           },
           ip: getRequestIp(req),
         });
-        return created!;
+        return { created: created!, asignaciones, saldoAFavor: centsToMoney(allocation.remainingCents) };
       });
       if (!result) {
         res.status(404).json({ error: "Cliente no encontrado." });
@@ -1450,17 +1559,15 @@ router.post(
       }
       res.status(201).json(
         CreateClientePagoResponse.parse({
-          id: result.id,
+          id: result.created.id,
           clienteId: id,
+          monto: result.created.importe.startsWith("-") ? result.created.importe.slice(1) : result.created.importe,
+          cuentaDestino: result.created.cuentaDestino,
+          asignaciones: result.asignaciones,
+          saldoAFavor: result.saldoAFavor,
         }),
       );
     } catch (e) {
-      if (e instanceof Error && e.message === "PAYMENT_EXCEEDS_BALANCE") {
-        res.status(400).json({
-          error: "El pago no puede exceder el saldo actual.",
-        });
-        return;
-      }
       if (e instanceof Error && e.message === "SYSTEM_CLIENT_CREDIT") {
         res.status(400).json({ error: "Venta a Público no admite movimientos de crédito." });
         return;
@@ -1469,8 +1576,8 @@ router.post(
         res.status(409).json({ error: "El cliente está inactivo.", code: "INACTIVE_CLIENT" });
         return;
       }
-      if (e instanceof Error && e.message === "INVALID_PAYMENT_TICKET") {
-        res.status(400).json({ error: "El ticket no pertenece al cliente." });
+      if (e instanceof Error && e.message === "DIRECTED_PAYMENT") {
+        res.status(400).json({ error: "Un abono no puede dirigirse a un ticket; se aplica FIFO." });
         return;
       }
       next(e);

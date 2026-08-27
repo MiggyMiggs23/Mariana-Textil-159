@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClienteMovimientoCuentaDestino } from './clienteMovimientoCuentaDestino';
 import type { ClienteMovimientoDiasPlazo } from './clienteMovimientoDiasPlazo';
 import type { ClienteMovimientoEstado } from './clienteMovimientoEstado';
 
@@ -22,6 +23,8 @@ export interface ClienteMovimiento {
   nombreUsuario?: string;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  cuentaDestino?: ClienteMovimientoCuentaDestino;
   /** @nullable */
   referencia?: string | null;
   fechaEfectiva?: Date;

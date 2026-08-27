@@ -73,6 +73,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -160,47 +161,8 @@ function CarteraContent() {
     .sort((a, b) => new Date(a.fecha!).getTime() - new Date(b.fecha!).getTime()) || [];
 
   const [paymentOpen, setPaymentOpen] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("EFECTIVO");
-  const [reference, setReference] = useState("");
-  const [paymentNotes, setPaymentNotes] = useState("");
-
-  const createPayment = useCreateClientePago();
   const queryClient = useQueryClient();
   const { toast } = useToast();
-
-  const submitPayment = () => {
-    if (!clienteId) return;
-    createPayment.mutate(
-      {
-        id: clienteId,
-        data: {
-          importe: Number(amount),
-          formaPago: paymentMethod,
-          referencia: reference || null,
-          notas: paymentNotes || null,
-          fechaEfectiva: new Date().toISOString().split("T")[0],
-          ticketId: null, // NO se asocia al ticket directamente
-        },
-      },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(clienteId) });
-          setPaymentOpen(false);
-          setAmount("");
-          setReference("");
-          setPaymentNotes("");
-          toast({ title: "Pago registrado exitosamente" });
-        },
-        onError: (error) =>
-          toast({
-            title: "Error al registrar pago",
-            description: getApiErrorMessage(error, "Intenta de nuevo"),
-            variant: "destructive",
-          }),
-      }
-    );
-  };
 
   return (
     <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6">
@@ -359,86 +321,17 @@ function CarteraContent() {
         </CardContent>
       </Card>
 
-      <Dialog open={paymentOpen} onOpenChange={(open) => {
-        setPaymentOpen(open);
-        if (!open) {
-          setAmount("");
-          setReference("");
-          setPaymentNotes("");
-        }
-      }}>
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden">
-          <DialogHeader className="bg-sidebar p-6 text-white pb-6">
-            <DialogTitle className="text-xl flex items-center gap-2">
-              <Wallet className="h-5 w-5" /> Registrar Abono Global
-            </DialogTitle>
-            <DialogDescription className="text-white/70 mt-2">
-              El abono se descontará del saldo total de {formatNumber(cuenta?.saldoActual, { kind: "money" })} aplicando primero a las notas más antiguas (FIFO).
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-5 p-6 bg-secondary/10">
-            <div className="space-y-2">
-              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Importe a abonar</Label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xl">$</span>
-                <Input
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="pl-9 h-14 text-2xl font-black bg-white border-2 focus-visible:ring-0 focus-visible:border-primary"
-                  autoFocus
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Forma de Pago</Label>
-              <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                <SelectTrigger className="h-12 bg-white border-2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>
-                  <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {paymentMethod === "TRANSFERENCIA" && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino / Referencia</Label>
-                <Input
-                  value={reference}
-                  onChange={(e) => setReference(e.target.value)}
-                  placeholder="Ej. Terminación 4567, Banco..."
-                  className="h-12 bg-white border-2"
-                />
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Notas (Opcional)</Label>
-              <Textarea
-                value={paymentNotes}
-                onChange={(e) => setPaymentNotes(e.target.value)}
-                placeholder="Observaciones sobre el pago..."
-                rows={2}
-                className="bg-white border-2 resize-none"
-              />
-            </div>
-          </div>
-          <DialogFooter className="p-4 border-t bg-white">
-            <Button variant="ghost" onClick={() => setPaymentOpen(false)} className="font-bold text-muted-foreground">Cancelar</Button>
-            <Button
-              onClick={submitPayment}
-              disabled={!Number(amount) || createPayment.isPending}
-              className="font-bold h-10 px-8"
-            >
-              {createPayment.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Aplicar Abono
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ClientePagoDialog
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+        clienteId={clienteId || 0}
+        saldoActual={cuenta?.saldoActual}
+        onSuccess={() => {
+          if (clienteId) {
+            queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(clienteId) });
+          }
+        }}
+      />
     </div>
   );
 }

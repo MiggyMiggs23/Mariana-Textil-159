@@ -5,17 +5,18 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClientePagoInputCuentaDestino } from './clientePagoInputCuentaDestino';
+import type { ClientePagoInputFormaPago } from './clientePagoInputFormaPago';
 
 export interface ClientePagoInput {
   /** @minimum 0.01 */
   importe: number;
-  formaPago: string;
+  formaPago: ClientePagoInputFormaPago;
+  cuentaDestino: ClientePagoInputCuentaDestino;
   /** @nullable */
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
   /** @nullable */
   fechaEfectiva?: Date | null;
-  /** @nullable */
-  ticketId?: number | null;
 }

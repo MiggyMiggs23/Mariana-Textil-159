@@ -3137,6 +3137,7 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "ticketFolio": zod.number().nullish(),
   "nombreUsuario": zod.string().optional(),
   "formaPago": zod.string().nullish(),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish(),
   "referencia": zod.string().nullish(),
   "fechaEfectiva": zod.coerce.date().optional(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
@@ -3237,7 +3238,8 @@ export const GetClientePagosResponse = zod.object({
   "id": zod.number().optional(),
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
-  "formaPago": zod.string().nullish()
+  "formaPago": zod.string().nullish(),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish()
 }))
 })
 
@@ -3255,16 +3257,60 @@ export const createClientePagoBodyImporteMin = 0.01;
 
 export const CreateClientePagoBody = zod.object({
   "importe": zod.number().min(createClientePagoBodyImporteMin),
-  "formaPago": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish(),
-  "fechaEfectiva": zod.coerce.date().nullish(),
-  "ticketId": zod.number().nullish()
+  "fechaEfectiva": zod.coerce.date().nullish()
 })
 
 export const CreateClientePagoResponse = zod.object({
   "id": zod.number(),
-  "clienteId": zod.number()
+  "clienteId": zod.number(),
+  "monto": zod.string(),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "asignaciones": zod.array(zod.object({
+  "folio": zod.number().nullable(),
+  "ticketId": zod.number().nullable(),
+  "movimientoVentaId": zod.number(),
+  "vencimiento": zod.coerce.date().nullable(),
+  "saldoAntes": zod.string(),
+  "aplicado": zod.string(),
+  "saldoDespues": zod.string(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL'])
+})),
+  "saldoAFavor": zod.string()
+})
+
+
+/**
+ * @summary Vista previa FIFO de un pago de cliente
+ */
+export const PreviewClientePagoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const previewClientePagoBodyImporteMin = 0.01;
+
+
+
+export const PreviewClientePagoBody = zod.object({
+  "importe": zod.number().min(previewClientePagoBodyImporteMin)
+})
+
+export const PreviewClientePagoResponse = zod.object({
+  "monto": zod.string(),
+  "asignaciones": zod.array(zod.object({
+  "folio": zod.number().nullable(),
+  "ticketId": zod.number().nullable(),
+  "movimientoVentaId": zod.number(),
+  "vencimiento": zod.coerce.date().nullable(),
+  "saldoAntes": zod.string(),
+  "aplicado": zod.string(),
+  "saldoDespues": zod.string(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL'])
+})),
+  "saldoAFavor": zod.string()
 })
 
 

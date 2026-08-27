@@ -225,6 +225,8 @@ export const movimientosCreditoTable = pgTable(
       .references(() => usuariosTable.id),
     notas: text("notas"),
     formaPago: formaPagoTicketEnum("forma_pago"),
+    /** Destination declared when an external customer ABONO is recorded. */
+    cuentaDestino: text("cuenta_destino"),
     referencia: text("referencia"),
     metadata: text("metadata"),
     diasPlazo: integer("dias_plazo"),
@@ -252,6 +254,10 @@ export const movimientosCreditoTable = pgTable(
       "movimientos_credito_plazo_check",
       sql`(${table.diasPlazo} IS NULL AND ${table.fechaVencimiento} IS NULL)
         OR (${table.diasPlazo} IN (7, 15, 30, 60) AND ${table.fechaVencimiento} IS NOT NULL)`,
+    ),
+    check(
+      "movimientos_credito_cuenta_destino_check",
+      sql`${table.cuentaDestino} IS NULL OR ${table.cuentaDestino} IN ('CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL')`,
     ),
   ],
 );

@@ -6,13 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AplicacionCredito } from './aplicacionCredito';
-import type { ClientePagoCuentaDestino } from './clientePagoCuentaDestino';
 
-export interface ClientePago {
-  id: number;
-  clienteId: number;
+export interface ClientePagoPreview {
   monto: string;
-  cuentaDestino: ClientePagoCuentaDestino;
   asignaciones: AplicacionCredito[];
   saldoAFavor: string;
 }

@@ -1,4 +1,5 @@
 export * from "./audit";
+export * from "./aplicaciones-credito";
 export * from "./clientes";
 export * from "./cliente-documentos";
 export * from "./contenedores";

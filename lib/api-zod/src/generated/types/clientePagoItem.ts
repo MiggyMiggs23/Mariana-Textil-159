@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClientePagoItemCuentaDestino } from './clientePagoItemCuentaDestino';
 
 export interface ClientePagoItem {
   id?: number;
@@ -12,4 +13,6 @@ export interface ClientePagoItem {
   fecha?: Date;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  cuentaDestino?: ClientePagoItemCuentaDestino;
 }

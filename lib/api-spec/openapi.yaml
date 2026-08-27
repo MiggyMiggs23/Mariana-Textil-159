@@ -2100,6 +2100,34 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/{id}/pagos/vista-previa:
+    post:
+      operationId: previewClientePago
+      tags: [clientes]
+      summary: Vista previa FIFO de un pago de cliente
+      parameters:
+        - $ref: "#/components/parameters/ClienteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientePagoPreviewInput"
+      responses:
+        "200":
+          description: Reparto FIFO estimado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientePagoPreview"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /clientes/{id}/ajustes:
     post:
       operationId: createClienteAjuste
@@ -4938,6 +4966,7 @@ components:
         ticketFolio: { type: ["number", "null"] }
         nombreUsuario: { type: string }
         formaPago: { type: ["string", "null"] }
+        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         referencia: { type: ["string", "null"] }
         fechaEfectiva: { type: string, format: date-time }
         diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
@@ -5003,6 +5032,7 @@ components:
         importe: { type: string }
         fecha: { type: string, format: date-time }
         formaPago: { type: ["string", "null"] }
+        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
     ClientePagos:
       type: object
       required: [clienteId, pagos]
@@ -5014,20 +5044,52 @@ components:
             $ref: "#/components/schemas/ClientePagoItem"
     ClientePago:
       type: object
-      required: [id, clienteId]
+      required: [id, clienteId, monto, cuentaDestino, asignaciones, saldoAFavor]
       properties:
         id: { type: number }
         clienteId: { type: number }
-    ClientePagoInput:
+        monto: { type: string }
+        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        asignaciones:
+          type: array
+          items: { $ref: "#/components/schemas/AplicacionCredito" }
+        saldoAFavor: { type: string }
+    AplicacionCredito:
       type: object
-      required: [importe, formaPago]
+      required: [folio, ticketId, movimientoVentaId, vencimiento, saldoAntes, aplicado, saldoDespues, resultado]
+      properties:
+        folio: { type: ["number", "null"] }
+        ticketId: { type: ["number", "null"] }
+        movimientoVentaId: { type: number }
+        vencimiento: { type: ["string", "null"], format: date }
+        saldoAntes: { type: string }
+        aplicado: { type: string }
+        saldoDespues: { type: string }
+        resultado: { type: string, enum: [SALDADA, PARCIAL] }
+    ClientePagoPreview:
+      type: object
+      required: [monto, asignaciones, saldoAFavor]
+      properties:
+        monto: { type: string }
+        asignaciones:
+          type: array
+          items: { $ref: "#/components/schemas/AplicacionCredito" }
+        saldoAFavor: { type: string }
+    ClientePagoPreviewInput:
+      type: object
+      required: [importe]
       properties:
         importe: { type: number, minimum: 0.01 }
-        formaPago: { type: string }
+    ClientePagoInput:
+      type: object
+      required: [importe, formaPago, cuentaDestino]
+      properties:
+        importe: { type: number, minimum: 0.01 }
+        formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA] }
+        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         fechaEfectiva: { type: ["string", "null"], format: date-time }
-        ticketId: { type: ["number", "null"] }
     ClienteAjusteInput:
       type: object
       required: [importe, motivo]

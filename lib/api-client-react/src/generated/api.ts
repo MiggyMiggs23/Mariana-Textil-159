@@ -56,6 +56,8 @@ import type {
   ClienteInput,
   ClientePago,
   ClientePagoInput,
+  ClientePagoPreview,
+  ClientePagoPreviewInput,
   ClientePagos,
   ClientePrecios,
   ClienteUpdate,
@@ -7344,6 +7346,78 @@ export const useCreateClientePago = <TError = ErrorType<ValidationErrorResponse 
         TContext
       > => {
       return useMutation(getCreateClientePagoMutationOptions(options));
+    }
+
+export const getPreviewClientePagoUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/pagos/vista-previa`
+}
+
+/**
+ * @summary Vista previa FIFO de un pago de cliente
+ */
+export const previewClientePago = async (id: number,
+    clientePagoPreviewInput: ClientePagoPreviewInput, options?: Parameters<typeof customFetch>[1]): Promise<ClientePagoPreview> => {
+
+  return customFetch<ClientePagoPreview>(getPreviewClientePagoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(clientePagoPreviewInput)
+  }
+);}
+
+
+
+
+
+export const getPreviewClientePagoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewClientePago>>, TError,{id: number;data: BodyType<ClientePagoPreviewInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewClientePago>>, TError,{id: number;data: BodyType<ClientePagoPreviewInput>}, TContext> => {
+
+const mutationKey = ['previewClientePago'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewClientePago>>, {id: number;data: BodyType<ClientePagoPreviewInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  previewClientePago(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewClientePagoMutationResult = NonNullable<Awaited<ReturnType<typeof previewClientePago>>>
+    export type PreviewClientePagoMutationBody = BodyType<ClientePagoPreviewInput>
+    export type PreviewClientePagoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Vista previa FIFO de un pago de cliente
+ */
+export const usePreviewClientePago = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewClientePago>>, TError,{id: number;data: BodyType<ClientePagoPreviewInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewClientePago>>,
+        TError,
+        {id: number;data: BodyType<ClientePagoPreviewInput>},
+        TContext
+      > => {
+      return useMutation(getPreviewClientePagoMutationOptions(options));
     }
 
 export const getCreateClienteAjusteUrl = (id: number,) => {

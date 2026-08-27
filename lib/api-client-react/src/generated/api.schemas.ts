@@ -1394,6 +1394,18 @@ export interface ClientePrecios {
 /**
  * @nullable
  */
+export type ClienteMovimientoCuentaDestino = typeof ClienteMovimientoCuentaDestino[keyof typeof ClienteMovimientoCuentaDestino] | null;
+
+
+export const ClienteMovimientoCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+/**
+ * @nullable
+ */
 export type ClienteMovimientoDiasPlazo = typeof ClienteMovimientoDiasPlazo[keyof typeof ClienteMovimientoDiasPlazo] | null;
 
 
@@ -1432,6 +1444,8 @@ export interface ClienteMovimiento {
   nombreUsuario?: string;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  cuentaDestino?: ClienteMovimientoCuentaDestino;
   /** @nullable */
   referencia?: string | null;
   fechaEfectiva?: string;
@@ -1494,12 +1508,26 @@ export interface ClienteEstadisticas {
   lineasSinCosto?: number;
 }
 
+/**
+ * @nullable
+ */
+export type ClientePagoItemCuentaDestino = typeof ClientePagoItemCuentaDestino[keyof typeof ClientePagoItemCuentaDestino] | null;
+
+
+export const ClientePagoItemCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
 export interface ClientePagoItem {
   id?: number;
   importe?: string;
   fecha?: string;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  cuentaDestino?: ClientePagoItemCuentaDestino;
 }
 
 export interface ClientePagos {
@@ -1507,23 +1535,85 @@ export interface ClientePagos {
   pagos: ClientePagoItem[];
 }
 
+export type ClientePagoCuentaDestino = typeof ClientePagoCuentaDestino[keyof typeof ClientePagoCuentaDestino];
+
+
+export const ClientePagoCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export type AplicacionCreditoResultado = typeof AplicacionCreditoResultado[keyof typeof AplicacionCreditoResultado];
+
+
+export const AplicacionCreditoResultado = {
+  SALDADA: 'SALDADA',
+  PARCIAL: 'PARCIAL',
+} as const;
+
+export interface AplicacionCredito {
+  /** @nullable */
+  folio: number | null;
+  /** @nullable */
+  ticketId: number | null;
+  movimientoVentaId: number;
+  /** @nullable */
+  vencimiento: string | null;
+  saldoAntes: string;
+  aplicado: string;
+  saldoDespues: string;
+  resultado: AplicacionCreditoResultado;
+}
+
 export interface ClientePago {
   id: number;
   clienteId: number;
+  monto: string;
+  cuentaDestino: ClientePagoCuentaDestino;
+  asignaciones: AplicacionCredito[];
+  saldoAFavor: string;
 }
+
+export interface ClientePagoPreview {
+  monto: string;
+  asignaciones: AplicacionCredito[];
+  saldoAFavor: string;
+}
+
+export interface ClientePagoPreviewInput {
+  /** @minimum 0.01 */
+  importe: number;
+}
+
+export type ClientePagoInputFormaPago = typeof ClientePagoInputFormaPago[keyof typeof ClientePagoInputFormaPago];
+
+
+export const ClientePagoInputFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+export type ClientePagoInputCuentaDestino = typeof ClientePagoInputCuentaDestino[keyof typeof ClientePagoInputCuentaDestino];
+
+
+export const ClientePagoInputCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
 
 export interface ClientePagoInput {
   /** @minimum 0.01 */
   importe: number;
-  formaPago: string;
+  formaPago: ClientePagoInputFormaPago;
+  cuentaDestino: ClientePagoInputCuentaDestino;
   /** @nullable */
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
   /** @nullable */
   fechaEfectiva?: string | null;
-  /** @nullable */
-  ticketId?: number | null;
 }
 
 export interface ClienteAjusteInput {
