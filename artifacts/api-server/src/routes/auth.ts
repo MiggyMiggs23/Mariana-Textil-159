@@ -122,7 +122,7 @@ router.post("/auth/login", async (req, res): Promise<void> => {
   );
 });
 
-router.use(requireSession);
+router.use("/auth", requireSession);
 
 router.get("/auth/me", async (req, res): Promise<void> => {
   const permisos = await buildPermissionMatrix(req.auth!.user.id, req.auth!.user.rol);

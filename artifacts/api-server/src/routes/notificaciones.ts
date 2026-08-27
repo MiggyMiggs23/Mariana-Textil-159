@@ -16,7 +16,7 @@ import {
 import { requireSession } from "../middlewares/auth";
 
 const router: IRouter = Router();
-router.use(requireSession);
+router.use("/notificaciones", requireSession);
 
 function requireLiteralAdmin(req: Request, res: Response): boolean {
   if (req.auth!.user.rol === "ADMIN") return true;

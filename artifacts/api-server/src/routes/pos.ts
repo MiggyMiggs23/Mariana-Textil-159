@@ -70,7 +70,7 @@ import {
 import { normalizeUsername } from "../lib/auth-identifiers";
 
 const router: IRouter = Router();
-router.use(requireSession);
+router.use(["/pos", "/tickets", "/caja", "/sesiones-caja"], requireSession);
 
 function handlePosError(
   error: unknown,

@@ -39,7 +39,7 @@ export interface PermissionMatrix {
 
 type PermissionReader = Pick<typeof db, "select">;
 
-/** All 24 module identifiers */
+/** All 26 module identifiers */
 export const MODULOS = [
   "dashboard",
   "pos",
@@ -49,6 +49,7 @@ export const MODULOS = [
   "etiquetas",
   "inventario",
   "productos",
+  "precios",
   "ajustes",
   "clientes",
   "clientes_credito",
