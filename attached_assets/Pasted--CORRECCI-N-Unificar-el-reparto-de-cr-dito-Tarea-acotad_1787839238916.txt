@@ -1,0 +1,97 @@
+# CORRECCIÓN — Unificar el reparto de crédito
+
+Tarea acotada. **No adelantes otro trabajo.** Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## BLOQUE 1 — Dos algoritmos con el mismo nombre
+
+Existen **dos funciones distintas llamadas `allocateCreditFifo`**, en archivos distintos, con firmas distintas y con reglas distintas:
+
+| Archivo | Quién la usa | Para qué |
+|---|---|---|
+| `lib/credit-allocation.ts` | `lib/pos.ts`, `routes/clientes.ts`, `lib/compras-proveedor.ts` | **Aplicar** abonos: reparte dinero contra notas y persiste el resultado |
+| `lib/clientes-aging.ts` | el cálculo de antigüedad de cartera | **Reportar** saldos pendientes por nota |
+
+No hacen lo mismo. La de `clientes-aging.ts` descuenta un `linkedReversal` por venta antes de repartir; la de `credit-allocation.ts` no conoce ese concepto.
+
+### Por qué importa
+
+**El saldo con el que se aplica un abono y el saldo que reporta la antigüedad se calculan con reglas distintas.**
+
+Hoy pueden coincidir porque no hay reversos ligados en la base. En cuanto exista uno, van a divergir: la cartera va a decir que una nota tiene saldo mientras el sistema de cobro la considera saldada, o al revés.
+
+Es el mismo patrón que ya costó caro en el inventario, cuando la pantalla mostraba metros que el kardex decía que ya no existían. **Dos fuentes de verdad para el mismo número.**
+
+El prompt de la Parte 6 pedía explícitamente un solo algoritmo. Quedó a medias: se unificaron tres consumidores y el cuarto se quedó con el suyo.
+
+### Qué se hace
+
+**Un solo algoritmo, en `lib/credit-allocation.ts`, que sirva a los cuatro consumidores.**
+
+- Generalízalo para que maneje el concepto de reverso ligado a una venta específica, que hoy solo conoce la versión de `clientes-aging.ts`. Es un requisito real del negocio: un reverso ligado a un ticket debe cancelar ese ticket antes de repartir por fecha.
+- **Elimina la función de `clientes-aging.ts`** y haz que el cálculo de antigüedad use la unificada.
+- Conserva ambos juegos de pruebas. Las de `clientes-aging.test.ts` cubren casos que la nueva no contempla —reverso ligado, ajuste negativo que no puede saltarse el reparto— y **esos casos deben seguir pasando contra la función unificada.**
+- Si alguna prueba no puede adaptarse sin cambiar el comportamiento esperado, **detente y anótalo en `replit.md`** en vez de aflojar la prueba.
+
+### Verificación cruzada
+
+Escribe una prueba que confirme el punto de fondo: **para el mismo conjunto de movimientos, el saldo pendiente por nota que reporta la antigüedad debe ser idéntico al que resulta de aplicar los abonos.**
+
+Inclúyela con un reverso ligado en los datos, que es justo el caso donde hoy divergirían.
+
+Reporta el resultado de esa comparación.
+
+---
+
+## BLOQUE 2 — Nombre de base fijo en el código
+
+El revisor de la Parte 6 detectó que la prueba de integración de crédito trae el nombre de una base de prueba **escrito a mano** (`parte6_credit_test_20260827`), a pesar de aceptar `TEST_DATABASE_URL`.
+
+Esa base ya no existe: la rama se eliminó al terminar. La prueba no puede volver a correr.
+
+### Qué se hace
+
+Reemplaza el nombre fijo por una **verificación de aislamiento configurable**:
+
+- La prueba lee su base de `TEST_DATABASE_URL`
+- Antes de operar, confirma con `current_database()` que la base **no** es la de desarrollo, comparando contra `DATABASE_URL`
+- Si son la misma, la prueba falla de inmediato con un mensaje claro, sin ejecutar nada
+
+Así la prueba corre en cualquier rama desechable, hoy y dentro de seis meses, y sigue siendo imposible que toque desarrollo por accidente.
+
+**Recorre el resto de las pruebas** buscando otros nombres de base escritos a mano y aplícales el mismo tratamiento. Reporta cuántas encontraste.
+
+---
+
+## BLOQUE 3 — Espacios sobrantes
+
+El revisor también reportó espacios al final de línea en los archivos nuevos de la interfaz de pago dirigido, contrario a lo que decía el documento de validación.
+
+Límpialos y corrige el documento de validación para que refleje el estado real.
+
+Si hay una verificación automática de formato en el proyecto, confirma que pase. Si no la hay, no la agregues en esta tarea.
+
+---
+
+## BLOQUE 4 — Verificación
+
+- Existe **una sola** función `allocateCreditFifo` en todo el repositorio
+- Los cuatro consumidores la usan: POS, clientes, proveedores y antigüedad de cartera
+- Las pruebas de `clientes-aging.test.ts` pasan contra la función unificada, incluyendo el reverso ligado y el ajuste negativo
+- La prueba cruzada confirma que el saldo reportado y el saldo aplicado coinciden, con reverso ligado en los datos
+- La prueba de integración de crédito corre en una rama desechable nueva, sin nombre de base escrito a mano
+- Conteo de otras pruebas con nombres de base fijos que hubo que corregir
+- Sin espacios sobrantes en los archivos reportados
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea, las veces que haga falta. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`. No toques development bajo ninguna circunstancia.
+
+---
+
+## Al terminar
+
+En `replit.md`, bajo decisiones de arquitectura:
+
+> Existe **un solo** algoritmo de reparto de crédito, en `lib/credit-allocation.ts`, usado tanto para aplicar abonos como para calcular la antigüedad de cartera, en clientes y en proveedores. Nunca debe existir una segunda implementación: dos algoritmos para el mismo número producen dos verdades que divergen en silencio. Las pruebas de integración leen su base de `TEST_DATABASE_URL` y verifican con `current_database()` que no sea la de desarrollo; ningún nombre de base va escrito a mano en el código.
