@@ -8456,7 +8456,6 @@ components:
         adminPassword: { type: string }
     EnvioSalidaInput:
       type: object
-      required: [transportista]
       properties:
         transportista: { type: string, minLength: 1 }
         notaEnvio: { type: ["string", "null"] }

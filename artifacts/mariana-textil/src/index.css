@@ -236,6 +236,14 @@
     size: 100mm 70mm;
     margin: 0;
   }
+  @page viaje-page {
+    size: 216mm 279mm;
+    margin: 0;
+  }
+  .viaje-page-print {
+    page: viaje-page;
+  }
+
   @page entrada-page {
     size: 216mm 279mm;
     margin: 0;

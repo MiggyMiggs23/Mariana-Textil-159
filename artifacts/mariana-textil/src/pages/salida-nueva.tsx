@@ -231,14 +231,15 @@ export default function SalidaNueva() {
       toast({ title: "Atención", description: "No hay rollos escaneados", variant: "destructive" });
       return;
     }
-    if (!transportista.trim()) {
+    const linkedViaje = draft.viaje;
+    if (!linkedViaje && !transportista.trim()) {
       toast({ title: "Atención", description: "El transportista es obligatorio", variant: "destructive" });
       return;
     }
     sendMutation.mutate({
       id: draft.id,
       data: {
-        transportista: transportista.trim(),
+        ...(!linkedViaje ? { transportista: transportista.trim() } : {}),
         notaEnvio: notaEnvio.trim() || null,
       }
     }, {
@@ -359,18 +360,28 @@ export default function SalidaNueva() {
                   </Select>
                 </div>
 
-                <div className="space-y-1.5 pt-2">
-                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Transportista</label>
-                  <div className="relative">
-                    <Truck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <Input
-                      value={transportista}
-                      onChange={e => setTransportista(e.target.value)}
-                      placeholder="Nombre, placas..."
-                      className="pl-9 bg-white"
-                    />
+                {draft?.viaje ? (
+                  <div className="space-y-1.5 pt-2">
+                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Transporte del viaje</label>
+                    <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm font-medium text-slate-700">
+                      <Truck className="w-4 h-4 text-slate-400" />
+                      {draft.transporteEfectivo}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-1.5 pt-2">
+                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Transportista</label>
+                    <div className="relative">
+                      <Truck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <Input
+                        value={transportista}
+                        onChange={e => setTransportista(e.target.value)}
+                        placeholder="Nombre, placas..."
+                        className="pl-9 bg-white"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <div className="space-y-1.5">
                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Nota de envío (Opcional)</label>
@@ -515,7 +526,7 @@ export default function SalidaNueva() {
                     <Button
                       className="w-full h-12 text-base font-bold bg-green-600 hover:bg-green-700 text-white shadow-sm"
                       onClick={handleConfirm}
-                       disabled={scannedRolls.length === 0 || !origenId || !destinoId || !transportista.trim() || sendMutation.isPending || addRollMutation.isPending || removeRollMutation.isPending}
+                       disabled={scannedRolls.length === 0 || !origenId || !destinoId || (!draft?.viaje && !transportista.trim()) || sendMutation.isPending || addRollMutation.isPending || removeRollMutation.isPending}
                     >
                        {sendMutation.isPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <CheckCircle2 className="w-5 h-5 mr-2" />}
                        Guardar y enviar

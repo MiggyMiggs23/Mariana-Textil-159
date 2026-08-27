@@ -75,7 +75,7 @@ async function getSalidaFolioFormateado(
 type EnviarSalidaInput = {
   salidaId: number;
   usuarioId: number;
-  transportista: string;
+  transportista?: string | null;
   notaEnvio?: string | null;
 };
 
@@ -974,7 +974,12 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
       "SALIDA_DRAFT_OWNER_REQUIRED",
     );
   }
-  if (!input.transportista.trim()) {
+  const [viajeLink] = await tx
+    .select({ viajeId: viajeSalidasTable.viajeId })
+    .from(viajeSalidasTable)
+    .where(eq(viajeSalidasTable.salidaId, salida.id))
+    .limit(1);
+  if (!viajeLink && !input.transportista?.trim()) {
     throw new InventarioError("El transportista es obligatorio.", "TRANSPORT_REQUIRED");
   }
   const [transito] = await tx
@@ -1011,7 +1016,7 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
       estado: "EN_TRANSITO",
       usuarioEnviaId: input.usuarioId,
       enviadaAt: new Date(),
-      transportista: input.transportista.trim(),
+      transportista: viajeLink ? null : input.transportista!.trim(),
       notaEnvio: input.notaEnvio?.trim() || null,
       actividadAt: new Date(),
     })

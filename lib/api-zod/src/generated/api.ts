@@ -6318,7 +6318,7 @@ export const EnviarSalidaParams = zod.object({
 
 
 export const EnviarSalidaBody = zod.object({
-  "transportista": zod.string().min(1),
+  "transportista": zod.string().min(1).optional(),
   "notaEnvio": zod.string().nullish()
 })
 

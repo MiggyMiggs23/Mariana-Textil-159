@@ -557,12 +557,6 @@ router.post(
         res.status(403).json({ error: "El rol CAJA no puede enviar salidas." });
         return;
       }
-      const [viajeLink] = await db.select({ viajeId: viajeSalidasTable.viajeId })
-        .from(viajeSalidasTable).where(eq(viajeSalidasTable.salidaId, id)).limit(1);
-      if (viajeLink) {
-        res.status(409).json({ error: "La salida está ligada a un viaje; el transporte lo determina el viaje." });
-        return;
-      }
       await requireSalidaAccess(req.auth!, id, "origin");
       const result = await db.transaction((tx) =>
         enviarSalida(tx, {

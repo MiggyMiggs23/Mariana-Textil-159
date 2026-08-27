@@ -8,7 +8,7 @@
 
 export interface EnvioSalidaInput {
   /** @minLength 1 */
-  transportista: string;
+  transportista?: string;
   /** @nullable */
   notaEnvio?: string | null;
 }
