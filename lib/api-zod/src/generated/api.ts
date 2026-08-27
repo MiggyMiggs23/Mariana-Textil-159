@@ -281,6 +281,103 @@ export const UpdateCamionetaResponse = zod.object({
 
 
 /**
+ * @summary Lista el catálogo histórico de choferes
+ */
+export const listChoferesQueryActivoDefault = `all`;
+
+export const ListChoferesQueryParams = zod.object({
+  "activo": zod.enum(['true', 'false', 'all']).default(listChoferesQueryActivoDefault).describe('all incluye registros activos e inactivos.')
+})
+
+export const ListChoferesResponseItem = zod.object({
+  "id": zod.number(),
+  "nombreCompleto": zod.string(),
+  "telefono": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListChoferesResponse = zod.array(ListChoferesResponseItem)
+
+
+/**
+ * @summary Crea un chofer histórico (ADMIN o SOPORTE)
+ */
+export const createChoferBodyNombreCompletoMax = 160;
+
+export const createChoferBodyTelefonoMax = 32;
+
+export const createChoferBodyActivoDefault = true;
+
+export const CreateChoferBody = zod.object({
+  "nombreCompleto": zod.string().min(1).max(createChoferBodyNombreCompletoMax),
+  "telefono": zod.string().min(1).max(createChoferBodyTelefonoMax),
+  "activo": zod.boolean().default(createChoferBodyActivoDefault)
+})
+
+export const CreateChoferResponse = zod.object({
+  "id": zod.number(),
+  "nombreCompleto": zod.string(),
+  "telefono": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Obtiene un chofer del catálogo histórico
+ */
+
+
+
+export const GetChoferParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetChoferResponse = zod.object({
+  "id": zod.number(),
+  "nombreCompleto": zod.string(),
+  "telefono": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+ */
+
+
+
+export const UpdateChoferParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const updateChoferBodyNombreCompletoMax = 160;
+
+export const updateChoferBodyTelefonoMax = 32;
+
+
+
+export const UpdateChoferBody = zod.object({
+  "nombreCompleto": zod.string().min(1).max(updateChoferBodyNombreCompletoMax).optional(),
+  "telefono": zod.string().min(1).max(updateChoferBodyTelefonoMax).optional(),
+  "activo": zod.boolean().optional()
+})
+
+export const UpdateChoferResponse = zod.object({
+  "id": zod.number(),
+  "nombreCompleto": zod.string(),
+  "telefono": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({

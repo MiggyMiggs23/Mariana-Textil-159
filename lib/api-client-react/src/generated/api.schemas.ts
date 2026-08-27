@@ -1279,6 +1279,43 @@ export interface CamionetaUpdate {
   activa?: boolean;
 }
 
+export interface Chofer {
+  id: number;
+  nombreCompleto: string;
+  telefono: string;
+  activo: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChoferInput {
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  nombreCompleto: string;
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
+  telefono: string;
+  activo?: boolean;
+}
+
+export interface ChoferUpdate {
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  nombreCompleto?: string;
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
+  telefono?: string;
+  activo?: boolean;
+}
+
 export type Role = typeof Role[keyof typeof Role];
 
 
@@ -4541,6 +4578,22 @@ export type ListCamionetasActiva = typeof ListCamionetasActiva[keyof typeof List
 
 
 export const ListCamionetasActiva = {
+  true: 'true',
+  false: 'false',
+  all: 'all',
+} as const;
+
+export type ListChoferesParams = {
+/**
+ * all incluye registros activos e inactivos.
+ */
+activo?: ListChoferesActivo;
+};
+
+export type ListChoferesActivo = typeof ListChoferesActivo[keyof typeof ListChoferesActivo];
+
+
+export const ListChoferesActivo = {
   true: 'true',
   false: 'false',
   all: 'all',

@@ -20,6 +20,7 @@ export { ensureAplicacionesPagoProveedorSchema } from "./lib/aplicaciones-pago-p
 export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";
 export { ensureSolicitudesPagoDirigidoSchema } from "./lib/solicitudes-pago-dirigido-schema";
 export { ensureCamionetasSchema } from "./lib/camionetas-schema";
+export { ensureChoferesSchema } from "./lib/choferes-schema";
 export { createTestDatabaseGuard } from "./lib/test-database-guard";
 
 const { Pool } = pg;

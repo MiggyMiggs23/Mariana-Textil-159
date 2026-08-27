@@ -12,14 +12,14 @@ import {
   useObtenerSesionCajaActual,
   getObtenerSesionCajaActualQueryKey,
   useCountEntradasPendientesCosto,
-  getCountEntradasPendientesCostoQueryKey
+  getCountEntradasPendientesCostoQueryKey,
 } from "@workspace/api-client-react";
 import { hasPermission, Modules, Module } from "@/lib/permisos";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { 
-  LayoutDashboard, 
-  MapPin, 
-  Users, 
+import {
+  LayoutDashboard,
+  MapPin,
+  Users,
   Boxes,
   LogOut,
   Menu,
@@ -39,10 +39,16 @@ import {
   BarChart3,
   Tags,
   Settings,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { useLocationScope } from "@/lib/location-scope";
@@ -76,35 +82,124 @@ type NavGroup = {
 const NAV_GROUPS: NavGroup[] = [
   {
     items: [
-      { name: "Tiempo Real", path: "/caja/tiempo-real", icon: Activity, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-    ]
+      {
+        name: "Tiempo Real",
+        path: "/caja/tiempo-real",
+        icon: Activity,
+        module: Modules.COBROS_PAGOS,
+        isClickable: true,
+        adminOnly: true,
+      },
+    ],
   },
   {
     title: "INVENTARIO",
     items: [
-      { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
-      { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
-      { name: "Vista Global", path: "/inventario/vista-global", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
-      { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
-      { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
-      { name: "Precios", path: "/precios", icon: Banknote, module: Modules.PRECIOS, isClickable: true, adminOnly: true },
-    ]
+      {
+        name: "Productos",
+        path: "/productos",
+        icon: Package,
+        module: Modules.PRODUCTOS,
+        isClickable: true,
+      },
+      {
+        name: "Inventario",
+        path: "/inventario",
+        icon: Boxes,
+        module: Modules.INVENTARIO,
+        isClickable: true,
+      },
+      {
+        name: "Vista Global",
+        path: "/inventario/vista-global",
+        icon: LayoutDashboard,
+        module: Modules.DASHBOARD,
+        isClickable: true,
+      },
+      {
+        name: "Ajustes",
+        path: "/inventario/ajustes",
+        icon: FileBarChart,
+        module: Modules.AJUSTES,
+        isClickable: true,
+      },
+      {
+        name: "Etiquetas",
+        path: "/etiquetas",
+        icon: Tags,
+        module: Modules.ETIQUETAS,
+        isClickable: true,
+      },
+      {
+        name: "Precios",
+        path: "/precios",
+        icon: Banknote,
+        module: Modules.PRECIOS,
+        isClickable: true,
+        adminOnly: true,
+      },
+    ],
   },
   {
     title: "OPERACIÓN",
     items: [
-      { name: "Ventas / POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
-      { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
-      { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: true },
-      { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
-    ]
+      {
+        name: "Ventas / POS",
+        path: "/pos",
+        icon: ShoppingCart,
+        module: Modules.POS,
+        isClickable: true,
+      },
+      {
+        name: "Entradas",
+        path: "/entradas",
+        icon: ArrowDownToLine,
+        module: Modules.ENTRADAS,
+        isClickable: true,
+      },
+      {
+        name: "Salidas",
+        path: "/salidas",
+        icon: ArrowUpFromLine,
+        module: Modules.SALIDAS,
+        isClickable: true,
+      },
+      {
+        name: "Movimientos",
+        path: "/movimientos",
+        icon: Activity,
+        module: Modules.MOVIMIENTOS,
+        isClickable: true,
+      },
+    ],
   },
   {
     title: "CAJA",
     items: [
-      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-      { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
+      {
+        name: "Cuentas",
+        path: "/caja/cuentas-destino",
+        icon: Wallet,
+        module: Modules.COBROS_PAGOS,
+        isClickable: true,
+        adminOnly: true,
+      },
+      {
+        name: "Cobros",
+        path: "/cobros",
+        icon: Banknote,
+        module: Modules.COBROS_PAGOS,
+        isClickable: true,
+        adminOnly: true,
+      },
+      {
+        name: "Cortes",
+        path: "/caja/cortes",
+        icon: FileBarChart,
+        module: Modules.COBROS_PAGOS,
+        isClickable: true,
+        adminOnly: true,
+      },
       {
         name: "Pagos Dirigidos",
         path: "/pagos-dirigidos",
@@ -113,61 +208,140 @@ const NAV_GROUPS: NavGroup[] = [
         anyModules: [Modules.CLIENTES_FINANZAS, Modules.PROVEEDORES_FINANZAS],
         isClickable: true,
       },
-      { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, isClickable: true, adminOnly: true },
-    ]
+      {
+        name: "Alertas",
+        path: "/alertas",
+        icon: AlertTriangle,
+        module: Modules.COBROS_PAGOS,
+        isClickable: true,
+        adminOnly: true,
+      },
+    ],
   },
   {
     title: "DIRECTORIO",
     items: [
-      { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
-      { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
-    ]
+      {
+        name: "Clientes",
+        path: "/clientes",
+        icon: UserSquare2,
+        module: Modules.CLIENTES,
+        isClickable: true,
+      },
+      {
+        name: "Proveedores",
+        path: "/proveedores",
+        icon: Truck,
+        module: Modules.PROVEEDORES,
+        isClickable: true,
+      },
+    ],
   },
   {
     items: [
-      { name: "Reportes", path: "/reportes", icon: BarChart3, module: Modules.REPORTES, isClickable: true },
-    ]
+      {
+        name: "Reportes",
+        path: "/reportes",
+        icon: BarChart3,
+        module: Modules.REPORTES,
+        isClickable: true,
+      },
+    ],
   },
   {
     items: [
-      { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: true },
-    ]
+      {
+        name: "Próximos Contenedores",
+        path: "/contenedores",
+        icon: Ship,
+        module: Modules.CONTENEDORES,
+        isClickable: true,
+      },
+    ],
   },
   {
     title: "CONFIGURACIÓN",
     items: [
-      { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
-      { name: "Camionetas", path: "/configuracion/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
-      { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
-      { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
-      { name: "Conciliación", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },
-      { name: "Auditoría", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, isClickable: true, adminOnly: true },
-    ]
-  }
+      {
+        name: "Sitios",
+        path: "/ubicaciones",
+        icon: MapPin,
+        module: Modules.UBICACIONES,
+        isClickable: true,
+      },
+      {
+        name: "Camionetas",
+        path: "/configuracion/camionetas",
+        icon: Truck,
+        module: Modules.CAMIONETAS,
+        isClickable: true,
+      },
+      {
+        name: "Choferes",
+        path: "/configuracion/choferes",
+        icon: UserSquare2,
+        module: Modules.CHOFERES,
+        isClickable: true,
+      },
+      {
+        name: "Usuarios",
+        path: "/usuarios",
+        icon: Users,
+        module: Modules.USUARIOS,
+        isClickable: true,
+      },
+      {
+        name: "Permisos",
+        path: "/permisos",
+        icon: Shield,
+        module: Modules.PERMISOS,
+        isClickable: true,
+      },
+      {
+        name: "Conciliación",
+        path: "/administracion/conciliacion",
+        icon: Settings,
+        module: Modules.CONCILIACION,
+        isClickable: true,
+      },
+      {
+        name: "Auditoría",
+        path: "/auditoria",
+        icon: Activity,
+        module: Modules.AUDITORIA,
+        isClickable: true,
+        adminOnly: true,
+      },
+    ],
+  },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const queryClient = useQueryClient();
-  const { data: user, error, isLoading } = useGetCurrentUser({
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useGetCurrentUser({
     query: {
       retry: false,
-      queryKey: getGetCurrentUserQueryKey()
-    }
+      queryKey: getGetCurrentUserQueryKey(),
+    },
   });
-  
+
   const { data: ajustesPendientes } = useListAjustesPendientes({
     query: {
       enabled: hasPermission(user, Modules.AJUSTES, "autorizar"),
-      queryKey: getListAjustesPendientesQueryKey()
-    }
+      queryKey: getListAjustesPendientesQueryKey(),
+    },
   });
 
   const { data: countPendientesData } = useCountEntradasPendientesCosto({
     query: {
       enabled: user?.rol === Role.ADMIN,
-      queryKey: getCountEntradasPendientesCostoQueryKey()
-    }
+      queryKey: getCountEntradasPendientesCostoQueryKey(),
+    },
   });
   const { data: etiquetasAlerts } = useQuery({
     queryKey: ["etiquetas", "alertas"],
@@ -181,8 +355,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: locations } = useGetUbicacionesInventario({
     query: {
       enabled: user?.alcanceConsulta === "TODAS",
-      queryKey: getGetUbicacionesInventarioQueryKey()
-    }
+      queryKey: getGetUbicacionesInventarioQueryKey(),
+    },
   });
 
   const logout = useLogout();
@@ -196,7 +370,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     {
       query: {
         enabled: isCaja && !!assignedLocationId,
-        queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: assignedLocationId ?? 0 }),
+        queryKey: getObtenerSesionCajaActualQueryKey({
+          ubicacionId: assignedLocationId ?? 0,
+        }),
       },
     },
   );
@@ -223,14 +399,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const userBlockLocation =
     user.rol === Role.ADMIN
       ? "Global"
-      : user.ubicacion?.nombre ?? "Sin sitio asignado";
+      : (user.ubicacion?.nombre ?? "Sin sitio asignado");
 
   const handleLogout = () => {
     logout.mutate(undefined, {
       onSuccess: () => {
         queryClient.clear();
         setLocation("/login");
-      }
+      },
     });
   };
 
@@ -246,14 +422,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         )}
         <Select
           value={
-            selectedLocationId === null
-              ? "global"
-              : String(selectedLocationId)
+            selectedLocationId === null ? "global" : String(selectedLocationId)
           }
           onValueChange={(value) =>
-            setSelectedLocationId(
-              value === "global" ? null : Number(value),
-            )
+            setSelectedLocationId(value === "global" ? null : Number(value))
           }
         >
           <SelectTrigger
@@ -299,31 +471,72 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const navGroups = isCaja
-    ? [{
-        items: [
-          { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
-          { name: "Pagos Dirigidos", path: "/pagos-dirigidos", icon: Activity, module: Modules.COBROS_PAGOS, anyModules: [Modules.CLIENTES_FINANZAS], isClickable: true },
-          { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.COBROS_PAGOS, isClickable: true },
-          { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
-          { name: "Salidas", path: "/salidas", icon: ArrowDownToLine, module: Modules.SALIDAS, isClickable: true },
-        ],
-      }]
+    ? [
+        {
+          items: [
+            {
+              name: "Cobros",
+              path: "/cobros",
+              icon: Banknote,
+              module: Modules.COBROS_PAGOS,
+              isClickable: true,
+            },
+            {
+              name: "Pagos Dirigidos",
+              path: "/pagos-dirigidos",
+              icon: Activity,
+              module: Modules.COBROS_PAGOS,
+              anyModules: [Modules.CLIENTES_FINANZAS],
+              isClickable: true,
+            },
+            {
+              name: "Cortes",
+              path: "/caja/cortes",
+              icon: FileBarChart,
+              module: Modules.COBROS_PAGOS,
+              isClickable: true,
+            },
+            {
+              name: "Inventario",
+              path: "/inventario",
+              icon: Boxes,
+              module: Modules.INVENTARIO,
+              isClickable: true,
+            },
+            {
+              name: "Salidas",
+              path: "/salidas",
+              icon: ArrowDownToLine,
+              module: Modules.SALIDAS,
+              isClickable: true,
+            },
+          ],
+        },
+      ]
     : NAV_GROUPS;
 
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
       {navGroups.map((group) => {
-        const allowedItems = group.items.filter(item =>
-          (item.anyModules
-            ? item.anyModules.some((module) => hasPermission(user, module, "ver") || hasPermission(user, module, "crear"))
-            : hasPermission(user, item.module, "ver")) &&
-          (!item.adminOnly || user.rol === Role.ADMIN)
+        const allowedItems = group.items.filter(
+          (item) =>
+            (item.anyModules
+              ? item.anyModules.some(
+                  (module) =>
+                    hasPermission(user, module, "ver") ||
+                    hasPermission(user, module, "crear"),
+                )
+              : hasPermission(user, item.module, "ver")) &&
+            (!item.adminOnly || user.rol === Role.ADMIN),
         );
-        
+
         if (allowedItems.length === 0) return null;
 
         return (
-          <div key={group.title ?? group.items[0].path} className="px-3 space-y-1">
+          <div
+            key={group.title ?? group.items[0].path}
+            className="px-3 space-y-1"
+          >
             {group.title && (
               <h4 className="px-3 text-xs font-semibold text-sidebar-foreground/50 tracking-wider mb-2">
                 {group.title}
@@ -335,7 +548,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 (item.path !== "/" && location.startsWith(`${item.path}/`));
               if (!item.isClickable) {
                 return (
-                  <div key={item.path} className="flex items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground/50 cursor-not-allowed group relative">
+                  <div
+                    key={item.path}
+                    className="flex items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground/50 cursor-not-allowed group relative"
+                  >
                     <item.icon className="w-4 h-4" />
                     <span className="font-medium text-sm">{item.name}</span>
                     <span className="ml-auto text-[9px] uppercase font-bold bg-sidebar-accent/50 text-sidebar-foreground/70 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
@@ -346,30 +562,50 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               }
 
               return (
-                <Link 
+                <Link
                   key={item.path}
                   href={item.path}
                   onClick={onItemClick}
-                  data-testid={`nav-item-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                  data-testid={`nav-item-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative",
-                    isActive 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold" 
-                      : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 font-medium"
+                    isActive
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold"
+                      : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 font-medium",
                   )}
                 >
-                  <item.icon className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
+                  <item.icon
+                    className={cn(
+                      "w-4 h-4",
+                      isActive
+                        ? "text-sidebar-primary-foreground"
+                        : "text-sidebar-foreground/70",
+                    )}
+                  />
                   <span className="text-sm">{item.name}</span>
                   {item.path === "/etiquetas" && etiquetasAlerts?.count ? (
-                    <span data-testid="badge-etiquetas-alertas" title="Rollos con 3 o más reimpresiones" className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-amber-500 text-white text-[10px] font-bold rounded-full">
+                    <span
+                      data-testid="badge-etiquetas-alertas"
+                      title="Rollos con 3 o más reimpresiones"
+                      className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-amber-500 text-white text-[10px] font-bold rounded-full"
+                    >
                       {etiquetasAlerts.count}
                     </span>
-                  ) : item.path === "/entradas" && countPendientesData?.count ? (
-                    <span data-testid={`badge-entradas-pendientes`} className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-destructive text-white text-[10px] font-bold rounded-full">
+                  ) : item.path === "/entradas" &&
+                    countPendientesData?.count ? (
+                    <span
+                      data-testid={`badge-entradas-pendientes`}
+                      className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1 bg-destructive text-white text-[10px] font-bold rounded-full"
+                    >
                       {countPendientesData.count}
                     </span>
-                  ) : item.path === "/inventario/ajustes" && ajustesPendientes && ajustesPendientes.length > 0 ? (
-                    <span data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full">
+                  ) : item.path === "/inventario/ajustes" &&
+                    ajustesPendientes &&
+                    ajustesPendientes.length > 0 ? (
+                    <span
+                      data-testid={`badge-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                      className="ml-auto flex items-center justify-center w-5 h-5 bg-destructive text-white text-[10px] font-bold rounded-full"
+                    >
                       {ajustesPendientes.length}
                     </span>
                   ) : null}
@@ -386,17 +622,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-[100dvh] flex bg-background">
       <NotificationAudioController userId={user.id} role={user.rol} />
       {/* Sidebar for Desktop */}
-      {!isTerminal && <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
-        <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
-          <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
-          <span className="font-bold text-lg tracking-tight text-white">Mariana Textil</span>
-        </div>
-        
-        <nav className="flex-1 overflow-y-auto custom-scrollbar">
-          {renderNavContent()}
-        </nav>
+      {!isTerminal && (
+        <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
+          <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
+            <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
+            <span className="font-bold text-lg tracking-tight text-white">
+              Mariana Textil
+            </span>
+          </div>
 
-      </aside>}
+          <nav className="flex-1 overflow-y-auto custom-scrollbar">
+            {renderNavContent()}
+          </nav>
+        </aside>
+      )}
 
       {/* Mobile Header & Menu */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -409,19 +648,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-1">
               <span id="notification-audio-mobile-slot" className="contents" />
               <NotificationsBell isAdmin={user.rol === Role.ADMIN} mobile />
-              <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setLogoutDialogOpen(true)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-sidebar-accent"
+                onClick={() => setLogoutDialogOpen(true)}
+              >
                 <LogOut className="w-5 h-5" />
                 <span className="sr-only">Cerrar sesión</span>
               </Button>
-              {!isTerminal && <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(true)}>
-                <Menu className="w-6 h-6" />
-              </Button>}
+              {!isTerminal && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-sidebar-accent"
+                  onClick={() => setMobileMenuOpen(true)}
+                >
+                  <Menu className="w-6 h-6" />
+                </Button>
+              )}
             </div>
           </div>
           <div className="border-t border-white/10 px-4 pb-3 pt-2 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">{user.nombre}</p>
-              <p className="text-xs text-white/70">{user.rol} · {userBlockLocation}</p>
+              <p className="text-xs text-white/70">
+                {user.rol} · {userBlockLocation}
+              </p>
             </div>
             {renderLocationControl(true)}
           </div>
@@ -439,10 +692,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="text-right leading-tight">
               <p className="text-sm font-semibold">{user.nombre}</p>
               <p className="text-xs text-muted-foreground">{user.rol}</p>
-              <p className="text-xs text-muted-foreground">{userBlockLocation}</p>
+              <p className="text-xs text-muted-foreground">
+                {userBlockLocation}
+              </p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setLogoutDialogOpen(true)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setLogoutDialogOpen(true)}
+          >
             <LogOut className="mr-2 h-4 w-4" />
             Cerrar sesión
           </Button>
@@ -450,29 +709,36 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
         {mobileMenuOpen && (
           <div className="no-print fixed inset-0 z-50 flex md:hidden">
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+            <div
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            />
             <div className="relative w-[280px] bg-sidebar text-sidebar-foreground h-full flex flex-col animate-in slide-in-from-left duration-200">
               <div className="h-16 flex items-center justify-between px-6 border-b border-sidebar-border flex-shrink-0">
                 <div className="flex items-center gap-2.5">
                   <BrandLogo variant="mark" className="h-9 w-9" />
-                  <span className="font-bold text-lg text-white">Mariana Textil</span>
+                  <span className="font-bold text-lg text-white">
+                    Mariana Textil
+                  </span>
                 </div>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-sidebar-accent" onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-sidebar-accent"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   <X className="w-5 h-5" />
                 </Button>
               </div>
-              
+
               <nav className="flex-1 overflow-y-auto">
                 {renderNavContent(() => setMobileMenuOpen(false))}
               </nav>
-
             </div>
           </div>
         )}
 
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">{children}</main>
       </div>
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
         <DialogContent>
@@ -484,11 +750,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </DialogHeader>
           {isCaja && sesionCajaData?.sesion && (
             <p className="text-sm text-amber-700 dark:text-amber-400">
-              Tienes una sesión de caja abierta. Si cierras sesión, la caja seguirá abierta y podrás retomarla al volver a entrar.
+              Tienes una sesión de caja abierta. Si cierras sesión, la caja
+              seguirá abierta y podrás retomarla al volver a entrar.
             </p>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setLogoutDialogOpen(false)} disabled={logout.isPending}>
+            <Button
+              variant="outline"
+              onClick={() => setLogoutDialogOpen(false)}
+              disabled={logout.isPending}
+            >
               Cancelar
             </Button>
             <Button onClick={handleLogout} disabled={logout.isPending}>

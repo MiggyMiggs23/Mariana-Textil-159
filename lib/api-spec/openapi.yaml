@@ -47,6 +47,8 @@ tags:
     description: Consulta de la bitácora inmutable exclusiva para ADMIN
   - name: camionetas
     description: Catálogo histórico de camionetas para operaciones de transporte
+  - name: choferes
+    description: Catálogo histórico de choferes para operaciones de transporte
 paths:
   /pagos-dirigidos:
     get:
@@ -54,13 +56,30 @@ paths:
       tags: [clientes, proveedores]
       summary: Lista la cola de pagos dirigidos según el alcance del usuario
       parameters:
-        - { in: query, name: tipo, schema: { type: string, enum: [CLIENTE, PROVEEDOR] } }
+        - {
+            in: query,
+            name: tipo,
+            schema: { type: string, enum: [CLIENTE, PROVEEDOR] },
+          }
         - { in: query, name: entidadId, schema: { type: number, minimum: 1 } }
-        - { in: query, name: estado, schema: { type: string, enum: [PENDIENTE, APROBADA, RECHAZADA] } }
+        - {
+            in: query,
+            name: estado,
+            schema: { type: string, enum: [PENDIENTE, APROBADA, RECHAZADA] },
+          }
       responses:
         "200":
           description: Solicitudes visibles
-          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudesPagoDirigidoResult" } } }
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      $ref: "#/components/schemas/SolicitudesPagoDirigidoResult",
+                    },
+                },
+            }
         "401": { $ref: "#/components/responses/Unauthorized" }
     post:
       operationId: createSolicitudPagoDirigido
@@ -74,7 +93,14 @@ paths:
       responses:
         "201":
           description: Solicitud creada o aplicada
-          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigido" } } }
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    { $ref: "#/components/schemas/SolicitudPagoDirigido" },
+                },
+            }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -83,11 +109,28 @@ paths:
       operationId: aprobarSolicitudPagoDirigido
       tags: [clientes, proveedores]
       summary: Aprueba y aplica una solicitud de pago dirigido (ADMIN)
-      parameters: [{ in: path, name: id, required: true, schema: { type: number, minimum: 1 } }]
+      parameters:
+        [
+          {
+            in: path,
+            name: id,
+            required: true,
+            schema: { type: number, minimum: 1 },
+          },
+        ]
       responses:
         "201":
           description: Aplicación creada
-          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigidoAplicada" } } }
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      $ref: "#/components/schemas/SolicitudPagoDirigidoAplicada",
+                    },
+                },
+            }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -97,16 +140,32 @@ paths:
       operationId: rechazarSolicitudPagoDirigido
       tags: [clientes, proveedores]
       summary: Rechaza una solicitud, conservando sus datos para captura FIFO posterior (ADMIN)
-      parameters: [{ in: path, name: id, required: true, schema: { type: number, minimum: 1 } }]
+      parameters:
+        [
+          {
+            in: path,
+            name: id,
+            required: true,
+            schema: { type: number, minimum: 1 },
+          },
+        ]
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/MotivoRechazoPagoDirigidoInput" }
+            schema:
+              { $ref: "#/components/schemas/MotivoRechazoPagoDirigidoInput" }
       responses:
         "200":
           description: Solicitud rechazada
-          content: { application/json: { schema: { $ref: "#/components/schemas/SolicitudPagoDirigido" } } }
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    { $ref: "#/components/schemas/SolicitudPagoDirigido" },
+                },
+            }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "409": { $ref: "#/components/responses/Conflict" }
@@ -123,7 +182,17 @@ paths:
       responses:
         "200":
           description: Camionetas visibles en configuración
-          content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Camioneta" } } } }
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      type: array,
+                      items: { $ref: "#/components/schemas/Camioneta" },
+                    },
+                },
+            }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
     post:
@@ -132,9 +201,21 @@ paths:
       summary: Crea una camioneta histórica (ADMIN o SOPORTE)
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: "#/components/schemas/CamionetaInput" } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: "#/components/schemas/CamionetaInput" } },
+          }
       responses:
-        "201": { description: Camioneta creada, content: { application/json: { schema: { $ref: "#/components/schemas/Camioneta" } } } }
+        "201":
+          {
+            description: Camioneta creada,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Camioneta" } },
+              },
+          }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -146,7 +227,15 @@ paths:
       summary: Obtiene una camioneta del catálogo histórico
       parameters: [{ $ref: "#/components/parameters/CamionetaId" }]
       responses:
-        "200": { description: Camioneta, content: { application/json: { schema: { $ref: "#/components/schemas/Camioneta" } } } }
+        "200":
+          {
+            description: Camioneta,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Camioneta" } },
+              },
+          }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -157,14 +246,123 @@ paths:
       parameters: [{ $ref: "#/components/parameters/CamionetaId" }]
       requestBody:
         required: true
-        content: { application/json: { schema: { $ref: "#/components/schemas/CamionetaUpdate" } } }
+        content:
+          {
+            application/json:
+              { schema: { $ref: "#/components/schemas/CamionetaUpdate" } },
+          }
       responses:
-        "200": { description: Camioneta actualizada, content: { application/json: { schema: { $ref: "#/components/schemas/Camioneta" } } } }
+        "200":
+          {
+            description: Camioneta actualizada,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Camioneta" } },
+              },
+          }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
+  /choferes:
+    get:
+      operationId: listChoferes
+      tags: [choferes]
+      summary: Lista el catálogo histórico de choferes
+      parameters:
+        - in: query
+          name: activo
+          schema: { type: string, enum: ["true", "false", all], default: all }
+          description: all incluye registros activos e inactivos.
+      responses:
+        "200":
+          {
+            description: Choferes visibles en configuración,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      {
+                        type: array,
+                        items: { $ref: "#/components/schemas/Chofer" },
+                      },
+                  },
+              },
+          }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createChofer
+      tags: [choferes]
+      summary: Crea un chofer histórico (ADMIN o SOPORTE)
+      requestBody:
+        required: true
+        content:
+          {
+            application/json:
+              { schema: { $ref: "#/components/schemas/ChoferInput" } },
+          }
+      responses:
+        "201":
+          {
+            description: Chofer creado,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Chofer" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /choferes/{id}:
+    get:
+      operationId: getChofer
+      tags: [choferes]
+      summary: Obtiene un chofer del catálogo histórico
+      parameters: [{ $ref: "#/components/parameters/ChoferId" }]
+      responses:
+        "200":
+          {
+            description: Chofer,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Chofer" } },
+              },
+          }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      operationId: updateChofer
+      tags: [choferes]
+      summary: Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+      parameters: [{ $ref: "#/components/parameters/ChoferId" }]
+      requestBody:
+        required: true
+        content:
+          {
+            application/json:
+              { schema: { $ref: "#/components/schemas/ChoferUpdate" } },
+          }
+      responses:
+        "200":
+          {
+            description: Chofer actualizado,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: "#/components/schemas/Chofer" } },
+              },
+          }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /healthz:
     get:
       operationId: healthCheck
@@ -436,8 +634,16 @@ paths:
       summary: Lista precios y márgenes actuales de todo el catálogo (ADMIN)
       parameters:
         - { in: query, name: search, schema: { type: string } }
-        - { in: query, name: unidad, schema: { $ref: "#/components/schemas/UnidadProducto" } }
-        - { in: query, name: semaforo, schema: { $ref: "#/components/schemas/SemaforoPrecio" } }
+        - {
+            in: query,
+            name: unidad,
+            schema: { $ref: "#/components/schemas/UnidadProducto" },
+          }
+        - {
+            in: query,
+            name: semaforo,
+            schema: { $ref: "#/components/schemas/SemaforoPrecio" },
+          }
         - in: query
           name: modoPrecio
           description: Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
@@ -884,7 +1090,14 @@ paths:
       responses:
         "200":
           description: Compra y pagos aplicados
-          content: { application/json: { schema: { $ref: "#/components/schemas/ProveedorCompraDetalle" } } }
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    { $ref: "#/components/schemas/ProveedorCompraDetalle" },
+                },
+            }
         "404": { $ref: "#/components/responses/NotFound" }
   /proveedores/{id}/pagos/{pagoId}:
     get:
@@ -899,7 +1112,13 @@ paths:
       responses:
         "200":
           description: Pago y compras aplicadas
-          content: { application/json: { schema: { $ref: "#/components/schemas/ProveedorPagoDetalle" } } }
+          content:
+            {
+              application/json:
+                {
+                  schema: { $ref: "#/components/schemas/ProveedorPagoDetalle" },
+                },
+            }
         "404": { $ref: "#/components/responses/NotFound" }
   /proveedores/{id}/pagos/{pagoId}/reversar:
     post:
@@ -920,7 +1139,11 @@ paths:
       responses:
         "201":
           description: Reverso registrado
-          content: { application/json: { schema: { $ref: "#/components/schemas/PagoProveedorRow" } } }
+          content:
+            {
+              application/json:
+                { schema: { $ref: "#/components/schemas/PagoProveedorRow" } },
+            }
         "400": { $ref: "#/components/responses/ValidationError" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
@@ -1032,15 +1255,35 @@ paths:
       tags: [contenedores]
       summary: Lista paginada de contenedores
       parameters:
-        - { in: query, name: estado, schema: { $ref: "#/components/schemas/EstadoContenedor" } }
+        - {
+            in: query,
+            name: estado,
+            schema: { $ref: "#/components/schemas/EstadoContenedor" },
+          }
         - { in: query, name: proveedorId, schema: { type: number } }
         - { in: query, name: sitioDestinoId, schema: { type: number } }
         - { in: query, name: productoId, schema: { type: number } }
-        - { in: query, name: fechaDesde, schema: { $ref: "#/components/schemas/CalendarDate" } }
-        - { in: query, name: fechaHasta, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - {
+            in: query,
+            name: fechaDesde,
+            schema: { $ref: "#/components/schemas/CalendarDate" },
+          }
+        - {
+            in: query,
+            name: fechaHasta,
+            schema: { $ref: "#/components/schemas/CalendarDate" },
+          }
         - { in: query, name: search, schema: { type: string } }
-        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
-        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 200, default: 20 } }
+        - {
+            in: query,
+            name: page,
+            schema: { type: number, minimum: 1, default: 1 },
+          }
+        - {
+            in: query,
+            name: pageSize,
+            schema: { type: number, minimum: 1, maximum: 200, default: 20 },
+          }
       responses:
         "200":
           description: Resultado paginado
@@ -1073,9 +1316,22 @@ paths:
       tags: [contenedores]
       summary: Situación actual y analítica del periodo
       parameters:
-        - { in: query, name: year, required: true, schema: { type: number, minimum: 2000, maximum: 2200 } }
-        - { in: query, name: quarter, schema: { type: number, minimum: 1, maximum: 4 } }
-        - { in: query, name: semester, schema: { type: number, minimum: 1, maximum: 2 } }
+        - {
+            in: query,
+            name: year,
+            required: true,
+            schema: { type: number, minimum: 2000, maximum: 2200 },
+          }
+        - {
+            in: query,
+            name: quarter,
+            schema: { type: number, minimum: 1, maximum: 4 },
+          }
+        - {
+            in: query,
+            name: semester,
+            schema: { type: number, minimum: 1, maximum: 2 },
+          }
         - { in: query, name: sitioDestinoId, schema: { type: number } }
       responses:
         "200":
@@ -1092,8 +1348,16 @@ paths:
       summary: Exporta el control completo a XLSX
       parameters:
         - { in: query, name: year, required: true, schema: { type: number } }
-        - { in: query, name: quarter, schema: { type: number, minimum: 1, maximum: 4 } }
-        - { in: query, name: semester, schema: { type: number, minimum: 1, maximum: 2 } }
+        - {
+            in: query,
+            name: quarter,
+            schema: { type: number, minimum: 1, maximum: 4 },
+          }
+        - {
+            in: query,
+            name: semester,
+            schema: { type: number, minimum: 1, maximum: 2 },
+          }
       responses:
         "200":
           description: Libro XLSX
@@ -1108,8 +1372,16 @@ paths:
       summary: Exporta el control completo a PDF
       parameters:
         - { in: query, name: year, required: true, schema: { type: number } }
-        - { in: query, name: quarter, schema: { type: number, minimum: 1, maximum: 4 } }
-        - { in: query, name: semester, schema: { type: number, minimum: 1, maximum: 2 } }
+        - {
+            in: query,
+            name: quarter,
+            schema: { type: number, minimum: 1, maximum: 4 },
+          }
+        - {
+            in: query,
+            name: semester,
+            schema: { type: number, minimum: 1, maximum: 2 },
+          }
       responses:
         "200":
           description: Documento PDF
@@ -1123,7 +1395,12 @@ paths:
       tags: [contenedores]
       summary: Contenedores EN_TRANSITO del sitio resuelto para una entrada
       parameters:
-        - { in: query, name: ubicacionId, required: true, schema: { type: number } }
+        - {
+            in: query,
+            name: ubicacionId,
+            required: true,
+            schema: { type: number },
+          }
       responses:
         "200":
           description: Opciones disponibles
@@ -1494,7 +1771,8 @@ paths:
           name: estado
           schema:
             type: string
-            enum: [PROGRAMADO, DISPONIBLE, EN_TRANSITO, MOSTRADOR, VENDIDO, BAJA]
+            enum:
+              [PROGRAMADO, DISPONIBLE, EN_TRANSITO, MOSTRADOR, VENDIDO, BAJA]
         - in: query
           name: serie
           schema: { type: string }
@@ -1992,7 +2270,6 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-
 
   /clientes/{id}/baja:
     post:
@@ -3498,9 +3775,21 @@ paths:
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
         - { in: query, name: cajeroId, schema: { type: number } }
         - { in: query, name: numeroCorte, schema: { type: number } }
-        - { in: query, name: soloConDiferencia, schema: { type: boolean, default: false } }
-        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
-        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 200, default: 50 } }
+        - {
+            in: query,
+            name: soloConDiferencia,
+            schema: { type: boolean, default: false },
+          }
+        - {
+            in: query,
+            name: page,
+            schema: { type: number, minimum: 1, default: 1 },
+          }
+        - {
+            in: query,
+            name: pageSize,
+            schema: { type: number, minimum: 1, maximum: 200, default: 50 },
+          }
       responses:
         "200":
           description: Cortes paginados
@@ -3530,7 +3819,7 @@ paths:
       operationId: exportAdminCorteXlsx
       tags: [admin-analytics]
       summary: Exporta detalle histórico de un corte a XLSX
-      parameters: [ { $ref: "#/components/parameters/SesionCajaId" } ]
+      parameters: [{ $ref: "#/components/parameters/SesionCajaId" }]
       responses:
         "200":
           description: XLSX
@@ -3545,7 +3834,7 @@ paths:
       operationId: exportAdminCortePdf
       tags: [admin-analytics]
       summary: Exporta detalle histórico de un corte a PDF o reimpresión
-      parameters: [ { $ref: "#/components/parameters/SesionCajaId" } ]
+      parameters: [{ $ref: "#/components/parameters/SesionCajaId" }]
       responses:
         "200":
           description: PDF
@@ -3564,9 +3853,21 @@ paths:
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
-        - { in: query, name: umbralCorte, schema: { type: number, minimum: 0, default: 500 } }
-        - { in: query, name: umbralTienda, schema: { type: number, minimum: 0, default: 500 } }
-        - { in: query, name: agrupacion, schema: { type: string, enum: [semana, mes], default: semana } }
+        - {
+            in: query,
+            name: umbralCorte,
+            schema: { type: number, minimum: 0, default: 500 },
+          }
+        - {
+            in: query,
+            name: umbralTienda,
+            schema: { type: number, minimum: 0, default: 500 },
+          }
+        - {
+            in: query,
+            name: agrupacion,
+            schema: { type: string, enum: [semana, mes], default: semana },
+          }
       responses:
         "200":
           description: Resumen de diferencias
@@ -3601,7 +3902,20 @@ paths:
         - in: query
           name: periodo
           required: true
-          schema: { type: string, enum: [diario, semanal, mensual, trimestral, semestral, anual, personalizado] }
+          schema:
+            {
+              type: string,
+              enum:
+                [
+                  diario,
+                  semanal,
+                  mensual,
+                  trimestral,
+                  semestral,
+                  anual,
+                  personalizado,
+                ],
+            }
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
       responses:
@@ -3624,7 +3938,11 @@ paths:
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
         - { in: query, name: cajeroId, schema: { type: number } }
         - { in: query, name: numeroCorte, schema: { type: number } }
-        - { in: query, name: soloConDiferencia, schema: { type: boolean, default: false } }
+        - {
+            in: query,
+            name: soloConDiferencia,
+            schema: { type: boolean, default: false },
+          }
       responses:
         "200":
           description: XLSX
@@ -3644,7 +3962,11 @@ paths:
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
         - { in: query, name: cajeroId, schema: { type: number } }
         - { in: query, name: numeroCorte, schema: { type: number } }
-        - { in: query, name: soloConDiferencia, schema: { type: boolean, default: false } }
+        - {
+            in: query,
+            name: soloConDiferencia,
+            schema: { type: boolean, default: false },
+          }
       responses:
         "200":
           description: PDF
@@ -3695,10 +4017,22 @@ paths:
       parameters:
         - { in: query, name: q, schema: { type: string, maxLength: 150 } }
         - { in: query, name: sitioId, schema: { type: number } }
-        - { in: query, name: estado, schema: { $ref: "#/components/schemas/EstadoRollo" } }
+        - {
+            in: query,
+            name: estado,
+            schema: { $ref: "#/components/schemas/EstadoRollo" },
+          }
         - { in: query, name: productoId, schema: { type: number } }
-        - { in: query, name: fechaDesde, schema: { type: string, format: date } }
-        - { in: query, name: fechaHasta, schema: { type: string, format: date } }
+        - {
+            in: query,
+            name: fechaDesde,
+            schema: { type: string, format: date },
+          }
+        - {
+            in: query,
+            name: fechaHasta,
+            schema: { type: string, format: date },
+          }
         - { in: query, name: folio, schema: { type: number } }
       responses:
         "200":
@@ -3709,7 +4043,12 @@ paths:
                 type: object
                 required: [items, limit, total]
                 properties:
-                  items: { type: array, maxItems: 50, items: { $ref: "#/components/schemas/RolloEtiqueta" } }
+                  items:
+                    {
+                      type: array,
+                      maxItems: 50,
+                      items: { $ref: "#/components/schemas/RolloEtiqueta" },
+                    }
                   limit: { type: number, const: 50 }
                   total: { type: number }
         "401": { $ref: "#/components/responses/Unauthorized" }
@@ -3724,7 +4063,11 @@ paths:
       responses:
         "200":
           description: Detalle para etiqueta
-          content: { application/json: { schema: { $ref: "#/components/schemas/RolloEtiqueta" } } }
+          content:
+            {
+              application/json:
+                { schema: { $ref: "#/components/schemas/RolloEtiqueta" } },
+            }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -3741,10 +4084,18 @@ paths:
               type: object
               required: [rolloIds, motivo]
               properties:
-                rolloIds: { type: array, minItems: 1, maxItems: 50, uniqueItems: true, items: { type: number } }
+                rolloIds:
+                  {
+                    type: array,
+                    minItems: 1,
+                    maxItems: 50,
+                    uniqueItems: true,
+                    items: { type: number },
+                  }
                 motivo: { type: string, minLength: 10, maxLength: 1000 }
                 adminUsuario: { type: string }
-                adminPassword: { type: string, format: password, writeOnly: true }
+                adminPassword:
+                  { type: string, format: password, writeOnly: true }
       responses:
         "201":
           description: Etiquetas registradas
@@ -3754,7 +4105,12 @@ paths:
                 type: object
                 required: [etiquetas, registradoAt]
                 properties:
-                  etiquetas: { type: array, items: { $ref: "#/components/schemas/EtiquetaImprimible" } }
+                  etiquetas:
+                    {
+                      type: array,
+                      items:
+                        { $ref: "#/components/schemas/EtiquetaImprimible" },
+                    }
                   registradoAt: { type: string, format: date-time }
         "400":
           description: Solicitud inválida
@@ -3769,13 +4125,29 @@ paths:
       tags: [etiquetas]
       summary: Historial de reimpresiones exclusivo ADMIN
       parameters:
-        - { in: query, name: fechaDesde, schema: { type: string, format: date } }
-        - { in: query, name: fechaHasta, schema: { type: string, format: date } }
+        - {
+            in: query,
+            name: fechaDesde,
+            schema: { type: string, format: date },
+          }
+        - {
+            in: query,
+            name: fechaHasta,
+            schema: { type: string, format: date },
+          }
         - { in: query, name: sitioId, schema: { type: number } }
         - { in: query, name: usuarioId, schema: { type: number } }
         - { in: query, name: productoId, schema: { type: number } }
-        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
-        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 100, default: 50 } }
+        - {
+            in: query,
+            name: page,
+            schema: { type: number, minimum: 1, default: 1 },
+          }
+        - {
+            in: query,
+            name: pageSize,
+            schema: { type: number, minimum: 1, maximum: 100, default: 50 },
+          }
       responses:
         "200":
           description: Historial paginado
@@ -3787,7 +4159,10 @@ paths:
                 properties:
                   items:
                     type: array
-                    items: { $ref: "#/components/schemas/ReimpresionEtiquetaHistorial" }
+                    items:
+                      {
+                        $ref: "#/components/schemas/ReimpresionEtiquetaHistorial",
+                      }
                   total: { type: number }
                   page: { type: number }
                   pageSize: { type: number }
@@ -3799,8 +4174,16 @@ paths:
       tags: [etiquetas]
       summary: Exporta historial filtrado a Excel (ADMIN)
       parameters:
-        - { in: query, name: fechaDesde, schema: { type: string, format: date } }
-        - { in: query, name: fechaHasta, schema: { type: string, format: date } }
+        - {
+            in: query,
+            name: fechaDesde,
+            schema: { type: string, format: date },
+          }
+        - {
+            in: query,
+            name: fechaHasta,
+            schema: { type: string, format: date },
+          }
         - { in: query, name: sitioId, schema: { type: number } }
         - { in: query, name: usuarioId, schema: { type: number } }
         - { in: query, name: productoId, schema: { type: number } }
@@ -3852,7 +4235,20 @@ paths:
         - name: seccion
           in: path
           required: true
-          schema: { type: string, enum: [ventas, utilidad, inventario, mapas-calor, color, compras, clientes] }
+          schema:
+            {
+              type: string,
+              enum:
+                [
+                  ventas,
+                  utilidad,
+                  inventario,
+                  mapas-calor,
+                  color,
+                  compras,
+                  clientes,
+                ],
+            }
         - $ref: "#/components/parameters/ReportePeriodo"
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
@@ -3875,7 +4271,11 @@ paths:
       responses:
         "200":
           description: Bloques data-driven del reporte
-          content: { application/json: { schema: { $ref: "#/components/schemas/ReporteSeccion" } } }
+          content:
+            {
+              application/json:
+                { schema: { $ref: "#/components/schemas/ReporteSeccion" } },
+            }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -3888,7 +4288,20 @@ paths:
         - name: seccion
           in: path
           required: true
-          schema: { type: string, enum: [ventas, utilidad, inventario, mapas-calor, color, compras, clientes] }
+          schema:
+            {
+              type: string,
+              enum:
+                [
+                  ventas,
+                  utilidad,
+                  inventario,
+                  mapas-calor,
+                  color,
+                  compras,
+                  clientes,
+                ],
+            }
         - $ref: "#/components/parameters/ReportePeriodo"
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
@@ -3909,7 +4322,15 @@ paths:
         - $ref: "#/components/parameters/ReporteCoberturaNormal"
         - $ref: "#/components/parameters/ReporteCoberturaExceso"
       responses:
-        "200": { description: Archivo XLSX, content: { application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: { schema: { type: string, format: binary } } } }
+        "200":
+          {
+            description: Archivo XLSX,
+            content:
+              {
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  { schema: { type: string, format: binary } },
+              },
+          }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
   /reportes/{seccion}/export.pdf:
@@ -3921,7 +4342,20 @@ paths:
         - name: seccion
           in: path
           required: true
-          schema: { type: string, enum: [ventas, utilidad, inventario, mapas-calor, color, compras, clientes] }
+          schema:
+            {
+              type: string,
+              enum:
+                [
+                  ventas,
+                  utilidad,
+                  inventario,
+                  mapas-calor,
+                  color,
+                  compras,
+                  clientes,
+                ],
+            }
         - $ref: "#/components/parameters/ReportePeriodo"
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
@@ -3942,7 +4376,12 @@ paths:
         - $ref: "#/components/parameters/ReporteCoberturaNormal"
         - $ref: "#/components/parameters/ReporteCoberturaExceso"
       responses:
-        "200": { description: Archivo PDF, content: { application/pdf: { schema: { type: string, format: binary } } } }
+        "200":
+          {
+            description: Archivo PDF,
+            content:
+              { application/pdf: { schema: { type: string, format: binary } } },
+          }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
   /auditoria:
@@ -3951,15 +4390,31 @@ paths:
       tags: [auditoria]
       summary: Lista la auditoría newest-first (solo ADMIN)
       parameters:
-        - { in: query, name: desde, schema: { $ref: "#/components/schemas/CalendarDate" } }
-        - { in: query, name: hasta, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - {
+            in: query,
+            name: desde,
+            schema: { $ref: "#/components/schemas/CalendarDate" },
+          }
+        - {
+            in: query,
+            name: hasta,
+            schema: { $ref: "#/components/schemas/CalendarDate" },
+          }
         - { in: query, name: usuarioId, schema: { type: number, minimum: 1 } }
         - { in: query, name: modulo, schema: { type: string, maxLength: 80 } }
         - { in: query, name: accion, schema: { type: string, maxLength: 80 } }
         - { in: query, name: sitioId, schema: { type: number, minimum: 1 } }
         - { in: query, name: search, schema: { type: string, maxLength: 150 } }
-        - { in: query, name: page, schema: { type: number, minimum: 1, default: 1 } }
-        - { in: query, name: pageSize, schema: { type: number, minimum: 1, maximum: 100, default: 50 } }
+        - {
+            in: query,
+            name: page,
+            schema: { type: number, minimum: 1, default: 1 },
+          }
+        - {
+            in: query,
+            name: pageSize,
+            schema: { type: number, minimum: 1, maximum: 100, default: 50 },
+          }
       responses:
         "200":
           description: Resultado paginado
@@ -3975,8 +4430,16 @@ paths:
       tags: [auditoria]
       summary: Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
       parameters:
-        - { in: query, name: desde, schema: { $ref: "#/components/schemas/CalendarDate" } }
-        - { in: query, name: hasta, schema: { $ref: "#/components/schemas/CalendarDate" } }
+        - {
+            in: query,
+            name: desde,
+            schema: { $ref: "#/components/schemas/CalendarDate" },
+          }
+        - {
+            in: query,
+            name: hasta,
+            schema: { $ref: "#/components/schemas/CalendarDate" },
+          }
         - { in: query, name: usuarioId, schema: { type: number, minimum: 1 } }
         - { in: query, name: modulo, schema: { type: string, maxLength: 80 } }
         - { in: query, name: accion, schema: { type: string, maxLength: 80 } }
@@ -3997,7 +4460,12 @@ paths:
       tags: [auditoria]
       summary: Obtiene detalle y evidencia antes/después (solo ADMIN)
       parameters:
-        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+        - {
+            in: path,
+            name: id,
+            required: true,
+            schema: { type: number, minimum: 1 },
+          }
       responses:
         "200":
           description: Detalle de auditoría
@@ -4010,19 +4478,49 @@ paths:
         "404": { $ref: "#/components/responses/NotFound" }
 components:
   parameters:
-    CamionetaId: { name: id, in: path, required: true, schema: { type: number, minimum: 1 } }
+    CamionetaId:
+      {
+        name: id,
+        in: path,
+        required: true,
+        schema: { type: number, minimum: 1 },
+      }
+    ChoferId:
+      {
+        name: id,
+        in: path,
+        required: true,
+        schema: { type: number, minimum: 1 },
+      }
     ReportePeriodo:
       name: periodo
       in: query
-      schema: { type: string, enum: [diario, semanal, mensual, trimestral, semestral, anual, personalizado], default: mensual }
-    ReporteUbicacionIds: { name: ubicacionIds, in: query, schema: { type: string } }
-    ReporteProductoIds: { name: productoIds, in: query, schema: { type: string } }
+      schema:
+        {
+          type: string,
+          enum:
+            [
+              diario,
+              semanal,
+              mensual,
+              trimestral,
+              semestral,
+              anual,
+              personalizado,
+            ],
+          default: mensual,
+        }
+    ReporteUbicacionIds:
+      { name: ubicacionIds, in: query, schema: { type: string } }
+    ReporteProductoIds:
+      { name: productoIds, in: query, schema: { type: string } }
     ReporteTelas: { name: telas, in: query, schema: { type: string } }
     ReporteColores: { name: colores, in: query, schema: { type: string } }
     ReporteUnidades: { name: unidades, in: query, schema: { type: string } }
     ReporteUsuarioIds: { name: usuarioIds, in: query, schema: { type: string } }
     ReporteClienteIds: { name: clienteIds, in: query, schema: { type: string } }
-    ReporteProveedorIds: { name: proveedorIds, in: query, schema: { type: string } }
+    ReporteProveedorIds:
+      { name: proveedorIds, in: query, schema: { type: string } }
     ReporteFormasPago: { name: formasPago, in: query, schema: { type: string } }
     ReporteFacturado: { name: facturado, in: query, schema: { type: boolean } }
     ReporteModalidad:
@@ -4030,11 +4528,28 @@ components:
       in: query
       description: Modalidad de las líneas de venta; Todo no restringe resultados.
       schema: { type: string, enum: [TODO, ROLLOS, METRAJE], default: TODO }
-    ReporteMargenUmbral: { name: margenUmbral, in: query, schema: { type: number, default: 15 } }
-    ReporteCoberturaCritico: { name: coberturaCritico, in: query, schema: { type: number, default: 7 } }
-    ReporteCoberturaBajo: { name: coberturaBajo, in: query, schema: { type: number, default: 15 } }
-    ReporteCoberturaNormal: { name: coberturaNormal, in: query, schema: { type: number, default: 60 } }
-    ReporteCoberturaExceso: { name: coberturaExceso, in: query, schema: { type: number, default: 90 } }
+    ReporteMargenUmbral:
+      { name: margenUmbral, in: query, schema: { type: number, default: 15 } }
+    ReporteCoberturaCritico:
+      {
+        name: coberturaCritico,
+        in: query,
+        schema: { type: number, default: 7 },
+      }
+    ReporteCoberturaBajo:
+      { name: coberturaBajo, in: query, schema: { type: number, default: 15 } }
+    ReporteCoberturaNormal:
+      {
+        name: coberturaNormal,
+        in: query,
+        schema: { type: number, default: 60 },
+      }
+    ReporteCoberturaExceso:
+      {
+        name: coberturaExceso,
+        in: query,
+        schema: { type: number, default: 90 },
+      }
     AnalyticsDesde:
       name: desde
       in: query
@@ -4197,7 +4712,8 @@ components:
           items: { $ref: "#/components/schemas/SolicitudPagoDirigido" }
     SolicitudPagoDirigidoInput:
       type: object
-      required: [tipo, entidadId, documentoMovimientoId, importe, formaPago, motivo]
+      required:
+        [tipo, entidadId, documentoMovimientoId, importe, formaPago, motivo]
       properties:
         tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
         entidadId: { type: number, minimum: 1 }
@@ -4211,7 +4727,22 @@ components:
         motivo: { type: string, minLength: 10 }
     SolicitudPagoDirigido:
       type: object
-      required: [id, tipo, entidadId, documentoMovimientoId, importe, formaPago, motivo, solicitanteId, solicitanteNombre, contraparteNombre, documentoFolio, estado, createdAt]
+      required:
+        [
+          id,
+          tipo,
+          entidadId,
+          documentoMovimientoId,
+          importe,
+          formaPago,
+          motivo,
+          solicitanteId,
+          solicitanteNombre,
+          contraparteNombre,
+          documentoFolio,
+          estado,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
@@ -4243,7 +4774,21 @@ components:
         estado: { type: string, enum: [APROBADA] }
     AuditoriaEntry:
       type: object
-      required: [id, fecha, usuarioId, usuario, rolSnapshot, accion, modulo, entidad, entidadId, sitioId, sitio, ip]
+      required:
+        [
+          id,
+          fecha,
+          usuarioId,
+          usuario,
+          rolSnapshot,
+          accion,
+          modulo,
+          entidad,
+          entidadId,
+          sitioId,
+          sitio,
+          ip,
+        ]
       properties:
         id: { type: string }
         fecha: { type: string, format: date-time }
@@ -4264,7 +4809,8 @@ components:
           required: [datosAntes, datosDespues]
           properties:
             datosAntes: { type: ["object", "null"], additionalProperties: true }
-            datosDespues: { type: ["object", "null"], additionalProperties: true }
+            datosDespues:
+              { type: ["object", "null"], additionalProperties: true }
     AuditoriaListResult:
       type: object
       required: [items, total, page, pageSize]
@@ -4324,7 +4870,11 @@ components:
       properties:
         proveedorId: { type: number }
         referencia: { type: ["string", "null"] }
-        fechaPedido: { anyOf: [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }] }
+        fechaPedido:
+          {
+            anyOf:
+              [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }],
+          }
         fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
         sitioDestinoId: { type: number }
         notas: { type: ["string", "null"] }
@@ -4342,9 +4892,27 @@ components:
         motivo: { type: string, minLength: 10 }
     ContenedorLinea:
       type: object
-      required: [id, productoId, sku, tela, color, unidad, cantidadEsperada, rollosEsperados, nota, cantidadRecibida, rollosRecibidos, diferencia]
+      required:
+        [
+          id,
+          productoId,
+          sku,
+          tela,
+          color,
+          unidad,
+          cantidadEsperada,
+          rollosEsperados,
+          nota,
+          cantidadRecibida,
+          rollosRecibidos,
+          diferencia,
+        ]
       properties:
-        id: { type: ["number", "null"], description: Null when the product was received but was not expected }
+        id:
+          {
+            type: ["number", "null"],
+            description: Null when the product was received but was not expected,
+          }
         productoId: { type: number }
         sku: { type: string }
         tela: { type: string }
@@ -4372,7 +4940,21 @@ components:
         kilos: { type: string }
     ContenedorListItem:
       type: object
-      required: [id, folio, proveedorId, proveedor, referencia, fechaEstimadaLlegada, sitioDestinoId, sitioDestino, estado, diasParaLlegar, lineas, totales]
+      required:
+        [
+          id,
+          folio,
+          proveedorId,
+          proveedor,
+          referencia,
+          fechaEstimadaLlegada,
+          sitioDestinoId,
+          sitioDestino,
+          estado,
+          diasParaLlegar,
+          lineas,
+          totales,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -4399,16 +4981,48 @@ components:
         pageSize: { type: number }
     ContenedorDetail:
       type: object
-      required: [id, folio, proveedorId, proveedor, referencia, fechaPedido, fechaEstimadaLlegada, fechaRealLlegada, sitioDestinoId, sitioDestino, entradaId, estado, notas, motivoCancelacion, usuarioId, createdAt, updatedAt, diasTransito, diferenciaFechaEstimada, totalesEsperados, totalesRecibidos, lineas]
+      required:
+        [
+          id,
+          folio,
+          proveedorId,
+          proveedor,
+          referencia,
+          fechaPedido,
+          fechaEstimadaLlegada,
+          fechaRealLlegada,
+          sitioDestinoId,
+          sitioDestino,
+          entradaId,
+          estado,
+          notas,
+          motivoCancelacion,
+          usuarioId,
+          createdAt,
+          updatedAt,
+          diasTransito,
+          diferenciaFechaEstimada,
+          totalesEsperados,
+          totalesRecibidos,
+          lineas,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
         proveedorId: { type: number }
         proveedor: { type: string }
         referencia: { type: ["string", "null"] }
-        fechaPedido: { anyOf: [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }] }
+        fechaPedido:
+          {
+            anyOf:
+              [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }],
+          }
         fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
-        fechaRealLlegada: { anyOf: [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }] }
+        fechaRealLlegada:
+          {
+            anyOf:
+              [{ $ref: "#/components/schemas/CalendarDate" }, { type: "null" }],
+          }
         sitioDestinoId: { type: number }
         sitioDestino: { type: string }
         entradaId: { type: ["number", "null"] }
@@ -4428,7 +5042,8 @@ components:
         costoTotal: { type: ["string", "null"], description: Solo ADMIN }
     ContenedorEntradaOption:
       type: object
-      required: [id, folio, proveedorId, proveedor, referencia, fechaEstimadaLlegada]
+      required:
+        [id, folio, proveedorId, proveedor, referencia, fechaEstimadaLlegada]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -4438,7 +5053,15 @@ components:
         fechaEstimadaLlegada: { $ref: "#/components/schemas/CalendarDate" }
     ContenedorResumenKpis:
       type: object
-      required: [enTransito, rollosPorLlegar, metrosPorLlegar, kilosPorLlegar, retrasados, proximo]
+      required:
+        [
+          enTransito,
+          rollosPorLlegar,
+          metrosPorLlegar,
+          kilosPorLlegar,
+          retrasados,
+          proximo,
+        ]
       properties:
         enTransito: { type: number }
         rollosPorLlegar: { type: number }
@@ -4462,7 +5085,19 @@ components:
       additionalProperties: true
     ContenedorProveedorResumen:
       type: object
-      required: [proveedorId, proveedor, contenedores, rollos, metros, kilos, diasPromedioTransito, antes, aTiempo, despues]
+      required:
+        [
+          proveedorId,
+          proveedor,
+          contenedores,
+          rollos,
+          metros,
+          kilos,
+          diasPromedioTransito,
+          antes,
+          aTiempo,
+          despues,
+        ]
       properties:
         proveedorId: { type: number }
         proveedor: { type: string }
@@ -4478,7 +5113,17 @@ components:
         participacion: { type: ["string", "null"], description: Solo ADMIN }
     ContenedorPeriodoResumen:
       type: object
-      required: [contenedores, rollos, metros, kilos, diasPromedio, antes, aTiempo, despues]
+      required:
+        [
+          contenedores,
+          rollos,
+          metros,
+          kilos,
+          diasPromedio,
+          antes,
+          aTiempo,
+          despues,
+        ]
       properties:
         contenedores: { type: number }
         rollos: { type: number }
@@ -4488,11 +5133,20 @@ components:
         antes: { type: number }
         aTiempo: { type: number }
         despues: { type: number }
-        costoTotal: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
-        costoPromedio: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
+        costoTotal:
+          {
+            type: ["string", "null"],
+            description: Solo ADMIN; null cuando hay costos pendientes,
+          }
+        costoPromedio:
+          {
+            type: ["string", "null"],
+            description: Solo ADMIN; null cuando hay costos pendientes,
+          }
     ContenedorProductoResumen:
       type: object
-      required: [productoId, sku, tela, color, unidad, contenedores, rollos, cantidad]
+      required:
+        [productoId, sku, tela, color, unidad, contenedores, rollos, cantidad]
       properties:
         productoId: { type: number }
         sku: { type: string }
@@ -4522,8 +5176,16 @@ components:
       required: [mes]
       properties:
         mes: { type: number }
-        costoActual: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
-        costoAnioAnterior: { type: ["string", "null"], description: Solo ADMIN; null cuando hay costos pendientes }
+        costoActual:
+          {
+            type: ["string", "null"],
+            description: Solo ADMIN; null cuando hay costos pendientes,
+          }
+        costoAnioAnterior:
+          {
+            type: ["string", "null"],
+            description: Solo ADMIN; null cuando hay costos pendientes,
+          }
     ContenedorDiferenciaResumen:
       type: object
       required: [producto_id, sku, tela, color, unidad, esperado, recibido]
@@ -4537,18 +5199,58 @@ components:
         recibido: { type: string }
     ContenedorResumen:
       type: object
-      required: [actual, periodo, porProveedor, porProducto, porTela, porColor, porMes, diferencias]
+      required:
+        [
+          actual,
+          periodo,
+          porProveedor,
+          porProducto,
+          porTela,
+          porColor,
+          porMes,
+          diferencias,
+        ]
       properties:
         actual: { $ref: "#/components/schemas/ContenedorResumenKpis" }
         periodo: { $ref: "#/components/schemas/ContenedorPeriodoResumen" }
-        porProveedor: { type: array, items: { $ref: "#/components/schemas/ContenedorProveedorResumen" } }
-        porProducto: { type: array, items: { $ref: "#/components/schemas/ContenedorProductoResumen" } }
-        porTela: { type: array, items: { $ref: "#/components/schemas/ContenedorGrupoResumen" } }
-        porColor: { type: array, items: { $ref: "#/components/schemas/ContenedorGrupoResumen" } }
-        porMes: { type: array, items: { $ref: "#/components/schemas/ContenedorMesResumen" } }
-        diferencias: { type: array, items: { $ref: "#/components/schemas/ContenedorDiferenciaResumen" } }
+        porProveedor:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/ContenedorProveedorResumen" },
+          }
+        porProducto:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/ContenedorProductoResumen" },
+          }
+        porTela:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/ContenedorGrupoResumen" },
+          }
+        porColor:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/ContenedorGrupoResumen" },
+          }
+        porMes:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/ContenedorMesResumen" },
+          }
+        diferencias:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/ContenedorDiferenciaResumen" },
+          }
     ReportePrimitive:
-      oneOf: [{ type: string }, { type: number }, { type: boolean }, { type: "null" }]
+      oneOf:
+        [
+          { type: string },
+          { type: number },
+          { type: boolean },
+          { type: "null" },
+        ]
     ReporteKpi:
       type: object
       required: [id, label, value, kind]
@@ -4568,48 +5270,213 @@ components:
       properties:
         id: { type: string }
         title: { type: string }
-        type: { type: string, enum: [line, bar, stacked-bar, heatmap, treemap, scatter] }
+        type:
+          {
+            type: string,
+            enum: [line, bar, stacked-bar, heatmap, treemap, scatter],
+          }
         categoryKey: { type: string }
-        series: { type: array, items: { type: object, required: [key, label], properties: { key: { type: string }, label: { type: string }, kind: { type: string }, economic: { type: boolean }, estimated: { type: boolean } } } }
-        rows: { type: array, items: { type: object, additionalProperties: { $ref: "#/components/schemas/ReportePrimitive" } } }
+        series:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [key, label],
+                properties:
+                  {
+                    key: { type: string },
+                    label: { type: string },
+                    kind: { type: string },
+                    economic: { type: boolean },
+                    estimated: { type: boolean },
+                  },
+              },
+          }
+        rows:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                additionalProperties:
+                  { $ref: "#/components/schemas/ReportePrimitive" },
+              },
+          }
     ReporteTable:
       type: object
       required: [id, title, columns, rows, totals]
       properties:
         id: { type: string }
         title: { type: string }
-        columns: { type: array, items: { type: object, required: [key, label, kind], properties: { key: { type: string }, label: { type: string }, kind: { type: string }, economic: { type: boolean }, estimated: { type: boolean } } } }
-        rows: { type: array, items: { type: object, additionalProperties: { $ref: "#/components/schemas/ReportePrimitive" } } }
-        totals: { type: object, additionalProperties: { $ref: "#/components/schemas/ReportePrimitive" } }
+        columns:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [key, label, kind],
+                properties:
+                  {
+                    key: { type: string },
+                    label: { type: string },
+                    kind: { type: string },
+                    economic: { type: boolean },
+                    estimated: { type: boolean },
+                  },
+              },
+          }
+        rows:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                additionalProperties:
+                  { $ref: "#/components/schemas/ReportePrimitive" },
+              },
+          }
+        totals:
+          {
+            type: object,
+            additionalProperties:
+              { $ref: "#/components/schemas/ReportePrimitive" },
+          }
     ReporteSeccion:
       type: object
-      required: [section, generatedAt, hasEconomicAccess, range, activeFilters, warnings, kpis, charts, tables]
+      required:
+        [
+          section,
+          generatedAt,
+          hasEconomicAccess,
+          range,
+          activeFilters,
+          warnings,
+          kpis,
+          charts,
+          tables,
+        ]
       properties:
         section: { type: string }
         generatedAt: { type: string, format: date-time }
         hasEconomicAccess: { type: boolean }
-        range: { type: object, required: [desde, hasta, previousDesde, previousHasta, yearAgoDesde, yearAgoHasta], properties: { desde: { type: string, format: date-time }, hasta: { type: string, format: date-time }, previousDesde: { type: string, format: date-time }, previousHasta: { type: string, format: date-time }, yearAgoDesde: { type: string, format: date-time }, yearAgoHasta: { type: string, format: date-time } } }
+        range:
+          {
+            type: object,
+            required:
+              [
+                desde,
+                hasta,
+                previousDesde,
+                previousHasta,
+                yearAgoDesde,
+                yearAgoHasta,
+              ],
+            properties:
+              {
+                desde: { type: string, format: date-time },
+                hasta: { type: string, format: date-time },
+                previousDesde: { type: string, format: date-time },
+                previousHasta: { type: string, format: date-time },
+                yearAgoDesde: { type: string, format: date-time },
+                yearAgoHasta: { type: string, format: date-time },
+              },
+          }
         activeFilters: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
-        kpis: { type: array, items: { $ref: "#/components/schemas/ReporteKpi" } }
-        charts: { type: array, items: { $ref: "#/components/schemas/ReporteChart" } }
-        tables: { type: array, items: { $ref: "#/components/schemas/ReporteTable" } }
+        kpis:
+          { type: array, items: { $ref: "#/components/schemas/ReporteKpi" } }
+        charts:
+          { type: array, items: { $ref: "#/components/schemas/ReporteChart" } }
+        tables:
+          { type: array, items: { $ref: "#/components/schemas/ReporteTable" } }
     ReportesCatalogos:
       type: object
-      required: [sites, products, fabrics, colors, units, users, clients, suppliers, paymentMethods]
+      required:
+        [
+          sites,
+          products,
+          fabrics,
+          colors,
+          units,
+          users,
+          clients,
+          suppliers,
+          paymentMethods,
+        ]
       properties:
-        sites: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
-        products: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        sites:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [id, label],
+                properties: { id: { type: number }, label: { type: string } },
+              },
+          }
+        products:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [id, label],
+                properties: { id: { type: number }, label: { type: string } },
+              },
+          }
         fabrics: { type: array, items: { type: string } }
         colors: { type: array, items: { type: string } }
         units: { type: array, items: { type: string } }
-        users: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
-        clients: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
-        suppliers: { type: array, items: { type: object, required: [id, label], properties: { id: { type: number }, label: { type: string } } } }
+        users:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [id, label],
+                properties: { id: { type: number }, label: { type: string } },
+              },
+          }
+        clients:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [id, label],
+                properties: { id: { type: number }, label: { type: string } },
+              },
+          }
+        suppliers:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                required: [id, label],
+                properties: { id: { type: number }, label: { type: string } },
+              },
+          }
         paymentMethods: { type: array, items: { type: string } }
     RolloEtiqueta:
       type: object
-      required: [id, serie, productoId, producto, sku, cantidad, unidad, sitioId, sitio, estado, createdAt, reimpresionesCount, alertaReimpresiones]
+      required:
+        [
+          id,
+          serie,
+          productoId,
+          producto,
+          sku,
+          cantidad,
+          unidad,
+          sitioId,
+          sitio,
+          estado,
+          createdAt,
+          reimpresionesCount,
+          alertaReimpresiones,
+        ]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -4631,7 +5498,22 @@ components:
         alertaReimpresiones: { type: boolean }
     EtiquetaImprimible:
       type: object
-      required: [rolloId, productoId, producto, tela, color, sku, serie, cantidad, unidad, qr, marca, fechaReimpresion, formatoMm]
+      required:
+        [
+          rolloId,
+          productoId,
+          producto,
+          tela,
+          color,
+          sku,
+          serie,
+          cantidad,
+          unidad,
+          qr,
+          marca,
+          fechaReimpresion,
+          formatoMm,
+        ]
       properties:
         rolloId: { type: number }
         productoId: { type: number }
@@ -4653,7 +5535,23 @@ components:
             alto: { type: number, const: 60 }
     ReimpresionEtiquetaHistorial:
       type: object
-      required: [id, rolloId, serie, productoId, producto, sku, sitioId, sitio, usuarioId, solicito, autorizadoPor, autorizo, motivo, createdAt]
+      required:
+        [
+          id,
+          rolloId,
+          serie,
+          productoId,
+          producto,
+          sku,
+          sitioId,
+          sitio,
+          usuarioId,
+          solicito,
+          autorizadoPor,
+          autorizo,
+          motivo,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         rolloId: { type: number }
@@ -4671,7 +5569,22 @@ components:
         createdAt: { type: string, format: date-time }
     AnalyticsMoneyTotals:
       type: object
-      required: [ventas, cobrado, pendiente, subtotal, iva, costo, margen, margenPorcentaje, tickets, ticketsCobrados, ticketsPendientes, cancelaciones, lineasExcluidasMargen]
+      required:
+        [
+          ventas,
+          cobrado,
+          pendiente,
+          subtotal,
+          iva,
+          costo,
+          margen,
+          margenPorcentaje,
+          tickets,
+          ticketsCobrados,
+          ticketsPendientes,
+          cancelaciones,
+          lineasExcluidasMargen,
+        ]
       properties:
         ventas: { type: string }
         cobrado: { type: string }
@@ -4696,7 +5609,18 @@ components:
         cantidad: { type: string }
     AdminRealtimeDashboard:
       type: object
-      required: [generatedAt, fullRefreshSeconds, pendingRefreshSeconds, totales, cantidades, pendientes, tiendas, comparativo, ultimosTickets]
+      required:
+        [
+          generatedAt,
+          fullRefreshSeconds,
+          pendingRefreshSeconds,
+          totales,
+          cantidades,
+          pendientes,
+          tiendas,
+          comparativo,
+          ultimosTickets,
+        ]
       properties:
         generatedAt: { type: string, format: date-time }
         fullRefreshSeconds: { type: number, enum: [300] }
@@ -4720,7 +5644,29 @@ components:
     AdminRealtimeStore:
       type: object
       description: Incluye toda tienda activa; sesionCajaId nulo distingue explícitamente una tienda sin caja abierta.
-      required: [ubicacionId, nombreUbicacion, sesionCajaId, abiertaAt, cajero, usuarioTerminal, vendido, cobrado, pendiente, tickets, ticketPromedio, margen, margenPorcentaje, efectivo, transferencia, credito, pendientes30Min, cancelaciones, tasaCancelacion, alertas]
+      required:
+        [
+          ubicacionId,
+          nombreUbicacion,
+          sesionCajaId,
+          abiertaAt,
+          cajero,
+          usuarioTerminal,
+          vendido,
+          cobrado,
+          pendiente,
+          tickets,
+          ticketPromedio,
+          margen,
+          margenPorcentaje,
+          efectivo,
+          transferencia,
+          credito,
+          pendientes30Min,
+          cancelaciones,
+          tasaCancelacion,
+          alertas,
+        ]
       properties:
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
@@ -4748,7 +5694,17 @@ components:
         alertas: { type: array, items: { type: string } }
     AdminRealtimeTicket:
       type: object
-      required: [id, folio, createdAt, nombreUbicacion, nombreCliente, importe, margen, cobrado]
+      required:
+        [
+          id,
+          folio,
+          createdAt,
+          nombreUbicacion,
+          nombreCliente,
+          importe,
+          margen,
+          cobrado,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -4776,7 +5732,20 @@ components:
               alertas: { type: array, items: { type: string } }
     AdminAlertaTicket:
       type: object
-      required: [id, folio, createdAt, minutosTranscurridos, ubicacionId, nombreUbicacion, clienteId, nombreCliente, importe, creadorId, nombreCreador]
+      required:
+        [
+          id,
+          folio,
+          createdAt,
+          minutosTranscurridos,
+          ubicacionId,
+          nombreUbicacion,
+          clienteId,
+          nombreCliente,
+          importe,
+          creadorId,
+          nombreCreador,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -4793,7 +5762,17 @@ components:
         nombreCreador: { type: string }
     AdminAlertaCredito:
       type: object
-      required: [movimientoId, clienteId, nombreCliente, nota, ticketFolio, importe, fechaVencimiento, diasRestantes]
+      required:
+        [
+          movimientoId,
+          clienteId,
+          nombreCliente,
+          nota,
+          ticketFolio,
+          importe,
+          fechaVencimiento,
+          diasRestantes,
+        ]
       properties:
         movimientoId: { type: number }
         clienteId: { type: number }
@@ -4809,7 +5788,17 @@ components:
           description: Días firmados contra hoy en Ciudad de México; negativo significa vencido.
     AdminAlertaSalida:
       type: object
-      required: [id, folio, enviadaAt, horasEnTransito, origenId, nombreOrigen, destinoId, nombreDestino]
+      required:
+        [
+          id,
+          folio,
+          enviadaAt,
+          horasEnTransito,
+          origenId,
+          nombreOrigen,
+          destinoId,
+          nombreDestino,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -4823,7 +5812,8 @@ components:
         nombreDestino: { type: string }
     AdminAlertas:
       type: object
-      required: [generatedAt, total, ticketsPendientes, creditos, salidasEnTransito]
+      required:
+        [generatedAt, total, ticketsPendientes, creditos, salidasEnTransito]
       properties:
         generatedAt: { type: string, format: date-time }
         total:
@@ -4841,7 +5831,25 @@ components:
           items: { $ref: "#/components/schemas/AdminAlertaSalida" }
     AdminCorteRow:
       type: object
-      required: [id, ubicacionId, nombreUbicacion, usuarioId, nombreUsuario, abiertaAt, cerradaAt, estado, fondoInicial, vendido, totalCobrado, efectivoEsperado, efectivoContado, diferencia, ticketsCobrados, ticketsCancelados]
+      required:
+        [
+          id,
+          ubicacionId,
+          nombreUbicacion,
+          usuarioId,
+          nombreUsuario,
+          abiertaAt,
+          cerradaAt,
+          estado,
+          fondoInicial,
+          vendido,
+          totalCobrado,
+          efectivoEsperado,
+          efectivoContado,
+          diferencia,
+          ticketsCobrados,
+          ticketsCancelados,
+        ]
       properties:
         id: { type: number }
         ubicacionId: { type: number }
@@ -4871,7 +5879,15 @@ components:
         pageSize: { type: number }
         totales:
           type: object
-          required: [vendido, cobrado, efectivoEsperado, efectivoContado, diferencia, tickets]
+          required:
+            [
+              vendido,
+              cobrado,
+              efectivoEsperado,
+              efectivoContado,
+              diferencia,
+              tickets,
+            ]
           properties:
             vendido: { type: string }
             cobrado: { type: string }
@@ -4881,7 +5897,22 @@ components:
             tickets: { type: number }
     AdminDiferenciaGroup:
       type: object
-      required: [id, nombre, cortes, exactos, faltantes, sobrantes, importeFaltantes, importeSobrantes, diferencia, diferenciaNeta, diferenciaAbsoluta, promedio, porcentajeExactos]
+      required:
+        [
+          id,
+          nombre,
+          cortes,
+          exactos,
+          faltantes,
+          sobrantes,
+          importeFaltantes,
+          importeSobrantes,
+          diferencia,
+          diferenciaNeta,
+          diferenciaAbsoluta,
+          promedio,
+          porcentajeExactos,
+        ]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -4898,7 +5929,8 @@ components:
         porcentajeExactos: { type: string }
     AdminTrendPoint:
       type: object
-      required: [fecha, importe, diferenciaAbsoluta, cortes, exactos, porcentajeExactos]
+      required:
+        [fecha, importe, diferenciaAbsoluta, cortes, exactos, porcentajeExactos]
       properties:
         fecha: { type: string, format: date }
         importe: { type: string }
@@ -4924,7 +5956,18 @@ components:
       properties:
         resumen:
           type: object
-          required: [cortes, exactos, faltantes, sobrantes, importeFaltantes, importeSobrantes, diferenciaNeta, diferenciaAbsoluta, porcentajeExactos]
+          required:
+            [
+              cortes,
+              exactos,
+              faltantes,
+              sobrantes,
+              importeFaltantes,
+              importeSobrantes,
+              diferenciaNeta,
+              diferenciaAbsoluta,
+              porcentajeExactos,
+            ]
           properties:
             cortes: { type: number }
             exactos: { type: number }
@@ -4935,13 +5978,35 @@ components:
             diferenciaNeta: { type: string }
             diferenciaAbsoluta: { type: string }
             porcentajeExactos: { type: string }
-        porCajero: { type: array, items: { $ref: "#/components/schemas/AdminDiferenciaGroup" } }
-        porTienda: { type: array, items: { $ref: "#/components/schemas/AdminDiferenciaGroup" } }
-        tendencia: { type: array, items: { $ref: "#/components/schemas/AdminTrendPoint" } }
-        alertas: { type: array, items: { $ref: "#/components/schemas/AdminAlert" } }
+        porCajero:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/AdminDiferenciaGroup" },
+          }
+        porTienda:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/AdminDiferenciaGroup" },
+          }
+        tendencia:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/AdminTrendPoint" },
+          }
+        alertas:
+          { type: array, items: { $ref: "#/components/schemas/AdminAlert" } }
     AdminCuentaDestinoRow:
       type: object
-      required: [cuentaDestino, formaPago, importe, importeAnterior, variacionPorcentaje, porcentaje, operaciones]
+      required:
+        [
+          cuentaDestino,
+          formaPago,
+          importe,
+          importeAnterior,
+          variacionPorcentaje,
+          porcentaje,
+          operaciones,
+        ]
       properties:
         cuentaDestino: { type: string }
         formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA, CREDITO] }
@@ -4961,15 +6026,33 @@ components:
         importe: { type: string }
     AdminCuentasDestino:
       type: object
-      required: [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado]
+      required:
+        [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado]
       properties:
-        resumen: { type: array, items: { $ref: "#/components/schemas/AdminCuentaDestinoRow" } }
-        tendencia: { type: array, items: { $ref: "#/components/schemas/AdminCuentaTrend" } }
+        resumen:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/AdminCuentaDestinoRow" },
+          }
+        tendencia:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/AdminCuentaTrend" },
+          }
         porTienda:
           type: array
           items:
             type: object
-            required: [ubicacionId, nombreUbicacion, cajaFisica, cuentaFiscal, cuentaNoFiscal, cuentasPorCobrar, total]
+            required:
+              [
+                ubicacionId,
+                nombreUbicacion,
+                cajaFisica,
+                cuentaFiscal,
+                cuentaNoFiscal,
+                cuentasPorCobrar,
+                total,
+              ]
             properties:
               ubicacionId: { type: number }
               nombreUbicacion: { type: string }
@@ -4980,7 +6063,15 @@ components:
               total: { type: string }
         facturacion:
           type: object
-          required: [facturadoTotal, noFacturadoTotal, facturadoEfectivo, facturadoTransferencia, noFacturadoEfectivo, noFacturadoTransferencia]
+          required:
+            [
+              facturadoTotal,
+              noFacturadoTotal,
+              facturadoEfectivo,
+              facturadoTransferencia,
+              noFacturadoEfectivo,
+              noFacturadoTransferencia,
+            ]
           properties:
             facturadoTotal: { type: string }
             noFacturadoTotal: { type: string }
@@ -4992,7 +6083,34 @@ components:
         totalCobrado: { type: string }
     AdminStoreComparison:
       type: object
-      required: [ubicacionId, nombreUbicacion, ventas, subtotal, costo, margen, tickets, ticketPromedio, diferenciaTicketPromedio, tendenciaPorcentaje, mejorDia, peorDia, cancelaciones, lineasExcluidasMargen, metros, kilos, rollosMetros, rollosKilos, metrajeMetros, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
+      required:
+        [
+          ubicacionId,
+          nombreUbicacion,
+          ventas,
+          subtotal,
+          costo,
+          margen,
+          tickets,
+          ticketPromedio,
+          diferenciaTicketPromedio,
+          tendenciaPorcentaje,
+          mejorDia,
+          peorDia,
+          cancelaciones,
+          lineasExcluidasMargen,
+          metros,
+          kilos,
+          rollosMetros,
+          rollosKilos,
+          metrajeMetros,
+          efectivo,
+          transferencia,
+          credito,
+          porcentajeFacturado,
+          diferenciaCaja,
+          participacion,
+        ]
       properties:
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
@@ -5021,12 +6139,25 @@ components:
         participacion: { type: string }
     AdminComparacionTiendas:
       type: object
-      required: [periodo, desde, hasta, tiendas, totales, promedioGeneralTicket, ventasPorFecha]
+      required:
+        [
+          periodo,
+          desde,
+          hasta,
+          tiendas,
+          totales,
+          promedioGeneralTicket,
+          ventasPorFecha,
+        ]
       properties:
         periodo: { type: string }
         desde: { type: string, format: date }
         hasta: { type: string, format: date }
-        tiendas: { type: array, items: { $ref: "#/components/schemas/AdminStoreComparison" } }
+        tiendas:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/AdminStoreComparison" },
+          }
         totales: { $ref: "#/components/schemas/AdminStoreComparisonTotals" }
         promedioGeneralTicket: { type: string }
         ventasPorFecha:
@@ -5040,7 +6171,28 @@ components:
         ventas: { type: string }
     AdminStoreComparisonTotals:
       type: object
-      required: [ventas, subtotal, costo, margen, tickets, ticketPromedio, cancelaciones, lineasExcluidasMargen, metros, kilos, rollosMetros, rollosKilos, metrajeMetros, efectivo, transferencia, credito, porcentajeFacturado, diferenciaCaja, participacion]
+      required:
+        [
+          ventas,
+          subtotal,
+          costo,
+          margen,
+          tickets,
+          ticketPromedio,
+          cancelaciones,
+          lineasExcluidasMargen,
+          metros,
+          kilos,
+          rollosMetros,
+          rollosKilos,
+          metrajeMetros,
+          efectivo,
+          transferencia,
+          credito,
+          porcentajeFacturado,
+          diferenciaCaja,
+          participacion,
+        ]
       properties:
         ventas: { type: string }
         subtotal: { type: string }
@@ -5097,7 +6249,8 @@ components:
           type: string
     Camioneta:
       type: object
-      required: [id, nombre, placas, marca, modelo, tipo, activa, createdAt, updatedAt]
+      required:
+        [id, nombre, placas, marca, modelo, tipo, activa, createdAt, updatedAt]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -5128,6 +6281,30 @@ components:
         modelo: { type: ["string", "null"], maxLength: 80 }
         tipo: { type: string, enum: [PROPIA, CONTRATADA] }
         activa: { type: boolean }
+    Chofer:
+      type: object
+      required: [id, nombreCompleto, telefono, activo, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        nombreCompleto: { type: string }
+        telefono: { type: string }
+        activo: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ChoferInput:
+      type: object
+      required: [nombreCompleto, telefono]
+      properties:
+        nombreCompleto: { type: string, minLength: 1, maxLength: 160 }
+        telefono: { type: string, minLength: 1, maxLength: 32 }
+        activo: { type: boolean, default: true }
+    ChoferUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        nombreCompleto: { type: string, minLength: 1, maxLength: 160 }
+        telefono: { type: string, minLength: 1, maxLength: 32 }
+        activo: { type: boolean }
     Role:
       type: string
       enum: [ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, SOPORTE]
@@ -5260,7 +6437,16 @@ components:
         $ref: "#/components/schemas/ModulePermission"
     Cliente:
       type: object
-      required: [id, nombre, activo, esSistema, recibeNotaSinPrecios, createdAt, updatedAt]
+      required:
+        [
+          id,
+          nombre,
+          activo,
+          esSistema,
+          recibeNotaSinPrecios,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         nombre: { type: string }
@@ -5308,7 +6494,17 @@ components:
 
     ClienteDocumento:
       type: object
-      required: [id, clienteId, lado, publicId, filename, mimeType, subidoPor, createdAt]
+      required:
+        [
+          id,
+          clienteId,
+          lado,
+          publicId,
+          filename,
+          mimeType,
+          subidoPor,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         clienteId: { type: number }
@@ -5401,12 +6597,20 @@ components:
         ticketFolio: { type: ["number", "null"] }
         nombreUsuario: { type: string }
         formaPago: { type: ["string", "null"] }
-        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        cuentaDestino:
+          {
+            type: ["string", "null"],
+            enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL],
+          }
         referencia: { type: ["string", "null"] }
         fechaEfectiva: { type: string, format: date-time }
         diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
         fechaVencimiento: { type: ["string", "null"], format: date }
-        estado: { type: ["string", "null"], enum: [VIGENTE, POR_VENCER, VENCIDA, PAGADA, SIN_PLAZO] }
+        estado:
+          {
+            type: ["string", "null"],
+            enum: [VIGENTE, POR_VENCER, VENCIDA, PAGADA, SIN_PLAZO],
+          }
         sinPlazo: { type: boolean }
         movimientoOrigenId: { type: ["number", "null"] }
     ClienteEstadoCuenta:
@@ -5468,7 +6672,11 @@ components:
         importe: { type: string }
         fecha: { type: string, format: date-time }
         formaPago: { type: ["string", "null"] }
-        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        cuentaDestino:
+          {
+            type: ["string", "null"],
+            enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL],
+          }
         revertido: { type: boolean }
         reversoMovimientoId: { type: ["number", "null"] }
         motivoReverso: { type: ["string", "null"] }
@@ -5488,14 +6696,25 @@ components:
         id: { type: number }
         clienteId: { type: number }
         monto: { type: string }
-        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        cuentaDestino:
+          { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         asignaciones:
           type: array
           items: { $ref: "#/components/schemas/AplicacionCredito" }
         saldoAFavor: { type: string }
     AplicacionCredito:
       type: object
-      required: [folio, ticketId, movimientoVentaId, vencimiento, saldoAntes, aplicado, saldoDespues, resultado]
+      required:
+        [
+          folio,
+          ticketId,
+          movimientoVentaId,
+          vencimiento,
+          saldoAntes,
+          aplicado,
+          saldoDespues,
+          resultado,
+        ]
       properties:
         folio: { type: ["number", "null"] }
         ticketId: { type: ["number", "null"] }
@@ -5522,20 +6741,46 @@ components:
         fechaEfectiva: { type: ["string", "null"], format: date-time }
     ClienteNotaAbono:
       type: object
-      required: [movimientoPagoId, fecha, montoAplicado, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador, revertido]
+      required:
+        [
+          movimientoPagoId,
+          fecha,
+          montoAplicado,
+          montoTotalAbono,
+          formaPago,
+          cuentaDestino,
+          referencia,
+          usuarioRegistrador,
+          revertido,
+        ]
       properties:
         movimientoPagoId: { type: number }
         fecha: { type: string, format: date-time }
         montoAplicado: { type: string }
         montoTotalAbono: { type: string }
         formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA] }
-        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        cuentaDestino:
+          {
+            type: ["string", "null"],
+            enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL],
+          }
         referencia: { type: ["string", "null"] }
         usuarioRegistrador: { type: string }
         revertido: { type: boolean }
     ClienteNotaCreditoDetalle:
       type: object
-      required: [clienteId, ticket, movimientoVentaId, importeOriginal, saldoActual, estado, fechaVencimiento, diasVencidos, abonos]
+      required:
+        [
+          clienteId,
+          ticket,
+          movimientoVentaId,
+          importeOriginal,
+          saldoActual,
+          estado,
+          fechaVencimiento,
+          diasVencidos,
+          abonos,
+        ]
       properties:
         clienteId: { type: number }
         ticket: { $ref: "#/components/schemas/TicketDetalle" }
@@ -5550,7 +6795,16 @@ components:
           items: { $ref: "#/components/schemas/ClienteNotaAbono" }
     ClientePagoAplicacionDetalle:
       type: object
-      required: [ticketId, folio, movimientoVentaId, aplicado, importeOriginal, saldoActual, resultado]
+      required:
+        [
+          ticketId,
+          folio,
+          movimientoVentaId,
+          aplicado,
+          importeOriginal,
+          saldoActual,
+          resultado,
+        ]
       properties:
         ticketId: { type: number }
         folio: { type: number }
@@ -5561,14 +6815,29 @@ components:
         resultado: { type: string, enum: [PENDIENTE, PARCIAL, PAGADA] }
     ClientePagoDetalle:
       type: object
-      required: [id, clienteId, fecha, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador, aplicaciones]
+      required:
+        [
+          id,
+          clienteId,
+          fecha,
+          montoTotalAbono,
+          formaPago,
+          cuentaDestino,
+          referencia,
+          usuarioRegistrador,
+          aplicaciones,
+        ]
       properties:
         id: { type: number }
         clienteId: { type: number }
         fecha: { type: string, format: date-time }
         montoTotalAbono: { type: string }
         formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA] }
-        cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        cuentaDestino:
+          {
+            type: ["string", "null"],
+            enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL],
+          }
         referencia: { type: ["string", "null"] }
         usuarioRegistrador: { type: string }
         revertido: { type: boolean }
@@ -5591,7 +6860,8 @@ components:
       properties:
         importe: { type: number, minimum: 0.01 }
         formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA] }
-        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        cuentaDestino:
+          { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         fechaEfectiva: { type: ["string", "null"], format: date-time }
@@ -5607,14 +6877,27 @@ components:
     ClienteAnalitica:
       type: object
       additionalProperties: true
-      required: [clienteId, periodo, productos, telasColores, tendencia, mezclaPagos, actividad]
+      required:
+        [
+          clienteId,
+          periodo,
+          productos,
+          telasColores,
+          tendencia,
+          mezclaPagos,
+          actividad,
+        ]
       properties:
         clienteId: { type: number }
         periodo: { type: object, additionalProperties: true }
-        productos: { type: array, items: { type: object, additionalProperties: true } }
-        telasColores: { type: array, items: { type: object, additionalProperties: true } }
-        tendencia: { type: array, items: { type: object, additionalProperties: true } }
-        mezclaPagos: { type: array, items: { type: object, additionalProperties: true } }
+        productos:
+          { type: array, items: { type: object, additionalProperties: true } }
+        telasColores:
+          { type: array, items: { type: object, additionalProperties: true } }
+        tendencia:
+          { type: array, items: { type: object, additionalProperties: true } }
+        mezclaPagos:
+          { type: array, items: { type: object, additionalProperties: true } }
         actividad: { type: object, additionalProperties: true }
     ClientesResumen:
       type: object
@@ -5647,7 +6930,20 @@ components:
     ClientesAnalitica:
       type: object
       additionalProperties: true
-      required: [periodo, ventas, tickets, costo, margen, lineasSinCosto, metros, kilos, rollosMetros, rollosKilos, metrajeMetros]
+      required:
+        [
+          periodo,
+          ventas,
+          tickets,
+          costo,
+          margen,
+          lineasSinCosto,
+          metros,
+          kilos,
+          rollosMetros,
+          rollosKilos,
+          metrajeMetros,
+        ]
       properties:
         periodo:
           type: object
@@ -5665,14 +6961,36 @@ components:
         rollosMetros: { type: string }
         rollosKilos: { type: string }
         metrajeMetros: { type: string }
-        topVentas: { type: array, items: { type: object, additionalProperties: true } }
-        topMargen: { type: array, items: { type: object, additionalProperties: true } }
-        pareto: { type: array, items: { type: object, additionalProperties: true } }
-        publicoVsRegistrado: { type: array, items: { type: object, additionalProperties: true } }
-        mensual: { type: array, items: { type: object, additionalProperties: true } }
+        topVentas:
+          { type: array, items: { type: object, additionalProperties: true } }
+        topMargen:
+          { type: array, items: { type: object, additionalProperties: true } }
+        pareto:
+          { type: array, items: { type: object, additionalProperties: true } }
+        publicoVsRegistrado:
+          { type: array, items: { type: object, additionalProperties: true } }
+        mensual:
+          { type: array, items: { type: object, additionalProperties: true } }
     NotificacionCredito:
       type: object
-      required: [id, ticketId, clienteId, clienteNombre, folio, importe, diasPlazo, fechaVencimiento, cajeroId, cajeroNombre, tiendaId, tiendaNombre, urgente, leidaAt, createdAt]
+      required:
+        [
+          id,
+          ticketId,
+          clienteId,
+          clienteNombre,
+          folio,
+          importe,
+          diasPlazo,
+          fechaVencimiento,
+          cajeroId,
+          cajeroNombre,
+          tiendaId,
+          tiendaNombre,
+          urgente,
+          leidaAt,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         ticketId: { type: number }
@@ -5691,7 +7009,18 @@ components:
         createdAt: { type: string, format: date-time }
     AlertaCredito:
       type: object
-      required: [movimientoId, ticketId, clienteId, clienteNombre, folio, pendiente, fechaVencimiento, diasVencido, estado]
+      required:
+        [
+          movimientoId,
+          ticketId,
+          clienteId,
+          clienteNombre,
+          folio,
+          pendiente,
+          fechaVencimiento,
+          diasVencido,
+          estado,
+        ]
       properties:
         movimientoId: { type: number }
         ticketId: { type: ["number", "null"] }
@@ -5730,7 +7059,15 @@ components:
         kind:
           {
             type: string,
-            enum: [TICKET_READY, DIRECTED_PAYMENT, CREDIT_DUE, TRANSIT_OVERDUE, SYSTEM, CREDIT_NOTICE],
+            enum:
+              [
+                TICKET_READY,
+                DIRECTED_PAYMENT,
+                CREDIT_DUE,
+                TRANSIT_OVERDUE,
+                SYSTEM,
+                CREDIT_NOTICE,
+              ],
           }
         family:
           $ref: "#/components/schemas/NotificationFamily"
@@ -5755,7 +7092,14 @@ components:
           }
     NotificacionesPanel:
       type: object
-      required: [notificaciones, sistema, porVencer, vencidas, clientesConMultiplesVencidas]
+      required:
+        [
+          notificaciones,
+          sistema,
+          porVencer,
+          vencidas,
+          clientesConMultiplesVencidas,
+        ]
       properties:
         notificaciones:
           type: array
@@ -6097,7 +7441,14 @@ components:
       enum: [AVERAGE_12_MONTHS, STALE_LAST_KNOWN, NO_COST]
     CostoReferenciaMetreado:
       type: object
-      required: [costoUnitario, estado, esMayorA12Meses, rollosIncluidos, fechaUltimaRecepcion]
+      required:
+        [
+          costoUnitario,
+          estado,
+          esMayorA12Meses,
+          rollosIncluidos,
+          fechaUltimaRecepcion,
+        ]
       properties:
         costoUnitario: { type: ["string", "null"] }
         estado: { $ref: "#/components/schemas/EstadoCostoMetreado" }
@@ -6106,7 +7457,15 @@ components:
         fechaUltimaRecepcion: { type: ["string", "null"], format: date-time }
     ResumenPrecioModo:
       type: object
-      required: [modo, precioLista, costoUnitarioBase, margenPesosUnidad, margenPorcentajeSubtotal, semaforo]
+      required:
+        [
+          modo,
+          precioLista,
+          costoUnitarioBase,
+          margenPesosUnidad,
+          margenPorcentajeSubtotal,
+          semaforo,
+        ]
       properties:
         modo: { $ref: "#/components/schemas/ModoPrecio" }
         precioLista: { type: ["string", "null"] }
@@ -6116,7 +7475,26 @@ components:
         semaforo: { $ref: "#/components/schemas/SemaforoPrecio" }
     PrecioProducto:
       type: object
-      required: [id, sku, tela, color, unidad, seVendePorMetro, activo, costoUnitarioPonderado, costoReferenciaMetreado, precioLista, precioMayoreo, precioMenudeo, preciosPorModo, margenPesosUnidad, margenPorcentajeSubtotal, semaforo, ultimoCambioPrecio]
+      required:
+        [
+          id,
+          sku,
+          tela,
+          color,
+          unidad,
+          seVendePorMetro,
+          activo,
+          costoUnitarioPonderado,
+          costoReferenciaMetreado,
+          precioLista,
+          precioMayoreo,
+          precioMenudeo,
+          preciosPorModo,
+          margenPesosUnidad,
+          margenPorcentajeSubtotal,
+          semaforo,
+          ultimoCambioPrecio,
+        ]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -6126,7 +7504,8 @@ components:
         seVendePorMetro: { type: boolean }
         activo: { type: boolean }
         costoUnitarioPonderado: { type: ["string", "null"] }
-        costoReferenciaMetreado: { $ref: "#/components/schemas/CostoReferenciaMetreado" }
+        costoReferenciaMetreado:
+          { $ref: "#/components/schemas/CostoReferenciaMetreado" }
         precioLista: { type: string }
         precioMayoreo: { type: ["string", "null"] }
         precioMenudeo: { type: ["string", "null"] }
@@ -6148,14 +7527,32 @@ components:
         seVendePorMetro: { type: boolean }
     PrecioHistorialItem:
       type: object
-      required: [id, modoPrecio, precioListaAnterior, precioListaNuevo, costoUnitarioPonderado, costoUnitarioBase, margenPesosUnidad, margenPorcentajeSubtotal, motivo, advertenciaBajoCosto, usuarioId, createdAt]
+      required:
+        [
+          id,
+          modoPrecio,
+          precioListaAnterior,
+          precioListaNuevo,
+          costoUnitarioPonderado,
+          costoUnitarioBase,
+          margenPesosUnidad,
+          margenPorcentajeSubtotal,
+          motivo,
+          advertenciaBajoCosto,
+          usuarioId,
+          createdAt,
+        ]
       properties:
         id: { type: number }
         modoPrecio: { $ref: "#/components/schemas/ModoPrecio" }
         precioListaAnterior: { type: ["string", "null"] }
         precioListaNuevo: { type: string }
         costoUnitarioPonderado: { type: ["string", "null"] }
-        costoUnitarioBase: { type: ["string", "null"], description: Instantaneous cost base snapshotted when this mode price changed }
+        costoUnitarioBase:
+          {
+            type: ["string", "null"],
+            description: Instantaneous cost base snapshotted when this mode price changed,
+          }
         margenPesosUnidad: { type: ["string", "null"] }
         margenPorcentajeSubtotal: { type: ["string", "null"] }
         motivo: { type: string }
@@ -6184,7 +7581,11 @@ components:
           allOf: [{ $ref: "#/components/schemas/ModoPrecio" }]
           default: ROLLO
           description: Modo a cambiar; se omite únicamente para compatibilidad con clientes de precio por rollo.
-        precioListaNuevo: { type: string, description: Importe positivo con máximo dos decimales }
+        precioListaNuevo:
+          {
+            type: string,
+            description: Importe positivo con máximo dos decimales,
+          }
         motivo: { type: string, minLength: 5 }
     PrecioCambioResultado:
       type: object
@@ -6473,12 +7874,34 @@ components:
       type: object
       required:
         [
-          id, createdAt, tipo, cantidad, saldoPosterior, productoId, skuProducto,
-          telaProducto, colorProducto, unidadProducto, rolloId, serie,
-          ubicacionId, nombreUbicacion, ubicacionActiva, usuarioId,
-          nombreUsuario, username, documentoTipo, documentoId,
-          documentoEtiqueta, documentoRuta, referenciaRolloRuta,
-          movimientoOrigenId, justificacion, revisado, revisadoPor, revisadoAt
+          id,
+          createdAt,
+          tipo,
+          cantidad,
+          saldoPosterior,
+          productoId,
+          skuProducto,
+          telaProducto,
+          colorProducto,
+          unidadProducto,
+          rolloId,
+          serie,
+          ubicacionId,
+          nombreUbicacion,
+          ubicacionActiva,
+          usuarioId,
+          nombreUsuario,
+          username,
+          documentoTipo,
+          documentoId,
+          documentoEtiqueta,
+          documentoRuta,
+          referenciaRolloRuta,
+          movimientoOrigenId,
+          justificacion,
+          revisado,
+          revisadoPor,
+          revisadoAt,
         ]
       properties:
         id: { type: number }
@@ -6662,8 +8085,7 @@ components:
           minItems: 1
     EntradaRollo:
       type: object
-      required:
-        [id, serie, productoId, cantidadInicial]
+      required: [id, serie, productoId, cantidadInicial]
       properties:
         id: { type: number }
         serie: { type: string }
@@ -6798,8 +8220,20 @@ components:
     EntradaPendienteCosto:
       type: object
       required:
-         [id, folio, inicialesSitio, folioFormateado, fecha, nombreUbicacion, nombreProveedor, rollosPendientes,
-         totalMetros, totalKilos, nombreUsuario, overdue48h]
+        [
+          id,
+          folio,
+          inicialesSitio,
+          folioFormateado,
+          fecha,
+          nombreUbicacion,
+          nombreProveedor,
+          rollosPendientes,
+          totalMetros,
+          totalKilos,
+          nombreUsuario,
+          overdue48h,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -6847,8 +8281,15 @@ components:
     ExistenciaAgrupada:
       type: object
       required:
-        [productoKey, telaProducto, coloresCount, rollosCount, totalMetros,
-         totalKilos, colores]
+        [
+          productoKey,
+          telaProducto,
+          coloresCount,
+          rollosCount,
+          totalMetros,
+          totalKilos,
+          colores,
+        ]
       properties:
         productoKey: { type: string }
         telaProducto: { type: string }
@@ -6916,7 +8357,7 @@ components:
       properties:
         uuidCliente:
           type: string
-          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
         origenId: { type: number }
         series:
           type: array
@@ -6975,7 +8416,28 @@ components:
     SalidaResumen:
       type: object
       required:
-        [id, folio, inicialesSitio, folioFormateado, modalidad, estado, origenId, nombreOrigen, destinoId, nombreDestino, armadoPorId, nombreArmadoPor, fechaArmado, totalProductos, totalCantidadSolicitada, totalCantidadEnviada, totalCantidadRecibida, diferenciasPendientes, createdAt, updatedAt]
+        [
+          id,
+          folio,
+          inicialesSitio,
+          folioFormateado,
+          modalidad,
+          estado,
+          origenId,
+          nombreOrigen,
+          destinoId,
+          nombreDestino,
+          armadoPorId,
+          nombreArmadoPor,
+          fechaArmado,
+          totalProductos,
+          totalCantidadSolicitada,
+          totalCantidadEnviada,
+          totalCantidadRecibida,
+          diferenciasPendientes,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -7020,7 +8482,20 @@ components:
     SalidaLinea:
       type: object
       required:
-        [id, productoId, skuProducto, telaProducto, colorProducto, unidadProducto, cantidadSolicitada, cantidadEnviada, cantidadRecibida, rollosSolicitados, rollosEnviados, rollosRecibidos]
+        [
+          id,
+          productoId,
+          skuProducto,
+          telaProducto,
+          colorProducto,
+          unidadProducto,
+          cantidadSolicitada,
+          cantidadEnviada,
+          cantidadRecibida,
+          rollosSolicitados,
+          rollosEnviados,
+          rollosRecibidos,
+        ]
       properties:
         id: { type: number }
         productoId: { type: number }
@@ -7037,7 +8512,17 @@ components:
         nota: { type: ["string", "null"] }
     SalidaRollo:
       type: object
-      required: [id, lineaId, rolloId, serie, estado, cantidadEnviada, recibido, diferencia]
+      required:
+        [
+          id,
+          lineaId,
+          rolloId,
+          serie,
+          estado,
+          cantidadEnviada,
+          recibido,
+          diferencia,
+        ]
       properties:
         id: { type: number }
         lineaId: { type: number }
@@ -7061,7 +8546,24 @@ components:
         - $ref: "#/components/schemas/SalidaResumen"
         - type: object
           required:
-            [uuidCliente, enviadoPorId, nombreEnviadoPor, fechaEnvio, transportista, notaEnvio, recibidoPorId, nombreRecibidoPor, fechaRecepcion, notaRecepcion, canceladoPorId, nombreCanceladoPor, fechaCancelacion, motivoCancelacion, lineas, rollos]
+            [
+              uuidCliente,
+              enviadoPorId,
+              nombreEnviadoPor,
+              fechaEnvio,
+              transportista,
+              notaEnvio,
+              recibidoPorId,
+              nombreRecibidoPor,
+              fechaRecepcion,
+              notaRecepcion,
+              canceladoPorId,
+              nombreCanceladoPor,
+              fechaCancelacion,
+              motivoCancelacion,
+              lineas,
+              rollos,
+            ]
           properties:
             uuidCliente: { type: string }
             enviadoPorId: { type: ["number", "null"] }
@@ -7087,7 +8589,8 @@ components:
                 $ref: "#/components/schemas/SalidaRollo"
     NotificacionSistema:
       type: object
-      required: [id, tipo, titulo, mensaje, entidad, entidadId, leidaAt, createdAt]
+      required:
+        [id, tipo, titulo, mensaje, entidad, entidadId, leidaAt, createdAt]
       properties:
         id: { type: number }
         tipo: { type: string }
@@ -7151,7 +8654,8 @@ components:
         notas: { type: ["string", "null"] }
     AplicacionPagoProveedor:
       type: object
-      required: [pagoProveedorId, compraProveedorId, importe, saldoAntes, saldoDespues]
+      required:
+        [pagoProveedorId, compraProveedorId, importe, saldoAntes, saldoDespues]
       properties:
         pagoProveedorId: { type: number }
         compraProveedorId: { type: number }
@@ -7585,7 +9089,17 @@ components:
             mas90: { type: string }
         margenGenerado:
           type: object
-          required: [ventas, costo, margen, margenPct, lineasIncluidas, lineasExcluidasSinRollo, lineasExcluidasSinCosto, nota]
+          required:
+            [
+              ventas,
+              costo,
+              margen,
+              margenPct,
+              lineasIncluidas,
+              lineasExcluidasSinRollo,
+              lineasExcluidasSinCosto,
+              nota,
+            ]
           properties:
             ventas: { type: string }
             costo: { type: string }
@@ -7613,7 +9127,15 @@ components:
             $ref: "#/components/schemas/EstadisticasPorColor"
     AnaliticaGlobalProveedores:
       type: object
-      required: [pareto, deuda, tendenciaMensual, costosAlAlza, comparacionCostos, antiguedadDeuda]
+      required:
+        [
+          pareto,
+          deuda,
+          tendenciaMensual,
+          costosAlAlza,
+          comparacionCostos,
+          antiguedadDeuda,
+        ]
       properties:
         pareto:
           type: array
@@ -7646,7 +9168,15 @@ components:
           type: array
           items:
             type: object
-            required: [productoId, sku, proveedor, costoAnterior, costoActual, variacionPct]
+            required:
+              [
+                productoId,
+                sku,
+                proveedor,
+                costoAnterior,
+                costoActual,
+                variacionPct,
+              ]
             properties:
               productoId: { type: number }
               sku: { type: string }
@@ -7658,7 +9188,17 @@ components:
           type: array
           items:
             type: object
-            required: [productoId, sku, unidad, proveedorMasBarato, costoMasBarato, costoMasCaro, ahorroPct, proveedores]
+            required:
+              [
+                productoId,
+                sku,
+                unidad,
+                proveedorMasBarato,
+                costoMasBarato,
+                costoMasCaro,
+                ahorroPct,
+                proveedores,
+              ]
             properties:
               productoId: { type: number }
               sku: { type: string }
@@ -7737,7 +9277,20 @@ components:
         precioSugerido: { type: string }
     PosProducto:
       type: object
-      required: [id, sku, tela, color, unidad, precioSugerido, precioMayoreo, precioMenudeo, costoReferenciaMetreado, seVendePorMetro, activo]
+      required:
+        [
+          id,
+          sku,
+          tela,
+          color,
+          unidad,
+          precioSugerido,
+          precioMayoreo,
+          precioMenudeo,
+          costoReferenciaMetreado,
+          seVendePorMetro,
+          activo,
+        ]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -7748,7 +9301,8 @@ components:
         precioSugerido: { type: string }
         precioMayoreo: { type: ["string", "null"] }
         precioMenudeo: { type: ["string", "null"] }
-        costoReferenciaMetreado: { $ref: "#/components/schemas/CostoReferenciaMetreado" }
+        costoReferenciaMetreado:
+          { $ref: "#/components/schemas/CostoReferenciaMetreado" }
         seVendePorMetro: { type: boolean }
         activo: { type: boolean }
     PosBusquedaResult:
@@ -8021,7 +9575,8 @@ components:
         saldoPendiente:
           {
             type: string,
-            description: Saldo FIFO actual de la porción a crédito de esta venta, después de abonos y reversos,
+            description: Saldo FIFO actual de la porción a crédito de esta venta,
+            después de abonos y reversos,
           }
         telefonoCliente: { type: ["string", "null"] }
         correoCliente: { type: ["string", "null"] }
@@ -8086,7 +9641,27 @@ components:
         - $ref: "#/components/schemas/TicketDocumentoImpresionSinPrecios"
     TicketDocumentoImpresionBase:
       type: object
-      required: [ticketId, folio, copia, documentoTipo, notaSinPrecios, ubicacionId, nombreUbicacion, createdAt, estado, clienteId, nombreCliente, nombreDestinatario, direccionEntregaSnapshot, direccionEntregaEfectiva, telefonoCliente, correoCliente, direccionFiscalEfectiva, lineas]
+      required:
+        [
+          ticketId,
+          folio,
+          copia,
+          documentoTipo,
+          notaSinPrecios,
+          ubicacionId,
+          nombreUbicacion,
+          createdAt,
+          estado,
+          clienteId,
+          nombreCliente,
+          nombreDestinatario,
+          direccionEntregaSnapshot,
+          direccionEntregaEfectiva,
+          telefonoCliente,
+          correoCliente,
+          direccionFiscalEfectiva,
+          lineas,
+        ]
       properties:
         ticketId: { type: number }
         folio: { type: number }
@@ -8109,7 +9684,18 @@ components:
       allOf:
         - $ref: "#/components/schemas/TicketDocumentoImpresionBase"
         - type: object
-          required: [subtotal, iva, tasaIva, total, esCredito, diasCreditoCliente, fechaVencimiento, saldoPendiente, lineas]
+          required:
+            [
+              subtotal,
+              iva,
+              tasaIva,
+              total,
+              esCredito,
+              diasCreditoCliente,
+              fechaVencimiento,
+              saldoPendiente,
+              lineas,
+            ]
           properties:
             subtotal: { type: string }
             iva: { type: string }
@@ -8138,7 +9724,16 @@ components:
                 $ref: "#/components/schemas/TicketLineaImpresionSinPrecios"
     TicketLineaImpresionBase:
       type: object
-      required: [productoId, tipo, skuProducto, telaProducto, colorProducto, unidadProducto, cantidad]
+      required:
+        [
+          productoId,
+          tipo,
+          skuProducto,
+          telaProducto,
+          colorProducto,
+          unidadProducto,
+          cantidad,
+        ]
       properties:
         productoId: { type: number }
         tipo: { $ref: "#/components/schemas/TipoTicket" }
@@ -8274,7 +9869,17 @@ components:
         importe: { type: string }
     CorteFacturacion:
       type: object
-      required: [facturado, ticketsCount, subtotal, iva, importe, efectivo, transferencia, credito]
+      required:
+        [
+          facturado,
+          ticketsCount,
+          subtotal,
+          iva,
+          importe,
+          efectivo,
+          transferencia,
+          credito,
+        ]
       properties:
         facturado: { type: boolean }
         ticketsCount: { type: number }

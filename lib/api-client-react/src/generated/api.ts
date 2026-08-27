@@ -46,6 +46,9 @@ import type {
   CamionetaUpdate,
   CapturarCostosEntradaInput,
   CatalogosEntrada,
+  Chofer,
+  ChoferInput,
+  ChoferUpdate,
   Cliente,
   ClienteAjusteInput,
   ClienteAnalitica,
@@ -139,6 +142,7 @@ import type {
   ListAdminCortesParams,
   ListAuditoriaParams,
   ListCamionetasParams,
+  ListChoferesParams,
   ListComprasProveedorParams,
   ListContenedoresDisponiblesEntradaParams,
   ListContenedoresParams,
@@ -874,6 +878,310 @@ export const useUpdateCamioneta = <TError = ErrorType<ValidationErrorResponse | 
         TContext
       > => {
       return useMutation(getUpdateCamionetaMutationOptions(options));
+    }
+
+export const getListChoferesUrl = (params?: ListChoferesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/choferes?${stringifiedParams}` : `/api/choferes`
+}
+
+/**
+ * @summary Lista el catálogo histórico de choferes
+ */
+export const listChoferes = async (params?: ListChoferesParams, options?: Parameters<typeof customFetch>[1]): Promise<Chofer[]> => {
+
+  return customFetch<Chofer[]>(getListChoferesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListChoferesQueryKey = (params?: ListChoferesParams,) => {
+    return [
+    `/api/choferes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListChoferesQueryOptions = <TData = Awaited<ReturnType<typeof listChoferes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListChoferesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listChoferes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListChoferesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listChoferes>>> = ({ signal }) => listChoferes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listChoferes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListChoferesQueryResult = NonNullable<Awaited<ReturnType<typeof listChoferes>>>
+export type ListChoferesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista el catálogo histórico de choferes
+ */
+
+export function useListChoferes<TData = Awaited<ReturnType<typeof listChoferes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListChoferesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listChoferes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListChoferesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateChoferUrl = () => {
+
+
+
+
+  return `/api/choferes`
+}
+
+/**
+ * @summary Crea un chofer histórico (ADMIN o SOPORTE)
+ */
+export const createChofer = async (choferInput: ChoferInput, options?: Parameters<typeof customFetch>[1]): Promise<Chofer> => {
+
+  return customFetch<Chofer>(getCreateChoferUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(choferInput)
+  }
+);}
+
+
+
+
+
+export const getCreateChoferMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createChofer>>, TError,{data: BodyType<ChoferInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createChofer>>, TError,{data: BodyType<ChoferInput>}, TContext> => {
+
+const mutationKey = ['createChofer'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createChofer>>, {data: BodyType<ChoferInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createChofer(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateChoferMutationResult = NonNullable<Awaited<ReturnType<typeof createChofer>>>
+    export type CreateChoferMutationBody = BodyType<ChoferInput>
+    export type CreateChoferMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Crea un chofer histórico (ADMIN o SOPORTE)
+ */
+export const useCreateChofer = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createChofer>>, TError,{data: BodyType<ChoferInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createChofer>>,
+        TError,
+        {data: BodyType<ChoferInput>},
+        TContext
+      > => {
+      return useMutation(getCreateChoferMutationOptions(options));
+    }
+
+export const getGetChoferUrl = (id: number,) => {
+
+
+
+
+  return `/api/choferes/${id}`
+}
+
+/**
+ * @summary Obtiene un chofer del catálogo histórico
+ */
+export const getChofer = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Chofer> => {
+
+  return customFetch<Chofer>(getGetChoferUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetChoferQueryKey = (id: number,) => {
+    return [
+    `/api/choferes/${id}`
+    ] as const;
+    }
+
+
+export const getGetChoferQueryOptions = <TData = Awaited<ReturnType<typeof getChofer>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getChofer>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetChoferQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getChofer>>> = ({ signal }) => getChofer(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getChofer>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetChoferQueryResult = NonNullable<Awaited<ReturnType<typeof getChofer>>>
+export type GetChoferQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene un chofer del catálogo histórico
+ */
+
+export function useGetChofer<TData = Awaited<ReturnType<typeof getChofer>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getChofer>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetChoferQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateChoferUrl = (id: number,) => {
+
+
+
+
+  return `/api/choferes/${id}`
+}
+
+/**
+ * @summary Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+ */
+export const updateChofer = async (id: number,
+    choferUpdate: ChoferUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Chofer> => {
+
+  return customFetch<Chofer>(getUpdateChoferUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(choferUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateChoferMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateChofer>>, TError,{id: number;data: BodyType<ChoferUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateChofer>>, TError,{id: number;data: BodyType<ChoferUpdate>}, TContext> => {
+
+const mutationKey = ['updateChofer'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateChofer>>, {id: number;data: BodyType<ChoferUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateChofer(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateChoferMutationResult = NonNullable<Awaited<ReturnType<typeof updateChofer>>>
+    export type UpdateChoferMutationBody = BodyType<ChoferUpdate>
+    export type UpdateChoferMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+ */
+export const useUpdateChofer = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateChofer>>, TError,{id: number;data: BodyType<ChoferUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateChofer>>,
+        TError,
+        {id: number;data: BodyType<ChoferUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateChoferMutationOptions(options));
     }
 
 export const getHealthCheckUrl = () => {

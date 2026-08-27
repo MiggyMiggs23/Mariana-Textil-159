@@ -35,7 +35,7 @@ export async function ensureAuditSchema(
           NEW.rol_snapshot := COALESCE(NEW.rol_snapshot, usuario_rol);
           -- Catalog records have no affected operational site. Keep their
           -- explicit null instead of inheriting the editor's assigned site.
-          IF NEW.entidad <> 'camionetas' THEN
+          IF NEW.entidad NOT IN ('camionetas', 'choferes') THEN
             NEW.sitio_id := COALESCE(NEW.sitio_id, usuario_sitio);
           END IF;
         END IF;

@@ -68,6 +68,7 @@ export const MODULOS = [
   "conciliacion",
   "auditoria",
   "camionetas",
+  "choferes",
 ] as const;
 
 export type ModuloId = (typeof MODULOS)[number];
@@ -130,10 +131,7 @@ export async function resolvePermiso(
     .select()
     .from(permisosRolTable)
     .where(
-      and(
-        eq(permisosRolTable.rol, rol),
-        eq(permisosRolTable.modulo, modulo),
-      ),
+      and(eq(permisosRolTable.rol, rol), eq(permisosRolTable.modulo, modulo)),
     )
     .limit(1);
 
@@ -167,9 +165,7 @@ export async function resolvePermiso(
     puedeEditar,
     puedeAutorizar,
   };
-  return rol === "SUPERVISOR"
-    ? applySupervisorCeiling(permission)
-    : permission;
+  return rol === "SUPERVISOR" ? applySupervisorCeiling(permission) : permission;
 }
 
 /**
@@ -236,9 +232,7 @@ export async function buildPermissionMatrix(
       puedeAutorizar,
     };
     matrix[modulo] =
-      rol === "SUPERVISOR"
-        ? applySupervisorCeiling(permission)
-        : permission;
+      rol === "SUPERVISOR" ? applySupervisorCeiling(permission) : permission;
   }
 
   return matrix;
@@ -295,7 +289,12 @@ export function requierePermiso(modulo: string, accion: AccionPermiso) {
 export function validateAdminInvariants(
   rol: string,
   _modulo: string,
-  _updates: { puedeVer?: boolean; puedeCrear?: boolean; puedeEditar?: boolean; puedeAutorizar?: boolean },
+  _updates: {
+    puedeVer?: boolean;
+    puedeCrear?: boolean;
+    puedeEditar?: boolean;
+    puedeAutorizar?: boolean;
+  },
 ): string | null {
   if (rol === "ADMIN") {
     return "El administrador tiene acceso total a todos los módulos y no puede ser restringido.";
@@ -344,6 +343,8 @@ export async function hasAdminRecoveryAccount(
         )
     ) as has_full_access
   `);
-  return (result.rows[0] as { has_full_access: boolean } | undefined)
-    ?.has_full_access === true;
+  return (
+    (result.rows[0] as { has_full_access: boolean } | undefined)
+      ?.has_full_access === true
+  );
 }

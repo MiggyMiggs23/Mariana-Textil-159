@@ -1,5 +1,6 @@
 export * from "./audit";
 export * from "./camionetas";
+export * from "./choferes";
 export * from "./aplicaciones-credito";
 export * from "./aplicaciones-pago-proveedor";
 export * from "./clientes";
