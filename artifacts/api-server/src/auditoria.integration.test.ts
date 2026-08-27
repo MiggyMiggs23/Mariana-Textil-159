@@ -94,8 +94,8 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
     await assert.rejects(() => pool.query(`UPDATE auditoria SET accion='MUTADA' WHERE id=$1`, [old.id]), /append-only/);
     await assert.rejects(() => pool.query(`DELETE FROM auditoria WHERE id=$1`, [old.id]), /append-only/);
     const explicitSiteAudit = await one(
-      `INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,sitio_id,ip)
-       VALUES($1,'REIMPRIMIR_ETIQUETA','reimpresiones_etiqueta',$2,$3,'127.0.0.1')
+      `INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,sitio_id,ip,created_at)
+       VALUES($1,'REIMPRIMIR_ETIQUETA','reimpresiones_etiqueta',$2,$3,'127.0.0.1','2026-08-27T11:00:00Z')
        RETURNING id`,
       [adminWithoutSite.id, `${tag}-rollo`, siteTwo.id],
     );

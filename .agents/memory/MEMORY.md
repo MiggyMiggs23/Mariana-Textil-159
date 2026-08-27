@@ -14,3 +14,4 @@
 - [Migración de folios por sitio](site-folio-migrations.md) — retirar unicidad global antes de renumerar y reparar referencias desde relaciones internas estables.
 - [Sitio afectado en auditoría](audit-affected-site.md) — conservar el sitio explícito del evento antes de derivar el sitio asignado al actor.
 - [Exclusividad de audio entre pestañas](cross-tab-audio-exclusivity.md) — exigir exclusión real antes de reproducir; sin coordinación segura, fallar cerrado.
+- [Auditoría append-only en pruebas](audit-test-cleanup-boundary.md) — no habilitar bypass de limpieza; conservar registros y eliminar la rama desechable completa.
