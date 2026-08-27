@@ -304,6 +304,7 @@ router.post(
             lineas: body.lineas.map((linea) => ({
               rolloId: linea.rolloId,
               productoId: linea.productoId,
+              tipo: linea.tipo,
               cantidad: String(linea.cantidad),
               precioUnitario: String(linea.precioUnitario),
             })),
@@ -360,7 +361,6 @@ router.get(
           nombreUsuarioTerminal: usuariosTable.nombre,
           clienteId: ticketsTable.clienteId,
           nombreCliente: clientesTable.nombre,
-          tipo: ticketsTable.tipo,
           subtotal: ticketsTable.subtotal,
           iva: ticketsTable.iva,
           tasaIva: ticketsTable.tasaIva,

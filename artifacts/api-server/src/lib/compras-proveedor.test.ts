@@ -512,7 +512,6 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
     ubicacionId,
     usuarioTerminalId: 1,
     clienteId: cliente!.id,
-    tipo: "NORMAL",
     subtotal: "300.00",
     iva: "0.00",
     tasaIva: "0.1600",
@@ -521,17 +520,17 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
   }).returning();
   createdTicketIds.push(ticket!.id);
   await db.insert(ticketLineasTable).values([
-    { ticketId: ticket!.id, rolloId: rolloA, productoId, cantidad: "1", precioUnitario: "100", precioSugerido: "100", importe: "100", costoUnitarioCongelado: "40", costoTotalCongelado: "40" },
-    { ticketId: ticket!.id, rolloId: rolloB, productoId, cantidad: "1", precioUnitario: "200", precioSugerido: "200", importe: "200", costoUnitarioCongelado: "100", costoTotalCongelado: "100" },
-    { ticketId: ticket!.id, rolloId: rolloA, productoId, cantidad: "1", precioUnitario: "50", precioSugerido: "50", importe: "50", costoUnitarioCongelado: "0", costoTotalCongelado: "0" },
+    { ticketId: ticket!.id, rolloId: rolloA, productoId, tipo: "NORMAL", cantidad: "1", precioUnitario: "100", precioSugerido: "100", importe: "100", costoUnitarioCongelado: "40", costoTotalCongelado: "40" },
+    { ticketId: ticket!.id, rolloId: rolloB, productoId, tipo: "NORMAL", cantidad: "1", precioUnitario: "200", precioSugerido: "200", importe: "200", costoUnitarioCongelado: "100", costoTotalCongelado: "100" },
+    { ticketId: ticket!.id, rolloId: rolloA, productoId, tipo: "NORMAL", cantidad: "1", precioUnitario: "50", precioSugerido: "50", importe: "50", costoUnitarioCongelado: "0", costoTotalCongelado: "0" },
   ]);
   const [metreado] = await db.insert(ticketsTable).values({
     folio: 900000100 + seq, ubicacionId, usuarioTerminalId: 1, clienteId: cliente!.id,
-    tipo: "METREADO", subtotal: "70.00", iva: "0.00", tasaIva: "0.1600", total: "70.00", uuidCliente: randomUUID(),
+    subtotal: "70.00", iva: "0.00", tasaIva: "0.1600", total: "70.00", uuidCliente: randomUUID(),
   }).returning();
   createdTicketIds.push(metreado!.id);
   await db.insert(ticketLineasTable).values({
-    ticketId: metreado!.id, rolloId: null, productoId, cantidad: "1", precioUnitario: "70", precioSugerido: "70", importe: "70", costoUnitarioCongelado: "30", costoTotalCongelado: "30",
+    ticketId: metreado!.id, rolloId: null, productoId, tipo: "METREADO" as const, cantidad: "1", precioUnitario: "70", precioSugerido: "70", importe: "70", costoUnitarioCongelado: null, costoTotalCongelado: null,
   });
   const desde = new Date(Date.now() - 60_000);
   const hasta = new Date(Date.now() + 60_000);

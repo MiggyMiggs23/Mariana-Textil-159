@@ -4,6 +4,7 @@ import {
   ensureClientesSchema,
   ensureSalidasSchema,
   ensureTicketIvaSchema,
+  ensureTicketLineTypesSchema,
   ensureAdminAnalyticsSchema,
   ensureEtiquetasSchema,
   ensureSupervisorRole,
@@ -37,6 +38,8 @@ async function startServer() {
   logger.info("Esquema de clientes verificado");
   await ensureTicketIvaSchema(pool);
   logger.info("Esquema de IVA de tickets verificado");
+  await ensureTicketLineTypesSchema(pool);
+  logger.info("Tipos de línea de tickets verificados");
   await ensureSalidasSchema(pool);
   logger.info("Esquema de Salidas verificado");
   await ensureDocumentFoliosSchema(pool);

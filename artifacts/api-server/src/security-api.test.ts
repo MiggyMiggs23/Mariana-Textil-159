@@ -572,7 +572,6 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
       uuidCliente: randomUUID(),
       ubicacionId: otherTiendaId,
       clienteId: 1,
-      tipo: "NORMAL",
       facturado: false,
       lineas: [
         {
@@ -621,7 +620,6 @@ await test("S-03C: POS price rejection is JSON, visible and contains no cost", a
       uuidCliente: randomUUID(),
       ubicacionId: seedTienda.id,
       clienteId: 1,
-      tipo: "NORMAL",
       facturado: false,
       lineas: [
         {
@@ -2055,7 +2053,6 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
       ubicacionId: seedTienda.id,
       usuarioTerminalId: testAdmin.id,
       clienteId,
-      tipo: "NORMAL",
       subtotal: "1250.00",
       iva: "200.00",
       tasaIva: "0.1600",
@@ -2068,6 +2065,7 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   await db.insert(ticketLineasTable).values({
     ticketId: analyticsTicket!.id,
     productoId: analyticsProductId,
+    tipo: "NORMAL",
     cantidad: "12.345",
     precioUnitario: "101.26",
     precioSugerido: "101.26",

@@ -79,7 +79,6 @@ export const ticketsTable = pgTable(
     clienteId: integer("cliente_id")
       .notNull()
       .references(() => clientesTable.id),
-    tipo: tipoTicketEnum("tipo").notNull(),
     subtotal: numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
     iva: numeric("iva", { precision: 12, scale: 2 }).notNull().default("0"),
     tasaIva: numeric("tasa_iva", { precision: 5, scale: 4 })
@@ -137,6 +136,7 @@ export const ticketLineasTable = pgTable(
     productoId: integer("producto_id")
       .notNull()
       .references(() => productosTable.id),
+    tipo: tipoTicketEnum("tipo").notNull(),
     cantidad: numeric("cantidad", { precision: 10, scale: 3 }).notNull(),
     precioUnitario: numeric("precio_unitario", {
       precision: 12,
@@ -150,16 +150,28 @@ export const ticketLineasTable = pgTable(
     costoUnitarioCongelado: numeric("costo_unitario_congelado", {
       precision: 12,
       scale: 2,
-    }).notNull(),
+    }),
     costoTotalCongelado: numeric("costo_total_congelado", {
       precision: 12,
       scale: 2,
-    }).notNull(),
+    }),
   },
   (table) => [
     index("ticket_lineas_ticket_idx").on(table.ticketId),
     index("ticket_lineas_rollo_idx").on(table.rolloId),
     index("ticket_lineas_producto_idx").on(table.productoId),
+    index("ticket_lineas_tipo_idx").on(table.tipo),
+    check(
+      "ticket_lineas_tipo_rollo_costos_check",
+      sql`(${table.tipo} = 'NORMAL'
+          AND ${table.rolloId} IS NOT NULL
+          AND ${table.costoUnitarioCongelado} IS NOT NULL
+          AND ${table.costoTotalCongelado} IS NOT NULL)
+        OR (${table.tipo} = 'METREADO'
+          AND ${table.rolloId} IS NULL
+          AND ${table.costoUnitarioCongelado} IS NULL
+          AND ${table.costoTotalCongelado} IS NULL)`,
+    ),
   ],
 );
 

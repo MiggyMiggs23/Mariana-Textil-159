@@ -3190,11 +3190,12 @@ export interface PosPrecioValidationResult {
 
 export interface TicketLineaInput {
   /**
-     * Obligatorio para venta NORMAL de rollo completo; debe ser null en tickets METREADO hasta habilitar el tipo por línea.
+     * Obligatorio para línea NORMAL de rollo completo; debe ser null en línea METREADO.
      * @nullable
      */
   rolloId: number | null;
   productoId: number;
+  tipo: TipoTicket;
   /** @exclusiveMinimum 0 */
   cantidad: number;
   /** @minimum 0 */
@@ -3207,7 +3208,8 @@ export interface TicketInput {
   ubicacionId: number;
   /** @minimum 1 */
   clienteId: number;
-  tipo: TipoTicket;
+  /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
+  tipo?: TipoTicket;
   facturado: boolean;
   /** @minItems 1 */
   lineas: TicketLineaInput[];
@@ -3271,6 +3273,7 @@ export interface TicketLinea {
   /** @nullable */
   rolloId: number | null;
   productoId: number;
+  tipo: TipoTicket;
   cantidad: string;
   precioUnitario: string;
   precioSugerido: string;
@@ -3312,7 +3315,6 @@ export interface TicketResumen {
   nombreCliente: string | null;
   /** @nullable */
   direccionEntregaEfectiva?: string | null;
-  tipo: TipoTicket;
   subtotal: string;
   /** IVA aplicado al ticket; es 0.00 si no fue facturado */
   iva: string;

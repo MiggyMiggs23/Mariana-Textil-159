@@ -304,6 +304,8 @@ function CobroDialog({
     0,
   );
   const totalTicket = Number(ticket?.total || 0);
+  const hasMetreadoLine =
+    ticket?.lineas.some((linea) => linea.tipo === "METREADO") ?? false;
   const isPaymentSelected = pagos.length > 0;
   const faltante = isPaymentSelected ? totalTicket - totalPagado : totalTicket;
   const usaCredito = pagos.some(
@@ -440,7 +442,7 @@ function CobroDialog({
                     Folio {formatNumber(ticket.folio, { kind: "identifier" })}
                   </div>
                   <div className="text-sm font-medium px-2 py-0.5 bg-sidebar/10 text-sidebar rounded inline-block mt-1">
-                    {ticket.tipo}
+                    {hasMetreadoLine ? "METREADO" : "NORMAL"}
                   </div>
                 </div>
               </div>
@@ -498,7 +500,7 @@ function CobroDialog({
                           : "outline"
                       }
                       className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.TRANSFERENCIA ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
-                      disabled={ticket.tipo === "METREADO"}
+                      disabled={hasMetreadoLine}
                       onClick={() =>
                         setPrimaryFormaPago(FormaPagoTicket.TRANSFERENCIA)
                       }
@@ -514,7 +516,7 @@ function CobroDialog({
                           : "outline"
                       }
                       className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.CREDITO ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
-                      disabled={ticket.tipo === "METREADO"}
+                      disabled={hasMetreadoLine}
                       onClick={() =>
                         setPrimaryFormaPago(FormaPagoTicket.CREDITO)
                       }
@@ -615,7 +617,7 @@ function CobroDialog({
                             >
                               Efectivo
                             </SelectItem>
-                            {ticket.tipo !== "METREADO" && (
+                            {!hasMetreadoLine && (
                               <>
                                 <SelectItem
                                   value={FormaPagoTicket.TRANSFERENCIA}

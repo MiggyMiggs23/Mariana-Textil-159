@@ -78,7 +78,7 @@ async function makeLocation() {
   return row!.id;
 }
 
-async function makeProduct(precioSugerido = "100.00") {
+async function makeProduct(precioSugerido = "100.00", unidad: "METRO" | "KILO" = "METRO") {
   const tag = `${RUN}-${++seq}`;
   const [row] = await db
     .insert(productosTable)
@@ -86,7 +86,7 @@ async function makeProduct(precioSugerido = "100.00") {
       sku: tag,
       tela: `Tela ${tag}`,
       color: `Color ${tag}`,
-      unidad: "METRO",
+      unidad,
       precioSugerido,
     })
     .returning();
@@ -151,6 +151,7 @@ async function sale(input: {
           {
             rolloId: input.rolloId ?? null,
             productoId: input.productoId,
+            tipo: input.tipo ?? "NORMAL",
             cantidad: input.cantidad,
             precioUnitario: input.precio,
           },
@@ -448,6 +449,11 @@ await test("POS-04 metreado no toca inventario, no factura y solo acepta efectiv
       ),
     );
   assert.equal(movements.length, 0);
+  assert.equal(ticket.lineas[0]?.tipo, "METREADO");
+  assert.ok(ticket.lineas[0] && "costoUnitarioCongelado" in ticket.lineas[0]);
+  assert.equal(ticket.lineas[0].costoUnitarioCongelado, null);
+  assert.ok(ticket.lineas[0] && "costoTotalCongelado" in ticket.lineas[0]);
+  assert.equal(ticket.lineas[0].costoTotalCongelado, null);
   await assert.rejects(
     () =>
       sale({
@@ -504,6 +510,49 @@ await test("POS-04 metreado no toca inventario, no factura y solo acepta efectiv
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.totalCobrado, "100.00");
   assert.equal(corte?.efectivoEsperado, "200.00");
+});
+
+await test("POS-04A tipo por línea permite ticket mixto y rechaza KILO metreado", async () => {
+  const ubicacionId = await makeLocation();
+  const productoMetroId = await makeProduct();
+  const productoKiloId = await makeProduct("100.00", "KILO");
+  const rollo = await makeRollo(productoMetroId, ubicacionId, "3", "20");
+  const mixto = await db.transaction((tx) =>
+    crearTicket(
+      tx,
+      {
+        ubicacionId,
+        usuarioTerminalId: USER_ID,
+        clienteId: 1,
+        facturado: false,
+        uuidCliente: randomUUID(),
+        lineas: [
+          { rolloId: rollo.id, productoId: productoMetroId, tipo: "NORMAL", cantidad: "3", precioUnitario: "30" },
+          { rolloId: null, productoId: productoMetroId, tipo: "METREADO", cantidad: "2", precioUnitario: "40" },
+        ],
+        ip: "127.0.0.1",
+      },
+      true,
+    ),
+  );
+  assert.ok(mixto);
+  createdTicketIds.push(mixto!.id);
+  assert.deepEqual(mixto!.lineas.map((linea) => linea.tipo), ["NORMAL", "METREADO"]);
+  assert.ok(
+    mixto!.lineas[1] && "costoUnitarioCongelado" in mixto!.lineas[1],
+  );
+  assert.equal(mixto!.lineas[1].costoUnitarioCongelado, null);
+  await assert.rejects(
+    () => sale({
+      ubicacionId,
+      productoId: productoKiloId,
+      cantidad: "1",
+      precio: "40",
+      tipo: "METREADO",
+    }),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "METREADO_UNIT_REQUIRED",
+  );
 });
 
 await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", async () => {

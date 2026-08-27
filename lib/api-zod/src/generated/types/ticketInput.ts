@@ -14,7 +14,8 @@ export interface TicketInput {
   ubicacionId: number;
   /** @minimum 1 */
   clienteId: number;
-  tipo: TipoTicket;
+  /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
+  tipo?: TipoTicket;
   facturado: boolean;
   /** @minItems 1 */
   lineas: TicketLineaInput[];

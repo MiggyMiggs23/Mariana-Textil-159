@@ -6912,17 +6912,19 @@ components:
         code: { type: string }
     TicketLineaInput:
       type: object
-      required: [rolloId, productoId, cantidad, precioUnitario]
+      required: [rolloId, productoId, tipo, cantidad, precioUnitario]
       properties:
         rolloId:
           type: ["number", "null"]
-          description: Obligatorio para venta NORMAL de rollo completo; debe ser null en tickets METREADO hasta habilitar el tipo por línea.
+          description: Obligatorio para línea NORMAL de rollo completo; debe ser null en línea METREADO.
         productoId: { type: number }
+        tipo:
+          $ref: "#/components/schemas/TipoTicket"
         cantidad: { type: number, exclusiveMinimum: 0 }
         precioUnitario: { type: number, minimum: 0 }
     TicketInput:
       type: object
-      required: [uuidCliente, ubicacionId, clienteId, tipo, facturado, lineas]
+      required: [uuidCliente, ubicacionId, clienteId, facturado, lineas]
       properties:
         uuidCliente:
           {
@@ -6933,6 +6935,7 @@ components:
         clienteId: { type: number, minimum: 1 }
         tipo:
           $ref: "#/components/schemas/TipoTicket"
+          description: Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.
         facturado: { type: boolean }
         lineas:
           type: array
@@ -7002,6 +7005,7 @@ components:
           ticketId,
           rolloId,
           productoId,
+          tipo,
           cantidad,
           precioUnitario,
           precioSugerido,
@@ -7018,6 +7022,8 @@ components:
         ticketId: { type: number }
         rolloId: { type: ["number", "null"] }
         productoId: { type: number }
+        tipo:
+          $ref: "#/components/schemas/TipoTicket"
         cantidad: { type: string }
         precioUnitario: { type: string }
         precioSugerido: { type: string }
@@ -7050,7 +7056,6 @@ components:
           nombreUsuarioTerminal,
           clienteId,
           nombreCliente,
-          tipo,
           subtotal,
           iva,
           tasaIva,
@@ -7076,8 +7081,6 @@ components:
         clienteId: { type: ["number", "null"] }
         nombreCliente: { type: ["string", "null"] }
         direccionEntregaEfectiva: { type: ["string", "null"] }
-        tipo:
-          $ref: "#/components/schemas/TipoTicket"
         subtotal: { type: string }
         iva:
           {

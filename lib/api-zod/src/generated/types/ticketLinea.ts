@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { TipoTicket } from './tipoTicket';
 import type { UnidadProducto } from './unidadProducto';
 
 export interface TicketLinea {
@@ -13,6 +14,7 @@ export interface TicketLinea {
   /** @nullable */
   rolloId: number | null;
   productoId: number;
+  tipo: TipoTicket;
   cantidad: string;
   precioUnitario: string;
   precioSugerido: string;

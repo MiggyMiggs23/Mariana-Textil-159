@@ -16,7 +16,6 @@ import {
   ubicacionesTable,
   usuariosTable,
   type FormaPagoTicket,
-  type TipoTicket,
 } from "@workspace/db";
 import {
   InventarioError,
@@ -51,6 +50,7 @@ export class PosError extends Error {
 export type CrearTicketLineaInput = {
   rolloId?: number | null;
   productoId: number;
+  tipo?: "NORMAL" | "METREADO";
   cantidad: string;
   precioUnitario: string;
 };
@@ -59,7 +59,8 @@ export type CrearTicketInput = {
   ubicacionId: number;
   usuarioTerminalId: number;
   clienteId: number;
-  tipo: TipoTicket;
+  /** Legacy request default; new callers should send tipo on every line. */
+  tipo?: "NORMAL" | "METREADO";
   facturado: boolean;
   uuidCliente: string;
   lineas: CrearTicketLineaInput[];
@@ -149,7 +150,6 @@ export async function buildTicketDetail(
         NULLIF(btrim(${clientesTable.direccionEntrega}), ''),
         NULLIF(btrim(${clientesTable.direccionParticular}), '')
       )`,
-      tipo: ticketsTable.tipo,
       subtotal: ticketsTable.subtotal,
       iva: ticketsTable.iva,
       tasaIva: ticketsTable.tasaIva,
@@ -189,6 +189,7 @@ export async function buildTicketDetail(
       rolloId: ticketLineasTable.rolloId,
       serie: rollosTable.serie,
       productoId: ticketLineasTable.productoId,
+      tipo: ticketLineasTable.tipo,
       sku: productosTable.sku,
       tela: productosTable.tela,
       color: productosTable.color,
@@ -240,6 +241,7 @@ export async function buildTicketDetail(
         rolloId: linea.rolloId,
         serieRollo: linea.serie ?? null,
         productoId: linea.productoId,
+        tipo: linea.tipo,
         skuProducto: linea.sku,
         telaProducto: linea.tela,
         colorProducto: linea.color,
@@ -251,6 +253,14 @@ export async function buildTicketDetail(
         importe: linea.importe,
       };
       if (!includeCosts) return base;
+      if (linea.costoTotalCongelado == null) {
+        return {
+          ...base,
+          costoUnitarioCongelado: null,
+          costoTotalCongelado: null,
+          margen: null,
+        };
+      }
       const costo = money(linea.costoTotalCongelado);
       const importe = money(linea.importe);
       return {
@@ -373,13 +383,6 @@ export async function crearTicket(
       "CLIENT_REQUIRED",
     );
   }
-  if (input.tipo === "METREADO" && input.facturado) {
-    throw new PosError(
-      "Las ventas metreadas no pueden marcarse como facturadas.",
-      "METREADO_FACTURADO",
-    );
-  }
-
   const [ubicacion] = await tx
     .select()
     .from(ubicacionesTable)
@@ -401,8 +404,12 @@ export async function crearTicket(
     throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
   }
 
+  // Only NORMAL lines participate in roll lookup/locking. METREADO explicitly
+  // owns no roll and must never validate or consume inventory.
   const rolloIds = input.lineas.flatMap((linea) =>
-    linea.rolloId == null ? [] : [linea.rolloId],
+    (linea.tipo ?? input.tipo) === "NORMAL" && linea.rolloId != null
+      ? [linea.rolloId]
+      : [],
   );
   if (new Set(rolloIds).size !== rolloIds.length) {
     throw new PosError(
@@ -410,13 +417,6 @@ export async function crearTicket(
       "DUPLICATE_ROLLO",
     );
   }
-  if (input.tipo === "NORMAL" && rolloIds.length !== input.lineas.length) {
-    throw new PosError(
-      "Cada línea de una venta normal requiere un rollo.",
-      "ROLLO_REQUIRED",
-    );
-  }
-
   const rollos =
     rolloIds.length === 0
       ? []
@@ -458,6 +458,13 @@ export async function crearTicket(
   );
 
   const lineasPreparadas = input.lineas.map((linea) => {
+    const tipo = linea.tipo ?? input.tipo;
+    if (tipo == null) {
+      throw new PosError(
+        "Cada línea debe indicar si es NORMAL o METREADO.",
+        "LINE_TYPE_REQUIRED",
+      );
+    }
     const cantidad = decimalQuantity(linea.cantidad);
     const precioCents = money(linea.precioUnitario);
     if (precioCents <= 0) {
@@ -473,11 +480,23 @@ export async function crearTicket(
         "INVALID_PRODUCT",
       );
     }
+    if (tipo === "NORMAL" && linea.rolloId == null) {
+      throw new PosError(
+        "Cada línea NORMAL requiere un rollo.",
+        "ROLLO_REQUIRED",
+      );
+    }
+    if (tipo === "METREADO" && producto.unidad !== "METRO") {
+      throw new PosError(
+        "Las líneas METREADO solo admiten productos por METRO.",
+        "METREADO_UNIT_REQUIRED",
+      );
+    }
     const rollo =
       linea.rolloId == null ? null : (rolloMap.get(linea.rolloId) ?? null);
-    if (input.tipo === "METREADO" && linea.rolloId != null) {
+    if (tipo === "METREADO" && linea.rolloId != null) {
       throw new PosError(
-        "Los tickets METREADO no pueden incluir un rollo hasta habilitar el tipo por línea.",
+        "Las líneas METREADO no pueden incluir un rollo.",
         "METREADO_ROLLO_NOT_ALLOWED",
         409,
       );
@@ -504,7 +523,7 @@ export async function crearTicket(
         );
       }
       if (
-        input.tipo === "NORMAL" &&
+        tipo === "NORMAL" &&
         Number(cantidad) !== Number(rollo.cantidadActual)
       ) {
         throw new PosError(
@@ -518,7 +537,7 @@ export async function crearTicket(
           "ROLLO_SIN_COSTO",
         );
       }
-      if (input.tipo === "NORMAL" && precioCents < money(rollo.costoUnitario!)) {
+      if (tipo === "NORMAL" && precioCents < money(rollo.costoUnitario!)) {
         throw new PosError(
           priceBelowCostMessage(producto.tela, producto.color, rollo.serie),
           "PRICE_BELOW_COST",
@@ -527,22 +546,34 @@ export async function crearTicket(
     }
     const cantidadMilesimas = Math.round(Number(cantidad) * 1000);
     const importeCents = Math.round((cantidadMilesimas * precioCents) / 1000);
-    const costoUnitario = rollo?.costoUnitario ?? "0.00";
-    const costoCents = Math.round(
-      (cantidadMilesimas * money(costoUnitario)) / 1000,
-    );
+    const costoUnitario = tipo === "NORMAL" ? rollo!.costoUnitario! : null;
+    const costoCents =
+      costoUnitario == null
+        ? null
+        : Math.round((cantidadMilesimas * money(costoUnitario)) / 1000);
     return {
       rolloId: rollo?.id ?? null,
       productoId: linea.productoId,
+      tipo,
       cantidad,
       precioUnitario: decimalMoney(precioCents),
       precioSugerido: producto.precioSugerido,
       importe: decimalMoney(importeCents),
       costoUnitarioCongelado: costoUnitario,
-      costoTotalCongelado: decimalMoney(costoCents),
+      costoTotalCongelado:
+        costoCents == null ? null : decimalMoney(costoCents),
       importeCents,
     };
   });
+  if (
+    input.facturado &&
+    lineasPreparadas.some((linea) => linea.tipo === "METREADO")
+  ) {
+    throw new PosError(
+      "Las ventas con líneas metreadas no pueden marcarse como facturadas.",
+      "METREADO_FACTURADO",
+    );
+  }
 
   const subtotalCents = lineasPreparadas.reduce(
     (total, linea) => total + linea.importeCents,
@@ -561,7 +592,6 @@ export async function crearTicket(
       ubicacionId: input.ubicacionId,
       usuarioTerminalId: input.usuarioTerminalId,
       clienteId: input.clienteId,
-      tipo: input.tipo,
       subtotal: decimalMoney(subtotalCents),
       iva: decimalMoney(ivaCents),
       tasaIva: "0.1600",
@@ -574,7 +604,7 @@ export async function crearTicket(
     .returning();
 
   for (const linea of lineasPreparadas) {
-    if (input.tipo === "NORMAL" && linea.rolloId != null) {
+    if (linea.tipo === "NORMAL" && linea.rolloId != null) {
       await venderRollo(tx, {
         rolloId: linea.rolloId,
         usuarioId: input.usuarioTerminalId,
@@ -587,6 +617,7 @@ export async function crearTicket(
       ticketId: ticket!.id,
       rolloId: linea.rolloId,
       productoId: linea.productoId,
+      tipo: linea.tipo as "NORMAL" | "METREADO",
       cantidad: linea.cantidad,
       precioUnitario: linea.precioUnitario,
       precioSugerido: linea.precioSugerido,
@@ -603,7 +634,7 @@ export async function crearTicket(
     entidadId: String(ticket!.id),
     datosDespues: {
       folio,
-      tipo: input.tipo,
+      tiposLinea: [...new Set(lineasPreparadas.map((linea) => linea.tipo))],
       subtotal: decimalMoney(subtotalCents),
       iva: decimalMoney(ivaCents),
       total: decimalMoney(totalCents),
@@ -649,25 +680,23 @@ export async function cancelarTicket(
     );
   }
 
-  if (ticket.tipo === "NORMAL") {
-    const ventas = await tx
-      .select()
-      .from(movimientosTable)
-      .where(
-        and(
-          eq(movimientosTable.tipo, "VENTA"),
-          eq(movimientosTable.documentoTipo, "TICKET"),
-          eq(movimientosTable.documentoId, String(ticket.id)),
-        ),
-      )
-      .orderBy(asc(movimientosTable.id));
-    for (const venta of ventas) {
-      await revertirMovimiento(tx, {
-        movimientoOrigenId: Number(venta.id),
-        usuarioId: input.usuarioId,
-        justificacion: motivo,
-      });
-    }
+  const ventas = await tx
+    .select()
+    .from(movimientosTable)
+    .where(
+      and(
+        eq(movimientosTable.tipo, "VENTA"),
+        eq(movimientosTable.documentoTipo, "TICKET"),
+        eq(movimientosTable.documentoId, String(ticket.id)),
+      ),
+    )
+    .orderBy(asc(movimientosTable.id));
+  for (const venta of ventas) {
+    await revertirMovimiento(tx, {
+      movimientoOrigenId: Number(venta.id),
+      usuarioId: input.usuarioId,
+      justificacion: motivo,
+    });
   }
 
   const [creditRow] = await tx
@@ -880,10 +909,17 @@ export async function cobrarTicket(
     }
     return { ...pago, cents };
   });
-  if (
-    ticket.tipo === "METREADO" &&
-    pagos.some((pago) => pago.formaPago !== "EFECTIVO")
-  ) {
+  const [metreado] = await tx
+    .select({ id: ticketLineasTable.id })
+    .from(ticketLineasTable)
+    .where(
+      and(
+        eq(ticketLineasTable.ticketId, ticket.id),
+        eq(ticketLineasTable.tipo, "METREADO"),
+      ),
+    )
+    .limit(1);
+  if (metreado && pagos.some((pago) => pago.formaPago !== "EFECTIVO")) {
     throw new PosError(
       "Los tickets metreados solo pueden cobrarse en efectivo.",
       "METREADO_CASH_ONLY",
@@ -1056,7 +1092,6 @@ export async function listarTicketsPendientesCaja(
       nombreUsuarioTerminal: usuariosTable.nombre,
       clienteId: ticketsTable.clienteId,
       nombreCliente: clientesTable.nombre,
-      tipo: ticketsTable.tipo,
       subtotal: ticketsTable.subtotal,
       iva: ticketsTable.iva,
       tasaIva: ticketsTable.tasaIva,
@@ -1262,7 +1297,6 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       subtotal: ticketsTable.subtotal,
       iva: ticketsTable.iva,
       total: ticketsTable.total,
-      tipo: ticketsTable.tipo,
       estado: ticketsTable.estado,
     })
     .from(ticketPagosTable)
@@ -1343,7 +1377,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
 
   const tipos = await database
     .select({
-      tipo: ticketsTable.tipo,
+      tipo: ticketLineasTable.tipo,
       ticketsCount: sql<number>`COUNT(DISTINCT ${ticketsTable.id})::int`,
       cantidad: sql<string>`COALESCE(SUM(${ticketLineasTable.cantidad}), 0)::text`,
       importe: sql<string>`COALESCE(SUM(${ticketLineasTable.importe}), 0)::text`,
@@ -1359,8 +1393,8 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         eq(ticketsTable.estado, "VENDIDO"),
       ),
     )
-    .groupBy(ticketsTable.tipo)
-    .orderBy(ticketsTable.tipo);
+    .groupBy(ticketLineasTable.tipo)
+    .orderBy(ticketLineasTable.tipo);
 
   const formas = { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 };
   const cuentas = {

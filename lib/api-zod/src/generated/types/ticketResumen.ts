@@ -6,7 +6,6 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { EstadoTicket } from './estadoTicket';
-import type { TipoTicket } from './tipoTicket';
 
 export interface TicketResumen {
   id: number;
@@ -21,7 +20,6 @@ export interface TicketResumen {
   nombreCliente: string | null;
   /** @nullable */
   direccionEntregaEfectiva?: string | null;
-  tipo: TipoTicket;
   subtotal: string;
   /** IVA aplicado al ticket; es 0.00 si no fue facturado */
   iva: string;

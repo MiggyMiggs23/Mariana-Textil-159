@@ -173,7 +173,6 @@ before(async () => {
       ubicacionId: ownLocationId,
       usuarioTerminalId: terminal.created.id,
       clienteId: 1,
-      tipo: "NORMAL",
       subtotal: "10",
       iva: "0",
       tasaIva: "0",

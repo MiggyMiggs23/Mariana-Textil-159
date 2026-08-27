@@ -260,7 +260,7 @@ export default function TicketDetailPage() {
               Ticket #{ticket.folio}
             </h1>
             <p className="text-muted-foreground text-sm">
-              {ticket.tipo} - {ticket.nombreUbicacion}
+              {ticket.nombreUbicacion}
             </p>
           </div>
         </div>
@@ -450,7 +450,6 @@ export default function TicketDetailPage() {
             <div><span className="font-semibold">Atendió:</span> {ticket.nombreUsuarioTerminal}</div>
             <div><span className="font-semibold">Cliente:</span> {customerName}</div>
           </div>
-          <p className="mt-1 text-xs">Tipo: {ticket.tipo}</p>
           {ticket.facturado && <p className="text-xs font-bold">FACTURADO</p>}
           {ticket.direccionEntregaEfectiva && (
             <div className="text-left text-[10px] mt-1">

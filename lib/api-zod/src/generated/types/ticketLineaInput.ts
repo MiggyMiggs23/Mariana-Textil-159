@@ -5,14 +5,16 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { TipoTicket } from './tipoTicket';
 
 export interface TicketLineaInput {
   /**
-     * Obligatorio para venta NORMAL de rollo completo; debe ser null en tickets METREADO hasta habilitar el tipo por línea.
+     * Obligatorio para línea NORMAL de rollo completo; debe ser null en línea METREADO.
      * @nullable
      */
   rolloId: number | null;
   productoId: number;
+  tipo: TipoTicket;
   /** @exclusiveMinimum 0 */
   cantidad: number;
   /** @minimum 0 */

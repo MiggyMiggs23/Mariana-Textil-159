@@ -549,6 +549,7 @@ export default function PosPage() {
     const lineas: TicketLineaInput[] = cart.map((item) => ({
       rolloId: item.rollo?.id || null,
       productoId: item.producto.id,
+      tipo: tipoTicket,
       cantidad: Number(item.cantidad),
       precioUnitario: Number(item.precioUnitario),
     }));
