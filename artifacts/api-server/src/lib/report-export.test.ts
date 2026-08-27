@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   INVENTORY_MODALITY,
   PURCHASE_MODALITY,
+  UNATTRIBUTED_MODALITY,
   createReportWorkbook,
   excelColumnName,
   normalizeExportTables,
@@ -21,6 +22,24 @@ test("export normalization adds modality and keeps non-applicable sections expli
     rows: [{ sku: "A" }], totals: {},
   }]);
   assert.equal(purchases.rows[0]?.modalidad, PURCHASE_MODALITY);
+
+  const [unattributed] = normalizeExportTables("clientes", [], [{
+    id: "publico-registrado", title: "Público", columns: [{ key: "tipo", label: "Tipo", kind: "text" }],
+    rows: [{ tipo: "Registrado" }], totals: {},
+  }]);
+  assert.equal(unattributed.rows[0]?.modalidad, UNATTRIBUTED_MODALITY);
+
+  const [filtered] = normalizeExportTables("clientes", ["modalidad=ROLLOS"], [{
+    id: "publico-registrado", title: "Público", columns: [{ key: "tipo", label: "Tipo", kind: "text" }],
+    rows: [{ tipo: "Registrado" }], totals: {},
+  }]);
+  assert.equal(filtered.rows[0]?.modalidad, "ROLLOS");
+
+  const [credit] = normalizeExportTables("clientes", ["modalidad=METRAJE"], [{
+    id: "cuentas-por-cobrar-fifo", title: "Crédito", columns: [{ key: "saldo", label: "Saldo", kind: "money" }],
+    rows: [{ saldo: 100 }], totals: {},
+  }]);
+  assert.equal(credit.rows[0]?.modalidad, UNATTRIBUTED_MODALITY);
 });
 
 test("export normalization preserves sale modality and pending financial groups", () => {

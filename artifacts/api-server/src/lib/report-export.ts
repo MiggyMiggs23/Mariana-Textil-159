@@ -21,6 +21,7 @@ export type ExportTable = {
 
 export const INVENTORY_MODALITY = "NO APLICA — INVENTARIO FÍSICO";
 export const PURCHASE_MODALITY = "NO APLICA — COMPRAS POR ROLLO";
+export const UNATTRIBUTED_MODALITY = "NO APLICA — SIN DESGLOSE POR MODALIDAD";
 
 const pendingFinancialField = (column: ExportColumn) =>
   /costo|utilidad|margen/i.test(`${column.key} ${column.label}`);
@@ -34,11 +35,12 @@ function modalityFor(
     return INVENTORY_MODALITY;
   }
   if (section === "compras") return PURCHASE_MODALITY;
-  // Client summary rows deliberately retain both separately calculated amounts;
-  // this label prevents an export from silently presenting that row as one sale type.
-  if (section === "clientes" && table.id === "clientes") return "ROLLOS Y METRAJE (DESGLOSADO)";
+  if (section === "clientes" && table.id === "clientes") return "ROLLOS Y METRAJE (COLUMNAS SEPARADAS)";
+  if (section === "clientes" && ["cuentas-por-cobrar-fifo", "castigos-y-reversos"].includes(table.id)) {
+    return UNATTRIBUTED_MODALITY;
+  }
   if (activeModality === "ROLLOS" || activeModality === "METRAJE") return activeModality;
-  return "ROLLOS Y METRAJE (DESGLOSADO)";
+  return UNATTRIBUTED_MODALITY;
 }
 
 export function activeReportModality(activeFilters: unknown): string {

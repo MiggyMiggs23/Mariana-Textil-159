@@ -206,3 +206,7 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Está prohibido crear ADMIN temporales o limpiar usuarios/sesiones mediante `executeSql({ environment: "development" })`. La limpieza E2E consiste en eliminar únicamente la rama Neon desechable.
 - Los precios existentes solo se modifican por `/precios`; `PATCH /productos/:id` rechaza cualquier intento de evadir el historial. El precio inicial al crear producto sí está permitido.
 - Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.
+
+## Parte 4 — Regla definitiva de reportes por tipo de venta
+
+Los reportes separan siempre ROLLOS de METRAJE. Un margen agregado que revuelva las dos modalidades sin distinguirlas no es aceptable. La venta por rollo se costea con el costo exacto del rollo; la metreada, con el promedio simple de 12 meses congelado al emitir el ticket. Si cualquier línea de un grupo carece de costo congelado, el costo, la utilidad y el margen del grupo quedan pendientes, nunca en cero.

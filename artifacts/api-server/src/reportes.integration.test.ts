@@ -146,6 +146,25 @@ if (!testUrl) {
       await addTicket({ product: 2, site: 0, qty: 3, price: 90, cost: 30, days: -2 });
       await addTicket({ product: 1, site: 1, qty: 1, price: 100, cost: 25, roll: false, days: -1 });
       await addTicket({ product: 3, site: 1, qty: 2, price: 120, cost: 35, state: "CANCELADO", days: -1 });
+      const mixedTicket = await one(
+        `INSERT INTO tickets(folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,
+          estado,cobrado,cobrado_at,facturado,created_at)
+         VALUES($1,$2,$3,$4,$5,100,0,100,'VENDIDO',true,$6,false,$6) RETURNING id`,
+        [folio++, randomUUID(), ids.sites[0], ids.users[1], ids.clients[0], date(-1)],
+      );
+      ids.tickets.push(Number(mixedTicket.id));
+      await pool.query(
+        `INSERT INTO ticket_lineas(ticket_id,rollo_id,producto_id,tipo,cantidad,precio_unitario,precio_sugerido,
+          importe,costo_unitario_congelado,costo_total_congelado,costo_referencia_estado)
+         VALUES
+          ($1,$2,$3,'NORMAL',3,20,100,60,10,30,NULL),
+          ($1,NULL,$4,'METREADO',2,20,100,40,10,20,'AVERAGE_12_MONTHS')`,
+        [mixedTicket.id, ids.rolls[0], ids.products[0], ids.products[1]],
+      );
+      ids.payments.push(Number((await one(
+        "INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at) VALUES($1,'EFECTIVO',100,$2,$3) RETURNING id",
+        [mixedTicket.id, ids.users[1], date(-1)],
+      )).id));
       for (const [type, amount] of [["VENTA_CREDITO", 100], ["ABONO", -25]] as const) {
         ids.credit.push(Number((await one(
           `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,notas,dias_plazo,fecha_vencimiento)
@@ -158,10 +177,10 @@ if (!testUrl) {
       await t.test("sales and margin use frozen, valid lines and filter correctly", async () => {
         const ventas = await reports.buildReport("ventas", input, undefined, true) as Record<string, any>;
         const utilidad = await reports.buildReport("utilidad", input, undefined, true) as Record<string, any>;
-        assert.equal(kpi(ventas, "ventas").value, 810, "cancelled sale excluded; unlinked sale remains");
+        assert.equal(kpi(ventas, "ventas").value, 910, "cancelled sale excluded; mixed sale components remain");
         assert.equal(kpi(utilidad, "utilidad-exacta").value, null, "missing metered cost keeps utility pending");
         assert.equal(kpi(utilidad, "margen-exacto").value, null, "pending cost never becomes a false margin");
-        assert.equal(kpi(utilidad, "margen-rollos").value, 500 / 710 * 100, "roll margin uses line subtotal, not IVA");
+        assert.equal(kpi(utilidad, "margen-rollos").value, 530 / 770 * 100, "roll margin uses line subtotal, not IVA");
         const facturado = await reports.buildReport("utilidad", { ...input, facturado: true }, undefined, true) as Record<string, any>;
         assert.equal(kpi(facturado, "margen-rollos").value, 75, "an invoiced ticket margin still uses its 320 subtotal, not its 336 total");
         assert.equal(kpi(utilidad, "margen-metraje").value, null, "metered component remains independently pending");
@@ -171,12 +190,12 @@ if (!testUrl) {
         assert.equal(new Set(porSitio.map((row) => row.dimension)).size, 2);
         assert.ok(porSitio.every((row) => row.modalidad && row.unidad));
         const red = await reports.buildReport("ventas", { ...input, colores: "Rojo", unidades: "METRO", ubicacionIds: String(ids.sites[0]) }, undefined, true) as Record<string, any>;
-        assert.equal(kpi(red, "ventas").value, 320, "combined transversal color/site/unit filters");
+        assert.equal(kpi(red, "ventas").value, 380, "combined transversal color/site/unit filters");
         const metraje = await reports.buildReport("ventas", { ...input, modalidad: "METRAJE" }, undefined, true) as Record<string, any>;
-        assert.equal(kpi(metraje, "ventas").value, 100, "modality filter is enforced by sale-line SQL");
+        assert.equal(kpi(metraje, "ventas").value, 140, "modality filter is enforced by sale-line SQL");
         assert.ok(table(metraje, "por-sitio").rows.every(row => row.modalidad === "METRAJE"));
         const rollos = await reports.buildReport("ventas", { ...input, modalidad: "ROLLOS" }, undefined, true) as Record<string, any>;
-        assert.equal(kpi(rollos, "ventas").value, 710);
+        assert.equal(kpi(rollos, "ventas").value, 770);
         assert.deepEqual((await reports.buildReport("ventas", { ...input, colores: "" }, undefined, true) as Record<string, any>).activeFilters.includes("colores="), false);
         assert.ok(table(ventas, "canasta-pares").rows.length >= 0);
       });
@@ -195,11 +214,20 @@ if (!testUrl) {
         assert.ok(table(purchases, "productos").rows.every(r => r.estadoCostoReferencia === "AVERAGE_12_MONTHS"));
         assert.ok(table(clients, "clientes").rows.some(r => Number(r.comprasRollos) > 0 && Number(r.comprasMetraje) > 0));
         assert.ok(table(clients, "cuentas-por-cobrar-fifo").rows.some(r => Number(r.saldo) === 75));
-        const [heatMetered, colorMetered, clientMetered] = await Promise.all(["mapas-calor", "color", "clientes"].map(section =>
-          reports.buildReport(section as any, { ...input, modalidad: "METRAJE" }, undefined, true) as Promise<Record<string, any>>));
+        const paymentRows = table(clients, "formas-pago").rows;
+        assert.deepEqual(paymentRows.map((row) => row.modalidad).sort(), ["METRAJE", "ROLLOS"]);
+        assert.equal(paymentRows.reduce((sum, row) => sum + Number(row.importe), 0), 974);
+        const [heatMetered, colorMetered, clientMetered, clientRolls] = await Promise.all([
+          reports.buildReport("mapas-calor", { ...input, modalidad: "METRAJE" }, undefined, true),
+          reports.buildReport("color", { ...input, modalidad: "METRAJE" }, undefined, true),
+          reports.buildReport("clientes", { ...input, modalidad: "METRAJE" }, undefined, true),
+          reports.buildReport("clientes", { ...input, modalidad: "ROLLOS" }, undefined, true),
+        ] as Array<Promise<Record<string, any>>>);
         assert.ok((heatMetered.charts as any[]).every(chart => chart.rows.every((row: any) => row.modalidad === "METRAJE")));
         assert.ok(table(colorMetered, "ranking-color").rows.every(r => r.modalidad === "METRAJE"));
         assert.ok(table(clientMetered, "clientes").rows.every(r => Number(r.comprasRollos) === 0));
+        assert.equal(table(clientMetered, "formas-pago").rows.reduce((sum, row) => sum + Number(row.importe), 0), 156);
+        assert.equal(table(clientRolls, "formas-pago").rows.reduce((sum, row) => sum + Number(row.importe), 0), 818);
       });
       await t.test("ranges, helper invariants, access redaction, exports and timing", async () => {
         const { GetReporteSeccionResponse } = await import("@workspace/api-zod");
