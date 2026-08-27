@@ -326,18 +326,6 @@ after(async () => {
   setPrivateObjectStorageForTests(null);
   await new Promise<void>((resolve) => server.close(() => resolve()));
   await pool.query("DELETE FROM sesiones WHERE usuario_id IN ($1,$2)", [adminId, terminalId]);
-   const cleanupClient = await pool.connect();
-   try {
-     await cleanupClient.query("BEGIN");
-     await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
-     await cleanupClient.query("DELETE FROM auditoria WHERE usuario_id IN ($1,$2)", [adminId, terminalId]);
-     await cleanupClient.query("COMMIT");
-   } catch (error) {
-     await cleanupClient.query("ROLLBACK");
-     throw error;
-   } finally {
-     cleanupClient.release();
-   }
   await pool.query("DELETE FROM cliente_documentos WHERE cliente_id = ANY($1::int[])", [clientIds]);
   await pool.query("DELETE FROM ticket_pagos WHERE usuario_id IN ($1,$2)", [adminId, terminalId]);
   await pool.query(
@@ -349,8 +337,6 @@ after(async () => {
   await pool.query("DELETE FROM movimientos_credito WHERE cliente_id = ANY($1::int[])", [clientIds]);
   await pool.query("ALTER TABLE movimientos_credito ENABLE TRIGGER movimientos_credito_inmutables");
   await pool.query("DELETE FROM clientes WHERE id = ANY($1::int[])", [clientIds]);
-  await pool.query("DELETE FROM usuarios WHERE id IN ($1,$2)", [adminId, terminalId]);
   await pool.query("DELETE FROM productos WHERE id=$1", [productId]);
-  await pool.query("DELETE FROM ubicaciones WHERE id=$1", [locationId]);
   await pool.end();
 });

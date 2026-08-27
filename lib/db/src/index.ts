@@ -17,6 +17,7 @@ export { ensureAuditSchema } from "./lib/audit-schema";
 export { ensureAplicacionesPagoProveedorSchema } from "./lib/aplicaciones-pago-proveedor-schema";
 export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";
 export { ensureSolicitudesPagoDirigidoSchema } from "./lib/solicitudes-pago-dirigido-schema";
+export { createTestDatabaseGuard } from "./lib/test-database-guard";
 
 const { Pool } = pg;
 

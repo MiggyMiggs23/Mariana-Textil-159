@@ -12,10 +12,6 @@ if (!testUrl) {
 if (testUrl === applicationUrl) {
   throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
 }
-if (!/\/parte5_audit_test_20260827(?:\?|$)/.test(testUrl)) {
-  throw new Error("TEST_DATABASE_URL no apunta a la base temporal segura esperada.");
-}
-
 test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async () => {
   const [{ pool, ensureAuditSchema }, { listAuditoria, getAuditoria, exportAuditoriaRows }, { default: app }] =
     await Promise.all([
@@ -23,6 +19,10 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
       import("./lib/auditoria"),
       import("./app"),
     ]);
+  const { createTestDatabaseGuard } = await import("@workspace/db");
+  const { assertIsolated, testDatabaseName } =
+    await createTestDatabaseGuard(pool, testUrl, applicationUrl);
+  await assertIsolated();
   await ensureAuditSchema(pool);
 
   const tag = `AUDIT-${randomUUID()}`;
@@ -78,9 +78,9 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
        VALUES($1,$2,$3,$4,$5::jsonb,$6::jsonb,'127.0.0.1',$7) RETURNING id`,
       [userId, action, entity, entityId, JSON.stringify(before), JSON.stringify(after), timestamp],
     );
-    const old = await insert(Number(admin.id), "ACTUALIZAR", tag, "alpha", "2026-08-27T12:00:00Z", { estado: "antes" }, { estado: "después" });
-    await insert(Number(caja.id), "OTRA_ACCION", `${tag}-otro`, "beta", "2026-08-27T13:00:00Z", null, { beta: true });
-    const newest = await insert(Number(admin.id), "ACTUALIZAR", tag, "gamma", "2026-08-27T14:00:00Z", { valor: 1 }, { valor: 2 });
+    const old = await insert(Number(admin.id), "ACTUALIZAR", tag, `${tag}-alpha`, "2026-08-27T12:00:00Z", { estado: "antes" }, { estado: "después" });
+    await insert(Number(caja.id), "OTRA_ACCION", `${tag}-otro`, `${tag}-beta`, "2026-08-27T13:00:00Z", null, { beta: true });
+    const newest = await insert(Number(admin.id), "ACTUALIZAR", tag, `${tag}-gamma`, "2026-08-27T14:00:00Z", { valor: 1 }, { valor: 2 });
 
     const frozen = await one(
       `SELECT usuario_snapshot,rol_snapshot,sitio_id,sitio_snapshot,modulo FROM auditoria WHERE id=$1`,
@@ -120,20 +120,20 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
 
     const all = await listAuditoria({ search: tag }, 1, 10);
     assert.deepEqual(all.items.map((row) => row.entidadId), [
-      "gamma",
-      "beta",
-      "alpha",
+      `${tag}-gamma`,
+      `${tag}-beta`,
+      `${tag}-alpha`,
       `${tag}-rollo`,
     ]);
     const paged = await listAuditoria({ search: tag }, 2, 1);
     assert.equal(paged.total, 4);
-    assert.equal(paged.items[0]?.entidadId, "beta");
+    assert.equal(paged.items[0]?.entidadId, `${tag}-beta`);
     assert.equal((await listAuditoria({ desde: "2026-08-27", hasta: "2026-08-27", search: tag }, 1, 10)).total, 4);
     assert.equal((await listAuditoria({ usuarioId: Number(caja.id), search: tag }, 1, 10)).total, 1);
     assert.equal((await listAuditoria({ modulo: tag, search: tag }, 1, 10)).total, 2);
     assert.equal((await listAuditoria({ accion: "OTRA_ACCION", search: tag }, 1, 10)).total, 1);
     assert.equal((await listAuditoria({ sitioId: Number(siteTwo.id), search: tag }, 1, 10)).total, 2);
-    assert.equal((await listAuditoria({ search: "alpha" }, 1, 10)).total, 1);
+    assert.equal((await listAuditoria({ search: `${tag}-alpha` }, 1, 10)).total, 1);
 
     const detail = await getAuditoria(String(newest.id));
     assert.deepEqual(detail?.datosAntes, { valor: 1 });
@@ -176,40 +176,30 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
     try {
       assert.equal(
         (await cleanupClient.query<{ database: string }>("SELECT current_database() AS database")).rows[0]?.database,
-        "parte5_audit_test_20260827",
+        testDatabaseName,
       );
+      await cleanupClient.query(`
+        CREATE TABLE IF NOT EXISTS public.integration_test_database_guard (
+          singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton)
+        )
+      `);
       await cleanupClient.query("BEGIN");
       await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
-      await cleanupClient.query("DELETE FROM auditoria WHERE id=$1", [old.id]);
-      await cleanupClient.query("COMMIT");
-      assert.equal((await pool.query("SELECT 1 FROM auditoria WHERE id=$1", [old.id])).rowCount, 0);
-    } catch (error) {
+      await assert.rejects(
+        () => cleanupClient.query("DELETE FROM auditoria WHERE id=$1", [old.id]),
+        /append-only/,
+      );
       await cleanupClient.query("ROLLBACK");
-      throw error;
+      assert.equal((await pool.query("SELECT 1 FROM auditoria WHERE id=$1", [old.id])).rowCount, 1);
     } finally {
+      await cleanupClient.query("ROLLBACK").catch(() => undefined);
+      await cleanupClient.query("DROP TABLE IF EXISTS public.integration_test_database_guard");
       cleanupClient.release();
     }
   } finally {
+    await assertIsolated();
     if (server) await new Promise<void>((resolve, reject) => server!.close((error) => error ? reject(error) : resolve()));
     await pool.query(`DELETE FROM sesiones WHERE id = ANY($1::uuid[])`, [ids.sessions]);
-    const cleanupClient = await pool.connect();
-    try {
-      await cleanupClient.query("BEGIN");
-      await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
-      await cleanupClient.query(
-        `DELETE FROM auditoria
-         WHERE entidad LIKE $1 OR usuario_id = ANY($2::int[])`,
-        [`${tag}%`, ids.users],
-      );
-      await cleanupClient.query("COMMIT");
-    } catch (error) {
-      await cleanupClient.query("ROLLBACK");
-      throw error;
-    } finally {
-      cleanupClient.release();
-    }
-    await pool.query(`DELETE FROM usuarios WHERE id = ANY($1::int[])`, [ids.users]);
-    await pool.query(`DELETE FROM ubicaciones WHERE id = ANY($1::int[])`, [ids.sites]);
     await pool.end();
   }
 });

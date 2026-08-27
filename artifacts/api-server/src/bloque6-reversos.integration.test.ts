@@ -3,7 +3,6 @@ import test from "node:test";
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const appUrl = process.env.DATABASE_URL;
-const databaseName = "parte6_credit_test_20260827";
 
 test("Bloque 6: reversos conservan evidencia y restauran saldos en ambos ledgers", async (t) => {
   if (!testUrl) { t.skip("TEST_DATABASE_URL no está configurada."); return; }
@@ -11,11 +10,16 @@ test("Bloque 6: reversos conservan evidencia y restauran saldos en ambos ledgers
   // The DB package selects TEST_DATABASE_URL for test processes; import only
   // after the environment guard above, never fall back to DATABASE_URL.
   const { pool } = await import("@workspace/db");
+  const { createTestDatabaseGuard } = await import("@workspace/db");
   const client = await pool.connect();
+  const { assertIsolated } = await createTestDatabaseGuard(
+    client,
+    testUrl,
+    appUrl,
+  );
   const guard = async () => {
     if (testUrl === appUrl) throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
-    const result = await client.query<{ current_database: string }>("SELECT current_database()");
-    if (result.rows[0]?.current_database !== databaseName) throw new Error("Base de pruebas no autorizada.");
+    await assertIsolated();
   };
   const write = async (text: string, values: unknown[] = []) => { await guard(); return client.query(text, values); };
   let sequence = 0;

@@ -12,15 +12,18 @@ if (!testUrl) {
 if (testUrl === applicationUrl) {
   throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
 }
-if (!/\/parte5_audit_test_20260827(?:\?|$)/.test(testUrl)) {
-  throw new Error("TEST_DATABASE_URL no apunta a parte5_audit_test_20260827.");
-}
-
 test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales", async () => {
   const [{ pool }, { default: app }] = await Promise.all([
     import("@workspace/db"),
     import("./app"),
   ]);
+  const { createTestDatabaseGuard } = await import("@workspace/db");
+  const { assertIsolated } = await createTestDatabaseGuard(
+    pool,
+    testUrl,
+    applicationUrl,
+  );
+  await assertIsolated();
   const tag = `PART5-${randomUUID()}`;
   const initials = tag
     .slice(-2)
@@ -191,20 +194,6 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
     }
     await pool.query(`DELETE FROM sesiones WHERE id = ANY($1::uuid[])`, [fixtureSessions]);
     await pool.query(`DELETE FROM permisos_usuario WHERE usuario_id = ANY($1::int[])`, [fixtureUsers]);
-    const cleanupClient = await pool.connect();
-    try {
-      await cleanupClient.query("BEGIN");
-      await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
-      await cleanupClient.query(`DELETE FROM auditoria WHERE usuario_id = ANY($1::int[])`, [fixtureUsers]);
-      await cleanupClient.query("COMMIT");
-    } catch (error) {
-      await cleanupClient.query("ROLLBACK");
-      throw error;
-    } finally {
-      cleanupClient.release();
-    }
-    await pool.query(`DELETE FROM usuarios WHERE id = ANY($1::int[])`, [fixtureUsers]);
-    await pool.query(`DELETE FROM ubicaciones WHERE id = ANY($1::int[])`, [fixtureLocations]);
     await pool.end();
   }
 });

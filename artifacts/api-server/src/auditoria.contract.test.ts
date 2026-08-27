@@ -54,8 +54,10 @@ test("la migración central congela inserciones sin inferir históricos", () => 
   assert.match(migration, /NEW\.rol_snapshot/);
   assert.match(migration, /NEW\.sitio_snapshot/);
   assert.match(migration, /BEFORE UPDATE OR DELETE ON auditoria/);
-  assert.match(migration, /current_database\(\) = 'parte5_audit_test_20260827'/);
-  assert.match(migration, /app\.audit_test_cleanup/);
+  assert.match(migration, /RAISE EXCEPTION 'auditoria es append-only'/);
+  assert.doesNotMatch(migration, /integration_test_database_guard/);
+  assert.doesNotMatch(migration, /app\.audit_test_cleanup/);
+  assert.doesNotMatch(migration, /current_setting\s*\(/);
 });
 
 test("las consultas de auditoría usan exclusivamente snapshots", () => {

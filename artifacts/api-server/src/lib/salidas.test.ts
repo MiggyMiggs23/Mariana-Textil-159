@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaFolioTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { crearRollo, InventarioError } from "./inventario";
 import {
@@ -317,14 +317,9 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   });
   after(async () => { await db.transaction(async (tx) => {
     if (docs.length) {
-       await tx.execute(sql`SET LOCAL app.audit_test_cleanup = 'on'`);
       await tx.delete(notificacionesSistemaTable).where(and(
         eq(notificacionesSistemaTable.entidad, "salidas"),
         inArray(notificacionesSistemaTable.entidadId, docs.map(String)),
-      ));
-      await tx.delete(auditoriaTable).where(and(
-        eq(auditoriaTable.entidad, "salidas"),
-        inArray(auditoriaTable.entidadId, docs.map(String)),
       ));
       await tx.delete(salidaRollosTable).where(inArray(salidaRollosTable.salidaId, docs));
       await tx.delete(salidaLineasTable).where(inArray(salidaLineasTable.salidaId, docs));
@@ -334,7 +329,6 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     if (products.length) { await tx.delete(existenciasTable).where(inArray(existenciasTable.productoId, products)); await tx.delete(productosTable).where(inArray(productosTable.id, products)); }
     if (locations.length) {
       await tx.delete(salidaFolioTable).where(inArray(salidaFolioTable.ubicacionId, locations));
-      await tx.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, locations));
     }
   }); });
 }

@@ -3,7 +3,6 @@ import test from "node:test";
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const applicationDatabaseUrl = process.env.DATABASE_URL;
-const expectedDatabase = "parte6_credit_test_20260827";
 
 test("aplicaciones_credito is append-only and only links customer ABONOs to sales", async (t) => {
   if (!testDatabaseUrl) {
@@ -14,15 +13,15 @@ test("aplicaciones_credito is append-only and only links customer ABONOs to sale
     throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   }
   const { pool } = await import("@workspace/db");
+  const { createTestDatabaseGuard } = await import("@workspace/db");
   const client = await pool.connect();
   try {
-    // This guard deliberately runs on the same connection that will write.
-    const database = await client.query<{ current_database: string }>(
-      "SELECT current_database()",
+    const { assertIsolated } = await createTestDatabaseGuard(
+      client,
+      testDatabaseUrl,
+      applicationDatabaseUrl,
     );
-    if (database.rows[0]?.current_database !== expectedDatabase) {
-      throw new Error("La integración se negó a escribir fuera de la base temporal autorizada.");
-    }
+    await assertIsolated();
     await client.query("BEGIN");
     const write = async (
       text: string,
@@ -33,12 +32,7 @@ test("aplicaciones_credito is append-only and only links customer ABONOs to sale
       if (testDatabaseUrl === applicationDatabaseUrl) {
         throw new Error("TEST_DATABASE_URL dejó de ser distinta de DATABASE_URL.");
       }
-      const guard = await client.query<{ current_database: string }>(
-        "SELECT current_database()",
-      );
-      if (guard.rows[0]?.current_database !== expectedDatabase) {
-        throw new Error("La integración se negó a escribir fuera de la base temporal autorizada.");
-      }
+      await assertIsolated();
       return client.query(text, values);
     };
     let savepointSequence = 0;

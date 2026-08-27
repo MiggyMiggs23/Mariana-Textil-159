@@ -52,7 +52,6 @@ import { createServer, type Server } from "node:http";
 import { randomUUID } from "node:crypto";
 import { and, count, eq, sql } from "drizzle-orm";
 import {
-  auditoriaTable,
   db,
   entradasTable,
   ensureClientesSchema,
@@ -2919,27 +2918,9 @@ async function cleanup(): Promise<void> {
     } catch { /* best effort */ }
   }
 
-  // Delete users
   for (const id of createdSesionCajaIds) {
     try {
       await db.delete(sesionesCajaTable).where(eq(sesionesCajaTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  for (const id of createdUserIds) {
-    try {
-       await db.transaction(async (tx) => {
-         await tx.execute(sql`SET LOCAL app.audit_test_cleanup = 'on'`);
-         await tx.delete(auditoriaTable).where(eq(auditoriaTable.usuarioId, id));
-       });
-      await db.delete(usuariosTable).where(eq(usuariosTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  // Delete ubicaciones (after deleting rollos/existencias that reference them)
-  for (const id of createdUbicacionIds) {
-    try {
-      await db.delete(ubicacionesTable).where(eq(ubicacionesTable.id, id));
     } catch { /* best effort */ }
   }
 }

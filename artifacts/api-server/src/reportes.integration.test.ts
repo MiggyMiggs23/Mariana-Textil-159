@@ -13,12 +13,8 @@ const applicationUrl = process.env.DATABASE_URL;
 if (!testUrl) {
   test.skip("reportes database integration (TEST_DATABASE_URL not set)", () => {});
 } else {
-  const database = decodeURIComponent(new URL(testUrl).pathname).replace(/^\/+/, "");
   if (testUrl === applicationUrl) {
     throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL; refusing to mutate the application database.");
-  }
-  if (!database.includes("reports_integral_test")) {
-    throw new Error("TEST_DATABASE_URL database name must contain reports_integral_test; refusing to write.");
   }
   test("reportes build committed, isolated decision reports", async (t) => {
     const [{ pool }, reports, sales, inventory, commercial, { requierePermiso }, { toExcelNumber }] = await Promise.all([
@@ -30,6 +26,13 @@ if (!testUrl) {
       import("./lib/permisos"),
       import("@workspace/number-format"),
     ]);
+    const { createTestDatabaseGuard } = await import("@workspace/db");
+    const { assertIsolated } = await createTestDatabaseGuard(
+      pool,
+      testUrl,
+      applicationUrl,
+    );
+    await assertIsolated();
     const tag = `RPI-${randomUUID()}`;
     const ids = { sites: [] as number[], users: [] as number[], clients: [] as number[], suppliers: [] as number[],
       products: [] as number[], entries: [] as number[], rolls: [] as number[], tickets: [] as number[],

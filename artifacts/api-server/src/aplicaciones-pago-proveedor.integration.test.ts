@@ -3,7 +3,6 @@ import test from "node:test";
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const applicationDatabaseUrl = process.env.DATABASE_URL;
-const expectedDatabase = "parte6_credit_test_20260827";
 
 test("aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only", async (t) => {
   if (!testDatabaseUrl) {
@@ -12,13 +11,16 @@ test("aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only",
   }
   if (testDatabaseUrl === applicationDatabaseUrl) throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   const { pool } = await import("@workspace/db");
+  const { createTestDatabaseGuard } = await import("@workspace/db");
   const client = await pool.connect();
+  const { assertIsolated } = await createTestDatabaseGuard(
+    client,
+    testDatabaseUrl,
+    applicationDatabaseUrl,
+  );
   const guard = async () => {
     if (testDatabaseUrl === applicationDatabaseUrl) throw new Error("TEST_DATABASE_URL dejó de ser distinta de DATABASE_URL.");
-    const database = await client.query<{ current_database: string }>("SELECT current_database()");
-    if (database.rows[0]?.current_database !== expectedDatabase) {
-      throw new Error("La integración se negó a escribir fuera de la base temporal autorizada.");
-    }
+    await assertIsolated();
   };
   const write = async (text: string, values: unknown[] = []) => {
     await guard(); // same connection immediately before every write
@@ -138,17 +140,18 @@ test("ensure materializa pago legado dirigido una sola vez", async (t) => {
   }
   const { ensureAplicacionesPagoProveedorSchema, pool } =
     await import("@workspace/db");
+  const { createTestDatabaseGuard } = await import("@workspace/db");
   const client = await pool.connect();
+  const { assertIsolated } = await createTestDatabaseGuard(
+    client,
+    testDatabaseUrl,
+    applicationDatabaseUrl,
+  );
   const guard = async () => {
     if (testDatabaseUrl === applicationDatabaseUrl) {
       throw new Error("TEST_DATABASE_URL dejó de ser distinta de DATABASE_URL.");
     }
-    const result = await client.query<{ current_database: string }>(
-      "SELECT current_database()",
-    );
-    if (result.rows[0]?.current_database !== expectedDatabase) {
-      throw new Error("La integración se negó a escribir fuera de la base temporal autorizada.");
-    }
+    await assertIsolated();
   };
   const write = async (text: string, values: unknown[] = []) => {
     await guard();

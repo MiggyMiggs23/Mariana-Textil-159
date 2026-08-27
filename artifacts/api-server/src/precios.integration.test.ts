@@ -167,26 +167,12 @@ if (!testUrl) {
       if (ids.tickets.length) await mutate("DELETE FROM tickets WHERE id = ANY($1::int[])", [ids.tickets]);
       if (ids.products.length) {
         await mutate("DELETE FROM precio_historial WHERE producto_id = ANY($1::int[])", [ids.products]);
-         const cleanupClient = await pool.connect();
-         try {
-           await cleanupClient.query("BEGIN");
-           await cleanupClient.query("SET LOCAL app.audit_test_cleanup = 'on'");
-           await cleanupClient.query("DELETE FROM auditoria WHERE entidad='productos' AND entidad_id = ANY($1::text[])", [ids.products.map(String)]);
-           await cleanupClient.query("COMMIT");
-         } catch (error) {
-           await cleanupClient.query("ROLLBACK");
-           throw error;
-         } finally {
-           cleanupClient.release();
-         }
       }
       if (ids.rolls.length) await mutate("DELETE FROM rollos WHERE id = ANY($1::int[])", [ids.rolls]);
       if (ids.products.length) await mutate("DELETE FROM productos WHERE id = ANY($1::int[])", [ids.products]);
       if (ids.clients.length) await mutate("DELETE FROM clientes WHERE id = ANY($1::int[])", [ids.clients]);
       if (sessions.length) await mutate("DELETE FROM sesiones WHERE id = ANY($1::uuid[])", [sessions]);
       if (ids.users.length) await mutate("DELETE FROM permisos_usuario WHERE usuario_id = ANY($1::int[])", [ids.users]);
-      if (ids.users.length) await mutate("DELETE FROM usuarios WHERE id = ANY($1::int[])", [ids.users]);
-      if (ids.locations.length) await mutate("DELETE FROM ubicaciones WHERE id = ANY($1::int[])", [ids.locations]);
     }
   });
 }

@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import {
-  auditoriaTable,
   clientesTable,
   db,
   entradasTable,
@@ -1411,17 +1410,6 @@ try {
   );
   financialTriggersDisabled = true;
   if (createdTicketIds.length > 0) {
-     await db.transaction(async (tx) => {
-       await tx.execute(sql`SET LOCAL app.audit_test_cleanup = 'on'`);
-       await tx
-         .delete(auditoriaTable)
-         .where(
-           and(
-             eq(auditoriaTable.entidad, "tickets"),
-             inArray(auditoriaTable.entidadId, createdTicketIds.map(String)),
-           ),
-         );
-     });
     await db
       .delete(notificacionesCreditoTable)
       .where(inArray(notificacionesCreditoTable.ticketId, createdTicketIds));
@@ -1439,17 +1427,6 @@ try {
       .where(inArray(ticketsTable.id, createdTicketIds));
   }
   if (createdSessionIds.length > 0) {
-     await db.transaction(async (tx) => {
-       await tx.execute(sql`SET LOCAL app.audit_test_cleanup = 'on'`);
-       await tx
-         .delete(auditoriaTable)
-         .where(
-           and(
-             eq(auditoriaTable.entidad, "sesiones_caja"),
-             inArray(auditoriaTable.entidadId, createdSessionIds.map(String)),
-           ),
-         );
-     });
     await db
       .delete(sesionesCajaTable)
       .where(inArray(sesionesCajaTable.id, createdSessionIds));

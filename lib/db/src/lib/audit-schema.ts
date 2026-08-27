@@ -66,10 +66,6 @@ export async function ensureAuditSchema(
        CREATE OR REPLACE FUNCTION proteger_auditoria_append_only()
        RETURNS trigger LANGUAGE plpgsql AS $$
        BEGIN
-         IF current_database() = 'parte5_audit_test_20260827'
-            AND current_setting('app.audit_test_cleanup', true) = 'on' THEN
-           RETURN CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END;
-         END IF;
          RAISE EXCEPTION 'auditoria es append-only';
        END;
        $$;

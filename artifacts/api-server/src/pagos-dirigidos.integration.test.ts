@@ -5,7 +5,6 @@ import test from "node:test";
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const applicationUrl = process.env.DATABASE_URL;
-const expectedDatabase = "parte6_credit_test_20260827";
 
 test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte", async (t) => {
   if (!testUrl) {
@@ -22,14 +21,13 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
       import("./app"),
       import("./lib/reportes-commercial"),
     ]);
-  const identity = await pool.query<{ database: string }>(
-    "SELECT current_database() AS database",
+  const { createTestDatabaseGuard } = await import("@workspace/db");
+  const { assertIsolated } = await createTestDatabaseGuard(
+    pool,
+    testUrl,
+    applicationUrl,
   );
-  assert.equal(
-    identity.rows[0]?.database,
-    expectedDatabase,
-    "La integración se negó a escribir fuera de la base temporal autorizada.",
-  );
+  await assertIsolated();
   await ensureClientesSchema(pool);
   await ensureSolicitudesPagoDirigidoSchema(pool);
 
