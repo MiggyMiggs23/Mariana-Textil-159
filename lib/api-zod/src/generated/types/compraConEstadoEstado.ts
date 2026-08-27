@@ -10,7 +10,7 @@ export type CompraConEstadoEstado = typeof CompraConEstadoEstado[keyof typeof Co
 
 
 export const CompraConEstadoEstado = {
-  Pagada: 'Pagada',
-  Parcial: 'Parcial',
-  Pendiente: 'Pendiente',
+  PAGADA: 'PAGADA',
+  PARCIAL: 'PARCIAL',
+  PENDIENTE: 'PENDIENTE',
 } as const;

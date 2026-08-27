@@ -178,15 +178,18 @@ import type {
   PrecioProducto,
   PrecioProductoDetail,
   PrecioVentaPorMetroUpdate,
+  PreviewPagoProveedor,
   Producto,
   ProductoDetail,
   ProductoInput,
   ProductoUpdate,
   Proveedor,
+  ProveedorCompraDetalle,
   ProveedorComprasResult,
   ProveedorEstadisticas,
   ProveedorEstadoCuenta,
   ProveedorInput,
+  ProveedorPagoDetalle,
   ProveedorPagosResult,
   ProveedorUpdate,
   ProveedoresListResult,
@@ -2616,6 +2619,230 @@ export const useRegistrarPagoProveedor = <TError = ErrorType<ValidationErrorResp
       > => {
       return useMutation(getRegistrarPagoProveedorMutationOptions(options));
     }
+
+export const getPreviewPagoProveedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}/pagos/preview`
+}
+
+/**
+ * @summary Calcula el reparto FIFO de un pago sin persistirlo
+ */
+export const previewPagoProveedor = async (id: number,
+    pagoProveedorInput: PagoProveedorInput, options?: Parameters<typeof customFetch>[1]): Promise<PreviewPagoProveedor> => {
+
+  return customFetch<PreviewPagoProveedor>(getPreviewPagoProveedorUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pagoProveedorInput)
+  }
+);}
+
+
+
+
+
+export const getPreviewPagoProveedorMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewPagoProveedor>>, TError,{id: number;data: BodyType<PagoProveedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewPagoProveedor>>, TError,{id: number;data: BodyType<PagoProveedorInput>}, TContext> => {
+
+const mutationKey = ['previewPagoProveedor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewPagoProveedor>>, {id: number;data: BodyType<PagoProveedorInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  previewPagoProveedor(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewPagoProveedorMutationResult = NonNullable<Awaited<ReturnType<typeof previewPagoProveedor>>>
+    export type PreviewPagoProveedorMutationBody = BodyType<PagoProveedorInput>
+    export type PreviewPagoProveedorMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Calcula el reparto FIFO de un pago sin persistirlo
+ */
+export const usePreviewPagoProveedor = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewPagoProveedor>>, TError,{id: number;data: BodyType<PagoProveedorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewPagoProveedor>>,
+        TError,
+        {id: number;data: BodyType<PagoProveedorInput>},
+        TContext
+      > => {
+      return useMutation(getPreviewPagoProveedorMutationOptions(options));
+    }
+
+export const getGetProveedorCompraDetalleUrl = (id: number,
+    compraId: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}/compras/${compraId}`
+}
+
+export const getProveedorCompraDetalle = async (id: number,
+    compraId: number, options?: Parameters<typeof customFetch>[1]): Promise<ProveedorCompraDetalle> => {
+
+  return customFetch<ProveedorCompraDetalle>(getGetProveedorCompraDetalleUrl(id,compraId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetProveedorCompraDetalleQueryKey = (id: number,
+    compraId: number,) => {
+    return [
+    `/api/proveedores/${id}/compras/${compraId}`
+    ] as const;
+    }
+
+
+export const getGetProveedorCompraDetalleQueryOptions = <TData = Awaited<ReturnType<typeof getProveedorCompraDetalle>>, TError = ErrorType<NotFoundResponse>>(id: number,
+    compraId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedorCompraDetalle>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProveedorCompraDetalleQueryKey(id,compraId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProveedorCompraDetalle>>> = ({ signal }) => getProveedorCompraDetalle(id,compraId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined && compraId !== null && compraId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProveedorCompraDetalle>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetProveedorCompraDetalleQueryResult = NonNullable<Awaited<ReturnType<typeof getProveedorCompraDetalle>>>
+export type GetProveedorCompraDetalleQueryError = ErrorType<NotFoundResponse>
+
+
+
+export function useGetProveedorCompraDetalle<TData = Awaited<ReturnType<typeof getProveedorCompraDetalle>>, TError = ErrorType<NotFoundResponse>>(
+ id: number,
+    compraId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedorCompraDetalle>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetProveedorCompraDetalleQueryOptions(id,compraId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetProveedorPagoDetalleUrl = (id: number,
+    pagoId: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}/pagos/${pagoId}`
+}
+
+export const getProveedorPagoDetalle = async (id: number,
+    pagoId: number, options?: Parameters<typeof customFetch>[1]): Promise<ProveedorPagoDetalle> => {
+
+  return customFetch<ProveedorPagoDetalle>(getGetProveedorPagoDetalleUrl(id,pagoId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetProveedorPagoDetalleQueryKey = (id: number,
+    pagoId: number,) => {
+    return [
+    `/api/proveedores/${id}/pagos/${pagoId}`
+    ] as const;
+    }
+
+
+export const getGetProveedorPagoDetalleQueryOptions = <TData = Awaited<ReturnType<typeof getProveedorPagoDetalle>>, TError = ErrorType<NotFoundResponse>>(id: number,
+    pagoId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedorPagoDetalle>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProveedorPagoDetalleQueryKey(id,pagoId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProveedorPagoDetalle>>> = ({ signal }) => getProveedorPagoDetalle(id,pagoId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined && pagoId !== null && pagoId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProveedorPagoDetalle>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetProveedorPagoDetalleQueryResult = NonNullable<Awaited<ReturnType<typeof getProveedorPagoDetalle>>>
+export type GetProveedorPagoDetalleQueryError = ErrorType<NotFoundResponse>
+
+
+
+export function useGetProveedorPagoDetalle<TData = Awaited<ReturnType<typeof getProveedorPagoDetalle>>, TError = ErrorType<NotFoundResponse>>(
+ id: number,
+    pagoId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedorPagoDetalle>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetProveedorPagoDetalleQueryOptions(id,pagoId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getRegistrarAjusteProveedorUrl = (id: number,) => {
 

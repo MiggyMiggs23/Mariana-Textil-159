@@ -20,9 +20,4 @@ export interface PagoProveedorInput {
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
-  /**
-     * Opcional: liga el pago a una compra específica
-     * @nullable
-     */
-  entradaId?: number | null;
 }

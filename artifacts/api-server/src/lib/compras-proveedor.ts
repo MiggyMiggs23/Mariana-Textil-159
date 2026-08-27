@@ -25,18 +25,20 @@
 
 import { and, asc, eq, gte, lte, sql } from "drizzle-orm";
 import {
+  aplicacionesPagoProveedorTable,
   auditoriaTable,
   db,
   pagosProveedorTable,
   type FormaPagoProveedor,
 } from "@workspace/db";
 import type { Tx } from "./inventario";
+import { allocateCreditFifo, centsToMoney, moneyToCents } from "./credit-allocation";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type EstadoCompra = "Pagada" | "Parcial" | "Pendiente";
+export type EstadoCompra = "PAGADA" | "PARCIAL" | "PENDIENTE";
 
 export type CompraConEstado = {
   entradaId: number;
@@ -187,9 +189,9 @@ function calcEstadoCompra(
   totalCosto: number,
   abonado: number,
 ): EstadoCompra {
-  if (abonado <= 0) return "Pendiente";
-  if (abonado >= totalCosto - 0.005) return "Pagada";
-  return "Parcial";
+  if (abonado <= 0) return "PENDIENTE";
+  if (abonado >= totalCosto - 0.005) return "PAGADA";
+  return "PARCIAL";
 }
 
 /** Coerce a raw SQL date value (may be string or Date) to Date. */
@@ -276,7 +278,7 @@ export async function syncCompraEntrada(
     usuarioId: number;
   },
 ): Promise<void> {
-  await tx
+  const inserted = await tx
     .insert(pagosProveedorTable)
     .values({
       proveedorId: opts.proveedorId,
@@ -286,7 +288,72 @@ export async function syncCompraEntrada(
       fecha: opts.fecha,
       usuarioId: opts.usuarioId,
     })
-    .onConflictDoNothing();
+    .onConflictDoNothing()
+    .returning();
+  const compra = inserted[0];
+  if (compra) await aplicarCreditosProveedor(tx, opts.proveedorId, [compra.id]);
+}
+
+type AsignacionProveedor = {
+  pagoProveedorId: number; compraProveedorId: number; importe: string;
+  saldoAntes: string; saldoDespues: string;
+};
+
+async function aplicarCreditosProveedor(
+  tx: Tx,
+  proveedorId: number,
+  compraIds?: number[],
+): Promise<AsignacionProveedor[]> {
+  const rows = await tx.execute<{
+    id: number; tipo: "PAGO" | "COMPRA"; importe: string; fecha: Date | string;
+    disponible: string; saldo: string;
+  }>(sql`
+    SELECT pp.id, pp.tipo, pp.importe, pp.fecha,
+      CASE WHEN pp.tipo='PAGO' THEN -pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.pago_proveedor_id=pp.id),0) ELSE 0 END::text disponible,
+      CASE WHEN pp.tipo='COMPRA' THEN pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.compra_proveedor_id=pp.id),0) ELSE 0 END::text saldo
+    FROM pagos_proveedor pp WHERE pp.proveedor_id=${proveedorId}
+      AND pp.tipo IN ('PAGO','COMPRA')
+      ${compraIds ? sql`AND (pp.tipo='PAGO' OR pp.id = ANY(ARRAY[${sql.raw(compraIds.join(","))}]::int[]))` : sql``}
+    ORDER BY pp.fecha, pp.id FOR UPDATE
+  `);
+  const sources = (rows.rows as any[]).filter((r) => r.tipo === "PAGO" && moneyToCents(r.disponible) > 0)
+    .map((r) => ({ id: Number(r.id), availableCents: moneyToCents(r.disponible) }));
+  const targets = (rows.rows as any[]).filter((r) => r.tipo === "COMPRA" && moneyToCents(r.saldo) > 0)
+    .map((r) => ({ id: Number(r.id), balanceCents: moneyToCents(r.saldo), createdAt: toDate(r.fecha)! }));
+  const result = allocateCreditFifo(sources, targets);
+  const assignments: AsignacionProveedor[] = [];
+  for (const a of result.allocations) {
+    await tx.insert(aplicacionesPagoProveedorTable).values({
+      pagoProveedorId: a.sourceId, compraProveedorId: a.targetId, importe: centsToMoney(a.appliedCents),
+    });
+    assignments.push({
+      pagoProveedorId: a.sourceId, compraProveedorId: a.targetId, importe: centsToMoney(a.appliedCents),
+      saldoAntes: centsToMoney(a.balanceBeforeCents), saldoDespues: centsToMoney(a.balanceAfterCents),
+    });
+  }
+  return assignments;
+}
+
+export async function previewPagoProveedor(opts: {
+  proveedorId: number; importe: number;
+}): Promise<{ asignaciones: Array<AsignacionProveedor & { entradaId: number | null; folio: number | null; fecha: string; resultado: EstadoCompra }>; saldoAFavor: string }> {
+  const rows = await db.execute<any>(sql`
+    SELECT pp.id,pp.entrada_id,pp.fecha,pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.compra_proveedor_id=pp.id),0) saldo,e.folio
+    FROM pagos_proveedor pp LEFT JOIN entradas e ON e.id=pp.entrada_id
+    WHERE pp.proveedor_id=${opts.proveedorId} AND pp.tipo='COMPRA' ORDER BY pp.fecha,pp.id`);
+  const targets = rows.rows.filter((r: any) => moneyToCents(r.saldo) > 0)
+    .map((r: any) => ({ id: Number(r.id), balanceCents: moneyToCents(r.saldo), createdAt: toDate(r.fecha)! }));
+  const allocated = allocateCreditFifo([{ id: 0, availableCents: moneyToCents(opts.importe) }], targets);
+  return {
+    asignaciones: allocated.allocations.map((a) => {
+      const row = rows.rows.find((r: any) => Number(r.id) === a.targetId)!;
+      return { ...a, pagoProveedorId: 0, compraProveedorId: a.targetId, importe: centsToMoney(a.appliedCents),
+        saldoAntes: centsToMoney(a.balanceBeforeCents), saldoDespues: centsToMoney(a.balanceAfterCents),
+        entradaId: row.entrada_id == null ? null : Number(row.entrada_id), folio: row.folio == null ? null : Number(row.folio),
+        fecha: toDate(row.fecha)!.toISOString(), resultado: a.balanceAfterCents === 0 ? "PAGADA" : "PARCIAL" };
+    }),
+    saldoAFavor: centsToMoney(allocated.remainingCents),
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -296,7 +363,6 @@ export async function syncCompraEntrada(
 /**
  * Register a PAGO (payment) for a supplier.
  * importe must be positive (stored as negative internally).
- * If entradaId is provided it must belong to the proveedor.
  * fecha defaults to now if not provided.
  */
 export async function registrarPago(
@@ -308,17 +374,19 @@ export async function registrarPago(
     fecha?: Date | null; // defaults to now
     referencia?: string | null;
     notas?: string | null;
+    /** Deprecated compatibility input; deliberately ignored (FIFO is mandatory). */
     entradaId?: number | null;
     usuarioId: number;
     ip?: string | null;
   },
-): Promise<typeof pagosProveedorTable.$inferSelect> {
+): Promise<{ pago: typeof pagosProveedorTable.$inferSelect; asignaciones: AsignacionProveedor[]; saldoAFavor: string }> {
+  await tx.execute(sql`SELECT pg_advisory_xact_lock(${opts.proveedorId})`);
   const fecha = opts.fecha ?? new Date();
   const [row] = await tx
     .insert(pagosProveedorTable)
     .values({
       proveedorId: opts.proveedorId,
-      entradaId: opts.entradaId ?? null,
+      entradaId: null,
       importe: (-Math.abs(opts.importe)).toFixed(2),
       tipo: "PAGO",
       formaPago: opts.formaPago,
@@ -329,16 +397,20 @@ export async function registrarPago(
     })
     .returning();
 
+  const asignaciones = await aplicarCreditosProveedor(tx, opts.proveedorId);
   await tx.insert(auditoriaTable).values({
     usuarioId: opts.usuarioId,
     accion: "CREAR",
     entidad: "pagos_proveedor",
     entidadId: String(row!.id),
-    datosDespues: { ...row! } as Record<string, unknown>,
+    datosDespues: { ...row!, asignaciones } as Record<string, unknown>,
     ip: opts.ip ?? "desconocida",
   });
 
-  return row!;
+  const disponible = await tx.execute<{ disponible: string }>(sql`
+    SELECT (-importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.pago_proveedor_id=${row!.id}),0))::text disponible
+    FROM pagos_proveedor WHERE id=${row!.id}`);
+  return { pago: row!, asignaciones, saldoAFavor: parseFloat(disponible.rows[0]?.disponible ?? "0").toFixed(2) };
 }
 
 /**
@@ -482,7 +554,8 @@ export async function comprasPorProveedor(opts: {
     };
   }
 
-  // Sum PAGOs linked to each entrada
+  // Sum immutable applications linked to each purchase; legacy directed PAGOs
+  // remain visible as historical data but all new payments use this evidence.
   const entradaIds = compras
     .map((c) => c.entrada_id)
     .filter((id): id is number => id != null);
@@ -493,12 +566,16 @@ export async function comprasPorProveedor(opts: {
       entrada_id: number;
       abonado: string;
     }>(sql`
-      SELECT entrada_id, ABS(SUM(importe))::text AS abonado
-      FROM pagos_proveedor
-      WHERE proveedor_id = ${opts.proveedorId}
-        AND tipo = 'PAGO'
-        AND entrada_id = ANY(ARRAY[${sql.raw(entradaIds.join(","))}]::int[])
-      GROUP BY entrada_id
+      SELECT c.entrada_id,
+        (COALESCE(SUM(a.importe),0) + COALESCE((
+          SELECT ABS(SUM(old.importe)) FROM pagos_proveedor old
+          WHERE old.tipo='PAGO' AND old.entrada_id=c.entrada_id
+        ),0))::text AS abonado
+      FROM pagos_proveedor c
+      LEFT JOIN aplicaciones_pago_proveedor a ON a.compra_proveedor_id=c.id
+      WHERE c.proveedor_id = ${opts.proveedorId} AND c.tipo='COMPRA'
+        AND c.entrada_id = ANY(ARRAY[${sql.raw(entradaIds.join(","))}]::int[])
+      GROUP BY c.id,c.entrada_id
     `);
     for (const r of pagoRows.rows as Array<{ entrada_id: number; abonado: string }>) {
       pagoSums.set(r.entrada_id, parseFloat(r.abonado));

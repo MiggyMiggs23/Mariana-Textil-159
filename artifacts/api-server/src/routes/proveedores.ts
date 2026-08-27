@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import ExcelJS from "exceljs";
 import {
   CreateProveedorBody,
@@ -16,6 +16,12 @@ import {
   EstadoCuentaProveedorParams,
   EstadisticasProveedorParams,
   ExportarProveedorXlsxParams,
+  PreviewPagoProveedorBody,
+  PreviewPagoProveedorResponse,
+  GetProveedorCompraDetalleParams,
+  GetProveedorCompraDetalleResponse,
+  GetProveedorPagoDetalleParams,
+  GetProveedorPagoDetalleResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -38,6 +44,7 @@ import {
   estadisticasPeriodo,
   registrarPago,
   registrarAjuste,
+  previewPagoProveedor,
   resumenProveedores,
   analiticaGlobalProveedores,
   type EstadoCompra,
@@ -84,6 +91,32 @@ router.get(
     } catch (e) {
       next(e);
     }
+  },
+);
+
+router.post(
+  "/proveedores/:id/pagos/preview",
+  requierePermiso("proveedores_finanzas", "crear"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = RegistrarPagoProveedorParams.safeParse(req.params);
+      const body = PreviewPagoProveedorBody.safeParse(req.body);
+      if (!params.success || !body.success) {
+        res.status(400).json({ error: "Datos del pago inválidos." });
+        return;
+      }
+      const [prov] = await db.select({ id: proveedoresTable.id }).from(proveedoresTable)
+        .where(eq(proveedoresTable.id, params.data.id)).limit(1);
+      if (!prov) {
+        res.status(404).json({ error: "Proveedor no encontrado." });
+        return;
+      }
+      const preview = await previewPagoProveedor({ proveedorId: prov.id, importe: body.data.importe });
+      res.json(PreviewPagoProveedorResponse.parse({
+        ...preview,
+        asignaciones: preview.asignaciones.map((a) => ({ ...a, resultado: a.resultado === "PAGADA" ? "SALDADA" : "PARCIAL" })),
+      }));
+    } catch (e) { next(e); }
   },
 );
 
@@ -417,8 +450,22 @@ router.get(
 
       const { movimientos } = await estadoCuenta({ proveedorId: id, desde, hasta });
       const pagos = movimientos.filter((m) => m.tipo === "PAGO" || m.tipo === "AJUSTE");
-
-      res.json({ proveedorId: id, pagos });
+      const aplicaciones = await db.execute<any>(sql`
+        SELECT pago_proveedor_id, compra_proveedor_id, importe
+        FROM aplicaciones_pago_proveedor
+        WHERE pago_proveedor_id = ANY(ARRAY[${sql.raw(pagos.filter((p) => p.tipo === "PAGO").map((p) => p.id).join(",") || "0")}]::int[])`);
+      const byPago = new Map<number, any[]>();
+      for (const app of aplicaciones.rows) {
+        const idPago = Number(app.pago_proveedor_id);
+        byPago.set(idPago, [...(byPago.get(idPago) ?? []), {
+          pagoProveedorId: idPago, compraProveedorId: Number(app.compra_proveedor_id), importe: app.importe,
+        }]);
+      }
+      res.json({ proveedorId: id, pagos: pagos.map((p) => {
+        const apps = byPago.get(p.id) ?? [];
+        const applied = apps.reduce((sum, app) => sum + Number(app.importe), 0);
+        return { ...p, aplicaciones: apps, saldoDisponible: p.tipo === "PAGO" ? (-Number(p.importe) - applied).toFixed(2) : "0.00" };
+      }) });
     } catch (e) {
       next(e);
     }
@@ -499,13 +546,12 @@ router.post(
         return;
       }
 
-      const { importe, formaPago, fecha: fechaRaw, referencia, notas, entradaId } = req.body as {
+      const { importe, formaPago, fecha: fechaRaw, referencia, notas } = req.body as {
         importe?: unknown;
         formaPago?: unknown;
         fecha?: unknown;
         referencia?: unknown;
         notas?: unknown;
-        entradaId?: unknown;
       };
 
       if (typeof importe !== "number" || importe <= 0) {
@@ -537,27 +583,9 @@ router.post(
         fecha = parsed;
       }
 
-      if (entradaId != null) {
-        const eid = Number(entradaId);
-        if (isNaN(eid)) {
-          res.status(400).json({ error: "entradaId inválido." });
-          return;
-        }
-        const [entrada] = await db
-          .select({ id: entradasTable.id, proveedorId: entradasTable.proveedorId })
-          .from(entradasTable)
-          .where(eq(entradasTable.id, eid))
-          .limit(1);
-        if (!entrada) {
-          res.status(400).json({ error: "Entrada no encontrada." });
-          return;
-        }
-        if (entrada.proveedorId !== params.data.id) {
-          res.status(400).json({
-            error: "La entrada no pertenece a este proveedor.",
-          });
-          return;
-        }
+      if ("entradaId" in (req.body as Record<string, unknown>)) {
+        res.status(400).json({ error: "entradaId no se admite; el pago se reparte FIFO." });
+        return;
       }
 
       const row = await db.transaction(async (tx) =>
@@ -568,24 +596,25 @@ router.post(
           fecha,
           referencia: typeof referencia === "string" ? referencia : null,
           notas: typeof notas === "string" ? notas : null,
-          entradaId: entradaId != null ? Number(entradaId) : null,
           usuarioId: req.auth!.user.id,
           ip: getRequestIp(req),
         }),
       );
 
       res.status(201).json({
-        id: row.id,
-        proveedorId: row.proveedorId,
-        entradaId: row.entradaId ?? null,
-        importe: row.importe,
-        tipo: row.tipo,
-        formaPago: row.formaPago ?? null,
-        referencia: row.referencia ?? null,
-        fecha: row.fecha.toISOString(),
-        usuarioId: row.usuarioId,
-        notas: row.notas ?? null,
-        createdAt: row.createdAt.toISOString(),
+        id: row.pago.id,
+        proveedorId: row.pago.proveedorId,
+        entradaId: null,
+        importe: row.pago.importe,
+        tipo: row.pago.tipo,
+        formaPago: row.pago.formaPago ?? null,
+        referencia: row.pago.referencia ?? null,
+        fecha: row.pago.fecha.toISOString(),
+        usuarioId: row.pago.usuarioId,
+        notas: row.pago.notas ?? null,
+        createdAt: row.pago.createdAt.toISOString(),
+        saldoDisponible: row.saldoAFavor,
+        aplicaciones: row.asignaciones,
       });
     } catch (e) {
       next(e);
@@ -664,6 +693,54 @@ router.post(
     } catch (e) {
       next(e);
     }
+  },
+);
+
+router.get(
+  "/proveedores/:id/compras/:compraId",
+  requierePermiso("proveedores_finanzas", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = GetProveedorCompraDetalleParams.safeParse(req.params);
+      if (!params.success) { res.status(400).json({ error: "ID inválido." }); return; }
+      const compra = await db.execute<any>(sql`SELECT * FROM pagos_proveedor WHERE id=${params.data.compraId} AND proveedor_id=${params.data.id} AND tipo='COMPRA'`);
+      if (!compra.rows[0]) { res.status(404).json({ error: "Compra no encontrada." }); return; }
+      const apps = await db.execute<any>(sql`
+        SELECT a.pago_proveedor_id,a.compra_proveedor_id,a.importe,
+          p.entrada_id,e.folio,p.fecha,
+          (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x WHERE x.compra_proveedor_id=c.id),0))::text saldo
+        FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
+        JOIN pagos_proveedor c ON c.id=a.compra_proveedor_id LEFT JOIN entradas e ON e.id=c.entrada_id
+        WHERE a.compra_proveedor_id=${params.data.compraId} ORDER BY a.id`);
+      res.json(GetProveedorCompraDetalleResponse.parse({ compra: compra.rows[0], aplicaciones: apps.rows.map((a: any) => ({
+        pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
+        saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio,
+        fecha: new Date(a.fecha).toISOString(), resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL",
+      })) }));
+    } catch (e) { next(e); }
+  },
+);
+
+router.get(
+  "/proveedores/:id/pagos/:pagoId",
+  requierePermiso("proveedores_finanzas", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = GetProveedorPagoDetalleParams.safeParse(req.params);
+      if (!params.success) { res.status(400).json({ error: "ID inválido." }); return; }
+      const pago = await db.execute<any>(sql`SELECT * FROM pagos_proveedor WHERE id=${params.data.pagoId} AND proveedor_id=${params.data.id} AND tipo='PAGO'`);
+      if (!pago.rows[0]) { res.status(404).json({ error: "Pago no encontrado." }); return; }
+      const apps = await db.execute<any>(sql`
+        SELECT a.*,c.entrada_id,e.folio,c.fecha,
+          (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x WHERE x.compra_proveedor_id=c.id),0))::text saldo
+        FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor c ON c.id=a.compra_proveedor_id
+        LEFT JOIN entradas e ON e.id=c.entrada_id WHERE a.pago_proveedor_id=${params.data.pagoId} ORDER BY a.id`);
+      const saldo = await db.execute<any>(sql`SELECT (-importe-COALESCE((SELECT SUM(importe) FROM aplicaciones_pago_proveedor WHERE pago_proveedor_id=${params.data.pagoId}),0))::text saldo FROM pagos_proveedor WHERE id=${params.data.pagoId}`);
+      res.json(GetProveedorPagoDetalleResponse.parse({ pago: pago.rows[0], saldoDisponible: saldo.rows[0]?.saldo ?? "0.00",
+        aplicaciones: apps.rows.map((a: any) => ({ pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
+          saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio, fecha: new Date(a.fecha).toISOString(),
+          resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL" })) }));
+    } catch (e) { next(e); }
   },
 );
 

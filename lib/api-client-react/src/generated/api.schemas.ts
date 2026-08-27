@@ -3287,6 +3287,28 @@ export const FormaPagoProveedor = {
   OTRO: 'OTRO',
 } as const;
 
+export type AplicacionPagoProveedorResultado = typeof AplicacionPagoProveedorResultado[keyof typeof AplicacionPagoProveedorResultado];
+
+
+export const AplicacionPagoProveedorResultado = {
+  SALDADA: 'SALDADA',
+  PARCIAL: 'PARCIAL',
+} as const;
+
+export interface AplicacionPagoProveedor {
+  pagoProveedorId: number;
+  compraProveedorId: number;
+  importe: string;
+  saldoAntes: string;
+  saldoDespues: string;
+  /** @nullable */
+  entradaId?: number | null;
+  /** @nullable */
+  folio?: number | null;
+  fecha?: string;
+  resultado?: AplicacionPagoProveedorResultado;
+}
+
 export interface PagoProveedorRow {
   id: number;
   proveedorId: number;
@@ -3302,6 +3324,8 @@ export interface PagoProveedorRow {
   /** @nullable */
   notas?: string | null;
   createdAt: string;
+  aplicaciones?: AplicacionPagoProveedor[];
+  saldoDisponible?: string;
 }
 
 export interface PagoProveedorInput {
@@ -3317,11 +3341,22 @@ export interface PagoProveedorInput {
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
-  /**
-     * Opcional: liga el pago a una compra específica
-     * @nullable
-     */
-  entradaId?: number | null;
+}
+
+export interface PreviewPagoProveedor {
+  asignaciones: AplicacionPagoProveedor[];
+  saldoAFavor: string;
+}
+
+export interface ProveedorCompraDetalle {
+  compra: PagoProveedorRow;
+  aplicaciones: AplicacionPagoProveedor[];
+}
+
+export interface ProveedorPagoDetalle {
+  pago: PagoProveedorRow;
+  aplicaciones: AplicacionPagoProveedor[];
+  saldoDisponible: string;
 }
 
 export interface AjusteProveedorInput {
@@ -3391,9 +3426,9 @@ export type CompraConEstadoEstado = typeof CompraConEstadoEstado[keyof typeof Co
 
 
 export const CompraConEstadoEstado = {
-  Pagada: 'Pagada',
-  Parcial: 'Parcial',
-  Pendiente: 'Pendiente',
+  PAGADA: 'PAGADA',
+  PARCIAL: 'PARCIAL',
+  PENDIENTE: 'PENDIENTE',
 } as const;
 
 export interface CompraConEstado {
@@ -4137,9 +4172,9 @@ export type ListComprasProveedorEstado = typeof ListComprasProveedorEstado[keyof
 
 
 export const ListComprasProveedorEstado = {
-  Pagada: 'Pagada',
-  Parcial: 'Parcial',
-  Pendiente: 'Pendiente',
+  PAGADA: 'PAGADA',
+  PARCIAL: 'PARCIAL',
+  PENDIENTE: 'PENDIENTE',
 } as const;
 
 export type EstadoCuentaProveedorParams = {

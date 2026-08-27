@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { AplicacionPagoProveedor } from './aplicacionPagoProveedor';
 import type { FormaPagoProveedor } from './formaPagoProveedor';
 import type { TipoPagoProveedor } from './tipoPagoProveedor';
 
@@ -23,4 +24,6 @@ export interface PagoProveedorRow {
   /** @nullable */
   notas?: string | null;
   createdAt: Date;
+  aplicaciones?: AplicacionPagoProveedor[];
+  saldoDisponible?: string;
 }

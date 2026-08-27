@@ -627,7 +627,7 @@ paths:
           name: estado
           schema:
             type: string
-            enum: [Pagada, Parcial, Pendiente]
+            enum: [PAGADA, PARCIAL, PENDIENTE]
           description: Filtrar por estado de pago
         - in: query
           name: page
@@ -729,6 +729,58 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/pagos/preview:
+    post:
+      operationId: previewPagoProveedor
+      tags: [proveedores]
+      summary: Calcula el reparto FIFO de un pago sin persistirlo
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PagoProveedorInput" }
+      responses:
+        "200":
+          description: Reparto propuesto
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PreviewPagoProveedor" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /proveedores/{id}/compras/{compraId}:
+    get:
+      operationId: getProveedorCompraDetalle
+      tags: [proveedores]
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: path
+          name: compraId
+          required: true
+          schema: { type: number }
+      responses:
+        "200":
+          description: Compra y pagos aplicados
+          content: { application/json: { schema: { $ref: "#/components/schemas/ProveedorCompraDetalle" } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /proveedores/{id}/pagos/{pagoId}:
+    get:
+      operationId: getProveedorPagoDetalle
+      tags: [proveedores]
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: path
+          name: pagoId
+          required: true
+          schema: { type: number }
+      responses:
+        "200":
+          description: Pago y compras aplicadas
+          content: { application/json: { schema: { $ref: "#/components/schemas/ProveedorPagoDetalle" } } }
+        "404": { $ref: "#/components/responses/NotFound" }
   /proveedores/{id}/ajustes:
     post:
       operationId: registrarAjusteProveedor
@@ -6703,6 +6755,10 @@ components:
         usuarioId: { type: number }
         notas: { type: ["string", "null"] }
         createdAt: { type: string, format: date-time }
+        aplicaciones:
+          type: array
+          items: { $ref: "#/components/schemas/AplicacionPagoProveedor" }
+        saldoDisponible: { type: string }
     PagoProveedorInput:
       type: object
       required: [importe, formaPago]
@@ -6723,11 +6779,44 @@ components:
           }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
-        entradaId:
-          {
-            type: ["number", "null"],
-            description: "Opcional: liga el pago a una compra específica",
-          }
+    AplicacionPagoProveedor:
+      type: object
+      required: [pagoProveedorId, compraProveedorId, importe, saldoAntes, saldoDespues]
+      properties:
+        pagoProveedorId: { type: number }
+        compraProveedorId: { type: number }
+        importe: { type: string }
+        saldoAntes: { type: string }
+        saldoDespues: { type: string }
+        entradaId: { type: ["number", "null"] }
+        folio: { type: ["number", "null"] }
+        fecha: { type: string, format: date-time }
+        resultado: { type: string, enum: [SALDADA, PARCIAL] }
+    PreviewPagoProveedor:
+      type: object
+      required: [asignaciones, saldoAFavor]
+      properties:
+        asignaciones:
+          type: array
+          items: { $ref: "#/components/schemas/AplicacionPagoProveedor" }
+        saldoAFavor: { type: string }
+    ProveedorCompraDetalle:
+      type: object
+      required: [compra, aplicaciones]
+      properties:
+        compra: { $ref: "#/components/schemas/PagoProveedorRow" }
+        aplicaciones:
+          type: array
+          items: { $ref: "#/components/schemas/AplicacionPagoProveedor" }
+    ProveedorPagoDetalle:
+      type: object
+      required: [pago, aplicaciones, saldoDisponible]
+      properties:
+        pago: { $ref: "#/components/schemas/PagoProveedorRow" }
+        aplicaciones:
+          type: array
+          items: { $ref: "#/components/schemas/AplicacionPagoProveedor" }
+        saldoDisponible: { type: string }
     AjusteProveedorInput:
       type: object
       required: [importe, notas]
@@ -6865,7 +6954,7 @@ components:
         saldoPendiente: { type: string }
         estado:
           type: string
-          enum: [Pagada, Parcial, Pendiente]
+          enum: [PAGADA, PARCIAL, PENDIENTE]
         nombreUbicacion:
           {
             type: string,

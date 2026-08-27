@@ -1035,7 +1035,7 @@ export const listComprasProveedorQueryPageSizeMax = 200;
 export const ListComprasProveedorQueryParams = zod.object({
   "desde": zod.date().optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
   "hasta": zod.date().optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD'),
-  "estado": zod.enum(['Pagada', 'Parcial', 'Pendiente']).optional().describe('Filtrar por estado de pago'),
+  "estado": zod.enum(['PAGADA', 'PARCIAL', 'PENDIENTE']).optional().describe('Filtrar por estado de pago'),
   "page": zod.coerce.number().min(1).default(listComprasProveedorQueryPageDefault),
   "pageSize": zod.coerce.number().min(1).max(listComprasProveedorQueryPageSizeMax).default(listComprasProveedorQueryPageSizeDefault)
 })
@@ -1048,7 +1048,7 @@ export const ListComprasProveedorResponse = zod.object({
   "totalCosto": zod.string(),
   "abonado": zod.string(),
   "saldoPendiente": zod.string(),
-  "estado": zod.enum(['Pagada', 'Parcial', 'Pendiente']),
+  "estado": zod.enum(['PAGADA', 'PARCIAL', 'PENDIENTE']),
   "nombreUbicacion": zod.string().describe('Nombre de la ubicación\/bodega de recepción'),
   "totalRollos": zod.number().describe('Número de rollos recibidos en esta entrada'),
   "cantidadTotal": zod.string().describe('Suma de cantidades de todos los rollos (en la unidad del producto)'),
@@ -1144,8 +1144,7 @@ export const RegistrarPagoProveedorBody = zod.object({
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),
   "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
   "referencia": zod.string().nullish(),
-  "notas": zod.string().nullish(),
-  "entradaId": zod.number().nullish().describe('Opcional: liga el pago a una compra específica')
+  "notas": zod.string().nullish()
 })
 
 export const RegistrarPagoProveedorResponse = zod.object({
@@ -1159,7 +1158,145 @@ export const RegistrarPagoProveedorResponse = zod.object({
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
   "notas": zod.string().nullish(),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})).optional(),
+  "saldoDisponible": zod.string().optional()
+})
+
+
+/**
+ * @summary Calcula el reparto FIFO de un pago sin persistirlo
+ */
+export const PreviewPagoProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const previewPagoProveedorBodyImporteMin = 0.01;
+
+
+
+export const PreviewPagoProveedorBody = zod.object({
+  "importe": zod.number().min(previewPagoProveedorBodyImporteMin).describe('Importe positivo; se guarda como negativo internamente'),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),
+  "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
+  "referencia": zod.string().nullish(),
+  "notas": zod.string().nullish()
+})
+
+export const PreviewPagoProveedorResponse = zod.object({
+  "asignaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})),
+  "saldoAFavor": zod.string()
+})
+
+
+export const GetProveedorCompraDetalleParams = zod.object({
+  "id": zod.coerce.number(),
+  "compraId": zod.coerce.number()
+})
+
+export const GetProveedorCompraDetalleResponse = zod.object({
+  "compra": zod.object({
+  "id": zod.number(),
+  "proveedorId": zod.number(),
+  "entradaId": zod.number().nullish(),
+  "importe": zod.string(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "referencia": zod.string().nullish(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})).optional(),
+  "saldoDisponible": zod.string().optional()
+}),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+}))
+})
+
+
+export const GetProveedorPagoDetalleParams = zod.object({
+  "id": zod.coerce.number(),
+  "pagoId": zod.coerce.number()
+})
+
+export const GetProveedorPagoDetalleResponse = zod.object({
+  "pago": zod.object({
+  "id": zod.number(),
+  "proveedorId": zod.number(),
+  "entradaId": zod.number().nullish(),
+  "importe": zod.string(),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "referencia": zod.string().nullish(),
+  "fecha": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})).optional(),
+  "saldoDisponible": zod.string().optional()
+}),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})),
+  "saldoDisponible": zod.string()
 })
 
 
@@ -1190,7 +1327,19 @@ export const RegistrarAjusteProveedorResponse = zod.object({
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
   "notas": zod.string().nullish(),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "aplicaciones": zod.array(zod.object({
+  "pagoProveedorId": zod.number(),
+  "compraProveedorId": zod.number(),
+  "importe": zod.string(),
+  "saldoAntes": zod.string(),
+  "saldoDespues": zod.string(),
+  "entradaId": zod.number().nullish(),
+  "folio": zod.number().nullish(),
+  "fecha": zod.coerce.date().optional(),
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+})).optional(),
+  "saldoDisponible": zod.string().optional()
 })
 
 

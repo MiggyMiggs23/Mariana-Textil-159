@@ -14,6 +14,7 @@ import {
   ensureProductPricingSchema,
   pool,
   ensureAuditSchema,
+  ensureAplicacionesPagoProveedorSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -34,6 +35,7 @@ if (Number.isNaN(port) || port <= 0) {
 
 async function startServer() {
   await ensureAuditSchema(pool);
+  await ensureAplicacionesPagoProveedorSchema(pool);
   logger.info("Esquema de auditoría verificado");
   await ensureEstadoRolloSchema(pool);
   await ensureProductMeterSchema(pool);

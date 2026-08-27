@@ -36,10 +36,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert, Search } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { formatNumber } from "@workspace/number-format";
+import { ProveedorPagoDialog } from "@/components/proveedor-pago-dialog";
+import { ProveedorCompraDetalle } from "@/components/proveedor-compra-detalle";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -128,7 +130,8 @@ export default function ProveedorDetail() {
 
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'editar');
   const canToggleActive = user?.rol === Role.ADMIN; // Admins only for active status? Or keep based on rule
-  const isAdmin = user?.rol === Role.ADMIN;
+  const canVerFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, "ver");
+  const canCrearFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, "crear");
   const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== "SUPERVISOR";
 
   const handleSave = () => {
@@ -186,7 +189,7 @@ export default function ProveedorDetail() {
   });
 
   const [isPagoOpen, setIsPagoOpen] = useState(false);
-  const [pagoPreselectedEntrada, setPagoPreselectedEntrada] = useState<number | null>(null);
+  const [detalleCompraId, setDetalleCompraId] = useState<number | null>(null);
 
   const [isAjusteOpen, setIsAjusteOpen] = useState(false);
 
@@ -317,7 +320,7 @@ export default function ProveedorDetail() {
                     {formatNumber(estadoCuenta?.saldoActual || "0", { kind: "money" })}
                   </span>
                   {estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
-                    <Button size="sm" className="mt-3 w-full" onClick={() => { setPagoPreselectedEntrada(null); setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
+                    <Button size="sm" className="mt-3 w-full" onClick={() => { setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
                       Abonar a cuenta
                     </Button>
                   )}
@@ -511,11 +514,11 @@ export default function ProveedorDetail() {
                         <TableRow
                           key={compra.entradaId}
                           className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                          onClick={() => handleOpenEntradaDocument(compra.entradaId)}
+                          onClick={() => setDetalleCompraId(compra.entradaId)}
                           onKeyDown={(event) => {
                             if (event.key === "Enter" || event.key === " ") {
                               event.preventDefault();
-                              handleOpenEntradaDocument(compra.entradaId);
+                              setDetalleCompraId(compra.entradaId);
                             }
                           }}
                           tabIndex={0}
@@ -548,23 +551,11 @@ export default function ProveedorDetail() {
                           <TableCell className="text-right text-muted-foreground">{formatNumber(compra.abonado, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-semibold">{formatNumber(compra.saldoPendiente, { kind: "money" })}</TableCell>
                           <TableCell>
-                            <Badge variant={compra.estado === CompraConEstadoEstado.Pagada ? "default" : compra.estado === CompraConEstadoEstado.Parcial ? "secondary" : "destructive"}>
+                            <Badge variant={compra.estado === CompraConEstadoEstado.PAGADA ? "default" : compra.estado === CompraConEstadoEstado.PARCIAL ? "secondary" : "destructive"}>
                               {compra.estado}
                             </Badge>
                           </TableCell>
-                          {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
-                            <TableCell>
-                              {compra.estado !== CompraConEstadoEstado.Pagada && (
-                                <Button size="sm" variant="ghost" className="h-8 w-full text-xs" onClick={(event) => {
-                                  event.stopPropagation();
-                                  setPagoPreselectedEntrada(compra.entradaId);
-                                  setIsPagoOpen(true);
-                                }}>
-                                  Pagar
-                                </Button>
-                              )}
-                            </TableCell>
-                          )}
+
                         </TableRow>
                       ))
                     )}
@@ -594,7 +585,7 @@ export default function ProveedorDetail() {
                   <Button variant="outline" onClick={() => setIsAjusteOpen(true)} className="text-muted-foreground" data-testid="button-registrar-ajuste">
                     Registrar Ajuste
                   </Button>
-                  <Button onClick={() => { setPagoPreselectedEntrada(null); setIsPagoOpen(true); }} data-testid="button-registrar-pago">
+                  <Button onClick={() => { setIsPagoOpen(true); }} data-testid="button-registrar-pago">
                     <Plus className="w-4 h-4 mr-2" />
                     Registrar Pago
                   </Button>
@@ -1016,16 +1007,28 @@ export default function ProveedorDetail() {
         </section>
       </div>
 
-      {isAdmin && (
-        <PagoDialog
+      {canVerFinanzas && (
+        <>
+          <ProveedorPagoDialog
           open={isPagoOpen}
-          onClose={() => setIsPagoOpen(false)}
+          onOpenChange={setIsPagoOpen}
           proveedorId={provId}
-          entradaId={pagoPreselectedEntrada}
+          saldoActual={estadoCuenta?.saldoActual}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: getListComprasProveedorQueryKey(provId) });
+            queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(provId) });
+          }}
         />
+        <ProveedorCompraDetalle
+          open={!!detalleCompraId}
+          onOpenChange={(val) => !val && setDetalleCompraId(null)}
+          proveedorId={provId}
+          compraId={detalleCompraId || 0}
+        />
+        </>
       )}
 
-      {isAdmin && (
+      {canVerFinanzas && (
         <AjusteDialog
           open={isAjusteOpen}
           onClose={() => setIsAjusteOpen(false)}
@@ -1036,146 +1039,7 @@ export default function ProveedorDetail() {
   );
 }
 
-function PagoDialog({ open, onClose, proveedorId, entradaId }: { open: boolean, onClose: () => void, proveedorId: number, entradaId: number | null }) {
-  const registrarPago = useRegistrarPagoProveedor();
-  const queryClient = useQueryClient();
 
-  const [formData, setFormData] = useState<{
-    importe: string;
-    formaPago: FormaPagoProveedor;
-    fecha: string;
-    referencia: string;
-    notas: string;
-  }>({
-    importe: "",
-    formaPago: FormaPagoProveedor.TRANSFERENCIA,
-    fecha: new Date().toISOString().split("T")[0],
-    referencia: "",
-    notas: ""
-  });
-
-  useEffect(() => {
-    if (open) {
-      setFormData({
-        importe: "",
-        formaPago: FormaPagoProveedor.TRANSFERENCIA,
-        fecha: new Date().toISOString().split("T")[0],
-        referencia: "",
-        notas: ""
-      });
-    }
-  }, [open]);
-
-  const handleSubmit = () => {
-    const importe = parseFloat(formData.importe);
-    if (isNaN(importe) || importe <= 0) {
-      toast.error("Importe inválido", { description: "El importe debe ser mayor a 0." });
-      return;
-    }
-
-    registrarPago.mutate({
-      id: proveedorId,
-      data: {
-        importe: importe,
-        formaPago: formData.formaPago,
-        fecha: new Date(`${formData.fecha}T12:00:00-06:00`).toISOString(),
-        referencia: formData.referencia.trim() || null,
-        notas: formData.notas.trim() || null,
-        entradaId: entradaId
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Pago registrado exitosamente");
-        // Invalidar las queries relevantes
-        queryClient.invalidateQueries({ queryKey: getListProveedoresQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getListComprasProveedorQueryKey(proveedorId) });
-        queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(proveedorId) });
-        queryClient.invalidateQueries({ queryKey: getEstadisticasProveedorQueryKey(proveedorId) });
-        onClose();
-      },
-      onError: (err: any) => {
-        toast.error("Error al registrar pago", { description: getErrorMessage(err) });
-      }
-    });
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
-      <DialogContent className="sm:max-w-[450px]">
-        <DialogHeader>
-          <DialogTitle>Registrar Pago</DialogTitle>
-          <DialogDescription>
-            {entradaId ? `Abonar a la orden de compra #${formatNumber(entradaId, { kind: "identifier" })}` : "Abono general a la cuenta del proveedor"}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Importe a Pagar *</Label>
-              <Input
-                type="number" step="0.01" min="0.01"
-                value={formData.importe}
-                onChange={e => setFormData({...formData, importe: e.target.value})}
-                placeholder="0.00"
-                data-testid="input-pago-importe"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Fecha del Pago</Label>
-              <Input
-                type="date"
-                value={formData.fecha}
-                onChange={e => setFormData({...formData, fecha: e.target.value})}
-                data-testid="input-pago-fecha"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Forma de Pago</Label>
-            <Select value={formData.formaPago} onValueChange={(v: FormaPagoProveedor) => setFormData({...formData, formaPago: v})}>
-              <SelectTrigger data-testid="select-pago-forma"><SelectValue/></SelectTrigger>
-              <SelectContent>
-                <SelectItem value={FormaPagoProveedor.TRANSFERENCIA}>Transferencia</SelectItem>
-                <SelectItem value={FormaPagoProveedor.CHEQUE}>Cheque</SelectItem>
-                <SelectItem value={FormaPagoProveedor.EFECTIVO}>Efectivo</SelectItem>
-                <SelectItem value={FormaPagoProveedor.OTRO}>Otro</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Referencia (OP/Cheque)</Label>
-            <Input
-              value={formData.referencia}
-              onChange={e => setFormData({...formData, referencia: e.target.value})}
-              placeholder="Ej. OP-1234567"
-              data-testid="input-pago-referencia"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Notas</Label>
-            <Input
-              value={formData.notas}
-              onChange={e => setFormData({...formData, notas: e.target.value})}
-              placeholder="Comentarios adicionales"
-              data-testid="input-pago-notas"
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSubmit} disabled={registrarPago.isPending} data-testid="button-confirm-pago">
-            {registrarPago.isPending ? "Procesando..." : "Confirmar Pago"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 function AjusteDialog({ open, onClose, proveedorId }: { open: boolean, onClose: () => void, proveedorId: number }) {
   const registrarAjuste = useRegistrarAjusteProveedor();

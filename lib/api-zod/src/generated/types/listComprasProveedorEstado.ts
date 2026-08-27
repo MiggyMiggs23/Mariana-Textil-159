@@ -10,7 +10,7 @@ export type ListComprasProveedorEstado = typeof ListComprasProveedorEstado[keyof
 
 
 export const ListComprasProveedorEstado = {
-  Pagada: 'Pagada',
-  Parcial: 'Parcial',
-  Pendiente: 'Pendiente',
+  PAGADA: 'PAGADA',
+  PARCIAL: 'PARCIAL',
+  PENDIENTE: 'PENDIENTE',
 } as const;
