@@ -1,0 +1,250 @@
+# PARTE 7 — Ticket o Nota, notas sin precios y transporte
+
+Parte nueva. **No adelantes trabajo de otras tareas.** Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## Contexto del negocio
+
+Mariana Textil entrega mercancía de dos formas:
+
+- **El cliente se lleva la mercancía del mostrador.** Es la operación diaria.
+- **La mercancía sale a domicilio en camioneta.** Hay cuatro camionetas propias, a veces más con fletes contratados.
+
+Hoy el sistema decide qué documento imprimir según la forma de pago: crédito imprime nota, contado imprime ticket. **Eso está incompleto**, porque una venta de contado que se va en camioneta también necesita nota.
+
+La decisión real no es cómo se paga, sino **cómo sale la mercancía**. Y eso lo sabe el vendedor al empezar la venta.
+
+---
+
+## BLOQUE 1 — Elegir el documento antes de vender
+
+Al entrar a **Ventas / POS**, antes de la pantalla actual, aparece una selección con **dos botones grandes**:
+
+| Botón | Cuándo |
+|---|---|
+| **TICKET** | El cliente se lleva la mercancía del mostrador |
+| **NOTA** | La mercancía sale a domicilio |
+
+La interfaz debe ser muy simple: dos botones, nada más. Nada de explicaciones largas ni de opciones adicionales en esa pantalla.
+
+Al elegir, se entra al POS **tal como está hoy**. El carrito, el escaneo, el precio libre, las líneas de rollo y metreadas, el agrupamiento en secciones: nada de eso cambia.
+
+### Qué cambia con NOTA
+
+- **El cliente es obligatorio.** No se puede cerrar la venta sin elegirlo.
+- Aparece la opción de imprimir **con precios** o **sin precios** (Bloque 2).
+
+### Qué cambia con TICKET
+
+Nada. Funciona igual que hoy.
+
+### Regla que se conserva
+
+**Una venta a crédito siempre emite Nota**, aunque el cliente se la lleve del mostrador. Se va debiendo y necesita el papel con su fecha de vencimiento.
+
+Si el vendedor eligió TICKET y luego cobra a crédito, el sistema cambia el documento a Nota y lo indica en pantalla. **No lo rechaces; corrígelo y avisa.**
+
+### Venta a Público en NOTA
+
+El cliente **Venta a Público** ya existe en el catálogo y es una opción válida en Nota.
+
+Al elegirlo, se habilitan dos campos de texto libre —**nombre de quien recibe** y **domicilio de entrega**— que se imprimen en la nota y quedan guardados en el documento.
+
+**No se crea un cliente.** Es solo para saber a quién se le mandó. No aparece en el catálogo, no genera crédito, no acumula historial.
+
+---
+
+## BLOQUE 2 — Nota y Nota de Productos
+
+La nota se imprime en dos variantes. **Quien elige es la persona que opera el POS**, al momento de la venta.
+
+| Variante | Contenido |
+|---|---|
+| **Nota** | Con precios: precio unitario, subtotal por sección, IVA si aplica, total |
+| **Nota de Productos** | Sin ningún precio: solo tela, color, SKU, serie, cantidad y unidad, con totales de rollos y de metros o kilos |
+
+La segunda es lo que en México se llama una remisión. Sirve cuando quien recibe en la bodega del cliente es un almacenista que no tiene por qué ver los precios que le da su patrón.
+
+### Regla
+
+En la **Nota de Productos no debe aparecer ningún importe**, ni siquiera el total. Y el filtrado se hace **en el servidor**, quitando los campos de la respuesta, no ocultándolos con estilos.
+
+### La copia interna no cambia
+
+**Tu copia siempre lleva precios y siempre lleva QR**, sin importar cuál variante se llevó el cliente. Es tu control.
+
+Se conservan las dos copias con sus rótulos: **COPIA INTERNA** con QR, **COPIA CLIENTE** sin QR.
+
+### Aplica a contado y a crédito
+
+Las dos variantes están disponibles en cualquier forma de pago.
+
+### ⚠️ Agrupación de líneas al imprimir
+
+**Esto aplica al TICKET y a las DOS variantes de NOTA. No lo cambies ni lo reinterpretes.**
+
+En el papel, las líneas de rollo **se agrupan por producto** —tela y color, es decir por SKU— y se imprime **la cantidad de rollos**, no cada rollo por separado.
+
+Ejemplo de lo que debe salir:
+
+```
+ROLLOS
+  Tafetán Blanco    TAF-BLA    3 rollos    150.000 METRO
+  Razo Verde        RAZ-VER    2 rollos    100.000 METRO
+```
+
+**Los números de serie NO se imprimen.** Ni en el ticket, ni en la Nota, ni en la Nota de Productos.
+
+Razón: un ticket de 40 rollos con su serie cada uno son cuatro hojas que nadie lee. Al cliente le importa cuántos rollos de cada tela se lleva.
+
+**Esta regla ya está implementada y funcionando.** Consérvala tal cual al agregar las variantes nuevas. Si al construir la Nota de Productos empiezas de cero en vez de reutilizar el componente existente, vas a perderla sin darte cuenta.
+
+**Dónde sí se conserva el detalle por rollo:**
+
+- En el detalle del documento **dentro del sistema**, donde sí se ven las series
+- En la **hoja de salida** entre sitios, que es un documento de control interno y necesita rollo por rollo
+- En la **hoja del viaje**, por la misma razón
+
+Es decir: **al cliente se le resume, al control interno se le detalla.**
+
+### Preferencia por cliente
+
+Agrega a la ficha del cliente una preferencia: **"Recibe nota sin precios"**, apagada por defecto.
+
+Cuando esté encendida, la variante sin precios viene **preseleccionada** al elegir a ese cliente. **El operador siempre puede cambiarla**; es una sugerencia, no una regla.
+
+---
+
+## BLOQUE 3 — Catálogo de camionetas
+
+Nueva pantalla, en la sección de CONFIGURACIÓN o donde encaje mejor con la barra lateral actual.
+
+Campos:
+
+- Nombre o alias con el que se le conoce
+- Placas
+- Marca y modelo, opcionales
+- **Tipo: propia o contratada**
+- Activa o inactiva
+
+**Nada se borra.** Una camioneta que sale de servicio se marca inactiva y deja de aparecer en los selectores, pero conserva su historial de viajes.
+
+Solo ADMIN y SOPORTE pueden editar el catálogo.
+
+---
+
+## BLOQUE 4 — Catálogo de choferes
+
+Los choferes son de planta, así que va catálogo, no texto libre.
+
+Campos:
+
+- Nombre completo
+- Teléfono
+- Activo o inactivo
+
+Mismas reglas: nada se borra, se marca inactivo.
+
+Si en algún momento maneja alguien que no está en el catálogo, se da de alta primero. **No dejes un campo de texto libre paralelo**, o en un año vas a tener el mismo chofer escrito de cinco formas distintas.
+
+---
+
+## BLOQUE 5 — Viajes
+
+Nueva pestaña **Viajes**, dentro de la sección de OPERACIÓN.
+
+### Qué se registra
+
+Un viaje se captura **al salir**:
+
+- Camioneta, del catálogo
+- Chofer, del catálogo
+- Sitio de origen
+- Fecha y hora de salida
+- Destino: uno o varios, según los documentos que lleve
+- Observaciones, opcional
+
+### Los documentos van anexados
+
+**Un viaje puede llevar varios documentos.** Una camioneta sale con dos notas de cliente y una salida a Cruces, y los tres cuelgan del mismo viaje.
+
+Se anexan:
+
+- **Notas** de venta, de cualquier cliente
+- **Salidas** entre sitios
+
+Al anexar, el viaje muestra el resumen: cuántos documentos, cuántos rollos, cuántos metros y kilos por separado, y a qué destinos.
+
+### Lo que NO se hace
+
+- **El viaje no se cierra.** No hay estado de "regresó". Se registra la salida y ya.
+- **No hay confirmación de entrega.** La constancia es la nota firmada en papel.
+- **No hay ubicación en vivo.** Eso requiere un aparato en cada camión y no está en alcance. Deja el diseño de modo que se pueda agregar después colgándole posiciones al viaje, sin rehacer nada.
+
+### El campo de transportista
+
+La salida entre sitios ya tiene un campo `transportista` de texto libre.
+
+Cuando una salida se anexa a un viaje, **el chofer y la camioneta vienen del viaje**, no de ese campo. Evita que el mismo dato viva en dos lugares.
+
+Conserva el campo para las salidas que no van en viaje —las que se llevan a pie o en un vehículo particular— pero **si la salida pertenece a un viaje, muestra los datos del viaje y no permitas editarlo aparte.**
+
+### Consulta
+
+La lista de viajes se filtra por fecha, camioneta, chofer, sitio de origen y destino.
+
+Al abrir un viaje: sus datos, sus documentos anexados, y desde cada documento se puede saltar al detalle.
+
+Y al revés: **desde una nota o una salida, se debe poder ver en qué viaje se fue.**
+
+### Impresión
+
+El viaje genera una hoja imprimible con la lista de documentos que lleva, para que el chofer traiga un solo papel con todo lo que carga. Con folio por sitio, como los demás documentos.
+
+---
+
+## BLOQUE 6 — Verificación
+
+**Ticket o Nota**
+- Los dos botones aparecen antes del POS y son la única decisión de esa pantalla
+- Con TICKET, el POS funciona idéntico a hoy
+- Con NOTA, el cliente es obligatorio
+- Una venta a crédito emite Nota aunque se haya elegido TICKET, y lo avisa
+- Venta a Público permite capturar nombre y domicilio sin crear cliente
+
+**Las dos variantes**
+- La Nota de Productos **no trae ningún importe**, y el filtrado ocurre en el servidor
+- La copia interna siempre trae precios y QR, en las dos variantes
+- La preferencia del cliente preselecciona pero no obliga
+- Funciona en contado y en crédito
+
+**Agrupación al imprimir**
+- Un ticket con 5 rollos del mismo SKU imprime **un renglón que dice 5 rollos**, no cinco renglones
+- **Ningún número de serie aparece** en el ticket ni en las dos variantes de nota
+- La agrupación funciona igual en las tres: ticket, Nota y Nota de Productos
+- El detalle por rollo **sí** se conserva en el documento dentro del sistema, en la hoja de salida y en la hoja del viaje
+
+**Catálogos**
+- Camionetas y choferes se dan de alta, se editan y se marcan inactivos
+- Un registro inactivo no aparece en selectores pero conserva su historial
+- No existe ningún campo de texto libre paralelo para chofer
+
+**Viajes**
+- Un viaje con tres documentos —dos notas y una salida— se registra y los muestra
+- El resumen separa metros de kilos
+- Desde el documento se puede llegar al viaje y al revés
+- Una salida anexada a un viaje toma el chofer del viaje y no permite editarlo aparte
+- La hoja del viaje se imprime con su folio
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> El documento de venta se elige antes de vender: TICKET cuando el cliente se lleva la mercancía del mostrador, NOTA cuando sale a domicilio. Es una decisión sobre cómo sale la mercancía, no sobre cómo se paga; aplica a contado y a crédito. Una venta a crédito siempre emite Nota. La Nota se imprime con precios o como Nota de Productos sin ningún importe, a elección del operador; el filtrado de importes se hace en el servidor. La copia interna siempre lleva precios y QR. **En el ticket y en las dos variantes de nota, las líneas de rollo se agrupan por producto mostrando la cantidad de rollos, y los números de serie no se imprimen; el detalle por rollo se conserva solo en el documento dentro del sistema, en la hoja de salida y en la hoja del viaje.** Los viajes registran camioneta, chofer, origen y los documentos que se llevaron; no se cierran, no confirman entrega y no rastrean ubicación. Cuando una salida pertenece a un viaje, el chofer viene del viaje y no del campo de transportista.
