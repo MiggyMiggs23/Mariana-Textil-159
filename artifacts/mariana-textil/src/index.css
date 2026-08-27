@@ -47,6 +47,15 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
+
+  --color-report-header: hsl(var(--report-header));
+  --color-report-header-foreground: hsl(var(--report-header-foreground));
+  --color-report-stripe: hsl(var(--report-stripe));
+  --color-report-accent-warm: hsl(var(--report-accent-warm));
+  --color-report-accent-warm-bg: hsl(var(--report-accent-warm-bg));
+  --color-report-positive: hsl(var(--report-positive));
+  --color-report-negative: hsl(var(--report-negative));
+  --color-report-text-muted: hsl(var(--report-text-muted));
 }
 
 :root {
@@ -79,6 +88,16 @@
   --sidebar-accent: 228 43% 24%;
   --sidebar-accent-foreground: 210 40% 98%;
   --sidebar-ring: 232 68% 75%;
+
+  /* Reportes Palette */
+  --report-header: 228 51% 15%; /* Azul profundo (navy) */
+  --report-header-foreground: 0 0% 100%;
+  --report-stripe: 210 20% 97%; /* Azul/gris muy claro */
+  --report-accent-warm: 25 70% 50%; /* Cobre/tierra para acentos */
+  --report-accent-warm-bg: 25 30% 95%; /* Fondo cálido muy suave */
+  --report-positive: 150 40% 35%; /* Verde sobrio */
+  --report-negative: 350 45% 45%; /* Rojo sobrio */
+  --report-text-muted: 30 15% 45%; /* Gris neutro cálido */
 
   --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --radius: 0.375rem; /* Firm, slightly rounded */
@@ -114,6 +133,16 @@
   --sidebar-accent: 217.2 32.6% 17.5%;
   --sidebar-accent-foreground: 210 40% 98%;
   --sidebar-ring: 228 69% 55%;
+
+  /* Reportes Palette (Dark Mode) */
+  --report-header: 228 40% 12%; 
+  --report-header-foreground: 0 0% 100%;
+  --report-stripe: 226 20% 8%; 
+  --report-accent-warm: 25 65% 55%;
+  --report-accent-warm-bg: 25 40% 12%; 
+  --report-positive: 150 40% 45%;
+  --report-negative: 350 45% 55%;
+  --report-text-muted: 30 15% 65%;
 }
 
 @layer base {
