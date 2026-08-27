@@ -36,7 +36,7 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber } from "@workspace/number-format";
-import { groupTicketLines } from "@/lib/ticket-lines";
+import { groupTicketLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 
 export default function TicketDetailPage() {
@@ -205,36 +205,8 @@ export default function TicketDetailPage() {
     );
   }
 
-  const groupedLines = groupTicketLines(ticket.lineas);
-  const displayLines = showRolls
-    ? ticket.lineas.map((linea) => ({
-        rowKey: `line-${linea.id}`,
-        skuProducto: linea.skuProducto,
-        telaProducto: linea.telaProducto,
-        colorProducto: linea.colorProducto,
-        unidadProducto: linea.unidadProducto,
-        precioUnitario: linea.precioUnitario,
-        rollos: 1,
-        cantidad: linea.cantidad,
-        importe: linea.importe,
-        costoTotalCongelado: linea.costoTotalCongelado,
-        margen: linea.margen,
-        serieRollo: linea.serieRollo,
-      }))
-    : groupedLines.map((linea) => ({
-        rowKey: `group-${linea.key}`,
-        skuProducto: linea.skuProducto,
-        telaProducto: linea.telaProducto,
-        colorProducto: linea.colorProducto,
-        unidadProducto: linea.unidadProducto,
-        precioUnitario: linea.precioUnitario,
-        rollos: linea.rollos,
-        cantidad: linea.cantidad,
-        importe: linea.importe,
-        costoTotalCongelado: linea.costoTotalCongelado,
-        margen: linea.margen,
-        serieRollo: null,
-      }));
+  const { rollos: uiRollos, metraje: uiMetraje } = groupTicketLinesByModality(ticket.lineas, showRolls);
+  const { rollos: printRollos, metraje: printMetraje } = groupTicketLinesByModality(ticket.lineas, false);
   const customerName =
     ticket.clienteId === 1 || !ticket.clienteId
       ? "VENTA AL PÚBLICO"
@@ -362,53 +334,142 @@ export default function TicketDetailPage() {
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y">
-              {displayLines.map((linea) => (
-                <tr key={linea.rowKey} className="hover:bg-muted/10">
-                  <td className="px-4 py-3">
-                    <div className="font-medium text-foreground">
-                      {linea.telaProducto} - {linea.colorProducto}
-                    </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-muted-foreground">
-                        {linea.skuProducto}
-                      </span>
-                      {linea.serieRollo && (
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
-                          {linea.serieRollo}
+            {uiRollos.lines.length > 0 && (
+              <tbody className="divide-y border-b">
+                <tr>
+                  <td colSpan={(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) ? 7 : 5} className="bg-muted/20 px-4 py-2 font-bold text-foreground">
+                    ROLLOS
+                  </td>
+                </tr>
+                {uiRollos.lines.map((linea) => (
+                  <tr key={linea.key} className="hover:bg-muted/10">
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-foreground">
+                        {linea.telaProducto} - {linea.colorProducto}
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-muted-foreground">
+                          {linea.skuProducto}
                         </span>
-                      )}
-                    </div>
+                        {linea.serieRollo && (
+                          <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
+                            {linea.serieRollo}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right tabular-nums">
+                      {linea.rollos}
+                    </td>
+                    <td className="px-4 py-3 text-right font-mono">
+                      {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {formatNumber(linea.precioUnitario, { kind: "money" })}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold">
+                      {formatNumber(linea.importe, { kind: "money" })}
+                    </td>
+                    {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
+                      <>
+                        <td className="px-4 py-3 text-right">
+                          {linea.costoTotalCongelado == null
+                            ? "—"
+                            : formatNumber(linea.costoTotalCongelado, { kind: "money" })}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {linea.margen == null
+                            ? "—"
+                            : formatNumber(linea.margen, { kind: "money" })}
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+                <tr className="bg-muted/5">
+                  <td colSpan={4} className="px-4 py-3 text-right font-semibold text-muted-foreground">
+                    Subtotal Rollos
                   </td>
-                  <td className="px-4 py-3 text-right tabular-nums">
-                    {linea.rollos}
-                  </td>
-                  <td className="px-4 py-3 text-right font-mono">
-                    {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    {formatNumber(linea.precioUnitario, { kind: "money" })}
-                  </td>
-                  <td className="px-4 py-3 text-right font-semibold">
-                    {formatNumber(linea.importe, { kind: "money" })}
+                  <td className="px-4 py-3 text-right font-bold">
+                    {formatNumber(uiRollos.subtotal, { kind: "money" })}
                   </td>
                   {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
                     <>
-                      <td className="px-4 py-3 text-right">
-                        {linea.costoTotalCongelado == null
-                          ? "—"
-                          : formatNumber(linea.costoTotalCongelado, { kind: "money" })}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        {linea.margen == null
-                          ? "—"
-                          : formatNumber(linea.margen, { kind: "money" })}
-                      </td>
+                      <td></td>
+                      <td></td>
                     </>
                   )}
                 </tr>
-              ))}
-            </tbody>
+              </tbody>
+            )}
+            {uiMetraje.lines.length > 0 && (
+              <tbody className="divide-y border-b">
+                <tr>
+                  <td colSpan={(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) ? 7 : 5} className="bg-muted/20 px-4 py-2 font-bold text-foreground">
+                    METRAJE
+                  </td>
+                </tr>
+                {uiMetraje.lines.map((linea) => (
+                  <tr key={linea.key} className="hover:bg-muted/10">
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-foreground">
+                        {linea.telaProducto} - {linea.colorProducto}
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-muted-foreground">
+                          {linea.skuProducto}
+                        </span>
+                        {linea.serieRollo && (
+                          <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
+                            {linea.serieRollo}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right tabular-nums">
+                      {linea.rollos}
+                    </td>
+                    <td className="px-4 py-3 text-right font-mono">
+                      {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {formatNumber(linea.precioUnitario, { kind: "money" })}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold">
+                      {formatNumber(linea.importe, { kind: "money" })}
+                    </td>
+                    {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
+                      <>
+                        <td className="px-4 py-3 text-right">
+                          {linea.costoTotalCongelado == null
+                            ? "—"
+                            : formatNumber(linea.costoTotalCongelado, { kind: "money" })}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {linea.margen == null
+                            ? "—"
+                            : formatNumber(linea.margen, { kind: "money" })}
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+                <tr className="bg-muted/5">
+                  <td colSpan={4} className="px-4 py-3 text-right font-semibold text-muted-foreground">
+                    Subtotal Metraje
+                  </td>
+                  <td className="px-4 py-3 text-right font-bold">
+                    {formatNumber(uiMetraje.subtotal, { kind: "money" })}
+                  </td>
+                  {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) && (
+                    <>
+                      <td></td>
+                      <td></td>
+                    </>
+                  )}
+                </tr>
+              </tbody>
+            )}
           </table>
         </CardContent>
         <CardFooter className="bg-muted/20 border-t p-6 flex-col items-end gap-2">
@@ -467,28 +528,68 @@ export default function TicketDetailPage() {
                 <th className="text-right font-normal pb-1">Imp</th>
               </tr>
             </thead>
-            <tbody>
-              {groupedLines.map((linea) => (
-                <tr key={linea.key}>
-                  <td className="py-1">
-                    <div className="font-semibold">
-                      {linea.telaProducto} {linea.colorProducto}
-                    </div>
-                    <div className="text-[9px]">
-                      {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
-                      {" · "}
-                      {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
-                    </div>
-                  </td>
-                  <td className="text-right align-top py-1 font-mono">
-                    {linea.rollos}
-                  </td>
-                  <td className="text-right align-top py-1">
-                    {formatNumber(linea.importe, { kind: "money" })}
-                  </td>
+            {printRollos.lines.length > 0 && (
+              <tbody className="border-b border-black/10">
+                <tr>
+                  <td colSpan={3} className="py-1 font-bold">ROLLOS</td>
                 </tr>
-              ))}
-            </tbody>
+                {printRollos.lines.map((linea) => (
+                  <tr key={linea.key}>
+                    <td className="py-1">
+                      <div className="font-semibold">
+                        {linea.telaProducto} {linea.colorProducto}
+                      </div>
+                      <div className="text-[9px]">
+                        {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                        {" · "}
+                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
+                      </div>
+                    </td>
+                    <td className="text-right align-top py-1 font-mono">
+                      {linea.rollos}
+                    </td>
+                    <td className="text-right align-top py-1">
+                      {formatNumber(linea.importe, { kind: "money" })}
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td colSpan={2} className="py-1 text-right font-semibold">Subtotal Rollos</td>
+                  <td className="py-1 text-right font-semibold">{formatNumber(printRollos.subtotal, { kind: "money" })}</td>
+                </tr>
+              </tbody>
+            )}
+            {printMetraje.lines.length > 0 && (
+              <tbody className="border-b border-black/10">
+                <tr>
+                  <td colSpan={3} className="py-1 font-bold">METRAJE</td>
+                </tr>
+                {printMetraje.lines.map((linea) => (
+                  <tr key={linea.key}>
+                    <td className="py-1">
+                      <div className="font-semibold">
+                        {linea.telaProducto} {linea.colorProducto}
+                      </div>
+                      <div className="text-[9px]">
+                        {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                        {" · "}
+                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
+                      </div>
+                    </td>
+                    <td className="text-right align-top py-1 font-mono">
+                      {linea.rollos}
+                    </td>
+                    <td className="text-right align-top py-1">
+                      {formatNumber(linea.importe, { kind: "money" })}
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td colSpan={2} className="py-1 text-right font-semibold">Subtotal Metraje</td>
+                  <td className="py-1 text-right font-semibold">{formatNumber(printMetraje.subtotal, { kind: "money" })}</td>
+                </tr>
+              </tbody>
+            )}
           </table>
         </div>
 
@@ -570,30 +671,72 @@ export default function TicketDetailPage() {
               <th className="border border-gray-300 p-2 text-right">Importe</th>
             </tr>
           </thead>
-          <tbody>
-            {groupedLines.map((linea) => (
-              <tr key={linea.key}>
-                <td className="border border-gray-300 p-2 font-mono text-xs">
-                  {linea.skuProducto}
-                </td>
-                <td className="border border-gray-300 p-2">
-                  {linea.telaProducto} - {linea.colorProducto}
-                </td>
-                <td className="border border-gray-300 p-2 text-right">
-                  {linea.rollos}
-                </td>
-                <td className="border border-gray-300 p-2 text-right font-mono">
-                  {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
-                </td>
-                <td className="border border-gray-300 p-2 text-right">
-                  {formatNumber(linea.precioUnitario, { kind: "money" })}
-                </td>
-                <td className="border border-gray-300 p-2 text-right font-bold">
-                  {formatNumber(linea.importe, { kind: "money" })}
-                </td>
+          {printRollos.lines.length > 0 && (
+            <tbody>
+              <tr>
+                <td colSpan={6} className="border border-gray-300 bg-gray-50 p-2 font-bold text-center">ROLLOS</td>
               </tr>
-            ))}
-          </tbody>
+              {printRollos.lines.map((linea) => (
+                <tr key={linea.key}>
+                  <td className="border border-gray-300 p-2 font-mono text-xs">
+                    {linea.skuProducto}
+                  </td>
+                  <td className="border border-gray-300 p-2">
+                    {linea.telaProducto} - {linea.colorProducto}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right">
+                    {linea.rollos}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right font-mono">
+                    {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right">
+                    {formatNumber(linea.precioUnitario, { kind: "money" })}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right font-bold">
+                    {formatNumber(linea.importe, { kind: "money" })}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td colSpan={5} className="border border-gray-300 p-2 text-right font-semibold">Subtotal Rollos</td>
+                <td className="border border-gray-300 p-2 text-right font-bold">{formatNumber(printRollos.subtotal, { kind: "money" })}</td>
+              </tr>
+            </tbody>
+          )}
+          {printMetraje.lines.length > 0 && (
+            <tbody>
+              <tr>
+                <td colSpan={6} className="border border-gray-300 bg-gray-50 p-2 font-bold text-center">METRAJE</td>
+              </tr>
+              {printMetraje.lines.map((linea) => (
+                <tr key={linea.key}>
+                  <td className="border border-gray-300 p-2 font-mono text-xs">
+                    {linea.skuProducto}
+                  </td>
+                  <td className="border border-gray-300 p-2">
+                    {linea.telaProducto} - {linea.colorProducto}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right">
+                    {linea.rollos}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right font-mono">
+                    {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right">
+                    {formatNumber(linea.precioUnitario, { kind: "money" })}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-right font-bold">
+                    {formatNumber(linea.importe, { kind: "money" })}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td colSpan={5} className="border border-gray-300 p-2 text-right font-semibold">Subtotal Metraje</td>
+                <td className="border border-gray-300 p-2 text-right font-bold">{formatNumber(printMetraje.subtotal, { kind: "money" })}</td>
+              </tr>
+            </tbody>
+          )}
         </table>
 
         <div className="flex justify-end">
