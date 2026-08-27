@@ -1,0 +1,196 @@
+# PARTE 3 — Precios en tres pestañas y costeo de la venta metreada
+
+Cuarta parte del plan. **No adelantes trabajo de la Parte 4** (los reportes separados por tipo de venta ya quedaron esbozados en la Parte 2; su desarrollo completo va después). Si encuentras algo que pertenece ahí, anótalo en `replit.md` bajo "Pendiente de partes siguientes" y sigue.
+
+Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## Contexto del negocio
+
+Mariana Textil vende de dos formas, con dos estructuras de precio distintas:
+
+- **Venta por rollo.** El fuerte del negocio. Se conoce el costo exacto del rollo específico, congelado al recibirlo, y el margen es exacto.
+- **Venta metreada.** La excepción. El rollo ya salió del inventario por completo y la línea no se ata a ningún rollo, así que **el costo no puede venir del rollo: viene del promedio de la tela.** Estas telas se venden bastante más caras que por rollo.
+
+De ahí la necesidad de tres precios por producto en vez de uno.
+
+---
+
+## BLOQUE 1 — El costo promedio de 12 meses
+
+Función compartida que calcula el costo de referencia de un producto para la venta metreada.
+
+### La regla, exactamente
+
+> **Promedio simple del costo por metro de cada rollo recibido en los últimos 12 meses corridos.**
+
+Punto por punto:
+
+- **Costo por metro**, no costo total del rollo. Es el `costo_unitario` que ya se congela al recibir.
+- **Cada rollo cuenta una vez**, sin importar si trajo 30 metros o 60. No se pondera por cantidad.
+- **Promedio simple, NO ponderado.** Esto es una regla del negocio, no una aproximación ni un error a corregir. Miguel compra por rollo y las variaciones de precio entre compras son de centavos a 5 pesos. El promedio simple refleja cómo él piensa el costo.
+- **Últimos 12 meses corridos** desde hoy, no año calendario. El año calendario haría que el costo se reinicie cada 1 de enero y diera saltos raros en enero y febrero.
+- Solo rollos con `costo_unitario` capturado. Los rollos recibidos por BODEGA o SUPERVISOR entran con costo nulo y **no cuentan** hasta que ADMIN lo capture.
+
+### Si no hay compras en el periodo
+
+Cae al **último costo conocido** del producto, el del rollo más reciente con costo capturado, sin límite de antigüedad.
+
+Marca ese caso de forma explícita en lo que devuelve la función y muéstralo en pantalla con una advertencia visible: el costo tiene más de 12 meses.
+
+**Nunca devuelvas cero ni nulo silenciosamente.** Si no hay ningún costo conocido en toda la historia del producto, devuelve nulo y márcalo como "sin costo", y que la interfaz lo diga.
+
+### Dónde se calcula
+
+En el servidor, siempre. **Nunca en el cliente.** Deja pruebas unitarias con al menos estos casos: varios rollos en el periodo, un solo rollo, ningún rollo en 12 meses pero sí antes, ningún rollo nunca, y rollos con costo nulo mezclados con rollos con costo.
+
+---
+
+## BLOQUE 2 — El interruptor por producto
+
+Agrega a cada producto un campo booleano: **`se_vende_por_metro`**.
+
+### Reglas
+
+- Los productos cuya unidad es **kilo** nunca se venden por metro. Para ellos el campo va en falso y **no es editable**. Es una regla del negocio: los kilos solo se venden por rollo.
+- Para los productos en metros, el valor por defecto es **falso**. Miguel lo enciende producto por producto.
+- Se edita desde la pantalla de Precios, solo ADMIN.
+
+### No es una etiqueta, es un candado
+
+- Si está apagado, las pestañas de Mayoreo y Menudeo **se bloquean** para ese producto. No se captura un precio que nunca se va a usar.
+- **El POS rechaza en el servidor cualquier línea metreada de un producto con el interruptor apagado**, con un mensaje claro. No queda a criterio del vendedor.
+
+Esa validación en el servidor es lo que hace que el interruptor sirva. Alguien nuevo en Cruces no va a cortar una tela que Miguel nunca corta.
+
+---
+
+## BLOQUE 3 — Las tres pestañas de Precios
+
+La pantalla de Precios pasa de una lista a **tres pestañas**. Sigue siendo solo ADMIN, con la misma verificación en el servidor que ya tiene.
+
+| Pestaña | Aplica a | Base de costo |
+|---|---|---|
+| **Precio por Rollo** | Todos los productos | Costo promedio de los rollos con existencia, como hoy |
+| **Mayoreo (10 m o más)** | Solo si `se_vende_por_metro` | Promedio simple de 12 meses del Bloque 1 |
+| **Menudeo (menos de 10 m)** | Solo si `se_vende_por_metro` | Promedio simple de 12 meses del Bloque 1 |
+
+### Lo que se conserva de la pantalla actual
+
+Todo el comportamiento que ya funciona, aplicado ahora a cada pestaña:
+
+- Edición **producto por producto**. Nada de cambios masivos, por porcentaje, por selección múltiple ni por importación.
+- Motivo del cambio obligatorio.
+- **Vista previa obligatoria** antes de guardar, con precio anterior, precio nuevo, diferencia y margen resultante.
+- Advertencia si el precio queda por debajo del costo, permitiendo guardar de todas formas y dejando constancia.
+- Historial por producto con gráfica de precio contra costo.
+- Semáforo del margen: verde en 30% o más, ámbar entre 15% y 30%, rojo por debajo.
+
+### El aviso de las dos bases de costo
+
+Las pestañas comparan contra bases distintas, así que **el mismo producto puede salir verde en una y ámbar en otra.** No es un error.
+
+Rotúlalo en cada pestaña, visible: de dónde sale el costo con el que se calcula ese margen. Si no, parece contradicción.
+
+### Corrección pendiente
+
+En `lib/precios.ts`, el porcentaje de margen se divide entre el precio. **Con precio en cero da `-Infinity` y eso se pinta en pantalla.** Corrígelo: con precio en cero o nulo, el margen no se calcula y se muestra un guion.
+
+---
+
+## BLOQUE 4 — La regla de mayoreo y menudeo en el POS
+
+Cuando se agrega una línea metreada, el sistema elige el precio sugerido según la cantidad.
+
+### La regla, exactamente
+
+> **10 metros o más es mayoreo. Menos de 10 es menudeo.**
+> **El umbral se cuenta por producto y color, es decir por línea, no por ticket.**
+
+5 metros de rojo y 5 de negro son **dos líneas de menudeo**, aunque sea la misma tela. No se suman.
+
+Si el vendedor cambia la cantidad de una línea y cruza el umbral, **el precio sugerido se recalcula en vivo** y se indica en pantalla que cambió de mayoreo a menudeo o al revés.
+
+### El precio es sugerencia, no tope
+
+El POS conserva **precio libre**. El precio de las tres pestañas es lo que aparece precargado, no un límite. El vendedor puede subirlo o bajarlo.
+
+En las líneas metreadas **no hay piso al costo**, porque no hay rollo asociado. Si el precio capturado queda por debajo del costo promedio, muestra una advertencia visible pero **permite continuar**.
+
+### Constante nombrada
+
+El umbral de 10 metros va como constante nombrada y comentada, en un solo lugar, compartida entre cliente y servidor. No lo escondas dentro de una condición.
+
+---
+
+## BLOQUE 5 — El costo se congela en la línea
+
+Al crear el ticket, la línea metreada toma el promedio vigente **en ese momento** y lo congela, igual que una línea de rollo congela el costo de su rollo.
+
+**Es indispensable.** El promedio se recalcula con cada compra nueva; si no se congela, la utilidad de una venta de marzo cambiaría sola en diciembre y el histórico dejaría de ser confiable.
+
+### Lo que hay que ajustar
+
+La Parte 2 dejó una restricción en `ticket_lineas` que obliga a que una línea `METREADO` tenga `costo_unitario_congelado` y `costo_total_congelado` en **nulo**. Eso era correcto mientras el costo no existía; ahora hay que permitir que se llenen.
+
+Modifica la restricción para que una línea `METREADO`:
+
+- Siga exigiendo `rollo_id` nulo
+- **Pueda** tener costos capturados, o nulos si el producto no tiene ningún costo conocido
+
+Las líneas `NORMAL` no cambian: siguen exigiendo rollo y costos.
+
+### Si no hay costo
+
+Si un producto no tiene ningún costo conocido en toda su historia, la línea se guarda con costo nulo y los reportes la siguen tratando como **costo pendiente**. Nunca cero.
+
+### Nada retroactivo
+
+**Las líneas metreadas ya existentes no se recalculan.** Se quedan con su costo nulo y marcadas como pendientes. Un cambio de precio o de costo nunca modifica un ticket ya emitido.
+
+---
+
+## BLOQUE 6 — Verificación
+
+Reporta esto:
+
+**Costo promedio**
+- Un producto con 5 rollos recibidos en 12 meses da el promedio simple de sus 5 costos por metro, no el ponderado
+- Un rollo de 30 m y uno de 60 m pesan igual en el promedio
+- Un producto sin compras en 12 meses pero con historia cae al último costo y se marca la advertencia
+- Un producto sin ningún costo devuelve nulo y se marca "sin costo"
+- Los rollos con costo nulo no ensucian el promedio
+
+**Interruptor**
+- Un producto en kilos no permite encender el interruptor
+- Con el interruptor apagado, las pestañas de mayoreo y menudeo están bloqueadas
+- **El servidor rechaza una línea metreada de un producto con el interruptor apagado**
+
+**Precios**
+- Las tres pestañas cargan y cada una indica de dónde sale su costo
+- Un producto con precio en cero muestra un guion en el margen, no `-Infinity`
+- El historial y la gráfica siguen funcionando en las tres
+
+**POS**
+- 10 metros exactos toma precio de mayoreo
+- 9.999 metros toma precio de menudeo
+- 5 m de un color y 5 m de otro son dos líneas de menudeo
+- Cambiar la cantidad recalcula el precio sugerido en vivo
+- El precio sigue siendo libre; por debajo del costo advierte pero deja continuar
+
+**Congelado**
+- Una línea metreada guarda el costo promedio vigente al momento del ticket
+- Recibir mercancía nueva después no cambia el margen de ese ticket
+- Un producto sin costo conocido guarda la línea con costo nulo, nunca cero
+- Las líneas metreadas anteriores a esta parte siguen con costo nulo, sin recalcular
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`, bajo decisiones de arquitectura:
+
+> El costo de la venta metreada es el **promedio simple del costo por metro de cada rollo recibido en los últimos 12 meses corridos**. Cada rollo cuenta una vez, sin ponderar por cantidad. Promedio simple, nunca ponderado: es una regla del negocio y no debe "corregirse". Sin compras en 12 meses, cae al último costo conocido y se marca la advertencia. El costo se congela en la línea del ticket al momento de la venta. Cada producto tiene el interruptor `se_vende_por_metro`, que el POS hace cumplir en el servidor; los productos en kilos nunca lo tienen encendido. Mayoreo es 10 metros o más, contado por línea —producto y color—, nunca por ticket.
