@@ -169,8 +169,13 @@ export const ticketLineasTable = pgTable(
           AND ${table.costoTotalCongelado} IS NOT NULL)
         OR (${table.tipo} = 'METREADO'
           AND ${table.rolloId} IS NULL
-          AND ${table.costoUnitarioCongelado} IS NULL
-          AND ${table.costoTotalCongelado} IS NULL)`,
+          AND (
+            (${table.costoUnitarioCongelado} IS NULL
+              AND ${table.costoTotalCongelado} IS NULL)
+            OR
+            (${table.costoUnitarioCongelado} IS NOT NULL
+              AND ${table.costoTotalCongelado} IS NOT NULL)
+          ))`,
     ),
   ],
 );

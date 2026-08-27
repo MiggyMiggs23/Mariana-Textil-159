@@ -73,7 +73,7 @@ await test("la migración desvincula y audita líneas METREADO legacy antes del 
        (ticket_id, rollo_id, producto_id, tipo, cantidad, precio_unitario,
         precio_sugerido, importe, costo_unitario_congelado,
         costo_total_congelado)
-     VALUES ($1, $2, $3, NULL, 10, 10, 10, 100, 5, 50)
+      VALUES ($1, $2, $3, NULL, 10, 10, 10, 100, NULL, NULL)
      RETURNING id`,
     [ticketId, rolloId, productId],
   );

@@ -425,7 +425,7 @@ await test("POS-03 concurrencia permite vender el mismo rollo solo una vez", asy
   );
 });
 
-await test("POS-04 metreado no toca inventario, no factura y solo acepta efectivo", async () => {
+await test("POS-04 metreado congela costo, no toca inventario, no factura y solo acepta efectivo", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId);
@@ -462,9 +462,18 @@ await test("POS-04 metreado no toca inventario, no factura y solo acepta efectiv
   assert.equal(movements.length, 0);
   assert.equal(ticket.lineas[0]?.tipo, "METREADO");
   assert.ok(ticket.lineas[0] && "costoUnitarioCongelado" in ticket.lineas[0]);
-  assert.equal(ticket.lineas[0].costoUnitarioCongelado, null);
+  assert.equal(ticket.lineas[0].costoUnitarioCongelado, "50.00");
   assert.ok(ticket.lineas[0] && "costoTotalCongelado" in ticket.lineas[0]);
-  assert.equal(ticket.lineas[0].costoTotalCongelado, null);
+  assert.equal(ticket.lineas[0].costoTotalCongelado, "125.00");
+  assert.equal(ticket.lineas[0].margen, "-25.00");
+  // A subsequent reception changes future reference costs, never issued lines.
+  await makeRollo(productoId, ubicacionId, "10", "80.00");
+  const frozen = await buildTicketDetail(db, ticket.id, true);
+  const frozenLine = frozen?.lineas[0];
+  assert.ok(frozenLine && "costoUnitarioCongelado" in frozenLine);
+  assert.equal(frozenLine.costoUnitarioCongelado, "50.00");
+  assert.equal(frozenLine.costoTotalCongelado, "125.00");
+  assert.equal(frozenLine.margen, "-25.00");
   await assert.rejects(
     () =>
       sale({
@@ -521,6 +530,23 @@ await test("POS-04 metreado no toca inventario, no factura y solo acepta efectiv
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.totalCobrado, "100.00");
   assert.equal(corte?.efectivoEsperado, "200.00");
+});
+
+await test("POS-04C metreado sin historial de costo conserva ambos costos nulos", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct();
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    cantidad: "2.555",
+    precio: "40",
+    tipo: "METREADO",
+  });
+  const line = ticket.lineas[0];
+  assert.ok(line && "costoUnitarioCongelado" in line);
+  assert.equal(line.costoUnitarioCongelado, null);
+  assert.equal(line.costoTotalCongelado, null);
+  assert.equal(line.margen, null);
 });
 
 await test("POS-04B metreado se rechaza definitivamente cuando el producto está bloqueado", async () => {
@@ -582,8 +608,8 @@ await test("POS-04A ticket mixto con 2 rollos y 8 metros se crea, guarda y cobra
   assert.ok(
     mixto!.lineas[2] && "costoUnitarioCongelado" in mixto!.lineas[2],
   );
-  assert.equal(mixto!.lineas[2].costoUnitarioCongelado, null);
-  assert.equal(mixto!.lineas[2].costoTotalCongelado, null);
+  assert.equal(mixto!.lineas[2].costoUnitarioCongelado, "20.00");
+  assert.equal(mixto!.lineas[2].costoTotalCongelado, "160.00");
   const session = await db.transaction((tx) =>
     abrirSesionCaja(tx, {
       ubicacionId,

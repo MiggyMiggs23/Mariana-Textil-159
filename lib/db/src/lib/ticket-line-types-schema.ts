@@ -43,11 +43,14 @@ export async function ensureTicketLineTypesSchema(pool: Pool): Promise<void> {
       WHERE linea.tipo = 'METREADO'
         AND linea.rollo_id IS NOT NULL;
 
+      -- Only repair the malformed legacy rows above.  Do not touch valid
+      -- METREADO rows: their frozen costs are historical accounting facts.
       UPDATE ticket_lineas
       SET rollo_id = NULL,
           costo_unitario_congelado = NULL,
           costo_total_congelado = NULL
-      WHERE tipo = 'METREADO';
+      WHERE tipo = 'METREADO'
+        AND rollo_id IS NOT NULL;
 
       ALTER TABLE ticket_lineas
         ALTER COLUMN tipo SET NOT NULL,
@@ -57,27 +60,29 @@ export async function ensureTicketLineTypesSchema(pool: Pool): Promise<void> {
       CREATE INDEX IF NOT EXISTS ticket_lineas_tipo_idx
         ON ticket_lineas (tipo);
 
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint
-          WHERE conname = 'ticket_lineas_tipo_rollo_costos_check'
-        ) THEN
-          ALTER TABLE ticket_lineas
-            ADD CONSTRAINT ticket_lineas_tipo_rollo_costos_check
-            CHECK (
-              (tipo = 'NORMAL'
-                AND rollo_id IS NOT NULL
-                AND costo_unitario_congelado IS NOT NULL
-                AND costo_total_congelado IS NOT NULL)
-              OR
-              (tipo = 'METREADO'
-                AND rollo_id IS NULL
-                AND costo_unitario_congelado IS NULL
+      -- Part 2 used this name for a stricter METREADO check.  Drop it by
+      -- name on every run before installing the final, repeatable rule.
+      ALTER TABLE ticket_lineas
+        DROP CONSTRAINT IF EXISTS ticket_lineas_tipo_rollo_costos_check;
+
+      ALTER TABLE ticket_lineas
+        ADD CONSTRAINT ticket_lineas_tipo_rollo_costos_check
+        CHECK (
+          (tipo = 'NORMAL'
+            AND rollo_id IS NOT NULL
+            AND costo_unitario_congelado IS NOT NULL
+            AND costo_total_congelado IS NOT NULL)
+          OR
+          (tipo = 'METREADO'
+            AND rollo_id IS NULL
+            AND (
+              (costo_unitario_congelado IS NULL
                 AND costo_total_congelado IS NULL)
-            );
-        END IF;
-      END $$;
+              OR
+              (costo_unitario_congelado IS NOT NULL
+                AND costo_total_congelado IS NOT NULL)
+            ))
+        );
 
       ALTER TABLE tickets DROP COLUMN IF EXISTS tipo;
     `);

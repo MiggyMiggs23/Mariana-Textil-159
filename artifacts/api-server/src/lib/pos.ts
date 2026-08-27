@@ -461,6 +461,25 @@ export async function crearTicket(
   const productoMap = new Map(
     productos.map((producto) => [producto.id, producto]),
   );
+  // This instant is the authoritative creation time for both the ticket and
+  // every metered cost snapshot.  It is intentionally not recalculated while
+  // processing individual lines.
+  const ticketCreatedAt = new Date();
+  const meteredProductIds = [
+    ...new Set(
+      input.lineas
+        .filter((linea) => (linea.tipo ?? input.tipo) === "METREADO")
+        .map((linea) => linea.productoId),
+    ),
+  ];
+  const meteredCosts = new Map(
+    await Promise.all(
+      meteredProductIds.map(async (productId) => [
+        productId,
+        await meteredReferenceCost(tx, productId, ticketCreatedAt),
+      ] as const),
+    ),
+  );
 
   const lineasPreparadas = input.lineas.map((linea) => {
     const tipo = linea.tipo ?? input.tipo;
@@ -567,7 +586,10 @@ export async function crearTicket(
     }
     const cantidadMilesimas = Math.round(Number(cantidad) * 1000);
     const importeCents = Math.round((cantidadMilesimas * precioCents) / 1000);
-    const costoUnitario = tipo === "NORMAL" ? rollo!.costoUnitario! : null;
+    const costoUnitario =
+      tipo === "NORMAL"
+        ? rollo!.costoUnitario!
+        : (meteredCosts.get(linea.productoId)?.cost ?? null);
     const costoCents =
       costoUnitario == null
         ? null
@@ -624,6 +646,7 @@ export async function crearTicket(
       cobrado: false,
       facturado: input.facturado,
       uuidCliente: input.uuidCliente,
+      createdAt: ticketCreatedAt,
     })
     .returning();
 
