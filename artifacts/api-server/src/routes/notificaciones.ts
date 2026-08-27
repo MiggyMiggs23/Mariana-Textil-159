@@ -1,4 +1,5 @@
 import { Router, type IRouter, type Request, type Response } from "express";
+import { createHash } from "node:crypto";
 import { asc, desc, eq, isNull, sql } from "drizzle-orm";
 import {
   CountNotificacionesNoLeidasResponse,
@@ -231,6 +232,10 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
         .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || b.id.localeCompare(a.id))
         .slice(0, 100),
       generatedAt: new Date(),
+      sessionKey: createHash("sha256")
+        .update(req.auth!.sessionId)
+        .digest("hex")
+        .slice(0, 24),
     });
     res.json({
       ...parsed,

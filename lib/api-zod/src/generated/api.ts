@@ -4195,7 +4195,8 @@ export const GetNotificationFeedResponse = zod.object({
   "updatedAt": zod.coerce.date(),
   "siteId": zod.number().nullable()
 })),
-  "generatedAt": zod.coerce.date()
+  "generatedAt": zod.coerce.date(),
+  "sessionKey": zod.string().describe('Namespace opaco de la sesión para coordinar deduplicación entre pestañas')
 })
 
 

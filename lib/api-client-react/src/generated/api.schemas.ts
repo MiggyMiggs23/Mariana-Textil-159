@@ -2235,6 +2235,8 @@ export interface NotificationFeedEvent {
 export interface NotificationFeed {
   events: NotificationFeedEvent[];
   generatedAt: string;
+  /** Namespace opaco de la sesión para coordinar deduplicación entre pestañas */
+  sessionKey: string;
 }
 
 export interface NotificacionSistema {

@@ -5618,13 +5618,18 @@ components:
         siteId: { type: ["number", "null"] }
     NotificationFeed:
       type: object
-      required: [events, generatedAt]
+      required: [events, generatedAt, sessionKey]
       properties:
         events:
           type: array
           items:
             $ref: "#/components/schemas/NotificationFeedEvent"
         generatedAt: { type: string, format: date-time }
+        sessionKey:
+          {
+            type: string,
+            description: "Namespace opaco de la sesión para coordinar deduplicación entre pestañas",
+          }
     NotificacionesPanel:
       type: object
       required: [notificaciones, sistema, porVencer, vencidas, clientesConMultiplesVencidas]

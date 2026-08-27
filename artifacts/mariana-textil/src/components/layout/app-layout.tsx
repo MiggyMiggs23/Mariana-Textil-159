@@ -56,6 +56,7 @@ import {
 } from "@/components/ui/dialog";
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { NotificationsBell } from "@/components/notifications-bell";
+import { NotificationAudioController } from "@/components/notification-audio-controller";
 
 type NavItem = {
   name: string;
@@ -382,6 +383,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex bg-background">
+      <NotificationAudioController userId={user.id} role={user.rol} />
       {/* Sidebar for Desktop */}
       {!isTerminal && <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
         <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">

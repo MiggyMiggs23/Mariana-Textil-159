@@ -10,4 +10,6 @@ import type { NotificationFeedEvent } from './notificationFeedEvent';
 export interface NotificationFeed {
   events: NotificationFeedEvent[];
   generatedAt: Date;
+  /** Namespace opaco de la sesión para coordinar deduplicación entre pestañas */
+  sessionKey: string;
 }
