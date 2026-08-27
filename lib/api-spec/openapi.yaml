@@ -347,7 +347,7 @@ paths:
     post:
       operationId: changePrecio
       tags: [precios]
-      summary: Cambia el precio de lista y registra su historial inmutable (ADMIN)
+      summary: Cambia un precio por modo y registra su historial inmutable (ADMIN)
       parameters:
         - $ref: "#/components/parameters/ProductoId"
       requestBody:
@@ -5346,9 +5346,34 @@ components:
     SemaforoPrecio:
       type: string
       enum: [VERDE, AMBAR, ROJO, SIN_COSTO]
+    ModoPrecio:
+      type: string
+      enum: [ROLLO, MAYOREO, MENUDEO]
+    EstadoCostoMetreado:
+      type: string
+      enum: [AVERAGE_12_MONTHS, STALE_LAST_KNOWN, NO_COST]
+    CostoReferenciaMetreado:
+      type: object
+      required: [costoUnitario, estado, esMayorA12Meses, rollosIncluidos, fechaUltimaRecepcion]
+      properties:
+        costoUnitario: { type: ["string", "null"] }
+        estado: { $ref: "#/components/schemas/EstadoCostoMetreado" }
+        esMayorA12Meses: { type: boolean }
+        rollosIncluidos: { type: number }
+        fechaUltimaRecepcion: { type: ["string", "null"], format: date-time }
+    ResumenPrecioModo:
+      type: object
+      required: [modo, precioLista, costoUnitarioBase, margenPesosUnidad, margenPorcentajeSubtotal, semaforo]
+      properties:
+        modo: { $ref: "#/components/schemas/ModoPrecio" }
+        precioLista: { type: ["string", "null"] }
+        costoUnitarioBase: { type: ["string", "null"] }
+        margenPesosUnidad: { type: ["string", "null"] }
+        margenPorcentajeSubtotal: { type: ["string", "null"] }
+        semaforo: { $ref: "#/components/schemas/SemaforoPrecio" }
     PrecioProducto:
       type: object
-      required: [id, sku, tela, color, unidad, seVendePorMetro, activo, costoUnitarioPonderado, precioLista, margenPesosUnidad, margenPorcentajeSubtotal, semaforo, ultimoCambioPrecio]
+      required: [id, sku, tela, color, unidad, seVendePorMetro, activo, costoUnitarioPonderado, costoReferenciaMetreado, precioLista, precioMayoreo, precioMenudeo, preciosPorModo, margenPesosUnidad, margenPorcentajeSubtotal, semaforo, ultimoCambioPrecio]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -5358,7 +5383,17 @@ components:
         seVendePorMetro: { type: boolean }
         activo: { type: boolean }
         costoUnitarioPonderado: { type: ["string", "null"] }
+        costoReferenciaMetreado: { $ref: "#/components/schemas/CostoReferenciaMetreado" }
         precioLista: { type: string }
+        precioMayoreo: { type: ["string", "null"] }
+        precioMenudeo: { type: ["string", "null"] }
+        preciosPorModo:
+          type: object
+          required: [ROLLO, MAYOREO, MENUDEO]
+          properties:
+            ROLLO: { $ref: "#/components/schemas/ResumenPrecioModo" }
+            MAYOREO: { $ref: "#/components/schemas/ResumenPrecioModo" }
+            MENUDEO: { $ref: "#/components/schemas/ResumenPrecioModo" }
         margenPesosUnidad: { type: ["string", "null"] }
         margenPorcentajeSubtotal: { type: ["string", "null"] }
         semaforo: { $ref: "#/components/schemas/SemaforoPrecio" }
@@ -5370,12 +5405,14 @@ components:
         seVendePorMetro: { type: boolean }
     PrecioHistorialItem:
       type: object
-      required: [id, precioListaAnterior, precioListaNuevo, costoUnitarioPonderado, margenPesosUnidad, margenPorcentajeSubtotal, motivo, advertenciaBajoCosto, usuarioId, createdAt]
+      required: [id, modoPrecio, precioListaAnterior, precioListaNuevo, costoUnitarioPonderado, costoUnitarioBase, margenPesosUnidad, margenPorcentajeSubtotal, motivo, advertenciaBajoCosto, usuarioId, createdAt]
       properties:
         id: { type: number }
-        precioListaAnterior: { type: string }
+        modoPrecio: { $ref: "#/components/schemas/ModoPrecio" }
+        precioListaAnterior: { type: ["string", "null"] }
         precioListaNuevo: { type: string }
         costoUnitarioPonderado: { type: ["string", "null"] }
+        costoUnitarioBase: { type: ["string", "null"], description: Instantaneous cost base snapshotted when this mode price changed }
         margenPesosUnidad: { type: ["string", "null"] }
         margenPorcentajeSubtotal: { type: ["string", "null"] }
         motivo: { type: string }
@@ -5400,6 +5437,10 @@ components:
       type: object
       required: [precioListaNuevo, motivo]
       properties:
+        modoPrecio:
+          allOf: [{ $ref: "#/components/schemas/ModoPrecio" }]
+          default: ROLLO
+          description: Modo a cambiar; se omite únicamente para compatibilidad con clientes de precio por rollo.
         precioListaNuevo: { type: string, description: Importe positivo con máximo dos decimales }
         motivo: { type: string, minLength: 5 }
     PrecioCambioResultado:

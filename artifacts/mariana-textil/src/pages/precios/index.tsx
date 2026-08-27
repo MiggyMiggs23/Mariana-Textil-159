@@ -1,22 +1,24 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
-  useListPrecios, 
+import {
+  useListPrecios,
   useUpdatePrecioVentaPorMetro,
   getListPreciosQueryKey,
   UnidadProducto,
   SemaforoPrecio,
-  PrecioProducto
+  PrecioProducto,
+  ModoPrecio
 } from "@workspace/api-client-react";
 import { formatNumber } from "@workspace/number-format";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Tag, Filter, CheckCircle2, AlertCircle, AlertTriangle, AlertOctagon, HelpCircle } from "lucide-react";
+import { Search, MapPin, Tag, Filter, CheckCircle2, AlertTriangle, AlertOctagon, HelpCircle, Lock } from "lucide-react";
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,6 +30,7 @@ export default function PreciosList() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [unidad, setUnidad] = useState<string>("all");
   const [semaforo, setSemaforo] = useState<string>("all");
+  const [activeMode, setActiveMode] = useState<ModoPrecio>(ModoPrecio.ROLLO);
 
   const queryParams = {
     search: debouncedSearch || undefined,
@@ -93,8 +96,8 @@ export default function PreciosList() {
             <div className="flex flex-wrap items-center gap-4">
               <div className="relative flex-1 min-w-[250px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Buscar por SKU, tela o color..." 
+                <Input
+                  placeholder="Buscar por SKU, tela o color..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && setDebouncedSearch(search)}
@@ -130,6 +133,16 @@ export default function PreciosList() {
                 </Select>
               </div>
             </div>
+
+            <div className="pt-4 mt-2 border-t">
+              <Tabs value={activeMode} onValueChange={(v) => setActiveMode(v as ModoPrecio)} className="w-full">
+                <TabsList className="grid w-full grid-cols-3 max-w-2xl">
+                  <TabsTrigger value={ModoPrecio.ROLLO}>Precio por Rollo</TabsTrigger>
+                  <TabsTrigger value={ModoPrecio.MAYOREO}>Mayoreo (10m o más)</TabsTrigger>
+                  <TabsTrigger value={ModoPrecio.MENUDEO}>Menudeo (menos de 10m)</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto rounded-b-lg border-t">
@@ -140,32 +153,35 @@ export default function PreciosList() {
                     <TableHead>Producto</TableHead>
                     <TableHead className="w-[80px] text-center">Unidad</TableHead>
                     <TableHead className="w-[190px]">Venta por metro</TableHead>
-                    <TableHead className="text-right">Costo Pond.</TableHead>
+                    <TableHead className="text-right">Costo Base</TableHead>
                     <TableHead className="text-right">Precio Lista</TableHead>
                     <TableHead className="text-right">Margen $</TableHead>
                     <TableHead className="text-right">Margen %</TableHead>
                     <TableHead className="text-center">Estado</TableHead>
-                    <TableHead className="text-right">Último Cambio</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
                         Cargando precios...
                       </TableCell>
                     </TableRow>
                   ) : !precios || precios.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
                         No se encontraron productos con precios para los filtros seleccionados.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    precios.map((precio) => (
+                    precios.map((precio) => {
+                      const modeData = precio.preciosPorModo[activeMode];
+                      const isLocked = activeMode !== ModoPrecio.ROLLO && (!precio.seVendePorMetro || precio.unidad === UnidadProducto.KILO);
+
+                      return (
                       <TableRow key={precio.id} className={!precio.activo ? "opacity-60" : ""}>
                         <TableCell className="font-mono text-sm">
-                          <Link href={`/precios/${precio.id}`} className="text-primary hover:underline font-semibold" data-testid={`link-precio-${precio.sku}`}>
+                          <Link href={`/precios/${precio.id}?mode=${activeMode}`} className="text-primary hover:underline font-semibold" data-testid={`link-precio-${precio.sku}`}>
                             {precio.sku}
                           </Link>
                         </TableCell>
@@ -193,33 +209,42 @@ export default function PreciosList() {
                             />
                             <span className="text-xs text-muted-foreground">
                               {precio.unidad === UnidadProducto.KILO
-                                ? "No disponible: los kilos solo se venden por rollo."
+                                ? "KILO"
                                 : precio.seVendePorMetro
-                                  ? "Habilitada"
-                                  : "Mayoreo y menudeo bloqueados"}
+                                  ? "Sí"
+                                  : "No"}
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-right text-muted-foreground">
-                          {precio.costoUnitarioPonderado ? formatNumber(precio.costoUnitarioPonderado, { kind: "money" }) : "—"}
-                        </TableCell>
-                        <TableCell className="text-right font-bold text-foreground">
-                          {formatNumber(precio.precioLista, { kind: "money" })}
-                        </TableCell>
-                        <TableCell className="text-right font-medium">
-                          {precio.margenPesosUnidad ? formatNumber(precio.margenPesosUnidad, { kind: "money" }) : "—"}
-                        </TableCell>
-                        <TableCell className="text-right font-medium">
-                          {precio.margenPorcentajeSubtotal ? formatNumber(precio.margenPorcentajeSubtotal, { kind: "percentage" }) : "—"}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {getSemaforoBadge(precio.semaforo)}
-                        </TableCell>
-                        <TableCell className="text-right text-xs text-muted-foreground whitespace-nowrap">
-                          {precio.ultimoCambioPrecio ? format(new Date(precio.ultimoCambioPrecio), "dd/MM/yyyy HH:mm") : "Sin historial"}
-                        </TableCell>
+
+                        {isLocked ? (
+                          <TableCell colSpan={5}>
+                            <div className="flex items-center justify-center text-muted-foreground bg-muted/20 py-2 rounded-md border border-dashed border-border/50">
+                              <Lock className="w-4 h-4 mr-2" />
+                              <span className="text-sm font-medium">Bloqueado para este modo</span>
+                            </div>
+                          </TableCell>
+                        ) : (
+                          <>
+                            <TableCell className="text-right text-muted-foreground">
+                              {modeData.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "—"}
+                            </TableCell>
+                            <TableCell className="text-right font-bold text-foreground">
+                              {modeData.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                              {modeData.margenPesosUnidad && Number(modeData.margenPesosUnidad) !== 0 ? formatNumber(modeData.margenPesosUnidad, { kind: "money" }) : "—"}
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                              {modeData.margenPorcentajeSubtotal && Number(modeData.margenPorcentajeSubtotal) !== 0 ? formatNumber(modeData.margenPorcentajeSubtotal, { kind: "percentage" }) : "—"}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {getSemaforoBadge(modeData.semaforo)}
+                            </TableCell>
+                          </>
+                        )}
                       </TableRow>
-                    ))
+                    )})
                   )}
                 </TableBody>
               </Table>

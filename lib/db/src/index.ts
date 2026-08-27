@@ -12,6 +12,7 @@ export { ensureSupervisorRole } from "./lib/role-migration";
 export { ensureDocumentFoliosSchema } from "./lib/document-folios-schema";
 export { ensureEstadoRolloSchema } from "./lib/estado-rollo-schema";
 export { ensureProductMeterSchema } from "./lib/product-meter-schema";
+export { ensureProductPricingSchema } from "./lib/product-pricing-schema";
 
 const { Pool } = pg;
 

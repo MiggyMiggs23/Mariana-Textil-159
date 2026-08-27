@@ -26,6 +26,14 @@ export const productosTable = pgTable(
       precision: 12,
       scale: 2,
     }).notNull(),
+    precioMayoreo: numeric("precio_mayoreo", {
+      precision: 12,
+      scale: 2,
+    }),
+    precioMenudeo: numeric("precio_menudeo", {
+      precision: 12,
+      scale: 2,
+    }),
     notas: text("notas"),
     activo: boolean("activo").notNull().default(true),
     seVendePorMetro: boolean("se_vende_por_metro").notNull().default(false),

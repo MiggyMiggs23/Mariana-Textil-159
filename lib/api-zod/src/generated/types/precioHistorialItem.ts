@@ -5,13 +5,21 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ModoPrecio } from './modoPrecio';
 
 export interface PrecioHistorialItem {
   id: number;
-  precioListaAnterior: string;
+  modoPrecio: ModoPrecio;
+  /** @nullable */
+  precioListaAnterior: string | null;
   precioListaNuevo: string;
   /** @nullable */
   costoUnitarioPonderado: string | null;
+  /**
+     * Instantaneous cost base snapshotted when this mode price changed
+     * @nullable
+     */
+  costoUnitarioBase: string | null;
   /** @nullable */
   margenPesosUnidad: string | null;
   /** @nullable */

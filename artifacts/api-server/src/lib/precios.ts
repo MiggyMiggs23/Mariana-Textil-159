@@ -31,7 +31,7 @@ export function weightedCurrentUnitCost(rows: CostRow[]): string | null {
   return totalQuantity > 0 ? (totalCost / totalQuantity).toFixed(2) : null;
 }
 
-export function priceMetrics(price: string, cost: string | null): PrecioMetrics {
+export function priceMetrics(price: string | null, cost: string | null): PrecioMetrics {
   if (cost == null) {
     return {
       costoUnitarioPonderado: null,
@@ -40,9 +40,18 @@ export function priceMetrics(price: string, cost: string | null): PrecioMetrics 
       semaforo: "SIN_COSTO",
     };
   }
-  const margin = Number(price) - Number(cost);
+  const parsedPrice = Number(price);
+  if (price == null || !Number.isFinite(parsedPrice) || parsedPrice <= 0) {
+    return {
+      costoUnitarioPonderado: Number(cost).toFixed(2),
+      margenPesosUnidad: null,
+      margenPorcentajeSubtotal: null,
+      semaforo: "ROJO",
+    };
+  }
+  const margin = parsedPrice - Number(cost);
   // Margin is expressed over sale subtotal (price), as contracted.
-  const percent = (margin / Number(price)) * 100;
+  const percent = (margin / parsedPrice) * 100;
   return {
     costoUnitarioPonderado: Number(cost).toFixed(2),
     margenPesosUnidad: margin.toFixed(2),

@@ -20,6 +20,8 @@ test("no valid current cost is null and price semaphores use subtotal margin", (
   assert.equal(priceMetrics("100.00", "85.00").semaforo, "AMBAR");
   assert.equal(priceMetrics("100.00", "86.00").semaforo, "ROJO");
   assert.equal(priceMetrics("100.00", null).semaforo, "SIN_COSTO");
+  assert.equal(priceMetrics("0", "10.00").margenPorcentajeSubtotal, null);
+  assert.equal(priceMetrics(null, "10.00").margenPorcentajeSubtotal, null);
   assert.equal(validPositiveMoney("1.234"), false);
   assert.equal(validPositiveMoney("0.00"), false);
 });

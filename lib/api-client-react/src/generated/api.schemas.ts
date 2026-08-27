@@ -1958,6 +1958,53 @@ export const SemaforoPrecio = {
   SIN_COSTO: 'SIN_COSTO',
 } as const;
 
+export type ModoPrecio = typeof ModoPrecio[keyof typeof ModoPrecio];
+
+
+export const ModoPrecio = {
+  ROLLO: 'ROLLO',
+  MAYOREO: 'MAYOREO',
+  MENUDEO: 'MENUDEO',
+} as const;
+
+export type EstadoCostoMetreado = typeof EstadoCostoMetreado[keyof typeof EstadoCostoMetreado];
+
+
+export const EstadoCostoMetreado = {
+  AVERAGE_12_MONTHS: 'AVERAGE_12_MONTHS',
+  STALE_LAST_KNOWN: 'STALE_LAST_KNOWN',
+  NO_COST: 'NO_COST',
+} as const;
+
+export interface CostoReferenciaMetreado {
+  /** @nullable */
+  costoUnitario: string | null;
+  estado: EstadoCostoMetreado;
+  esMayorA12Meses: boolean;
+  rollosIncluidos: number;
+  /** @nullable */
+  fechaUltimaRecepcion: string | null;
+}
+
+export interface ResumenPrecioModo {
+  modo: ModoPrecio;
+  /** @nullable */
+  precioLista: string | null;
+  /** @nullable */
+  costoUnitarioBase: string | null;
+  /** @nullable */
+  margenPesosUnidad: string | null;
+  /** @nullable */
+  margenPorcentajeSubtotal: string | null;
+  semaforo: SemaforoPrecio;
+}
+
+export type PrecioProductoPreciosPorModo = {
+  ROLLO: ResumenPrecioModo;
+  MAYOREO: ResumenPrecioModo;
+  MENUDEO: ResumenPrecioModo;
+};
+
 export interface PrecioProducto {
   id: number;
   sku: string;
@@ -1968,7 +2015,13 @@ export interface PrecioProducto {
   activo: boolean;
   /** @nullable */
   costoUnitarioPonderado: string | null;
+  costoReferenciaMetreado: CostoReferenciaMetreado;
   precioLista: string;
+  /** @nullable */
+  precioMayoreo: string | null;
+  /** @nullable */
+  precioMenudeo: string | null;
+  preciosPorModo: PrecioProductoPreciosPorModo;
   /** @nullable */
   margenPesosUnidad: string | null;
   /** @nullable */
@@ -1984,10 +2037,17 @@ export interface PrecioVentaPorMetroUpdate {
 
 export interface PrecioHistorialItem {
   id: number;
-  precioListaAnterior: string;
+  modoPrecio: ModoPrecio;
+  /** @nullable */
+  precioListaAnterior: string | null;
   precioListaNuevo: string;
   /** @nullable */
   costoUnitarioPonderado: string | null;
+  /**
+     * Instantaneous cost base snapshotted when this mode price changed
+     * @nullable
+     */
+  costoUnitarioBase: string | null;
   /** @nullable */
   margenPesosUnidad: string | null;
   /** @nullable */
@@ -2006,6 +2066,8 @@ export type PrecioProductoDetail = PrecioProducto & {
 };
 
 export interface CambiarPrecioInput {
+  /** Modo a cambiar; se omite únicamente para compatibilidad con clientes de precio por rollo. */
+  modoPrecio?: ModoPrecio;
   /** Importe positivo con máximo dos decimales */
   precioListaNuevo: string;
   /** @minLength 5 */

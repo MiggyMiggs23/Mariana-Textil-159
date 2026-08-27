@@ -1392,7 +1392,7 @@ export const getChangePrecioUrl = (id: number,) => {
 }
 
 /**
- * @summary Cambia el precio de lista y registra su historial inmutable (ADMIN)
+ * @summary Cambia un precio por modo y registra su historial inmutable (ADMIN)
  */
 export const changePrecio = async (id: number,
     cambiarPrecioInput: CambiarPrecioInput, options?: Parameters<typeof customFetch>[1]): Promise<PrecioCambioResultado> => {
@@ -1442,7 +1442,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type ChangePrecioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Cambia el precio de lista y registra su historial inmutable (ADMIN)
+ * @summary Cambia un precio por modo y registra su historial inmutable (ADMIN)
  */
 export const useChangePrecio = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePrecio>>, TError,{id: number;data: BodyType<CambiarPrecioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}

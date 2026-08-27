@@ -22,6 +22,7 @@ import {
 import { requireSession } from "../middlewares/auth";
 import { getRequestIp } from "../lib/request";
 import { priceMetrics, validPositiveMoney, weightedCurrentUnitCost } from "../lib/precios";
+import { meteredReferenceCost } from "../lib/metered-reference-cost";
 
 const router: IRouter = Router();
 router.use("/precios", requireSession);
@@ -52,9 +53,11 @@ async function currentCost(database: Pick<typeof db, "select">, productId: numbe
 function presentHistory(row: History) {
   return {
     id: row.id,
+    modoPrecio: row.modoPrecio,
     precioListaAnterior: row.precioListaAnterior,
     precioListaNuevo: row.precioListaNuevo,
     costoUnitarioPonderado: row.costoUnitarioPonderado,
+    costoUnitarioBase: row.costoUnitarioPonderado,
     margenPesosUnidad: row.margenPesosUnidad,
     margenPorcentajeSubtotal: row.margenPorcentajeSubtotal,
     motivo: row.motivo,
@@ -65,8 +68,24 @@ function presentHistory(row: History) {
 }
 
 async function presentProduct(product: Product, database: Pick<typeof db, "select"> = db) {
-  const cost = await currentCost(database, product.id);
+  const [cost, meteredCost] = await Promise.all([
+    currentCost(database, product.id),
+    meteredReferenceCost(database, product.id, new Date()),
+  ]);
   const metrics = priceMetrics(product.precioSugerido, cost);
+  const meteredReference = {
+    costoUnitario: meteredCost.cost,
+    estado: meteredCost.status,
+    esMayorA12Meses: meteredCost.isOlderThan12Months,
+    rollosIncluidos: meteredCost.rollsIncluded,
+    fechaUltimaRecepcion: meteredCost.latestReceptionDate,
+  };
+  const modeSummary = (modo: "ROLLO" | "MAYOREO" | "MENUDEO", price: string | null, baseCost: string | null) => ({
+    modo,
+    precioLista: price,
+    costoUnitarioBase: baseCost,
+    ...priceMetrics(price, baseCost),
+  });
   const [last] = await database
     .select({ createdAt: precioHistorialTable.createdAt })
     .from(precioHistorialTable)
@@ -82,6 +101,14 @@ async function presentProduct(product: Product, database: Pick<typeof db, "selec
     seVendePorMetro: product.seVendePorMetro,
     activo: product.activo,
     precioLista: product.precioSugerido,
+    precioMayoreo: product.precioMayoreo,
+    precioMenudeo: product.precioMenudeo,
+    costoReferenciaMetreado: meteredReference,
+    preciosPorModo: {
+      ROLLO: modeSummary("ROLLO", product.precioSugerido, cost),
+      MAYOREO: modeSummary("MAYOREO", product.precioMayoreo, meteredCost.cost),
+      MENUDEO: modeSummary("MENUDEO", product.precioMenudeo, meteredCost.cost),
+    },
     ...metrics,
     ultimoCambioPrecio: last?.createdAt ?? null,
   };
@@ -127,7 +154,11 @@ router.get("/precios/:id", requireAdmin, async (req, res): Promise<void> => {
 
 router.post("/precios/:id/cambiar", requireAdmin, async (req, res): Promise<void> => {
   const params = ChangePrecioParams.safeParse(req.params);
-  const body = ChangePrecioBody.safeParse(req.body);
+  const body = ChangePrecioBody.safeParse({
+    ...req.body,
+    // Existing callers predate named price modes; their changes remain ROLLO.
+    modoPrecio: req.body?.modoPrecio ?? "ROLLO",
+  });
   const reason = body.success ? body.data.motivo.trim() : "";
   const newPrice = body.success ? body.data.precioListaNuevo : "";
   if (!params.success || !body.success || reason.length < 5 || !validPositiveMoney(newPrice)) {
@@ -140,26 +171,46 @@ router.post("/precios/:id/cambiar", requireAdmin, async (req, res): Promise<void
     await tx.execute(sql`SELECT pg_advisory_xact_lock(1347569993, ${params.data.id})`);
     const [before] = await tx.select().from(productosTable).where(eq(productosTable.id, params.data.id)).for("update").limit(1);
     if (!before) return null;
-    const cost = await currentCost(tx, before.id);
+    const modoPrecio = body.data.modoPrecio ?? "ROLLO";
+    const isMeteredMode = modoPrecio !== "ROLLO";
+    if (isMeteredMode && !before.seVendePorMetro) {
+      return { kind: "metered-disabled" } as const;
+    }
+    const cost = isMeteredMode
+      ? (await meteredReferenceCost(tx, before.id, new Date())).cost
+      : await currentCost(tx, before.id);
     const metrics = priceMetrics(body.data.precioListaNuevo, cost);
-    const [updated] = await tx.update(productosTable).set({ precioSugerido: body.data.precioListaNuevo }).where(eq(productosTable.id, before.id)).returning();
+    const previousPrice = modoPrecio === "ROLLO"
+      ? before.precioSugerido
+      : modoPrecio === "MAYOREO" ? before.precioMayoreo : before.precioMenudeo;
+    const updateValues = modoPrecio === "ROLLO"
+      ? { precioSugerido: body.data.precioListaNuevo }
+      : modoPrecio === "MAYOREO"
+        ? { precioMayoreo: body.data.precioListaNuevo }
+        : { precioMenudeo: body.data.precioListaNuevo };
+    const [updated] = await tx.update(productosTable).set(updateValues).where(eq(productosTable.id, before.id)).returning();
     const [change] = await tx.insert(precioHistorialTable).values({
-      productoId: before.id, precioListaAnterior: before.precioSugerido,
+      productoId: before.id, precioListaAnterior: previousPrice,
       precioListaNuevo: body.data.precioListaNuevo, costoUnitarioPonderado: cost,
+      modoPrecio,
       margenPesosUnidad: metrics.margenPesosUnidad, margenPorcentajeSubtotal: metrics.margenPorcentajeSubtotal,
       motivo: reason, advertenciaBajoCosto: cost !== null && Number(body.data.precioListaNuevo) < Number(cost),
       usuarioId: req.auth!.user.id,
     }).returning();
     await tx.insert(auditoriaTable).values({
       usuarioId: req.auth!.user.id, accion: "CAMBIAR_PRECIO", entidad: "productos", entidadId: String(before.id),
-      datosAntes: { precioSugerido: before.precioSugerido },
-      datosDespues: { precioSugerido: updated!.precioSugerido, motivo: reason, ...metrics, advertenciaBajoCosto: change!.advertenciaBajoCosto },
+      datosAntes: { modoPrecio, precioLista: previousPrice },
+      datosDespues: { modoPrecio, precioLista: body.data.precioListaNuevo, motivo: reason, ...metrics, advertenciaBajoCosto: change!.advertenciaBajoCosto },
       ip: getRequestIp(req),
     });
     return { product: updated!, change: change! };
   });
   if (!result) {
     res.status(404).json({ error: "Producto no encontrado." });
+    return;
+  }
+  if (result.kind === "metered-disabled") {
+    res.status(400).json({ error: "El producto no está habilitado para venta por metro.", code: "VENTA_POR_METRO_DESHABILITADA" });
     return;
   }
   const product = await presentProduct(result.product);

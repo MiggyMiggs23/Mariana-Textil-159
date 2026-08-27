@@ -12,11 +12,12 @@ if (!testUrl) {
   throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
 } else {
   test("precios is ADMIN-only and changes only catalog price/history", async () => {
-    const [{ pool, ensureProductMeterSchema }, { default: app }] = await Promise.all([
+    const [{ pool, ensureProductMeterSchema, ensureProductPricingSchema }, { default: app }] = await Promise.all([
       import("@workspace/db"),
       import("./app"),
     ]);
     await ensureProductMeterSchema(pool);
+    await ensureProductPricingSchema(pool);
     const tag = `PRECIO-IT-${randomUUID()}`;
     const expectedDb = decodeURIComponent(new URL(testUrl).pathname.slice(1));
     let server: Server | undefined;
@@ -121,11 +122,26 @@ if (!testUrl) {
       assert.equal(noCost.body[0].semaforo, "SIN_COSTO");
       assert.equal((await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, { precioListaNuevo: "90.00", motivo: "ajuste normal" })).response.status, 200);
       assert.equal((await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, { precioListaNuevo: "17.00", motivo: "   precio bajo costo   " })).response.status, 200);
+      const wholesale = await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, {
+        modoPrecio: "MAYOREO", precioListaNuevo: "125.00", motivo: "precio mayoreo",
+      });
+      assert.equal(wholesale.response.status, 200);
+      assert.equal(wholesale.body.precioLista, "17.00");
+      assert.equal(wholesale.body.precioMayoreo, "125.00");
+      const retail = await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, {
+        modoPrecio: "MENUDEO", precioListaNuevo: "150.00", motivo: "precio menudeo",
+      });
+      assert.equal(retail.response.status, 200);
+      assert.equal(retail.body.precioMayoreo, "125.00");
+      assert.equal(retail.body.precioMenudeo, "150.00");
       assert.equal((await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, { precioListaNuevo: "0", motivo: "no" })).response.status, 400);
       assert.equal((await request("PATCH", `/api/productos/${product.id}`, sessions[0]!, { precioSugerido: "22.00" })).response.status, 400);
       const detail = await request("GET", `/api/precios/${product.id}`, sessions[0]!);
-      assert.equal(detail.body.historial[0].advertenciaBajoCosto, true);
-      assert.equal(detail.body.historial[0].precioListaNuevo, "17.00");
+      const rolloHistory = detail.body.historial.find((item: { modoPrecio: string }) => item.modoPrecio === "ROLLO");
+      assert.equal(rolloHistory.advertenciaBajoCosto, true);
+      assert.equal(rolloHistory.precioListaNuevo, "17.00");
+      assert.equal(detail.body.historial[0].modoPrecio, "MENUDEO");
+      assert.equal(detail.body.historial[1].modoPrecio, "MAYOREO");
       assert.deepEqual(detail.body.puntosGrafica.map((x: { id: number }) => x.id), [...detail.body.historial].reverse().map((x: { id: number }) => x.id));
       const frozen = await pool.query("SELECT precio_sugerido,costo_unitario_congelado,costo_total_congelado FROM ticket_lineas WHERE id=$1", [line.id]);
       assert.deepEqual(frozen.rows[0], { precio_sugerido: "100.00", costo_unitario_congelado: "10.00", costo_total_congelado: "10.00" });

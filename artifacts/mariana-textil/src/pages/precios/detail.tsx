@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { useParams, Link, useLocation } from "wouter";
+import { useParams, Link, useLocation, useSearch } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
+import {
   useGetPrecio,
   useChangePrecio,
   getGetPrecioQueryKey,
   getListPreciosQueryKey,
   SemaforoPrecio,
-  PrecioHistorialItem
+  PrecioHistorialItem,
+  ModoPrecio,
+  UnidadProducto
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatNumber } from "@workspace/number-format";
@@ -18,9 +20,9 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { 
-  ArrowLeft, CheckCircle2, AlertTriangle, AlertOctagon, HelpCircle, 
-  TrendingUp, TrendingDown, DollarSign, History, LineChart, FileText 
+import {
+  ArrowLeft, CheckCircle2, AlertTriangle, AlertOctagon, HelpCircle, Lock,
+  TrendingUp, TrendingDown, DollarSign, History, LineChart, FileText
 } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -37,7 +39,7 @@ import {
 function getSemaforoBadge(s: SemaforoPrecio, size: "sm" | "md" = "sm") {
   const cn = size === "md" ? "px-3 py-1 text-sm" : "text-xs";
   const iconCn = size === "md" ? "w-4 h-4 mr-2" : "w-3 h-3 mr-1";
-  
+
   switch (s) {
     case SemaforoPrecio.VERDE:
       return <Badge variant="outline" className={`bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800 ${cn}`}><CheckCircle2 className={iconCn} /> Saludable</Badge>;
@@ -52,6 +54,10 @@ function getSemaforoBadge(s: SemaforoPrecio, size: "sm" | "md" = "sm") {
 
 export default function PrecioDetail() {
   const { id } = useParams();
+  const searchString = useSearch();
+  const searchParams = new URLSearchParams(searchString);
+  const initialMode = (searchParams.get("mode") as ModoPrecio) || ModoPrecio.ROLLO;
+
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
 
@@ -62,27 +68,40 @@ export default function PrecioDetail() {
   const changePrecio = useChangePrecio();
 
   // Workflow State
+  const [activeMode, setActiveMode] = useState<ModoPrecio>(initialMode);
   const [step, setStep] = useState<1 | 2>(1);
   const [precioNuevo, setPrecioNuevo] = useState("");
   const [motivo, setMotivo] = useState("");
 
-  const initializedForId = useRef<number | null>(null);
-
   useEffect(() => {
-    if (producto && initializedForId.current !== producto.id) {
-      initializedForId.current = producto.id;
-      setPrecioNuevo(producto.precioLista);
-      setMotivo("");
-      setStep(1);
+    setActiveMode(initialMode);
+  }, [initialMode]);
+
+  const initializedForId = useRef<string | null>(null);
+
+  // We need to re-initialize when the product or active mode changes
+  useEffect(() => {
+    if (producto) {
+      const modeKey = `${producto.id}-${activeMode}`;
+      if (initializedForId.current !== modeKey) {
+        initializedForId.current = modeKey;
+        const currentModePrice = producto.preciosPorModo[activeMode]?.precioLista;
+        setPrecioNuevo(currentModePrice || "");
+        setMotivo("");
+        setStep(1);
+      }
     }
-  }, [producto]);
+  }, [producto, activeMode]);
+
+  const modeData = producto?.preciosPorModo[activeMode];
+  const isLocked = producto && activeMode !== ModoPrecio.ROLLO && (!producto.seVendePorMetro || producto.unidad === UnidadProducto.KILO);
 
   const liveMetrics = useMemo(() => {
-    if (!producto || !precioNuevo) return null;
+    if (!producto || !modeData || !precioNuevo) return null;
     const priceNum = Number(precioNuevo);
     if (!Number.isFinite(priceNum) || priceNum <= 0) return null;
 
-    if (!producto.costoUnitarioPonderado) {
+    if (!modeData.costoUnitarioBase) {
       return {
         margenPesos: null,
         margenPct: null,
@@ -91,10 +110,10 @@ export default function PrecioDetail() {
       };
     }
 
-    const costNum = Number(producto.costoUnitarioPonderado);
+    const costNum = Number(modeData.costoUnitarioBase);
     const margin = priceNum - costNum;
     const pct = (margin / priceNum) * 100;
-    
+
     let semaforo: typeof SemaforoPrecio[keyof typeof SemaforoPrecio] = SemaforoPrecio.ROJO;
     if (pct >= 30) semaforo = SemaforoPrecio.VERDE;
     else if (pct >= 15) semaforo = SemaforoPrecio.AMBAR;
@@ -105,7 +124,7 @@ export default function PrecioDetail() {
       semaforo,
       advertenciaBajoCosto: margin < 0
     };
-  }, [producto, precioNuevo]);
+  }, [producto, modeData, precioNuevo]);
 
   if (isLoading) {
     return (
@@ -151,6 +170,7 @@ export default function PrecioDetail() {
     changePrecio.mutate({
       id: producto.id,
       data: {
+        modoPrecio: activeMode,
         precioListaNuevo: parseFloat(Number(precioNuevo).toFixed(2)).toString(),
         motivo: motivo.trim()
       }
@@ -170,26 +190,30 @@ export default function PrecioDetail() {
   };
 
   // Format data for chart
-  const chartData = [...producto.puntosGrafica].map(pt => ({
+  const modePuntosGrafica = producto.puntosGrafica.filter(pt => pt.modoPrecio === activeMode);
+  const chartData = [...modePuntosGrafica].map(pt => ({
     date: format(new Date(pt.createdAt), "MMM dd, yyyy"),
     rawDate: new Date(pt.createdAt).getTime(),
     precio: Number(pt.precioListaNuevo),
-    costo: pt.costoUnitarioPonderado ? Number(pt.costoUnitarioPonderado) : null,
+    costo: pt.costoUnitarioBase ? Number(pt.costoUnitarioBase) : null,
   })).sort((a, b) => a.rawDate - b.rawDate);
 
   // Fallback if no history yet
-  if (chartData.length === 0) {
+  if (chartData.length === 0 && modeData?.precioLista) {
     chartData.push({
       date: "Actual",
       rawDate: Date.now(),
-      precio: Number(producto.precioLista),
-      costo: producto.costoUnitarioPonderado ? Number(producto.costoUnitarioPonderado) : null
+      precio: Number(modeData.precioLista),
+      costo: modeData.costoUnitarioBase ? Number(modeData.costoUnitarioBase) : null
     });
   }
 
-  const diffPct = Number(producto.precioLista) > 0 
-    ? ((Number(precioNuevo) - Number(producto.precioLista)) / Number(producto.precioLista)) * 100 
+  const currentPriceForMode = modeData?.precioLista || "0";
+  const diffPct = Number(currentPriceForMode) > 0
+    ? ((Number(precioNuevo) - Number(currentPriceForMode)) / Number(currentPriceForMode)) * 100
     : 0;
+
+  const modeHistorial = producto.historial.filter(h => h.modoPrecio === activeMode);
 
   return (
     <AppLayout>
@@ -204,44 +228,74 @@ export default function PrecioDetail() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Header & Current Metrics */}
-          <Card className="lg:col-span-3 bg-gradient-to-br from-sidebar to-sidebar-accent text-white shadow-lg overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-sidebar-primary rounded-full blur-[80px] opacity-20 -mr-20 -mt-20 pointer-events-none"></div>
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="font-mono text-sidebar-primary-foreground/70 bg-sidebar-accent/50 px-2 py-1 rounded text-sm font-bold border border-white/10" data-testid="text-sku">
-                      {producto.sku}
-                    </span>
-                    <Badge variant="outline" className="text-white border-white/20 bg-white/5 uppercase text-xs">{producto.unidad}</Badge>
-                    {!producto.activo && <Badge variant="destructive">Inactivo</Badge>}
-                  </div>
-                  <h1 className="text-3xl font-bold tracking-tight mb-1">{producto.tela}</h1>
-                  <p className="text-lg text-sidebar-foreground/80 font-medium">{producto.color}</p>
-                </div>
-                
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12 bg-black/20 p-6 rounded-xl border border-white/10 backdrop-blur-sm">
-                  <div>
-                    <p className="text-sm text-sidebar-foreground/60 font-medium mb-1 uppercase tracking-wider">Costo Pond.</p>
-                    <div className="text-2xl font-semibold text-sidebar-primary-foreground/90">
-                      {producto.costoUnitarioPonderado ? formatNumber(producto.costoUnitarioPonderado, { kind: "money" }) : "Sin costo"}
-                    </div>
-                  </div>
-                  <div className="hidden md:block w-px h-12 bg-white/10"></div>
-                  <div>
-                    <p className="text-sm text-sidebar-foreground/60 font-medium mb-1 uppercase tracking-wider flex items-center justify-between">
-                      Precio de Lista
-                    </p>
-                    <div className="text-4xl font-bold text-white tracking-tighter" data-testid="text-current-price">
-                      {formatNumber(producto.precioLista, { kind: "money" })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
+        <div className="flex border-b border-border mb-6">
+          {(["ROLLO", "MAYOREO", "MENUDEO"] as ModoPrecio[]).map((mode) => (
+            <button
+              key={mode}
+              className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+                activeMode === mode
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+              }`}
+              onClick={() => setActiveMode(mode)}
+              data-testid={`tab-mode-${mode}`}
+            >
+              {mode === "ROLLO" ? "Precio por Rollo" : mode === "MAYOREO" ? "Mayoreo (≥ 10m)" : "Menudeo (< 10m)"}
+            </button>
+          ))}
+        </div>
+
+        {isLocked ? (
+          <Card className="border-dashed border-2 border-muted bg-muted/10 p-12 text-center flex flex-col items-center">
+            <Lock className="w-12 h-12 mb-4 text-muted-foreground opacity-50" />
+            <h2 className="text-xl font-bold mb-2">Modo Bloqueado</h2>
+            <p className="text-muted-foreground">
+              Este producto {producto.unidad === UnidadProducto.KILO ? 'se vende por KILO y no soporta ventas metreadas' : 'tiene la venta por metro deshabilitada'}.
+              Para modificar los precios de mayoreo o menudeo, primero debes habilitar la venta por metro desde el catálogo.
+            </p>
           </Card>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Header & Current Metrics */}
+            <Card className="lg:col-span-3 bg-gradient-to-br from-sidebar to-sidebar-accent text-white shadow-lg overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-sidebar-primary rounded-full blur-[80px] opacity-20 -mr-20 -mt-20 pointer-events-none"></div>
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="font-mono text-sidebar-primary-foreground/70 bg-sidebar-accent/50 px-2 py-1 rounded text-sm font-bold border border-white/10" data-testid="text-sku">
+                        {producto.sku}
+                      </span>
+                      <Badge variant="outline" className="text-white border-white/20 bg-white/5 uppercase text-xs">{producto.unidad}</Badge>
+                      <Badge variant="outline" className="text-white border-white/20 bg-white/5 font-medium">{activeMode}</Badge>
+                      {!producto.activo && <Badge variant="destructive">Inactivo</Badge>}
+                    </div>
+                    <h1 className="text-3xl font-bold tracking-tight mb-1">{producto.tela}</h1>
+                    <p className="text-lg text-sidebar-foreground/80 font-medium">{producto.color}</p>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12 bg-black/20 p-6 rounded-xl border border-white/10 backdrop-blur-sm">
+                    <div>
+                      <p className="text-sm text-sidebar-foreground/60 font-medium mb-1 uppercase tracking-wider flex items-center gap-1">
+                        Costo Base <span title="Costo unitario utilizado como referencia para el margen de este modo de precio."><HelpCircle className="w-3 h-3 opacity-60" /></span>
+                      </p>
+                      <div className="text-2xl font-semibold text-sidebar-primary-foreground/90">
+                        {modeData?.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "Sin costo"}
+                      </div>
+                    </div>
+                    <div className="hidden md:block w-px h-12 bg-white/10"></div>
+                    <div>
+                      <p className="text-sm text-sidebar-foreground/60 font-medium mb-1 uppercase tracking-wider flex items-center justify-between">
+                        Precio de Lista ({activeMode})
+                      </p>
+                      <div className="text-4xl font-bold text-white tracking-tighter" data-testid="text-current-price">
+                        {modeData?.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
           {/* Left Column: Chart */}
           <div className="lg:col-span-2 space-y-6">
@@ -259,42 +313,42 @@ export default function PrecioDetail() {
                 <ResponsiveContainer width="100%" height="100%">
                   <RechartsLineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                    <XAxis 
-                      dataKey="date" 
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} 
-                      tickMargin={10} 
-                      axisLine={false} 
-                      tickLine={false} 
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickLine={false}
                     />
-                    <YAxis 
-                      tickFormatter={(value) => `$${value}`} 
-                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} 
-                      tickMargin={10} 
-                      axisLine={false} 
-                      tickLine={false} 
+                    <YAxis
+                      tickFormatter={(value) => `$${value}`}
+                      tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickLine={false}
                     />
-                    <RechartsTooltip 
+                    <RechartsTooltip
                       formatter={(value: number) => formatNumber(value, { kind: "money" })}
                       contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     />
                     <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '14px' }} />
-                    <Line 
-                      type="stepAfter" 
-                      dataKey="precio" 
-                      name="Precio Lista" 
-                      stroke="hsl(var(--primary))" 
-                      strokeWidth={3} 
-                      dot={{ r: 4, fill: "hsl(var(--background))", strokeWidth: 2 }} 
-                      activeDot={{ r: 6 }} 
+                    <Line
+                      type="stepAfter"
+                      dataKey="precio"
+                      name={`Precio Lista (${activeMode})`}
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={3}
+                      dot={{ r: 4, fill: "hsl(var(--background))", strokeWidth: 2 }}
+                      activeDot={{ r: 6 }}
                     />
-                    <Line 
-                      type="monotone" 
-                      dataKey="costo" 
-                      name="Costo Ponderado" 
-                      stroke="hsl(var(--muted-foreground))" 
-                      strokeWidth={2} 
-                      strokeDasharray="4 4" 
-                      dot={{ r: 3 }} 
+                    <Line
+                      type="monotone"
+                      dataKey="costo"
+                      name="Costo Base"
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth={2}
+                      strokeDasharray="4 4"
+                      dot={{ r: 3 }}
                     />
                   </RechartsLineChart>
                 </ResponsiveContainer>
@@ -321,26 +375,26 @@ export default function PrecioDetail() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {producto.historial.length === 0 ? (
+                    {modeHistorial.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                           No hay historial de cambios registrado.
                         </TableCell>
                       </TableRow>
                     ) : (
-                      producto.historial.map((item) => (
+                      modeHistorial.map((item) => (
                         <TableRow key={item.id}>
                           <TableCell className="whitespace-nowrap text-xs text-muted-foreground font-medium">
                             {format(new Date(item.createdAt), "dd/MM/yy HH:mm")}
                           </TableCell>
                           <TableCell className="text-right text-muted-foreground line-through decoration-muted-foreground/40">
-                            {formatNumber(item.precioListaAnterior, { kind: "money" })}
+                            {item.precioListaAnterior && Number(item.precioListaAnterior) > 0 ? formatNumber(item.precioListaAnterior, { kind: "money" }) : "—"}
                           </TableCell>
                           <TableCell className="text-right font-bold text-foreground">
-                            {formatNumber(item.precioListaNuevo, { kind: "money" })}
+                            {item.precioListaNuevo && Number(item.precioListaNuevo) > 0 ? formatNumber(item.precioListaNuevo, { kind: "money" }) : "—"}
                           </TableCell>
                           <TableCell className="text-right">
-                            {item.margenPorcentajeSubtotal ? (
+                            {item.margenPorcentajeSubtotal && Number(item.margenPorcentajeSubtotal) !== 0 ? (
                               <Badge variant="outline" className={`font-mono font-medium ${
                                 Number(item.margenPorcentajeSubtotal) >= 30 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
                                 Number(item.margenPorcentajeSubtotal) >= 15 ? 'bg-amber-50 text-amber-700 border-amber-200' :
@@ -383,13 +437,13 @@ export default function PrecioDetail() {
                   <div className={`h-2 flex-1 rounded-full ${step >= 2 ? 'bg-primary' : 'bg-muted'}`}></div>
                 </div>
               </CardHeader>
-              
+
               {step === 1 && (
                 <CardContent className="p-6 space-y-6">
                   <div className="space-y-2">
                     <Label className="text-muted-foreground uppercase text-xs font-bold tracking-wider">Precio Actual</Label>
                     <div className="text-2xl font-bold bg-muted/50 p-3 rounded-lg border border-border/50 text-muted-foreground">
-                      {formatNumber(producto.precioLista, { kind: "money" })}
+                      {modeData?.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}
                     </div>
                   </div>
 
@@ -399,7 +453,7 @@ export default function PrecioDetail() {
                     </Label>
                     <div className="relative">
                       <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input 
+                      <Input
                         id="precioNuevo"
                         type="number"
                         step="0.01"
@@ -416,7 +470,7 @@ export default function PrecioDetail() {
                     <h4 className="text-sm font-semibold flex items-center gap-2 text-foreground/80 border-b pb-2">
                       <TrendingUp className="w-4 h-4" /> Proyección de Margen
                     </h4>
-                    
+
                     {!liveMetrics ? (
                       <p className="text-sm text-muted-foreground py-2 text-center">Ingresa un precio válido</p>
                     ) : (
@@ -440,7 +494,7 @@ export default function PrecioDetail() {
                         {liveMetrics.advertenciaBajoCosto && (
                           <div className="mt-2 p-2 bg-destructive/10 text-destructive text-xs rounded-md border border-destructive/20 flex items-start gap-2">
                             <AlertOctagon className="w-4 h-4 shrink-0 mt-0.5" />
-                            <p>El precio ingresado está por debajo del costo unitario ponderado ({formatNumber(producto.costoUnitarioPonderado, { kind: "money" })}).</p>
+                            <p>El precio ingresado está por debajo del costo unitario base ({modeData?.costoUnitarioBase && Number(modeData.costoUnitarioBase) > 0 ? formatNumber(modeData.costoUnitarioBase, { kind: "money" }) : "—"}).</p>
                           </div>
                         )}
                       </>
@@ -451,7 +505,7 @@ export default function PrecioDetail() {
                     <Label htmlFor="motivo" className="uppercase text-xs font-bold tracking-wider text-foreground">
                       Motivo del Cambio
                     </Label>
-                    <Input 
+                    <Input
                       id="motivo"
                       value={motivo}
                       onChange={(e) => setMotivo(e.target.value)}
@@ -469,13 +523,13 @@ export default function PrecioDetail() {
                     <h3 className="font-bold text-primary flex items-center gap-2 border-b border-primary/10 pb-2">
                       <FileText className="w-4 h-4" /> Resumen del Cambio
                     </h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-semibold">Anterior</p>
-                        <p className="text-lg font-medium text-muted-foreground line-through decoration-muted-foreground/40">{formatNumber(producto.precioLista, { kind: "money" })}</p>
-                        {producto.margenPorcentajeSubtotal && (
-                          <p className="text-xs text-muted-foreground mt-1">Margen: {formatNumber(producto.margenPorcentajeSubtotal, { kind: "percentage", percentageInput: "percent" })}</p>
+                        <p className="text-lg font-medium text-muted-foreground line-through decoration-muted-foreground/40">{modeData?.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}</p>
+                        {modeData?.margenPorcentajeSubtotal && (
+                          <p className="text-xs text-muted-foreground mt-1">Margen: {formatNumber(modeData.margenPorcentajeSubtotal, { kind: "percentage", percentageInput: "percent" })}</p>
                         )}
                       </div>
                       <div>
@@ -522,9 +576,9 @@ export default function PrecioDetail() {
                     <Button variant="outline" className="flex-1 h-11" onClick={() => setStep(1)} disabled={changePrecio.isPending}>
                       Volver
                     </Button>
-                    <Button 
+                    <Button
                       className={`flex-1 h-11 font-bold shadow-md ${liveMetrics?.advertenciaBajoCosto ? 'bg-destructive hover:bg-destructive/90 text-destructive-foreground' : ''}`}
-                      onClick={handleConfirm} 
+                      onClick={handleConfirm}
                       disabled={changePrecio.isPending}
                       data-testid="button-confirm-price"
                     >
@@ -536,6 +590,7 @@ export default function PrecioDetail() {
             </Card>
           </div>
         </div>
+        )}
       </div>
     </AppLayout>
   );

@@ -16,6 +16,7 @@ export const rolUsuarioEnum = pgEnum("rol_usuario", [
 ]);
 
 export const unidadProductoEnum = pgEnum("unidad_producto", ["METRO", "KILO"]);
+export const precioModoEnum = pgEnum("precio_modo", ["ROLLO", "MAYOREO", "MENUDEO"]);
 
 export const tipoProveedorEnum = pgEnum("tipo_proveedor", [
   "NACIONAL",

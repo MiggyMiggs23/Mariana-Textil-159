@@ -5,8 +5,11 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ModoPrecio } from './modoPrecio';
 
 export interface CambiarPrecioInput {
+  /** Modo a cambiar; se omite únicamente para compatibilidad con clientes de precio por rollo. */
+  modoPrecio?: ModoPrecio;
   /** Importe positivo con máximo dos decimales */
   precioListaNuevo: string;
   /** @minLength 5 */

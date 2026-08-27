@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { precioModoEnum } from "./enums";
 import { productosTable } from "./productos";
 import { usuariosTable } from "./users";
 
@@ -22,11 +23,12 @@ export const precioHistorialTable = pgTable(
     precioListaAnterior: numeric("precio_lista_anterior", {
       precision: 12,
       scale: 2,
-    }).notNull(),
+    }),
     precioListaNuevo: numeric("precio_lista_nuevo", {
       precision: 12,
       scale: 2,
     }).notNull(),
+    modoPrecio: precioModoEnum("modo_precio").notNull().default("ROLLO"),
     costoUnitarioPonderado: numeric("costo_unitario_ponderado", {
       precision: 12,
       scale: 2,

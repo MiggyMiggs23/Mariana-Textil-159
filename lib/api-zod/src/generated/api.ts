@@ -393,7 +393,42 @@ export const ListPreciosResponseItem = zod.object({
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoReferenciaMetreado": zod.object({
+  "costoUnitario": zod.string().nullable(),
+  "estado": zod.enum(['AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN', 'NO_COST']),
+  "esMayorA12Meses": zod.boolean(),
+  "rollosIncluidos": zod.number(),
+  "fechaUltimaRecepcion": zod.coerce.date().nullable()
+}),
   "precioLista": zod.string(),
+  "precioMayoreo": zod.string().nullable(),
+  "precioMenudeo": zod.string().nullable(),
+  "preciosPorModo": zod.object({
+  "ROLLO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MAYOREO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MENUDEO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+})
+}),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
@@ -418,7 +453,42 @@ export const GetPrecioResponse = zod.object({
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoReferenciaMetreado": zod.object({
+  "costoUnitario": zod.string().nullable(),
+  "estado": zod.enum(['AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN', 'NO_COST']),
+  "esMayorA12Meses": zod.boolean(),
+  "rollosIncluidos": zod.number(),
+  "fechaUltimaRecepcion": zod.coerce.date().nullable()
+}),
   "precioLista": zod.string(),
+  "precioMayoreo": zod.string().nullable(),
+  "precioMenudeo": zod.string().nullable(),
+  "preciosPorModo": zod.object({
+  "ROLLO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MAYOREO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MENUDEO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+})
+}),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
@@ -426,9 +496,11 @@ export const GetPrecioResponse = zod.object({
 }).and(zod.object({
   "historial": zod.array(zod.object({
   "id": zod.number(),
-  "precioListaAnterior": zod.string(),
+  "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioListaAnterior": zod.string().nullable(),
   "precioListaNuevo": zod.string(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable().describe('Instantaneous cost base snapshotted when this mode price changed'),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "motivo": zod.string(),
@@ -438,9 +510,11 @@ export const GetPrecioResponse = zod.object({
 })).describe('Orden descendente, más reciente primero'),
   "puntosGrafica": zod.array(zod.object({
   "id": zod.number(),
-  "precioListaAnterior": zod.string(),
+  "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioListaAnterior": zod.string().nullable(),
   "precioListaNuevo": zod.string(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable().describe('Instantaneous cost base snapshotted when this mode price changed'),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "motivo": zod.string(),
@@ -452,17 +526,19 @@ export const GetPrecioResponse = zod.object({
 
 
 /**
- * @summary Cambia el precio de lista y registra su historial inmutable (ADMIN)
+ * @summary Cambia un precio por modo y registra su historial inmutable (ADMIN)
  */
 export const ChangePrecioParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const changePrecioBodyModoPrecioDefault = `ROLLO`;
 export const changePrecioBodyMotivoMin = 5;
 
 
 
 export const ChangePrecioBody = zod.object({
+  "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']).default(changePrecioBodyModoPrecioDefault).describe('Modo a cambiar; se omite únicamente para compatibilidad con clientes de precio por rollo.'),
   "precioListaNuevo": zod.string().describe('Importe positivo con máximo dos decimales'),
   "motivo": zod.string().min(changePrecioBodyMotivoMin)
 })
@@ -477,7 +553,42 @@ export const ChangePrecioResponse = zod.object({
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoReferenciaMetreado": zod.object({
+  "costoUnitario": zod.string().nullable(),
+  "estado": zod.enum(['AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN', 'NO_COST']),
+  "esMayorA12Meses": zod.boolean(),
+  "rollosIncluidos": zod.number(),
+  "fechaUltimaRecepcion": zod.coerce.date().nullable()
+}),
   "precioLista": zod.string(),
+  "precioMayoreo": zod.string().nullable(),
+  "precioMenudeo": zod.string().nullable(),
+  "preciosPorModo": zod.object({
+  "ROLLO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MAYOREO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MENUDEO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+})
+}),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
@@ -485,9 +596,11 @@ export const ChangePrecioResponse = zod.object({
 }),
   "cambio": zod.object({
   "id": zod.number(),
-  "precioListaAnterior": zod.string(),
+  "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioListaAnterior": zod.string().nullable(),
   "precioListaNuevo": zod.string(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable().describe('Instantaneous cost base snapshotted when this mode price changed'),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "motivo": zod.string(),
@@ -518,7 +631,42 @@ export const UpdatePrecioVentaPorMetroResponse = zod.object({
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
+  "costoReferenciaMetreado": zod.object({
+  "costoUnitario": zod.string().nullable(),
+  "estado": zod.enum(['AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN', 'NO_COST']),
+  "esMayorA12Meses": zod.boolean(),
+  "rollosIncluidos": zod.number(),
+  "fechaUltimaRecepcion": zod.coerce.date().nullable()
+}),
   "precioLista": zod.string(),
+  "precioMayoreo": zod.string().nullable(),
+  "precioMenudeo": zod.string().nullable(),
+  "preciosPorModo": zod.object({
+  "ROLLO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MAYOREO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+}),
+  "MENUDEO": zod.object({
+  "modo": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "precioLista": zod.string().nullable(),
+  "costoUnitarioBase": zod.string().nullable(),
+  "margenPesosUnidad": zod.string().nullable(),
+  "margenPorcentajeSubtotal": zod.string().nullable(),
+  "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO'])
+})
+}),
   "margenPesosUnidad": zod.string().nullable(),
   "margenPorcentajeSubtotal": zod.string().nullable(),
   "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']),
