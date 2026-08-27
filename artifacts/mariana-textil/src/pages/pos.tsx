@@ -66,6 +66,10 @@ import {
   advertenciaSkuEscaneado,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
+import {
+  MAYOREO_THRESHOLD_METERS,
+  suggestedMeteredPrice,
+} from "@workspace/metered-pricing";
 
 type PriceValidation = {
   status: "idle" | "checking" | "valid" | "invalid" | "error";
@@ -76,6 +80,18 @@ type CartLineKey = string;
 
 function getCartLineKey(item: any): CartLineKey {
   return item.rollo ? `rollo-${item.rollo.id}` : `producto-${item.producto.id}`;
+}
+
+function meteredCostWarning(item: any): string | null {
+  const cost = item.producto.costoReferenciaMetreado?.costoUnitario;
+  if (
+    cost != null &&
+    Number.isFinite(item.precioUnitario) &&
+    item.precioUnitario < Number(cost)
+  ) {
+    return "El precio capturado está por debajo del costo de referencia metreado. La venta puede continuar.";
+  }
+  return null;
 }
 
 // Componente Cart Line para el POS
@@ -179,6 +195,7 @@ function CartLineItem({
 
   const priceIsBlocked =
     priceValidation.status === "invalid" || priceValidation.status === "error";
+  const belowMeteredCost = isMetreado ? meteredCostWarning(item) : null;
 
   return (
     <div className={`border-b py-3 last:border-0 ${isMetreado ? 'bg-amber-50/30' : ''}`}>
@@ -191,6 +208,23 @@ function CartLineItem({
             <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm ${isMetreado ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
               {isMetreado ? 'Metreado' : 'Rollo'}
             </span>
+             {isMetreado && (
+               <>
+                 <span
+                   className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm bg-violet-100 text-violet-800"
+                   data-testid={`precio-tipo-${item.producto.id}`}
+                 >
+                   {item.meteredPriceTier === "MAYOREO"
+                     ? `Mayoreo (${MAYOREO_THRESHOLD_METERS} m o más)`
+                     : `Menudeo (menos de ${MAYOREO_THRESHOLD_METERS} m)`}
+                 </span>
+                 {item.meteredPriceTierChanged && (
+                   <span className="text-xs font-medium text-violet-800" role="status">
+                     Precio sugerido actualizado al cruzar el umbral.
+                   </span>
+                 )}
+               </>
+             )}
             {!isMetreado && item.rollo && (
               <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground font-mono">
                 {item.rollo.serie}
@@ -229,8 +263,8 @@ function CartLineItem({
             <div className="w-20">
               <Input
                 type="number"
-                min="0.1"
-                step="0.1"
+                min="0.001"
+                step="0.001"
                 value={item.cantidad}
                 onChange={(e) =>
                   onChangeQuantity &&
@@ -268,6 +302,23 @@ function CartLineItem({
           {priceValidation.message}
         </p>
       )}
+       {belowMeteredCost && (
+         <p className="mt-2 flex items-center gap-1 text-xs font-medium text-amber-800" role="alert">
+           <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+           {belowMeteredCost}
+         </p>
+       )}
+       {isMetreado && item.producto.costoReferenciaMetreado && (
+         <p className="mt-1 text-xs text-muted-foreground">
+           Costo de referencia:{" "}
+           {item.producto.costoReferenciaMetreado.costoUnitario == null
+             ? "sin costo conocido"
+             : formatNumber(item.producto.costoReferenciaMetreado.costoUnitario, { kind: "money" })}
+           {item.producto.costoReferenciaMetreado.esMayorA12Meses
+             ? " (último costo conocido, mayor a 12 meses)"
+             : ""}
+         </p>
+       )}
     </div>
   );
 }
@@ -395,7 +446,7 @@ export default function PosPage() {
         },
       ]);
     } else {
-      // Para METREADO, añadir producto con cantidad 1 (editable luego)
+      // Para METREADO, cada producto-color is an independent line.
       if (cart.find((c) => c.producto.id === item.id && c.isMetreado)) {
         toast({
           title: "El producto ya está en el ticket. Ajusta la cantidad.",
@@ -405,14 +456,19 @@ export default function PosPage() {
       }
       setCart([
         ...cart,
-        {
+        (() => {
+          const suggested = suggestedMeteredPrice(1, item);
+          return {
           rollo: null,
           producto: item,
           cantidad: 1,
-          precioUnitario: Number(item.precioSugerido),
+          precioUnitario: Number(suggested.price),
           priceValidation: { status: "valid" },
           isMetreado: true,
-        },
+          meteredPriceTier: suggested.tier,
+          meteredPriceTierChanged: false,
+        };
+        })(),
       ]);
     }
     setSearch("");
@@ -421,7 +477,24 @@ export default function PosPage() {
   const updateCartQuantity = (index: number, qty: number) => {
     setCart((current) =>
       current.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, cantidad: qty } : item,
+        itemIndex === index && item.isMetreado
+          ? (() => {
+              const suggested = suggestedMeteredPrice(qty, item.producto);
+              const crossedTier = item.meteredPriceTier !== suggested.tier;
+              return {
+                ...item,
+                cantidad: qty,
+                // Keep a freely edited price within a tier; crossing the
+                // threshold deliberately refreshes the prefilled suggestion.
+                precioUnitario: crossedTier
+                  ? Number(suggested.price)
+                  : item.precioUnitario,
+                meteredPriceTier: suggested.tier,
+                meteredPriceTierChanged: crossedTier,
+                priceValidation: { status: "valid" },
+              };
+            })()
+          : item,
       ),
     );
   };
@@ -799,7 +872,7 @@ export default function PosPage() {
 
                 {tipoTicket === TipoTicket.METREADO &&
                   searchResults.productos
-                    .filter((prod: PosProducto) => prod.unidad === "METRO")
+                    .filter((prod: PosProducto) => prod.unidad === "METRO" && prod.seVendePorMetro)
                     .map((prod: PosProducto) => (
                     <Card
                       key={prod.id}
@@ -816,9 +889,12 @@ export default function PosPage() {
                         </div>
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
-                            {formatNumber(prod.precioSugerido, { kind: "money" })}
+                             {formatNumber(prod.precioMenudeo, { kind: "money" })}
                             /{prod.unidad}
                           </div>
+                           <div className="text-xs text-muted-foreground text-right">
+                             Mayoreo: {formatNumber(prod.precioMayoreo, { kind: "money" })} · desde {MAYOREO_THRESHOLD_METERS} m
+                           </div>
                           <Button
                             size="sm"
                             onClick={() => addToCart(prod)}

@@ -3273,6 +3273,11 @@ export interface PosProducto {
   color: string;
   unidad: UnidadProducto;
   precioSugerido: string;
+  /** @nullable */
+  precioMayoreo: string | null;
+  /** @nullable */
+  precioMenudeo: string | null;
+  costoReferenciaMetreado: CostoReferenciaMetreado;
   seVendePorMetro: boolean;
   activo: boolean;
 }

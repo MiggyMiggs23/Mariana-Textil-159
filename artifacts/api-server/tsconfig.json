@@ -13,6 +13,9 @@
       "path": "../../lib/scanned-code"
     },
     {
+      "path": "../../lib/metered-pricing"
+    },
+    {
       "path": "../../lib/db"
     },
     {

@@ -47,6 +47,7 @@
     "@google-cloud/storage": "^8.0.1",
     "@workspace/api-zod": "workspace:*",
     "@workspace/db": "workspace:*",
+    "@workspace/metered-pricing": "workspace:*",
     "@workspace/number-format": "workspace:*",
     "@workspace/scanned-code": "workspace:*",
     "cookie-parser": "^1.4.7",

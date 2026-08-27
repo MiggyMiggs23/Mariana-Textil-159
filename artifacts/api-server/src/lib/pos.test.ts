@@ -96,6 +96,8 @@ async function makeProduct(
       color: `Color ${tag}`,
       unidad,
       precioSugerido,
+      precioMayoreo: precioSugerido,
+      precioMenudeo: precioSugerido,
       seVendePorMetro,
     })
     .returning();
@@ -1259,6 +1261,48 @@ await test("POS-09 cierre es irreversible y calcula diferencia", async () => {
     (error: unknown) =>
       error instanceof PosError && error.code === "SESSION_CLOSED",
   );
+});
+
+await test("POS-10 metreado persists per-line Menudeo/Mayoreo suggestions without blocking a price below reference cost", async () => {
+  const ubicacionId = await makeLocation();
+  const rojoId = await makeProduct();
+  const negroId = await makeProduct();
+  await db
+    .update(productosTable)
+    .set({ precioMayoreo: "80.00", precioMenudeo: "100.00" })
+    .where(inArray(productosTable.id, [rojoId, negroId]));
+  // Reception costs establish a metered reference, but METREADO still permits
+  // a freely chosen price below it.
+  await makeRollo(rojoId, ubicacionId, "10", "50");
+  await makeRollo(negroId, ubicacionId, "10", "50");
+  const ticket = await db.transaction((tx) =>
+    crearTicket(
+      tx,
+      {
+        ubicacionId,
+        usuarioTerminalId: USER_ID,
+        clienteId: 1,
+        facturado: false,
+        uuidCliente: randomUUID(),
+        lineas: [
+          { productoId: rojoId, tipo: "METREADO", cantidad: "9.999", precioUnitario: "40" },
+          { productoId: rojoId, tipo: "METREADO", cantidad: "10.000", precioUnitario: "40" },
+          // Same fabric represented by separate product-color lines must not aggregate.
+          { productoId: rojoId, tipo: "METREADO", cantidad: "5.000", precioUnitario: "40" },
+          { productoId: negroId, tipo: "METREADO", cantidad: "5.000", precioUnitario: "40" },
+        ],
+        ip: "127.0.0.1",
+      },
+      true,
+    ),
+  );
+  assert.ok(ticket);
+  createdTicketIds.push(ticket!.id);
+  assert.deepEqual(
+    ticket!.lineas.map((linea) => linea.precioSugerido),
+    ["100.00", "80.00", "100.00", "100.00"],
+  );
+  assert.equal(ticket!.lineas[0]?.precioUnitario, "40.00");
 });
 
 let financialTriggersDisabled = false;

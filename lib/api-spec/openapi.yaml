@@ -2318,7 +2318,7 @@ paths:
           description: Ubicación donde el rollo debe estar DISPONIBLE
       responses:
         "200":
-          description: Resultados disponibles para la terminal, sin costos
+          description: Resultados disponibles para la terminal; los productos metreados incluyen precios y costo de referencia.
           content:
             application/json:
               schema:
@@ -6934,7 +6934,7 @@ components:
         precioSugerido: { type: string }
     PosProducto:
       type: object
-      required: [id, sku, tela, color, unidad, precioSugerido, seVendePorMetro, activo]
+      required: [id, sku, tela, color, unidad, precioSugerido, precioMayoreo, precioMenudeo, costoReferenciaMetreado, seVendePorMetro, activo]
       properties:
         id: { type: number }
         sku: { type: string }
@@ -6943,6 +6943,9 @@ components:
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         precioSugerido: { type: string }
+        precioMayoreo: { type: ["string", "null"] }
+        precioMenudeo: { type: ["string", "null"] }
+        costoReferenciaMetreado: { $ref: "#/components/schemas/CostoReferenciaMetreado" }
         seVendePorMetro: { type: boolean }
         activo: { type: boolean }
     PosBusquedaResult:

@@ -3466,6 +3466,15 @@ export const BuscarPosResponse = zod.object({
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO']),
   "precioSugerido": zod.string(),
+  "precioMayoreo": zod.string().nullable(),
+  "precioMenudeo": zod.string().nullable(),
+  "costoReferenciaMetreado": zod.object({
+  "costoUnitario": zod.string().nullable(),
+  "estado": zod.enum(['AVERAGE_12_MONTHS', 'STALE_LAST_KNOWN', 'NO_COST']),
+  "esMayorA12Meses": zod.boolean(),
+  "rollosIncluidos": zod.number(),
+  "fechaUltimaRecepcion": zod.coerce.date().nullable()
+}),
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean()
 }))

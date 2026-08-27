@@ -33,6 +33,11 @@ import {
   type CreditTerm,
 } from "./clientes-aging";
 import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
+import {
+  meteredPriceTier,
+  suggestedMeteredPrice,
+} from "@workspace/metered-pricing";
+import { meteredReferenceCost } from "./metered-reference-cost";
 
 const FOLIO_ROW_ID = 1;
 
@@ -498,6 +503,16 @@ export async function crearTicket(
         "METREADO_NO_HABILITADO",
       );
     }
+    const suggestedPrice =
+      tipo === "METREADO"
+        ? suggestedMeteredPrice(Number(cantidad), producto).price
+        : producto.precioSugerido;
+    if (suggestedPrice == null) {
+      throw new PosError(
+        `No hay precio ${meteredPriceTier(Number(cantidad)).toLowerCase()} configurado para ${productName(producto.tela, producto.color)}.`,
+        "METREADO_PRICE_NOT_CONFIGURED",
+      );
+    }
     const rollo =
       linea.rolloId == null ? null : (rolloMap.get(linea.rolloId) ?? null);
     if (tipo === "METREADO" && linea.rolloId != null) {
@@ -563,7 +578,10 @@ export async function crearTicket(
       tipo,
       cantidad,
       precioUnitario: decimalMoney(precioCents),
-      precioSugerido: producto.precioSugerido,
+      // METREADO suggestions are selected independently per submitted line,
+      // never by accumulating matching products elsewhere on the ticket.
+      precioSugerido:
+        suggestedPrice,
       importe: decimalMoney(importeCents),
       costoUnitarioCongelado: costoUnitario,
       costoTotalCongelado:
@@ -1685,7 +1703,7 @@ export async function buscarPos(
     )
     .orderBy(desc(rollosTable.id))
     .limit(50);
-  const productos = codigo.serie
+   const productos = codigo.serie
     ? []
     : await database
         .select({
@@ -1695,6 +1713,8 @@ export async function buscarPos(
           color: productosTable.color,
           unidad: productosTable.unidad,
           precioSugerido: productosTable.precioSugerido,
+           precioMayoreo: productosTable.precioMayoreo,
+           precioMenudeo: productosTable.precioMenudeo,
           seVendePorMetro: productosTable.seVendePorMetro,
           activo: productosTable.activo,
         })
@@ -1709,7 +1729,27 @@ export async function buscarPos(
         )
         .orderBy(productosTable.tela, productosTable.color)
         .limit(25);
-  return { rollos, productos };
+   const productosConCosto = await Promise.all(
+     productos.map(async (producto) => {
+       const reference = await meteredReferenceCost(
+         database,
+         producto.id,
+         new Date(),
+       );
+       return {
+         ...producto,
+         costoReferenciaMetreado: {
+           costoUnitario: reference.cost,
+           estado: reference.status,
+           esMayorA12Meses: reference.isOlderThan12Months,
+           rollosIncluidos: reference.rollsIncluded,
+           fechaUltimaRecepcion:
+             reference.latestReceptionDate?.toISOString() ?? null,
+         },
+       };
+     }),
+   );
+   return { rollos, productos: productosConCosto };
 }
 
 export function isInventoryError(error: unknown): error is InventarioError {

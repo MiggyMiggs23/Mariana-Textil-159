@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CostoReferenciaMetreado } from './costoReferenciaMetreado';
 import type { UnidadProducto } from './unidadProducto';
 
 export interface PosProducto {
@@ -14,6 +15,11 @@ export interface PosProducto {
   color: string;
   unidad: UnidadProducto;
   precioSugerido: string;
+  /** @nullable */
+  precioMayoreo: string | null;
+  /** @nullable */
+  precioMenudeo: string | null;
+  costoReferenciaMetreado: CostoReferenciaMetreado;
   seVendePorMetro: boolean;
   activo: boolean;
 }

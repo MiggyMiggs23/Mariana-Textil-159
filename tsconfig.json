@@ -10,6 +10,9 @@
       "path": "./lib/number-format"
     },
     {
+      "path": "./lib/metered-pricing"
+    },
+    {
       "path": "./lib/db"
     },
     {
