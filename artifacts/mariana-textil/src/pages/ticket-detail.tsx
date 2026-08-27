@@ -38,6 +38,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber } from "@workspace/number-format";
 import { groupTicketLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -46,6 +47,7 @@ export default function TicketDetailPage() {
   const queryClient = useQueryClient();
 
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
@@ -122,7 +124,6 @@ export default function TicketDetailPage() {
       return;
     }
 
-    let credencialesAdmin = null;
     if (user?.rol !== Role.ADMIN) {
       if (!adminUser || !adminPass) {
         toast({
@@ -131,15 +132,23 @@ export default function TicketDetailPage() {
         });
         return;
       }
-      credencialesAdmin = { usuario: adminUser, password: adminPass };
     }
 
+    setCancelConfirmationOpen(true);
+  };
+
+  const executeCancelar = () => {
+    const credencialesAdmin =
+      user?.rol === Role.ADMIN
+        ? null
+        : { usuario: adminUser, password: adminPass };
     cancelarTicket.mutate(
       { id: ticketId, data: { motivo, credencialesAdmin } },
       {
         onSuccess: () => {
           toast({ title: "Ticket cancelado correctamente" });
           setCancelOpen(false);
+          setCancelConfirmationOpen(false);
           setAdminPass("");
           queryClient.invalidateQueries({
             queryKey: getObtenerTicketQueryKey(ticketId),
@@ -833,11 +842,22 @@ export default function TicketDetailPage() {
               {cancelarTicket.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              Cancelar Definitivamente
+              Continuar
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <ConfirmacionTextoExacto
+        open={cancelConfirmationOpen}
+        onOpenChange={setCancelConfirmationOpen}
+        titulo="Cancelar ticket cobrado"
+        descripcion="Se cancelará el ticket con folio indicado y se revertirán sus movimientos de inventario."
+        textoRequerido={String(ticket.folio)}
+        etiqueta="Confirmación del folio"
+        textoConfirmar="Cancelar definitivamente"
+        pendiente={cancelarTicket.isPending}
+        onConfirm={executeCancelar}
+      />
     </div>
   );
 }

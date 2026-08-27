@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 export function SalidaMostrador() {
   const [, setLocation] = useLocation();
@@ -31,6 +32,7 @@ export function SalidaMostrador() {
   const [input, setInput] = useState("");
   const [series, setSeries] = useState<string[]>([]);
   const [observaciones, setObservaciones] = useState("");
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const isAdmin = user?.rol === Role.ADMIN;
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export function SalidaMostrador() {
     setInput("");
   };
 
-  const confirm = async () => {
+  const executeConfirm = async () => {
     if (!origenId || !series.length) return;
     try {
       const document = await createMutation.mutateAsync({
@@ -79,6 +81,14 @@ export function SalidaMostrador() {
       });
       inputRef.current?.focus();
     }
+  };
+
+  const confirm = () => {
+    if (series.length > 5) {
+      setConfirmationOpen(true);
+      return;
+    }
+    void executeConfirm();
   };
 
   return (
@@ -123,7 +133,7 @@ export function SalidaMostrador() {
             data-testid="button-confirmar-mostrador"
             className="w-full"
             disabled={!origenId || !series.length || createMutation.isPending}
-            onClick={() => void confirm()}
+            onClick={confirm}
           >
             {createMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Confirmar salida de {series.length} rollo{series.length === 1 ? "" : "s"}
@@ -184,6 +194,17 @@ export function SalidaMostrador() {
           </CardContent>
         </Card>
       </div>
+      <ConfirmacionTextoExacto
+        open={confirmationOpen}
+        onOpenChange={setConfirmationOpen}
+        titulo="Confirmar salida a mostrador"
+        descripcion="Se retirarán más de 5 rollos del inventario y se generará una hoja foliada imprimible."
+        textoRequerido="MOSTRADOR"
+        etiqueta="Confirmación de salida"
+        textoConfirmar="Confirmar salida"
+        pendiente={createMutation.isPending}
+        onConfirm={() => void executeConfirm()}
+      />
     </div>
   );
 }

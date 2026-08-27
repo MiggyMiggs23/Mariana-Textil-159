@@ -46,6 +46,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { formatNumber } from "@workspace/number-format";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 const date = (value?: string) => value ? new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(value)) : "—";
 
@@ -76,6 +77,7 @@ export default function ClienteDetail() {
     contactoNombre: "", notas: ""
   });
   const [bajaOpen, setBajaOpen] = useState(false);
+  const [bajaConfirmationOpen, setBajaConfirmationOpen] = useState(false);
   const [bajaMotivo, setBajaMotivo] = useState("");
   const [bajaRequiresAuth, setBajaRequiresAuth] = useState<{ monto: string; desde: string | null } | null>(null);
   const [adminUser, setAdminUser] = useState("");
@@ -159,6 +161,10 @@ export default function ClienteDetail() {
       toast({ title: "Motivo muy corto", description: "El motivo debe tener al menos 20 caracteres.", variant: "destructive" });
       return;
     }
+    setBajaConfirmationOpen(true);
+  };
+
+  const executeConfirmedBaja = () => {
     executeBaja.mutate({
       id, data: {
         motivo: bajaMotivo,
@@ -169,6 +175,7 @@ export default function ClienteDetail() {
       onSuccess: (res) => {
         queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) });
         setBajaOpen(false);
+          setBajaConfirmationOpen(false);
         setBajaRequiresAuth(null);
         if (res.resultado === "ELIMINADO") {
           toast({ title: "Cliente eliminado correctamente" });
@@ -178,6 +185,7 @@ export default function ClienteDetail() {
         }
       },
       onError: (err: any) => {
+        setBajaConfirmationOpen(false);
         if (err?.data?.code === "ADMIN_CREDENTIALS_REQUIRED" || (err?.data?.error && err.data.error.includes("credenciales"))) {
           setBajaRequiresAuth({
             monto: err.data.monto || err.data.saldoPendiente || "Desconocido",
@@ -350,6 +358,17 @@ export default function ClienteDetail() {
           <DialogFooter><Button variant="destructive" onClick={handleBajaSubmit} disabled={executeBaja.isPending}>{executeBaja.isPending ? "Procesando..." : "Confirmar Baja"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
+      <ConfirmacionTextoExacto
+        open={bajaConfirmationOpen}
+        onOpenChange={setBajaConfirmationOpen}
+        titulo="Confirmar baja de cliente"
+        descripcion="Se dará de baja al cliente y, si no tiene saldo pendiente, podrá eliminarse de forma permanente."
+        textoRequerido={client.nombre}
+        etiqueta="Confirmación del nombre del cliente"
+        textoConfirmar="Confirmar baja"
+        pendiente={executeBaja.isPending}
+        onConfirm={executeConfirmedBaja}
+      />
     </AppLayout>
   );
 }

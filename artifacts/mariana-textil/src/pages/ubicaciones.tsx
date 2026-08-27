@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus } from "lucide-react";
 import { Modules, hasPermission } from "@/lib/permisos";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 export default function Ubicaciones() {
   const { data: locations, isLoading } = useListLocations();
@@ -37,6 +38,7 @@ export default function Ubicaciones() {
   const [editName, setEditName] = useState("");
   const [editInitials, setEditInitials] = useState("");
   const [editActive, setEditActive] = useState(false);
+  const [disableConfirmationOpen, setDisableConfirmationOpen] = useState(false);
   const canCreate = hasPermission(user, Modules.UBICACIONES, "crear");
   const canEdit = hasPermission(user, Modules.UBICACIONES, "editar");
 
@@ -48,6 +50,15 @@ export default function Ubicaciones() {
   };
 
   const handleSave = () => {
+    if (!editingLocation) return;
+    if (editingLocation.activa && !editActive) {
+      setDisableConfirmationOpen(true);
+      return;
+    }
+    saveLocation();
+  };
+
+  const saveLocation = () => {
     if (!editingLocation) return;
     
     updateLocation.mutate(
@@ -63,6 +74,7 @@ export default function Ubicaciones() {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getListLocationsQueryKey() });
           toast.success("Sitio actualizado correctamente");
+           setDisableConfirmationOpen(false);
           setEditingLocation(null);
         },
         onError: (err: any) => {
@@ -237,6 +249,17 @@ export default function Ubicaciones() {
           </DialogFooter>
         </DialogContent>
       </Dialog>}
+      <ConfirmacionTextoExacto
+        open={disableConfirmationOpen}
+        onOpenChange={setDisableConfirmationOpen}
+        titulo="Desactivar sitio"
+        descripcion="El sitio dejará de estar disponible para operaciones nuevas."
+        textoRequerido={editingLocation?.nombre ?? ""}
+        etiqueta="Confirmación del nombre del sitio"
+        textoConfirmar="Desactivar sitio"
+        pendiente={updateLocation.isPending}
+        onConfirm={saveLocation}
+      />
     </AppLayout>
   );
 }

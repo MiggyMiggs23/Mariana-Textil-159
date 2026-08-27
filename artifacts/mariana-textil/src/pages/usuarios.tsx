@@ -24,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Modules, hasPermission } from "@/lib/permisos";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 export default function Usuarios() {
   const { data: currentUser } = useGetCurrentUser();
@@ -39,6 +40,7 @@ export default function Usuarios() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
+  const [userConfirmationOpen, setUserConfirmationOpen] = useState(false);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -89,7 +91,7 @@ export default function Usuarios() {
     setPasswordVisibilityResetKey((current) => current + 1);
   };
 
-  const handleSave = () => {
+  const executeSave = () => {
     setPasswordVisibilityResetKey((current) => current + 1);
     if (!formData.nombre.trim() || !formData.usuario.trim()) {
       toast.error("Datos incompletos", { description: "Nombre y usuario son obligatorios" });
@@ -136,6 +138,7 @@ export default function Usuarios() {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: getListUsersQueryKey() });
             toast.success("Usuario actualizado correctamente");
+             setUserConfirmationOpen(false);
             closeDialogs();
           },
           onError: (err: any) => {
@@ -144,6 +147,16 @@ export default function Usuarios() {
         }
       );
     }
+  };
+
+  const handleSave = () => {
+    const isDeactivating = !!editingUser && editingUser.activo && !formData.activo;
+    const isChangingRole = !!editingUser && editingUser.rol !== formData.rol;
+    if (isDeactivating || isChangingRole) {
+      setUserConfirmationOpen(true);
+      return;
+    }
+    executeSave();
   };
 
   if (isLoading) {
@@ -366,6 +379,21 @@ export default function Usuarios() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <ConfirmacionTextoExacto
+        open={userConfirmationOpen}
+        onOpenChange={setUserConfirmationOpen}
+        titulo={editingUser?.activo && !formData.activo ? "Desactivar usuario" : "Cambiar rol de usuario"}
+        descripcion={
+          editingUser?.activo && !formData.activo
+            ? "El usuario perderá acceso al sistema."
+            : "Se cambiarán los permisos asociados al rol del usuario."
+        }
+        textoRequerido={editingUser?.usuario ?? ""}
+        etiqueta="Confirmación del nombre de usuario"
+        textoConfirmar="Confirmar cambio"
+        pendiente={isPending}
+        onConfirm={executeSave}
+      />
     </AppLayout>
   );
 }
