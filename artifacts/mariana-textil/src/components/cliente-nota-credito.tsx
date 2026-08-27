@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, ArrowRightLeft, CalendarClock, Ban, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";
@@ -170,7 +171,11 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                           >
                             Ver Reparto
                           </Button>
-                          {hasPermission(user, Modules.CLIENTES_FINANZAS, 'autorizar') && (
+                          {abono.revertido ? (
+                            <Badge variant="outline" className="h-8 border-destructive/40 text-destructive">
+                              REVERTIDO
+                            </Badge>
+                          ) : hasPermission(user, Modules.CLIENTES_FINANZAS, 'autorizar') && (
                             <Button
                               variant="destructive"
                               size="sm"

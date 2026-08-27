@@ -1081,7 +1081,7 @@ export const EstadoCuentaProveedorQueryParams = zod.object({
 export const EstadoCuentaProveedorResponse = zod.object({
   "movimientos": zod.array(zod.object({
   "id": zod.number(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "importe": zod.string(),
   "saldoAcumulado": zod.string(),
   "fecha": zod.coerce.date(),
@@ -1113,7 +1113,7 @@ export const ListProveedorPagosResponse = zod.object({
   "proveedorId": zod.number(),
   "pagos": zod.array(zod.object({
   "id": zod.number(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "importe": zod.string(),
   "saldoAcumulado": zod.string(),
   "fecha": zod.coerce.date(),
@@ -1152,7 +1152,7 @@ export const RegistrarPagoProveedorResponse = zod.object({
   "proveedorId": zod.number(),
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
@@ -1168,7 +1168,9 @@ export const RegistrarPagoProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })).optional(),
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
@@ -1206,7 +1208,9 @@ export const PreviewPagoProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })),
   "saldoAFavor": zod.string()
 })
@@ -1214,7 +1218,7 @@ export const PreviewPagoProveedorResponse = zod.object({
 
 export const GetProveedorCompraDetalleParams = zod.object({
   "id": zod.coerce.number(),
-  "compraId": zod.coerce.number()
+  "compraId": zod.coerce.number().describe('Identificador de la entrada que originó la compra')
 })
 
 export const GetProveedorCompraDetalleResponse = zod.object({
@@ -1223,7 +1227,7 @@ export const GetProveedorCompraDetalleResponse = zod.object({
   "proveedorId": zod.number(),
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
@@ -1239,7 +1243,9 @@ export const GetProveedorCompraDetalleResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })).optional(),
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
@@ -1255,7 +1261,9 @@ export const GetProveedorCompraDetalleResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 }))
 })
 
@@ -1271,7 +1279,7 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "proveedorId": zod.number(),
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
@@ -1287,7 +1295,9 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })).optional(),
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
@@ -1303,7 +1313,9 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })),
   "saldoDisponible": zod.string()
 })
@@ -1329,7 +1341,7 @@ export const ReversarPagoProveedorResponse = zod.object({
   "proveedorId": zod.number(),
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
@@ -1345,7 +1357,9 @@ export const ReversarPagoProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })).optional(),
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
@@ -1375,7 +1389,7 @@ export const RegistrarAjusteProveedorResponse = zod.object({
   "proveedorId": zod.number(),
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
-  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE']),
+  "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
   "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
@@ -1391,7 +1405,9 @@ export const RegistrarAjusteProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "fecha": zod.coerce.date().optional(),
-  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional()
+  "resultado": zod.enum(['SALDADA', 'PARCIAL']).optional(),
+  "revertido": zod.boolean().optional(),
+  "motivoReverso": zod.string().nullish()
 })).optional(),
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
@@ -3625,7 +3641,8 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']).nullable(),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullable(),
   "referencia": zod.string().nullable(),
-  "usuarioRegistrador": zod.string()
+  "usuarioRegistrador": zod.string(),
+  "revertido": zod.boolean()
 }))
 })
 

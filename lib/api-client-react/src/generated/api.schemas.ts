@@ -1628,6 +1628,7 @@ export interface ClienteNotaAbono {
   /** @nullable */
   referencia: string | null;
   usuarioRegistrador: string;
+  revertido: boolean;
 }
 
 export type ClienteNotaCreditoDetalleEstado = typeof ClienteNotaCreditoDetalleEstado[keyof typeof ClienteNotaCreditoDetalleEstado];
@@ -2126,6 +2127,7 @@ export const TipoPagoProveedor = {
   COMPRA: 'COMPRA',
   PAGO: 'PAGO',
   AJUSTE: 'AJUSTE',
+  REVERSO: 'REVERSO',
 } as const;
 
 export interface MovimientoLedger {
@@ -3319,6 +3321,9 @@ export interface AplicacionPagoProveedor {
   folio?: number | null;
   fecha?: string;
   resultado?: AplicacionPagoProveedorResultado;
+  revertido?: boolean;
+  /** @nullable */
+  motivoReverso?: string | null;
 }
 
 export interface PagoProveedorRow {

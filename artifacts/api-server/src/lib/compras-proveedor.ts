@@ -408,7 +408,10 @@ export async function registrarPago(
   });
 
   const disponible = await tx.execute<{ disponible: string }>(sql`
-    SELECT (-importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.pago_proveedor_id=${row!.id}),0))::text disponible
+    SELECT (-importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a
+      WHERE a.pago_proveedor_id=${row!.id}
+        AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r
+          WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id)),0))::text disponible
     FROM pagos_proveedor WHERE id=${row!.id}`);
   return { pago: row!, asignaciones, saldoAFavor: parseFloat(disponible.rows[0]?.disponible ?? "0").toFixed(2) };
 }
@@ -588,8 +591,7 @@ export async function comprasPorProveedor(opts: {
     };
   }
 
-  // Sum immutable applications linked to each purchase; legacy directed PAGOs
-  // remain visible as historical data but all new payments use this evidence.
+  // Active immutable applications are the sole allocation source.
   const entradaIds = compras
     .map((c) => c.entrada_id)
     .filter((id): id is number => id != null);
@@ -601,10 +603,7 @@ export async function comprasPorProveedor(opts: {
       abonado: string;
     }>(sql`
       SELECT c.entrada_id,
-        (COALESCE(SUM(a.importe),0) + COALESCE((
-          SELECT ABS(SUM(old.importe)) FROM pagos_proveedor old
-          WHERE old.tipo='PAGO' AND old.entrada_id=c.entrada_id
-        ),0))::text AS abonado
+        COALESCE(SUM(a.importe),0)::text AS abonado
       FROM pagos_proveedor c
        LEFT JOIN aplicaciones_pago_proveedor a ON a.compra_proveedor_id=c.id
          AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.movimiento_origen_id=a.pago_proveedor_id AND r.tipo='REVERSO')
@@ -1142,16 +1141,24 @@ export async function estadisticasPeriodo(opts: {
 
   const extras = await db.execute(sql`
     WITH compras AS (
-      SELECT pp.entrada_id, pp.fecha, pp.importe
+      SELECT pp.id, pp.entrada_id, pp.fecha, pp.importe
       FROM pagos_proveedor pp WHERE pp.proveedor_id = ${proveedorId} AND pp.tipo = 'COMPRA'
     ), deudas AS (
-      SELECT c.entrada_id, c.fecha, GREATEST(0, c.importe - COALESCE(ABS(SUM(p.importe)), 0)) AS saldo
-      FROM compras c LEFT JOIN pagos_proveedor p ON p.entrada_id = c.entrada_id AND p.tipo = 'PAGO'
-      GROUP BY c.entrada_id, c.fecha, c.importe
+      SELECT c.id, c.entrada_id, c.fecha,
+        GREATEST(0, c.importe - COALESCE(SUM(a.importe) FILTER (
+          WHERE NOT EXISTS (SELECT 1 FROM pagos_proveedor r
+            WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id)
+        ), 0)) AS saldo
+      FROM compras c LEFT JOIN aplicaciones_pago_proveedor a ON a.compra_proveedor_id=c.id
+      GROUP BY c.id, c.entrada_id, c.fecha, c.importe
     ), pagadas AS (
-      SELECT c.entrada_id, EXTRACT(EPOCH FROM (MAX(p.fecha)-c.fecha))/86400 AS dias
-      FROM compras c JOIN pagos_proveedor p ON p.entrada_id=c.entrada_id AND p.tipo='PAGO'
-      GROUP BY c.entrada_id,c.fecha HAVING ABS(SUM(p.importe)) >= MAX(c.importe)
+      SELECT c.id, EXTRACT(EPOCH FROM (MAX(p.fecha)-c.fecha))/86400 AS dias
+      FROM compras c
+      JOIN aplicaciones_pago_proveedor a ON a.compra_proveedor_id=c.id
+      JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
+      WHERE NOT EXISTS (SELECT 1 FROM pagos_proveedor r
+        WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=p.id)
+      GROUP BY c.id,c.fecha HAVING SUM(a.importe) >= MAX(c.importe)
     )
     SELECT
       (SELECT AVG(dias)::text FROM pagadas) AS dias_pago,

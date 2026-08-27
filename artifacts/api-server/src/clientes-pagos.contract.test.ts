@@ -4,6 +4,7 @@ import {
   CreateClientePagoBody,
   PreviewClientePagoBody,
 } from "@workspace/api-zod";
+import { readFile } from "node:fs/promises";
 
 test("contrato de abono exige cuentaDestino y mantiene preview sin ella", () => {
   assert.equal(
@@ -21,5 +22,13 @@ test("contrato de abono exige cuentaDestino y mantiene preview sin ella", () => 
   assert.equal(
     PreviewClientePagoBody.safeParse({ importe: 125 }).success,
     true,
+  );
+});
+
+test("estado de cuenta proyecta cuentaDestino desde el CTE del ledger", async () => {
+  const routes = await readFile(new URL("./routes/clientes.ts", import.meta.url), "utf8");
+  assert.match(
+    routes,
+    /WITH ledger AS \([\s\S]*m\.forma_pago, m\.cuenta_destino,[\s\S]*cuenta_destino AS "cuentaDestino"/,
   );
 });

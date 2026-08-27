@@ -27,7 +27,7 @@ test("document and ticket actions stack safely on phones", async () => {
     /flex flex-col gap-4 no-print sm:flex-row sm:items-center sm:justify-between/,
   );
   assert.match(ticket, /flex flex-col gap-3 sm:flex-row sm:flex-wrap/);
-  assert.equal((ticket.match(/className="w-full sm:w-auto"/g) ?? []).length, 3);
+  assert.equal((ticket.match(/className="w-full sm:w-auto"/g) ?? []).length, 4);
   assert.match(ticket, /CardContent className="overflow-x-auto p-0">[\s\S]*min-w-\[700px\]/);
 });
 

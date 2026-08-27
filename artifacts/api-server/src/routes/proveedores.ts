@@ -22,6 +22,7 @@ import {
   GetProveedorCompraDetalleResponse,
   GetProveedorPagoDetalleParams,
   GetProveedorPagoDetalleResponse,
+  ReversarPagoProveedorResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -75,6 +76,29 @@ function presentProveedor(row: typeof proveedoresTable.$inferSelect) {
     notas: row.notas,
     activo: row.activo,
     createdAt: row.createdAt,
+  };
+}
+
+function presentPagoProveedor(row: any) {
+  return {
+    id: Number(row.id),
+    proveedorId: Number(row.proveedor_id ?? row.proveedorId),
+    entradaId: (row.entrada_id ?? row.entradaId) == null
+      ? null
+      : Number(row.entrada_id ?? row.entradaId),
+    importe: String(row.importe),
+    tipo: row.tipo,
+    formaPago: row.forma_pago ?? row.formaPago ?? null,
+    referencia: row.referencia ?? null,
+    fecha: new Date(row.fecha).toISOString(),
+    usuarioId: Number(row.usuario_id ?? row.usuarioId),
+    notas: row.notas ?? null,
+    createdAt: new Date(row.created_at ?? row.createdAt).toISOString(),
+    revertido: Boolean(row.revertido),
+    reversoMovimientoId: row.reversoMovimientoId == null
+      ? null
+      : Number(row.reversoMovimientoId),
+    motivoReverso: row.motivoReverso ?? null,
   };
 }
 
@@ -452,20 +476,24 @@ router.get(
       const { movimientos } = await estadoCuenta({ proveedorId: id, desde, hasta });
       const pagos = movimientos.filter((m) => m.tipo === "PAGO" || m.tipo === "AJUSTE");
       const aplicaciones = await db.execute<any>(sql`
-        SELECT pago_proveedor_id, compra_proveedor_id, importe
-        FROM aplicaciones_pago_proveedor
+        SELECT a.pago_proveedor_id, a.compra_proveedor_id, a.importe,
+          EXISTS (SELECT 1 FROM pagos_proveedor r
+            WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id) AS revertido
+        FROM aplicaciones_pago_proveedor a
         WHERE pago_proveedor_id = ANY(ARRAY[${sql.raw(pagos.filter((p) => p.tipo === "PAGO").map((p) => p.id).join(",") || "0")}]::int[])`);
       const byPago = new Map<number, any[]>();
       for (const app of aplicaciones.rows) {
         const idPago = Number(app.pago_proveedor_id);
-        byPago.set(idPago, [...(byPago.get(idPago) ?? []), {
+         byPago.set(idPago, [...(byPago.get(idPago) ?? []), {
           pagoProveedorId: idPago, compraProveedorId: Number(app.compra_proveedor_id), importe: app.importe,
+           revertido: app.revertido,
         }]);
       }
       res.json({ proveedorId: id, pagos: pagos.map((p) => {
         const apps = byPago.get(p.id) ?? [];
-        const applied = apps.reduce((sum, app) => sum + Number(app.importe), 0);
-        return { ...p, aplicaciones: apps, saldoDisponible: p.tipo === "PAGO" ? (-Number(p.importe) - applied).toFixed(2) : "0.00" };
+        const revertido = apps.some((app) => app.revertido);
+        const applied = revertido ? 0 : apps.reduce((sum, app) => sum + Number(app.importe), 0);
+        return { ...p, aplicaciones: apps, saldoDisponible: p.tipo === "PAGO" && !revertido ? (-Number(p.importe) - applied).toFixed(2) : "0.00" };
       }) });
     } catch (e) {
       next(e);
@@ -711,7 +739,9 @@ router.post(
       const reverso = await db.transaction((tx) => reversarPago(tx, {
         proveedorId, pagoId, motivo, usuarioId: req.auth!.user.id, ip: getRequestIp(req),
       }));
-      res.status(201).json(reverso);
+      res.status(201).json(
+        ReversarPagoProveedorResponse.parse(presentPagoProveedor(reverso)),
+      );
     } catch (error) {
       if (error instanceof Error && error.message === "PAYMENT_NOT_FOUND") {
         res.status(404).json({ error: "Pago no encontrado." }); return;
@@ -731,19 +761,32 @@ router.get(
     try {
       const params = GetProveedorCompraDetalleParams.safeParse(req.params);
       if (!params.success) { res.status(400).json({ error: "ID inválido." }); return; }
-      const compra = await db.execute<any>(sql`SELECT * FROM pagos_proveedor WHERE id=${params.data.compraId} AND proveedor_id=${params.data.id} AND tipo='COMPRA'`);
+      const compra = await db.execute<any>(sql`
+        SELECT * FROM pagos_proveedor
+        WHERE entrada_id=${params.data.compraId}
+          AND proveedor_id=${params.data.id}
+          AND tipo='COMPRA'`);
       if (!compra.rows[0]) { res.status(404).json({ error: "Compra no encontrada." }); return; }
+      const compraMovimientoId = Number(compra.rows[0].id);
       const apps = await db.execute<any>(sql`
         SELECT a.pago_proveedor_id,a.compra_proveedor_id,a.importe,
           p.entrada_id,e.folio,p.fecha,
-          (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x WHERE x.compra_proveedor_id=c.id),0))::text saldo
+          EXISTS(SELECT 1 FROM pagos_proveedor r
+            WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id) AS revertido,
+          (SELECT r.notas FROM pagos_proveedor r
+            WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id
+            LIMIT 1) AS "motivoReverso",
+          (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x
+            WHERE x.compra_proveedor_id=c.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r
+              WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=x.pago_proveedor_id)),0))::text saldo
         FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
         JOIN pagos_proveedor c ON c.id=a.compra_proveedor_id LEFT JOIN entradas e ON e.id=c.entrada_id
-        WHERE a.compra_proveedor_id=${params.data.compraId} ORDER BY a.id`);
-      res.json(GetProveedorCompraDetalleResponse.parse({ compra: compra.rows[0], aplicaciones: apps.rows.map((a: any) => ({
+        WHERE a.compra_proveedor_id=${compraMovimientoId} ORDER BY a.id`);
+      res.json(GetProveedorCompraDetalleResponse.parse({ compra: presentPagoProveedor(compra.rows[0]), aplicaciones: apps.rows.map((a: any) => ({
         pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
         saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio,
-        fecha: new Date(a.fecha).toISOString(), resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL",
+         fecha: new Date(a.fecha).toISOString(), resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL",
+         revertido: Boolean(a.revertido), motivoReverso: a.motivoReverso ?? null,
       })) }));
     } catch (e) { next(e); }
   },
@@ -765,11 +808,19 @@ router.get(
       if (!pago.rows[0]) { res.status(404).json({ error: "Pago no encontrado." }); return; }
       const apps = await db.execute<any>(sql`
         SELECT a.*,c.entrada_id,e.folio,c.fecha,
-          (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x WHERE x.compra_proveedor_id=c.id),0))::text saldo
+          (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x
+            WHERE x.compra_proveedor_id=c.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r
+              WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=x.pago_proveedor_id)),0))::text saldo
         FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor c ON c.id=a.compra_proveedor_id
         LEFT JOIN entradas e ON e.id=c.entrada_id WHERE a.pago_proveedor_id=${params.data.pagoId} ORDER BY a.id`);
-      const saldo = await db.execute<any>(sql`SELECT (-importe-COALESCE((SELECT SUM(importe) FROM aplicaciones_pago_proveedor WHERE pago_proveedor_id=${params.data.pagoId}),0))::text saldo FROM pagos_proveedor WHERE id=${params.data.pagoId}`);
-      res.json(GetProveedorPagoDetalleResponse.parse({ pago: pago.rows[0], saldoDisponible: saldo.rows[0]?.saldo ?? "0.00",
+      const saldo = await db.execute<any>(sql`SELECT (CASE WHEN EXISTS (
+        SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=${params.data.pagoId}
+      ) THEN 0 ELSE -importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a
+        WHERE a.pago_proveedor_id=${params.data.pagoId} AND NOT EXISTS (
+          SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO'
+            AND r.movimiento_origen_id=a.pago_proveedor_id)),0) END)::text saldo
+        FROM pagos_proveedor WHERE id=${params.data.pagoId}`);
+      res.json(GetProveedorPagoDetalleResponse.parse({ pago: presentPagoProveedor(pago.rows[0]), saldoDisponible: saldo.rows[0]?.saldo ?? "0.00",
         aplicaciones: apps.rows.map((a: any) => ({ pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
           saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio, fecha: new Date(a.fecha).toISOString(),
           resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL" })) }));

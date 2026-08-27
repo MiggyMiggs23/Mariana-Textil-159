@@ -232,18 +232,50 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       END $$;
        CREATE OR REPLACE FUNCTION validate_credit_application()
        RETURNS trigger LANGUAGE plpgsql AS $$
-       DECLARE abono_cliente integer;
-       DECLARE venta_cliente integer;
-       DECLARE abono_tipo tipo_movimiento_credito;
-       DECLARE venta_tipo tipo_movimiento_credito;
+       DECLARE abono movimientos_credito%ROWTYPE;
+       DECLARE venta movimientos_credito%ROWTYPE;
+       DECLARE cliente_bloqueo integer;
        BEGIN
-         SELECT cliente_id, tipo INTO abono_cliente, abono_tipo
+         SELECT cliente_id INTO cliente_bloqueo
            FROM movimientos_credito WHERE id = NEW.abono_movimiento_id;
-         SELECT cliente_id, tipo INTO venta_cliente, venta_tipo
-           FROM movimientos_credito WHERE id = NEW.venta_movimiento_id;
-         IF abono_tipo <> 'ABONO' OR venta_tipo <> 'VENTA_CREDITO'
-           OR abono_cliente IS DISTINCT FROM venta_cliente THEN
+         IF cliente_bloqueo IS NOT NULL THEN
+           PERFORM pg_advisory_xact_lock(240024, cliente_bloqueo);
+         END IF;
+         SELECT * INTO abono FROM movimientos_credito
+           WHERE id = NEW.abono_movimiento_id FOR UPDATE;
+         SELECT * INTO venta FROM movimientos_credito
+           WHERE id = NEW.venta_movimiento_id FOR UPDATE;
+         IF abono.id IS NULL OR venta.id IS NULL
+           OR abono.tipo <> 'ABONO' OR venta.tipo <> 'VENTA_CREDITO'
+           OR abono.cliente_id IS DISTINCT FROM venta.cliente_id THEN
            RAISE EXCEPTION 'Una aplicación debe enlazar un ABONO y una VENTA_CREDITO del mismo cliente.';
+         END IF;
+         IF EXISTS (
+           SELECT 1 FROM movimientos_credito r
+           WHERE r.tipo = 'REVERSO' AND r.movimiento_origen_id = abono.id
+         ) THEN
+           RAISE EXCEPTION 'No se puede aplicar un ABONO revertido.';
+         END IF;
+         IF NEW.importe <= 0
+           OR NEW.importe > -abono.importe - COALESCE((
+             SELECT SUM(a.importe) FROM aplicaciones_credito a
+             WHERE a.abono_movimiento_id = abono.id
+               AND NOT EXISTS (
+                 SELECT 1 FROM movimientos_credito r
+                 WHERE r.tipo = 'REVERSO'
+                   AND r.movimiento_origen_id = a.abono_movimiento_id
+               )
+           ), 0)
+           OR NEW.importe > venta.importe - COALESCE((
+             SELECT SUM(a.importe) FROM aplicaciones_credito a
+             WHERE a.venta_movimiento_id = venta.id
+               AND NOT EXISTS (
+                 SELECT 1 FROM movimientos_credito r
+                 WHERE r.tipo = 'REVERSO'
+                   AND r.movimiento_origen_id = a.abono_movimiento_id
+               )
+           ), 0) THEN
+           RAISE EXCEPTION 'La aplicación de crédito excede el saldo disponible.';
          END IF;
          RETURN NEW;
        END $$;

@@ -100,8 +100,8 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                               <span className="font-black text-sm text-sidebar">
                                 {format(parseDate(asig.fecha || new Date().toISOString()), "dd/MM/yyyy")}
                               </span>
-                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.resultado === "SALDADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
-                                {asig.resultado}
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.revertido ? "bg-red-100 text-red-700" : asig.resultado === "SALDADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+                                {asig.revertido ? "REVERTIDO" : asig.resultado}
                               </span>
                             </div>
                             <div className="text-xs text-muted-foreground">
@@ -119,7 +119,7 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                               >
                                 Ver Reparto
                               </Button>
-                              {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'autorizar') && (
+                              {!asig.revertido && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'autorizar') && (
                                 <Button
                                   variant="destructive"
                                   size="sm"
@@ -169,14 +169,14 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                   <h4 className="font-bold text-sidebar border-b pb-2">Aplicaciones de este pago</h4>
                   <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
                     {pagoDetalle.aplicaciones.map((asig, idx) => (
-                      <div key={idx} className={`p-3 rounded-lg border shadow-sm flex items-center justify-between ${asig.compraProveedorId === compraId ? "bg-primary/5 border-primary/30" : "bg-white"}`}>
+                      <div key={idx} className={`p-3 rounded-lg border shadow-sm flex items-center justify-between ${asig.entradaId === compraId ? "bg-primary/5 border-primary/30" : "bg-white"}`}>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-black text-sm text-sidebar">#{asig.folio || asig.entradaId}</span>
                             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.resultado === "SALDADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
                               {asig.resultado}
                             </span>
-                            {asig.compraProveedorId === compraId && (
+                            {asig.entradaId === compraId && (
                               <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-primary/20 text-primary">Esta Compra</span>
                             )}
                           </div>

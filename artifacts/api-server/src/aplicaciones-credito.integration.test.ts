@@ -41,6 +41,14 @@ test("aplicaciones_credito is append-only and only links customer ABONOs to sale
       }
       return client.query(text, values);
     };
+    let savepointSequence = 0;
+    const expectWriteRejects = async (text: string, values: unknown[] = []) => {
+      const savepoint = `credito_rechazado_${++savepointSequence}`;
+      await write(`SAVEPOINT ${savepoint}`);
+      await assert.rejects(() => write(text, values));
+      await client.query(`ROLLBACK TO SAVEPOINT ${savepoint}`);
+      await write(`RELEASE SAVEPOINT ${savepoint}`);
+    };
     const seed = await client.query<{ cliente_id: number; usuario_id: number }>(`
       SELECT c.id AS cliente_id, u.id AS usuario_id
       FROM clientes c CROSS JOIN usuarios u
@@ -77,25 +85,49 @@ test("aplicaciones_credito is append-only and only links customer ABONOs to sale
     assert.equal(assigned.rows[0]?.total, "77.00");
     // 23.00 remains as negative-ledger credit, available to a subsequent sale.
     assert.equal(100 - Number(assigned.rows[0]?.total), 23);
-    await assert.rejects(
-      () => write(
+    await expectWriteRejects(
         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
          VALUES($1,$2,'0')`,
         [abono, saleOne],
-      ),
     );
-    await assert.rejects(
-      () => write(
+    await expectWriteRejects(
         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
          VALUES($1,$2,'1.00')`,
         [saleOne, saleTwo],
-      ),
     );
-    await assert.rejects(
-      () => write("UPDATE aplicaciones_credito SET importe='1.00' WHERE abono_movimiento_id=$1", [abono]),
+    await expectWriteRejects(
+      "UPDATE aplicaciones_credito SET importe='1.00' WHERE abono_movimiento_id=$1",
+      [abono],
     );
-    await assert.rejects(
-      () => write("DELETE FROM aplicaciones_credito WHERE abono_movimiento_id=$1", [abono]),
+    await expectWriteRejects(
+      "DELETE FROM aplicaciones_credito WHERE abono_movimiento_id=$1",
+      [abono],
+    );
+    await write(
+      `INSERT INTO movimientos_credito
+         (cliente_id,tipo,importe,movimiento_origen_id,usuario_id)
+       VALUES($1,'REVERSO','100.00',$2,$3)`,
+      [clienteId, abono, usuarioId],
+    );
+    const saleAfterReverse = await sale("23.00");
+    const availableAfterReverse = await client.query<{ disponible: string }>(
+      `SELECT COALESCE(SUM(-ab.importe-COALESCE(used.total,0)),0)::text disponible
+       FROM movimientos_credito ab
+       LEFT JOIN LATERAL (
+         SELECT SUM(a.importe) total FROM aplicaciones_credito a
+         WHERE a.abono_movimiento_id=ab.id
+       ) used ON true
+       WHERE ab.cliente_id=$1 AND ab.tipo='ABONO'
+         AND NOT EXISTS (SELECT 1 FROM movimientos_credito r
+           WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=ab.id)`,
+      [clienteId],
+    );
+    assert.equal(availableAfterReverse.rows[0]?.disponible, "0");
+    await expectWriteRejects(
+      `INSERT INTO aplicaciones_credito
+         (abono_movimiento_id,venta_movimiento_id,importe)
+       VALUES($1,$2,'23.00')`,
+      [abono, saleAfterReverse],
     );
   } finally {
     await client.query("ROLLBACK").catch(() => undefined);

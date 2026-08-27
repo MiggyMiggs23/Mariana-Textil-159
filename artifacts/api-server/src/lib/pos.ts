@@ -1071,11 +1071,9 @@ export async function cobrarTicket(
   {
     // Serialize credit issuance for this customer even when different tickets
     // are being charged in different cash sessions/locations.
-    if (creditCents > 0) {
-      await tx.execute(
-        sql`SELECT pg_advisory_xact_lock(240024, ${clienteId})`,
-      );
-    }
+    await tx.execute(
+      sql`SELECT pg_advisory_xact_lock(240024, ${clienteId})`,
+    );
     const [cliente] = await tx
       .select()
       .from(clientesTable)
@@ -1140,6 +1138,11 @@ export async function cobrarTicket(
         .where(and(
           eq(movimientosCreditoTable.clienteId, clienteId),
           eq(movimientosCreditoTable.tipo, "ABONO"),
+          sql`NOT EXISTS (
+            SELECT 1 FROM movimientos_credito reverso
+            WHERE reverso.tipo = 'REVERSO'
+              AND reverso.movimiento_origen_id = ${movimientosCreditoTable.id}
+          )`,
         ))
         .orderBy(asc(movimientosCreditoTable.createdAt), asc(movimientosCreditoTable.id));
       const allocation = allocateCreditFifo(

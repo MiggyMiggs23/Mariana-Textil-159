@@ -19,4 +19,7 @@ export interface AplicacionPagoProveedor {
   folio?: number | null;
   fecha?: Date;
   resultado?: AplicacionPagoProveedorResultado;
+  revertido?: boolean;
+  /** @nullable */
+  motivoReverso?: string | null;
 }

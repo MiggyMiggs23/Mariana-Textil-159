@@ -20,4 +20,5 @@ export interface ClienteNotaAbono {
   /** @nullable */
   referencia: string | null;
   usuarioRegistrador: string;
+  revertido: boolean;
 }

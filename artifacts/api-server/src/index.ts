@@ -36,8 +36,8 @@ if (Number.isNaN(port) || port <= 0) {
 
 async function startServer() {
   await ensureAuditSchema(pool);
-  await ensureAplicacionesPagoProveedorSchema(pool);
   await ensurePagosProveedorSchema(pool);
+  await ensureAplicacionesPagoProveedorSchema(pool);
   logger.info("Esquema de auditoría verificado");
   await ensureEstadoRolloSchema(pool);
   await ensureProductMeterSchema(pool);

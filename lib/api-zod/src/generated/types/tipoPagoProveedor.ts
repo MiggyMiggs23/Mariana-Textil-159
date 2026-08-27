@@ -13,4 +13,5 @@ export const TipoPagoProveedor = {
   COMPRA: 'COMPRA',
   PAGO: 'PAGO',
   AJUSTE: 'AJUSTE',
+  REVERSO: 'REVERSO',
 } as const;

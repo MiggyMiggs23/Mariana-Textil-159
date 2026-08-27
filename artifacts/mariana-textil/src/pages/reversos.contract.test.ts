@@ -21,6 +21,8 @@ test("Block 6 reversos functionality in clientes UI", async () => {
   // - Invalida/refresca consultas para que estado vuelva automaticamente
   assert.match(clienteNotaCredito, /queryClient\.invalidateQueries/);
   assert.match(clienteNotaCredito, /getGetClienteNotaCreditoQueryKey/);
+  assert.match(clienteNotaCredito, /abono\.revertido \?/);
+  assert.match(clienteNotaCredito, />\s*REVERTIDO\s*</);
 
   // - No DELETE / No estado manual
   assert.doesNotMatch(clienteNotaCredito, /DELETE/i);
@@ -45,6 +47,8 @@ test("Block 6 reversos functionality in proveedores UI", async () => {
   assert.match(proveedorCompra, /queryClient\.invalidateQueries/);
   assert.match(proveedorCompra, /getGetProveedorCompraDetalleQueryKey/);
   assert.match(proveedorCompra, /listComprasProveedor/);
+  assert.match(proveedorCompra, /asig\.revertido \? "REVERTIDO"/);
+  assert.match(proveedorCompra, /!asig\.revertido && hasPermission/);
 
   // - No DELETE / No estado manual
   assert.doesNotMatch(proveedorCompra, /DELETE/i);

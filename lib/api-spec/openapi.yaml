@@ -760,6 +760,7 @@ paths:
         - in: path
           name: compraId
           required: true
+          description: Identificador de la entrada que originó la compra
           schema: { type: number }
       responses:
         "200":
@@ -5264,7 +5265,7 @@ components:
         importe: { type: number, minimum: 0.01 }
     ClienteNotaAbono:
       type: object
-      required: [movimientoPagoId, fecha, montoAplicado, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador]
+      required: [movimientoPagoId, fecha, montoAplicado, montoTotalAbono, formaPago, cuentaDestino, referencia, usuarioRegistrador, revertido]
       properties:
         movimientoPagoId: { type: number }
         fecha: { type: string, format: date-time }
@@ -5274,6 +5275,7 @@ components:
         cuentaDestino: { type: ["string", "null"], enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         referencia: { type: ["string", "null"] }
         usuarioRegistrador: { type: string }
+        revertido: { type: boolean }
     ClienteNotaCreditoDetalle:
       type: object
       required: [clienteId, ticket, movimientoVentaId, importeOriginal, saldoActual, estado, fechaVencimiento, diasVencidos, abonos]
@@ -6784,7 +6786,7 @@ components:
         createdAt: { type: string, format: date-time }
     TipoPagoProveedor:
       type: string
-      enum: [COMPRA, PAGO, AJUSTE]
+      enum: [COMPRA, PAGO, AJUSTE, REVERSO]
     FormaPagoProveedor:
       type: string
       enum: [EFECTIVO, TRANSFERENCIA, CHEQUE, OTRO]
@@ -6847,6 +6849,8 @@ components:
         folio: { type: ["number", "null"] }
         fecha: { type: string, format: date-time }
         resultado: { type: string, enum: [SALDADA, PARCIAL] }
+        revertido: { type: boolean }
+        motivoReverso: { type: ["string", "null"] }
     PreviewPagoProveedor:
       type: object
       required: [asignaciones, saldoAFavor]

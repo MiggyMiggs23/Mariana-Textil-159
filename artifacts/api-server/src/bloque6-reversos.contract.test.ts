@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
-import { ReversarClientePagoBody, ReversarPagoProveedorBody } from "@workspace/api-zod";
+import {
+  ReversarClientePagoBody,
+  ReversarPagoProveedorBody,
+  ReversarPagoProveedorResponse,
+} from "@workspace/api-zod";
 import { creditStatus } from "./lib/clientes-aging";
 
 const source = async (path: string) =>
@@ -13,6 +17,22 @@ test("Bloque 6: contratos de reverso requieren motivo", () => {
     assert.equal(schema.safeParse({}).success, false);
     assert.equal(schema.safeParse({ motivo: "" }).success, false);
   }
+  assert.equal(
+    ReversarPagoProveedorResponse.safeParse({
+      id: 1,
+      proveedorId: 2,
+      entradaId: null,
+      importe: "500.00",
+      tipo: "REVERSO",
+      formaPago: null,
+      referencia: null,
+      fecha: "2026-08-27T12:00:00.000Z",
+      usuarioId: 3,
+      notas: "Captura incorrecta",
+      createdAt: "2026-08-27T12:00:00.000Z",
+    }).success,
+    true,
+  );
 });
 
 test("Bloque 6: endpoints son autorizados, append-only y auditados", async () => {
@@ -26,6 +46,7 @@ test("Bloque 6: endpoints son autorizados, append-only y auditados", async () =>
   assert.match(proveedores, /\/proveedores\/:id\/pagos\/:pagoId\/reversar/);
   assert.match(clientes, /requierePermiso\("clientes_finanzas", "autorizar"\)/);
   assert.match(proveedores, /requierePermiso\("proveedores_finanzas", "autorizar"\)/);
+  assert.match(proveedores, /ReversarPagoProveedorResponse\.parse\(presentPagoProveedor\(reverso\)\)/);
   assert.match(clientes, /accion: "REVERSAR_PAGO_CLIENTE"/);
   assert.match(service, /accion: "REVERSAR_PAGO_PROVEEDOR"/);
   assert.match(clientes, /datosAntes:[\s\S]*asignaciones/);
@@ -67,4 +88,32 @@ test("Bloque 6: antigüedad parte de vencimiento; plazo CAJA no se preselecciona
   // The established financial convention is subtotal before IVA; this guards
   // the contract without loading the DB-backed reporting module.
   assert.equal(116 - 16, 100);
+});
+
+test("Bloque 6: aplicaciones activas son la única fuente y comparten lock de cliente", async () => {
+  const [clientes, proveedores, service, pos, clienteSchema, proveedorSchema, server] =
+    await Promise.all([
+      source("./routes/clientes.ts"),
+      source("./routes/proveedores.ts"),
+      source("./lib/compras-proveedor.ts"),
+      source("./lib/pos.ts"),
+      source("../../../lib/db/src/lib/clientes-schema.ts"),
+      source("../../../lib/db/src/lib/aplicaciones-pago-proveedor-schema.ts"),
+      source("./index.ts"),
+    ]);
+  assert.doesNotMatch(service, /old\.entrada_id|p\.entrada_id\s*=\s*c\.entrada_id/);
+  assert.match(service, /aplicaciones_pago_proveedor[\s\S]*movimiento_origen_id/);
+  assert.match(proveedores, /aplicaciones_pago_proveedor[\s\S]*movimiento_origen_id/);
+  assert.match(clientes, /aplicaciones_credito[\s\S]*movimiento_origen_id/);
+  assert.match(pos, /eq\(movimientosCreditoTable\.tipo, "ABONO"\)[\s\S]*NOT EXISTS[\s\S]*movimiento_origen_id/);
+  const lock = /pg_advisory_xact_lock\(240024,\s*\$\{clienteId\}\)/;
+  assert.match(clientes, lock);
+  assert.match(pos, lock);
+  assert.match(clienteSchema, /La aplicación de crédito excede el saldo disponible/);
+  assert.match(proveedorSchema, /Aplicación proveedor excede el saldo disponible/);
+  assert.ok(
+    server.indexOf("await ensurePagosProveedorSchema(pool)") <
+      server.indexOf("await ensureAplicacionesPagoProveedorSchema(pool)"),
+    "el enum y movimiento_origen_id deben existir antes de reconciliar aplicaciones",
+  );
 });

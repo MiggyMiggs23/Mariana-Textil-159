@@ -1034,7 +1034,7 @@ router.get(
         pool.query(
           `WITH ledger AS (
              SELECT m.id, m.tipo, m.importe, m.created_at, m.notas,
-                m.forma_pago, m.referencia, m.dias_plazo, m.fecha_vencimiento,
+                m.forma_pago, m.cuenta_destino, m.referencia, m.dias_plazo, m.fecha_vencimiento,
                 t.folio AS ticket_folio,
                u.nombre AS nombre_usuario,
                SUM(m.importe) OVER (ORDER BY m.created_at,m.id) AS saldo_corrido
@@ -1494,7 +1494,9 @@ router.get(
         `SELECT a.abono_movimiento_id AS "movimientoPagoId",ab.created_at AS fecha,
            a.importe::text AS "montoAplicado",ABS(ab.importe)::text AS "montoTotalAbono",
            ab.forma_pago AS "formaPago",ab.cuenta_destino AS "cuentaDestino",
-           ab.referencia,u.nombre AS "usuarioRegistrador"
+           ab.referencia,u.nombre AS "usuarioRegistrador",
+           EXISTS (SELECT 1 FROM movimientos_credito r
+             WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=ab.id) AS revertido
          FROM aplicaciones_credito a
          JOIN movimientos_credito ab ON ab.id=a.abono_movimiento_id
          JOIN usuarios u ON u.id=ab.usuario_id
