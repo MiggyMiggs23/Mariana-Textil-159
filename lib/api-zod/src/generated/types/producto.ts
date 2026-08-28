@@ -18,6 +18,21 @@ export interface Producto {
      * @pattern ^#[0-9A-F]{6}$
      */
   colorHex: string | null;
+  /**
+     * Ancho capturado manualmente en centímetros; los productos históricos permanecen null.
+     * @nullable
+     */
+  anchoCm: number | null;
+  /**
+     * Composición textil libre capturada manualmente; no se infiere.
+     * @nullable
+     */
+  composicion: string | null;
+  /**
+     * Gramaje capturado manualmente en g/m²; los productos históricos permanecen null.
+     * @nullable
+     */
+  gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;

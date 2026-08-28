@@ -16,6 +16,7 @@ export { ensureEstadoRolloSchema } from "./lib/estado-rollo-schema";
 export { ensureProductMeterSchema } from "./lib/product-meter-schema";
 export { ensureProductPricingSchema } from "./lib/product-pricing-schema";
 export { ensureProductColorSchema } from "./lib/product-color-schema";
+export { ensureProductSpecificationsSchema } from "./lib/product-specifications-schema";
 export { ensureAuditSchema } from "./lib/audit-schema";
 export { ensureAplicacionesPagoProveedorSchema } from "./lib/aplicaciones-pago-proveedor-schema";
 export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";

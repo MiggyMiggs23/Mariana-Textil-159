@@ -26,6 +26,21 @@ export interface ProductoInput {
      * @pattern ^#[0-9A-Fa-f]{6}$
      */
   colorHex?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  anchoCm?: number | null;
+  /**
+     * @maxLength 1000
+     * @nullable
+     */
+  composicion?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  gramajeGm2?: number | null;
   unidad: UnidadProducto;
   precioSugerido: string;
   /** @nullable */

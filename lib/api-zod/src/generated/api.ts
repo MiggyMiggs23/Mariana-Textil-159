@@ -804,6 +804,10 @@ export const ListProductosQueryParams = zod.object({
 })
 
 export const listProductosResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+export const listProductosResponseAnchoCmMultipleOf = 0.01;
+
+export const listProductosResponseGramajeGm2MultipleOf = 0.01;
+
 
 
 export const ListProductosResponseItem = zod.object({
@@ -812,6 +816,9 @@ export const ListProductosResponseItem = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "colorHex": zod.string().regex(listProductosResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
+  "anchoCm": zod.number().multipleOf(listProductosResponseAnchoCmMultipleOf).nullable().describe('Ancho capturado manualmente en centímetros; los productos históricos permanecen null.'),
+  "composicion": zod.string().nullable().describe('Composición textil libre capturada manualmente; no se infiere.'),
+  "gramajeGm2": zod.number().multipleOf(listProductosResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
@@ -834,6 +841,14 @@ export const createProductoBodyTelaMax = 200;
 export const createProductoBodyColorMax = 100;
 
 export const createProductoBodyColorHexRegExp = new RegExp('^#[0-9A-Fa-f]{6}$');
+export const createProductoBodyAnchoCmMin = 0;
+export const createProductoBodyAnchoCmMultipleOf = 0.01;
+
+export const createProductoBodyComposicionMax = 1000;
+
+export const createProductoBodyGramajeGm2Min = 0;
+export const createProductoBodyGramajeGm2MultipleOf = 0.01;
+
 
 
 export const CreateProductoBody = zod.object({
@@ -841,12 +856,19 @@ export const CreateProductoBody = zod.object({
   "tela": zod.string().min(1).max(createProductoBodyTelaMax),
   "color": zod.string().min(1).max(createProductoBodyColorMax),
   "colorHex": zod.string().regex(createProductoBodyColorHexRegExp).nullish().describe('Color hexadecimal opcional; únicamente ADMIN puede capturarlo'),
+  "anchoCm": zod.number().min(createProductoBodyAnchoCmMin).multipleOf(createProductoBodyAnchoCmMultipleOf).nullish(),
+  "composicion": zod.string().max(createProductoBodyComposicionMax).nullish(),
+  "gramajeGm2": zod.number().min(createProductoBodyGramajeGm2Min).multipleOf(createProductoBodyGramajeGm2MultipleOf).nullish(),
   "unidad": zod.enum(['METRO', 'KILO']),
   "precioSugerido": zod.string(),
   "notas": zod.string().nullish()
 })
 
 export const createProductoResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+export const createProductoResponseAnchoCmMultipleOf = 0.01;
+
+export const createProductoResponseGramajeGm2MultipleOf = 0.01;
+
 
 
 export const CreateProductoResponse = zod.object({
@@ -855,6 +877,9 @@ export const CreateProductoResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "colorHex": zod.string().regex(createProductoResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
+  "anchoCm": zod.number().multipleOf(createProductoResponseAnchoCmMultipleOf).nullable().describe('Ancho capturado manualmente en centímetros; los productos históricos permanecen null.'),
+  "composicion": zod.string().nullable().describe('Composición textil libre capturada manualmente; no se infiere.'),
+  "gramajeGm2": zod.number().multipleOf(createProductoResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
@@ -1176,6 +1201,10 @@ export const GetProductoParams = zod.object({
 })
 
 export const getProductoResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+export const getProductoResponseAnchoCmMultipleOf = 0.01;
+
+export const getProductoResponseGramajeGm2MultipleOf = 0.01;
+
 
 
 export const GetProductoResponse = zod.object({
@@ -1184,6 +1213,9 @@ export const GetProductoResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "colorHex": zod.string().regex(getProductoResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
+  "anchoCm": zod.number().multipleOf(getProductoResponseAnchoCmMultipleOf).nullable(),
+  "composicion": zod.string().nullable(),
+  "gramajeGm2": zod.number().multipleOf(getProductoResponseGramajeGm2MultipleOf).nullable(),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),
@@ -1244,6 +1276,14 @@ export const updateProductoBodyTelaMax = 200;
 export const updateProductoBodyColorMax = 100;
 
 export const updateProductoBodyColorHexRegExp = new RegExp('^#[0-9A-Fa-f]{6}$');
+export const updateProductoBodyAnchoCmMin = 0;
+export const updateProductoBodyAnchoCmMultipleOf = 0.01;
+
+export const updateProductoBodyComposicionMax = 1000;
+
+export const updateProductoBodyGramajeGm2Min = 0;
+export const updateProductoBodyGramajeGm2MultipleOf = 0.01;
+
 
 
 export const UpdateProductoBody = zod.object({
@@ -1251,6 +1291,9 @@ export const UpdateProductoBody = zod.object({
   "tela": zod.string().min(1).max(updateProductoBodyTelaMax).optional(),
   "color": zod.string().min(1).max(updateProductoBodyColorMax).optional(),
   "colorHex": zod.string().regex(updateProductoBodyColorHexRegExp).nullish().describe('Establece o limpia el color hexadecimal; únicamente ADMIN puede editarlo'),
+  "anchoCm": zod.number().min(updateProductoBodyAnchoCmMin).multipleOf(updateProductoBodyAnchoCmMultipleOf).nullish(),
+  "composicion": zod.string().max(updateProductoBodyComposicionMax).nullish(),
+  "gramajeGm2": zod.number().min(updateProductoBodyGramajeGm2Min).multipleOf(updateProductoBodyGramajeGm2MultipleOf).nullish(),
   "unidad": zod.enum(['METRO', 'KILO']).optional(),
   "precioSugerido": zod.string().optional(),
   "notas": zod.string().nullish(),
@@ -1258,6 +1301,10 @@ export const UpdateProductoBody = zod.object({
 })
 
 export const updateProductoResponseColorHexRegExp = new RegExp('^#[0-9A-F]{6}$');
+export const updateProductoResponseAnchoCmMultipleOf = 0.01;
+
+export const updateProductoResponseGramajeGm2MultipleOf = 0.01;
+
 
 
 export const UpdateProductoResponse = zod.object({
@@ -1266,6 +1313,9 @@ export const UpdateProductoResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "colorHex": zod.string().regex(updateProductoResponseColorHexRegExp).nullable().describe('Color hexadecimal capturado manualmente; no se deriva del nombre del color'),
+  "anchoCm": zod.number().multipleOf(updateProductoResponseAnchoCmMultipleOf).nullable().describe('Ancho capturado manualmente en centímetros; los productos históricos permanecen null.'),
+  "composicion": zod.string().nullable().describe('Composición textil libre capturada manualmente; no se infiere.'),
+  "gramajeGm2": zod.number().multipleOf(updateProductoResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
   "unidad": zod.enum(['METRO', 'KILO']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().optional(),

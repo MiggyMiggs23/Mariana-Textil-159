@@ -14,6 +14,7 @@ import {
   ensureProductMeterSchema,
   ensureProductPricingSchema,
   ensureProductColorSchema,
+  ensureProductSpecificationsSchema,
   pool,
   ensureAuditSchema,
   ensureAplicacionesPagoProveedorSchema,
@@ -56,6 +57,7 @@ async function startServer() {
   await ensureProductMeterSchema(pool);
   await ensureProductPricingSchema(pool);
   await ensureProductColorSchema(pool);
+  await ensureProductSpecificationsSchema(pool);
   logger.info("Interruptores de venta por metro verificados");
   logger.info("Estado de rollos verificado");
   const migratedSupportUsers = await ensureSupervisorRole(pool);

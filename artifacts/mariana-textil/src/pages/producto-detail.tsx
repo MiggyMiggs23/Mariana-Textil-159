@@ -29,6 +29,7 @@ import { generateSKU } from "./productos";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber } from "@workspace/number-format";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -113,6 +114,9 @@ export default function ProductoDetail() {
     sku: string;
     isCustomSku: boolean;
     colorHex?: string | null;
+    anchoCm: string;
+    composicion: string;
+    gramajeGm2: string;
   }>({
     tela: "",
     color: "",
@@ -122,7 +126,10 @@ export default function ProductoDetail() {
     activo: true,
     sku: "",
     isCustomSku: false,
-    colorHex: null
+    colorHex: null,
+    anchoCm: "",
+    composicion: "",
+    gramajeGm2: "",
   });
 
   const initializedForId = useRef<number | null>(null);
@@ -139,12 +146,16 @@ export default function ProductoDetail() {
         activo: product.activo,
         sku: product.sku,
         isCustomSku: true, // start with exact SKU
-        colorHex: product.colorHex || null
+        colorHex: product.colorHex || null,
+        anchoCm: product.anchoCm == null ? "" : product.anchoCm.toFixed(2),
+        composicion: product.composicion || "",
+        gramajeGm2: product.gramajeGm2 == null ? "" : product.gramajeGm2.toFixed(2),
       });
     }
   }, [product]);
 
   const isAdmin = user?.rol === Role.ADMIN;
+  const canEditProduct = hasPermission(user, Modules.PRODUCTOS, "editar");
   const isSupervisor = user?.rol === Role.SUPERVISOR;
   const canViewPurchaseCosts = user != null && user.rol !== Role.TERMINAL && !isSupervisor;
   const canViewPrices = user != null && !isSupervisor;
@@ -166,7 +177,10 @@ export default function ProductoDetail() {
         notas: formData.notas || null,
         activo: formData.activo,
         sku: isBlocked ? undefined : displaySku,
-        colorHex: formData.colorHex
+        colorHex: isAdmin ? formData.colorHex : undefined,
+        anchoCm: formData.anchoCm === "" ? null : Number(formData.anchoCm),
+        composicion: formData.composicion || null,
+        gramajeGm2: formData.gramajeGm2 === "" ? null : Number(formData.gramajeGm2),
       }
     }, {
       onSuccess: () => {
@@ -213,12 +227,12 @@ export default function ProductoDetail() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al catálogo
           </Link>
-          {isAdmin && !isEditing && (
+          {canEditProduct && !isEditing && (
             <Button variant="outline" onClick={() => setIsEditing(true)} data-testid="button-edit-product">
               Editar Producto
             </Button>
           )}
-          {isAdmin && isEditing && (
+          {canEditProduct && isEditing && (
             <div className="flex items-center gap-2">
               <Button variant="ghost" onClick={() => setIsEditing(false)}>Cancelar</Button>
               <Button onClick={handleSave} disabled={updateProducto.isPending} data-testid="button-save-product">
@@ -312,6 +326,33 @@ export default function ProductoDetail() {
                     )}
                   </div>
                 )}
+
+                <div className="col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Ancho</Label>
+                    {isEditing ? (
+                      <Input type="number" step="0.01" min="0" value={formData.anchoCm} onChange={e => setFormData({...formData, anchoCm: e.target.value})} data-testid="input-edit-ancho-cm" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center" data-testid="text-product-ancho-cm">{product.anchoCm == null ? "Sin especificar" : `${product.anchoCm.toFixed(2)} cm`}</div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Gramaje</Label>
+                    {isEditing ? (
+                      <Input type="number" step="0.01" min="0" value={formData.gramajeGm2} onChange={e => setFormData({...formData, gramajeGm2: e.target.value})} data-testid="input-edit-gramaje-gm2" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center" data-testid="text-product-gramaje-gm2">{product.gramajeGm2 == null ? "Sin especificar" : `${product.gramajeGm2.toFixed(2)} g/m²`}</div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Composición</Label>
+                    {isEditing ? (
+                      <Input value={formData.composicion} onChange={e => setFormData({...formData, composicion: e.target.value})} placeholder="Ej. 100% poliéster" data-testid="input-edit-composicion" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center" data-testid="text-product-composicion">{product.composicion || "Sin especificar"}</div>
+                    )}
+                  </div>
+                </div>
 
                 <div className="col-span-2 space-y-1">
                   <Label className="text-muted-foreground">Notas</Label>

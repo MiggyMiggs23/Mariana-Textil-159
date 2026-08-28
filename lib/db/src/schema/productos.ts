@@ -22,6 +22,15 @@ export const productosTable = pgTable(
     tela: text("tela").notNull(),
     color: text("color").notNull(),
     colorHex: text("color_hex"),
+    anchoCm: numeric("ancho_cm", {
+      precision: 10,
+      scale: 2,
+    }),
+    composicion: text("composicion"),
+    gramajeGm2: numeric("gramaje_gm2", {
+      precision: 10,
+      scale: 2,
+    }),
     unidad: unidadProductoEnum("unidad").notNull(),
     precioSugerido: numeric("precio_sugerido", {
       precision: 12,

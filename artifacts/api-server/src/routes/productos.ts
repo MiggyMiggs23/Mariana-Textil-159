@@ -160,6 +160,9 @@ function presentProducto(
     tela: row.tela,
     color: row.color,
     colorHex: row.colorHex,
+    anchoCm: row.anchoCm === null ? null : Number(row.anchoCm),
+    composicion: row.composicion,
+    gramajeGm2: row.gramajeGm2 === null ? null : Number(row.gramajeGm2),
     unidad: row.unidad,
     seVendePorMetro: row.seVendePorMetro,
     precioSugerido: row.precioSugerido,
@@ -340,6 +343,9 @@ router.post(
             tela,
             color,
             colorHex,
+            anchoCm: parsed.data.anchoCm == null ? null : String(parsed.data.anchoCm),
+            composicion: parsed.data.composicion ?? null,
+            gramajeGm2: parsed.data.gramajeGm2 == null ? null : String(parsed.data.gramajeGm2),
             unidad: parsed.data.unidad as UnidadProducto,
             precioSugerido: parsed.data.precioSugerido,
             notas: parsed.data.notas ?? null,
@@ -746,6 +752,9 @@ router.patch(
       tela?: string;
       color?: string;
       colorHex?: string | null;
+      anchoCm?: string | null;
+      composicion?: string | null;
+      gramajeGm2?: string | null;
       unidad?: UnidadProducto;
       precioSugerido?: string;
       notas?: string | null;
@@ -757,6 +766,13 @@ router.patch(
     if (newColor !== undefined) updates.color = newColor;
     if (newColorHex !== undefined || body.data.colorHex === null) {
       updates.colorHex = newColorHex ?? null;
+    }
+    if ("anchoCm" in body.data) {
+      updates.anchoCm = body.data.anchoCm == null ? null : String(body.data.anchoCm);
+    }
+    if ("composicion" in body.data) updates.composicion = body.data.composicion ?? null;
+    if ("gramajeGm2" in body.data) {
+      updates.gramajeGm2 = body.data.gramajeGm2 == null ? null : String(body.data.gramajeGm2);
     }
     if (body.data.unidad !== undefined)
       updates.unidad = body.data.unidad as UnidadProducto;

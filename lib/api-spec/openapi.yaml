@@ -7986,6 +7986,9 @@ components:
           tela,
           color,
           colorHex,
+          anchoCm,
+          composicion,
+          gramajeGm2,
           unidad,
           seVendePorMetro,
           notas,
@@ -8005,6 +8008,17 @@ components:
           type: ["string", "null"]
           pattern: "^#[0-9A-F]{6}$"
           description: Color hexadecimal capturado manualmente; no se deriva del nombre del color
+        anchoCm:
+          type: ["number", "null"]
+          multipleOf: 0.01
+          description: Ancho capturado manualmente en centímetros; los productos históricos permanecen null.
+        composicion:
+          type: ["string", "null"]
+          description: Composición textil libre capturada manualmente; no se infiere.
+        gramajeGm2:
+          type: ["number", "null"]
+          multipleOf: 0.01
+          description: Gramaje capturado manualmente en g/m²; los productos históricos permanecen null.
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         seVendePorMetro: { type: boolean }
@@ -8026,6 +8040,9 @@ components:
           tela,
           color,
           colorHex,
+          anchoCm,
+          composicion,
+          gramajeGm2,
           unidad,
           seVendePorMetro,
           notas,
@@ -8049,6 +8066,14 @@ components:
           type: ["string", "null"]
           pattern: "^#[0-9A-F]{6}$"
           description: Color hexadecimal capturado manualmente; no se deriva del nombre del color
+        anchoCm:
+          type: ["number", "null"]
+          multipleOf: 0.01
+        composicion:
+          type: ["string", "null"]
+        gramajeGm2:
+          type: ["number", "null"]
+          multipleOf: 0.01
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         seVendePorMetro: { type: boolean }
@@ -8090,6 +8115,17 @@ components:
           type: ["string", "null"]
           pattern: "^#[0-9A-Fa-f]{6}$"
           description: Color hexadecimal opcional; únicamente ADMIN puede capturarlo
+        anchoCm:
+          type: ["number", "null"]
+          minimum: 0
+          multipleOf: 0.01
+        composicion:
+          type: ["string", "null"]
+          maxLength: 1000
+        gramajeGm2:
+          type: ["number", "null"]
+          minimum: 0
+          multipleOf: 0.01
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         precioSugerido: { type: string }
@@ -8107,6 +8143,17 @@ components:
           type: ["string", "null"]
           pattern: "^#[0-9A-Fa-f]{6}$"
           description: Establece o limpia el color hexadecimal; únicamente ADMIN puede editarlo
+        anchoCm:
+          type: ["number", "null"]
+          minimum: 0
+          multipleOf: 0.01
+        composicion:
+          type: ["string", "null"]
+          maxLength: 1000
+        gramajeGm2:
+          type: ["number", "null"]
+          minimum: 0
+          multipleOf: 0.01
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         precioSugerido: { type: string }

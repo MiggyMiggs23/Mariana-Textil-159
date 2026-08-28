@@ -22,6 +22,12 @@ export interface ProductoDetail {
      * @pattern ^#[0-9A-F]{6}$
      */
   colorHex: string | null;
+  /** @nullable */
+  anchoCm: number | null;
+  /** @nullable */
+  composicion: string | null;
+  /** @nullable */
+  gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;

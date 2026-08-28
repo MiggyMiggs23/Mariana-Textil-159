@@ -2884,6 +2884,21 @@ export interface Producto {
      * @pattern ^#[0-9A-F]{6}$
      */
   colorHex: string | null;
+  /**
+     * Ancho capturado manualmente en centímetros; los productos históricos permanecen null.
+     * @nullable
+     */
+  anchoCm: number | null;
+  /**
+     * Composición textil libre capturada manualmente; no se infiere.
+     * @nullable
+     */
+  composicion: string | null;
+  /**
+     * Gramaje capturado manualmente en g/m²; los productos históricos permanecen null.
+     * @nullable
+     */
+  gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;
@@ -2908,6 +2923,12 @@ export interface ProductoDetail {
      * @pattern ^#[0-9A-F]{6}$
      */
   colorHex: string | null;
+  /** @nullable */
+  anchoCm: number | null;
+  /** @nullable */
+  composicion: string | null;
+  /** @nullable */
+  gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
   precioSugerido?: string;
@@ -2946,6 +2967,21 @@ export interface ProductoInput {
      * @pattern ^#[0-9A-Fa-f]{6}$
      */
   colorHex?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  anchoCm?: number | null;
+  /**
+     * @maxLength 1000
+     * @nullable
+     */
+  composicion?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  gramajeGm2?: number | null;
   unidad: UnidadProducto;
   precioSugerido: string;
   /** @nullable */
@@ -2971,6 +3007,21 @@ export interface ProductoUpdate {
      * @pattern ^#[0-9A-Fa-f]{6}$
      */
   colorHex?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  anchoCm?: number | null;
+  /**
+     * @maxLength 1000
+     * @nullable
+     */
+  composicion?: string | null;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  gramajeGm2?: number | null;
   unidad?: UnidadProducto;
   precioSugerido?: string;
   /** @nullable */

@@ -103,6 +103,16 @@ export default function Productos() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterUnidad, setFilterUnidad] = useState("ALL");
   const [filterEstado, setFilterEstado] = useState("ACTIVE");
+  const [visibleSpecificationColumns, setVisibleSpecificationColumns] = useState<Set<string>>(() => new Set());
+
+  const toggleSpecificationColumn = (column: string) => {
+    setVisibleSpecificationColumns((current) => {
+      const next = new Set(current);
+      if (next.has(column)) next.delete(column);
+      else next.add(column);
+      return next;
+    });
+  };
 
   const [expandedTelas, setExpandedTelas] = useState<Set<string>>(() => {
     try {
@@ -244,6 +254,23 @@ export default function Productos() {
                   <SelectItem value="INACTIVE">Inactivos</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="flex items-center gap-2 rounded-md border bg-background px-2 py-1">
+                <span className="text-xs text-muted-foreground">Columnas:</span>
+                {[
+                  ["anchoCm", "Ancho"],
+                  ["composicion", "Composición"],
+                  ["gramajeGm2", "Gramaje"],
+                ].map(([column, label]) => (
+                  <label key={column} className="flex items-center gap-1 text-xs cursor-pointer">
+                    <Checkbox
+                      checked={visibleSpecificationColumns.has(column)}
+                      onCheckedChange={() => toggleSpecificationColumn(column)}
+                      data-testid={`checkbox-product-column-${column}`}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -308,6 +335,9 @@ export default function Productos() {
                                   <TableHead className="w-[100px]">Color</TableHead>
                                   <TableHead>SKU</TableHead>
                                   <TableHead>Unidad</TableHead>
+                                   {visibleSpecificationColumns.has("anchoCm") && <TableHead className="text-right">Ancho</TableHead>}
+                                   {visibleSpecificationColumns.has("composicion") && <TableHead>Composición</TableHead>}
+                                   {visibleSpecificationColumns.has("gramajeGm2") && <TableHead className="text-right">Gramaje</TableHead>}
                                   {canViewPrices && <TableHead className="text-right">Precio</TableHead>}
                                   <TableHead className="text-right">Rollos</TableHead>
                                   <TableHead className="text-right">Cantidad</TableHead>
@@ -335,6 +365,9 @@ export default function Productos() {
                                     <TableCell>
                                       <Badge variant="outline" className="text-[10px]">{p.unidad}</Badge>
                                     </TableCell>
+                                     {visibleSpecificationColumns.has("anchoCm") && <TableCell className="text-right">{p.anchoCm == null ? "—" : `${p.anchoCm.toFixed(2)} cm`}</TableCell>}
+                                     {visibleSpecificationColumns.has("composicion") && <TableCell>{p.composicion || "—"}</TableCell>}
+                                     {visibleSpecificationColumns.has("gramajeGm2") && <TableCell className="text-right">{p.gramajeGm2 == null ? "—" : `${p.gramajeGm2.toFixed(2)} g/m²`}</TableCell>}
                                     {canViewPrices && <TableCell className={`text-right ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.precioSugerido ?? 0, { kind: "money" })}</TableCell>}
                                     <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.rollos, { kind: "count" })}</TableCell>
                                     <TableCell className={`text-right font-medium tabular-nums ${isZeroStock ? "text-muted-foreground" : ""}`}>
@@ -355,7 +388,7 @@ export default function Productos() {
                                 )})}
                                 {canCreate && (
                                   <TableRow>
-                                    <TableCell colSpan={8} className="p-2">
+                                     <TableCell colSpan={8 + visibleSpecificationColumns.size} className="p-2">
                                       <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-primary h-8" onClick={() => openCreate(tela)}>
                                         <Plus className="w-4 h-4 mr-2" /> Agregar color a {tela}
                                       </Button>
@@ -407,6 +440,9 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
     unidad: UnidadProducto;
     precioSugerido: string;
     notas: string;
+    anchoCm: string;
+    composicion: string;
+    gramajeGm2: string;
   }>({
     sku: "",
     isCustomSku: false,
@@ -414,7 +450,10 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
     color: "",
     unidad: UnidadProducto.METRO,
     precioSugerido: "0.00",
-    notas: ""
+    notas: "",
+    anchoCm: "",
+    composicion: "",
+    gramajeGm2: "",
   });
 
   useEffect(() => {
@@ -426,7 +465,10 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
         color: "",
         unidad: UnidadProducto.METRO,
         precioSugerido: "0.00",
-        notas: ""
+        notas: "",
+        anchoCm: "",
+        composicion: "",
+        gramajeGm2: "",
       });
     }
   }, [open, initialTela]);
@@ -450,6 +492,9 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
         unidad: formData.unidad,
         precioSugerido: formData.precioSugerido,
         notas: formData.notas.trim() || null,
+        anchoCm: formData.anchoCm === "" ? null : Number(formData.anchoCm),
+        composicion: formData.composicion.trim() || null,
+        gramajeGm2: formData.gramajeGm2 === "" ? null : Number(formData.gramajeGm2),
         sku: formData.isCustomSku && formData.sku.trim() ? formData.sku.trim() : undefined
       }
     }, {
@@ -561,6 +606,24 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             <p className="text-[10px] text-muted-foreground">
               El SKU se genera automáticamente usando los primeros caracteres de la tela y el color.
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Especificaciones (opcionales)</Label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="input-product-ancho">Ancho (cm)</Label>
+                <Input id="input-product-ancho" type="number" step="0.01" min="0" value={formData.anchoCm} onChange={e => setFormData({ ...formData, anchoCm: e.target.value })} data-testid="input-product-ancho" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="input-product-gramaje">Gramaje (g/m²)</Label>
+                <Input id="input-product-gramaje" type="number" step="0.01" min="0" value={formData.gramajeGm2} onChange={e => setFormData({ ...formData, gramajeGm2: e.target.value })} data-testid="input-product-gramaje" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="input-product-composicion">Composición</Label>
+              <Input id="input-product-composicion" value={formData.composicion} onChange={e => setFormData({ ...formData, composicion: e.target.value })} placeholder='Ej. 100% poliéster' data-testid="input-product-composicion" />
+            </div>
           </div>
 
           <div className="space-y-2">

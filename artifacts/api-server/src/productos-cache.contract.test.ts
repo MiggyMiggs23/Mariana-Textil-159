@@ -11,6 +11,9 @@ test("productos contract declares cache-backed availability fields and filters",
   assert.match(spec, /enum: \[TODOS, CON_EXISTENCIA, AGOTADOS\]/);
   assert.match(spec, /sitiosConExistencia/);
   assert.match(spec, /rollosDisponibles/);
+  assert.match(spec, /anchoCm/);
+  assert.match(spec, /composicion/);
+  assert.match(spec, /gramajeGm2/);
 });
 
 test("productos route scopes cache totals and available-roll links server-side", async () => {
@@ -29,7 +32,8 @@ test("producto contracts retain zero catalog rows and expose scoped detail links
   const now = new Date();
   const list = ListProductosResponse.parse([{
     id: 1, sku: "CERO", tela: "Tela", color: "Sin stock", unidad: "METRO",
-    colorHex: null, seVendePorMetro: false, precioSugerido: "10.00",
+    colorHex: null, anchoCm: null, composicion: null, gramajeGm2: null,
+    seVendePorMetro: false, precioSugerido: "10.00",
     notas: null, activo: true, rollos: 0,
     cantidad: "0.000", sitiosConExistencia: 0, createdAt: now, updatedAt: now,
   }]);
@@ -49,4 +53,6 @@ test("producto contracts retain zero catalog rows and expose scoped detail links
   });
   assert.equal(detail.inventarioPorUbicacion[0]?.ubicacionId, 7);
   assert.equal(detail.rollosDisponibles[0]?.estado, "DISPONIBLE");
+  assert.equal(detail.anchoCm, null);
+  assert.equal(detail.gramajeGm2, null);
 });
