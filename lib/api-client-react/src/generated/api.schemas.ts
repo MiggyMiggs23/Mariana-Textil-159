@@ -1126,6 +1126,48 @@ export interface AdminCuentaDestinoRow {
   operaciones: number;
 }
 
+export type AdminCuentaDestinoMovimientoDocumentoTipo = typeof AdminCuentaDestinoMovimientoDocumentoTipo[keyof typeof AdminCuentaDestinoMovimientoDocumentoTipo];
+
+
+export const AdminCuentaDestinoMovimientoDocumentoTipo = {
+  TICKET: 'TICKET',
+} as const;
+
+export interface AdminCuentaDestinoMovimiento {
+  id: number;
+  fecha: string;
+  tipo: string;
+  documentoTipo: AdminCuentaDestinoMovimientoDocumentoTipo;
+  documentoId: number;
+  documento: string;
+  /** @nullable */
+  cliente: string | null;
+  ubicacionId: number;
+  sitio: string;
+  monto: string;
+  registroId: number;
+  registro: string;
+}
+
+export type AdminCuentaDestinoMovimientosCuentaDestino = typeof AdminCuentaDestinoMovimientosCuentaDestino[keyof typeof AdminCuentaDestinoMovimientosCuentaDestino];
+
+
+export const AdminCuentaDestinoMovimientosCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTAS_POR_COBRAR: 'CUENTAS_POR_COBRAR',
+} as const;
+
+export interface AdminCuentaDestinoMovimientos {
+  cuentaDestino: AdminCuentaDestinoMovimientosCuentaDestino;
+  items: AdminCuentaDestinoMovimiento[];
+  total: number;
+  page: number;
+  pageSize: number;
+  montoTotal: string;
+}
+
 export interface AdminCuentaTrend {
   fecha: string;
   cuentaDestino: string;
@@ -5658,6 +5700,29 @@ hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
 };
 
+export type ListAdminCuentaDestinoMovimientosParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
 export type GetAdminComparacionTiendasParams = {
 periodo: GetAdminComparacionTiendasPeriodo;
 /**
@@ -5720,6 +5785,20 @@ soloConDiferencia?: boolean;
 };
 
 export type ExportAdminCuentasDestinoXlsxParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+};
+
+export type ExportAdminCuentaDestinoMovimientosXlsxParams = {
 /**
  * Día inicial en America/Mexico_City
  * @pattern ^\d{4}-\d{2}-\d{2}$

@@ -4159,6 +4159,27 @@ paths:
               schema: { $ref: "#/components/schemas/AdminCuentasDestino" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuentas-destino/{cuentaDestino}/movimientos:
+    get:
+      operationId: listAdminCuentaDestinoMovimientos
+      tags: [admin-analytics]
+      summary: Lista los movimientos reales de una cuenta destino
+      parameters:
+        - $ref: "#/components/parameters/AccountDestination"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+      responses:
+        "200":
+          description: Movimientos de la cuenta destino
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminCuentaDestinoMovimientos" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/comparacion-tiendas:
     get:
       operationId: getAdminComparacionTiendas
@@ -4256,6 +4277,25 @@ paths:
           content:
             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
               schema: { type: string, format: binary }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuentas-destino/{cuentaDestino}/movimientos/export.xlsx:
+    get:
+      operationId: exportAdminCuentaDestinoMovimientosXlsx
+      tags: [admin-analytics]
+      summary: Exporta a XLSX los movimientos reales de una cuenta destino
+      parameters:
+        - $ref: "#/components/parameters/AccountDestination"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200":
+          description: XLSX
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
   /admin/cuentas-destino/export.pdf:
@@ -4952,6 +4992,13 @@ components:
       name: ubicacionId
       in: query
       schema: { type: number }
+    AccountDestination:
+      name: cuentaDestino
+      in: path
+      required: true
+      schema:
+        type: string
+        enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR]
     LocationId:
       name: id
       in: path
@@ -6482,6 +6529,37 @@ components:
           description: Porcentaje en unidades; 12.50 significa 12.5%
         porcentaje: { type: string }
         operaciones: { type: number }
+    AdminCuentaDestinoMovimiento:
+      type: object
+      required:
+        [id, fecha, tipo, documentoTipo, documentoId, documento, cliente, ubicacionId, sitio, monto, registroId, registro]
+      properties:
+        id: { type: number }
+        fecha: { type: string, format: date-time }
+        tipo: { type: string }
+        documentoTipo: { type: string, enum: [TICKET] }
+        documentoId: { type: number }
+        documento: { type: string }
+        cliente: { type: ["string", "null"] }
+        ubicacionId: { type: number }
+        sitio: { type: string }
+        monto: { type: string }
+        registroId: { type: number }
+        registro: { type: string }
+    AdminCuentaDestinoMovimientos:
+      type: object
+      required: [cuentaDestino, items, total, page, pageSize, montoTotal]
+      properties:
+        cuentaDestino:
+          type: string
+          enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR]
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AdminCuentaDestinoMovimiento" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+        montoTotal: { type: string }
     AdminCuentaTrend:
       type: object
       required: [fecha, cuentaDestino, importe]

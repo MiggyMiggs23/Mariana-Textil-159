@@ -45,6 +45,7 @@ import Alertas from "@/pages/alertas";
 import CajaTiempoReal from "@/pages/caja/tiempo-real";
 import CajaCortes from "@/pages/caja/cortes";
 import CajaCuentasDestino from "@/pages/caja/cuentas-destino";
+import CuentaDestinoDetalle from "@/pages/caja/cuenta-destino-detalle";
 import Notificaciones from "@/pages/notificaciones";
 import Reportes from "@/pages/reportes";
 import Contenedores from "@/pages/contenedores/index";
@@ -474,6 +475,15 @@ function Router() {
             <ProtectedRoute
               component={Reportes}
               allowedModule={Modules.REPORTES}
+            />
+          )}
+        />
+        <Route
+          path="/caja/cuentas-destino/:cuentaDestino"
+          component={() => (
+            <ProtectedRoute
+              component={CuentaDestinoDetalle}
+              allowedModule={Modules.COBROS_PAGOS}
             />
           )}
         />

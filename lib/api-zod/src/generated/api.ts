@@ -7713,6 +7713,53 @@ export const GetAdminCuentasDestinoResponse = zod.object({
 
 
 /**
+ * @summary Lista los movimientos reales de una cuenta destino
+ */
+export const ListAdminCuentaDestinoMovimientosParams = zod.object({
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR'])
+})
+
+export const listAdminCuentaDestinoMovimientosQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAdminCuentaDestinoMovimientosQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAdminCuentaDestinoMovimientosQueryPageDefault = 1;
+
+export const listAdminCuentaDestinoMovimientosQueryPageSizeDefault = 50;
+export const listAdminCuentaDestinoMovimientosQueryPageSizeMax = 100;
+
+
+
+export const ListAdminCuentaDestinoMovimientosQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listAdminCuentaDestinoMovimientosQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(listAdminCuentaDestinoMovimientosQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional(),
+  "page": zod.coerce.number().int().min(1).default(listAdminCuentaDestinoMovimientosQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(listAdminCuentaDestinoMovimientosQueryPageSizeMax).default(listAdminCuentaDestinoMovimientosQueryPageSizeDefault)
+})
+
+export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR']),
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "fecha": zod.coerce.date(),
+  "tipo": zod.string(),
+  "documentoTipo": zod.enum(['TICKET']),
+  "documentoId": zod.number(),
+  "documento": zod.string(),
+  "cliente": zod.string().nullable(),
+  "ubicacionId": zod.number(),
+  "sitio": zod.string(),
+  "monto": zod.string(),
+  "registroId": zod.number(),
+  "registro": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number(),
+  "montoTotal": zod.string()
+})
+
+
+/**
  * @summary Comparación de tiendas por periodo
  */
 export const getAdminComparacionTiendasQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
@@ -7845,6 +7892,26 @@ export const ExportAdminCuentasDestinoXlsxQueryParams = zod.object({
 })
 
 export const ExportAdminCuentasDestinoXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta a XLSX los movimientos reales de una cuenta destino
+ */
+export const ExportAdminCuentaDestinoMovimientosXlsxParams = zod.object({
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR'])
+})
+
+export const exportAdminCuentaDestinoMovimientosXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAdminCuentaDestinoMovimientosXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const ExportAdminCuentaDestinoMovimientosXlsxQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportAdminCuentaDestinoMovimientosXlsxQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportAdminCuentaDestinoMovimientosXlsxQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const ExportAdminCuentaDestinoMovimientosXlsxResponse = zod.unknown()
 
 
 /**

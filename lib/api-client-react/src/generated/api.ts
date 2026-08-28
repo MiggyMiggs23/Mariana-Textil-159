@@ -24,6 +24,7 @@ import type {
   AdminAlertas,
   AdminComparacionTiendas,
   AdminCortesResult,
+  AdminCuentaDestinoMovimientos,
   AdminCuentasDestino,
   AdminDiferencias,
   AdminPendingSummary,
@@ -110,6 +111,7 @@ import type {
   ExistenciaRow,
   ExportAdminCortesPdfParams,
   ExportAdminCortesXlsxParams,
+  ExportAdminCuentaDestinoMovimientosXlsxParams,
   ExportAdminCuentasDestinoPdfParams,
   ExportAdminCuentasDestinoXlsxParams,
   ExportAuditoriaXlsxParams,
@@ -147,6 +149,7 @@ import type {
   KardexFilters,
   KardexResult,
   ListAdminCortesParams,
+  ListAdminCuentaDestinoMovimientosParams,
   ListAuditoriaParams,
   ListAuditoriasInventarioParams,
   ListCamionetasParams,
@@ -14248,6 +14251,95 @@ export function useGetAdminCuentasDestino<TData = Awaited<ReturnType<typeof getA
 
 
 
+export const getListAdminCuentaDestinoMovimientosUrl = (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ListAdminCuentaDestinoMovimientosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cuentas-destino/${cuentaDestino}/movimientos?${stringifiedParams}` : `/api/admin/cuentas-destino/${cuentaDestino}/movimientos`
+}
+
+/**
+ * @summary Lista los movimientos reales de una cuenta destino
+ */
+export const listAdminCuentaDestinoMovimientos = async (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ListAdminCuentaDestinoMovimientosParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminCuentaDestinoMovimientos> => {
+
+  return customFetch<AdminCuentaDestinoMovimientos>(getListAdminCuentaDestinoMovimientosUrl(cuentaDestino,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAdminCuentaDestinoMovimientosQueryKey = (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ListAdminCuentaDestinoMovimientosParams,) => {
+    return [
+    `/api/admin/cuentas-destino/${cuentaDestino}/movimientos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAdminCuentaDestinoMovimientosQueryOptions = <TData = Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ListAdminCuentaDestinoMovimientosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAdminCuentaDestinoMovimientosQueryKey(cuentaDestino,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>> = ({ signal }) => listAdminCuentaDestinoMovimientos(cuentaDestino,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: cuentaDestino !== null && cuentaDestino !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAdminCuentaDestinoMovimientosQueryResult = NonNullable<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>>
+export type ListAdminCuentaDestinoMovimientosQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista los movimientos reales de una cuenta destino
+ */
+
+export function useListAdminCuentaDestinoMovimientos<TData = Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ListAdminCuentaDestinoMovimientosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAdminCuentaDestinoMovimientosQueryOptions(cuentaDestino,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getGetAdminComparacionTiendasUrl = (params: GetAdminComparacionTiendasParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -14572,6 +14664,95 @@ export function useExportAdminCuentasDestinoXlsx<TData = Awaited<ReturnType<type
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getExportAdminCuentasDestinoXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportAdminCuentaDestinoMovimientosXlsxUrl = (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ExportAdminCuentaDestinoMovimientosXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cuentas-destino/${cuentaDestino}/movimientos/export.xlsx?${stringifiedParams}` : `/api/admin/cuentas-destino/${cuentaDestino}/movimientos/export.xlsx`
+}
+
+/**
+ * @summary Exporta a XLSX los movimientos reales de una cuenta destino
+ */
+export const exportAdminCuentaDestinoMovimientosXlsx = async (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ExportAdminCuentaDestinoMovimientosXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportAdminCuentaDestinoMovimientosXlsxUrl(cuentaDestino,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportAdminCuentaDestinoMovimientosXlsxQueryKey = (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ExportAdminCuentaDestinoMovimientosXlsxParams,) => {
+    return [
+    `/api/admin/cuentas-destino/${cuentaDestino}/movimientos/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportAdminCuentaDestinoMovimientosXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ExportAdminCuentaDestinoMovimientosXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportAdminCuentaDestinoMovimientosXlsxQueryKey(cuentaDestino,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>> = ({ signal }) => exportAdminCuentaDestinoMovimientosXlsx(cuentaDestino,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: cuentaDestino !== null && cuentaDestino !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportAdminCuentaDestinoMovimientosXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>>
+export type ExportAdminCuentaDestinoMovimientosXlsxQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta a XLSX los movimientos reales de una cuenta destino
+ */
+
+export function useExportAdminCuentaDestinoMovimientosXlsx<TData = Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+    params?: ExportAdminCuentaDestinoMovimientosXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportAdminCuentaDestinoMovimientosXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportAdminCuentaDestinoMovimientosXlsxQueryOptions(cuentaDestino,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -56,6 +56,10 @@ export function accountDestination(
   return facturado ? "CUENTA_FISCAL" : "CUENTA_NO_FISCAL";
 }
 
+export function isAccountDestination(value: string): value is AccountDestination {
+  return ACCOUNT_DESTINATION_ORDER.includes(value as AccountDestination);
+}
+
 export function calculateFrozenMargin(
   lines: Array<{
     importe: string | number;
@@ -556,6 +560,77 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
       noFacturadoEfectivo: decimal(rows.filter((r) => !r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
       noFacturadoTransferencia: decimal(rows.filter((r) => !r.facturado && r.formaPago === "TRANSFERENCIA").reduce((s, r) => s + Number(r.importe), 0)),
     },
+  };
+}
+
+export async function listDestinationAccountMovements(
+  filters: AnalyticsFilters,
+  destination: AccountDestination,
+  page = 1,
+  pageSize = 50,
+) {
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId ?? null,
+    destination,
+    pageSize,
+    (page - 1) * pageSize,
+  ];
+  const condition = `($1::timestamptz IS NULL OR t.cobrado_at >= $1)
+    AND ($2::timestamptz IS NULL OR t.cobrado_at <= $2)
+    AND ($3::int IS NULL OR t.ubicacion_id = $3)
+    AND CASE $4::text
+      WHEN 'CAJA_FISICA' THEN p.forma_pago='EFECTIVO'
+      WHEN 'CUENTAS_POR_COBRAR' THEN p.forma_pago='CREDITO'
+      WHEN 'CUENTA_FISCAL' THEN p.forma_pago='TRANSFERENCIA' AND t.facturado
+      WHEN 'CUENTA_NO_FISCAL' THEN p.forma_pago='TRANSFERENCIA' AND NOT t.facturado
+      ELSE false
+    END
+    AND t.estado='VENDIDO' AND t.cobrado`;
+  const joins = `FROM tickets t
+    JOIN ticket_pagos p ON p.ticket_id=t.id
+    JOIN ubicaciones u ON u.id=t.ubicacion_id
+    JOIN usuarios registrador ON registrador.id=p.usuario_id
+    LEFT JOIN clientes c ON c.id=t.cliente_id`;
+  const [rows, aggregate] = await Promise.all([
+    pool.query(
+      `SELECT p.id,t.cobrado_at fecha,
+        CASE $4::text
+          WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
+          WHEN 'CUENTAS_POR_COBRAR' THEN 'Venta a crédito'
+          WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal'
+          ELSE 'Transferencia no fiscal'
+        END tipo,
+        'TICKET' "documentoTipo",t.id "documentoId",
+        ('Ticket #' || t.folio::text) documento,c.nombre cliente,
+        u.id "ubicacionId",u.nombre sitio,p.importe::text monto,
+        registrador.id "registroId",registrador.nombre registro
+       ${joins} WHERE ${condition}
+       ORDER BY t.cobrado_at DESC,p.id DESC LIMIT $5 OFFSET $6`,
+      values,
+    ),
+    pool.query(
+      `SELECT COUNT(*)::int total,COALESCE(SUM(p.importe),0)::text "montoTotal"
+       ${joins} WHERE ${condition}`,
+      values.slice(0, 4),
+    ),
+  ]);
+  return {
+    cuentaDestino: destination,
+    items: rows.rows.map((row) => ({
+      ...row,
+      id: Number(row.id),
+      fecha: new Date(row.fecha).toISOString(),
+      documentoId: Number(row.documentoId),
+      ubicacionId: Number(row.ubicacionId),
+      registroId: Number(row.registroId),
+      monto: decimal(row.monto),
+    })),
+    total: Number(aggregate.rows[0]!.total),
+    page,
+    pageSize,
+    montoTotal: decimal(aggregate.rows[0]!.montoTotal),
   };
 }
 

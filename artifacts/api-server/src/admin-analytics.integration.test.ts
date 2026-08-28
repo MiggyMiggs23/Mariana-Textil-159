@@ -263,6 +263,25 @@ if (!testUrl) {
         Number(destinations.totalCobrado),
       );
       assert.equal(destinations.ivaCobrado, "96.00");
+      const destinationDetails = await Promise.all(
+        (["CAJA_FISICA", "CUENTA_FISCAL", "CUENTA_NO_FISCAL", "CUENTAS_POR_COBRAR"] as const).map(
+          (destination) => analytics.listDestinationAccountMovements(
+            filters,
+            destination,
+            1,
+            1,
+          ),
+        ),
+      );
+      assert.deepEqual(destinationDetails.map((detail) => detail.total), [2, 1, 1, 1]);
+      for (const detail of destinationDetails) {
+        assert.equal(detail.items.length, 1);
+        assert.equal(detail.items[0]!.documentoTipo, "TICKET");
+        assert.ok(ids.tickets.includes(detail.items[0]!.documentoId));
+        assert.equal(detail.montoTotal, destinations.resumen.find(
+          (row) => row.cuentaDestino === detail.cuentaDestino,
+        )!.importe);
+      }
       assert.equal(
         Math.round(comparison.tiendas.reduce((sum, store) => sum + Number(store.participacion), 0)),
         100,

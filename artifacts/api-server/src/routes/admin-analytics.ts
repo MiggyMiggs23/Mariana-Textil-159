@@ -7,12 +7,17 @@ import {
   ExportAdminCortesXlsxQueryParams,
   ExportAdminCuentasDestinoPdfQueryParams,
   ExportAdminCuentasDestinoXlsxQueryParams,
+  ExportAdminCuentaDestinoMovimientosXlsxParams,
+  ExportAdminCuentaDestinoMovimientosXlsxQueryParams,
   GetAdminComparacionTiendasQueryParams,
   GetAdminComparacionTiendasResponse,
   GetAdminCorteParams,
   GetAdminCorteResponse,
   GetAdminCuentasDestinoQueryParams,
   GetAdminCuentasDestinoResponse,
+  ListAdminCuentaDestinoMovimientosParams,
+  ListAdminCuentaDestinoMovimientosQueryParams,
+  ListAdminCuentaDestinoMovimientosResponse,
   GetAdminDiferenciasQueryParams,
   GetAdminDiferenciasResponse,
   GetAdminRealtimeDashboardQueryParams,
@@ -32,6 +37,8 @@ import {
   compareStores,
   comparisonRange,
   getDestinationAccounts,
+  isAccountDestination,
+  listDestinationAccountMovements,
   getDifferences,
   getPending,
   getQuantities,
@@ -149,6 +156,27 @@ router.get("/admin/cuentas-destino", async (req, res, next): Promise<void> => {
   }
 });
 
+router.get("/admin/cuentas-destino/:cuentaDestino/movimientos", async (req, res, next): Promise<void> => {
+  try {
+    const { cuentaDestino } = ListAdminCuentaDestinoMovimientosParams.parse(req.params);
+    const query = ListAdminCuentaDestinoMovimientosQueryParams.parse(req.query);
+    if (!isAccountDestination(cuentaDestino)) {
+      res.status(400).json({ error: "Cuenta destino inválida.", code: "VALIDATION_ERROR" });
+      return;
+    }
+    res.json(ListAdminCuentaDestinoMovimientosResponse.parse(
+      await listDestinationAccountMovements(
+        parseAnalyticsFilters(query),
+        cuentaDestino,
+        query.page,
+        query.pageSize,
+      ),
+    ));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
 router.get("/admin/comparacion-tiendas", async (req, res, next): Promise<void> => {
   try {
     const query = GetAdminComparacionTiendasQueryParams.parse(req.query);
@@ -237,6 +265,48 @@ async function destinationsXlsx(req: any, res: any) {
 
 router.get("/admin/cuentas-destino/export.xlsx", async (req, res, next): Promise<void> => {
   try { await destinationsXlsx(req, res); } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+router.get("/admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx", async (req, res, next): Promise<void> => {
+  try {
+    const { cuentaDestino } = ExportAdminCuentaDestinoMovimientosXlsxParams.parse(req.params);
+    const query = ExportAdminCuentaDestinoMovimientosXlsxQueryParams.parse(req.query);
+    if (!isAccountDestination(cuentaDestino)) {
+      res.status(400).json({ error: "Cuenta destino inválida.", code: "VALIDATION_ERROR" });
+      return;
+    }
+    const data = await listDestinationAccountMovements(
+      parseAnalyticsFilters(query),
+      cuentaDestino,
+      1,
+      1_000_000,
+    );
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Movimientos");
+    sheet.columns = [
+      { header: "Fecha", key: "fecha", width: 22 },
+      { header: "Tipo", key: "tipo", width: 24 },
+      { header: "Documento", key: "documento", width: 20 },
+      { header: "Cliente", key: "cliente", width: 28 },
+      { header: "Sitio", key: "sitio", width: 24 },
+      { header: "Monto", key: "monto", width: 16 },
+      { header: "Registró", key: "registro", width: 24 },
+    ];
+    sheet.getColumn("monto").numFmt = EXCEL_NUMBER_FORMAT.money;
+    sheet.addRows(data.items.map((row) => ({
+      ...row,
+      fecha: new Date(row.fecha),
+      cliente: row.cliente ?? "Público general",
+      monto: toExcelNumber(row.monto),
+    })));
+    sheet.addRow({ sitio: "Total", monto: toExcelNumber(data.montoTotal) });
+    res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.attachment(`movimientos-${cuentaDestino.toLowerCase()}.xlsx`);
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
 });
 
 router.get("/admin/cuentas-destino/export.pdf", async (req, res, next): Promise<void> => {

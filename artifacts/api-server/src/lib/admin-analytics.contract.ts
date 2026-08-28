@@ -17,6 +17,10 @@ import {
   ExportAdminCortesXlsxQueryParams,
   ExportAdminCuentasDestinoPdfQueryParams,
   ExportAdminCuentasDestinoXlsxQueryParams,
+  ExportAdminCuentaDestinoMovimientosXlsxParams,
+  ListAdminCuentaDestinoMovimientosParams,
+  ListAdminCuentaDestinoMovimientosQueryParams,
+  ListAdminCuentaDestinoMovimientosResponse,
   GetAdminComparacionTiendasQueryParams,
   GetAdminCuentasDestinoQueryParams,
   GetAdminDiferenciasQueryParams,
@@ -32,6 +36,40 @@ test("account destinations preserve payment/facturado rules", () => {
   assert.equal(accountDestination("CREDITO", true), "CUENTAS_POR_COBRAR");
   assert.equal(accountDestination("TRANSFERENCIA", true), "CUENTA_FISCAL");
   assert.equal(accountDestination("TRANSFERENCIA", false), "CUENTA_NO_FISCAL");
+});
+
+test("destination movement contract validates account, pagination and real ticket links", () => {
+  assert.equal(ListAdminCuentaDestinoMovimientosParams.parse({
+    cuentaDestino: "CUENTA_FISCAL",
+  }).cuentaDestino, "CUENTA_FISCAL");
+  assert.equal(ExportAdminCuentaDestinoMovimientosXlsxParams.safeParse({
+    cuentaDestino: "OTRA",
+  }).success, false);
+  assert.deepEqual(ListAdminCuentaDestinoMovimientosQueryParams.parse({}), {
+    page: 1,
+    pageSize: 50,
+  });
+  assert.equal(ListAdminCuentaDestinoMovimientosResponse.safeParse({
+    cuentaDestino: "CAJA_FISICA",
+    items: [{
+      id: 1,
+      fecha: new Date().toISOString(),
+      tipo: "Cobro en efectivo",
+      documentoTipo: "TICKET",
+      documentoId: 10,
+      documento: "Ticket #100",
+      cliente: null,
+      ubicacionId: 2,
+      sitio: "Centro",
+      monto: "125.00",
+      registroId: 3,
+      registro: "Cajero",
+    }],
+    total: 1,
+    page: 1,
+    pageSize: 50,
+    montoTotal: "125.00",
+  }).success, true);
 });
 
 test("margin is pending when any line has no frozen cost", () => {

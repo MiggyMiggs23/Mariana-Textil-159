@@ -27,6 +27,7 @@ import { es } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { getAccountDestinationChartColor } from "@/lib/report-chart-colors";
+import { Link } from "wouter";
 
 export default function CajaCuentasDestino() {
   const { selectedLocationId } = useLocationScope();
@@ -171,27 +172,36 @@ export default function CajaCuentasDestino() {
               {data.resumen.slice(0, 4).map((row, i) => {
                 const varPct = Number(row.variacionPorcentaje);
                 const isPositive = varPct > 0;
+                const inheritedFilters = new URLSearchParams({ desde, hasta });
+                if (selectedLocationId != null) inheritedFilters.set("ubicacionId", String(selectedLocationId));
                 return (
-                  <Card key={i} className="relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                      <Wallet className="w-12 h-12" />
-                    </div>
-                    <CardContent className="pt-6">
-                      <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{formatAccountDestination(row.cuentaDestino)}</p>
-                      <div className="flex items-end gap-2 mt-2">
-                        <h2 className="text-3xl font-black text-sidebar">{formatNumber(row.importe, { kind: "money" })}</h2>
+                  <Link
+                    key={i}
+                    href={`/caja/cuentas-destino/${row.cuentaDestino}?${inheritedFilters.toString()}`}
+                    className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    data-testid={`link-cuenta-destino-${row.cuentaDestino}`}
+                  >
+                    <Card className="relative h-full overflow-hidden transition-colors hover:border-primary/60 hover:bg-muted/20">
+                      <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Wallet className="w-12 h-12" />
                       </div>
-                      <div className="flex items-center justify-between mt-3 text-sm">
-                        <span className="font-bold text-sidebar bg-sidebar/10 px-2 py-0.5 rounded">
-                          {formatNumber(row.porcentaje, { kind: "percentage", percentageInput: "percent" })}
-                        </span>
-                        <div className={`flex items-center gap-1 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
-                          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : varPct < 0 ? <ArrowDownRight className="w-4 h-4" /> : null}
-                          {formatNumber(Math.abs(varPct), { kind: "percentage", percentageInput: "percent" })} vs ant.
+                      <CardContent className="pt-6">
+                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{formatAccountDestination(row.cuentaDestino)}</p>
+                        <div className="flex items-end gap-2 mt-2">
+                          <h2 className="text-3xl font-black text-sidebar">{formatNumber(row.importe, { kind: "money" })}</h2>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        <div className="flex items-center justify-between mt-3 text-sm">
+                          <span className="font-bold text-sidebar bg-sidebar/10 px-2 py-0.5 rounded">
+                            {formatNumber(row.porcentaje, { kind: "percentage", percentageInput: "percent" })}
+                          </span>
+                          <div className={`flex items-center gap-1 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                            {isPositive ? <ArrowUpRight className="w-4 h-4" /> : varPct < 0 ? <ArrowDownRight className="w-4 h-4" /> : null}
+                            {formatNumber(Math.abs(varPct), { kind: "percentage", percentageInput: "percent" })} vs ant.
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 );
               })}
             </div>

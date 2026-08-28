@@ -18,6 +18,10 @@ export * from "./generated/types/adminCorteRow";
 export * from "./generated/types/adminCorteRowEstado";
 export * from "./generated/types/adminCortesResult";
 export * from "./generated/types/adminCortesResultTotales";
+export * from "./generated/types/adminCuentaDestinoMovimiento";
+export * from "./generated/types/adminCuentaDestinoMovimientoDocumentoTipo";
+export * from "./generated/types/adminCuentaDestinoMovimientos";
+export * from "./generated/types/adminCuentaDestinoMovimientosCuentaDestino";
 export * from "./generated/types/adminCuentaDestinoRow";
 export * from "./generated/types/adminCuentaDestinoRowFormaPago";
 export * from "./generated/types/adminCuentaTrend";
@@ -558,6 +562,7 @@ export type { BajaClienteBody as BajaClienteBodyType } from "./generated/types/b
 export type { CrearReimpresionEtiquetasBody as CrearReimpresionEtiquetasBodyType } from "./generated/types/crearReimpresionEtiquetasBody";
 export type { EstadisticasProveedorParams as EstadisticasProveedorQueryParams } from "./generated/types/estadisticasProveedorParams";
 export type { EstadoCuentaProveedorParams as EstadoCuentaProveedorQueryParams } from "./generated/types/estadoCuentaProveedorParams";
+export type { ExportAdminCuentaDestinoMovimientosXlsxParams as ExportAdminCuentaDestinoMovimientosXlsxClientParams } from "./generated/types/exportAdminCuentaDestinoMovimientosXlsxParams";
 export type { ExportReporteSeccionPdfParams as ExportReporteSeccionPdfQueryParams } from "./generated/types/exportReporteSeccionPdfParams";
 export type { ExportReporteSeccionXlsxParams as ExportReporteSeccionXlsxQueryParams } from "./generated/types/exportReporteSeccionXlsxParams";
 export type { ExportarProveedorXlsxParams as ExportarProveedorXlsxQueryParams } from "./generated/types/exportarProveedorXlsxParams";
@@ -565,6 +570,7 @@ export type { GetClienteAnaliticaParams as GetClienteAnaliticaQueryParams } from
 export type { GetClienteComprasParams as GetClienteComprasQueryParams } from "./generated/types/getClienteComprasParams";
 export type { GetClienteEstadoCuentaParams as GetClienteEstadoCuentaQueryParams } from "./generated/types/getClienteEstadoCuentaParams";
 export type { GetReporteSeccionParams as GetReporteSeccionPathParams } from "./generated/types/getReporteSeccionParams";
+export type { ListAdminCuentaDestinoMovimientosParams as ListAdminCuentaDestinoMovimientosClientParams } from "./generated/types/listAdminCuentaDestinoMovimientosParams";
 export type { ListComprasProveedorParams as ListComprasProveedorQueryParams } from "./generated/types/listComprasProveedorParams";
 export type { ListProveedorPagosParams as ListProveedorPagosQueryParams } from "./generated/types/listProveedorPagosParams";
 export type { ObtenerDocumentoImpresionTicketParams as ObtenerDocumentoImpresionTicketClientParams } from "./generated/types/obtenerDocumentoImpresionTicketParams";
