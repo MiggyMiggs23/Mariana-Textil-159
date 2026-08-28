@@ -1,0 +1,255 @@
+# PARTE 8 — Auditoría de inventario, purga de catálogos y corte diario
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## BLOQUE 1 — Renombrar Auditoría a Bitácora
+
+La pantalla que hoy se llama **Auditoría** —quién hizo qué en el sistema— pasa a llamarse **Bitácora**.
+
+El nombre actual está mal usado: lo que hay es un registro de acciones, no una auditoría. Y el nombre "Auditoría" se necesita para otra cosa (Bloque 2).
+
+- Cambia el nombre en la barra lateral, en los títulos y en los textos de la interfaz.
+- **El módulo de permisos sigue llamándose `auditoria`** internamente. No renombres el enum ni la tabla; es solo presentación.
+- Se queda donde está, en CONFIGURACIÓN, y conserva todas sus reglas: solo ADMIN escribe, SISTEMAS solo lee, y es inmutable en la base de datos.
+
+### Y Conciliación pasa a Conciliación de Kardex
+
+La pantalla **Conciliación** pasa a llamarse **Conciliación de Kardex**.
+
+Por la misma razón que la anterior: el nombre solo dice que algo se concilia, no qué. Y ahora que va a existir una Auditoría de Inventario que también compara cifras, hay que poder distinguirlas de un vistazo.
+
+- **Conciliación de Kardex** compara el caché de existencias contra el kardex. Es una verificación interna del sistema consigo mismo.
+- **Auditoría de Inventario** compara el sistema contra la mercancía física. Es el mundo real contra el sistema.
+
+Son cosas distintas y los nombres deben decirlo.
+
+Cambia el nombre en la barra lateral, en los títulos y en los textos. **El módulo de permisos sigue llamándose `conciliacion`** internamente: no renombres el enum ni la tabla.
+
+---
+
+## BLOQUE 2 — Auditoría de Inventario
+
+Nueva pantalla **Auditoría de Inventario**, en la sección INVENTARIO.
+
+Es el conteo físico: alguien va a una bodega, escanea todos los rollos con pistola, y el sistema compara contra lo que dice tener.
+
+### Abrir la auditoría
+
+Se elige el sitio y se abre. Queda registrado quién la abrió y cuándo.
+
+**Solo puede haber una auditoría abierta por sitio a la vez.**
+
+Al abrirse, el sistema toma una **fotografía de la existencia de ese sitio en ese momento**: qué rollos dice tener, con su serie. Esa fotografía es contra la que se compara, no la existencia al cerrar.
+
+Es importante: si alguien vende durante el conteo, la comparación se haría contra un blanco móvil. La fotografía la congela.
+
+### Escanear
+
+Un `<CampoEscaneo>` grande. Se escanean rollos uno tras otro con la pistola, sin tocar la pantalla.
+
+**Varias personas escanean sobre la misma auditoría al mismo tiempo.** Dos o tres aparatos, cada uno con su sesión, alimentando el mismo conteo.
+
+- Cada escaneo se guarda de inmediato en el servidor, con quién lo hizo y a qué hora.
+- **Un rollo escaneado dos veces no se duplica**, ni por la misma persona ni por dos aparatos distintos. Se registra una sola vez y se avisa en pantalla que ya estaba.
+- El contador de avance se actualiza en vivo para todos los que están escaneando.
+- Se registra la lista de **quiénes participaron**, derivada de quién escaneó.
+
+### Cerrar
+
+Al cerrar, el sistema compara lo escaneado contra la fotografía y arroja tres listas:
+
+| Lista | Significa |
+|---|---|
+| **Cuadró** | Escaneado y estaba en la fotografía |
+| **Faltante** | Estaba en la fotografía y no se escaneó |
+| **Sobrante** | Se escaneó y no estaba en la fotografía de ese sitio |
+
+Para cada sobrante, indica **dónde lo tiene el sistema**: en otro sitio, vendido, en mostrador o sin registro. Un rollo que aparece en Cruces cuando el sistema lo tiene en Tomás quiere decir que un traslado nunca se registró — y eso es el hallazgo más valioso de toda la auditoría.
+
+### No se puede pausar
+
+Una vez abierta, la auditoría **tiene que cerrarse**. No hay estado de pausa.
+
+Sí debe existir **cancelar**, con motivo escrito obligatorio, para cuando algo sale mal de verdad. Queda en la bitácora.
+
+### La auditoría NO corrige el inventario
+
+**Solo reporta.** Al cerrar queda en estado de espera de confirmación de ADMIN.
+
+ADMIN revisa el resultado y decide qué hacer. Si acepta, **se generan los ajustes correspondientes** —uno por cada faltante y cada sobrante— con su referencia a la auditoría que los originó.
+
+Si no acepta, la auditoría queda cerrada con su resultado registrado y sin generar ningún ajuste.
+
+**El conteo nunca escribe el inventario por su cuenta.** Un escaneo incompleto —se acabó la batería a media bodega— borraría medio inventario.
+
+### La hoja impresa
+
+Al cerrar, se genera una hoja imprimible con:
+
+- Sitio, fecha, hora de inicio y de cierre, duración
+- Quién la abrió y quiénes participaron
+- Totales: rollos esperados, escaneados, faltantes y sobrantes
+- Las tres listas con serie, SKU, tela, color y cantidad
+- Para los sobrantes, dónde los tiene el sistema
+- Espacio para firmas
+
+Con folio por sitio, como los demás documentos.
+
+### Solo rollos, solo QR
+
+**No se cuentan metros ni kilos.** Escanear el QR confirma que el rollo está presente; no verifica que tenga la cantidad que dice.
+
+Es una limitación conocida y aceptada. Déjala anotada en `replit.md`.
+
+### Permisos
+
+Puede abrir, escanear y cerrar: **ADMIN, SUPERVISOR, BODEGA y SISTEMAS**. BODEGA solo en su sitio.
+
+Confirmar el resultado y generar los ajustes: **solo ADMIN.**
+
+---
+
+## BLOQUE 3 — Purga de registros inactivos
+
+Hoy nada se borra: los registros se marcan inactivos y se acumulan. Con el tiempo los selectores se llenan de basura.
+
+Agrega la posibilidad de **eliminar definitivamente** registros inactivos de:
+
+- Usuarios
+- Camionetas
+- Choferes
+- Clientes
+- Proveedores
+- Productos
+
+### La regla que lo hace seguro
+
+> **Solo se puede eliminar un registro que no tenga ninguna referencia en el sistema.**
+
+Antes de permitir el borrado, cuenta las referencias del registro en todas las tablas que lo apunten. Si tiene **una sola**, el borrado se rechaza y se muestra **cuántas y de qué tipo**.
+
+Esto es crítico:
+
+- Un **usuario** que aparece en la bitácora, en un movimiento de kardex o en un ticket **no se puede borrar**. Si se borra, esos registros pierden su autor y la trazabilidad se rompe.
+- Un **chofer** que manejó un viaje no se puede borrar.
+- Un **cliente** con notas o movimientos de crédito no se puede borrar.
+- Un **producto** con rollos o líneas de venta no se puede borrar.
+
+En la práctica, esto significa que solo se van a poder borrar registros que se crearon por error o que nunca se usaron. **Que es exactamente lo que hay que poder limpiar.**
+
+### Cómo se presenta
+
+En cada catálogo, un filtro para ver los inactivos, y en cada uno un botón de eliminar.
+
+Al oprimirlo:
+
+- Si tiene referencias: mensaje explicando cuántas y de qué tipo, sin borrar nada
+- Si no tiene: **confirmación reforzada** —escribir el nombre exacto del registro— y se elimina
+
+Solo ADMIN. Cada eliminación queda en la bitácora, con los datos completos del registro borrado guardados en el "antes", para que quede constancia de qué había ahí.
+
+---
+
+## BLOQUE 4 — Un corte al día
+
+Hoy `sesiones_caja` permite abrir y cerrar sesiones sin límite de cuántas por día.
+
+La operación real es una sola secuencia diaria:
+
+1. **En la mañana** se registra el fondo de caja chica que hay en la caja
+2. Se opera todo el día
+3. **Al terminar el día** se hace el corte
+
+Todos los días igual.
+
+### Qué se hace
+
+- **Una sola sesión de caja por sitio y por día.** Si ya existe una sesión de hoy en ese sitio, no se puede abrir otra.
+- Si al abrir una sesión hay una del día anterior sin cerrar, **avísalo de forma visible** y no permitas abrir la nueva hasta resolverla.
+- La apertura pide el **fondo de caja chica**, obligatorio. Ese campo ya existe como `fondo_inicial`; hazlo el centro del paso de apertura.
+- El cierre calcula lo de siempre: esperado contra contado, por cuenta destino.
+
+### Salidas de dinero, solo en Mariana
+
+**Únicamente Tienda Mariana paga a proveedores.** Cruces y Coco no.
+
+- En la sesión de caja de Mariana, agrega el registro de **salidas de dinero**: monto, motivo, proveedor cuando aplique, y **de qué cuenta salió** (Efectivo, Cuentas No Fiscales, Cuentas Fiscales).
+- Esas salidas se restan del esperado en el corte de Mariana.
+- **En Cruces y Coco esa opción no existe.** No la escondas con estilos: el servidor debe rechazar una salida de dinero registrada desde un sitio que no sea Mariana.
+- Que el sitio autorizado sea una **constante nombrada y comentada**, no una condición escondida. El día que Coco empiece a pagar proveedores, debe ser un cambio de una línea.
+
+---
+
+## BLOQUE 5 — Hoja de ventas del día
+
+Al cerrar el corte, además del comprobante de corte que ya existe, el sistema imprime una **hoja de ventas del día** para poder hacer cuentas a mano.
+
+Contenido, agrupado por producto:
+
+| Producto | SKU | Cantidad | Unidad | Importe |
+|---|---|---|---|---|
+
+- Agrupado por **producto y color**, no rollo por rollo. **Sin números de serie**, igual que en el ticket.
+- Separando **ROLLOS** y **METRAJE** en dos secciones, con subtotal cada una.
+- **Metros y kilos nunca sumados entre sí.**
+- Al pie: total de rollos, total de metros, total de kilos, subtotal, IVA de lo facturado y total general.
+- Encabezado con sitio, fecha, y quién hizo el corte.
+
+Aplica a **todas las tiendas** —Mariana, Cruces y Coco—, no solo a algunas. Es la hoja con la que se cuadra el día.
+
+---
+
+## BLOQUE 6 — Verificación
+
+**Bitácora**
+- La pantalla se llama Bitácora y el módulo interno sigue siendo `auditoria`
+- Conserva su inmutabilidad y sus permisos
+- La pantalla de Conciliación se llama **Conciliación de Kardex** y su módulo interno sigue siendo `conciliacion`
+- No quedó ningún nombre viejo en barra lateral, títulos ni textos
+
+**Auditoría de inventario**
+- Solo una auditoría abierta por sitio
+- La fotografía se toma al abrir, y una venta durante el conteo no altera la comparación
+- Dos aparatos escanean sobre la misma auditoría y el contador avanza para los dos
+- Un rollo escaneado dos veces no se duplica y se avisa
+- Al cerrar salen las tres listas, y los sobrantes indican dónde los tiene el sistema
+- La auditoría **no modifica el inventario** hasta que ADMIN confirma
+- Al confirmar se generan los ajustes con referencia a la auditoría
+- Cancelar exige motivo y queda en la bitácora
+- La hoja se imprime con su folio y sus firmas
+- BODEGA solo puede auditar su sitio
+
+**Purga**
+- Un usuario con registros en la bitácora **no se puede borrar**, y el mensaje dice cuántas referencias tiene
+- Un chofer sin viajes sí se puede borrar, con confirmación escrita
+- La eliminación queda en la bitácora con los datos del registro borrado
+
+**Corte**
+- No se puede abrir una segunda sesión el mismo día en el mismo sitio
+- Una sesión del día anterior sin cerrar se avisa y bloquea la apertura
+- La apertura exige el fondo de caja chica
+- Una salida de dinero desde Cruces o Coco **se rechaza en el servidor**
+- Las salidas de Mariana se restan del esperado
+
+**Hoja de ventas**
+- Se imprime al cerrar, agrupada por producto y sin series
+- ROLLOS y METRAJE separados con su subtotal
+- Metros y kilos no se suman entre sí
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Bitácora** es el registro de quién hizo qué en el sistema; es inmutable y vive en Configuración. **Conciliación de Kardex** compara el caché de existencias contra el kardex: el sistema contra sí mismo. **Auditoría de Inventario** compara el sistema contra la mercancía física y vive en Inventario. Los tres nombres deben decir qué compara cada uno. Al abrirse toma una fotografía de la existencia del sitio, contra la cual compara; varias personas escanean sobre la misma auditoría al mismo tiempo y un rollo repetido no se duplica. **La auditoría nunca corrige el inventario por su cuenta**: reporta, y ADMIN decide si se generan los ajustes. Solo cuenta rollos por QR; no verifica metros ni kilos.
+>
+> Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el sistema. Un usuario que aparece en la bitácora o en el kardex nunca se borra: perder su rastro rompe la trazabilidad.
+>
+> **Una sola sesión de caja por sitio y por día:** se registra el fondo de caja chica en la mañana, se opera, y se corta al terminar. Únicamente Tienda Mariana registra salidas de dinero a proveedores, y el sitio autorizado es una constante nombrada. Al cerrar se imprime la hoja de ventas del día, agrupada por producto y sin series.
