@@ -1994,7 +1994,17 @@ export const ListContenedoresResponse = zod.object({
   "sitioDestino": zod.string(),
   "estado": zod.enum(['EN_TRANSITO', 'RECIBIDO', 'CANCELADO']),
   "diasParaLlegar": zod.number(),
-  "lineas": zod.number(),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO']),
+  "cantidadEsperada": zod.string(),
+  "rollosEsperados": zod.number().nullable(),
+  "nota": zod.string().nullable()
+})).describe('Todas las líneas de producto esperadas del contenedor.'),
+  "lineasCount": zod.number().describe('Conteo compatible para vistas resumidas; coincide con lineas.length'),
   "totales": zod.object({
   "lineas": zod.number(),
   "rollos": zod.number(),

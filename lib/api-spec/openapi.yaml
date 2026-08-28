@@ -5010,6 +5010,28 @@ components:
         rollos: { type: number }
         metros: { type: string }
         kilos: { type: string }
+    ContenedorListLinea:
+      type: object
+      required:
+        [
+          productoId,
+          sku,
+          tela,
+          color,
+          unidad,
+          cantidadEsperada,
+          rollosEsperados,
+          nota,
+        ]
+      properties:
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO] }
+        cantidadEsperada: { type: string }
+        rollosEsperados: { type: ["number", "null"] }
+        nota: { type: ["string", "null"] }
     ContenedorListItem:
       type: object
       required:
@@ -5025,6 +5047,7 @@ components:
           estado,
           diasParaLlegar,
           lineas,
+          lineasCount,
           totales,
         ]
       properties:
@@ -5038,7 +5061,15 @@ components:
         sitioDestino: { type: string }
         estado: { $ref: "#/components/schemas/EstadoContenedor" }
         diasParaLlegar: { type: number }
-        lineas: { type: number }
+        lineas:
+          type: array
+          description: Todas las líneas de producto esperadas del contenedor.
+          items: { $ref: "#/components/schemas/ContenedorListLinea" }
+        lineasCount:
+          {
+            type: number,
+            description: Conteo compatible para vistas resumidas; coincide con lineas.length,
+          }
         totales: { $ref: "#/components/schemas/ContenedorTotals" }
         costoTotal: { type: ["string", "null"], description: Solo ADMIN }
     ContenedorListResult:

@@ -273,6 +273,27 @@ export interface ContenedorTotals {
   kilos: string;
 }
 
+export type ContenedorListLineaUnidad = typeof ContenedorListLineaUnidad[keyof typeof ContenedorListLineaUnidad];
+
+
+export const ContenedorListLineaUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface ContenedorListLinea {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: ContenedorListLineaUnidad;
+  cantidadEsperada: string;
+  /** @nullable */
+  rollosEsperados: number | null;
+  /** @nullable */
+  nota: string | null;
+}
+
 export interface ContenedorListItem {
   id: number;
   folio: number;
@@ -285,7 +306,10 @@ export interface ContenedorListItem {
   sitioDestino: string;
   estado: EstadoContenedor;
   diasParaLlegar: number;
-  lineas: number;
+  /** Todas las líneas de producto esperadas del contenedor. */
+  lineas: ContenedorListLinea[];
+  /** Conteo compatible para vistas resumidas; coincide con lineas.length */
+  lineasCount: number;
   totales: ContenedorTotals;
   /**
      * Solo ADMIN

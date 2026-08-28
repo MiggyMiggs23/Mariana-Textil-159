@@ -14,6 +14,7 @@ import {
   daysBetween,
   mexicoCalendarDate,
   periodBounds,
+  projectContenedorListItem,
   redactEconomicData,
   weightedUnitCost,
 } from "./contenedores-helpers";
@@ -24,7 +25,9 @@ export {
   daysBetween,
   mexicoCalendarDate,
   periodBounds,
+  projectContenedorListItem,
   redactEconomicData,
+  summarizeExpectedLines,
   weightedUnitCost,
 } from "./contenedores-helpers";
 
@@ -450,54 +453,49 @@ export async function listContenedores(
   }
   const where = sql.join(conditions, sql` AND `);
   const result = await db.execute(sql`
-    SELECT c.id, c.folio, c.proveedor_id, p.nombre proveedor, c.referencia,
-      c.fecha_estimada_llegada, c.sitio_destino_id, u.nombre sitio_destino,
-      c.estado, COUNT(cl.id)::int lineas,
-      COALESCE(SUM(cl.rollos_esperados),0)::int rollos,
-      COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
-      COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='KILO'),0)::text kilos,
+    WITH filtered AS (
+      SELECT c.id, c.folio, c.proveedor_id, p.nombre proveedor, c.referencia,
+        c.fecha_estimada_llegada, c.sitio_destino_id, u.nombre sitio_destino,
+        c.estado, c.entrada_id, COUNT(*) OVER()::int total_rows
+      FROM contenedores c
+      JOIN proveedores p ON p.id=c.proveedor_id
+      JOIN ubicaciones u ON u.id=c.sitio_destino_id
+      WHERE ${where}
+    ), paged AS (
+      SELECT * FROM filtered
+      ORDER BY fecha_estimada_llegada ASC,folio ASC
+      LIMIT ${query.pageSize} OFFSET ${(query.page - 1) * query.pageSize}
+    ), line_aggregates AS (
+      SELECT cl.contenedor_id,
+        jsonb_agg(jsonb_build_object(
+          'productoId',cl.producto_id,
+          'sku',pr.sku,
+          'tela',pr.tela,
+          'color',pr.color,
+          'unidad',pr.unidad,
+          'cantidadEsperada',cl.cantidad_esperada::text,
+          'rollosEsperados',cl.rollos_esperados,
+          'nota',cl.nota
+        ) ORDER BY cl.id) lineas
+      FROM contenedor_lineas cl
+      JOIN productos pr ON pr.id=cl.producto_id
+      WHERE cl.contenedor_id IN (SELECT id FROM paged)
+      GROUP BY cl.contenedor_id
+    )
+    SELECT pg.*, la.lineas,
       ${scope.admin ? sql`(SELECT CASE
         WHEN e.total_costo IS NULL OR COUNT(*) FILTER (WHERE r.id IS NOT NULL AND r.costo_total IS NULL)>0 THEN NULL
         ELSE COALESCE(SUM(r.costo_total),0)::text END
         FROM entradas e LEFT JOIN rollos r ON r.recepcion_id=e.id
-        WHERE e.id=c.entrada_id GROUP BY e.total_costo) costo_total,` : sql``}
-      COUNT(*) OVER()::int total_rows
-    FROM contenedores c
-    JOIN proveedores p ON p.id=c.proveedor_id
-    JOIN ubicaciones u ON u.id=c.sitio_destino_id
-    JOIN contenedor_lineas cl ON cl.contenedor_id=c.id
-    JOIN productos pr ON pr.id=cl.producto_id
-    WHERE ${where}
-    GROUP BY c.id,p.nombre,u.nombre
-    ORDER BY c.fecha_estimada_llegada ASC,c.folio ASC
-    LIMIT ${query.pageSize} OFFSET ${(query.page - 1) * query.pageSize}
+        WHERE e.id=pg.entrada_id GROUP BY e.total_costo) costo_total` : sql`NULL costo_total`}
+    FROM paged pg
+    JOIN line_aggregates la ON la.contenedor_id=pg.id
+    ORDER BY pg.fecha_estimada_llegada ASC,pg.folio ASC
   `);
   const today = mexicoCalendarDate();
-  const items = (result.rows as Array<Record<string, unknown>>).map((row) => {
-    const item: Record<string, unknown> = {
-      id: Number(row.id),
-      folio: Number(row.folio),
-      proveedorId: Number(row.proveedor_id),
-      proveedor: String(row.proveedor),
-      referencia: row.referencia == null ? null : String(row.referencia),
-      fechaEstimadaLlegada: String(row.fecha_estimada_llegada),
-      sitioDestinoId: Number(row.sitio_destino_id),
-      sitioDestino: String(row.sitio_destino),
-      estado: String(row.estado),
-      diasParaLlegar: daysBetween(today, String(row.fecha_estimada_llegada)),
-      lineas: Number(row.lineas),
-      totales: {
-        lineas: Number(row.lineas),
-        rollos: Number(row.rollos),
-        metros: Number(row.metros).toFixed(3),
-        kilos: Number(row.kilos).toFixed(3),
-      },
-    };
-    if (scope.admin)
-      item.costoTotal =
-        row.costo_total == null ? null : Number(row.costo_total).toFixed(2);
-    return item;
-  });
+  const items = (result.rows as Array<Record<string, unknown>>).map((row) =>
+    projectContenedorListItem(row, today, scope.admin),
+  );
   return {
     items,
     total: Number(result.rows[0]?.total_rows ?? 0),

@@ -177,6 +177,8 @@ export * from './contenedorLinea';
 export * from './contenedorLineaInput';
 export * from './contenedorLineaUnidad';
 export * from './contenedorListItem';
+export * from './contenedorListLinea';
+export * from './contenedorListLineaUnidad';
 export * from './contenedorListResult';
 export * from './contenedorMesResumen';
 export * from './contenedorPeriodoResumen';

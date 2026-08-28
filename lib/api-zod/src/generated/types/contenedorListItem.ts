@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CalendarDate } from './calendarDate';
+import type { ContenedorListLinea } from './contenedorListLinea';
 import type { ContenedorTotals } from './contenedorTotals';
 import type { EstadoContenedor } from './estadoContenedor';
 
@@ -21,7 +22,10 @@ export interface ContenedorListItem {
   sitioDestino: string;
   estado: EstadoContenedor;
   diasParaLlegar: number;
-  lineas: number;
+  /** Todas las líneas de producto esperadas del contenedor. */
+  lineas: ContenedorListLinea[];
+  /** Conteo compatible para vistas resumidas; coincide con lineas.length */
+  lineasCount: number;
   totales: ContenedorTotals;
   /**
      * Solo ADMIN

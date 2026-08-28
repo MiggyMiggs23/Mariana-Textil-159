@@ -176,6 +176,8 @@ export * from "./generated/types/contenedorLinea";
 export * from "./generated/types/contenedorLineaInput";
 export * from "./generated/types/contenedorLineaUnidad";
 export * from "./generated/types/contenedorListItem";
+export * from "./generated/types/contenedorListLinea";
+export * from "./generated/types/contenedorListLineaUnidad";
 export * from "./generated/types/contenedorListResult";
 export * from "./generated/types/contenedorMesResumen";
 export * from "./generated/types/contenedorPeriodoResumen";

@@ -6,9 +6,12 @@ import {
   canEditContenedor,
   daysBetween,
   periodBounds,
+  projectContenedorListItem,
   redactEconomicData,
+  summarizeExpectedLines,
   weightedUnitCost,
 } from "./contenedores-helpers";
+import type { ContenedorListLinea } from "./contenedores-helpers";
 import { createTextPdf } from "./pdf";
 
 test("calendar dates are timezone-free and leap years are validated", () => {
@@ -137,7 +140,8 @@ test("list and upcoming KPI contracts expose line count and calendar date", () =
     new URL("../../../../lib/api-spec/openapi.yaml", import.meta.url),
     "utf8",
   );
-  assert.match(source, /lineas: Number\(row\.lineas\)/);
+  assert.match(source, /jsonb_agg\(jsonb_build_object\(/);
+  assert.match(contract, /lineasCount:/);
   assert.match(source, /p\.nombre proveedor,c\.fecha_estimada_llegada/);
   assert.match(source, /fechaEstimadaLlegada: String\(nextRow\.fecha_estimada_llegada\)/);
   assert.match(contract, /ContenedorResumenKpisProximo:/);
@@ -153,4 +157,101 @@ test("container destination catalogs and validation allow only active stores or 
   assert.match(domain, /site\.tipo !== "TIENDA" && site\.tipo !== "BODEGA"/);
   assert.match(route, /inArray\(ubicacionesTable\.tipo, \["TIENDA", "BODEGA"\]\)/);
   assert.match(route, /eq\(ubicacionesTable\.activa, true\)/);
+});
+
+const listRow: Record<string, unknown> & { lineas: ContenedorListLinea[] } = {
+  id: 8,
+  folio: 104,
+  proveedor_id: 2,
+  proveedor: "Textiles Norte",
+  referencia: "CN-104",
+  fecha_estimada_llegada: "2026-05-20",
+  sitio_destino_id: 3,
+  sitio_destino: "Bodega Centro",
+  estado: "EN_TRANSITO",
+  costo_total: "987.65",
+  lineas: [
+    {
+      productoId: 11,
+      sku: "ALG-AZ",
+      tela: "Algodón",
+      color: "Azul",
+      unidad: "METRO",
+      cantidadEsperada: "120.250",
+      rollosEsperados: 4,
+      nota: "Lote principal",
+    },
+    {
+      productoId: 12,
+      sku: "LINO-NAT",
+      tela: "Lino",
+      color: "Natural",
+      unidad: "METRO",
+      cantidadEsperada: "30.500",
+      rollosEsperados: null,
+      nota: null,
+    },
+    {
+      productoId: 13,
+      sku: "HILO-NEG",
+      tela: "Hilo",
+      color: "Negro",
+      unidad: "KILO",
+      cantidadEsperada: "42.750",
+      rollosEsperados: 2,
+      nota: "No mezclar",
+    },
+  ],
+};
+
+test("list projection includes every complete expected multiproduct line", () => {
+  const item = projectContenedorListItem(listRow, "2026-05-10", false);
+  assert.equal(item.lineasCount, 3);
+  assert.deepEqual(item.lineas, listRow.lineas);
+  for (const line of item.lineas as Array<Record<string, unknown>>) {
+    assert.deepEqual(Object.keys(line), [
+      "productoId",
+      "sku",
+      "tela",
+      "color",
+      "unidad",
+      "cantidadEsperada",
+      "rollosEsperados",
+      "nota",
+    ]);
+  }
+});
+
+test("list totals keep rolls, metres and kilos separate", () => {
+  assert.deepEqual(summarizeExpectedLines(listRow.lineas), {
+    lineas: 3,
+    rollos: 6,
+    metros: "150.750",
+    kilos: "42.750",
+  });
+});
+
+test("non-admin list projection contains no economic fields", () => {
+  const item = projectContenedorListItem(listRow, "2026-05-10", false);
+  assert.equal(JSON.stringify(item).includes("costo"), false);
+  assert.equal(
+    (item.lineas as Array<Record<string, unknown>>).some((line) =>
+      Object.keys(line).some((key) => key.toLowerCase().includes("costo")),
+    ),
+    false,
+  );
+});
+
+test("list query batches lines and orders arrival date then folio", () => {
+  const source = readFileSync(new URL("./contenedores.ts", import.meta.url), "utf8");
+  const start = source.indexOf("export async function listContenedores");
+  const end = source.indexOf("export async function getContenedoresSummary", start);
+  const operation = source.slice(start, end);
+  assert.match(operation, /line_aggregates AS \(/);
+  assert.match(operation, /WHERE cl\.contenedor_id IN \(SELECT id FROM paged\)/);
+  assert.match(
+    operation,
+    /ORDER BY pg\.fecha_estimada_llegada ASC,pg\.folio ASC/,
+  );
+  assert.equal((operation.match(/db\.execute/g) ?? []).length, 1);
 });

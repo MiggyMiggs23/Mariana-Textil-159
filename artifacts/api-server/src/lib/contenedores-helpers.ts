@@ -90,3 +90,89 @@ export function canEditContenedor(
 ): boolean {
   return estado === "EN_TRANSITO" && entradaId == null;
 }
+
+export type ContenedorListLinea = {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: "METRO" | "KILO";
+  cantidadEsperada: string;
+  rollosEsperados: number | null;
+  nota: string | null;
+};
+
+export function summarizeExpectedLines(lineas: ContenedorListLinea[]) {
+  return {
+    lineas: lineas.length,
+    rollos: lineas.reduce(
+      (sum, linea) => sum + (linea.rollosEsperados ?? 0),
+      0,
+    ),
+    metros: lineas
+      .filter((linea) => linea.unidad === "METRO")
+      .reduce((sum, linea) => sum + Number(linea.cantidadEsperada), 0)
+      .toFixed(3),
+    kilos: lineas
+      .filter((linea) => linea.unidad === "KILO")
+      .reduce((sum, linea) => sum + Number(linea.cantidadEsperada), 0)
+      .toFixed(3),
+  };
+}
+
+function parseListLines(value: unknown): ContenedorListLinea[] {
+  const raw = typeof value === "string" ? JSON.parse(value) : value;
+  if (!Array.isArray(raw)) {
+    throw new ContenedorValidationError(
+      "Las líneas del contenedor no tienen un formato válido.",
+    );
+  }
+  return raw.map((line) => {
+    const row = line as Record<string, unknown>;
+    const unidad = String(row.unidad);
+    if (unidad !== "METRO" && unidad !== "KILO") {
+      throw new ContenedorValidationError(
+        "La unidad de una línea del contenedor no es válida.",
+      );
+    }
+    return {
+      productoId: Number(row.productoId),
+      sku: String(row.sku),
+      tela: String(row.tela),
+      color: String(row.color),
+      unidad,
+      cantidadEsperada: Number(row.cantidadEsperada).toFixed(3),
+      rollosEsperados:
+        row.rollosEsperados == null ? null : Number(row.rollosEsperados),
+      nota: row.nota == null ? null : String(row.nota),
+    };
+  });
+}
+
+export function projectContenedorListItem(
+  row: Record<string, unknown>,
+  today: string,
+  admin: boolean,
+) {
+  const lineas = parseListLines(row.lineas);
+  const item: Record<string, unknown> = {
+    id: Number(row.id),
+    folio: Number(row.folio),
+    proveedorId: Number(row.proveedor_id),
+    proveedor: String(row.proveedor),
+    referencia: row.referencia == null ? null : String(row.referencia),
+    fechaEstimadaLlegada: String(row.fecha_estimada_llegada),
+    sitioDestinoId: Number(row.sitio_destino_id),
+    sitioDestino: String(row.sitio_destino),
+    estado: String(row.estado),
+    diasParaLlegar: daysBetween(today, String(row.fecha_estimada_llegada)),
+    lineas,
+    lineasCount: lineas.length,
+    totales: summarizeExpectedLines(lineas),
+  };
+  if (admin) {
+    item.costoTotal =
+      row.costo_total == null ? null : Number(row.costo_total).toFixed(2);
+  }
+  return item;
+}
