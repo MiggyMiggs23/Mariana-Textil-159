@@ -123,18 +123,23 @@ export default function Clientes() {
               <Card className="overflow-hidden">
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}<TableHead className="text-right">Acción</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}</TableRow></TableHeader>
                     <TableBody>{visible.map((client) => (
                       <TableRow key={client.id} data-testid={`row-client-${client.id}`}>
                         <TableCell className="font-medium">
-                          {client.nombre}
+                          <Link
+                            href={`/clientes/${client.id}`}
+                            className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            data-testid={`link-client-${client.id}`}
+                          >
+                            {client.nombre}
+                          </Link>
                           {client.id === 1 && <Badge variant="secondary" className="ml-2"><LockKeyhole className="mr-1 h-3 w-3" />Sistema</Badge>}
                         </TableCell>
                         <TableCell><div>{client.telefono || "—"}</div><div className="text-xs text-muted-foreground">{client.correo}</div></TableCell>
                         <TableCell>{client.rfc || "—"}</TableCell>
                         <TableCell><Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></TableCell>
                         {canCredit && <ClientFinancialCells id={client.id} />}
-                        <TableCell className="text-right"><Button variant="ghost" size="sm" asChild><Link href={`/clientes/${client.id}`} data-testid={`link-client-${client.id}`}>Ver detalle</Link></Button></TableCell>
                       </TableRow>
                     ))}</TableBody>
                   </Table>

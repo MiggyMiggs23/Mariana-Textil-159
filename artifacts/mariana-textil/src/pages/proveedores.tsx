@@ -252,8 +252,12 @@ export default function Proveedores() {
                         data-testid={`row-supplier-${p.id}`}
                       >
                         <TableCell>
-                          <Link href={`/proveedores/${p.id}`} className="block h-full w-full py-2">
-                            <div className="font-bold text-foreground text-base" data-testid={`display-supplier-name-${p.id}`}>{p.nombre}</div>
+                          <Link
+                            href={`/proveedores/${p.id}`}
+                            className="block h-full w-full py-2 text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            data-testid={`link-supplier-${p.id}`}
+                          >
+                            <div className="font-bold text-base" data-testid={`display-supplier-name-${p.id}`}>{p.nombre}</div>
                             {p.contactoNombre && <div className="text-xs text-muted-foreground">{p.contactoNombre}</div>}
                           </Link>
                         </TableCell>
