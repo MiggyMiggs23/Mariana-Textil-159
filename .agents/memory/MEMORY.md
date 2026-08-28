@@ -17,3 +17,4 @@
 - [Auditoría append-only en pruebas](audit-test-cleanup-boundary.md) — no habilitar bypass de limpieza; conservar registros y eliminar la rama desechable completa.
 - [Pagos dirigidos y evidencia](directed-payment-evidence.md) — dirigir por movimiento exacto; las aplicaciones append-only documentan decisiones, no definen el saldo.
 - [Contrato matricial de mapas de calor](heatmap-matrix-contract.md) — pivotar filas largas antes de renderizar; series son columnas y celdas solo números finitos o ausencia.
+- [Sobrantes concurrentes de auditoría](inventory-audit-concurrent-surplus.md) — si el rollo ya cambió al sitio auditado, resolver manualmente; nunca marcar aplicado sin movimiento trazable.

@@ -413,8 +413,7 @@ export async function confirmAuditoria(
   for (const { rollo, serie } of surplus) {
     let resolucion = "RESOLUCION_MANUAL";
     if (rollo.ubicacionId === header.ubicacionId) {
-      if (rollo.estado === "DISPONIBLE") resolucion = "APLICADA";
-      else manual++;
+      manual++;
     } else if (rollo.estado === "DISPONIBLE") {
       await transferirRolloInmediato(tx, {
         rolloId: rollo.id,

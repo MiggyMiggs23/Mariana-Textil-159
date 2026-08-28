@@ -36,6 +36,7 @@
     "test:etiquetas": "NODE_ENV=test tsx --test src/etiquetas-api.test.ts",
     "test:etiquetas-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/etiquetas-api.integration.test.ts",
     "test:auditoria": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/auditoria.integration.test.ts",
+    "test:task57-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/task57.integration.test.ts",
     "test:admin-invariants": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/admin-invariants.integration.test.ts",
     "test:reportes": "tsx --test src/lib/reportes.test.ts",
     "test:reportes-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/reportes.integration.test.ts",

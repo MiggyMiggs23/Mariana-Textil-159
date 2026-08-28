@@ -298,3 +298,11 @@ Existe **un solo** algoritmo de reparto de crédito, en `lib/credit-allocation.t
 En Reportes, el color codifica información y nunca decora: modalidad, signo, rango, categoría o estado. Cada color debe tener un significado documentado; si no puede explicarse en una frase, no se usa.
 
 Los destinos de dinero conservan sus códigos internos y se presentan siempre en este orden: **Efectivo**, **Cuentas No Fiscales**, **Cuentas Fiscales**, **Ventas a Crédito**. Las etiquetas se resuelven desde `@workspace/number-format`; no deben duplicarse en frontend, API, PDF o XLSX.
+
+## Parte 8 — Auditoría de inventario, purga y corte diario
+
+**Bitácora** es el registro de quién hizo qué en el sistema; es inmutable y vive en Configuración. **Conciliación de Kardex** compara el caché de existencias contra el kardex: el sistema contra sí mismo. **Auditoría de Inventario** compara el sistema contra la mercancía física y vive en Inventario. Los tres nombres deben decir qué compara cada uno. Al abrirse toma una fotografía de la existencia del sitio, contra la cual compara; varias personas escanean sobre la misma auditoría al mismo tiempo y un rollo repetido no se duplica. **La auditoría nunca corrige el inventario por su cuenta**: reporta, y ADMIN decide si se generan los ajustes. Solo cuenta rollos por QR; no verifica metros ni kilos.
+
+Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el sistema. Un usuario que aparece en la bitácora o en el kardex nunca se borra: perder su rastro rompe la trazabilidad.
+
+**Una sola sesión de caja por sitio y por día:** se registra el fondo de caja chica en la mañana, se opera, y se corta al terminar. Únicamente Tienda Mariana registra salidas de dinero a proveedores, y el sitio autorizado es una constante nombrada. Al cerrar se imprime la hoja de ventas del día, agrupada por producto y sin series.
