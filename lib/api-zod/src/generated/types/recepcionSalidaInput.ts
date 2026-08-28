@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { RecepcionSalidaInputPisosPorRolloItem } from './recepcionSalidaInputPisosPorRolloItem';
 
 export interface RecepcionSalidaInput {
   completa: boolean;
@@ -13,4 +14,5 @@ export interface RecepcionSalidaInput {
      * @nullable
      */
   nota?: string | null;
+  pisosPorRollo?: RecepcionSalidaInputPisosPorRolloItem[];
 }

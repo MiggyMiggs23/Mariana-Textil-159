@@ -594,6 +594,7 @@ router.post(
           usuarioId: req.auth!.user.id,
           completa: body.completa,
           nota: body.nota,
+          pisosPorRollo: body.pisosPorRollo,
           ip: req.ip || req.socket.remoteAddress || "desconocida",
         }),
       );

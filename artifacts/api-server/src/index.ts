@@ -23,6 +23,7 @@ import {
   ensureChoferesSchema,
   ensureViajesSchema,
   ensureAuditoriaInventarioSchema,
+  ensurePisosSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -58,6 +59,7 @@ async function startServer() {
   logger.info("Estado de rollos verificado");
   const migratedSupportUsers = await ensureSupervisorRole(pool);
   await ensureAuditoriaInventarioSchema(pool);
+  await ensurePisosSchema(pool);
   logger.info(
     { migratedSupportUsers },
     "Roles SUPERVISOR, SISTEMAS y CONTADOR verificados",

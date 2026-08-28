@@ -12,6 +12,10 @@ export interface ProductoRolloDisponible {
   serie: string;
   ubicacionId: number;
   ubicacionNombre: string;
+  /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
   cantidad: string;
   estado: ProductoRolloDisponibleEstado;
 }

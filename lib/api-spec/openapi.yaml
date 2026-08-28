@@ -511,6 +511,63 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /locations/{id}/pisos:
+    get:
+      operationId: listPisosLocation
+      tags: [locations]
+      summary: Lista pisos; ADMIN puede incluir inactivos
+      parameters:
+        - $ref: "#/components/parameters/LocationId"
+      responses:
+        "200":
+          description: Pisos del sitio
+          content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Piso" } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createPisoLocation
+      tags: [locations]
+      summary: Crea un piso (ADMIN)
+      parameters: [{ $ref: "#/components/parameters/LocationId" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/PisoInput" } } }
+      responses:
+        "201": { description: Piso creado, content: { application/json: { schema: { $ref: "#/components/schemas/Piso" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /locations/{id}/pisos/{pisoId}:
+    patch:
+      operationId: updatePisoLocation
+      tags: [locations]
+      summary: Edita o activa/desactiva un piso (ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/LocationId"
+        - { in: path, name: pisoId, required: true, schema: { type: number, minimum: 1 } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/PisoUpdate" } } }
+      responses:
+        "200": { description: Piso actualizado, content: { application/json: { schema: { $ref: "#/components/schemas/Piso" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/rollos/{id}/piso:
+    patch:
+      operationId: updateRolloPiso
+      tags: [inventario]
+      summary: Cambia únicamente el piso físico actual de un rollo
+      parameters: [{ $ref: "#/components/parameters/RolloId" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/RolloPisoUpdate" } } }
+      responses:
+        "200": { description: Rollo actualizado, content: { application/json: { schema: { $ref: "#/components/schemas/RolloSummary" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /users:
     get:
       operationId: listUsers
@@ -1910,6 +1967,9 @@ paths:
           schema: { type: number }
         - in: query
           name: productoId
+          schema: { type: number }
+        - in: query
+          name: pisoId
           schema: { type: number }
         - in: query
           name: usuarioId
@@ -6075,6 +6135,8 @@ components:
       properties:
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
+        pisoId: { type: ["number", "null"] }
+        nombrePiso: { type: ["string", "null"] }
         sesionCajaId: { type: ["number", "null"] }
         abiertaAt: { type: ["string", "null"], format: date-time }
         cajero: { type: ["string", "null"] }
@@ -6748,6 +6810,32 @@ components:
           type: string
           pattern: "^[A-Z]{2,3}$"
         activa: { type: boolean }
+    Piso:
+      type: object
+      required: [id, ubicacionId, nombre, activo, createdAt, updatedAt]
+      properties:
+        id: { type: number }
+        ubicacionId: { type: number }
+        nombre: { type: string }
+        activo: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    PisoInput:
+      type: object
+      required: [nombre]
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 120 }
+        activo: { type: boolean, default: true }
+    PisoUpdate:
+      type: object
+      properties:
+        nombre: { type: string, minLength: 1, maxLength: 120 }
+        activo: { type: boolean }
+    RolloPisoUpdate:
+      type: object
+      required: [pisoId]
+      properties:
+        pisoId: { type: ["number", "null"] }
     AlcanceConsulta:
       type: string
       enum: [PROPIA, TODAS]
@@ -7672,6 +7760,8 @@ components:
         serie: { type: string }
         ubicacionId: { type: number }
         ubicacionNombre: { type: string }
+        pisoId: { type: ["number", "null"] }
+        nombrePiso: { type: ["string", "null"] }
         cantidad: { type: string }
         estado: { type: string, enum: [DISPONIBLE] }
     ProductoComprasResumen:
@@ -8503,6 +8593,10 @@ components:
           type: array
           items: { type: string }
           minItems: 1
+        pisosPorCantidad:
+          description: Piso por cada posición de cantidades; null solo es válido en sitios sin pisos activos.
+          type: array
+          items: { type: ["number", "null"] }
     EntradaInput:
       type: object
       required: [ubicacionId, uuidCliente, lineas]
@@ -8525,6 +8619,8 @@ components:
         serie: { type: string }
         productoId: { type: number }
         cantidadInicial: { type: string }
+        pisoId: { type: ["number", "null"] }
+        nombrePiso: { type: ["string", "null"] }
         costoUnitario: { type: ["string", "null"] }
         costoTotal: { type: ["string", "null"] }
     EntradaLinea:
@@ -8846,6 +8942,14 @@ components:
       properties:
         completa: { type: boolean }
         nota: { type: ["string", "null"], maxLength: 2000 }
+        pisosPorRollo:
+          type: array
+          items:
+            type: object
+            required: [rolloId, pisoId]
+            properties:
+              rolloId: { type: number, minimum: 1 }
+              pisoId: { type: ["number", "null"] }
     SalidaResumen:
       type: object
       required:
@@ -10625,6 +10729,7 @@ components:
       required: [serie]
       properties:
         serie: { type: string, minLength: 1, maxLength: 100 }
+        pisoId: { type: ["number", "null"] }
     AuditoriaInventarioCancelacionInput:
       type: object
       required: [motivo]
@@ -10632,7 +10737,7 @@ components:
         motivo: { type: string, minLength: 10, maxLength: 1000 }
     AuditoriaInventarioResumen:
       type: object
-      required: [id, folio, folioFormateado, ubicacionId, nombreUbicacion, estado, totalSnapshot, totalEscaneados, cuadros, faltantes, sobrantes, abiertaAt, creadaPor]
+      required: [id, folio, folioFormateado, ubicacionId, nombreUbicacion, estado, totalSnapshot, totalEscaneados, cuadros, faltantes, sobrantes, malAcomodados, abiertaAt, creadaPor]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -10645,6 +10750,7 @@ components:
         cuadros: { type: number }
         faltantes: { type: number }
         sobrantes: { type: number }
+        malAcomodados: { type: number }
         abiertaAt: { type: string, format: date-time }
         creadaPor: { type: string }
     AuditoriaInventarioResultado:
@@ -10652,13 +10758,17 @@ components:
       required: [serie, clasificacion, cantidad, unidad, estadoActual, resolucion]
       properties:
         serie: { type: string }
-        clasificacion: { type: string, enum: [CUADRO, FALTANTE, SOBRANTE] }
+        clasificacion: { type: string, enum: [CUADRO, FALTANTE, SOBRANTE, MAL_ACOMODADO] }
         rolloId: { type: [number, "null"] }
         producto: { type: [string, "null"] }
         cantidad: { type: [string, "null"], pattern: '^-?\d+(\.\d{1,3})?$' }
         unidad: { type: [string, "null"] }
         ubicacionActualId: { type: [number, "null"] }
         ubicacionActual: { type: [string, "null"] }
+        pisoEsperadoId: { type: ["number", "null"] }
+        pisoEsperado: { type: ["string", "null"] }
+        pisoRealId: { type: ["number", "null"] }
+        pisoReal: { type: ["string", "null"] }
         estadoActual: { type: string }
         resolucion: { type: string, enum: [PENDIENTE, APLICADA, RESOLUCION_MANUAL] }
         escaneadoAt: { type: [string, "null"], format: date-time }

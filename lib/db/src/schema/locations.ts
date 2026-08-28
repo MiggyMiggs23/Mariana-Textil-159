@@ -5,6 +5,8 @@ import {
   serial,
   text,
   timestamp,
+  integer,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -31,6 +33,30 @@ export const ubicacionesTable = pgTable(
   ],
 );
 
+/** Physical floor/level within a real location. It deliberately has no ledger relation. */
+export const pisosTable = pgTable(
+  "pisos",
+  {
+    id: serial("id").primaryKey(),
+    ubicacionId: integer("ubicacion_id")
+      .notNull()
+      .references(() => ubicacionesTable.id),
+    nombre: text("nombre").notNull(),
+    activo: boolean("activo").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex("pisos_ubicacion_nombre_ci_unique").on(
+      table.ubicacionId,
+      sql`lower(${table.nombre})`,
+    ),
+  ],
+);
+
 export const insertUbicacionSchema = createInsertSchema(ubicacionesTable).omit({
   id: true,
   createdAt: true,
@@ -38,3 +64,4 @@ export const insertUbicacionSchema = createInsertSchema(ubicacionesTable).omit({
 
 export type InsertUbicacion = z.infer<typeof insertUbicacionSchema>;
 export type Ubicacion = typeof ubicacionesTable.$inferSelect;
+export type Piso = typeof pisosTable.$inferSelect;

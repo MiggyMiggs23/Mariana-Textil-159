@@ -16,7 +16,7 @@ test("Block 5 functionality in proveedor UI", async () => {
 
   // - No selector de entrada/compra y no enviar entradaId
   assert.doesNotMatch(pagoDialog, /entradaId:/);
-  
+
   // - Preview muestra compra/folio/fecha/saldoAntes/aplicado/saldoDespues/SALDADA|PARCIAL y saldo a favor.
   assert.match(pagoDialog, /usePreviewPagoProveedor/);
   assert.match(pagoDialog, /asig.saldoAntes/);

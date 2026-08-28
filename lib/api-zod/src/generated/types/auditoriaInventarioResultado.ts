@@ -26,6 +26,14 @@ export interface AuditoriaInventarioResultado {
   ubicacionActualId?: number | null;
   /** @nullable */
   ubicacionActual?: string | null;
+  /** @nullable */
+  pisoEsperadoId?: number | null;
+  /** @nullable */
+  pisoEsperado?: string | null;
+  /** @nullable */
+  pisoRealId?: number | null;
+  /** @nullable */
+  pisoReal?: string | null;
   estadoActual: string;
   resolucion: AuditoriaInventarioResultadoResolucion;
   /** @nullable */

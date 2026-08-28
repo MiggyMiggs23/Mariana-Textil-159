@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { 
+import {
   useCreateContenedor,
   useGetCatalogosContenedores,
   getGetCatalogosContenedoresQueryKey,
@@ -35,7 +35,7 @@ export default function ContenedorNuevo() {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  
+
   const { data: catalogos } = useGetCatalogosContenedores({
     query: { queryKey: getGetCatalogosContenedoresQueryKey() }
   });
@@ -52,7 +52,7 @@ export default function ContenedorNuevo() {
 
   // Lines State
   const [lineas, setLineas] = useState<LineaForm[]>([]);
-  
+
   // Current Line Input State
   const [curProductoId, setCurProductoId] = useState<string>("");
   const [curCantidad, setCurCantidad] = useState<string>("");
@@ -142,7 +142,7 @@ export default function ContenedorNuevo() {
     });
   };
 
-  
+
   const isFormValid = proveedorId && sitioDestinoId && fechaEstimadaLlegada && lineas.length > 0;
 
   return (
@@ -162,8 +162,8 @@ export default function ContenedorNuevo() {
             <Button variant="outline" asChild className="hidden sm:flex">
               <Link href="/contenedores">Cancelar</Link>
             </Button>
-            <Button 
-              onClick={handleSubmit} 
+            <Button
+              onClick={handleSubmit}
               disabled={!isFormValid || createContenedor.isPending}
               className="bg-sidebar hover:bg-sidebar/90"
             >
@@ -259,7 +259,7 @@ export default function ContenedorNuevo() {
                       ) : lineas.map((linea, idx) => (
                         <TableRow key={idx}>
                           <TableCell className="align-top pt-3">
-                            <ProductCombobox 
+                            <ProductCombobox
                               products={(catalogos?.productos as any) || []}
                               value={linea.productoId}
                               onValueChange={v => {
@@ -271,38 +271,38 @@ export default function ContenedorNuevo() {
                             />
                           </TableCell>
                           <TableCell className="align-top pt-3">
-                            <Input 
-                              type="number" min="0.1" step="0.1" 
-                              value={linea.cantidadEsperada} 
+                            <Input
+                              type="number" min="0.1" step="0.1"
+                              value={linea.cantidadEsperada}
                               onChange={e => {
                                 const newLineas = [...lineas];
                                 newLineas[idx].cantidadEsperada = e.target.value;
                                 setLineas(newLineas);
-                              }} 
+                              }}
                               className="h-9"
                             />
                           </TableCell>
                           <TableCell className="align-top pt-3">
-                            <Input 
-                              type="number" min="1" step="1" 
-                              value={linea.rollosEsperados} 
+                            <Input
+                              type="number" min="1" step="1"
+                              value={linea.rollosEsperados}
                               onChange={e => {
                                 const newLineas = [...lineas];
                                 newLineas[idx].rollosEsperados = e.target.value;
                                 setLineas(newLineas);
-                              }} 
+                              }}
                               className="h-9"
                             />
                           </TableCell>
                           <TableCell className="align-top pt-3">
-                            <Input 
-                              placeholder="Nota..." 
-                              value={linea.nota || ""} 
+                            <Input
+                              placeholder="Nota..."
+                              value={linea.nota || ""}
                               onChange={e => {
                                 const newLineas = [...lineas];
                                 newLineas[idx].nota = e.target.value;
                                 setLineas(newLineas);
-                              }} 
+                              }}
                               className="h-9"
                             />
                           </TableCell>
@@ -326,8 +326,8 @@ export default function ContenedorNuevo() {
                 <CardTitle className="text-lg">Notas del Embarque</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <Textarea 
-                  placeholder="Instrucciones de descarga, comentarios del proveedor..." 
+                <Textarea
+                  placeholder="Instrucciones de descarga, comentarios del proveedor..."
                   className="min-h-[120px] resize-none"
                   value={notas}
                   onChange={e => setNotas(e.target.value)}

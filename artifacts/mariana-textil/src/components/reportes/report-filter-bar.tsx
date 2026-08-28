@@ -68,17 +68,17 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
     onChange(DEFAULT_FILTERS);
   };
 
-  const activeCount = 
+  const activeCount =
     (filters.modalidad !== "TODO" ? 1 : 0) +
-    filters.ubicacionIds.length + 
-    filters.productoIds.length + 
-    filters.telas.length + 
-    filters.colores.length + 
-    filters.unidades.length + 
-    filters.usuarioIds.length + 
-    filters.clienteIds.length + 
-    filters.proveedorIds.length + 
-    filters.formasPago.length + 
+    filters.ubicacionIds.length +
+    filters.productoIds.length +
+    filters.telas.length +
+    filters.colores.length +
+    filters.unidades.length +
+    filters.usuarioIds.length +
+    filters.clienteIds.length +
+    filters.proveedorIds.length +
+    filters.formasPago.length +
     (filters.facturado !== undefined ? 1 : 0);
 
   return (
@@ -103,19 +103,19 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
 
           {isCustom && (
             <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-md border h-9">
-              <Input 
-                type="date" 
-                value={filters.desde || ""} 
-                onChange={e => onChange({ ...filters, desde: e.target.value })} 
-                className="h-7 text-sm bg-background border-none w-[130px]" 
+              <Input
+                type="date"
+                value={filters.desde || ""}
+                onChange={e => onChange({ ...filters, desde: e.target.value })}
+                className="h-7 text-sm bg-background border-none w-[130px]"
                 data-testid="filter-desde"
               />
               <span className="text-muted-foreground text-sm">-</span>
-              <Input 
-                type="date" 
-                value={filters.hasta || ""} 
-                onChange={e => onChange({ ...filters, hasta: e.target.value })} 
-                className="h-7 text-sm bg-background border-none w-[130px]" 
+              <Input
+                type="date"
+                value={filters.hasta || ""}
+                onChange={e => onChange({ ...filters, hasta: e.target.value })}
+                className="h-7 text-sm bg-background border-none w-[130px]"
                 data-testid="filter-hasta"
               />
             </div>
@@ -138,8 +138,8 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
           </Select>
 
           {/* Facturado Toggle */}
-          <Select 
-            value={filters.facturado === undefined ? "todos" : filters.facturado ? "facturado" : "nota"} 
+          <Select
+            value={filters.facturado === undefined ? "todos" : filters.facturado ? "facturado" : "nota"}
             onValueChange={handleFacturadoChange}
           >
             <SelectTrigger className="w-[140px] h-9 bg-background" data-testid="filter-facturado">
@@ -155,59 +155,59 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
           {/* Catalog Multi-Selects */}
           {catalogos && (
             <>
-              <MultiSelectFilter 
-                label="Sitios" 
-                options={(catalogos.sites || []).map(s => ({ id: s.id, nombre: s.label }))} 
-                selected={filters.ubicacionIds.map(String)} 
-                onChange={(v) => onChange({ ...filters, ubicacionIds: v.map(Number) })} 
+              <MultiSelectFilter
+                label="Sitios"
+                options={(catalogos.sites || []).map(s => ({ id: s.id, nombre: s.label }))}
+                selected={filters.ubicacionIds.map(String)}
+                onChange={(v) => onChange({ ...filters, ubicacionIds: v.map(Number) })}
               />
-              <MultiSelectFilter 
-                label="Productos" 
-                options={(catalogos.products || []).map(p => ({ id: p.id, nombre: p.label }))} 
-                selected={filters.productoIds.map(String)} 
-                onChange={(v) => onChange({ ...filters, productoIds: v.map(Number) })} 
+              <MultiSelectFilter
+                label="Productos"
+                options={(catalogos.products || []).map(p => ({ id: p.id, nombre: p.label }))}
+                selected={filters.productoIds.map(String)}
+                onChange={(v) => onChange({ ...filters, productoIds: v.map(Number) })}
               />
-              <MultiSelectFilter 
-                label="Telas" 
-                options={(catalogos.fabrics || []).map(t => ({ id: t, nombre: t }))} 
-                selected={filters.telas} 
-                onChange={(v) => onChange({ ...filters, telas: v })} 
+              <MultiSelectFilter
+                label="Telas"
+                options={(catalogos.fabrics || []).map(t => ({ id: t, nombre: t }))}
+                selected={filters.telas}
+                onChange={(v) => onChange({ ...filters, telas: v })}
               />
-              <MultiSelectFilter 
-                label="Colores" 
-                options={(catalogos.colors || []).map(c => ({ id: c, nombre: c }))} 
-                selected={filters.colores} 
-                onChange={(v) => onChange({ ...filters, colores: v })} 
+              <MultiSelectFilter
+                label="Colores"
+                options={(catalogos.colors || []).map(c => ({ id: c, nombre: c }))}
+                selected={filters.colores}
+                onChange={(v) => onChange({ ...filters, colores: v })}
               />
-              <MultiSelectFilter 
-                label="Unidades" 
-                options={(catalogos.units || []).map(u => ({ id: u, nombre: u }))} 
-                selected={filters.unidades} 
-                onChange={(v) => onChange({ ...filters, unidades: v })} 
+              <MultiSelectFilter
+                label="Unidades"
+                options={(catalogos.units || []).map(u => ({ id: u, nombre: u }))}
+                selected={filters.unidades}
+                onChange={(v) => onChange({ ...filters, unidades: v })}
               />
-              <MultiSelectFilter 
-                label="Usuarios" 
-                options={(catalogos.users || []).map(u => ({ id: u.id, nombre: u.label }))} 
-                selected={filters.usuarioIds.map(String)} 
-                onChange={(v) => onChange({ ...filters, usuarioIds: v.map(Number) })} 
+              <MultiSelectFilter
+                label="Usuarios"
+                options={(catalogos.users || []).map(u => ({ id: u.id, nombre: u.label }))}
+                selected={filters.usuarioIds.map(String)}
+                onChange={(v) => onChange({ ...filters, usuarioIds: v.map(Number) })}
               />
-              <MultiSelectFilter 
-                label="Clientes" 
-                options={(catalogos.clients || []).map(c => ({ id: c.id, nombre: c.label }))} 
-                selected={filters.clienteIds.map(String)} 
-                onChange={(v) => onChange({ ...filters, clienteIds: v.map(Number) })} 
+              <MultiSelectFilter
+                label="Clientes"
+                options={(catalogos.clients || []).map(c => ({ id: c.id, nombre: c.label }))}
+                selected={filters.clienteIds.map(String)}
+                onChange={(v) => onChange({ ...filters, clienteIds: v.map(Number) })}
               />
-              <MultiSelectFilter 
-                label="Proveedores" 
-                options={(catalogos.suppliers || []).map(p => ({ id: p.id, nombre: p.label }))} 
-                selected={filters.proveedorIds.map(String)} 
-                onChange={(v) => onChange({ ...filters, proveedorIds: v.map(Number) })} 
+              <MultiSelectFilter
+                label="Proveedores"
+                options={(catalogos.suppliers || []).map(p => ({ id: p.id, nombre: p.label }))}
+                selected={filters.proveedorIds.map(String)}
+                onChange={(v) => onChange({ ...filters, proveedorIds: v.map(Number) })}
               />
-              <MultiSelectFilter 
-                label="Métodos" 
-                options={(catalogos.paymentMethods || []).map(m => ({ id: m, nombre: m }))} 
-                selected={filters.formasPago} 
-                onChange={(v) => onChange({ ...filters, formasPago: v })} 
+              <MultiSelectFilter
+                label="Métodos"
+                options={(catalogos.paymentMethods || []).map(m => ({ id: m, nombre: m }))}
+                selected={filters.formasPago}
+                onChange={(v) => onChange({ ...filters, formasPago: v })}
               />
             </>
           )}
@@ -240,16 +240,16 @@ export function ReportFilterBar({ catalogos, filters, onChange, onRefresh, onDow
   );
 }
 
-function MultiSelectFilter({ 
-  label, 
-  options, 
-  selected, 
-  onChange 
-}: { 
-  label: string; 
-  options: { id: number | string; nombre: string }[]; 
-  selected: string[]; 
-  onChange: (val: string[]) => void 
+function MultiSelectFilter({
+  label,
+  options,
+  selected,
+  onChange
+}: {
+  label: string;
+  options: { id: number | string; nombre: string }[];
+  selected: string[];
+  onChange: (val: string[]) => void
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -272,9 +272,9 @@ function MultiSelectFilter({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           className={cn("h-9 border-dashed gap-1.5", selected.length > 0 && "border-solid bg-sidebar/5 border-sidebar/20")}
           data-testid={`filter-btn-${label.toLowerCase()}`}
         >
@@ -290,10 +290,10 @@ function MultiSelectFilter({
       </PopoverTrigger>
       <PopoverContent className="w-[220px] p-0" align="start">
         <div className="p-2 border-b">
-          <Input 
-            placeholder="Buscar..." 
-            value={search} 
-            onChange={(e) => setSearch(e.target.value)} 
+          <Input
+            placeholder="Buscar..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="h-8 text-xs"
             data-testid={`filter-search-${label.toLowerCase()}`}
           />
@@ -305,7 +305,7 @@ function MultiSelectFilter({
           {filteredOptions.map(opt => {
             const isSelected = selected.includes(String(opt.id));
             return (
-              <div 
+              <div
                 key={opt.id}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-muted cursor-pointer"
                 onClick={() => toggleOption(String(opt.id))}

@@ -8,6 +8,7 @@ import {
   auditoriasInventarioTable,
   auditoriaTable,
   productosTable,
+  pisosTable,
   rollosTable,
   ubicacionesTable,
   usuariosTable,
@@ -126,11 +127,14 @@ export async function createAuditoria(
       unidadSnapshot: productosTable.unidad,
       ubicacionSnapshotId: ubicacionesTable.id,
       ubicacionSnapshot: ubicacionesTable.nombre,
+       pisoSnapshotId: rollosTable.pisoId,
+       pisoSnapshot: pisosTable.nombre,
       estadoSnapshot: rollosTable.estado,
     })
     .from(rollosTable)
     .innerJoin(productosTable, eq(productosTable.id, rollosTable.productoId))
     .innerJoin(ubicacionesTable, eq(ubicacionesTable.id, rollosTable.ubicacionId))
+    .leftJoin(pisosTable, eq(pisosTable.id, rollosTable.pisoId))
     .where(
       and(
         eq(rollosTable.ubicacionId, input.ubicacionId),
@@ -155,7 +159,7 @@ export async function createAuditoria(
 
 export async function scanAuditoria(
   tx: Tx,
-  input: { auditoriaId: number; serie: string; usuarioId: number; ip: string },
+    input: { auditoriaId: number; serie: string; usuarioId: number; ip: string; pisoId?: number | null },
 ) {
   const serie = input.serie.trim();
   const [header] = await tx
@@ -167,6 +171,12 @@ export async function scanAuditoria(
   if (!header) throw new AuditoriaInventarioError("Auditoría no encontrada.", "NOT_FOUND");
   if (header.estado !== "ABIERTA") {
     throw new AuditoriaInventarioError("El conteo está cerrado y no admite escaneos.", "NOT_OPEN");
+  }
+  const activeFloors = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
+    .where(and(eq(pisosTable.ubicacionId, header.ubicacionId), eq(pisosTable.activo, true)));
+  const realFloor = input.pisoId == null ? null : activeFloors.find((floor) => floor.id === input.pisoId);
+  if ((activeFloors.length && !realFloor) || (!activeFloors.length && input.pisoId != null)) {
+    throw new AuditoriaInventarioError("El piso real debe ser activo y pertenecer al sitio auditado.", "INVALID_FLOOR");
   }
   const [roll] = await tx
     .select({ id: rollosTable.id, estado: rollosTable.estado })
@@ -180,6 +190,8 @@ export async function scanAuditoria(
       serie,
       rolloId: roll?.id ?? null,
       usuarioId: input.usuarioId,
+      pisoRealId: input.pisoId ?? null,
+      pisoReal: realFloor?.nombre ?? null,
     })
     .onConflictDoNothing()
     .returning({ serie: auditoriaInventarioEscaneosTable.serie });
@@ -218,7 +230,7 @@ export async function scanAuditoria(
       auditoriaId: header.id,
       sitioId: header.ubicacionId,
       ip: input.ip,
-      datos: { serie, clasificacion: snapshot ? "CUADRO" : "SOBRANTE" },
+      datos: { serie, pisoRealId: input.pisoId ?? null, clasificacion: snapshot ? "CUADRO" : "SOBRANTE" },
     });
   }
   return {
@@ -390,6 +402,31 @@ export async function confirmAuditoria(
       datos: { rolloId, resolucion: "BAJA" },
     });
   }
+  // A misplaced roll was physically found: correcting its floor is deliberately
+  // not a stock adjustment and must never create kardex/existence rows.
+  const misplacedResult = await tx.execute(sql`
+    SELECT s.rollo_id, e.piso_real_id, r.estado::text estado, r.ubicacion_id
+    FROM auditoria_inventario_snapshot s
+    JOIN auditoria_inventario_escaneos e ON e.auditoria_id=s.auditoria_id AND e.serie=s.serie
+    JOIN rollos r ON r.id=s.rollo_id
+    WHERE s.auditoria_id=${header.id}
+      AND s.piso_snapshot_id IS DISTINCT FROM e.piso_real_id
+    FOR UPDATE OF r
+  `);
+  let misplacedApplied = 0;
+  let misplacedManual = 0;
+  for (const item of misplacedResult.rows as Array<{ rollo_id: number; piso_real_id: number | null; estado: string; ubicacion_id: number }>) {
+    const rolloId = Number(item.rollo_id);
+    const safe = item.estado === "DISPONIBLE" && Number(item.ubicacion_id) === header.ubicacionId;
+    const resolution = safe ? "APLICADA" : "RESOLUCION_MANUAL";
+    if (safe) {
+      await tx.update(rollosTable).set({ pisoId: item.piso_real_id ?? null }).where(eq(rollosTable.id, rolloId));
+      misplacedApplied++;
+      await audit(tx, { usuarioId: input.usuarioId, accion: "CAMBIAR_PISO", auditoriaId: header.id, sitioId: header.ubicacionId, ip: input.ip, datos: { rolloId, pisoId: item.piso_real_id, origen: "AUDITORIA" } });
+    } else misplacedManual++;
+    await tx.update(auditoriaInventarioSnapshotTable).set({ resolucion: resolution })
+      .where(and(eq(auditoriaInventarioSnapshotTable.auditoriaId, header.id), eq(auditoriaInventarioSnapshotTable.rolloId, rolloId)));
+  }
   const surplus = await tx
     .select({ rollo: rollosTable, serie: auditoriaInventarioEscaneosTable.serie })
     .from(auditoriaInventarioEscaneosTable)
@@ -501,6 +538,8 @@ export async function confirmAuditoria(
       faltantesBaja: missingAdjusted,
       sobrantesReubicados: relocated,
       resolucionManual: manual + missingManual,
+      malAcomodadosAplicados: misplacedApplied,
+      malAcomodadosManual: misplacedManual,
     },
   });
 }
@@ -530,7 +569,9 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
   const usarVivoParaSobrantes = header.estado === "ABIERTA";
   const result = await tx.execute(sql`
     SELECT COALESCE(s.serie, e.serie) serie,
-      CASE WHEN s.serie IS NOT NULL AND e.serie IS NOT NULL THEN 'CUADRO'
+      CASE WHEN s.serie IS NOT NULL AND e.serie IS NOT NULL
+                  AND s.piso_snapshot_id IS DISTINCT FROM e.piso_real_id THEN 'MAL_ACOMODADO'
+           WHEN s.serie IS NOT NULL AND e.serie IS NOT NULL THEN 'CUADRO'
            WHEN s.serie IS NOT NULL THEN 'FALTANTE' ELSE 'SOBRANTE' END clasificacion,
        COALESCE(s.rollo_id, e.rollo_id) rollo_id,
        CASE WHEN s.serie IS NOT NULL THEN s.sku_snapshot
@@ -551,7 +592,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
             WHEN ${usarVivoParaSobrantes} THEN COALESCE(r.estado::text, 'SIN_REGISTRO')
             ELSE e.estado_cierre END estado_actual,
        e.escaneado_at, e.resolucion resolucion_escaneo,
-       s.resolucion resolucion_snapshot
+        s.resolucion resolucion_snapshot,
+        s.piso_snapshot_id, s.piso_snapshot, e.piso_real_id, e.piso_real
     FROM auditoria_inventario_snapshot s
     FULL OUTER JOIN auditoria_inventario_escaneos e
       ON e.auditoria_id = s.auditoria_id AND e.serie = s.serie
@@ -578,6 +620,10 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
       unidad: row.unidad == null ? null : String(row.unidad),
       ubicacionActualId: row.ubicacion_actual_id == null ? null : Number(row.ubicacion_actual_id),
       ubicacionActual: row.ubicacion_actual == null ? null : String(row.ubicacion_actual),
+       pisoEsperadoId: row.piso_snapshot_id == null ? null : Number(row.piso_snapshot_id),
+       pisoEsperado: row.piso_snapshot == null ? null : String(row.piso_snapshot),
+       pisoRealId: row.piso_real_id == null ? null : Number(row.piso_real_id),
+       pisoReal: row.piso_real == null ? null : String(row.piso_real),
       estadoActual: String(row.estado_actual),
       resolucion,
       escaneadoAt: row.escaneado_at == null ? null : new Date(String(row.escaneado_at)).toISOString(),
@@ -598,8 +644,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
     ultimoAt: new Date(String(row.ultimo_at)).toISOString(),
   }));
   const count = (kind: string) => resultados.filter((r) => r.clasificacion === kind).length;
-  const totalSnapshot = count("CUADRO") + count("FALTANTE");
-  const totalEscaneados = count("CUADRO") + count("SOBRANTE");
+  const totalSnapshot = count("CUADRO") + count("FALTANTE") + count("MAL_ACOMODADO");
+  const totalEscaneados = count("CUADRO") + count("SOBRANTE") + count("MAL_ACOMODADO");
   return {
     id: header.id,
     folio: header.folio,
@@ -612,6 +658,7 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
     cuadros: count("CUADRO"),
     faltantes: count("FALTANTE"),
     sobrantes: count("SOBRANTE"),
+    malAcomodados: count("MAL_ACOMODADO"),
     abiertaAt: header.abiertaAt.toISOString(),
     creadaPor: header.creadaPor,
     motivoCancelacion: header.motivoCancelacion,

@@ -6,12 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface AuditoriaInventarioEscaneoInput {
-  /**
-     * @minLength 1
-     * @maxLength 100
-     */
-  serie: string;
+export interface RolloPisoUpdate {
   /** @nullable */
-  pisoId?: number | null;
+  pisoId: number | null;
 }

@@ -6,6 +6,7 @@ import {
   useListRollos,
   useGetCurrentUser,
   getGetExistenciasAgrupadasQueryKey,
+  useListPisosLocation,
   Role,
   ListRollosEstado
 } from "@workspace/api-client-react";
@@ -43,7 +44,16 @@ export default function Inventario() {
   const debouncedSearch = useDebounce(search, 500);
 
   const [estadoFilter, setEstadoFilter] = useState<string>("TODOS");
+  const [pisoFilter, setPisoFilter] = useState<string>("TODOS");
   const [showZero, setShowZero] = useState(false);
+
+  useEffect(() => {
+    setPisoFilter("TODOS");
+  }, [effectiveUbicacionId]);
+
+  const { data: pisos } = useListPisosLocation(effectiveUbicacionId ?? 0, {
+    query: { enabled: !!effectiveUbicacionId && !consolidado, queryKey: ['pisosLocation', effectiveUbicacionId ?? 0] }
+  });
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
     try {
@@ -106,6 +116,7 @@ export default function Inventario() {
     ubicacionId: effectiveUbicacionId,
     serie: debouncedSearch ? debouncedSearch : undefined,
     estado: estadoFilter !== "TODOS" ? estadoFilter as ListRollosEstado : undefined,
+    pisoId: pisoFilter !== "TODOS" ? Number(pisoFilter) : undefined,
     page: 1,
     pageSize: 100
   });
@@ -226,19 +237,38 @@ export default function Inventario() {
           </TabsContent>
 
           <TabsContent value="rollos" className="m-0 space-y-4">
-            <div className="flex gap-2 items-center text-sm">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <Select value={estadoFilter} onValueChange={setEstadoFilter}>
-                <SelectTrigger className="w-[180px] h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="TODOS">Todos los estados</SelectItem>
-                  <SelectItem value="DISPONIBLE">Disponibles</SelectItem>
-                  <SelectItem value="MOSTRADOR">Mostrador</SelectItem>
-                  <SelectItem value="EN_TRANSITO">En Tránsito</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-wrap gap-2 items-center text-sm">
+              <div className="flex items-center gap-2 bg-background border rounded-md px-2">
+                <Filter className="w-4 h-4 text-muted-foreground" />
+                <Select value={estadoFilter} onValueChange={setEstadoFilter}>
+                  <SelectTrigger className="w-[180px] h-8 border-0 shadow-none focus:ring-0 px-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TODOS">Todos los estados</SelectItem>
+                    <SelectItem value="DISPONIBLE">Disponibles</SelectItem>
+                    <SelectItem value="MOSTRADOR">Mostrador</SelectItem>
+                    <SelectItem value="EN_TRANSITO">En Tránsito</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {!consolidado && pisos && pisos.length > 0 && (
+                <div className="flex items-center gap-2 bg-background border rounded-md px-2">
+                  <span className="text-muted-foreground font-semibold text-xs ml-1">Piso</span>
+                  <Select value={pisoFilter} onValueChange={setPisoFilter}>
+                    <SelectTrigger className="w-[150px] h-8 border-0 shadow-none focus:ring-0 px-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="TODOS">Todos los pisos</SelectItem>
+                      {pisos.map(p => (
+                        <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -272,6 +302,11 @@ export default function Inventario() {
                           {rollo.telaProducto} <span className="text-muted-foreground font-normal">/</span> {rollo.colorProducto}
                         </div>
                         {isTodas && <div className="text-xs text-muted-foreground mt-1">{rollo.nombreUbicacion}</div>}
+                        {(rollo as any).nombrePiso && (
+                          <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1 bg-muted/30 px-1.5 py-0.5 rounded w-fit border border-dashed">
+                            Piso: {(rollo as any).nombrePiso}
+                          </div>
+                        )}
                       </div>
 
                         <div className="flex items-end justify-between mt-auto gap-3">

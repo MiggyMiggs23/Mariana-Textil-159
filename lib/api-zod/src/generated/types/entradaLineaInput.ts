@@ -12,4 +12,6 @@ export interface EntradaLineaInput {
   costoUnitario?: string | null;
   /** @minItems 1 */
   cantidades: string[];
+  /** Piso por cada posición de cantidades; null solo es válido en sitios sin pisos activos. */
+  pisosPorCantidad?: (number | null)[];
 }

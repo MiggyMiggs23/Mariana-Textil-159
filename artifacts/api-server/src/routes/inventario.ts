@@ -64,6 +64,9 @@ import {
   GetExistenciasAgrupadasResponse,
   GetCatalogosEntradaResponse,
   GetUbicacionesInventarioResponse,
+  UpdateRolloPisoParams,
+  UpdateRolloPisoBody,
+  UpdateRolloPisoResponse,
 } from "@workspace/api-zod";
 import {
   db,
@@ -71,10 +74,12 @@ import {
   existenciasTable,
   movimientosTable,
   productosTable,
+  pisosTable,
   proveedoresTable,
   rollosTable,
   ubicacionesTable,
   usuariosTable,
+  auditoriaTable,
   type EstadoRollo,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
@@ -266,6 +271,8 @@ async function getRolloDetail(rolloId: number) {
       unidad: productosTable.unidad,
       ubicacionId: rollosTable.ubicacionId,
       nombreUbicacion: ubicacionesTable.nombre,
+       pisoId: rollosTable.pisoId,
+       nombrePiso: pisosTable.nombre,
       proveedorId: rollosTable.proveedorId,
       estado: rollosTable.estado,
       cantidadInicial: rollosTable.cantidadInicial,
@@ -279,6 +286,7 @@ async function getRolloDetail(rolloId: number) {
     .from(rollosTable)
     .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
     .innerJoin(ubicacionesTable, eq(rollosTable.ubicacionId, ubicacionesTable.id))
+    .leftJoin(pisosTable, eq(rollosTable.pisoId, pisosTable.id))
     .where(eq(rollosTable.id, rolloId))
     .limit(1);
 
@@ -300,6 +308,8 @@ async function getRolloDetail(rolloId: number) {
     unidadProducto: rollo.unidad,
     ubicacionId: rollo.ubicacionId,
     nombreUbicacion: rollo.nombreUbicacion,
+    pisoId: rollo.pisoId ?? null,
+    nombrePiso: rollo.nombrePiso ?? null,
     proveedorId: rollo.proveedorId ?? null,
     estado: rollo.estado,
     cantidadInicial: rollo.cantidadInicial,
@@ -455,6 +465,7 @@ inventarioRouter.post(
                   ? null
                   : (l.costoUnitario ?? null),
             cantidades: l.cantidades,
+            pisosPorCantidad: l.pisosPorCantidad,
           })),
             allowPendingCosts:
               auth.user.rol === "BODEGA" ||
@@ -1115,6 +1126,49 @@ inventarioRouter.get(
   },
 );
 
+// Physical floor correction is intentionally not an inventory movement: it does
+// not change stock, state, location, ledger, or existence cache.
+inventarioRouter.patch(
+  "/rollos/:id/piso",
+  requireSession,
+  requierePermiso("inventario", "editar"),
+  async (req, res, next) => {
+    try {
+      const params = UpdateRolloPisoParams.parse(req.params);
+      const body = UpdateRolloPisoBody.parse(req.body);
+      const result = await db.transaction(async (tx) => {
+        const [rollo] = await tx.select().from(rollosTable)
+          .where(eq(rollosTable.id, params.id)).for("update").limit(1);
+        if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+        const scopeError = checkOperationalScope(req.auth!, [rollo.ubicacionId]);
+        if (scopeError) throw new InventarioError(scopeError, "SCOPE_DENIED");
+        const active = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
+          .where(and(eq(pisosTable.ubicacionId, rollo.ubicacionId), eq(pisosTable.activo, true)));
+        const floor = body.pisoId == null ? null : active.find((item) => item.id === body.pisoId);
+        if ((active.length && !floor) || (!active.length && body.pisoId != null)) {
+          throw new InventarioError("El piso debe ser activo y pertenecer a la ubicación actual.", "INVALID_FLOOR");
+        }
+        const before = { pisoId: rollo.pisoId, nombrePiso: (await tx.select({ nombre: pisosTable.nombre }).from(pisosTable).where(eq(pisosTable.id, rollo.pisoId ?? -1)).limit(1))[0]?.nombre ?? null };
+        const [updated] = await tx.update(rollosTable).set({ pisoId: body.pisoId }).where(eq(rollosTable.id, rollo.id)).returning();
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id, modulo: "inventario", accion: "CAMBIAR_PISO", entidad: "rollos",
+          entidadId: String(rollo.id), sitioId: rollo.ubicacionId, datosAntes: before,
+          datosDespues: { pisoId: body.pisoId, nombrePiso: floor?.nombre ?? null }, ip: getRequestIp(req),
+        });
+        return updated!;
+      });
+      const detail = await getRolloDetail(result.id);
+      res.json(UpdateRolloPisoResponse.parse(detail));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        res.status(error.code === "ROLLO_NOT_FOUND" ? 404 : error.code === "SCOPE_DENIED" ? 403 : 400).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
 // ── List rollos ───────────────────────────────────────────────────────────────
 // Module: inventario / ver — read scope applied to list
 
@@ -1147,6 +1201,7 @@ inventarioRouter.get(
       }
       if (q.productoId)
         conditions.push(eq(rollosTable.productoId, q.productoId));
+      if (q.pisoId) conditions.push(eq(rollosTable.pisoId, q.pisoId));
       if (q.estado)
         conditions.push(eq(rollosTable.estado, q.estado as EstadoRollo));
       if (q.serie) {
@@ -1175,6 +1230,8 @@ inventarioRouter.get(
           unidad: productosTable.unidad,
           ubicacionId: rollosTable.ubicacionId,
           nombreUbicacion: ubicacionesTable.nombre,
+          pisoId: rollosTable.pisoId,
+          nombrePiso: pisosTable.nombre,
           proveedorId: rollosTable.proveedorId,
           estado: rollosTable.estado,
           cantidadInicial: rollosTable.cantidadInicial,
@@ -1191,6 +1248,7 @@ inventarioRouter.get(
           ubicacionesTable,
           eq(rollosTable.ubicacionId, ubicacionesTable.id),
         )
+        .leftJoin(pisosTable, eq(rollosTable.pisoId, pisosTable.id))
         .where(where)
         .orderBy(desc(rollosTable.createdAt))
         .limit(pageSize)
@@ -1205,6 +1263,8 @@ inventarioRouter.get(
         colorProducto: r.color,
         ubicacionId: r.ubicacionId,
         nombreUbicacion: r.nombreUbicacion,
+        pisoId: r.pisoId ?? null,
+        nombrePiso: r.nombrePiso ?? null,
         proveedorId: r.proveedorId ?? null,
         estado: r.estado,
         cantidadInicial: r.cantidadInicial,

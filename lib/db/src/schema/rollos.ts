@@ -15,7 +15,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { estadoRolloEnum, tipoMovimientoEnum } from "./enums";
 import { productosTable } from "./productos";
-import { ubicacionesTable } from "./locations";
+import { pisosTable, ubicacionesTable } from "./locations";
 import { proveedoresTable } from "./proveedores";
 import { usuariosTable } from "./users";
 
@@ -37,6 +37,8 @@ export const rollosTable = pgTable(
     ubicacionId: integer("ubicacion_id")
       .notNull()
       .references(() => ubicacionesTable.id),
+    /** Nullable for historical rolls and sites without a floor catalog. */
+    pisoId: integer("piso_id").references(() => pisosTable.id),
     proveedorId: integer("proveedor_id").references(() => proveedoresTable.id),
     /** FK to a reception record (future use, nullable now) */
     recepcionId: integer("recepcion_id"),
@@ -70,6 +72,7 @@ export const rollosTable = pgTable(
   (table) => [
     index("rollos_producto_idx").on(table.productoId),
     index("rollos_ubicacion_idx").on(table.ubicacionId),
+    index("rollos_piso_idx").on(table.pisoId),
     index("rollos_estado_idx").on(table.estado),
     index("rollos_serie_idx").on(table.serie),
   ],

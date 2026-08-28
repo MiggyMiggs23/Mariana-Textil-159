@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import {
   CreateLocationBody,
   CreateLocationResponse,
@@ -7,11 +7,20 @@ import {
   UpdateLocationBody,
   UpdateLocationParams,
   UpdateLocationResponse,
+  ListPisosLocationParams,
+  ListPisosLocationResponse,
+  CreatePisoLocationParams,
+  CreatePisoLocationBody,
+  CreatePisoLocationResponse,
+  UpdatePisoLocationParams,
+  UpdatePisoLocationBody,
+  UpdatePisoLocationResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
   db,
   ubicacionesTable,
+  pisosTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
@@ -134,6 +143,85 @@ router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (
         res.status(400).json({ error: "Ya existe un sitio con ese nombre o iniciales." });
       return;
     }
+    throw error;
+  }
+});
+
+function presentPiso(row: typeof pisosTable.$inferSelect) {
+  return {
+    id: row.id,
+    ubicacionId: row.ubicacionId,
+    nombre: row.nombre,
+    activo: row.activo,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+router.get("/locations/:id/pisos", requierePermiso("ubicaciones", "ver"), async (req, res): Promise<void> => {
+  const params = ListPisosLocationParams.safeParse(req.params);
+  if (!params.success) {
+    res.status(400).json({ error: "Sitio inválido." });
+    return;
+  }
+  const [site] = await db.select({ id: ubicacionesTable.id }).from(ubicacionesTable)
+    .where(and(eq(ubicacionesTable.id, params.data.id), inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]))).limit(1);
+  if (!site) {
+    res.status(404).json({ error: "Ubicación no encontrada." });
+    return;
+  }
+  const rows = await db.select().from(pisosTable)
+    .where(and(eq(pisosTable.ubicacionId, site.id), req.auth!.user.rol === "ADMIN" ? undefined : eq(pisosTable.activo, true)))
+    .orderBy(asc(pisosTable.nombre));
+  res.json(ListPisosLocationResponse.parse(rows.map(presentPiso)));
+});
+
+router.post("/locations/:id/pisos", requierePermiso("ubicaciones", "crear"), async (req, res): Promise<void> => {
+  if (req.auth!.user.rol !== "ADMIN") {
+    res.status(403).json({ error: "Solo ADMIN administra pisos." });
+    return;
+  }
+  const params = CreatePisoLocationParams.safeParse(req.params);
+  const body = CreatePisoLocationBody.safeParse(req.body);
+  const nombre = body.success ? body.data.nombre.trim().replace(/\s+/g, " ") : "";
+  if (!params.success || !body.success || !nombre) {
+    res.status(400).json({ error: "Datos de piso inválidos." });
+    return;
+  }
+  try {
+    const piso = await db.transaction(async (tx) => {
+      const [site] = await tx.select({ id: ubicacionesTable.id }).from(ubicacionesTable)
+        .where(and(eq(ubicacionesTable.id, params.data.id), inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]))).limit(1);
+      if (!site) return null;
+      const [created] = await tx.insert(pisosTable).values({ ubicacionId: site.id, nombre, activo: body.data.activo }).returning();
+      await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "CREAR", entidad: "pisos", entidadId: String(created!.id), datosDespues: presentPiso(created!), ip: getRequestIp(req) });
+      return created!;
+    });
+    if (!piso) { res.status(404).json({ error: "Ubicación no encontrada." }); return; }
+    res.status(201).json(CreatePisoLocationResponse.parse(presentPiso(piso)));
+  } catch (error) {
+    if ((error as { code?: string }).code === "23505") { res.status(409).json({ error: "Ya existe un piso con ese nombre en este sitio." }); return; }
+    throw error;
+  }
+});
+
+router.patch("/locations/:id/pisos/:pisoId", requierePermiso("ubicaciones", "editar"), async (req, res): Promise<void> => {
+  if (req.auth!.user.rol !== "ADMIN") { res.status(403).json({ error: "Solo ADMIN administra pisos." }); return; }
+  const params = UpdatePisoLocationParams.safeParse(req.params);
+  const body = UpdatePisoLocationBody.safeParse(req.body);
+  const nombre = body.success && body.data.nombre !== undefined ? body.data.nombre.trim().replace(/\s+/g, " ") : undefined;
+  if (!params.success || !body.success || !Object.keys(body.data).length || nombre === "") { res.status(400).json({ error: "Datos de piso inválidos." }); return; }
+  const [before] = await db.select().from(pisosTable).where(and(eq(pisosTable.id, params.data.pisoId), eq(pisosTable.ubicacionId, params.data.id))).limit(1);
+  if (!before) { res.status(404).json({ error: "Piso no encontrado." }); return; }
+  try {
+    const [after] = await db.transaction(async (tx) => {
+      const updated = await tx.update(pisosTable).set({ ...body.data, nombre }).where(eq(pisosTable.id, before.id)).returning();
+      await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "ACTUALIZAR", entidad: "pisos", entidadId: String(before.id), datosAntes: presentPiso(before), datosDespues: presentPiso(updated[0]!), ip: getRequestIp(req) });
+      return updated;
+    });
+    res.json(UpdatePisoLocationResponse.parse(presentPiso(after!)));
+  } catch (error) {
+    if ((error as { code?: string }).code === "23505") { res.status(409).json({ error: "Ya existe un piso con ese nombre en este sitio." }); return; }
     throw error;
   }
 });

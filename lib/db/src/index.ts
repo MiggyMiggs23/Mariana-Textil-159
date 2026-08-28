@@ -24,6 +24,7 @@ export { ensureCamionetasSchema } from "./lib/camionetas-schema";
 export { ensureChoferesSchema } from "./lib/choferes-schema";
 export { ensureViajesSchema } from "./lib/viajes-schema";
 export { ensureAuditoriaInventarioSchema } from "./lib/auditoria-inventario-schema";
+export { ensurePisosSchema } from "./lib/pisos-schema";
 export { createTestDatabaseGuard } from "./lib/test-database-guard";
 
 const { Pool } = pg;

@@ -61,12 +61,12 @@ export function generateSKU(tela: string, color: string) {
 // Substring matching highlighter
 function HighlightMatch({ text, search }: { text: string; search: string }) {
   if (!search.trim()) return <>{text}</>;
-  
+
   // Escape search term for regex
   const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = new RegExp(`(${safeSearch})`, "gi");
   const parts = text.split(regex);
-  
+
   return (
     <>
       {parts.map((part, i) =>
@@ -85,11 +85,11 @@ function HighlightMatch({ text, search }: { text: string; search: string }) {
 export default function Productos() {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
-  
+
   const { data: user } = useGetCurrentUser({
     query: { queryKey: getGetCurrentUserQueryKey() }
   });
-  
+
   const [filterExistencia, setFilterExistencia] = useState<ListProductosExistencia>(ListProductosExistencia.TODOS);
 
   const queryParams = useMemo(() => ({
@@ -121,9 +121,9 @@ export default function Productos() {
     if (!productos) return [];
     return productos.filter((p) => {
       const search = searchTerm.toLowerCase();
-      const matchSearch = !search || 
-        p.tela.toLowerCase().includes(search) || 
-        p.color.toLowerCase().includes(search) || 
+      const matchSearch = !search ||
+        p.tela.toLowerCase().includes(search) ||
+        p.color.toLowerCase().includes(search) ||
         p.sku.toLowerCase().includes(search);
       const matchUnidad = filterUnidad === "ALL" || p.unidad === filterUnidad;
       const matchEstado = filterEstado === "ALL" || (filterEstado === "ACTIVE" ? p.activo : !p.activo);
@@ -246,7 +246,7 @@ export default function Productos() {
               </Select>
             </div>
           </div>
-          
+
           <CardContent className="p-0">
             {isLoading ? (
               <div className="p-8 text-center animate-pulse">
@@ -267,14 +267,14 @@ export default function Productos() {
                     <button onClick={handleCollapseAll} className="text-primary hover:underline font-medium" data-testid="button-collapse-all">Colapsar todo</button>
                   </div>
                 </div>
-                
+
                 <div className="w-full">
                   {grouped.map(([tela, groupProducts]) => {
                     const isExpanded = expandedTelas.has(tela);
 
                     return (
                       <div key={tela} className="border-b last:border-0">
-                        <div 
+                        <div
                           className="flex items-center justify-between p-3 hover:bg-muted/50 cursor-pointer select-none transition-colors"
                           onClick={() => toggleGroup(tela)}
                           data-testid={`row-tela-group-${tela}`}
@@ -288,10 +288,10 @@ export default function Productos() {
                           </div>
                           <div className="flex items-center gap-6 text-sm">
                             {canCreate && (
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-8 px-2 z-10 hidden md:flex" 
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 px-2 z-10 hidden md:flex"
                                 onClick={(e) => { e.stopPropagation(); openCreate(tela); }}
                               >
                                 <Plus className="w-4 h-4 mr-1" /> Color
@@ -320,8 +320,8 @@ export default function Productos() {
                                 {groupProducts.map(p => {
                                   const isZeroStock = p.rollos === 0 && parseFloat(p.cantidad) === 0;
                                   return (
-                                  <TableRow 
-                                    key={p.id} 
+                                  <TableRow
+                                    key={p.id}
                                     className={`cursor-pointer transition-colors ${isZeroStock ? "opacity-60 bg-muted/20 hover:bg-muted/40" : "hover:bg-muted/40"}`}
                                     onClick={() => setLocation(`/productos/${p.id}`)}
                                     data-testid={`row-product-${p.id}`}
@@ -377,15 +377,15 @@ export default function Productos() {
       </div>
 
       {productos && (
-        <CreateProductDialog 
-          open={isCreateOpen} 
-          onClose={() => setIsCreateOpen(false)} 
+        <CreateProductDialog
+          open={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
           initialTela={createTelaPreFill}
           existingProducts={productos}
           canViewPrices={canViewPrices}
         />
       )}
-      
+
       <ImportProductsDialog
         open={isImportOpen}
         onClose={() => setIsImportOpen(false)}
@@ -398,7 +398,7 @@ export default function Productos() {
 function CreateProductDialog({ open, onClose, initialTela, existingProducts, canViewPrices }: { open: boolean, onClose: () => void, initialTela: string, existingProducts: Producto[], canViewPrices: boolean }) {
   const createProducto = useCreateProducto();
   const queryClient = useQueryClient();
-  
+
   const [formData, setFormData] = useState<{
     sku: string;
     isCustomSku: boolean;
@@ -442,7 +442,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
       toast.error("Datos incompletos", { description: "La tela y el color son obligatorios." });
       return;
     }
-    
+
     createProducto.mutate({
       data: {
         tela: formData.tela.trim(),
@@ -473,12 +473,12 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             Agrega una nueva combinación de tela y color al catálogo.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Tela</Label>
-              <Input 
+              <Input
                 list="telas-list"
                 value={formData.tela}
                 onChange={e => setFormData({ ...formData, tela: e.target.value.toUpperCase() })}
@@ -491,7 +491,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             </div>
             <div className="space-y-2">
               <Label>Color</Label>
-              <Input 
+              <Input
                 list="colors-list"
                 value={formData.color}
                 onChange={e => setFormData({ ...formData, color: e.target.value.toUpperCase() })}
@@ -503,7 +503,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
               </datalist>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Unidad de Medida</Label>
@@ -520,8 +520,8 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             {canViewPrices && (
               <div className="space-y-2">
                 <Label>Precio Sugerido</Label>
-                <Input 
-                  type="number" 
+                <Input
+                  type="number"
                   step="0.01"
                   min="0"
                   value={formData.precioSugerido}
@@ -536,8 +536,8 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             <div className="flex items-center justify-between">
               <Label>SKU del Producto</Label>
               <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="custom-sku" 
+                <Checkbox
+                  id="custom-sku"
                   checked={formData.isCustomSku}
                   onCheckedChange={(c) => setFormData({ ...formData, isCustomSku: c === true, sku: c === true ? autoSku : "" })}
                   data-testid="checkbox-custom-sku"
@@ -546,8 +546,8 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
               </div>
             </div>
             {formData.isCustomSku ? (
-              <Input 
-                value={formData.sku} 
+              <Input
+                value={formData.sku}
                 onChange={e => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
                 placeholder={autoSku}
                 className="font-mono text-sm uppercase"
@@ -565,7 +565,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
 
           <div className="space-y-2">
             <Label>Notas (Opcional)</Label>
-            <Input 
+            <Input
               value={formData.notas}
               onChange={e => setFormData({ ...formData, notas: e.target.value })}
               placeholder="Información adicional del producto..."
@@ -573,7 +573,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             />
           </div>
         </div>
-        
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={createProducto.isPending} data-testid="button-save-product">
@@ -589,7 +589,7 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
   const queryClient = useQueryClient();
   const previewImport = usePreviewImportProductos();
   const confirmImport = useConfirmImportProductos();
-  
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedContent, setSelectedContent] = useState("");
   const [previewData, setPreviewData] = useState<ImportPreviewRow[] | null>(null);
@@ -609,7 +609,7 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
     if (!file) return;
     setSelectedFile(file);
     setPreviewData(null);
-    
+
     const reader = new FileReader();
     reader.onload = (evt) => {
       const base64 = evt.target?.result?.toString().split(',')[1];
@@ -637,8 +637,8 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
       data: { fileName: selectedFile.name, content: selectedContent }
     }, {
       onSuccess: (res) => {
-        toast.success("Importación completada", { 
-          description: `${res.insertados} insertados, ${res.duplicados} omitidos, ${res.errores} errores.` 
+        toast.success("Importación completada", {
+          description: `${res.insertados} insertados, ${res.duplicados} omitidos, ${res.errores} errores.`
         });
         queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
         onClose();
@@ -666,15 +666,15 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
 
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
           {!previewData && (
-            <div 
-              className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-12 text-center flex flex-col items-center justify-center bg-muted/10 hover:bg-muted/30 transition-colors cursor-pointer" 
+            <div
+              className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-12 text-center flex flex-col items-center justify-center bg-muted/10 hover:bg-muted/30 transition-colors cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
               data-testid="input-file-dropzone"
             >
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                className="hidden" 
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 onChange={handleFileUpload}
               />

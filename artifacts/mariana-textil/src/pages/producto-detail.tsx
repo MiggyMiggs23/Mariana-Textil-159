@@ -472,6 +472,7 @@ export default function ProductoDetail() {
                         </TableCell>
                         <TableCell className="text-sm">
                           {rollo.ubicacionNombre}
+                          {rollo.nombrePiso && <span className="ml-2 text-[10px] uppercase bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Piso: {rollo.nombrePiso}</span>}
                         </TableCell>
                         <TableCell className="text-right font-medium tabular-nums">
                           {formatNumber(rollo.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{product.unidad}</span>

@@ -93,6 +93,7 @@ type RecibirSalidaInput = {
   completa: boolean;
   nota?: string | null;
   ip: string;
+  pisosPorRollo?: Array<{ rolloId: number; pisoId: number | null }>;
 };
 
 type SalidaHeader = typeof salidasTable.$inferSelect;
@@ -1037,6 +1038,10 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
     throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
   }
   const note = input.nota?.trim() || null;
+  const pisos = new Map((input.pisosPorRollo ?? []).map((item) => [item.rolloId, item.pisoId]));
+  if (pisos.size !== (input.pisosPorRollo?.length ?? 0) || [...pisos.keys()].some((id) => !salidaRollos.some((r) => r.rolloId === id))) {
+    throw new InventarioError("La asignación de pisos no corresponde a los rollos de la salida.", "INVALID_FLOOR");
+  }
   for (const salidaRollo of salidaRollos) {
     if (salidaRollo.recibido) {
       throw new InventarioError("El rollo no está pendiente en esta salida.", "ROLLO_NOT_PENDING");
@@ -1048,6 +1053,7 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       justificacion: `Recepción de salida ${folioFormateado}.`,
       documentoTipo: "RECEPCION_SALIDA",
       documentoId: String(salida.id),
+      pisoDestinoId: pisos.get(salidaRollo.rolloId) ?? null,
     });
     await tx
       .update(salidaRollosTable)

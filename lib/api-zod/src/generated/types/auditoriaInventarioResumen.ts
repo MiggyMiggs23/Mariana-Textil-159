@@ -19,6 +19,7 @@ export interface AuditoriaInventarioResumen {
   cuadros: number;
   faltantes: number;
   sobrantes: number;
+  malAcomodados: number;
   abiertaAt: Date;
   creadaPor: string;
 }

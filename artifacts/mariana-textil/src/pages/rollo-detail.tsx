@@ -1,14 +1,18 @@
+import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { useGetRollo, getGetRolloQueryKey } from "@workspace/api-client-react";
+import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer } from "lucide-react";
+import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer, Layers } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/api-client-react";
 import { formatNumber } from "@workspace/number-format";
 import { useQuery } from "@tanstack/react-query";
@@ -19,11 +23,41 @@ export default function RolloDetail() {
   const { id } = useParams();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const isAdmin = user?.rol === Role.ADMIN;
+  const canEdit = hasPermission(user, Modules.INVENTARIO, "editar");
   const canViewLabels = hasPermission(user, Modules.ETIQUETAS, "ver");
+  const queryClient = useQueryClient();
 
   const { data: rollo, isLoading } = useGetRollo(Number(id), {
     query: { enabled: !!id, queryKey: getGetRolloQueryKey(Number(id)) }
   });
+
+  const { data: pisos } = useListPisosLocation(rollo?.ubicacionId ?? 0, {
+    query: { enabled: !!rollo?.ubicacionId, queryKey: ['pisosLocation', rollo?.ubicacionId ?? 0] }
+  });
+  const pisosActivos = pisos?.filter(p => p.activo) || [];
+
+  const updatePiso = useUpdateRolloPiso();
+
+  const [isEditingPiso, setIsEditingPiso] = useState(false);
+  const [selectedPiso, setSelectedPiso] = useState<string>("none");
+
+  const handleUpdatePiso = () => {
+    updatePiso.mutate({ id: Number(id), data: { pisoId: selectedPiso === "none" ? null : Number(selectedPiso) } }, {
+      onSuccess: () => {
+        toast.success("Piso actualizado");
+        setIsEditingPiso(false);
+        queryClient.invalidateQueries({ queryKey: getGetRolloQueryKey(Number(id)) });
+        queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
+        if (rollo?.productoId) {
+          queryClient.invalidateQueries({ queryKey: getGetProductoQueryKey(rollo.productoId) });
+        }
+      },
+      onError: (err: any) => {
+        toast.error("Error al actualizar piso", { description: err.data?.error || err.message });
+      }
+    });
+  };
+
   const { data: reimpresiones } = useQuery({
     queryKey: ["etiquetas", "rollo", Number(id), "resumen"],
     queryFn: () => etiquetasApi.resumenRollo(Number(id)),
@@ -80,6 +114,40 @@ export default function RolloDetail() {
                   <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                     <span className="font-mono bg-muted/50 px-2 py-0.5 rounded border">SKU: {rollo.skuProducto}</span>
                     <span className="flex items-center"><MapPin className="w-4 h-4 mr-1" /> {rollo.nombreUbicacion}</span>
+                    {((rollo as any).nombrePiso || canEdit) && (
+                      <div className="flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-muted-foreground" />
+                        {isEditingPiso ? (
+                          <div className="flex items-center gap-2">
+                            <Select value={selectedPiso} onValueChange={setSelectedPiso}>
+                              <SelectTrigger className="h-7 w-[140px] text-xs">
+                                <SelectValue placeholder="Sin piso" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">Sin piso</SelectItem>
+                                {pisosActivos.map(p => (
+                                  <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Button size="sm" className="h-7 px-2" disabled={updatePiso.isPending} onClick={handleUpdatePiso}>Guardar</Button>
+                            <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => setIsEditingPiso(false)}>Cancelar</Button>
+                          </div>
+                        ) : (
+                          <>
+                            <span>{(rollo as any).nombrePiso || "Sin piso"}</span>
+                            {canEdit && (
+                              <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => {
+                                setSelectedPiso((rollo as any).pisoId ? (rollo as any).pisoId.toString() : "none");
+                                setIsEditingPiso(true);
+                              }}>
+                                Cambiar
+                              </Button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <Badge variant="outline" className="shrink-0 text-sm bg-background">

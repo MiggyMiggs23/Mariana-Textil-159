@@ -10,7 +10,7 @@ import {
   getGetAuditoriaQueryKey,
 } from '@workspace/api-client-react';
 import type { ListAuditoriaParams, Role } from '@workspace/api-client-react';
-import { 
+import {
   Calendar as CalendarIcon,
   Search,
   Download,
@@ -75,7 +75,7 @@ const AUDIT_ROLES: Role[] = [
 
 export default function Auditoria() {
   const { toast } = useToast();
-  
+
   // Fitros
   const [dateRange, setDateRange] = useState<DateRange>({
     from: startOfMonth(new Date()),
@@ -266,9 +266,9 @@ export default function Auditoria() {
 
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Módulo</Label>
-            <Input 
-              placeholder="Ej. PRODUCTOS" 
-              className="h-9 bg-white" 
+            <Input
+              placeholder="Ej. PRODUCTOS"
+              className="h-9 bg-white"
               value={modulo}
               onChange={(e) => { setModulo(e.target.value.toUpperCase()); setPage(1); }}
             />
@@ -276,8 +276,8 @@ export default function Auditoria() {
 
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Acción</Label>
-            <Input 
-              placeholder="Ej. CREAR" 
+            <Input
+              placeholder="Ej. CREAR"
               className="h-9 bg-white"
               value={accion}
               onChange={(e) => { setAccion(e.target.value.toUpperCase()); setPage(1); }}
@@ -289,8 +289,8 @@ export default function Auditoria() {
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Entidad, folio..." 
+                <Input
+                  placeholder="Entidad, folio..."
                   className="pl-8 h-9 bg-white"
                   value={search}
                   onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -347,7 +347,7 @@ export default function Auditoria() {
                             {item.modulo || '-'}
                           </span>
                           <Badge variant={
-                            item.accion === 'CREAR' ? 'default' : 
+                            item.accion === 'CREAR' ? 'default' :
                             item.accion === 'ELIMINAR' ? 'destructive' : 'secondary'
                           } className="text-[10px] px-1.5 py-0 rounded-sm">
                             {item.accion}
@@ -374,16 +374,16 @@ export default function Auditoria() {
               </TableBody>
             </Table>
           </div>
-          
+
           {data && (
             <div className="p-4 border-t flex items-center justify-between text-sm">
               <div className="text-muted-foreground">
                 Mostrando {((page - 1) * pageSize) + 1} a {Math.min(page * pageSize, data.total)} de <span className="font-medium text-foreground">{data.total}</span> registros
               </div>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
                 >
@@ -392,9 +392,9 @@ export default function Auditoria() {
                 <div className="font-medium tabular-nums px-2">
                   {page} / {Math.ceil(data.total / pageSize) || 1}
                 </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setPage(p => p + 1)}
                   disabled={page >= Math.ceil(data.total / pageSize)}
                 >
@@ -406,9 +406,9 @@ export default function Auditoria() {
         </div>
       </div>
 
-      <AuditoriaDetailSheet 
-        id={selectedId} 
-        onClose={() => setSelectedId(null)} 
+      <AuditoriaDetailSheet
+        id={selectedId}
+        onClose={() => setSelectedId(null)}
       />
     </div>
   );
@@ -439,7 +439,7 @@ function AuditoriaDetailSheet({ id, onClose }: { id: string | null, onClose: () 
             Registro de cambios detallado.
           </SheetDescription>
         </SheetHeader>
-        
+
         <ScrollArea className="flex-1">
           {isLoading ? (
             <div className="flex items-center justify-center h-64">
@@ -465,7 +465,7 @@ function AuditoriaDetailSheet({ id, onClose }: { id: string | null, onClose: () 
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">{data.modulo || '-'}</span>
                     <Badge variant={
-                      data.accion === 'CREAR' ? 'default' : 
+                      data.accion === 'CREAR' ? 'default' :
                       data.accion === 'ELIMINAR' ? 'destructive' : 'secondary'
                     } className="text-[10px] px-1.5 py-0 rounded-sm">
                       {data.accion}
@@ -491,7 +491,7 @@ function AuditoriaDetailSheet({ id, onClose }: { id: string | null, onClose: () 
                   <div className="h-4 w-1 bg-primary rounded-full mr-2"></div>
                   Comparación de Datos
                 </h3>
-                
+
                 {allKeys.length === 0 ? (
                   <div className="text-center p-8 bg-muted/30 border rounded-lg border-dashed">
                     <p className="text-sm text-muted-foreground">No hay datos asociados a este evento.</p>
@@ -510,13 +510,13 @@ function AuditoriaDetailSheet({ id, onClose }: { id: string | null, onClose: () 
                         {allKeys.map(key => {
                           const valAntes = data.datosAntes ? (data.datosAntes as any)[key] : undefined;
                           const valDespues = data.datosDespues ? (data.datosDespues as any)[key] : undefined;
-                          
+
                           // Convert undefined/null to something printable
                           const strAntes = valAntes === undefined ? '-' : valAntes === null ? 'null' : typeof valAntes === 'object' ? JSON.stringify(valAntes) : String(valAntes);
                           const strDespues = valDespues === undefined ? '-' : valDespues === null ? 'null' : typeof valDespues === 'object' ? JSON.stringify(valDespues) : String(valDespues);
-                          
+
                           const isChanged = strAntes !== strDespues;
-                          
+
                           return (
                             <TableRow key={key} className={cn(isChanged ? "bg-amber-50/30" : "")}>
                               <TableCell className="font-mono text-xs border-r font-medium text-muted-foreground bg-muted/10">{key}</TableCell>

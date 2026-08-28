@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { ProductCombobox } from "@/components/product-combobox";
-import { 
-  useGetConciliacion, 
+import {
+  useGetConciliacion,
   useRecalcularExistencias,
   getGetConciliacionQueryKey,
   useListProductos,
@@ -34,7 +34,7 @@ export default function Conciliacion() {
 
   const { data: productos } = useListProductos();
   const { data: ubicaciones } = useListLocations();
-  
+
   const { data: conciliaciones, isLoading } = useGetConciliacion({
     productoId: productoId !== "all" ? Number(productoId) : undefined,
     ubicacionId: ubicacionId !== "all" ? Number(ubicacionId) : undefined
@@ -88,7 +88,7 @@ export default function Conciliacion() {
                 activeOnly={false}
               />
             </div>
-            
+
             <div className="space-y-2 flex-1">
               <label className="text-sm font-medium flex items-center gap-2">
                 <Filter className="w-4 h-4 text-muted-foreground" /> Sitio
@@ -162,7 +162,7 @@ export default function Conciliacion() {
                     const diferencia = quantityDifference(cantMov, cantCach);
                     const cantDiff = diferencia !== 0;
                     const rollDiff = row.rollosMovimientos !== row.rollosCache;
-                    
+
                     return (
                       <TableRow key={`${row.productoId}:${row.ubicacionId}`} className="bg-destructive/5">
                         <TableCell className="font-mono font-medium">{row.productoId}</TableCell>
@@ -192,14 +192,14 @@ export default function Conciliacion() {
                            <span className={rollDiff ? 'text-destructive font-bold' : 'text-muted-foreground'}>{formatNumber(row.rollosCache, { kind: "count" })}</span>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button 
-                            variant="default" 
+                          <Button
+                            variant="default"
                             size="sm"
                             className="bg-primary"
                             onClick={() => handleRecalcular(row.productoId, row.ubicacionId)}
                             disabled={recalcular.isPending}
                           >
-                            <RefreshCw className={`w-4 h-4 mr-2 ${recalcular.isPending ? 'animate-spin' : ''}`} /> 
+                            <RefreshCw className={`w-4 h-4 mr-2 ${recalcular.isPending ? 'animate-spin' : ''}`} />
                             Recalcular
                           </Button>
                         </TableCell>

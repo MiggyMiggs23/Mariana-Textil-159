@@ -890,6 +890,10 @@ export interface AdminRealtimeStore {
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
+  /** @nullable */
   sesionCajaId: number | null;
   /** @nullable */
   abiertaAt: string | null;
@@ -1449,6 +1453,38 @@ export interface LocationUpdate {
   /** @pattern ^[A-Z]{2,3}$ */
   iniciales?: string;
   activa?: boolean;
+}
+
+export interface Piso {
+  id: number;
+  ubicacionId: number;
+  nombre: string;
+  activo: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PisoInput {
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  nombre: string;
+  activo?: boolean;
+}
+
+export interface PisoUpdate {
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  nombre?: string;
+  activo?: boolean;
+}
+
+export interface RolloPisoUpdate {
+  /** @nullable */
+  pisoId: number | null;
 }
 
 export type AlcanceConsulta = typeof AlcanceConsulta[keyof typeof AlcanceConsulta];
@@ -2675,6 +2711,10 @@ export interface ProductoRolloDisponible {
   serie: string;
   ubicacionId: number;
   ubicacionNombre: string;
+  /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
   cantidad: string;
   estado: ProductoRolloDisponibleEstado;
 }
@@ -3324,6 +3364,8 @@ export interface EntradaLineaInput {
   costoUnitario?: string | null;
   /** @minItems 1 */
   cantidades: string[];
+  /** Piso por cada posición de cantidades; null solo es válido en sitios sin pisos activos. */
+  pisosPorCantidad?: (number | null)[];
 }
 
 export interface EntradaInput {
@@ -3344,6 +3386,10 @@ export interface EntradaRollo {
   serie: string;
   productoId: number;
   cantidadInicial: string;
+  /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
   /** @nullable */
   costoUnitario?: string | null;
   /** @nullable */
@@ -3714,6 +3760,13 @@ export interface EnvioSalidaInput {
   notaEnvio?: string | null;
 }
 
+export type RecepcionSalidaInputPisosPorRolloItem = {
+  /** @minimum 1 */
+  rolloId: number;
+  /** @nullable */
+  pisoId: number | null;
+};
+
 export interface RecepcionSalidaInput {
   completa: boolean;
   /**
@@ -3721,6 +3774,7 @@ export interface RecepcionSalidaInput {
      * @nullable
      */
   nota?: string | null;
+  pisosPorRollo?: RecepcionSalidaInputPisosPorRolloItem[];
 }
 
 export interface SalidaListResult {
@@ -4762,6 +4816,8 @@ export interface AuditoriaInventarioEscaneoInput {
      * @maxLength 100
      */
   serie: string;
+  /** @nullable */
+  pisoId?: number | null;
 }
 
 export interface AuditoriaInventarioCancelacionInput {
@@ -4794,6 +4850,7 @@ export interface AuditoriaInventarioResumen {
   cuadros: number;
   faltantes: number;
   sobrantes: number;
+  malAcomodados: number;
   abiertaAt: string;
   creadaPor: string;
 }
@@ -4805,6 +4862,7 @@ export const AuditoriaInventarioResultadoClasificacion = {
   CUADRO: 'CUADRO',
   FALTANTE: 'FALTANTE',
   SOBRANTE: 'SOBRANTE',
+  MAL_ACOMODADO: 'MAL_ACOMODADO',
 } as const;
 
 export type AuditoriaInventarioResultadoResolucion = typeof AuditoriaInventarioResultadoResolucion[keyof typeof AuditoriaInventarioResultadoResolucion];
@@ -4834,6 +4892,14 @@ export interface AuditoriaInventarioResultado {
   ubicacionActualId?: number | null;
   /** @nullable */
   ubicacionActual?: string | null;
+  /** @nullable */
+  pisoEsperadoId?: number | null;
+  /** @nullable */
+  pisoEsperado?: string | null;
+  /** @nullable */
+  pisoRealId?: number | null;
+  /** @nullable */
+  pisoReal?: string | null;
   estadoActual: string;
   resolucion: AuditoriaInventarioResultadoResolucion;
   /** @nullable */
@@ -5248,6 +5314,7 @@ pageSize?: number;
 export type ListRollosParams = {
 ubicacionId?: number;
 productoId?: number;
+pisoId?: number;
 usuarioId?: number;
 /**
  * Folio exacto o serie de rollo exacta/parcial

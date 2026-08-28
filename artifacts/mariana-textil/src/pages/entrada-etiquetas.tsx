@@ -128,7 +128,7 @@ export default function EntradaEtiquetas() {
         {/* Selection grid for screen */}
         <div className="no-print grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
           {rollosFullData.map(rollo => (
-            <div 
+            <div
               key={rollo.id}
               className={`p-3 rounded-lg border flex items-center gap-3 cursor-pointer transition-colors ${
                 selectedRollos.has(rollo.id) ? "bg-primary/5 border-primary" : "bg-card hover:bg-muted/50"

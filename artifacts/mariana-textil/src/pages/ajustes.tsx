@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
-  useAjustarRollo, 
-  useListAjustesPendientes, 
-  useRevisarAjuste, 
+import {
+  useAjustarRollo,
+  useListAjustesPendientes,
+  useRevisarAjuste,
   useRevertirMovimiento,
   useListRollos,
   useGetCurrentUser,
@@ -41,7 +41,7 @@ export default function Ajustes() {
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser();
   const isAdmin = user?.rol === Role.ADMIN;
-  
+
   const [activeTab, setActiveTab] = useState("nuevo");
 
   // State for search rollos
@@ -62,7 +62,7 @@ export default function Ajustes() {
     page: 1,
     pageSize: 5
   }, {
-    query: { 
+    query: {
       enabled: debouncedSearch.length >= 3,
       queryKey: getListRollosQueryKey({ serie: debouncedSearch, page: 1, pageSize: 5 })
     }
@@ -104,7 +104,7 @@ export default function Ajustes() {
   };
 
   const [selectedRollo, setSelectedRollo] = useState<any | null>(null);
-  
+
   // State for Adjustment form
   const [cantidadNueva, setCantidadNueva] = useState("");
   const [justificacion, setJustificacion] = useState("");
@@ -114,7 +114,7 @@ export default function Ajustes() {
   const ajustarRollo = useAjustarRollo();
   const revisarAjuste = useRevisarAjuste();
   const revertirMovimiento = useRevertirMovimiento();
-  
+
   const {
     data: pendientesRes,
     isLoading: loadingPendientes,
@@ -122,7 +122,7 @@ export default function Ajustes() {
     error: pendientesError,
     refetch: retryPendientes,
   } = useListAjustesPendientes({
-    query: { 
+    query: {
       enabled: isAdmin,
       queryKey: getListAjustesPendientesQueryKey()
     }
@@ -268,7 +268,7 @@ export default function Ajustes() {
                           <span>{skuWarning}</span>
                         </div>
                       )}
-                      
+
                       {debouncedSearch.length >= 3 && (
                         <div className="border rounded-md divide-y bg-background">
                           {loadingRollos ? (
@@ -284,8 +284,8 @@ export default function Ajustes() {
                             <div className="p-4 text-center text-muted-foreground">No se encontró ningún rollo con esa serie.</div>
                           ) : (
                             rollosRes?.items.map(rollo => (
-                              <div 
-                                key={rollo.id} 
+                              <div
+                                key={rollo.id}
                                 className="p-3 flex items-center justify-between hover:bg-muted/30 cursor-pointer transition-colors"
                                 onClick={() => handleSelectRollo(rollo)}
                                 data-testid={`select-rollo-${rollo.serie}`}
@@ -339,17 +339,17 @@ export default function Ajustes() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex gap-4">
-                    <Button 
+                    <Button
                       type="button"
-                      variant={!isBaja ? "default" : "outline"} 
+                      variant={!isBaja ? "default" : "outline"}
                       className="flex-1"
                       onClick={() => setIsBaja(false)}
                     >
                       Ajuste de Cantidad
                     </Button>
-                    <Button 
+                    <Button
                       type="button"
-                      variant={isBaja ? "destructive" : "outline"} 
+                      variant={isBaja ? "destructive" : "outline"}
                       className="flex-1"
                       onClick={() => setIsBaja(true)}
                     >
@@ -361,11 +361,11 @@ export default function Ajustes() {
                     <div className="space-y-2">
                       <Label>Nueva Cantidad Real</Label>
                       <div className="relative">
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          value={cantidadNueva} 
-                          onChange={(e) => setCantidadNueva(e.target.value)} 
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={cantidadNueva}
+                          onChange={(e) => setCantidadNueva(e.target.value)}
                           className="font-bold text-lg"
                           data-testid="input-cantidad-nueva"
                         />
@@ -383,11 +383,11 @@ export default function Ajustes() {
 
                   <div className="space-y-2">
                     <Label className="flex items-center gap-2">
-                      Justificación 
+                      Justificación
                       <span className="text-xs font-normal text-muted-foreground">(Mínimo 10 caracteres)</span>
                     </Label>
-                    <Textarea 
-                      placeholder="Explica el motivo del ajuste o la baja detalladamente..." 
+                    <Textarea
+                      placeholder="Explica el motivo del ajuste o la baja detalladamente..."
                       className="resize-none h-24"
                       value={justificacion}
                       onChange={(e) => setJustificacion(e.target.value)}
@@ -408,8 +408,8 @@ export default function Ajustes() {
                   )}
                 </CardContent>
                 <CardFooter>
-                  <Button 
-                    className="w-full" 
+                  <Button
+                    className="w-full"
                     variant={isBaja ? "destructive" : "default"}
                     disabled={!isFormValid || ajustarRollo.isPending}
                     onClick={handleSubmitAjuste}
@@ -494,17 +494,17 @@ export default function Ajustes() {
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-2">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
                                   onClick={() => handleRevisar(mov.rolloId, mov.id, false)}
                                   disabled={revisarAjuste.isPending || revertirMovimiento.isPending}
                                 >
                                   <X className="w-4 h-4 mr-1" /> Rechazar
                                 </Button>
-                                <Button 
-                                  variant="default" 
+                                <Button
+                                  variant="default"
                                   size="sm"
                                   className="bg-emerald-600 hover:bg-emerald-700"
                                   onClick={() => handleRevisar(mov.rolloId, mov.id, true)}

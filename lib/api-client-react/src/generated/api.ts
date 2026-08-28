@@ -195,6 +195,9 @@ import type {
   PermisosUsuarioRow,
   PermissionFlags,
   PermissionFlagsNullable,
+  Piso,
+  PisoInput,
+  PisoUpdate,
   PosBusquedaResult,
   PosPrecioValidationInput,
   PosPrecioValidationResult,
@@ -234,6 +237,8 @@ import type {
   RolloDetail,
   RolloEtiqueta,
   RolloListResult,
+  RolloPisoUpdate,
+  RolloSummary,
   SalidaDetail,
   SalidaDetailResponseResponse,
   SalidaDineroCaja,
@@ -1805,6 +1810,301 @@ export const useUpdateLocation = <TError = ErrorType<UnauthorizedResponse | Forb
         TContext
       > => {
       return useMutation(getUpdateLocationMutationOptions(options));
+    }
+
+export const getListPisosLocationUrl = (id: number,) => {
+
+
+
+
+  return `/api/locations/${id}/pisos`
+}
+
+/**
+ * @summary Lista pisos; ADMIN puede incluir inactivos
+ */
+export const listPisosLocation = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<Piso[]> => {
+
+  return customFetch<Piso[]>(getListPisosLocationUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPisosLocationQueryKey = (id: number,) => {
+    return [
+    `/api/locations/${id}/pisos`
+    ] as const;
+    }
+
+
+export const getListPisosLocationQueryOptions = <TData = Awaited<ReturnType<typeof listPisosLocation>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPisosLocation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPisosLocationQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPisosLocation>>> = ({ signal }) => listPisosLocation(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPisosLocation>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPisosLocationQueryResult = NonNullable<Awaited<ReturnType<typeof listPisosLocation>>>
+export type ListPisosLocationQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista pisos; ADMIN puede incluir inactivos
+ */
+
+export function useListPisosLocation<TData = Awaited<ReturnType<typeof listPisosLocation>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPisosLocation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPisosLocationQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreatePisoLocationUrl = (id: number,) => {
+
+
+
+
+  return `/api/locations/${id}/pisos`
+}
+
+/**
+ * @summary Crea un piso (ADMIN)
+ */
+export const createPisoLocation = async (id: number,
+    pisoInput: PisoInput, options?: Parameters<typeof customFetch>[1]): Promise<Piso> => {
+
+  return customFetch<Piso>(getCreatePisoLocationUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pisoInput)
+  }
+);}
+
+
+
+
+
+export const getCreatePisoLocationMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPisoLocation>>, TError,{id: number;data: BodyType<PisoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPisoLocation>>, TError,{id: number;data: BodyType<PisoInput>}, TContext> => {
+
+const mutationKey = ['createPisoLocation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPisoLocation>>, {id: number;data: BodyType<PisoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createPisoLocation(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePisoLocationMutationResult = NonNullable<Awaited<ReturnType<typeof createPisoLocation>>>
+    export type CreatePisoLocationMutationBody = BodyType<PisoInput>
+    export type CreatePisoLocationMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse | ConflictResponse>
+
+    /**
+ * @summary Crea un piso (ADMIN)
+ */
+export const useCreatePisoLocation = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPisoLocation>>, TError,{id: number;data: BodyType<PisoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPisoLocation>>,
+        TError,
+        {id: number;data: BodyType<PisoInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePisoLocationMutationOptions(options));
+    }
+
+export const getUpdatePisoLocationUrl = (id: number,
+    pisoId: number,) => {
+
+
+
+
+  return `/api/locations/${id}/pisos/${pisoId}`
+}
+
+/**
+ * @summary Edita o activa/desactiva un piso (ADMIN)
+ */
+export const updatePisoLocation = async (id: number,
+    pisoId: number,
+    pisoUpdate: PisoUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Piso> => {
+
+  return customFetch<Piso>(getUpdatePisoLocationUrl(id,pisoId),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pisoUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdatePisoLocationMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePisoLocation>>, TError,{id: number;pisoId: number;data: BodyType<PisoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePisoLocation>>, TError,{id: number;pisoId: number;data: BodyType<PisoUpdate>}, TContext> => {
+
+const mutationKey = ['updatePisoLocation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePisoLocation>>, {id: number;pisoId: number;data: BodyType<PisoUpdate>}> = (props) => {
+          const {id,pisoId,data} = props ?? {};
+
+          return  updatePisoLocation(id,pisoId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePisoLocationMutationResult = NonNullable<Awaited<ReturnType<typeof updatePisoLocation>>>
+    export type UpdatePisoLocationMutationBody = BodyType<PisoUpdate>
+    export type UpdatePisoLocationMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Edita o activa/desactiva un piso (ADMIN)
+ */
+export const useUpdatePisoLocation = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePisoLocation>>, TError,{id: number;pisoId: number;data: BodyType<PisoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePisoLocation>>,
+        TError,
+        {id: number;pisoId: number;data: BodyType<PisoUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdatePisoLocationMutationOptions(options));
+    }
+
+export const getUpdateRolloPisoUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/piso`
+}
+
+/**
+ * @summary Cambia únicamente el piso físico actual de un rollo
+ */
+export const updateRolloPiso = async (id: number,
+    rolloPisoUpdate: RolloPisoUpdate, options?: Parameters<typeof customFetch>[1]): Promise<RolloSummary> => {
+
+  return customFetch<RolloSummary>(getUpdateRolloPisoUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(rolloPisoUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateRolloPisoMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRolloPiso>>, TError,{id: number;data: BodyType<RolloPisoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateRolloPiso>>, TError,{id: number;data: BodyType<RolloPisoUpdate>}, TContext> => {
+
+const mutationKey = ['updateRolloPiso'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRolloPiso>>, {id: number;data: BodyType<RolloPisoUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateRolloPiso(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateRolloPisoMutationResult = NonNullable<Awaited<ReturnType<typeof updateRolloPiso>>>
+    export type UpdateRolloPisoMutationBody = BodyType<RolloPisoUpdate>
+    export type UpdateRolloPisoMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Cambia únicamente el piso físico actual de un rollo
+ */
+export const useUpdateRolloPiso = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRolloPiso>>, TError,{id: number;data: BodyType<RolloPisoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateRolloPiso>>,
+        TError,
+        {id: number;data: BodyType<RolloPisoUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateRolloPisoMutationOptions(options));
     }
 
 export const getListUsersUrl = () => {

@@ -20,6 +20,7 @@ import {
   db,
   existenciasTable,
   productosTable,
+  pisosTable,
   rollosTable,
   ubicacionesTable,
   type UnidadProducto,
@@ -176,7 +177,7 @@ function presentProductoDetail(
   totals: ExistenciasTotals & { porUbicacion: Map<number, { rollos: number; cantidad: string }> },
   rollosDisponibles: {
     id: number; serie: string; ubicacionId: number; ubicacionNombre: string;
-    cantidad: string; estado: "DISPONIBLE";
+    cantidad: string; estado: "DISPONIBLE"; pisoId: number | null; nombrePiso: string | null;
   }[],
   compras: {
     entrada_id: number;
@@ -593,11 +594,14 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
         serie: rollosTable.serie,
         ubicacionId: rollosTable.ubicacionId,
         ubicacionNombre: ubicacionesTable.nombre,
+        pisoId: rollosTable.pisoId,
+        nombrePiso: pisosTable.nombre,
         cantidad: rollosTable.cantidadActual,
         estado: rollosTable.estado,
       })
       .from(rollosTable)
       .innerJoin(ubicacionesTable, eq(rollosTable.ubicacionId, ubicacionesTable.id))
+      .leftJoin(pisosTable, eq(rollosTable.pisoId, pisosTable.id))
       .where(and(
         eq(rollosTable.productoId, producto.id),
         eq(rollosTable.estado, "DISPONIBLE"),

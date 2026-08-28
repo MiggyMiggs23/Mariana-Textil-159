@@ -17,7 +17,7 @@ test("Block 6 reversos functionality in clientes UI", async () => {
 
   // - Llama API correcta
   assert.match(clienteNotaCredito, /useReversarClientePago/);
-  
+
   // - Invalida/refresca consultas para que estado vuelva automaticamente
   assert.match(clienteNotaCredito, /queryClient\.invalidateQueries/);
   assert.match(clienteNotaCredito, /getGetClienteNotaCreditoQueryKey/);
@@ -42,7 +42,7 @@ test("Block 6 reversos functionality in proveedores UI", async () => {
 
   // - Llama API correcta
   assert.match(proveedorCompra, /useReversarPagoProveedor/);
-  
+
   // - Invalida/refresca consultas para que estado vuelva automaticamente
   assert.match(proveedorCompra, /queryClient\.invalidateQueries/);
   assert.match(proveedorCompra, /getGetProveedorCompraDetalleQueryKey/);

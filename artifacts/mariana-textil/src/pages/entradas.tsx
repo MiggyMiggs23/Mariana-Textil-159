@@ -25,7 +25,8 @@ import {
   getGetResumenContenedoresQueryKey,
   getGetContenedorQueryKey,
   Role,
-  EntradaDetail
+  EntradaDetail,
+  useListPisosLocation,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -63,6 +65,7 @@ type DraftLinea = {
   costoUnitario?: string;
   declaredCount: number;
   cantidades: string[];
+  pisos: (string | null)[];
   uniformBaseline: string | null;
   adjustedIndexes: number[];
 };
@@ -111,6 +114,11 @@ export default function Entradas() {
   });
 
   const [ubicacionId, setUbicacionId] = useState<string>("");
+  const { data: pisos } = useListPisosLocation(Number(ubicacionId), {
+    query: { enabled: !!ubicacionId, queryKey: ['pisosLocation', Number(ubicacionId)] }
+  });
+  const pisosActivos = pisos?.filter(p => p.activo) || [];
+
   const [proveedorId, setProveedorId] = useState<string>("none");
   const [contenedorId, setContenedorId] = useState<string>("none");
   const [autoDerivedProveedorId, setAutoDerivedProveedorId] = useState<string | null>(null);
@@ -152,9 +160,12 @@ export default function Entradas() {
   // Capture state
   const [capDraftId, setCapDraftId] = useState("");
   const [capCantidades, setCapCantidades] = useState<string[]>([]);
+  const [capPisos, setCapPisos] = useState<(string | null)[]>([]);
   const [capCurrentQty, setCapCurrentQty] = useState("");
+  const [capCurrentPiso, setCapCurrentPiso] = useState<string | null>(null);
   const [editingQtyIndex, setEditingQtyIndex] = useState<number | null>(null);
   const [editingQtyValue, setEditingQtyValue] = useState("");
+  const [editingPisoValue, setEditingPisoValue] = useState<string | null>(null);
   const [editingOriginalQty, setEditingOriginalQty] = useState("");
   const [editingOriginalWasAdjusted, setEditingOriginalWasAdjusted] = useState(false);
   const [isEditingLine, setIsEditingLine] = useState(false);
@@ -243,9 +254,12 @@ export default function Entradas() {
 
     setCapDraftId(crypto.randomUUID());
     setCapCantidades(createBlankRollQuantities(Number(declaredCount)));
+    setCapPisos(Array(Number(declaredCount)).fill(null));
     setCapCurrentQty("");
+    setCapCurrentPiso(null);
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingPisoValue(null);
     setEditingOriginalQty("");
     setEditingOriginalWasAdjusted(false);
     setIsEditingLine(false);
@@ -261,9 +275,12 @@ export default function Entradas() {
     setDeclaredCount(linea.declaredCount.toString());
     setCapDraftId(linea.id);
     setCapCantidades(Array.from({ length: linea.declaredCount }, (_, index) => linea.cantidades[index] ?? ""));
+    setCapPisos(Array.from({ length: linea.declaredCount }, (_, index) => linea.pisos[index] ?? null));
     setCapCurrentQty("");
+    setCapCurrentPiso(null);
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingPisoValue(null);
     setEditingOriginalQty("");
     setEditingOriginalWasAdjusted(false);
     setIsEditingLine(true);
@@ -348,13 +365,19 @@ export default function Entradas() {
     const val = parseFloat(capturedValue);
     const nextBlankIndex = capCantidades.findIndex((qty) => qty.trim() === "");
     if (!isNaN(val) && val > 0 && nextBlankIndex !== -1) {
+      if (pisosActivos.length > 0 && capCurrentPiso === null) {
+        toast.error("Selecciona un piso para el rollo.");
+        return;
+      }
       setCapCantidades((previous) => previous.map((qty, index) => index === nextBlankIndex ? capturedValue : qty));
+      setCapPisos((previous) => previous.map((piso, index) => index === nextBlankIndex ? capCurrentPiso : piso));
       setEditedQtyIndexes((previous) => {
         const next = new Set(previous);
         next.add(nextBlankIndex);
         return next;
       });
       setCapCurrentQty("");
+      // keep capCurrentPiso (if user is assigning multiple rolls to the same floor, it's easier)
       qtyInputRef.current?.focus();
     }
   };
@@ -372,6 +395,7 @@ export default function Entradas() {
 
   const handleRemoveCapturedQty = (idx: number) => {
     setCapCantidades(prev => prev.map((qty, i) => i === idx ? "" : qty));
+    setCapPisos(prev => prev.map((piso, i) => i === idx ? null : piso));
     setEditedQtyIndexes((previous) => {
       const next = new Set(previous);
       next.delete(idx);
@@ -379,6 +403,7 @@ export default function Entradas() {
     });
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingPisoValue(null);
     setEditingOriginalQty("");
     setEditingOriginalWasAdjusted(false);
     qtyInputRef.current?.focus();
@@ -387,6 +412,7 @@ export default function Entradas() {
   const handleStartEditCapturedQty = (idx: number) => {
     setEditingQtyIndex(idx);
     setEditingQtyValue(capCantidades[idx] ?? "");
+    setEditingPisoValue(capPisos[idx] ?? null);
     setEditingOriginalQty(capCantidades[idx] ?? "");
     setEditingOriginalWasAdjusted(editedQtyIndexes.has(idx));
   };
@@ -400,6 +426,12 @@ export default function Entradas() {
     ));
   };
 
+  const handleChangeCapturedPiso = (value: string | null) => {
+    if (editingQtyIndex === null) return;
+    setEditingPisoValue(value);
+    setCapPisos(prev => prev.map((p, i) => i === editingQtyIndex ? value : p));
+  };
+
   const handleSaveCapturedQty = () => {
     if (editingQtyIndex === null) return;
     const parsed = Number(editingQtyValue);
@@ -407,8 +439,13 @@ export default function Entradas() {
       toast.error("La cantidad debe ser mayor que cero");
       return;
     }
+    if (pisosActivos.length > 0 && editingPisoValue === null) {
+      toast.error("Selecciona un piso para el rollo");
+      return;
+    }
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingPisoValue(null);
     setEditingOriginalQty("");
     setEditingOriginalWasAdjusted(false);
     qtyInputRef.current?.focus();
@@ -431,6 +468,7 @@ export default function Entradas() {
     });
     setEditingQtyIndex(null);
     setEditingQtyValue("");
+    setEditingPisoValue(null);
     setEditingOriginalQty("");
     setEditingOriginalWasAdjusted(false);
     qtyInputRef.current?.focus();
@@ -477,6 +515,13 @@ export default function Entradas() {
       toast.error(`El metraje del rollo ${invalidRollIndex + 1} debe ser mayor que cero.`);
       return;
     }
+    if (pisosActivos.length > 0) {
+      const missingPisoIndex = capPisos.findIndex(p => p === null);
+      if (missingPisoIndex !== -1) {
+        toast.error(`El rollo ${missingPisoIndex + 1} no tiene un piso asignado.`);
+        return;
+      }
+    }
     if (capCantidades.length > declared) {
       toast.error(`Has capturado más rollos de los declarados (${declared})`);
       return;
@@ -496,6 +541,7 @@ export default function Entradas() {
       costoUnitario: showCost ? costoUnitario : undefined,
       declaredCount: declared,
       cantidades: capCantidades,
+      pisos: capPisos,
       uniformBaseline,
       adjustedIndexes: Array.from(editedQtyIndexes).sort((a, b) => a - b),
     };
@@ -612,7 +658,8 @@ export default function Entradas() {
         lineas: lineas.map(l => ({
           productoId: Number(l.productoId),
           costoUnitario: showCost ? l.costoUnitario : undefined,
-          cantidades: l.cantidades
+          cantidades: l.cantidades,
+          pisosPorCantidad: pisosActivos.length > 0 ? l.pisos.map(p => p ? Number(p) : null) : undefined,
         }))
       }
     }, {
@@ -1132,6 +1179,26 @@ export default function Entradas() {
                     Sobrescribir todos
                   </Button>
                 </div>
+                {pisosActivos.length > 0 && (
+                  <div className="mt-3 flex items-center gap-2">
+                    <Label className="text-xs">Asignar todos a piso:</Label>
+                    <Select value={capCurrentPiso || "none"} onValueChange={(v) => {
+                      const val = v === "none" ? null : v;
+                      setCapCurrentPiso(val);
+                      if (val) setCapPisos(prev => prev.map(() => val));
+                    }}>
+                      <SelectTrigger className="h-8 text-xs bg-background w-64">
+                        <SelectValue placeholder="Seleccionar piso..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Sin piso (elegir individualmente)</SelectItem>
+                        {pisosActivos.map(p => (
+                          <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
                 {adjustedRollCount > 0 && (
                   <p className="mt-2 text-xs font-medium text-amber-700">
                     Hay {adjustedRollCount} {adjustedRollCount === 1 ? "rollo ajustado" : "rollos ajustados"} que “Aplicar” conservará.
@@ -1139,8 +1206,8 @@ export default function Entradas() {
                 )}
               </div>
 
-              <div className="flex gap-3">
-                <div className="relative flex-1">
+              <div className="flex gap-3 items-start flex-col sm:flex-row">
+                <div className="relative flex-1 w-full">
                   <CampoEscaneo
                     ref={qtyInputRef}
                     type="number"
@@ -1158,11 +1225,26 @@ export default function Entradas() {
                     {selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}
                   </div>
                 </div>
+
+                {pisosActivos.length > 0 && (
+                  <Select value={capCurrentPiso || "none"} onValueChange={(v) => setCapCurrentPiso(v === "none" ? null : v)}>
+                    <SelectTrigger className="h-20 w-full sm:w-48 bg-muted/20 border-2 font-semibold text-xs text-left">
+                      <SelectValue placeholder="Elegir Piso" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Sin piso</SelectItem>
+                      {pisosActivos.map(p => (
+                        <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+
                 <Button
                   type="button"
                   onClick={() => handleAddQty()}
-                  className="h-20 px-8 bg-primary hover:bg-primary/90"
-                  disabled={!capCurrentQty || blankRollCount === 0}
+                  className="h-20 px-8 bg-primary hover:bg-primary/90 w-full sm:w-auto text-sm"
+                  disabled={!capCurrentQty || blankRollCount === 0 || (pisosActivos.length > 0 && !capCurrentPiso)}
                   data-testid="button-add-captured-roll"
                 >
                   <Plus className="w-5 h-5 mr-2" />
@@ -1216,22 +1298,42 @@ export default function Entradas() {
                                   handleSaveCapturedQty();
                                 }
                               }}
-                              className="h-10 w-32 text-lg font-bold"
+                              className="h-10 w-24 text-lg font-bold"
                               autoFocus
                               data-testid={`input-edit-roll-${idx}`}
                             />
                             <span className="text-sm font-bold text-muted-foreground">
                               {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
                             </span>
+                            {pisosActivos.length > 0 && (
+                              <Select value={editingPisoValue || "none"} onValueChange={(v) => handleChangeCapturedPiso(v === "none" ? null : v)}>
+                                <SelectTrigger className="h-10 text-xs w-32 bg-background">
+                                  <SelectValue placeholder="Piso" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">Sin piso</SelectItem>
+                                  {pisosActivos.map(p => (
+                                    <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            )}
                           </div>
                         ) : isBlank ? (
                           <span className="text-sm font-semibold text-muted-foreground">
                             Pendiente de captura
                           </span>
                         ) : (
-                          <span className="text-2xl font-black tabular-nums">
-                            {qty} <span className="text-sm font-bold text-muted-foreground">{selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}</span>
-                          </span>
+                          <div className="flex items-center gap-4">
+                            <span className="text-2xl font-black tabular-nums">
+                              {qty} <span className="text-sm font-bold text-muted-foreground">{selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}</span>
+                            </span>
+                            {pisosActivos.length > 0 && capPisos[idx] && (
+                              <Badge variant="outline" className="text-[10px]">
+                                {pisosActivos.find(p => p.id.toString() === capPisos[idx])?.nombre || capPisos[idx]}
+                              </Badge>
+                            )}
+                          </div>
                         )}
                       </div>
                       <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">

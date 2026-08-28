@@ -565,6 +565,112 @@ export const UpdateLocationResponse = zod.object({
 
 
 /**
+ * @summary Lista pisos; ADMIN puede incluir inactivos
+ */
+export const ListPisosLocationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListPisosLocationResponseItem = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombre": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListPisosLocationResponse = zod.array(ListPisosLocationResponseItem)
+
+
+/**
+ * @summary Crea un piso (ADMIN)
+ */
+export const CreatePisoLocationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const createPisoLocationBodyNombreMax = 120;
+
+export const createPisoLocationBodyActivoDefault = true;
+
+export const CreatePisoLocationBody = zod.object({
+  "nombre": zod.string().min(1).max(createPisoLocationBodyNombreMax),
+  "activo": zod.boolean().default(createPisoLocationBodyActivoDefault)
+})
+
+export const CreatePisoLocationResponse = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombre": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Edita o activa/desactiva un piso (ADMIN)
+ */
+
+
+
+export const UpdatePisoLocationParams = zod.object({
+  "id": zod.coerce.number(),
+  "pisoId": zod.coerce.number().min(1)
+})
+
+export const updatePisoLocationBodyNombreMax = 120;
+
+
+
+export const UpdatePisoLocationBody = zod.object({
+  "nombre": zod.string().min(1).max(updatePisoLocationBodyNombreMax).optional(),
+  "activo": zod.boolean().optional()
+})
+
+export const UpdatePisoLocationResponse = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombre": zod.string(),
+  "activo": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Cambia únicamente el piso físico actual de un rollo
+ */
+export const UpdateRolloPisoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateRolloPisoBody = zod.object({
+  "pisoId": zod.number().nullable()
+})
+
+export const UpdateRolloPisoResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string().nullish(),
+  "costoTotal": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Lista usuarios
  */
 export const listUsersResponseUbicacionOneInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
@@ -1097,6 +1203,8 @@ export const GetProductoResponse = zod.object({
   "serie": zod.string(),
   "ubicacionId": zod.number(),
   "ubicacionNombre": zod.string(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
   "cantidad": zod.string(),
   "estado": zod.enum(['DISPONIBLE'])
 })),
@@ -2520,6 +2628,7 @@ export const ListAuditoriasInventarioResponseItem = zod.object({
   "cuadros": zod.number(),
   "faltantes": zod.number(),
   "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 })
@@ -2551,6 +2660,7 @@ export const CreateAuditoriaInventarioResponse = zod.object({
   "cuadros": zod.number(),
   "faltantes": zod.number(),
   "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
@@ -2559,13 +2669,17 @@ export const CreateAuditoriaInventarioResponse = zod.object({
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
   "serie": zod.string(),
-  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
   "producto": zod.string().nullish(),
   "cantidad": zod.string().regex(createAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
   "unidad": zod.string().nullable(),
   "ubicacionActualId": zod.number().nullish(),
   "ubicacionActual": zod.string().nullish(),
+  "pisoEsperadoId": zod.number().nullish(),
+  "pisoEsperado": zod.string().nullish(),
+  "pisoRealId": zod.number().nullish(),
+  "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
   "escaneadoAt": zod.coerce.date().nullish()
@@ -2605,6 +2719,7 @@ export const GetAuditoriaInventarioResponse = zod.object({
   "cuadros": zod.number(),
   "faltantes": zod.number(),
   "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
@@ -2613,13 +2728,17 @@ export const GetAuditoriaInventarioResponse = zod.object({
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
   "serie": zod.string(),
-  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
   "producto": zod.string().nullish(),
   "cantidad": zod.string().regex(getAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
   "unidad": zod.string().nullable(),
   "ubicacionActualId": zod.number().nullish(),
   "ubicacionActual": zod.string().nullish(),
+  "pisoEsperadoId": zod.number().nullish(),
+  "pisoEsperado": zod.string().nullish(),
+  "pisoRealId": zod.number().nullish(),
+  "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
   "escaneadoAt": zod.coerce.date().nullish()
@@ -2649,7 +2768,8 @@ export const scanAuditoriaInventarioBodySerieMax = 100;
 
 
 export const ScanAuditoriaInventarioBody = zod.object({
-  "serie": zod.string().min(1).max(scanAuditoriaInventarioBodySerieMax)
+  "serie": zod.string().min(1).max(scanAuditoriaInventarioBodySerieMax),
+  "pisoId": zod.number().nullish()
 })
 
 export const ScanAuditoriaInventarioResponse = zod.object({
@@ -2685,6 +2805,7 @@ export const CloseAuditoriaInventarioResponse = zod.object({
   "cuadros": zod.number(),
   "faltantes": zod.number(),
   "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
@@ -2693,13 +2814,17 @@ export const CloseAuditoriaInventarioResponse = zod.object({
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
   "serie": zod.string(),
-  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
   "producto": zod.string().nullish(),
   "cantidad": zod.string().regex(closeAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
   "unidad": zod.string().nullable(),
   "ubicacionActualId": zod.number().nullish(),
   "ubicacionActual": zod.string().nullish(),
+  "pisoEsperadoId": zod.number().nullish(),
+  "pisoEsperado": zod.string().nullish(),
+  "pisoRealId": zod.number().nullish(),
+  "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
   "escaneadoAt": zod.coerce.date().nullish()
@@ -2748,6 +2873,7 @@ export const CancelAuditoriaInventarioResponse = zod.object({
   "cuadros": zod.number(),
   "faltantes": zod.number(),
   "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
@@ -2756,13 +2882,17 @@ export const CancelAuditoriaInventarioResponse = zod.object({
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
   "serie": zod.string(),
-  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
   "producto": zod.string().nullish(),
   "cantidad": zod.string().regex(cancelAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
   "unidad": zod.string().nullable(),
   "ubicacionActualId": zod.number().nullish(),
   "ubicacionActual": zod.string().nullish(),
+  "pisoEsperadoId": zod.number().nullish(),
+  "pisoEsperado": zod.string().nullish(),
+  "pisoRealId": zod.number().nullish(),
+  "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
   "escaneadoAt": zod.coerce.date().nullish()
@@ -2802,6 +2932,7 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
   "cuadros": zod.number(),
   "faltantes": zod.number(),
   "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
@@ -2810,13 +2941,17 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
   "serie": zod.string(),
-  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
   "producto": zod.string().nullish(),
   "cantidad": zod.string().regex(confirmAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
   "unidad": zod.string().nullable(),
   "ubicacionActualId": zod.number().nullish(),
   "ubicacionActual": zod.string().nullish(),
+  "pisoEsperadoId": zod.number().nullish(),
+  "pisoEsperado": zod.string().nullish(),
+  "pisoRealId": zod.number().nullish(),
+  "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
   "escaneadoAt": zod.coerce.date().nullish()
@@ -2847,7 +2982,8 @@ export const CrearEntradaBody = zod.object({
   "lineas": zod.array(zod.object({
   "productoId": zod.number(),
   "costoUnitario": zod.string().nullish(),
-  "cantidades": zod.array(zod.string()).min(1)
+  "cantidades": zod.array(zod.string()).min(1),
+  "pisosPorCantidad": zod.array(zod.number().nullable()).optional().describe('Piso por cada posición de cantidades; null solo es válido en sitios sin pisos activos.')
 })).min(1)
 })
 
@@ -2884,6 +3020,8 @@ export const CrearEntradaResponse = zod.object({
   "serie": zod.string(),
   "productoId": zod.number(),
   "cantidadInicial": zod.string(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
   "costoUnitario": zod.string().nullish(),
   "costoTotal": zod.string().nullish()
 }))
@@ -2987,6 +3125,8 @@ export const GetEntradaResponse = zod.object({
   "serie": zod.string(),
   "productoId": zod.number(),
   "cantidadInicial": zod.string(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
   "costoUnitario": zod.string().nullish(),
   "costoTotal": zod.string().nullish()
 }))
@@ -3046,6 +3186,8 @@ export const CapturarCostosEntradaResponse = zod.object({
   "serie": zod.string(),
   "productoId": zod.number(),
   "cantidadInicial": zod.string(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
   "costoUnitario": zod.string().nullish(),
   "costoTotal": zod.string().nullish()
 }))
@@ -3384,6 +3526,7 @@ export const GetRolloResponse = zod.object({
 export const ListRollosQueryParams = zod.object({
   "ubicacionId": zod.coerce.number().optional(),
   "productoId": zod.coerce.number().optional(),
+  "pisoId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
   "search": zod.coerce.string().optional().describe('Folio exacto o serie de rollo exacta\/parcial'),
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']).optional(),
@@ -6943,9 +7086,14 @@ export const recibirSalidaBodyNotaMax = 2000;
 
 
 
+
 export const RecibirSalidaBody = zod.object({
   "completa": zod.boolean(),
-  "nota": zod.string().max(recibirSalidaBodyNotaMax).nullish()
+  "nota": zod.string().max(recibirSalidaBodyNotaMax).nullish(),
+  "pisosPorRollo": zod.array(zod.object({
+  "rolloId": zod.number().min(1),
+  "pisoId": zod.number().nullable()
+})).optional()
 })
 
 export const RecibirSalidaResponse = zod.object({
@@ -7091,6 +7239,8 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "tiendas": zod.array(zod.object({
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
   "sesionCajaId": zod.number().nullable(),
   "abiertaAt": zod.coerce.date().nullable(),
   "cajero": zod.string().nullable(),
@@ -7113,6 +7263,8 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "comparativo": zod.array(zod.object({
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
   "sesionCajaId": zod.number().nullable(),
   "abiertaAt": zod.coerce.date().nullable(),
   "cajero": zod.string().nullable(),

@@ -29,6 +29,7 @@ import {
   movimientosTable,
   pagosProveedorTable,
   productosTable,
+  pisosTable,
   proveedoresTable,
   rollosTable,
   seriesConsecutivoTable,
@@ -401,6 +402,7 @@ export type CrearEntradaLineaInput = {
   productoId: number;
   costoUnitario: string | null;
   cantidades: string[];
+  pisosPorCantidad?: Array<number | null>;
 };
 
 export type CrearEntradaInput = {
@@ -423,6 +425,8 @@ export type EntradaRolloResult = {
   cantidadInicial: string;
   costoUnitario: string | null;
   costoTotal: string | null;
+  pisoId: number | null;
+  nombrePiso: string | null;
 };
 
 export type EntradaLineaResult = {
@@ -576,6 +580,19 @@ export async function crearEntrada(
       "EMPTY_ENTRY",
     );
   }
+  const pisosActivos = await tx.select({ id: pisosTable.id }).from(pisosTable)
+    .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
+  const pisoIds = new Set(pisosActivos.map((p) => p.id));
+  for (const linea of input.lineas) {
+    if (linea.pisosPorCantidad && linea.pisosPorCantidad.length !== linea.cantidades.length) {
+      throw new InventarioError("Debe indicar un piso por cada cantidad.", "INVALID_FLOOR");
+    }
+    for (const pisoId of linea.pisosPorCantidad ?? []) {
+      if (pisosActivos.length && pisoId == null) throw new InventarioError("El sitio requiere piso para cada rollo.", "FLOOR_REQUIRED");
+      if (pisoId != null && !pisoIds.has(pisoId)) throw new InventarioError("El piso está inactivo o no pertenece al sitio.", "INVALID_FLOOR");
+    }
+    if (pisosActivos.length && !linea.pisosPorCantidad) throw new InventarioError("El sitio requiere piso para cada rollo.", "FLOOR_REQUIRED");
+  }
 
   // Compute total cost across all lines/rolls
   let totalCosto = 0;
@@ -615,7 +632,7 @@ export async function crearEntrada(
 
   // 4 & 5) Create DISPONIBLE rolls + RECEPCION movements
   for (const linea of input.lineas) {
-    for (const cantidad of linea.cantidades) {
+    for (const [cantidadIndex, cantidad] of linea.cantidades.entries()) {
       const costoTotal =
         linea.costoUnitario == null
           ? null
@@ -627,6 +644,7 @@ export async function crearEntrada(
           serie: series[serieIdx++]!,
           productoId: linea.productoId,
           ubicacionId: input.ubicacionId,
+          pisoId: linea.pisosPorCantidad?.[cantidadIndex] ?? null,
           proveedorId: input.proveedorId ?? null,
           recepcionId: entrada!.id,
           estado: "DISPONIBLE",
@@ -786,9 +804,12 @@ export async function buildEntradaResult(
       cantidadInicial: rollosTable.cantidadInicial,
       costoUnitario: rollosTable.costoUnitario,
       costoTotal: rollosTable.costoTotal,
+       pisoId: rollosTable.pisoId,
+       nombrePiso: pisosTable.nombre,
     })
     .from(rollosTable)
     .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+    .leftJoin(pisosTable, eq(rollosTable.pisoId, pisosTable.id))
     .where(eq(rollosTable.recepcionId, entradaId))
     .orderBy(rollosTable.id);
 
@@ -799,6 +820,8 @@ export async function buildEntradaResult(
     cantidadInicial: r.cantidadInicial,
     costoUnitario: r.costoUnitario,
     costoTotal: r.costoTotal,
+    pisoId: r.pisoId ?? null,
+    nombrePiso: r.nombrePiso ?? null,
   }));
 
   // Group lines by product
@@ -1122,6 +1145,7 @@ export type TransferirRolloInmediatoInput = {
   documentoId: string;
   /** Stable operation UUID; :salida and :entrada are ledger idempotency keys. */
   uuidCliente?: string | null;
+  pisoDestinoId?: number | null;
 };
 
 export type TransferirRolloInmediatoResult = {
@@ -1169,7 +1193,13 @@ export async function transferirRolloInmediato(
   if (rollo.estado !== "DISPONIBLE") {
     throw new InventarioError("El rollo no está DISPONIBLE.", "ROLLO_UNAVAILABLE");
   }
-  await tx.update(rollosTable).set({ ubicacionId: input.ubicacionDestinoId, estado: "DISPONIBLE" })
+  const pisosDestino = await tx.select({ id: pisosTable.id }).from(pisosTable)
+    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)));
+  if (pisosDestino.length && (input.pisoDestinoId == null || !pisosDestino.some((p) => p.id === input.pisoDestinoId))) {
+    throw new InventarioError("El piso destino es obligatorio, activo y debe pertenecer al sitio.", "INVALID_FLOOR");
+  }
+  if (!pisosDestino.length && input.pisoDestinoId != null) throw new InventarioError("El sitio destino no tiene ese piso activo.", "INVALID_FLOOR");
+  await tx.update(rollosTable).set({ ubicacionId: input.ubicacionDestinoId, estado: "DISPONIBLE", pisoId: input.pisoDestinoId ?? null })
     .where(eq(rollosTable.id, rollo.id));
   const salidaMovimiento = await insertMovimiento(tx, {
     rolloId: rollo.id, productoId: rollo.productoId, ubicacionId: input.ubicacionOrigenId,
@@ -1242,7 +1272,7 @@ export async function moverRollo(
   // Move rollo to transit location and set EN_TRANSITO
   await tx
     .update(rollosTable)
-    .set({ estado: "EN_TRANSITO", ubicacionId: input.ubicacionTransitoId })
+    .set({ estado: "EN_TRANSITO", ubicacionId: input.ubicacionTransitoId, pisoId: null })
     .where(eq(rollosTable.id, input.rolloId));
 
   // TRANSFERENCIA_SALIDA at origin (negative)
@@ -1295,6 +1325,7 @@ export type RecibirTransferenciaInput = {
   documentoTipo?: string | null;
   documentoId?: string | null;
   uuidCliente?: string | null;
+  pisoDestinoId?: number | null;
 };
 
 export type RecibirTransferenciaResult = {
@@ -1347,11 +1378,17 @@ export async function recibirTransferencia(
   }
 
   const transitoId = rollo.ubicacionId;
+  const pisosDestino = await tx.select({ id: pisosTable.id }).from(pisosTable)
+    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)));
+  if (pisosDestino.length && (input.pisoDestinoId == null || !pisosDestino.some((p) => p.id === input.pisoDestinoId))) {
+    throw new InventarioError("El piso destino es obligatorio, activo y debe pertenecer al sitio.", "INVALID_FLOOR");
+  }
+  if (!pisosDestino.length && input.pisoDestinoId != null) throw new InventarioError("El sitio destino no tiene ese piso activo.", "INVALID_FLOOR");
 
   // Move rollo to destination and set DISPONIBLE
   await tx
     .update(rollosTable)
-    .set({ estado: "DISPONIBLE", ubicacionId: input.ubicacionDestinoId })
+    .set({ estado: "DISPONIBLE", ubicacionId: input.ubicacionDestinoId, pisoId: input.pisoDestinoId ?? null })
     .where(eq(rollosTable.id, input.rolloId));
 
   // TRANSFERENCIA_SALIDA at transit (negative)

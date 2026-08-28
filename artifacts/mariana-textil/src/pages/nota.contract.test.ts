@@ -10,7 +10,7 @@ test("Block 4 functionality in ticket detail", async () => {
 
   // - En /tickets/:id, cuando ticket.esCredito y clienteId existe, carga detalle de nota
   assert.match(ticketDetail, /<ClienteNotaCredito/);
-  
+
   // - Show derived state, balance, vencimiento, días vencidos
   assert.match(notaCredito, /nota\.estado === "PAGADA"/);
   assert.match(notaCredito, /nota\.estado === "PARCIAL"/);
@@ -40,7 +40,7 @@ test("Block 4 functionality in ticket detail", async () => {
 
 test("Block 4 functionality in cobros", async () => {
   const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
-  
+
   // - Desde Cartera, cada fila de nota debe permitir abrir /tickets/:ticketId para ver este detalle
   assert.match(cobros, /<Link href=\{`\/tickets\/\$\{nota\.ticketFolio\}`\}/);
 });

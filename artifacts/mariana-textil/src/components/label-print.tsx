@@ -77,7 +77,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
   const productName = `${data.tela} - ${data.color}`.toUpperCase();
 
   return (
-    <div 
+    <div
       className={`label-page bg-white text-black p-[3mm] font-sans border border-gray-300 rounded-[3mm] relative overflow-hidden flex flex-col ${className}`}
       style={{ width: '100mm', height: '70mm', boxSizing: 'border-box' }}
     >
@@ -129,15 +129,15 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
 
         <div className="flex flex-col items-center justify-center relative min-w-0">
           <div className="bg-white border border-black rounded-[2mm] p-[1mm] flex-none">
-            <QRCodeSVG 
-              value={qrPayload} 
+            <QRCodeSVG
+              value={qrPayload}
               size={256}
               width="29mm"
               height="29mm"
               className="block shrink-0"
               style={{ width: "29mm", height: "29mm", minWidth: "29mm", minHeight: "29mm", flexShrink: 0 }}
-              level="Q" 
-              includeMargin={true} 
+              level="Q"
+              includeMargin={true}
               fgColor="#000000"
               bgColor="#ffffff"
             />

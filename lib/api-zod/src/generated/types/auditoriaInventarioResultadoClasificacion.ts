@@ -13,4 +13,5 @@ export const AuditoriaInventarioResultadoClasificacion = {
   CUADRO: 'CUADRO',
   FALTANTE: 'FALTANTE',
   SOBRANTE: 'SOBRANTE',
+  MAL_ACOMODADO: 'MAL_ACOMODADO',
 } as const;

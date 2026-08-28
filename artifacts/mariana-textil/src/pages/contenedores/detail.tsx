@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
-import { 
+import {
   useGetContenedor,
   getGetContenedorQueryKey,
   useUpdateContenedor,
@@ -45,7 +45,7 @@ export default function ContenedorDetail() {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
-  
+
   const { data: catalogos } = useGetCatalogosContenedores({
     query: { queryKey: getGetCatalogosContenedoresQueryKey() }
   });
@@ -100,7 +100,7 @@ export default function ContenedorDetail() {
     if (!editProveedorId) { toast.error("Selecciona un proveedor"); return; }
     if (!editSitioDestinoId) { toast.error("Selecciona un sitio destino"); return; }
     if (!editFecha) { toast.error("La fecha estimada es obligatoria"); return; }
-    
+
     if (editLineas.length === 0) { toast.error("Agrega al menos un producto al contenedor"); return; }
     const productIds = new Set();
     for (let i = 0; i < editLineas.length; i++) {
@@ -197,8 +197,8 @@ export default function ContenedorDetail() {
               <Button variant="outline" onClick={() => setIsEditing(false)} className="hidden sm:flex">
                 Cancelar
               </Button>
-              <Button 
-                onClick={handleSaveEdit} 
+              <Button
+                onClick={handleSaveEdit}
                 disabled={updateContenedor.isPending}
                 className="bg-sidebar hover:bg-sidebar/90"
               >
@@ -295,7 +295,7 @@ export default function ContenedorDetail() {
                         ) : editLineas.map((linea, idx) => (
                           <TableRow key={idx}>
                             <TableCell className="align-top pt-3">
-                              <ProductCombobox 
+                              <ProductCombobox
                                 products={(catalogos?.productos as any) || []}
                                 value={linea.productoId}
                                 onValueChange={v => {
@@ -307,38 +307,38 @@ export default function ContenedorDetail() {
                               />
                             </TableCell>
                             <TableCell className="align-top pt-3">
-                              <Input 
-                                type="number" min="0.1" step="0.1" 
-                                value={linea.cantidadEsperada} 
+                              <Input
+                                type="number" min="0.1" step="0.1"
+                                value={linea.cantidadEsperada}
                                 onChange={e => {
                                   const newLineas = [...editLineas];
                                   newLineas[idx].cantidadEsperada = e.target.value;
                                   setEditLineas(newLineas);
-                                }} 
+                                }}
                                 className="h-9"
                               />
                             </TableCell>
                             <TableCell className="align-top pt-3">
-                              <Input 
-                                type="number" min="1" step="1" 
-                                value={linea.rollosEsperados} 
+                              <Input
+                                type="number" min="1" step="1"
+                                value={linea.rollosEsperados}
                                 onChange={e => {
                                   const newLineas = [...editLineas];
                                   newLineas[idx].rollosEsperados = e.target.value;
                                   setEditLineas(newLineas);
-                                }} 
+                                }}
                                 className="h-9"
                               />
                             </TableCell>
                             <TableCell className="align-top pt-3">
-                              <Input 
-                                placeholder="Nota..." 
-                                value={linea.nota || ""} 
+                              <Input
+                                placeholder="Nota..."
+                                value={linea.nota || ""}
                                 onChange={e => {
                                   const newLineas = [...editLineas];
                                   newLineas[idx].nota = e.target.value;
                                   setEditLineas(newLineas);
-                                }} 
+                                }}
                                 className="h-9"
                               />
                             </TableCell>
@@ -362,8 +362,8 @@ export default function ContenedorDetail() {
                   <CardTitle className="text-lg">Notas del Embarque</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <Textarea 
-                    placeholder="Instrucciones de descarga, comentarios del proveedor..." 
+                  <Textarea
+                    placeholder="Instrucciones de descarga, comentarios del proveedor..."
                     className="min-h-[120px] resize-none"
                     value={editNotas}
                     onChange={e => setEditNotas(e.target.value)}
@@ -380,7 +380,7 @@ export default function ContenedorDetail() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto space-y-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
+
         {/* Header Options */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -443,7 +443,7 @@ export default function ContenedorDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            
+
             {/* Detalles */}
             <Card className="shadow-sm border-border/50">
               <CardHeader className="bg-muted/20 border-b border-border/50 pb-4">
@@ -498,8 +498,8 @@ export default function ContenedorDetail() {
                           "text-xs font-bold",
                           contenedor.diferenciaFechaEstimada < 0 ? "text-emerald-600" : contenedor.diferenciaFechaEstimada > 0 ? "text-destructive" : "text-muted-foreground"
                         )}>
-                          {contenedor.diferenciaFechaEstimada < 0 ? `Llegó ${Math.abs(contenedor.diferenciaFechaEstimada)} días antes` : 
-                           contenedor.diferenciaFechaEstimada > 0 ? `Se retrasó ${contenedor.diferenciaFechaEstimada} días` : 
+                          {contenedor.diferenciaFechaEstimada < 0 ? `Llegó ${Math.abs(contenedor.diferenciaFechaEstimada)} días antes` :
+                           contenedor.diferenciaFechaEstimada > 0 ? `Se retrasó ${contenedor.diferenciaFechaEstimada} días` :
                            "Llegada a tiempo"}
                         </p>
                       )}
@@ -537,7 +537,7 @@ export default function ContenedorDetail() {
                       const isShort = diff < 0;
                       const isOver = diff > 0;
                       const isUnexpected = linea.id === null || Number(linea.cantidadEsperada) === 0;
-                      
+
                       return (
                         <TableRow key={linea.id || `unexpected-${idx}`} className="hover:bg-muted/40">
                           <TableCell>
@@ -548,14 +548,14 @@ export default function ContenedorDetail() {
                             <div className="text-xs text-muted-foreground">{linea.tela} - {linea.color}</div>
                             {linea.nota && <div className="text-[10px] text-amber-600 mt-1">{linea.nota}</div>}
                           </TableCell>
-                          
+
                           <TableCell className="text-right border-l border-border/30 font-medium">
                             {formatNumber(Number(linea.cantidadEsperada), { kind: "count" })} <span className="text-xs text-muted-foreground">{linea.unidad === "METRO" ? "m" : "kg"}</span>
                           </TableCell>
                           <TableCell className="text-right text-muted-foreground">
                             {linea.rollosEsperados !== null && linea.rollosEsperados !== undefined ? formatNumber(linea.rollosEsperados, { kind: "count" }) : "-"}
                           </TableCell>
-                          
+
                           {isRecibido && (
                             <>
                               <TableCell className="text-right border-l border-border/30 font-semibold text-emerald-700 dark:text-emerald-400">
@@ -572,7 +572,7 @@ export default function ContenedorDetail() {
                               </TableCell>
                             </>
                           )}
-                          
+
                           {isAdmin && (
                             <TableCell className="text-right border-l border-border/30">
                               {linea.costoTotal ? (
@@ -598,19 +598,19 @@ export default function ContenedorDetail() {
           </div>
 
           <div className="space-y-6">
-            
+
             <Card className="shadow-sm border-border/50">
               <CardHeader className="bg-muted/20 border-b border-border/50 pb-4">
                 <CardTitle className="text-lg text-sidebar">Totales</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y divide-border/50">
-                  
+
                   <div className="p-4 flex items-center justify-between bg-sidebar/5">
                     <span className="font-semibold text-sidebar">Líneas</span>
                     <span className="font-bold">{formatNumber(contenedor.totalesEsperados.lineas, { kind: "count" })}</span>
                   </div>
-                  
+
                   <div className="p-4">
                     <div className="flex justify-between items-end mb-2">
                       <span className="font-medium text-muted-foreground text-sm">Metros</span>
@@ -658,7 +658,7 @@ export default function ContenedorDetail() {
                       </div>
                     )}
                   </div>
-                  
+
                   {isAdmin && contenedor.costoTotal && (
                     <div className="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 flex flex-col items-end">
                       <span className="font-medium text-emerald-800/60 dark:text-emerald-300/60 text-sm mb-1">Costo Total</span>
@@ -698,8 +698,8 @@ export default function ContenedorDetail() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Motivo de cancelación <span className="text-destructive">*</span></Label>
-              <Textarea 
-                placeholder="Indica la razón detallada..." 
+              <Textarea
+                placeholder="Indica la razón detallada..."
                 value={cancelReason}
                 onChange={e => setCancelReason(e.target.value)}
                 className="resize-none h-24"

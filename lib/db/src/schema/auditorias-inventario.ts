@@ -13,7 +13,7 @@ import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { rollosTable } from "./rollos";
-import { ubicacionesTable } from "./locations";
+import { pisosTable, ubicacionesTable } from "./locations";
 import { usuariosTable } from "./users";
 
 export const auditoriaInventarioFolioTable = pgTable(
@@ -81,6 +81,8 @@ export const auditoriaInventarioSnapshotTable = pgTable(
       .notNull()
       .references(() => ubicacionesTable.id),
     ubicacionSnapshot: text("ubicacion_snapshot").notNull(),
+    pisoSnapshotId: integer("piso_snapshot_id").references(() => pisosTable.id),
+    pisoSnapshot: text("piso_snapshot"),
     estadoSnapshot: text("estado_snapshot").notNull(),
     resolucion: text("resolucion").notNull().default("PENDIENTE"),
   },
@@ -114,6 +116,8 @@ export const auditoriaInventarioEscaneosTable = pgTable(
       () => ubicacionesTable.id,
     ),
     ubicacionCierre: text("ubicacion_cierre"),
+    pisoRealId: integer("piso_real_id").references(() => pisosTable.id),
+    pisoReal: text("piso_real"),
     resolucion: text("resolucion").notNull().default("PENDIENTE"),
   },
   (table) => [

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
-  useListUsers, 
+import {
+  useListUsers,
   useCreateUser,
   useUpdateUser,
   useListLocations,
   useGetCurrentUser,
-  User, 
+  User,
   Role,
   getListUsersQueryKey
 } from "@workspace/api-client-react";
@@ -37,7 +37,7 @@ export default function Usuarios() {
   const canCreate = hasPermission(currentUser, Modules.USUARIOS, "crear");
   const canEdit = hasPermission(currentUser, Modules.USUARIOS, "editar");
   const isAdmin = currentUser?.rol === Role.ADMIN;
-  
+
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
@@ -114,7 +114,7 @@ export default function Usuarios() {
         return;
       }
       payload.password = formData.password;
-      
+
       createUser.mutate(
         { data: payload },
         {
@@ -278,17 +278,17 @@ export default function Usuarios() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Nombre completo</Label>
-                <Input 
-                  value={formData.nombre} 
-                  onChange={(e) => setFormData({...formData, nombre: e.target.value})} 
+                <Input
+                  value={formData.nombre}
+                  onChange={(e) => setFormData({...formData, nombre: e.target.value})}
                   placeholder="Juan Pérez"
                 />
               </div>
               <div className="space-y-2">
                 <Label>Nombre de usuario</Label>
-                <Input 
-                  value={formData.usuario} 
-                  onChange={(e) => setFormData({...formData, usuario: e.target.value})} 
+                <Input
+                  value={formData.usuario}
+                  onChange={(e) => setFormData({...formData, usuario: e.target.value})}
                   placeholder="juan.p"
                 />
               </div>
@@ -373,8 +373,8 @@ export default function Usuarios() {
               <Label htmlFor="user-password">Contraseña {editingUser && <span className="text-muted-foreground font-normal">(Dejar en blanco para no cambiar)</span>}</Label>
               <PasswordInput
                 id="user-password"
-                value={formData.password} 
-                onChange={(e) => setFormData({...formData, password: e.target.value})} 
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
                 placeholder={editingUser ? "••••••••" : "Mínimo 10 caracteres"}
                 autoComplete="new-password"
                 visibilityResetKey={passwordVisibilityResetKey}
@@ -384,10 +384,10 @@ export default function Usuarios() {
 
             {editingUser && (
               <div className="flex items-center space-x-2 mt-4 p-3 bg-muted/50 rounded-md border">
-                <Checkbox 
-                  id="user-active" 
-                  checked={formData.activo} 
-                  onCheckedChange={(checked) => setFormData({...formData, activo: checked === true})} 
+                <Checkbox
+                  id="user-active"
+                  checked={formData.activo}
+                  onCheckedChange={(checked) => setFormData({...formData, activo: checked === true})}
                 />
                 <Label htmlFor="user-active" className="cursor-pointer">Usuario con acceso activo al sistema</Label>
               </div>

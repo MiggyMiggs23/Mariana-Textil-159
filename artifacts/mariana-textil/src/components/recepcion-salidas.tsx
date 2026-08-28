@@ -6,16 +6,18 @@ import {
   useGetSalidaRecepcion,
   useListSalidasRecepcion,
   useRecibirSalida,
+  useListPisosLocation,
 } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { CheckCircle2, Loader2, PackageCheck } from "lucide-react";
+import { CheckCircle2, Loader2, PackageCheck, MapPin } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 
@@ -39,6 +41,8 @@ export function RecepcionSalidas() {
   const [salidaId, setSalidaId] = useState<number | null>(initialId);
   const [completa, setCompleta] = useState(true);
   const [nota, setNota] = useState("");
+  const [pisosAsignados, setPisosAsignados] = useState<Record<number, number | null>>({});
+
   const pendientes = useListSalidasRecepcion({
     query: {
       queryKey: getListSalidasRecepcionQueryKey(),
@@ -52,6 +56,13 @@ export function RecepcionSalidas() {
       retry: false,
     },
   });
+
+  const destinoId = detalle.data?.destinoId;
+  const { data: pisos } = useListPisosLocation(destinoId ?? 0, {
+    query: { enabled: destinoId != null, queryKey: ['pisosLocation', destinoId ?? 0] }
+  });
+  const pisosActivos = pisos?.filter(p => p.activo) || [];
+
   const receive = useRecibirSalida({
     mutation: {
       onSuccess: async (received) => {
@@ -62,6 +73,7 @@ export function RecepcionSalidas() {
         setSalidaId(null);
         setCompleta(true);
         setNota("");
+        setPisosAsignados({});
         await queryClient.invalidateQueries({
           queryKey: getListSalidasRecepcionQueryKey(),
         });
@@ -78,6 +90,7 @@ export function RecepcionSalidas() {
   useEffect(() => {
     setCompleta(true);
     setNota("");
+    setPisosAsignados({});
   }, [salidaId]);
 
   const selectScan = (raw: string) => {
@@ -159,6 +172,58 @@ export function RecepcionSalidas() {
               />
             </div>
             <div className="space-y-3 border-t pt-4">
+              {pisosActivos.length > 0 && detalle.data.rollos && (
+                <div className="space-y-3 mb-6 bg-muted/20 p-4 rounded-xl border border-dashed">
+                  <h4 className="text-sm font-semibold flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    Asignar pisos a los rollos (obligatorio)
+                  </h4>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Select onValueChange={(v) => {
+                      const val = v === "none" ? null : Number(v);
+                      if (!detalle.data?.rollos) return;
+                      const next: Record<number, number | null> = {};
+                      detalle.data.rollos.filter(r => r.recibido !== true).forEach(r => {
+                        next[r.rolloId] = val;
+                      });
+                      setPisosAsignados(next);
+                    }}>
+                      <SelectTrigger className="h-8 text-xs bg-background w-[200px]">
+                        <SelectValue placeholder="Aplicar a todos..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Sin piso</SelectItem>
+                        {pisosActivos.map(p => (
+                          <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    {detalle.data.rollos.filter(r => r.recibido !== true).map((rollo) => (
+                      <div key={rollo.rolloId} className="flex items-center justify-between gap-2 bg-background p-2 rounded-md border text-sm">
+                        <span className="font-mono font-bold text-xs">{rollo.serie}</span>
+                        <Select value={pisosAsignados[rollo.rolloId]?.toString() || "none"} onValueChange={(v) => {
+                          setPisosAsignados(prev => ({
+                            ...prev,
+                            [rollo.rolloId]: v === "none" ? null : Number(v)
+                          }));
+                        }}>
+                          <SelectTrigger className="h-7 w-[120px] text-xs">
+                            <SelectValue placeholder="Piso" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">Seleccionar piso</SelectItem>
+                            {pisosActivos.map(p => (
+                              <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <label className="flex items-center gap-3 font-medium">
                 <Checkbox
                   checked={completa}
@@ -182,12 +247,32 @@ export function RecepcionSalidas() {
               <Button
                 className="w-full sm:w-auto"
                 disabled={receive.isPending}
-                onClick={() =>
+                onClick={() => {
+                  const rollosARecibir = detalle.data?.rollos?.filter(r => r.recibido !== true) || [];
+                  const requiresPiso = pisosActivos.length > 0;
+
+                  if (requiresPiso) {
+                    const missingPiso = rollosARecibir.some(r => !pisosAsignados[r.rolloId]);
+                    if (missingPiso) {
+                      toast({
+                        title: "Falta asignar piso",
+                        description: "Todos los rollos entrantes deben tener un piso asignado.",
+                        variant: "destructive"
+                      });
+                      return;
+                    }
+                  }
+
+                  const pisosPorRollo = requiresPiso ? rollosARecibir.map(r => ({
+                    rolloId: r.rolloId,
+                    pisoId: pisosAsignados[r.rolloId] || null
+                  })) : undefined;
+
                   receive.mutate({
-                    id: detalle.data.id,
-                    data: { completa, nota: nota.trim() || null },
-                  })
-                }
+                    id: detalle.data!.id,
+                    data: { completa, nota: nota.trim() || null, pisosPorRollo },
+                  });
+                }}
               >
                 {receive.isPending
                   ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />

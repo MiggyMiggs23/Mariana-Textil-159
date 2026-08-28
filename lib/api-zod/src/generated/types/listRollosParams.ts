@@ -10,6 +10,7 @@ import type { ListRollosEstado } from './listRollosEstado';
 export type ListRollosParams = {
 ubicacionId?: number;
 productoId?: number;
+pisoId?: number;
 usuarioId?: number;
 /**
  * Folio exacto o serie de rollo exacta/parcial

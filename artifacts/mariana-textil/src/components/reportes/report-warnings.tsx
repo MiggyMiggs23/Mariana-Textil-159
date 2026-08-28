@@ -10,14 +10,14 @@ export function ReportWarnings({ warnings }: { warnings: string[] }) {
         // Simple heuristic to determine severity
         const isError = w.toLowerCase().includes("error") || w.toLowerCase().includes("crítico");
         const isWarning = w.toLowerCase().includes("advertencia") || w.toLowerCase().includes("atención");
-        
+
         return (
-          <div 
+          <div
             key={i}
             data-testid={`warning-alert-${i}`}
             className={`flex items-start gap-3 p-3 rounded-md border text-sm shadow-sm ${
-              isError 
-                ? "bg-destructive/10 border-destructive/20 text-destructive" 
+              isError
+                ? "bg-destructive/10 border-destructive/20 text-destructive"
                 : isWarning
                   ? "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:border-amber-900/50 dark:text-amber-500"
                   : "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/30 dark:border-blue-900/50 dark:text-blue-400"

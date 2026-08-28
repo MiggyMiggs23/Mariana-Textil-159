@@ -12,8 +12,12 @@ import {
   useListAuditoriasInventario,
   useListSitiosAuditoriaInventario,
   useScanAuditoriaInventario,
+  useListPisosLocation,
+  getListRollosQueryKey,
+  getListProductosQueryKey,
+  getGetExistenciasAgrupadasQueryKey,
 } from "@workspace/api-client-react";
-import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play, Shuffle } from "lucide-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { Badge } from "@/components/ui/badge";
@@ -66,6 +70,7 @@ export default function AuditoriasInventario() {
   const [scan, setScan] = useState("");
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const [selectedPiso, setSelectedPiso] = useState<string>("none");
   const scanRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -78,6 +83,10 @@ export default function AuditoriasInventario() {
     }
   }, [audits.data, selectedId]);
 
+  useEffect(() => {
+    setSelectedPiso("none");
+  }, [selectedId, siteId]);
+
   const detail = useGetAuditoriaInventario(selectedId ?? 0, {
     query: {
       enabled: selectedId != null,
@@ -86,6 +95,11 @@ export default function AuditoriasInventario() {
         query.state.data?.estado === "ABIERTA" ? 3000 : false,
     },
   });
+
+  const { data: pisos } = useListPisosLocation(detail.data?.ubicacionId ?? 0, {
+    query: { enabled: !!detail.data?.ubicacionId, queryKey: ['pisosLocation', detail.data?.ubicacionId ?? 0] }
+  });
+  const pisosActivos = pisos?.filter(p => p.activo) || [];
 
   const invalidate = async (id?: number) => {
     await queryClient.invalidateQueries({ queryKey: getListAuditoriasInventarioQueryKey() });
@@ -98,13 +112,22 @@ export default function AuditoriasInventario() {
   const scanMutation = useScanAuditoriaInventario();
   const close = useCloseAuditoriaInventario();
   const cancel = useCancelAuditoriaInventario();
-  const confirm = useConfirmAuditoriaInventario();
+  const confirm = useConfirmAuditoriaInventario({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getGetExistenciasAgrupadasQueryKey() });
+      }
+    }
+  });
   const pending = create.isPending || scanMutation.isPending || close.isPending || cancel.isPending || confirm.isPending;
 
   const grouped = useMemo(() => ({
     CUADRO: detail.data?.resultados.filter((row) => row.clasificacion === "CUADRO") ?? [],
     FALTANTE: detail.data?.resultados.filter((row) => row.clasificacion === "FALTANTE") ?? [],
     SOBRANTE: detail.data?.resultados.filter((row) => row.clasificacion === "SOBRANTE") ?? [],
+    MAL_ACOMODADO: detail.data?.resultados.filter((row) => row.clasificacion === "MAL_ACOMODADO") ?? [],
   }), [detail.data]);
 
   const run = (
@@ -301,7 +324,7 @@ export default function AuditoriasInventario() {
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-3 md:gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                       {/* Cuadros */}
                       <div className="flex flex-col p-4 md:p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30">
                         <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 mb-2">
@@ -326,6 +349,14 @@ export default function AuditoriasInventario() {
                         </div>
                         <span className="text-3xl md:text-4xl font-mono font-black text-amber-800 dark:text-amber-300 tracking-tighter" data-testid="metric-sobrantes">{detail.data.sobrantes}</span>
                       </div>
+                      {/* Mal Acomodados */}
+                      <div className="flex flex-col p-4 md:p-5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30">
+                        <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400 mb-2">
+                          <Shuffle className="h-4 w-4 md:h-5 md:w-5" />
+                          <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest">Mal Acomodado</span>
+                        </div>
+                        <span className="text-3xl md:text-4xl font-mono font-black text-blue-800 dark:text-blue-300 tracking-tighter" data-testid="metric-mal-acomodados">{detail.data.malAcomodados || 0}</span>
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -335,20 +366,38 @@ export default function AuditoriasInventario() {
                   <div className="sticky top-4 z-20 rounded-2xl bg-card shadow-lg ring-1 ring-primary/20 overflow-hidden transform transition-all">
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent pointer-events-none" />
                     <div className="relative p-5 md:p-6">
-                      <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary mb-3" htmlFor="audit-scan">
-                        <ScanLine className="h-5 w-5" /> Escanear Serie o QR
-                      </label>
+                      <div className="flex flex-col sm:flex-row gap-4 mb-3 items-start sm:items-center justify-between">
+                        <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary" htmlFor="audit-scan">
+                          <ScanLine className="h-5 w-5" /> Escanear Serie o QR
+                        </label>
+                        {pisosActivos.length > 0 && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Piso Real:</span>
+                            <Select value={selectedPiso} onValueChange={setSelectedPiso}>
+                              <SelectTrigger className="h-8 w-[160px] text-xs font-bold bg-background">
+                                <SelectValue placeholder="Sin piso" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">Sin piso</SelectItem>
+                                {pisosActivos.map(p => (
+                                  <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                      </div>
                       <CampoEscaneo
                         id="audit-scan"
                         ref={scanRef}
                         value={scan}
                         onChange={setScan}
-                        disabled={scanMutation.isPending}
+                        disabled={scanMutation.isPending || (pisosActivos.length > 0 && selectedPiso === "none")}
                         data-testid="input-audit-scan"
-                        placeholder="Serie o SKU-SERIE; Enter para registrar"
+                        placeholder={pisosActivos.length > 0 && selectedPiso === "none" ? "Selecciona un piso antes de escanear" : "Serie o SKU-SERIE; Enter para registrar"}
                         className="h-16 font-mono text-2xl shadow-inner bg-background/50 focus-visible:bg-background border-primary/30 focus-visible:border-primary transition-colors"
                         onScan={async (serie) => {
-                          await scanMutation.mutateAsync({ id: detail.data!.id, data: { serie } }, {
+                          await scanMutation.mutateAsync({ id: detail.data!.id, data: { serie, pisoId: selectedPiso === "none" ? null : Number(selectedPiso) } }, {
                             onSuccess: (result) => {
                               void invalidate(detail.data!.id);
                               toast({
@@ -366,20 +415,21 @@ export default function AuditoriasInventario() {
 
                 {/* Results Tables */}
                 <div className="space-y-8 mt-2">
-                  {(["FALTANTE", "SOBRANTE", "CUADRO"] as const).map((kind) => {
+                  {(["FALTANTE", "SOBRANTE", "CUADRO", "MAL_ACOMODADO"] as const).map((kind) => {
                     const isFaltante = kind === "FALTANTE";
                     const isSobrante = kind === "SOBRANTE";
                     const isCuadro = kind === "CUADRO";
+                    const isMalAcomodado = kind === "MAL_ACOMODADO";
                     const items = grouped[kind];
 
-                    if (items.length === 0 && isCuadro) return null;
+                    if (items.length === 0 && (isCuadro || isMalAcomodado)) return null;
 
                     return (
                       <div key={kind} className="flex flex-col gap-3">
                         <div className="flex items-center justify-between border-b pb-2">
-                          <h3 className={`flex items-center gap-2 text-sm font-bold uppercase tracking-widest ${isFaltante ? "text-rose-600 dark:text-rose-400" : isSobrante ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}>
-                            {isFaltante ? <XCircle className="h-4 w-4" /> : isSobrante ? <AlertTriangle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
-                            {kind}
+                          <h3 className={`flex items-center gap-2 text-sm font-bold uppercase tracking-widest ${isFaltante ? "text-rose-600 dark:text-rose-400" : isSobrante ? "text-amber-600 dark:text-amber-400" : isMalAcomodado ? "text-blue-600 dark:text-blue-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+                            {isFaltante ? <XCircle className="h-4 w-4" /> : isSobrante ? <AlertTriangle className="h-4 w-4" /> : isMalAcomodado ? <Shuffle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
+                            {kind.replace('_', ' ')}
                           </h3>
                           <Badge variant="secondary" className="font-mono text-xs px-2">{items.length}</Badge>
                         </div>
@@ -397,7 +447,10 @@ export default function AuditoriasInventario() {
                                     <TableHead className="w-[140px] font-semibold">Serie</TableHead>
                                     <TableHead className="font-semibold">Producto</TableHead>
                                     <TableHead className="w-[120px] text-right font-semibold">Cantidad</TableHead>
-                                    <TableHead className="w-[180px] font-semibold">Ubicación actual</TableHead>
+                                    {isMalAcomodado && (
+                                      <TableHead className="w-[140px] font-semibold">Piso Esperado</TableHead>
+                                    )}
+                                    <TableHead className="w-[180px] font-semibold">{isMalAcomodado ? "Piso Real" : "Ubicación actual"}</TableHead>
                                     <TableHead className="w-[140px] font-semibold">Estado</TableHead>
                                     <TableHead className="w-[160px] font-semibold">Resolución</TableHead>
                                   </TableRow>
@@ -408,7 +461,10 @@ export default function AuditoriasInventario() {
                                       <TableCell className="font-mono font-bold text-[13px]">{row.serie}</TableCell>
                                       <TableCell className="text-[13px]">{row.producto ?? <span className="text-muted-foreground italic">Sin registro</span>}</TableCell>
                                       <TableCell className="font-mono text-right text-[13px]">{row.cantidad ?? "—"} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ?? ""}</span></TableCell>
-                                      <TableCell className="text-[13px]">{row.ubicacionActual ?? <span className="text-muted-foreground italic">Desconocida</span>}</TableCell>
+                                      {isMalAcomodado && (
+                                        <TableCell className="text-[13px]">{(row as any).pisoEsperadoNombre ?? <span className="text-muted-foreground italic">Sin piso</span>}</TableCell>
+                                      )}
+                                      <TableCell className="text-[13px]">{isMalAcomodado ? ((row as any).pisoRealNombre ?? <span className="text-muted-foreground italic">Desconocido</span>) : (row.ubicacionActual ?? <span className="text-muted-foreground italic">Desconocida</span>)}</TableCell>
                                       <TableCell>
                                         <Badge variant="outline" className="bg-background text-[10px] uppercase tracking-wider">{row.estadoActual}</Badge>
                                       </TableCell>
@@ -439,10 +495,10 @@ export default function AuditoriasInventario() {
             <div>{detail.data.nombreUbicacion} · Estado: {detail.data.estado}</div>
             <div className="text-sm">Apertura: {new Date(detail.data.abiertaAt).toLocaleString("es-MX")} · Cierre: {detail.data.cerradaAt ? new Date(detail.data.cerradaAt).toLocaleString("es-MX") : "En curso"} · Duración: {duration(detail.data.abiertaAt, detail.data.cerradaAt)}</div>
           </header>
-          <div className="my-3 grid grid-cols-5 gap-2 text-center text-sm">
-            <div>Snapshot<br /><b>{detail.data.totalSnapshot}</b></div><div>Escaneados<br /><b>{detail.data.totalEscaneados}</b></div><div>Cuadro<br /><b>{detail.data.cuadros}</b></div><div>Faltante<br /><b>{detail.data.faltantes}</b></div><div>Sobrante<br /><b>{detail.data.sobrantes}</b></div>
+          <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">
+            <div>Snapshot<br /><b>{detail.data.totalSnapshot}</b></div><div>Escaneados<br /><b>{detail.data.totalEscaneados}</b></div><div>Cuadro<br /><b>{detail.data.cuadros}</b></div><div>Faltante<br /><b>{detail.data.faltantes}</b></div><div>Sobrante<br /><b>{detail.data.sobrantes}</b></div><div>Mal Acomodado<br /><b>{detail.data.malAcomodados || 0}</b></div>
           </div>
-          {(["CUADRO", "FALTANTE", "SOBRANTE"] as const).map((kind) => <section key={kind} className="mb-4"><h2 className="border-b border-black font-bold">{kind} ({grouped[kind].length})</h2>{grouped[kind].map((row) => <div key={row.serie} className="grid grid-cols-[100px_1fr_100px_130px_100px] border-b py-1 text-xs"><b>{row.serie}</b><span>{row.producto ?? "Sin registro"}</span><span>{row.cantidad ?? "—"} {row.unidad ?? ""}</span><span>{row.ubicacionActual ?? "Sin ubicación"}</span><span>{row.estadoActual}</span></div>)}</section>)}
+          {(["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const).map((kind) => <section key={kind} className="mb-4"><h2 className="border-b border-black font-bold">{kind.replace('_', ' ')} ({grouped[kind].length})</h2>{grouped[kind].map((row) => <div key={row.serie} className="grid grid-cols-[100px_1fr_100px_130px_100px] border-b py-1 text-xs"><b>{row.serie}</b><span>{row.producto ?? "Sin registro"}</span><span>{row.cantidad ?? "—"} {row.unidad ?? ""}</span><span>{kind === "MAL_ACOMODADO" ? (row as any).pisoRealNombre ?? "Desconocido" : row.ubicacionActual ?? "Sin ubicación"}</span><span>{row.estadoActual}</span></div>)}</section>)}
           <section><h2 className="font-bold">Participantes</h2>{detail.data.participantes.map((person) => <div key={person.usuarioId} className="text-sm">{person.nombre}: {person.escaneos} escaneos</div>)}</section>
           <footer className="mt-14 grid grid-cols-2 gap-16 text-center text-sm"><div className="border-t border-black pt-2">Responsable de conteo</div><div className="border-t border-black pt-2">Autorización ADMIN</div></footer>
         </article>

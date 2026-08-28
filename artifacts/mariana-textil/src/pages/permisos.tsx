@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
+import {
   useListPermisosRoles,
   useUpdatePermisosRol,
   getListPermisosRolesQueryKey,
@@ -41,11 +41,11 @@ export default function Permisos() {
   const { data: usersData } = useListUsers();
 
   const userIdNum = selectedUserId ? parseInt(selectedUserId, 10) : 0;
-  
+
   const { data: overridesData, isLoading: isLoadingOverrides } = useGetPermisosUsuario(userIdNum, {
     query: { enabled: !!userIdNum, queryKey: getGetPermisosUsuarioQueryKey(userIdNum) }
   });
-  
+
   const { data: previewData } = useGetPermisosPreview(userIdNum, {
     query: { enabled: !!userIdNum, queryKey: getGetPermisosPreviewQueryKey(userIdNum) }
   });
@@ -64,7 +64,7 @@ export default function Permisos() {
       puedeAutorizar: current?.puedeAutorizar ?? false,
       [key]: checked
     };
-    
+
     // Some basic sanity constraints
     if ((key === 'puedeCrear' || key === 'puedeEditar' || key === 'puedeAutorizar') && checked) {
       data.puedeVer = true;
@@ -202,25 +202,25 @@ export default function Permisos() {
                             <tr key={modulo} className="hover:bg-muted/10 transition-colors">
                               <td className="p-4 font-medium font-mono text-xs">{modulo}</td>
                               <td className="p-4 text-center">
-                                <Checkbox 
+                                <Checkbox
                                   checked={current?.puedeVer ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeVer', c === true)}
                                 />
                               </td>
                               <td className="p-4 text-center">
-                                <Checkbox 
+                                <Checkbox
                                   checked={current?.puedeCrear ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeCrear', c === true)}
                                 />
                               </td>
                               <td className="p-4 text-center">
-                                <Checkbox 
+                                <Checkbox
                                   checked={current?.puedeEditar ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeEditar', c === true)}
                                 />
                               </td>
                               <td className="p-4 text-center">
-                                <Checkbox 
+                                <Checkbox
                                   checked={current?.puedeAutorizar ?? false}
                                   onCheckedChange={(c) => handleRoleChange(modulo, 'puedeAutorizar', c === true)}
                                 />
@@ -295,11 +295,11 @@ export default function Permisos() {
                           {ALL_MODULES.map(modulo => {
                             const currentOverride = overridesData?.overrides.find(r => r.modulo === modulo);
                             const currentPreview = previewData?.permisos.find(r => r.modulo === modulo);
-                            
+
                             const isOverridden = !!currentOverride && (
-                              currentOverride.puedeVer != null || 
-                              currentOverride.puedeCrear != null || 
-                              currentOverride.puedeEditar != null || 
+                              currentOverride.puedeVer != null ||
+                              currentOverride.puedeCrear != null ||
+                              currentOverride.puedeEditar != null ||
                               currentOverride.puedeAutorizar != null
                             );
 
@@ -309,7 +309,7 @@ export default function Permisos() {
                                   {modulo}
                                   {isOverridden && <span className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider">Modificado</span>}
                                 </td>
-                                
+
                                 {(['puedeVer', 'puedeCrear', 'puedeEditar', 'puedeAutorizar'] as const).map(k => {
                                   const overrideVal = currentOverride?.[k];
                                   const effectiveVal = currentPreview?.[k];
@@ -319,7 +319,7 @@ export default function Permisos() {
                                        : overrideVal
                                          ? "allow"
                                          : "deny";
-                                  
+
                                   return (
                                     <td key={k} className="p-4 text-center">
                                        <Select
@@ -355,12 +355,12 @@ export default function Permisos() {
                                     </td>
                                   )
                                 })}
-                                
+
                                 <td className="p-4 text-center">
                                   {isOverridden ? (
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
                                       onClick={() => handleResetUserModule(modulo)}
                                       className="text-xs h-7 text-muted-foreground hover:text-destructive"
                                     >
@@ -380,7 +380,7 @@ export default function Permisos() {
                         </tbody>
                       </table>
                     </div>
-                    
+
                     <div className="text-sm text-muted-foreground bg-muted/20 p-4 rounded-md border flex items-start gap-3">
                       <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />
                       <div>

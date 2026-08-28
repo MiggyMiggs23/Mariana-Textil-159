@@ -214,6 +214,7 @@ router.post(
         scanAuditoria(tx, {
           auditoriaId: id,
           serie,
+          pisoId: body.pisoId,
           usuarioId: req.auth!.user.id,
           ip: getRequestIp(req),
         }),
