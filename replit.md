@@ -237,6 +237,14 @@ Para abonos de clientes, “cuenta destino” usa las categorías operativas exi
 
 El pago dirigido se solicita desde el cobro del cliente o el pago al proveedor, se autoriza desde la notificación sin entrar a otra pantalla, y su histórico vive en Reportes como registro de cuántas excepciones a la regla FIFO ha habido. No es una pantalla de trabajo diario.
 
+## Roles SISTEMAS y CONTADOR
+
+**SISTEMAS** es el rol del técnico responsable de la aplicación. Opera todo y sí ve el dinero, porque diagnostica problemas de cartera y de precios. No vende ni cobra: no tiene POS, cortes ni cobros. Lee la bitácora, que es inmutable.
+
+**CONTADOR** ve todo lo financiero y no toca la mercancía: consulta entradas, salidas y movimientos para cuadrar, pero no crea ni edita ninguno. Registra pagos a proveedores y cobros; se eligió conservadoramente `crear` en `proveedores_finanzas` y `cobros_pagos`. No administra el sistema.
+
+Los dos existen separados de ADMIN para distinguir en la bitácora qué hizo cada perfil. La matriz del seed valida al arrancar que cada módulo exista, que no haya módulos extra, que cada fila tenga seis celdas y que cada celda use una tupla canónica de permisos; así ninguna fila corta vuelve a negar permisos silenciosamente.
+
 ### Pendientes antes del piloto
 
 - Definir y probar el procedimiento de salidas extraordinarias.
@@ -245,7 +253,6 @@ El pago dirigido se solicita desde el cobro del cliente o el pago al proveedor, 
 - Construir y validar el script de reinicio, incluida su confirmación textual exacta.
 - Tomar la decisión final de impresora y validar el flujo físico.
 - Cambiar la contraseña inicial antes de producción.
-- Definir el alcance y la matriz del rol CONTADOR.
 
 ## Product
 
