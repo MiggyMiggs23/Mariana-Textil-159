@@ -18,7 +18,8 @@ export async function ensureSolicitudesPagoDirigidoSchema(pool: Pool): Promise<v
       motivo_rechazo text CHECK (motivo_rechazo IS NULL OR char_length(trim(motivo_rechazo)) >= 10),
       solicitante_id integer NOT NULL REFERENCES usuarios(id),
       solicitante_nombre text NOT NULL DEFAULT '', autorizador_id integer REFERENCES usuarios(id),
-      autorizador_nombre text, contraparte_nombre text NOT NULL DEFAULT '', documento_folio text NOT NULL DEFAULT '',
+       autorizador_nombre text, contraparte_nombre text NOT NULL DEFAULT '', documento_folio text NOT NULL DEFAULT '',
+       ubicacion_id integer REFERENCES ubicaciones(id), ubicacion_nombre text,
       movimiento_id integer,
       estado estado_solicitud_pago_dirigido NOT NULL DEFAULT 'PENDIENTE',
       resuelta_at timestamptz, created_at timestamptz NOT NULL DEFAULT now()
@@ -34,6 +35,15 @@ export async function ensureSolicitudesPagoDirigidoSchema(pool: Pool): Promise<v
     ALTER TABLE solicitudes_pago_dirigido ADD COLUMN IF NOT EXISTS autorizador_nombre text;
     ALTER TABLE solicitudes_pago_dirigido ADD COLUMN IF NOT EXISTS contraparte_nombre text NOT NULL DEFAULT '';
     ALTER TABLE solicitudes_pago_dirigido ADD COLUMN IF NOT EXISTS documento_folio text NOT NULL DEFAULT '';
+    ALTER TABLE solicitudes_pago_dirigido ADD COLUMN IF NOT EXISTS ubicacion_id integer REFERENCES ubicaciones(id);
+    ALTER TABLE solicitudes_pago_dirigido ADD COLUMN IF NOT EXISTS ubicacion_nombre text;
+    UPDATE solicitudes_pago_dirigido s SET
+      ubicacion_id=COALESCE(s.ubicacion_id, CASE WHEN s.tipo='CLIENTE' THEN
+        (SELECT t.ubicacion_id FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id WHERE m.id=s.documento_movimiento_id)
+        ELSE (SELECT e.ubicacion_id FROM pagos_proveedor p JOIN entradas e ON e.id=p.entrada_id WHERE p.id=s.documento_movimiento_id) END),
+      ubicacion_nombre=COALESCE(s.ubicacion_nombre, CASE WHEN s.tipo='CLIENTE' THEN
+        (SELECT u.nombre FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id JOIN ubicaciones u ON u.id=t.ubicacion_id WHERE m.id=s.documento_movimiento_id)
+        ELSE (SELECT u.nombre FROM pagos_proveedor p JOIN entradas e ON e.id=p.entrada_id JOIN ubicaciones u ON u.id=e.ubicacion_id WHERE p.id=s.documento_movimiento_id) END);
     ALTER TABLE solicitudes_pago_dirigido DROP CONSTRAINT IF EXISTS solicitudes_pago_dirigido_resolved_check;
     ALTER TABLE solicitudes_pago_dirigido ADD CONSTRAINT solicitudes_pago_dirigido_resolved_check CHECK
       ((estado='PENDIENTE' AND autorizador_id IS NULL AND resuelta_at IS NULL)

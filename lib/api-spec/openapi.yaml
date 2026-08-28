@@ -4249,6 +4249,7 @@ paths:
                   color,
                   compras,
                   clientes,
+                  pagos-dirigidos,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -4302,6 +4303,7 @@ paths:
                   color,
                   compras,
                   clientes,
+                  pagos-dirigidos,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -4356,6 +4358,7 @@ paths:
                   color,
                   compras,
                   clientes,
+                  pagos-dirigidos,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -4793,6 +4796,8 @@ components:
           solicitanteNombre,
           contraparteNombre,
           documentoFolio,
+          ubicacionId,
+          ubicacionNombre,
           estado,
           createdAt,
         ]
@@ -4815,6 +4820,8 @@ components:
         autorizadorNombre: { type: ["string", "null"] }
         contraparteNombre: { type: string }
         documentoFolio: { type: string }
+        ubicacionId: { type: ["number", "null"] }
+        ubicacionNombre: { type: ["string", "null"] }
         movimientoId: { type: ["number", "null"] }
         estado: { type: string, enum: [PENDIENTE, APROBADA, RECHAZADA] }
         createdAt: { type: string, format: date-time }
@@ -7102,7 +7109,7 @@ components:
       enum: [AVISO, SOLICITUD, ALERTA]
     NotificationFeedEvent:
       type: object
-      required: [id, kind, family, title, message, href, updatedAt, siteId]
+      required: [id, kind, family, title, message, href, updatedAt, siteId, action]
       properties:
         id:
           {
@@ -7129,6 +7136,21 @@ components:
         href: { type: string }
         updatedAt: { type: string, format: date-time }
         siteId: { type: ["number", "null"] }
+        action:
+          oneOf:
+            - $ref: "#/components/schemas/DirectedPaymentNotificationAction"
+            - type: "null"
+    DirectedPaymentNotificationAction:
+      type: object
+      required: [requestId, tipo, contraparte, documento, importe, motivo, solicitante]
+      properties:
+        requestId: { type: number }
+        tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
+        contraparte: { type: string }
+        documento: { type: string }
+        importe: { type: string }
+        motivo: { type: string }
+        solicitante: { type: string }
     NotificationFeed:
       type: object
       required: [events, generatedAt, sessionKey]

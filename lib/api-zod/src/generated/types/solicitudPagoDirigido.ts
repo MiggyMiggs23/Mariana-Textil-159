@@ -35,6 +35,10 @@ export interface SolicitudPagoDirigido {
   contraparteNombre: string;
   documentoFolio: string;
   /** @nullable */
+  ubicacionId: number | null;
+  /** @nullable */
+  ubicacionNombre: string | null;
+  /** @nullable */
   movimientoId?: number | null;
   estado: SolicitudPagoDirigidoEstado;
   createdAt: Date;

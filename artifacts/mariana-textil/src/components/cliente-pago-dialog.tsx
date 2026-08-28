@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Wallet, ArrowRight, CheckCircle2, ChevronLeft } from "lucide-react";
 import {
   useCreateClientePago,
+  useCreateSolicitudPagoDirigido,
   usePreviewClientePago,
   type ClientePago,
   type ClientePagoPreview,
@@ -43,6 +44,9 @@ export function ClientePagoDialog({
   const [reference, setReference] = useState("");
   const [paymentNotes, setPaymentNotes] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
+  const [mode, setMode] = useState<"FIFO" | "DIRIGIDO">("FIFO");
+  const [selectedMovementId, setSelectedMovementId] = useState<number | null>(null);
+  const [motivo, setMotivo] = useState("");
 
   const [previewData, setPreviewData] = useState<ClientePagoPreview | null>(null);
   const [realResult, setRealResult] = useState<ClientePago | null>(null);
@@ -50,6 +54,7 @@ export function ClientePagoDialog({
   const { toast } = useToast();
   const previewPayment = usePreviewClientePago();
   const createPayment = useCreateClientePago();
+  const createDirectedPayment = useCreateSolicitudPagoDirigido();
 
   // Reset form when modal opens/closes
   useEffect(() => {
@@ -60,6 +65,9 @@ export function ClientePagoDialog({
       setDestinationAccount("CAJA_FISICA");
       setReference("");
       setPaymentNotes("");
+      setMode("FIFO");
+      setSelectedMovementId(null);
+      setMotivo("");
       setPreviewData(null);
       setRealResult(null);
 
@@ -118,6 +126,22 @@ export function ClientePagoDialog({
 
   const submitPayment = () => {
     if (!destinationAccount) return;
+    if (mode === "DIRIGIDO") {
+      if (!selectedMovementId || motivo.trim().length < 10) return;
+      createDirectedPayment.mutate({
+        data: {
+          tipo: "CLIENTE", entidadId: clienteId, documentoMovimientoId: selectedMovementId,
+          importe: Number(amount), formaPago: paymentMethod, cuentaDestino: destinationAccount,
+          referencia: reference || undefined, notas: paymentNotes || undefined,
+          fechaEfectiva: effectiveDate ? `${effectiveDate}T12:00:00` : undefined,
+          motivo: motivo.trim(),
+        },
+      }, {
+        onSuccess: (data) => { setRealResult(data as unknown as ClientePago); setStep("success"); onSuccess?.(); },
+        onError: (error) => toast({ title: "Error al solicitar pago dirigido", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" }),
+      });
+      return;
+    }
 
     createPayment.mutate(
       {
@@ -149,6 +173,7 @@ export function ClientePagoDialog({
   };
 
   const isFormValid = Number(amount) > 0 && destinationAccount !== "";
+  const isSubmitting = createPayment.isPending || createDirectedPayment.isPending;
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
@@ -174,6 +199,13 @@ export function ClientePagoDialog({
 
         {step === "form" && (
           <div className="space-y-5 p-6 bg-secondary/10">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Aplicación</Label>
+              <Select value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
+                <SelectTrigger className="h-12 bg-white border-2" data-testid="select-cliente-payment-mode"><SelectValue /></SelectTrigger>
+                <SelectContent><SelectItem value="FIFO">Normal (FIFO)</SelectItem><SelectItem value="DIRIGIDO">Pago dirigido</SelectItem></SelectContent>
+              </Select>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2 col-span-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Importe a abonar</Label>
@@ -286,10 +318,10 @@ export function ClientePagoDialog({
 
             {previewData.asignaciones.length > 0 ? (
               <div className="space-y-3">
-                <h4 className="font-bold text-sidebar border-b pb-2">Reparto de abono (FIFO)</h4>
+                <h4 className="font-bold text-sidebar border-b pb-2">{mode === "FIFO" ? "Reparto de abono (FIFO)" : "Selecciona exactamente una nota"}</h4>
                 <div className="space-y-2">
                   {previewData.asignaciones.map((asig) => (
-                    <div key={asig.movimientoVentaId} className="bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between">
+                    <button type="button" key={asig.movimientoVentaId} disabled={mode === "FIFO"} onClick={() => setSelectedMovementId(asig.movimientoVentaId)} className={`w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between ${mode === "DIRIGIDO" && selectedMovementId === asig.movimientoVentaId ? "ring-2 ring-primary" : ""}`}>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>
@@ -305,13 +337,19 @@ export function ClientePagoDialog({
                         <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Aplicado</span>
                         <span className="font-black text-primary tabular-nums">+{formatNumber(asig.aplicado, { kind: "money" })}</span>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
             ) : (
               <div className="text-center py-6 bg-amber-50 rounded-lg border border-amber-200">
                 <p className="font-medium text-amber-700">No hay notas pendientes para aplicar saldo.</p>
+              </div>
+            )}
+            {mode === "DIRIGIDO" && (
+              <div className="space-y-2">
+                <Label>Motivo del pago dirigido (mínimo 10 caracteres)</Label>
+                <Textarea value={motivo} onChange={(event) => setMotivo(event.target.value)} data-testid="input-cliente-directed-reason" />
               </div>
             )}
 
@@ -333,7 +371,7 @@ export function ClientePagoDialog({
           <div className="p-6 bg-secondary/10 space-y-6 animate-in zoom-in-95 max-h-[60vh] overflow-y-auto">
              <div className="bg-white border-2 border-emerald-500/20 rounded-xl shadow-sm p-6 text-center space-y-2">
                 <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
-                 <h3 className="font-black text-xl text-sidebar">Abono registrado exitosamente</h3>
+                  <h3 className="font-black text-xl text-sidebar">{mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "Abono registrado exitosamente"}</h3>
                 <p className="text-muted-foreground text-sm font-medium">Se aplicó {formatNumber(amount, { kind: "money" })} a la cuenta del cliente.</p>
              </div>
 
@@ -385,11 +423,11 @@ export function ClientePagoDialog({
               </Button>
               <Button
                 onClick={submitPayment}
-                disabled={createPayment.isPending}
+                 disabled={isSubmitting || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
                 className="font-bold h-10 px-8"
               >
-                {createPayment.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Confirmar Abono
+                 {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                 {mode === "DIRIGIDO" ? "Enviar solicitud" : "Confirmar Abono"}
               </Button>
             </>
           )}

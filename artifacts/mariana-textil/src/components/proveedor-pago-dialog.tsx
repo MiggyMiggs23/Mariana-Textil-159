@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Wallet, ArrowRight, CheckCircle2, ChevronLeft } from "lucide-react";
-import { usePreviewPagoProveedor, useRegistrarPagoProveedor, PreviewPagoProveedor, FormaPagoProveedor } from "@workspace/api-client-react";
+import { usePreviewPagoProveedor, useRegistrarPagoProveedor, useCreateSolicitudPagoDirigido, PreviewPagoProveedor, FormaPagoProveedor } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
@@ -36,6 +36,9 @@ export function ProveedorPagoDialog({
   const [reference, setReference] = useState("");
   const [paymentNotes, setPaymentNotes] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
+  const [mode, setMode] = useState<"FIFO" | "DIRIGIDO">("FIFO");
+  const [selectedMovementId, setSelectedMovementId] = useState<number | null>(null);
+  const [motivo, setMotivo] = useState("");
 
   const [previewData, setPreviewData] = useState<PreviewPagoProveedor | null>(null);
   const [realResult, setRealResult] = useState<any>(null);
@@ -43,6 +46,7 @@ export function ProveedorPagoDialog({
   const { toast } = useToast();
   const previewPayment = usePreviewPagoProveedor();
   const createPayment = useRegistrarPagoProveedor();
+  const createDirectedPayment = useCreateSolicitudPagoDirigido();
 
   useEffect(() => {
     if (open) {
@@ -51,6 +55,9 @@ export function ProveedorPagoDialog({
       setPaymentMethod(FormaPagoProveedor.TRANSFERENCIA);
       setReference("");
       setPaymentNotes("");
+      setMode("FIFO");
+      setSelectedMovementId(null);
+      setMotivo("");
       setPreviewData(null);
       setRealResult(null);
 
@@ -92,6 +99,19 @@ export function ProveedorPagoDialog({
   };
 
   const submitPayment = () => {
+    if (mode === "DIRIGIDO") {
+      if (!selectedMovementId || motivo.trim().length < 10) return;
+      createDirectedPayment.mutate({ data: {
+        tipo: "PROVEEDOR", entidadId: proveedorId, documentoMovimientoId: selectedMovementId,
+        importe: Number(amount), formaPago: paymentMethod, referencia: reference || undefined,
+        notas: paymentNotes || undefined, fechaEfectiva: effectiveDate ? `${effectiveDate}T12:00:00` : undefined,
+        motivo: motivo.trim(),
+      } }, {
+        onSuccess: (data) => { setRealResult(data); setStep("success"); onSuccess?.(); },
+        onError: (error) => toast({ title: "Error al solicitar pago dirigido", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" }),
+      });
+      return;
+    }
     createPayment.mutate(
       {
         id: proveedorId,
@@ -121,6 +141,7 @@ export function ProveedorPagoDialog({
   };
 
   const isFormValid = Number(amount) > 0;
+  const isSubmitting = createPayment.isPending || createDirectedPayment.isPending;
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
@@ -146,6 +167,13 @@ export function ProveedorPagoDialog({
 
         {step === "form" && (
           <div className="space-y-5 p-6 bg-secondary/10">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Aplicación</Label>
+              <Select value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
+                <SelectTrigger className="h-12 bg-white border-2" data-testid="select-proveedor-payment-mode"><SelectValue /></SelectTrigger>
+                <SelectContent><SelectItem value="FIFO">Normal (FIFO)</SelectItem><SelectItem value="DIRIGIDO">Pago dirigido</SelectItem></SelectContent>
+              </Select>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2 col-span-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Importe a pagar</Label>
@@ -223,10 +251,10 @@ export function ProveedorPagoDialog({
 
             {previewData.asignaciones.length > 0 ? (
               <div className="space-y-3">
-                <h4 className="font-bold text-sidebar border-b pb-2">Reparto de pago (FIFO)</h4>
+                <h4 className="font-bold text-sidebar border-b pb-2">{mode === "FIFO" ? "Reparto de pago (FIFO)" : "Selecciona exactamente una compra"}</h4>
                 <div className="space-y-2">
                   {previewData.asignaciones.map((asig, idx) => (
-                    <div key={idx} className="bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between">
+                    <button type="button" key={idx} disabled={mode === "FIFO"} onClick={() => setSelectedMovementId(asig.compraProveedorId)} className={`w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between ${mode === "DIRIGIDO" && selectedMovementId === asig.compraProveedorId ? "ring-2 ring-primary" : ""}`}>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-black text-sm text-sidebar">#{asig.folio || asig.entradaId || "Compra"}</span>
@@ -242,13 +270,19 @@ export function ProveedorPagoDialog({
                         <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Aplicado</span>
                         <span className="font-black text-primary tabular-nums">+{formatNumber(asig.importe, { kind: "money" })}</span>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
             ) : (
               <div className="text-center py-6 bg-amber-50 rounded-lg border border-amber-200">
                 <p className="font-medium text-amber-700">No hay compras pendientes para aplicar este pago.</p>
+              </div>
+            )}
+            {mode === "DIRIGIDO" && (
+              <div className="space-y-2">
+                <Label>Motivo del pago dirigido (mínimo 10 caracteres)</Label>
+                <Textarea value={motivo} onChange={(event) => setMotivo(event.target.value)} data-testid="input-proveedor-directed-reason" />
               </div>
             )}
 
@@ -270,7 +304,7 @@ export function ProveedorPagoDialog({
           <div className="p-6 bg-secondary/10 space-y-6 animate-in zoom-in-95 max-h-[60vh] overflow-y-auto">
              <div className="bg-white border-2 border-emerald-500/20 rounded-xl shadow-sm p-6 text-center space-y-2">
                 <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
-                <h3 className="font-black text-xl text-sidebar">¡Pago registrado exitosamente!</h3>
+                 <h3 className="font-black text-xl text-sidebar">{mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "¡Pago registrado exitosamente!"}</h3>
                 <p className="text-muted-foreground text-sm font-medium">Se aplicó {formatNumber(amount, { kind: "money" })} a la cuenta del proveedor.</p>
              </div>
 
@@ -322,11 +356,11 @@ export function ProveedorPagoDialog({
               </Button>
               <Button
                 onClick={submitPayment}
-                disabled={createPayment.isPending}
+                 disabled={isSubmitting || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
                 className="font-bold h-10 px-8"
               >
-                {createPayment.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Confirmar Pago
+                 {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                 {mode === "DIRIGIDO" ? "Enviar solicitud" : "Confirmar Pago"}
               </Button>
             </>
           )}

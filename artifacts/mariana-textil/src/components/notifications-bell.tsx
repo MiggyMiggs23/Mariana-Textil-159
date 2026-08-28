@@ -2,9 +2,13 @@ import { useState } from "react";
 import { Link } from "wouter";
 import {
   getGetNotificationFeedQueryKey,
+  getListSolicitudesPagoDirigidoQueryKey,
   NotificationFamily,
+  useAprobarSolicitudPagoDirigido,
   useGetNotificationFeed,
+  useRechazarSolicitudPagoDirigido,
 } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   Bell,
@@ -18,6 +22,10 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 const FAMILY_LABELS: Record<NotificationFamily, string> = {
   AVISO: "Aviso",
@@ -51,6 +59,12 @@ export function NotificationsBell({
   isAdmin?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [rejecting, setRejecting] = useState<number | null>(null);
+  const [motivoRechazo, setMotivoRechazo] = useState("");
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const approve = useAprobarSolicitudPagoDirigido();
+  const reject = useRechazarSolicitudPagoDirigido();
   const { data, isLoading, isError, refetch } = useGetNotificationFeed({
     query: {
       queryKey: getGetNotificationFeedQueryKey(),
@@ -60,6 +74,23 @@ export function NotificationsBell({
   });
 
   const events = data?.events ?? [];
+  const refreshDirected = () => {
+    queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getListSolicitudesPagoDirigidoQueryKey() });
+    queryClient.invalidateQueries({ queryKey: ["/api/clientes"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/proveedores"] });
+  };
+  const approveDirected = (requestId: number) => approve.mutate({ id: requestId }, {
+    onSuccess: () => { refreshDirected(); toast({ title: "Pago dirigido aprobado" }); },
+    onError: (error) => toast({ title: "No se pudo aprobar", description: getApiErrorMessage(error), variant: "destructive" }),
+  });
+  const rejectDirected = () => {
+    if (rejecting == null || motivoRechazo.trim().length < 10) return;
+    reject.mutate({ id: rejecting, data: { motivoRechazo: motivoRechazo.trim() } }, {
+      onSuccess: () => { refreshDirected(); setRejecting(null); setMotivoRechazo(""); toast({ title: "Pago dirigido rechazado" }); },
+      onError: (error) => toast({ title: "No se pudo rechazar", description: getApiErrorMessage(error), variant: "destructive" }),
+    });
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -112,10 +143,8 @@ export function NotificationsBell({
           ) : (
             <div className="divide-y">
               {events.map((event) => (
-                <Link
+                <div
                   key={`${event.id}:${event.updatedAt}`}
-                  href={event.href}
-                  onClick={() => setOpen(false)}
                   className="block p-4 outline-none transition-colors hover:bg-muted focus:bg-muted"
                 >
                   <div className="flex items-start gap-3">
@@ -128,10 +157,22 @@ export function NotificationsBell({
                         </span>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{event.message}</p>
+                      {isAdmin && event.kind === "DIRECTED_PAYMENT" && event.action ? (
+                        <div className="mt-2 space-y-2" data-testid={`directed-payment-action-${event.action.requestId}`}>
+                          <p className="text-xs"><strong>{event.action.documento}</strong> · {event.action.contraparte}</p>
+                          <p className="text-xs text-muted-foreground">{event.action.motivo}</p>
+                          <div className="flex gap-2">
+                            <Button size="sm" disabled={approve.isPending || reject.isPending} onClick={() => approveDirected(event.action!.requestId)}>Aprobar</Button>
+                            <Button size="sm" variant="destructive" disabled={approve.isPending || reject.isPending} onClick={() => { setRejecting(event.action!.requestId); setMotivoRechazo(""); }}>Rechazar</Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <Link href={event.href} onClick={() => setOpen(false)} className="mt-2 inline-block text-xs font-medium text-primary hover:underline">Ver detalle</Link>
+                      )}
                       <p className="mt-2 text-[10px] text-muted-foreground">{eventTime(event.updatedAt)}</p>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           )}
@@ -156,6 +197,13 @@ export function NotificationsBell({
           </div>
         )}
       </PopoverContent>
+      <Dialog open={rejecting != null} onOpenChange={(value) => { if (!value) { setRejecting(null); setMotivoRechazo(""); } }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Rechazar pago dirigido</DialogTitle></DialogHeader>
+          <Textarea value={motivoRechazo} onChange={(event) => setMotivoRechazo(event.target.value)} placeholder="Motivo del rechazo (mínimo 10 caracteres)" data-testid="input-directed-rejection-reason" />
+          <DialogFooter><Button variant="ghost" onClick={() => setRejecting(null)}>Cancelar</Button><Button variant="destructive" onClick={rejectDirected} disabled={reject.isPending || motivoRechazo.trim().length < 10}>Confirmar rechazo</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Popover>
   );
 }

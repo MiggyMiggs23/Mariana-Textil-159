@@ -204,6 +204,8 @@ export * from "./generated/types/credencialesAdmin";
 export * from "./generated/types/currentUser";
 export * from "./generated/types/dashboard";
 export * from "./generated/types/dashboardInventarioPorUbicacionItem";
+export * from "./generated/types/directedPaymentNotificationAction";
+export * from "./generated/types/directedPaymentNotificationActionTipo";
 export * from "./generated/types/documentoTipoTicket";
 export * from "./generated/types/entradaDetail";
 export * from "./generated/types/entradaInput";

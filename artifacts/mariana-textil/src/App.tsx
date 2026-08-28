@@ -45,7 +45,6 @@ import Alertas from "@/pages/alertas";
 import CajaTiempoReal from "@/pages/caja/tiempo-real";
 import CajaCortes from "@/pages/caja/cortes";
 import CajaCuentasDestino from "@/pages/caja/cuentas-destino";
-import PagosDirigidos from "@/pages/pagos-dirigidos";
 import Notificaciones from "@/pages/notificaciones";
 import Reportes from "@/pages/reportes";
 import Contenedores from "@/pages/contenedores/index";
@@ -193,6 +192,12 @@ function PosWithLayout() {
       <Pos />
     </AppLayout>
   );
+}
+
+function RedirectPagosDirigidos() {
+  const [, setLocation] = useLocation();
+  useEffect(() => setLocation("/reportes?tab=pagos-dirigidos"), [setLocation]);
+  return null;
 }
 
 function Router() {
@@ -448,7 +453,7 @@ function Router() {
         />
         <Route
           path="/pagos-dirigidos"
-          component={() => <ProtectedRoute component={PagosDirigidos} />}
+          component={() => <ProtectedRoute component={RedirectPagosDirigidos} allowedModule={Modules.REPORTES} />}
         />
         <Route
           path="/caja/diferencias"

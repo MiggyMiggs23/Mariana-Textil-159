@@ -85,14 +85,15 @@ async function apply(tx: any, request: any, userId: number) {
 async function snapshots(tx: any, data: Payment, userId: number) {
   const user = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${userId}`);
   const document = await tx.execute(data.tipo === "CLIENTE" ? sql`
-    SELECT c.nombre contraparte, CONCAT('Nota ',t.folio) folio FROM movimientos_credito m
-    JOIN clientes c ON c.id=m.cliente_id JOIN tickets t ON t.id=m.ticket_id
+    SELECT c.nombre contraparte, CONCAT('Nota ',t.folio) folio, t.ubicacion_id, u.nombre ubicacion_nombre FROM movimientos_credito m
+    JOIN clientes c ON c.id=m.cliente_id JOIN tickets t ON t.id=m.ticket_id JOIN ubicaciones u ON u.id=t.ubicacion_id
     WHERE m.id=${data.documentoMovimientoId} AND m.cliente_id=${data.entidadId} AND m.tipo='VENTA_CREDITO'`
-    : sql`SELECT p.nombre contraparte, CONCAT('Compra ',e.folio) folio FROM pagos_proveedor pp
-    JOIN proveedores p ON p.id=pp.proveedor_id LEFT JOIN entradas e ON e.id=pp.entrada_id
+    : sql`SELECT p.nombre contraparte, CONCAT('Compra ',e.folio) folio, e.ubicacion_id, u.nombre ubicacion_nombre FROM pagos_proveedor pp
+    JOIN proveedores p ON p.id=pp.proveedor_id LEFT JOIN entradas e ON e.id=pp.entrada_id LEFT JOIN ubicaciones u ON u.id=e.ubicacion_id
     WHERE pp.id=${data.documentoMovimientoId} AND pp.proveedor_id=${data.entidadId} AND pp.tipo='COMPRA'`);
   if (!document.rows[0]) throw new Error("DIRECTED_DOCUMENT_NOT_FOUND");
-  return { solicitanteNombre: String(user.rows[0]?.nombre ?? ""), contraparteNombre: String(document.rows[0].contraparte), documentoFolio: String(document.rows[0].folio ?? "Sin folio") };
+  const rawLocationId = document.rows[0].ubicacion_id;
+  return { solicitanteNombre: String(user.rows[0]?.nombre ?? ""), contraparteNombre: String(document.rows[0].contraparte), documentoFolio: String(document.rows[0].folio ?? "Sin folio"), ubicacionId: rawLocationId == null ? null : Number(rawLocationId), ubicacionNombre: document.rows[0].ubicacion_nombre == null ? null : String(document.rows[0].ubicacion_nombre) };
 }
 
 function present(row: any) {
@@ -106,6 +107,7 @@ function present(row: any) {
     solicitanteId: Number(row.solicitanteId ?? row.solicitante_id), solicitanteNombre: row.solicitanteNombre ?? row.solicitante_nombre,
     autorizadorId: row.autorizadorId ?? row.autorizador_id ?? null, autorizadorNombre: row.autorizadorNombre ?? row.autorizador_nombre ?? null,
     contraparteNombre: row.contraparteNombre ?? row.contraparte_nombre, documentoFolio: row.documentoFolio ?? row.documento_folio,
+    ubicacionId: row.ubicacionId ?? row.ubicacion_id ?? null, ubicacionNombre: row.ubicacionNombre ?? row.ubicacion_nombre ?? null,
     movimientoId: row.movimientoId ?? row.movimiento_id ?? null, estado: row.estado, createdAt: row.createdAt ?? row.created_at,
   };
 }

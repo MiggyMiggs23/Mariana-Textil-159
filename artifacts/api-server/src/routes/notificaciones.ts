@@ -62,7 +62,12 @@ type FeedEvent = {
   href: string;
   updatedAt: string;
   siteId: number | null;
+  action: {
+    requestId: number; tipo: Kind; contraparte: string; documento: string;
+    importe: string; motivo: string; solicitante: string;
+  } | null;
 };
+type Kind = "CLIENTE" | "PROVEEDOR";
 
 function directedPaymentEvent(row: Record<string, unknown>, adminQueue: boolean): FeedEvent {
   const id = Number(row.id);
@@ -88,7 +93,16 @@ function directedPaymentEvent(row: Record<string, unknown>, adminQueue: boolean)
       : `$${importe} para ${contraparte} · ${documento}.`,
     href: "/pagos-dirigidos",
     updatedAt,
-    siteId: null,
+    siteId: row.ubicacionId == null ? null : Number(row.ubicacionId),
+    action: adminQueue ? {
+      requestId: id,
+      tipo: tipo as Kind,
+      contraparte,
+      documento,
+      importe,
+      motivo: String(row.motivo),
+      solicitante: String(row.solicitanteNombre),
+    } : null,
   };
 }
 
@@ -136,6 +150,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
         href: `/cobros?ticketId=${ticketId}`,
         updatedAt: new Date(ticket.createdAt as string | Date).toISOString(),
         siteId: user.ubicacionId,
+        action: null,
       };
       events.set(event.id, event);
     }
@@ -177,6 +192,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: "/notificaciones",
           updatedAt: row.createdAt.toISOString(),
           siteId: null,
+          action: null,
         });
       }
       for (const row of creditNotifications) {
@@ -189,6 +205,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: `/clientes/${row.clienteId}?tab=estado`,
           updatedAt: row.createdAt.toISOString(),
           siteId: row.tiendaId,
+          action: null,
         });
       }
       for (const row of alerts.ticketsPendientes) {
@@ -201,6 +218,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: `/tickets/${row.id}`,
           updatedAt: row.createdAt,
           siteId: row.ubicacionId,
+          action: null,
         });
       }
       for (const row of alerts.creditos) {
@@ -213,6 +231,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: `/clientes/${row.clienteId}?tab=estado`,
           updatedAt: `${row.fechaVencimiento}T12:00:00.000Z`,
           siteId: null,
+          action: null,
         });
       }
       for (const row of alerts.salidasEnTransito) {
@@ -225,6 +244,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: `/salidas/${row.id}`,
           updatedAt: row.enviadaAt,
           siteId: row.destinoId,
+          action: null,
         });
       }
     }

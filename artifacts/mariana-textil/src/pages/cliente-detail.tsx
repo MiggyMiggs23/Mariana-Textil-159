@@ -49,6 +49,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { formatNumber } from "@workspace/number-format";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
+import { DirectedPaymentHistory } from "@/components/directed-payment-history";
 
 const date = (value?: string) => value ? new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(value)) : "—";
 
@@ -283,6 +284,7 @@ export default function ClienteDetail() {
           {canFinances && <ClientAnalyticsBlocks query={analytics} />}
         </Tabs>
 
+        {canFinances && <DirectedPaymentHistory tipo="CLIENTE" entidadId={id} />}
         <ClientePagoDialog
           open={paymentOpen}
           onOpenChange={setPaymentOpen}

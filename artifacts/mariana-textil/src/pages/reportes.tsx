@@ -23,6 +23,7 @@ const TABS = [
   { id: "color", label: "Análisis de Color" },
   { id: "compras", label: "Compras" },
   { id: "clientes", label: "Clientes y Crédito" },
+  { id: "pagos-dirigidos", label: "Pagos Dirigidos" },
   { id: "comparativo", label: "Comparativo entre Sitios" },
   { id: "diferencias", label: "Diferencias de Caja" },
 ];
@@ -48,7 +49,7 @@ export default function Reportes() {
 
   const allowedTabs = TABS.filter(tab => {
     if (!isAdmin) {
-      if (["utilidad", "compras", "clientes", "comparativo", "diferencias"].includes(tab.id)) {
+      if (["utilidad", "compras", "clientes", "pagos-dirigidos", "comparativo", "diferencias"].includes(tab.id)) {
         return false;
       }
     }
@@ -57,9 +58,12 @@ export default function Reportes() {
 
   // Extract tab from URL or default to "ventas"
   let activeTab = "ventas";
+  const requestedQueryTab = new URLSearchParams(searchString).get("tab");
   const pathParts = location.split('/');
   const lastPart = pathParts[pathParts.length - 1];
-  if (allowedTabs.some(t => t.id === lastPart)) {
+  if (allowedTabs.some(t => t.id === requestedQueryTab)) {
+    activeTab = requestedQueryTab!;
+  } else if (allowedTabs.some(t => t.id === lastPart)) {
     activeTab = lastPart;
   } else if (!allowedTabs.some(t => t.id === activeTab)) {
     activeTab = allowedTabs[0]?.id || "inventario";
@@ -97,10 +101,10 @@ export default function Reportes() {
 
   // Redirect to default tab if base route hit
   useEffect(() => {
-    if (location === "/reportes" || location === "/reportes/") {
+    if ((location === "/reportes" || location === "/reportes/") && !requestedQueryTab) {
       setLocation(`/reportes/ventas${searchString ? '?' + searchString : ''}`);
     }
-  }, [location, searchString, setLocation]);
+  }, [location, searchString, setLocation, requestedQueryTab]);
 
   // Sync state to URL when filters change
   const handleFilterChange = (newFilters: FilterState) => {

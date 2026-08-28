@@ -209,14 +209,6 @@ const NAV_GROUPS: NavGroup[] = [
         adminOnly: true,
       },
       {
-        name: "Pagos Dirigidos",
-        path: "/pagos-dirigidos",
-        icon: Activity,
-        module: Modules.COBROS_PAGOS,
-        anyModules: [Modules.CLIENTES_FINANZAS, Modules.PROVEEDORES_FINANZAS],
-        isClickable: true,
-      },
-      {
         name: "Alertas",
         path: "/alertas",
         icon: AlertTriangle,
@@ -487,14 +479,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               path: "/cobros",
               icon: Banknote,
               module: Modules.COBROS_PAGOS,
-              isClickable: true,
-            },
-            {
-              name: "Pagos Dirigidos",
-              path: "/pagos-dirigidos",
-              icon: Activity,
-              module: Modules.COBROS_PAGOS,
-              anyModules: [Modules.CLIENTES_FINANZAS],
               isClickable: true,
             },
             {

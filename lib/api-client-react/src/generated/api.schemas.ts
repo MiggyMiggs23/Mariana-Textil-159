@@ -54,6 +54,10 @@ export interface SolicitudPagoDirigido {
   contraparteNombre: string;
   documentoFolio: string;
   /** @nullable */
+  ubicacionId: number | null;
+  /** @nullable */
+  ubicacionNombre: string | null;
+  /** @nullable */
   movimientoId?: number | null;
   estado: SolicitudPagoDirigidoEstado;
   createdAt: string;
@@ -2378,6 +2382,24 @@ export const NotificationFeedEventKind = {
   CREDIT_NOTICE: 'CREDIT_NOTICE',
 } as const;
 
+export type DirectedPaymentNotificationActionTipo = typeof DirectedPaymentNotificationActionTipo[keyof typeof DirectedPaymentNotificationActionTipo];
+
+
+export const DirectedPaymentNotificationActionTipo = {
+  CLIENTE: 'CLIENTE',
+  PROVEEDOR: 'PROVEEDOR',
+} as const;
+
+export interface DirectedPaymentNotificationAction {
+  requestId: number;
+  tipo: DirectedPaymentNotificationActionTipo;
+  contraparte: string;
+  documento: string;
+  importe: string;
+  motivo: string;
+  solicitante: string;
+}
+
 export interface NotificationFeedEvent {
   /** Identificador estable del evento para deduplicar sonido entre consultas */
   id: string;
@@ -2389,6 +2411,7 @@ export interface NotificationFeedEvent {
   updatedAt: string;
   /** @nullable */
   siteId: number | null;
+  action: DirectedPaymentNotificationAction | null;
 }
 
 export interface NotificationFeed {

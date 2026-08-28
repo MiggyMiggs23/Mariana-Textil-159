@@ -12,6 +12,7 @@ export const REPORT_SECTIONS = [
   "color",
   "compras",
   "clientes",
+  "pagos-dirigidos",
 ] as const;
 
 export type ReportSection = (typeof REPORT_SECTIONS)[number];
@@ -166,7 +167,9 @@ export async function buildReport(
   const reportInput = economic ? input : omitEconomicReportFilters(input);
   const range = reportRange(reportInput);
   const context = { input: reportInput, locations, range };
-  const content = section === "ventas" || section === "utilidad"
+  const content = section === "pagos-dirigidos"
+    ? await buildDirectedPaymentsReport(context)
+    : section === "ventas" || section === "utilidad"
     ? await buildSalesReport(section, context)
     : section === "inventario" || section === "mapas-calor" || section === "color"
       ? await buildInventoryReport(section, context)
@@ -191,6 +194,39 @@ export async function buildReport(
     ...content,
   };
   return economic ? report : redactEconomic(report);
+}
+
+async function buildDirectedPaymentsReport(context: { input: Record<string, unknown>; locations?: number[]; range: ReturnType<typeof reportRange> }) {
+  const requested = typeof context.input.ubicacionIds === "string"
+    ? context.input.ubicacionIds.split(",").map(Number).filter(Number.isInteger) : [];
+  const locations = context.locations?.length ? context.locations : requested;
+  const result = await pool.query(`SELECT COALESCE(s.resuelta_at,s.created_at) fecha,
+      COALESCE(s.ubicacion_nombre,u.nombre,'Sin sitio') sitio,s.tipo,
+      s.contraparte_nombre contraparte,s.documento_folio documento,s.importe,s.motivo,
+      s.solicitante_nombre solicitante,COALESCE(s.autorizador_nombre,'') autorizador,s.estado
+    FROM solicitudes_pago_dirigido s LEFT JOIN ubicaciones u ON u.id=s.ubicacion_id
+    WHERE s.estado IN ('APROBADA','RECHAZADA')
+      AND COALESCE(s.resuelta_at,s.created_at) >= $1 AND COALESCE(s.resuelta_at,s.created_at) <= $2
+      AND ($3::int[] IS NULL OR s.ubicacion_id=ANY($3::int[]))
+    ORDER BY COALESCE(s.resuelta_at,s.created_at) DESC,s.id DESC`,
+    [context.range.desde, context.range.hasta, locations.length ? locations : null]);
+  const rows = result.rows.map((row) => ({
+    fecha: new Date(row.fecha).toISOString(), sitio: row.sitio, tipo: row.tipo,
+    contraparte: row.contraparte, documento: row.documento, importe: Number(row.importe),
+    motivo: row.motivo, solicitante: row.solicitante, autorizador: row.autorizador, estado: row.estado,
+  }));
+  return {
+    kpis: [{ id: "solicitudes", label: "Solicitudes resueltas", value: rows.length, kind: "count" }],
+    charts: [],
+    tables: [{ id: "pagos-dirigidos", title: "Pagos dirigidos resueltos", columns: [
+      { key: "fecha", label: "Fecha", kind: "text" }, { key: "sitio", label: "Sitio", kind: "text" },
+      { key: "tipo", label: "Tipo", kind: "text" }, { key: "contraparte", label: "Cliente / proveedor", kind: "text" },
+      { key: "documento", label: "Documento", kind: "text" }, { key: "importe", label: "Monto", kind: "money", economic: true },
+      { key: "motivo", label: "Motivo", kind: "text" }, { key: "solicitante", label: "Solicitante", kind: "text" },
+      { key: "autorizador", label: "Autorizador", kind: "text" }, { key: "estado", label: "Estado", kind: "text" },
+    ], rows, totals: { importe: rows.reduce((sum, row) => sum + row.importe, 0) } }],
+    warnings: ["Incluye únicamente solicitudes aprobadas o rechazadas; las pendientes se atienden desde notificaciones."],
+  };
 }
 
 export async function getCatalogs(locations?: number[], economic = true) {

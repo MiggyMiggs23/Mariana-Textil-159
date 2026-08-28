@@ -40,6 +40,8 @@ export const ListSolicitudesPagoDirigidoResponse = zod.object({
   "autorizadorNombre": zod.string().nullish(),
   "contraparteNombre": zod.string(),
   "documentoFolio": zod.string(),
+  "ubicacionId": zod.number().nullable(),
+  "ubicacionNombre": zod.string().nullable(),
   "movimientoId": zod.number().nullish(),
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
   "createdAt": zod.coerce.date()
@@ -91,6 +93,8 @@ export const CreateSolicitudPagoDirigidoResponse = zod.object({
   "autorizadorNombre": zod.string().nullish(),
   "contraparteNombre": zod.string(),
   "documentoFolio": zod.string(),
+  "ubicacionId": zod.number().nullable(),
+  "ubicacionNombre": zod.string().nullable(),
   "movimientoId": zod.number().nullish(),
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
   "createdAt": zod.coerce.date()
@@ -151,6 +155,8 @@ export const RechazarSolicitudPagoDirigidoResponse = zod.object({
   "autorizadorNombre": zod.string().nullish(),
   "contraparteNombre": zod.string(),
   "documentoFolio": zod.string(),
+  "ubicacionId": zod.number().nullable(),
+  "ubicacionNombre": zod.string().nullable(),
   "movimientoId": zod.number().nullish(),
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
   "createdAt": zod.coerce.date()
@@ -4453,7 +4459,16 @@ export const GetNotificationFeedResponse = zod.object({
   "message": zod.string(),
   "href": zod.string(),
   "updatedAt": zod.coerce.date(),
-  "siteId": zod.number().nullable()
+  "siteId": zod.number().nullable(),
+  "action": zod.union([zod.object({
+  "requestId": zod.number(),
+  "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
+  "contraparte": zod.string(),
+  "documento": zod.string(),
+  "importe": zod.string(),
+  "motivo": zod.string(),
+  "solicitante": zod.string()
+}),zod.null()])
 })),
   "generatedAt": zod.coerce.date(),
   "sessionKey": zod.string().describe('Namespace opaco de la sesión para coordinar deduplicación entre pestañas')
@@ -7360,7 +7375,7 @@ export const GetReportesCatalogosResponse = zod.object({
  * @summary Reporte analítico de sólo lectura
  */
 export const GetReporteSeccionParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos'])
 })
 
 export const getReporteSeccionQueryPeriodoDefault = `mensual`;
@@ -7454,7 +7469,7 @@ export const GetReporteSeccionResponse = zod.object({
  * @summary Exporta un reporte a XLSX
  */
 export const ExportReporteSeccionXlsxParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos'])
 })
 
 export const exportReporteSeccionXlsxQueryPeriodoDefault = `mensual`;
@@ -7496,7 +7511,7 @@ export const ExportReporteSeccionXlsxResponse = zod.unknown()
  * @summary Exporta un reporte a PDF
  */
 export const ExportReporteSeccionPdfParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos'])
 })
 
 export const exportReporteSeccionPdfQueryPeriodoDefault = `mensual`;

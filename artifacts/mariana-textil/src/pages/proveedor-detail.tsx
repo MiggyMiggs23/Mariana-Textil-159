@@ -47,6 +47,7 @@ import {
 import { ProveedorPagoDialog } from "@/components/proveedor-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { ProveedorCompraDetalle } from "@/components/proveedor-compra-detalle";
+import { DirectedPaymentHistory } from "@/components/directed-payment-history";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -1032,6 +1033,7 @@ export default function ProveedorDetail() {
 
       {canVerFinanzas && (
         <>
+          {canViewFinanzas && <DirectedPaymentHistory tipo="PROVEEDOR" entidadId={provId} />}
           <ProveedorPagoDialog
           open={isPagoOpen}
           onOpenChange={setIsPagoOpen}
