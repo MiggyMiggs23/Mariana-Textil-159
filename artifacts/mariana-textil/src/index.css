@@ -219,6 +219,10 @@
   display: none;
 }
 
+.hoja-ventas-print {
+  display: none;
+}
+
 @media print {
   body.print-viaje { background: white !important; }
   body.print-viaje .no-print { display: none !important; }
@@ -336,6 +340,32 @@
     overflow: visible;
     border: 0;
     box-shadow: none;
+  }
+
+  @page hoja-ventas {
+    size: letter portrait;
+    margin: 10mm;
+  }
+
+  body.print-hoja-ventas {
+    background: white;
+  }
+
+  body.print-hoja-ventas * {
+    visibility: hidden;
+  }
+
+  body.print-hoja-ventas .hoja-ventas-print,
+  body.print-hoja-ventas .hoja-ventas-print * {
+    visibility: visible;
+  }
+
+  body.print-hoja-ventas .hoja-ventas-print {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    color: black;
+    page: hoja-ventas;
   }
 
   .print-ticket-container {

@@ -52,6 +52,8 @@ export const sesionesCajaTable = pgTable(
     /** Calendar day in the Mexico City operating timezone, not UTC. */
     fechaOperativa: date("fecha_operativa", { mode: "string" }).notNull(),
     cerradaAt: timestamp("cerrada_at", { withTimezone: true }),
+    /** Actor that performed the close; it may differ from the opening cashier. */
+    cerradaPorId: integer("cerrada_por_id").references(() => usuariosTable.id),
     fondoInicial: numeric("fondo_inicial", {
       precision: 12,
       scale: 2,

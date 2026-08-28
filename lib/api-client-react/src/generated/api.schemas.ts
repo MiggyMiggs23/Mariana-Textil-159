@@ -4501,6 +4501,55 @@ export interface CorteProducto {
   importe: string;
 }
 
+export type HojaVentasDiaLineaUnidad = typeof HojaVentasDiaLineaUnidad[keyof typeof HojaVentasDiaLineaUnidad];
+
+
+export const HojaVentasDiaLineaUnidad = {
+  ROLLOS: 'ROLLOS',
+  METRO: 'METRO',
+  KILO: 'KILO',
+} as const;
+
+export interface HojaVentasDiaLinea {
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  tipo: TipoTicket;
+  unidad: HojaVentasDiaLineaUnidad;
+  cantidad: string;
+  importe: string;
+}
+
+export type HojaVentasDiaSeccionModalidad = typeof HojaVentasDiaSeccionModalidad[keyof typeof HojaVentasDiaSeccionModalidad];
+
+
+export const HojaVentasDiaSeccionModalidad = {
+  ROLLOS: 'ROLLOS',
+  METRAJE: 'METRAJE',
+} as const;
+
+export interface HojaVentasDiaSeccion {
+  modalidad: HojaVentasDiaSeccionModalidad;
+  lineas: HojaVentasDiaLinea[];
+  subtotal: string;
+}
+
+export interface HojaVentasDia {
+  sitio: string;
+  fechaOperativa: string;
+  cerrada: boolean;
+  /** @nullable */
+  quienCerro: string | null;
+  secciones: HojaVentasDiaSeccion[];
+  totalRollos: string;
+  totalMetros: string;
+  totalKilos: string;
+  subtotal: string;
+  ivaFacturado: string;
+  totalGeneral: string;
+}
+
 export interface CortePendiente {
   ticketId: number;
   folio: number;
@@ -4612,6 +4661,7 @@ export interface CorteCaja {
   efectivoContado: string | null;
   /** @nullable */
   diferencia: string | null;
+  hojaVentasDia: HojaVentasDia;
   /**
      * Solo presente en respuestas exclusivas para ADMIN
      * @nullable

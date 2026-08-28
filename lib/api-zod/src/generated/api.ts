@@ -5676,6 +5676,32 @@ export const ObtenerCorteCajaResponse = zod.object({
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
+  "hojaVentasDia": zod.object({
+  "sitio": zod.string(),
+  "fechaOperativa": zod.coerce.date(),
+  "cerrada": zod.boolean(),
+  "quienCerro": zod.string().nullable(),
+  "secciones": zod.array(zod.object({
+  "modalidad": zod.enum(['ROLLOS', 'METRAJE']),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO']),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})),
+  "subtotal": zod.string()
+})),
+  "totalRollos": zod.string(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "subtotal": zod.string(),
+  "ivaFacturado": zod.string(),
+  "totalGeneral": zod.string()
+}),
   "costo": zod.string().nullish().describe('Solo presente en respuestas exclusivas para ADMIN'),
   "margen": zod.string().nullish().describe('Margen sobre subtotal; solo presente para ADMIN'),
   "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),
@@ -5787,6 +5813,32 @@ export const CerrarSesionCajaResponse = zod.object({
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
+  "hojaVentasDia": zod.object({
+  "sitio": zod.string(),
+  "fechaOperativa": zod.coerce.date(),
+  "cerrada": zod.boolean(),
+  "quienCerro": zod.string().nullable(),
+  "secciones": zod.array(zod.object({
+  "modalidad": zod.enum(['ROLLOS', 'METRAJE']),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO']),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})),
+  "subtotal": zod.string()
+})),
+  "totalRollos": zod.string(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "subtotal": zod.string(),
+  "ivaFacturado": zod.string(),
+  "totalGeneral": zod.string()
+}),
   "costo": zod.string().nullish().describe('Solo presente en respuestas exclusivas para ADMIN'),
   "margen": zod.string().nullish().describe('Margen sobre subtotal; solo presente para ADMIN'),
   "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),
@@ -7314,6 +7366,32 @@ export const GetAdminCorteResponse = zod.object({
   "efectivoEsperado": zod.string(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
+  "hojaVentasDia": zod.object({
+  "sitio": zod.string(),
+  "fechaOperativa": zod.coerce.date(),
+  "cerrada": zod.boolean(),
+  "quienCerro": zod.string().nullable(),
+  "secciones": zod.array(zod.object({
+  "modalidad": zod.enum(['ROLLOS', 'METRAJE']),
+  "lineas": zod.array(zod.object({
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO']),
+  "cantidad": zod.string(),
+  "importe": zod.string()
+})),
+  "subtotal": zod.string()
+})),
+  "totalRollos": zod.string(),
+  "totalMetros": zod.string(),
+  "totalKilos": zod.string(),
+  "subtotal": zod.string(),
+  "ivaFacturado": zod.string(),
+  "totalGeneral": zod.string()
+}),
   "costo": zod.string().nullish().describe('Solo presente en respuestas exclusivas para ADMIN'),
   "margen": zod.string().nullish().describe('Margen sobre subtotal; solo presente para ADMIN'),
   "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),

@@ -4,6 +4,10 @@ import type { Pool } from "pg";
 export async function ensureCashSessionSchema(pool: Pick<Pool, "query">): Promise<void> {
   await pool.query(`
     ALTER TABLE sesiones_caja ADD COLUMN IF NOT EXISTS fecha_operativa date;
+    -- Keep historical sessions intact. New closures record their actual actor,
+    -- rather than incorrectly attributing a corte to the opening cashier.
+    ALTER TABLE sesiones_caja ADD COLUMN IF NOT EXISTS cerrada_por_id integer
+      REFERENCES usuarios(id);
     UPDATE sesiones_caja
       SET fecha_operativa = (abierta_at AT TIME ZONE 'America/Mexico_City')::date
       WHERE fecha_operativa IS NULL;

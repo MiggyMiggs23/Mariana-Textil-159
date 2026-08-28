@@ -15,6 +15,7 @@ import type { CorteMetreado } from './corteMetreado';
 import type { CortePendiente } from './cortePendiente';
 import type { CorteProducto } from './corteProducto';
 import type { CorteTicketCobrado } from './corteTicketCobrado';
+import type { HojaVentasDia } from './hojaVentasDia';
 import type { SesionCaja } from './sesionCaja';
 
 export interface CorteCaja {
@@ -42,6 +43,7 @@ export interface CorteCaja {
   efectivoContado: string | null;
   /** @nullable */
   diferencia: string | null;
+  hojaVentasDia: HojaVentasDia;
   /**
      * Solo presente en respuestas exclusivas para ADMIN
      * @nullable

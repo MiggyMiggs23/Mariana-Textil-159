@@ -10350,6 +10350,40 @@ components:
           $ref: "#/components/schemas/UnidadProducto"
         cantidad: { type: string }
         importe: { type: string }
+    HojaVentasDiaLinea:
+      type: object
+      required: [productoId, sku, tela, color, tipo, unidad, cantidad, importe]
+      properties:
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        tipo: { $ref: "#/components/schemas/TipoTicket" }
+        unidad: { type: string, enum: [ROLLOS, METRO, KILO] }
+        cantidad: { type: string }
+        importe: { type: string }
+    HojaVentasDiaSeccion:
+      type: object
+      required: [modalidad, lineas, subtotal]
+      properties:
+        modalidad: { type: string, enum: [ROLLOS, METRAJE] }
+        lineas: { type: array, items: { $ref: "#/components/schemas/HojaVentasDiaLinea" } }
+        subtotal: { type: string }
+    HojaVentasDia:
+      type: object
+      required: [sitio, fechaOperativa, cerrada, quienCerro, secciones, totalRollos, totalMetros, totalKilos, subtotal, ivaFacturado, totalGeneral]
+      properties:
+        sitio: { type: string }
+        fechaOperativa: { type: string, format: date }
+        cerrada: { type: boolean }
+        quienCerro: { type: ["string", "null"] }
+        secciones: { type: array, items: { $ref: "#/components/schemas/HojaVentasDiaSeccion" } }
+        totalRollos: { type: string }
+        totalMetros: { type: string }
+        totalKilos: { type: string }
+        subtotal: { type: string }
+        ivaFacturado: { type: string }
+        totalGeneral: { type: string }
     CortePendiente:
       type: object
       required: [ticketId, folio, total, nombreCliente, createdAt]
@@ -10428,6 +10462,7 @@ components:
           efectivoEsperado,
           efectivoContado,
           diferencia,
+          hojaVentasDia,
         ]
       properties:
         sesion:
@@ -10493,6 +10528,7 @@ components:
         efectivoEsperado: { type: string }
         efectivoContado: { type: ["string", "null"] }
         diferencia: { type: ["string", "null"] }
+        hojaVentasDia: { $ref: "#/components/schemas/HojaVentasDia" }
         costo:
           type: ["string", "null"]
           description: Solo presente en respuestas exclusivas para ADMIN

@@ -125,6 +125,44 @@ function decimalMoney(cents: number): string {
   return (cents / 100).toFixed(2);
 }
 
+/** Pure aggregation behind the daily sheet; inputs must already be scoped to one valid paid session. */
+export function aggregateHojaVentasDia(
+  lineas: Array<{ productoId: number; sku: string; tela: string; color: string; tipo: "NORMAL" | "METREADO"; unidad: "METRO" | "KILO"; cantidad?: string; cantidadFisica?: string; cantidadRollos?: number; importe: string }>,
+  tickets: Array<{ subtotal: string; iva: string; total: string; facturado: boolean }>,
+) {
+  const grouped = new Map<string, { linea: typeof lineas[number]; fisica: number; rollos: number; importe: number }>();
+  for (const linea of lineas) {
+    const key = `${linea.productoId}:${linea.tipo}:${linea.color}:${linea.unidad}`;
+    const previous = grouped.get(key);
+    const fisica = Number(linea.cantidadFisica ?? linea.cantidad ?? "0");
+    const rollos = linea.tipo === "NORMAL" ? (linea.cantidadRollos ?? 1) : 0;
+    if (previous) {
+      previous.fisica += fisica; previous.rollos += rollos; previous.importe += money(linea.importe);
+    } else {
+      grouped.set(key, { linea, fisica, rollos, importe: money(linea.importe) });
+    }
+  }
+  const all = [...grouped.values()];
+  const section = (tipo: "NORMAL" | "METREADO") => {
+    const items = all.filter((item) => item.linea.tipo === tipo);
+    return { lineas: items.map((item) => ({ productoId: item.linea.productoId, sku: item.linea.sku, tela: item.linea.tela, color: item.linea.color, tipo, unidad: tipo === "NORMAL" ? "ROLLOS" as const : item.linea.unidad, cantidad: String(tipo === "NORMAL" ? item.rollos : item.fisica), importe: decimalMoney(item.importe) })), subtotal: decimalMoney(items.reduce((total, item) => total + item.importe, 0)) };
+  };
+  const rollos = section("NORMAL");
+  const metraje = section("METREADO");
+  return {
+    secciones: [
+      { modalidad: "ROLLOS" as const, ...rollos },
+      { modalidad: "METRAJE" as const, ...metraje },
+    ],
+    totalRollos: String(all.reduce((total, item) => total + item.rollos, 0)),
+    totalMetros: String(all.filter((item) => item.linea.unidad === "METRO").reduce((total, item) => total + item.fisica, 0)),
+    totalKilos: String(all.filter((item) => item.linea.unidad === "KILO").reduce((total, item) => total + item.fisica, 0)),
+    subtotal: decimalMoney(tickets.reduce((total, ticket) => total + money(ticket.subtotal), 0)),
+    ivaFacturado: decimalMoney(tickets.filter((ticket) => ticket.facturado).reduce((total, ticket) => total + money(ticket.iva), 0)),
+    totalGeneral: decimalMoney(tickets.reduce((total, ticket) => total + money(ticket.total), 0)),
+  };
+}
+
 function decimalQuantity(value: string): string {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
@@ -1616,6 +1654,8 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       nombreUsuario: usuariosTable.nombre,
       abiertaAt: sesionesCajaTable.abiertaAt,
       cerradaAt: sesionesCajaTable.cerradaAt,
+      fechaOperativa: sesionesCajaTable.fechaOperativa,
+      cerradaPorId: sesionesCajaTable.cerradaPorId,
       fondoInicial: sesionesCajaTable.fondoInicial,
       efectivoContado: sesionesCajaTable.efectivoContado,
       estado: sesionesCajaTable.estado,
@@ -1629,6 +1669,14 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     .where(eq(sesionesCajaTable.id, sesionId))
     .limit(1);
   if (!sesion) return null;
+
+  const [cerrador] = sesion.cerradaPorId == null
+    ? []
+    : await database
+        .select({ nombre: usuariosTable.nombre })
+        .from(usuariosTable)
+        .where(eq(usuariosTable.id, sesion.cerradaPorId))
+        .limit(1);
 
   const pagos = await database
     .select({
@@ -1695,6 +1743,55 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       productosTable.unidad,
     )
     .orderBy(productosTable.tela, productosTable.color);
+
+  // This is intentionally session-scoped, not a rolling date report. It uses
+  // the same frozen ticket_lineas values as the printed ticket and never joins
+  // rollos, so serial numbers cannot leak into the daily sales sheet.
+  const hojaLineas = await database
+    .select({
+      productoId: ticketLineasTable.productoId,
+      sku: productosTable.sku,
+      tela: productosTable.tela,
+      color: productosTable.color,
+      tipo: ticketLineasTable.tipo,
+      unidad: productosTable.unidad,
+      cantidadFisica: sql<string>`COALESCE(SUM(${ticketLineasTable.cantidad}), 0)::text`,
+      cantidadRollos: sql<number>`COUNT(CASE WHEN ${ticketLineasTable.tipo} = 'NORMAL' THEN ${ticketLineasTable.id} END)::int`,
+      importe: sql<string>`COALESCE(SUM(${ticketLineasTable.importe}), 0)::text`,
+    })
+    .from(ticketLineasTable)
+    .innerJoin(ticketsTable, eq(ticketLineasTable.ticketId, ticketsTable.id))
+    .innerJoin(productosTable, eq(ticketLineasTable.productoId, productosTable.id))
+    .where(and(
+      eq(ticketsTable.sesionCajaId, sesion.id),
+      eq(ticketsTable.estado, "VENDIDO"),
+      eq(ticketsTable.cobrado, true),
+    ))
+    .groupBy(
+      ticketLineasTable.productoId,
+      ticketLineasTable.tipo,
+      productosTable.sku,
+      productosTable.tela,
+      productosTable.color,
+      productosTable.unidad,
+    )
+    .orderBy(ticketLineasTable.tipo, productosTable.tela, productosTable.color);
+
+  const hojaTickets = await database
+    .select({
+      subtotal: ticketsTable.subtotal,
+      iva: ticketsTable.iva,
+      total: ticketsTable.total,
+      facturado: ticketsTable.facturado,
+    })
+    .from(ticketsTable)
+    .where(and(
+      eq(ticketsTable.sesionCajaId, sesion.id),
+      eq(ticketsTable.estado, "VENDIDO"),
+      eq(ticketsTable.cobrado, true),
+    ));
+
+  const hojaAgrupada = aggregateHojaVentasDia(hojaLineas, hojaTickets);
 
   const ticketsCobradosDetalle = await database
     .select({
@@ -1935,6 +2032,13 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     efectivoContado: contado == null ? null : decimalMoney(contado),
     diferencia: contado == null ? null : decimalMoney(contado - esperado),
     fondoInicial: sesion.fondoInicial,
+    hojaVentasDia: {
+      sitio: sesion.nombreUbicacion,
+      fechaOperativa: sesion.fechaOperativa,
+      cerrada: sesion.estado === "CERRADA",
+      quienCerro: cerrador?.nombre ?? null,
+      ...hojaAgrupada,
+    },
   };
 }
 
@@ -1975,6 +2079,7 @@ export async function cerrarSesionCaja(
     .set({
       estado: "CERRADA",
       cerradaAt: new Date(),
+      cerradaPorId: input.usuarioId,
       efectivoContado: decimalMoney(contado),
     })
     .where(eq(sesionesCajaTable.id, sesion.id));
