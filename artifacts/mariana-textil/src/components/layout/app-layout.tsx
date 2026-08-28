@@ -14,33 +14,9 @@ import {
   useCountEntradasPendientesCosto,
   getCountEntradasPendientesCostoQueryKey,
 } from "@workspace/api-client-react";
-import { hasPermission, Modules, Module } from "@/lib/permisos";
+import { hasPermission, Modules } from "@/lib/permisos";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  LayoutDashboard,
-  MapPin,
-  Users,
-  Boxes,
-  LogOut,
-  Menu,
-  X,
-  ShoppingCart,
-  ArrowDownToLine,
-  ArrowUpFromLine,
-  Activity,
-  Package,
-  UserSquare2,
-  Truck,
-  Ship,
-  Banknote,
-  FileBarChart,
-  Shield,
-  Wallet,
-  BarChart3,
-  Tags,
-  Settings,
-  AlertTriangle,
-} from "lucide-react";
+import { MapPin, LogOut, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -63,257 +39,7 @@ import {
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { NotificationAudioController } from "@/components/notification-audio-controller";
-
-type NavItem = {
-  name: string;
-  path: string;
-  icon: any;
-  module: Module;
-  anyModules?: Module[];
-  isClickable: boolean;
-  adminOnly?: boolean;
-};
-
-type NavGroup = {
-  title?: string;
-  items: NavItem[];
-};
-
-const NAV_GROUPS: NavGroup[] = [
-  {
-    items: [
-      {
-        name: "Tiempo Real",
-        path: "/caja/tiempo-real",
-        icon: Activity,
-        module: Modules.COBROS_PAGOS,
-        isClickable: true,
-        adminOnly: true,
-      },
-    ],
-  },
-  {
-    title: "INVENTARIO",
-    items: [
-      {
-        name: "Productos",
-        path: "/productos",
-        icon: Package,
-        module: Modules.PRODUCTOS,
-        isClickable: true,
-      },
-      {
-        name: "Inventario",
-        path: "/inventario",
-        icon: Boxes,
-        module: Modules.INVENTARIO,
-        isClickable: true,
-      },
-      {
-        name: "Vista Global",
-        path: "/inventario/vista-global",
-        icon: LayoutDashboard,
-        module: Modules.DASHBOARD,
-        isClickable: true,
-      },
-      {
-        name: "Ajustes",
-        path: "/inventario/ajustes",
-        icon: FileBarChart,
-        module: Modules.AJUSTES,
-        isClickable: true,
-      },
-      {
-        name: "Etiquetas",
-        path: "/etiquetas",
-        icon: Tags,
-        module: Modules.ETIQUETAS,
-        isClickable: true,
-      },
-      {
-        name: "Precios",
-        path: "/precios",
-        icon: Banknote,
-        module: Modules.PRECIOS,
-        isClickable: true,
-        adminOnly: true,
-      },
-    ],
-  },
-  {
-    title: "OPERACIÓN",
-    items: [
-      {
-        name: "Ventas / POS",
-        path: "/pos",
-        icon: ShoppingCart,
-        module: Modules.POS,
-        isClickable: true,
-      },
-      {
-        name: "Entradas",
-        path: "/entradas",
-        icon: ArrowDownToLine,
-        module: Modules.ENTRADAS,
-        isClickable: true,
-      },
-      {
-        name: "Salidas",
-        path: "/salidas",
-        icon: ArrowUpFromLine,
-        module: Modules.SALIDAS,
-        isClickable: true,
-      },
-      {
-        name: "Viajes",
-        path: "/viajes",
-        icon: Truck,
-        module: Modules.VIAJES,
-        isClickable: true,
-      },
-      {
-        name: "Movimientos",
-        path: "/movimientos",
-        icon: Activity,
-        module: Modules.MOVIMIENTOS,
-        isClickable: true,
-      },
-    ],
-  },
-  {
-    title: "CAJA",
-    items: [
-      {
-        name: "Cuentas",
-        path: "/caja/cuentas-destino",
-        icon: Wallet,
-        module: Modules.COBROS_PAGOS,
-        isClickable: true,
-        adminOnly: true,
-      },
-      {
-        name: "Cobros",
-        path: "/cobros",
-        icon: Banknote,
-        module: Modules.COBROS_PAGOS,
-        isClickable: true,
-        adminOnly: true,
-      },
-      {
-        name: "Cortes",
-        path: "/caja/cortes",
-        icon: FileBarChart,
-        module: Modules.COBROS_PAGOS,
-        isClickable: true,
-        adminOnly: true,
-      },
-      {
-        name: "Alertas",
-        path: "/alertas",
-        icon: AlertTriangle,
-        module: Modules.COBROS_PAGOS,
-        isClickable: true,
-        adminOnly: true,
-      },
-    ],
-  },
-  {
-    title: "DIRECTORIO",
-    items: [
-      {
-        name: "Clientes",
-        path: "/clientes",
-        icon: UserSquare2,
-        module: Modules.CLIENTES,
-        isClickable: true,
-      },
-      {
-        name: "Proveedores",
-        path: "/proveedores",
-        icon: Truck,
-        module: Modules.PROVEEDORES,
-        isClickable: true,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        name: "Reportes",
-        path: "/reportes",
-        icon: BarChart3,
-        module: Modules.REPORTES,
-        isClickable: true,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        name: "Próximos Contenedores",
-        path: "/contenedores",
-        icon: Ship,
-        module: Modules.CONTENEDORES,
-        isClickable: true,
-      },
-    ],
-  },
-  {
-    title: "CONFIGURACIÓN",
-    items: [
-      {
-        name: "Sitios",
-        path: "/ubicaciones",
-        icon: MapPin,
-        module: Modules.UBICACIONES,
-        isClickable: true,
-      },
-      {
-        name: "Camionetas",
-        path: "/configuracion/camionetas",
-        icon: Truck,
-        module: Modules.CAMIONETAS,
-        isClickable: true,
-      },
-      {
-        name: "Choferes",
-        path: "/configuracion/choferes",
-        icon: UserSquare2,
-        module: Modules.CHOFERES,
-        isClickable: true,
-      },
-      {
-        name: "Usuarios",
-        path: "/usuarios",
-        icon: Users,
-        module: Modules.USUARIOS,
-        isClickable: true,
-      },
-      {
-        name: "Permisos",
-        path: "/permisos",
-        icon: Shield,
-        module: Modules.PERMISOS,
-        isClickable: true,
-      },
-      {
-        name: "Conciliación",
-        path: "/administracion/conciliacion",
-        icon: Settings,
-        module: Modules.CONCILIACION,
-        isClickable: true,
-      },
-      {
-        name: "Auditoría",
-        path: "/auditoria",
-        icon: Activity,
-        module: Modules.AUDITORIA,
-        isClickable: true,
-        adminOnly: true,
-      },
-    ],
-  },
-];
+import { getVisibleNavGroups } from "@/components/layout/app-navigation";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -469,60 +195,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const navGroups = isCaja
-    ? [
-        {
-          items: [
-            {
-              name: "Cobros",
-              path: "/cobros",
-              icon: Banknote,
-              module: Modules.COBROS_PAGOS,
-              isClickable: true,
-            },
-            {
-              name: "Cortes",
-              path: "/caja/cortes",
-              icon: FileBarChart,
-              module: Modules.COBROS_PAGOS,
-              isClickable: true,
-            },
-            {
-              name: "Inventario",
-              path: "/inventario",
-              icon: Boxes,
-              module: Modules.INVENTARIO,
-              isClickable: true,
-            },
-            {
-              name: "Salidas",
-              path: "/salidas",
-              icon: ArrowDownToLine,
-              module: Modules.SALIDAS,
-              isClickable: true,
-            },
-          ],
-        },
-      ]
-    : NAV_GROUPS;
+  const navGroups = getVisibleNavGroups(user);
 
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
       {navGroups.map((group) => {
-        const allowedItems = group.items.filter(
-          (item) =>
-            (item.anyModules
-              ? item.anyModules.some(
-                  (module) =>
-                    hasPermission(user, module, "ver") ||
-                    hasPermission(user, module, "crear"),
-                )
-              : hasPermission(user, item.module, "ver")) &&
-            (!item.adminOnly || user.rol === Role.ADMIN),
-        );
-
-        if (allowedItems.length === 0) return null;
-
         return (
           <div
             key={group.title ?? group.items[0].path}
@@ -533,7 +210,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 {group.title}
               </h4>
             )}
-            {allowedItems.map((item) => {
+            {group.items.map((item) => {
               const isActive =
                 location === item.path ||
                 (item.path !== "/" && location.startsWith(`${item.path}/`));

@@ -290,7 +290,9 @@ function Router() {
 
         <Route
           path="/salidas"
-          component={() => <ProtectedRoute component={Salidas} />}
+          component={() => (
+            <ProtectedRoute component={Salidas} allowedModule={Modules.SALIDAS} />
+          )}
         />
         <Route
           path="/viajes"
@@ -405,12 +407,14 @@ function Router() {
 
         <Route
           path="/precios"
-          component={() => <ProtectedRoute component={PreciosList} adminOnly />}
+          component={() => (
+            <ProtectedRoute component={PreciosList} allowedModule={Modules.PRECIOS} />
+          )}
         />
         <Route
           path="/precios/:id"
           component={() => (
-            <ProtectedRoute component={PrecioDetail} adminOnly />
+            <ProtectedRoute component={PrecioDetail} allowedModule={Modules.PRECIOS} />
           )}
         />
         <Route
@@ -437,8 +441,7 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={CajaTiempoReal}
-              allowedModule={Modules.COBROS_PAGOS}
-              adminOnly
+              allowedModule={Modules.RESUMEN_CAJA}
             />
           )}
         />
@@ -447,7 +450,7 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={CajaCortes}
-              allowedModule={Modules.COBROS_PAGOS}
+              allowedModule={Modules.CORTES}
             />
           )}
         />
@@ -470,7 +473,6 @@ function Router() {
             <ProtectedRoute
               component={CajaCuentasDestino}
               allowedModule={Modules.COBROS_PAGOS}
-              adminOnly
             />
           )}
         />
@@ -485,7 +487,9 @@ function Router() {
         />
         <Route
           path="/alertas"
-          component={() => <ProtectedRoute component={Alertas} adminOnly />}
+          component={() => (
+            <ProtectedRoute component={Alertas} allowedModule={Modules.COBROS_PAGOS} />
+          )}
         />
         <Route
           path="/notificaciones"
@@ -574,7 +578,6 @@ function Router() {
             <ProtectedRoute
               component={Auditoria}
               allowedModule={Modules.AUDITORIA}
-              adminOnly
             />
           )}
         />
