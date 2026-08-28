@@ -60,6 +60,119 @@ export function isAccountDestination(value: string): value is AccountDestination
   return ACCOUNT_DESTINATION_ORDER.includes(value as AccountDestination);
 }
 
+/**
+ * Canonical destination cash-flow read model.  A credit sale is represented
+ * once by its VENTA_CREDITO ledger row; subsequent ABONOs are separate cash
+ * entries and always use the destination explicitly recorded on the ledger.
+ * POS payments deliberately exclude CREDITO to avoid counting that sale twice.
+ */
+function destinationReadModel() {
+  return `WITH destination_movements AS (
+    SELECT p.id, p.created_at fecha, p.importe importe, p.forma_pago "formaPago",
+      CASE WHEN p.forma_pago='EFECTIVO' THEN 'CAJA_FISICA'
+        WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END "cuentaDestino",
+      t.id "documentoId", t.folio, t.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
+      p.usuario_id "registroId", t.facturado, 'POS' fuente
+    FROM ticket_pagos p JOIN tickets t ON t.id=p.ticket_id
+    WHERE ($1::timestamptz IS NULL OR p.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR p.created_at <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)
+      AND t.estado='VENDIDO' AND t.cobrado AND p.forma_pago <> 'CREDITO'
+    UNION ALL
+    SELECT m.id, m.created_at fecha, m.importe,
+      'CREDITO' "formaPago", 'CUENTAS_POR_COBRAR' "cuentaDestino",
+      t.id "documentoId", t.folio, m.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
+      m.usuario_id "registroId", COALESCE(t.facturado,false) facturado, 'CREDITO' fuente
+    FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
+    WHERE ($1::timestamptz IS NULL OR m.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)
+      AND m.tipo='VENTA_CREDITO' AND t.estado='VENDIDO'
+    UNION ALL
+    SELECT (m.id * 1000000 + a.id),m.created_at fecha,a.importe,
+      COALESCE(m.forma_pago,'TRANSFERENCIA') "formaPago",m.cuenta_destino "cuentaDestino",
+      sale_ticket.id "documentoId",sale_ticket.folio,m.cliente_id "clienteId",sale_ticket.ubicacion_id "ubicacionId",
+      m.usuario_id "registroId",COALESCE(sale_ticket.facturado,false) facturado,'ABONO' fuente
+    FROM movimientos_credito m JOIN aplicaciones_credito a ON a.abono_movimiento_id=m.id
+    JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
+    JOIN tickets sale_ticket ON sale_ticket.id=sale.ticket_id
+    WHERE ($1::timestamptz IS NULL OR m.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+      AND ($3::int IS NULL OR sale_ticket.ubicacion_id=$3)
+      AND m.tipo='ABONO' AND m.cuenta_destino IS NOT NULL AND sale_ticket.estado='VENDIDO'
+    UNION ALL
+    SELECT (m.id * 1000000),m.created_at fecha,
+      -m.importe-COALESCE(aplicado.importe,0),
+      COALESCE(m.forma_pago,'TRANSFERENCIA') "formaPago",m.cuenta_destino "cuentaDestino",
+      m.cliente_id "documentoId",NULL::bigint folio,m.cliente_id "clienteId",NULL::int "ubicacionId",
+      m.usuario_id "registroId",false facturado,'ABONO_SALDO_FAVOR' fuente
+    FROM movimientos_credito m LEFT JOIN LATERAL (
+      SELECT SUM(a.importe) importe
+      FROM aplicaciones_credito a
+      JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
+      JOIN tickets sale_ticket ON sale_ticket.id=sale.ticket_id
+      WHERE a.abono_movimiento_id=m.id AND sale_ticket.estado='VENDIDO'
+    ) aplicado ON true
+    WHERE ($1::timestamptz IS NULL OR m.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+      AND $3::int IS NULL
+      AND m.tipo='ABONO' AND m.cuenta_destino IS NOT NULL
+      AND -m.importe > COALESCE(aplicado.importe,0)
+    UNION ALL
+    SELECT (r.id * 1000000 + a.id),r.created_at fecha,-a.importe,
+      COALESCE(original.forma_pago,'TRANSFERENCIA') "formaPago",original.cuenta_destino "cuentaDestino",
+      sale_ticket.id "documentoId",sale_ticket.folio,original.cliente_id "clienteId",sale_ticket.ubicacion_id "ubicacionId",
+      r.usuario_id "registroId",COALESCE(sale_ticket.facturado,false) facturado,'REVERSO_ABONO' fuente
+    FROM movimientos_credito r JOIN movimientos_credito original ON original.id=r.movimiento_origen_id
+    JOIN aplicaciones_credito a ON a.abono_movimiento_id=original.id
+    JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
+    JOIN tickets sale_ticket ON sale_ticket.id=sale.ticket_id
+    WHERE ($1::timestamptz IS NULL OR r.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR r.created_at <= $2)
+      AND ($3::int IS NULL OR sale_ticket.ubicacion_id=$3)
+      AND r.tipo='REVERSO' AND original.tipo='ABONO' AND original.cuenta_destino IS NOT NULL
+      AND sale_ticket.estado='VENDIDO'
+    UNION ALL
+    SELECT (r.id * 1000000),r.created_at fecha,
+      -( -original.importe-COALESCE(aplicado.importe,0) ),
+      COALESCE(original.forma_pago,'TRANSFERENCIA') "formaPago",original.cuenta_destino "cuentaDestino",
+      original.cliente_id "documentoId",NULL::bigint folio,original.cliente_id "clienteId",NULL::int "ubicacionId",
+      r.usuario_id "registroId",false facturado,'REVERSO_ABONO_SALDO_FAVOR' fuente
+    FROM movimientos_credito r JOIN movimientos_credito original ON original.id=r.movimiento_origen_id
+    LEFT JOIN LATERAL (
+      SELECT SUM(a.importe) importe
+      FROM aplicaciones_credito a
+      JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
+      JOIN tickets sale_ticket ON sale_ticket.id=sale.ticket_id
+      WHERE a.abono_movimiento_id=original.id AND sale_ticket.estado='VENDIDO'
+    ) aplicado ON true
+    WHERE ($1::timestamptz IS NULL OR r.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR r.created_at <= $2)
+      AND $3::int IS NULL
+      AND r.tipo='REVERSO' AND original.tipo='ABONO' AND original.cuenta_destino IS NOT NULL
+      AND -original.importe > COALESCE(aplicado.importe,0)
+  )`;
+}
+
+/** Sum from the same canonical rows used by cards, detail and exports. */
+export async function getDestinationCollectedAmount(
+  filters: AnalyticsFilters,
+  destination: AccountDestination,
+) {
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId ?? null,
+  ];
+  const result = await pool.query(
+    `${destinationReadModel()}
+     SELECT COALESCE(SUM(importe),0)::text amount
+     FROM destination_movements WHERE "cuentaDestino"=$4`,
+    [...values, destination],
+  );
+  return decimal(result.rows[0]!.amount);
+}
+
 export function calculateFrozenMargin(
   lines: Array<{
     importe: string | number;
@@ -452,38 +565,35 @@ export async function listCuts(
 export async function getDestinationAccounts(filters: AnalyticsFilters) {
   // Account destinations are cash-flow reporting: a ticket sold yesterday and
   // charged today belongs to today's collected period.
-  const condition = where(filters, "t", "cobrado_at");
-  const priorCondition = where(previousEqualPeriod(filters), "t", "cobrado_at");
-  const accountSql = `SELECT (t.cobrado_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
-       p.forma_pago "formaPago",t.facturado,SUM(p.importe)::text importe,COUNT(*)::int operaciones
-     FROM tickets t JOIN ticket_pagos p ON p.ticket_id=t.id
-     WHERE %CONDITION% AND t.estado='VENDIDO' AND t.cobrado
-     GROUP BY fecha,p.forma_pago,t.facturado ORDER BY fecha,p.forma_pago,t.facturado`;
+  const condition = where(filters, "t", "created_at");
+  const priorCondition = where(previousEqualPeriod(filters), "t", "created_at");
+  const accountSql = () => `${destinationReadModel()}
+    SELECT (fecha AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
+      "formaPago",facturado,"cuentaDestino",SUM(importe)::text importe,COUNT(*)::int operaciones
+    FROM destination_movements GROUP BY fecha,"formaPago",facturado,"cuentaDestino"`;
   const [result, fiscal, prior, byStore] = await Promise.all([pool.query(
-    accountSql.replace("%CONDITION%", condition.text),
+    accountSql(),
     condition.values,
   ), pool.query(
     `SELECT COALESCE(SUM(t.iva),0)::text iva
      FROM tickets t WHERE ${condition.text}
        AND t.estado='VENDIDO' AND t.cobrado`,
     condition.values,
-  ), pool.query(accountSql.replace("%CONDITION%", priorCondition.text), priorCondition.values),
-  pool.query(
-    `SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",p.forma_pago "formaPago",
-       t.facturado,SUM(p.importe)::text importe
-     FROM tickets t JOIN ticket_pagos p ON p.ticket_id=t.id
-     JOIN ubicaciones u ON u.id=t.ubicacion_id
-     WHERE ${condition.text} AND t.estado='VENDIDO' AND t.cobrado
-     GROUP BY u.id,u.nombre,p.forma_pago,t.facturado ORDER BY u.nombre`,
+   ), pool.query(accountSql(), priorCondition.values),
+   pool.query(
+     `${destinationReadModel()}
+      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",d."formaPago",d.facturado,d."cuentaDestino",SUM(d.importe)::text importe
+      FROM destination_movements d JOIN ubicaciones u ON u.id=d."ubicacionId"
+      GROUP BY u.id,u.nombre,d."formaPago",d.facturado,d."cuentaDestino" ORDER BY u.nombre`,
     condition.values,
   )]);
   const rows = result.rows.map((row) => ({
     ...row,
-    cuentaDestino: accountDestination(row.formaPago, row.facturado),
+     cuentaDestino: row.cuentaDestino,
   }));
   const priorTotals = new Map<AccountDestination, number>();
   for (const row of prior.rows) {
-    const destination = accountDestination(row.formaPago, row.facturado);
+     const destination = row.cuentaDestino as AccountDestination;
     priorTotals.set(destination, (priorTotals.get(destination) ?? 0) + Number(row.importe));
   }
   const destinationPaymentMethod: Record<AccountDestination, string> = {
@@ -540,7 +650,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
         ubicacionId: Number(row.ubicacionId), nombreUbicacion: String(row.nombreUbicacion),
         cajaFisica: 0, cuentaFiscal: 0, cuentaNoFiscal: 0, cuentasPorCobrar: 0,
       };
-      const key = accountDestination(row.formaPago, row.facturado);
+       const key = row.cuentaDestino as AccountDestination;
       if (key === "CAJA_FISICA") item.cajaFisica += Number(row.importe);
       else if (key === "CUENTA_FISCAL") item.cuentaFiscal += Number(row.importe);
       else if (key === "CUENTA_NO_FISCAL") item.cuentaNoFiscal += Number(row.importe);
@@ -577,42 +687,31 @@ export async function listDestinationAccountMovements(
     pageSize,
     (page - 1) * pageSize,
   ];
-  const condition = `($1::timestamptz IS NULL OR t.cobrado_at >= $1)
-    AND ($2::timestamptz IS NULL OR t.cobrado_at <= $2)
-    AND ($3::int IS NULL OR t.ubicacion_id = $3)
-    AND CASE $4::text
-      WHEN 'CAJA_FISICA' THEN p.forma_pago='EFECTIVO'
-      WHEN 'CUENTAS_POR_COBRAR' THEN p.forma_pago='CREDITO'
-      WHEN 'CUENTA_FISCAL' THEN p.forma_pago='TRANSFERENCIA' AND t.facturado
-      WHEN 'CUENTA_NO_FISCAL' THEN p.forma_pago='TRANSFERENCIA' AND NOT t.facturado
-      ELSE false
-    END
-    AND t.estado='VENDIDO' AND t.cobrado`;
-  const joins = `FROM tickets t
-    JOIN ticket_pagos p ON p.ticket_id=t.id
-    JOIN ubicaciones u ON u.id=t.ubicacion_id
-    JOIN usuarios registrador ON registrador.id=p.usuario_id
-    LEFT JOIN clientes c ON c.id=t.cliente_id`;
+  const condition = `($1::timestamptz IS NULL OR t.created_at >= $1)
+    AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+    AND ($3::int IS NULL OR t.ubicacion_id = $3)`;
+  const readModel = destinationReadModel();
+  const joins = `FROM destination_movements d
+    LEFT JOIN ubicaciones u ON u.id=d."ubicacionId"
+    JOIN usuarios registrador ON registrador.id=d."registroId"
+    LEFT JOIN clientes c ON c.id=d."clienteId"`;
   const [rows, aggregate] = await Promise.all([
     pool.query(
-      `SELECT p.id,t.cobrado_at fecha,
-        CASE $4::text
-          WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
-          WHEN 'CUENTAS_POR_COBRAR' THEN 'Venta a crédito'
-          WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal'
-          ELSE 'Transferencia no fiscal'
-        END tipo,
-        'TICKET' "documentoTipo",t.id "documentoId",
-        ('Ticket #' || t.folio::text) documento,c.nombre cliente,
-        u.id "ubicacionId",u.nombre sitio,p.importe::text monto,
-        registrador.id "registroId",registrador.nombre registro
-       ${joins} WHERE ${condition}
-       ORDER BY t.cobrado_at DESC,p.id DESC LIMIT $5 OFFSET $6`,
+       `${readModel} SELECT d.id,d.fecha,
+         CASE d."cuentaDestino" WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
+           WHEN 'CUENTAS_POR_COBRAR' THEN 'Venta a crédito'
+           WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal' ELSE 'Transferencia no fiscal' END tipo,
+         CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN 'CLIENTE' ELSE 'TICKET' END "documentoTipo",d."documentoId",
+         CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN ('Cliente #' || d."clienteId"::text) ELSE ('Ticket #' || d.folio::text) END documento,c.nombre cliente,
+         d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,d.importe::text monto,
+         registrador.id "registroId",registrador.nombre registro
+        ${joins} WHERE d."cuentaDestino"=$4
+        ORDER BY d.fecha DESC,d.id DESC LIMIT $5 OFFSET $6`,
       values,
     ),
     pool.query(
-      `SELECT COUNT(*)::int total,COALESCE(SUM(p.importe),0)::text "montoTotal"
-       ${joins} WHERE ${condition}`,
+       `${readModel} SELECT COUNT(*)::int total,COALESCE(SUM(d.importe),0)::text "montoTotal"
+        ${joins} WHERE d."cuentaDestino"=$4`,
       values.slice(0, 4),
     ),
   ]);
@@ -623,7 +722,7 @@ export async function listDestinationAccountMovements(
       id: Number(row.id),
       fecha: new Date(row.fecha).toISOString(),
       documentoId: Number(row.documentoId),
-      ubicacionId: Number(row.ubicacionId),
+       ubicacionId: row.ubicacionId == null ? null : Number(row.ubicacionId),
       registroId: Number(row.registroId),
       monto: decimal(row.monto),
     })),

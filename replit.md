@@ -1,8 +1,10 @@
-# Decisión pendiente — METREADO_FACTURADO
+# Decisiones de la Parte 9
 
-Actualmente POS rechaza facturar ventas con líneas metreadas (`METREADO_FACTURADO`).
-No se modificó esta regla al implementar el cuadre fiscal; confirmar con el usuario si
-en el futuro debe permitirse facturar cortes de tela.
+El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.
+
+En toda tabla del sistema, el identificador principal del renglón es un enlace al detalle: un solo enlace por renglón, y ninguna columna de "Ver detalle".
+
+Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una venta con líneas metreadas.
 
 # Mariana Textil
 

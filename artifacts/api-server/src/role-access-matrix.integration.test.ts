@@ -12,12 +12,14 @@ import test from "node:test";
 import { eq, sql } from "drizzle-orm";
 import {
   db,
+  pool,
   productosTable,
   rollosTable,
   sesionesTable,
   ubicacionesTable,
   usuariosTable,
   type RolUsuario,
+  createTestDatabaseGuard,
 } from "@workspace/db";
 import app from "./app";
 import { isSupervisorSensitiveKey } from "./lib/sensitive-data";
@@ -43,14 +45,12 @@ if (!testUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
   );
 }
 
-const identity = await db.execute<{ database: string }>(
-  sql`SELECT current_database() AS database`,
+const { assertIsolated } = await createTestDatabaseGuard(
+  pool,
+  testUrl,
+  process.env.DATABASE_URL,
 );
-assert.equal(
-  identity.rows[0]?.database,
-  "task54_e2e",
-  "Task 54 must only mutate its disposable task54_e2e database.",
-);
+await assertIsolated();
 
 const run = `T54${randomUUID().replaceAll("-", "")}`;
 const password = "Task54Role!pass";

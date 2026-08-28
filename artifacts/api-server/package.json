@@ -27,6 +27,7 @@
     "test:admin-bypass-empty": "tsx src/admin-bypass-empty-permissions.test.ts",
     "test:security-api": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/security-api.test.ts",
     "test:role-access-matrix": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/role-access-matrix.integration.test.ts",
+    "test:pos-location-authorization": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/pos-location-authorization.integration.test.ts",
     "test:supervisor-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/security-api.test.ts",
     "test:clientes-ajustes": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/clientes-ajustes-api.test.ts",
     "test:clientes-ajustes:unit": "tsx --test src/lib/spanish-order.test.ts",
@@ -48,7 +49,8 @@
     "test:productos-cache-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/productos-cache.integration.test.ts",
     "test:inventory-six-view-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/inventory-six-view.integration.test.ts",
     "test:pagos-dirigidos-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/pagos-dirigidos.integration.test.ts",
-    "test:viajes-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/viajes.integration.test.ts"
+    "test:viajes-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/viajes.integration.test.ts",
+    "test:cuadre-fiscal-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/cuadre-fiscal.integration.test.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^8.0.1",

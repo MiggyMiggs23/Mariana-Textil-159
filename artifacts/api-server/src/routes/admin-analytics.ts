@@ -47,6 +47,7 @@ import {
   compareStores,
   comparisonRange,
   getDestinationAccounts,
+  getDestinationCollectedAmount,
   isAccountDestination,
   listDestinationAccountMovements,
   getDifferences,
@@ -62,7 +63,18 @@ import {
 } from "../lib/admin-analytics";
 
 const router: IRouter = Router();
-router.use("/admin", requireSession, requireRole("ADMIN"));
+router.use("/admin", requireSession);
+router.use("/admin", (req, res, next) => {
+  if (req.path.startsWith("/cuadre-fiscal")) {
+    next();
+    return;
+  }
+  if (req.method === "GET" && req.path.startsWith("/cuentas-destino")) {
+    requireRole("ADMIN", "CONTADOR", "SISTEMAS")(req, res, next);
+    return;
+  }
+  requireRole("ADMIN")(req, res, next);
+});
 
 function badInput(error: unknown, res: Parameters<Parameters<IRouter["get"]>[1]>[1]): boolean {
   if (!(error instanceof AnalyticsInputError)) return false;
@@ -193,18 +205,25 @@ async function fiscalFigures(filters: ReturnType<typeof parseAnalyticsFilters>) 
     pool.query(`SELECT COALESCE(SUM(t.total),0)::text amount FROM tickets t WHERE t.estado='VENDIDO' AND t.facturado
       AND ($1::timestamptz IS NULL OR t.created_at >= $1) AND ($2::timestamptz IS NULL OR t.created_at <= $2)
       AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
-    pool.query(`SELECT COALESCE(SUM(p.importe),0)::text amount FROM tickets t JOIN ticket_pagos p ON p.ticket_id=t.id
-      WHERE t.estado='VENDIDO' AND t.cobrado AND t.facturado AND p.forma_pago='TRANSFERENCIA'
-      AND ($1::timestamptz IS NULL OR t.cobrado_at >= $1) AND ($2::timestamptz IS NULL OR t.cobrado_at <= $2)
-      AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
+    getDestinationCollectedAmount(filters, "CUENTA_FISCAL"),
     pool.query(`SELECT COALESCE(SUM(m.importe-COALESCE(a.aplicado,0)),0)::text amount
       FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
-      LEFT JOIN LATERAL (SELECT SUM(importe) aplicado FROM aplicaciones_credito WHERE venta_movimiento_id=m.id) a ON true
+      LEFT JOIN LATERAL (
+        SELECT SUM(ap.importe) aplicado
+        FROM aplicaciones_credito ap
+        WHERE ap.venta_movimiento_id=m.id
+          AND NOT EXISTS (
+            SELECT 1
+            FROM movimientos_credito reverso
+            WHERE reverso.tipo='REVERSO'
+              AND reverso.movimiento_origen_id=ap.abono_movimiento_id
+          )
+      ) a ON true
       WHERE m.tipo='VENTA_CREDITO' AND t.facturado AND t.estado='VENDIDO'
       AND ($1::timestamptz IS NULL OR t.created_at >= $1) AND ($2::timestamptz IS NULL OR t.created_at <= $2)
       AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
   ]);
-  return { facturado: Number(invoiced.rows[0]!.amount).toFixed(2), cobradoCuentaFiscal: Number(collected.rows[0]!.amount).toFixed(2), porCobrarFiscal: Number(receivable.rows[0]!.amount).toFixed(2) };
+  return { facturado: Number(invoiced.rows[0]!.amount).toFixed(2), cobradoCuentaFiscal: collected, porCobrarFiscal: Number(receivable.rows[0]!.amount).toFixed(2) };
 }
 
 function presentFiscalRecord(row: any) {

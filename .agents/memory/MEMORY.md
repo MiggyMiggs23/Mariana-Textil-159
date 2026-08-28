@@ -18,3 +18,5 @@
 - [Pagos dirigidos y evidencia](directed-payment-evidence.md) — dirigir por movimiento exacto; las aplicaciones append-only documentan decisiones, no definen el saldo.
 - [Contrato matricial de mapas de calor](heatmap-matrix-contract.md) — pivotar filas largas antes de renderizar; series son columnas y celdas solo números finitos o ausencia.
 - [Sobrantes concurrentes de auditoría](inventory-audit-concurrent-surplus.md) — si el rollo ya cambió al sitio auditado, resolver manualmente; nunca marcar aplicado sin movimiento trazable.
+- [Destinos financieros desde el ledger](financial-destination-ledger.md) — combinar pagos POS, abonos, aplicaciones, saldos a favor y reversos con su fecha efectiva.
+- [Lectura global sin operación global](cross-location-read-authorization.md) — no ampliar helpers operativos para habilitar consultas multi-sitio; autorizar la lectura en handlers dedicados.

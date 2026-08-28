@@ -72,6 +72,17 @@ test("destination movement contract validates account, pagination and real ticke
   }).success, true);
 });
 
+test("destination movement Excel exports the canonical paginated read-model total", async () => {
+  const route = await readFile(
+    new URL("../routes/admin-analytics.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(
+    route,
+    /const data = await listDestinationAccountMovements\([\s\S]*sheet\.addRow\(\{ sitio: "Total", monto: toExcelNumber\(data\.montoTotal\) \}\)/,
+  );
+});
+
 test("margin is pending when any line has no frozen cost", () => {
   assert.deepEqual(calculateFrozenMargin([
     { rolloId: 1, importe: "150.00", costoUnitarioCongelado: "50", costoTotalCongelado: "100" },

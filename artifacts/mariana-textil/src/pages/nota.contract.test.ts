@@ -41,6 +41,8 @@ test("Block 4 functionality in ticket detail", async () => {
 test("Block 4 functionality in cobros", async () => {
   const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
 
-  // - Desde Cartera, cada fila de nota debe permitir abrir /tickets/:ticketId para ver este detalle
-  assert.match(cobros, /<Link href=\{`\/tickets\/\$\{nota\.ticketFolio\}`\}/);
+  // El listado solo recibe el folio visible, no el ID interno que exige /tickets/:id.
+  // Debe conservar texto en vez de fabricar un enlace muerto con el folio.
+  assert.doesNotMatch(cobros, /<Link href=\{`\/tickets\/\$\{nota\.ticketFolio\}`\}/);
+  assert.match(cobros, /\{nota\.ticketFolio\}/);
 });

@@ -97,11 +97,15 @@ function ProtectedRoute({
   allowedModule,
   allowedAction = "ver",
   adminOnly,
+  allowedRoles,
+  allowedAnyModules,
 }: {
   component: React.ComponentType;
   allowedModule?: string;
   allowedAction?: "ver" | "crear" | "editar" | "autorizar";
   adminOnly?: boolean;
+  allowedRoles?: string[];
+  allowedAnyModules?: string[];
 }) {
   const [location, setLocation] = useLocation();
   const {
@@ -166,7 +170,12 @@ function ProtectedRoute({
     );
   }
 
-  if (allowedModule && !hasPermission(user, allowedModule, allowedAction)) {
+  const rolePermitted = allowedRoles?.includes(user.rol) ?? false;
+
+  const modulePermitted = allowedAnyModules
+    ? allowedAnyModules.some((module) => hasPermission(user, module, allowedAction))
+    : allowedModule ? hasPermission(user, allowedModule, allowedAction) : true;
+  if ((allowedModule || allowedAnyModules) && !rolePermitted && !modulePermitted) {
     return (
       <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
         <div className="space-y-4">
@@ -442,7 +451,7 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={Cobros}
-              allowedModule={Modules.COBROS_PAGOS}
+              allowedAnyModules={[Modules.COBROS_PAGOS, Modules.POS]}
             />
           )}
         />
@@ -484,6 +493,7 @@ function Router() {
             <ProtectedRoute
               component={CuentaDestinoDetalle}
               allowedModule={Modules.COBROS_PAGOS}
+              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />
@@ -493,6 +503,7 @@ function Router() {
             <ProtectedRoute
               component={CajaCuentasDestino}
               allowedModule={Modules.COBROS_PAGOS}
+              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />
@@ -541,7 +552,8 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={TicketDetail}
-              allowedModule={Modules.COBROS_PAGOS}
+              allowedAnyModules={[Modules.COBROS_PAGOS, Modules.POS]}
+              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />

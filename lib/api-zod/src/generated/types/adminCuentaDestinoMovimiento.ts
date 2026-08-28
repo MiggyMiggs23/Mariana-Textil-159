@@ -16,7 +16,8 @@ export interface AdminCuentaDestinoMovimiento {
   documento: string;
   /** @nullable */
   cliente: string | null;
-  ubicacionId: number;
+  /** @nullable */
+  ubicacionId: number | null;
   sitio: string;
   monto: string;
   registroId: number;

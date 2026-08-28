@@ -22,7 +22,7 @@ if (!testUrl) {
     const ids = {
       tickets: [] as number[], sessions: [] as number[], rollos: [] as number[],
       products: [] as number[], users: [] as number[], locations: [] as number[],
-      clients: [] as number[],
+       clients: [] as number[], creditMovements: [] as number[], creditApplications: [] as number[],
     };
     const one = async (text: string, values: unknown[] = []) => {
       const result = await pool.query(text, values);
@@ -77,21 +77,21 @@ if (!testUrl) {
 
       // Two closed cuts in the report window: shortage 200 and surplus 150.
       const closedA = await one(
-        `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,cerrada_at,fondo_inicial,efectivo_contado,estado)
-         VALUES($1,$2,$3,$4,100,0,'CERRADA') RETURNING id`,
+          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,fecha_operativa,cerrada_at,fondo_inicial,efectivo_contado,estado)
+          VALUES($1,$2,$3,($3 AT TIME ZONE 'America/Mexico_City')::date,$4,100,0,'CERRADA') RETURNING id`,
         [ids.locations[0], ids.users[1], new Date(now.getTime() - 3 * 60 * 60_000), new Date(now.getTime() - 2 * 60 * 60_000)],
       );
       const closedB = await one(
-        `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,cerrada_at,fondo_inicial,efectivo_contado,estado)
-         VALUES($1,$2,$3,$4,100,250,'CERRADA') RETURNING id`,
+          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,fecha_operativa,cerrada_at,fondo_inicial,efectivo_contado,estado)
+          VALUES($1,$2,$3,($3 AT TIME ZONE 'America/Mexico_City')::date,$4,100,250,'CERRADA') RETURNING id`,
         [ids.locations[1], ids.users[2], new Date(now.getTime() - 3 * 60 * 60_000), new Date(now.getTime() - 2 * 60 * 60_000)],
       );
       ids.sessions.push(Number(closedA.id), Number(closedB.id));
       // An exact cut in the preceding week makes the trend's numerator and
       // denominator independently observable.
       const closedExact = await one(
-        `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,cerrada_at,fondo_inicial,efectivo_contado,estado)
-         VALUES($1,$2,$3,$4,100,100,'CERRADA') RETURNING id`,
+          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,fecha_operativa,cerrada_at,fondo_inicial,efectivo_contado,estado)
+          VALUES($1,$2,$3,($3 AT TIME ZONE 'America/Mexico_City')::date,$4,100,100,'CERRADA') RETURNING id`,
         [ids.locations[0], ids.users[1],
           new Date(now.getTime() - 9 * 24 * 60 * 60_000),
           new Date(now.getTime() - 8 * 24 * 60 * 60_000)],
@@ -111,8 +111,8 @@ if (!testUrl) {
       }).desde!;
       for (let index = 0; index < 3; index += 1) {
         const session = await one(
-          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,cerrada_at,fondo_inicial,efectivo_contado,estado)
-           VALUES($1,$2,$3,$4,10,0,'CERRADA') RETURNING id`,
+          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,fecha_operativa,cerrada_at,fondo_inicial,efectivo_contado,estado)
+            VALUES($1,$2,$3,($3 AT TIME ZONE 'America/Mexico_City')::date,$4,10,0,'CERRADA') RETURNING id`,
           [ids.locations[0], ids.users[1],
             new Date(monthStart.getTime() + index * 120_000),
             new Date(monthStart.getTime() + index * 120_000 + 60_000)],
@@ -123,8 +123,8 @@ if (!testUrl) {
       // Open sessions keep realtime store cards operational after historical cuts.
       for (let index = 0; index < 2; index += 1) {
         const session = await one(
-          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,fondo_inicial,estado)
-           VALUES($1,$2,$3,0,'ABIERTA') RETURNING id`,
+          `INSERT INTO sesiones_caja(ubicacion_id,usuario_id,abierta_at,fecha_operativa,fondo_inicial,estado)
+            VALUES($1,$2,$3,($3 AT TIME ZONE 'America/Mexico_City')::date,0,'ABIERTA') RETURNING id`,
           [ids.locations[index], ids.users[index + 1], from],
         );
         ids.sessions.push(Number(session.id));
@@ -134,9 +134,9 @@ if (!testUrl) {
         store: number; session: number; subtotal: number; iva?: number;
         state?: "VENDIDO" | "CANCELADO"; paid?: boolean; facturado?: boolean;
         payment?: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO"; oldPending?: boolean;
-        unit?: 0 | 1;
+         unit?: 0 | 1; paymentCreatedAt?: Date; createdAt?: Date;
       }) => {
-        const created = input.oldPending ? new Date(now.getTime() - 90 * 60_000) : now;
+        const created = input.createdAt ?? (input.oldPending ? new Date(now.getTime() - 90 * 60_000) : now);
         const total = input.subtotal + (input.iva ?? 0);
         const ticket = await one(
           `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,
@@ -165,7 +165,7 @@ if (!testUrl) {
           await pool.query(
             `INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at)
              VALUES($1,$2,$3,$4,$5)`,
-            [ticket.id, input.payment, total, ids.users[1], now],
+             [ticket.id, input.payment, total, ids.users[1], input.paymentCreatedAt ?? now],
           );
         }
         return Number(ticket.id);
@@ -177,9 +177,70 @@ if (!testUrl) {
       await addTicket({ store: 0, session: 0, subtotal: 75, unit: 0 });
       // Four destination cards across both stores.
       await addTicket({ store: 0, session: 5, subtotal: 100, iva: 16, paid: true, payment: "EFECTIVO", unit: 0 });
-      await addTicket({ store: 0, session: 5, subtotal: 200, iva: 32, paid: true, payment: "TRANSFERENCIA", facturado: true, unit: 0 });
+       await addTicket({ store: 0, session: 5, subtotal: 200, iva: 32, paid: true, payment: "TRANSFERENCIA", facturado: true, unit: 0, createdAt: new Date(from.getTime() - 60_000), paymentCreatedAt: new Date(now.getTime() + 10_000) });
       await addTicket({ store: 1, session: 6, subtotal: 300, iva: 48, paid: true, payment: "TRANSFERENCIA", unit: 1 });
-      await addTicket({ store: 1, session: 6, subtotal: 400, paid: true, payment: "CREDITO", unit: 1 });
+       const creditTicket = await addTicket({ store: 1, session: 6, subtotal: 400, paid: true, payment: "CREDITO", unit: 1 });
+       const creditSale = await one(
+         `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,created_at)
+          VALUES($1,$2,'VENTA_CREDITO',400,$3,$4) RETURNING id`,
+         [ids.clients[0], creditTicket, ids.users[1], now],
+       );
+       ids.creditMovements.push(Number(creditSale.id));
+       // Production payment flow: ABONO has no ticket. Its applications resolve
+       // the paid sales/documents; unapplied remainder remains client credit.
+       const fiscalAbono = await one(
+         `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at)
+          VALUES($1,NULL,'ABONO',-50,$2,'TRANSFERENCIA','CUENTA_FISCAL',$3) RETURNING id`,
+         [ids.clients[0], ids.users[1], new Date(now.getTime() + 20_000)],
+       );
+       ids.creditMovements.push(Number(fiscalAbono.id));
+       const creditApplication = await one(
+         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
+          VALUES($1,$2,30) RETURNING id`,
+         [fiscalAbono.id, creditSale.id],
+       );
+       ids.creditApplications.push(Number(creditApplication.id));
+       const reversedAbono = await one(
+         `INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id,created_at)
+          VALUES($1,'REVERSO',50,$2,$3,$4) RETURNING id`,
+         [ids.clients[0], fiscalAbono.id, ids.users[0], new Date(now.getTime() + 30_000)],
+       );
+       ids.creditMovements.push(Number(reversedAbono.id));
+       const fullyAppliedAbono = await one(
+         `INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at)
+          VALUES($1,'ABONO',-10,$2,'TRANSFERENCIA','CUENTA_FISCAL',$3) RETURNING id`,
+         [ids.clients[0], ids.users[1], new Date(now.getTime() + 40_000)],
+       );
+       ids.creditMovements.push(Number(fullyAppliedAbono.id));
+       const fullApplication = await one(
+         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
+          VALUES($1,$2,10) RETURNING id`,
+         [fullyAppliedAbono.id, creditSale.id],
+       );
+       ids.creditApplications.push(Number(fullApplication.id));
+       // Cancellation does not erase immutable credit evidence, but neither
+       // the cancelled sale nor an application to it is a destination entry.
+       const cancelledCreditTicket = await addTicket({
+         store: 1, session: 6, subtotal: 60, state: "CANCELADO", unit: 1,
+       });
+       const cancelledCreditSale = await one(
+         `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,created_at)
+          VALUES($1,$2,'VENTA_CREDITO',60,$3,$4) RETURNING id`,
+         [ids.clients[0], cancelledCreditTicket, ids.users[1], now],
+       );
+       ids.creditMovements.push(Number(cancelledCreditSale.id));
+       const cancelledSaleAbono = await one(
+         `INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at)
+          VALUES($1,'ABONO',-60,$2,'TRANSFERENCIA','CUENTA_FISCAL',$3) RETURNING id`,
+         [ids.clients[0], ids.users[1], new Date(now.getTime() + 50_000)],
+       );
+       ids.creditMovements.push(Number(cancelledSaleAbono.id));
+       const cancelledSaleApplication = await one(
+         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
+          VALUES($1,$2,60) RETURNING id`,
+         [cancelledSaleAbono.id, cancelledCreditSale.id],
+       );
+       ids.creditApplications.push(Number(cancelledSaleApplication.id));
       await addTicket({ store: 0, session: 5, subtotal: 50, oldPending: true, unit: 0 });
       await addTicket({ store: 1, session: 6, subtotal: 999, state: "CANCELADO", unit: 1 });
 
@@ -218,7 +279,7 @@ if (!testUrl) {
 
       assert.equal(Number(summary.ventas), Number(summary.cobrado) + Number(summary.pendiente));
       assert.ok(Number(summary.margen) > 0);
-      assert.equal(summary.cancelaciones, 1);
+       assert.equal(summary.cancelaciones, 2);
       assert.equal(pending.tickets, 2);
       assert.ok(cards.some((card) => card.alertas.includes("PENDIENTE_MAS_30_MIN")));
       assert.ok(cards.reduce((sum, card) => sum + Number(card.margen), 0) > 0);
@@ -262,22 +323,95 @@ if (!testUrl) {
         destinations.resumen.reduce((sum, row) => sum + Number(row.importe), 0),
         Number(destinations.totalCobrado),
       );
-      assert.equal(destinations.ivaCobrado, "96.00");
-      const destinationDetails = await Promise.all(
+       assert.equal(destinations.ivaCobrado, "64.00");
+       assert.equal(destinations.resumen.find((row) => row.cuentaDestino === "CUENTA_FISCAL")!.importe, "302.00");
+       const destinationDetails = await Promise.all(
         (["CAJA_FISICA", "CUENTA_FISCAL", "CUENTA_NO_FISCAL", "CUENTAS_POR_COBRAR"] as const).map(
           (destination) => analytics.listDestinationAccountMovements(
             filters,
             destination,
             1,
-            1,
+             10,
           ),
         ),
       );
-      assert.deepEqual(destinationDetails.map((detail) => detail.total), [2, 1, 1, 1]);
+       assert.deepEqual(destinationDetails.map((detail) => detail.total), [2, 7, 1, 1]);
+       const fiscalDetail = destinationDetails[1]!;
+       const effectiveAbonoDate = new Date(now.getTime() + 20_000).toISOString();
+       const appliedProjection = fiscalDetail.items.find(
+         (item) => item.documentoTipo === "TICKET" && item.documentoId === creditTicket && item.monto === "30.00",
+       );
+       const remainderProjection = fiscalDetail.items.find(
+          (item) =>
+            item.documentoTipo === "CLIENTE" &&
+            item.documentoId === ids.clients[0] &&
+            item.monto === "20.00",
+        );
+        const reversedRemainderProjection = fiscalDetail.items.find(
+          (item) =>
+            item.documentoTipo === "CLIENTE" &&
+            item.documentoId === ids.clients[0] &&
+            item.monto === "-20.00",
+       );
+       assert.deepEqual(appliedProjection && {
+         monto: appliedProjection.monto,
+         fecha: appliedProjection.fecha,
+         ubicacionId: appliedProjection.ubicacionId,
+         sitio: appliedProjection.sitio,
+       }, {
+         monto: "30.00",
+         fecha: effectiveAbonoDate,
+         ubicacionId: ids.locations[1],
+         sitio: `${tag}-Sur`,
+       });
+       assert.deepEqual(remainderProjection && {
+         monto: remainderProjection.monto,
+         fecha: remainderProjection.fecha,
+         ubicacionId: remainderProjection.ubicacionId,
+         sitio: remainderProjection.sitio,
+       }, {
+         monto: "20.00",
+         fecha: effectiveAbonoDate,
+         ubicacionId: null,
+         sitio: "Estado de cuenta",
+       });
+       assert.equal(
+         Number(appliedProjection!.monto) + Number(remainderProjection!.monto),
+         50,
+       );
+        assert.deepEqual(reversedRemainderProjection && {
+          monto: reversedRemainderProjection.monto,
+          fecha: reversedRemainderProjection.fecha,
+          ubicacionId: reversedRemainderProjection.ubicacionId,
+          sitio: reversedRemainderProjection.sitio,
+        }, {
+          monto: "-20.00",
+          fecha: new Date(now.getTime() + 30_000).toISOString(),
+          ubicacionId: null,
+          sitio: "Estado de cuenta",
+        });
+       assert.equal(fiscalDetail.items.filter((item) => item.documentoTipo === "CLIENTE").length, 3);
+       assert.ok(!fiscalDetail.items.some((item) =>
+         item.documentoTipo === "TICKET" && item.documentoId === cancelledCreditTicket,
+       ));
+       assert.ok(fiscalDetail.items.some((item) =>
+         item.documentoTipo === "CLIENTE" && item.monto === "60.00" && item.sitio === "Estado de cuenta",
+       ));
+       const siteFiscalDetail = await analytics.listDestinationAccountMovements(
+         { ...filters, ubicacionId: ids.locations[1] },
+         "CUENTA_FISCAL",
+         1,
+         10,
+       );
+       assert.equal(siteFiscalDetail.total, 3);
+       assert.equal(siteFiscalDetail.montoTotal, "10.00");
+       assert.equal(siteFiscalDetail.items[0]!.documentoTipo, "TICKET");
+       assert.equal(await analytics.getDestinationCollectedAmount(filters, "CUENTA_FISCAL"), "302.00");
+       assert.equal(await analytics.getDestinationCollectedAmount(
+         { ...filters, ubicacionId: ids.locations[1] },
+         "CUENTA_FISCAL",
+       ), "10.00");
       for (const detail of destinationDetails) {
-        assert.equal(detail.items.length, 1);
-        assert.equal(detail.items[0]!.documentoTipo, "TICKET");
-        assert.ok(ids.tickets.includes(detail.items[0]!.documentoId));
         assert.equal(detail.montoTotal, destinations.resumen.find(
           (row) => row.cuentaDestino === detail.cuentaDestino,
         )!.importe);
@@ -319,6 +453,8 @@ if (!testUrl) {
     } finally {
       if (ids.tickets.length) {
         await pool.query(`DELETE FROM ticket_pagos WHERE ticket_id = ANY($1::int[])`, [ids.tickets]);
+         if (ids.creditApplications.length) await pool.query(`DELETE FROM aplicaciones_credito WHERE id = ANY($1::int[])`, [ids.creditApplications]);
+        if (ids.creditMovements.length) await pool.query(`DELETE FROM movimientos_credito WHERE id = ANY($1::int[])`, [ids.creditMovements]);
         await pool.query(`DELETE FROM ticket_lineas WHERE ticket_id = ANY($1::int[])`, [ids.tickets]);
         await pool.query(`DELETE FROM tickets WHERE id = ANY($1::int[])`, [ids.tickets]);
       }

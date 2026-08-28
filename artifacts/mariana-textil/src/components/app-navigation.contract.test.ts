@@ -181,6 +181,29 @@ test("permission filtering never returns an empty navigation section", () => {
   );
 });
 
+test("ticket detail preserves POS/Cobros readers and explicit fiscal reviewers", async () => {
+  const app = await readFile(new URL("../App.tsx", import.meta.url), "utf8");
+  assert.match(
+    app,
+    /path="\/tickets\/:id"[\s\S]*allowedAnyModules=\{\[Modules\.COBROS_PAGOS, Modules\.POS\]\}[\s\S]*allowedRoles=\{\["ADMIN", "CONTADOR", "SISTEMAS"\]\}/,
+  );
+  assert.ok(
+    hasReadableModule(user("TERMINAL", [Modules.POS]), [Modules.COBROS_PAGOS, Modules.POS]),
+  );
+  assert.ok(
+    hasReadableModule(user("CAJA", [Modules.COBROS_PAGOS]), [Modules.COBROS_PAGOS, Modules.POS]),
+  );
+  assert.ok(["ADMIN", "CONTADOR", "SISTEMAS"].includes(user("SISTEMAS", []).rol));
+});
+
+function hasReadableModule(currentUser: CurrentUser, modules: Module[]) {
+  return modules.some((module) =>
+    currentUser.permisos?.some((permission) =>
+      permission.modulo === module && permission.puedeVer,
+    ),
+  );
+}
+
 test("routes use matrix permissions while notifications remain admin-only", async () => {
   const app = await readFile(
     new URL("artifacts/mariana-textil/src/App.tsx", root),

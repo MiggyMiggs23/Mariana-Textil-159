@@ -6634,11 +6634,11 @@ components:
         id: { type: number }
         fecha: { type: string, format: date-time }
         tipo: { type: string }
-        documentoTipo: { type: string, enum: [TICKET] }
+        documentoTipo: { type: string, enum: [TICKET, CLIENTE] }
         documentoId: { type: number }
         documento: { type: string }
         cliente: { type: ["string", "null"] }
-        ubicacionId: { type: number }
+        ubicacionId: { type: ["number", "null"] }
         sitio: { type: string }
         monto: { type: string }
         registroId: { type: number }

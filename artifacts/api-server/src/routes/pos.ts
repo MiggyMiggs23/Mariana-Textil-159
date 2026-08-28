@@ -135,6 +135,27 @@ function assertOperationalLocation(req: Request, ubicacionId: number): void {
   }
 }
 
+function assertTicketReadLocation(req: Request, ubicacionId: number): void {
+  if (["ADMIN", "CONTADOR", "SISTEMAS"].includes(req.auth!.user.rol)) return;
+  assertOperationalLocation(req, ubicacionId);
+}
+
+/** Fiscal/technical reviewers may inspect an immutable ticket, never operate POS. */
+function requiereLecturaTicket(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
+  if (["ADMIN", "CONTADOR", "SISTEMAS"].includes(req.auth!.user.rol)) {
+    next();
+    return;
+  }
+  void requiereAlguno([
+    { modulo: "pos", accion: "ver" },
+    { modulo: "cobros_pagos", accion: "ver" },
+  ])(req, res, next);
+}
+
 function requiereAlguno(
   checks: Array<{ modulo: ModuloId; accion: "ver" | "crear" }>,
 ) {
@@ -522,10 +543,7 @@ router.get(
 
 router.get(
   "/tickets/:id/documento-impresion",
-  requiereAlguno([
-    { modulo: "pos", accion: "ver" },
-    { modulo: "cobros_pagos", accion: "ver" },
-  ]),
+  requiereLecturaTicket,
   async (req, res, next): Promise<void> => {
     try {
       const params = ObtenerTicketParams.parse(req.params);
@@ -537,7 +555,7 @@ router.get(
         res.status(404).json({ error: "Ticket no encontrado." });
         return;
       }
-      assertOperationalLocation(req, ticket.ubicacionId);
+      assertTicketReadLocation(req, ticket.ubicacionId);
       res.json(projectTicketPrintDocument(ticket, copia));
     } catch (error) {
       handlePosError(error, res, next);
@@ -547,10 +565,7 @@ router.get(
 
 router.get(
   "/tickets/:id",
-  requiereAlguno([
-    { modulo: "pos", accion: "ver" },
-    { modulo: "cobros_pagos", accion: "ver" },
-  ]),
+  requiereLecturaTicket,
   async (req, res, next): Promise<void> => {
     try {
       const params = ObtenerTicketParams.parse(req.params);
@@ -560,7 +575,7 @@ router.get(
         res.status(404).json({ error: "Ticket no encontrado." });
         return;
       }
-      assertOperationalLocation(req, ticket.ubicacionId);
+      assertTicketReadLocation(req, ticket.ubicacionId);
       const parsed = ObtenerTicketResponse.parse(ticket);
       res.json(
         omitTerminalTicketSensitiveFields(
