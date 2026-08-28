@@ -32,6 +32,7 @@ import {
   getCategoricalChartColor,
   REPORT_NEGATIVE_COLOR,
 } from "@/lib/report-chart-colors";
+import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
 
 // Helper for generic API errors
@@ -75,7 +76,7 @@ export default function Proveedores() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTipo, setFilterTipo] = useState("ALL");
-  const [filterEstado, setFilterEstado] = useState("ALL");
+  const [filterEstado, setFilterEstado] = useState("ACTIVE");
   const [sortOrder, setSortOrder] = useState<"AZ" | "SALDO">("AZ");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
@@ -226,6 +227,7 @@ export default function Proveedores() {
                     )}
                     {canViewFinanzas && <TableHead>Última Compra</TableHead>}
                     <TableHead className="text-right">Estado</TableHead>
+                    {user?.rol === "ADMIN" && <TableHead className="text-right">Acciones</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -291,6 +293,11 @@ export default function Proveedores() {
                             {p.activo ? "Activo" : "Inactivo"}
                           </Badge>
                         </TableCell>
+                        {user?.rol === "ADMIN" && (
+                          <TableCell className="text-right">
+                            {!p.activo && <PurgaCatalogoButton entidad="proveedores" id={p.id} nombreVisible={p.nombre} invalidateQueryKey={getListProveedoresQueryKey()} />}
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   )}

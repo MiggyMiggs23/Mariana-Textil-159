@@ -35,6 +35,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Edit, Plus, Search, UserRound } from "lucide-react";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -217,6 +218,9 @@ export default function Choferes() {
                                 >
                                   {chofer.activo ? "Desactivar" : "Activar"}
                                 </Button>
+                                {user?.rol === "ADMIN" && !chofer.activo && (
+                                  <PurgaCatalogoButton entidad="choferes" id={chofer.id} nombreVisible={chofer.nombreCompleto} invalidateQueryKey={getListChoferesQueryKey()} />
+                                )}
                               </TableCell>
                             )}
                           </TableRow>
@@ -258,6 +262,9 @@ export default function Choferes() {
                               <Edit className="w-4 h-4 mr-2" />
                               Editar
                             </Button>
+                            {user?.rol === "ADMIN" && !chofer.activo && (
+                              <PurgaCatalogoButton entidad="choferes" id={chofer.id} nombreVisible={chofer.nombreCompleto} invalidateQueryKey={getListChoferesQueryKey()} />
+                            )}
                             <Button
                               variant="outline"
                               size="sm"

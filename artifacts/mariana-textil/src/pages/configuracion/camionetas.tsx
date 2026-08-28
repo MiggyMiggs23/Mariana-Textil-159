@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { Search, Plus, Truck, Edit } from "lucide-react";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Switch } from "@/components/ui/switch";
+import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -55,6 +56,7 @@ export default function Camionetas() {
   const [editingCamioneta, setEditingCamioneta] = useState<Camioneta | null>(null);
 
   const canEdit = hasPermission(user, Modules.CAMIONETAS, 'crear');
+  const isAdmin = user?.rol === "ADMIN";
 
   const filteredCamionetas = useMemo(() => {
     if (!camionetas) return [];
@@ -192,6 +194,9 @@ export default function Camionetas() {
                             <Button variant="ghost" size="icon" onClick={() => handleEdit(c)}>
                               <Edit className="w-4 h-4 text-muted-foreground" />
                             </Button>
+                            {isAdmin && !c.activa && (
+                              <PurgaCatalogoButton entidad="camionetas" id={c.id} nombreVisible={c.nombre} invalidateQueryKey={getListCamionetasQueryKey()} />
+                            )}
                           </TableCell>
                         )}
                       </TableRow>
@@ -243,6 +248,9 @@ export default function Camionetas() {
                           <Edit className="w-4 h-4 mr-2" />
                           Editar
                         </Button>
+                        {isAdmin && !c.activa && (
+                          <PurgaCatalogoButton entidad="camionetas" id={c.id} nombreVisible={c.nombre} invalidateQueryKey={getListCamionetasQueryKey()} />
+                        )}
                       </div>
                     )}
                   </div>

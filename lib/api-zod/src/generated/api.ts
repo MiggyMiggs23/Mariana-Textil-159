@@ -8167,3 +8167,52 @@ export const GetViajeResponse = zod.object({
 }))
 
 
+/**
+ * @summary Cuenta referencias antes de purgar un registro inactivo (solo ADMIN)
+ */
+
+
+
+export const GetPurgaPreflightParams = zod.object({
+  "entidad": zod.enum(['usuarios', 'camionetas', 'choferes', 'clientes', 'proveedores', 'productos']),
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetPurgaPreflightResponse = zod.object({
+  "entidad": zod.enum(['usuarios', 'camionetas', 'choferes', 'clientes', 'proveedores', 'productos']),
+  "id": zod.number(),
+  "nombreVisible": zod.string(),
+  "inactivo": zod.boolean(),
+  "referencias": zod.array(zod.object({
+  "tipo": zod.string(),
+  "cantidad": zod.number()
+})),
+  "totalReferencias": zod.number(),
+  "puedeEliminar": zod.boolean(),
+  "motivoBloqueo": zod.string().nullish()
+})
+
+
+/**
+ * @summary Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+ */
+
+
+
+export const DeleteRegistroInactivoParams = zod.object({
+  "entidad": zod.enum(['usuarios', 'camionetas', 'choferes', 'clientes', 'proveedores', 'productos']),
+  "id": zod.coerce.number().min(1)
+})
+
+
+
+
+export const DeleteRegistroInactivoBody = zod.object({
+  "confirmacion": zod.string().min(1)
+})
+
+export const DeleteRegistroInactivoResponse = zod.object({
+  "eliminado": zod.literal(true)
+})
+
+

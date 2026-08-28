@@ -34,6 +34,7 @@ import { getGlobalAnalytics } from "@/lib/clientes-api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatNumber } from "@workspace/number-format";
 import { toast } from "sonner";
+import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
 export default function Clientes() {
   const [search, setSearch] = useState("");
@@ -123,7 +124,7 @@ export default function Clientes() {
               <Card className="overflow-hidden">
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}</TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}{user?.rol === "ADMIN" && <TableHead className="text-right">Acciones</TableHead>}</TableRow></TableHeader>
                     <TableBody>{visible.map((client) => (
                       <TableRow key={client.id} data-testid={`row-client-${client.id}`}>
                         <TableCell className="font-medium">
@@ -140,6 +141,13 @@ export default function Clientes() {
                         <TableCell>{client.rfc || "—"}</TableCell>
                         <TableCell><Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></TableCell>
                         {canCredit && <ClientFinancialCells id={client.id} />}
+                        {user?.rol === "ADMIN" && (
+                          <TableCell className="text-right">
+                            {!client.activo && !client.esSistema && (
+                              <PurgaCatalogoButton entidad="clientes" id={client.id} nombreVisible={client.nombre} invalidateQueryKey={getListClientesQueryKey()} />
+                            )}
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}</TableBody>
                   </Table>

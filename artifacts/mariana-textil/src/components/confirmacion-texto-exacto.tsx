@@ -26,7 +26,7 @@ export type ConfirmacionTextoExactoProps = {
   etiqueta?: string;
   textoConfirmar?: string;
   pendiente?: boolean;
-  onConfirm: () => void;
+  onConfirm: (texto: string) => void;
 };
 
 /**
@@ -54,7 +54,8 @@ export function ConfirmacionTextoExacto({
   };
 
   const handleConfirm = () => {
-    if (!pendiente) ejecutarSiTextoCoincide(texto, textoRequerido, onConfirm);
+    if (!pendiente)
+      ejecutarSiTextoCoincide(texto, textoRequerido, () => onConfirm(texto));
   };
 
   return (

@@ -4703,8 +4703,66 @@ paths:
       responses:
         "200": { description: Detalle de viaje, content: { application/json: { schema: { $ref: "#/components/schemas/ViajeDetail" } } } }
         "404": { $ref: "#/components/responses/NotFound" }
+  /purga/{entidad}/{id}/preflight:
+    get:
+      operationId: getPurgaPreflight
+      tags: [users, productos, proveedores, clientes]
+      summary: Cuenta referencias antes de purgar un registro inactivo (solo ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/PurgaEntidad"
+        - $ref: "#/components/parameters/PurgaId"
+      responses:
+        "200":
+          description: Resultado del preflight
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PurgaPreflight" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /purga/{entidad}/{id}:
+    delete:
+      operationId: deleteRegistroInactivo
+      tags: [users, productos, proveedores, clientes]
+      summary: Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+      parameters:
+        - $ref: "#/components/parameters/PurgaEntidad"
+        - $ref: "#/components/parameters/PurgaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PurgaConfirmacion" }
+      responses:
+        "200":
+          description: Registro purgado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PurgaResultado" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Registro activo, confirmación incorrecta o referencias existentes
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PurgaConflicto" }
 components:
   parameters:
+    PurgaEntidad:
+      name: entidad
+      in: path
+      required: true
+      schema:
+        type: string
+        enum: [usuarios, camionetas, choferes, clientes, proveedores, productos]
+    PurgaId:
+      name: id
+      in: path
+      required: true
+      schema: { type: number, minimum: 1 }
     CamionetaId:
       {
         name: id,
@@ -4925,6 +4983,48 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    PurgaReferencia:
+      type: object
+      required: [tipo, cantidad]
+      properties:
+        tipo: { type: string }
+        cantidad: { type: number }
+    PurgaPreflight:
+      type: object
+      required: [entidad, id, nombreVisible, inactivo, referencias, totalReferencias, puedeEliminar]
+      properties:
+        entidad:
+          type: string
+          enum: [usuarios, camionetas, choferes, clientes, proveedores, productos]
+        id: { type: number }
+        nombreVisible: { type: string }
+        inactivo: { type: boolean }
+        referencias:
+          type: array
+          items: { $ref: "#/components/schemas/PurgaReferencia" }
+        totalReferencias: { type: number }
+        puedeEliminar: { type: boolean }
+        motivoBloqueo: { type: [string, "null"] }
+    PurgaConfirmacion:
+      type: object
+      additionalProperties: false
+      required: [confirmacion]
+      properties:
+        confirmacion: { type: string, minLength: 1 }
+    PurgaResultado:
+      type: object
+      required: [eliminado]
+      properties:
+        eliminado: { type: boolean, enum: [true] }
+    PurgaConflicto:
+      type: object
+      required: [error, referencias, totalReferencias]
+      properties:
+        error: { type: string }
+        referencias:
+          type: array
+          items: { $ref: "#/components/schemas/PurgaReferencia" }
+        totalReferencias: { type: number }
     MotivoRechazoPagoDirigidoInput:
       type: object
       required: [motivoRechazo]

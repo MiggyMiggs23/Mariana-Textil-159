@@ -218,6 +218,10 @@ import type {
   ProveedorUpdate,
   ProveedoresListResult,
   ProveedoresResumen,
+  PurgaConfirmacion,
+  PurgaConflicto,
+  PurgaPreflight,
+  PurgaResultado,
   RateLimitedResponse,
   RecalcularInput,
   RecepcionSalidaInput,
@@ -15568,4 +15572,160 @@ export function useGetViaje<TData = Awaited<ReturnType<typeof getViaje>>, TError
 
 
 
+
+export const getGetPurgaPreflightUrl = (entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number,) => {
+
+
+
+
+  return `/api/purga/${entidad}/${id}/preflight`
+}
+
+/**
+ * @summary Cuenta referencias antes de purgar un registro inactivo (solo ADMIN)
+ */
+export const getPurgaPreflight = async (entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number, options?: Parameters<typeof customFetch>[1]): Promise<PurgaPreflight> => {
+
+  return customFetch<PurgaPreflight>(getGetPurgaPreflightUrl(entidad,id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPurgaPreflightQueryKey = (entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number,) => {
+    return [
+    `/api/purga/${entidad}/${id}/preflight`
+    ] as const;
+    }
+
+
+export const getGetPurgaPreflightQueryOptions = <TData = Awaited<ReturnType<typeof getPurgaPreflight>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPurgaPreflight>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPurgaPreflightQueryKey(entidad,id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPurgaPreflight>>> = ({ signal }) => getPurgaPreflight(entidad,id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: entidad !== null && entidad !== undefined && id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPurgaPreflight>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPurgaPreflightQueryResult = NonNullable<Awaited<ReturnType<typeof getPurgaPreflight>>>
+export type GetPurgaPreflightQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Cuenta referencias antes de purgar un registro inactivo (solo ADMIN)
+ */
+
+export function useGetPurgaPreflight<TData = Awaited<ReturnType<typeof getPurgaPreflight>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPurgaPreflight>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPurgaPreflightQueryOptions(entidad,id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDeleteRegistroInactivoUrl = (entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number,) => {
+
+
+
+
+  return `/api/purga/${entidad}/${id}`
+}
+
+/**
+ * @summary Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+ */
+export const deleteRegistroInactivo = async (entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
+    id: number,
+    purgaConfirmacion: PurgaConfirmacion, options?: Parameters<typeof customFetch>[1]): Promise<PurgaResultado> => {
+
+  return customFetch<PurgaResultado>(getDeleteRegistroInactivoUrl(entidad,id),
+  {
+    ...options,
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(purgaConfirmacion)
+  }
+);}
+
+
+
+
+
+export const getDeleteRegistroInactivoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | PurgaConflicto>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRegistroInactivo>>, TError,{entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteRegistroInactivo>>, TError,{entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}, TContext> => {
+
+const mutationKey = ['deleteRegistroInactivo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteRegistroInactivo>>, {entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}> = (props) => {
+          const {entidad,id,data} = props ?? {};
+
+          return  deleteRegistroInactivo(entidad,id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteRegistroInactivoMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRegistroInactivo>>>
+    export type DeleteRegistroInactivoMutationBody = BodyType<PurgaConfirmacion>
+    export type DeleteRegistroInactivoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | PurgaConflicto>
+
+    /**
+ * @summary Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+ */
+export const useDeleteRegistroInactivo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | PurgaConflicto>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRegistroInactivo>>, TError,{entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteRegistroInactivo>>,
+        TError,
+        {entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>},
+        TContext
+      > => {
+      return useMutation(getDeleteRegistroInactivoMutationOptions(options));
+    }
 

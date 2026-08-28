@@ -29,6 +29,7 @@ import { ChevronRight, ChevronDown, Plus, Upload, Search, Package, CheckCircle2,
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatNumber } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -312,6 +313,7 @@ export default function Productos() {
                                   <TableHead className="text-right">Cantidad</TableHead>
                                   <TableHead className="text-right">Sitios</TableHead>
                                   <TableHead className="text-right">Estado</TableHead>
+                                   {user?.rol === "ADMIN" && <TableHead className="text-right">Acciones</TableHead>}
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
@@ -344,6 +346,11 @@ export default function Productos() {
                                         {p.activo ? "Activo" : "Inactivo"}
                                       </Badge>
                                     </TableCell>
+                                     {user?.rol === "ADMIN" && (
+                                       <TableCell className="text-right" onClick={(event) => event.stopPropagation()}>
+                                         {!p.activo && <PurgaCatalogoButton entidad="productos" id={p.id} nombreVisible={`${p.tela} / ${p.color} (${p.sku})`} invalidateQueryKey={getListProductosQueryKey(queryParams)} />}
+                                       </TableCell>
+                                     )}
                                   </TableRow>
                                 )})}
                                 {canCreate && (

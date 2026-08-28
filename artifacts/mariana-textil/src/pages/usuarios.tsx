@@ -25,6 +25,7 @@ import { Pencil, Plus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Modules, hasPermission } from "@/lib/permisos";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
+import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
 export default function Usuarios() {
   const { data: currentUser } = useGetCurrentUser();
@@ -41,6 +42,7 @@ export default function Usuarios() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
   const [userConfirmationOpen, setUserConfirmationOpen] = useState(false);
+  const [estado, setEstado] = useState<"ACTIVE" | "INACTIVE" | "ALL">("ACTIVE");
 
   // Form states
   const [formData, setFormData] = useState({
@@ -191,6 +193,16 @@ export default function Usuarios() {
         </div>
 
         <Card>
+          <div className="flex justify-end border-b p-4">
+            <Select value={estado} onValueChange={(value) => setEstado(value as typeof estado)}>
+              <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ACTIVE">Activos</SelectItem>
+                <SelectItem value="INACTIVE">Inactivos</SelectItem>
+                <SelectItem value="ALL">Todos</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <CardContent className="p-0">
             <Table>
               <TableHeader>
@@ -204,7 +216,7 @@ export default function Usuarios() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users?.map((user) => (
+                {users?.filter((user) => estado === "ALL" || (estado === "ACTIVE" ? user.activo : !user.activo)).map((user) => (
                   <TableRow key={user.id}>
                     <TableCell>
                       <div className="font-medium text-foreground">{user.nombre}</div>
@@ -234,6 +246,9 @@ export default function Usuarios() {
                           <Pencil className="w-4 h-4 mr-2" />
                           Editar
                         </Button>
+                      )}
+                      {isAdmin && !user.activo && (
+                        <PurgaCatalogoButton entidad="usuarios" id={user.id} nombreVisible={user.nombre} invalidateQueryKey={getListUsersQueryKey()} />
                       )}
                     </TableCell>
                   </TableRow>

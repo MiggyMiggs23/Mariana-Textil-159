@@ -5,6 +5,50 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface PurgaReferencia {
+  tipo: string;
+  cantidad: number;
+}
+
+export type PurgaPreflightEntidad = typeof PurgaPreflightEntidad[keyof typeof PurgaPreflightEntidad];
+
+
+export const PurgaPreflightEntidad = {
+  usuarios: 'usuarios',
+  camionetas: 'camionetas',
+  choferes: 'choferes',
+  clientes: 'clientes',
+  proveedores: 'proveedores',
+  productos: 'productos',
+} as const;
+
+export interface PurgaPreflight {
+  entidad: PurgaPreflightEntidad;
+  id: number;
+  nombreVisible: string;
+  inactivo: boolean;
+  referencias: PurgaReferencia[];
+  totalReferencias: number;
+  puedeEliminar: boolean;
+  /** @nullable */
+  motivoBloqueo?: string | null;
+}
+
+export interface PurgaConfirmacion {
+  /** @minLength 1 */
+  confirmacion: string;
+}
+
+export interface PurgaResultado {
+  eliminado: true;
+}
+
+export interface PurgaConflicto {
+  error: string;
+  referencias: PurgaReferencia[];
+  totalReferencias: number;
+}
+
 export interface MotivoRechazoPagoDirigidoInput {
   /** @minLength 10 */
   motivoRechazo: string;
