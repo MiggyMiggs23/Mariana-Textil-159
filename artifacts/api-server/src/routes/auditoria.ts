@@ -52,7 +52,7 @@ router.get("/auditoria/export.xlsx", async (req, res): Promise<void> => {
     throw error;
   }
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Auditoría");
+  const sheet = workbook.addWorksheet("Bitácora");
   sheet.columns = [
     { header: "Fecha", key: "fecha", width: 24 },
     { header: "Usuario", key: "usuario", width: 22 },
@@ -67,7 +67,7 @@ router.get("/auditoria/export.xlsx", async (req, res): Promise<void> => {
   rows.forEach((row) => sheet.addRow(row));
   const buffer = await workbook.xlsx.writeBuffer();
   res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-  res.setHeader("Content-Disposition", 'attachment; filename="auditoria.xlsx"');
+  res.setHeader("Content-Disposition", 'attachment; filename="bitacora.xlsx"');
   res.send(Buffer.from(buffer));
 });
 
@@ -79,7 +79,7 @@ router.get("/auditoria/:id", async (req, res): Promise<void> => {
   }
   const result = await getAuditoria(String(parsed.data.id));
   if (!result) {
-    res.status(404).json({ error: "Registro de auditoría no encontrado." });
+    res.status(404).json({ error: "Registro de bitácora no encontrado." });
     return;
   }
   res.json(GetAuditoriaResponse.parse(result));

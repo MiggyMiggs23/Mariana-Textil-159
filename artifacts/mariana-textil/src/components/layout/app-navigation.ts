@@ -107,8 +107,8 @@ export const NAV_GROUPS: NavGroup[] = [
       { name: "Choferes", path: "/configuracion/choferes", icon: UserSquare2, module: Modules.CHOFERES, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
       { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
-      { name: "Conciliación", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },
-      { name: "Auditoría", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, isClickable: true },
+      { name: "Conciliación de Kardex", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },
+      { name: "Bitácora", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, isClickable: true },
     ],
   },
 ];

@@ -67,7 +67,7 @@ export default function Conciliacion() {
     <AppLayout>
       <div className="max-w-6xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Conciliación de Inventario</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Conciliación de Kardex</h1>
           <p className="text-muted-foreground mt-1">
             Verifica la integridad de las existencias contra el kardex de movimientos. La consulta global incluye sitios inactivos con historial o existencias.
           </p>

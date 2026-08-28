@@ -121,7 +121,7 @@ export default function Auditoria() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Auditoria_${format(new Date(), 'yyyyMMdd_HHmm')}.xlsx`;
+      a.download = `Bitacora_${format(new Date(), 'yyyyMMdd_HHmm')}.xlsx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -159,7 +159,7 @@ export default function Auditoria() {
     <div className="flex flex-col h-full space-y-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Auditoría del Sistema</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Bitácora</h1>
           <p className="text-sm text-muted-foreground">
             Bitácora operativa de solo lectura.
           </p>
@@ -325,7 +325,7 @@ export default function Auditoria() {
                 {!data?.items?.length ? (
                   <TableRow>
                     <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
-                      No se encontraron registros de auditoría con los filtros actuales.
+                      No se encontraron registros en la bitácora con los filtros actuales.
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -434,7 +434,7 @@ function AuditoriaDetailSheet({ id, onClose }: { id: string | null, onClose: () 
     <Sheet open={!!id} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full sm:max-w-xl md:max-w-3xl lg:max-w-4xl border-l p-0 flex flex-col">
         <SheetHeader className="p-6 pb-4 border-b bg-muted/20">
-          <SheetTitle className="text-xl">Detalle de Auditoría</SheetTitle>
+          <SheetTitle className="text-xl">Detalle de Bitácora</SheetTitle>
           <SheetDescription>
             Registro de cambios detallado.
           </SheetDescription>

@@ -81,8 +81,8 @@ test("SISTEMAS navigation follows its matrix without POS or CAJA", () => {
       "Choferes",
       "Usuarios",
       "Permisos",
-      "Conciliación",
-      "Auditoría",
+      "Conciliación de Kardex",
+      "Bitácora",
     ],
   );
 });
