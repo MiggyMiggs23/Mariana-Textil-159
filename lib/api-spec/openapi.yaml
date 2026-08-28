@@ -6135,8 +6135,6 @@ components:
       properties:
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
-        pisoId: { type: ["number", "null"] }
-        nombrePiso: { type: ["string", "null"] }
         sesionCajaId: { type: ["number", "null"] }
         abiertaAt: { type: ["string", "null"], format: date-time }
         cajero: { type: ["string", "null"] }
@@ -8258,6 +8256,8 @@ components:
         colorProducto: { type: string }
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
+        pisoId: { type: ["number", "null"] }
+        nombrePiso: { type: ["string", "null"] }
         proveedorId: { type: ["number", "null"] }
         estado:
           $ref: "#/components/schemas/EstadoRollo"
@@ -8330,6 +8330,8 @@ components:
         unidadProducto: { type: string }
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
+        pisoId: { type: ["number", "null"] }
+        nombrePiso: { type: ["string", "null"] }
         proveedorId: { type: ["number", "null"] }
         estado:
           $ref: "#/components/schemas/EstadoRollo"

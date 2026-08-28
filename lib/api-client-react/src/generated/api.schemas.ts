@@ -890,10 +890,6 @@ export interface AdminRealtimeStore {
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */
-  pisoId?: number | null;
-  /** @nullable */
-  nombrePiso?: string | null;
-  /** @nullable */
   sesionCajaId: number | null;
   /** @nullable */
   abiertaAt: string | null;
@@ -3111,6 +3107,10 @@ export interface RolloSummary {
   ubicacionId: number;
   nombreUbicacion?: string;
   /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
+  /** @nullable */
   proveedorId?: number | null;
   estado: EstadoRollo;
   cantidadInicial: string;
@@ -3165,6 +3165,10 @@ export interface RolloDetail {
   unidadProducto?: string;
   ubicacionId: number;
   nombreUbicacion?: string;
+  /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
   /** @nullable */
   proveedorId?: number | null;
   estado: EstadoRollo;

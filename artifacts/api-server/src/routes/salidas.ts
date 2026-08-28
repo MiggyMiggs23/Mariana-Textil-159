@@ -576,6 +576,7 @@ router.post(
 router.post(
   "/salidas/:id/recibir",
   requireSession,
+  requierePermiso("salidas", "crear"),
   async (req, res, next) => {
     try {
       const { id } = RecibirSalidaParams.parse(req.params);

@@ -19,6 +19,10 @@ export interface RolloDetail {
   ubicacionId: number;
   nombreUbicacion?: string;
   /** @nullable */
+  pisoId?: number | null;
+  /** @nullable */
+  nombrePiso?: string | null;
+  /** @nullable */
   proveedorId?: number | null;
   estado: EstadoRollo;
   cantidadInicial: string;

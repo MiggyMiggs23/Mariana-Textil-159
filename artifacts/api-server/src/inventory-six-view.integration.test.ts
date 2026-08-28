@@ -38,6 +38,18 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
       import("./lib/inventario"),
     ]);
   const tag = `INV6-${randomUUID()}`;
+  const fixtureHex = tag.replace(/\D/g, "").padEnd(18, "0");
+  const fixtureInitials = Array.from({ length: 3 }, (_, index) =>
+    Array.from({ length: 3 }, (__, offset) =>
+      String.fromCharCode(
+        65
+          + (Number.parseInt(
+            fixtureHex.slice((index * 3 + offset) * 2, (index * 3 + offset + 1) * 2),
+            16,
+          ) % 26),
+      ),
+    ).join(""),
+  );
   const ids = {
     locations: [] as number[],
     users: [] as number[],
@@ -45,6 +57,7 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     products: [] as number[],
     rolls: [] as number[],
     movements: [] as number[],
+    floors: [] as number[],
   };
   let server: Server | undefined;
   let baseUrl = "";
@@ -94,16 +107,16 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
 
   try {
     const own = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'BODEGA',true) RETURNING id",
-      [`${tag}-PROPIA`],
+      "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'BODEGA',true) RETURNING id",
+      [`${tag}-PROPIA`, fixtureInitials[0]],
     );
     const other = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id",
-      [`${tag}-OTRA`],
+      "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id",
+      [`${tag}-OTRA`, fixtureInitials[1]],
     );
     const transit = await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TRANSITO',true) RETURNING id",
-      [`${tag}-TRANSITO`],
+      "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TRANSITO',true) RETURNING id",
+      [`${tag}-TRANSITO`, fixtureInitials[2]],
     );
     const ownId = Number(own.id);
     const otherId = Number(other.id);
@@ -261,6 +274,40 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     await addRoll(8, ownId, "DISPONIBLE", 1.75, available(1.75));
     await addRoll(8, otherId, "DISPONIBLE", 3, available(3));
 
+    const ownFloorA = await one(
+      "INSERT INTO pisos(ubicacion_id,nombre,activo) VALUES($1,$2,true) RETURNING id",
+      [ownId, `${tag}-PROPIA-A`],
+    );
+    const ownFloorB = await one(
+      "INSERT INTO pisos(ubicacion_id,nombre,activo) VALUES($1,$2,true) RETURNING id",
+      [ownId, `${tag}-PROPIA-B`],
+    );
+    const otherFloorA = await one(
+      "INSERT INTO pisos(ubicacion_id,nombre,activo) VALUES($1,$2,true) RETURNING id",
+      [otherId, `${tag}-OTRA-A`],
+    );
+    const otherFloorB = await one(
+      "INSERT INTO pisos(ubicacion_id,nombre,activo) VALUES($1,$2,true) RETURNING id",
+      [otherId, `${tag}-OTRA-B`],
+    );
+    const floorIds = {
+      ownA: Number(ownFloorA.id),
+      ownB: Number(ownFloorB.id),
+      otherA: Number(otherFloorA.id),
+      otherB: Number(otherFloorB.id),
+    };
+    ids.floors.push(floorIds.ownA, floorIds.ownB, floorIds.otherA, floorIds.otherB);
+    await mutate(
+      `UPDATE rollos
+          SET piso_id=CASE ubicacion_id
+            WHEN $2::int THEN $3::int
+            WHEN $4::int THEN $5::int
+          END
+        WHERE id=ANY($1::int[]) AND estado='DISPONIBLE'
+          AND ubicacion_id=ANY($6::int[])`,
+      [ids.rolls, ownId, floorIds.ownA, otherId, floorIds.otherA, [ownId, otherId]],
+    );
+
     await guardDatabase();
     await reconstruirCacheExistencias();
     const snapshot = await pool.query(
@@ -327,6 +374,134 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     const reportPath = (locations: number[]) =>
       `/api/reportes/inventario?periodo=mensual&productoIds=${ids.products.join(",")}`
       + `&ubicacionIds=${locations.join(",")}`;
+
+    const sortedTotals = (totals: Map<number, Total>) =>
+      Array.from(totals.entries()).sort(([left], [right]) => left - right);
+    const normalizeDashboardTotals = (body: Json) =>
+      body.inventarioPorUbicacion
+        .filter((row: Json) => [ownId, otherId].includes(Number(row.ubicacionId)))
+        .map((row: Json) => ({
+          locationId: Number(row.ubicacionId),
+          metres: rounded(row.metros),
+          kilos: rounded(row.kilos),
+          rolls: Number(row.rollos),
+        }))
+        .sort((left: Json, right: Json) => left.locationId - right.locationId);
+    const canonicalize = (
+      value: unknown,
+      options: { omitFloorPresentation?: boolean } = {},
+    ): unknown => {
+      if (Array.isArray(value)) {
+        return value
+          .map((item) => canonicalize(item, options))
+          .sort((left, right) =>
+            JSON.stringify(left).localeCompare(JSON.stringify(right))
+          );
+      }
+      if (value && typeof value === "object") {
+        return Object.fromEntries(
+          Object.entries(value as Json)
+            .filter(([key]) => key !== "generatedAt")
+            .filter(([key]) =>
+              !options.omitFloorPresentation
+              || (key !== "pisoId" && key !== "nombrePiso")
+            )
+            .map(([key, item]) => [key, canonicalize(item, options)]),
+        );
+      }
+      return value;
+    };
+    const differingLeafPaths = (
+      before: unknown,
+      after: unknown,
+      path = "",
+    ): string[] => {
+      if (Object.is(before, after)) return [];
+      if (Array.isArray(before) && Array.isArray(after)) {
+        if (before.length !== after.length) return [path];
+        return before.flatMap((item, index) =>
+          differingLeafPaths(item, after[index], `${path}[${index}]`)
+        );
+      }
+      if (
+        before && after
+        && typeof before === "object" && typeof after === "object"
+        && !Array.isArray(before) && !Array.isArray(after)
+      ) {
+        const keys = new Set([
+          ...Object.keys(before as Json),
+          ...Object.keys(after as Json),
+        ]);
+        return Array.from(keys).flatMap((key) =>
+          differingLeafPaths(
+            (before as Json)[key],
+            (after as Json)[key],
+            path ? `${path}.${key}` : key,
+          )
+        );
+      }
+      return [path];
+    };
+    const captureSixViews = async (
+      session: string,
+      scope: "admin" | "own",
+    ) => {
+      const maliciousLocation = scope === "own" ? `&ubicacionId=${otherId}` : "";
+      const dashboardPath = scope === "own"
+        ? `/api/dashboard?ubicacionId=${otherId}`
+        : "/api/dashboard";
+      const grouped = await request(
+        `/api/inventario/existencias/agrupadas?includeSinExistencia=true${maliciousLocation}`,
+        session,
+      );
+      const vistaGlobal = await request(dashboardPath, session);
+      const dashboard = await request(dashboardPath, session);
+      const productList = await request(
+        `/api/productos?existencia=TODOS${maliciousLocation}`,
+        session,
+      );
+      const productDetails = await Promise.all(
+        products.map((product) => request(`/api/productos/${product.id}`, session)),
+      );
+      const report = await request(
+        reportPath(scope === "admin" ? [ownId, otherId, transitId] : [otherId, transitId]),
+        session,
+      );
+      const taggedGrouped = grouped
+        .map((group: Json) => ({
+          ...group,
+          colores: group.colores.filter((row: Json) =>
+            ids.products.includes(Number(row.productoId))
+          ),
+        }))
+        .filter((group: Json) => group.colores.length > 0);
+      const taggedProducts = productList.filter((row: Json) =>
+        ids.products.includes(Number(row.id))
+      );
+      const responses = canonicalize({
+        grouped: taggedGrouped,
+        vistaGlobal,
+        dashboard,
+        productList: taggedProducts,
+        productDetails,
+        report,
+      }) as Json;
+      return {
+        responses,
+        totals: {
+          grouped: sortedTotals(normalizeGrouped(taggedGrouped)),
+          vistaGlobal: normalizeDashboardTotals(vistaGlobal),
+          dashboard: normalizeDashboardTotals(dashboard),
+          productList: sortedTotals(normalizeProducts(taggedProducts)),
+          productDetails: productDetails.map((detail: Json) => ({
+            productId: Number(detail.id),
+            quantity: rounded(detail.cantidad),
+            rolls: Number(detail.rollos),
+          })),
+          report: sortedTotals(normalizeReport(report)),
+        },
+      };
+    };
 
     for (const actor of [
       { scope: "admin" as const, session: sessions.admin },
@@ -434,6 +609,99 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
       assert.equal(detail.cantidad, "0.000", "catalog-only product must expose explicit zero");
       assert.equal(detail.rollos, 0);
     }
+
+    const inventorySnapshot = async () =>
+      (await pool.query(
+        `SELECT producto_id,ubicacion_id,cantidad_total::text,rollos_count
+           FROM existencias
+          WHERE producto_id=ANY($1::int[])
+          ORDER BY producto_id,ubicacion_id`,
+        [ids.products],
+      )).rows;
+    const movementSnapshot = async () =>
+      (await pool.query(
+        `SELECT COUNT(*)::int AS count,
+                COALESCE(SUM(cantidad),0)::text AS quantity
+           FROM movimientos
+          WHERE producto_id=ANY($1::int[])`,
+        [ids.products],
+      )).rows[0]!;
+
+    const beforeFloorChange = {
+      admin: await captureSixViews(sessions.admin, "admin"),
+      own: await captureSixViews(sessions.own, "own"),
+    };
+    const movementsBeforeFloorChange = await movementSnapshot();
+    const inventoryBeforeFloorChange = await inventorySnapshot();
+
+    await mutate(
+      `UPDATE rollos
+          SET piso_id=CASE ubicacion_id
+            WHEN $2::int THEN $3::int
+            WHEN $4::int THEN $5::int
+          END
+        WHERE id=ANY($1::int[]) AND estado='DISPONIBLE'
+          AND ubicacion_id=ANY($6::int[])`,
+      [ids.rolls, ownId, floorIds.ownB, otherId, floorIds.otherB, [ownId, otherId]],
+    );
+    await mutate(
+      `UPDATE pisos
+          SET nombre=nombre || '-REUBICADO'
+        WHERE id=ANY($1::int[])`,
+      [[floorIds.ownB, floorIds.otherB]],
+    );
+    await guardDatabase();
+    await reconstruirCacheExistencias();
+
+    const afterFloorChange = {
+      admin: await captureSixViews(sessions.admin, "admin"),
+      own: await captureSixViews(sessions.own, "own"),
+    };
+    const movementsAfterFloorChange = await movementSnapshot();
+    const inventoryAfterFloorChange = await inventorySnapshot();
+
+    assert.deepEqual(
+      movementsAfterFloorChange,
+      movementsBeforeFloorChange,
+      "changing floors without inventory operations must preserve movement count and sum",
+    );
+    assert.deepEqual(
+      inventoryAfterFloorChange,
+      inventoryBeforeFloorChange,
+      "changing floors and rebuilding cache must preserve the exact existence snapshot",
+    );
+    for (const scope of ["admin", "own"] as const) {
+      assert.deepEqual(
+        afterFloorChange[scope].totals,
+        beforeFloorChange[scope].totals,
+        `${scope}: all six-view totals must ignore floors`,
+      );
+      assert.deepEqual(
+        canonicalize(afterFloorChange[scope].responses, {
+          omitFloorPresentation: true,
+        }),
+        canonicalize(beforeFloorChange[scope].responses, {
+          omitFloorPresentation: true,
+        }),
+        `${scope}: normalized six-view responses must be exactly floor-invariant`,
+      );
+      const changedPaths = differingLeafPaths(
+        beforeFloorChange[scope].responses,
+        afterFloorChange[scope].responses,
+        "responses",
+      );
+      assert.ok(
+        changedPaths.length > 0,
+        `${scope}: fixture must prove that visible floor descriptions actually changed`,
+      );
+      assert.ok(
+        changedPaths.every((path) =>
+          path.startsWith("responses.productDetails[")
+          && (path.endsWith(".pisoId") || path.endsWith(".nombrePiso"))
+        ),
+        `${scope}: only floor presentation fields may change: ${changedPaths.join(", ")}`,
+      );
+    }
   } finally {
     await closeServer();
     if (ids.sessions.length) {
@@ -450,6 +718,9 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     }
     if (ids.rolls.length) {
       await mutate("DELETE FROM rollos WHERE id=ANY($1::int[])", [ids.rolls]);
+    }
+    if (ids.floors.length) {
+      await mutate("DELETE FROM pisos WHERE id=ANY($1::int[])", [ids.floors]);
     }
     if (ids.users.length) {
       await mutate(

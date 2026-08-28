@@ -229,6 +229,7 @@ Inventory routes enforce the following effective permissions on the server:
 | `POST /api/salidas/borrador/rollos` | `salidas` | `crear` + ubicación origen; valida y guarda el rollo en el mismo viaje |
 | `DELETE /api/salidas/:id/rollos/:rolloId` | `salidas` | `crear` + ubicación origen + propietario del borrador |
 | `POST /api/salidas/:id/enviar` | `salidas` | `crear` + ubicación origen + propietario; `ARMANDO → EN_TRANSITO` |
+| `POST /api/salidas/:id/recibir` | `salidas` | `crear` + ubicación destino; exige piso activo por rollo cuando el sitio tiene catálogo |
 | `GET /api/salidas/:id/documento` | `salidas` | `ver` + alcance de ubicación; solo `EN_TRANSITO` o `RECIBIDA` |
 | `POST /api/salidas/:id/cancelar` | `salidas` | `autorizar` + ubicación relacionada; solo `ARMANDO` |
 | `POST /api/inventario/rollos/:id/salida-mostrador` | `salidas` | `crear` |

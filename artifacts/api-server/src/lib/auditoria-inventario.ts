@@ -428,7 +428,11 @@ export async function confirmAuditoria(
       .where(and(eq(auditoriaInventarioSnapshotTable.auditoriaId, header.id), eq(auditoriaInventarioSnapshotTable.rolloId, rolloId)));
   }
   const surplus = await tx
-    .select({ rollo: rollosTable, serie: auditoriaInventarioEscaneosTable.serie })
+    .select({
+      rollo: rollosTable,
+      serie: auditoriaInventarioEscaneosTable.serie,
+      pisoRealId: auditoriaInventarioEscaneosTable.pisoRealId,
+    })
     .from(auditoriaInventarioEscaneosTable)
     .leftJoin(
       auditoriaInventarioSnapshotTable,
@@ -447,7 +451,7 @@ export async function confirmAuditoria(
     .for("update", { of: rollosTable });
   let relocated = 0;
   let manual = 0;
-  for (const { rollo, serie } of surplus) {
+  for (const { rollo, serie, pisoRealId } of surplus) {
     let resolucion = "RESOLUCION_MANUAL";
     if (rollo.ubicacionId === header.ubicacionId) {
       manual++;
@@ -461,6 +465,7 @@ export async function confirmAuditoria(
         documentoTipo: "AUDITORIA_INVENTARIO",
         documentoId: String(header.id),
         uuidCliente: stableUuid(`auditoria:${header.id}:sobrante:${rollo.id}`),
+        pisoDestinoId: pisoRealId,
       });
       relocated++;
       resolucion = "APLICADA";
@@ -481,6 +486,7 @@ export async function confirmAuditoria(
         documentoTipo: "AUDITORIA_INVENTARIO",
         documentoId: String(header.id),
         uuidCliente: null,
+        pisoDestinoId: pisoRealId,
       });
       relocated++;
       resolucion = "APLICADA";

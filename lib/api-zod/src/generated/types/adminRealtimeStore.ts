@@ -13,10 +13,6 @@ export interface AdminRealtimeStore {
   ubicacionId: number;
   nombreUbicacion: string;
   /** @nullable */
-  pisoId?: number | null;
-  /** @nullable */
-  nombrePiso?: string | null;
-  /** @nullable */
   sesionCajaId: number | null;
   /** @nullable */
   abiertaAt: Date | null;
