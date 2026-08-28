@@ -1,0 +1,298 @@
+# CORRECCIÓN — Roles SISTEMAS y CONTADOR, y limpieza para pruebas
+
+**Este prompt reemplaza al prompt anterior del rol SISTEMAS.** No ejecutes los dos; los dos tocan la matriz de permisos y se estorbarían.
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## El problema de origen
+
+Durante la Parte 7 se creó el rol `SOPORTE` a partir de una mención de paso en un prompt —*"solo ADMIN y SOPORTE pueden editar el catálogo"*— **sin que existiera un diseño detrás.**
+
+El resultado es una matriz de permisos rota. En `lib/db/src/seed.mjs`, `MATRIX` declara cinco roles en su encabezado, pero **25 de sus 29 filas solo tienen cuatro valores.** Solo `auditoria`, `camionetas`, `choferes` y `viajes` tienen los cinco.
+
+Efecto real: **SOPORTE hoy solo puede operar camionetas, choferes y viajes.** Todo lo demás le queda negado por omisión.
+
+Se descubrió antes del piloto. Hay que corregirlo y agregar además el rol CONTADOR.
+
+---
+
+## BLOQUE 1 — Renombrar SOPORTE a SISTEMAS y crear CONTADOR
+
+**SOPORTE pasa a llamarse SISTEMAS.** Usa el mismo procedimiento que cuando `INVENTARIOS` pasó a `SUPERVISOR`: `ALTER TYPE ... RENAME VALUE` dentro de una transacción con candado. No crees un rol nuevo ni dejes los dos conviviendo.
+
+**Agrega el rol CONTADOR** al enum, con el mismo mecanismo condicional que ya se usó para agregar SOPORTE.
+
+Al terminar hay **seis roles**: ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS, CONTADOR — seis además de ADMIN, que tiene bypass incondicional y no vive en la matriz.
+
+Reporta cuántos usuarios tenían el rol SOPORTE antes del cambio.
+
+---
+
+## BLOQUE 2 — Completar la matriz
+
+Corrige `MATRIX` para que **todas** las filas tengan un valor por rol, en el orden declarado en `ROLES`.
+
+Agrega una validación al arranque del seed que **falle ruidosamente** si:
+
+- Alguna fila no tiene exactamente tantos valores como roles hay en `ROLES`
+- Algún valor no es uno de los conjuntos de permisos válidos
+- Algún módulo de `MODULOS` no tiene fila, o hay una fila para un módulo que no existe
+
+Este error pasó desapercibido porque nada lo verificaba.
+
+### SISTEMAS
+
+El técnico responsable de la aplicación.
+
+| Módulo | SISTEMAS |
+|---|---|
+| dashboard | ver |
+| **pos** | **nada** |
+| entradas | ver, crear, editar |
+| salidas | ver, crear, editar |
+| movimientos | ver, crear, editar |
+| etiquetas | ver, crear |
+| inventario | ver |
+| productos | ver, crear, editar |
+| precios | ver, crear, editar |
+| ajustes | ver, crear |
+| clientes | ver, crear, editar |
+| clientes_credito | ver |
+| clientes_precios | ver |
+| clientes_finanzas | ver |
+| proveedores | ver, crear, editar |
+| proveedores_finanzas | ver |
+| contenedores | ver, crear, editar |
+| ubicaciones | ver, crear, editar |
+| usuarios | ver, crear, editar |
+| permisos | ver, editar |
+| **resumen_caja** | **nada** |
+| **cortes** | **nada** |
+| **cobros_pagos** | **nada** |
+| reportes | ver |
+| conciliacion | ver, crear |
+| **auditoria** | **ver, solo lectura** |
+| camionetas | ver, crear, editar |
+| choferes | ver, crear, editar |
+| viajes | ver, crear, editar |
+
+**Las tres decisiones que lo definen:**
+
+- **SÍ ve el dinero.** Va a diagnosticar problemas de cartera, de precios y de cortes, y a ciegas no puede.
+- **NO vende ni cobra.** Sin POS, sin cortes, sin cobros. Así, si un ticket o un corte tiene problemas, nunca es suyo.
+- **SÍ lee la bitácora y solo lee.** La bitácora ya es inmutable en la base de datos.
+
+Alcance: **todas las ubicaciones.**
+
+### CONTADOR
+
+La persona que lleva la contabilidad. **Ve el dinero, no toca la mercancía.**
+
+| Módulo | CONTADOR |
+|---|---|
+| dashboard | ver |
+| **pos** | **nada** |
+| **entradas** | **ver** |
+| **salidas** | **ver** |
+| movimientos | ver |
+| **etiquetas** | **nada** |
+| inventario | ver |
+| productos | ver |
+| precios | ver |
+| **ajustes** | **nada** |
+| clientes | ver |
+| clientes_credito | ver |
+| clientes_precios | ver |
+| clientes_finanzas | ver |
+| proveedores | ver |
+| proveedores_finanzas | ver, crear, editar |
+| contenedores | ver |
+| **ubicaciones** | **nada** |
+| **usuarios** | **nada** |
+| **permisos** | **nada** |
+| resumen_caja | ver |
+| cortes | ver |
+| cobros_pagos | ver, crear |
+| reportes | ver |
+| conciliacion | ver |
+| **auditoria** | **nada** |
+| **camionetas** | **nada** |
+| **choferes** | **nada** |
+| viajes | ver |
+
+**Las decisiones que lo definen:**
+
+- **Ve todo lo financiero**, incluidos costos, márgenes, cartera, cortes y facturado contra no facturado.
+- **No opera inventario.** Puede consultar entradas, salidas y movimientos para cuadrar, pero **no crea ni edita ninguno.** No mueve mercancía.
+- **No vende.** Sin POS.
+- **Registra pagos a proveedores y cobros**, porque es parte de su trabajo. Con `crear`, no con `editar`: un pago mal registrado se corrige con movimiento inverso, como todo en este sistema.
+- **No administra el sistema.** Sin usuarios, sin permisos, sin sitios, sin auditoría.
+
+Alcance: **todas las ubicaciones.**
+
+**Decisión conservadora anotada:** se le dio `crear` en `cobros_pagos` y en `proveedores_finanzas` asumiendo que registra pagos. Si el usuario prefiere que sea puramente de consulta, es un cambio de una línea en la matriz. Déjalo anotado en `replit.md`.
+
+---
+
+## BLOQUE 3 — Candados sobre el rol ADMIN
+
+SISTEMAS tiene `usuarios` y `permisos`, así que necesita límites explícitos, aplicados **en el servidor**:
+
+1. **No puede crear un usuario con rol ADMIN.**
+2. **No puede cambiar el rol de nadie hacia ADMIN.**
+3. **No puede modificar el rol, los permisos ni el estado de un usuario que ya es ADMIN.** Ni desactivarlo, ni cambiarle la contraseña.
+4. **No puede modificar la fila de permisos del rol ADMIN.**
+5. **No puede otorgarse a sí mismo permisos que no tiene**, ni subirse el propio rol.
+
+Cada intento rechazado genera su registro en la bitácora.
+
+Esas cinco reglas son las que hacen que el rol exista. Sin ellas, SISTEMAS es indistinguible de ADMIN.
+
+Las protecciones que ya existen —no dejar el sistema sin ADMIN activo, no modificar los propios permisos— se conservan intactas y aplican a los seis roles.
+
+---
+
+## BLOQUE 4 — Distinguible en la bitácora
+
+Verifica que el rol quede correctamente registrado para SISTEMAS y CONTADOR, y que el filtro por rol de la pantalla de Auditoría los incluya.
+
+Esto es lo que justifica tener roles separados en vez de repartir ADMIN: **poder ver de un vistazo qué hizo sistemas, qué hizo el contador y qué hicieron los dueños.**
+
+---
+
+## BLOQUE 5 — Barra lateral
+
+Revisa qué ve cada rol nuevo con la matriz nueva.
+
+**SISTEMAS:** no ve Ventas / POS ni la sección CAJA. Sí ve INVENTARIO, OPERACIÓN sin POS, DIRECTORIO, Reportes, Contenedores, Viajes y toda CONFIGURACIÓN incluida Auditoría.
+
+**CONTADOR:** no ve POS, ni Ajustes, ni Etiquetas, ni la sección CONFIGURACIÓN. Sí ve la sección CAJA completa, DIRECTORIO, Reportes, Contenedores, y lo de INVENTARIO y OPERACIÓN en modo consulta.
+
+**Ninguna sección debe quedar visible con cero entradas dentro**, para ninguno de los seis roles.
+
+---
+
+## BLOQUE 6 — Prueba de acceso real de los seis roles
+
+Verificar el seed no basta. La matriz puede estar bien escrita y el servidor comportarse distinto, porque hay techos en código, middleware y filtrados que no salen de ahí.
+
+Escribe una prueba de integración que, para **cada uno de los seis roles**, inicie sesión y compruebe contra endpoints reales:
+
+- Un endpoint que **debe** alcanzar, y responde correctamente
+- Un endpoint que **no debe** alcanzar, y responde 403
+- Que ninguna respuesta traiga campos de dinero cuando el rol no debe verlos
+
+Esta prueba es el respaldo real de la matriz. Si mañana alguien agrega un rol o un módulo y lo deja a medias, aquí se cae.
+
+Reporta la tabla completa, rol por rol.
+
+---
+
+## BLOQUE 7 — Limpieza para el arranque de pruebas
+
+**Este bloque borra datos y es irreversible. Ejecútalo al final, después de que todo lo demás esté commiteado.**
+
+El usuario va a empezar mañana a probar los ciclos completos y necesita la base limpia.
+
+### Qué se conserva, sin excepción
+
+- **Clientes**, todos, con sus direcciones, plazos y datos
+- **Proveedores**, todos, con sus datos de contacto
+- **Ubicaciones**, los siete sitios y las dos técnicas
+- **Usuarios reales y sus permisos** — los que el usuario creó a propósito
+- **La matriz de permisos y los roles**
+- **El catálogo de productos** (ver la nota más abajo)
+
+### Qué se borra
+
+- Todos los **tickets y notas**, con sus líneas y sus pagos
+- Todos los **movimientos de crédito** de clientes
+- Todas las **compras y pagos a proveedores**, incluidas las que se les hicieron
+- Todos los **rollos**
+- Todos los **movimientos de kardex** y el caché de existencias
+- Todas las **entradas y salidas**, incluidas las de mostrador
+- Todos los **viajes**
+- Todos los **cortes de caja** y cobros
+- Todos los **contenedores** y sus líneas
+- Todas las **etiquetas** emitidas y su historial de reimpresión
+- Todos los **historiales de precios**
+- Todas las **solicitudes de pago dirigido**
+- Todas las **notificaciones y alertas**
+
+### Usuarios y datos de prueba
+
+Elimina todo usuario, cliente, proveedor, producto o ubicación **generado por pruebas automatizadas** — los que traen nombre generado, tipo `UbSAT SA1787447615051_6`.
+
+Si algo generado por pruebas tiene referencias que impidan borrarlo, **no lo fuerces**: anótalo y repórtalo.
+
+### ⚠️ El catálogo de productos
+
+El usuario pidió borrar "los productos que dio de alta". **Hay ambigüedad y no la resuelvas por tu cuenta.**
+
+El catálogo tiene **154 productos en 109 telas**, importados desde un archivo con trabajo previo. Borrarlos significaría volver a importarlos.
+
+**Decisión conservadora: conserva el catálogo completo de productos.** Borra únicamente los productos que sean claramente de prueba automatizada.
+
+Antes de borrar nada, **entrega el conteo de productos** y una muestra de los que parezcan de prueba, para que el usuario decida si quiere borrar alguno más.
+
+### Contadores
+
+Reinicia:
+
+- **Serie de rollos** en 1000001
+- **Folio de entradas** en 100 por sitio
+- **Folio de salidas** en 1 por sitio
+- **Folio de tickets** en 1000
+
+### Antes de borrar
+
+**Entrega primero el inventario completo de lo que vas a borrar**, con el conteo por tabla. Después ejecuta.
+
+Todo en **una sola transacción**. Si algo falla, no debe quedar la base a medias.
+
+### Después de borrar
+
+Confirma que la aplicación levante, que se pueda iniciar sesión, y que las pantallas principales carguen vacías sin error: Inventario, Productos, Ventas, Clientes, Proveedores, Reportes.
+
+---
+
+## BLOQUE 8 — Verificación
+
+**Roles**
+- El enum tiene SISTEMAS y CONTADOR, y no queda rastro de SOPORTE
+- Todas las filas de `MATRIX` tienen un valor por rol
+- El seed falla ruidosamente si una fila está incompleta o tiene un valor inválido
+- SISTEMAS opera todo menos POS, cortes y cobros, y lee la bitácora sin poder alterarla
+- CONTADOR ve todo lo financiero, consulta inventario sin poder moverlo, y no entra a configuración
+- Los cinco candados sobre ADMIN se rechazan en el servidor, y cada rechazo queda en la bitácora
+- La prueba de los seis roles pasa, con su tabla
+
+**Barra lateral**
+- Ninguna sección queda vacía para ninguno de los seis roles
+
+**Limpieza**
+- Inventario previo de lo que se borró, con conteo por tabla
+- Conteo de productos y muestra de los que parecen de prueba
+- Clientes, proveedores, sitios, usuarios reales y catálogo de productos intactos
+- Contadores reiniciados
+- La aplicación levanta y las pantallas principales cargan vacías sin error
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`, bajo decisiones de arquitectura:
+
+> **SISTEMAS** es el rol del técnico responsable de la aplicación. Opera todo y sí ve el dinero, porque diagnostica problemas de cartera y de precios. No vende ni cobra: sin POS, sin cortes, sin cobros. Lee la bitácora y no puede alterarla. No puede crear administradores ni tocar a un usuario que ya es ADMIN: esa llave se queda con el dueño.
+>
+> **CONTADOR** ve todo lo financiero y no toca la mercancía: consulta entradas, salidas y movimientos para cuadrar, pero no crea ni edita ninguno. Registra pagos a proveedores y cobros. No administra el sistema.
+>
+> Los dos existen separados de ADMIN para poder distinguir en la bitácora qué hizo cada quien.
+>
+> La matriz de permisos del seed valida al arranque que cada fila tenga tantos valores como roles existan y que cada valor sea válido. Una fila corta niega permisos en silencio, y así se creó por accidente un rol incompleto en la Parte 7.
