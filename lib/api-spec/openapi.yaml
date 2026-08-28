@@ -29,6 +29,8 @@ tags:
     description: Administración de permisos por rol y por usuario
   - name: inventario
     description: Inventario de rollos, kardex, ajustes y conciliación
+  - name: auditoria-inventario
+    description: Conteos físicos de rollos por sitio
   - name: pos
     description: Punto de venta y búsqueda para terminal
   - name: caja
@@ -1460,6 +1462,153 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ContenedorDetail" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/auditorias/sitios:
+    get:
+      operationId: listSitiosAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Lista sitios permitidos para auditorías
+      responses:
+        "200":
+          description: Sitios permitidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AuditoriaInventarioSitio" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /inventario/auditorias:
+    get:
+      operationId: listAuditoriasInventario
+      tags: [auditoria-inventario]
+      summary: Lista auditorías visibles
+      parameters:
+        - { in: query, name: ubicacionId, schema: { type: number, minimum: 1 } }
+      responses:
+        "200":
+          description: Auditorías visibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AuditoriaInventarioResumen" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Abre una auditoría y toma el snapshot de rollos presentes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuditoriaInventarioInput" }
+      responses:
+        "201":
+          description: Auditoría abierta
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioDetail" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/auditorias/{id}:
+    get:
+      operationId: getAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Obtiene resultados y participantes de una auditoría
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      responses:
+        "200":
+          description: Detalle de auditoría
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /inventario/auditorias/{id}/escaneos:
+    post:
+      operationId: scanAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Registra una serie por presencia de forma idempotente
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuditoriaInventarioEscaneoInput" }
+      responses:
+        "200":
+          description: Resultado idempotente del escaneo
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioEscaneoResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/auditorias/{id}/cerrar:
+    post:
+      operationId: closeAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Cierra y congela el conteo sin alterar inventario
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      responses:
+        "200":
+          description: Auditoría cerrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/auditorias/{id}/cancelar:
+    post:
+      operationId: cancelAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Cancela sin alterar inventario
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuditoriaInventarioCancelacionInput" }
+      responses:
+        "200":
+          description: Auditoría cancelada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioDetail" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/auditorias/{id}/confirmar:
+    post:
+      operationId: confirmAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Aplica la política conservadora de resultados (solo ADMIN)
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      responses:
+        "200":
+          description: Auditoría confirmada o resultado idempotente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
   /inventario/entradas:
     post:
@@ -10233,3 +10382,89 @@ components:
       properties:
         tickets: { type: array, items: { type: object, additionalProperties: true } }
         salidas: { type: array, items: { type: object, additionalProperties: true } }
+    AuditoriaInventarioSitio:
+      type: object
+      required: [id, nombre, iniciales]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        iniciales: { type: string }
+    AuditoriaInventarioInput:
+      type: object
+      required: [ubicacionId]
+      properties:
+        ubicacionId: { type: number, minimum: 1 }
+    AuditoriaInventarioEscaneoInput:
+      type: object
+      required: [serie]
+      properties:
+        serie: { type: string, minLength: 1, maxLength: 100 }
+    AuditoriaInventarioCancelacionInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 10, maxLength: 1000 }
+    AuditoriaInventarioResumen:
+      type: object
+      required: [id, folio, folioFormateado, ubicacionId, nombreUbicacion, estado, totalSnapshot, totalEscaneados, cuadros, faltantes, sobrantes, abiertaAt, creadaPor]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        folioFormateado: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        estado: { type: string, enum: [ABIERTA, CERRADA, CANCELADA, CONFIRMADA] }
+        totalSnapshot: { type: number }
+        totalEscaneados: { type: number }
+        cuadros: { type: number }
+        faltantes: { type: number }
+        sobrantes: { type: number }
+        abiertaAt: { type: string, format: date-time }
+        creadaPor: { type: string }
+    AuditoriaInventarioResultado:
+      type: object
+      required: [serie, clasificacion, cantidad, unidad, estadoActual, resolucion]
+      properties:
+        serie: { type: string }
+        clasificacion: { type: string, enum: [CUADRO, FALTANTE, SOBRANTE] }
+        rolloId: { type: [number, "null"] }
+        producto: { type: [string, "null"] }
+        cantidad: { type: [string, "null"], pattern: '^-?\d+(\.\d{1,3})?$' }
+        unidad: { type: [string, "null"] }
+        ubicacionActualId: { type: [number, "null"] }
+        ubicacionActual: { type: [string, "null"] }
+        estadoActual: { type: string }
+        resolucion: { type: string, enum: [PENDIENTE, APLICADA, RESOLUCION_MANUAL] }
+        escaneadoAt: { type: [string, "null"], format: date-time }
+    AuditoriaInventarioParticipante:
+      type: object
+      required: [usuarioId, nombre, escaneos, primeroAt, ultimoAt]
+      properties:
+        usuarioId: { type: number }
+        nombre: { type: string }
+        escaneos: { type: number }
+        primeroAt: { type: string, format: date-time }
+        ultimoAt: { type: string, format: date-time }
+    AuditoriaInventarioDetail:
+      allOf:
+        - $ref: "#/components/schemas/AuditoriaInventarioResumen"
+        - type: object
+          required: [resultados, participantes]
+          properties:
+            motivoCancelacion: { type: [string, "null"] }
+            cerradaAt: { type: [string, "null"], format: date-time }
+            confirmadaAt: { type: [string, "null"], format: date-time }
+            resultados:
+              type: array
+              items: { $ref: "#/components/schemas/AuditoriaInventarioResultado" }
+            participantes:
+              type: array
+              items: { $ref: "#/components/schemas/AuditoriaInventarioParticipante" }
+    AuditoriaInventarioEscaneoResult:
+      type: object
+      required: [serie, duplicado, clasificacion, estadoActual]
+      properties:
+        serie: { type: string }
+        duplicado: { type: boolean }
+        clasificacion: { type: string, enum: [CUADRO, SOBRANTE] }
+        estadoActual: { type: string }

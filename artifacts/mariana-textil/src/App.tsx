@@ -60,6 +60,7 @@ import Viajes from "@/pages/viajes";
 import ViajeNuevo from "@/pages/viaje-nuevo";
 import ViajeDetail from "@/pages/viaje-detail";
 import ViajeDocumento from "@/pages/viaje-documento";
+import AuditoriasInventario from "@/pages/auditorias-inventario";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -349,6 +350,15 @@ function Router() {
           )}
         />
 
+        <Route
+          path="/inventario/auditorias"
+          component={() => (
+            <ProtectedRoute
+              component={AuditoriasInventario}
+              allowedModule={Modules.AUDITORIA_INVENTARIO}
+            />
+          )}
+        />
         <Route
           path="/inventario"
           component={() => (

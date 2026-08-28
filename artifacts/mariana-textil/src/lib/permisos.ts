@@ -8,6 +8,7 @@ export const Modules = {
   MOVIMIENTOS: "movimientos",
   ETIQUETAS: "etiquetas",
   INVENTARIO: "inventario",
+  AUDITORIA_INVENTARIO: "auditoria_inventario",
   PRODUCTOS: "productos",
   AJUSTES: "ajustes",
   CLIENTES: "clientes",

@@ -2488,6 +2488,350 @@ export const CancelContenedorResponse = zod.object({
 
 
 /**
+ * @summary Lista sitios permitidos para auditorías
+ */
+export const ListSitiosAuditoriaInventarioResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "iniciales": zod.string()
+})
+export const ListSitiosAuditoriaInventarioResponse = zod.array(ListSitiosAuditoriaInventarioResponseItem)
+
+
+/**
+ * @summary Lista auditorías visibles
+ */
+
+
+
+export const ListAuditoriasInventarioQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional()
+})
+
+export const ListAuditoriasInventarioResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+})
+export const ListAuditoriasInventarioResponse = zod.array(ListAuditoriasInventarioResponseItem)
+
+
+/**
+ * @summary Abre una auditoría y toma el snapshot de rollos presentes
+ */
+
+
+
+export const CreateAuditoriaInventarioBody = zod.object({
+  "ubicacionId": zod.number().min(1)
+})
+
+export const createAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp = new RegExp('^-?\\d+(\\.\\d{1,3})?$');
+
+
+export const CreateAuditoriaInventarioResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+}).and(zod.object({
+  "motivoCancelacion": zod.string().nullish(),
+  "cerradaAt": zod.coerce.date().nullish(),
+  "confirmadaAt": zod.coerce.date().nullish(),
+  "resultados": zod.array(zod.object({
+  "serie": zod.string(),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "rolloId": zod.number().nullish(),
+  "producto": zod.string().nullish(),
+  "cantidad": zod.string().regex(createAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
+  "unidad": zod.string().nullable(),
+  "ubicacionActualId": zod.number().nullish(),
+  "ubicacionActual": zod.string().nullish(),
+  "estadoActual": zod.string(),
+  "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
+  "escaneadoAt": zod.coerce.date().nullish()
+})),
+  "participantes": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "escaneos": zod.number(),
+  "primeroAt": zod.coerce.date(),
+  "ultimoAt": zod.coerce.date()
+}))
+}))
+
+
+/**
+ * @summary Obtiene resultados y participantes de una auditoría
+ */
+
+
+
+export const GetAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const getAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp = new RegExp('^-?\\d+(\\.\\d{1,3})?$');
+
+
+export const GetAuditoriaInventarioResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+}).and(zod.object({
+  "motivoCancelacion": zod.string().nullish(),
+  "cerradaAt": zod.coerce.date().nullish(),
+  "confirmadaAt": zod.coerce.date().nullish(),
+  "resultados": zod.array(zod.object({
+  "serie": zod.string(),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "rolloId": zod.number().nullish(),
+  "producto": zod.string().nullish(),
+  "cantidad": zod.string().regex(getAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
+  "unidad": zod.string().nullable(),
+  "ubicacionActualId": zod.number().nullish(),
+  "ubicacionActual": zod.string().nullish(),
+  "estadoActual": zod.string(),
+  "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
+  "escaneadoAt": zod.coerce.date().nullish()
+})),
+  "participantes": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "escaneos": zod.number(),
+  "primeroAt": zod.coerce.date(),
+  "ultimoAt": zod.coerce.date()
+}))
+}))
+
+
+/**
+ * @summary Registra una serie por presencia de forma idempotente
+ */
+
+
+
+export const ScanAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const scanAuditoriaInventarioBodySerieMax = 100;
+
+
+
+export const ScanAuditoriaInventarioBody = zod.object({
+  "serie": zod.string().min(1).max(scanAuditoriaInventarioBodySerieMax)
+})
+
+export const ScanAuditoriaInventarioResponse = zod.object({
+  "serie": zod.string(),
+  "duplicado": zod.boolean(),
+  "clasificacion": zod.enum(['CUADRO', 'SOBRANTE']),
+  "estadoActual": zod.string()
+})
+
+
+/**
+ * @summary Cierra y congela el conteo sin alterar inventario
+ */
+
+
+
+export const CloseAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const closeAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp = new RegExp('^-?\\d+(\\.\\d{1,3})?$');
+
+
+export const CloseAuditoriaInventarioResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+}).and(zod.object({
+  "motivoCancelacion": zod.string().nullish(),
+  "cerradaAt": zod.coerce.date().nullish(),
+  "confirmadaAt": zod.coerce.date().nullish(),
+  "resultados": zod.array(zod.object({
+  "serie": zod.string(),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "rolloId": zod.number().nullish(),
+  "producto": zod.string().nullish(),
+  "cantidad": zod.string().regex(closeAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
+  "unidad": zod.string().nullable(),
+  "ubicacionActualId": zod.number().nullish(),
+  "ubicacionActual": zod.string().nullish(),
+  "estadoActual": zod.string(),
+  "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
+  "escaneadoAt": zod.coerce.date().nullish()
+})),
+  "participantes": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "escaneos": zod.number(),
+  "primeroAt": zod.coerce.date(),
+  "ultimoAt": zod.coerce.date()
+}))
+}))
+
+
+/**
+ * @summary Cancela sin alterar inventario
+ */
+
+
+
+export const CancelAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const cancelAuditoriaInventarioBodyMotivoMin = 10;
+export const cancelAuditoriaInventarioBodyMotivoMax = 1000;
+
+
+
+export const CancelAuditoriaInventarioBody = zod.object({
+  "motivo": zod.string().min(cancelAuditoriaInventarioBodyMotivoMin).max(cancelAuditoriaInventarioBodyMotivoMax)
+})
+
+export const cancelAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp = new RegExp('^-?\\d+(\\.\\d{1,3})?$');
+
+
+export const CancelAuditoriaInventarioResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+}).and(zod.object({
+  "motivoCancelacion": zod.string().nullish(),
+  "cerradaAt": zod.coerce.date().nullish(),
+  "confirmadaAt": zod.coerce.date().nullish(),
+  "resultados": zod.array(zod.object({
+  "serie": zod.string(),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "rolloId": zod.number().nullish(),
+  "producto": zod.string().nullish(),
+  "cantidad": zod.string().regex(cancelAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
+  "unidad": zod.string().nullable(),
+  "ubicacionActualId": zod.number().nullish(),
+  "ubicacionActual": zod.string().nullish(),
+  "estadoActual": zod.string(),
+  "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
+  "escaneadoAt": zod.coerce.date().nullish()
+})),
+  "participantes": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "escaneos": zod.number(),
+  "primeroAt": zod.coerce.date(),
+  "ultimoAt": zod.coerce.date()
+}))
+}))
+
+
+/**
+ * @summary Aplica la política conservadora de resultados (solo ADMIN)
+ */
+
+
+
+export const ConfirmAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const confirmAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp = new RegExp('^-?\\d+(\\.\\d{1,3})?$');
+
+
+export const ConfirmAuditoriaInventarioResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+}).and(zod.object({
+  "motivoCancelacion": zod.string().nullish(),
+  "cerradaAt": zod.coerce.date().nullish(),
+  "confirmadaAt": zod.coerce.date().nullish(),
+  "resultados": zod.array(zod.object({
+  "serie": zod.string(),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE']),
+  "rolloId": zod.number().nullish(),
+  "producto": zod.string().nullish(),
+  "cantidad": zod.string().regex(confirmAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
+  "unidad": zod.string().nullable(),
+  "ubicacionActualId": zod.number().nullish(),
+  "ubicacionActual": zod.string().nullish(),
+  "estadoActual": zod.string(),
+  "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
+  "escaneadoAt": zod.coerce.date().nullish()
+})),
+  "participantes": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "escaneos": zod.number(),
+  "primeroAt": zod.coerce.date(),
+  "ultimoAt": zod.coerce.date()
+}))
+}))
+
+
+/**
  * @summary Crea una entrada completa (rollos DISPONIBLES) en una sola transacción
  */
 

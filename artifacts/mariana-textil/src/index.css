@@ -260,6 +260,23 @@
     size: letter portrait;
     margin: 8mm;
   }
+  @page audit-inventory {
+    size: letter portrait;
+    margin: 10mm;
+  }
+  body.print-auditoria-inventario * {
+    visibility: hidden;
+  }
+  body.print-auditoria-inventario .audit-inventory-print,
+  body.print-auditoria-inventario .audit-inventory-print * {
+    visibility: visible;
+  }
+  body.print-auditoria-inventario .audit-inventory-print {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    page: audit-inventory;
+  }
   @page label-sheet {
     size: letter portrait;
     margin: 5mm;

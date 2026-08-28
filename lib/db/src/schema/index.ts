@@ -1,4 +1,5 @@
 export * from "./audit";
+export * from "./auditorias-inventario";
 export * from "./camionetas";
 export * from "./choferes";
 export * from "./aplicaciones-credito";

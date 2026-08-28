@@ -33,6 +33,13 @@ import type {
   AjusteRolloInput,
   AnaliticaGlobalProveedores,
   AuditoriaDetail,
+  AuditoriaInventarioCancelacionInput,
+  AuditoriaInventarioDetail,
+  AuditoriaInventarioEscaneoInput,
+  AuditoriaInventarioEscaneoResult,
+  AuditoriaInventarioInput,
+  AuditoriaInventarioResumen,
+  AuditoriaInventarioSitio,
   AuditoriaListResult,
   BajaCliente200,
   BajaClienteBody,
@@ -141,6 +148,7 @@ import type {
   KardexResult,
   ListAdminCortesParams,
   ListAuditoriaParams,
+  ListAuditoriasInventarioParams,
   ListCamionetasParams,
   ListChoferesParams,
   ListComprasProveedorParams,
@@ -4875,6 +4883,601 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getCancelContenedorMutationOptions(options));
+    }
+
+export const getListSitiosAuditoriaInventarioUrl = () => {
+
+
+
+
+  return `/api/inventario/auditorias/sitios`
+}
+
+/**
+ * @summary Lista sitios permitidos para auditorías
+ */
+export const listSitiosAuditoriaInventario = async ( options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioSitio[]> => {
+
+  return customFetch<AuditoriaInventarioSitio[]>(getListSitiosAuditoriaInventarioUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSitiosAuditoriaInventarioQueryKey = () => {
+    return [
+    `/api/inventario/auditorias/sitios`
+    ] as const;
+    }
+
+
+export const getListSitiosAuditoriaInventarioQueryOptions = <TData = Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSitiosAuditoriaInventarioQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>> = ({ signal }) => listSitiosAuditoriaInventario({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSitiosAuditoriaInventarioQueryResult = NonNullable<Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>>
+export type ListSitiosAuditoriaInventarioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista sitios permitidos para auditorías
+ */
+
+export function useListSitiosAuditoriaInventario<TData = Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSitiosAuditoriaInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSitiosAuditoriaInventarioQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListAuditoriasInventarioUrl = (params?: ListAuditoriasInventarioParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/auditorias?${stringifiedParams}` : `/api/inventario/auditorias`
+}
+
+/**
+ * @summary Lista auditorías visibles
+ */
+export const listAuditoriasInventario = async (params?: ListAuditoriasInventarioParams, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioResumen[]> => {
+
+  return customFetch<AuditoriaInventarioResumen[]>(getListAuditoriasInventarioUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAuditoriasInventarioQueryKey = (params?: ListAuditoriasInventarioParams,) => {
+    return [
+    `/api/inventario/auditorias`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAuditoriasInventarioQueryOptions = <TData = Awaited<ReturnType<typeof listAuditoriasInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListAuditoriasInventarioParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAuditoriasInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAuditoriasInventarioQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAuditoriasInventario>>> = ({ signal }) => listAuditoriasInventario(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAuditoriasInventario>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAuditoriasInventarioQueryResult = NonNullable<Awaited<ReturnType<typeof listAuditoriasInventario>>>
+export type ListAuditoriasInventarioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista auditorías visibles
+ */
+
+export function useListAuditoriasInventario<TData = Awaited<ReturnType<typeof listAuditoriasInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListAuditoriasInventarioParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAuditoriasInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAuditoriasInventarioQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateAuditoriaInventarioUrl = () => {
+
+
+
+
+  return `/api/inventario/auditorias`
+}
+
+/**
+ * @summary Abre una auditoría y toma el snapshot de rollos presentes
+ */
+export const createAuditoriaInventario = async (auditoriaInventarioInput: AuditoriaInventarioInput, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioDetail> => {
+
+  return customFetch<AuditoriaInventarioDetail>(getCreateAuditoriaInventarioUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(auditoriaInventarioInput)
+  }
+);}
+
+
+
+
+
+export const getCreateAuditoriaInventarioMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAuditoriaInventario>>, TError,{data: BodyType<AuditoriaInventarioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAuditoriaInventario>>, TError,{data: BodyType<AuditoriaInventarioInput>}, TContext> => {
+
+const mutationKey = ['createAuditoriaInventario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAuditoriaInventario>>, {data: BodyType<AuditoriaInventarioInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAuditoriaInventario(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof createAuditoriaInventario>>>
+    export type CreateAuditoriaInventarioMutationBody = BodyType<AuditoriaInventarioInput>
+    export type CreateAuditoriaInventarioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
+
+    /**
+ * @summary Abre una auditoría y toma el snapshot de rollos presentes
+ */
+export const useCreateAuditoriaInventario = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAuditoriaInventario>>, TError,{data: BodyType<AuditoriaInventarioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAuditoriaInventario>>,
+        TError,
+        {data: BodyType<AuditoriaInventarioInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAuditoriaInventarioMutationOptions(options));
+    }
+
+export const getGetAuditoriaInventarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/auditorias/${id}`
+}
+
+/**
+ * @summary Obtiene resultados y participantes de una auditoría
+ */
+export const getAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioDetail> => {
+
+  return customFetch<AuditoriaInventarioDetail>(getGetAuditoriaInventarioUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAuditoriaInventarioQueryKey = (id: number,) => {
+    return [
+    `/api/inventario/auditorias/${id}`
+    ] as const;
+    }
+
+
+export const getGetAuditoriaInventarioQueryOptions = <TData = Awaited<ReturnType<typeof getAuditoriaInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuditoriaInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAuditoriaInventarioQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuditoriaInventario>>> = ({ signal }) => getAuditoriaInventario(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuditoriaInventario>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAuditoriaInventarioQueryResult = NonNullable<Awaited<ReturnType<typeof getAuditoriaInventario>>>
+export type GetAuditoriaInventarioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene resultados y participantes de una auditoría
+ */
+
+export function useGetAuditoriaInventario<TData = Awaited<ReturnType<typeof getAuditoriaInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuditoriaInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAuditoriaInventarioQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getScanAuditoriaInventarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/auditorias/${id}/escaneos`
+}
+
+/**
+ * @summary Registra una serie por presencia de forma idempotente
+ */
+export const scanAuditoriaInventario = async (id: number,
+    auditoriaInventarioEscaneoInput: AuditoriaInventarioEscaneoInput, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioEscaneoResult> => {
+
+  return customFetch<AuditoriaInventarioEscaneoResult>(getScanAuditoriaInventarioUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(auditoriaInventarioEscaneoInput)
+  }
+);}
+
+
+
+
+
+export const getScanAuditoriaInventarioMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof scanAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaInventarioEscaneoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof scanAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaInventarioEscaneoInput>}, TContext> => {
+
+const mutationKey = ['scanAuditoriaInventario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof scanAuditoriaInventario>>, {id: number;data: BodyType<AuditoriaInventarioEscaneoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  scanAuditoriaInventario(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ScanAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof scanAuditoriaInventario>>>
+    export type ScanAuditoriaInventarioMutationBody = BodyType<AuditoriaInventarioEscaneoInput>
+    export type ScanAuditoriaInventarioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Registra una serie por presencia de forma idempotente
+ */
+export const useScanAuditoriaInventario = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof scanAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaInventarioEscaneoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof scanAuditoriaInventario>>,
+        TError,
+        {id: number;data: BodyType<AuditoriaInventarioEscaneoInput>},
+        TContext
+      > => {
+      return useMutation(getScanAuditoriaInventarioMutationOptions(options));
+    }
+
+export const getCloseAuditoriaInventarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/auditorias/${id}/cerrar`
+}
+
+/**
+ * @summary Cierra y congela el conteo sin alterar inventario
+ */
+export const closeAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioDetail> => {
+
+  return customFetch<AuditoriaInventarioDetail>(getCloseAuditoriaInventarioUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getCloseAuditoriaInventarioMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof closeAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof closeAuditoriaInventario>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['closeAuditoriaInventario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof closeAuditoriaInventario>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  closeAuditoriaInventario(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CloseAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof closeAuditoriaInventario>>>
+
+    export type CloseAuditoriaInventarioMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Cierra y congela el conteo sin alterar inventario
+ */
+export const useCloseAuditoriaInventario = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof closeAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof closeAuditoriaInventario>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getCloseAuditoriaInventarioMutationOptions(options));
+    }
+
+export const getCancelAuditoriaInventarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/auditorias/${id}/cancelar`
+}
+
+/**
+ * @summary Cancela sin alterar inventario
+ */
+export const cancelAuditoriaInventario = async (id: number,
+    auditoriaInventarioCancelacionInput: AuditoriaInventarioCancelacionInput, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioDetail> => {
+
+  return customFetch<AuditoriaInventarioDetail>(getCancelAuditoriaInventarioUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(auditoriaInventarioCancelacionInput)
+  }
+);}
+
+
+
+
+
+export const getCancelAuditoriaInventarioMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaInventarioCancelacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cancelAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaInventarioCancelacionInput>}, TContext> => {
+
+const mutationKey = ['cancelAuditoriaInventario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelAuditoriaInventario>>, {id: number;data: BodyType<AuditoriaInventarioCancelacionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  cancelAuditoriaInventario(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CancelAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof cancelAuditoriaInventario>>>
+    export type CancelAuditoriaInventarioMutationBody = BodyType<AuditoriaInventarioCancelacionInput>
+    export type CancelAuditoriaInventarioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Cancela sin alterar inventario
+ */
+export const useCancelAuditoriaInventario = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaInventarioCancelacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cancelAuditoriaInventario>>,
+        TError,
+        {id: number;data: BodyType<AuditoriaInventarioCancelacionInput>},
+        TContext
+      > => {
+      return useMutation(getCancelAuditoriaInventarioMutationOptions(options));
+    }
+
+export const getConfirmAuditoriaInventarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/auditorias/${id}/confirmar`
+}
+
+/**
+ * @summary Aplica la política conservadora de resultados (solo ADMIN)
+ */
+export const confirmAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioDetail> => {
+
+  return customFetch<AuditoriaInventarioDetail>(getConfirmAuditoriaInventarioUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getConfirmAuditoriaInventarioMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmAuditoriaInventario>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['confirmAuditoriaInventario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmAuditoriaInventario>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  confirmAuditoriaInventario(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof confirmAuditoriaInventario>>>
+
+    export type ConfirmAuditoriaInventarioMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Aplica la política conservadora de resultados (solo ADMIN)
+ */
+export const useConfirmAuditoriaInventario = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmAuditoriaInventario>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getConfirmAuditoriaInventarioMutationOptions(options));
     }
 
 export const getCrearEntradaUrl = () => {

@@ -9,6 +9,7 @@ export const SUPERVISOR_PERMISSION_CEILING: Readonly<
 > = {
   dashboard: new Set(["ver"]),
   inventario: new Set(["ver"]),
+  auditoria_inventario: new Set(["ver", "crear", "editar"]),
   productos: new Set(["ver"]),
   entradas: new Set(["ver", "crear", "editar"]),
   salidas: new Set(["ver", "crear", "editar", "autorizar"]),

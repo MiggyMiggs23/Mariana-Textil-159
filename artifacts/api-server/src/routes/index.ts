@@ -25,6 +25,7 @@ import pagosDirigidosRouter from "./pagos-dirigidos";
 import camionetasRouter from "./camionetas";
 import choferesRouter from "./choferes";
 import viajesRouter from "./viajes";
+import auditoriasInventarioRouter from "./auditorias-inventario";
 
 const router: IRouter = Router();
 
@@ -41,6 +42,7 @@ router.use(clienteDocumentosRouter);
 router.use(clientesRouter);
 router.use(permisosRouter);
 router.use("/inventario", inventarioRouter);
+router.use("/inventario", auditoriasInventarioRouter);
 router.use(posRouter);
 router.use(salidasRouter);
 router.use(adminAnalyticsRouter);

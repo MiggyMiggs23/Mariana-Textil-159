@@ -4588,6 +4588,135 @@ export interface ViajesEligibleDocuments {
   salidas: ViajesEligibleDocumentsSalidasItem[];
 }
 
+export interface AuditoriaInventarioSitio {
+  id: number;
+  nombre: string;
+  iniciales: string;
+}
+
+export interface AuditoriaInventarioInput {
+  /** @minimum 1 */
+  ubicacionId: number;
+}
+
+export interface AuditoriaInventarioEscaneoInput {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  serie: string;
+}
+
+export interface AuditoriaInventarioCancelacionInput {
+  /**
+     * @minLength 10
+     * @maxLength 1000
+     */
+  motivo: string;
+}
+
+export type AuditoriaInventarioResumenEstado = typeof AuditoriaInventarioResumenEstado[keyof typeof AuditoriaInventarioResumenEstado];
+
+
+export const AuditoriaInventarioResumenEstado = {
+  ABIERTA: 'ABIERTA',
+  CERRADA: 'CERRADA',
+  CANCELADA: 'CANCELADA',
+  CONFIRMADA: 'CONFIRMADA',
+} as const;
+
+export interface AuditoriaInventarioResumen {
+  id: number;
+  folio: number;
+  folioFormateado: string;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  estado: AuditoriaInventarioResumenEstado;
+  totalSnapshot: number;
+  totalEscaneados: number;
+  cuadros: number;
+  faltantes: number;
+  sobrantes: number;
+  abiertaAt: string;
+  creadaPor: string;
+}
+
+export type AuditoriaInventarioResultadoClasificacion = typeof AuditoriaInventarioResultadoClasificacion[keyof typeof AuditoriaInventarioResultadoClasificacion];
+
+
+export const AuditoriaInventarioResultadoClasificacion = {
+  CUADRO: 'CUADRO',
+  FALTANTE: 'FALTANTE',
+  SOBRANTE: 'SOBRANTE',
+} as const;
+
+export type AuditoriaInventarioResultadoResolucion = typeof AuditoriaInventarioResultadoResolucion[keyof typeof AuditoriaInventarioResultadoResolucion];
+
+
+export const AuditoriaInventarioResultadoResolucion = {
+  PENDIENTE: 'PENDIENTE',
+  APLICADA: 'APLICADA',
+  RESOLUCION_MANUAL: 'RESOLUCION_MANUAL',
+} as const;
+
+export interface AuditoriaInventarioResultado {
+  serie: string;
+  clasificacion: AuditoriaInventarioResultadoClasificacion;
+  /** @nullable */
+  rolloId?: number | null;
+  /** @nullable */
+  producto?: string | null;
+  /**
+     * @nullable
+     * @pattern ^-?\d+(\.\d{1,3})?$
+     */
+  cantidad: string | null;
+  /** @nullable */
+  unidad: string | null;
+  /** @nullable */
+  ubicacionActualId?: number | null;
+  /** @nullable */
+  ubicacionActual?: string | null;
+  estadoActual: string;
+  resolucion: AuditoriaInventarioResultadoResolucion;
+  /** @nullable */
+  escaneadoAt?: string | null;
+}
+
+export interface AuditoriaInventarioParticipante {
+  usuarioId: number;
+  nombre: string;
+  escaneos: number;
+  primeroAt: string;
+  ultimoAt: string;
+}
+
+export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
+  /** @nullable */
+  motivoCancelacion?: string | null;
+  /** @nullable */
+  cerradaAt?: string | null;
+  /** @nullable */
+  confirmadaAt?: string | null;
+  resultados: AuditoriaInventarioResultado[];
+  participantes: AuditoriaInventarioParticipante[];
+});
+
+export type AuditoriaInventarioEscaneoResultClasificacion = typeof AuditoriaInventarioEscaneoResultClasificacion[keyof typeof AuditoriaInventarioEscaneoResultClasificacion];
+
+
+export const AuditoriaInventarioEscaneoResultClasificacion = {
+  CUADRO: 'CUADRO',
+  SOBRANTE: 'SOBRANTE',
+} as const;
+
+export interface AuditoriaInventarioEscaneoResult {
+  serie: string;
+  duplicado: boolean;
+  clasificacion: AuditoriaInventarioEscaneoResultClasificacion;
+  estadoActual: string;
+}
+
 /**
  * Estado actualizado de la salida
  */
@@ -4921,6 +5050,13 @@ semester?: number;
 
 export type ListContenedoresDisponiblesEntradaParams = {
 ubicacionId: number;
+};
+
+export type ListAuditoriasInventarioParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId?: number;
 };
 
 export type ListEntradasParams = {

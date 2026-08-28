@@ -20,6 +20,7 @@ import {
   Users,
   UserSquare2,
   Wallet,
+  ClipboardCheck,
   type LucideIcon,
 } from "lucide-react";
 import { hasPermission, Modules, type Module } from "@/lib/permisos";
@@ -58,6 +59,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
       { name: "Vista Global", path: "/inventario/vista-global", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
       { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
+      { name: "Auditorías", path: "/inventario/auditorias", icon: ClipboardCheck, module: Modules.AUDITORIA_INVENTARIO, isClickable: true },
       { name: "Etiquetas", path: "/etiquetas", icon: Tags, module: Modules.ETIQUETAS, isClickable: true },
       { name: "Precios", path: "/precios", icon: Banknote, module: Modules.PRECIOS, isClickable: true },
     ],
