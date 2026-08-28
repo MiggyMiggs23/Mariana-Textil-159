@@ -2182,7 +2182,7 @@ export const getListPreciosUrl = (params?: ListPreciosParams,) => {
 }
 
 /**
- * @summary Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+ * @summary Lista precios y márgenes actuales de todo el catálogo (permiso precios/ver)
  */
 export const listPrecios = async (params?: ListPreciosParams, options?: Parameters<typeof customFetch>[1]): Promise<PrecioProducto[]> => {
 
@@ -2229,7 +2229,7 @@ export type ListPreciosQueryError = ErrorType<UnauthorizedResponse | ForbiddenRe
 
 
 /**
- * @summary Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+ * @summary Lista precios y márgenes actuales de todo el catálogo (permiso precios/ver)
  */
 
 export function useListPrecios<TData = Awaited<ReturnType<typeof listPrecios>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
@@ -2259,7 +2259,7 @@ export const getGetPrecioUrl = (id: number,) => {
 }
 
 /**
- * @summary Detalle, historial y puntos cronológicos de precio (ADMIN)
+ * @summary Detalle, historial y puntos cronológicos de precio (permiso precios/ver)
  */
 export const getPrecio = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<PrecioProductoDetail> => {
 
@@ -2306,7 +2306,7 @@ export type GetPrecioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResp
 
 
 /**
- * @summary Detalle, historial y puntos cronológicos de precio (ADMIN)
+ * @summary Detalle, historial y puntos cronológicos de precio (permiso precios/ver)
  */
 
 export function useGetPrecio<TData = Awaited<ReturnType<typeof getPrecio>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
@@ -2336,7 +2336,7 @@ export const getChangePrecioUrl = (id: number,) => {
 }
 
 /**
- * @summary Cambia un precio por modo y registra su historial inmutable (ADMIN)
+ * @summary Cambia un precio por modo y registra su historial inmutable (permiso precios/editar)
  */
 export const changePrecio = async (id: number,
     cambiarPrecioInput: CambiarPrecioInput, options?: Parameters<typeof customFetch>[1]): Promise<PrecioCambioResultado> => {
@@ -2386,7 +2386,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type ChangePrecioMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Cambia un precio por modo y registra su historial inmutable (ADMIN)
+ * @summary Cambia un precio por modo y registra su historial inmutable (permiso precios/editar)
  */
 export const useChangePrecio = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePrecio>>, TError,{id: number;data: BodyType<CambiarPrecioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -2408,7 +2408,7 @@ export const getUpdatePrecioVentaPorMetroUrl = (id: number,) => {
 }
 
 /**
- * @summary Habilita o bloquea la venta metreada de un producto (ADMIN)
+ * @summary Habilita o bloquea la venta metreada de un producto (permiso precios/editar)
  */
 export const updatePrecioVentaPorMetro = async (id: number,
     precioVentaPorMetroUpdate: PrecioVentaPorMetroUpdate, options?: Parameters<typeof customFetch>[1]): Promise<PrecioProducto> => {
@@ -2458,7 +2458,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type UpdatePrecioVentaPorMetroMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Habilita o bloquea la venta metreada de un producto (ADMIN)
+ * @summary Habilita o bloquea la venta metreada de un producto (permiso precios/editar)
  */
 export const useUpdatePrecioVentaPorMetro = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrecioVentaPorMetro>>, TError,{id: number;data: BodyType<PrecioVentaPorMetroUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}

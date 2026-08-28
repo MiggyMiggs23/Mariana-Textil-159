@@ -761,7 +761,7 @@ export const CreateProductoResponse = zod.object({
 
 
 /**
- * @summary Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+ * @summary Lista precios y márgenes actuales de todo el catálogo (permiso precios/ver)
  */
 export const ListPreciosQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
@@ -824,7 +824,7 @@ export const ListPreciosResponse = zod.array(ListPreciosResponseItem)
 
 
 /**
- * @summary Detalle, historial y puntos cronológicos de precio (ADMIN)
+ * @summary Detalle, historial y puntos cronológicos de precio (permiso precios/ver)
  */
 export const GetPrecioParams = zod.object({
   "id": zod.coerce.number()
@@ -912,7 +912,7 @@ export const GetPrecioResponse = zod.object({
 
 
 /**
- * @summary Cambia un precio por modo y registra su historial inmutable (ADMIN)
+ * @summary Cambia un precio por modo y registra su historial inmutable (permiso precios/editar)
  */
 export const ChangePrecioParams = zod.object({
   "id": zod.coerce.number()
@@ -998,7 +998,7 @@ export const ChangePrecioResponse = zod.object({
 
 
 /**
- * @summary Habilita o bloquea la venta metreada de un producto (ADMIN)
+ * @summary Habilita o bloquea la venta metreada de un producto (permiso precios/editar)
  */
 export const UpdatePrecioVentaPorMetroParams = zod.object({
   "id": zod.coerce.number()

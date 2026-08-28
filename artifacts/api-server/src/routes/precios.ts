@@ -1,4 +1,4 @@
-import { Router, type IRouter, type NextFunction, type Request, type Response } from "express";
+import { Router, type IRouter } from "express";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import {
   ChangePrecioBody,
@@ -20,20 +20,13 @@ import {
   rollosTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
+import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { priceMetrics, validPositiveMoney, weightedCurrentUnitCost } from "../lib/precios";
 import { meteredReferenceCost } from "../lib/metered-reference-cost";
 
 const router: IRouter = Router();
 router.use("/precios", requireSession);
-
-function requireAdmin(req: Request, res: Response, next: NextFunction): void {
-  if (req.auth?.user.rol !== "ADMIN") {
-    res.status(403).json({ error: "Este módulo es exclusivo para ADMIN." });
-    return;
-  }
-  next();
-}
 
 type Product = typeof productosTable.$inferSelect;
 type History = typeof precioHistorialTable.$inferSelect;
@@ -114,7 +107,7 @@ async function presentProduct(product: Product, database: Pick<typeof db, "selec
   };
 }
 
-router.get("/precios", requireAdmin, async (req, res): Promise<void> => {
+router.get("/precios", requierePermiso("precios", "ver"), async (req, res): Promise<void> => {
   const query = ListPreciosQueryParams.safeParse(req.query);
   if (!query.success) {
     res.status(400).json({ error: "Filtros de precios inválidos." });
@@ -137,7 +130,7 @@ router.get("/precios", requireAdmin, async (req, res): Promise<void> => {
   res.json(ListPreciosResponse.parse(rows));
 });
 
-router.get("/precios/:id", requireAdmin, async (req, res): Promise<void> => {
+router.get("/precios/:id", requierePermiso("precios", "ver"), async (req, res): Promise<void> => {
   const params = GetPrecioParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: "ID inválido." });
@@ -155,7 +148,7 @@ router.get("/precios/:id", requireAdmin, async (req, res): Promise<void> => {
   res.json(GetPrecioResponse.parse(response));
 });
 
-router.post("/precios/:id/cambiar", requireAdmin, async (req, res): Promise<void> => {
+router.post("/precios/:id/cambiar", requierePermiso("precios", "editar"), async (req, res): Promise<void> => {
   const params = ChangePrecioParams.safeParse(req.params);
   const body = ChangePrecioBody.safeParse({
     ...req.body,
@@ -220,7 +213,7 @@ router.post("/precios/:id/cambiar", requireAdmin, async (req, res): Promise<void
   res.json(ChangePrecioResponse.parse({ producto: { ...product, ultimoCambioPrecio: result.change.createdAt }, cambio: presentHistory(result.change) }));
 });
 
-router.patch("/precios/:id/venta-por-metro", requireAdmin, async (req, res): Promise<void> => {
+router.patch("/precios/:id/venta-por-metro", requierePermiso("precios", "editar"), async (req, res): Promise<void> => {
   const params = UpdatePrecioVentaPorMetroParams.safeParse(req.params);
   const body = UpdatePrecioVentaPorMetroBody.safeParse(req.body);
   if (!params.success || !body.success) {

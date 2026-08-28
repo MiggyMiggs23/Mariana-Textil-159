@@ -20,7 +20,7 @@ tags:
   - name: productos
     description: Catálogo de productos/telas
   - name: precios
-    description: Administración de precios de lista exclusiva para ADMIN
+    description: Consulta y administración de precios según permisos efectivos
   - name: proveedores
     description: Administración de proveedores
   - name: clientes
@@ -633,7 +633,7 @@ paths:
     get:
       operationId: listPrecios
       tags: [precios]
-      summary: Lista precios y márgenes actuales de todo el catálogo (ADMIN)
+      summary: Lista precios y márgenes actuales de todo el catálogo (permiso precios/ver)
       parameters:
         - { in: query, name: search, schema: { type: string } }
         - {
@@ -666,7 +666,7 @@ paths:
     get:
       operationId: getPrecio
       tags: [precios]
-      summary: Detalle, historial y puntos cronológicos de precio (ADMIN)
+      summary: Detalle, historial y puntos cronológicos de precio (permiso precios/ver)
       parameters:
         - $ref: "#/components/parameters/ProductoId"
       responses:
@@ -682,7 +682,7 @@ paths:
     post:
       operationId: changePrecio
       tags: [precios]
-      summary: Cambia un precio por modo y registra su historial inmutable (ADMIN)
+      summary: Cambia un precio por modo y registra su historial inmutable (permiso precios/editar)
       parameters:
         - $ref: "#/components/parameters/ProductoId"
       requestBody:
@@ -704,7 +704,7 @@ paths:
     patch:
       operationId: updatePrecioVentaPorMetro
       tags: [precios]
-      summary: Habilita o bloquea la venta metreada de un producto (ADMIN)
+      summary: Habilita o bloquea la venta metreada de un producto (permiso precios/editar)
       parameters:
         - $ref: "#/components/parameters/ProductoId"
       requestBody:
