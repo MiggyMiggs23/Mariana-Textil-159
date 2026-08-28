@@ -14368,7 +14368,7 @@ export const getListAuditoriaUrl = (params?: ListAuditoriaParams,) => {
 }
 
 /**
- * @summary Lista la auditoría newest-first (solo ADMIN)
+ * @summary Lista la auditoría newest-first para usuarios con permiso
  */
 export const listAuditoria = async (params?: ListAuditoriaParams, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaListResult> => {
 
@@ -14415,7 +14415,7 @@ export type ListAuditoriaQueryError = ErrorType<ValidationErrorResponse | Unauth
 
 
 /**
- * @summary Lista la auditoría newest-first (solo ADMIN)
+ * @summary Lista la auditoría newest-first para usuarios con permiso
  */
 
 export function useListAuditoria<TData = Awaited<ReturnType<typeof listAuditoria>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
@@ -14452,7 +14452,7 @@ export const getExportAuditoriaXlsxUrl = (params?: ExportAuditoriaXlsxParams,) =
 }
 
 /**
- * @summary Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+ * @summary Exporta el resultado filtrado completo con límite conservador
  */
 export const exportAuditoriaXlsx = async (params?: ExportAuditoriaXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
@@ -14499,7 +14499,7 @@ export type ExportAuditoriaXlsxQueryError = ErrorType<ValidationErrorResponse | 
 
 
 /**
- * @summary Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+ * @summary Exporta el resultado filtrado completo con límite conservador
  */
 
 export function useExportAuditoriaXlsx<TData = Awaited<ReturnType<typeof exportAuditoriaXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
@@ -14529,7 +14529,7 @@ export const getGetAuditoriaUrl = (id: number,) => {
 }
 
 /**
- * @summary Obtiene detalle y evidencia antes/después (solo ADMIN)
+ * @summary Obtiene detalle y evidencia antes/después para usuarios con permiso
  */
 export const getAuditoria = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaDetail> => {
 
@@ -14576,7 +14576,7 @@ export type GetAuditoriaQueryError = ErrorType<ValidationErrorResponse | Unautho
 
 
 /**
- * @summary Obtiene detalle y evidencia antes/después (solo ADMIN)
+ * @summary Obtiene detalle y evidencia antes/después para usuarios con permiso
  */
 
 export function useGetAuditoria<TData = Awaited<ReturnType<typeof getAuditoria>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(

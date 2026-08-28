@@ -13,16 +13,15 @@ import {
   getAuditoria,
   listAuditoria,
 } from "../lib/auditoria";
+import { requierePermiso } from "../lib/permisos";
 
 const router: IRouter = Router();
 
-router.use("/auditoria", requireSession, (req, res, next): void => {
-  if (req.auth!.user.rol !== "ADMIN") {
-    res.status(403).json({ error: "La auditoría requiere rol ADMIN." });
-    return;
-  }
-  next();
-});
+router.use(
+  "/auditoria",
+  requireSession,
+  requierePermiso("auditoria", "ver"),
+);
 
 router.get("/auditoria", async (req, res): Promise<void> => {
   const parsed = ListAuditoriaQueryParams.safeParse(req.query);

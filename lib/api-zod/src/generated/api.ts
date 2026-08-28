@@ -7567,7 +7567,7 @@ export const ExportReporteSeccionPdfResponse = zod.unknown()
 
 
 /**
- * @summary Lista la auditoría newest-first (solo ADMIN)
+ * @summary Lista la auditoría newest-first para usuarios con permiso
  */
 export const listAuditoriaQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listAuditoriaQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
@@ -7590,6 +7590,7 @@ export const ListAuditoriaQueryParams = zod.object({
   "desde": zod.coerce.string().regex(listAuditoriaQueryDesdeRegExp).optional(),
   "hasta": zod.coerce.string().regex(listAuditoriaQueryHastaRegExp).optional(),
   "usuarioId": zod.coerce.number().min(1).optional(),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SISTEMAS', 'CONTADOR']).optional(),
   "modulo": zod.coerce.string().max(listAuditoriaQueryModuloMax).optional(),
   "accion": zod.coerce.string().max(listAuditoriaQueryAccionMax).optional(),
   "sitioId": zod.coerce.number().min(1).optional(),
@@ -7620,7 +7621,7 @@ export const ListAuditoriaResponse = zod.object({
 
 
 /**
- * @summary Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+ * @summary Exporta el resultado filtrado completo con límite conservador
  */
 export const exportAuditoriaXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const exportAuditoriaXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
@@ -7638,6 +7639,7 @@ export const ExportAuditoriaXlsxQueryParams = zod.object({
   "desde": zod.coerce.string().regex(exportAuditoriaXlsxQueryDesdeRegExp).optional(),
   "hasta": zod.coerce.string().regex(exportAuditoriaXlsxQueryHastaRegExp).optional(),
   "usuarioId": zod.coerce.number().min(1).optional(),
+  "rol": zod.enum(['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SISTEMAS', 'CONTADOR']).optional(),
   "modulo": zod.coerce.string().max(exportAuditoriaXlsxQueryModuloMax).optional(),
   "accion": zod.coerce.string().max(exportAuditoriaXlsxQueryAccionMax).optional(),
   "sitioId": zod.coerce.number().min(1).optional(),
@@ -7648,7 +7650,7 @@ export const ExportAuditoriaXlsxResponse = zod.unknown()
 
 
 /**
- * @summary Obtiene detalle y evidencia antes/después (solo ADMIN)
+ * @summary Obtiene detalle y evidencia antes/después para usuarios con permiso
  */
 
 

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CalendarDate } from './calendarDate';
+import type { Role } from './role';
 
 export type ExportAuditoriaXlsxParams = {
 desde?: CalendarDate;
@@ -14,6 +15,7 @@ hasta?: CalendarDate;
  * @minimum 1
  */
 usuarioId?: number;
+rol?: Role;
 /**
  * @maxLength 80
  */

@@ -44,7 +44,7 @@ tags:
   - name: contenedores
     description: Próximos contenedores y control anual de compras
   - name: auditoria
-    description: Consulta de la bitácora inmutable exclusiva para ADMIN
+    description: Consulta por permiso de la bitácora inmutable
   - name: camionetas
     description: Catálogo histórico de camionetas para operaciones de transporte
   - name: choferes
@@ -4405,7 +4405,7 @@ paths:
     get:
       operationId: listAuditoria
       tags: [auditoria]
-      summary: Lista la auditoría newest-first (solo ADMIN)
+      summary: Lista la auditoría newest-first para usuarios con permiso
       parameters:
         - {
             in: query,
@@ -4418,6 +4418,11 @@ paths:
             schema: { $ref: "#/components/schemas/CalendarDate" },
           }
         - { in: query, name: usuarioId, schema: { type: number, minimum: 1 } }
+        - {
+            in: query,
+            name: rol,
+            schema: { $ref: "#/components/schemas/Role" },
+          }
         - { in: query, name: modulo, schema: { type: string, maxLength: 80 } }
         - { in: query, name: accion, schema: { type: string, maxLength: 80 } }
         - { in: query, name: sitioId, schema: { type: number, minimum: 1 } }
@@ -4445,7 +4450,7 @@ paths:
     get:
       operationId: exportAuditoriaXlsx
       tags: [auditoria]
-      summary: Exporta el resultado filtrado completo con límite conservador (solo ADMIN)
+      summary: Exporta el resultado filtrado completo con límite conservador
       parameters:
         - {
             in: query,
@@ -4458,6 +4463,11 @@ paths:
             schema: { $ref: "#/components/schemas/CalendarDate" },
           }
         - { in: query, name: usuarioId, schema: { type: number, minimum: 1 } }
+        - {
+            in: query,
+            name: rol,
+            schema: { $ref: "#/components/schemas/Role" },
+          }
         - { in: query, name: modulo, schema: { type: string, maxLength: 80 } }
         - { in: query, name: accion, schema: { type: string, maxLength: 80 } }
         - { in: query, name: sitioId, schema: { type: number, minimum: 1 } }
@@ -4475,7 +4485,7 @@ paths:
     get:
       operationId: getAuditoria
       tags: [auditoria]
-      summary: Obtiene detalle y evidencia antes/después (solo ADMIN)
+      summary: Obtiene detalle y evidencia antes/después para usuarios con permiso
       parameters:
         - {
             in: path,

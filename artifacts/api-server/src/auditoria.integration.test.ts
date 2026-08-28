@@ -12,7 +12,7 @@ if (!testUrl) {
 if (testUrl === applicationUrl) {
   throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
 }
-test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async () => {
+test("auditoría: snapshots de roles, filtros, acceso por permiso e inmutabilidad", async () => {
   const [{ pool, ensureAuditSchema }, { listAuditoria, getAuditoria, exportAuditoriaRows }, { default: app }] =
     await Promise.all([
       import("@workspace/db"),
@@ -58,12 +58,37 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
        VALUES($1,$2,'integration-only','CAJA',$3,true,'PROPIA') RETURNING id`,
       [`${tag} Caja`, `${tag.toLowerCase()}-caja`, siteTwo.id],
     );
+    const sistemas = await one(
+      `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
+       VALUES($1,$2,'integration-only','SISTEMAS',NULL,true,'TODAS') RETURNING id`,
+      [`${tag} Sistemas`, `${tag.toLowerCase()}-sistemas`],
+    );
+    const contador = await one(
+      `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
+       VALUES($1,$2,'integration-only','CONTADOR',NULL,true,'TODAS') RETURNING id`,
+      [`${tag} Contador`, `${tag.toLowerCase()}-contador`],
+    );
     const adminWithoutSite = await one(
       `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
        VALUES($1,$2,'integration-only','ADMIN',NULL,true,'TODAS') RETURNING id`,
       [`${tag} Admin sin sitio`, `${tag.toLowerCase()}-admin-sin-sitio`],
     );
-    ids.users.push(Number(admin.id), Number(caja.id), Number(adminWithoutSite.id));
+    ids.users.push(
+      Number(admin.id),
+      Number(caja.id),
+      Number(adminWithoutSite.id),
+      Number(sistemas.id),
+      Number(contador.id),
+    );
+    await pool.query(
+      `INSERT INTO permisos_rol(rol,modulo,puede_ver,puede_crear,puede_editar,puede_autorizar)
+       VALUES
+         ('SISTEMAS','auditoria',true,false,false,false),
+         ('CONTADOR','auditoria',false,false,false,false)
+       ON CONFLICT (rol,modulo) DO UPDATE SET
+         puede_ver=excluded.puede_ver, puede_crear=excluded.puede_crear,
+         puede_editar=excluded.puede_editar, puede_autorizar=excluded.puede_autorizar`,
+    );
 
     const insert = async (
       userId: number,
@@ -81,6 +106,16 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
     const old = await insert(Number(admin.id), "ACTUALIZAR", tag, `${tag}-alpha`, "2026-08-27T12:00:00Z", { estado: "antes" }, { estado: "después" });
     await insert(Number(caja.id), "OTRA_ACCION", `${tag}-otro`, `${tag}-beta`, "2026-08-27T13:00:00Z", null, { beta: true });
     const newest = await insert(Number(admin.id), "ACTUALIZAR", tag, `${tag}-gamma`, "2026-08-27T14:00:00Z", { valor: 1 }, { valor: 2 });
+    const sistemasAudit = await insert(Number(sistemas.id), "ACTUALIZAR", tag, `${tag}-sistemas`, "2026-08-27T15:00:00Z", null, { role: "SISTEMAS" });
+    const contadorAudit = await insert(Number(contador.id), "ACTUALIZAR", tag, `${tag}-contador`, "2026-08-27T16:00:00Z", null, { role: "CONTADOR" });
+    assert.equal(
+      (await one(`SELECT rol_snapshot FROM auditoria WHERE id=$1`, [sistemasAudit.id])).rol_snapshot,
+      "SISTEMAS",
+    );
+    assert.equal(
+      (await one(`SELECT rol_snapshot FROM auditoria WHERE id=$1`, [contadorAudit.id])).rol_snapshot,
+      "CONTADOR",
+    );
 
     const frozen = await one(
       `SELECT usuario_snapshot,rol_snapshot,sitio_id,sitio_snapshot,modulo FROM auditoria WHERE id=$1`,
@@ -120,25 +155,29 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
 
     const all = await listAuditoria({ search: tag }, 1, 10);
     assert.deepEqual(all.items.map((row) => row.entidadId), [
+      `${tag}-contador`,
+      `${tag}-sistemas`,
       `${tag}-gamma`,
       `${tag}-beta`,
       `${tag}-alpha`,
       `${tag}-rollo`,
     ]);
     const paged = await listAuditoria({ search: tag }, 2, 1);
-    assert.equal(paged.total, 4);
-    assert.equal(paged.items[0]?.entidadId, `${tag}-beta`);
-    assert.equal((await listAuditoria({ desde: "2026-08-27", hasta: "2026-08-27", search: tag }, 1, 10)).total, 4);
+    assert.equal(paged.total, 6);
+    assert.equal(paged.items[0]?.entidadId, `${tag}-sistemas`);
+    assert.equal((await listAuditoria({ desde: "2026-08-27", hasta: "2026-08-27", search: tag }, 1, 10)).total, 6);
     assert.equal((await listAuditoria({ usuarioId: Number(caja.id), search: tag }, 1, 10)).total, 1);
-    assert.equal((await listAuditoria({ modulo: tag, search: tag }, 1, 10)).total, 2);
+    assert.equal((await listAuditoria({ modulo: tag, search: tag }, 1, 10)).total, 4);
     assert.equal((await listAuditoria({ accion: "OTRA_ACCION", search: tag }, 1, 10)).total, 1);
     assert.equal((await listAuditoria({ sitioId: Number(siteTwo.id), search: tag }, 1, 10)).total, 2);
     assert.equal((await listAuditoria({ search: `${tag}-alpha` }, 1, 10)).total, 1);
+    assert.equal((await listAuditoria({ rol: "SISTEMAS", search: tag }, 1, 10)).total, 1);
+    assert.equal((await listAuditoria({ rol: "CONTADOR", search: tag }, 1, 10)).total, 1);
 
     const detail = await getAuditoria(String(newest.id));
     assert.deepEqual(detail?.datosAntes, { valor: 1 });
     assert.deepEqual(detail?.datosDespues, { valor: 2 });
-    assert.equal((await exportAuditoriaRows({ modulo: tag })).length, 2);
+    assert.equal((await exportAuditoriaRows({ modulo: tag })).length, 4);
 
     await pool.query(
       `INSERT INTO auditoria(accion,entidad,entidad_id,ip)
@@ -168,6 +207,14 @@ test("auditoría: trigger, filtros, detalle, exportación y acceso ADMIN", async
       fetch(`${base}${path}`, { method, headers: { Cookie: `mariana_session=${cookie}` } });
     assert.equal((await request("GET", `/api/auditoria?search=${encodeURIComponent(tag)}`, ids.sessions[0]!)).status, 200);
     assert.equal((await request("GET", "/api/auditoria", ids.sessions[1]!)).status, 403);
+    const sistemasCookie = ids.sessions[3]!;
+    const contadorCookie = ids.sessions[4]!;
+    assert.equal((await request("GET", `/api/auditoria?rol=SISTEMAS`, sistemasCookie)).status, 200);
+    assert.equal((await request("GET", `/api/auditoria/${sistemasAudit.id}`, sistemasCookie)).status, 200);
+    assert.equal((await request("GET", `/api/auditoria/export.xlsx?rol=SISTEMAS`, sistemasCookie)).status, 200);
+    assert.equal((await request("GET", "/api/auditoria", contadorCookie)).status, 403);
+    assert.equal((await request("GET", `/api/auditoria/${contadorAudit.id}`, contadorCookie)).status, 403);
+    assert.equal((await request("GET", "/api/auditoria/export.xlsx", contadorCookie)).status, 403);
     for (const method of ["POST", "PATCH", "DELETE"]) {
       const response = await request(method, "/api/auditoria", ids.sessions[0]!);
       assert.ok([404, 405].includes(response.status), `${method} must not mutate audit`);

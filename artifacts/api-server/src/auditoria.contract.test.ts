@@ -32,6 +32,8 @@ test("contrato de auditoría conserva evidencia histórica desconocida", () => {
     page: 2,
     pageSize: 25,
   });
+  assert.equal(ListAuditoriaQueryParams.parse({ rol: "SISTEMAS" }).rol, "SISTEMAS");
+  assert.equal(ListAuditoriaQueryParams.parse({ rol: "CONTADOR" }).rol, "CONTADOR");
 });
 
 test("cobertura mínima corresponde a acciones reales", () => {
@@ -64,4 +66,12 @@ test("las consultas de auditoría usan exclusivamente snapshots", () => {
   const presentation = readFileSync(new URL("./lib/auditoria.ts", import.meta.url), "utf8");
   assert.match(presentation, /a\.usuario_snapshot AS usuario/);
   assert.doesNotMatch(presentation, /JOIN\s+usuarios/i);
+  assert.match(presentation, /a\.rol_snapshot =/);
+});
+
+test("los endpoints de auditoría se autorizan por permiso y siguen sin mutaciones", () => {
+  const route = readFileSync(new URL("./routes/auditoria.ts", import.meta.url), "utf8");
+  assert.match(route, /requierePermiso\("auditoria", "ver"\)/);
+  assert.doesNotMatch(route, /user\.rol !== "ADMIN"/);
+  assert.doesNotMatch(route, /router\.(post|put|patch|delete)\(/i);
 });

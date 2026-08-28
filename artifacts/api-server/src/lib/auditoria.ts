@@ -17,6 +17,7 @@ export type AuditoriaFilters = {
   desde?: string;
   hasta?: string;
   usuarioId?: number;
+  rol?: string;
   modulo?: string;
   accion?: string;
   sitioId?: number;
@@ -56,6 +57,7 @@ function whereSql(filters: AuditoriaFilters) {
     );
   }
   if (filters.usuarioId) conditions.push(sql`a.usuario_id = ${filters.usuarioId}`);
+  if (filters.rol) conditions.push(sql`a.rol_snapshot = ${filters.rol}`);
   if (filters.modulo) conditions.push(sql`a.modulo = ${filters.modulo}`);
   if (filters.accion) conditions.push(sql`a.accion = ${filters.accion}`);
   if (filters.sitioId) conditions.push(sql`a.sitio_id = ${filters.sitioId}`);

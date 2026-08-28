@@ -9,7 +9,7 @@ import {
   exportAuditoriaXlsx,
   getGetAuditoriaQueryKey,
 } from '@workspace/api-client-react';
-import type { ListAuditoriaParams } from '@workspace/api-client-react';
+import type { ListAuditoriaParams, Role } from '@workspace/api-client-react';
 import { 
   Calendar as CalendarIcon,
   Search,
@@ -63,6 +63,16 @@ type DateRange = {
   to?: Date | undefined;
 };
 
+const AUDIT_ROLES: Role[] = [
+  'ADMIN',
+  'TERMINAL',
+  'CAJA',
+  'SUPERVISOR',
+  'BODEGA',
+  'SISTEMAS',
+  'CONTADOR',
+];
+
 export default function Auditoria() {
   const { toast } = useToast();
   
@@ -72,6 +82,7 @@ export default function Auditoria() {
     to: endOfMonth(new Date()),
   });
   const [usuarioId, setUsuarioId] = useState<string>('all');
+  const [rol, setRol] = useState<Role | 'all'>('all');
   const [sitioId, setSitioId] = useState<string>('all');
   const [modulo, setModulo] = useState<string>('');
   const [accion, setAccion] = useState<string>('');
@@ -90,13 +101,14 @@ export default function Auditoria() {
     desde: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
     hasta: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : (dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined),
     usuarioId: usuarioId !== 'all' ? Number(usuarioId) : undefined,
+    rol: rol !== 'all' ? rol : undefined,
     sitioId: sitioId !== 'all' ? Number(sitioId) : undefined,
     modulo: modulo || undefined,
     accion: accion || undefined,
     search: search || undefined,
     page,
     pageSize,
-  }), [dateRange, usuarioId, sitioId, modulo, accion, search, page, pageSize]);
+  }), [dateRange, usuarioId, rol, sitioId, modulo, accion, search, page, pageSize]);
 
   const { data, isFetching } = useListAuditoria(params);
 
@@ -125,6 +137,7 @@ export default function Auditoria() {
   const clearFilters = () => {
     setDateRange({ from: undefined, to: undefined });
     setUsuarioId('all');
+    setRol('all');
     setSitioId('all');
     setModulo('');
     setAccion('');
@@ -148,7 +161,7 @@ export default function Auditoria() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Auditoría del Sistema</h1>
           <p className="text-sm text-muted-foreground">
-            Bitácora operativa. Solo acceso administrador.
+            Bitácora operativa de solo lectura.
           </p>
         </div>
         <Button onClick={handleExport} disabled={isExporting} variant="outline" className="shrink-0 bg-white">
@@ -158,7 +171,7 @@ export default function Auditoria() {
       </div>
 
       <div className="bg-card border rounded-lg shadow-sm">
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 items-end">
           <div className="space-y-1.5 flex flex-col">
             <Label className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Fecha</Label>
             <Popover>
@@ -204,6 +217,21 @@ export default function Auditoria() {
                 />
               </PopoverContent>
             </Popover>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Rol</Label>
+            <Select value={rol} onValueChange={(value) => { setRol(value as Role | 'all'); setPage(1); }}>
+              <SelectTrigger className="h-9 bg-white">
+                <SelectValue placeholder="Todos" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los roles</SelectItem>
+                {AUDIT_ROLES.map((role) => (
+                  <SelectItem key={role} value={role}>{role}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-1.5">

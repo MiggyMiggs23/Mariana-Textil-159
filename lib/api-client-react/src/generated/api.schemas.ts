@@ -5566,6 +5566,7 @@ hasta?: CalendarDate;
  * @minimum 1
  */
 usuarioId?: number;
+rol?: Role;
 /**
  * @maxLength 80
  */
@@ -5600,6 +5601,7 @@ hasta?: CalendarDate;
  * @minimum 1
  */
 usuarioId?: number;
+rol?: Role;
 /**
  * @maxLength 80
  */
