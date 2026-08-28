@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   useListContenedores,
   getListContenedoresQueryKey,
@@ -716,7 +716,7 @@ export default function Contenedores() {
           ) : (
             <div className="space-y-5">
               {sortedItems.map(item => (
-                <ContainerBlock key={item.id} item={item} isAdmin={isAdmin} setLocation={setLocation} />
+                <ContainerBlock key={item.id} item={item} isAdmin={isAdmin} />
               ))}
             </div>
           )}
@@ -735,7 +735,7 @@ export default function Contenedores() {
   );
 }
 
-function ContainerBlock({ item, isAdmin, setLocation }: { item: ContenedorListItem, isAdmin: boolean, setLocation: (path: string) => void }) {
+function ContainerBlock({ item, isAdmin }: { item: ContenedorListItem, isAdmin: boolean }) {
   const isOverdue = item.estado === EstadoContenedor.EN_TRANSITO && item.diasParaLlegar < 0;
   const isUrgent = item.estado === EstadoContenedor.EN_TRANSITO && item.diasParaLlegar >= 0 && item.diasParaLlegar <= 7;
 
@@ -744,10 +744,9 @@ function ContainerBlock({ item, isAdmin, setLocation }: { item: ContenedorListIt
       {/* Block Header */}
       <div
         className={cn(
-          "px-5 py-4 flex flex-wrap items-center justify-between gap-4 cursor-pointer relative",
+          "px-5 py-4 flex flex-wrap items-center justify-between gap-4 relative",
           isOverdue ? "bg-report-negative/5 hover:bg-report-negative/10 border-b border-report-negative/20" : "bg-report-stripe/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-b border-border/50"
         )}
-        onClick={() => setLocation(`/contenedores/${item.id}`)}
       >
         {isOverdue && (
           <div className="absolute left-0 top-0 bottom-0 w-1 bg-report-negative"></div>
@@ -756,7 +755,13 @@ function ContainerBlock({ item, isAdmin, setLocation }: { item: ContenedorListIt
         <div className="flex items-center gap-4 md:gap-8 w-full md:w-auto">
           <div className="flex flex-col min-w-[80px]">
             <span className="text-[10px] text-report-text-muted font-bold uppercase tracking-wider mb-0.5">Folio</span>
-            <span className="font-mono text-lg text-report-header font-black">#{item.folio.toString().padStart(5, '0')}</span>
+            <Link
+              href={`/contenedores/${item.id}`}
+              className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-mono text-lg font-black"
+              data-testid={`link-contenedor-${item.id}`}
+            >
+              #{item.folio.toString().padStart(5, '0')}
+            </Link>
           </div>
 
           <div className="hidden md:block h-10 w-px bg-border/60"></div>

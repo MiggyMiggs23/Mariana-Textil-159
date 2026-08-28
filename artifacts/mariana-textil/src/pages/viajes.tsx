@@ -17,10 +17,10 @@ export default function Viajes() {
       {canCreate && <Link href="/viajes/nuevo"><Button><Plus className="mr-2 h-4 w-4" />Nuevo viaje</Button></Link>}</div>
     <Card><CardHeader><CardTitle>Viajes registrados</CardTitle></CardHeader><CardContent className="p-0">
       {isLoading ? <p className="p-6 text-muted-foreground">Cargando viajes…</p> : !data?.length ? <p className="p-6 text-muted-foreground">No hay viajes registrados.</p> :
-        <div className="divide-y">{data.map((viaje) => <Link key={viaje.id} href={`/viajes/${viaje.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-muted/40">
-          <div><p className="font-bold">{viaje.folioFormateado}</p><p className="text-sm text-muted-foreground">{viaje.nombreOrigen} · {new Date(viaje.salidaAt).toLocaleString("es-MX")}</p></div>
+        <div className="divide-y">{data.map((viaje) => <div key={viaje.id} className="flex items-center justify-between gap-4 p-4 hover:bg-muted/40">
+          <div><Link href={`/viajes/${viaje.id}`} className="font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" data-testid={`link-viaje-${viaje.id}`}>{viaje.folioFormateado}</Link><p className="text-sm text-muted-foreground">{viaje.nombreOrigen} · {new Date(viaje.salidaAt).toLocaleString("es-MX")}</p></div>
           <div className="text-right text-sm"><p className="flex items-center justify-end gap-1"><Truck className="h-4 w-4" />{viaje.camioneta}</p><p className="text-muted-foreground">{viaje.chofer} · {formatNumber(viaje.documentos, { kind: "count" })} documentos</p></div>
-        </Link>)}</div>}
+        </div>)}</div>}
     </CardContent></Card>
   </div></AppLayout>;
 }

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
-import { useLocation } from "wouter";
+import { Link } from "wouter";
 import {
   useListProductos,
   useCreateProducto,
@@ -83,7 +83,6 @@ function HighlightMatch({ text, search }: { text: string; search: string }) {
 }
 
 export default function Productos() {
-  const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
 
   const { data: user } = useGetCurrentUser({
@@ -352,12 +351,17 @@ export default function Productos() {
                                   return (
                                   <TableRow
                                     key={p.id}
-                                    className={`cursor-pointer transition-colors ${isZeroStock ? "opacity-60 bg-muted/20 hover:bg-muted/40" : "hover:bg-muted/40"}`}
-                                    onClick={() => setLocation(`/productos/${p.id}`)}
+                                    className={`transition-colors ${isZeroStock ? "opacity-60 bg-muted/20 hover:bg-muted/40" : "hover:bg-muted/40"}`}
                                     data-testid={`row-product-${p.id}`}
                                   >
                                     <TableCell className="font-semibold text-sidebar">
-                                      <HighlightMatch text={p.color} search={searchTerm} />
+                                      <Link
+                                        href={`/productos/${p.id}`}
+                                        className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                        data-testid={`link-product-${p.id}`}
+                                      >
+                                        <HighlightMatch text={p.color} search={searchTerm} />
+                                      </Link>
                                     </TableCell>
                                     <TableCell className="font-mono text-xs text-muted-foreground">
                                       <HighlightMatch text={p.sku} search={searchTerm} />

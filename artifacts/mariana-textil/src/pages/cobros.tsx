@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
@@ -291,24 +291,11 @@ function CarteraContent() {
                                 {isHighlighted && (
                                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
                                 )}
-                                {nota.ticketFolio ? (
-                                  <Link href={`/tickets/${nota.ticketFolio}`} className="hover:underline cursor-pointer block w-full">
-                                    #{nota.ticketFolio}
-                                    {isHighlighted && (
-                                      <span className="ml-3 inline-flex items-center rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider no-underline">
-                                        ESCANEADA
-                                      </span>
-                                    )}
-                                  </Link>
-                                ) : (
-                                  <>
-                                    #{nota.ticketFolio}
-                                    {isHighlighted && (
-                                      <span className="ml-3 inline-flex items-center rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
-                                        ESCANEADA
-                                      </span>
-                                    )}
-                                  </>
+                                #{nota.ticketFolio}
+                                {isHighlighted && (
+                                  <span className="ml-3 inline-flex items-center rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
+                                    ESCANEADA
+                                  </span>
                                 )}
                               </td>
                               <td className="p-4 text-muted-foreground font-medium">

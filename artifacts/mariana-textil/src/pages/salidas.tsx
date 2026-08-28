@@ -377,13 +377,12 @@ export default function Salidas() {
                     {displayItems.map((salida) => {
                       const cancelled = salida.estado === "CANCELADA";
                       return (
-                        <Link
+                        <div
                           key={salida.id}
-                          href={`/salidas/${salida.id}`}
                           data-testid={`row-salida-${salida.id}`}
                           className={`grid min-w-[1050px] grid-cols-[80px_150px_160px_80px_100px_100px_1fr_120px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
                         >
-                          <span className="font-bold">{salida.folioFormateado}</span>
+                          <Link href={`/salidas/${salida.id}`} className="font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" data-testid={`link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
                           <span className="text-sm">{format(new Date(salida.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
                           <span className="truncate font-medium">{salida.nombreOrigen}</span>
                           <span className="text-right font-semibold tabular-nums">{formatNumber(salida.totalRollos ?? 0, { kind: "count" })}</span>
@@ -391,7 +390,7 @@ export default function Salidas() {
                           <span className="text-right tabular-nums">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
                           <span className="truncate">{salida.transportista || "—"}</span>
                           <span className={cancelled ? "no-underline" : ""}><EstadoBadge estado={salida.estado} /></span>
-                        </Link>
+                        </div>
                       );
                     })}
                   </div>
@@ -399,17 +398,14 @@ export default function Salidas() {
               ) : (
               <div className="divide-y divide-slate-100">
                 {displayItems.map((salida) => (
-                  <Link
+                  <div
                     key={salida.id}
-                    href={`/salidas/${salida.id}`}
                     data-testid={`row-salida-${salida.id}`}
                     className={`flex flex-col sm:flex-row sm:items-center p-4 hover:bg-slate-50 transition-colors gap-4 group ${salida.estado === 'CANCELADA' ? 'opacity-60' : ''}`}
                   >
                     <div className="w-20 shrink-0">
                       <p className="text-xs font-semibold text-slate-500 mb-1">FOLIO</p>
-                      <p className={`text-lg font-bold transition-colors ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900 group-hover:text-primary'}`}>
-                        {salida.folioFormateado}
-                      </p>
+                      <Link href={`/salidas/${salida.id}`} className={`text-lg font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${salida.estado === 'CANCELADA' ? 'line-through' : ''}`} data-testid={`mobile-link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
                     </div>
 
                     <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -444,7 +440,7 @@ export default function Salidas() {
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
               )

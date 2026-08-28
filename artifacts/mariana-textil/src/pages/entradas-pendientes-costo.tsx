@@ -399,7 +399,13 @@ export default function EntradasPendientesCosto() {
                               <AlertTriangle className="w-4 h-4 text-destructive" data-testid={`icon-overdue-${item.id}`} />
                             </span>
                           )}
-                          #{item.folioFormateado}
+                          <Link
+                            href={`/entradas/${item.id}/documento`}
+                            className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            data-testid={`link-entrada-${item.id}`}
+                          >
+                            #{item.folioFormateado}
+                          </Link>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           {format(new Date(item.fecha), "dd/MM/yyyy")}

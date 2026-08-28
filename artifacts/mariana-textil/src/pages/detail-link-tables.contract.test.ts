@@ -3,6 +3,21 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../../../../", import.meta.url);
+const primaryLinkClass =
+  "text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const tableFiles = [
+  "ajustes.tsx", "auditoria/index.tsx", "auditorias-inventario.tsx",
+  "caja/comparativo.tsx", "caja/cortes.tsx", "caja/cuenta-destino-detalle.tsx",
+  "caja/cuentas-destino.tsx", "caja/diferencias.tsx", "caja/tiempo-real.tsx",
+  "cliente-detail.tsx", "clientes.tsx", "conciliacion.tsx",
+  "configuracion/camionetas.tsx", "configuracion/choferes.tsx",
+  "contenedores/detail.tsx", "contenedores/index.tsx", "contenedores/nuevo.tsx",
+  "corte-detail-shared.tsx", "dashboard.tsx", "entradas-pendientes-costo.tsx",
+  "entradas.tsx", "etiquetas.tsx", "inventario.tsx", "movimientos.tsx",
+  "precios/detail.tsx", "precios/index.tsx", "producto-detail.tsx",
+  "productos.tsx", "proveedor-detail.tsx", "proveedores.tsx",
+  "rollo-detail.tsx", "ubicaciones.tsx", "usuarios.tsx",
+];
 
 /**
  * Task #53 Block 3 review record. Table files with literal "Ver detalle",
@@ -38,4 +53,55 @@ test("client and provider tables use accessible primary-name detail links", asyn
   );
   assert.doesNotMatch(proveedores, /<TableHead[^>]*>Acción<\/TableHead>/);
   assert.doesNotMatch(proveedores, />Ver detalle</);
+});
+
+test("table inventory has no obsolete Ver detalle column", async () => {
+  const sources = await Promise.all(
+    tableFiles.map((file) =>
+      readFile(new URL(`artifacts/mariana-textil/src/pages/${file}`, root), "utf8"),
+    ),
+  );
+
+  for (let index = 0; index < sources.length; index += 1) {
+    assert.doesNotMatch(
+      sources[index],
+      /(?:<TableHead[^>]*>|<th[^>]*>)\s*Ver detalle\s*<\//i,
+      `${tableFiles[index]} retains an obsolete Ver detalle column`,
+    );
+  }
+});
+
+test("detail-capable table identifiers have one primary link and declared routes", async () => {
+  const [app, productos, movimientos, entradasPendientes, salidas, viajes, contenedores] =
+    await Promise.all([
+      readFile(new URL("artifacts/mariana-textil/src/App.tsx", root), "utf8"),
+      readFile(new URL("artifacts/mariana-textil/src/pages/productos.tsx", root), "utf8"),
+      readFile(new URL("artifacts/mariana-textil/src/pages/movimientos.tsx", root), "utf8"),
+      readFile(new URL("artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx", root), "utf8"),
+      readFile(new URL("artifacts/mariana-textil/src/pages/salidas.tsx", root), "utf8"),
+      readFile(new URL("artifacts/mariana-textil/src/pages/viajes.tsx", root), "utf8"),
+      readFile(new URL("artifacts/mariana-textil/src/pages/contenedores/index.tsx", root), "utf8"),
+    ]);
+
+  for (const route of [
+    "/productos/:id", "/inventario/rollos/:id", "/entradas/:id/documento",
+    "/salidas/:id", "/tickets/:id", "/viajes/:id", "/contenedores/:id",
+  ]) {
+    assert.match(app, new RegExp(`path="${route}"`));
+  }
+
+  for (const [source, href, identifier] of [
+    [productos, /href=\{`\/productos\/\$\{p\.id\}`\}/, /\{p\.color\}/],
+    [movimientos, /href=\{row\.referenciaRolloRuta\}/, /\{row\.serie\}/],
+    [entradasPendientes, /href=\{`\/entradas\/\$\{item\.id\}\/documento`\}/, /\{item\.folioFormateado\}/],
+    [salidas, /href=\{`\/salidas\/\$\{salida\.id\}`\}/, /\{salida\.folioFormateado\}/],
+    [viajes, /href=\{`\/viajes\/\$\{viaje\.id\}`\}/, /\{viaje\.folioFormateado\}/],
+    [contenedores, /href=\{`\/contenedores\/\$\{item\.id\}`\}/, /\{item\.folio\.toString\(\)\.padStart/],
+  ] as const) {
+    assert.match(source, href);
+    assert.match(source, identifier);
+    assert.match(source, new RegExp(primaryLinkClass.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.doesNotMatch(movimientos, /(?:link|mobile-link)-doc-/);
 });

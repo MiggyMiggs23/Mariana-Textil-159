@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { formatNumber } from "@workspace/number-format";
 import {
-  Search, Download, FileText, ChevronDown, Filter, History, Loader2, AlertCircle
+  Search, Download, ChevronDown, Filter, History, Loader2, AlertCircle
 } from "lucide-react";
 
 const TIMEZONE = "America/Mexico_City";
@@ -86,7 +86,6 @@ const TipoMovimientoColors: Record<string, string> = {
 export default function Movimientos() {
   const { data: user } = useGetCurrentUser();
   const { toast } = useToast();
-  const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   const [searchInput, setSearchInput] = useState("");
   const [filters, setFilters] = useState<{
@@ -485,7 +484,7 @@ export default function Movimientos() {
                               <div className="text-xs text-muted-foreground mt-0.5 truncate">{row.colorProducto} &middot; {row.skuProducto}</div>
                             </TableCell>
                             <TableCell className="align-top py-3">
-                              <Link href={row.referenciaRolloRuta} className="text-primary hover:text-primary/80 hover:underline font-mono text-sm tracking-tight" data-testid={`link-rollo-${row.rolloId}`}>
+                              <Link href={row.referenciaRolloRuta} className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-mono text-sm tracking-tight" data-testid={`link-rollo-${row.rolloId}`}>
                                 {row.serie}
                               </Link>
                             </TableCell>
@@ -512,17 +511,9 @@ export default function Movimientos() {
                             </TableCell>
                             <TableCell className="align-top py-3">
                               {row.documentoRuta ? (
-                                <a
-                                  href={`${baseUrl}${row.documentoRuta}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 hover:underline bg-primary/5 hover:bg-primary/10 px-2 py-1 rounded-md transition-colors"
-                                  title="Abrir documento"
-                                  data-testid={`link-doc-${row.id}`}
-                                >
-                                  <FileText className="w-3.5 h-3.5" />
+                                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground bg-primary/5 px-2 py-1 rounded-md">
                                   <span>{row.documentoEtiqueta || `${row.documentoTipo} ${row.documentoId}`}</span>
-                                </a>
+                                </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground/70 bg-muted/30 px-2 py-1 rounded-md">
                                   <span className="w-3.5 h-3.5 flex items-center justify-center border border-dashed rounded-sm border-current opacity-70">
@@ -573,7 +564,7 @@ export default function Movimientos() {
 
                         <div>
                           <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Rollo</span>
-                          <Link href={row.referenciaRolloRuta} className="text-primary hover:underline font-mono font-medium tracking-tight" data-testid={`mobile-link-rollo-${row.rolloId}`}>
+                          <Link href={row.referenciaRolloRuta} className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-mono font-medium tracking-tight" data-testid={`mobile-link-rollo-${row.rolloId}`}>
                             {row.serie}
                           </Link>
                         </div>
@@ -599,16 +590,9 @@ export default function Movimientos() {
                         <div>
                           <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Documento</span>
                           {row.documentoRuta ? (
-                            <a
-                              href={`${baseUrl}${row.documentoRuta}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline truncate"
-                              data-testid={`mobile-link-doc-${row.id}`}
-                            >
-                              <FileText className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground truncate">
                               <span className="truncate">{row.documentoEtiqueta || `${row.documentoTipo} ${row.documentoId}`}</span>
-                            </a>
+                            </span>
                           ) : (
                             <span className="text-[11px] font-medium text-muted-foreground italic flex items-center gap-1">
                               <span className="w-3 h-3 flex items-center justify-center border border-dashed rounded-[2px] border-current opacity-70">
