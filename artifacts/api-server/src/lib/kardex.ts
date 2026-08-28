@@ -248,13 +248,23 @@ async function enrichDocuments(rows: JoinedMovement[]) {
           ubicacionesTable,
           eq(entradasTable.ubicacionId, ubicacionesTable.id),
         )
-        .where(inArray(entradasTable.id, entradaIds))
+        .where(
+          or(
+            inArray(entradasTable.id, entradaIds),
+            inArray(entradasTable.folio, entradaIds),
+          ),
+        )
     : [];
   const entradaMap = new Map(
-    entradas.map((entrada) => [
-      entrada.id,
-      `${entrada.iniciales}-${String(entrada.folio).padStart(6, "0")}`,
-    ]),
+    entradas.flatMap((entrada) => {
+      const document = {
+        id: entrada.id,
+        label: `${entrada.iniciales}-${String(entrada.folio).padStart(6, "0")}`,
+      };
+      // Historical RECEPCION movements may reference the entry folio rather
+      // than its primary key; both must retain the same navigable document.
+      return [[entrada.id, document], [entrada.folio, document]] as const;
+    }),
   );
   const ticketIds = references
     .filter((reference) => reference.tipo === "TICKET" && reference.id)
@@ -353,19 +363,18 @@ async function enrichDocuments(rows: JoinedMovement[]) {
 
 function resolveDocument(
   reference: DocumentReference,
-  entradaMap: Map<number, string>,
+  entradaMap: Map<number, { id: number; label: string }>,
   ticketMap: Map<number, number>,
   salidaMap: Map<number, string>,
 ): { label: string | null; route: string | null } {
   if (!reference.tipo || !reference.id) return { label: null, route: null };
   if (reference.tipo === "ENTRADA") {
-    const entradaId = Number(reference.id);
-    const folio = entradaMap.get(entradaId);
-    return folio == null
+    const entry = entradaMap.get(Number(reference.id));
+    return entry == null
       ? { label: null, route: null }
       : {
-          label: `Entrada ${folio}`,
-          route: `/entradas/${entradaId}/documento`,
+          label: `Entrada ${entry.label}`,
+          route: `/entradas/${entry.id}/documento`,
         };
   }
   if (reference.tipo === "TICKET") {

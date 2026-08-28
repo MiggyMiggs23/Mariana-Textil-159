@@ -64,9 +64,9 @@ export type TicketCreditMovement = {
   directedMovimientoId?: number | null;
   movimientoOrigenId?: number | null;
   tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
-  importe: string;
-  diasPlazo: number | null;
-  fechaVencimiento: string | Date | null;
+  importe: string | number;
+  diasPlazo?: number | null;
+  fechaVencimiento?: string | Date | null;
   createdAt: Date;
   id: number;
 };
@@ -90,7 +90,7 @@ function decimalMoney(cents: number): string {
  */
 export function deriveTicketCreditData(
   ticketId: number,
-  payments: TicketCreditPayment[],
+  _payments: TicketCreditPayment[],
   movements: TicketCreditMovement[],
 ): {
   esCredito: boolean;
@@ -99,9 +99,18 @@ export function deriveTicketCreditData(
   fechaVencimiento: string | null;
   saldoPendiente: string;
 } {
-  const creditCents = payments
-    .filter((payment) => payment.formaPago === "CREDITO")
-    .reduce((sum, payment) => sum + moneyCents(payment.importe), 0);
+  // VENTA_CREDITO movements are the accounting source of truth.  In
+  // particular, ticket_pagos can be missing for historical tickets, while
+  // aplicaciones_credito remains allocation evidence and must not change the
+  // outstanding balance independently of the ledger projection.
+  const sales = movements.filter(
+    (movement) =>
+      movement.tipo === "VENTA_CREDITO" && movement.ticketId === ticketId,
+  );
+  const creditCents = sales.reduce(
+    (sum, movement) => sum + moneyCents(movement.importe),
+    0,
+  );
   if (creditCents <= 0) {
     return {
       esCredito: false,
@@ -116,10 +125,7 @@ export function deriveTicketCreditData(
   const outstanding = projection.charges
     .filter((charge) => charge.ticketId === ticketId)
     .reduce((sum, charge) => sum + charge.pendienteCents, 0);
-  const sale = movements.find(
-    (movement) =>
-      movement.tipo === "VENTA_CREDITO" && movement.ticketId === ticketId,
-  );
+  const sale = sales[0];
 
   return {
     esCredito: true,

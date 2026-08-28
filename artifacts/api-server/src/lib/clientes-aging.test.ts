@@ -174,6 +174,42 @@ test("cash ticket does not infer credit from unrelated customer ledger", () => {
   });
 });
 
+test("ticket credit derives from its sale movement without a ticket payment", () => {
+  const credit = deriveTicketCreditData(
+    20,
+    [],
+    [
+      {
+        id: 1,
+        ticketId: 20,
+        tipo: "VENTA_CREDITO",
+        importe: "90.00",
+        diasPlazo: 30,
+        fechaVencimiento: "2026-09-30",
+        createdAt: new Date("2026-08-31T12:00:00Z"),
+      },
+      {
+        id: 2,
+        ticketId: null,
+        directedMovimientoId: 1,
+        tipo: "ABONO",
+        importe: "-30.00",
+        diasPlazo: null,
+        fechaVencimiento: null,
+        createdAt: new Date("2026-09-01T12:00:00Z"),
+      },
+    ],
+  );
+
+  assert.deepEqual(credit, {
+    esCredito: true,
+    importeCredito: "90.00",
+    diasPlazo: 30,
+    fechaVencimiento: "2026-09-30",
+    saldoPendiente: "60.00",
+  });
+});
+
 test("mixed ticket reports only its credit portion and persisted terms", () => {
   const credit = deriveTicketCreditData(
     20,

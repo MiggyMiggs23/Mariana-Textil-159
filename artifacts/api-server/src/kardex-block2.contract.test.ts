@@ -7,6 +7,7 @@ const root = resolve(import.meta.dirname, "../../..");
 const spec = readFileSync(resolve(root, "lib/api-spec/openapi.yaml"), "utf8");
 const kardex = readFileSync(resolve(import.meta.dirname, "lib/kardex.ts"), "utf8");
 const route = readFileSync(resolve(import.meta.dirname, "routes/inventario.ts"), "utf8");
+const page = readFileSync(resolve(root, "artifacts/mariana-textil/src/pages/movimientos.tsx"), "utf8");
 
 test("TODO_LO_QUE_SALIO is a read-only GET contract with its exact forced types", () => {
   const kardexPath = spec.slice(
@@ -36,4 +37,14 @@ test("outgoing preset retains read scope and supplies destination, documents, un
   assert.match(kardex, /sum\(abs\(\$\{movimientosTable\.cantidad\}\)\)/);
   assert.match(kardex, /totalMetros/);
   assert.match(kardex, /totalKilos/);
+});
+
+test("outgoing view sends its combined preset through list and export endpoints", () => {
+  assert.match(page, /modo\?: "TODO_LO_QUE_SALIO"/);
+  assert.match(page, /modo: filters\.modo/);
+  assert.match(page, /useGetKardex\(\s*queryParams/s);
+  assert.match(page, /exportKardexXlsx\(filterParams\)/);
+  assert.match(page, /Todo lo que salió/);
+  assert.match(route, /inventarioRouter\.get\(\s*"\/kardex",/s);
+  assert.match(route, /inventarioRouter\.get\(\s*"\/kardex\/exportar",/s);
 });

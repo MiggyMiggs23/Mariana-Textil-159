@@ -13,7 +13,7 @@ if (originalDatabaseUrl && originalDatabaseUrl === testDatabaseUrl) {
 }
 const parsedTestUrl = new URL(testDatabaseUrl);
 const expectedDatabase = decodeURIComponent(parsedTestUrl.pathname.replace(/^\//, ""));
-if (!expectedDatabase || !/(test|ci)/i.test(`${parsedTestUrl.hostname}/${expectedDatabase}`)) {
+if (!expectedDatabase || !/(test|ci|e2e)/i.test(`${parsedTestUrl.hostname}/${expectedDatabase}`)) {
   throw new Error("TEST_DATABASE_URL must visibly identify an isolated test/CI database.");
 }
 
@@ -33,6 +33,13 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
   let server: Server | undefined;
   let baseUrl = "";
   const tag = `CONT-IT-${randomUUID()}`;
+  const initialsSeed = tag
+    .replace(/^CONT-IT-/, "")
+    .replaceAll("-", "")
+    .slice(0, 2)
+    .split("")
+    .map((character) => String.fromCharCode(65 + Number.parseInt(character, 16)))
+    .join("");
   const created = {
     sites: [] as number[],
     providers: [] as number[],
@@ -46,7 +53,7 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
     const result = await pool.query("SELECT current_database() AS name");
     const actual = String(result.rows[0]?.name ?? "");
     assert.equal(actual, expectedDatabase, `${stage}: pool points at the URL pathname database`);
-    assert.match(actual, /test|ci/i, `${stage}: database name is visibly isolated`);
+    assert.match(actual, /test|ci|e2e/i, `${stage}: database name is visibly isolated`);
   }
 
   // The first live database operation is intentionally this identity query.
@@ -160,12 +167,12 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
   try {
     await assertDatabaseIdentity("before fixture mutation");
     ownSite = Number((await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'BODEGA',true) RETURNING id",
-      [`${tag}-own`],
+      "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'BODEGA',true) RETURNING id",
+      [`${tag}-own`, `${initialsSeed}A`],
     )).id);
     otherSite = Number((await one(
-      "INSERT INTO ubicaciones(nombre,tipo,activa) VALUES($1,'TIENDA',true) RETURNING id",
-      [`${tag}-other`],
+      "INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id",
+      [`${tag}-other`, `${initialsSeed}B`],
     )).id);
     created.sites.push(ownSite, otherSite);
     providerId = Number((await one(
@@ -250,7 +257,9 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
       assert.equal(patched.body.referencia, `${tag}-updated`);
       const list = await api("GET", `/contenedores?search=${encodeURIComponent(tag)}`, admin);
       assert.equal(list.status, 200);
-      assert.ok(list.body.items.some((row: any) => row.id === cancelledId && row.lineas === 1));
+      assert.ok(list.body.items.some((row: any) =>
+        row.id === cancelledId && row.lineasCount === 1 && row.lineas.length === 1
+      ));
       assert.equal((await api("GET", `/contenedores/${cancelledId}`, admin)).status, 200);
       const cancelled = await api("POST", `/contenedores/${cancelledId}/cancelar`, admin,
         { motivo: "Cancelación válida del escenario aislado" });

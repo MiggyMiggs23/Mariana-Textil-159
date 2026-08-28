@@ -235,6 +235,8 @@ El libro de movimientos de crédito es la fuente de verdad. El estado de una not
 
 Para abonos de clientes, “cuenta destino” usa las categorías operativas existentes, no un catálogo bancario inventado: el efectivo entra a `CAJA_FISICA` y una transferencia debe indicar `CUENTA_FISCAL` o `CUENTA_NO_FISCAL`. Los movimientos históricos pueden conservar `null`, pero todo abono nuevo debe registrar una categoría coherente con su forma de pago.
 
+El pago dirigido se solicita desde el cobro del cliente o el pago al proveedor, se autoriza desde la notificación sin entrar a otra pantalla, y su histórico vive en Reportes como registro de cuántas excepciones a la regla FIFO ha habido. No es una pantalla de trabajo diario.
+
 ### Pendientes antes del piloto
 
 - Definir y probar el procedimiento de salidas extraordinarias.

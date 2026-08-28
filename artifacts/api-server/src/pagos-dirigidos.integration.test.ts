@@ -124,15 +124,15 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
   const otherSiteTicket = await ticket(otherLocation.id, 70);
   const oldSale = await one(
     `INSERT INTO movimientos_credito(
-       cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
-     ) VALUES($1,$2,'VENTA_CREDITO','120.00',$3,'CREDITO',now()-interval '2 days')
+        cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,fecha_vencimiento,created_at
+      ) VALUES($1,$2,'VENTA_CREDITO','120.00',$3,'CREDITO',(now()-interval '1 day')::date,now()-interval '2 days')
      RETURNING id`,
     [cliente.id, oldTicket.id, admin.id],
   );
   const newSale = await one(
     `INSERT INTO movimientos_credito(
-       cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
-     ) VALUES($1,$2,'VENTA_CREDITO','90.00',$3,'CREDITO',now()-interval '1 day')
+        cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,fecha_vencimiento,created_at
+      ) VALUES($1,$2,'VENTA_CREDITO','90.00',$3,'CREDITO',(now()-interval '1 day')::date,now()-interval '1 day')
      RETURNING id`,
     [cliente.id, newTicket.id, admin.id],
   );

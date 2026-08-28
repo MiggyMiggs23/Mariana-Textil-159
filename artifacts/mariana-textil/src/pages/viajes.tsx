@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber } from "@workspace/number-format";
-import { Plus, Route, Truck } from "lucide-react";
+import { Plus, Truck } from "lucide-react";
 import { hasPermission, Modules } from "@/lib/permisos";
 
 /** Historical dispatch list; creation is intentionally a separate operational flow. */
@@ -13,7 +13,7 @@ export default function Viajes() {
   const { data, isLoading } = useListViajes(undefined, { query: { queryKey: getListViajesQueryKey(undefined) } });
   const canCreate = hasPermission(user, Modules.VIAJES, "crear");
   return <AppLayout><div className="mx-auto max-w-6xl space-y-6 pb-12">
-    <div className="flex items-center justify-between gap-4"><div><h1 className="flex items-center gap-2 text-3xl font-bold"><Route className="text-primary" />Viajes</h1><p className="mt-1 text-muted-foreground">Historial de hojas de despacho.</p></div>
+    <div className="flex items-center justify-between gap-4"><div><h1 className="flex items-center gap-2 text-3xl font-bold"><Truck className="text-primary" />Viajes</h1><p className="mt-1 text-muted-foreground">Historial de hojas de despacho.</p></div>
       {canCreate && <Link href="/viajes/nuevo"><Button><Plus className="mr-2 h-4 w-4" />Nuevo viaje</Button></Link>}</div>
     <Card><CardHeader><CardTitle>Viajes registrados</CardTitle></CardHeader><CardContent className="p-0">
       {isLoading ? <p className="p-6 text-muted-foreground">Cargando viajes…</p> : !data?.length ? <p className="p-6 text-muted-foreground">No hay viajes registrados.</p> :

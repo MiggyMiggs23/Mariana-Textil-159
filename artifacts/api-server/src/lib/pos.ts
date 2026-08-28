@@ -282,7 +282,22 @@ export async function buildTicketDetail(
     .where(eq(ticketPagosTable.ticketId, ticketId))
     .orderBy(asc(ticketPagosTable.id));
 
-  const creditMovements = pagos.some((pago) => pago.formaPago === "CREDITO")
+  // The immutable credit ledger is authoritative.  A ticket payment is only
+  // the POS collection record and may be absent from historical/imported
+  // tickets, so it must not decide whether this ticket has a credit charge.
+  const [creditSale] = ticket.clienteId == null
+    ? []
+    : await database
+        .select({ id: movimientosCreditoTable.id })
+        .from(movimientosCreditoTable)
+        .where(
+          and(
+            eq(movimientosCreditoTable.ticketId, ticketId),
+            eq(movimientosCreditoTable.tipo, "VENTA_CREDITO"),
+          ),
+        )
+        .limit(1);
+  const creditMovements = creditSale
     ? await loadCustomerCreditLedgerInTransaction(
         Number(ticket.clienteId),
         database,

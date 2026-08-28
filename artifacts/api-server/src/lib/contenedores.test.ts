@@ -255,3 +255,19 @@ test("list query batches lines and orders arrival date then folio", () => {
   );
   assert.equal((operation.match(/db\.execute/g) ?? []).length, 1);
 });
+
+test("container page renders all supplied lines, four distinct KPIs, and ETA order", () => {
+  const page = readFileSync(
+    new URL("../../../mariana-textil/src/pages/contenedores/index.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(page, /const sortedItems = useMemo/);
+  assert.match(page, /new Date\(a\.fechaEstimadaLlegada\).*new Date\(b\.fechaEstimadaLlegada\)/s);
+  assert.match(page, /\{sortedItems\.map\(item =>/);
+  assert.match(page, /\{item\.lineas\.map\(\(linea, idx\) =>/);
+  for (const label of ["En Tránsito", "Rollos por Llegar", "Metros por Llegar", "Kilos por Llegar"]) {
+    assert.match(page, new RegExp(`>${label}<`));
+  }
+  assert.match(page, /bg-report-header text-report-header-foreground/);
+  assert.match(page, /bg-report-accent-warm-bg/);
+});
