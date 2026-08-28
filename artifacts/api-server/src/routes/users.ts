@@ -122,12 +122,16 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
   }
 
   const role = parsed.data.rol as RolUsuario;
-  if (
-    (role === "ADMIN" || role === "SISTEMAS") &&
-    req.auth!.user.rol !== "ADMIN"
-  ) {
+  if (role === "ADMIN" && req.auth!.user.rol !== "ADMIN") {
+    await auditRejectedUserChange(
+      req,
+      normalizeUsername(parsed.data.usuario),
+      "Solo un ADMIN puede crear cuentas ADMIN.",
+      null,
+      { rol: role },
+    );
     res.status(403).json({
-      error: "Solo un ADMIN puede crear cuentas ADMIN o SISTEMAS.",
+      error: "Solo un ADMIN puede crear cuentas ADMIN.",
     });
     return;
   }
@@ -230,32 +234,32 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   const finalRole = (body.data.rol ?? beforeRow.user.rol) as RolUsuario;
   if (
     actor.rol !== "ADMIN" &&
-    (beforeRow.user.rol === "ADMIN" || beforeRow.user.rol === "SISTEMAS")
+    beforeRow.user.rol === "ADMIN"
   ) {
     await auditRejectedUserChange(
       req,
       String(beforeRow.user.id),
-      "Solo un ADMIN puede modificar una cuenta ADMIN o SISTEMAS.",
+      "Solo un ADMIN puede modificar una cuenta ADMIN.",
       sanitizeUserForAudit(beforeRow.user),
     );
     res.status(403).json({
-      error: "Solo un ADMIN puede modificar una cuenta ADMIN o SISTEMAS.",
+      error: "Solo un ADMIN puede modificar una cuenta ADMIN.",
     });
     return;
   }
   if (
     actor.rol !== "ADMIN" &&
-    (finalRole === "ADMIN" || finalRole === "SISTEMAS")
+    finalRole === "ADMIN"
   ) {
     await auditRejectedUserChange(
       req,
       String(beforeRow.user.id),
-      "Solo un ADMIN puede asignar los roles ADMIN o SISTEMAS.",
+      "Solo un ADMIN puede asignar el rol ADMIN.",
       sanitizeUserForAudit(beforeRow.user),
       { rol: finalRole },
     );
     res.status(403).json({
-      error: "Solo un ADMIN puede asignar los roles ADMIN o SISTEMAS.",
+      error: "Solo un ADMIN puede asignar el rol ADMIN.",
     });
     return;
   }

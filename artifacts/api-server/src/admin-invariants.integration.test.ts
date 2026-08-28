@@ -46,7 +46,7 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
     );
     fixtureLocations.push(Number(location.id));
 
-    const makeUser = async (role: "ADMIN" | "CAJA", suffix: string) => {
+    const makeUser = async (role: "ADMIN" | "CAJA" | "SISTEMAS", suffix: string) => {
       const user = await one(
         `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
          VALUES($1,$2,'integration-only',$3,$4,true,$5) RETURNING id`,
@@ -54,8 +54,8 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
           `${tag} ${suffix}`,
           `${tag.toLowerCase()}-${suffix}`,
           role,
-          role === "ADMIN" ? null : location.id,
-          role === "ADMIN" ? "TODAS" : "PROPIA",
+          role === "ADMIN" || role === "SISTEMAS" ? null : location.id,
+          role === "ADMIN" || role === "SISTEMAS" ? "TODAS" : "PROPIA",
         ],
       );
       fixtureUsers.push(Number(user.id));
@@ -65,12 +65,29 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
     const actorId = await makeUser("ADMIN", "actor");
     const secondAdminId = await makeUser("ADMIN", "second-admin");
     const cajaId = await makeUser("CAJA", "caja");
+    const sistemasId = await makeUser("SISTEMAS", "sistemas");
     const actorSession = randomUUID();
+    const sistemasSession = randomUUID();
     fixtureSessions.push(actorSession);
+    fixtureSessions.push(sistemasSession);
     await pool.query(
       `INSERT INTO sesiones(id,usuario_id,expira_at,ip,user_agent)
        VALUES($1,$2,now()+interval '1 hour','127.0.0.1',$3)`,
       [actorSession, actorId, tag],
+    );
+    await pool.query(
+      `INSERT INTO sesiones(id,usuario_id,expira_at,ip,user_agent)
+       VALUES($1,$2,now()+interval '1 hour','127.0.0.1',$3)`,
+      [sistemasSession, sistemasId, tag],
+    );
+    await pool.query(
+      `INSERT INTO permisos_rol(rol,modulo,puede_ver,puede_crear,puede_editar,puede_autorizar)
+       VALUES
+         ('SISTEMAS','usuarios',true,true,true,false),
+         ('SISTEMAS','permisos',true,false,true,false)
+       ON CONFLICT (rol,modulo) DO UPDATE SET
+         puede_ver=excluded.puede_ver, puede_crear=excluded.puede_crear,
+         puede_editar=excluded.puede_editar, puede_autorizar=excluded.puede_autorizar`,
     );
 
     // The production fixtures are never deleted. Their active state is
@@ -96,11 +113,16 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
     const address = server.address();
     assert.ok(address && typeof address !== "string");
     const base = `http://127.0.0.1:${address.port}/api`;
-    const request = async (method: string, path: string, body?: unknown) => {
+    const request = async (
+      method: string,
+      path: string,
+      body?: unknown,
+      session = actorSession,
+    ) => {
       const response = await fetch(`${base}${path}`, {
         method,
         headers: {
-          Cookie: `mariana_session=${actorSession}`,
+          Cookie: `mariana_session=${session}`,
           "Content-Type": "application/json",
         },
         body: body === undefined ? undefined : JSON.stringify(body),
@@ -116,6 +138,83 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
       );
       assert.equal(result.rows[0]?.count, expected, `expected rejection audit for ${entity}:${entityId}`);
     };
+    const rejectedBySistemas = async (entity: string, entityId: string, expected = 1) => {
+      const result = await pool.query(
+        `SELECT count(*)::int AS count FROM auditoria
+         WHERE usuario_id=$1 AND accion='RECHAZAR_INVARIANTE'
+           AND entidad=$2 AND entidad_id=$3`,
+        [sistemasId, entity, entityId],
+      );
+      assert.equal(result.rows[0]?.count, expected, `expected SISTEMAS rejection audit for ${entity}:${entityId}`);
+    };
+
+    const adminBeforeSistemasAttempts = await pool.query(
+      `SELECT nombre,rol,activo,password_hash FROM usuarios WHERE id=$1`,
+      [secondAdminId],
+    );
+    const forbiddenAdminUsername = `${tag.toLowerCase()}-forbidden-admin`;
+    assert.equal(
+      (await request("POST", "/users", {
+        nombre: `${tag} forbidden admin`,
+        usuario: forbiddenAdminUsername,
+        password: "integration-only-password",
+        rol: "ADMIN",
+        ubicacionId: null,
+      }, sistemasSession)).status,
+      403,
+    );
+    await rejectedBySistemas("usuarios", forbiddenAdminUsername);
+    assert.equal(
+      (await pool.query(`SELECT count(*)::int AS count FROM usuarios WHERE usuario=$1`, [forbiddenAdminUsername])).rows[0]?.count,
+      0,
+    );
+    assert.equal(
+      (await request("PATCH", `/users/${cajaId}`, { rol: "ADMIN" }, sistemasSession)).status,
+      403,
+    );
+    await rejectedBySistemas("usuarios", String(cajaId));
+    for (const update of [
+      { nombre: `${tag} hacked` },
+      { rol: "CAJA", ubicacionId: Number(location.id) },
+      { activo: false },
+      { password: "replacement-password" },
+    ]) {
+      assert.equal(
+        (await request("PATCH", `/users/${secondAdminId}`, update, sistemasSession)).status,
+        403,
+      );
+    }
+    await rejectedBySistemas("usuarios", String(secondAdminId), 4);
+    assert.deepEqual(
+      (await pool.query(`SELECT nombre,rol,activo,password_hash FROM usuarios WHERE id=$1`, [secondAdminId])).rows,
+      adminBeforeSistemasAttempts.rows,
+    );
+    assert.equal(
+      (await request("PUT", "/permisos/roles/ADMIN/dashboard", {
+        puedeVer: false, puedeCrear: false, puedeEditar: false, puedeAutorizar: false,
+      }, sistemasSession)).status,
+      403,
+    );
+    await rejectedBySistemas("permisos_rol", "ADMIN:dashboard");
+    assert.equal(
+      (await request("PUT", "/permisos/roles/SISTEMAS/pos", {
+        puedeVer: true, puedeCrear: false, puedeEditar: false, puedeAutorizar: false,
+      }, sistemasSession)).status,
+      403,
+    );
+    await rejectedBySistemas("permisos_rol", "SISTEMAS:pos");
+    assert.equal(
+      (await request("PUT", `/permisos/usuarios/${sistemasId}/pos`, {
+        puedeVer: true, puedeCrear: false, puedeEditar: false, puedeAutorizar: false,
+      }, sistemasSession)).status,
+      403,
+    );
+    await rejectedBySistemas("permisos_usuario", `${sistemasId}:pos`);
+    assert.equal(
+      (await request("PATCH", `/users/${sistemasId}`, { rol: "ADMIN" }, sistemasSession)).status,
+      403,
+    );
+    await rejectedBySistemas("usuarios", String(sistemasId));
 
     // Another ADMIN may remove ADMIN from a different account only while a
     // recoverable ADMIN remains. This also establishes actorId as the last.

@@ -23,6 +23,7 @@ import {
   requierePermiso,
   buildPermissionMatrix,
   hasAdminRecoveryAccount,
+  resolvePermiso,
   validateAdminInvariants,
 } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
@@ -130,6 +131,33 @@ router.put(
           error: "Al desactivar 'ver', las otras acciones deben también estar desactivadas.",
         });
         return;
+      }
+
+      if (req.auth!.user.rol === "SISTEMAS" && rol === "SISTEMAS") {
+        const actorPermission = await resolvePermiso(
+          req.auth!.user.id,
+          req.auth!.user.rol,
+          modulo,
+        );
+        const grantsMissingPermission =
+          (puedeVer && actorPermission?.puedeVer !== true) ||
+          (puedeCrear && actorPermission?.puedeCrear !== true) ||
+          (puedeEditar && actorPermission?.puedeEditar !== true) ||
+          (puedeAutorizar && actorPermission?.puedeAutorizar !== true);
+        if (grantsMissingPermission) {
+          await auditRejectedPermissionChange(
+            req,
+            "permisos_rol",
+            `${rol}:${modulo}`,
+            "SISTEMAS no puede otorgarse permisos que no tiene.",
+            null,
+            { puedeVer, puedeCrear, puedeEditar, puedeAutorizar },
+          );
+          res.status(403).json({
+            error: "No puedes otorgar a tu propio rol permisos que no tienes.",
+          });
+          return;
+        }
       }
 
       // Validate admin invariants
