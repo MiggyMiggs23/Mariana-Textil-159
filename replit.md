@@ -239,18 +239,27 @@ El pago dirigido se solicita desde el cobro del cliente o el pago al proveedor, 
 
 ## Roles SISTEMAS y CONTADOR
 
-**SISTEMAS** es el rol del técnico responsable de la aplicación. Opera todo y sí ve el dinero, porque diagnostica problemas de cartera y de precios. No vende ni cobra: no tiene POS, cortes ni cobros. Lee la bitácora, que es inmutable.
+**SISTEMAS** es el rol del técnico responsable de la aplicación. Opera todo y sí ve el dinero, porque diagnostica problemas de cartera y de precios. No vende ni cobra: sin POS, sin cortes, sin cobros. Lee la bitácora y no puede alterarla. No puede crear administradores ni tocar a un usuario que ya es ADMIN: esa llave se queda con el dueño.
 
-**CONTADOR** ve todo lo financiero y no toca la mercancía: consulta entradas, salidas y movimientos para cuadrar, pero no crea ni edita ninguno. Registra pagos a proveedores y cobros; se eligió conservadoramente `crear` en `proveedores_finanzas` y `cobros_pagos`. No administra el sistema.
+**CONTADOR** ve todo lo financiero y no toca la mercancía: consulta entradas, salidas y movimientos para cuadrar, pero no crea ni edita ninguno. Registra pagos a proveedores y cobros. No administra el sistema.
 
-Los dos existen separados de ADMIN para distinguir en la bitácora qué hizo cada perfil. La matriz del seed valida al arrancar que cada módulo exista, que no haya módulos extra, que cada fila tenga seis celdas y que cada celda use una tupla canónica de permisos; así ninguna fila corta vuelve a negar permisos silenciosamente.
+Los dos existen separados de ADMIN para poder distinguir en la bitácora qué hizo cada quien.
+
+La matriz de permisos del seed valida al arranque que cada fila tenga tantos valores como roles existan y que cada valor sea válido. Una fila corta niega permisos en silencio, y así se creó por accidente un rol incompleto en la Parte 7.
+
+Decisión conservadora: CONTADOR tiene `crear` en `cobros_pagos` y en `proveedores_finanzas` porque registra cobros y pagos. Si se decide que el perfil sea puramente de consulta, esas dos celdas se pueden retirar de la matriz.
+
+### Limpieza para el piloto
+
+La limpieza autorizada dejó vacíos los datos operativos y conservó clientes, proveedores, sitios, usuarios reales, permisos y los 154 productos del catálogo aprobado. Los usuarios y sitios generados por pruebas que siguen referenciados por la bitácora inmutable se conservaron completos; nunca se fuerza su eliminación ni se altera la auditoría para borrarlos.
+
+La pantalla de acceso y los servicios quedaron disponibles después de la limpieza. La comprobación autenticada de las pantallas con una cuenta real queda pendiente para el usuario porque la contraseña vigente del administrador no está disponible en el workspace; no se restablecen contraseñas reales ni se crean sesiones artificiales para una prueba.
 
 ### Pendientes antes del piloto
 
 - Definir y probar el procedimiento de salidas extraordinarias.
 - Configurar, ejecutar y comprobar respaldos y restauración.
 - Preparar la toma de inventario físico.
-- Construir y validar el script de reinicio, incluida su confirmación textual exacta.
 - Tomar la decisión final de impresora y validar el flujo físico.
 - Cambiar la contraseña inicial antes de producción.
 
