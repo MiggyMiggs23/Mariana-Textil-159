@@ -208,6 +208,7 @@ import type {
   ProductoInput,
   ProductoUpdate,
   Proveedor,
+  ProveedorCaja,
   ProveedorCompraDetalle,
   ProveedorComprasResult,
   ProveedorEstadisticas,
@@ -235,9 +236,12 @@ import type {
   RolloListResult,
   SalidaDetail,
   SalidaDetailResponseResponse,
+  SalidaDineroCaja,
+  SalidaDineroCajaInput,
   SalidaListResult,
   SalidaMostradorDocumentoInput,
   SalidaResumen,
+  SalidasDineroCajaResponse,
   ServerTime,
   SesionCaja,
   SesionCajaActual,
@@ -11918,6 +11922,232 @@ export const useCerrarSesionCaja = <TError = ErrorType<ValidationErrorResponse |
       > => {
       return useMutation(getCerrarSesionCajaMutationOptions(options));
     }
+
+export const getListarSalidasDineroCajaUrl = (id: number,) => {
+
+
+
+
+  return `/api/sesiones-caja/${id}/salidas-dinero`
+}
+
+/**
+ * @summary Lista salidas de dinero de una sesión de caja
+ */
+export const listarSalidasDineroCaja = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SalidasDineroCajaResponse> => {
+
+  return customFetch<SalidasDineroCajaResponse>(getListarSalidasDineroCajaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarSalidasDineroCajaQueryKey = (id: number,) => {
+    return [
+    `/api/sesiones-caja/${id}/salidas-dinero`
+    ] as const;
+    }
+
+
+export const getListarSalidasDineroCajaQueryOptions = <TData = Awaited<ReturnType<typeof listarSalidasDineroCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarSalidasDineroCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarSalidasDineroCajaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarSalidasDineroCaja>>> = ({ signal }) => listarSalidasDineroCaja(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarSalidasDineroCaja>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarSalidasDineroCajaQueryResult = NonNullable<Awaited<ReturnType<typeof listarSalidasDineroCaja>>>
+export type ListarSalidasDineroCajaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Lista salidas de dinero de una sesión de caja
+ */
+
+export function useListarSalidasDineroCaja<TData = Awaited<ReturnType<typeof listarSalidasDineroCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarSalidasDineroCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarSalidasDineroCajaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCrearSalidaDineroCajaUrl = (id: number,) => {
+
+
+
+
+  return `/api/sesiones-caja/${id}/salidas-dinero`
+}
+
+/**
+ * @summary Registra una salida de dinero de caja en Tienda Mariana
+ */
+export const crearSalidaDineroCaja = async (id: number,
+    salidaDineroCajaInput: SalidaDineroCajaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDineroCaja> => {
+
+  return customFetch<SalidaDineroCaja>(getCrearSalidaDineroCajaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(salidaDineroCajaInput)
+  }
+);}
+
+
+
+
+
+export const getCrearSalidaDineroCajaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalidaDineroCaja>>, TError,{id: number;data: BodyType<SalidaDineroCajaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof crearSalidaDineroCaja>>, TError,{id: number;data: BodyType<SalidaDineroCajaInput>}, TContext> => {
+
+const mutationKey = ['crearSalidaDineroCaja'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearSalidaDineroCaja>>, {id: number;data: BodyType<SalidaDineroCajaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  crearSalidaDineroCaja(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrearSalidaDineroCajaMutationResult = NonNullable<Awaited<ReturnType<typeof crearSalidaDineroCaja>>>
+    export type CrearSalidaDineroCajaMutationBody = BodyType<SalidaDineroCajaInput>
+    export type CrearSalidaDineroCajaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Registra una salida de dinero de caja en Tienda Mariana
+ */
+export const useCrearSalidaDineroCaja = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalidaDineroCaja>>, TError,{id: number;data: BodyType<SalidaDineroCajaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof crearSalidaDineroCaja>>,
+        TError,
+        {id: number;data: BodyType<SalidaDineroCajaInput>},
+        TContext
+      > => {
+      return useMutation(getCrearSalidaDineroCajaMutationOptions(options));
+    }
+
+export const getListarProveedoresActivosCajaUrl = () => {
+
+
+
+
+  return `/api/caja/proveedores-activos`
+}
+
+/**
+ * @summary Catálogo mínimo de proveedores activos para salidas de caja
+ */
+export const listarProveedoresActivosCaja = async ( options?: Parameters<typeof customFetch>[1]): Promise<ProveedorCaja[]> => {
+
+  return customFetch<ProveedorCaja[]>(getListarProveedoresActivosCajaUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarProveedoresActivosCajaQueryKey = () => {
+    return [
+    `/api/caja/proveedores-activos`
+    ] as const;
+    }
+
+
+export const getListarProveedoresActivosCajaQueryOptions = <TData = Awaited<ReturnType<typeof listarProveedoresActivosCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarProveedoresActivosCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarProveedoresActivosCajaQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarProveedoresActivosCaja>>> = ({ signal }) => listarProveedoresActivosCaja({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarProveedoresActivosCaja>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarProveedoresActivosCajaQueryResult = NonNullable<Awaited<ReturnType<typeof listarProveedoresActivosCaja>>>
+export type ListarProveedoresActivosCajaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Catálogo mínimo de proveedores activos para salidas de caja
+ */
+
+export function useListarProveedoresActivosCaja<TData = Awaited<ReturnType<typeof listarProveedoresActivosCaja>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarProveedoresActivosCaja>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarProveedoresActivosCajaQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getListSalidasUrl = (params?: ListSalidasParams,) => {
   const normalizedParams = new URLSearchParams();

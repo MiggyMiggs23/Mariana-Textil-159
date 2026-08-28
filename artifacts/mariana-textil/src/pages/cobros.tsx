@@ -24,6 +24,10 @@ import {
   getGetClienteEstadoCuentaQueryKey,
   useCreateClientePago,
   TicketDetalle,
+  useCrearSalidaDineroCaja,
+  useListarSalidasDineroCaja,
+  useListarProveedoresActivosCaja,
+  getListarSalidasDineroCajaQueryKey,
 } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { useLocationScope } from "@/lib/location-scope";
@@ -77,6 +81,9 @@ import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
+
+/** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
+const MARIANA_LOCATION_ID = 1;
 
 function CarteraContent() {
   const [scannedInput, setScannedInput] = useState("");
@@ -491,7 +498,7 @@ function AbrirCajaForm({
 
   const handleAbrir = () => {
     const fondoNum = Number(fondo);
-    if (isNaN(fondoNum) || fondoNum < 0) {
+    if (!fondo.trim() || isNaN(fondoNum) || fondoNum < 0) {
       toast({ title: "Monto inválido", variant: "destructive" });
       return;
     }
@@ -538,6 +545,7 @@ function AbrirCajaForm({
                 min="0"
                 step="0.01"
                 value={fondo}
+                required
                 onChange={(e) => setFondo(e.target.value)}
                 className="pl-8 h-12 text-xl font-bold"
                 autoFocus
@@ -1194,6 +1202,47 @@ function CobroDialog({
   );
 }
 
+function SalidasDineroPanel({ sesionId }: { sesionId: number }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [monto, setMonto] = useState("");
+  const [motivo, setMotivo] = useState("");
+  const [proveedorId, setProveedorId] = useState<string>("");
+  const [cuentaOrigen, setCuentaOrigen] = useState<"CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL">("CAJA_FISICA");
+  const { data, isLoading, isError, error } = useListarSalidasDineroCaja(sesionId, { query: { queryKey: getListarSalidasDineroCajaQueryKey(sesionId) } });
+  const { data: proveedores = [] } = useListarProveedoresActivosCaja();
+  const crear = useCrearSalidaDineroCaja();
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const valor = Number(monto);
+    if (!Number.isFinite(valor) || valor <= 0 || !motivo.trim()) {
+      toast({ title: "Captura un monto mayor a cero y un motivo.", variant: "destructive" }); return;
+    }
+    crear.mutate({ id: sesionId, data: { monto: valor.toFixed(2), motivo: motivo.trim(), cuentaOrigen, proveedorId: proveedorId ? Number(proveedorId) : null } }, {
+      onSuccess: () => {
+        setMonto(""); setMotivo(""); setProveedorId("");
+        queryClient.invalidateQueries({ queryKey: getListarSalidasDineroCajaQueryKey(sesionId) });
+        queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
+        toast({ title: "Salida de dinero registrada." });
+      },
+      onError: (err: unknown) => toast({ title: "No se pudo registrar la salida", description: getApiErrorMessage(err, "Intenta nuevamente."), variant: "destructive" }),
+    });
+  };
+  return <Card className="border-amber-200">
+    <CardHeader><CardTitle className="text-lg">Salidas de dinero</CardTitle><CardDescription>Solo pagos operativos de Tienda Mariana.</CardDescription></CardHeader>
+    <CardContent className="space-y-4">
+      <form onSubmit={submit} className="grid gap-3 md:grid-cols-2" aria-label="Registrar salida de dinero">
+        <div><Label htmlFor="salida-monto">Monto</Label><Input id="salida-monto" type="number" min="0.01" step="0.01" required value={monto} onChange={(e) => setMonto(e.target.value)} /></div>
+        <div><Label htmlFor="salida-cuenta">Cuenta de origen</Label><Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as typeof cuentaOrigen)}><SelectTrigger id="salida-cuenta"><SelectValue /></SelectTrigger><SelectContent>{(["CAJA_FISICA", "CUENTA_NO_FISCAL", "CUENTA_FISCAL"] as const).map((cuenta) => <SelectItem key={cuenta} value={cuenta}>{formatAccountDestination(cuenta)}</SelectItem>)}</SelectContent></Select></div>
+        <div><Label htmlFor="salida-motivo">Motivo</Label><Input id="salida-motivo" required maxLength={500} value={motivo} onChange={(e) => setMotivo(e.target.value)} /></div>
+        <div><Label htmlFor="salida-proveedor">Proveedor (opcional)</Label><Select value={proveedorId} onValueChange={setProveedorId}><SelectTrigger id="salida-proveedor"><SelectValue placeholder="Sin proveedor" /></SelectTrigger><SelectContent>{proveedores.map((p) => <SelectItem key={p.id} value={String(p.id)}>{p.nombre}</SelectItem>)}</SelectContent></Select></div>
+        <Button type="submit" disabled={crear.isPending} className="md:col-span-2">{crear.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Registrar salida</Button>
+      </form>
+      {isLoading ? <p className="text-sm text-muted-foreground">Cargando salidas…</p> : isError ? <p role="alert" className="text-sm text-destructive">{getApiErrorMessage(error, "No se pudieron cargar las salidas.")}</p> : <div className="space-y-2">{data?.salidas.length ? data.salidas.map((salida) => <div key={salida.id} className="flex flex-wrap justify-between gap-2 border-t pt-2 text-sm"><span>{salida.motivo}{salida.proveedorId ? ` · Proveedor #${salida.proveedorId}` : ""}</span><span className="font-medium">{formatAccountDestination(salida.cuentaOrigen)} · {formatNumber(salida.monto, { kind: "money" })}</span></div>) : <p className="text-sm text-muted-foreground">Sin salidas registradas.</p>}</div>}
+    </CardContent>
+  </Card>;
+}
+
 function CobrosContent() {
   const { selectedLocationId } = useLocationScope();
   const [, setLocation] = useLocation();
@@ -1375,6 +1424,7 @@ function CobrosContent() {
     );
   }
   const sesionId = sesionData.sesion.id;
+  const sesionEsAnterior = mexicoCityDate(new Date(sesionData.sesion.abiertaAt)) < mexicoCityDate(new Date());
 
   return (
     <div className="flex flex-col h-full max-w-[1600px] mx-auto gap-6">
@@ -1400,6 +1450,15 @@ function CobrosContent() {
           </Button>
         </div>
       </div>
+      {sesionEsAnterior && (
+        <Card className="border-amber-400 bg-amber-50" role="alert">
+          <CardContent className="flex gap-3 p-4 text-amber-950">
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+            <p><strong>Sesión de fecha anterior:</strong> esta sesión abrió el {format(new Date(sesionData.sesion.abiertaAt), "PPP", { locale: es })}. Debe cerrarse antes de poder abrir la caja de hoy.</p>
+          </CardContent>
+        </Card>
+      )}
+      {sesionData.sesion.ubicacionId === MARIANA_LOCATION_ID && <SalidasDineroPanel sesionId={sesionId} />}
 
       <div className="flex flex-col flex-1 min-h-0">
         <Card className="flex-1 flex flex-col shadow-sm border-sidebar-border/10">
@@ -1827,6 +1886,8 @@ function CorteDetail({ corte }: { corte: CorteCaja }) {
       <div className="grid gap-4 md:grid-cols-2">
       <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${formatNumber(row.ticketsCount, { kind: "count" })} tickets)`} value={row.importe} />)}</CorteSection>
         <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={formatAccountDestination(row.cuentaDestino)} value={row.importe} />)}</CorteSection>
+      <CorteSection title="Salidas de dinero">{corte.salidas.length ? corte.salidas.map((salida) => <CorteRow key={salida.id} label={`${formatAccountDestination(salida.cuentaOrigen)} · ${salida.motivo}`} value={`-${formatNumber(salida.monto, { kind: "money" })}`} />) : <p className="text-xs text-muted-foreground">Sin salidas registradas.</p>}</CorteSection>
+      <CorteSection title="Neto esperado por cuenta">{Object.entries(corte.salidasPorCuenta).map(([cuenta, salida]) => <CorteRow key={cuenta} label={`${formatAccountDestination(cuenta)} · salidas`} value={`-${formatNumber(salida, { kind: "money" })}`} />)}</CorteSection>
         <CorteSection title="Facturación">{corte.facturacion.map((row) => <CorteFiscalRow key={String(row.facturado)} row={row} />)}</CorteSection>
       <CorteSection title="Rollos / Metraje">{corte.metreado.map((row) => <CorteRow key={`${row.tipo}-${row.unidad}`} label={`${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${row.unidad}`} value={row.importe} />)}</CorteSection>
       </div>

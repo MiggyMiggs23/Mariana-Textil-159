@@ -3525,6 +3525,49 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /sesiones-caja/{id}/salidas-dinero:
+    get:
+      operationId: listarSalidasDineroCaja
+      tags: [caja]
+      summary: Lista salidas de dinero de una sesión de caja
+      parameters:
+        - $ref: "#/components/parameters/SesionCajaId"
+      responses:
+        "200":
+          description: Salidas registradas
+          content: { application/json: { schema: { $ref: "#/components/schemas/SalidasDineroCajaResponse" } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    post:
+      operationId: crearSalidaDineroCaja
+      tags: [caja]
+      summary: Registra una salida de dinero de caja en Tienda Mariana
+      parameters:
+        - $ref: "#/components/parameters/SesionCajaId"
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/SalidaDineroCajaInput" } } }
+      responses:
+        "201":
+          description: Salida registrada
+          content: { application/json: { schema: { $ref: "#/components/schemas/SalidaDineroCaja" } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /caja/proveedores-activos:
+    get:
+      operationId: listarProveedoresActivosCaja
+      tags: [caja]
+      summary: Catálogo mínimo de proveedores activos para salidas de caja
+      responses:
+        "200":
+          description: Identificadores y nombres de proveedores activos
+          content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/ProveedorCaja" } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /salidas:
     get:
       operationId: listSalidas
@@ -10334,6 +10377,35 @@ components:
         motivo: { type: string }
         canceladoAt: { type: string, format: date-time }
         autor: { type: string }
+    ProveedorCaja:
+      type: object
+      required: [id, nombre]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+    SalidaDineroCajaInput:
+      type: object
+      required: [monto, motivo, cuentaOrigen]
+      properties:
+        monto: { type: string, pattern: "^[0-9]+(\\.[0-9]{1,2})?$" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+        proveedorId: { type: ["number", "null"] }
+        cuentaOrigen: { type: string, enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL] }
+    SalidaDineroCaja:
+      allOf:
+        - $ref: "#/components/schemas/SalidaDineroCajaInput"
+        - type: object
+          required: [id, sesionCajaId, creadoPorId, createdAt]
+          properties:
+            id: { type: number }
+            sesionCajaId: { type: number }
+            creadoPorId: { type: number }
+            createdAt: { type: string, format: date-time }
+    SalidasDineroCajaResponse:
+      type: object
+      required: [salidas]
+      properties:
+        salidas: { type: array, items: { $ref: "#/components/schemas/SalidaDineroCaja" } }
     CorteCaja:
       type: object
       required:
@@ -10341,6 +10413,8 @@ components:
           sesion,
           formasPago,
           cuentasDestino,
+            salidas,
+            salidasPorCuenta,
           facturacion,
           metreado,
           productos,
@@ -10366,6 +10440,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/CorteCuentaDestino"
+        salidas:
+          type: array
+          items:
+            type: object
+            required: [id, monto, motivo, proveedorId, cuentaOrigen, createdAt, proveedor]
+            properties:
+              id: { type: number }
+              monto: { type: string }
+              motivo: { type: string }
+              proveedorId: { type: ["number", "null"] }
+              cuentaOrigen: { type: string, enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL] }
+              createdAt: { type: string, format: date-time }
+              proveedor: { type: ["string", "null"] }
+        salidasPorCuenta:
+          type: object
+          additionalProperties: { type: string }
         facturacion:
           type: array
           description: Desglose facturado y no facturado

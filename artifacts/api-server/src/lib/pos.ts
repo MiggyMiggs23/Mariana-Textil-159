@@ -10,6 +10,9 @@ import {
   productosTable,
   rollosTable,
   sesionesCajaTable,
+  sesionesCajaDiasTable,
+  salidasDineroCajaTable,
+  proveedoresTable,
   ticketFolioTable,
   ticketLineasTable,
   ticketPagosTable,
@@ -51,6 +54,9 @@ import { ACCOUNT_DESTINATION_ORDER } from "@workspace/number-format";
 import { meteredReferenceCost } from "./metered-reference-cost";
 
 const FOLIO_ROW_ID = 1;
+
+/** Tienda Mariana (MA) is presently the only location allowed to pay providers from cash. */
+export const MARIANA_LOCATION_ID = 1;
 
 export class PosError extends Error {
   constructor(
@@ -1042,6 +1048,12 @@ export async function abrirSesionCaja(
       "INVALID_FUND",
     );
   }
+  // Serialize openings for a location even when there are no session rows yet.
+  // The operating day comes from PostgreSQL so API hosts cannot disagree on timezone.
+  const dayResult = await tx.execute(
+    sql<{ fecha_operativa: string }>`SELECT pg_advisory_xact_lock(${input.ubicacionId}), (now() AT TIME ZONE 'America/Mexico_City')::date::text AS fecha_operativa`,
+  );
+  const fechaOperativa = String(dayResult.rows[0]!.fecha_operativa);
   const [existing] = await tx
     .select()
     .from(sesionesCajaTable)
@@ -1055,10 +1067,35 @@ export async function abrirSesionCaja(
     .limit(1);
   if (existing) {
     throw new PosError(
-      "Ya existe una sesión de caja abierta en esta ubicación.",
-      "SESSION_ALREADY_OPEN",
+      `Hay una sesión abierta del ${existing.fechaOperativa}; debe cerrarse antes de abrir una nueva.`,
+      "PREVIOUS_SESSION_OPEN",
       409,
     );
+  }
+  const [today] = await tx
+    .select({ id: sesionesCajaTable.id })
+    .from(sesionesCajaTable)
+    .where(and(eq(sesionesCajaTable.ubicacionId, input.ubicacionId), eq(sesionesCajaTable.fechaOperativa, fechaOperativa)))
+    .limit(1);
+  if (today) {
+    throw new PosError(
+      "Ya existe una sesión de caja para la fecha operativa de hoy, abierta o cerrada.",
+      "SESSION_ALREADY_EXISTS_TODAY",
+      409,
+    );
+  }
+  try {
+    // Claim the operational day before creating its session. The guardian makes
+    // the rule safe without imposing a destructive unique constraint on history.
+    await tx.insert(sesionesCajaDiasTable).values({
+      ubicacionId: input.ubicacionId,
+      fechaOperativa,
+    });
+  } catch (error: unknown) {
+    if ((error as { code?: string }).code === "23505") {
+      throw new PosError("Ya existe una sesión de caja para la fecha operativa de hoy.", "SESSION_ALREADY_EXISTS_TODAY", 409);
+    }
+    throw error;
   }
   const [created] = await tx
     .insert(sesionesCajaTable)
@@ -1066,15 +1103,19 @@ export async function abrirSesionCaja(
       ubicacionId: input.ubicacionId,
       usuarioId: input.usuarioId,
       fondoInicial: decimalMoney(fondo),
+      fechaOperativa,
       estado: "ABIERTA",
     })
     .returning();
+  await tx.update(sesionesCajaDiasTable)
+    .set({ sesionCajaId: created!.id })
+    .where(and(eq(sesionesCajaDiasTable.ubicacionId, input.ubicacionId), eq(sesionesCajaDiasTable.fechaOperativa, fechaOperativa)));
   await tx.insert(auditoriaTable).values({
     usuarioId: input.usuarioId,
     accion: "ABRIR_CAJA",
     entidad: "sesiones_caja",
     entidadId: String(created!.id),
-    datosDespues: { fondoInicial: decimalMoney(fondo) },
+    datosDespues: { fondoInicial: decimalMoney(fondo), fechaOperativa, ubicacionId: input.ubicacionId },
     ip: input.ip,
   });
   return {
@@ -1084,6 +1125,35 @@ export async function abrirSesionCaja(
     abiertaAt: created!.abiertaAt.toISOString(),
     cerradaAt: null,
   };
+}
+
+export async function crearSalidaDineroCaja(
+  tx: Tx,
+  input: { sesionCajaId: number; monto: string; motivo: string; proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL"; creadoPorId: number; ip: string },
+) {
+  const monto = money(input.monto);
+  if (monto <= 0) throw new PosError("El monto de la salida debe ser mayor a cero.", "INVALID_AMOUNT");
+  const motivo = input.motivo.trim();
+  if (!motivo || motivo.length > 500) throw new PosError("El motivo es obligatorio y debe tener máximo 500 caracteres.", "INVALID_REASON");
+  const [sesion] = await tx.select().from(sesionesCajaTable)
+    .where(eq(sesionesCajaTable.id, input.sesionCajaId)).for("update").limit(1);
+  if (!sesion) throw new PosError("Sesión no encontrada.", "SESSION_NOT_FOUND", 404);
+  if (sesion.ubicacionId !== MARIANA_LOCATION_ID) throw new PosError("Las salidas de dinero solo están autorizadas en Tienda Mariana.", "CASH_OUT_LOCATION_FORBIDDEN", 403);
+  if (sesion.estado !== "ABIERTA") throw new PosError("No se pueden registrar salidas en una sesión cerrada.", "SESSION_CLOSED", 409);
+  if (input.proveedorId != null) {
+    const [proveedor] = await tx.select({ id: proveedoresTable.id, activo: proveedoresTable.activo }).from(proveedoresTable)
+      .where(eq(proveedoresTable.id, input.proveedorId)).limit(1);
+    if (!proveedor || !proveedor.activo) throw new PosError("El proveedor seleccionado no existe o está inactivo.", "PROVIDER_NOT_FOUND", 400);
+  }
+  const [created] = await tx.insert(salidasDineroCajaTable).values({
+    sesionCajaId: sesion.id, monto: decimalMoney(monto), motivo, proveedorId: input.proveedorId ?? null,
+    cuentaOrigen: input.cuentaOrigen, creadoPorId: input.creadoPorId,
+  }).returning();
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.creadoPorId, accion: "SALIDA_DINERO_CAJA", entidad: "salidas_dinero_caja",
+    entidadId: String(created!.id), datosDespues: { ubicacionId: sesion.ubicacionId, sesionCajaId: sesion.id, cuentaOrigen: input.cuentaOrigen, monto: decimalMoney(monto), motivo, proveedorId: input.proveedorId ?? null }, ip: input.ip,
+  });
+  return created!;
 }
 
 export async function cobrarTicket(
@@ -1497,6 +1567,8 @@ export async function listarSesionesCajaHistorial(database: Reader) {
         sql<string>`COALESCE(SUM(CASE WHEN ${ticketsTable.estado} = 'VENDIDO' THEN ${ticketPagosTable.importe} ELSE 0 END), 0)::text`,
       efectivoCobrado:
         sql<string>`COALESCE(SUM(CASE WHEN ${ticketsTable.estado} = 'VENDIDO' AND ${ticketPagosTable.formaPago} = 'EFECTIVO' THEN ${ticketPagosTable.importe} ELSE 0 END), 0)::text`,
+      salidasEfectivo:
+        sql<string>`COALESCE((SELECT SUM(sdc.monto) FROM salidas_dinero_caja sdc WHERE sdc.sesion_caja_id = ${sesionesCajaTable.id} AND sdc.cuenta_origen = 'CAJA_FISICA'), 0)::text`,
     })
     .from(sesionesCajaTable)
     .innerJoin(
@@ -1518,7 +1590,7 @@ export async function listarSesionesCajaHistorial(database: Reader) {
 
   return rows.map((row) => {
     const efectivoEsperadoCents =
-      money(row.fondoInicial) + money(row.efectivoCobrado);
+      money(row.fondoInicial) + money(row.efectivoCobrado) - money(row.salidasEfectivo);
     const efectivoContadoCents =
       row.efectivoContado == null ? null : money(row.efectivoContado);
     return {
@@ -1573,6 +1645,13 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     .from(ticketPagosTable)
     .innerJoin(ticketsTable, eq(ticketPagosTable.ticketId, ticketsTable.id))
     .where(eq(ticketsTable.sesionCajaId, sesion.id));
+  const salidas = await database.select({
+    id: salidasDineroCajaTable.id, sesionCajaId: salidasDineroCajaTable.sesionCajaId, creadoPorId: salidasDineroCajaTable.creadoPorId, monto: salidasDineroCajaTable.monto, motivo: salidasDineroCajaTable.motivo,
+    proveedorId: salidasDineroCajaTable.proveedorId, cuentaOrigen: salidasDineroCajaTable.cuentaOrigen,
+    createdAt: salidasDineroCajaTable.createdAt, proveedor: proveedoresTable.nombre,
+  }).from(salidasDineroCajaTable)
+    .leftJoin(proveedoresTable, eq(salidasDineroCajaTable.proveedorId, proveedoresTable.id))
+    .where(eq(salidasDineroCajaTable.sesionCajaId, sesion.id)).orderBy(salidasDineroCajaTable.createdAt);
 
   const pendientes = (
     await listarTicketsPendientesCaja(database, sesion.ubicacionId)
@@ -1732,6 +1811,12 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       else cuentas.CUENTA_NO_FISCAL += cents;
     }
   }
+  const salidasPorCuenta = { CAJA_FISICA: 0, CUENTA_NO_FISCAL: 0, CUENTA_FISCAL: 0 };
+  for (const salida of salidas) {
+    const cents = money(salida.monto);
+    salidasPorCuenta[salida.cuentaOrigen] += cents;
+    cuentas[salida.cuentaOrigen] -= cents;
+  }
   let subtotalFacturado = 0;
   let ivaFacturado = 0;
   let subtotalNoFacturado = 0;
@@ -1752,7 +1837,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     (total, value) => total + value,
     0,
   );
-  const esperado = money(sesion.fondoInicial) + formas.EFECTIVO;
+  const esperado = money(sesion.fondoInicial) + formas.EFECTIVO - salidasPorCuenta.CAJA_FISICA;
   const contado =
     sesion.efectivoContado == null ? null : money(sesion.efectivoContado);
   return {
@@ -1800,6 +1885,8 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         importe: decimalMoney(cuentas.CUENTAS_POR_COBRAR),
       },
     ],
+    salidas: salidas.map((salida) => ({ ...salida, createdAt: salida.createdAt.toISOString() })),
+    salidasPorCuenta: Object.fromEntries(Object.entries(salidasPorCuenta).map(([cuentaOrigen, cents]) => [cuentaOrigen, decimalMoney(cents)])),
     facturacion: [
       {
         facturado: true,

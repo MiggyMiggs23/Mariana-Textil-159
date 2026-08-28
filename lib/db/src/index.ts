@@ -3,6 +3,7 @@ import pg from "pg";
 import * as schema from "./schema";
 import { assertIsolatedTestDatabaseUrls } from "./lib/test-database-guard";
 export { ensureTicketIvaSchema } from "./lib/ticket-iva-schema";
+export { ensureCashSessionSchema } from "./lib/cash-session-schema";
 export { ensureTicketLineTypesSchema } from "./lib/ticket-line-types-schema";
 export { ensureSalidasSchema } from "./lib/salidas-schema";
 export { ensurePendingCostsSchema } from "./lib/pending-costs-schema";

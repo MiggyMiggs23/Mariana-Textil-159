@@ -4526,10 +4526,73 @@ export interface CorteCancelacion {
   autor: string;
 }
 
+export interface ProveedorCaja {
+  id: number;
+  nombre: string;
+}
+
+export type SalidaDineroCajaInputCuentaOrigen = typeof SalidaDineroCajaInputCuentaOrigen[keyof typeof SalidaDineroCajaInputCuentaOrigen];
+
+
+export const SalidaDineroCajaInputCuentaOrigen = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+} as const;
+
+export interface SalidaDineroCajaInput {
+  /** @pattern ^[0-9]+(\.[0-9]{1,2})?$ */
+  monto: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+  /** @nullable */
+  proveedorId?: number | null;
+  cuentaOrigen: SalidaDineroCajaInputCuentaOrigen;
+}
+
+export type SalidaDineroCaja = SalidaDineroCajaInput & {
+  id: number;
+  sesionCajaId: number;
+  creadoPorId: number;
+  createdAt: string;
+};
+
+export interface SalidasDineroCajaResponse {
+  salidas: SalidaDineroCaja[];
+}
+
+export type CorteCajaSalidasItemCuentaOrigen = typeof CorteCajaSalidasItemCuentaOrigen[keyof typeof CorteCajaSalidasItemCuentaOrigen];
+
+
+export const CorteCajaSalidasItemCuentaOrigen = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+} as const;
+
+export type CorteCajaSalidasItem = {
+  id: number;
+  monto: string;
+  motivo: string;
+  /** @nullable */
+  proveedorId: number | null;
+  cuentaOrigen: CorteCajaSalidasItemCuentaOrigen;
+  createdAt: string;
+  /** @nullable */
+  proveedor: string | null;
+};
+
+export type CorteCajaSalidasPorCuenta = {[key: string]: string};
+
 export interface CorteCaja {
   sesion: SesionCaja;
   formasPago: CorteFormaPago[];
   cuentasDestino: CorteCuentaDestino[];
+  salidas: CorteCajaSalidasItem[];
+  salidasPorCuenta: CorteCajaSalidasPorCuenta;
   /** Desglose facturado y no facturado */
   facturacion: CorteFacturacion[];
   /** Desglose NORMAL y METREADO */

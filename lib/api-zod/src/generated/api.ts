@@ -5611,6 +5611,16 @@ export const ObtenerCorteCajaResponse = zod.object({
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "monto": zod.string(),
+  "motivo": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
+  "createdAt": zod.coerce.date(),
+  "proveedor": zod.string().nullable()
+})),
+  "salidasPorCuenta": zod.record(zod.string(), zod.string()),
   "facturacion": zod.array(zod.object({
   "facturado": zod.boolean(),
   "ticketsCount": zod.number(),
@@ -5712,6 +5722,16 @@ export const CerrarSesionCajaResponse = zod.object({
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "monto": zod.string(),
+  "motivo": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
+  "createdAt": zod.coerce.date(),
+  "proveedor": zod.string().nullable()
+})),
+  "salidasPorCuenta": zod.record(zod.string(), zod.string()),
   "facturacion": zod.array(zod.object({
   "facturado": zod.boolean(),
   "ticketsCount": zod.number(),
@@ -5772,6 +5792,80 @@ export const CerrarSesionCajaResponse = zod.object({
   "margenPorcentaje": zod.string().nullish().describe('Solo presente para ADMIN'),
   "lineasExcluidasMargen": zod.number().optional().describe('Líneas metreadas sin rollo o sin costo, solo para ADMIN')
 })
+
+
+/**
+ * @summary Lista salidas de dinero de una sesión de caja
+ */
+export const ListarSalidasDineroCajaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const listarSalidasDineroCajaResponseSalidasItemOneMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
+export const listarSalidasDineroCajaResponseSalidasItemOneMotivoMax = 500;
+
+
+
+export const ListarSalidasDineroCajaResponse = zod.object({
+  "salidas": zod.array(zod.object({
+  "monto": zod.string().regex(listarSalidasDineroCajaResponseSalidasItemOneMontoRegExp),
+  "motivo": zod.string().min(1).max(listarSalidasDineroCajaResponseSalidasItemOneMotivoMax),
+  "proveedorId": zod.number().nullish(),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL'])
+}).and(zod.object({
+  "id": zod.number(),
+  "sesionCajaId": zod.number(),
+  "creadoPorId": zod.number(),
+  "createdAt": zod.coerce.date()
+})))
+})
+
+
+/**
+ * @summary Registra una salida de dinero de caja en Tienda Mariana
+ */
+export const CrearSalidaDineroCajaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const crearSalidaDineroCajaBodyMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
+export const crearSalidaDineroCajaBodyMotivoMax = 500;
+
+
+
+export const CrearSalidaDineroCajaBody = zod.object({
+  "monto": zod.string().regex(crearSalidaDineroCajaBodyMontoRegExp),
+  "motivo": zod.string().min(1).max(crearSalidaDineroCajaBodyMotivoMax),
+  "proveedorId": zod.number().nullish(),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL'])
+})
+
+export const crearSalidaDineroCajaResponseOneMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
+export const crearSalidaDineroCajaResponseOneMotivoMax = 500;
+
+
+
+export const CrearSalidaDineroCajaResponse = zod.object({
+  "monto": zod.string().regex(crearSalidaDineroCajaResponseOneMontoRegExp),
+  "motivo": zod.string().min(1).max(crearSalidaDineroCajaResponseOneMotivoMax),
+  "proveedorId": zod.number().nullish(),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL'])
+}).and(zod.object({
+  "id": zod.number(),
+  "sesionCajaId": zod.number(),
+  "creadoPorId": zod.number(),
+  "createdAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Catálogo mínimo de proveedores activos para salidas de caja
+ */
+export const ListarProveedoresActivosCajaResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})
+export const ListarProveedoresActivosCajaResponse = zod.array(ListarProveedoresActivosCajaResponseItem)
 
 
 /**
@@ -7155,6 +7249,16 @@ export const GetAdminCorteResponse = zod.object({
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "monto": zod.string(),
+  "motivo": zod.string(),
+  "proveedorId": zod.number().nullable(),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
+  "createdAt": zod.coerce.date(),
+  "proveedor": zod.string().nullable()
+})),
+  "salidasPorCuenta": zod.record(zod.string(), zod.string()),
   "facturacion": zod.array(zod.object({
   "facturado": zod.boolean(),
   "ticketsCount": zod.number(),

@@ -4,6 +4,11 @@ import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import {
   AbrirSesionCajaBody,
   AbrirSesionCajaResponse,
+  CrearSalidaDineroCajaBody,
+  CrearSalidaDineroCajaParams,
+  CrearSalidaDineroCajaResponse,
+  ListarSalidasDineroCajaParams,
+  ListarSalidasDineroCajaResponse,
   BuscarPosQueryParams,
   BuscarPosResponse,
   CancelarTicketBody,
@@ -43,6 +48,7 @@ import {
   ticketsTable,
   ubicacionesTable,
   usuariosTable,
+  proveedoresTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import {
@@ -59,6 +65,7 @@ import {
   buscarPos,
   cancelarTicket,
   cerrarSesionCaja,
+  crearSalidaDineroCaja,
   cobrarTicket,
   crearTicket,
   isInventoryError,
@@ -833,6 +840,54 @@ router.post(
     } catch (error) {
       handlePosError(error, res, next);
     }
+  },
+);
+
+router.get(
+  "/sesiones-caja/:id/salidas-dinero",
+  requierePermiso("cobros_pagos", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const sesionId = ListarSalidasDineroCajaParams.parse(req.params).id;
+      const corte = await buildCorteCaja(db, sesionId);
+      if (!corte) { res.status(404).json({ error: "Sesión no encontrada." }); return; }
+      assertOperationalLocation(req, corte.sesion.ubicacionId);
+      res.json(ListarSalidasDineroCajaResponse.parse({ salidas: corte.salidas }));
+    } catch (error) { handlePosError(error, res, next); }
+  },
+);
+
+router.post(
+  "/sesiones-caja/:id/salidas-dinero",
+  requierePermiso("cobros_pagos", "crear"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const sesionId = CrearSalidaDineroCajaParams.parse(req.params).id;
+      const body = CrearSalidaDineroCajaBody.parse(req.body);
+      const session = await getSesion(sesionId);
+      if (!session) { res.status(404).json({ error: "Sesión no encontrada." }); return; }
+      assertOperationalLocation(req, session.ubicacionId);
+      const salida = await db.transaction((tx) => crearSalidaDineroCaja(tx, {
+        sesionCajaId: sesionId, monto: body.monto, motivo: body.motivo, proveedorId: body.proveedorId,
+        cuentaOrigen: body.cuentaOrigen, creadoPorId: req.auth!.user.id, ip: getRequestIp(req),
+      }));
+      res.status(201).json(CrearSalidaDineroCajaResponse.parse({
+        ...salida, createdAt: salida.createdAt,
+      }));
+    } catch (error) { handlePosError(error, res, next); }
+  },
+);
+
+router.get(
+  "/caja/proveedores-activos",
+  requierePermiso("cobros_pagos", "ver"),
+  async (_req, res, next): Promise<void> => {
+    try {
+      // Deliberately a minimal operational catalog: no balances, contact data, or purchases.
+      const proveedores = await db.select({ id: proveedoresTable.id, nombre: proveedoresTable.nombre })
+        .from(proveedoresTable).where(eq(proveedoresTable.activo, true)).orderBy(proveedoresTable.nombre);
+      res.json(proveedores);
+    } catch (error) { handlePosError(error, res, next); }
   },
 );
 

@@ -5,6 +5,8 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CorteCajaSalidasItem } from './corteCajaSalidasItem';
+import type { CorteCajaSalidasPorCuenta } from './corteCajaSalidasPorCuenta';
 import type { CorteCancelacion } from './corteCancelacion';
 import type { CorteCuentaDestino } from './corteCuentaDestino';
 import type { CorteFacturacion } from './corteFacturacion';
@@ -19,6 +21,8 @@ export interface CorteCaja {
   sesion: SesionCaja;
   formasPago: CorteFormaPago[];
   cuentasDestino: CorteCuentaDestino[];
+  salidas: CorteCajaSalidasItem[];
+  salidasPorCuenta: CorteCajaSalidasPorCuenta;
   /** Desglose facturado y no facturado */
   facturacion: CorteFacturacion[];
   /** Desglose NORMAL y METREADO */

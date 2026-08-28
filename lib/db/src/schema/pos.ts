@@ -29,6 +29,7 @@ import { ubicacionesTable } from "./locations";
 import { productosTable } from "./productos";
 import { rollosTable } from "./rollos";
 import { usuariosTable } from "./users";
+import { proveedoresTable } from "./proveedores";
 
 /** Application-level values stored in tickets.documento_tipo (TEXT). */
 export type DocumentoTipoTicket = "TICKET" | "NOTA";
@@ -48,6 +49,8 @@ export const sesionesCajaTable = pgTable(
     abiertaAt: timestamp("abierta_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    /** Calendar day in the Mexico City operating timezone, not UTC. */
+    fechaOperativa: date("fecha_operativa", { mode: "string" }).notNull(),
     cerradaAt: timestamp("cerrada_at", { withTimezone: true }),
     fondoInicial: numeric("fondo_inicial", {
       precision: 12,
@@ -67,6 +70,39 @@ export const sesionesCajaTable = pgTable(
     uniqueIndex("sesiones_caja_una_abierta_ubicacion_idx")
       .on(table.ubicacionId)
       .where(sql`${table.estado} = 'ABIERTA'`),
+  ],
+);
+
+/** Non-destructive guardian for days opened after the daily-session rule was introduced. */
+export const sesionesCajaDiasTable = pgTable(
+  "sesiones_caja_dias",
+  {
+    ubicacionId: integer("ubicacion_id").notNull().references(() => ubicacionesTable.id),
+    fechaOperativa: date("fecha_operativa", { mode: "string" }).notNull(),
+    sesionCajaId: integer("sesion_caja_id").references(() => sesionesCajaTable.id),
+  },
+  (table) => [uniqueIndex("sesiones_caja_dias_ubicacion_fecha_uidx").on(table.ubicacionId, table.fechaOperativa)],
+);
+
+/** Money disbursed from a cash session; provider payments are Mariana-only in service code. */
+export const salidasDineroCajaTable = pgTable(
+  "salidas_dinero_caja",
+  {
+    id: serial("id").primaryKey(),
+    sesionCajaId: integer("sesion_caja_id").notNull().references(() => sesionesCajaTable.id),
+    monto: numeric("monto", { precision: 12, scale: 2 }).notNull(),
+    motivo: text("motivo").notNull(),
+    proveedorId: integer("proveedor_id").references(() => proveedoresTable.id),
+    cuentaOrigen: text("cuenta_origen").notNull().$type<"CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL">(),
+    creadoPorId: integer("creado_por_id").notNull().references(() => usuariosTable.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("salidas_dinero_caja_sesion_created_idx").on(table.sesionCajaId, table.createdAt),
+    index("salidas_dinero_caja_proveedor_idx").on(table.proveedorId),
+    check("salidas_dinero_caja_monto_check", sql`${table.monto} > 0`),
+    check("salidas_dinero_caja_motivo_check", sql`char_length(trim(${table.motivo})) BETWEEN 1 AND 500`),
+    check("salidas_dinero_caja_cuenta_check", sql`${table.cuentaOrigen} IN ('CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL')`),
   ],
 );
 
