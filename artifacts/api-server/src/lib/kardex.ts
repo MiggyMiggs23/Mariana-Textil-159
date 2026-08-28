@@ -12,8 +12,10 @@ import {
   sql,
   type SQL,
 } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import {
   db,
+  clientesTable,
   entradasTable,
   movimientosTable,
   productosTable,
@@ -26,8 +28,11 @@ import {
   type TipoMovimiento,
 } from "@workspace/db";
 
+const destinoUbicacion = alias(ubicacionesTable, "destino");
+
 export type KardexFiltersInput = {
   tipos?: TipoMovimiento[];
+  modo?: "TODO_LO_QUE_SALIO";
   desde?: Date;
   hasta?: Date;
   ubicacionId?: number;
@@ -37,7 +42,19 @@ export type KardexFiltersInput = {
   incluirUbicacionesInactivas: boolean;
 };
 
+export const TODO_LO_QUE_SALIO_TIPOS = [
+  "VENTA",
+  "TRANSFERENCIA_SALIDA",
+  "SALIDA_MOSTRADOR",
+] as const satisfies readonly TipoMovimiento[];
+
 type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];
+
+export function resolveKardexTipos(filters: KardexFiltersInput) {
+  return filters.modo === "TODO_LO_QUE_SALIO"
+    ? [...TODO_LO_QUE_SALIO_TIPOS]
+    : filters.tipos;
+}
 
 function whereConditions(filters: KardexFiltersInput): SQL[] {
   const conditions: SQL[] = [];
@@ -53,8 +70,9 @@ function whereConditions(filters: KardexFiltersInput): SQL[] {
   if (filters.usuarioId != null) {
     conditions.push(eq(movimientosTable.usuarioId, filters.usuarioId));
   }
-  if (filters.tipos?.length) {
-    conditions.push(inArray(movimientosTable.tipo, filters.tipos));
+  const tipos = resolveKardexTipos(filters);
+  if (tipos?.length) {
+    conditions.push(inArray(movimientosTable.tipo, tipos));
   }
   if (filters.desde) {
     conditions.push(gte(movimientosTable.createdAt, filters.desde));
@@ -254,8 +272,13 @@ async function enrichDocuments(rows: JoinedMovement[]) {
   const [tickets, salidas] = await Promise.all([
     ticketIds.length
       ? db
-          .select({ id: ticketsTable.id, folio: ticketsTable.folio })
+          .select({
+            id: ticketsTable.id,
+            folio: ticketsTable.folio,
+            clienteNombre: clientesTable.nombre,
+          })
           .from(ticketsTable)
+          .innerJoin(clientesTable, eq(ticketsTable.clienteId, clientesTable.id))
           .where(inArray(ticketsTable.id, ticketIds))
       : [],
     salidaIds.length
@@ -264,21 +287,29 @@ async function enrichDocuments(rows: JoinedMovement[]) {
             id: salidasTable.id,
             folio: salidasTable.folio,
             iniciales: ubicacionesTable.iniciales,
+            destinoNombre: destinoUbicacion.nombre,
           })
           .from(salidasTable)
           .innerJoin(
             ubicacionesTable,
             eq(salidasTable.origenId, ubicacionesTable.id),
           )
+          .leftJoin(destinoUbicacion, eq(salidasTable.destinoId, destinoUbicacion.id))
           .where(inArray(salidasTable.id, salidaIds))
       : [],
   ]);
   const ticketMap = new Map(tickets.map((ticket) => [ticket.id, ticket.folio]));
+  const ticketClientMap = new Map(
+    tickets.map((ticket) => [ticket.id, ticket.clienteNombre]),
+  );
   const salidaMap = new Map(
     salidas.map((salida) => [
       salida.id,
       `${salida.iniciales}-${String(salida.folio).padStart(6, "0")}`,
     ]),
+  );
+  const salidaDestinationMap = new Map(
+    salidas.map((salida) => [salida.id, salida.destinoNombre]),
   );
 
   return rows.map((row, index) => {
@@ -305,6 +336,16 @@ async function enrichDocuments(rows: JoinedMovement[]) {
         ? (row.tipo === "TRANSFERENCIA_SALIDA" ? "Salida a sitio" : "Entrada por salida")
         : document.label,
       documentoRuta: salidaInmediata && reference.id ? `/salidas/${reference.id}` : document.route,
+      destinoEtiqueta:
+        row.tipo === "VENTA" && reference.tipo === "TICKET" && reference.id
+          ? (ticketClientMap.get(Number(reference.id)) ?? null)
+          : row.tipo === "TRANSFERENCIA_SALIDA" &&
+              reference.tipo === "SALIDA" &&
+              reference.id
+            ? (salidaDestinationMap.get(Number(reference.id)) ?? null)
+            : row.tipo === "SALIDA_MOSTRADOR"
+              ? "Mostrador"
+              : null,
       referenciaRolloRuta: `/inventario/rollos/${row.rolloId}`,
     };
   });
@@ -362,8 +403,12 @@ export async function getKardex(
   pagination?: { page: number; pageSize: number },
 ) {
   const conditions = whereConditions(filters);
-  const [{ total }] = await db
-    .select({ total: count() })
+  const [{ total, totalMetros, totalKilos }] = await db
+    .select({
+      total: count(),
+      totalMetros: sql<string>`coalesce(sum(abs(${movimientosTable.cantidad})) filter (where ${productosTable.unidad} = 'METRO'), 0)::text`,
+      totalKilos: sql<string>`coalesce(sum(abs(${movimientosTable.cantidad})) filter (where ${productosTable.unidad} = 'KILO'), 0)::text`,
+    })
     .from(movimientosTable)
     .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))
     .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
@@ -382,7 +427,14 @@ export async function getKardex(
         }
       : undefined,
   );
-  return { movimientos: await enrichDocuments(rows), total: total ?? 0 };
+  return {
+    movimientos: await enrichDocuments(rows),
+    total: total ?? 0,
+    resumen: {
+      totalMetros: totalMetros ?? "0",
+      totalKilos: totalKilos ?? "0",
+    },
+  };
 }
 
 export async function listKardexFilters(filters: {

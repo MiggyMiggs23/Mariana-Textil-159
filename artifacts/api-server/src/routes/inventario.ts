@@ -1467,6 +1467,7 @@ function normalizeKardexQuery(query: Record<string, unknown>) {
 
 function kardexFilters(
   query: {
+    modo?: KardexFiltersInput["modo"];
     tipos?: KardexFiltersInput["tipos"];
     desde?: Date;
     hasta?: Date;
@@ -1478,6 +1479,8 @@ function kardexFilters(
   ubicacionId: number | null | undefined,
 ): KardexFiltersInput {
   return {
+    // The lib also enforces this preset so no caller can bypass it.
+    modo: query.modo,
     tipos: query.tipos,
     desde: query.desde,
     hasta: query.hasta,
@@ -1596,6 +1599,7 @@ inventarioRouter.get(
         { header: "Producto", key: "producto", width: 30 },
         { header: "Serie", key: "serie", width: 18 },
         { header: "Ubicación", key: "ubicacion", width: 24 },
+        { header: "Destino", key: "destino", width: 24 },
         { header: "Cantidad", key: "cantidad", width: 14 },
         { header: "Unidad", key: "unidad", width: 12 },
         { header: "Usuario", key: "usuario", width: 24 },
@@ -1626,6 +1630,7 @@ inventarioRouter.get(
           producto: `${movement.telaProducto} - ${movement.colorProducto}`,
           serie: movement.serie,
           ubicacion: movement.nombreUbicacion,
+          destino: movement.destinoEtiqueta ?? "",
           cantidad: toExcelNumber(movement.cantidad),
           unidad: movement.unidadProducto,
           usuario: movement.nombreUsuario,
@@ -1634,7 +1639,7 @@ inventarioRouter.get(
         });
       }
       sheet.getRow(1).font = { bold: true };
-      sheet.autoFilter = { from: "A1", to: "L1" };
+      sheet.autoFilter = { from: "A1", to: "M1" };
       res.setHeader(
         "Content-Type",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

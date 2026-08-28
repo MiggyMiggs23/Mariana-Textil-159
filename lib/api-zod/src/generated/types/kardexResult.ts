@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { KardexHistoryRow } from './kardexHistoryRow';
+import type { KardexResumen } from './kardexResumen';
 
 export interface KardexResult {
   movimientos: KardexHistoryRow[];
@@ -13,4 +14,5 @@ export interface KardexResult {
   page: number;
   pageSize: number;
   totalPages: number;
+  resumen: KardexResumen;
 }

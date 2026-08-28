@@ -97,6 +97,7 @@ export default function Movimientos() {
     productoId: string;
     usuarioId: string;
     tipos: TipoMovimiento[];
+    modo?: "TODO_LO_QUE_SALIO";
     incluirUbicacionesInactivas: boolean;
   }>({
     buscar: "",
@@ -106,6 +107,7 @@ export default function Movimientos() {
     productoId: "all",
     usuarioId: "all",
     tipos: [],
+    modo: undefined,
     incluirUbicacionesInactivas: false
   });
 
@@ -134,6 +136,7 @@ export default function Movimientos() {
   );
 
   const filterParams = {
+    modo: filters.modo,
     ubicacionId: filters.ubicacionId !== "all" ? Number(filters.ubicacionId) : undefined,
     productoId: filters.productoId !== "all" ? Number(filters.productoId) : undefined,
     usuarioId: filters.usuarioId !== "all" ? Number(filters.usuarioId) : undefined,
@@ -189,6 +192,7 @@ export default function Movimientos() {
       productoId: "all",
       usuarioId: "all",
       tipos: [],
+      modo: undefined,
       incluirUbicacionesInactivas: false
     });
     setPage(1);
@@ -232,6 +236,25 @@ export default function Movimientos() {
           </CardHeader>
           <CardContent className="pt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="space-y-1.5">
+                <Label>Vista rápida</Label>
+                <Button
+                  type="button"
+                  variant={filters.modo === "TODO_LO_QUE_SALIO" ? "default" : "outline"}
+                  className="w-full justify-start gap-2"
+                  onClick={() => {
+                    setFilters(f => ({
+                      ...f,
+                      modo: f.modo === "TODO_LO_QUE_SALIO" ? undefined : "TODO_LO_QUE_SALIO"
+                    }));
+                    setPage(1);
+                  }}
+                  data-testid="button-modo-todo-lo-que-salio"
+                >
+                  <History className="w-4 h-4" />
+                  Todo lo que salió
+                </Button>
+              </div>
               <div className="space-y-1.5 xl:col-span-2">
                 <Label>Buscar</Label>
                 <div className="relative">
@@ -415,7 +438,7 @@ export default function Movimientos() {
               <p className="text-sm text-muted-foreground max-w-sm">
                 No se encontraron movimientos que coincidan con los filtros seleccionados. Intenta ajustar tu búsqueda.
               </p>
-              {(filters.buscar || filters.tipos.length > 0 || filters.productoId !== 'all' || filters.ubicacionId !== 'all' || filters.usuarioId !== 'all' || filters.desde || filters.hasta) && (
+              {(filters.modo || filters.buscar || filters.tipos.length > 0 || filters.productoId !== 'all' || filters.ubicacionId !== 'all' || filters.usuarioId !== 'all' || filters.desde || filters.hasta) && (
                 <Button variant="outline" size="sm" className="mt-4" onClick={handleClearFilters} data-testid="button-clear-filters-empty">
                   Limpiar filtros
                 </Button>
@@ -434,6 +457,7 @@ export default function Movimientos() {
                         <TableHead className="min-w-[180px]">Producto</TableHead>
                         <TableHead className="whitespace-nowrap">Rollo / Serie</TableHead>
                         <TableHead className="whitespace-nowrap">Sitio</TableHead>
+                        <TableHead className="whitespace-nowrap">Destino</TableHead>
                         <TableHead className="text-right whitespace-nowrap">Cantidad</TableHead>
                         <TableHead className="whitespace-nowrap">Usuario</TableHead>
                         <TableHead className="whitespace-nowrap">Documento</TableHead>
@@ -470,6 +494,11 @@ export default function Movimientos() {
                                 <span className="font-medium text-sm text-foreground">{row.nombreUbicacion}</span>
                                 {!row.ubicacionActiva && <Badge variant="secondary" className="text-[10px] h-4 px-1.5 font-medium py-0 border-transparent bg-muted text-muted-foreground">Inactiva</Badge>}
                               </div>
+                            </TableCell>
+                            <TableCell className="align-top py-3">
+                              <span className="text-sm font-medium text-foreground">
+                                {row.destinoEtiqueta ?? "—"}
+                              </span>
                             </TableCell>
                             <TableCell className="align-top py-3 text-right">
                               <div className={`font-bold text-sm tracking-tight ${cantColor}`}>
@@ -563,6 +592,11 @@ export default function Movimientos() {
                         </div>
 
                         <div>
+                          <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Destino</span>
+                          <div className="font-medium text-foreground truncate">{row.destinoEtiqueta ?? "—"}</div>
+                        </div>
+
+                        <div>
                           <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Documento</span>
                           {row.documentoRuta ? (
                             <a
@@ -588,6 +622,21 @@ export default function Movimientos() {
                     </div>
                   );
                 })}
+              </div>
+
+              <div className="flex justify-end gap-3 text-right tabular-nums">
+                <Card className="min-w-[150px]">
+                  <CardContent className="p-3">
+                    <div className="text-xs font-medium text-muted-foreground">Total metros</div>
+                    <div className="font-bold">{formatNumber(data.resumen.totalMetros, { kind: "quantity" })} <span className="text-xs font-normal">metro</span></div>
+                  </CardContent>
+                </Card>
+                <Card className="min-w-[150px]">
+                  <CardContent className="p-3">
+                    <div className="text-xs font-medium text-muted-foreground">Total kilos</div>
+                    <div className="font-bold">{formatNumber(data.resumen.totalKilos, { kind: "quantity" })} <span className="text-xs font-normal">kilo</span></div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Pagination */}

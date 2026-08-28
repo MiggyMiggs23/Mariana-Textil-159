@@ -5,9 +5,14 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ExportKardexXlsxModo } from './exportKardexXlsxModo';
 import type { TipoMovimiento } from './tipoMovimiento';
 
 export type ExportKardexXlsxParams = {
+/**
+ * Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.
+ */
+modo?: ExportKardexXlsxModo;
 tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;

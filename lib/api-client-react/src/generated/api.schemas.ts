@@ -3118,6 +3118,8 @@ export interface KardexHistoryRow {
   documentoEtiqueta: string | null;
   /** @nullable */
   documentoRuta: string | null;
+  /** @nullable */
+  destinoEtiqueta: string | null;
   referenciaRolloRuta: string;
   /** @nullable */
   movimientoOrigenId: number | null;
@@ -3130,12 +3132,20 @@ export interface KardexHistoryRow {
   revisadoAt: string | null;
 }
 
+export interface KardexResumen {
+  /** Suma absoluta de cantidades METRO del resultado filtrado completo. */
+  totalMetros: string;
+  /** Suma absoluta de cantidades KILO del resultado filtrado completo. */
+  totalKilos: string;
+}
+
 export interface KardexResult {
   movimientos: KardexHistoryRow[];
   total: number;
   page: number;
   pageSize: number;
   totalPages: number;
+  resumen: KardexResumen;
 }
 
 export interface KardexFilterProduct {
@@ -4959,6 +4969,10 @@ includeSinExistencia?: boolean;
 };
 
 export type GetKardexParams = {
+/**
+ * Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.
+ */
+modo?: GetKardexModo;
 tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
@@ -4978,11 +4992,22 @@ page?: number;
 pageSize?: number;
 };
 
+export type GetKardexModo = typeof GetKardexModo[keyof typeof GetKardexModo];
+
+
+export const GetKardexModo = {
+  TODO_LO_QUE_SALIO: 'TODO_LO_QUE_SALIO',
+} as const;
+
 export type ListKardexFiltersParams = {
 incluirUbicacionesInactivas?: boolean;
 };
 
 export type ExportKardexXlsxParams = {
+/**
+ * Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.
+ */
+modo?: ExportKardexXlsxModo;
 tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
@@ -4992,6 +5017,13 @@ hasta?: string;
 buscar?: string;
 incluirUbicacionesInactivas?: boolean;
 };
+
+export type ExportKardexXlsxModo = typeof ExportKardexXlsxModo[keyof typeof ExportKardexXlsxModo];
+
+
+export const ExportKardexXlsxModo = {
+  TODO_LO_QUE_SALIO: 'TODO_LO_QUE_SALIO',
+} as const;
 
 export type GetConciliacionParams = {
 productoId?: number;

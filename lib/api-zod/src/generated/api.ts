@@ -3142,6 +3142,7 @@ export const getKardexQueryPageSizeMax = 100;
 
 
 export const GetKardexQueryParams = zod.object({
+  "modo": zod.enum(['TODO_LO_QUE_SALIO']).optional().describe('Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.'),
   "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
@@ -3178,6 +3179,7 @@ export const GetKardexResponse = zod.object({
   "documentoId": zod.string().nullable(),
   "documentoEtiqueta": zod.string().nullable(),
   "documentoRuta": zod.string().nullable(),
+  "destinoEtiqueta": zod.string().nullable(),
   "referenciaRolloRuta": zod.string(),
   "movimientoOrigenId": zod.number().nullable(),
   "justificacion": zod.string().nullable(),
@@ -3188,7 +3190,11 @@ export const GetKardexResponse = zod.object({
   "total": zod.number(),
   "page": zod.number(),
   "pageSize": zod.number(),
-  "totalPages": zod.number()
+  "totalPages": zod.number(),
+  "resumen": zod.object({
+  "totalMetros": zod.string().describe('Suma absoluta de cantidades METRO del resultado filtrado completo.'),
+  "totalKilos": zod.string().describe('Suma absoluta de cantidades KILO del resultado filtrado completo.')
+})
 })
 
 
@@ -3229,6 +3235,7 @@ export const ListKardexFiltersResponse = zod.object({
 export const exportKardexXlsxQueryIncluirUbicacionesInactivasDefault = false;
 
 export const ExportKardexXlsxQueryParams = zod.object({
+  "modo": zod.enum(['TODO_LO_QUE_SALIO']).optional().describe('Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.'),
   "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),

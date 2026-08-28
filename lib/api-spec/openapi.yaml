@@ -1872,6 +1872,12 @@ paths:
       summary: Historial completo de movimientos, filtrable y paginado
       parameters:
         - in: query
+          name: modo
+          description: Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.
+          schema:
+            type: string
+            enum: [TODO_LO_QUE_SALIO]
+        - in: query
           name: tipos
           style: form
           explode: true
@@ -1943,6 +1949,12 @@ paths:
       tags: [inventario]
       summary: Exporta el historial filtrado como XLSX
       parameters:
+        - in: query
+          name: modo
+          description: Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.
+          schema:
+            type: string
+            enum: [TODO_LO_QUE_SALIO]
         - in: query
           name: tipos
           style: form
@@ -7935,7 +7947,7 @@ components:
         cantidadTotal: { type: string }
     KardexResult:
       type: object
-      required: [movimientos, total, page, pageSize, totalPages]
+      required: [movimientos, total, page, pageSize, totalPages, resumen]
       properties:
         movimientos:
           type: array
@@ -7945,6 +7957,18 @@ components:
         page: { type: number }
         pageSize: { type: number }
         totalPages: { type: number }
+        resumen:
+          $ref: "#/components/schemas/KardexResumen"
+    KardexResumen:
+      type: object
+      required: [totalMetros, totalKilos]
+      properties:
+        totalMetros:
+          type: string
+          description: Suma absoluta de cantidades METRO del resultado filtrado completo.
+        totalKilos:
+          type: string
+          description: Suma absoluta de cantidades KILO del resultado filtrado completo.
     KardexHistoryRow:
       type: object
       required:
@@ -7971,6 +7995,7 @@ components:
           documentoId,
           documentoEtiqueta,
           documentoRuta,
+          destinoEtiqueta,
           referenciaRolloRuta,
           movimientoOrigenId,
           justificacion,
@@ -8002,6 +8027,7 @@ components:
         documentoId: { type: ["string", "null"] }
         documentoEtiqueta: { type: ["string", "null"] }
         documentoRuta: { type: ["string", "null"] }
+        destinoEtiqueta: { type: ["string", "null"] }
         referenciaRolloRuta: { type: string }
         movimientoOrigenId: { type: ["number", "null"] }
         justificacion: { type: ["string", "null"] }

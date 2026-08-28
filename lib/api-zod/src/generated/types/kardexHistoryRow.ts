@@ -34,6 +34,8 @@ export interface KardexHistoryRow {
   documentoEtiqueta: string | null;
   /** @nullable */
   documentoRuta: string | null;
+  /** @nullable */
+  destinoEtiqueta: string | null;
   referenciaRolloRuta: string;
   /** @nullable */
   movimientoOrigenId: number | null;
