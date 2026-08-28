@@ -12,7 +12,8 @@
     "push": "drizzle-kit push --config ./drizzle.config.ts",
     "push-force": "drizzle-kit push --force --config ./drizzle.config.ts",
     "seed": "node ./src/seed.mjs",
-    "verify-connection": "node ./src/verify-connection.mjs"
+    "verify-connection": "node ./src/verify-connection.mjs",
+    "cleanup:bloque-7": "node ./src/scripts/cleanup-bloque-7.mjs"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
