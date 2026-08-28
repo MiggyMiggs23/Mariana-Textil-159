@@ -24,6 +24,7 @@ import type {
   AdminAlertas,
   AdminComparacionTiendas,
   AdminCortesResult,
+  AdminCuadreFiscal,
   AdminCuentaDestinoMovimientos,
   AdminCuentasDestino,
   AdminDiferencias,
@@ -97,6 +98,10 @@ import type {
   CrearReimpresionEtiquetas201,
   CrearReimpresionEtiquetasBody,
   CreateClienteAjuste201,
+  CuadreFiscalDiferenciaInput,
+  CuadreFiscalPeriodoInput,
+  CuadreFiscalRegistro,
+  CuadreFiscalResolucionInput,
   CurrentUser,
   Dashboard,
   EntradaDetail,
@@ -125,6 +130,7 @@ import type {
   ExportarSalidasParams,
   ForbiddenResponse,
   GetAdminComparacionTiendasParams,
+  GetAdminCuadreFiscalParams,
   GetAdminCuentasDestinoParams,
   GetAdminDiferenciasParams,
   GetAdminRealtimeDashboardParams,
@@ -14339,6 +14345,304 @@ export function useListAdminCuentaDestinoMovimientos<TData = Awaited<ReturnType<
 
 
 
+
+export const getGetAdminCuadreFiscalUrl = (params?: GetAdminCuadreFiscalParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/cuadre-fiscal?${stringifiedParams}` : `/api/admin/cuadre-fiscal`
+}
+
+/**
+ * @summary Cifras actuales e histórico del cuadre fiscal
+ */
+export const getAdminCuadreFiscal = async (params?: GetAdminCuadreFiscalParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminCuadreFiscal> => {
+
+  return customFetch<AdminCuadreFiscal>(getGetAdminCuadreFiscalUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminCuadreFiscalQueryKey = (params?: GetAdminCuadreFiscalParams,) => {
+    return [
+    `/api/admin/cuadre-fiscal`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAdminCuadreFiscalQueryOptions = <TData = Awaited<ReturnType<typeof getAdminCuadreFiscal>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetAdminCuadreFiscalParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminCuadreFiscal>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminCuadreFiscalQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminCuadreFiscal>>> = ({ signal }) => getAdminCuadreFiscal(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminCuadreFiscal>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminCuadreFiscalQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminCuadreFiscal>>>
+export type GetAdminCuadreFiscalQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Cifras actuales e histórico del cuadre fiscal
+ */
+
+export function useGetAdminCuadreFiscal<TData = Awaited<ReturnType<typeof getAdminCuadreFiscal>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetAdminCuadreFiscalParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminCuadreFiscal>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminCuadreFiscalQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateAdminCuadreFiscalConfirmacionUrl = () => {
+
+
+
+
+  return `/api/admin/cuadre-fiscal/confirmaciones`
+}
+
+/**
+ * @summary Confirma la cifra facturada congelada
+ */
+export const createAdminCuadreFiscalConfirmacion = async (cuadreFiscalPeriodoInput: CuadreFiscalPeriodoInput, options?: Parameters<typeof customFetch>[1]): Promise<CuadreFiscalRegistro> => {
+
+  return customFetch<CuadreFiscalRegistro>(getCreateAdminCuadreFiscalConfirmacionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(cuadreFiscalPeriodoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateAdminCuadreFiscalConfirmacionMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminCuadreFiscalConfirmacion>>, TError,{data: BodyType<CuadreFiscalPeriodoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAdminCuadreFiscalConfirmacion>>, TError,{data: BodyType<CuadreFiscalPeriodoInput>}, TContext> => {
+
+const mutationKey = ['createAdminCuadreFiscalConfirmacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAdminCuadreFiscalConfirmacion>>, {data: BodyType<CuadreFiscalPeriodoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAdminCuadreFiscalConfirmacion(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAdminCuadreFiscalConfirmacionMutationResult = NonNullable<Awaited<ReturnType<typeof createAdminCuadreFiscalConfirmacion>>>
+    export type CreateAdminCuadreFiscalConfirmacionMutationBody = BodyType<CuadreFiscalPeriodoInput>
+    export type CreateAdminCuadreFiscalConfirmacionMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse>
+
+    /**
+ * @summary Confirma la cifra facturada congelada
+ */
+export const useCreateAdminCuadreFiscalConfirmacion = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminCuadreFiscalConfirmacion>>, TError,{data: BodyType<CuadreFiscalPeriodoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAdminCuadreFiscalConfirmacion>>,
+        TError,
+        {data: BodyType<CuadreFiscalPeriodoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAdminCuadreFiscalConfirmacionMutationOptions(options));
+    }
+
+export const getCreateAdminCuadreFiscalDiferenciaUrl = () => {
+
+
+
+
+  return `/api/admin/cuadre-fiscal/diferencias`
+}
+
+/**
+ * @summary Reporta una diferencia fiscal
+ */
+export const createAdminCuadreFiscalDiferencia = async (cuadreFiscalDiferenciaInput: CuadreFiscalDiferenciaInput, options?: Parameters<typeof customFetch>[1]): Promise<CuadreFiscalRegistro> => {
+
+  return customFetch<CuadreFiscalRegistro>(getCreateAdminCuadreFiscalDiferenciaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(cuadreFiscalDiferenciaInput)
+  }
+);}
+
+
+
+
+
+export const getCreateAdminCuadreFiscalDiferenciaMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminCuadreFiscalDiferencia>>, TError,{data: BodyType<CuadreFiscalDiferenciaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAdminCuadreFiscalDiferencia>>, TError,{data: BodyType<CuadreFiscalDiferenciaInput>}, TContext> => {
+
+const mutationKey = ['createAdminCuadreFiscalDiferencia'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAdminCuadreFiscalDiferencia>>, {data: BodyType<CuadreFiscalDiferenciaInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAdminCuadreFiscalDiferencia(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAdminCuadreFiscalDiferenciaMutationResult = NonNullable<Awaited<ReturnType<typeof createAdminCuadreFiscalDiferencia>>>
+    export type CreateAdminCuadreFiscalDiferenciaMutationBody = BodyType<CuadreFiscalDiferenciaInput>
+    export type CreateAdminCuadreFiscalDiferenciaMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse>
+
+    /**
+ * @summary Reporta una diferencia fiscal
+ */
+export const useCreateAdminCuadreFiscalDiferencia = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminCuadreFiscalDiferencia>>, TError,{data: BodyType<CuadreFiscalDiferenciaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAdminCuadreFiscalDiferencia>>,
+        TError,
+        {data: BodyType<CuadreFiscalDiferenciaInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAdminCuadreFiscalDiferenciaMutationOptions(options));
+    }
+
+export const getResolveAdminCuadreFiscalDiferenciaUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/cuadre-fiscal/diferencias/${id}/resolver`
+}
+
+/**
+ * @summary Resuelve una diferencia fiscal (ADMIN)
+ */
+export const resolveAdminCuadreFiscalDiferencia = async (id: number,
+    cuadreFiscalResolucionInput: CuadreFiscalResolucionInput, options?: Parameters<typeof customFetch>[1]): Promise<CuadreFiscalRegistro> => {
+
+  return customFetch<CuadreFiscalRegistro>(getResolveAdminCuadreFiscalDiferenciaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(cuadreFiscalResolucionInput)
+  }
+);}
+
+
+
+
+
+export const getResolveAdminCuadreFiscalDiferenciaMutationOptions = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolveAdminCuadreFiscalDiferencia>>, TError,{id: number;data: BodyType<CuadreFiscalResolucionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resolveAdminCuadreFiscalDiferencia>>, TError,{id: number;data: BodyType<CuadreFiscalResolucionInput>}, TContext> => {
+
+const mutationKey = ['resolveAdminCuadreFiscalDiferencia'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resolveAdminCuadreFiscalDiferencia>>, {id: number;data: BodyType<CuadreFiscalResolucionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  resolveAdminCuadreFiscalDiferencia(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResolveAdminCuadreFiscalDiferenciaMutationResult = NonNullable<Awaited<ReturnType<typeof resolveAdminCuadreFiscalDiferencia>>>
+    export type ResolveAdminCuadreFiscalDiferenciaMutationBody = BodyType<CuadreFiscalResolucionInput>
+    export type ResolveAdminCuadreFiscalDiferenciaMutationError = ErrorType<ValidationErrorResponse | ForbiddenResponse>
+
+    /**
+ * @summary Resuelve una diferencia fiscal (ADMIN)
+ */
+export const useResolveAdminCuadreFiscalDiferencia = <TError = ErrorType<ValidationErrorResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolveAdminCuadreFiscalDiferencia>>, TError,{id: number;data: BodyType<CuadreFiscalResolucionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resolveAdminCuadreFiscalDiferencia>>,
+        TError,
+        {id: number;data: BodyType<CuadreFiscalResolucionInput>},
+        TContext
+      > => {
+      return useMutation(getResolveAdminCuadreFiscalDiferenciaMutationOptions(options));
+    }
 
 export const getGetAdminComparacionTiendasUrl = (params: GetAdminComparacionTiendasParams,) => {
   const normalizedParams = new URLSearchParams();

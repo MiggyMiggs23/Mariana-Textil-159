@@ -24,6 +24,7 @@ import {
   ensureViajesSchema,
   ensureAuditoriaInventarioSchema,
   ensurePisosSchema,
+  ensureCuadreFiscalSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -77,6 +78,7 @@ async function startServer() {
   logger.info("Iniciales y folios por sitio verificados");
   await ensurePendingCostsSchema(pool);
   await ensureAdminAnalyticsSchema(pool);
+  await ensureCuadreFiscalSchema(pool);
   await ensureEtiquetasSchema(pool);
   logger.info("Esquema de Etiquetas verificado");
   logger.info("Esquema de costos pendientes verificado");

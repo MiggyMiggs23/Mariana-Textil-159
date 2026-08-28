@@ -1126,6 +1126,93 @@ export interface AdminCuentaDestinoRow {
   operaciones: number;
 }
 
+export interface CuadreFiscalPeriodoInput {
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  desde: string;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  hasta: string;
+  ubicacionId?: number;
+}
+
+export type CuadreFiscalDiferenciaInputDireccion = typeof CuadreFiscalDiferenciaInputDireccion[keyof typeof CuadreFiscalDiferenciaInputDireccion];
+
+
+export const CuadreFiscalDiferenciaInputDireccion = {
+  MAS: 'MAS',
+  MENOS: 'MENOS',
+} as const;
+
+export type CuadreFiscalDiferenciaInput = CuadreFiscalPeriodoInput & {
+  direccion: CuadreFiscalDiferenciaInputDireccion;
+  /** @exclusiveMinimum 0 */
+  monto: number;
+  /** @minLength 20 */
+  descripcion: string;
+};
+
+export interface CuadreFiscalResolucionInput {
+  /** @minLength 1 */
+  nota: string;
+}
+
+export type CuadreFiscalRegistroTipo = typeof CuadreFiscalRegistroTipo[keyof typeof CuadreFiscalRegistroTipo];
+
+
+export const CuadreFiscalRegistroTipo = {
+  CONFIRMACION: 'CONFIRMACION',
+  DIFERENCIA: 'DIFERENCIA',
+} as const;
+
+export type CuadreFiscalRegistroEstado = typeof CuadreFiscalRegistroEstado[keyof typeof CuadreFiscalRegistroEstado];
+
+
+export const CuadreFiscalRegistroEstado = {
+  CONFIRMADA: 'CONFIRMADA',
+  PENDIENTE: 'PENDIENTE',
+  RESUELTA: 'RESUELTA',
+} as const;
+
+/**
+ * @nullable
+ */
+export type CuadreFiscalRegistroDireccion = typeof CuadreFiscalRegistroDireccion[keyof typeof CuadreFiscalRegistroDireccion] | null;
+
+
+export const CuadreFiscalRegistroDireccion = {
+  MAS: 'MAS',
+  MENOS: 'MENOS',
+} as const;
+
+export interface CuadreFiscalRegistro {
+  id: number;
+  tipo: CuadreFiscalRegistroTipo;
+  desde: string;
+  hasta: string;
+  facturadoCongelado: string;
+  actor: string;
+  creadoAt: string;
+  estado: CuadreFiscalRegistroEstado;
+  /** @nullable */
+  direccion?: CuadreFiscalRegistroDireccion;
+  /** @nullable */
+  monto?: string | null;
+  /** @nullable */
+  descripcion?: string | null;
+  /** @nullable */
+  notaResolucion?: string | null;
+  /** @nullable */
+  resueltoPor?: string | null;
+  /** @nullable */
+  resueltoAt?: string | null;
+}
+
+export interface AdminCuadreFiscal {
+  facturado: string;
+  cobradoCuentaFiscal: string;
+  porCobrarFiscal: string;
+  historial: CuadreFiscalRegistro[];
+}
+
 export type AdminCuentaDestinoMovimientoDocumentoTipo = typeof AdminCuentaDestinoMovimientoDocumentoTipo[keyof typeof AdminCuentaDestinoMovimientoDocumentoTipo];
 
 
@@ -5721,6 +5808,20 @@ page?: number;
  * @maximum 100
  */
 pageSize?: number;
+};
+
+export type GetAdminCuadreFiscalParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
 };
 
 export type GetAdminComparacionTiendasParams = {

@@ -26,11 +26,21 @@ import {
   GetAdminRealtimePendingResponse,
   ListAdminCortesQueryParams,
   ListAdminCortesResponse,
+  GetAdminCuadreFiscalQueryParams,
+  GetAdminCuadreFiscalResponse,
+  CreateAdminCuadreFiscalConfirmacionBody,
+  CreateAdminCuadreFiscalConfirmacionResponse,
+  CreateAdminCuadreFiscalDiferenciaBody,
+  CreateAdminCuadreFiscalDiferenciaResponse,
+  ResolveAdminCuadreFiscalDiferenciaParams,
+  ResolveAdminCuadreFiscalDiferenciaBody,
+  ResolveAdminCuadreFiscalDiferenciaResponse,
 } from "@workspace/api-zod";
 import { EXCEL_NUMBER_FORMAT, formatAccountDestination, formatNumber, toExcelNumber } from "@workspace/number-format";
 import { requireRole, requireSession } from "../middlewares/auth";
+import { getRequestIp } from "../lib/request";
 import { buildCorteCaja } from "../lib/pos";
-import { db } from "@workspace/db";
+import { db, pool } from "@workspace/db";
 import { createTextPdf } from "../lib/pdf";
 import {
   AnalyticsInputError,
@@ -175,6 +185,84 @@ router.get("/admin/cuentas-destino/:cuentaDestino/movimientos", async (req, res,
   } catch (error) {
     if (!badInput(error, res)) next(error);
   }
+});
+
+async function fiscalFigures(filters: ReturnType<typeof parseAnalyticsFilters>) {
+  const values = [filters.desde?.toISOString() ?? null, filters.hasta?.toISOString() ?? null, filters.ubicacionId ?? null];
+  const [invoiced, collected, receivable] = await Promise.all([
+    pool.query(`SELECT COALESCE(SUM(t.total),0)::text amount FROM tickets t WHERE t.estado='VENDIDO' AND t.facturado
+      AND ($1::timestamptz IS NULL OR t.created_at >= $1) AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
+    pool.query(`SELECT COALESCE(SUM(p.importe),0)::text amount FROM tickets t JOIN ticket_pagos p ON p.ticket_id=t.id
+      WHERE t.estado='VENDIDO' AND t.cobrado AND t.facturado AND p.forma_pago='TRANSFERENCIA'
+      AND ($1::timestamptz IS NULL OR t.cobrado_at >= $1) AND ($2::timestamptz IS NULL OR t.cobrado_at <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
+    pool.query(`SELECT COALESCE(SUM(m.importe-COALESCE(a.aplicado,0)),0)::text amount
+      FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
+      LEFT JOIN LATERAL (SELECT SUM(importe) aplicado FROM aplicaciones_credito WHERE venta_movimiento_id=m.id) a ON true
+      WHERE m.tipo='VENTA_CREDITO' AND t.facturado AND t.estado='VENDIDO'
+      AND ($1::timestamptz IS NULL OR t.created_at >= $1) AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
+  ]);
+  return { facturado: Number(invoiced.rows[0]!.amount).toFixed(2), cobradoCuentaFiscal: Number(collected.rows[0]!.amount).toFixed(2), porCobrarFiscal: Number(receivable.rows[0]!.amount).toFixed(2) };
+}
+
+function presentFiscalRecord(row: any) {
+  return { id: Number(row.id), tipo: row.tipo, desde: String(row.desde).slice(0, 10), hasta: String(row.hasta).slice(0, 10),
+    facturadoCongelado: Number(row.facturado_congelado).toFixed(2), actor: row.actor, creadoAt: new Date(row.created_at).toISOString(),
+    estado: row.estado, direccion: row.direccion, monto: row.monto == null ? null : Number(row.monto).toFixed(2),
+    descripcion: row.descripcion, notaResolucion: row.nota_resolucion, resueltoPor: row.resuelto_por,
+    resueltoAt: row.resuelto_at ? new Date(row.resuelto_at).toISOString() : null };
+}
+
+router.get("/admin/cuadre-fiscal", requireRole("ADMIN", "CONTADOR", "SISTEMAS"), async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminCuadreFiscalQueryParams.parse(req.query);
+    const filters = parseAnalyticsFilters(query);
+    const [figures, history] = await Promise.all([fiscalFigures(filters), pool.query(
+      `SELECT r.*,u.nombre actor,ru.nombre resuelto_por FROM cuadre_fiscal_registros r JOIN usuarios u ON u.id=r.actor_id
+       LEFT JOIN usuarios ru ON ru.id=r.resuelto_por_id ORDER BY r.created_at DESC,r.id DESC`)]);
+    res.json(GetAdminCuadreFiscalResponse.parse({ ...figures, historial: history.rows.map(presentFiscalRecord) }));
+  } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+async function createFiscalRecord(req: any, res: any, input: { desde: string; hasta: string; ubicacionId?: number; direccion?: "MAS" | "MENOS"; monto?: number; descripcion?: string }, type: "CONFIRMACION" | "DIFERENCIA") {
+  const filters = parseAnalyticsFilters(input);
+  const figures = await fiscalFigures(filters);
+  const user = req.auth!.user;
+  const client = await pool.connect();
+  await client.query("BEGIN");
+  try {
+    const row = await client.query(`INSERT INTO cuadre_fiscal_registros(tipo,desde,hasta,ubicacion_id,facturado_congelado,actor_id,direccion,monto,descripcion,estado)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`, [type, input.desde, input.hasta, input.ubicacionId ?? null, figures.facturado, user.id, input.direccion ?? null, input.monto ?? null, input.descripcion ?? null, type === "CONFIRMACION" ? "CONFIRMADA" : "PENDIENTE"]);
+    const record = row.rows[0]!;
+    await client.query(`INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,datos_despues,ip) VALUES($1,$2,'cuadre_fiscal_registros',$3,$4,$5)`,
+      [user.id, type === "CONFIRMACION" ? "CONFIRMAR_CUADRE_FISCAL" : "REPORTAR_DIFERENCIA_FISCAL", String(record.id), JSON.stringify({ ...input, facturadoCongelado: figures.facturado }), getRequestIp(req)]);
+    if (type === "DIFERENCIA") await client.query(`INSERT INTO notificaciones_sistema(tipo,titulo,mensaje,entidad,entidad_id) VALUES('SOLICITUD_CUADRE_FISCAL','Solicitud: diferencia fiscal',$1,'cuadre_fiscal_registros',$2)`, [`${user.nombre} reportó ${input.direccion} $${input.monto}: ${input.descripcion}`, String(record.id)]);
+    await client.query("COMMIT");
+    const full = { ...record, actor: user.nombre, resuelto_por: null };
+    res.status(201).json((type === "CONFIRMACION" ? CreateAdminCuadreFiscalConfirmacionResponse : CreateAdminCuadreFiscalDiferenciaResponse).parse(presentFiscalRecord(full)));
+  } catch (error) { await client.query("ROLLBACK"); throw error; } finally { client.release(); }
+}
+router.post("/admin/cuadre-fiscal/confirmaciones", requireRole("ADMIN", "CONTADOR"), async (req, res, next): Promise<void> => { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalConfirmacionBody.parse(req.body),"CONFIRMACION"); } catch(error) { if(!badInput(error,res)) next(error); } });
+router.post("/admin/cuadre-fiscal/diferencias", requireRole("ADMIN", "CONTADOR"), async (req, res, next): Promise<void> => { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalDiferenciaBody.parse(req.body),"DIFERENCIA"); } catch(error) { if(!badInput(error,res)) next(error); } });
+router.post("/admin/cuadre-fiscal/diferencias/:id/resolver", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
+  try {
+    const { id } = ResolveAdminCuadreFiscalDiferenciaParams.parse(req.params);
+    const { nota } = ResolveAdminCuadreFiscalDiferenciaBody.parse(req.body);
+    const user = req.auth!.user;
+    const client = await pool.connect();
+    await client.query("BEGIN");
+    try {
+      const updated = await client.query(`UPDATE cuadre_fiscal_registros SET estado='RESUELTA',nota_resolucion=$1,resuelto_por_id=$2,resuelto_at=now()
+        WHERE id=$3 AND tipo='DIFERENCIA' AND estado='PENDIENTE' RETURNING *`, [nota, user.id, id]);
+      if (!updated.rows[0]) { await client.query("ROLLBACK"); res.status(404).json({ error: "Diferencia pendiente no encontrada." }); return; }
+      await client.query(`INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,datos_despues,ip) VALUES($1,'RESOLVER_DIFERENCIA_FISCAL','cuadre_fiscal_registros',$2,$3,$4)`,
+        [user.id, String(id), JSON.stringify({ nota }), getRequestIp(req)]);
+      await client.query("COMMIT");
+      res.json(ResolveAdminCuadreFiscalDiferenciaResponse.parse(presentFiscalRecord({ ...updated.rows[0], actor: "", resuelto_por: user.nombre })));
+    } catch (error) { await client.query("ROLLBACK"); throw error; } finally { client.release(); }
+  } catch (error) { if (!badInput(error, res)) next(error); }
 });
 
 router.get("/admin/comparacion-tiendas", async (req, res, next): Promise<void> => {

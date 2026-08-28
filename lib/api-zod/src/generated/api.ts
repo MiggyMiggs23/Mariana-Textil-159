@@ -7760,6 +7760,147 @@ export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
 
 
 /**
+ * @summary Cifras actuales e histórico del cuadre fiscal
+ */
+export const getAdminCuadreFiscalQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getAdminCuadreFiscalQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetAdminCuadreFiscalQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getAdminCuadreFiscalQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getAdminCuadreFiscalQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional()
+})
+
+export const GetAdminCuadreFiscalResponse = zod.object({
+  "facturado": zod.string(),
+  "cobradoCuentaFiscal": zod.string(),
+  "porCobrarFiscal": zod.string(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CONFIRMACION', 'DIFERENCIA']),
+  "desde": zod.string(),
+  "hasta": zod.string(),
+  "facturadoCongelado": zod.string(),
+  "actor": zod.string(),
+  "creadoAt": zod.coerce.date(),
+  "estado": zod.enum(['CONFIRMADA', 'PENDIENTE', 'RESUELTA']),
+  "direccion": zod.union([zod.literal('MAS'),zod.literal('MENOS'),zod.literal(null)]).nullish(),
+  "monto": zod.string().nullish(),
+  "descripcion": zod.string().nullish(),
+  "notaResolucion": zod.string().nullish(),
+  "resueltoPor": zod.string().nullish(),
+  "resueltoAt": zod.coerce.date().nullish()
+}))
+})
+
+
+/**
+ * @summary Confirma la cifra facturada congelada
+ */
+export const createAdminCuadreFiscalConfirmacionBodyDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createAdminCuadreFiscalConfirmacionBodyHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const CreateAdminCuadreFiscalConfirmacionBody = zod.object({
+  "desde": zod.string().regex(createAdminCuadreFiscalConfirmacionBodyDesdeRegExp),
+  "hasta": zod.string().regex(createAdminCuadreFiscalConfirmacionBodyHastaRegExp),
+  "ubicacionId": zod.number().optional()
+})
+
+export const CreateAdminCuadreFiscalConfirmacionResponse = zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CONFIRMACION', 'DIFERENCIA']),
+  "desde": zod.string(),
+  "hasta": zod.string(),
+  "facturadoCongelado": zod.string(),
+  "actor": zod.string(),
+  "creadoAt": zod.coerce.date(),
+  "estado": zod.enum(['CONFIRMADA', 'PENDIENTE', 'RESUELTA']),
+  "direccion": zod.union([zod.literal('MAS'),zod.literal('MENOS'),zod.literal(null)]).nullish(),
+  "monto": zod.string().nullish(),
+  "descripcion": zod.string().nullish(),
+  "notaResolucion": zod.string().nullish(),
+  "resueltoPor": zod.string().nullish(),
+  "resueltoAt": zod.coerce.date().nullish()
+})
+
+
+/**
+ * @summary Reporta una diferencia fiscal
+ */
+export const createAdminCuadreFiscalDiferenciaBodyOneDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createAdminCuadreFiscalDiferenciaBodyOneHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createAdminCuadreFiscalDiferenciaBodyTwoMontoExclusiveMin = 0;
+
+export const createAdminCuadreFiscalDiferenciaBodyTwoDescripcionMin = 20;
+
+
+
+export const CreateAdminCuadreFiscalDiferenciaBody = zod.object({
+  "desde": zod.string().regex(createAdminCuadreFiscalDiferenciaBodyOneDesdeRegExp),
+  "hasta": zod.string().regex(createAdminCuadreFiscalDiferenciaBodyOneHastaRegExp),
+  "ubicacionId": zod.number().optional()
+}).and(zod.object({
+  "direccion": zod.enum(['MAS', 'MENOS']),
+  "monto": zod.number().gt(createAdminCuadreFiscalDiferenciaBodyTwoMontoExclusiveMin),
+  "descripcion": zod.string().min(createAdminCuadreFiscalDiferenciaBodyTwoDescripcionMin)
+}))
+
+export const CreateAdminCuadreFiscalDiferenciaResponse = zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CONFIRMACION', 'DIFERENCIA']),
+  "desde": zod.string(),
+  "hasta": zod.string(),
+  "facturadoCongelado": zod.string(),
+  "actor": zod.string(),
+  "creadoAt": zod.coerce.date(),
+  "estado": zod.enum(['CONFIRMADA', 'PENDIENTE', 'RESUELTA']),
+  "direccion": zod.union([zod.literal('MAS'),zod.literal('MENOS'),zod.literal(null)]).nullish(),
+  "monto": zod.string().nullish(),
+  "descripcion": zod.string().nullish(),
+  "notaResolucion": zod.string().nullish(),
+  "resueltoPor": zod.string().nullish(),
+  "resueltoAt": zod.coerce.date().nullish()
+})
+
+
+/**
+ * @summary Resuelve una diferencia fiscal (ADMIN)
+ */
+
+
+
+export const ResolveAdminCuadreFiscalDiferenciaParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+
+
+
+export const ResolveAdminCuadreFiscalDiferenciaBody = zod.object({
+  "nota": zod.string().min(1)
+})
+
+export const ResolveAdminCuadreFiscalDiferenciaResponse = zod.object({
+  "id": zod.number(),
+  "tipo": zod.enum(['CONFIRMACION', 'DIFERENCIA']),
+  "desde": zod.string(),
+  "hasta": zod.string(),
+  "facturadoCongelado": zod.string(),
+  "actor": zod.string(),
+  "creadoAt": zod.coerce.date(),
+  "estado": zod.enum(['CONFIRMADA', 'PENDIENTE', 'RESUELTA']),
+  "direccion": zod.union([zod.literal('MAS'),zod.literal('MENOS'),zod.literal(null)]).nullish(),
+  "monto": zod.string().nullish(),
+  "descripcion": zod.string().nullish(),
+  "notaResolucion": zod.string().nullish(),
+  "resueltoPor": zod.string().nullish(),
+  "resueltoAt": zod.coerce.date().nullish()
+})
+
+
+/**
  * @summary Comparación de tiendas por periodo
  */
 export const getAdminComparacionTiendasQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');

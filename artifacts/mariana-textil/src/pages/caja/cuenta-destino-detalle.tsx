@@ -4,7 +4,14 @@ import {
   exportAdminCuentaDestinoMovimientosXlsx,
   getListAdminCuentaDestinoMovimientosQueryKey,
   useListAdminCuentaDestinoMovimientos,
+  useGetAdminCuadreFiscal,
+  useGetCurrentUser,
+  useCreateAdminCuadreFiscalConfirmacion,
+  useCreateAdminCuadreFiscalDiferencia,
+  useResolveAdminCuadreFiscalDiferencia,
+  getGetAdminCuadreFiscalQueryKey,
 } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { formatAccountDestination, formatNumber } from "@workspace/number-format";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
@@ -54,6 +61,18 @@ export default function CuentaDestinoDetalle() {
   const [page, setPage] = useState(1);
   const pageSize = 50;
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { data: currentUser } = useGetCurrentUser();
+  const fiscalQuery = useGetAdminCuadreFiscal({ desde: desde || undefined, hasta: hasta || undefined, ubicacionId }, {
+    query: { enabled: destination === "CUENTA_FISCAL", queryKey: getGetAdminCuadreFiscalQueryKey({ desde: desde || undefined, hasta: hasta || undefined, ubicacionId }) },
+  });
+  const confirm = useCreateAdminCuadreFiscalConfirmacion();
+  const report = useCreateAdminCuadreFiscalDiferencia();
+  const resolve = useResolveAdminCuadreFiscalDiferencia();
+  const [differenceAmount, setDifferenceAmount] = useState("");
+  const [differenceDirection, setDifferenceDirection] = useState<"MAS" | "MENOS">("MAS");
+  const [differenceDescription, setDifferenceDescription] = useState("");
+  const [resolutionNotes, setResolutionNotes] = useState<Record<number, string>>({});
 
   useEffect(() => setPage(1), [desde, hasta, ubicacionId]);
 
@@ -97,6 +116,8 @@ export default function CuentaDestinoDetalle() {
       });
     }
   };
+  const fiscalInput = { desde, hasta, ...(ubicacionId == null ? {} : { ubicacionId }) };
+  const refreshFiscal = () => queryClient.invalidateQueries({ queryKey: getGetAdminCuadreFiscalQueryKey({ desde: desde || undefined, hasta: hasta || undefined, ubicacionId }) });
 
   if (!isDestination(routeParams?.cuentaDestino)) {
     return (
@@ -235,6 +256,27 @@ export default function CuentaDestinoDetalle() {
             )}
           </CardContent>
         </Card>
+        {destination === "CUENTA_FISCAL" && fiscalQuery.data && (
+          <Card>
+            <CardHeader><CardTitle>Cuadre Fiscal</CardTitle></CardHeader>
+            <CardContent className="space-y-5">
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="rounded border p-3"><p className="text-sm text-muted-foreground">Facturado del periodo</p><p className="text-xl font-bold" data-testid="text-fiscal-facturado">{formatNumber(fiscalQuery.data.facturado, { kind: "money" })}</p></div>
+                <div className="rounded border p-3"><p className="text-sm text-muted-foreground">Cobrado a cuenta fiscal</p><p className="text-xl font-bold">{formatNumber(fiscalQuery.data.cobradoCuentaFiscal, { kind: "money" })}</p></div>
+                <div className="rounded border p-3"><p className="text-sm text-muted-foreground">Por cobrar de ventas fiscales</p><p className="text-xl font-bold">{formatNumber(fiscalQuery.data.porCobrarFiscal, { kind: "money" })}</p></div>
+              </div>
+              <p className="text-sm text-muted-foreground">La diferencia entre facturado y cobrado es cartera, no un descuadre.</p>
+              {(currentUser?.rol === "CONTADOR" || currentUser?.rol === "ADMIN") && <div className="flex flex-wrap gap-2">
+                <Button onClick={() => confirm.mutate({ data: fiscalInput }, { onSuccess: refreshFiscal, onError: (error) => toast({ title: "No se pudo confirmar", description: getApiErrorMessage(error), variant: "destructive" }) })} disabled={confirm.isPending} data-testid="button-confirmar-cuentas">Confirmar cuentas</Button>
+                <Input type="number" min="0.01" step="0.01" value={differenceAmount} onChange={(e) => setDifferenceAmount(e.target.value)} placeholder="Monto" className="w-28" data-testid="input-diferencia-monto" />
+                <select value={differenceDirection} onChange={(e) => setDifferenceDirection(e.target.value as "MAS" | "MENOS")} className="rounded border bg-background px-2" data-testid="select-diferencia-direccion"><option value="MAS">Más</option><option value="MENOS">Menos</option></select>
+                <textarea value={differenceDescription} onChange={(e) => setDifferenceDescription(e.target.value)} placeholder="Descripción (mínimo 20 caracteres)" className="min-h-10 flex-1 rounded border bg-background p-2 text-sm" data-testid="input-diferencia-descripcion" />
+                <Button variant="outline" disabled={report.isPending || differenceDescription.trim().length < 20 || Number(differenceAmount) <= 0} onClick={() => report.mutate({ data: { ...fiscalInput, monto: Number(differenceAmount), direccion: differenceDirection, descripcion: differenceDescription } }, { onSuccess: () => { setDifferenceAmount(""); setDifferenceDescription(""); refreshFiscal(); }, onError: (error) => toast({ title: "No se pudo reportar", description: getApiErrorMessage(error), variant: "destructive" }) })} data-testid="button-reportar-diferencia">Reportar diferencia</Button>
+              </div>}
+              <div><h3 className="mb-2 font-semibold">Histórico</h3>{fiscalQuery.data.historial.length === 0 ? <p className="text-sm text-muted-foreground">Sin confirmaciones ni diferencias.</p> : <div className="space-y-2">{fiscalQuery.data.historial.map((item) => <div key={item.id} className="rounded border p-3 text-sm" data-testid={`fiscal-registro-${item.id}`}><b>{item.tipo}</b> · {item.desde} a {item.hasta} · Facturado congelado {formatNumber(item.facturadoCongelado, { kind: "money" })} · {item.actor} · {item.estado}{item.direccion ? ` · ${item.direccion} ${formatNumber(item.monto, { kind: "money" })}` : ""}{item.descripcion ? ` · ${item.descripcion}` : ""}{item.notaResolucion ? ` · Resolución: ${item.notaResolucion}` : ""}{currentUser?.rol === "ADMIN" && item.tipo === "DIFERENCIA" && item.estado === "PENDIENTE" && <div className="mt-2 flex gap-2"><Input value={resolutionNotes[item.id] ?? ""} onChange={(e) => setResolutionNotes((notes) => ({ ...notes, [item.id]: e.target.value }))} placeholder="Nota de resolución" data-testid={`input-resolucion-${item.id}`} /><Button size="sm" disabled={!resolutionNotes[item.id]?.trim() || resolve.isPending} onClick={() => resolve.mutate({ id: item.id, data: { nota: resolutionNotes[item.id]! } }, { onSuccess: refreshFiscal })} data-testid={`button-resolver-${item.id}`}>Resolver</Button></div>}</div>)}</div>}</div>
+            </CardContent>
+          </Card>
+        )}
 
         {query.data && query.data.total > pageSize && (
           <div className="flex items-center justify-between">

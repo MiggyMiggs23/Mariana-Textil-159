@@ -1,3 +1,9 @@
+# Decisión pendiente — METREADO_FACTURADO
+
+Actualmente POS rechaza facturar ventas con líneas metreadas (`METREADO_FACTURADO`).
+No se modificó esta regla al implementar el cuadre fiscal; confirmar con el usuario si
+en el futuro debe permitirse facturar cortes de tela.
+
 # Mariana Textil
 
 Sistema interno de inventarios, ventas y salidas entre ubicaciones para las tiendas y

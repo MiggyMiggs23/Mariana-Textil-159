@@ -186,7 +186,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
         events.set(`system:${row.id}`, {
           id: `system:${row.id}`,
           kind: "SYSTEM",
-          family: row.tipo.includes("INCOMPLETA") ? "ALERTA" : "AVISO",
+            family: row.tipo.startsWith("SOLICITUD_") ? "SOLICITUD" : row.tipo.includes("INCOMPLETA") ? "ALERTA" : "AVISO",
           title: row.titulo,
           message: row.mensaje,
           href: "/notificaciones",

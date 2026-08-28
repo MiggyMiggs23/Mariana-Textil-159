@@ -4180,6 +4180,56 @@ paths:
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuadre-fiscal:
+    get:
+      operationId: getAdminCuadreFiscal
+      tags: [admin-analytics]
+      summary: Cifras actuales e histórico del cuadre fiscal
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+      responses:
+        "200": { description: Cuadre fiscal, content: { application/json: { schema: { $ref: "#/components/schemas/AdminCuadreFiscal" } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuadre-fiscal/confirmaciones:
+    post:
+      operationId: createAdminCuadreFiscalConfirmacion
+      tags: [admin-analytics]
+      summary: Confirma la cifra facturada congelada
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CuadreFiscalPeriodoInput" } } }
+      responses:
+        "201": { description: Confirmación, content: { application/json: { schema: { $ref: "#/components/schemas/CuadreFiscalRegistro" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuadre-fiscal/diferencias:
+    post:
+      operationId: createAdminCuadreFiscalDiferencia
+      tags: [admin-analytics]
+      summary: Reporta una diferencia fiscal
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CuadreFiscalDiferenciaInput" } } }
+      responses:
+        "201": { description: Diferencia, content: { application/json: { schema: { $ref: "#/components/schemas/CuadreFiscalRegistro" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/cuadre-fiscal/diferencias/{id}/resolver:
+    post:
+      operationId: resolveAdminCuadreFiscalDiferencia
+      tags: [admin-analytics]
+      summary: Resuelve una diferencia fiscal (ADMIN)
+      parameters: [{ in: path, name: id, required: true, schema: { type: number, minimum: 1 } }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CuadreFiscalResolucionInput" } } }
+      responses:
+        "200": { description: Diferencia resuelta, content: { application/json: { schema: { $ref: "#/components/schemas/CuadreFiscalRegistro" } } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/comparacion-tiendas:
     get:
       operationId: getAdminComparacionTiendas
@@ -6529,6 +6579,53 @@ components:
           description: Porcentaje en unidades; 12.50 significa 12.5%
         porcentaje: { type: string }
         operaciones: { type: number }
+    CuadreFiscalPeriodoInput:
+      type: object
+      required: [desde, hasta]
+      properties:
+        desde: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+        hasta: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+        ubicacionId: { type: number }
+    CuadreFiscalDiferenciaInput:
+      allOf:
+        - $ref: "#/components/schemas/CuadreFiscalPeriodoInput"
+        - type: object
+          required: [direccion, monto, descripcion]
+          properties:
+            direccion: { type: string, enum: [MAS, MENOS] }
+            monto: { type: number, exclusiveMinimum: 0 }
+            descripcion: { type: string, minLength: 20 }
+    CuadreFiscalResolucionInput:
+      type: object
+      required: [nota]
+      properties:
+        nota: { type: string, minLength: 1 }
+    CuadreFiscalRegistro:
+      type: object
+      required: [id, tipo, desde, hasta, facturadoCongelado, actor, creadoAt, estado]
+      properties:
+        id: { type: number }
+        tipo: { type: string, enum: [CONFIRMACION, DIFERENCIA] }
+        desde: { type: string }
+        hasta: { type: string }
+        facturadoCongelado: { type: string }
+        actor: { type: string }
+        creadoAt: { type: string, format: date-time }
+        estado: { type: string, enum: [CONFIRMADA, PENDIENTE, RESUELTA] }
+        direccion: { type: ["string", "null"], enum: [MAS, MENOS, null] }
+        monto: { type: ["string", "null"] }
+        descripcion: { type: ["string", "null"] }
+        notaResolucion: { type: ["string", "null"] }
+        resueltoPor: { type: ["string", "null"] }
+        resueltoAt: { type: ["string", "null"], format: date-time }
+    AdminCuadreFiscal:
+      type: object
+      required: [facturado, cobradoCuentaFiscal, porCobrarFiscal, historial]
+      properties:
+        facturado: { type: string }
+        cobradoCuentaFiscal: { type: string }
+        porCobrarFiscal: { type: string }
+        historial: { type: array, items: { $ref: "#/components/schemas/CuadreFiscalRegistro" } }
     AdminCuentaDestinoMovimiento:
       type: object
       required:
