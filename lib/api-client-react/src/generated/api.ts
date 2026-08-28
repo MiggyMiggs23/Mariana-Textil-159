@@ -676,7 +676,7 @@ export const getCreateCamionetaUrl = () => {
 }
 
 /**
- * @summary Crea una camioneta histórica (ADMIN o SOPORTE)
+ * @summary Crea una camioneta histórica (ADMIN o SISTEMAS)
  */
 export const createCamioneta = async (camionetaInput: CamionetaInput, options?: Parameters<typeof customFetch>[1]): Promise<Camioneta> => {
 
@@ -725,7 +725,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateCamionetaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
 
     /**
- * @summary Crea una camioneta histórica (ADMIN o SOPORTE)
+ * @summary Crea una camioneta histórica (ADMIN o SISTEMAS)
  */
 export const useCreateCamioneta = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCamioneta>>, TError,{data: BodyType<CamionetaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -824,7 +824,7 @@ export const getUpdateCamionetaUrl = (id: number,) => {
 }
 
 /**
- * @summary Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+ * @summary Edita o activa/desactiva una camioneta (ADMIN o SISTEMAS)
  */
 export const updateCamioneta = async (id: number,
     camionetaUpdate: CamionetaUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Camioneta> => {
@@ -874,7 +874,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type UpdateCamionetaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
- * @summary Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+ * @summary Edita o activa/desactiva una camioneta (ADMIN o SISTEMAS)
  */
 export const useUpdateCamioneta = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCamioneta>>, TError,{id: number;data: BodyType<CamionetaUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -980,7 +980,7 @@ export const getCreateChoferUrl = () => {
 }
 
 /**
- * @summary Crea un chofer histórico (ADMIN o SOPORTE)
+ * @summary Crea un chofer histórico (ADMIN o SISTEMAS)
  */
 export const createChofer = async (choferInput: ChoferInput, options?: Parameters<typeof customFetch>[1]): Promise<Chofer> => {
 
@@ -1029,7 +1029,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateChoferMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
 
     /**
- * @summary Crea un chofer histórico (ADMIN o SOPORTE)
+ * @summary Crea un chofer histórico (ADMIN o SISTEMAS)
  */
 export const useCreateChofer = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createChofer>>, TError,{data: BodyType<ChoferInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -1128,7 +1128,7 @@ export const getUpdateChoferUrl = (id: number,) => {
 }
 
 /**
- * @summary Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+ * @summary Edita o activa/desactiva un chofer (ADMIN o SISTEMAS)
  */
 export const updateChofer = async (id: number,
     choferUpdate: ChoferUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Chofer> => {
@@ -1178,7 +1178,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type UpdateChoferMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+ * @summary Edita o activa/desactiva un chofer (ADMIN o SISTEMAS)
  */
 export const useUpdateChofer = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateChofer>>, TError,{id: number;data: BodyType<ChoferUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}

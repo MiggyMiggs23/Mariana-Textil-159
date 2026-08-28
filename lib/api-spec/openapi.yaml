@@ -200,7 +200,7 @@ paths:
     post:
       operationId: createCamioneta
       tags: [camionetas]
-      summary: Crea una camioneta histórica (ADMIN o SOPORTE)
+      summary: Crea una camioneta histórica (ADMIN o SISTEMAS)
       requestBody:
         required: true
         content:
@@ -244,7 +244,7 @@ paths:
     patch:
       operationId: updateCamioneta
       tags: [camionetas]
-      summary: Edita o activa/desactiva una camioneta (ADMIN o SOPORTE)
+      summary: Edita o activa/desactiva una camioneta (ADMIN o SISTEMAS)
       parameters: [{ $ref: "#/components/parameters/CamionetaId" }]
       requestBody:
         required: true
@@ -299,7 +299,7 @@ paths:
     post:
       operationId: createChofer
       tags: [choferes]
-      summary: Crea un chofer histórico (ADMIN o SOPORTE)
+      summary: Crea un chofer histórico (ADMIN o SISTEMAS)
       requestBody:
         required: true
         content:
@@ -342,7 +342,7 @@ paths:
     patch:
       operationId: updateChofer
       tags: [choferes]
-      summary: Edita o activa/desactiva un chofer (ADMIN o SOPORTE)
+      summary: Edita o activa/desactiva un chofer (ADMIN o SISTEMAS)
       parameters: [{ $ref: "#/components/parameters/ChoferId" }]
       requestBody:
         required: true
@@ -6410,7 +6410,7 @@ components:
         activo: { type: boolean }
     Role:
       type: string
-      enum: [ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, SOPORTE]
+      enum: [ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS, CONTADOR]
     LocationType:
       type: string
       enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]

@@ -36,7 +36,8 @@ const DEFAULT_QUERY_SCOPE: Record<RolUsuario, AlcanceConsulta> = {
   CAJA: "TODAS",
   SUPERVISOR: "TODAS",
   BODEGA: "PROPIA",
-  SOPORTE: "TODAS",
+  SISTEMAS: "TODAS",
+  CONTADOR: "TODAS",
 };
 
 async function auditRejectedUserChange(
@@ -80,10 +81,18 @@ function validateAssignment(
   role: RolUsuario,
   location: Awaited<ReturnType<typeof findRealLocation>>,
 ): string | null {
-  if ((role === "ADMIN" || role === "SOPORTE") && location !== null) {
+  if (
+    (role === "ADMIN" || role === "SISTEMAS" || role === "CONTADOR") &&
+    location !== null
+  ) {
     return "Los roles globales deben tener acceso a todos los sitios.";
   }
-  if (role !== "ADMIN" && role !== "SOPORTE" && !location) {
+  if (
+    role !== "ADMIN" &&
+    role !== "SISTEMAS" &&
+    role !== "CONTADOR" &&
+    !location
+  ) {
     return "La ubicación es obligatoria para este rol.";
   }
   return null;
@@ -114,17 +123,20 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
 
   const role = parsed.data.rol as RolUsuario;
   if (
-    (role === "ADMIN" || role === "SOPORTE") &&
+    (role === "ADMIN" || role === "SISTEMAS") &&
     req.auth!.user.rol !== "ADMIN"
   ) {
     res.status(403).json({
-      error: "Solo un ADMIN puede crear cuentas ADMIN o SOPORTE.",
+      error: "Solo un ADMIN puede crear cuentas ADMIN o SISTEMAS.",
     });
     return;
   }
   const location = await findRealLocation(parsed.data.ubicacionId);
   const alcanceConsulta =
-    role === "ADMIN" || role === "SUPERVISOR" || role === "SOPORTE"
+    role === "ADMIN" ||
+    role === "SUPERVISOR" ||
+    role === "SISTEMAS" ||
+    role === "CONTADOR"
       ? "TODAS"
       : ((parsed.data.alcanceConsulta as AlcanceConsulta | undefined) ??
         DEFAULT_QUERY_SCOPE[role]);
@@ -160,7 +172,9 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
           passwordHash: sql`crypt(${parsed.data.password}, gen_salt('bf', 12))`,
           rol: role,
           ubicacionId:
-            role === "ADMIN" || role === "SOPORTE" ? null : location!.id,
+            role === "ADMIN" || role === "SISTEMAS" || role === "CONTADOR"
+              ? null
+              : location!.id,
           alcanceConsulta,
         })
         .returning();
@@ -216,32 +230,32 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   const finalRole = (body.data.rol ?? beforeRow.user.rol) as RolUsuario;
   if (
     actor.rol !== "ADMIN" &&
-    (beforeRow.user.rol === "ADMIN" || beforeRow.user.rol === "SOPORTE")
+    (beforeRow.user.rol === "ADMIN" || beforeRow.user.rol === "SISTEMAS")
   ) {
     await auditRejectedUserChange(
       req,
       String(beforeRow.user.id),
-      "Solo un ADMIN puede modificar una cuenta ADMIN o SOPORTE.",
+      "Solo un ADMIN puede modificar una cuenta ADMIN o SISTEMAS.",
       sanitizeUserForAudit(beforeRow.user),
     );
     res.status(403).json({
-      error: "Solo un ADMIN puede modificar una cuenta ADMIN o SOPORTE.",
+      error: "Solo un ADMIN puede modificar una cuenta ADMIN o SISTEMAS.",
     });
     return;
   }
   if (
     actor.rol !== "ADMIN" &&
-    (finalRole === "ADMIN" || finalRole === "SOPORTE")
+    (finalRole === "ADMIN" || finalRole === "SISTEMAS")
   ) {
     await auditRejectedUserChange(
       req,
       String(beforeRow.user.id),
-      "Solo un ADMIN puede asignar los roles ADMIN o SOPORTE.",
+      "Solo un ADMIN puede asignar los roles ADMIN o SISTEMAS.",
       sanitizeUserForAudit(beforeRow.user),
       { rol: finalRole },
     );
     res.status(403).json({
-      error: "Solo un ADMIN puede asignar los roles ADMIN o SOPORTE.",
+      error: "Solo un ADMIN puede asignar los roles ADMIN o SISTEMAS.",
     });
     return;
   }
@@ -291,11 +305,16 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
   if (body.data.rol !== undefined) updates.rol = finalRole;
   if (body.data.activo !== undefined) updates.activo = body.data.activo;
   updates.ubicacionId =
-    finalRole === "ADMIN" || finalRole === "SOPORTE" ? null : location!.id;
+    finalRole === "ADMIN" ||
+    finalRole === "SISTEMAS" ||
+    finalRole === "CONTADOR"
+      ? null
+      : location!.id;
   updates.alcanceConsulta =
     finalRole === "ADMIN" ||
     finalRole === "SUPERVISOR" ||
-    finalRole === "SOPORTE"
+    finalRole === "SISTEMAS" ||
+    finalRole === "CONTADOR"
       ? "TODAS"
       : ((body.data.alcanceConsulta as AlcanceConsulta | undefined) ??
         beforeRow.user.alcanceConsulta ??

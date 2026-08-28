@@ -39,12 +39,12 @@ function requiereGestorChoferes(action: "crear" | "editar") {
   return [
     requierePermiso("choferes", action),
     (req: Request, res: Response, next: NextFunction) => {
-      if (req.auth?.user.rol !== "ADMIN" && req.auth?.user.rol !== "SOPORTE") {
+      if (req.auth?.user.rol !== "ADMIN" && req.auth?.user.rol !== "SISTEMAS") {
         res
           .status(403)
           .json({
             error:
-              "Solo ADMIN o SOPORTE pueden modificar el catálogo de choferes.",
+              "Solo ADMIN o SISTEMAS pueden modificar el catálogo de choferes.",
           });
         return;
       }

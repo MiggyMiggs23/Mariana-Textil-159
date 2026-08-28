@@ -54,8 +54,11 @@ async function startServer() {
   await ensureProductColorSchema(pool);
   logger.info("Interruptores de venta por metro verificados");
   logger.info("Estado de rollos verificado");
-  await ensureSupervisorRole(pool);
-  logger.info("Rol SUPERVISOR verificado");
+  const migratedSupportUsers = await ensureSupervisorRole(pool);
+  logger.info(
+    { migratedSupportUsers },
+    "Roles SUPERVISOR, SISTEMAS y CONTADOR verificados",
+  );
   await ensureClientesSchema(pool);
   logger.info("Esquema de clientes verificado");
   await ensureTicketIvaSchema(pool);

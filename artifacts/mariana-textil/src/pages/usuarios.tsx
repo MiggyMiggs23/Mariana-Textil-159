@@ -291,7 +291,10 @@ export default function Usuarios() {
                       ...formData,
                       rol,
                       alcanceConsulta:
-                        rol === Role.ADMIN || rol === Role.SUPERVISOR || rol === Role.SOPORTE
+                        rol === Role.ADMIN ||
+                        rol === Role.SUPERVISOR ||
+                        rol === Role.SISTEMAS ||
+                        rol === Role.CONTADOR
                           ? "TODAS"
                           : formData.alcanceConsulta,
                     });
@@ -302,7 +305,8 @@ export default function Usuarios() {
                   </SelectTrigger>
                     <SelectContent>
                     {isAdmin && <SelectItem value={Role.ADMIN}>Administrador</SelectItem>}
-                    {isAdmin && <SelectItem value={Role.SOPORTE}>Soporte</SelectItem>}
+                    {isAdmin && <SelectItem value={Role.SISTEMAS}>Sistemas</SelectItem>}
+                    <SelectItem value={Role.CONTADOR}>Contador</SelectItem>
                     <SelectItem value={Role.TERMINAL}>Terminal</SelectItem>
                     <SelectItem value={Role.CAJA}>Caja</SelectItem>
                     <SelectItem value={Role.SUPERVISOR}>Supervisor</SelectItem>
@@ -317,7 +321,8 @@ export default function Usuarios() {
                   disabled={
                     formData.rol === Role.ADMIN ||
                     formData.rol === Role.SUPERVISOR ||
-                    formData.rol === Role.SOPORTE
+                    formData.rol === Role.SISTEMAS ||
+                    formData.rol === Role.CONTADOR
                   }
                   onValueChange={(val) => setFormData({...formData, alcanceConsulta: val as "PROPIA" | "TODAS"})}
                 >

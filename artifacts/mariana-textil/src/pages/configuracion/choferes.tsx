@@ -63,7 +63,7 @@ export default function Choferes() {
   const [editing, setEditing] = useState<Chofer | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusTarget, setStatusTarget] = useState<Chofer | null>(null);
-  const isCatalogManager = user?.rol === "ADMIN" || user?.rol === "SOPORTE";
+  const isCatalogManager = user?.rol === "ADMIN" || user?.rol === "SISTEMAS";
   const canCreate =
     isCatalogManager && hasPermission(user, Modules.CHOFERES, "crear");
   const canUpdate =
