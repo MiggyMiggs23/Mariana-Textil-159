@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     const [u] = await db.select({ id: usuariosTable.id }).from(usuariosTable).where(eq(usuariosTable.activo, true)).limit(1);
     assert.ok(u); user = u.id;
   });
-  async function fx(unidad: "METRO" | "KILO" = "METRO") {
+  async function fx(unidad: "METRO" | "KILO" | "BOLSA" = "METRO") {
     const n = `${tag}-${products.length}`;
     const [p] = await db.insert(productosTable).values({ sku: n, tela: n, color: "Azul", unidad, precioSugerido: "10" }).returning();
     const suffix = String.fromCharCode(65 + (products.length % 26));
@@ -307,10 +307,11 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     ));
     assert.equal(notification?.tipo, "SALIDA_INCOMPLETA");
   });
-  test("new states remain readable and ARMANDO totals split metres/kilos", async () => {
-    const m = await fx("METRO"), k = await fx("KILO"); const rm = await roll(m.productoId, m.origenId, "7"), rk = await roll(k.productoId, k.origenId, "3");
-    const sm = await create(m.origenId, m.destinoId, [rm.id]); const sk = await create(k.origenId, k.destinoId, [rk.id]);
-    assert.equal(sm.totalMetros, "7.000"); assert.equal(sk.totalKilos, "3.000");
+  test("new states remain readable and ARMANDO totals split metres/kilos/bags", async () => {
+    const m = await fx("METRO"), k = await fx("KILO"), b = await fx("BOLSA");
+    const rm = await roll(m.productoId, m.origenId, "7"), rk = await roll(k.productoId, k.origenId, "3"), rb = await roll(b.productoId, b.origenId, "12");
+    const sm = await create(m.origenId, m.destinoId, [rm.id]), sk = await create(k.origenId, k.destinoId, [rk.id]), sb = await create(b.origenId, b.destinoId, [rb.id]);
+    assert.equal(sm.totalMetros, "7.000"); assert.equal(sk.totalKilos, "3.000"); assert.equal(sb.totalBolsas, "12.000");
     await db.update(salidasTable).set({ estado: "EN_TRANSITO" }).where(eq(salidasTable.id, sm.id));
     assert.equal((await buildSalidaDetail(db, sm.id))?.estado, "EN_TRANSITO");
     assert.ok((await listarSalidas({ page: 1, pageSize: 100 })).items.some((x) => x.id === sm.id));

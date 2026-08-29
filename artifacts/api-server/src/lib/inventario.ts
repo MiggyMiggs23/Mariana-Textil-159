@@ -2072,11 +2072,12 @@ export type InventarioUbicacionSummary = {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
 };
 
 /**
  * Returns inventory totals per location for dashboard display.
- * Separates METRO and KILO products to avoid mixing units.
+ * Separates METRO, KILO and BOLSA products to avoid mixing units.
  */
 export async function getInventarioPorUbicacion(
   ubicacionIds?: number[],
@@ -2103,19 +2104,22 @@ export async function getInventarioPorUbicacion(
 
   const map = new Map<
     number,
-    { rollos: number; metros: number; kilos: number }
+    { rollos: number; metros: number; kilos: number; bolsas: number }
   >();
   for (const row of rows) {
     const cur = map.get(row.ubicacionId) ?? {
       rollos: 0,
       metros: 0,
       kilos: 0,
+      bolsas: 0,
     };
     cur.rollos += row.rollos;
     if (row.unidad === "METRO") {
       cur.metros += parseFloat(row.cantidad ?? "0");
-    } else {
+    } else if (row.unidad === "KILO") {
       cur.kilos += parseFloat(row.cantidad ?? "0");
+    } else {
+      cur.bolsas += parseFloat(row.cantidad ?? "0");
     }
     map.set(row.ubicacionId, cur);
   }
@@ -2125,6 +2129,7 @@ export async function getInventarioPorUbicacion(
     rollos: v.rollos,
     metros: v.metros.toFixed(3),
     kilos: v.kilos.toFixed(3),
+    bolsas: v.bolsas.toFixed(3),
   }));
 }
 

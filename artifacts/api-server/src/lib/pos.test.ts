@@ -111,7 +111,7 @@ async function makeLocation() {
 
 async function makeProduct(
   precioSugerido = "100.00",
-  unidad: "METRO" | "KILO" = "METRO",
+  unidad: "METRO" | "KILO" | "BOLSA" = "METRO",
   seVendePorMetro = unidad === "METRO",
 ) {
   const tag = `${RUN}-${++seq}`;

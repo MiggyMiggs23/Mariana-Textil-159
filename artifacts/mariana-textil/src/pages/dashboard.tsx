@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Users, Warehouse } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocationScope } from "@/lib/location-scope";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 
 export default function Dashboard() {
   const { data: user } = useGetCurrentUser();
@@ -106,8 +106,8 @@ export default function Dashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[300px]">Sitio</TableHead>
-                    <TableHead className="text-right">Metros (m)</TableHead>
-                    <TableHead className="text-right">Kilos (kg)</TableHead>
+                    <TableHead className="text-right">{formatUnit("METRO")}</TableHead>
+                    <TableHead className="text-right">{formatUnit("KILO")}</TableHead>
                     <TableHead className="text-right">Rollos</TableHead>
                   </TableRow>
                 </TableHeader>

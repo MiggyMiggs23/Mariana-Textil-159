@@ -11,4 +11,5 @@ export interface ContenedorTotals {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
 }

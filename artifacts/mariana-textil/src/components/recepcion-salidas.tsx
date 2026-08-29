@@ -11,7 +11,7 @@ import {
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { CheckCircle2, Loader2, PackageCheck, MapPin } from "lucide-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -161,8 +161,8 @@ export function RecepcionSalidas() {
               <Summary label="Destino" value={detalle.data.nombreDestino} />
               <Summary label="Rollos" value={formatNumber(detalle.data.totalRollos ?? 0, { kind: "count" })} />
               <Summary label="Transportista" value={detalle.data.transportista || "—"} />
-              <Summary label="Metros" value={formatNumber(detalle.data.totalMetros ?? "0", { kind: "quantity" })} />
-              <Summary label="Kilos" value={formatNumber(detalle.data.totalKilos ?? "0", { kind: "quantity" })} />
+              <Summary label={formatUnit("METRO")} value={formatNumber(detalle.data.totalMetros ?? "0", { kind: "quantity" })} />
+              <Summary label={formatUnit("KILO")} value={formatNumber(detalle.data.totalKilos ?? "0", { kind: "quantity" })} />
               <Summary label="Enviado por" value={detalle.data.nombreEnviadoPor || "—"} />
               <Summary
                 label="Fecha de envío"

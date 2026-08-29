@@ -12,4 +12,5 @@ export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
 export const UnidadProducto = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

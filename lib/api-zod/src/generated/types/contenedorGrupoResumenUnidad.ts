@@ -12,4 +12,5 @@ export type ContenedorGrupoResumenUnidad = typeof ContenedorGrupoResumenUnidad[k
 export const ContenedorGrupoResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

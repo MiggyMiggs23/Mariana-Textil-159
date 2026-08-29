@@ -12,4 +12,5 @@ export type ExistenciaAgrupadaHijoUnidad = typeof ExistenciaAgrupadaHijoUnidad[k
 export const ExistenciaAgrupadaHijoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

@@ -17,6 +17,7 @@ export interface HojaVentasDia {
   totalRollos: string;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   subtotal: string;
   ivaFacturado: string;
   totalGeneral: string;

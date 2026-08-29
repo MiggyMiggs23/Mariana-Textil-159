@@ -15,6 +15,7 @@ export interface ContenedorGrupoResumen {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   /**
      * Solo ADMIN
      * @nullable

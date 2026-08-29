@@ -12,4 +12,5 @@ export type ContenedorDiferenciaResumenUnidad = typeof ContenedorDiferenciaResum
 export const ContenedorDiferenciaResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

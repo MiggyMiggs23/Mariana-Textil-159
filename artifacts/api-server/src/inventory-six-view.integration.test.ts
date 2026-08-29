@@ -24,7 +24,7 @@ type Total = { quantity: number; rolls: number };
 type ProductFixture = {
   id: number;
   sku: string;
-  unit: "METRO" | "KILO";
+  unit: "METRO" | "KILO" | "BOLSA";
   admin: Total;
   own: Total;
 };

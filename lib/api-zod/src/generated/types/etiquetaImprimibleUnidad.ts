@@ -12,4 +12,5 @@ export type EtiquetaImprimibleUnidad = typeof EtiquetaImprimibleUnidad[keyof typ
 export const EtiquetaImprimibleUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

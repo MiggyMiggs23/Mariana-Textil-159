@@ -18,6 +18,7 @@ export interface EntradaPendienteCosto {
   rollosPendientes: number;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   nombreUsuario: string;
   overdue48h: boolean;
 }

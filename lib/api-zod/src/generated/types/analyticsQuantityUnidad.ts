@@ -12,4 +12,5 @@ export type AnalyticsQuantityUnidad = typeof AnalyticsQuantityUnidad[keyof typeo
 export const AnalyticsQuantityUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

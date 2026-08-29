@@ -25,7 +25,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProductCombobox } from "@/components/product-combobox";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { Ship, ArrowLeft, ArrowDownToLine, Calendar, MapPin, Truck, AlertTriangle, AlertCircle, Edit2, Ban, CheckCircle2, Save, X, Plus, Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
@@ -550,7 +550,7 @@ export default function ContenedorDetail() {
                           </TableCell>
 
                           <TableCell className="text-right border-l border-border/30 font-medium">
-                            {formatNumber(Number(linea.cantidadEsperada), { kind: "count" })} <span className="text-xs text-muted-foreground">{linea.unidad === "METRO" ? "m" : "kg"}</span>
+                            {formatNumber(Number(linea.cantidadEsperada), { kind: "count" })} <span className="text-xs text-muted-foreground">{formatUnit(linea.unidad)}</span>
                           </TableCell>
                           <TableCell className="text-right text-muted-foreground">
                             {linea.rollosEsperados !== null && linea.rollosEsperados !== undefined ? formatNumber(linea.rollosEsperados, { kind: "count" }) : "-"}
@@ -559,7 +559,7 @@ export default function ContenedorDetail() {
                           {isRecibido && (
                             <>
                               <TableCell className="text-right border-l border-border/30 font-semibold text-emerald-700 dark:text-emerald-400">
-                                {formatNumber(Number(linea.cantidadRecibida), { kind: "count" })} <span className="text-xs font-normal opacity-70">{linea.unidad === "METRO" ? "m" : "kg"}</span>
+                                {formatNumber(Number(linea.cantidadRecibida), { kind: "count" })} <span className="text-xs font-normal opacity-70">{formatUnit(linea.unidad)}</span>
                               </TableCell>
                               <TableCell className="text-right font-medium">
                                 {formatNumber(linea.rollosRecibidos, { kind: "count" })}

@@ -27,7 +27,7 @@ import { es } from "date-fns/locale";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Link, useLocation } from "wouter";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 
 function CaptureCostDialog({
   entradaId,
@@ -193,7 +193,7 @@ function CaptureCostDialog({
                               {hasOverrides && <Badge variant="outline" className="mt-1 text-[10px] bg-amber-50 text-amber-700 border-amber-200">Sobrescrito parcialmente</Badge>}
                             </TableCell>
                             <TableCell className="text-right">
-                               {formatNumber(linea.cantidadTotal, { kind: "quantity" })} <span className="text-xs text-muted-foreground">{linea.unidadProducto}</span>
+                               {formatNumber(linea.cantidadTotal, { kind: "quantity" })} <span className="text-xs text-muted-foreground">{formatUnit(linea.unidadProducto)}</span>
                             </TableCell>
                             <TableCell>
                               {hasPending ? (
@@ -236,7 +236,7 @@ function CaptureCostDialog({
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right text-muted-foreground">
-                                   {formatNumber(rollo.cantidadInicial, { kind: "quantity" })} <span className="text-[10px]">{linea.unidadProducto}</span>
+                                   {formatNumber(rollo.cantidadInicial, { kind: "quantity" })} <span className="text-[10px]">{formatUnit(linea.unidadProducto)}</span>
                                 </TableCell>
                                 <TableCell>
                                   {isPending ? (
@@ -368,8 +368,9 @@ export default function EntradasPendientesCosto() {
                     <TableHead>Sitio</TableHead>
                     <TableHead>Proveedor</TableHead>
                     <TableHead className="text-right">Rollos</TableHead>
-                    <TableHead className="text-right">Metros</TableHead>
-                    <TableHead className="text-right">Kilos</TableHead>
+                    <TableHead className="text-right">{formatUnit("METRO")}</TableHead>
+                    <TableHead className="text-right">{formatUnit("KILO")}</TableHead>
+                    <TableHead className="text-right">{formatUnit("BOLSA")}</TableHead>
                     <TableHead>Registrado por</TableHead>
                     <TableHead className="text-center">Acción</TableHead>
                   </TableRow>
@@ -377,13 +378,13 @@ export default function EntradasPendientesCosto() {
                 <TableBody>
                   {listLoading ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="h-32 text-center text-muted-foreground">
+                      <TableCell colSpan={10} className="h-32 text-center text-muted-foreground">
                         Cargando pendientes...
                       </TableCell>
                     </TableRow>
                   ) : !pendientesRes || pendientesRes.items.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="h-48 text-center">
+                      <TableCell colSpan={10} className="h-48 text-center">
                         <div className="flex flex-col items-center justify-center text-muted-foreground">
                           <DollarSign className="w-12 h-12 opacity-20 mb-2" />
                           <p>No hay entradas pendientes de costo.</p>
@@ -415,6 +416,7 @@ export default function EntradasPendientesCosto() {
                          <TableCell className="text-right font-medium">{formatNumber(item.rollosPendientes, { kind: "count" })}</TableCell>
                          <TableCell className="text-right tabular-nums">{parseFloat(item.totalMetros) > 0 ? formatNumber(item.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
                          <TableCell className="text-right tabular-nums">{parseFloat(item.totalKilos) > 0 ? formatNumber(item.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
+                         <TableCell className="text-right tabular-nums">{parseFloat(item.totalBolsas) > 0 ? formatNumber(item.totalBolsas, { kind: "quantity" }) : "-"}</TableCell>
                         <TableCell className="text-sm text-muted-foreground">{item.nombreUsuario}</TableCell>
                         <TableCell className="text-center">
                           <Button size="sm" onClick={() => setSelectedEntradaId(item.id)} data-testid={`btn-capture-${item.id}`}>

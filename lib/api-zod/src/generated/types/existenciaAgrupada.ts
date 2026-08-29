@@ -14,5 +14,6 @@ export interface ExistenciaAgrupada {
   rollosCount: number;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   colores: ExistenciaAgrupadaHijo[];
 }

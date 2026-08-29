@@ -356,6 +356,15 @@ export async function getContenedorDetail(id: number, scope: Scope) {
         0,
       )
       .toFixed(3),
+    bolsas: lines
+      .filter((line) => line.unidad === "BOLSA")
+      .reduce(
+        (sum, line) =>
+          sum +
+          Number(received ? line.cantidadRecibida : line.cantidadEsperada),
+        0,
+      )
+      .toFixed(3),
   });
   const realDate = h.fecha_real_llegada == null ? null : String(h.fecha_real_llegada);
   const orderDate = h.fecha_pedido == null ? null : String(h.fecha_pedido);
@@ -519,6 +528,7 @@ export async function getContenedoresSummary(
       COALESCE(SUM(cl.rollos_esperados),0)::int rollos,
       COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
       COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='KILO'),0)::text kilos,
+      COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='BOLSA'),0)::text bolsas,
       COUNT(DISTINCT c.id) FILTER (WHERE c.fecha_estimada_llegada<CURRENT_DATE)::int retrasados
     FROM contenedores c JOIN contenedor_lineas cl ON cl.contenedor_id=c.id
     JOIN productos pr ON pr.id=cl.producto_id
@@ -547,6 +557,7 @@ export async function getContenedoresSummary(
       COUNT(rollo_id)::int rollos,
       COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='METRO'),0)::text metros,
       COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='KILO'),0)::text kilos,
+      COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='BOLSA'),0)::text bolsas,
       (SELECT AVG(fecha_real_llegada-fecha_pedido)::numeric(12,2)::text FROM received WHERE fecha_pedido IS NOT NULL) dias_promedio,
       (SELECT COUNT(*) FILTER (WHERE fecha_real_llegada<fecha_estimada_llegada)::int FROM received) antes,
       (SELECT COUNT(*) FILTER (WHERE fecha_real_llegada=fecha_estimada_llegada)::int FROM received) a_tiempo,
@@ -571,6 +582,7 @@ export async function getContenedoresSummary(
           COUNT(DISTINCT rc.id)::int contenedores,COUNT(rolls.rollo_id)::int rollos,
           COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='METRO'),0)::text metros,
           COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='KILO'),0)::text kilos,
+          COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='BOLSA'),0)::text bolsas,
           (SELECT AVG(avg_rc.fecha_real_llegada-avg_rc.fecha_pedido)::numeric(12,2)::text
             FROM received avg_rc WHERE avg_rc.proveedor_id=pv.id AND avg_rc.fecha_pedido IS NOT NULL) "diasPromedioTransito",
           COUNT(DISTINCT rc.id) FILTER (WHERE rc.fecha_real_llegada<rc.fecha_estimada_llegada)::int antes,
@@ -598,6 +610,7 @@ export async function getContenedoresSummary(
         SELECT pr.tela,pr.unidad,COUNT(DISTINCT c.id)::int contenedores,COUNT(r.id)::int rollos,
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='KILO'),0)::text kilos
+          ,COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='BOLSA'),0)::text bolsas
           ${scope.admin ? sql`, CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 THEN NULL ELSE SUM(r.costo_total)::text END AS "costoTotal",
           CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 OR SUM(r.cantidad_inicial)=0 THEN NULL ELSE (SUM(r.costo_total)/SUM(r.cantidad_inicial))::numeric(14,4)::text END AS "costoUnitarioReal"` : sql``}
         FROM contenedores c JOIN entradas e ON e.id=c.entrada_id JOIN rollos r ON r.recepcion_id=e.id JOIN productos pr ON pr.id=r.producto_id
@@ -608,6 +621,7 @@ export async function getContenedoresSummary(
         SELECT pr.color,pr.unidad,COUNT(DISTINCT c.id)::int contenedores,COUNT(r.id)::int rollos,
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='KILO'),0)::text kilos
+          ,COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='BOLSA'),0)::text bolsas
           ${scope.admin ? sql`, CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 THEN NULL ELSE SUM(r.costo_total)::text END AS "costoTotal",
           CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 OR SUM(r.cantidad_inicial)=0 THEN NULL ELSE (SUM(r.costo_total)/SUM(r.cantidad_inicial))::numeric(14,4)::text END AS "costoUnitarioReal"` : sql``}
         FROM contenedores c JOIN entradas e ON e.id=c.entrada_id JOIN rollos r ON r.recepcion_id=e.id JOIN productos pr ON pr.id=r.producto_id
@@ -665,6 +679,7 @@ export async function getContenedoresSummary(
       rollosPorLlegar: Number(c.rollos),
       metrosPorLlegar: Number(c.metros).toFixed(3),
       kilosPorLlegar: Number(c.kilos).toFixed(3),
+      bolsasPorLlegar: Number(c.bolsas).toFixed(3),
       retrasados: Number(c.retrasados),
       proximo: nextRow
         ? {
@@ -680,6 +695,7 @@ export async function getContenedoresSummary(
       rollos: Number(p.rollos),
       metros: Number(p.metros).toFixed(3),
       kilos: Number(p.kilos).toFixed(3),
+      bolsas: Number(p.bolsas).toFixed(3),
       diasPromedio: p.dias_promedio == null ? null : String(p.dias_promedio),
       antes: Number(p.antes),
       aTiempo: Number(p.a_tiempo),

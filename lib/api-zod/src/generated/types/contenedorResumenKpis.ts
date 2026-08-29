@@ -12,6 +12,7 @@ export interface ContenedorResumenKpis {
   rollosPorLlegar: number;
   metrosPorLlegar: string;
   kilosPorLlegar: string;
+  bolsasPorLlegar: string;
   retrasados: number;
   proximo: ContenedorResumenKpisProximo | null;
 }

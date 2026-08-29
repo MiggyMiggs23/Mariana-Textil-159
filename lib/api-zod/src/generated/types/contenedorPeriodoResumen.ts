@@ -11,6 +11,7 @@ export interface ContenedorPeriodoResumen {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   /** @nullable */
   diasPromedio: string | null;
   antes: number;

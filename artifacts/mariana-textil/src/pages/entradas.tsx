@@ -53,7 +53,7 @@ import {
   updateRollQuantity,
 } from "@/lib/roll-capture-state";
 import { Link } from "wouter";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 
 type DraftLinea = {
@@ -509,10 +509,14 @@ export default function Entradas() {
     }
     const invalidRollIndex = capCantidades.findIndex((qty) => {
       const parsed = Number(qty);
-      return !Number.isFinite(parsed) || parsed <= 0;
+      return !Number.isFinite(parsed) || parsed <= 0 ||
+        (selectedProduct?.unidad === "BOLSA" && !Number.isInteger(parsed));
     });
     if (invalidRollIndex !== -1) {
-      toast.error(`El metraje del rollo ${invalidRollIndex + 1} debe ser mayor que cero.`);
+      const isBag = selectedProduct?.unidad === "BOLSA";
+      toast.error(isBag
+        ? `Las bolsas de la caja ${invalidRollIndex + 1} deben ser un número entero mayor que cero.`
+        : `La cantidad del rollo ${invalidRollIndex + 1} debe ser mayor que cero.`);
       return;
     }
     if (pisosActivos.length > 0) {
@@ -832,7 +836,7 @@ export default function Entradas() {
                 {showCost && (
                   <div className="space-y-2">
                     <Label>
-                      Costo por {selectedProduct?.unidad?.toLowerCase() ?? "metro o kilo"} <span className="text-destructive">*</span>
+                      Costo por {selectedProduct ? formatUnit(selectedProduct.unidad) : "unidad"} <span className="text-destructive">*</span>
                     </Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
@@ -1137,7 +1141,7 @@ export default function Entradas() {
               <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
                 <div className="mb-3">
                   <div className="font-bold text-sm">
-                    Todos los rollos con el mismo {selectedProduct?.unidad === "KILO" ? "peso" : "metraje"}
+                    Todos los rollos con la misma {selectedProduct?.unidad === "KILO" ? "peso" : selectedProduct?.unidad === "BOLSA" ? "cantidad de bolsas por caja" : "cantidad en metros"}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Llena los {declaredCount || "—"} rollos de una vez y después corrige únicamente las excepciones.
@@ -1147,8 +1151,8 @@ export default function Entradas() {
                   <div className="relative flex-1">
                     <Input
                       type="number"
-                      min="0.01"
-                      step="0.01"
+                      min={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                      step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
                       value={uniformQty}
                       onChange={(event) => setUniformQty(event.target.value)}
                       placeholder="0.00"
@@ -1156,7 +1160,7 @@ export default function Entradas() {
                       data-testid="input-uniform-qty"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
-                      {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
+                      {formatUnit(selectedProduct?.unidad)}
                     </span>
                   </div>
                   <Button
@@ -1211,8 +1215,8 @@ export default function Entradas() {
                   <CampoEscaneo
                     ref={qtyInputRef}
                     type="number"
-                    step="0.01"
-                    placeholder="0.00"
+                    step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                    placeholder={selectedProduct?.unidad === "BOLSA" ? "0" : "0.00"}
                     value={capCurrentQty}
                     onChange={setCapCurrentQty}
                     onScan={handleAddQty}
@@ -1222,7 +1226,7 @@ export default function Entradas() {
                     data-testid="input-capture-qty"
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground text-xl">
-                    {selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}
+                    {formatUnit(selectedProduct?.unidad)}
                   </div>
                 </div>
 
@@ -1288,8 +1292,8 @@ export default function Entradas() {
                           <div className="flex items-center gap-2">
                             <Input
                               type="number"
-                              min="0.01"
-                              step="0.01"
+                              min={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                              step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
                               value={editingQtyValue}
                               onChange={(event) => handleChangeCapturedQty(event.target.value)}
                               onKeyDown={(event) => {
@@ -1303,7 +1307,7 @@ export default function Entradas() {
                               data-testid={`input-edit-roll-${idx}`}
                             />
                             <span className="text-sm font-bold text-muted-foreground">
-                              {selectedProduct?.unidad === "METRO" ? "M" : "KG"}
+                              {formatUnit(selectedProduct?.unidad)}
                             </span>
                             {pisosActivos.length > 0 && (
                               <Select value={editingPisoValue || "none"} onValueChange={(v) => handleChangeCapturedPiso(v === "none" ? null : v)}>
@@ -1326,7 +1330,7 @@ export default function Entradas() {
                         ) : (
                           <div className="flex items-center gap-4">
                             <span className="text-2xl font-black tabular-nums">
-                              {qty} <span className="text-sm font-bold text-muted-foreground">{selectedProduct?.unidad === 'METRO' ? 'M' : 'KG'}</span>
+                              {qty} <span className="text-sm font-bold text-muted-foreground">{formatUnit(selectedProduct?.unidad)}</span>
                             </span>
                             {pisosActivos.length > 0 && capPisos[idx] && (
                               <Badge variant="outline" className="text-[10px]">

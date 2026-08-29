@@ -14,6 +14,7 @@ export { ensureSupervisorRole } from "./lib/role-migration";
 export { ensureDocumentFoliosSchema } from "./lib/document-folios-schema";
 export { ensureEstadoRolloSchema } from "./lib/estado-rollo-schema";
 export { ensureProductMeterSchema } from "./lib/product-meter-schema";
+export { ensureProductUnitSchema } from "./lib/product-unit-schema";
 export { ensureProductPricingSchema } from "./lib/product-pricing-schema";
 export { ensureProductColorSchema } from "./lib/product-color-schema";
 export { ensureProductSpecificationsSchema } from "./lib/product-specifications-schema";

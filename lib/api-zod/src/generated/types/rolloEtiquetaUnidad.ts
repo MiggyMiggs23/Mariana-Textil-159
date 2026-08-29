@@ -12,4 +12,5 @@ export type RolloEtiquetaUnidad = typeof RolloEtiquetaUnidad[keyof typeof RolloE
 export const RolloEtiquetaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

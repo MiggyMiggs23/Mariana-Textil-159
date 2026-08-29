@@ -35,7 +35,7 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 
 import {
   Dialog,
@@ -264,7 +264,7 @@ export default function SalidaDetail() {
                           </td>
                           <td className="px-4 py-3 text-right">
                             <span className="font-medium text-slate-900">{formatNumber(rollo.cantidadEnviada, { kind: "quantity" })}</span>
-                            <span className="text-[10px] ml-1 uppercase text-slate-400 font-bold tracking-wider">{linea?.unidadProducto}</span>
+                            <span className="text-[10px] ml-1 text-slate-400 font-bold tracking-wider">{formatUnit(linea?.unidadProducto)}</span>
                           </td>
                         </tr>
                       );
@@ -295,7 +295,7 @@ export default function SalidaDetail() {
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-xs text-slate-500">{item.color} • {item.sku}</span>
-                          <span className="text-sm font-bold text-primary">{formatNumber(item.cantidad, { kind: "quantity" })} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
+                          <span className="text-sm font-bold text-primary">{formatNumber(item.cantidad, { kind: "quantity" })} <span className="text-[10px] font-bold text-slate-400">{formatUnit(item.unidad)}</span></span>
                         </div>
                       </div>
                     ))}
@@ -318,6 +318,12 @@ export default function SalidaDetail() {
                 <div className="flex justify-between items-end pb-1">
                   <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kilos</span>
                   <span className="text-lg font-bold text-slate-700">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
+                </div>
+              )}
+              {salida.totalBolsas && Number(salida.totalBolsas) > 0 && (
+                <div className="flex justify-between items-end pb-1">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{formatUnit("BOLSA")}</span>
+                  <span className="text-lg font-bold text-slate-700">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</span>
                 </div>
               )}
             </CardContent>

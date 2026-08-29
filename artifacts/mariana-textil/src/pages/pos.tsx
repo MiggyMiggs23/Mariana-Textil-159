@@ -63,7 +63,7 @@ import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { ClientSelector } from "@/components/client-selector";
 import { CampoEscaneo } from "@/components/campo-escaneo";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   advertenciaSkuEscaneado,
   type CodigoEscaneadoInterpretado,
@@ -241,7 +241,7 @@ function CartLineItem({
         <div className="flex items-center gap-3">
           <div className="w-24">
             <Label className="text-[10px] text-muted-foreground">
-              Precio / {item.producto.unidad}
+              Precio / {formatUnit(item.producto.unidad)}
             </Label>
             <div className="relative">
               <Input
@@ -277,7 +277,7 @@ function CartLineItem({
             </div>
           ) : (
             <div className="font-mono text-sm">
-               {formatNumber(item.cantidad, { kind: "quantity" })} {item.producto.unidad}
+               {formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.producto.unidad)}
             </div>
           )}
 
@@ -918,14 +918,14 @@ export default function PosPage() {
                           <div className="text-sm mt-2 text-muted-foreground">
                             Disp:{" "}
                             <span className="font-semibold text-foreground">
-                               {formatNumber(rollo.cantidadActual, { kind: "quantity" })} {rollo.unidad}
+                               {formatNumber(rollo.cantidadActual, { kind: "quantity" })} {formatUnit(rollo.unidad)}
                             </span>
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
                             {formatNumber(rollo.precioSugerido, { kind: "money" })}
-                            /{rollo.unidad}
+                            /{formatUnit(rollo.unidad)}
                           </div>
                           <Button
                             size="sm"
@@ -943,7 +943,7 @@ export default function PosPage() {
 
                 {tipoTicket === TipoTicket.METREADO &&
                   searchResults.productos
-                    .filter((prod: PosProducto) => prod.unidad === "METRO" && prod.seVendePorMetro)
+                    .filter((prod: PosProducto) => (prod.unidad === "METRO" || prod.unidad === "BOLSA") && prod.seVendePorMetro)
                     .map((prod: PosProducto) => (
                     <Card
                       key={prod.id}
@@ -961,7 +961,7 @@ export default function PosPage() {
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
                              {formatNumber(prod.precioMenudeo, { kind: "money" })}
-                            /{prod.unidad}
+                            /{formatUnit(prod.unidad)}
                           </div>
                            <div className="text-xs text-muted-foreground text-right">
                              Mayoreo: {formatNumber(prod.precioMayoreo, { kind: "money" })} · desde {MAYOREO_THRESHOLD_METERS} m

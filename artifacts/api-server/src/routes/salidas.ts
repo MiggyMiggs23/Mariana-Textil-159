@@ -410,7 +410,7 @@ router.get(
       ];
       for (const item of result.items) sheet.addRow({
         folio: item.folioFormateado, estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
-        usuario: item.nombreUsuario, rollos: toExcelNumber(item.totalRollos), metros: toExcelNumber(item.totalMetros), kilos: toExcelNumber(item.totalKilos),
+        usuario: item.nombreUsuario, rollos: toExcelNumber(item.totalRollos), metros: toExcelNumber(item.totalMetros), kilos: toExcelNumber(item.totalKilos), bolsas: toExcelNumber(item.totalBolsas),
         transportista: item.transportista, observaciones: item.observaciones,
       });
       sheet.getColumn("rollos").numFmt = EXCEL_NUMBER_FORMAT.count;

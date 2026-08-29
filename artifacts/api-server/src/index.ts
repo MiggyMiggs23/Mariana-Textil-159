@@ -12,6 +12,7 @@ import {
   ensureDocumentFoliosSchema,
   ensureEstadoRolloSchema,
   ensureProductMeterSchema,
+  ensureProductUnitSchema,
   ensureProductPricingSchema,
   ensureProductColorSchema,
   ensureProductSpecificationsSchema,
@@ -54,6 +55,7 @@ async function startServer() {
   await ensureAplicacionesPagoProveedorSchema(pool);
   logger.info("Esquema de auditoría verificado");
   await ensureEstadoRolloSchema(pool);
+  await ensureProductUnitSchema(pool);
   await ensureProductMeterSchema(pool);
   await ensureProductPricingSchema(pool);
   await ensureProductColorSchema(pool);

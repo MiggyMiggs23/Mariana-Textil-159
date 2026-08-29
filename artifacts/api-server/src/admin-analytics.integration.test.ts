@@ -60,7 +60,7 @@ if (!testUrl) {
         [`${tag}-Cliente`],
       );
       ids.clients.push(Number(client.id));
-      for (const unit of ["METRO", "KILO"]) {
+      for (const unit of ["METRO", "KILO", "BOLSA"]) {
         const product = await one(
           `INSERT INTO productos(sku,tela,color,unidad,precio_sugerido)
            VALUES($1,$2,$3,$4,100) RETURNING id`,

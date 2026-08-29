@@ -1,5 +1,31 @@
 export type NumericValue = number | string | bigint | null | undefined;
 
+/** Stable enum values remain technical; only this presentation boundary translates them. */
+export const UNIT_LABELS = {
+  METRO: "Mts.",
+  KILO: "Kg.",
+  BOLSA: "Bolsas",
+} as const;
+
+export type DisplayUnitCode = keyof typeof UNIT_LABELS;
+
+/**
+ * Formats a product unit for screens and generated documents.
+ * Unknown values are preserved so historical data is visible rather than mislabeled.
+ */
+export function formatUnit(value: string | null | undefined, empty = "—"): string {
+  if (!value) return empty;
+  return UNIT_LABELS[value.trim().toUpperCase() as DisplayUnitCode] ?? value.trim();
+}
+
+/** Quantity heading used by the physical QR label. */
+export function formatPackageQuantityLabel(value: string | null | undefined): string {
+  const unit = value?.trim().toUpperCase();
+  if (unit === "BOLSA") return "BOLSAS POR CAJA";
+  if (unit === "KILO") return "KILOS DEL ROLLO";
+  return "METROS DEL ROLLO";
+}
+
 /** Stable values used in APIs and persistence for where money is deposited. */
 export const ACCOUNT_DESTINATION_CODES = [
   "CAJA_FISICA",

@@ -1,10 +1,13 @@
-/** MAYOREO applies to each individual metered product-and-color line at 10 meters or more. */
-export const MAYOREO_THRESHOLD_METERS = 10;
+/** Initial MAYOREO threshold for each loose-unit product-and-color line. */
+export const MAYOREO_THRESHOLD_UNITS = 10;
+/** Named aliases keep the applicable physical unit explicit at call sites. */
+export const MAYOREO_THRESHOLD_METERS = MAYOREO_THRESHOLD_UNITS;
+export const MAYOREO_THRESHOLD_BAGS = MAYOREO_THRESHOLD_UNITS;
 
 export type MeteredPriceTier = "MAYOREO" | "MENUDEO";
 
 export function meteredPriceTier(quantity: number): MeteredPriceTier {
-  return quantity >= MAYOREO_THRESHOLD_METERS ? "MAYOREO" : "MENUDEO";
+  return quantity >= MAYOREO_THRESHOLD_UNITS ? "MAYOREO" : "MENUDEO";
 }
 
 /** Selects the prefilled metered price for the line's current quantity. */

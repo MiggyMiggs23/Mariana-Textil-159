@@ -13,4 +13,5 @@ export const HojaVentasDiaLineaUnidad = {
   ROLLOS: 'ROLLOS',
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

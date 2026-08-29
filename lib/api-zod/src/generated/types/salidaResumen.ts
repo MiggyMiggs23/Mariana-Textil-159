@@ -30,6 +30,7 @@ export interface SalidaResumen {
   totalRollos?: number;
   totalMetros?: string;
   totalKilos?: string;
+  totalBolsas?: string;
   /** @nullable */
   usuarioId?: number | null;
   /** @nullable */

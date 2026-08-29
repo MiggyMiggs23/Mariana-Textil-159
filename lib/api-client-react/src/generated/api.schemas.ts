@@ -217,6 +217,7 @@ export type ContenedorCatalogoProductoUnidad = typeof ContenedorCatalogoProducto
 export const ContenedorCatalogoProductoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ContenedorCatalogoProducto {
@@ -277,6 +278,7 @@ export type ContenedorLineaUnidad = typeof ContenedorLineaUnidad[keyof typeof Co
 export const ContenedorLineaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ContenedorLinea {
@@ -315,6 +317,7 @@ export interface ContenedorTotals {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
 }
 
 export type ContenedorListLineaUnidad = typeof ContenedorListLineaUnidad[keyof typeof ContenedorListLineaUnidad];
@@ -323,6 +326,7 @@ export type ContenedorListLineaUnidad = typeof ContenedorListLineaUnidad[keyof t
 export const ContenedorListLineaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ContenedorListLinea {
@@ -427,6 +431,7 @@ export interface ContenedorResumenKpis {
   rollosPorLlegar: number;
   metrosPorLlegar: string;
   kilosPorLlegar: string;
+  bolsasPorLlegar: string;
   retrasados: number;
   proximo: ContenedorResumenKpisProximo | null;
 }
@@ -440,6 +445,7 @@ export interface ContenedorProveedorResumen {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   /** @nullable */
   diasPromedioTransito: string | null;
   antes: number;
@@ -462,6 +468,7 @@ export interface ContenedorPeriodoResumen {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   /** @nullable */
   diasPromedio: string | null;
   antes: number;
@@ -485,6 +492,7 @@ export type ContenedorProductoResumenUnidad = typeof ContenedorProductoResumenUn
 export const ContenedorProductoResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ContenedorProductoResumen {
@@ -514,6 +522,7 @@ export type ContenedorGrupoResumenUnidad = typeof ContenedorGrupoResumenUnidad[k
 export const ContenedorGrupoResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ContenedorGrupoResumen {
@@ -524,6 +533,7 @@ export interface ContenedorGrupoResumen {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   /**
      * Solo ADMIN
      * @nullable
@@ -556,6 +566,7 @@ export type ContenedorDiferenciaResumenUnidad = typeof ContenedorDiferenciaResum
 export const ContenedorDiferenciaResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ContenedorDiferenciaResumen {
@@ -719,6 +730,7 @@ export type RolloEtiquetaUnidad = typeof RolloEtiquetaUnidad[keyof typeof RolloE
 export const RolloEtiquetaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export type EstadoRollo = typeof EstadoRollo[keyof typeof EstadoRollo];
@@ -763,6 +775,7 @@ export type EtiquetaImprimibleUnidad = typeof EtiquetaImprimibleUnidad[keyof typ
 export const EtiquetaImprimibleUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export type EtiquetaImprimibleFormatoMm = {
@@ -839,6 +852,7 @@ export type AnalyticsQuantityUnidad = typeof AnalyticsQuantityUnidad[keyof typeo
 export const AnalyticsQuantityUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export type TipoTicket = typeof TipoTicket[keyof typeof TipoTicket];
@@ -1316,9 +1330,12 @@ export interface AdminStoreComparison {
   lineasExcluidasMargen: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   rollosMetros: string;
   rollosKilos: string;
+  rollosBolsas: string;
   metrajeMetros: string;
+  metrajeBolsas: string;
   efectivo: string;
   transferencia: string;
   credito: string;
@@ -1340,9 +1357,12 @@ export interface AdminStoreComparisonTotals {
   lineasExcluidasMargen: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   rollosMetros: string;
   rollosKilos: string;
+  rollosBolsas: string;
   metrajeMetros: string;
+  metrajeBolsas: string;
   efectivo: string;
   transferencia: string;
   credito: string;
@@ -2220,6 +2240,7 @@ export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
 export const UnidadProducto = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 /**
@@ -2793,6 +2814,7 @@ export type DashboardInventarioPorUbicacionItem = {
   nombre: string;
   metros: string;
   kilos: string;
+  bolsas: string;
   rollos: string;
 };
 
@@ -3432,6 +3454,8 @@ export interface KardexResumen {
   totalMetros: string;
   /** Suma absoluta de cantidades KILO del resultado filtrado completo. */
   totalKilos: string;
+  /** Suma absoluta de cantidades BOLSA del resultado filtrado completo. */
+  totalBolsas: string;
 }
 
 export interface KardexResult {
@@ -3668,6 +3692,7 @@ export interface EntradaPendienteCosto {
   rollosPendientes: number;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   nombreUsuario: string;
   overdue48h: boolean;
 }
@@ -3702,6 +3727,7 @@ export type ExistenciaAgrupadaHijoUnidad = typeof ExistenciaAgrupadaHijoUnidad[k
 export const ExistenciaAgrupadaHijoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface ExistenciaAgrupadaHijo {
@@ -3720,6 +3746,7 @@ export interface ExistenciaAgrupada {
   rollosCount: number;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   colores: ExistenciaAgrupadaHijo[];
 }
 
@@ -3827,6 +3854,7 @@ export interface SalidaResumen {
   totalRollos?: number;
   totalMetros?: string;
   totalKilos?: string;
+  totalBolsas?: string;
   /** @nullable */
   usuarioId?: number | null;
   /** @nullable */
@@ -4748,6 +4776,7 @@ export const HojaVentasDiaLineaUnidad = {
   ROLLOS: 'ROLLOS',
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;
 
 export interface HojaVentasDiaLinea {
@@ -4785,6 +4814,7 @@ export interface HojaVentasDia {
   totalRollos: string;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   subtotal: string;
   ivaFacturado: string;
   totalGeneral: string;
@@ -4953,6 +4983,7 @@ export interface ViajeSummary {
   totalRollos: number;
   totalMetros: string;
   totalKilos: string;
+  totalBolsas: string;
   destinos: string[];
 }
 

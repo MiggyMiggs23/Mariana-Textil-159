@@ -39,7 +39,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert, Search } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   getCategoricalChartColor,
   REPORT_NEGATIVE_COLOR,
@@ -549,12 +549,12 @@ export default function ProveedorDetail() {
                             <div>{formatNumber(compra.totalRollos, { kind: "count" })} rll</div>
                             {parseFloat(compra.cantidadMetros) > 0 && (
                               <div className="text-xs text-muted-foreground">
-                                {formatNumber(compra.cantidadMetros, { kind: "quantity" })} METRO · {formatNumber(compra.costoPorMetro, { kind: "money" })} / metro
+                                {formatNumber(compra.cantidadMetros, { kind: "quantity" })} {formatUnit("METRO")} · {formatNumber(compra.costoPorMetro, { kind: "money" })} / {formatUnit("METRO")}
                               </div>
                             )}
                             {parseFloat(compra.cantidadKilos) > 0 && (
                               <div className="text-xs text-muted-foreground">
-                                {formatNumber(compra.cantidadKilos, { kind: "quantity" })} KILO · {formatNumber(compra.costoPorKilo, { kind: "money" })} / kilo
+                                {formatNumber(compra.cantidadKilos, { kind: "quantity" })} {formatUnit("KILO")} · {formatNumber(compra.costoPorKilo, { kind: "money" })} / {formatUnit("KILO")}
                               </div>
                             )}
                           </TableCell>
@@ -792,14 +792,13 @@ export default function ProveedorDetail() {
                            <TableHead>Producto (SKU)</TableHead>
                            <TableHead>Tela / Color</TableHead>
                            <TableHead className="text-right">Rollos / Cantidad</TableHead>
-                            <TableHead className="text-right">Costo por metro</TableHead>
-                            <TableHead className="text-right">Costo por kilo</TableHead>
+                             <TableHead className="text-right">Costo unitario</TableHead>
                            <TableHead className="text-right">Total</TableHead>
                          </TableRow>
                        </TableHeader>
                        <TableBody>
-                         {estadisticas.porProducto.length === 0 ? (
-                            <TableRow><TableCell colSpan={6} className="text-center h-24 text-muted-foreground">No hay productos en el periodo</TableCell></TableRow>
+                          {estadisticas.porProducto.length === 0 ? (
+                             <TableRow><TableCell colSpan={5} className="text-center h-24 text-muted-foreground">No hay productos en el periodo</TableCell></TableRow>
                          ) : (
                            estadisticas.porProducto.map(prod => (
                              <Fragment key={prod.productoId}>
@@ -808,26 +807,15 @@ export default function ProveedorDetail() {
                                <TableCell>{prod.tela} <Badge variant="secondary" className="ml-2 font-normal text-[10px]">{prod.color}</Badge></TableCell>
                                <TableCell className="text-right text-sm">
                                   <div>{formatNumber(prod.totalRollos, { kind: "count" })} rll</div>
-                                  <div className="text-xs text-muted-foreground">{formatNumber(prod.cantidadTotal, { kind: "quantity" })} {prod.unidad}</div>
+                                  <div className="text-xs text-muted-foreground">{formatNumber(prod.cantidadTotal, { kind: "quantity" })} {formatUnit(prod.unidad)}</div>
                                </TableCell>
-                               <TableCell className="text-right">
-                                  {prod.unidad === "METRO" ? (
-                                    <>
-                                      <div className="font-medium">{formatNumber(prod.costoPorUnidad, { kind: "money" })} / metro</div>
-                                    </>
-                                  ) : "-"}
-                                </TableCell>
                                 <TableCell className="text-right">
-                                  {prod.unidad === "KILO" ? (
-                                    <>
-                                      <div className="font-medium">{formatNumber(prod.costoPorUnidad, { kind: "money" })} / kilo</div>
-                                    </>
-                                  ) : "-"}
+                                   <div className="font-medium">{formatNumber(prod.costoPorUnidad, { kind: "money" })} / {formatUnit(prod.unidad)}</div>
                                </TableCell>
                                 <TableCell className="text-right font-semibold">{formatNumber(prod.totalCosto, { kind: "money" })}</TableCell>
                              </TableRow>
                              <TableRow key={`${prod.productoId}-analytics`} className="bg-muted/10">
-                               <TableCell colSpan={6}>
+                                <TableCell colSpan={5}>
                                  <div className="grid md:grid-cols-2 gap-4 py-2 text-xs">
                                    <div><b>Historial real por compra</b>
                                       {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--report-stripe))"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${prod.unidad.toLowerCase()}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke={getCategoricalChartColor(0)} strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}

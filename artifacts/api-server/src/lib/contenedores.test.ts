@@ -222,12 +222,22 @@ test("list projection includes every complete expected multiproduct line", () =>
   }
 });
 
-test("list totals keep rolls, metres and kilos separate", () => {
+test("list totals keep rolls, metres, kilos and bags separate", () => {
   assert.deepEqual(summarizeExpectedLines(listRow.lineas), {
     lineas: 3,
     rollos: 6,
     metros: "150.750",
     kilos: "42.750",
+    bolsas: "0.000",
+  });
+});
+
+test("container totals preserve BOLSA as its own quantity", () => {
+  assert.deepEqual(summarizeExpectedLines([{
+    productoId: 14, sku: "BOL-TR", tela: "Bolsa", color: "Transparente",
+    unidad: "BOLSA", cantidadEsperada: "24", rollosEsperados: 1, nota: null,
+  }]), {
+    lineas: 1, rollos: 1, metros: "0.000", kilos: "0.000", bolsas: "24.000",
   });
 });
 

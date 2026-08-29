@@ -26,7 +26,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ReportTable } from "@/components/reportes/report-table";
 import { ReportCharts } from "@/components/reportes/report-charts";
 import { ProductCombobox } from "@/components/product-combobox";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { Ship, Plus, Search, Calendar, MapPin, Loader2, ArrowRight, Download, FileText, AlertCircle } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
@@ -869,7 +869,7 @@ function ContainerBlock({ item, isAdmin }: { item: ContenedorListItem, isAdmin: 
                   </TableCell>
                   <TableCell className="py-2 text-right font-mono text-sm font-semibold">
                     {formatNumber(Number(linea.cantidadEsperada), { kind: "count" })}
-                    <span className="text-[10px] text-muted-foreground ml-1">{linea.unidad === "METRO" ? "m" : "kg"}</span>
+                    <span className="text-[10px] text-muted-foreground ml-1">{formatUnit(linea.unidad)}</span>
                   </TableCell>
                   <TableCell className="py-2 pr-5 text-right font-mono text-sm font-semibold">
                     {linea.rollosEsperados ? formatNumber(linea.rollosEsperados, { kind: "count" }) : "-"}

@@ -415,7 +415,11 @@ inventarioRouter.post(
 
       // Products must exist and be active
       const productos = await db
-        .select({ id: productosTable.id, activo: productosTable.activo })
+        .select({
+          id: productosTable.id,
+          activo: productosTable.activo,
+          unidad: productosTable.unidad,
+        })
         .from(productosTable)
         .where(inArray(productosTable.id, productoIds));
       const productoMap = new Map(productos.map((p) => [p.id, p]));
@@ -427,6 +431,18 @@ inventarioRouter.post(
         }
         if (!p.activo) {
           res.status(400).json({ error: `Producto ${id} está inactivo.` });
+          return;
+        }
+      }
+      for (const linea of body.lineas) {
+        if (
+          productoMap.get(linea.productoId)?.unidad === "BOLSA" &&
+          linea.cantidades.some((cantidad) => !Number.isInteger(Number(cantidad)))
+        ) {
+          res.status(400).json({
+            error: "La cantidad de bolsas por caja debe ser un número entero.",
+            code: "BOLSA_INTEGER_QUANTITY_REQUIRED",
+          });
           return;
         }
       }
@@ -706,6 +722,8 @@ inventarioRouter.get(
                  (WHERE pr.unidad = 'METRO'), 0)::text AS total_metros,
                COALESCE(SUM(r.cantidad_inicial) FILTER
                  (WHERE pr.unidad = 'KILO'), 0)::text AS total_kilos,
+                COALESCE(SUM(r.cantidad_inicial) FILTER
+                  (WHERE pr.unidad = 'BOLSA'), 0)::text AS total_bolsas,
                (e.created_at < now() - interval '48 hours') AS overdue_48h,
                COUNT(*) OVER()::int AS total_rows
         FROM entradas e
@@ -731,6 +749,7 @@ inventarioRouter.get(
           rollosPendientes: Number(row.rollos_pendientes),
           totalMetros: String(row.total_metros),
           totalKilos: String(row.total_kilos),
+          totalBolsas: String(row.total_bolsas),
           nombreUsuario: String(row.nombre_usuario),
           overdue48h: Boolean(row.overdue_48h),
         })),
@@ -1373,7 +1392,7 @@ inventarioRouter.get(
         sku: string;
         rollosCount: number;
         cantidadTotal: string;
-        unidad: "METRO" | "KILO";
+        unidad: "METRO" | "KILO" | "BOLSA";
       };
       type Parent = {
         productoKey: string;
@@ -1382,6 +1401,7 @@ inventarioRouter.get(
         rollosCount: number;
         totalMetros: string;
         totalKilos: string;
+        totalBolsas: string;
         colores: Child[];
       };
       const parents = new Map<string, Parent>();
@@ -1395,9 +1415,10 @@ inventarioRouter.get(
           rollosCount: 0,
           totalMetros: "0.000",
           totalKilos: "0.000",
+          totalBolsas: "0.000",
           colores: [],
         };
-        const unidad = String(raw.unidad) as "METRO" | "KILO";
+        const unidad = String(raw.unidad) as "METRO" | "KILO" | "BOLSA";
         const quantity = Number(raw.cantidad_total);
         const rollosCount = Number(raw.rollos_count);
         parent.colores.push({
@@ -1412,8 +1433,10 @@ inventarioRouter.get(
         parent.rollosCount += rollosCount;
         if (unidad === "METRO") {
           parent.totalMetros = (Number(parent.totalMetros) + quantity).toFixed(3);
-        } else {
+        } else if (unidad === "KILO") {
           parent.totalKilos = (Number(parent.totalKilos) + quantity).toFixed(3);
+        } else {
+          parent.totalBolsas = (Number(parent.totalBolsas) + quantity).toFixed(3);
         }
         parents.set(key, parent);
       }

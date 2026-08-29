@@ -17,7 +17,7 @@ import {
 import { keepPreviousData } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   Search,
   Plus,
@@ -363,13 +363,14 @@ export default function Salidas() {
             ) : (
               isCaja ? (
                 <div className="overflow-x-auto">
-                  <div className="grid min-w-[1050px] grid-cols-[80px_150px_160px_80px_100px_100px_1fr_120px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <div className="grid min-w-[1150px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                     <span>Folio</span>
                     <span>Fecha y hora</span>
                     <span>Origen</span>
                     <span className="text-right">Rollos</span>
-                    <span className="text-right">Metros</span>
-                    <span className="text-right">Kilos</span>
+                    <span className="text-right">{formatUnit("METRO")}</span>
+                    <span className="text-right">{formatUnit("KILO")}</span>
+                    <span className="text-right">{formatUnit("BOLSA")}</span>
                     <span>Transportista</span>
                     <span>Estado</span>
                   </div>
@@ -380,7 +381,7 @@ export default function Salidas() {
                         <div
                           key={salida.id}
                           data-testid={`row-salida-${salida.id}`}
-                          className={`grid min-w-[1050px] grid-cols-[80px_150px_160px_80px_100px_100px_1fr_120px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
+                          className={`grid min-w-[1150px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
                         >
                           <Link href={`/salidas/${salida.id}`} className="font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" data-testid={`link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
                           <span className="text-sm">{format(new Date(salida.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
@@ -388,6 +389,7 @@ export default function Salidas() {
                           <span className="text-right font-semibold tabular-nums">{formatNumber(salida.totalRollos ?? 0, { kind: "count" })}</span>
                           <span className="text-right tabular-nums">{formatNumber(salida.totalMetros, { kind: "quantity" })}</span>
                           <span className="text-right tabular-nums">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
+                           <span className="text-right tabular-nums">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</span>
                           <span className="truncate">{salida.transportista || "—"}</span>
                           <span className={cancelled ? "no-underline" : ""}><EstadoBadge estado={salida.estado} /></span>
                         </div>

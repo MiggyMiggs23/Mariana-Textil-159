@@ -4,7 +4,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, MapPin, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function SalidaDocumento() {
@@ -182,7 +182,7 @@ export default function SalidaDocumento() {
                         </td>
                         <td className="py-0.5 px-2 font-mono text-[10px] text-gray-700">{line?.skuProducto}</td>
                         <td className="py-0.5 px-2 text-right text-xs font-medium">{formatNumber(rollo.cantidadEnviada, { kind: "quantity" })}</td>
-                        <td className="py-0.5 px-2 text-[10px] font-bold text-gray-500 tracking-wider">{line?.unidadProducto}</td>
+                        <td className="py-0.5 px-2 text-[10px] font-bold text-gray-500 tracking-wider">{formatUnit(line?.unidadProducto)}</td>
                       </tr>
                     );
                   })}
@@ -222,14 +222,20 @@ export default function SalidaDocumento() {
                         </tr>
                         {Number(salida.totalMetros) > 0 && (
                           <tr>
-                            <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-gray-600 text-[9px] uppercase bg-gray-50">Total Metros</td>
+                            <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-gray-600 text-[9px] uppercase bg-gray-50">Total Mts.</td>
                              <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-right text-[10px]">{formatNumber(salida.totalMetros, { kind: "quantity" })}</td>
                           </tr>
                         )}
                         {Number(salida.totalKilos) > 0 && (
                           <tr>
-                            <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-gray-600 text-[9px] uppercase bg-gray-50">Total Kilos</td>
+                            <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-gray-600 text-[9px] uppercase bg-gray-50">Total Kg.</td>
                              <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-right text-[10px]">{formatNumber(salida.totalKilos, { kind: "quantity" })}</td>
+                          </tr>
+                        )}
+                        {Number(salida.totalBolsas) > 0 && (
+                          <tr>
+                            <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-gray-600 text-[9px] uppercase bg-gray-50">Total {formatUnit("BOLSA")}</td>
+                            <td className="py-0.5 px-1.5 border border-gray-200 font-bold text-right text-[10px]">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</td>
                           </tr>
                         )}
                       </tbody>

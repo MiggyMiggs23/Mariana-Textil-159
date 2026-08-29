@@ -12,4 +12,5 @@ export type ContenedorLineaUnidad = typeof ContenedorLineaUnidad[keyof typeof Co
 export const ContenedorLineaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

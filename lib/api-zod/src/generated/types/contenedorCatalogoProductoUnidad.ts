@@ -12,4 +12,5 @@ export type ContenedorCatalogoProductoUnidad = typeof ContenedorCatalogoProducto
 export const ContenedorCatalogoProductoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
+  BOLSA: 'BOLSA',
 } as const;

@@ -13,6 +13,7 @@ export interface ContenedorProveedorResumen {
   rollos: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   /** @nullable */
   diasPromedioTransito: string | null;
   antes: number;

@@ -25,10 +25,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock, Download, ChevronLeft, ChevronRight, Filter } from "lucide-react";
-import { generateSKU } from "./productos";
+import { generateSkuPreview } from "./productos";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
 
 // Helper for generic API errors
@@ -161,7 +161,7 @@ export default function ProductoDetail() {
   const canViewPrices = user != null && !isSupervisor;
   const isBlocked = product?.skuBloqueado === true;
 
-  const autoSku = generateSKU(formData.tela, formData.color);
+  const autoSku = generateSkuPreview(formData.tela, formData.color);
   const displaySku = formData.isCustomSku ? formData.sku : autoSku;
 
   const handleSave = () => {
@@ -176,7 +176,7 @@ export default function ProductoDetail() {
         precioSugerido: formData.precioSugerido,
         notas: formData.notas || null,
         activo: formData.activo,
-        sku: isBlocked ? undefined : displaySku,
+        sku: isBlocked || !formData.isCustomSku ? undefined : displaySku,
         colorHex: isAdmin ? formData.colorHex : undefined,
         anchoCm: formData.anchoCm === "" ? null : Number(formData.anchoCm),
         composicion: formData.composicion || null,
@@ -283,13 +283,14 @@ export default function ProductoDetail() {
                     <Select value={formData.unidad} onValueChange={(v: UnidadProducto) => setFormData({...formData, unidad: v})}>
                       <SelectTrigger data-testid="input-edit-unidad"><SelectValue/></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
-                        <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                        <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
+                        <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
+                        <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
                       </SelectContent>
                     </Select>
                   ) : (
                     <div className="font-medium flex items-center h-10">
-                      {product.unidad}
+                      {formatUnit(product.unidad)}
                       {product.unidadBloqueada && (
                         <span title="Unidad en uso, no se puede cambiar">
                           <Lock className="w-3 h-3 ml-2 text-muted-foreground" />
@@ -428,7 +429,7 @@ export default function ProductoDetail() {
                 <div className="space-y-4">
                   <div>
                     <div className="text-4xl font-bold tracking-tighter mb-1">{formatNumber(product.cantidad, { kind: "quantity" })}</div>
-                    <div className="text-sm font-medium text-sidebar-primary">{product.unidad} TOTALES</div>
+                    <div className="text-sm font-medium text-sidebar-primary">{formatUnit(product.unidad)} totales</div>
                   </div>
                   <div className="h-px bg-white/10 w-full"></div>
                   <div>
@@ -459,7 +460,7 @@ export default function ProductoDetail() {
                       <div key={inv.ubicacionId} className={`p-4 flex items-center justify-between hover:bg-muted/30 transition-colors ${isZero ? 'opacity-60 bg-muted/10' : ''}`}>
                         <div className={`font-medium text-sm ${isZero ? 'text-muted-foreground' : ''}`}>{inv.nombre}</div>
                         <div className="text-right">
-                          <div className={`font-bold tabular-nums ${isZero ? 'text-muted-foreground' : 'text-foreground'}`}>{formatNumber(inv.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{product.unidad}</span></div>
+                          <div className={`font-bold tabular-nums ${isZero ? 'text-muted-foreground' : 'text-foreground'}`}>{formatNumber(inv.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{formatUnit(product.unidad)}</span></div>
                           <div className="text-xs text-muted-foreground">{formatNumber(inv.rollos, { kind: "count" })} rollos</div>
                         </div>
                       </div>
@@ -516,7 +517,7 @@ export default function ProductoDetail() {
                           {rollo.nombrePiso && <span className="ml-2 text-[10px] uppercase bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Piso: {rollo.nombrePiso}</span>}
                         </TableCell>
                         <TableCell className="text-right font-medium tabular-nums">
-                          {formatNumber(rollo.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{product.unidad}</span>
+                          {formatNumber(rollo.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{formatUnit(product.unidad)}</span>
                         </TableCell>
                         <TableCell className="text-right">
                           <Badge
@@ -554,7 +555,7 @@ export default function ProductoDetail() {
                 <div>
                   <div className="text-sm text-muted-foreground">Cantidad comprada</div>
                   <div className="text-xl font-semibold">
-                    {formatNumber(product.comprasResumen?.totalCantidad ?? 0, { kind: "quantity" })} {product.unidad}
+                    {formatNumber(product.comprasResumen?.totalCantidad ?? 0, { kind: "quantity" })} {formatUnit(product.unidad)}
                   </div>
                 </div>
                 <div>
@@ -595,7 +596,7 @@ export default function ProductoDetail() {
                         </TableCell>
                         <TableCell>{compra.proveedorNombre || "Sin proveedor"}</TableCell>
                         <TableCell className="text-right">
-                           {formatNumber(compra.totalCantidad ?? 0, { kind: "quantity" })} {product.unidad}
+                           {formatNumber(compra.totalCantidad ?? 0, { kind: "quantity" })} {formatUnit(product.unidad)}
                            <div className="text-xs text-muted-foreground">{formatNumber(compra.totalRollos ?? 0, { kind: "count" })} rollos</div>
                         </TableCell>
                          <TableCell className="text-right font-semibold">{formatNumber(compra.costoPorUnidad ?? 0, { kind: "money" })}</TableCell>

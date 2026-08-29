@@ -4,7 +4,9 @@ import {
   EXCEL_NUMBER_FORMAT,
   ACCOUNT_DESTINATION_ORDER,
   formatNumber,
+  formatPackageQuantityLabel,
   formatAccountDestination,
+  formatUnit,
   normalizeAccountDestination,
   toExcelNumber,
 } from "./index.js";
@@ -66,4 +68,12 @@ test("normalizes destination codes and legacy labels at the presentation boundar
   assert.equal(formatAccountDestination("Cuentas por cobrar"), "Ventas a Crédito");
   assert.equal(formatAccountDestination("OTRA_CUENTA"), "OTRA_CUENTA");
   assert.equal(formatAccountDestination(null), "—");
+});
+
+test("uses one visible product-unit contract", () => {
+  assert.equal(formatUnit("METRO"), "Mts.");
+  assert.equal(formatUnit("KILO"), "Kg.");
+  assert.equal(formatUnit("BOLSA"), "Bolsas");
+  assert.equal(formatUnit("HISTORICA"), "HISTORICA");
+  assert.equal(formatPackageQuantityLabel("BOLSA"), "BOLSAS POR CAJA");
 });

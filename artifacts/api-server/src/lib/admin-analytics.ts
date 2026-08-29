@@ -361,7 +361,7 @@ export async function getQuantities(filters: AnalyticsFilters) {
   return result.rows.map((row) => ({
     modalidad: row.tipo === "METREADO" ? "METRAJE" as const : "ROLLOS" as const,
     tipo: row.tipo as "NORMAL" | "METREADO",
-    unidad: row.unidad as "METRO" | "KILO",
+    unidad: row.unidad as "METRO" | "KILO" | "BOLSA",
     cantidad: decimal(row.cantidad, 3),
   }));
 }
@@ -929,9 +929,12 @@ export async function compareStores(filters: AnalyticsFilters) {
           COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas,
          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'),0) metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'),0) kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='BOLSA'),0) bolsas,
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0) rollos_metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0) rollos_kilos,
-          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0) metraje_metros
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='BOLSA'),0) rollos_bolsas,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0) metraje_metros,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='BOLSA'),0) metraje_bolsas
        FROM ticket_lineas l JOIN ticket_data t ON t.id=l.ticket_id
        JOIN productos p ON p.id=l.producto_id WHERE t.estado='VENDIDO' GROUP BY l.ticket_id
      )
@@ -943,10 +946,12 @@ export async function compareStores(filters: AnalyticsFilters) {
        COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
        COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones,
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen",
-        COALESCE(SUM(l.metros),0)::text metros,COALESCE(SUM(l.kilos),0)::text kilos,
+         COALESCE(SUM(l.metros),0)::text metros,COALESCE(SUM(l.kilos),0)::text kilos,COALESCE(SUM(l.bolsas),0)::text bolsas,
         COALESCE(SUM(l.rollos_metros),0)::text "rollosMetros",
         COALESCE(SUM(l.rollos_kilos),0)::text "rollosKilos",
+         COALESCE(SUM(l.rollos_bolsas),0)::text "rollosBolsas",
         COALESCE(SUM(l.metraje_metros),0)::text "metrajeMetros",
+         COALESCE(SUM(l.metraje_bolsas),0)::text "metrajeBolsas",
        COALESCE(pay.efectivo,0)::text efectivo,
        COALESCE(pay.transferencia,0)::text transferencia,
        COALESCE(pay.credito,0)::text credito,
@@ -1022,10 +1027,12 @@ export async function compareStores(filters: AnalyticsFilters) {
       ventas: decimal(sales), subtotal: decimal(row.subtotal),
       costo: row.costo == null ? null : decimal(row.costo),
       margen: row.margen == null ? null : decimal(row.margen),
-      metros: decimal(row.metros, 3), kilos: decimal(row.kilos, 3),
+      metros: decimal(row.metros, 3), kilos: decimal(row.kilos, 3), bolsas: decimal(row.bolsas, 3),
       rollosMetros: decimal(row.rollosMetros, 3),
       rollosKilos: decimal(row.rollosKilos, 3),
+      rollosBolsas: decimal(row.rollosBolsas, 3),
       metrajeMetros: decimal(row.metrajeMetros, 3),
+      metrajeBolsas: decimal(row.metrajeBolsas, 3),
       ticketPromedio: decimal(average),
       diferenciaTicketPromedio: decimal(average - globalAverage),
       tendenciaPorcentaje: decimal(priorSales === 0 ? (sales === 0 ? 0 : 100) : ((sales - priorSales) / priorSales) * 100),
@@ -1055,10 +1062,12 @@ export async function compareStores(filters: AnalyticsFilters) {
       margen: result.rows.some((row) => row.margen == null) ? null : decimal(sum("margen")),
       tickets: totalTickets, ticketPromedio: decimal(globalAverage),
       cancelaciones: sum("cancelaciones"), lineasExcluidasMargen: sum("lineasExcluidasMargen"),
-      metros: decimal(sum("metros"), 3), kilos: decimal(sum("kilos"), 3),
+      metros: decimal(sum("metros"), 3), kilos: decimal(sum("kilos"), 3), bolsas: decimal(sum("bolsas"), 3),
       rollosMetros: decimal(sum("rollosMetros"), 3),
       rollosKilos: decimal(sum("rollosKilos"), 3),
+      rollosBolsas: decimal(sum("rollosBolsas"), 3),
       metrajeMetros: decimal(sum("metrajeMetros"), 3),
+      metrajeBolsas: decimal(sum("metrajeBolsas"), 3),
       efectivo: decimal(sum("efectivo")), transferencia: decimal(sum("transferencia")),
       credito: decimal(sum("credito")),
       porcentajeFacturado: decimal(totalSales === 0 ? 0 : (facturado / totalSales) * 100),
