@@ -22,7 +22,7 @@ import { Search, Boxes, Filter, ArrowRight, ChevronDown, ChevronRight } from "lu
 import { useDebounce } from "@/hooks/use-debounce";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 
 export default function Inventario() {
   const [, setLocation] = useLocation();
@@ -173,8 +173,8 @@ export default function Inventario() {
                       <TableHead>Tela / Producto</TableHead>
                       {isTodas && <TableHead>Sitio</TableHead>}
                       <TableHead className="text-right">Rollos</TableHead>
-                      <TableHead className="text-right">Total Metros</TableHead>
-                      <TableHead className="text-right">Total Kilos</TableHead>
+                      <TableHead className="text-right">Total Mts.</TableHead>
+                      <TableHead className="text-right">Total Kg.</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -222,7 +222,7 @@ export default function Inventario() {
                               <TableCell className="text-right tabular-nums py-2" colSpan={2}>
                                 <div className="flex items-center justify-end gap-1">
                                    <span className="font-medium">{formatNumber(hijo.cantidadTotal, { kind: "quantity" })}</span>
-                                  <span className="text-xs text-muted-foreground uppercase">{hijo.unidad}</span>
+                                  <span className="text-xs text-muted-foreground">{formatUnit(hijo.unidad)}</span>
                                 </div>
                               </TableCell>
                             </TableRow>

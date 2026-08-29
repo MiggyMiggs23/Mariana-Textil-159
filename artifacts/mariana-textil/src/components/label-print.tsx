@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { QRCodeSVG } from 'qrcode.react';
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
+import { formatPackageQuantityLabel } from "@workspace/number-format";
 
 export interface LabelData {
   sku: string;
@@ -73,7 +74,7 @@ function AutoFitText({
 
 export function LabelPrint({ data, className = "" }: { data: LabelData; className?: string }) {
   const qrPayload = `${data.sku}-${data.serie}`;
-  const unitLabel = data.unidad.toUpperCase().startsWith('K') ? 'KILOS DEL ROLLO' : 'METROS DEL ROLLO';
+  const unitLabel = formatPackageQuantityLabel(data.unidad);
   const productName = `${data.tela} - ${data.color}`.toUpperCase();
 
   return (

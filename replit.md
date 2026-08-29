@@ -231,6 +231,16 @@ Mientras esta decisión siga pendiente, continúa vigente el procedimiento de ra
 
 La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. El SUPERVISOR opera clientes y proveedores pero solo lee productos, porque editar un producto toca el precio.
 
+## Parte 10 — Catálogo por tela y unidad BOLSA
+
+Un producto sigue siendo **tela más color**; la pantalla los agrupa por tela pero el modelo no cambia. Una tela de un solo color también se agrupa.
+
+La unidad **BOLSA** mapea al modelo existente sin estructuras nuevas: una **caja** es un rollo, con su serie y su etiqueta, y su cantidad de **bolsas** es editable como los metros. Vender una caja equivale a vender un rollo; vender una bolsa suelta equivale a la venta metreada. Cada bolsa trae 100 piezas, pero el sistema cuenta bolsas, no piezas.
+
+**Metros, kilos y bolsas nunca se suman entre sí.**
+
+Las unidades se muestran siempre como **Mts.**, **Kg.** y **Bolsas**, traducidas por una función compartida. Ninguna se escribe a mano.
+
 ## Fuente de verdad del crédito
 
 El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —pendiente, parcial, pagada— se deriva de los movimientos y nunca se marca a mano. Ninguna pantalla, endpoint o tarea puede guardar ese estado como una marca independiente.

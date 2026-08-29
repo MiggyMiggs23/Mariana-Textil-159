@@ -12,7 +12,7 @@ import {
   UnidadProducto
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -266,7 +266,7 @@ export default function PrecioDetail() {
                       <span className="font-mono text-sidebar-primary-foreground/70 bg-sidebar-accent/50 px-2 py-1 rounded text-sm font-bold border border-white/10" data-testid="text-sku">
                         {producto.sku}
                       </span>
-                      <Badge variant="outline" className="text-white border-white/20 bg-white/5 uppercase text-xs">{producto.unidad}</Badge>
+                      <Badge variant="outline" className="text-white border-white/20 bg-white/5 text-xs">{formatUnit(producto.unidad)}</Badge>
                       <Badge variant="outline" className="text-white border-white/20 bg-white/5 font-medium">{activeMode}</Badge>
                       {!producto.activo && <Badge variant="destructive">Inactivo</Badge>}
                     </div>

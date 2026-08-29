@@ -94,7 +94,8 @@ router.get("/reportes/:seccion/export.pdf", async (req, res, next): Promise<void
   try {
     const data = await report(req);
     const lines = [`Periodo: ${JSON.stringify(data.range)}`, `Filtros: ${JSON.stringify(data.activeFilters)}`, "Indicadores:", ...reportKpis(data).map((item) => `${item.label}: ${item.value}`)];
-    for (const item of reportRows(data)) {
+    const tables = normalizeExportTables(String(data.section), data.activeFilters, reportRows(data));
+    for (const item of tables) {
       lines.push(item.title, ...item.rows.map((row) => item.columns.map((c) => `${c.label}: ${row[c.key] ?? ""}`).join(" | ")), `Totales: ${JSON.stringify(item.totals)}`);
     }
     res.setHeader("Server-Timing", `reportes;dur=${(performance.now() - started).toFixed(1)}`);

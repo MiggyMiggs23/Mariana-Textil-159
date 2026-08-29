@@ -38,7 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   advertenciaSkuEscaneado,
   interpretarCodigoEscaneado,
@@ -460,7 +460,7 @@ export default function SalidaNueva() {
                               <div className="flex items-center gap-4">
                                 <div className="text-right">
                                   <p className="font-semibold text-primary">{formatNumber(roll.cantidadActual, { kind: "quantity" })}</p>
-                                  <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{roll.unidad}</p>
+                                  <p className="text-[10px] font-bold tracking-wider text-slate-400">{formatUnit(roll.unidad)}</p>
                                 </div>
                                 <Button
                                   variant="ghost"
@@ -500,7 +500,7 @@ export default function SalidaNueva() {
                               </div>
                               <div className="flex justify-between items-center">
                                 <span className="text-xs text-slate-500">{item.color} • {item.sku}</span>
-                                <span className="text-sm font-bold text-primary">{formatNumber(item.cantidad, { kind: "quantity" })} <span className="text-[10px] font-bold text-slate-400">{item.unidad}</span></span>
+                                <span className="text-sm font-bold text-primary">{formatNumber(item.cantidad, { kind: "quantity" })} <span className="text-[10px] font-bold text-slate-400">{formatUnit(item.unidad)}</span></span>
                               </div>
                             </div>
                           ))}

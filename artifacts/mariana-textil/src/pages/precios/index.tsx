@@ -10,7 +10,7 @@ import {
   PrecioProducto,
   ModoPrecio
 } from "@workspace/api-client-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -200,7 +200,7 @@ export default function PreciosList() {
                           <div className="text-xs text-muted-foreground">{precio.color}</div>
                         </TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground font-medium uppercase">
-                          {precio.unidad}
+                          {formatUnit(precio.unidad)}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">

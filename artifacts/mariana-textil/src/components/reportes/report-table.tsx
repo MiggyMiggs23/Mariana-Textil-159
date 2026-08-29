@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpDown } from "lucide-react";
 import { formatReportValue } from "./report-format";
 import { cn } from "@/lib/utils";
+import { formatUnit } from "@workspace/number-format";
 
 export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable, hasEconomicAccess: boolean }) {
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -99,7 +100,7 @@ export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable,
                       <span className="italic text-report-text-muted opacity-80" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px)' }}>
                         {val || "Pendiente"}
                       </span>
-                    ) : val === undefined || val === null ? "-" : formatReportValue(val, col.kind || "count");
+                    ) : val === undefined || val === null ? "-" : col.key === "unidad" ? formatUnit(String(val)) : formatReportValue(val, col.kind || "count");
 
                     let cellClassName = "";
                     let indicator = null;

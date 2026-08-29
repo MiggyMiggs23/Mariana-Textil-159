@@ -1,5 +1,5 @@
 import { CorteCaja, exportAdminCorteXlsx, exportAdminCortePdf } from "@workspace/api-client-react";
-import { formatAccountDestination, formatNumber } from "@workspace/number-format";
+import { formatAccountDestination, formatNumber, formatUnit } from "@workspace/number-format";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
@@ -181,7 +181,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
               {corte.metreado.map((m, i) => (
                 <TableRow key={i}>
                   <TableCell className="font-medium">{m.tipo === "METREADO" ? "METRAJE" : "ROLLOS"}</TableCell>
-                  <TableCell className="text-right font-mono">{formatNumber(m.cantidad, { kind: "quantity" })} {m.unidad}</TableCell>
+                  <TableCell className="text-right font-mono">{formatNumber(m.cantidad, { kind: "quantity" })} {formatUnit(m.unidad)}</TableCell>
                   <TableCell className="text-right font-mono">{formatNumber(m.importe, { kind: "money" })}</TableCell>
                 </TableRow>
               ))}
@@ -200,7 +200,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
                 <TableRow key={i}>
                   <TableCell className="font-mono">{p.sku}</TableCell>
                   <TableCell>{p.tipo === "METREADO" ? "METRAJE" : "ROLLO"} · {p.tela} - {p.color}</TableCell>
-                  <TableCell className="text-right font-mono">{formatNumber(p.cantidad, { kind: "quantity" })} {p.unidad}</TableCell>
+                  <TableCell className="text-right font-mono">{formatNumber(p.cantidad, { kind: "quantity" })} {formatUnit(p.unidad)}</TableCell>
                   <TableCell className="text-right font-mono">{formatNumber(p.importe, { kind: "money" })}</TableCell>
                 </TableRow>
               ))}

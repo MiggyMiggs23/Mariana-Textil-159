@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { RefreshCw, Activity, AlertCircle, Clock, Banknote, ShoppingBag, Loader2, Target, LineChart, Users, Store, Receipt } from "lucide-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "wouter";
@@ -191,7 +191,7 @@ export default function CajaTiempoReal() {
                     data-testid={`quantity-${row.tipo.toLowerCase()}-${row.unidad.toLowerCase()}`}
                   >
                     <span className="font-semibold">{row.modalidad}</span>
-                    <span className="ml-2 font-mono">{formatNumber(row.cantidad, { kind: "quantity" })} {row.unidad}</span>
+                    <span className="ml-2 font-mono">{formatNumber(row.cantidad, { kind: "quantity" })} {formatUnit(row.unidad)}</span>
                   </div>
                 ))}
               </div>

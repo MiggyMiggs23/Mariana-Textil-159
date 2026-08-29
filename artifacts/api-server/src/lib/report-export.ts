@@ -1,5 +1,5 @@
 import ExcelJS from "exceljs";
-import { EXCEL_NUMBER_FORMAT, toExcelNumber } from "@workspace/number-format";
+import { EXCEL_NUMBER_FORMAT, formatUnit, toExcelNumber } from "@workspace/number-format";
 
 /**
  * Export-only normalization. Report builders retain their UI-oriented shapes,
@@ -70,6 +70,7 @@ export function normalizeExportTables(
     const fallbackModality = modalityFor(section, table, activeModality);
     const rows = table.rows.map((sourceRow) => {
       const row = { ...sourceRow };
+      if (row.unidad != null) row.unidad = formatUnit(String(row.unidad));
       if (row.modalidad == null || row.modalidad === "") row.modalidad = fallbackModality;
       // A group is pending as a whole. Do not replace a legitimate zero and do
       // not mark non-financial cells merely because they are null.

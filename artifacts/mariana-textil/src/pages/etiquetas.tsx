@@ -6,7 +6,7 @@ import {
   getGetCurrentUserQueryKey, getListLocationsQueryKey, getListProductosQueryKey, getListUsersQueryKey,
   useGetCurrentUser, useListLocations, useListProductos, useListUsers,
 } from "@workspace/api-client-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { AppLayout } from "@/components/layout/app-layout";
 import { LabelPrint } from "@/components/label-print";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -346,7 +346,7 @@ export default function Etiquetas() {
                         <TableCell className="max-w-56 font-medium">{rollo.producto || rollo.tela}</TableCell>
                         <TableCell>{rollo.color}</TableCell><TableCell className="font-mono text-xs">{rollo.sku}</TableCell>
                         <TableCell className="text-right font-semibold tabular-nums">{formatNumber(rollo.cantidad, { kind: "quantity" })}</TableCell>
-                        <TableCell>{rollo.unidad}</TableCell><TableCell>{rollo.sitio}</TableCell>
+                        <TableCell>{formatUnit(rollo.unidad)}</TableCell><TableCell>{rollo.sitio}</TableCell>
                         <TableCell><Badge variant="outline" className={estadoClass[rollo.estado]}>{rollo.estado.replace("_", " ")}</Badge></TableCell>
                         <TableCell>{rollo.entradaId ? <Link className="font-medium text-primary hover:underline" href={`/entradas/${rollo.entradaId}/documento`}>{rollo.entradaFolio ?? rollo.entradaId}</Link> : "—"}</TableCell>
                         <TableCell className="text-right"><Button size="sm" variant="outline" disabled={!canPrint} onClick={() => openPrintDialog(rollo)}><Printer className="mr-2 h-4 w-4" />Reimprimir etiqueta</Button></TableCell>

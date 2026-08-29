@@ -4,7 +4,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function EntradaDocumento() {
@@ -125,7 +125,7 @@ export default function EntradaDocumento() {
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-10 text-center">#</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Producto</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-center">Cantidad de Rollos</th>
-                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-right">Total de Metros/Kilos</th>
+                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-right">Cantidad / unidad</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">SKU</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Sitio</th>
                   </tr>
@@ -138,7 +138,7 @@ export default function EntradaDocumento() {
                         <td className="py-1 px-3 text-center text-gray-500 text-xs">{formatNumber(globalIndex, { kind: "count" })}</td>
                         <td className="py-1 px-3 font-bold text-xs text-black truncate max-w-[250px]">{linea.skuProducto} - {linea.telaProducto} {linea.colorProducto}</td>
                         <td className="py-1 px-3 text-center font-bold text-xs">{formatNumber(linea.rollosCount, { kind: "count" })}</td>
-                        <td className="py-1 px-3 text-right text-xs font-medium">{formatNumber(linea.cantidadTotal, { kind: "quantity" })} {linea.unidadProducto}</td>
+                        <td className="py-1 px-3 text-right text-xs font-medium">{formatNumber(linea.cantidadTotal, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
                         <td className="py-1 px-3 font-mono text-[10px] text-gray-600">{linea.skuProducto}</td>
                         <td className="py-1 px-3 text-xs text-gray-800">{entrada.nombreUbicacion}</td>
                       </tr>

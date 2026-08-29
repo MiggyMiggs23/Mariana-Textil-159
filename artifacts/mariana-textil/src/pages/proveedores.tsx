@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { Search, Plus, Truck, Building2, Globe2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   getCategoricalChartColor,
   REPORT_NEGATIVE_COLOR,
@@ -326,7 +326,7 @@ export default function Proveedores() {
                       { rango:"61–90", saldo:Number(analitica.antiguedadDeuda.de61a90) },
                       { rango:"90+", saldo:Number(analitica.antiguedadDeuda.mas90) },
                     ]}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--report-stripe))"/><XAxis dataKey="rango"/><YAxis/><Tooltip formatter={(v) => formatNumber(Number(v), { kind: "money" })}/><Bar dataKey="saldo" fill={REPORT_NEGATIVE_COLOR}/></BarChart></ResponsiveContainer></div></CardContent></Card>
-                    <Card className="md:col-span-2"><CardContent className="pt-6"><h2 className="font-semibold mb-4">Comparación del mismo producto entre proveedores</h2><div className="max-h-80 overflow-auto"><Table><TableHeader><TableRow><TableHead>Producto</TableHead><TableHead>Costos por proveedor</TableHead><TableHead className="text-right">Más barato / ahorro</TableHead></TableRow></TableHeader><TableBody>{analitica.comparacionCostos.map(p => <TableRow key={p.productoId}><TableCell><b>{p.sku}</b><div className="text-xs text-muted-foreground">{p.unidad}</div></TableCell><TableCell className="text-xs">{p.proveedores.map(x => `${x.proveedor}: ${formatNumber(x.costoUnitario, { kind: "money" })}`).join(" · ")}</TableCell><TableCell className="text-right"><b>{p.proveedorMasBarato}</b><div className="text-xs text-emerald-700">hasta {formatNumber(p.ahorroPct, { kind: "percentage", percentageInput: "percent" })}</div></TableCell></TableRow>)}</TableBody></Table></div></CardContent></Card>
+                    <Card className="md:col-span-2"><CardContent className="pt-6"><h2 className="font-semibold mb-4">Comparación del mismo producto entre proveedores</h2><div className="max-h-80 overflow-auto"><Table><TableHeader><TableRow><TableHead>Producto</TableHead><TableHead>Costos por proveedor</TableHead><TableHead className="text-right">Más barato / ahorro</TableHead></TableRow></TableHeader><TableBody>{analitica.comparacionCostos.map(p => <TableRow key={p.productoId}><TableCell><b>{p.sku}</b><div className="text-xs text-muted-foreground">{formatUnit(p.unidad)}</div></TableCell><TableCell className="text-xs">{p.proveedores.map(x => `${x.proveedor}: ${formatNumber(x.costoUnitario, { kind: "money" })}`).join(" · ")}</TableCell><TableCell className="text-right"><b>{p.proveedorMasBarato}</b><div className="text-xs text-emerald-700">hasta {formatNumber(p.ahorroPct, { kind: "percentage", percentageInput: "percent" })}</div></TableCell></TableRow>)}</TableBody></Table></div></CardContent></Card>
                   </div>
                 </>
               )}

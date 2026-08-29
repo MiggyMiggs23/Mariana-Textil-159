@@ -41,7 +41,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { groupTicketLinesByModality, groupPrintLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { BrandLogo } from "@/components/brand-logo";
@@ -437,7 +437,7 @@ export default function TicketDetailPage() {
                       {linea.rollos}
                     </td>
                     <td className="px-4 py-3 text-right font-mono">
-                      {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                      {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                     </td>
                     <td className="px-4 py-3 text-right">
                       {formatNumber(linea.precioUnitario, { kind: "money" })}
@@ -505,7 +505,7 @@ export default function TicketDetailPage() {
                       {linea.rollos}
                     </td>
                     <td className="px-4 py-3 text-right font-mono">
-                      {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                      {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                     </td>
                     <td className="px-4 py-3 text-right">
                       {formatNumber(linea.precioUnitario, { kind: "money" })}
@@ -619,7 +619,7 @@ export default function TicketDetailPage() {
                         {linea.telaProducto} {linea.colorProducto}
                       </div>
                       <div className="text-[9px]">
-                        {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                        {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                         {" · "}
                         {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
                       </div>
@@ -650,7 +650,7 @@ export default function TicketDetailPage() {
                         {linea.telaProducto} {linea.colorProducto}
                       </div>
                       <div className="text-[9px]">
-                        {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                        {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                         {" · "}
                         {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
                       </div>
@@ -767,7 +767,7 @@ export default function TicketDetailPage() {
                     {linea.rollos}
                   </td>
                   <td className="border border-gray-300 p-2 text-right font-mono">
-                    {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                    {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                   </td>
                   <td className="border border-gray-300 p-2 text-right">
                     {formatNumber(linea.precioUnitario, { kind: "money" })}
@@ -800,7 +800,7 @@ export default function TicketDetailPage() {
                     {linea.rollos}
                   </td>
                   <td className="border border-gray-300 p-2 text-right font-mono">
-                    {formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}
+                    {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                   </td>
                   <td className="border border-gray-300 p-2 text-right">
                     {formatNumber(linea.precioUnitario, { kind: "money" })}
@@ -983,7 +983,7 @@ export default function TicketDetailPage() {
                                 <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
                               </td>
                               <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
                               {!isPriceless && (
                                 <>
                                   <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
@@ -1010,7 +1010,7 @@ export default function TicketDetailPage() {
                                 <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
                               </td>
                               <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {linea.unidadProducto}</td>
+                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
                               {!isPriceless && (
                                 <>
                                   <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>

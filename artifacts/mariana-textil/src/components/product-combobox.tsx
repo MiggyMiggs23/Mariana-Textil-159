@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Search } from "lucide-react";
 import type { Producto } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
+import { formatUnit } from "@workspace/number-format";
 
 type ProductComboboxProps = {
   products: Producto[];
@@ -166,7 +167,7 @@ export function ProductCombobox({
                   </span>
                 </span>
                 <span className="shrink-0 rounded bg-muted px-2 py-1 text-[10px] font-bold">
-                  {product.unidad}
+                  {formatUnit(product.unidad)}
                 </span>
               </button>
             ))

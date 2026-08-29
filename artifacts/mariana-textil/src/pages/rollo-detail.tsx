@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/api-client-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { useQuery } from "@tanstack/react-query";
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
@@ -160,7 +160,7 @@ export default function RolloDetail() {
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Cantidad Actual</div>
                   <div className="text-3xl font-bold tracking-tight text-foreground">
-                    {formatNumber(rollo.cantidadActual, { kind: "quantity" })} <span className="text-base font-normal text-muted-foreground">{rollo.unidadProducto}</span>
+                    {formatNumber(rollo.cantidadActual, { kind: "quantity" })} <span className="text-base font-normal text-muted-foreground">{formatUnit(rollo.unidadProducto)}</span>
                   </div>
                   {isDeducted && (
                     <div className="text-xs text-muted-foreground mt-1">
@@ -175,7 +175,7 @@ export default function RolloDetail() {
                       {rollo.costoTotal != null ? formatNumber(rollo.costoTotal, { kind: "money" }) : 'Pendiente'}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {rollo.costoUnitario != null ? `${formatNumber(rollo.costoUnitario, { kind: "money" })} / ${rollo.unidadProducto}` : 'Pendiente'}
+                      {rollo.costoUnitario != null ? `${formatNumber(rollo.costoUnitario, { kind: "money" })} / ${formatUnit(rollo.unidadProducto)}` : 'Pendiente'}
                     </div>
                   </div>
                 )}
