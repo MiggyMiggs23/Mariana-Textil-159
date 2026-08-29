@@ -46,6 +46,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { formatUnit } from "@workspace/number-format";
 
 function message(error: unknown): string {
   if (error && typeof error === "object" && "data" in error) {
@@ -487,7 +488,7 @@ export default function AuditoriasInventario() {
                                     <TableRow key={row.serie} data-testid={`row-audit-result-${row.serie}`} className="group border-b-border/40 last:border-0">
                                       <TableCell className="font-mono font-bold text-[13px]">{row.serie}</TableCell>
                                       <TableCell className="text-[13px]">{row.producto ?? <span className="text-muted-foreground italic">Sin registro</span>}</TableCell>
-                                      <TableCell className="font-mono text-right text-[13px]">{row.cantidad ?? "—"} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ?? ""}</span></TableCell>
+                                      <TableCell className="font-mono text-right text-[13px]">{row.cantidad ?? "—"} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
                                       {isMalAcomodado && (
                                         <TableCell className="text-[13px]">{row.pisoEsperado ?? <span className="text-muted-foreground italic">Sin piso</span>}</TableCell>
                                       )}
@@ -525,7 +526,7 @@ export default function AuditoriasInventario() {
           <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">
             <div>Snapshot<br /><b>{detail.data.totalSnapshot}</b></div><div>Escaneados<br /><b>{detail.data.totalEscaneados}</b></div><div>Cuadro<br /><b>{detail.data.cuadros}</b></div><div>Faltante<br /><b>{detail.data.faltantes}</b></div><div>Sobrante<br /><b>{detail.data.sobrantes}</b></div><div>Mal Acomodado<br /><b>{detail.data.malAcomodados || 0}</b></div>
           </div>
-          {(["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const).map((kind) => <section key={kind} className="mb-4"><h2 className="border-b border-black font-bold">{kind.replace('_', ' ')} ({grouped[kind].length})</h2>{grouped[kind].map((row) => <div key={row.serie} className={`grid ${kind === "MAL_ACOMODADO" ? "grid-cols-[100px_1fr_100px_120px_120px_100px]" : "grid-cols-[100px_1fr_100px_130px_100px]"} border-b py-1 text-xs`}><b>{row.serie}</b><span>{row.producto ?? "Sin registro"}</span><span>{row.cantidad ?? "—"} {row.unidad ?? ""}</span>{kind === "MAL_ACOMODADO" ? <><span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span><span>Real: {row.pisoReal ?? "Desconocido"}</span></> : <span>{row.ubicacionActual ?? "Sin ubicación"}</span>}<span>{row.estadoActual}</span></div>)}</section>)}
+          {(["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const).map((kind) => <section key={kind} className="mb-4"><h2 className="border-b border-black font-bold">{kind.replace('_', ' ')} ({grouped[kind].length})</h2>{grouped[kind].map((row) => <div key={row.serie} className={`grid ${kind === "MAL_ACOMODADO" ? "grid-cols-[100px_1fr_100px_120px_120px_100px]" : "grid-cols-[100px_1fr_100px_130px_100px]"} border-b py-1 text-xs`}><b>{row.serie}</b><span>{row.producto ?? "Sin registro"}</span><span>{row.cantidad ?? "—"} {row.unidad ? formatUnit(row.unidad) : ""}</span>{kind === "MAL_ACOMODADO" ? <><span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span><span>Real: {row.pisoReal ?? "Desconocido"}</span></> : <span>{row.ubicacionActual ?? "Sin ubicación"}</span>}<span>{row.estadoActual}</span></div>)}</section>)}
           <section><h2 className="font-bold">Participantes</h2>{detail.data.participantes.map((person) => <div key={person.usuarioId} className="text-sm">{person.nombre}: {person.escaneos} escaneos</div>)}</section>
           <footer className="mt-14 grid grid-cols-2 gap-16 text-center text-sm"><div className="border-t border-black pt-2">Responsable de conteo</div><div className="border-t border-black pt-2">Autorización ADMIN</div></footer>
         </article>

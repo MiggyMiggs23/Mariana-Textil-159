@@ -756,6 +756,345 @@ await test("POS-04B metreado se rechaza definitivamente cuando el producto está
   assert.equal(rejected.length, 0);
 });
 
+await test("POS-BOLSA venta NORMAL exige y descuenta la caja completa", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", false);
+  const caja = await makeRollo(productoId, ubicacionId, "24", "10");
+
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: caja.id,
+    cantidad: "24",
+    precio: "15",
+  });
+  assert.equal(ticket.lineas[0]?.tipo, "NORMAL");
+  assert.equal(ticket.lineas[0]?.cantidad, "24.000");
+  assert.equal(ticket.lineas[0]?.serieRollo, caja.serie);
+  const [vendida] = await db
+    .select({
+      estado: rollosTable.estado,
+      cantidadActual: rollosTable.cantidadActual,
+    })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, caja.id));
+  assert.equal(vendida?.estado, "VENDIDO");
+  assert.equal(vendida?.cantidadActual, "0.000");
+});
+
+await test("POS-BOLSA METREADO descuenta saldo parcial y rechaza fracciones", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", true);
+  const caja = await makeRollo(productoId, ubicacionId, "24", "10");
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    cantidad: "3",
+    precio: "15",
+    tipo: "METREADO",
+  });
+  assert.equal(ticket.lineas[0]?.tipo, "METREADO");
+  assert.equal(ticket.lineas[0]?.cantidad, "3.000");
+  assert.equal(ticket.lineas[0]?.unidadProducto, "BOLSA");
+  const movements = await db
+    .select({
+      cantidad: movimientosTable.cantidad,
+      documentoTipo: movimientosTable.documentoTipo,
+    })
+    .from(movimientosTable)
+    .where(
+      and(
+        eq(movimientosTable.documentoTipo, "TICKET_BOLSA_METREADO"),
+        eq(movimientosTable.documentoId, String(ticket.id)),
+      ),
+    );
+  assert.deepEqual(movements, [{
+    cantidad: "-3.000",
+    documentoTipo: "TICKET_BOLSA_METREADO",
+  }]);
+  const [parcial] = await db.select({
+    estado: rollosTable.estado,
+    cantidadActual: rollosTable.cantidadActual,
+  }).from(rollosTable).where(eq(rollosTable.id, caja.id));
+  assert.equal(parcial?.estado, "DISPONIBLE");
+  assert.equal(parcial?.cantidadActual, "21.000");
+  await assert.rejects(
+    () => sale({
+      ubicacionId,
+      productoId,
+      cantidad: "1.5",
+      precio: "15",
+      tipo: "METREADO",
+    }),
+    (error: unknown) =>
+      error instanceof PosError &&
+      error.code === "BOLSA_INTEGER_QUANTITY_REQUIRED",
+  );
+});
+
+await test("POS-BOLSA METREADO cruza cajas FIFO y deja la línea sin rollo", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", true);
+  const primera = await makeRollo(productoId, ubicacionId, "2", "10");
+  const segunda = await makeRollo(productoId, ubicacionId, "5", "10");
+  const ticket = await sale({
+    ubicacionId,
+    productoId,
+    cantidad: "4",
+    precio: "15",
+    tipo: "METREADO",
+  });
+  assert.equal(ticket.lineas[0]?.rolloId, null);
+  const cajas = await db.select({
+    id: rollosTable.id,
+    estado: rollosTable.estado,
+    cantidadActual: rollosTable.cantidadActual,
+  }).from(rollosTable)
+    .where(inArray(rollosTable.id, [primera.id, segunda.id]))
+    .orderBy(rollosTable.id);
+  assert.deepEqual(cajas, [
+    { id: primera.id, estado: "VENDIDO", cantidadActual: "0.000" },
+    { id: segunda.id, estado: "DISPONIBLE", cantidadActual: "3.000" },
+  ]);
+  const movements = await db.select({
+    rolloId: movimientosTable.rolloId,
+    cantidad: movimientosTable.cantidad,
+  }).from(movimientosTable).where(and(
+    eq(movimientosTable.documentoTipo, "TICKET_BOLSA_METREADO"),
+    eq(movimientosTable.documentoId, String(ticket.id)),
+  )).orderBy(movimientosTable.id);
+  assert.deepEqual(movements, [
+    { rolloId: primera.id, cantidad: "-2.000" },
+    { rolloId: segunda.id, cantidad: "-2.000" },
+  ]);
+});
+
+await test("POS-BOLSA ticket mixto reserva la caja NORMAL antes del FIFO", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", true);
+  const cajaNormal = await makeRollo(productoId, ubicacionId, "5", "10");
+  const cajaFraccionada = await makeRollo(productoId, ubicacionId, "5", "10");
+
+  const ticket = await db.transaction((tx) =>
+    crearTicket(
+      tx,
+      {
+        ubicacionId,
+        usuarioTerminalId: USER_ID,
+        clienteId: 1,
+        facturado: false,
+        uuidCliente: randomUUID(),
+        ip: "127.0.0.1",
+        lineas: [
+          {
+            productoId,
+            tipo: "METREADO",
+            cantidad: "3",
+            precioUnitario: "15",
+          },
+          {
+            rolloId: cajaNormal.id,
+            productoId,
+            tipo: "NORMAL",
+            cantidad: "5",
+            precioUnitario: "15",
+          },
+        ],
+      },
+      true,
+    ),
+  );
+
+  assert.ok(ticket);
+  assert.equal(ticket.lineas.length, 2);
+  const cajas = await db
+    .select({
+      id: rollosTable.id,
+      estado: rollosTable.estado,
+      cantidadActual: rollosTable.cantidadActual,
+    })
+    .from(rollosTable)
+    .where(inArray(rollosTable.id, [cajaNormal.id, cajaFraccionada.id]));
+  const byId = new Map(cajas.map((caja) => [caja.id, caja]));
+  assert.deepEqual(byId.get(cajaNormal.id), {
+    id: cajaNormal.id,
+    estado: "VENDIDO",
+    cantidadActual: "0.000",
+  });
+  assert.deepEqual(byId.get(cajaFraccionada.id), {
+    id: cajaFraccionada.id,
+    estado: "DISPONIBLE",
+    cantidadActual: "2.000",
+  });
+});
+
+await test("POS-BOLSA METREADO saldo insuficiente revierte atómicamente", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", true);
+  const caja = await makeRollo(productoId, ubicacionId, "2", "10");
+  const uuid = randomUUID();
+  await assert.rejects(
+    () => sale({
+      ubicacionId,
+      productoId,
+      cantidad: "3",
+      precio: "15",
+      tipo: "METREADO",
+      uuid,
+    }),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "BOLSA_INSUFFICIENT_STOCK",
+  );
+  const [intacta] = await db.select({
+    estado: rollosTable.estado,
+    cantidadActual: rollosTable.cantidadActual,
+  }).from(rollosTable).where(eq(rollosTable.id, caja.id));
+  assert.deepEqual(intacta, { estado: "DISPONIBLE", cantidadActual: "2.000" });
+  const tickets = await db.select({ id: ticketsTable.id })
+    .from(ticketsTable).where(eq(ticketsTable.uuidCliente, uuid));
+  assert.equal(tickets.length, 0);
+});
+
+await test("POS-BOLSA METREADO concurrencia no sobrevende", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", true);
+  const caja = await makeRollo(productoId, ubicacionId, "5", "10");
+  const attempts = await Promise.allSettled([
+    sale({ ubicacionId, productoId, cantidad: "4", precio: "15", tipo: "METREADO" }),
+    sale({ ubicacionId, productoId, cantidad: "4", precio: "15", tipo: "METREADO" }),
+  ]);
+  assert.equal(attempts.filter((attempt) => attempt.status === "fulfilled").length, 1);
+  assert.equal(attempts.filter((attempt) => attempt.status === "rejected").length, 1);
+  const [restante] = await db.select({
+    estado: rollosTable.estado,
+    cantidadActual: rollosTable.cantidadActual,
+  }).from(rollosTable).where(eq(rollosTable.id, caja.id));
+  assert.deepEqual(restante, { estado: "DISPONIBLE", cantidadActual: "1.000" });
+});
+
+await test("POS-BOLSA concurrencia entre NORMAL y METREADO conserva una sola venta", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "BOLSA", true);
+  const caja = await makeRollo(productoId, ubicacionId, "5", "10");
+
+  const attempts = await Promise.allSettled([
+    sale({
+      ubicacionId,
+      productoId,
+      rolloId: caja.id,
+      cantidad: "5",
+      precio: "15",
+      tipo: "NORMAL",
+    }),
+    sale({
+      ubicacionId,
+      productoId,
+      cantidad: "3",
+      precio: "15",
+      tipo: "METREADO",
+    }),
+  ]);
+  assert.equal(
+    attempts.filter((attempt) => attempt.status === "fulfilled").length,
+    1,
+  );
+  assert.equal(
+    attempts.filter((attempt) => attempt.status === "rejected").length,
+    1,
+  );
+
+  const [restante] = await db
+    .select({
+      estado: rollosTable.estado,
+      cantidadActual: rollosTable.cantidadActual,
+    })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, caja.id));
+  assert.ok(
+    (restante?.estado === "VENDIDO" &&
+      restante.cantidadActual === "0.000") ||
+      (restante?.estado === "DISPONIBLE" &&
+        restante.cantidadActual === "2.000"),
+  );
+});
+
+await test("POS-BOLSA cancelación restaura NORMAL y parciales METREADO acumulados", async () => {
+  const ubicacionId = await makeLocation();
+  const normalProductoId = await makeProduct("100.00", "BOLSA", false);
+  const normalCaja = await makeRollo(normalProductoId, ubicacionId, "6", "10");
+  const normalTicket = await sale({
+    ubicacionId,
+    productoId: normalProductoId,
+    rolloId: normalCaja.id,
+    cantidad: "6",
+    precio: "15",
+    tipo: "NORMAL",
+  });
+  await db.transaction((tx) => cancelarTicket(tx, {
+    ticketId: normalTicket.id,
+    usuarioId: USER_ID,
+    autorizadoPor: USER_ID,
+    motivo: "Cancelación completa de caja",
+    ip: "127.0.0.1",
+  }, true));
+  const [normalRestaurada] = await db.select({
+    estado: rollosTable.estado,
+    cantidadActual: rollosTable.cantidadActual,
+  }).from(rollosTable).where(eq(rollosTable.id, normalCaja.id));
+  assert.deepEqual(normalRestaurada, {
+    estado: "DISPONIBLE",
+    cantidadActual: "6.000",
+  });
+
+  const meteredProductoId = await makeProduct("100.00", "BOLSA", true);
+  const meteredCaja = await makeRollo(meteredProductoId, ubicacionId, "7", "10");
+  const primera = await sale({
+    ubicacionId,
+    productoId: meteredProductoId,
+    cantidad: "3",
+    precio: "15",
+    tipo: "METREADO",
+  });
+  await sale({
+    ubicacionId,
+    productoId: meteredProductoId,
+    cantidad: "4",
+    precio: "15",
+    tipo: "METREADO",
+  });
+  await db.transaction((tx) => cancelarTicket(tx, {
+    ticketId: primera.id,
+    usuarioId: USER_ID,
+    autorizadoPor: USER_ID,
+    motivo: "Cancelación de venta parcial",
+    ip: "127.0.0.1",
+  }, true));
+  const [parcialRestaurada] = await db.select({
+    estado: rollosTable.estado,
+    cantidadActual: rollosTable.cantidadActual,
+  }).from(rollosTable).where(eq(rollosTable.id, meteredCaja.id));
+  assert.deepEqual(parcialRestaurada, {
+    estado: "DISPONIBLE",
+    cantidadActual: "3.000",
+  });
+});
+
+await test("POS-BOLSA KILO sigue sin admitir venta METREADO", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct("100.00", "KILO", false);
+  await assert.rejects(
+    () => sale({
+      ubicacionId,
+      productoId,
+      cantidad: "1",
+      precio: "15",
+      tipo: "METREADO",
+    }),
+    (error: unknown) =>
+      error instanceof PosError && error.code === "METREADO_UNIT_REQUIRED",
+  );
+});
+
 await test("POS-04A ticket mixto con 2 rollos y 8 metros se crea, guarda y cobra", async () => {
   const ubicacionId = await makeLocation();
   const productoMetroId = await makeProduct();

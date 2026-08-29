@@ -95,6 +95,10 @@ export default function PrecioDetail() {
 
   const modeData = producto?.preciosPorModo[activeMode];
   const isLocked = producto && activeMode !== ModoPrecio.ROLLO && (!producto.seVendePorMetro || producto.unidad === UnidadProducto.KILO);
+  const fragmentedSaleLabel =
+    producto?.unidad === UnidadProducto.BOLSA
+      ? "venta de bolsas sueltas"
+      : "venta por metro";
 
   const liveMetrics = useMemo(() => {
     if (!producto || !modeData || !precioNuevo) return null;
@@ -240,7 +244,11 @@ export default function PrecioDetail() {
               onClick={() => setActiveMode(mode)}
               data-testid={`tab-mode-${mode}`}
             >
-              {mode === "ROLLO" ? "Precio por Rollo" : mode === "MAYOREO" ? "Mayoreo (≥ 10m)" : "Menudeo (< 10m)"}
+              {mode === "ROLLO"
+                ? "Precio por Rollo"
+                : mode === "MAYOREO"
+                  ? `Mayoreo (≥ 10 ${formatUnit(producto.unidad)})`
+                  : `Menudeo (< 10 ${formatUnit(producto.unidad)})`}
             </button>
           ))}
         </div>
@@ -250,8 +258,10 @@ export default function PrecioDetail() {
             <Lock className="w-12 h-12 mb-4 text-muted-foreground opacity-50" />
             <h2 className="text-xl font-bold mb-2">Modo Bloqueado</h2>
             <p className="text-muted-foreground">
-              Este producto {producto.unidad === UnidadProducto.KILO ? 'se vende por KILO y no soporta ventas metreadas' : 'tiene la venta por metro deshabilitada'}.
-              Para modificar los precios de mayoreo o menudeo, primero debes habilitar la venta por metro desde el catálogo.
+              {producto.unidad === UnidadProducto.KILO
+                ? `Este producto se vende por ${formatUnit(producto.unidad)} y no admite ventas fraccionadas.`
+                : `Este producto tiene la ${fragmentedSaleLabel} deshabilitada.`}
+              {" "}Para modificar los precios de mayoreo o menudeo, primero debes habilitar la {fragmentedSaleLabel} desde el catálogo.
             </p>
           </Card>
         ) : (

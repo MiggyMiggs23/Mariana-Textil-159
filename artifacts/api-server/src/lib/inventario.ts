@@ -311,6 +311,24 @@ export type CrearRolloResult = {
   movimiento: typeof movimientosTable.$inferSelect | null;
 };
 
+function assertWholeBagQuantity(
+  unidad: string,
+  cantidad: string,
+  allowZero = false,
+): void {
+  if (unidad !== "BOLSA") return;
+  const value = Number(cantidad);
+  if (
+    !Number.isSafeInteger(value) ||
+    (allowZero ? value < 0 : value <= 0)
+  ) {
+    throw new InventarioError(
+      `La cantidad de bolsas debe ser un número entero ${allowZero ? "no negativo" : "mayor a cero"}.`,
+      "BOLSA_INTEGER_QUANTITY_REQUIRED",
+    );
+  }
+}
+
 /**
  * Create a single roll.
  * - estado DISPONIBLE → records ALTA movement + updates cache
@@ -344,7 +362,7 @@ export async function crearRollo(
   }
 
   const [producto] = await tx
-    .select({ sku: productosTable.sku })
+    .select({ sku: productosTable.sku, unidad: productosTable.unidad })
     .from(productosTable)
     .where(eq(productosTable.id, input.productoId))
     .limit(1);
@@ -352,6 +370,7 @@ export async function crearRollo(
   if (!producto) {
     throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
   }
+  assertWholeBagQuantity(producto.unidad, input.cantidadInicial);
 
   const [serie] = await reserveSeries(tx, 1);
   const estado: EstadoRollo = input.estado ?? "PROGRAMADO";
@@ -579,6 +598,32 @@ export async function crearEntrada(
       "La entrada debe incluir al menos un rollo.",
       "EMPTY_ENTRY",
     );
+  }
+  // BOLSA is an indivisible unit. Enforce this in the transactional engine as
+  // well as at the route boundary so every caller preserves the inventory
+  // invariant before an entrada, roll, or movement can be persisted.
+  const productUnits = await tx
+    .select({ id: productosTable.id, unidad: productosTable.unidad })
+    .from(productosTable)
+    .where(
+      inArray(
+        productosTable.id,
+        [...new Set(input.lineas.map((linea) => linea.productoId))],
+      ),
+    );
+  const unitByProductId = new Map(
+    productUnits.map((product) => [product.id, product.unidad]),
+  );
+  for (const linea of input.lineas) {
+    if (
+      unitByProductId.get(linea.productoId) === "BOLSA" &&
+      linea.cantidades.some((cantidad) => !Number.isInteger(Number(cantidad)))
+    ) {
+      throw new InventarioError(
+        "La cantidad de bolsas por caja debe ser un número entero.",
+        "BOLSA_INTEGER_QUANTITY_REQUIRED",
+      );
+    }
   }
   const pisosActivos = await tx.select({ id: pisosTable.id }).from(pisosTable)
     .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
@@ -1066,6 +1111,15 @@ export async function activarRollo(
   if (!rollo) {
     throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
   }
+  const [producto] = await tx
+    .select({ unidad: productosTable.unidad })
+    .from(productosTable)
+    .where(eq(productosTable.id, rollo.productoId))
+    .limit(1);
+  if (!producto) {
+    throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
+  }
+  assertWholeBagQuantity(producto.unidad, input.cantidadReal);
 
   if (!isValidUnitCost(rollo.costoUnitario)) {
     throw new InventarioError(
@@ -1513,7 +1567,12 @@ export type VenderRolloInput = {
   uuidCliente?: string | null;
   documentoTipo?: string | null;
   documentoId?: string | null;
+  /** BOLSA boxes physically become empty when sold whole. Legacy rolls do not. */
+  vaciarCantidadActual?: boolean;
 };
+
+export const DOCUMENTO_TICKET_BOLSA_NORMAL = "TICKET_BOLSA_NORMAL";
+export const DOCUMENTO_TICKET_BOLSA_METREADO = "TICKET_BOLSA_METREADO";
 
 /**
  * DISPONIBLE → VENDIDO. Records VENTA (negative).
@@ -1556,7 +1615,10 @@ export async function venderRollo(
 
   await tx
     .update(rollosTable)
-    .set({ estado: "VENDIDO" })
+    .set({
+      estado: "VENDIDO",
+      ...(input.vaciarCantidadActual ? { cantidadActual: "0.000" } : {}),
+    })
     .where(eq(rollosTable.id, input.rolloId));
 
   const movimiento = await insertMovimiento(tx, {
@@ -1581,6 +1643,95 @@ export async function venderRollo(
     .limit(1);
 
   return { rollo: updated!, movimiento };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type ConsumirBolsasFifoInput = {
+  productoId: number;
+  ubicacionId: number;
+  cantidad: string;
+  usuarioId: number;
+  documentoId: string;
+  justificacion?: string | null;
+};
+
+/**
+ * Consumes whole BOLSA units FIFO from one or more available physical boxes.
+ * Every selected row is locked until commit, and insufficient stock throws
+ * before any mutation so the caller's transaction remains all-or-nothing.
+ */
+export async function consumirBolsasFifo(
+  tx: Tx,
+  input: ConsumirBolsasFifoInput,
+): Promise<Array<typeof movimientosTable.$inferSelect>> {
+  const requerida = Number(input.cantidad);
+  if (!Number.isSafeInteger(requerida) || requerida <= 0) {
+    throw new InventarioError(
+      "La cantidad de bolsas debe ser un número entero mayor a cero.",
+      "BOLSA_INTEGER_QUANTITY_REQUIRED",
+    );
+  }
+
+  const cajas = await tx
+    .select()
+    .from(rollosTable)
+    .where(
+      and(
+        eq(rollosTable.productoId, input.productoId),
+        eq(rollosTable.ubicacionId, input.ubicacionId),
+        eq(rollosTable.estado, "DISPONIBLE"),
+      ),
+    )
+    .orderBy(rollosTable.id)
+    .for("update");
+
+  const disponibles = cajas.reduce(
+    (total, caja) => total + Number(caja.cantidadActual),
+    0,
+  );
+  if (disponibles < requerida) {
+    throw new InventarioError(
+      "No hay suficientes bolsas disponibles para completar la venta.",
+      "BOLSA_INSUFFICIENT_STOCK",
+    );
+  }
+
+  let pendiente = requerida;
+  const movimientos: Array<typeof movimientosTable.$inferSelect> = [];
+  for (const caja of cajas) {
+    if (pendiente === 0) break;
+    const actual = Number(caja.cantidadActual);
+    const consumida = Math.min(actual, pendiente);
+    if (consumida <= 0) continue;
+    const restante = actual - consumida;
+
+    await tx
+      .update(rollosTable)
+      .set({
+        cantidadActual: restante.toFixed(3),
+        estado: restante === 0 ? "VENDIDO" : "DISPONIBLE",
+      })
+      .where(eq(rollosTable.id, caja.id));
+
+    movimientos.push(
+      await insertMovimiento(tx, {
+        rolloId: caja.id,
+        productoId: input.productoId,
+        ubicacionId: input.ubicacionId,
+        tipo: "VENTA",
+        cantidad: (-consumida).toFixed(3),
+        usuarioId: input.usuarioId,
+        justificacion: input.justificacion ?? null,
+        documentoTipo: DOCUMENTO_TICKET_BOLSA_METREADO,
+        documentoId: input.documentoId,
+      }),
+    );
+    pendiente -= consumida;
+  }
+
+  await refreshCache(tx, input.productoId, input.ubicacionId);
+  return movimientos;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1640,6 +1791,17 @@ export async function ajustarRollo(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  const [producto] = await tx
+    .select({ unidad: productosTable.unidad })
+    .from(productosTable)
+    .where(eq(productosTable.id, rollo.productoId))
+    .limit(1);
+  if (!producto) {
+    throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
+  }
+  if (input.cantidadNueva != null) {
+    assertWholeBagQuantity(producto.unidad, input.cantidadNueva, true);
+  }
 
   if (!["DISPONIBLE", "EN_TRANSITO"].includes(rollo.estado)) {
     throw new InventarioError(
@@ -1794,8 +1956,8 @@ export async function revertirMovimiento(
     assertTransition(rollo.estado, estadoAnterior);
   }
 
-  // Only restore cantidadActual when the original movement actually mutated it.
-  // VENTA and TRANSFERENCIA_SALIDA/ENTRADA leave cantidadActual untouched.
+  // BOLSA sale documents are the only VENTA movements that mutate
+  // cantidadActual. Legacy METRO/KILO VENTA behavior remains unchanged.
   // SALIDA_MOSTRADOR is rejected by estadoAntesDe before quantity restoration.
   const movsThatChangeCantidad: TipoMovimiento[] = [
     "ALTA",
@@ -1803,7 +1965,11 @@ export async function revertirMovimiento(
     "AJUSTE_POSITIVO",
     "AJUSTE_NEGATIVO",
   ];
-  const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo)
+  const ventaBolsa =
+    orig.tipo === "VENTA" &&
+    (orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_NORMAL ||
+      orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_METREADO);
+  const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo) || ventaBolsa
     ? (parseFloat(rollo.cantidadActual) + parseFloat(inversaCantidad)).toFixed(3)
     : rollo.cantidadActual;
 

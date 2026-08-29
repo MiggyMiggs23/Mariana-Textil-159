@@ -38,3 +38,27 @@ test("conserva conteo cuando recibe el grupo SQL preagrupado", () => {
   assert.equal(hoja.totalMetros, "43");
   assert.equal(hoja.secciones[0].lineas[0].cantidad, "2");
 });
+
+test("separa los acumulados de METRO, KILO y BOLSA", () => {
+  const hoja = aggregateHojaVentasDia(
+    [
+      { productoId: 10, sku: "M", tela: "Producto", color: "Natural", tipo: "METREADO", unidad: "METRO", cantidadFisica: "2.5", importe: "25.00" },
+      { productoId: 11, sku: "K", tela: "Producto", color: "Natural", tipo: "METREADO", unidad: "KILO", cantidadFisica: "3", importe: "30.00" },
+      { productoId: 12, sku: "B", tela: "Producto", color: "Natural", tipo: "METREADO", unidad: "BOLSA", cantidadFisica: "4", importe: "40.00" },
+    ],
+    [{ subtotal: "95.00", iva: "0.00", total: "95.00", facturado: false }],
+  );
+  const metraje = hoja.secciones.find((section) => section.modalidad === "METRAJE")!;
+  assert.equal(metraje.lineas.length, 3);
+  assert.deepEqual(
+    metraje.lineas.map((linea) => [linea.unidad, linea.cantidad, linea.importe]).sort(),
+    [
+      ["BOLSA", "4", "40.00"],
+      ["KILO", "3", "30.00"],
+      ["METRO", "2.5", "25.00"],
+    ],
+  );
+  assert.equal(hoja.totalMetros, "2.5");
+  assert.equal(hoja.totalKilos, "3");
+  assert.equal(hoja.totalBolsas, "4");
+});

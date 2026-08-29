@@ -163,6 +163,9 @@ export function RecepcionSalidas() {
               <Summary label="Transportista" value={detalle.data.transportista || "—"} />
               <Summary label={formatUnit("METRO")} value={formatNumber(detalle.data.totalMetros ?? "0", { kind: "quantity" })} />
               <Summary label={formatUnit("KILO")} value={formatNumber(detalle.data.totalKilos ?? "0", { kind: "quantity" })} />
+              {Number(detalle.data.totalBolsas ?? 0) > 0 && (
+                <Summary label={formatUnit("BOLSA")} value={formatNumber(detalle.data.totalBolsas ?? "0", { kind: "quantity" })} />
+              )}
               <Summary label="Enviado por" value={detalle.data.nombreEnviadoPor || "—"} />
               <Summary
                 label="Fecha de envío"

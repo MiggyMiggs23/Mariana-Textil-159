@@ -23,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   Search, Download, ChevronDown, Filter, History, Loader2, AlertCircle
 } from "lucide-react";
@@ -501,7 +501,7 @@ export default function Movimientos() {
                             </TableCell>
                             <TableCell className="align-top py-3 text-right">
                               <div className={`font-bold text-sm tracking-tight ${cantColor}`}>
-                                 {sign}{formatNumber(Math.abs(cant), { kind: "quantity" })} <span className="text-xs font-normal opacity-70 ml-0.5">{row.unidadProducto.toLowerCase()}</span>
+                                 {sign}{formatNumber(Math.abs(cant), { kind: "quantity" })} <span className="text-xs font-normal opacity-70 ml-0.5">{formatUnit(row.unidadProducto)}</span>
                               </div>
                                <div className="text-[11px] text-muted-foreground font-medium mt-1">Saldo: {formatNumber(row.saldoPosterior, { kind: "quantity" })}</div>
                             </TableCell>
@@ -549,7 +549,7 @@ export default function Movimientos() {
                         </div>
                         <div className="text-right">
                           <div className={`font-bold tracking-tight ${cantColor}`}>
-                             {sign}{formatNumber(Math.abs(cant), { kind: "quantity" })} <span className="text-xs font-normal opacity-70 ml-0.5">{row.unidadProducto.toLowerCase()}</span>
+                             {sign}{formatNumber(Math.abs(cant), { kind: "quantity" })} <span className="text-xs font-normal opacity-70 ml-0.5">{formatUnit(row.unidadProducto)}</span>
                           </div>
                            <div className="text-[11px] font-medium text-muted-foreground mt-1">Saldo: {formatNumber(row.saldoPosterior, { kind: "quantity" })}</div>
                         </div>
@@ -611,16 +611,24 @@ export default function Movimientos() {
               <div className="flex justify-end gap-3 text-right tabular-nums">
                 <Card className="min-w-[150px]">
                   <CardContent className="p-3">
-                    <div className="text-xs font-medium text-muted-foreground">Total metros</div>
-                    <div className="font-bold">{formatNumber(data.resumen.totalMetros, { kind: "quantity" })} <span className="text-xs font-normal">metro</span></div>
+                    <div className="text-xs font-medium text-muted-foreground">Total {formatUnit("METRO")}</div>
+                    <div className="font-bold">{formatNumber(data.resumen.totalMetros, { kind: "quantity" })} <span className="text-xs font-normal">{formatUnit("METRO")}</span></div>
                   </CardContent>
                 </Card>
                 <Card className="min-w-[150px]">
                   <CardContent className="p-3">
-                    <div className="text-xs font-medium text-muted-foreground">Total kilos</div>
-                    <div className="font-bold">{formatNumber(data.resumen.totalKilos, { kind: "quantity" })} <span className="text-xs font-normal">kilo</span></div>
+                    <div className="text-xs font-medium text-muted-foreground">Total {formatUnit("KILO")}</div>
+                    <div className="font-bold">{formatNumber(data.resumen.totalKilos, { kind: "quantity" })} <span className="text-xs font-normal">{formatUnit("KILO")}</span></div>
                   </CardContent>
                 </Card>
+                {Number(data.resumen.totalBolsas) > 0 && (
+                  <Card className="min-w-[150px]">
+                    <CardContent className="p-3">
+                      <div className="text-xs font-medium text-muted-foreground">Total {formatUnit("BOLSA")}</div>
+                      <div className="font-bold">{formatNumber(data.resumen.totalBolsas, { kind: "quantity" })} <span className="text-xs font-normal">{formatUnit("BOLSA")}</span></div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
 
               {/* Pagination */}

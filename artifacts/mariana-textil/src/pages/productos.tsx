@@ -240,8 +240,9 @@ export default function Productos() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ALL">Todas las unid.</SelectItem>
-                  <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
-                  <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                  <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
+                  <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
+                  <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={filterEstado} onValueChange={setFilterEstado}>
@@ -324,8 +325,10 @@ export default function Productos() {
                             <div className="hidden lg:flex items-center gap-2">
                               {[...totalsByUnit.entries()].map(([unidad, total]) => (
                                 <Badge key={unidad} variant="outline" data-testid={`total-tela-${tela}-${unidad}`}>
-                                  {formatNumber(total.cantidad, { kind: "quantity" })} {unidad}
-                                  <span className="ml-1 text-muted-foreground">· {formatNumber(total.rollos, { kind: "count" })} rollos</span>
+                                  {formatNumber(total.cantidad, { kind: "quantity" })} {formatUnit(unidad)}
+                                  <span className="ml-1 text-muted-foreground">
+                                    · {formatNumber(total.rollos, { kind: "count" })} {unidad === UnidadProducto.BOLSA ? "cajas" : "rollos"}
+                                  </span>
                                 </Badge>
                               ))}
                             </div>
@@ -383,7 +386,7 @@ export default function Productos() {
                                       <HighlightMatch text={p.sku} search={searchTerm} />
                                     </TableCell>
                                     <TableCell>
-                                      <Badge variant="outline" className="text-[10px]">{p.unidad}</Badge>
+                                      <Badge variant="outline" className="text-[10px]">{formatUnit(p.unidad)}</Badge>
                                     </TableCell>
                                      {visibleSpecificationColumns.has("anchoCm") && <TableCell className="text-right">{p.anchoCm == null ? "—" : `${p.anchoCm.toFixed(2)} cm`}</TableCell>}
                                      {visibleSpecificationColumns.has("composicion") && <TableCell>{p.composicion || "—"}</TableCell>}
@@ -391,7 +394,7 @@ export default function Productos() {
                                     {canViewPrices && <TableCell className={`text-right ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.precioSugerido ?? 0, { kind: "money" })}</TableCell>}
                                     <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.rollos, { kind: "count" })}</TableCell>
                                     <TableCell className={`text-right font-medium tabular-nums ${isZeroStock ? "text-muted-foreground" : ""}`}>
-                                      {formatNumber(p.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{p.unidad}</span>
+                                       {formatNumber(p.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{formatUnit(p.unidad)}</span>
                                     </TableCell>
                                     <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.sitiosConExistencia, { kind: "count" })}</TableCell>
                                     <TableCell className="text-right">
@@ -580,8 +583,8 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
-                  <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                  <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
+                  <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
                   <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
                 </SelectContent>
               </Select>
@@ -815,7 +818,7 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
                         <TableCell>
                           <div className="font-semibold text-sm">{row.tela} - {row.color}</div>
                           <div className="text-[10px] text-muted-foreground">
-                            {row.unidad}
+                            {formatUnit(row.unidad)}
                             {canViewPrices && ` | ${formatNumber(row.precioSugerido, { kind: "money" })}`}
                           </div>
                         </TableCell>

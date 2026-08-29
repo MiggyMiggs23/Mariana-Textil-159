@@ -1958,9 +1958,12 @@ export interface ClienteCompraItem {
   iva?: string;
   metros?: string;
   kilos?: string;
+  bolsas?: string;
   rollosMetros?: string;
   rollosKilos?: string;
+  rollosBolsas?: string;
   metrajeMetros?: string;
+  metrajeBolsas?: string;
   /** @nullable */
   margen?: string | null;
   lineasSinCosto?: number;
@@ -1983,9 +1986,12 @@ export interface ClienteEstadisticas {
   comprasCount?: number | null;
   metros?: string;
   kilos?: string;
+  bolsas?: string;
   rollosMetros?: string;
   rollosKilos?: string;
+  rollosBolsas?: string;
   metrajeMetros?: string;
+  metrajeBolsas?: string;
   /** @nullable */
   costo?: string | null;
   /** @nullable */
@@ -2541,9 +2547,12 @@ export interface ClientesAnalitica {
   lineasSinCosto: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   rollosMetros: string;
   rollosKilos: string;
+  rollosBolsas: string;
   metrajeMetros: string;
+  metrajeBolsas: string;
   topVentas?: ClientesAnaliticaTopVentasItem[];
   topMargen?: ClientesAnaliticaTopMargenItem[];
   pareto?: ClientesAnaliticaParetoItem[];
@@ -2932,6 +2941,8 @@ export interface Producto {
   rollos: number;
   cantidad: string;
   sitiosConExistencia: number;
+  /** Verdadero cuando una referencia operativa o histórica impide cambiar la unidad. */
+  unidadBloqueada: boolean;
   createdAt: string;
   updatedAt: string;
 }

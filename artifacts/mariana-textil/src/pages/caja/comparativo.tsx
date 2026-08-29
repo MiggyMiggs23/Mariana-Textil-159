@@ -20,7 +20,7 @@ import {
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend, BarChart, Bar } from "recharts";
 import { BarChart3, RefreshCw, Loader2, AlertCircle, ArrowUpDown, ArrowUpRight, ArrowDownRight, TrendingUp } from "lucide-react";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
@@ -319,9 +319,11 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                               </div>
                             </TableCell>
                             <TableCell className="text-right font-mono">
-                              <div>Rollos: {formatNumber(t.rollosMetros, { kind: "quantity" })} METRO</div>
-                              <div className="text-muted-foreground text-[10px]">Rollos: {formatNumber(t.rollosKilos, { kind: "quantity" })} KILO</div>
-                              <div className="text-muted-foreground text-[10px]">Metraje: {formatNumber(t.metrajeMetros, { kind: "quantity" })} METRO</div>
+                              <div>Rollos: {formatNumber(t.rollosMetros, { kind: "quantity" })} {formatUnit("METRO")}</div>
+                              <div className="text-muted-foreground text-[10px]">Rollos: {formatNumber(t.rollosKilos, { kind: "quantity" })} {formatUnit("KILO")}</div>
+                              <div className="text-muted-foreground text-[10px]">Metraje: {formatNumber(t.metrajeMetros, { kind: "quantity" })} {formatUnit("METRO")}</div>
+                              <div className="text-muted-foreground text-[10px]">Cajas completas: {formatNumber(t.rollosBolsas, { kind: "quantity" })} {formatUnit("BOLSA")}</div>
+                              <div className="text-muted-foreground text-[10px]">Bolsas sueltas: {formatNumber(t.metrajeBolsas, { kind: "quantity" })} {formatUnit("BOLSA")}</div>
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="text-[10px] text-muted-foreground">Ef: <span className="font-mono font-medium text-foreground">{formatNumber(t.efectivo, { kind: "money" })}</span></div>
@@ -358,9 +360,11 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                           </TableCell>
                           <TableCell className="text-right font-mono">{formatNumber(data.totales.ticketPromedio, { kind: "money" })}</TableCell>
                           <TableCell className="text-right font-mono">
-                            <div>Rollos: {formatNumber(data.totales.rollosMetros, { kind: "quantity" })} METRO</div>
-                            <div className="text-muted-foreground text-[10px]">Rollos: {formatNumber(data.totales.rollosKilos, { kind: "quantity" })} KILO</div>
-                            <div className="text-muted-foreground text-[10px]">Metraje: {formatNumber(data.totales.metrajeMetros, { kind: "quantity" })} METRO</div>
+                            <div>Rollos: {formatNumber(data.totales.rollosMetros, { kind: "quantity" })} {formatUnit("METRO")}</div>
+                            <div className="text-muted-foreground text-[10px]">Rollos: {formatNumber(data.totales.rollosKilos, { kind: "quantity" })} {formatUnit("KILO")}</div>
+                            <div className="text-muted-foreground text-[10px]">Metraje: {formatNumber(data.totales.metrajeMetros, { kind: "quantity" })} {formatUnit("METRO")}</div>
+                            <div className="text-muted-foreground text-[10px]">Cajas completas: {formatNumber(data.totales.rollosBolsas, { kind: "quantity" })} {formatUnit("BOLSA")}</div>
+                            <div className="text-muted-foreground text-[10px]">Bolsas sueltas: {formatNumber(data.totales.metrajeBolsas, { kind: "quantity" })} {formatUnit("BOLSA")}</div>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="text-[10px] text-muted-foreground">Ef: <span className="font-mono font-medium text-foreground">{formatNumber(data.totales.efectivo, { kind: "money" })}</span></div>

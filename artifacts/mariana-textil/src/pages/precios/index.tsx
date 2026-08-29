@@ -47,14 +47,18 @@ export default function PreciosList() {
   const updateVentaPorMetro = useUpdatePrecioVentaPorMetro();
 
   const setVentaPorMetro = (product: PrecioProducto, checked: boolean) => {
+    const saleLabel =
+      product.unidad === UnidadProducto.BOLSA
+        ? "venta de bolsas sueltas"
+        : "venta por metro";
     updateVentaPorMetro.mutate(
       { id: product.id, data: { seVendePorMetro: checked } },
       {
         onSuccess: () => {
           toast.success(
             checked
-              ? "Venta por metro habilitada"
-              : "Venta por metro deshabilitada",
+              ? `${saleLabel} habilitada`
+              : `${saleLabel} deshabilitada`,
           );
           queryClient.invalidateQueries({ queryKey: getListPreciosQueryKey() });
         },
@@ -114,8 +118,9 @@ export default function PreciosList() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas las uds.</SelectItem>
-                    <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
-                    <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                    <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
+                    <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
+                    <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -139,8 +144,8 @@ export default function PreciosList() {
               <Tabs value={activeMode} onValueChange={(v) => setActiveMode(v as ModoPrecio)} className="w-full">
                 <TabsList className="grid w-full grid-cols-3 max-w-2xl">
                   <TabsTrigger value={ModoPrecio.ROLLO}>Precio por Rollo</TabsTrigger>
-                  <TabsTrigger value={ModoPrecio.MAYOREO}>Mayoreo (10m o más)</TabsTrigger>
-                  <TabsTrigger value={ModoPrecio.MENUDEO}>Menudeo (menos de 10m)</TabsTrigger>
+                  <TabsTrigger value={ModoPrecio.MAYOREO}>Mayoreo</TabsTrigger>
+                  <TabsTrigger value={ModoPrecio.MENUDEO}>Menudeo</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -153,7 +158,7 @@ export default function PreciosList() {
                     <TableHead className="w-[120px]">SKU</TableHead>
                     <TableHead>Producto</TableHead>
                     <TableHead className="w-[80px] text-center">Unidad</TableHead>
-                    <TableHead className="w-[190px]">Venta por metro</TableHead>
+                    <TableHead className="w-[190px]">Venta fraccionada</TableHead>
                     <TableHead className="text-right">
                       <div className="flex flex-col items-end">
                         <span>Costo base</span>
@@ -214,12 +219,12 @@ export default function PreciosList() {
                               onCheckedChange={(checked) =>
                                 setVentaPorMetro(precio, checked)
                               }
-                              aria-label={`Venta por metro de ${precio.tela} ${precio.color}`}
+                              aria-label={`${precio.unidad === UnidadProducto.BOLSA ? "Venta de bolsas sueltas" : "Venta por metro"} de ${precio.tela} ${precio.color}`}
                               data-testid={`switch-venta-metro-${precio.sku}`}
                             />
                             <span className="text-xs text-muted-foreground">
                               {precio.unidad === UnidadProducto.KILO
-                                ? "KILO"
+                                ? formatUnit(precio.unidad)
                                 : precio.seVendePorMetro
                                   ? "Sí"
                                   : "No"}

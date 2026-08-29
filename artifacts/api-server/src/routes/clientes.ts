@@ -426,9 +426,12 @@ router.get(
           COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto",
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad = 'METRO'), 0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad = 'KILO'), 0)::text AS kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad = 'BOLSA'), 0)::text AS bolsas,
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0)::text AS "rollosMetros",
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0)::text AS "rollosKilos",
-          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros"
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='BOLSA'),0)::text AS "rollosBolsas",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='BOLSA'),0)::text AS "metrajeBolsas"
         FROM tickets t
         JOIN ticket_lineas l ON l.ticket_id = t.id
         JOIN productos p ON p.id = l.producto_id
@@ -1242,9 +1245,12 @@ router.get(
           t.iva::text, t.total::text,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'), 0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'), 0)::text AS kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='BOLSA'), 0)::text AS bolsas,
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0)::text AS "rollosMetros",
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0)::text AS "rollosKilos",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='BOLSA'),0)::text AS "rollosBolsas",
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='BOLSA'),0)::text AS "metrajeBolsas",
           CASE WHEN COUNT(*) FILTER
             (WHERE l.costo_total_congelado IS NULL) = 0
             THEN SUM(l.importe-l.costo_total_congelado)::text END AS margen,
@@ -1371,9 +1377,12 @@ router.get(
           COUNT(DISTINCT t.id)::int AS "comprasCount",
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'),0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'),0)::text AS kilos,
+          COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='BOLSA'),0)::text AS bolsas,
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='METRO'),0)::text AS "rollosMetros",
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='KILO'),0)::text AS "rollosKilos",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='NORMAL' AND p.unidad='BOLSA'),0)::text AS "rollosBolsas",
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0)::text AS "metrajeMetros",
+          COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='BOLSA'),0)::text AS "metrajeBolsas",
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
             ELSE COALESCE(SUM(l.costo_total_congelado),0)::text END AS costo,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL

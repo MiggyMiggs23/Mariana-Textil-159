@@ -30,6 +30,9 @@ import {
 } from "./credit-allocation";
 import { loadCustomerCreditLedgerInTransaction } from "./credit-aging-read-model";
 import {
+  consumirBolsasFifo,
+  DOCUMENTO_TICKET_BOLSA_METREADO,
+  DOCUMENTO_TICKET_BOLSA_NORMAL,
   InventarioError,
   revertirMovimiento,
   venderRollo,
@@ -637,8 +640,8 @@ export async function crearTicket(
     );
   }
 
-  // Only NORMAL lines participate in roll lookup/locking. METREADO explicitly
-  // owns no roll and must never validate or consume inventory.
+  // NORMAL lines identify one physical roll/box. METREADO BOLSA inventory is
+  // allocated FIFO later and deliberately remains absent from ticket_linea.
   const rolloIds = input.lineas.flatMap((linea) =>
     (linea.tipo ?? input.tipo) === "NORMAL" && linea.rolloId != null
       ? [linea.rolloId]
@@ -676,7 +679,9 @@ export async function crearTicket(
               inArray(rollosTable.id, rolloIds),
               eq(rollosTable.ubicacionId, input.ubicacionId),
             ),
-          );
+          )
+          .orderBy(asc(rollosTable.createdAt), asc(rollosTable.id))
+          .for("update");
   const rolloMap = new Map(rollos.map((rollo) => [rollo.id, rollo]));
 
   const productoIds = [
@@ -762,11 +767,11 @@ export async function crearTicket(
     }
     const suggestedPrice =
       tipo === "METREADO"
-        ? suggestedMeteredPrice(Number(cantidad), producto).price
+        ? suggestedMeteredPrice(Number(cantidad), producto, producto.unidad).price
         : producto.precioSugerido;
     if (suggestedPrice == null) {
       throw new PosError(
-        `No hay precio ${meteredPriceTier(Number(cantidad)).toLowerCase()} configurado para ${productName(producto.tela, producto.color)}.`,
+        `No hay precio ${meteredPriceTier(Number(cantidad), producto.unidad).toLowerCase()} configurado para ${productName(producto.tela, producto.color)}.`,
         "METREADO_PRICE_NOT_CONFIGURED",
       );
     }
@@ -896,16 +901,45 @@ export async function crearTicket(
     })
     .returning();
 
+  // Sell every explicitly selected roll/box first. This prevents a FIFO BOLSA
+  // line in the same ticket from consuming a box also selected as NORMAL.
   for (const linea of lineasPreparadas) {
+    const producto = productoMap.get(linea.productoId)!;
     if (linea.tipo === "NORMAL" && linea.rolloId != null) {
       await venderRollo(tx, {
         rolloId: linea.rolloId,
         usuarioId: input.usuarioTerminalId,
         justificacion: `Venta ticket ${folio}`,
-        documentoTipo: "TICKET",
+        documentoTipo:
+          producto.unidad === "BOLSA"
+            ? DOCUMENTO_TICKET_BOLSA_NORMAL
+            : "TICKET",
         documentoId: String(ticket!.id),
+        vaciarCantidadActual: producto.unidad === "BOLSA",
       });
     }
+  }
+  for (const linea of lineasPreparadas) {
+    const producto = productoMap.get(linea.productoId)!;
+    if (linea.tipo === "METREADO" && producto.unidad === "BOLSA") {
+      try {
+        await consumirBolsasFifo(tx, {
+          productoId: linea.productoId,
+          ubicacionId: input.ubicacionId,
+          cantidad: linea.cantidad,
+          usuarioId: input.usuarioTerminalId,
+          documentoId: String(ticket!.id),
+          justificacion: `Venta metreada de bolsas ticket ${folio}`,
+        });
+      } catch (error) {
+        if (error instanceof InventarioError) {
+          throw new PosError(error.message, error.code, 409);
+        }
+        throw error;
+      }
+    }
+  }
+  for (const linea of lineasPreparadas) {
     await tx.insert(ticketLineasTable).values({
       ticketId: ticket!.id,
       rolloId: linea.rolloId,
@@ -984,7 +1018,17 @@ export async function cancelarTicket(
     .where(
       and(
         eq(movimientosTable.tipo, "VENTA"),
-        eq(movimientosTable.documentoTipo, "TICKET"),
+        or(
+          eq(movimientosTable.documentoTipo, "TICKET"),
+          eq(
+            movimientosTable.documentoTipo,
+            DOCUMENTO_TICKET_BOLSA_NORMAL,
+          ),
+          eq(
+            movimientosTable.documentoTipo,
+            DOCUMENTO_TICKET_BOLSA_METREADO,
+          ),
+        ),
         eq(movimientosTable.documentoId, String(ticket.id)),
       ),
     )

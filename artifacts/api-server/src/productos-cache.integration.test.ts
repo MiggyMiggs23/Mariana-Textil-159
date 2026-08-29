@@ -236,6 +236,9 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
         tela: `${tag} tela stock`,
         color: `${tag} azul`,
         colorHex: null,
+        anchoCm: null,
+        composicion: null,
+        gramajeGm2: null,
         unidad: "METRO",
         seVendePorMetro: true,
         precioSugerido: "123.45",
@@ -244,11 +247,52 @@ test("Block 2 products use scoped existencias cache and redact TERMINAL finances
         rollos: 3,
         cantidad: "12.000",
         sitiosConExistencia: 2,
+        unidadBloqueada: true,
         createdAt: (findProduct(todos, Number(stocked.id)) as { createdAt: string }).createdAt,
         updatedAt: (findProduct(todos, Number(stocked.id)) as { updatedAt: string }).updatedAt,
       },
     );
     assert.ok(findProduct(todos, Number(zero.id)), "TODOS must retain zero product");
+
+    const blockedUnitResponse = await fetch(
+      `${baseUrl}/api/productos/${stocked.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          cookie: `mariana_session=${actors.ADMIN}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ unidad: "BOLSA" }),
+      },
+    );
+    const blockedUnitBody = await blockedUnitResponse.json() as {
+      error?: string;
+    };
+    assert.equal(blockedUnitResponse.status, 400);
+    assert.match(blockedUnitBody.error ?? "", /historial operativo/i);
+    assert.equal(
+      (await one("SELECT unidad FROM productos WHERE id=$1", [stocked.id])).unidad,
+      "METRO",
+    );
+
+    const allowedUnitResponse = await fetch(
+      `${baseUrl}/api/productos/${zero.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          cookie: `mariana_session=${actors.ADMIN}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ unidad: "BOLSA" }),
+      },
+    );
+    const allowedUnitBody = await allowedUnitResponse.json() as {
+      unidad?: string;
+      unidadBloqueada?: boolean;
+    };
+    assert.equal(allowedUnitResponse.status, 200, JSON.stringify(allowedUnitBody));
+    assert.equal(allowedUnitBody.unidad, "BOLSA");
+    assert.equal(allowedUnitBody.unidadBloqueada, false);
 
     await patchProduct(
       Number(stocked.id),

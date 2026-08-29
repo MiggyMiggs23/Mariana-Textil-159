@@ -298,6 +298,11 @@ export default function ProductoDetail() {
                       )}
                     </div>
                   )}
+                  {isEditing && product.unidadBloqueada && (
+                    <p className="text-xs text-muted-foreground">
+                      La unidad no puede cambiarse porque este producto tiene historial operativo.
+                    </p>
+                  )}
                 </div>
 
                 {canViewPrices && (
@@ -541,13 +546,13 @@ export default function ProductoDetail() {
             <CardHeader>
               <CardTitle className="text-xl">Historial de compras</CardTitle>
               <CardDescription>
-                El costo por {product.unidad.toLowerCase()} se pondera con la cantidad recibida.
+                El costo por {formatUnit(product.unidad)} se pondera con la cantidad recibida.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div>
-                  <div className="text-sm text-muted-foreground">Costo por {product.unidad.toLowerCase()}</div>
+                  <div className="text-sm text-muted-foreground">Costo por {formatUnit(product.unidad)}</div>
                   <div className="text-2xl font-bold text-primary">
                     {formatNumber(product.comprasResumen?.costoPorUnidad ?? 0, { kind: "money" })}
                   </div>
@@ -573,7 +578,7 @@ export default function ProductoDetail() {
                       <TableHead>Entrada</TableHead>
                       <TableHead>Proveedor</TableHead>
                       <TableHead className="text-right">Cantidad</TableHead>
-                      <TableHead className="text-right">Costo por {product.unidad.toLowerCase()}</TableHead>
+                      <TableHead className="text-right">Costo por {formatUnit(product.unidad)}</TableHead>
                       <TableHead className="text-right">Total</TableHead>
                     </TableRow>
                   </TableHeader>

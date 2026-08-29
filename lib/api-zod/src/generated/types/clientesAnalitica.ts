@@ -23,9 +23,12 @@ export interface ClientesAnalitica {
   lineasSinCosto: number;
   metros: string;
   kilos: string;
+  bolsas: string;
   rollosMetros: string;
   rollosKilos: string;
+  rollosBolsas: string;
   metrajeMetros: string;
+  metrajeBolsas: string;
   topVentas?: ClientesAnaliticaTopVentasItem[];
   topMargen?: ClientesAnaliticaTopMargenItem[];
   pareto?: ClientesAnaliticaParetoItem[];

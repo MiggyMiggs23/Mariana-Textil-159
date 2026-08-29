@@ -77,6 +77,7 @@ export default function Inventario() {
       })
     }
   });
+  const hasBolsas = existenciasAgrupadas?.some((grupo) => Number(grupo.totalBolsas) > 0) ?? false;
 
   useEffect(() => {
     if (debouncedSearch && existenciasAgrupadas) {
@@ -175,18 +176,19 @@ export default function Inventario() {
                       <TableHead className="text-right">Rollos</TableHead>
                       <TableHead className="text-right">Total Mts.</TableHead>
                       <TableHead className="text-right">Total Kg.</TableHead>
+                       {hasBolsas && <TableHead className="text-right">Total {formatUnit("BOLSA")}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loadingExistencias ? (
                       <TableRow>
-                        <TableCell colSpan={isTodas ? 6 : 5} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 6 : 5) + (hasBolsas ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           Cargando inventario...
                         </TableCell>
                       </TableRow>
                     ) : existenciasAgrupadas?.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={isTodas ? 6 : 5} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 6 : 5) + (hasBolsas ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           <Boxes className="w-8 h-8 mx-auto mb-2 opacity-20" />
                           No se encontraron existencias
                         </TableCell>
@@ -206,6 +208,7 @@ export default function Inventario() {
                             <TableCell className="text-right font-bold py-3">{formatNumber(grupo.rollosCount, { kind: "count" })}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? formatNumber(grupo.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? formatNumber(grupo.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
+                             {hasBolsas && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalBolsas) > 0 ? formatNumber(grupo.totalBolsas, { kind: "quantity" }) : "-"}</TableCell>}
                           </TableRow>
                           {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => (
                             <TableRow key={hijo.productoId} className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
@@ -219,7 +222,7 @@ export default function Inventario() {
                               </TableCell>
                               {isTodas && <TableCell className="py-2"></TableCell>}
                                <TableCell className="text-right py-2">{formatNumber(hijo.rollosCount, { kind: "count" })}</TableCell>
-                              <TableCell className="text-right tabular-nums py-2" colSpan={2}>
+                              <TableCell className="text-right tabular-nums py-2" colSpan={hasBolsas ? 3 : 2}>
                                 <div className="flex items-center justify-end gap-1">
                                    <span className="font-medium">{formatNumber(hijo.cantidadTotal, { kind: "quantity" })}</span>
                                   <span className="text-xs text-muted-foreground">{formatUnit(hijo.unidad)}</span>

@@ -43,6 +43,7 @@ export default function Dashboard() {
   }
 
   const inventario = dashboard.inventarioPorUbicacion;
+  const hasBolsas = inventario.some((item) => Number(item.bolsas) > 0);
   const selectedLocationName =
     selectedLocationId === null ? null : inventario[0]?.nombre;
 
@@ -108,6 +109,7 @@ export default function Dashboard() {
                     <TableHead className="w-[300px]">Sitio</TableHead>
                     <TableHead className="text-right">{formatUnit("METRO")}</TableHead>
                     <TableHead className="text-right">{formatUnit("KILO")}</TableHead>
+                    {hasBolsas && <TableHead className="text-right">{formatUnit("BOLSA")}</TableHead>}
                     <TableHead className="text-right">Rollos</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -117,6 +119,7 @@ export default function Dashboard() {
                       <TableCell className="font-medium">{item.nombre}</TableCell>
                        <TableCell className="text-right tabular-nums">{formatNumber(item.metros, { kind: "quantity" })}</TableCell>
                        <TableCell className="text-right tabular-nums">{formatNumber(item.kilos, { kind: "quantity" })}</TableCell>
+                        {hasBolsas && <TableCell className="text-right tabular-nums">{formatNumber(item.bolsas, { kind: "quantity" })}</TableCell>}
                        <TableCell className="text-right tabular-nums">{formatNumber(item.rollos, { kind: "count" })}</TableCell>
                     </TableRow>
                   ))}

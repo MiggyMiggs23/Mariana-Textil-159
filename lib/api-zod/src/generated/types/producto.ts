@@ -42,6 +42,8 @@ export interface Producto {
   rollos: number;
   cantidad: string;
   sitiosConExistencia: number;
+  /** Verdadero cuando una referencia operativa o histórica impide cambiar la unidad. */
+  unidadBloqueada: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

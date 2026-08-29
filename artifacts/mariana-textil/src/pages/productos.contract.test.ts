@@ -10,6 +10,8 @@ test("catálogo agrupado conserva unidad, especificaciones y totales separados",
   assert.match(source, /inherited\?\.gramajeGm2/);
   assert.match(source, /totalsByUnit/);
   assert.match(source, /total-tela-/);
-  assert.match(source, /String\(product\.unidad\) === "BOLSA"/);
+  assert.match(source, /formatUnit\(unidad\)/);
+  assert.match(source, /value=\{UnidadProducto\.BOLSA\}/);
+  assert.match(source, /unidad === UnidadProducto\.BOLSA \? "cajas" : "rollos"/);
   assert.match(source, /Vista previa no autoritativa/);
 });

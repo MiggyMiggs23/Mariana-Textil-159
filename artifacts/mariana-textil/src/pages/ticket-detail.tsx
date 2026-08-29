@@ -621,7 +621,7 @@ export default function TicketDetailPage() {
                       <div className="text-[9px]">
                         {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                         {" · "}
-                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
+                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{formatUnit(linea.unidadProducto)}
                       </div>
                     </td>
                     <td className="text-right align-top py-1 font-mono">
@@ -652,7 +652,7 @@ export default function TicketDetailPage() {
                       <div className="text-[9px]">
                         {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
                         {" · "}
-                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{linea.unidadProducto === "KILO" ? "kg" : "m"}
+                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{formatUnit(linea.unidadProducto)}
                       </div>
                     </td>
                     <td className="text-right align-top py-1 font-mono">

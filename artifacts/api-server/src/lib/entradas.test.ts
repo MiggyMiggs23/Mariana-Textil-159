@@ -41,6 +41,7 @@ let failed = 0;
 const createdProductoIds: number[] = [];
 const createdUbicacionIds: number[] = [];
 const createdEntradaIds: number[] = [];
+const rejectedEntradaUuids: string[] = [];
 const createdProveedorIds: number[] = [];
 
 async function test(name: string, fn: () => Promise<void>): Promise<void> {
@@ -57,7 +58,9 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
 }
 
 let seq = 0;
-async function mkProducto(): Promise<{ id: number; sku: string }> {
+async function mkProducto(
+  unidad: "METRO" | "KILO" | "BOLSA" = "METRO",
+): Promise<{ id: number; sku: string }> {
   const tag = `${RUN}-${++seq}`;
   const [row] = await db
     .insert(productosTable)
@@ -65,7 +68,7 @@ async function mkProducto(): Promise<{ id: number; sku: string }> {
       sku: `ENT${tag}`.slice(0, 64),
       tela: `Tela ${tag}`,
       color: `Color ${tag}`,
-      unidad: "METRO" as const,
+      unidad,
       precioSugerido: "100.00",
     })
     .returning();
@@ -371,6 +374,73 @@ await test("E-04: Entrada sin rollos → InventarioError", async () => {
   );
 });
 
+// =============================================================================
+// E-05: BOLSA entries have indivisible quantities
+// =============================================================================
+
+await test("E-05: Recepción BOLSA entera crea caja con serie y movimiento", async () => {
+  const { id: productoId } = await mkProducto("BOLSA");
+  const ubicacionId = await mkUbicacion();
+
+  const entrada = await db.transaction((tx) =>
+    crearEntrada(tx, {
+      ubicacionId,
+      usuarioId: 1,
+      uuidCliente: randomUUID(),
+      lineas: [{
+        productoId,
+        costoUnitario: "12.50",
+        cantidades: ["24"],
+      }],
+    }),
+  );
+  createdEntradaIds.push(entrada.id);
+
+  assert.equal(entrada.rollos.length, 1);
+  assert.match(entrada.rollos[0]!.serie, /^\d+$/, "la caja debe recibir serie");
+  assert.equal(entrada.rollos[0]!.cantidadInicial, "24.000");
+  assert.equal(entrada.lineas[0]?.unidadProducto, "BOLSA");
+  assert.equal(entrada.lineas[0]?.cantidadTotal, "24.000");
+  const [movimiento] = await db
+    .select()
+    .from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, entrada.rollos[0]!.id));
+  assert.equal(movimiento?.tipo, "RECEPCION");
+  assert.equal(movimiento?.cantidad, "24.000");
+});
+
+await test("E-05B: Recepción BOLSA fraccionaria se rechaza sin crear entrada", async () => {
+  const { id: productoId } = await mkProducto("BOLSA");
+  const ubicacionId = await mkUbicacion();
+  const uuidCliente = randomUUID();
+  // Keep this UUID for cleanup too: before the engine guard existed this
+  // attempted transaction committed, then assert.rejects reported the failure.
+  rejectedEntradaUuids.push(uuidCliente);
+
+  await assert.rejects(
+    db.transaction((tx) =>
+      crearEntrada(tx, {
+        ubicacionId,
+        usuarioId: 1,
+        uuidCliente,
+        lineas: [{
+          productoId,
+          costoUnitario: "12.50",
+          cantidades: ["24.500"],
+        }],
+      }),
+    ),
+    (error: unknown) =>
+      error instanceof InventarioError &&
+      error.code === "BOLSA_INTEGER_QUANTITY_REQUIRED",
+  );
+  const rejected = await db
+    .select({ id: entradasTable.id })
+    .from(entradasTable)
+    .where(eq(entradasTable.uuidCliente, uuidCliente));
+  assert.equal(rejected.length, 0);
+});
+
 await test("E-06: costos pendientes requieren capability y se capturan sin movimientos nuevos", async () => {
   const { id: productoId } = await mkProducto();
   const ubicacionId = await mkUbicacion();
@@ -484,11 +554,20 @@ process.stdout.write(`Results: ${passed} passed, ${failed} failed\n`);
 
 try {
   await db.transaction(async (tx) => {
+    const cleanupEntradaIds = [...createdEntradaIds];
+    if (rejectedEntradaUuids.length > 0) {
+      const rejectedEntries = await tx
+        .select({ id: entradasTable.id })
+        .from(entradasTable)
+        .where(inArray(entradasTable.uuidCliente, rejectedEntradaUuids));
+      cleanupEntradaIds.push(...rejectedEntries.map((entry) => entry.id));
+    }
+    const allEntradaIds = [...new Set(cleanupEntradaIds)];
     // Delete pagos_proveedor first (FK to entradas)
-    if (createdEntradaIds.length > 0) {
+    if (allEntradaIds.length > 0) {
       await tx
         .delete(pagosProveedorTable)
-        .where(inArray(pagosProveedorTable.entradaId, createdEntradaIds));
+        .where(inArray(pagosProveedorTable.entradaId, allEntradaIds));
     }
     if (createdProveedorIds.length > 0) {
       await tx
@@ -496,11 +575,11 @@ try {
         .where(inArray(pagosProveedorTable.proveedorId, createdProveedorIds));
     }
 
-    if (createdEntradaIds.length > 0) {
+    if (allEntradaIds.length > 0) {
       const rollos = await tx
         .select({ id: rollosTable.id })
         .from(rollosTable)
-        .where(inArray(rollosTable.recepcionId, createdEntradaIds));
+        .where(inArray(rollosTable.recepcionId, allEntradaIds));
       const rolloIds = rollos.map((r) => r.id);
       if (rolloIds.length > 0) {
         await tx
@@ -510,7 +589,7 @@ try {
       }
       await tx
         .delete(entradasTable)
-        .where(inArray(entradasTable.id, createdEntradaIds));
+        .where(inArray(entradasTable.id, allEntradaIds));
     }
 
     if (createdProductoIds.length > 0) {

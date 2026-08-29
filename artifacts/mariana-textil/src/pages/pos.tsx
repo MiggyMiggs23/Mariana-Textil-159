@@ -69,7 +69,7 @@ import {
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
 import {
-  MAYOREO_THRESHOLD_METERS,
+  mayoreoThresholdForUnit,
   suggestedMeteredPrice,
 } from "@workspace/metered-pricing";
 
@@ -198,6 +198,9 @@ function CartLineItem({
   const priceIsBlocked =
     priceValidation.status === "invalid" || priceValidation.status === "error";
   const belowMeteredCost = isMetreado ? meteredCostWarning(item) : null;
+  const meteredUnit = formatUnit(item.producto.unidad);
+  const meteredThreshold = mayoreoThresholdForUnit(item.producto.unidad);
+  const requiresWholeQuantity = item.producto.unidad === "BOLSA";
 
   return (
     <div className={`border-b py-3 last:border-0 ${isMetreado ? 'bg-amber-50/30' : ''}`}>
@@ -217,8 +220,8 @@ function CartLineItem({
                    data-testid={`precio-tipo-${item.producto.id}`}
                  >
                    {item.meteredPriceTier === "MAYOREO"
-                     ? `Mayoreo (${MAYOREO_THRESHOLD_METERS} m o más)`
-                     : `Menudeo (menos de ${MAYOREO_THRESHOLD_METERS} m)`}
+                      ? `Mayoreo (${meteredThreshold} ${meteredUnit} o más)`
+                      : `Menudeo (menos de ${meteredThreshold} ${meteredUnit})`}
                  </span>
                  {item.meteredPriceTierChanged && (
                    <span className="text-xs font-medium text-violet-800" role="status">
@@ -265,13 +268,18 @@ function CartLineItem({
             <div className="w-20">
               <Input
                 type="number"
-                min="0.001"
-                step="0.001"
+                min={requiresWholeQuantity ? "1" : "0.001"}
+                step={requiresWholeQuantity ? "1" : "0.001"}
                 value={item.cantidad}
-                onChange={(e) =>
-                  onChangeQuantity &&
-                  onChangeQuantity(Number(e.target.value) || 0)
-                }
+                onChange={(e) => {
+                  const quantity = Number(e.target.value) || 0;
+                  if (
+                    onChangeQuantity &&
+                    (!requiresWholeQuantity || Number.isInteger(quantity))
+                  ) {
+                    onChangeQuantity(quantity);
+                  }
+                }}
                 className="h-8 text-right font-mono"
               />
             </div>
@@ -463,7 +471,7 @@ export default function PosPage() {
       setCart([
         ...cart,
         (() => {
-          const suggested = suggestedMeteredPrice(1, item);
+          const suggested = suggestedMeteredPrice(1, item, item.unidad);
           return {
           rollo: null,
           producto: item,
@@ -485,7 +493,11 @@ export default function PosPage() {
       current.map((item, itemIndex) =>
         itemIndex === index && item.isMetreado
           ? (() => {
-              const suggested = suggestedMeteredPrice(qty, item.producto);
+              const suggested = suggestedMeteredPrice(
+                qty,
+                item.producto,
+                item.producto.unidad,
+              );
               const crossedTier = item.meteredPriceTier !== suggested.tier;
               return {
                 ...item,
@@ -964,7 +976,7 @@ export default function PosPage() {
                             /{formatUnit(prod.unidad)}
                           </div>
                            <div className="text-xs text-muted-foreground text-right">
-                             Mayoreo: {formatNumber(prod.precioMayoreo, { kind: "money" })} · desde {MAYOREO_THRESHOLD_METERS} m
+                             Mayoreo: {formatNumber(prod.precioMayoreo, { kind: "money" })} · desde {mayoreoThresholdForUnit(prod.unidad)} {formatUnit(prod.unidad)}
                            </div>
                           <Button
                             size="sm"

@@ -828,6 +828,7 @@ export const ListProductosResponseItem = zod.object({
   "rollos": zod.number(),
   "cantidad": zod.string(),
   "sitiosConExistencia": zod.number(),
+  "unidadBloqueada": zod.boolean().describe('Verdadero cuando una referencia operativa o histórica impide cambiar la unidad.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -889,6 +890,7 @@ export const CreateProductoResponse = zod.object({
   "rollos": zod.number(),
   "cantidad": zod.string(),
   "sitiosConExistencia": zod.number(),
+  "unidadBloqueada": zod.boolean().describe('Verdadero cuando una referencia operativa o histórica impide cambiar la unidad.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -1325,6 +1327,7 @@ export const UpdateProductoResponse = zod.object({
   "rollos": zod.number(),
   "cantidad": zod.string(),
   "sitiosConExistencia": zod.number(),
+  "unidadBloqueada": zod.boolean().describe('Verdadero cuando una referencia operativa o histórica impide cambiar la unidad.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -4085,9 +4088,12 @@ export const GetClientesAnaliticaResponse = zod.object({
   "lineasSinCosto": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
+  "bolsas": zod.string(),
   "rollosMetros": zod.string(),
   "rollosKilos": zod.string(),
+  "rollosBolsas": zod.string(),
   "metrajeMetros": zod.string(),
+  "metrajeBolsas": zod.string(),
   "topVentas": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
   "topMargen": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
   "pareto": zod.array(zod.record(zod.string(), zod.unknown())).optional(),
@@ -4388,9 +4394,12 @@ export const GetClienteComprasResponse = zod.object({
   "iva": zod.string().optional(),
   "metros": zod.string().optional(),
   "kilos": zod.string().optional(),
+  "bolsas": zod.string().optional(),
   "rollosMetros": zod.string().optional(),
   "rollosKilos": zod.string().optional(),
+  "rollosBolsas": zod.string().optional(),
   "metrajeMetros": zod.string().optional(),
+  "metrajeBolsas": zod.string().optional(),
   "margen": zod.string().nullish(),
   "lineasSinCosto": zod.number().optional()
 })),
@@ -4412,9 +4421,12 @@ export const GetClienteEstadisticasResponse = zod.object({
   "comprasCount": zod.number().nullish(),
   "metros": zod.string().optional(),
   "kilos": zod.string().optional(),
+  "bolsas": zod.string().optional(),
   "rollosMetros": zod.string().optional(),
   "rollosKilos": zod.string().optional(),
+  "rollosBolsas": zod.string().optional(),
   "metrajeMetros": zod.string().optional(),
+  "metrajeBolsas": zod.string().optional(),
   "costo": zod.string().nullish(),
   "margen": zod.string().nullish(),
   "lineasSinCosto": zod.number().optional()

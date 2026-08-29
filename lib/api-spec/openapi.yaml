@@ -7320,9 +7320,12 @@ components:
         iva: { type: string }
         metros: { type: string }
         kilos: { type: string }
+        bolsas: { type: string }
         rollosMetros: { type: string }
         rollosKilos: { type: string }
+        rollosBolsas: { type: string }
         metrajeMetros: { type: string }
+        metrajeBolsas: { type: string }
         margen: { type: ["string", "null"] }
         lineasSinCosto: { type: number }
     ClienteCompras:
@@ -7345,9 +7348,12 @@ components:
         comprasCount: { type: ["number", "null"] }
         metros: { type: string }
         kilos: { type: string }
+        bolsas: { type: string }
         rollosMetros: { type: string }
         rollosKilos: { type: string }
+        rollosBolsas: { type: string }
         metrajeMetros: { type: string }
+        metrajeBolsas: { type: string }
         costo: { type: ["string", "null"] }
         margen: { type: ["string", "null"] }
         lineasSinCosto: { type: number }
@@ -7626,9 +7632,12 @@ components:
           lineasSinCosto,
           metros,
           kilos,
+          bolsas,
           rollosMetros,
           rollosKilos,
+          rollosBolsas,
           metrajeMetros,
+          metrajeBolsas,
         ]
       properties:
         periodo:
@@ -7644,9 +7653,12 @@ components:
         lineasSinCosto: { type: number }
         metros: { type: string }
         kilos: { type: string }
+        bolsas: { type: string }
         rollosMetros: { type: string }
         rollosKilos: { type: string }
+        rollosBolsas: { type: string }
         metrajeMetros: { type: string }
+        metrajeBolsas: { type: string }
         topVentas:
           { type: array, items: { type: object, additionalProperties: true } }
         topMargen:
@@ -8017,6 +8029,7 @@ components:
           rollos,
           cantidad,
           sitiosConExistencia,
+          unidadBloqueada,
           createdAt,
           updatedAt,
         ]
@@ -8050,6 +8063,9 @@ components:
         rollos: { type: number }
         cantidad: { type: string }
         sitiosConExistencia: { type: number }
+        unidadBloqueada:
+          type: boolean
+          description: Verdadero cuando una referencia operativa o histórica impide cambiar la unidad.
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
     ProductoDetail:

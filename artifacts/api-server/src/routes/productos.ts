@@ -105,6 +105,40 @@ type ExistenciasTotals = {
   sitiosConExistencia: number;
 };
 
+const EMPTY_EXISTENCIAS_TOTALS: ExistenciasTotals = {
+  rollos: 0,
+  cantidad: "0.000",
+  sitiosConExistencia: 0,
+};
+
+/**
+ * A product unit gives meaning to every stored quantity and unit price. Once a
+ * product is referenced anywhere operationally, changing it would reinterpret
+ * that immutable history. Keep this deliberately broader than current stock:
+ * depleted rolls and completed tickets must block it too.
+ */
+async function getUnidadBloqueadaProductoIds(
+  executor: Pick<typeof db, "execute">,
+  productoIds?: number[],
+): Promise<Set<number>> {
+  const productFilter = productoIds?.length
+    ? sql`WHERE producto_id IN (${sql.join(productoIds.map((id) => sql`${id}`), sql`, `)})`
+    : sql``;
+  const rows = await executor.execute<{ producto_id: number }>(sql`
+    SELECT DISTINCT producto_id
+    FROM (
+      SELECT producto_id FROM rollos ${productFilter}
+      UNION ALL SELECT producto_id FROM movimientos ${productFilter}
+      UNION ALL SELECT producto_id FROM ticket_lineas ${productFilter}
+      UNION ALL SELECT producto_id FROM salida_lineas ${productFilter}
+      UNION ALL SELECT producto_id FROM contenedor_lineas ${productFilter}
+      UNION ALL SELECT producto_id FROM precio_historial ${productFilter}
+      UNION ALL SELECT producto_id FROM existencias ${productFilter}
+    ) AS referencias_historicas
+  `);
+  return new Set(rows.rows.map((row) => Number(row.producto_id)));
+}
+
 async function getCacheByProducto(
   ubicacionIds: number[],
   productoId?: number,
@@ -146,7 +180,8 @@ async function getCacheByProducto(
 
 function presentProducto(
   row: typeof productosTable.$inferSelect,
-  totals: ExistenciasTotals = { rollos: 0, cantidad: "0.000", sitiosConExistencia: 0 },
+  totals: ExistenciasTotals,
+  unidadBloqueada: boolean,
 ) {
   return {
     id: row.id,
@@ -162,6 +197,7 @@ function presentProducto(
     precioSugerido: row.precioSugerido,
     notas: row.notas,
     activo: row.activo,
+    unidadBloqueada,
     ...totals,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -186,6 +222,7 @@ function presentProductoDetail(
     total_cantidad: string;
     total_rollos: string;
   }[],
+  unidadBloqueada: boolean,
 ) {
   const comprasHistorial = compras.map((compra) => {
     const totalCosto = parseFloat(compra.total_costo);
@@ -220,9 +257,9 @@ function presentProductoDetail(
     0,
   );
   return {
-    ...presentProducto(row, totals),
+    ...presentProducto(row, totals, unidadBloqueada),
     skuBloqueado: false,
-    unidadBloqueada: false,
+    unidadBloqueada,
     inventarioPorUbicacion: locations.map((location) => ({
       ubicacionId: location.id,
       nombre: location.nombre,
@@ -260,8 +297,16 @@ router.get("/productos", requierePermiso("productos", "ver"), async (req, res): 
     .select()
     .from(productosTable)
     .orderBy(productosTable.tela, productosTable.color);
+  const unidadBloqueadaIds = await getUnidadBloqueadaProductoIds(
+    db,
+    rows.map((row) => row.id),
+  );
   const response = ListProductosResponse.parse(rows
-    .map((row) => presentProducto(row, totalsByProducto.get(row.id)))
+    .map((row) => presentProducto(
+      row,
+      totalsByProducto.get(row.id) ?? EMPTY_EXISTENCIAS_TOTALS,
+      unidadBloqueadaIds.has(row.id),
+    ))
     .filter((row) => query.data.existencia === "TODOS"
       || (query.data.existencia === "CON_EXISTENCIA" && row.sitiosConExistencia > 0)
       || (query.data.existencia === "AGOTADOS" && row.sitiosConExistencia === 0)));
@@ -355,7 +400,11 @@ router.post(
         });
         return producto!;
       });
-      res.status(201).json(CreateProductoResponse.parse(presentProducto(created)));
+      res.status(201).json(
+        CreateProductoResponse.parse(
+          presentProducto(created, EMPTY_EXISTENCIAS_TOTALS, false),
+        ),
+      );
     } catch (error) {
       if ((error as { code?: string }).code === "23505") {
         res.status(400).json({
@@ -580,6 +629,9 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
     return;
   }
   const locations = await getRealLocations(ubicacionId);
+  const unidadBloqueada = (
+    await getUnidadBloqueadaProductoIds(db, [producto.id])
+  ).has(producto.id);
   const locationIds = locations.map((location) => location.id);
   const totals = (await getCacheByProducto(locationIds, producto.id)).get(producto.id) ?? {
     rollos: 0,
@@ -649,7 +701,7 @@ router.get("/productos/:id", requierePermiso("productos", "ver"), async (req, re
       total_costo: string;
       total_cantidad: string;
       total_rollos: string;
-    }>),
+    }>, unidadBloqueada),
   );
   res.json(
     omitTerminalSensitiveFields(
@@ -785,10 +837,25 @@ router.patch(
             .select()
             .from(productosTable)
             .where(eq(productosTable.id, params.data.id))
+            .for("update")
             .limit(1)
           : [before];
         if (!current) {
           return { error: "Producto no encontrado." } as const;
+        }
+        if (
+          body.data.unidad !== undefined &&
+          body.data.unidad !== current.unidad
+        ) {
+          // The product row was locked before reading it. That lock conflicts
+          // with the KEY SHARE lock PostgreSQL takes for new FK references, so
+          // none can appear after this check and before the unit update commits.
+          if ((await getUnidadBloqueadaProductoIds(tx, [current.id])).has(current.id)) {
+            return {
+              error:
+                "No se puede cambiar la unidad porque el producto ya tiene historial operativo.",
+            } as const;
+          }
         }
 
         // Enforce variant uniqueness (excluding this product) under the lock.
@@ -886,7 +953,18 @@ router.patch(
         return;
       }
 
-      res.json(UpdateProductoResponse.parse(presentProducto(outcome.producto)));
+      const unidadBloqueada = (
+        await getUnidadBloqueadaProductoIds(db, [outcome.producto.id])
+      ).has(outcome.producto.id);
+      res.json(
+        UpdateProductoResponse.parse(
+          presentProducto(
+            outcome.producto,
+            EMPTY_EXISTENCIAS_TOTALS,
+            unidadBloqueada,
+          ),
+        ),
+      );
     } catch (error) {
       // Unique DB constraints remain the final protection.
       if ((error as { code?: string }).code === "23505") {

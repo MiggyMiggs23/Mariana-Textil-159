@@ -35,7 +35,8 @@ test("producto contracts retain zero catalog rows and expose scoped detail links
     colorHex: null, anchoCm: null, composicion: null, gramajeGm2: null,
     seVendePorMetro: false, precioSugerido: "10.00",
     notas: null, activo: true, rollos: 0,
-    cantidad: "0.000", sitiosConExistencia: 0, createdAt: now, updatedAt: now,
+    cantidad: "0.000", sitiosConExistencia: 0, unidadBloqueada: false,
+    createdAt: now, updatedAt: now,
   }]);
   assert.equal(list[0]?.sitiosConExistencia, 0);
 

@@ -59,7 +59,9 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
 }
 
 let seq = 0;
-async function mkProducto(): Promise<{ id: number; sku: string }> {
+async function mkProducto(
+  unidad: "METRO" | "KILO" | "BOLSA" = "METRO",
+): Promise<{ id: number; sku: string }> {
   const tag = `${RUN}-${++seq}`;
   const [row] = await db
     .insert(productosTable)
@@ -67,7 +69,7 @@ async function mkProducto(): Promise<{ id: number; sku: string }> {
       sku: `TST${tag}`.slice(0, 64),
       tela: `Tela ${tag}`,
       color: `Color ${tag}`,
-      unidad: "METRO" as const,
+      unidad,
       precioSugerido: "100.00",
     })
     .returning();
@@ -1185,6 +1187,74 @@ await test("T-20C: venta directa rechaza rollo legado sin costo antes de mutar",
     .where(eq(movimientosTable.rolloId, rollo.id));
   assert.equal(movimientos.length, 1);
   assert.equal(movimientos[0]!.tipo, "ALTA");
+});
+
+await test("T-BOLSA: ajuste fraccionario se rechaza sin mutar rollo ni kardex", async () => {
+  const { id: productoId } = await mkProducto("BOLSA");
+  const ubicacionId = await mkUbicacion();
+  const { rollo } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "10",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+  const movimientosAntes = await db.select().from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rollo.id));
+  await assert.rejects(
+    () => db.transaction((tx) => ajustarRollo(tx, {
+      rolloId: rollo.id,
+      cantidadNueva: "1.500",
+      justificacion: "Ajuste fraccionario inválido",
+      usuarioId: 1,
+    })),
+    (error: unknown) =>
+      error instanceof InventarioError &&
+      error.code === "BOLSA_INTEGER_QUANTITY_REQUIRED",
+  );
+  const [unchanged] = await db.select().from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  const movimientosDespues = await db.select().from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rollo.id));
+  assert.equal(unchanged!.cantidadActual, "10.000");
+  assert.equal(movimientosDespues.length, movimientosAntes.length);
+});
+
+await test("T-BOLSA: activación fraccionaria se rechaza sin mutar rollo ni kardex", async () => {
+  const { id: productoId } = await mkProducto("BOLSA");
+  const ubicacionId = await mkUbicacion();
+  const { rollo } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "10",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "PROGRAMADO",
+    }),
+  );
+  trackRollo(rollo.serie);
+  await assert.rejects(
+    () => db.transaction((tx) => activarRollo(tx, {
+      rolloId: rollo.id,
+      cantidadReal: "1.500",
+      usuarioId: 1,
+    })),
+    (error: unknown) =>
+      error instanceof InventarioError &&
+      error.code === "BOLSA_INTEGER_QUANTITY_REQUIRED",
+  );
+  const [unchanged] = await db.select().from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  const movimientos = await db.select().from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rollo.id));
+  assert.equal(unchanged!.estado, "PROGRAMADO");
+  assert.equal(unchanged!.cantidadActual, "10.000");
+  assert.equal(movimientos.length, 0);
 });
 
 // =============================================================================

@@ -19,8 +19,10 @@ const visibleUnitSurfaces = [
   "artifacts/mariana-textil/src/pages/etiquetas.tsx",
   "artifacts/mariana-textil/src/pages/pos.tsx",
   "artifacts/mariana-textil/src/pages/cobros.tsx",
+  "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
   "artifacts/mariana-textil/src/pages/corte-detail-shared.tsx",
   "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+  "artifacts/mariana-textil/src/pages/caja/comparativo.tsx",
   "artifacts/mariana-textil/src/pages/contenedores/index.tsx",
   "artifacts/mariana-textil/src/pages/contenedores/detail.tsx",
   "artifacts/mariana-textil/src/pages/precios/index.tsx",
@@ -34,6 +36,9 @@ const visibleUnitSurfaces = [
   "artifacts/mariana-textil/src/pages/proveedores.tsx",
   "artifacts/mariana-textil/src/pages/viaje-detail.tsx",
   "artifacts/mariana-textil/src/pages/viaje-documento.tsx",
+  "artifacts/mariana-textil/src/pages/productos.tsx",
+  "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+  "artifacts/mariana-textil/src/pages/movimientos.tsx",
 ] as const;
 
 test("unit labels have the prescribed visible values", () => {
@@ -48,6 +53,21 @@ test("inventoried visible unit surfaces use the shared formatter", async () => {
   for (const path of visibleUnitSurfaces) {
     const source = await readFile(new URL(path, root), "utf8");
     assert.match(source, /format(Unit|PackageQuantityLabel)/, `${path} must use the shared unit presentation boundary`);
+    assert.doesNotMatch(
+      source,
+      /\{(?:prod|product)\.unidad\.toLowerCase\(\)\}/,
+      `${path} must not render a raw lower-case unit enum`,
+    );
+    assert.doesNotMatch(
+      source,
+      /unidadProducto === "KILO" \? "kg" : "m"/,
+      `${path} must not collapse BOLSA pricing labels into metres`,
+    );
+    assert.doesNotMatch(
+      source,
+      /[?:]\s*["']KILO["']/,
+      `${path} must not render the raw KILO enum label`,
+    );
   }
 
   const reportExport = await readFile(
@@ -55,4 +75,20 @@ test("inventoried visible unit surfaces use the shared formatter", async () => {
     "utf8",
   );
   assert.match(reportExport, /row\.unidad = formatUnit/);
+});
+
+test("Task 62 quantity surfaces render bag totals separately when present", async () => {
+  const surfaces = [
+    "artifacts/mariana-textil/src/pages/dashboard.tsx",
+    "artifacts/mariana-textil/src/pages/inventario.tsx",
+    "artifacts/mariana-textil/src/components/recepcion-salidas.tsx",
+    "artifacts/mariana-textil/src/pages/viaje-detail.tsx",
+    "artifacts/mariana-textil/src/pages/viaje-documento.tsx",
+  ];
+
+  for (const path of surfaces) {
+    const source = await readFile(new URL(path, root), "utf8");
+    assert.match(source, /totalBolsas|item\.bolsas/, `${path} must render bag totals`);
+    assert.match(source, /formatUnit\("BOLSA"\)/, `${path} must label bag totals with the shared formatter`);
+  }
 });

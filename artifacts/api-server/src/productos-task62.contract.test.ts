@@ -54,7 +54,40 @@ test("BOLSA está en contrato, importación y núcleo POS sin mezclarse con KILO
   assert.match(pos, /producto\.unidad !== "BOLSA"/);
   assert.match(pos, /item\.linea\.unidad === "BOLSA"/);
   assert.match(pos, /BOLSA_INTEGER_QUANTITY_REQUIRED/);
+  assert.match(
+    pos,
+    /suggestedMeteredPrice\(Number\(cantidad\), producto, producto\.unidad\)/,
+  );
+  assert.match(
+    pos,
+    /meteredPriceTier\(Number\(cantidad\), producto\.unidad\)/,
+  );
   assert.match(inventory, /WHERE pr\.unidad = 'BOLSA'/);
   assert.match(inventory, /unidad === "KILO"/);
   assert.match(inventory, /cantidad de bolsas por caja/);
+});
+
+test("la unidad se bloquea por referencias históricas y PATCH solo rechaza un cambio real", async () => {
+  const [route, spec] = await Promise.all([
+    readFile(new URL("./routes/productos.ts", import.meta.url), "utf8"),
+    readFile(new URL("../../../lib/api-spec/openapi.yaml", import.meta.url), "utf8"),
+  ]);
+  for (const table of [
+    "rollos",
+    "movimientos",
+    "ticket_lineas",
+    "salida_lineas",
+    "contenedor_lineas",
+    "precio_historial",
+    "existencias",
+  ]) {
+    assert.match(route, new RegExp(`FROM ${table}`));
+  }
+  assert.match(route, /body\.data\.unidad !== current\.unidad/);
+  assert.match(route, /historial operativo/);
+  assert.match(spec, /unidadBloqueada:/);
+  assert.match(
+    spec,
+    /Verdadero cuando una referencia operativa o histórica impide cambiar la unidad/,
+  );
 });
