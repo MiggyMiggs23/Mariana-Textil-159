@@ -16,8 +16,10 @@ import {
   getListRollosQueryKey,
   getListProductosQueryKey,
   getGetExistenciasAgrupadasQueryKey,
+  useCreateProducto,
+  useListProductos,
 } from "@workspace/api-client-react";
-import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play, Shuffle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play, Shuffle, Plus } from "lucide-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +42,10 @@ import {
 } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 function message(error: unknown): string {
   if (error && typeof error === "object" && "data" in error) {
@@ -71,7 +76,18 @@ export default function AuditoriasInventario() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [selectedPiso, setSelectedPiso] = useState<string>("none");
+  const [addColorOpen, setAddColorOpen] = useState(false);
+  const [addColorTela, setAddColorTela] = useState("");
+  const [addColor, setAddColor] = useState("");
   const scanRef = useRef<HTMLInputElement>(null);
+  const canCreateProduct = hasPermission(user, Modules.PRODUCTOS, "crear");
+  const products = useListProductos({}, {
+    query: {
+      enabled: canCreateProduct,
+      queryKey: getListProductosQueryKey(),
+    },
+  });
+  const createProduct = useCreateProducto();
 
   useEffect(() => {
     if (!siteId && sites.data?.length === 1) setSiteId(String(sites.data[0]!.id));
@@ -370,6 +386,17 @@ export default function AuditoriasInventario() {
                         <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary" htmlFor="audit-scan">
                           <ScanLine className="h-5 w-5" /> Escanear Serie o QR
                         </label>
+                        {canCreateProduct && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            data-testid="button-audit-add-product-color"
+                            onClick={() => setAddColorOpen(true)}
+                          >
+                            <Plus className="mr-2 h-4 w-4" /> Alta de color
+                          </Button>
+                        )}
                         {pisosActivos.length > 0 && (
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Piso Real:</span>
@@ -503,6 +530,91 @@ export default function AuditoriasInventario() {
           <footer className="mt-14 grid grid-cols-2 gap-16 text-center text-sm"><div className="border-t border-black pt-2">Responsable de conteo</div><div className="border-t border-black pt-2">Autorización ADMIN</div></footer>
         </article>
       )}
+
+      <Dialog
+        open={addColorOpen}
+        onOpenChange={(open) => {
+          setAddColorOpen(open);
+          if (!open) window.setTimeout(() => scanRef.current?.focus(), 0);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Alta rápida de color</DialogTitle>
+            <DialogDescription>
+              Crea una variante del catálogo. No registra ni asocia ninguna serie a esta auditoría.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="audit-product-tela">Tela existente</Label>
+              <Select value={addColorTela} onValueChange={setAddColorTela}>
+                <SelectTrigger id="audit-product-tela" data-testid="select-audit-product-tela">
+                  <SelectValue placeholder="Selecciona una tela" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[...new Set(products.data?.map((product) => product.tela) ?? [])].map((tela) => (
+                    <SelectItem key={tela} value={tela}>{tela}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="audit-product-color">Nuevo color</Label>
+              <Input
+                id="audit-product-color"
+                value={addColor}
+                onChange={(event) => setAddColor(event.target.value)}
+                data-testid="input-audit-product-color"
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAddColorOpen(false);
+                window.setTimeout(() => scanRef.current?.focus(), 0);
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              disabled={!addColorTela || !addColor.trim() || createProduct.isPending}
+              data-testid="button-confirm-audit-product-color"
+              onClick={() => {
+                const inherited = products.data?.find((product) => product.tela === addColorTela);
+                if (!inherited) return;
+                createProduct.mutate({
+                  data: {
+                    tela: inherited.tela,
+                    color: addColor.trim(),
+                    unidad: inherited.unidad,
+                    precioSugerido: inherited.precioSugerido ?? "0.00",
+                    anchoCm: inherited.anchoCm,
+                    composicion: inherited.composicion,
+                    gramajeGm2: inherited.gramajeGm2,
+                    notas: null,
+                  },
+                }, {
+                  onSuccess: () => {
+                    void queryClient.invalidateQueries({ queryKey: getListProductosQueryKey() });
+                    setAddColor("");
+                    setAddColorOpen(false);
+                    window.setTimeout(() => scanRef.current?.focus(), 0);
+                    toast({ title: "Color creado", description: "La variante quedó disponible en el catálogo." });
+                  },
+                  onError: (error) => toast({ title: "No se pudo crear el color", description: message(error), variant: "destructive" }),
+                });
+              }}
+            >
+              {createProduct.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Crear color
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Cancel Dialog */}
       <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>

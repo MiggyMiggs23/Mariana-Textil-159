@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, ChevronDown, Plus, Upload, Search, Package, CheckCircle2, AlertCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { formatNumber } from "@workspace/number-format";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 
@@ -45,7 +45,8 @@ function getErrorMessage(error: unknown): string {
   return typeof apiError.message === "string" ? apiError.message : "Error desconocido";
 }
 
-export function generateSKU(tela: string, color: string) {
+/** Visual hint only; the API allocates the authoritative collision-safe SKU. */
+export function generateSkuPreview(tela: string, color: string) {
   if (!tela || !color) return "";
   const normalize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
   const telaWords = normalize(tela).trim().split(/\s+/).slice(0, 3);
@@ -297,6 +298,13 @@ export default function Productos() {
                 <div className="w-full">
                   {grouped.map(([tela, groupProducts]) => {
                     const isExpanded = expandedTelas.has(tela);
+                    const totalsByUnit = groupProducts.reduce((totals, product) => {
+                      const current = totals.get(product.unidad) ?? { rollos: 0, cantidad: 0 };
+                      current.rollos += product.rollos;
+                      current.cantidad += Number(product.cantidad);
+                      totals.set(product.unidad, current);
+                      return totals;
+                    }, new Map<string, { rollos: number; cantidad: number }>());
 
                     return (
                       <div key={tela} className="border-b last:border-0">
@@ -313,6 +321,14 @@ export default function Productos() {
                             <Badge variant="secondary" className="ml-2">{groupProducts.length} colores</Badge>
                           </div>
                           <div className="flex items-center gap-6 text-sm">
+                            <div className="hidden lg:flex items-center gap-2">
+                              {[...totalsByUnit.entries()].map(([unidad, total]) => (
+                                <Badge key={unidad} variant="outline" data-testid={`total-tela-${tela}-${unidad}`}>
+                                  {formatNumber(total.cantidad, { kind: "quantity" })} {unidad}
+                                  <span className="ml-1 text-muted-foreground">· {formatNumber(total.rollos, { kind: "count" })} rollos</span>
+                                </Badge>
+                              ))}
+                            </div>
                             {canCreate && (
                               <Button
                                 variant="ghost"
@@ -462,25 +478,28 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
 
   useEffect(() => {
     if (open) {
+      const inherited = initialTela
+        ? existingProducts.find((product) => product.tela === initialTela)
+        : undefined;
       setFormData({
         sku: "",
         isCustomSku: false,
         tela: initialTela || "",
         color: "",
-        unidad: UnidadProducto.METRO,
-        precioSugerido: "0.00",
+        unidad: inherited?.unidad ?? UnidadProducto.METRO,
+        precioSugerido: inherited?.precioSugerido ?? "0.00",
         notas: "",
-        anchoCm: "",
-        composicion: "",
-        gramajeGm2: "",
+        anchoCm: inherited?.anchoCm == null ? "" : String(inherited.anchoCm),
+        composicion: inherited?.composicion ?? "",
+        gramajeGm2: inherited?.gramajeGm2 == null ? "" : String(inherited.gramajeGm2),
       });
     }
-  }, [open, initialTela]);
+  }, [open, initialTela, existingProducts]);
 
   const uniqueTelas = useMemo(() => Array.from(new Set(existingProducts.map(p => p.tela))), [existingProducts]);
   const uniqueColors = useMemo(() => Array.from(new Set(existingProducts.map(p => p.color))), [existingProducts]);
 
-  const autoSku = useMemo(() => generateSKU(formData.tela, formData.color), [formData.tela, formData.color]);
+  const autoSku = useMemo(() => generateSkuPreview(formData.tela, formData.color), [formData.tela, formData.color]);
   const displaySku = formData.isCustomSku ? formData.sku : autoSku;
 
   const handleSubmit = () => {
@@ -563,6 +582,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
                 <SelectContent>
                   <SelectItem value={UnidadProducto.METRO}>Metros</SelectItem>
                   <SelectItem value={UnidadProducto.KILO}>Kilos</SelectItem>
+                  <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -608,7 +628,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
               </div>
             )}
             <p className="text-[10px] text-muted-foreground">
-              El SKU se genera automáticamente usando los primeros caracteres de la tela y el color.
+              Vista previa no autoritativa. El servidor asignará el SKU definitivo y resolverá colisiones al guardar.
             </p>
           </div>
 

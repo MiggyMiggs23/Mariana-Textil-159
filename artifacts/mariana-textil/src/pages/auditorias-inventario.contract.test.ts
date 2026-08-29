@@ -25,4 +25,9 @@ test("la estación de auditoría integra contrato, escáner, polling e impresió
   assert.match(source, /text-audit-duration/);
   assert.match(source, /row\.cantidad/);
   assert.match(source, /data-testid="input-audit-scan"/);
+  assert.match(source, /hasPermission\(user, Modules\.PRODUCTOS, "crear"\)/);
+  assert.match(source, /useCreateProducto/);
+  assert.match(source, /button-audit-add-product-color/);
+  assert.match(source, /No registra ni asocia ninguna serie/);
+  assert.match(source, /scanRef\.current\?\.focus/);
 });
