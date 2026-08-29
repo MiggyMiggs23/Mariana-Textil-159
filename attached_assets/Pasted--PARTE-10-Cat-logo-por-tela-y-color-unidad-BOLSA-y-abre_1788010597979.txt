@@ -1,0 +1,200 @@
+# PARTE 10 — Catálogo por tela y color, unidad BOLSA y abreviaturas
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## BLOQUE 1 — Quitar "Base" y capitalizar
+
+### Eliminar el color "Base"
+
+Varios productos tienen `Base` como color, que era un relleno de la importación inicial. **No es un color real.**
+
+Reemplázalo por el color real:
+
+| Tela | Color real |
+|---|---|
+| Manta Libano | Crudo |
+| Manta Libanito | Crudo |
+| Todo lo que sea Pellón | Blanco |
+
+Para cualquier otro producto que tenga `Base` y no esté en esta lista, **no adivines.** Déjalo como está y **repórtalo en una lista** para que el usuario decida.
+
+Los SKU se recalculan según la regla existente: tres letras por palabra de la tela, guion, tres del color.
+
+**Actualiza el SKU en todas partes donde esté guardado.** Y revisa si hay rollos ya etiquetados con el SKU viejo; si los hay, repórtalo antes de cambiar nada.
+
+### Capitalización
+
+Tela y color se guardan con **cada palabra iniciando en mayúscula**: "Manta Libano", "Verde Bandera", "Azul Marino".
+
+- Aplica la corrección a todos los productos existentes.
+- Fuérzala al crear y al editar, en el servidor.
+- Respeta las excepciones razonables: preposiciones y artículos cortos en minúscula —"Manta de Cielo"— y las unidades de medida como se escriben: "15 Mm", "38 Mm".
+
+Escribe la función de capitalización en un solo lugar, compartida, con pruebas para los casos de la lista.
+
+---
+
+## BLOQUE 2 — Agrupar por tela en Productos
+
+En la pantalla de Productos, agrupa por **tela**, con sus colores desplegándose debajo.
+
+```
+▸ Manta Libano
+    Crudo          MANLIB-CRU    12 rollos    600.000 Mts.
+▸ Tafetán
+    Blanco         TAF-BLA        8 rollos    400.000 Mts.
+    Rojo           TAF-ROJ        3 rollos    150.000 Mts.
+```
+
+- Una tela con un solo color **también se agrupa y se despliega.** No la muestres como renglón suelto: la estructura debe ser la misma siempre.
+- El renglón de la tela muestra el total de rollos y la cantidad sumada de sus colores, con la unidad correspondiente.
+- Los colores agotados se ven en gris con cero, como ya está.
+- El buscador sigue encontrando por tela, color y SKU, y al encontrar algo despliega su tela.
+
+### Agregar un color
+
+En el renglón de cada tela, un botón **"Agregar color"**.
+
+Abre un formulario con la tela precargada y sin poder cambiarse. Solo se captura el color, el precio y las especificaciones. **La unidad se hereda de la tela** y no se puede cambiar: no tendría sentido que un color de la misma tela se venda por kilo y otro por metro.
+
+Internamente crea un producto nuevo con su SKU. **No cambies el modelo de datos:** un producto sigue siendo tela más color, y así deben seguir viviendo existencias, precios y kardex.
+
+### Agregar un color desde la auditoría de inventario
+
+En la **Auditoría de Inventario**, si al contar aparece una tela en un color que no existe en el catálogo, debe poder darse de alta **sin salirse de la auditoría**.
+
+El flujo tiene que ser corto: la persona está de pie en una bodega con una pistola en la mano. Un formulario mínimo —color y precio— y de vuelta al escaneo.
+
+---
+
+## BLOQUE 3 — Unidad BOLSA
+
+El sistema hoy solo conoce `METRO` y `KILO`. Se agrega una tercera: **`BOLSA`**.
+
+### Cómo encaja en el modelo existente
+
+El mapeo es directo y **no requiere estructuras nuevas**:
+
+| Concepto actual | Equivalente en BOLSA |
+|---|---|
+| Rollo | **Caja** |
+| Metros del rollo | **Bolsas de la caja**, editable igual que los metros |
+| Venta por rollo | **Venta por caja** |
+| Venta metreada | **Venta de bolsa suelta** |
+
+- Una caja es un rollo: tiene su serie, su etiqueta con QR, y se escanea una por una.
+- La cantidad de bolsas por caja **es editable al recibir**, igual que los metros de un rollo.
+- Cada bolsa trae 100 piezas. **Eso es informativo, no una unidad del sistema.** El sistema cuenta bolsas, no piezas.
+
+### La regla que no se toca
+
+> **Metros, kilos y bolsas nunca se suman entre sí.**
+
+Esto ya se cumple para metros y kilos en existencias, reportes, cortes, hojas impresas y exportaciones. **Recorre todos esos lugares y confirma que la tercera unidad se trate igual de estrictamente.** No basta con agregar el valor al enum.
+
+Deja en el commit la lista de lugares revisados.
+
+### Venta por bolsa suelta
+
+El interruptor `se_vende_por_metro` aplica a los productos en BOLSA: encendido significa que se pueden vender bolsas sueltas.
+
+**Considera renombrarlo** a algo como `se_vende_fraccionado`, que describe lo que hace ahora. Si el renombrado toca demasiadas cosas, déjalo con su nombre y anótalo.
+
+La restricción actual —los productos en KILO no pueden venderse fraccionados— **se conserva.** Los de BOLSA sí pueden.
+
+### Mayoreo y menudeo
+
+El umbral de mayoreo son **10 metros**, contados por línea.
+
+**Decisión conservadora para esta tarea:** los productos en BOLSA usan un umbral propio, también configurable, con valor inicial **10 bolsas**. Va como constante nombrada junto a la de metros.
+
+Anótalo en `replit.md` como decisión a confirmar: el usuario puede querer otro número, o no querer mayoreo en bolsas.
+
+---
+
+## BLOQUE 4 — Los cuatro productos nuevos
+
+Da de alta:
+
+| Tela | Color | Unidad |
+|---|---|---|
+| Cascabel 15 Mm | Oro | BOLSA |
+| Cascabel 22 Mm | Oro | BOLSA |
+| PomPon 25 Mm | Blanco | BOLSA |
+| PomPon 38 Mm | Blanco | BOLSA |
+
+- Los milímetros son **parte del nombre de la tela**, no una característica aparte. Hoy solo se trabaja Cascabel en oro y PomPon en blanco, pero la estructura de tela y color permite agregar más colores después.
+- Escríbelos con la capitalización del Bloque 1: "Cascabel 15 Mm", "PomPon 25 Mm".
+- Los SKU se generan con la regla existente. **Reporta qué SKU quedó cada uno** para que el usuario los revise.
+- Los precios quedan en cero y el usuario los captura desde Precios.
+
+---
+
+## BLOQUE 5 — Abreviaturas consistentes
+
+Las unidades se muestran de forma inconsistente en el sistema: en algunos lados aparece `METRO`, en otros `METROS`, en otros `Mts`.
+
+Unifica con una **función compartida** que traduzca el valor interno del enum a su forma visible:
+
+| Interno | Visible |
+|---|---|
+| `METRO` | **Mts.** |
+| `KILO` | **Kg.** |
+| `BOLSA` | **Bolsas** |
+
+- Con punto en las abreviadas, tal como se escriben.
+- Úsala en **todas** las pantallas, documentos impresos, exportaciones a Excel y PDF, gráficas y encabezados de tabla.
+- **No repartas los textos a mano.** Es la misma lección de los nombres de las cuentas: cuando el mismo dato vive en veinte lugares, uno se queda atrás.
+
+Recorre el repositorio y confirma que no quede ninguna unidad escrita a mano. Deja la lista en el commit.
+
+---
+
+## BLOQUE 6 — Verificación
+
+**Catálogo**
+- Ningún producto tiene "Base" como color, salvo los reportados para decisión del usuario
+- Manta Libano y Manta Libanito quedaron en Crudo, y los Pellón en Blanco
+- Los SKU se recalcularon y no hay rollos etiquetados con SKU viejo, o se reportó
+- Todos los nombres de tela y color están capitalizados por palabra
+- Crear un producto con nombre en minúsculas lo guarda capitalizado
+
+**Agrupación**
+- Productos agrupa por tela, y una tela de un solo color también se despliega
+- El total de la tela suma sus colores, con su unidad
+- "Agregar color" crea el producto con la tela y la unidad heredadas
+- Desde la Auditoría de Inventario se puede dar de alta un color sin salir de la auditoría
+
+**Unidad BOLSA**
+- Una caja se recibe con su cantidad de bolsas editable, su serie y su etiqueta
+- Se vende una caja completa y se vende una bolsa suelta
+- **Bolsas, metros y kilos nunca se suman entre sí** en existencias, reportes, cortes, hojas impresas y exportaciones
+- Lista de lugares revisados
+- Un producto en KILO sigue sin poder venderse fraccionado
+
+**Productos nuevos**
+- Los cuatro existen con su SKU reportado
+
+**Abreviaturas**
+- "Mts.", "Kg." y "Bolsas" aparecen igual en toda la aplicación
+- No queda ninguna unidad escrita a mano
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> Un producto sigue siendo **tela más color**; la pantalla los agrupa por tela pero el modelo no cambia. Una tela de un solo color también se agrupa.
+>
+> La unidad **BOLSA** mapea al modelo existente sin estructuras nuevas: una **caja** es un rollo, con su serie y su etiqueta, y su cantidad de **bolsas** es editable como los metros. Vender una caja equivale a vender un rollo; vender una bolsa suelta equivale a la venta metreada. Cada bolsa trae 100 piezas, pero el sistema cuenta bolsas, no piezas.
+>
+> **Metros, kilos y bolsas nunca se suman entre sí.**
+>
+> Las unidades se muestran siempre como **Mts.**, **Kg.** y **Bolsas**, traducidas por una función compartida. Ninguna se escribe a mano.
