@@ -25,7 +25,11 @@ import {
   ubicacionesTable,
   type UnidadProducto,
 } from "@workspace/db";
-import { generateBaseSku, generateSku } from "@workspace/db/sku";
+import {
+  generateBaseSku,
+  generateSku,
+  normalizeCatalogTitleCase,
+} from "@workspace/db/sku";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
@@ -56,16 +60,6 @@ type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 async function acquireCatalogLock(tx: Tx): Promise<void> {
   await tx.execute(sql`SELECT pg_advisory_xact_lock(${PRODUCT_CATALOG_LOCK_KEY})`);
-}
-
-// ── normalization ──────────────────────────────────────────────────────────
-// Title-case: capitalize first character, lowercase the rest, collapse whitespace.
-// Accent removal is done only for SKU generation, not for stored values.
-
-function normalizeVariantText(s: string): string {
-  const trimmed = s.trim().replace(/\s+/g, " ");
-  if (!trimmed) return trimmed;
-  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
 }
 
 /**
@@ -292,8 +286,8 @@ router.post(
       return;
     }
 
-    const tela = normalizeVariantText(parsed.data.tela);
-    const color = normalizeVariantText(parsed.data.color);
+    const tela = normalizeCatalogTitleCase(parsed.data.tela);
+    const color = normalizeCatalogTitleCase(parsed.data.color);
     if ("colorHex" in parsed.data && !canEditProductColorHex(req.auth!.user.rol)) {
       res.status(403).json({
         error: "Solo ADMIN puede capturar el color hexadecimal del producto.",
@@ -719,11 +713,11 @@ router.patch(
     // Normalize tela/color if provided
     const newTela =
       body.data.tela !== undefined
-        ? normalizeVariantText(body.data.tela)
+        ? normalizeCatalogTitleCase(body.data.tela)
         : undefined;
     const newColor =
       body.data.color !== undefined
-        ? normalizeVariantText(body.data.color)
+        ? normalizeCatalogTitleCase(body.data.color)
         : undefined;
     const newColorHex = body.data.colorHex === undefined
       ? undefined
@@ -786,11 +780,21 @@ router.patch(
         if (touchesCatalogNamespace) {
           await acquireCatalogLock(tx);
         }
+        const [current] = touchesCatalogNamespace
+          ? await tx
+            .select()
+            .from(productosTable)
+            .where(eq(productosTable.id, params.data.id))
+            .limit(1)
+          : [before];
+        if (!current) {
+          return { error: "Producto no encontrado." } as const;
+        }
 
         // Enforce variant uniqueness (excluding this product) under the lock.
         if (newTela !== undefined || newColor !== undefined) {
-          const checkTela = newTela ?? before.tela;
-          const checkColor = newColor ?? before.color;
+          const checkTela = newTela ?? current.tela;
+          const checkColor = newColor ?? current.color;
           const [conflict] = await tx
             .select({ id: productosTable.id })
             .from(productosTable)
@@ -828,6 +832,38 @@ router.patch(
           }
         }
 
+        // A tela/color identity change invalidates an automatically allocated
+        // SKU. Regenerate it under the same catalog lock. The current product
+        // is excluded, so its old SKU cannot create a false collision. An
+        // explicit custom SKU in this PATCH remains authoritative.
+        const targetTela = newTela ?? current.tela;
+        const targetColor = newColor ?? current.color;
+        const variantChanged =
+          targetTela !== current.tela || targetColor !== current.color;
+        // Many edit clients submit the current SKU with the whole form. Treat
+        // that unchanged value as non-custom so identity changes still
+        // regenerate it; only a genuinely different explicit SKU overrides.
+        if (
+          variantChanged &&
+          (newSku === undefined || newSku === current.sku)
+        ) {
+          const baseSku = generateBaseSku(targetTela, targetColor);
+          const existingRows = await tx
+            .select({ sku: productosTable.sku })
+            .from(productosTable)
+            .where(
+              and(
+                ilike(productosTable.sku, `${baseSku}%`),
+                ne(productosTable.id, params.data.id),
+              ),
+            );
+          updates.sku = generateSku(
+            targetTela,
+            targetColor,
+            new Set(existingRows.map((row) => row.sku)),
+          );
+        }
+
         const [producto] = await tx
           .update(productosTable)
           .set(updates)
@@ -838,7 +874,7 @@ router.patch(
           accion: "ACTUALIZAR",
           entidad: "productos",
           entidadId: String(params.data.id),
-          datosAntes: { ...before } as Record<string, unknown>,
+          datosAntes: { ...current } as Record<string, unknown>,
           datosDespues: { ...producto! } as Record<string, unknown>,
           ip: getRequestIp(req),
         });

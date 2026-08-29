@@ -4,7 +4,10 @@
  */
 
 import ExcelJS from "exceljs";
-import { generateBaseSku } from "@workspace/db/sku";
+import {
+  generateBaseSku,
+  normalizeCatalogTitleCase,
+} from "@workspace/db/sku";
 
 export type ImportRow = {
   rowIndex: number;
@@ -157,17 +160,6 @@ export type PreviewInput = {
 };
 
 /**
- * Title-case normalization for stored tela/color values:
- * trim, collapse whitespace, capitalize first char, lowercase the rest.
- * Accent removal is NOT applied here — that happens only during SKU generation.
- */
-function normalizeText(s: string): string {
-  const trimmed = s.trim().replace(/\s+/g, " ");
-  if (!trimmed) return trimmed;
-  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
-}
-
-/**
  * Build preview rows from parsed sheet data.
  */
 export function buildPreview(input: PreviewInput): PreviewRow[] {
@@ -213,8 +205,13 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
     if (!telaRaw) errors.push("tela vacía");
     if (!colorRaw) errors.push("color vacío");
     if (!unidadRaw) errors.push("unidad vacía");
-    if (unidadRaw && unidadRaw !== "METRO" && unidadRaw !== "KILO") {
-      errors.push(`unidad inválida: "${unidadRaw}" (use METRO o KILO)`);
+    if (
+      unidadRaw &&
+      unidadRaw !== "METRO" &&
+      unidadRaw !== "KILO" &&
+      unidadRaw !== "BOLSA"
+    ) {
+      errors.push(`unidad inválida: "${unidadRaw}" (use METRO, KILO o BOLSA)`);
     }
     if (!precioRaw) errors.push("precio vacío");
     const precio = parseFloat(precioRaw.replace(",", "."));
@@ -237,8 +234,8 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
       continue;
     }
 
-    const telaNorm = normalizeText(telaRaw);
-    const colorNorm = normalizeText(colorRaw);
+    const telaNorm = normalizeCatalogTitleCase(telaRaw);
+    const colorNorm = normalizeCatalogTitleCase(colorRaw);
     const variantKey = `${telaNorm.toUpperCase()}|${colorNorm.toUpperCase()}`;
 
     if (batchVariants.has(variantKey)) {

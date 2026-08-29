@@ -23,6 +23,29 @@ function normalize(str: string): string {
 }
 
 /**
+ * Canonical catalog text normalization shared by every product write path.
+ * It preserves accents, trims/collapses whitespace and applies catalog Title
+ * Case. Short Spanish articles/prepositions stay lowercase except at the
+ * beginning; existing intentional interior camel case is retained.
+ */
+export function normalizeCatalogTitleCase(value: string): string {
+  const shortWords = new Set([
+    "de", "del", "la", "las", "el", "los", "y", "e", "en", "con", "por", "para",
+  ]);
+  return value.trim().replace(/\s+/g, " ").split(" ").map((word, index) => {
+    const lower = word.toLocaleLowerCase("es-MX");
+    if (index > 0 && shortWords.has(lower)) return lower;
+    // Measurement units use a stable display convention.
+    if (lower === "mm") return "Mm";
+    // Preserve an intentional interior capital (e.g. PomPon), while still
+    // normalizing plain lowercase or all-uppercase catalog input.
+    const hasInteriorCapital = /[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]/.test(word.slice(1));
+    const rest = hasInteriorCapital ? word.slice(1) : lower.slice(1);
+    return word.charAt(0).toLocaleUpperCase("es-MX") + rest;
+  }).join(" ");
+}
+
+/**
  * Compute the SKU prefix for a tela (fabric) name.
  * At most the first 3 words are used. Each word token is cleaned, then:
  *   - Pure numeric token → preserved fully (e.g. "50", "4", "15")
