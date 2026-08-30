@@ -1,0 +1,113 @@
+# CORRECCIÓN — Encabezado del listado de series y pie de firmas de Entrada
+
+Ajuste final al documento de Entrada. La estructura de globales primero y series después quedó correcta; el contenido y los datos también. Esto es solamente aprovechamiento de la hoja y desbordamiento. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+**No toques las hojas de globales.** La primera hoja quedó bien y no se modifica, salvo por el pie de firmas del Bloque 2.
+
+---
+
+## BLOQUE 1 — Encabezado compacto en las hojas de series
+
+### El problema
+
+Las hojas del listado de series repiten el encabezado completo: el título "ENTRADA" a tamaño grande, el logo con su texto de marca, el QR, el borde grueso, y debajo el bloque "LISTADO DE SERIES · Agrupado por producto · 750 rollos".
+
+Eso consume aproximadamente una cuarta parte de cada hoja, **siete veces seguidas**, para repetir una información que ya está en la primera hoja.
+
+### Qué se hace
+
+Sustituye el encabezado completo de las hojas de series por **una franja compacta de una sola línea**.
+
+Lo que sí debe conservar esa franja, porque son hojas sueltas que se pueden separar del documento:
+
+- El **folio** de la entrada
+- La leyenda **"Listado de series"**
+- La **paginación**, en el mismo formato "Página X de Y"
+
+Lo que se elimina: el título grande, el logo, el QR, el borde grueso, y el subtítulo de dos renglones con el conteo de rollos.
+
+El conteo total de rollos ya aparece en las hojas de globales; **no hace falta repetirlo en cada hoja de series.**
+
+Si consideras que alguno de esos tres elementos tampoco debe ir, **dilo y explica por qué** en vez de quitarlo por tu cuenta. Una hoja de series sin folio no se puede volver a asociar a su entrada si se separa del legajo.
+
+**Recalcula cuántas filas caben por hoja de series con medición**, no por tanteo, y déjalo comentado con la medición. El Bloque 3 explica por qué esto importa más de lo que parece.
+
+---
+
+## BLOQUE 2 — El pie de firmas se parte entre dos hojas
+
+### El problema
+
+En la primera hoja se dibujan las tres líneas de firma, pero **las leyendas "RECIBIDO POR", "REVISADO POR" y "AUTORIZADO POR" no caben y aparecen hasta arriba de la segunda hoja**, encima del encabezado, sin ninguna línea debajo.
+
+El resultado es una hoja de firmas con tres rayas sin nombre y una segunda hoja que arranca con tres nombres sueltos. El documento no se puede firmar.
+
+### Qué se hace
+
+El bloque de pie —observaciones y las tres firmas con su leyenda— **es indivisible**. Nunca se parte entre hojas: o cabe entero en la hoja, o la hoja lleva menos renglones de producto.
+
+No lo resuelvas empujando el pie a una hoja propia. **Debe ir en la última hoja de globales**, que es la que se firma, junto al contenido.
+
+Recalcula las líneas por hoja de globales con el pie completo medido, incluidas las leyendas.
+
+---
+
+## BLOQUE 3 — El desbordamiento que arrastra, y que probablemente no viste
+
+Esto no me lo pediste, pero está en el PDF y es la causa de fondo de lo anterior.
+
+**Cada hoja de series está desbordando dos renglones sobre la siguiente.** Míralo en el PDF que generaste:
+
+- Arriba de la hoja 3, antes del encabezado, hay **1 renglón huérfano**
+- Arriba de la hoja 4, **3 renglones**
+- Arriba de la hoja 5, **5**
+- Hoja 6, **7**. Hoja 7, **9**. Hoja 8, **11**
+
+El error **se acumula de dos en dos**. Y al final el documento dice "Página 8 de 8" pero el navegador imprime **nueve hojas**: la novena trae los últimos renglones sueltos, sin encabezado y sin pie.
+
+La causa es que el bloque de cada hoja de series es más alto que la hoja física, y como el flujo es continuo, el sobrante empuja al siguiente. No es un problema de la última hoja: es un error de dos renglones que se repite y se suma.
+
+### Qué se hace
+
+1. **Cada hoja debe ser un contenedor de altura fija que no pueda desbordar.** El sobrante de una hoja jamás debe aparecer arriba del encabezado de la siguiente.
+2. Corrige el número de renglones por hoja de series contra la medición real, con la franja compacta del Bloque 1 ya puesta.
+3. **El total de hojas físicas debe coincidir con la paginación del documento.** Si el documento dice "de 8", el navegador debe imprimir 8, no 9.
+
+Corrige la causa, no el síntoma. Bajar el número de renglones a ojo hasta que deje de verse el desbordamiento deja el error latente para el día que cambie una tipografía.
+
+---
+
+## BLOQUE 4 — Verificación
+
+Genera PDF y ábrelo. **No lo des por bueno mirando la vista previa en pantalla.**
+
+Prueba con una entrada de **750 rollos en dos productos**, que es el caso del PDF de referencia:
+
+- Las hojas de series llevan solo la franja compacta con folio, leyenda y paginación
+- Ninguna hoja de series muestra logo, QR ni el título grande
+- **Ningún renglón aparece arriba del encabezado de ninguna hoja**
+- El total de hojas físicas coincide exactamente con la paginación del documento
+- El pie de firmas va completo, con líneas y leyendas juntas, en la última hoja de globales
+- Ninguna leyenda de firma aparece suelta en otra hoja
+- Las hojas de globales conservan el diseño que ya estaba aprobado
+- Con la franja compacta caben más filas de series por hoja que antes, y el documento total ocupa menos hojas
+- Los valores de filas por hoja están comentados con la medición que los justifica
+
+Repite además el caso de una entrada de una sola línea: **una hoja, sin hoja fantasma.**
+
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las pruebas de contrato del documento siguen pasando; si alguna afirmaba el encabezado de las hojas de series o el conteo de filas, **actualízala, no la borres**
+
+Adjunta los PDF al reporte.
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Hojas de series:** el listado de series de una Entrada no repite el encabezado completo. Lleva una franja de una línea con folio, la leyenda "Listado de series" y la paginación —suficiente para volver a asociar una hoja suelta a su entrada—. El título grande, el logo y el QR van solo en las hojas de globales.
+>
+> **Pie de firmas indivisible:** el bloque de observaciones y las tres firmas con su leyenda nunca se parte entre hojas. Si no cabe, la hoja lleva menos renglones de producto; nunca se empuja el pie a una hoja propia ni se dejan las líneas sin su leyenda. Va en la última hoja de globales, que es la que se firma.
+>
+> **Desbordamiento acumulado:** cada hoja es un contenedor de altura fija que no puede desbordar. Un bloque más alto que la hoja empuja su sobrante arriba del encabezado de la siguiente y el error se suma hoja tras hoja, hasta que el navegador imprime más hojas de las que el documento numera. La señal de que existe es un renglón huérfano arriba de un encabezado, o que el conteo del navegador no coincida con la paginación. Se corrige midiendo, nunca bajando el número de renglones a ojo hasta que deje de verse.
