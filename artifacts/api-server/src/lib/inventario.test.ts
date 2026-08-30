@@ -1257,6 +1257,92 @@ await test("T-BOLSA: activación fraccionaria se rechaza sin mutar rollo ni kard
   assert.equal(movimientos.length, 0);
 });
 
+await test("T-LOCK: ventas simultáneas de rollos distintos serializan saldo y caché", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const rollos = await db.transaction(async (tx) => {
+    const first = await crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "10.001",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    });
+    const second = await crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "20.002",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    });
+    return [first.rollo, second.rollo];
+  });
+  for (const rollo of rollos) trackRollo(rollo.serie);
+
+  const ventas = await Promise.all([
+    db.transaction((tx) =>
+      venderRollo(tx, { rolloId: rollos[0]!.id, usuarioId: 1 }),
+    ),
+    db.transaction((tx) =>
+      venderRollo(tx, { rolloId: rollos[1]!.id, usuarioId: 1 }),
+    ),
+  ]);
+  assert.equal(ventas.length, 2);
+
+  const movimientos = await db
+    .select({
+      cantidad: movimientosTable.cantidad,
+      saldoPosterior: movimientosTable.saldoPosterior,
+    })
+    .from(movimientosTable)
+    .where(
+      and(
+        eq(movimientosTable.productoId, productoId),
+        eq(movimientosTable.ubicacionId, ubicacionId),
+      ),
+    )
+    .orderBy(movimientosTable.id);
+  assert.equal(movimientos.length, 4, "Deben existir dos altas y dos ventas");
+  let saldo = 0n;
+  const mil = (value: string): bigint => {
+    const [whole, fraction = ""] = value.split(".");
+    const negative = whole!.startsWith("-");
+    const absoluteWhole = negative ? whole!.slice(1) : whole!;
+    const scaled =
+      BigInt(absoluteWhole) * 1000n +
+      BigInt(fraction.padEnd(3, "0").slice(0, 3));
+    return negative ? -scaled : scaled;
+  };
+  for (const movimiento of movimientos) {
+    saldo += mil(movimiento.cantidad);
+    assert.equal(
+      mil(movimiento.saldoPosterior),
+      saldo,
+      "Cada saldo_posterior debe continuar exactamente el movimiento anterior",
+    );
+  }
+  assert.equal(saldo, 0n);
+
+  const [cache] = await db
+    .select()
+    .from(existenciasTable)
+    .where(
+      and(
+        eq(existenciasTable.productoId, productoId),
+        eq(existenciasTable.ubicacionId, ubicacionId),
+      ),
+    );
+  assert.equal(cache!.cantidadTotal, "0.000");
+  assert.equal(cache!.rollosCount, 0);
+
+  const [conciliacion] = await conciliarTodo(productoId, ubicacionId);
+  assert.equal(conciliacion!.discrepanciaCadena, false);
+  assert.equal(conciliacion!.discrepanciaCache, false);
+  assert.equal(conciliacion!.discrepanciaRollos, false);
+});
+
 // =============================================================================
 // Cleanup
 // =============================================================================

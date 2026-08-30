@@ -50,6 +50,81 @@ import {
 // ── Drizzle transaction type ──────────────────────────────────────────────────
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
+type InventoryPair = { productoId: number; ubicacionId: number };
+
+/**
+ * Serialize every ledger/cache mutation for a product/location pair.  Locks
+ * are transaction-scoped and are always acquired in the same order so
+ * multi-location and batch operations cannot deadlock each other.
+ */
+async function lockInventoryPairs(
+  tx: Tx,
+  pairs: readonly InventoryPair[],
+): Promise<void> {
+  const ordered = Array.from(
+    new Map(
+      pairs.map((pair) => [
+        `${pair.productoId}:${pair.ubicacionId}`,
+        pair,
+      ]),
+    ).values(),
+  ).sort(
+    (a, b) =>
+      a.productoId - b.productoId || a.ubicacionId - b.ubicacionId,
+  );
+
+  for (const pair of ordered) {
+    await tx.execute(
+      sql`SELECT pg_advisory_xact_lock(${pair.productoId}, ${pair.ubicacionId})`,
+    );
+  }
+}
+
+async function lockInventoryPairForMovement(
+  tx: Tx,
+  movimientoId: number,
+): Promise<void> {
+  await tx.execute(sql`
+    SELECT pg_advisory_xact_lock(producto_id, ubicacion_id)
+    FROM movimientos
+    WHERE id = ${movimientoId}
+  `);
+}
+
+async function lockAllExistingInventoryPairs(tx: Tx): Promise<void> {
+  await tx.execute(sql`
+    SELECT pg_advisory_xact_lock(producto_id, ubicacion_id)
+    FROM (
+      SELECT producto_id, ubicacion_id FROM existencias
+      UNION
+      SELECT producto_id, ubicacion_id FROM movimientos
+      UNION
+      SELECT producto_id, ubicacion_id FROM rollos
+    ) AS inventory_pairs
+    ORDER BY producto_id, ubicacion_id
+  `);
+}
+
+function quantityToThousandthsBigInt(value: string): bigint {
+  const text = value.trim();
+  const match = /^([+-]?)(\d+)(?:\.(\d+))?$/.exec(text);
+  if (!match) throw new Error(`Cantidad decimal inválida: ${text}`);
+  const fraction = match[3] ?? "";
+  if (fraction.length > 3 && /[1-9]/.test(fraction.slice(3))) {
+    throw new Error(`Cantidad excede la precisión de milésimas: ${text}`);
+  }
+  const scaled =
+    BigInt(match[2]!) * 1000n +
+    BigInt(fraction.slice(0, 3).padEnd(3, "0"));
+  return match[1] === "-" ? -scaled : scaled;
+}
+
+function formatQuantityThousandthsBigInt(value: bigint): string {
+  const sign = value < 0n ? "-" : "";
+  const absolute = value < 0n ? -value : value;
+  return `${sign}${absolute / 1000n}.${String(absolute % 1000n).padStart(3, "0")}`;
+}
+
 // ── Errors ────────────────────────────────────────────────────────────────────
 
 export class InventarioError extends Error {
@@ -137,6 +212,7 @@ async function refreshCache(
   productoId: number,
   ubicacionId: number,
 ): Promise<void> {
+  await lockInventoryPairs(tx, [{ productoId, ubicacionId }]);
   // cantidad_total = SUM of all movements for this pair
   const [sumRow] = await tx
     .select({
@@ -219,10 +295,12 @@ async function insertMovimiento(
     uuidCliente?: string | null;
   },
 ): Promise<typeof movimientosTable.$inferSelect> {
+  await lockInventoryPairs(tx, [args]);
   const saldoAntes = await getSaldo(tx, args.productoId, args.ubicacionId);
-  const saldoPosterior = (
-    parseFloat(saldoAntes) + parseFloat(args.cantidad)
-  ).toFixed(3);
+  const saldoPosterior = formatQuantityThousandthsBigInt(
+    quantityToThousandthsBigInt(saldoAntes) +
+      quantityToThousandthsBigInt(args.cantidad),
+  );
 
   const [mov] = await tx
     .insert(movimientosTable)
@@ -341,6 +419,7 @@ export async function crearRollo(
   tx: Tx,
   input: CrearRolloInput,
 ): Promise<CrearRolloResult> {
+  await lockInventoryPairs(tx, [input]);
   // Idempotency
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, input.uuidCliente);
@@ -599,6 +678,13 @@ export async function crearEntrada(
       "EMPTY_ENTRY",
     );
   }
+  await lockInventoryPairs(
+    tx,
+    input.lineas.map((linea) => ({
+      productoId: linea.productoId,
+      ubicacionId: input.ubicacionId,
+    })),
+  );
   // BOLSA is an indivisible unit. Enforce this in the transactional engine as
   // well as at the route boundary so every caller preserves the inventory
   // invariant before an entrada, roll, or movement can be persisted.
@@ -1088,19 +1174,15 @@ export async function activarRollo(
   tx: Tx,
   input: ActivarRolloInput,
 ): Promise<ActivarRolloResult> {
-  // Idempotency
-  if (input.uuidCliente) {
-    const dup = await checkUuidCliente(tx, input.uuidCliente);
-    if (dup) {
-      const [rollo] = await tx
-        .select()
-        .from(rollosTable)
-        .where(eq(rollosTable.id, dup.rolloId))
-        .limit(1);
-      return { rollo: rollo!, movimiento: dup };
-    }
+  const [candidate] = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId))
+    .limit(1);
+  if (!candidate) {
+    throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
   }
-
+  await lockInventoryPairs(tx, [candidate]);
   const [rollo] = await tx
     .select()
     .from(rollosTable)
@@ -1110,6 +1192,14 @@ export async function activarRollo(
 
   if (!rollo) {
     throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  }
+  if (input.uuidCliente) {
+    const dup = await checkUuidCliente(tx, input.uuidCliente);
+    if (dup) {
+      const [duplicateRollo] = await tx.select().from(rollosTable)
+        .where(eq(rollosTable.id, dup.rolloId)).limit(1);
+      return { rollo: duplicateRollo!, movimiento: dup };
+    }
   }
   const [producto] = await tx
     .select({ unidad: productosTable.unidad })
@@ -1223,17 +1313,24 @@ export async function transferirRolloInmediato(
   if (input.ubicacionOrigenId === input.ubicacionDestinoId) {
     throw new InventarioError("El origen y destino deben ser diferentes.", "SAME_LOCATION");
   }
+  const [candidate] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [
+    { productoId: candidate.productoId, ubicacionId: input.ubicacionOrigenId },
+    { productoId: candidate.productoId, ubicacionId: input.ubicacionDestinoId },
+  ]);
   const salidaUuid = input.uuidCliente ? deriveUuid(input.uuidCliente, "salida") : null;
   const entradaUuid = input.uuidCliente ? deriveUuid(input.uuidCliente, "entrada") : null;
   if (salidaUuid) {
     const duplicate = await checkUuidCliente(tx, salidaUuid);
     if (duplicate) {
-      const [[rollo], [entrada]] = await Promise.all([
+      const [[existingRollo], [entrada]] = await Promise.all([
         tx.select().from(rollosTable).where(eq(rollosTable.id, duplicate.rolloId)).limit(1),
         tx.select().from(movimientosTable).where(eq(movimientosTable.uuidCliente, entradaUuid!)).limit(1),
       ]);
-      if (rollo && entrada) {
-        return { rollo, salidaMovimiento: duplicate, entradaMovimiento: entrada };
+      if (existingRollo && entrada) {
+        return { rollo: existingRollo, salidaMovimiento: duplicate, entradaMovimiento: entrada };
       }
       throw new InventarioError("Transferencia incompleta con UUID duplicado.", "IDEMPOTENCY_CONFLICT");
     }
@@ -1288,7 +1385,13 @@ export async function moverRollo(
   tx: Tx,
   input: MoverRolloInput,
 ): Promise<MoverRolloResult> {
-  // Idempotency
+  const [candidate] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [
+    { productoId: candidate.productoId, ubicacionId: input.ubicacionOrigenId },
+    { productoId: candidate.productoId, ubicacionId: input.ubicacionTransitoId },
+  ]);
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, `${input.uuidCliente}:salida`);
     if (dup) {
@@ -1396,7 +1499,13 @@ export async function recibirTransferencia(
   tx: Tx,
   input: RecibirTransferenciaInput,
 ): Promise<RecibirTransferenciaResult> {
-  // Idempotency
+  const [candidate] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [
+    candidate,
+    { productoId: candidate.productoId, ubicacionId: input.ubicacionDestinoId },
+  ]);
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, `${input.uuidCliente}:salida_transito`);
     if (dup) {
@@ -1507,18 +1616,10 @@ export async function salidaMostrador(
   rollo: typeof rollosTable.$inferSelect;
   movimiento: typeof movimientosTable.$inferSelect;
 }> {
-  if (input.uuidCliente) {
-    const dup = await checkUuidCliente(tx, input.uuidCliente);
-    if (dup) {
-      const [rollo] = await tx
-        .select()
-        .from(rollosTable)
-        .where(eq(rollosTable.id, dup.rolloId))
-        .limit(1);
-      return { rollo: rollo!, movimiento: dup };
-    }
-  }
-
+  const [candidate] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [candidate]);
   const [rollo] = await tx
     .select()
     .from(rollosTable)
@@ -1527,6 +1628,14 @@ export async function salidaMostrador(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  if (input.uuidCliente) {
+    const dup = await checkUuidCliente(tx, input.uuidCliente);
+    if (dup) {
+      const [duplicateRollo] = await tx.select().from(rollosTable)
+        .where(eq(rollosTable.id, dup.rolloId)).limit(1);
+      return { rollo: duplicateRollo!, movimiento: dup };
+    }
+  }
   assertTransition(rollo.estado, "MOSTRADOR");
 
   await tx
@@ -1585,18 +1694,10 @@ export async function venderRollo(
   rollo: typeof rollosTable.$inferSelect;
   movimiento: typeof movimientosTable.$inferSelect;
 }> {
-  if (input.uuidCliente) {
-    const dup = await checkUuidCliente(tx, input.uuidCliente);
-    if (dup) {
-      const [rollo] = await tx
-        .select()
-        .from(rollosTable)
-        .where(eq(rollosTable.id, dup.rolloId))
-        .limit(1);
-      return { rollo: rollo!, movimiento: dup };
-    }
-  }
-
+  const [candidate] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [candidate]);
   const [rollo] = await tx
     .select()
     .from(rollosTable)
@@ -1605,6 +1706,14 @@ export async function venderRollo(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  if (input.uuidCliente) {
+    const dup = await checkUuidCliente(tx, input.uuidCliente);
+    if (dup) {
+      const [duplicateRollo] = await tx.select().from(rollosTable)
+        .where(eq(rollosTable.id, dup.rolloId)).limit(1);
+      return { rollo: duplicateRollo!, movimiento: dup };
+    }
+  }
   if (!isValidUnitCost(rollo.costoUnitario)) {
     throw new InventarioError(
       rollWithoutValidUnitCostMessage(rollo.serie),
@@ -1672,6 +1781,7 @@ export async function consumirBolsasFifo(
       "BOLSA_INTEGER_QUANTITY_REQUIRED",
     );
   }
+  await lockInventoryPairs(tx, [input]);
 
   const cajas = await tx
     .select()
@@ -1771,18 +1881,10 @@ export async function ajustarRollo(
     );
   }
 
-  if (input.uuidCliente) {
-    const dup = await checkUuidCliente(tx, input.uuidCliente);
-    if (dup) {
-      const [rollo] = await tx
-        .select()
-        .from(rollosTable)
-        .where(eq(rollosTable.id, dup.rolloId))
-        .limit(1);
-      return { rollo: rollo!, movimiento: dup };
-    }
-  }
-
+  const [candidate] = await tx.select().from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [candidate]);
   const [rollo] = await tx
     .select()
     .from(rollosTable)
@@ -1791,6 +1893,14 @@ export async function ajustarRollo(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  if (input.uuidCliente) {
+    const dup = await checkUuidCliente(tx, input.uuidCliente);
+    if (dup) {
+      const [duplicateRollo] = await tx.select().from(rollosTable)
+        .where(eq(rollosTable.id, dup.rolloId)).limit(1);
+      return { rollo: duplicateRollo!, movimiento: dup };
+    }
+  }
   const [producto] = await tx
     .select({ unidad: productosTable.unidad })
     .from(productosTable)
@@ -1811,9 +1921,9 @@ export async function ajustarRollo(
   }
 
   const esBaja = input.cantidadNueva == null;
-  const cantidadAntes = parseFloat(rollo.cantidadActual);
+  const cantidadAntes = quantityToThousandthsBigInt(rollo.cantidadActual);
 
-  let diff: number;
+  let diff: bigint;
   let tipo: TipoMovimiento;
   let cantidadNueva: string;
   let estadoNuevo: EstadoRollo = rollo.estado;
@@ -1824,22 +1934,22 @@ export async function ajustarRollo(
     cantidadNueva = "0.000";
     estadoNuevo = "BAJA";
   } else {
-    const nueva = parseFloat(input.cantidadNueva!);
-    if (nueva < 0) {
+    const nueva = quantityToThousandthsBigInt(input.cantidadNueva!);
+    if (nueva < 0n) {
       throw new InventarioError(
         "La cantidad no puede ser negativa.",
         "NEGATIVE_QUANTITY",
       );
     }
     diff = nueva - cantidadAntes;
-    if (diff === 0) {
+    if (diff === 0n) {
       throw new InventarioError(
         "La cantidad nueva es igual a la actual.",
         "NO_CHANGE",
       );
     }
-    tipo = diff > 0 ? "AJUSTE_POSITIVO" : "AJUSTE_NEGATIVO";
-    cantidadNueva = nueva.toFixed(3);
+    tipo = diff > 0n ? "AJUSTE_POSITIVO" : "AJUSTE_NEGATIVO";
+    cantidadNueva = formatQuantityThousandthsBigInt(nueva);
   }
 
   // Guard state change through the transition machine (only applies when BAJA)
@@ -1857,7 +1967,7 @@ export async function ajustarRollo(
     productoId: rollo.productoId,
     ubicacionId: rollo.ubicacionId,
     tipo,
-    cantidad: diff.toFixed(3),
+    cantidad: formatQuantityThousandthsBigInt(diff),
     usuarioId: input.usuarioId,
     justificacion,
     revisado: input.revisado ?? false,
@@ -1898,18 +2008,7 @@ export async function revertirMovimiento(
   rollo: typeof rollosTable.$inferSelect;
   movimiento: typeof movimientosTable.$inferSelect;
 }> {
-  if (input.uuidCliente) {
-    const dup = await checkUuidCliente(tx, input.uuidCliente);
-    if (dup) {
-      const [rollo] = await tx
-        .select()
-        .from(rollosTable)
-        .where(eq(rollosTable.id, dup.rolloId))
-        .limit(1);
-      return { rollo: rollo!, movimiento: dup };
-    }
-  }
-
+  await lockInventoryPairForMovement(tx, input.movimientoOrigenId);
   const [orig] = await tx
     .select()
     .from(movimientosTable)
@@ -1919,6 +2018,14 @@ export async function revertirMovimiento(
 
   if (!orig) {
     throw new InventarioError("Movimiento no encontrado.", "MOVIMIENTO_NOT_FOUND");
+  }
+  if (input.uuidCliente) {
+    const dup = await checkUuidCliente(tx, input.uuidCliente);
+    if (dup) {
+      const [duplicateRollo] = await tx.select().from(rollosTable)
+        .where(eq(rollosTable.id, dup.rolloId)).limit(1);
+      return { rollo: duplicateRollo!, movimiento: dup };
+    }
   }
 
   // Check it hasn't already been cancelled
@@ -1945,7 +2052,9 @@ export async function revertirMovimiento(
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
 
   // Determine restoration: CANCELACION records the inverse signed quantity
-  const inversaCantidad = (parseFloat(orig.cantidad) * -1).toFixed(3);
+  const inversaCantidad = formatQuantityThousandthsBigInt(
+    -quantityToThousandthsBigInt(orig.cantidad),
+  );
 
   // Restore roll state where sensible.
   // estadoAntesDe throws for SALIDA_MOSTRADOR (MOSTRADOR is terminal).
@@ -1970,7 +2079,10 @@ export async function revertirMovimiento(
     (orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_NORMAL ||
       orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_METREADO);
   const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo) || ventaBolsa
-    ? (parseFloat(rollo.cantidadActual) + parseFloat(inversaCantidad)).toFixed(3)
+    ? formatQuantityThousandthsBigInt(
+        quantityToThousandthsBigInt(rollo.cantidadActual) +
+          quantityToThousandthsBigInt(inversaCantidad),
+      )
     : rollo.cantidadActual;
 
   await tx
@@ -2050,6 +2162,10 @@ export type ConciliacionFila = {
   cantidadCache: string;
   rollosMovimientos: number;
   rollosCache: number;
+  movimientosCadenaDiscrepantes: number;
+  discrepanciaCadena: boolean;
+  discrepanciaCache: boolean;
+  discrepanciaRollos: boolean;
   discrepancia: boolean;
 };
 
@@ -2079,6 +2195,41 @@ export async function conciliarTodo(
       .from(movimientosTable)
       .where(conditions.length ? and(...conditions) : undefined)
       .groupBy(movimientosTable.productoId, movimientosTable.ubicacionId);
+
+    // Validate the append-only running-balance chain independently from the
+    // aggregate/cache comparison. Historical rows are only reported, never
+    // rewritten.
+    const movimientosOrdenados = await tx
+      .select({
+        productoId: movimientosTable.productoId,
+        ubicacionId: movimientosTable.ubicacionId,
+        cantidad: movimientosTable.cantidad,
+        saldoPosterior: movimientosTable.saldoPosterior,
+      })
+      .from(movimientosTable)
+      .where(conditions.length ? and(...conditions) : undefined)
+      .orderBy(
+        movimientosTable.productoId,
+        movimientosTable.ubicacionId,
+        movimientosTable.id,
+      );
+    const saldosPorPar = new Map<string, bigint>();
+    const discrepanciasCadena = new Map<string, number>();
+    for (const movimiento of movimientosOrdenados) {
+      const key = `${movimiento.productoId}:${movimiento.ubicacionId}`;
+      const esperado =
+        (saldosPorPar.get(key) ?? 0n) +
+        quantityToThousandthsBigInt(movimiento.cantidad);
+      if (
+        quantityToThousandthsBigInt(movimiento.saldoPosterior) !== esperado
+      ) {
+        discrepanciasCadena.set(
+          key,
+          (discrepanciasCadena.get(key) ?? 0) + 1,
+        );
+      }
+      saldosPorPar.set(key, esperado);
+    }
 
     // Aggregate cache
     const cacheConditions = [];
@@ -2158,6 +2309,11 @@ export async function conciliarTodo(
         );
 
       const rollosMovimientos = cntRow?.cnt ?? 0;
+      const movimientosCadenaDiscrepantes =
+        discrepanciasCadena.get(key) ?? 0;
+      const discrepanciaCadena = movimientosCadenaDiscrepantes > 0;
+      const discrepanciaCache = movTotal !== cacheTotal;
+      const discrepanciaRollos = rollosMovimientos !== v.rollosCache;
       results.push({
         productoId: pId,
         ubicacionId: uId,
@@ -2167,8 +2323,12 @@ export async function conciliarTodo(
         cantidadCache: cacheTotalF,
         rollosMovimientos,
         rollosCache: v.rollosCache,
+        movimientosCadenaDiscrepantes,
+        discrepanciaCadena,
+        discrepanciaCache,
+        discrepanciaRollos,
         discrepancia:
-          movTotal !== cacheTotal || rollosMovimientos !== v.rollosCache,
+          discrepanciaCadena || discrepanciaCache || discrepanciaRollos,
       });
     }
 
@@ -2185,6 +2345,7 @@ export async function recalcularExistencias(
   ubicacionId: number,
 ): Promise<void> {
   await db.transaction(async (tx) => {
+    await lockInventoryPairs(tx, [{ productoId, ubicacionId }]);
     await refreshCache(tx, productoId, ubicacionId);
   });
 }
@@ -2198,6 +2359,7 @@ export async function recalcularExistencias(
  */
 export async function reconstruirCacheExistencias(): Promise<void> {
   await db.transaction(async (tx) => {
+    await lockAllExistingInventoryPairs(tx);
     await tx.execute(sql`
       WITH pairs AS (
         SELECT producto_id, ubicacion_id FROM existencias
@@ -2313,16 +2475,24 @@ export async function revisarAjuste(
   movimientoId: number,
   revisorId: number,
 ): Promise<void> {
-  const [mov] = await db
-    .select()
-    .from(movimientosTable)
-    .where(eq(movimientosTable.id, movimientoId))
-    .limit(1);
-  if (!mov) throw new InventarioError("Movimiento no encontrado.", "MOVIMIENTO_NOT_FOUND");
-  if (mov.revisado) throw new InventarioError("El movimiento ya fue revisado.", "ALREADY_REVIEWED");
+  await db.transaction(async (tx) => {
+    await lockInventoryPairForMovement(tx, movimientoId);
+    const [mov] = await tx
+      .select()
+      .from(movimientosTable)
+      .where(eq(movimientosTable.id, movimientoId))
+      .for("update")
+      .limit(1);
+    if (!mov) {
+      throw new InventarioError("Movimiento no encontrado.", "MOVIMIENTO_NOT_FOUND");
+    }
+    if (mov.revisado) {
+      throw new InventarioError("El movimiento ya fue revisado.", "ALREADY_REVIEWED");
+    }
 
-  await db
-    .update(movimientosTable)
-    .set({ revisado: true, revisadoPor: revisorId, revisadoAt: new Date() })
-    .where(eq(movimientosTable.id, movimientoId));
+    await tx
+      .update(movimientosTable)
+      .set({ revisado: true, revisadoPor: revisorId, revisadoAt: new Date() })
+      .where(eq(movimientosTable.id, movimientoId));
+  });
 }
