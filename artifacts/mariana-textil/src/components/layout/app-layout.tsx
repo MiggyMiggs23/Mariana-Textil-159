@@ -40,6 +40,7 @@ import { etiquetasApi } from "@/lib/etiquetas-api";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { NotificationAudioController } from "@/components/notification-audio-controller";
 import { getVisibleNavGroups } from "@/components/layout/app-navigation";
+import { getHomeRoute } from "@/lib/home-route";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -196,6 +197,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const navGroups = getVisibleNavGroups(user);
+  const homeRoute = getHomeRoute(user);
+  const homeLogoClass =
+    "flex cursor-pointer items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80";
 
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
@@ -292,11 +296,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar for Desktop */}
       {!isTerminal && (
         <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
-          <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border flex-shrink-0">
-            <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
-            <span className="font-bold text-lg tracking-tight text-white">
-              Mariana Textil
-            </span>
+          <div className="h-16 flex items-center px-5 border-b border-sidebar-border flex-shrink-0">
+            <Link
+              href={homeRoute}
+              className={homeLogoClass}
+              aria-label="Ir al inicio"
+              data-testid="desktop-home-logo"
+            >
+              <BrandLogo variant="mark" className="h-10 w-10 drop-shadow-sm" />
+              <span className="font-bold text-lg tracking-tight text-white">
+                Mariana Textil
+              </span>
+            </Link>
           </div>
 
           <nav className="flex-1 overflow-y-auto custom-scrollbar">
@@ -309,10 +320,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="no-print md:hidden sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-white shadow-sm">
           <div className="h-16 flex items-center justify-between px-4">
-            <div className="flex items-center gap-2.5">
+            <Link
+              href={homeRoute}
+              className={homeLogoClass}
+              aria-label="Ir al inicio"
+              data-testid="mobile-home-logo"
+            >
               <BrandLogo variant="mark" className="h-9 w-9" />
               <span className="font-bold text-lg">Mariana Textil</span>
-            </div>
+            </Link>
             <div className="flex items-center gap-1">
               <span id="notification-audio-mobile-slot" className="contents" />
               <NotificationsBell isAdmin={user.rol === Role.ADMIN} mobile />
@@ -383,12 +399,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             />
             <div className="relative w-[280px] bg-sidebar text-sidebar-foreground h-full flex flex-col animate-in slide-in-from-left duration-200">
               <div className="h-16 flex items-center justify-between px-6 border-b border-sidebar-border flex-shrink-0">
-                <div className="flex items-center gap-2.5">
+                <Link
+                  href={homeRoute}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={homeLogoClass}
+                  aria-label="Ir al inicio"
+                  data-testid="drawer-home-logo"
+                >
                   <BrandLogo variant="mark" className="h-9 w-9" />
                   <span className="font-bold text-lg text-white">
                     Mariana Textil
                   </span>
-                </div>
+                </Link>
                 <Button
                   variant="ghost"
                   size="icon"

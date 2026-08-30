@@ -57,6 +57,7 @@ import Camionetas from "@/pages/configuracion/camionetas";
 import Choferes from "@/pages/configuracion/choferes";
 import { LocationScopeProvider } from "@/lib/location-scope";
 import { Modules, hasPermission } from "@/lib/permisos";
+import { getHomeRoute } from "@/lib/home-route";
 import Viajes from "@/pages/viajes";
 import ViajeNuevo from "@/pages/viaje-nuevo";
 import ViajeDetail from "@/pages/viaje-detail";
@@ -125,19 +126,8 @@ function ProtectedRoute({
 
   useEffect(() => {
     if (user && location === "/") {
-      if (user.rol === "TERMINAL") {
-        setLocation("/pos");
-      } else if (user.rol === "CAJA") {
-        setLocation("/cobros");
-      } else if (user.rol === "ADMIN") {
-        setLocation("/caja/tiempo-real");
-      } else if (hasPermission(user, Modules.DASHBOARD, "ver")) {
-        setLocation("/inventario/vista-global");
-      } else if (hasPermission(user, Modules.POS, "ver")) {
-        setLocation("/pos");
-      } else if (hasPermission(user, Modules.COBROS_PAGOS, "ver")) {
-        setLocation("/cobros");
-      }
+      const homeRoute = getHomeRoute(user);
+      if (homeRoute !== "/") setLocation(homeRoute);
     }
   }, [user, location, setLocation]);
 
