@@ -1,0 +1,110 @@
+# CORRECCIÓN — Cierre del orden de candados: recepción y cancelación
+
+Tarea corta de cierre. Dos huecos del mismo defecto que ya se corrigió en POS y en el envío de salidas. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+El trabajo anterior quedó bien. La costura de prueba no dejó ninguna rama condicional en producción, la barrera con tiempo límite es una regresión fuerte de verdad, y el reporte en `reports/` dice con claridad que `POS-LOCK` no fue concluyente en vez de venderlo como prueba. Lo que sigue son dos bucles que quedaron fuera.
+
+---
+
+## BLOQUE 1 — La recepción de salidas no bloquea los pares de tránsito
+
+### La falla
+
+En el **envío** el bloqueo previo quedó completo. `lib/salidas.ts:1026` bloquea, para cada producto, tanto `{producto, origen}` como `{producto, tránsito}` — exactamente los dos pares que `moverRollo` necesita adentro.
+
+En la **recepción** no. `lib/salidas.ts:1083` bloquea únicamente el destino:
+
+```
+inventoryPairs.flatMap(({ productoId }) => [
+  { productoId, ubicacionId: salida.destinoId! },
+])
+```
+
+Pero `recibirTransferencia` (`lib/inventario.ts:1566`) necesita **dos** pares: el del rollo —que en ese momento está en la ubicación **TRÁNSITO**— y el del destino. El par de tránsito se sigue tomando dentro del bucle, en orden de `salida_rollos.id`, que no guarda ninguna relación con el `productoId`.
+
+Es la misma traba, con otro disparador:
+
+1. Recepción A en Tienda Cruces bloquea (7, Cruces) y (12, Cruces), ordenados.
+2. Recepción B en Tienda Coco, al mismo tiempo, bloquea sus dos pares de destino.
+3. En su bucle, A toma (12, TRÁNSITO). B toma (7, TRÁNSITO).
+4. A espera por (7, TRÁNSITO). B espera por (12, TRÁNSITO). **`40P01`.**
+
+Con la bodega central surtiendo a tres tiendas, dos recepciones simultáneas no son un caso raro.
+
+### Qué se hace
+
+Agrega el par de tránsito al bloqueo previo de la recepción, con la misma forma que ya usa el envío. La consulta `inventoryPairs` ya hace `innerJoin` contra `rollos`; toma de ahí también la `ubicacionId`, que en estado `EN_TRANSITO` es la ubicación de tránsito.
+
+**No la deduzcas ni la escribas a mano.** Debe salir de la fila del rollo, igual que sale el `productoId`.
+
+### Verificación
+
+Prueba de dos recepciones concurrentes hacia **destinos distintos**, de dos salidas que comparten los mismos dos productos, con los rollos en orden inverso una de la otra. Las dos deben concluir sin `40P01`.
+
+Si la traba no se reproduce contra el código actual, **dilo con claridad y no des la prueba por buena** — es el mismo caso no concluyente que ya reportaste con `POS-LOCK`. Si quieres una regresión fuerte, reusa la técnica de barrera con tiempo límite de `inventario-lock-barrier.test.ts`.
+
+---
+
+## BLOQUE 2 — `cancelarTicket` y los dos bucles de rutas de inventario
+
+### La falla
+
+La auditoría de bucles del reporte anterior encontró `lib/auditoria-inventario.ts`, pero se le pasaron tres:
+
+- **`lib/pos.ts:1065`** — `cancelarTicket` recorre las ventas del ticket llamando `revertirMovimiento`. Cada llamada toma su par por dentro con `lockInventoryPairForMovement`, sin bloqueo previo del conjunto. Dos cancelaciones simultáneas de tickets que comparten productos se traban.
+- **`routes/inventario.ts:1035`** — bucle sobre `ajustarRollo`.
+- **`routes/inventario.ts:1098`** — bucle sobre `revertirMovimiento`.
+
+### Qué se hace
+
+1. En `cancelarTicket`, reúne los pares de todos los movimientos de venta que vas a revertir y bloquéalos en una sola llamada **antes del bucle**. La consulta de `ventas` ya trae `producto_id` y `ubicacion_id` en cada fila; no hace falta una consulta extra.
+2. Aplica el mismo tratamiento a los dos bucles de `routes/inventario.ts`. Si alguno resulta no ser un bucle real sobre varios pares, **dilo y no lo toques**.
+3. Revisa una vez más el bucle de `lib/auditoria-inventario.ts:467`. El reporte anterior concluyó que no hacía falta corregirlo porque cada rollo pertenece a la auditoría ya bloqueada. Confirma que ese razonamiento cubre también el par de la **ubicación destino** de `transferirRolloInmediato`, no solo el del rollo. Si no lo cubre, corrígelo.
+
+### Regla general
+
+Esta es la tercera vez que aparece el mismo defecto. Establece la regla y hazla verificable:
+
+**Ninguna función que recorra varios elementos llamando al motor de inventario puede entrar al bucle sin haber bloqueado antes el conjunto completo de pares que el motor va a necesitar** — incluidos los pares implícitos, como el de tránsito o el de destino, que la función interna agrega por su cuenta.
+
+Deja en el commit la lista completa y definitiva de bucles del motor en todo el repositorio, con su estado: bloqueo previo completo, o justificación de por qué no lo necesita.
+
+---
+
+## BLOQUE 3 — Verificación
+
+**Recepción**
+
+- El bloqueo previo de la recepción incluye el par de tránsito, tomado de la fila del rollo y no escrito a mano
+- Existe una prueba de dos recepciones concurrentes a destinos distintos con productos compartidos en orden inverso
+- Ninguna transacción aborta con `40P01`
+- Si la prueba no reprodujo la traba, está dicho con claridad
+
+**Cancelación y rutas**
+
+- `cancelarTicket` bloquea todos sus pares antes del bucle de `revertirMovimiento`
+- Los dos bucles de `routes/inventario.ts` están corregidos, o está justificado por qué no aplican
+- Está confirmado si el bucle de `auditoria-inventario.ts` cubre el par de destino
+- Está la lista completa y definitiva de bucles del motor con su estado
+
+**General**
+
+- `pnpm run typecheck` completo aprueba
+- `pnpm run build` completo desde la raíz aprueba
+- La suite de inventario pasa entera, incluidos `T-LOCK` y la barrera determinista
+- La suite de POS y la de Salidas pasan enteras
+- El resultado de las ejecuciones nuevas se agrega a `reports/`, fechado y con el commit
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`, amplía la nota de orden de candados que ya existe:
+
+> **Pares implícitos:** el conjunto que se bloquea antes de un bucle debe incluir los pares que la función interna del motor agrega por su cuenta, no solo los que se ven en la línea del documento. `moverRollo` necesita origen **y** tránsito; `recibirTransferencia` necesita tránsito **y** destino; `transferirRolloInmediato` necesita origen **y** destino. Bloquear solo el par visible deja el otro para que se tome dentro del ciclo, en orden de fila, y la traba `40P01` reaparece con otro disparador.
+>
+> La lista de bucles del motor de inventario y su estado de bloqueo vive en el commit de cierre de esta corrección. Todo bucle nuevo sobre el motor se agrega a esa lista con su justificación.
