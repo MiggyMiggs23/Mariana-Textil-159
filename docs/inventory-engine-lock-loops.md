@@ -11,7 +11,7 @@ una sola llamada antes del ciclo.
 | Cancelar ticket | `revertirMovimiento` | Completo: pares producto + ubicación leídos de todas las ventas |
 | Salida directa a mostrador | `salidaMostrador` | Completo: pares reales de todos los rollos antes de bloquear filas |
 | Enviar salida | `moverRollo` | Completo: origen + tránsito para cada producto |
-| Recibir salida | `recibirTransferencia` | Completo: ubicación real de tránsito + destino para cada rollo |
+| Recibir salida | `recibirTransferencia` | Completo: ubicación real de tránsito + destino; relectura estable antes de `FOR UPDATE` |
 | Confirmar faltantes de auditoría | `ajustarRollo` | Completo: pares reales de todos los candidatos; se revalidan tras bloquear filas |
 | Resolver sobrantes de auditoría | `transferirRolloInmediato` / `recibirTransferencia` | Completo: origen real + destino auditado; se revalidan tras bloquear filas |
 

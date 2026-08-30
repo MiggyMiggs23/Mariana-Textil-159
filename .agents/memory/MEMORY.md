@@ -21,3 +21,4 @@
 - [Destinos financieros desde el ledger](financial-destination-ledger.md) — combinar pagos POS, abonos, aplicaciones, saldos a favor y reversos con su fecha efectiva.
 - [Lectura global sin operación global](cross-location-read-authorization.md) — no ampliar helpers operativos para habilitar consultas multi-sitio; autorizar la lectura en handlers dedicados.
 - [Ventas completas frente a consumo FIFO](normal-vs-fifo-locking.md) — bloquear y validar unidades completas antes de permitir consumo parcial concurrente.
+- [Revalidación de candidatos tras prebloqueo](prelock-candidate-revalidation.md) — releer sin candados de fila y bloquear solo candidatos estables para no usar pares obsoletos.
