@@ -46,6 +46,8 @@ import { RecepcionSalidas } from "@/components/recepcion-salidas";
 import { SalidaMostrador } from "@/components/salida-mostrador";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { SalidasExtraordinarias } from "@/components/salidas-extraordinarias";
+
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; class: string }> = {
     ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
@@ -222,10 +224,11 @@ export default function Salidas() {
             <TabsTrigger value="historial">Historial</TabsTrigger>
             <TabsTrigger value="recepcion">Recepción</TabsTrigger>
             {canCreate && <TabsTrigger value="mostrador">A mostrador</TabsTrigger>}
+            {user?.rol === "ADMIN" && <TabsTrigger value="extraordinarias">Extraordinarias</TabsTrigger>}
           </TabsList>
         </Tabs>
 
-        {activeTab === "recepcion" ? <RecepcionSalidas /> : activeTab === "mostrador" && canCreate ? <SalidaMostrador /> : (
+        {activeTab === "recepcion" ? <RecepcionSalidas /> : activeTab === "mostrador" && canCreate ? <SalidaMostrador /> : activeTab === "extraordinarias" && user?.rol === "ADMIN" ? <SalidasExtraordinarias /> : (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-4 border-b border-slate-100 bg-slate-50 flex flex-wrap gap-4 items-center justify-between">
             <div className="flex items-center gap-4 flex-1">

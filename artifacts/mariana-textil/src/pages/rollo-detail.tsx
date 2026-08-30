@@ -1,23 +1,28 @@
 import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
-import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey } from "@workspace/api-client-react";
+import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey, useRevertSalidaExtraordinaria, getListSalidasExtraordinariasQueryKey } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer, Layers } from "lucide-react";
+import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer, Layers, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/api-client-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
-import { useQuery } from "@tanstack/react-query";
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { useRef } from "react";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export default function RolloDetail() {
   const { id } = useParams();
@@ -64,6 +69,36 @@ export default function RolloDetail() {
     enabled: Boolean(id) && canViewLabels,
     retry: false,
   });
+
+  const revertMutation = useRevertSalidaExtraordinaria();
+  const [revertingMovimientoId, setRevertingMovimientoId] = useState<number | null>(null);
+  const [revertJustificacion, setRevertJustificacion] = useState("");
+  const [revertConfirmText, setRevertConfirmText] = useState("");
+  const uuidClienteRef = useRef<string>(crypto.randomUUID());
+
+  const handleRevert = (movimientoId: number, justificacion: string) => {
+    revertMutation.mutate({
+      movimientoId,
+      data: {
+        justificacion,
+        uuidCliente: uuidClienteRef.current,
+      }
+    }, {
+      onSuccess: () => {
+        toast.success("Salida extraordinaria reversada exitosamente");
+        setRevertingMovimientoId(null);
+        setRevertJustificacion("");
+        setRevertConfirmText("");
+        uuidClienteRef.current = crypto.randomUUID();
+        queryClient.invalidateQueries({ queryKey: getGetRolloQueryKey(Number(id)) });
+        queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getListSalidasExtraordinariasQueryKey() });
+      },
+      onError: (err: any) => {
+        toast.error("Error al reversar", { description: getApiErrorMessage(err) });
+      }
+    });
+  };
 
   if (isLoading) {
     return (
@@ -260,12 +295,18 @@ export default function RolloDetail() {
                     <TableHead className="text-right">Cantidad</TableHead>
                     <TableHead className="text-right">Saldo Posterior</TableHead>
                     <TableHead>Referencia</TableHead>
+                    {isAdmin && <TableHead className="w-[100px]"></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {rollo.historial.map((mov) => {
                     const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO'].includes(mov.tipo);
                     const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'CANCELACION'].includes(mov.tipo);
+
+                    const isExtraordinariaUnreversed = mov.tipo === 'AJUSTE_NEGATIVO' &&
+                                                       mov.motivoSalidaExtraordinaria != null &&
+                                                       !rollo.historial.some(m => m.movimientoOrigenId === mov.id);
+
                     return (
                       <TableRow key={mov.id}>
                         <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
@@ -287,6 +328,21 @@ export default function RolloDetail() {
                           {mov.documentoTipo && `${mov.documentoTipo} ${mov.documentoId || ''} `}
                           {mov.justificacion}
                         </TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-right">
+                            {isExtraordinariaUnreversed && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+                                onClick={() => setRevertingMovimientoId(mov.id)}
+                              >
+                                <RotateCcw className="w-3 h-3 mr-1" />
+                                Reversar
+                              </Button>
+                            )}
+                          </TableCell>
+                        )}
                       </TableRow>
                     );
                   })}
@@ -296,6 +352,73 @@ export default function RolloDetail() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={revertingMovimientoId !== null} onOpenChange={(open) => {
+        if (!open) {
+          setRevertingMovimientoId(null);
+          setRevertJustificacion("");
+          setRevertConfirmText("");
+        }
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-destructive">Reversar Salida Extraordinaria</DialogTitle>
+            <DialogDescription>
+              Esto regresará la cantidad al inventario y registrará un ajuste positivo. Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="revert-justificacion">Justificación <span className="text-destructive">*</span></Label>
+                <span className={`text-xs ${revertJustificacion.length < 10 ? 'text-destructive font-medium' : 'text-emerald-600 font-medium'}`}>
+                  {revertJustificacion.length}/10 min
+                </span>
+              </div>
+              <Textarea
+                id="revert-justificacion"
+                value={revertJustificacion}
+                onChange={(e) => setRevertJustificacion(e.target.value)}
+                placeholder="Explica detalladamente la razón de este reverso..."
+                className="resize-none"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="revert-confirm">Confirmación</Label>
+              <p className="text-sm text-muted-foreground">Escribe exactamente <strong className="font-mono text-foreground">REVERSAR</strong>.</p>
+              <Input
+                id="revert-confirm"
+                value={revertConfirmText}
+                onChange={(e) => setRevertConfirmText(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setRevertingMovimientoId(null);
+              setRevertJustificacion("");
+              setRevertConfirmText("");
+            }}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={revertJustificacion.length < 10 || revertConfirmText !== "REVERSAR" || revertMutation.isPending}
+              onClick={() => {
+                if (revertingMovimientoId && revertConfirmText === "REVERSAR" && revertJustificacion.length >= 10) {
+                  handleRevert(revertingMovimientoId, revertJustificacion);
+                }
+              }}
+            >
+              {revertMutation.isPending ? "Procesando..." : "Reversar Movimiento"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }
