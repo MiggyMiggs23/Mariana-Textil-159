@@ -277,6 +277,70 @@ await test("POS-01 venta normal descuenta inventario e idempotencia conserva fol
   assert.equal(ventas.length, 1);
 });
 
+await test("POS-LOCK: tickets inversos no se interbloquean por el orden de captura", async () => {
+  const ubicacionId = await makeLocation();
+  const productoA = await makeProduct();
+  const productoB = await makeProduct();
+  const [rolloA1, rolloA2, rolloB1, rolloB2] = await Promise.all([
+    makeRollo(productoA, ubicacionId),
+    makeRollo(productoA, ubicacionId),
+    makeRollo(productoB, ubicacionId),
+    makeRollo(productoB, ubicacionId),
+  ]);
+
+  const createTicket = async (
+    lines: Array<{ productoId: number; rolloId: number }>,
+  ) =>
+    db.transaction((tx) =>
+      crearTicket(
+        tx,
+        {
+          ubicacionId,
+          usuarioTerminalId: USER_ID,
+          clienteId: 1,
+          tipo: "NORMAL",
+          facturado: false,
+          uuidCliente: randomUUID(),
+          ip: "127.0.0.1",
+          lineas: lines.map((line) => ({
+            ...line,
+            tipo: "NORMAL" as const,
+            cantidad: "10.000",
+            precioUnitario: "75.00",
+          })),
+        },
+        true,
+      ),
+    );
+
+  const results = await Promise.allSettled([
+    createTicket([
+      { productoId: productoA, rolloId: rolloA1.id },
+      { productoId: productoB, rolloId: rolloB1.id },
+    ]),
+    createTicket([
+      { productoId: productoB, rolloId: rolloB2.id },
+      { productoId: productoA, rolloId: rolloA2.id },
+    ]),
+  ]);
+
+  for (const result of results) {
+    if (result.status === "rejected") {
+      const code =
+        typeof result.reason === "object" &&
+        result.reason !== null &&
+        "code" in result.reason
+          ? String(result.reason.code)
+          : "UNKNOWN";
+      assert.fail(
+        `Ambos tickets deben concluir; una transacción abortó con ${code}: ${String(result.reason)}`,
+      );
+    }
+    assert.ok(result.value);
+    createdTicketIds.push(result.value.id);
+  }
+});
+
 await test("POS documento NOTA de Venta a Público exige instantáneas de entrega", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();

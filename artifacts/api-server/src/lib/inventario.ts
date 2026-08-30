@@ -54,14 +54,14 @@ import {
 // ── Drizzle transaction type ──────────────────────────────────────────────────
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-type InventoryPair = { productoId: number; ubicacionId: number };
+export type InventoryPair = { productoId: number; ubicacionId: number };
 
 /**
  * Serialize every ledger/cache mutation for a product/location pair.  Locks
  * are transaction-scoped and are always acquired in the same order so
  * multi-location and batch operations cannot deadlock each other.
  */
-async function lockInventoryPairs(
+export async function lockInventoryPairs(
   tx: Tx,
   pairs: readonly InventoryPair[],
 ): Promise<void> {

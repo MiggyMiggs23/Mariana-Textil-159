@@ -4,6 +4,7 @@
  */
 import {
   and,
+  asc,
   count,
   desc,
   eq,
@@ -39,6 +40,7 @@ import {
 } from "@workspace/db/advisory-locks";
 import {
   InventarioError,
+  lockInventoryPairs,
   moverRollo,
   recibirTransferencia,
   salidaMostrador,
@@ -1010,10 +1012,29 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
   if (!transito) {
     throw new InventarioError("No existe una ubicación activa de En tránsito.", "TRANSIT_LOCATION_NOT_FOUND");
   }
+  const inventoryPairs = await tx
+    .select({
+      productoId: rollosTable.productoId,
+    })
+    .from(salidaRollosTable)
+    .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+    .where(eq(salidaRollosTable.salidaId, salida.id))
+    .orderBy(asc(salidaRollosTable.id));
+  if (!inventoryPairs.length) {
+    throw new InventarioError("La salida no tiene rollos preparados.", "EMPTY_PREPARATION");
+  }
+  await lockInventoryPairs(
+    tx,
+    inventoryPairs.flatMap(({ productoId }) => [
+      { productoId, ubicacionId: salida.origenId },
+      { productoId, ubicacionId: transito.id },
+    ]),
+  );
   const rollos = await tx
     .select()
     .from(salidaRollosTable)
     .where(eq(salidaRollosTable.salidaId, salida.id))
+    .orderBy(asc(salidaRollosTable.id))
     .for("update");
   if (!rollos.length) {
     throw new InventarioError("La salida no tiene rollos preparados.", "EMPTY_PREPARATION");
@@ -1048,10 +1069,28 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   const folioFormateado = await getSalidaFolioFormateado(tx, salida);
   requireState(salida, ["EN_TRANSITO"], "recibir");
+  const inventoryPairs = await tx
+    .select({
+      productoId: rollosTable.productoId,
+    })
+    .from(salidaRollosTable)
+    .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+    .where(eq(salidaRollosTable.salidaId, salida.id))
+    .orderBy(asc(salidaRollosTable.id));
+  if (!inventoryPairs.length) {
+    throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
+  }
+  await lockInventoryPairs(
+    tx,
+    inventoryPairs.flatMap(({ productoId }) => [
+      { productoId, ubicacionId: salida.destinoId! },
+    ]),
+  );
   const salidaRollos = await tx
     .select()
     .from(salidaRollosTable)
     .where(eq(salidaRollosTable.salidaId, salida.id))
+    .orderBy(asc(salidaRollosTable.id))
     .for("update");
   if (!salidaRollos.length) {
     throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");

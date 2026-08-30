@@ -34,6 +34,7 @@ import {
   DOCUMENTO_TICKET_BOLSA_METREADO,
   DOCUMENTO_TICKET_BOLSA_NORMAL,
   InventarioError,
+  lockInventoryPairs,
   revertirMovimiento,
   venderRollo,
   type Tx,
@@ -656,6 +657,17 @@ export async function crearTicket(
       "PUBLIC_NOTE_DELIVERY_REQUIRED",
     );
   }
+
+  // Acquire the complete, globally ordered inventory lock set before creating
+  // any ticket row or locking individual rolls. Internal engine calls are
+  // transaction-reentrant and therefore will not wait again.
+  await lockInventoryPairs(
+    tx,
+    input.lineas.map((linea) => ({
+      productoId: linea.productoId,
+      ubicacionId: input.ubicacionId,
+    })),
+  );
 
   // NORMAL lines identify one physical roll/box. METREADO BOLSA inventory is
   // allocated FIFO later and deliberately remains absent from ticket_linea.
