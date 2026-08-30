@@ -1,0 +1,178 @@
+# CORRECCIÓN — Impresión, logo y errores de entradas
+
+Tarea de corrección de fallas reales encontradas en pruebas. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## BLOQUE 1 — No se puede crear una entrada
+
+Desde una cuenta ADMIN, al intentar crear una entrada aparece **"Error inesperado. Intentar nuevamente."** y la entrada no se crea.
+
+Un mensaje de "error inesperado" significa que una excepción llegó hasta el cliente sin que nadie la interpretara.
+
+### Qué se hace
+
+1. **Reproduce la falla** y encuentra la causa real. No la parches en el cliente.
+2. Corrígela.
+3. **Elimina el mensaje genérico.** Todo error que pueda llegar al usuario en el flujo de entradas debe traer un mensaje que diga qué pasó y qué hacer. "Error inesperado" no le sirve a nadie en el piso.
+4. Recorre el resto de la aplicación buscando otros lugares que muestren errores genéricos donde el servidor sí manda un mensaje útil, y corrígelos.
+
+Reporta cuál era la causa.
+
+---
+
+## BLOQUE 2 — El logo no sale en ningún documento impreso
+
+**El logo de Mariana Textil no aparece en nada imprimible**: ni en etiquetas, ni en entradas, ni en salidas, ni presumiblemente en el ticket.
+
+Los componentes sí lo incluyen —`MonochromeBrandLogo` en la etiqueta, `BrandLogo` en entradas y salidas— así que **el problema es de impresión, no de que falte el componente.**
+
+### Causa probable
+
+En `index.css` no existe ninguna regla de `print-color-adjust`. Los navegadores, al imprimir, **descartan fondos e imágenes por omisión** para ahorrar tinta.
+
+### Qué se hace
+
+- Agrega `print-color-adjust: exact` y `-webkit-print-color-adjust: exact` en `@media print`, aplicado a los contenedores de documento y a las imágenes.
+- **Verifica que el archivo del logo llegue al navegador en el momento de imprimir.** Si es un recurso que Vite empaqueta y se carga tarde, la impresión puede dispararse antes de que esté disponible.
+- Confirma que el logo aparezca en: **etiqueta de rollo, entrada, salida, ticket, nota, nota de productos, hoja de viaje y hoja de auditoría de inventario.**
+
+Deja en el commit la lista de documentos verificados.
+
+---
+
+## BLOQUE 3 — La entrada se imprime en blanco
+
+Al imprimir una entrada desde cualquier cuenta, **la hoja sale en blanco**.
+
+La regla `@page entrada-page` declara 216 × 279 mm y el diseño usa las mismas medidas, así que el tamaño coincide. La falla está en otro lado.
+
+### Qué se hace
+
+1. Encuentra por qué el contenido no llega al papel. Revisa si el elemento con la clase de página está siendo ocultado por alguna regla de `@media print`, si un contenedor padre tiene `overflow: hidden` o altura cero, y si el orden de las reglas está anulando la visibilidad.
+2. Corrígelo y **verifica imprimiendo de verdad a PDF**, no solo mirando la vista previa.
+
+### Guardar y volver a abrir
+
+Hoy la entrada no se puede guardar como PDF ni volver a consultar después.
+
+- **En la lista de Entradas, el folio va en azul subrayado** y al hacer clic abre el documento imprimible de esa entrada.
+- Desde ahí se puede imprimir o guardar como PDF cuantas veces se quiera.
+- El documento debe poder abrirse en cualquier momento, no solo justo después de crear la entrada.
+
+---
+
+## BLOQUE 4 — Las etiquetas fallan al volver a imprimir
+
+Después de cerrar la ventana de impresión de etiquetas, al intentar volver a entrar **aparece un error y el sistema regresa a la pantalla anterior.**
+
+Encuentra la causa y corrígela. Debe poderse entrar a imprimir las etiquetas de una entrada las veces que haga falta, conservando las reglas que ya existen: marca de "REIMPRESA", autorización de ADMIN y alerta a las tres reimpresiones.
+
+### El QR se corta
+
+En la etiqueta de 100 × 70 mm, **el código QR aparece cortado**.
+
+Ajusta el bloque del QR para que quepa completo con su margen blanco alrededor. Un QR sin su margen no se escanea de manera confiable, aunque se vea completo.
+
+**Verifica escaneando una etiqueta impresa de verdad**, no solo mirándola en pantalla.
+
+---
+
+## BLOQUE 5 — Rediseño de la hoja de salida
+
+La hoja de salida sí imprime, pero el tamaño no está bien ajustado.
+
+### Tamaño
+
+**A6: 105 × 148 mm.**
+
+⚠️ **Antes de implementarlo, verifica que quepa.** La tabla tiene siete columnas y debe alojar diez renglones. A6 es una hoja pequeña; si el resultado queda ilegible, **detente y repórtalo** con una muestra, en vez de entregar algo que no se puede leer.
+
+Si hace falta orientación horizontal para que quepa, úsala y anótalo.
+
+### Encabezado
+
+En este orden:
+
+1. **"HOJA DE SALIDA"** en grande, como está hoy
+2. **Logo de Mariana Textil**
+3. **El QR en grande, esquinado**
+
+### Bloque de datos
+
+El bloque actual está bien. Solo cambian dos rótulos:
+
+| Rótulo actual | Nuevo |
+|---|---|
+| Solicitante | **Generó** |
+| Transportista | **Entregó** |
+
+### Tabla
+
+Reordena las columnas exactamente así:
+
+| # | Producto | Color | No. de Rollos | Cant. de Unidad | SKU | No. de Serie |
+|---|---|---|---|---|---|---|
+
+- El listado va **numerado**.
+- **Mínimo diez renglones**, aunque la salida traiga menos: los renglones vacíos se imprimen para poder anotar a mano.
+- Si la salida tiene más de diez rollos, **se imprimen las páginas que hagan falta**, con el encabezado repetido y numeración de página.
+
+**Nota importante:** esta hoja **sí lleva número de serie**. Es un documento de control interno, a diferencia del ticket y la nota, donde las series no se imprimen. No cambies esa regla.
+
+### Unidad
+
+Usa la abreviatura compartida: **Mts.**, **Kg.**, **Bolsas**.
+
+---
+
+## BLOQUE 6 — El logo lleva a inicio
+
+En toda la interfaz, hacer clic en el logo de Mariana Textil de la barra superior **lleva a la pantalla de inicio** del usuario según su rol.
+
+Con cursor de mano al pasar encima, para que se vea que es clicable.
+
+---
+
+## BLOQUE 7 — Verificación
+
+**Entradas**
+- Se puede crear una entrada desde ADMIN, y se reporta cuál era la causa del error
+- Ya no aparece "Error inesperado" en el flujo de entradas
+- La entrada imprime con contenido, no en blanco
+- El folio en la lista es enlace azul subrayado y abre el documento
+- El documento se puede abrir y guardar como PDF en cualquier momento
+
+**Logo**
+- Aparece impreso en etiqueta, entrada, salida, ticket, nota, nota de productos, hoja de viaje y hoja de auditoría
+- Lista de documentos verificados
+- Hacer clic en el logo de la barra superior lleva a inicio
+
+**Etiquetas**
+- Se puede volver a entrar a imprimir sin error, las veces que haga falta
+- El QR se imprime completo con su margen
+- **Una etiqueta impresa se escanea correctamente**
+
+**Salida**
+- Imprime en A6, o se reportó que no cabe con una muestra
+- El encabezado lleva título, logo y QR grande esquinado
+- Los rótulos dicen "Generó" y "Entregó"
+- Las columnas están en el orden pedido, numeradas
+- Se imprimen mínimo diez renglones, y más páginas cuando hace falta
+- **Sí aparece el número de serie**, porque es documento de control interno
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> Los documentos impresos requieren `print-color-adjust: exact` para que el logo y los fondos lleguen al papel; sin esa regla el navegador los descarta.
+>
+> **El ticket, la nota y la nota de productos NO imprimen números de serie** y agrupan los rollos por producto. **La hoja de salida, la hoja de viaje y la hoja de auditoría SÍ imprimen las series**, porque son documentos de control interno. Al cliente se le resume; al control interno se le detalla.
+>
+> Todo documento imprimible debe poder abrirse en cualquier momento desde el folio de su lista, no solo al crearse.
