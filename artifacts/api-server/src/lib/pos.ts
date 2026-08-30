@@ -1062,6 +1062,13 @@ export async function cancelarTicket(
       ),
     )
     .orderBy(asc(movimientosTable.id));
+  await lockInventoryPairs(
+    tx,
+    ventas.map((venta) => ({
+      productoId: venta.productoId,
+      ubicacionId: venta.ubicacionId,
+    })),
+  );
   for (const venta of ventas) {
     await revertirMovimiento(tx, {
       movimientoOrigenId: Number(venta.id),

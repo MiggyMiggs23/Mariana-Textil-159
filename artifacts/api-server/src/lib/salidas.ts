@@ -546,21 +546,45 @@ export async function crearSalidaMostrador(
     throw new InventarioError("El origen no es una ubicación operativa activa.", "INVALID_LOCATION");
   }
 
-  const rollos = await tx
+  const rolloCandidates = await tx
     .select()
     .from(rollosTable)
-    .where(inArray(rollosTable.serie, series))
-    .for("update");
-  if (rollos.length !== series.length) {
+    .where(inArray(rollosTable.serie, series));
+  if (rolloCandidates.length !== series.length) {
     throw new InventarioError("Una de las series no existe.", "ROLLO_NOT_FOUND");
   }
-  for (const rollo of rollos) {
+  for (const rollo of rolloCandidates) {
     if (rollo.ubicacionId !== input.origenId) {
       throw new InventarioError(`El rollo ${rollo.serie} está en otra ubicación.`, "LOCATION_MISMATCH");
     }
     if (rollo.estado !== "DISPONIBLE") {
       throw new InventarioError(`El rollo ${rollo.serie} no está DISPONIBLE.`, "ROLLO_UNAVAILABLE");
     }
+  }
+  await lockInventoryPairs(
+    tx,
+    rolloCandidates.map((rollo) => ({
+      productoId: rollo.productoId,
+      ubicacionId: rollo.ubicacionId,
+    })),
+  );
+  const rollos = await tx
+    .select()
+    .from(rollosTable)
+    .where(inArray(rollosTable.serie, series))
+    .orderBy(asc(rollosTable.id))
+    .for("update");
+  if (
+    rollos.length !== rolloCandidates.length ||
+    rollos.some((rollo) =>
+      rollo.ubicacionId !== input.origenId ||
+      rollo.estado !== "DISPONIBLE"
+    )
+  ) {
+    throw new InventarioError(
+      "Uno de los rollos cambió mientras se preparaba la salida.",
+      "ROLLO_UNAVAILABLE",
+    );
   }
   const [reservation] = await tx
     .select({ rolloId: salidaRollosTable.rolloId })

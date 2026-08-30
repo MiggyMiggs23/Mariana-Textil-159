@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import test from "node:test";
+import { sql } from "drizzle-orm";
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const applicationUrl = process.env.DATABASE_URL;
@@ -23,10 +24,12 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
   const [
     { db, pool, ensureAuditSchema, ensureAuditoriaInventarioSchema, createTestDatabaseGuard },
     inventoryAudit,
+    inventoryEngine,
     purge,
   ] = await Promise.all([
     import("@workspace/db"),
     import("./lib/auditoria-inventario"),
+    import("./lib/inventario"),
     import("./lib/purga-catalogos"),
   ]);
   const { assertIsolated } = await createTestDatabaseGuard(pool, testUrl, applicationUrl);
@@ -39,15 +42,27 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
   await Promise.all([ensureAuditSchema(pool), ensureAuditoriaInventarioSchema(pool)]);
 
   const tag = `T57-${randomUUID()}`;
-  const letterSeed = randomUUID().replaceAll("-", "");
-  const firstInitial = String.fromCharCode(65 + (Number.parseInt(letterSeed.slice(0, 2), 16) % 26));
-  const secondInitial = String.fromCharCode(65 + (Number.parseInt(letterSeed.slice(2, 4), 16) % 25));
-  const locationInitials = `${firstInitial}${secondInitial}`;
-  const otherLocationInitials = `${firstInitial}${String.fromCharCode(secondInitial.charCodeAt(0) + 1)}`;
   const ids = { locations: [] as number[], users: [] as number[], products: [] as number[], rolls: [] as number[] };
   try {
     const one = async (text: string, values: unknown[] = []) =>
       (await pool.query<Record<string, unknown>>(text, values)).rows[0]!;
+    const availableInitials = await pool.query<{ initials: string }>(
+      `SELECT candidate AS initials
+         FROM (
+           SELECT chr(first_code) || chr(second_code) || chr(third_code) AS candidate
+           FROM generate_series(65,90) AS first_code
+           CROSS JOIN generate_series(65,90) AS second_code
+           CROSS JOIN generate_series(65,90) AS third_code
+         ) AS candidates
+        WHERE NOT EXISTS (
+          SELECT 1 FROM ubicaciones WHERE iniciales=candidates.candidate
+        )
+        ORDER BY candidate
+        LIMIT 2`,
+    );
+    assert.equal(availableInitials.rows.length, 2);
+    const locationInitials = availableInitials.rows[0]!.initials;
+    const otherLocationInitials = availableInitials.rows[1]!.initials;
     const location = await one(
       `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'BODEGA',true) RETURNING id`,
       [`${tag} sitio`, locationInitials],
@@ -135,13 +150,56 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     await db.transaction((tx) => inventoryAudit.transitionAuditoria(tx, {
       auditoriaId: auditId, usuarioId: Number(actor.id), ip: "127.0.0.1", action: "CERRAR",
     }));
-    // Both discrepancies changed after the snapshot/close, so confirmation
-    // must leave them for manual resolution rather than mutate inventory.
-    await pool.query(`UPDATE rollos SET estado='PROGRAMADO' WHERE id=$1`, [missing.id]);
-    await pool.query(`UPDATE rollos SET ubicacion_id=$1 WHERE id=$2`, [location.id, surplus.id]);
-    await db.transaction((tx) => inventoryAudit.confirmAuditoria(tx, {
+    // Hold one candidate's advisory pair and start confirmation. Confirmation
+    // must wait before taking any roll row lock, so this transaction can still
+    // lock and change both discrepancies without a row/advisory cycle.
+    let releaseBlocker!: () => void;
+    let announceLock!: () => void;
+    const blockerMayFinish = new Promise<void>((resolve) => {
+      releaseBlocker = resolve;
+    });
+    const blockerHasPair = new Promise<void>((resolve) => {
+      announceLock = resolve;
+    });
+    const blocker = db.transaction(async (tx) => {
+      await inventoryEngine.lockInventoryPairs(tx, [{
+        productoId: Number(product.id),
+        ubicacionId: Number(location.id),
+      }]);
+      announceLock();
+      await blockerMayFinish;
+      await tx.execute(sql`SELECT id FROM rollos WHERE id=${Number(missing.id)} FOR UPDATE NOWAIT`);
+      await tx.execute(sql`UPDATE rollos SET estado='PROGRAMADO' WHERE id=${Number(missing.id)}`);
+      await tx.execute(sql`UPDATE rollos SET ubicacion_id=${Number(location.id)} WHERE id=${Number(surplus.id)}`);
+    });
+    await blockerHasPair;
+    const confirmation = db.transaction((tx) => inventoryAudit.confirmAuditoria(tx, {
       auditoriaId: auditId, usuarioId: Number(actor.id), ip: "127.0.0.1",
     }));
+    const waitDeadline = Date.now() + 2_000;
+    let waitingOnAdvisory = false;
+    while (Date.now() < waitDeadline) {
+      const waitState = await pool.query<{ waiting: boolean }>(
+        `SELECT EXISTS (
+           SELECT 1 FROM pg_stat_activity
+           WHERE pid <> pg_backend_pid()
+             AND wait_event_type='Lock'
+             AND wait_event='advisory'
+             AND query LIKE '%pg_advisory_xact_lock%'
+         ) AS waiting`,
+      );
+      waitingOnAdvisory = waitState.rows[0]?.waiting === true;
+      if (waitingOnAdvisory) break;
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    assert.equal(
+      waitingOnAdvisory,
+      true,
+      "confirmar debe esperar el candado consultivo antes de bloquear filas de rollos",
+    );
+    releaseBlocker();
+    await blocker;
+    await confirmation;
     assert.deepEqual(
       (await pool.query(`SELECT id, estado, ubicacion_id FROM rollos WHERE id = ANY($1::int[]) ORDER BY id`, [[missing.id, surplus.id]]))
         .rows.map((row) => ({ estado: row.estado, ubicacionId: Number(row.ubicacion_id) })),
@@ -246,8 +304,20 @@ test("Task 57: caja diaria serializa aperturas y descuenta salidas una vez", asy
       `SELECT id FROM ubicaciones WHERE id=1 AND tipo='TIENDA' AND activa=true`,
     );
     assert.equal(mariana.rowCount, 1, "la fixture aislada debe contener Tienda Mariana en ubicación 1");
-    const seed = randomUUID().replaceAll("-", "");
-    const initials = `C${String.fromCharCode(65 + (Number.parseInt(seed.slice(0, 2), 16) % 26))}`;
+    const initials = (await one(
+      `SELECT candidate AS initials
+         FROM (
+           SELECT chr(first_code) || chr(second_code) || chr(third_code) AS candidate
+           FROM generate_series(65,90) AS first_code
+           CROSS JOIN generate_series(65,90) AS second_code
+           CROSS JOIN generate_series(65,90) AS third_code
+         ) AS candidates
+        WHERE NOT EXISTS (
+          SELECT 1 FROM ubicaciones WHERE iniciales=candidates.candidate
+        )
+        ORDER BY candidate
+        LIMIT 1`,
+    )).initials;
     const otherLocation = await one(
       `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa) VALUES($1,$2,'TIENDA',true) RETURNING id`,
       [`${tag} otra tienda`, initials],

@@ -11,6 +11,7 @@
     "test:inventario": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/inventario.test.ts",
     "test:inventario-lock-barrier": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/inventario-lock-barrier.test.ts",
     "test:inventario-conciliacion-contract": "tsx --test src/inventario-conciliacion.contract.test.ts",
+    "test:inventory-lock-loops-contract": "tsx --test src/inventory-lock-loops.contract.test.ts",
     "benchmark:conciliacion": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/scripts/benchmark-conciliacion.ts",
     "test:transferencias-block3": "tsx --test src/transferencias-block3-architecture.test.ts",
     "test:entradas": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/entradas.test.ts",
