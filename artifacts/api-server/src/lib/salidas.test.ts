@@ -3,7 +3,7 @@ import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
 import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaFolioTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
-import { crearRollo, InventarioError } from "./inventario";
+import { crearRollo, InventarioError, recibirTransferencia } from "./inventario";
 import {
   agregarRolloBorradorSalida,
   buildSalidaDetail,
@@ -14,6 +14,7 @@ import {
   obtenerBorradorSalida,
   quitarRolloBorradorSalida,
   recibirSalida,
+  salidasConcurrencyTestSeam,
 } from "./salidas";
 
 if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
@@ -30,10 +31,26 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   async function fx(unidad: "METRO" | "KILO" | "BOLSA" = "METRO") {
     const n = `${tag}-${products.length}`;
     const [p] = await db.insert(productosTable).values({ sku: n, tela: n, color: "Azul", unidad, precioSugerido: "10" }).returning();
-    const suffix = String.fromCharCode(65 + (products.length % 26));
+    const availableInitials = await pool.query<{ iniciales: string }>(
+      `SELECT candidate AS iniciales
+       FROM (
+         SELECT chr(first_code) || chr(second_code)
+           || CASE WHEN third_code = 0 THEN '' ELSE chr(third_code) END AS candidate
+         FROM generate_series(65,90) AS first_code
+         CROSS JOIN generate_series(65,90) AS second_code
+         CROSS JOIN generate_series(0,90) AS third_code
+         WHERE third_code = 0 OR third_code >= 65
+       ) AS candidates
+       WHERE NOT EXISTS (
+         SELECT 1 FROM ubicaciones WHERE iniciales = candidates.candidate
+       )
+       ORDER BY length(candidate), candidate
+       LIMIT 2`,
+    );
+    assert.equal(availableInitials.rows.length, 2);
     const [o, d] = await db.insert(ubicacionesTable).values([
-      { nombre: `O-${n}`, iniciales: `S${suffix}`, tipo: "BODEGA" },
-      { nombre: `D-${n}`, iniciales: `T${suffix}`, tipo: "TIENDA" },
+      { nombre: `O-${n}`, iniciales: availableInitials.rows[0]!.iniciales, tipo: "BODEGA" },
+      { nombre: `D-${n}`, iniciales: availableInitials.rows[1]!.iniciales, tipo: "TIENDA" },
     ]).returning();
     products.push(p!.id); locations.push(o!.id, d!.id);
     return { productoId: p!.id, origenId: o!.id, destinoId: d!.id };
@@ -306,6 +323,135 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
       eq(notificacionesSistemaTable.entidadId, String(salida.id)),
     ));
     assert.equal(notification?.tipo, "SALIDA_INCOMPLETA");
+  });
+  test("SALIDAS-LOCK: recepciones inversas a destinos distintos no se interbloquean", async () => {
+    const first = await fx();
+    const second = await fx();
+    const [a1, b1, b2, a2] = await Promise.all([
+      roll(first.productoId, first.origenId, "11"),
+      roll(second.productoId, first.origenId, "12"),
+      roll(second.productoId, second.origenId, "13"),
+      roll(first.productoId, second.origenId, "14"),
+    ]);
+    const [salidaA, salidaB] = await Promise.all([
+      create(first.origenId, first.destinoId, [a1.id, b1.id]),
+      create(second.origenId, second.destinoId, [b2.id, a2.id]),
+    ]);
+    await Promise.all([
+      db.transaction((tx) => enviarSalida(tx, {
+        salidaId: salidaA.id,
+        usuarioId: user,
+        transportista: "Prueba",
+      })),
+      db.transaction((tx) => enviarSalida(tx, {
+        salidaId: salidaB.id,
+        usuarioId: user,
+        transportista: "Prueba",
+      })),
+    ]);
+
+    const results = await Promise.allSettled([
+      db.transaction((tx) => recibirSalida(tx, {
+        salidaId: salidaA.id,
+        usuarioId: user,
+        completa: true,
+        ip: "127.0.0.1",
+      })),
+      db.transaction((tx) => recibirSalida(tx, {
+        salidaId: salidaB.id,
+        usuarioId: user,
+        completa: true,
+        ip: "127.0.0.1",
+      })),
+    ]);
+
+    for (const result of results) {
+      if (result.status === "rejected") {
+        const code =
+          typeof result.reason === "object" &&
+          result.reason !== null &&
+          "code" in result.reason
+            ? String(result.reason.code)
+            : "UNKNOWN";
+        assert.fail(`Ambas recepciones deben concluir; abortó una con ${code}.`);
+      }
+      assert.equal(result.value.estado, "RECIBIDA");
+    }
+  });
+  test("SALIDAS-LOCK: una ubicación obsoleta se rechaza antes del ciclo del motor", async () => {
+    const shipmentFixture = await fx();
+    const raceFixture = await fx();
+    const item = await roll(
+      shipmentFixture.productoId,
+      shipmentFixture.origenId,
+      "15",
+    );
+    const salida = await create(
+      shipmentFixture.origenId,
+      shipmentFixture.destinoId,
+      [item.id],
+    );
+    await db.transaction((tx) => enviarSalida(tx, {
+      salidaId: salida.id,
+      usuarioId: user,
+      transportista: "Prueba",
+    }));
+
+    let announceRead!: () => void;
+    let releaseRead!: () => void;
+    const candidateWasRead = new Promise<void>((resolve) => {
+      announceRead = resolve;
+    });
+    const concurrentMoveFinished = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    salidasConcurrencyTestSeam.afterReceiveCandidateRead = async () => {
+      announceRead();
+      await concurrentMoveFinished;
+    };
+    try {
+      const receiving = db.transaction((tx) => recibirSalida(tx, {
+        salidaId: salida.id,
+        usuarioId: user,
+        completa: true,
+        ip: "127.0.0.1",
+      }));
+      await candidateWasRead;
+      await db.transaction((tx) => recibirTransferencia(tx, {
+        rolloId: item.id,
+        ubicacionDestinoId: raceFixture.destinoId,
+        usuarioId: user,
+        documentoTipo: "PRUEBA_CARRERA_RECEPCION",
+        documentoId: String(salida.id),
+      }));
+      releaseRead();
+      await assert.rejects(
+        receiving,
+        (error: unknown) =>
+          error instanceof InventarioError &&
+          error.code === "INVENTORY_CHANGED_RETRY",
+      );
+    } finally {
+      releaseRead();
+      salidasConcurrencyTestSeam.afterReceiveCandidateRead = undefined;
+    }
+
+    const [unchangedShipment] = await db
+      .select({ estado: salidasTable.estado })
+      .from(salidasTable)
+      .where(eq(salidasTable.id, salida.id));
+    const [movedRollo] = await db
+      .select({
+        estado: rollosTable.estado,
+        ubicacionId: rollosTable.ubicacionId,
+      })
+      .from(rollosTable)
+      .where(eq(rollosTable.id, item.id));
+    assert.equal(unchangedShipment?.estado, "EN_TRANSITO");
+    assert.deepEqual(movedRollo, {
+      estado: "DISPONIBLE",
+      ubicacionId: raceFixture.destinoId,
+    });
   });
   test("new states remain readable and ARMANDO totals split metres/kilos/bags", async () => {
     const m = await fx("METRO"), k = await fx("KILO"), b = await fx("BOLSA");

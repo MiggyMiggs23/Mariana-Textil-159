@@ -47,6 +47,18 @@ import {
   type Tx,
 } from "./inventario";
 
+export const salidasConcurrencyTestSeam: {
+  afterReceiveCandidateRead?: (
+    candidates: ReadonlyArray<{
+      salidaRolloId: number;
+      rolloId: number;
+      productoId: number;
+      ubicacionId: number;
+      estado: string;
+    }>,
+  ) => Promise<void>;
+} = {};
+
 export type CrearSalidaInput = {
   origenId: number;
   destinoId: number;
@@ -1069,32 +1081,86 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
   const salida = await getSalidaForUpdate(tx, input.salidaId);
   const folioFormateado = await getSalidaFolioFormateado(tx, salida);
   requireState(salida, ["EN_TRANSITO"], "recibir");
-  const inventoryPairs = await tx
+  const inventoryCandidates = await tx
     .select({
+      salidaRolloId: salidaRollosTable.id,
+      rolloId: rollosTable.id,
       productoId: rollosTable.productoId,
+      ubicacionId: rollosTable.ubicacionId,
+      estado: rollosTable.estado,
     })
     .from(salidaRollosTable)
     .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
     .where(eq(salidaRollosTable.salidaId, salida.id))
     .orderBy(asc(salidaRollosTable.id));
-  if (!inventoryPairs.length) {
+  if (!inventoryCandidates.length) {
     throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
   }
+  await salidasConcurrencyTestSeam.afterReceiveCandidateRead?.(inventoryCandidates);
   await lockInventoryPairs(
     tx,
-    inventoryPairs.flatMap(({ productoId }) => [
+    inventoryCandidates.flatMap(({ productoId, ubicacionId }) => [
+      { productoId, ubicacionId },
       { productoId, ubicacionId: salida.destinoId! },
     ]),
   );
-  const salidaRollos = await tx
-    .select()
+  const expectedByAssociation = new Map(
+    inventoryCandidates.map((item) => [item.salidaRolloId, item]),
+  );
+  const matchesPrelock = (item: (typeof inventoryCandidates)[number]) => {
+    const expected = expectedByAssociation.get(item.salidaRolloId);
+    return expected != null &&
+      expected.rolloId === item.rolloId &&
+      expected.productoId === item.productoId &&
+      expected.ubicacionId === item.ubicacionId &&
+      expected.estado === item.estado &&
+      item.estado === "EN_TRANSITO";
+  };
+  const refreshedCandidates = await tx
+    .select({
+      salidaRolloId: salidaRollosTable.id,
+      rolloId: rollosTable.id,
+      productoId: rollosTable.productoId,
+      ubicacionId: rollosTable.ubicacionId,
+      estado: rollosTable.estado,
+    })
     .from(salidaRollosTable)
+    .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+    .where(eq(salidaRollosTable.salidaId, salida.id))
+    .orderBy(asc(salidaRollosTable.id));
+  if (
+    refreshedCandidates.length !== inventoryCandidates.length ||
+    refreshedCandidates.some((item) => !matchesPrelock(item))
+  ) {
+    throw new InventarioError(
+      "El inventario cambió mientras se preparaba la recepción. Intenta de nuevo.",
+      "INVENTORY_CHANGED_RETRY",
+    );
+  }
+  const lockedCandidates = await tx
+    .select({
+      salidaRollo: salidaRollosTable,
+      salidaRolloId: salidaRollosTable.id,
+      rolloId: rollosTable.id,
+      productoId: rollosTable.productoId,
+      ubicacionId: rollosTable.ubicacionId,
+      estado: rollosTable.estado,
+    })
+    .from(salidaRollosTable)
+    .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
     .where(eq(salidaRollosTable.salidaId, salida.id))
     .orderBy(asc(salidaRollosTable.id))
     .for("update");
-  if (!salidaRollos.length) {
-    throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
+  if (
+    lockedCandidates.length !== inventoryCandidates.length ||
+    lockedCandidates.some((item) => !matchesPrelock(item))
+  ) {
+    throw new InventarioError(
+      "El inventario cambió mientras se preparaba la recepción. Intenta de nuevo.",
+      "INVENTORY_CHANGED_RETRY",
+    );
   }
+  const salidaRollos = lockedCandidates.map(({ salidaRollo }) => salidaRollo);
   const note = input.nota?.trim() || null;
   const pisos = new Map((input.pisosPorRollo ?? []).map((item) => [item.rolloId, item.pisoId]));
   if (pisos.size !== (input.pisosPorRollo?.length ?? 0) || [...pisos.keys()].some((id) => !salidaRollos.some((r) => r.rolloId === id))) {
