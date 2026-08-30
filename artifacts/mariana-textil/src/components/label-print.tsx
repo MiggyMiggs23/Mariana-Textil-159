@@ -92,7 +92,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
 
       <div className="border-b-[1.2mm] border-black w-full flex-shrink-0"></div>
 
-      <div className="grid grid-cols-[34mm_28mm_minmax(0,1fr)] gap-[1mm] flex-1 min-h-0 pt-[2.5mm]">
+      <div className="grid grid-cols-[31mm_30mm_minmax(0,1fr)] gap-[1mm] flex-1 min-h-0 pt-[2.5mm]">
         <div className="flex flex-col min-w-0 pr-[3mm]">
           <div className="flex-1 border-b border-gray-400 flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">SKU</div>
@@ -122,7 +122,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
         </div>
 
         <div className="flex min-w-0 flex-col items-center justify-center px-0">
-          <MonochromeBrandLogo className="h-auto max-h-[40mm] w-full max-w-[30mm]" />
+          <MonochromeBrandLogo className="h-auto max-h-[44mm] w-full max-w-[33mm]" />
           <div className="mt-[0.5mm] w-full whitespace-nowrap text-center text-[10px] font-black leading-none tracking-[-0.03em] text-black">
             MARIANA TEXTIL
           </div>
@@ -133,10 +133,10 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
             <QRCodeSVG
               value={qrPayload}
               size={256}
-              width="26mm"
-              height="26mm"
+              width="29mm"
+              height="29mm"
               className="block shrink-0"
-              style={{ width: "26mm", height: "26mm", minWidth: "26mm", minHeight: "26mm", flexShrink: 0 }}
+              style={{ width: "29mm", height: "29mm", minWidth: "29mm", minHeight: "29mm", flexShrink: 0 }}
               level="Q"
               includeMargin={true}
               fgColor="#000000"

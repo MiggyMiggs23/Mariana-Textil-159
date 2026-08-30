@@ -34,14 +34,16 @@ test("los documentos usan logo centrado y QR derecho compartidos", () => {
   assert.match(ticket, /ticketDocumentUrl = absoluteAppUrl\(`\/tickets\//);
 });
 
-test("logo y QR aumentan cincuenta por ciento sobre cada formato anterior", () => {
-  assert.equal(DOCUMENT_QR_SIZE, 96);
-  assert.match(entrada, /logoClassName="h-\[72px\] w-\[72px\]"/);
-  assert.match(salida, /logoClassName="h-\[60px\] w-\[60px\]"/);
-  assert.match(viaje, /logoClassName="h-\[96px\] w-\[96px\]"/);
-  assert.match(auditoria, /logoClassName="h-\[84px\] w-\[84px\]"/);
-  assert.equal((ticket.match(/h-\[64\.5mm\] w-\[57mm\]/g) ?? []).length, 2);
-  assert.match(ticket, /logoClassName="h-\[60px\] w-\[60px\]"/);
+test("logo y QR usan el máximo seguro verificado para cada formato", () => {
+  assert.equal(DOCUMENT_QR_SIZE, 112);
+  assert.match(entrada, /logoClassName="h-\[86px\] w-\[86px\]"/);
+  assert.match(salida, /logoClassName="h-\[72px\] w-\[72px\]"/);
+  assert.match(viaje, /qrSize=\{160\}/);
+  assert.match(viaje, /qrRenderAsCanvas/);
+  assert.match(viaje, /logoClassName="h-\[115px\] w-\[115px\]"/);
+  assert.match(auditoria, /logoClassName="h-\[100px\] w-\[100px\]"/);
+  assert.equal((ticket.match(/h-\[67\.5mm\] w-\[59\.5mm\]/g) ?? []).length, 2);
+  assert.match(ticket, /logoClassName="h-\[72px\] w-\[72px\]"/);
 });
 
 test("la nota interna lleva QR y la copia cliente conserva el espacio sin QR", () => {
@@ -55,8 +57,8 @@ test("el QR documental renderiza grande, conserva margen y se decodifica", () =>
   const svg = renderToStaticMarkup(
     createElement(DocumentQrCode, { url: expected, label: "Documento" }),
   );
-  assert.equal(DOCUMENT_QR_SIZE, 96);
-  assert.match(svg, /height="96" width="96"/);
+  assert.equal(DOCUMENT_QR_SIZE, 112);
+  assert.match(svg, /height="112" width="112"/);
 
   const viewBox = svg.match(/viewBox="0 0 (\d+) (\d+)"/);
   const blackPath = svg.match(/fill="#000000" d="([^"]+)"/);

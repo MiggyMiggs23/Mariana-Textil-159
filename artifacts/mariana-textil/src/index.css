@@ -256,15 +256,17 @@
     visibility: visible;
   }
   body.print-viaje .viaje-page {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 216mm !important;
+    display: block !important;
+    position: static;
+    width: 215.5mm !important;
     min-height: 0 !important;
-    height: 279mm !important;
+    height: 278.5mm !important;
     margin: 0 !important;
     box-shadow: none !important;
     overflow: hidden !important;
+  }
+  body.print-viaje #root {
+    display: none !important;
   }
   #replit-dev-banner,
   .replit-dev-banner,

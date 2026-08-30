@@ -1,22 +1,28 @@
 import React from "react";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 
-export const DOCUMENT_QR_SIZE = 96;
+export const DOCUMENT_QR_SIZE = 112;
 
 export function DocumentQrCode({
   url,
   label,
+  size = DOCUMENT_QR_SIZE,
+  renderAsCanvas = false,
 }: {
   url: string;
   label?: string;
+  size?: number;
+  renderAsCanvas?: boolean;
 }) {
-  return (
-    <QRCodeSVG
-      value={url}
-      size={DOCUMENT_QR_SIZE}
-      level="M"
-      includeMargin
-      aria-label={label}
-    />
-  );
+  const qrProps = {
+    value: url,
+    size,
+    level: "M" as const,
+    includeMargin: true,
+    boostLevel: false,
+    "aria-label": label,
+  };
+  return renderAsCanvas
+    ? <QRCodeCanvas {...qrProps} />
+    : <QRCodeSVG {...qrProps} shapeRendering="crispEdges" />;
 }

@@ -56,8 +56,8 @@ test("Thermal label uses spacing instead of vertical dividers and enlarges logo 
   const label = await readFile(new URL("artifacts/mariana-textil/src/components/label-print.tsx", root), "utf8");
   assert.doesNotMatch(label, /border-l border-gray-400/);
   assert.match(label, /gap-\[1mm\]/);
-  assert.match(label, /max-w-\[30mm\]/);
-  assert.match(label, /width="26mm"/);
+  assert.match(label, /max-w-\[33mm\]/);
+  assert.match(label, /width="29mm"/);
 });
 
 test("Credit Note (ticket-detail) prints exactly 216x140mm in two copies with internal QR", async () => {
@@ -103,5 +103,9 @@ test("Viaje isolates one exact letter page for printing", async () => {
   const viaje = await readFile(new URL("artifacts/mariana-textil/src/pages/viaje-documento.tsx", root), "utf8");
   assert.match(viaje, /printWhenReady\("print-viaje"\)/);
   assert.match(viaje, /viaje-document-shell/);
-  assert.match(css, /body\.print-viaje \.viaje-page\s*\{[\s\S]*height:\s*279mm !important;/);
+  assert.match(css, /body\.print-viaje \.viaje-page\s*\{[\s\S]*height:\s*278\.5mm !important;/);
+  assert.match(css, /body\.print-viaje \.viaje-page\s*\{[\s\S]*width:\s*215\.5mm !important;/);
+  assert.match(css, /body\.print-viaje \.viaje-page\s*\{[\s\S]*position:\s*static;/);
+  assert.match(css, /body\.print-viaje #root\s*\{[\s\S]*display:\s*none !important;/);
+  assert.match(viaje, /createPortal\(/);
 });

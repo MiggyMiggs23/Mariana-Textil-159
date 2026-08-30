@@ -56,7 +56,7 @@ export default function EntradaDocumento() {
               className="shrink-0 p-6"
               qrUrl={documentUrl}
               qrLabel={`QR para ver entrada ${entrada.folioFormateado}`}
-              logoClassName="h-[72px] w-[72px]"
+              logoClassName="h-[86px] w-[86px]"
             >
               <div className="flex items-center gap-4">
                 <div className="w-2 h-16 bg-[#1e3a8a] mr-2"></div>

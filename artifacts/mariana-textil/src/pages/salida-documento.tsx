@@ -83,7 +83,7 @@ export default function SalidaDocumento() {
               className="relative z-10 shrink-0 bg-white px-2"
               qrUrl={qrUrl}
               qrLabel={`QR para abrir salida ${salida.folioFormateado}`}
-              logoClassName="h-[60px] w-[60px]"
+              logoClassName="h-[72px] w-[72px]"
             >
               <h1 className="text-[22px] font-black text-black tracking-tighter uppercase leading-none">HOJA DE SALIDA</h1>
               <div className="mt-0.5 text-[10px] font-bold uppercase text-gray-700">Mariana Textil</div>

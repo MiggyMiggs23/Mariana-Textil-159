@@ -5,6 +5,7 @@ import { Printer, ArrowLeft } from "lucide-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
 import { absoluteAppUrl, printWhenReady } from "@/lib/print";
+import { createPortal } from "react-dom";
 
 /** Carta/216x279mm printable dispatch control sheet. */
 export default function ViajeDocumento() {
@@ -13,6 +14,41 @@ export default function ViajeDocumento() {
   const viaje: any = rawViaje;
   if (!viaje) return <p>Cargando documento…</p>;
   const documentUrl = absoluteAppUrl(`/viajes/${id}/documento`);
+  const documentContent = (
+    <>
+      <PrintableDocumentHeader
+        className="pb-4"
+        qrUrl={documentUrl}
+        qrLabel={`QR para abrir viaje ${viaje.folioFormateado}`}
+        qrSize={160}
+        qrRenderAsCanvas
+        logoClassName="h-[115px] w-[115px]"
+      >
+        <div>
+          <h1 className="text-3xl font-black">HOJA DE VIAJE</h1>
+          <p className="text-lg font-bold">{viaje.folioFormateado}</p>
+        </div>
+      </PrintableDocumentHeader>
+      <div className="my-5 grid grid-cols-2 gap-3">
+        <p><b>Origen:</b> {viaje.nombreOrigen}</p><p><b>Salida:</b> {new Date(viaje.salidaAt).toLocaleString("es-MX")}</p>
+        <p><b>Camioneta:</b> {viaje.camioneta}</p><p><b>Chofer:</b> {viaje.chofer}</p>
+        <p className="col-span-2"><b>Destinos:</b> {viaje.destinos.join(", ")}</p>
+      </div>
+      <h2 className="font-bold">Documentos</h2>
+      <ul className="mb-4 list-disc pl-5">
+        {viaje.tickets.map((ticket: any) => <li key={`t${ticket.id}`}>NOTA #{ticket.folio} · {ticket.destinatario || ticket.cliente}</li>)}
+        {viaje.salidas.map((salida: any) => <li key={`s${salida.id}`}>SALIDA #{salida.folio} · {salida.destino}</li>)}
+      </ul>
+      <table className="w-full border-collapse border">
+        <thead><tr className="bg-slate-100"><th>Serie</th><th>Documento</th><th>Producto</th><th>Cantidad</th></tr></thead>
+        <tbody>{viaje.rollos.map((rollo: any, index: number) => <tr key={index} className="border"><td className="font-mono">{rollo.serie}</td><td>{rollo.documento} #{rollo.documentoId}</td><td>{rollo.tela} {rollo.color}</td><td>{formatNumber(rollo.cantidad, { kind: "quantity" })} {formatUnit(rollo.unidad)}</td></tr>)}</tbody>
+      </table>
+      <footer className="mt-5 border-t pt-3">
+        <b>Totales:</b> {viaje.documentos} documentos · {formatNumber(viaje.totalRollos, { kind: "count" })} rollos · {formatNumber(viaje.totalMetros, { kind: "quantity" })} {formatUnit("METRO")} · {formatNumber(viaje.totalKilos, { kind: "quantity" })} {formatUnit("KILO")}
+        {Number(viaje.totalBolsas) > 0 && <> · {formatNumber(viaje.totalBolsas, { kind: "quantity" })} {formatUnit("BOLSA")}</>}
+      </footer>
+    </>
+  );
 
   return (
     <div className="viaje-document-shell min-h-screen bg-muted p-6 print:p-0">
@@ -20,37 +56,15 @@ export default function ViajeDocumento() {
         <Link href={`/viajes/${id}`}><Button variant="outline"><ArrowLeft />Volver</Button></Link>
         <Button onClick={() => void printWhenReady("print-viaje")}><Printer />Imprimir</Button>
       </div>
-      <article className="viaje-page viaje-page-print mx-auto min-h-[279mm] w-[216mm] bg-white p-[14mm] text-sm">
-        <PrintableDocumentHeader
-          className="pb-4"
-          qrUrl={documentUrl}
-          qrLabel={`QR para abrir viaje ${viaje.folioFormateado}`}
-          logoClassName="h-[96px] w-[96px]"
-        >
-          <div>
-            <h1 className="text-3xl font-black">HOJA DE VIAJE</h1>
-            <p className="text-lg font-bold">{viaje.folioFormateado}</p>
-          </div>
-        </PrintableDocumentHeader>
-        <div className="my-5 grid grid-cols-2 gap-3">
-          <p><b>Origen:</b> {viaje.nombreOrigen}</p><p><b>Salida:</b> {new Date(viaje.salidaAt).toLocaleString("es-MX")}</p>
-          <p><b>Camioneta:</b> {viaje.camioneta}</p><p><b>Chofer:</b> {viaje.chofer}</p>
-          <p className="col-span-2"><b>Destinos:</b> {viaje.destinos.join(", ")}</p>
-        </div>
-        <h2 className="font-bold">Documentos</h2>
-        <ul className="mb-4 list-disc pl-5">
-          {viaje.tickets.map((ticket: any) => <li key={`t${ticket.id}`}>NOTA #{ticket.folio} · {ticket.destinatario || ticket.cliente}</li>)}
-          {viaje.salidas.map((salida: any) => <li key={`s${salida.id}`}>SALIDA #{salida.folio} · {salida.destino}</li>)}
-        </ul>
-        <table className="w-full border-collapse border">
-          <thead><tr className="bg-slate-100"><th>Serie</th><th>Documento</th><th>Producto</th><th>Cantidad</th></tr></thead>
-          <tbody>{viaje.rollos.map((rollo: any, index: number) => <tr key={index} className="border"><td className="font-mono">{rollo.serie}</td><td>{rollo.documento} #{rollo.documentoId}</td><td>{rollo.tela} {rollo.color}</td><td>{formatNumber(rollo.cantidad, { kind: "quantity" })} {formatUnit(rollo.unidad)}</td></tr>)}</tbody>
-        </table>
-        <footer className="mt-5 border-t pt-3">
-          <b>Totales:</b> {viaje.documentos} documentos · {formatNumber(viaje.totalRollos, { kind: "count" })} rollos · {formatNumber(viaje.totalMetros, { kind: "quantity" })} {formatUnit("METRO")} · {formatNumber(viaje.totalKilos, { kind: "quantity" })} {formatUnit("KILO")}
-          {Number(viaje.totalBolsas) > 0 && <> · {formatNumber(viaje.totalBolsas, { kind: "quantity" })} {formatUnit("BOLSA")}</>}
-        </footer>
+      <article className="no-print mx-auto min-h-[279mm] w-[216mm] bg-white p-[14mm] text-sm">
+        {documentContent}
       </article>
+      {createPortal(
+        <article className="viaje-page viaje-page-print hidden bg-white p-[14mm] text-sm">
+          {documentContent}
+        </article>,
+        document.body,
+      )}
     </div>
   );
 }

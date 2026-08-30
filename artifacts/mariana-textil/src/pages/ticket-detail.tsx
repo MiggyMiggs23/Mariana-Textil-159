@@ -576,11 +576,11 @@ export default function TicketDetailPage() {
 
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
-        <div className="relative mb-4 pt-[27mm] text-center">
+        <div className="relative mb-4 pt-[29mm] text-center">
           <div className="absolute right-0 top-0">
             <DocumentQrCode url={ticketDocumentUrl} label={`QR para abrir ticket ${ticket.folio}`} />
           </div>
-          <MonochromeBrandLogo className="mx-auto mb-1 h-[64.5mm] w-[57mm] max-w-full" />
+          <MonochromeBrandLogo className="mx-auto mb-1 h-[67.5mm] w-[59.5mm] max-w-full" />
           <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-2 border-t border-black" />
@@ -710,7 +710,7 @@ export default function TicketDetailPage() {
           <div className="absolute right-0 top-0">
             <DocumentQrCode url={ticketDocumentUrl} label={`QR para abrir ticket ${ticket.folio}`} />
           </div>
-          <MonochromeBrandLogo className="mx-auto h-[64.5mm] w-[57mm]" />
+          <MonochromeBrandLogo className="mx-auto h-[67.5mm] w-[59.5mm]" />
           <p className="text-lg font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-sm font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-3 border-t-2 border-black" />
@@ -879,7 +879,7 @@ export default function TicketDetailPage() {
                 className="shrink-0 p-4"
                 qrUrl={isInternal ? qrUrl : undefined}
                 qrLabel={isInternal ? `QR para abrir nota ${printData.folio}` : undefined}
-                logoClassName="h-[60px] w-[60px]"
+                logoClassName="h-[72px] w-[72px]"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-2 h-12 bg-[#1e3a8a] mr-2"></div>

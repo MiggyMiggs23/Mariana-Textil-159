@@ -21,9 +21,9 @@ test("la reimpresión espera a que los datos estén montados antes de imprimir",
 });
 
 test("el QR completo cabe dentro de la tercera columna con margen blanco", () => {
-  assert.match(label, /grid-cols-\[34mm_28mm_minmax\(0,1fr\)\]/);
-  assert.match(label, /width="26mm"/);
-  assert.match(label, /height="26mm"/);
+  assert.match(label, /grid-cols-\[31mm_30mm_minmax\(0,1fr\)\]/);
+  assert.match(label, /width="29mm"/);
+  assert.match(label, /height="29mm"/);
   assert.match(label, /includeMargin=\{true\}/);
   assert.match(label, /bg-white p-\[1mm\]/);
 });

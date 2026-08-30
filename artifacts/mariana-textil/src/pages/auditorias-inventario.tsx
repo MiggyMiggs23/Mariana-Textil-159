@@ -526,7 +526,7 @@ export default function AuditoriasInventario() {
             className="gap-6 pb-3"
             qrUrl={absoluteAppUrl(`/inventario/auditorias?auditoriaId=${detail.data.id}`)}
             qrLabel={`QR para abrir auditoría ${detail.data.folioFormateado}`}
-            logoClassName="h-[84px] w-[84px]"
+            logoClassName="h-[100px] w-[100px]"
           >
             <div>
               <div className="text-sm font-bold uppercase tracking-widest">Mariana Textil · Auditoría de Inventario</div>
