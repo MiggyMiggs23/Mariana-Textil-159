@@ -1,0 +1,286 @@
+# CORRECCIÓN — Concurrencia del kardex, bloqueos y arranque
+
+Tarea de corrección derivada de una revisión de código completa, previa al piloto en Tienda Mariana. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+**Orden obligatorio: los bloques 1 y 2 se hacen antes que los demás.** El bloque 1 corrompe datos hoy; el bloque 2 puede dejar sin acceso al ADMIN el día del arranque.
+
+---
+
+## BLOQUE 1 — El kardex y el caché de existencias pierden escrituras concurrentes
+
+Esta es la falla más grave del sistema. **Corrompe el inventario en silencio.**
+
+### La falla
+
+`insertMovimiento` y `refreshCache`, en `artifacts/api-server/src/lib/inventario.ts`, **leen antes de bloquear**. El único candado que toman las funciones del motor es `FOR UPDATE` sobre la fila del rollo. El par (producto, ubicación) —que es lo que realmente se está modificando— queda sin proteger.
+
+La base corre en READ COMMITTED. No hay `isolationLevel` configurado en `lib/db/src/index.ts`.
+
+Escenario reproducible con dos rollos distintos del mismo producto en el mismo sitio:
+
+1. Existencia = 100. Dos rollos de 50.
+2. Terminal A vende el rollo 1: bloquea **ese** rollo, inserta movimiento −50, calcula `SUM(cantidad)` = 50.
+3. Terminal B vende el rollo 2 al mismo tiempo: bloquea **el otro** rollo —candado distinto, no espera a A—, inserta −50, calcula `SUM(cantidad)` = 50, porque la transacción de A todavía no hace commit y no la ve.
+4. Las dos escriben `existencias.cantidad_total = 50`.
+5. El valor correcto es **0**. El sistema cree que quedan 50 metros que no existen.
+
+El `onConflictDoUpdate` sobre `existencias` sí serializa la escritura, pero el valor que se escribe se calculó **antes** de tomar ese candado. Es una pérdida de actualización de manual.
+
+La misma carrera daña `saldo_posterior`: `getSaldo` lee el último saldo del par sin candado, así que dos movimientos concurrentes escriben el mismo saldo acumulado y el kardex queda con un renglón mentiroso.
+
+### Por qué importa hoy
+
+No es teórico. Tienda Mariana va a tener tres terminales vendiendo la misma tela y color. Basta que dos ventas se traslapen por milisegundos. También se dispara entre una venta y una entrada, o una venta y una salida, del mismo producto en el mismo sitio.
+
+### Qué se hace
+
+1. **Toma un candado por par (producto, ubicación) al inicio de cada función del motor que inserte movimientos, antes de cualquier lectura de saldo o de suma.** Reusa el patrón que ya existe en `lib/auditoria-inventario.ts:67`.
+
+   Como mínimo aplica en: `crearRollo`, `crearEntrada`, `activarRollo`, `transferirRolloInmediato`, `moverRollo`, `recibirTransferencia`, `salidaMostrador`, `venderRollo`, `consumirBolsasFifo`, `ajustarRollo` y `revertirMovimiento`.
+
+2. **El candado debe ser determinista y estar en su propio espacio de llaves**, para no chocar con los del bloque 3. Usa `pg_advisory_xact_lock` con dos argumentos y una constante de namespace propia, por ejemplo `pg_advisory_xact_lock(<NAMESPACE_EXISTENCIAS>, hashtextextended('producto:ubicacion', 0))`, o el esquema equivalente que decidas. Deja la constante nombrada y comentada, no un número suelto en la consulta.
+
+3. **Orden fijo de adquisición.** Cuando una sola transacción toca varios pares —una salida con rollos de productos distintos, una entrada de lote— los candados se toman **siempre ordenados por (productoId, ubicacionId) ascendente**. Sin orden fijo, dos transacciones que tocan los mismos dos pares en orden inverso se traban entre sí. Esto no es opcional.
+
+4. **`moverRollo` toca dos ubicaciones.** Origen y destino. Toma los dos candados, ordenados, antes de escribir nada.
+
+### Verificación obligatoria con datos
+
+En rama Neon desechable, escribe una prueba de concurrencia real —no simulada— que:
+
+- Cree un producto con dos rollos de la misma cantidad en el mismo sitio.
+- Dispare **dos ventas simultáneas de rollos distintos** desde dos conexiones separadas del pool, no en secuencia.
+- Confirme al terminar que `existencias.cantidad_total` es igual a `SUM(movimientos.cantidad)` para ese par.
+- Confirme que los dos movimientos tienen `saldo_posterior` **distinto y encadenado**: el segundo debe ser el primero menos la cantidad del segundo.
+
+Corre la prueba **contra el código actual primero** y reporta que falla. Una prueba que pasa antes de la corrección no está probando nada. Después aplica la corrección y confirma que pasa.
+
+### Conciliación
+
+`conciliarTodo` hoy compara `cantidad_total` contra la suma de movimientos y el conteo de rollos, pero **nunca revisa `saldo_posterior`**. Por eso este daño era invisible.
+
+Agrega a la conciliación una verificación de la cadena de saldos: para cada par, recorriendo los movimientos por `id` ascendente, cada `saldo_posterior` debe ser igual al anterior más la `cantidad` del renglón. Repórtalo como una discrepancia más, con su propia columna, sin mezclarlo con la discrepancia de caché.
+
+Si al correrla sobre development aparecen renglones ya dañados, **repórtalos, no los corrijas por tu cuenta.** Yo decido qué se hace con el histórico.
+
+---
+
+## BLOQUE 2 — El bloqueo por intentos fallidos no se reinicia nunca
+
+### La falla
+
+En `artifacts/api-server/src/routes/auth.ts`, el bloqueo cuenta los renglones `LOGIN_FALLIDO` de `auditoria` en los últimos 15 minutos, filtrando por nombre de usuario. **Un login exitoso no borra ni invalida esos intentos**, y el bloqueo no distingue de dónde vienen.
+
+Dos consecuencias:
+
+1. **Cualquiera que conozca un nombre de usuario deja fuera a esa persona 15 minutos** mandando cinco contraseñas malas. Incluye al ADMIN. No hace falta acertar nada.
+2. Un usuario que se equivocó cuatro veces, entró bien, y luego vuelve a equivocarse una sola vez, **queda bloqueado**, porque los cuatro intentos viejos siguen contando.
+
+En un piloto con gente aprendiendo a teclear su contraseña en una terminal del piso, el segundo caso va a pasar el primer día.
+
+### Qué se hace
+
+1. **Un `LOGIN_EXITOSO` cierra la ventana.** El conteo de intentos fallidos solo considera los posteriores al último acceso exitoso de ese usuario. Los intentos previos dejan de contar.
+2. **El bloqueo se cuenta por usuario e IP en conjunto, no por usuario solo.** Una IP desconocida no puede dejar fuera a nadie desde otra máquina.
+3. Conserva un límite por usuario mucho más alto —del orden de veinte intentos en la ventana— como red contra un ataque distribuido, pero que no lo pueda disparar una sola fuente.
+4. `auditoria` es de solo lectura. **No borres renglones.** Esto se resuelve cambiando la consulta, no limpiando la bitácora.
+5. Deja la ventana y los umbrales en constantes nombradas y comentadas, junto a `LOCKOUT_WINDOW_MS`.
+
+### Recuperación
+
+Debe existir una manera documentada de que un ADMIN bloqueado vuelva a entrar sin tocar la base a mano. Si tu solución no la contempla, **detente y repórtalo** antes de implementar.
+
+---
+
+## BLOQUE 3 — Llaves de advisory lock que colisionan entre sí
+
+### La falla
+
+Hay tres lugares que usan la versión de **un solo argumento** de `pg_advisory_xact_lock` pasando directamente un id de tabla, que son números chicos:
+
+- `lib/pos.ts:1147` → `pg_advisory_xact_lock(ubicacionId)`, valores 1 a 9
+- `lib/compras-proveedor.ts:384` y `:463` → `pg_advisory_xact_lock(proveedorId)`
+- `routes/pagos-dirigidos.ts:33` → `pg_advisory_xact_lock(entidadId)` en la rama de proveedor
+
+Comparten el mismo espacio de llaves. **Abrir la caja del sitio 3 y registrar un pago al proveedor 3 compiten por el mismo candado**, siendo operaciones sin ninguna relación.
+
+No corrompe datos. Bloquea operaciones sin motivo y abre riesgo de traba si dos transacciones toman esos candados en orden distinto.
+
+En clientes ya está bien resuelto: `pg_advisory_xact_lock(240024, id)` usa un namespace. Falta aplicar el mismo criterio a los otros tres.
+
+### Qué se hace
+
+1. Asigna una constante de namespace propia a cada dominio: sesiones de caja, proveedores, existencias (la del bloque 1) y las que haga falta. Nombradas, comentadas, en un solo archivo compartido.
+2. Convierte los tres usos de un argumento a la forma de dos argumentos con su namespace.
+3. **Recorre todo el repositorio** buscando cualquier otro `pg_advisory_xact_lock` que pase un id crudo y aplícale el mismo tratamiento.
+4. Deja en el commit la tabla completa de namespaces asignados: dominio, constante, qué protege.
+
+---
+
+## BLOQUE 4 — Conciliación con una consulta por renglón
+
+### La falla
+
+`conciliarTodo`, en `lib/inventario.ts`, arma el conjunto de pares y después ejecuta **un `COUNT(*)` por cada par dentro del bucle**, todo dentro de una sola transacción abierta.
+
+Con el catálogo completo por siete sitios son miles de consultas secuenciales manteniendo la transacción viva. El pool de `pg` en `lib/db/src/index.ts` está en sus valores por omisión: diez conexiones, sin timeout configurado.
+
+Con 21 a 30 usuarios, alguien abriendo Conciliación puede dejar la aplicación sin conexiones disponibles para todos los demás.
+
+### Qué se hace
+
+1. **Elimina el bucle.** El conteo de rollos `DISPONIBLE` por par se obtiene con un solo `GROUP BY`, del mismo modo que ya se obtiene la suma de movimientos.
+2. La verificación de cadena de saldos que agregas en el bloque 1 **también se resuelve con una sola consulta**, con función de ventana. No la implementes como bucle.
+3. Configura el pool de forma explícita: número máximo de conexiones, `idleTimeoutMillis` y `connectionTimeoutMillis`. Deja los valores comentados con el razonamiento, contando 7 sitios y 3 personas por sitio.
+4. Mide y reporta el tiempo de Conciliación antes y después, con el catálogo completo cargado.
+
+---
+
+## BLOQUE 5 — DDL en cada arranque sobre un despliegue autoscale
+
+### La falla
+
+`artifacts/api-server/src/index.ts` ejecuta cerca de treinta funciones `ensure*Schema` en cada arranque, con `ALTER TABLE` y `CREATE INDEX`. `.replit` declara `deploymentTarget = "autoscale"`.
+
+Dos instancias arrancando a la vez ejecutan DDL concurrente sobre la misma base. Además no hay cierre gradual: al redesplegar, el proceso muere y corta transacciones en vuelo, que en este sistema pueden ser una venta o una salida a medio ejecutar.
+
+Para el piloto en un solo sitio esto no explota. Al abrir los siete sí.
+
+### Qué se hace
+
+1. **Serializa el arranque.** Un `pg_advisory_lock` de sesión, con namespace propio, tomado antes de la primera función `ensure*` y liberado después de la última. La segunda instancia espera en vez de competir.
+2. **Cierre gradual.** Al recibir `SIGTERM` y `SIGINT`: dejar de aceptar conexiones nuevas, esperar a que terminen las solicitudes en curso con un tope de tiempo razonable, cerrar el pool, y solo entonces salir.
+3. `backfillCompras` se dispara sin esperar después de `listen`. **Que también respete el cierre gradual** y no quede a medias si el proceso muere.
+4. Reporta cuánto tarda hoy el arranque completo con las treinta funciones. Si es lento, dilo; no lo optimices en esta tarea.
+
+---
+
+## BLOQUE 6 — Tipos perdidos y aritmética inconsistente
+
+Tres correcciones acotadas. Sin cambio de comportamiento.
+
+### `any` en un camino financiero
+
+`routes/pagos-dirigidos.ts:30` declara `assertDocumentBalance(tx: any, request: any)`. En una ruta de pagos, `any` anula toda la verificación que da el resto del proyecto.
+
+Tipa los dos parámetros correctamente. Reusa el tipo `Tx` que ya está definido en otros archivos. Recorre el resto del archivo y quita los `any` que encuentres en el camino de pagos.
+
+### `parseFloat` en el saldo del kardex
+
+`insertMovimiento` calcula `saldoPosterior` así:
+
+```
+(parseFloat(saldoAntes) + parseFloat(args.cantidad)).toFixed(3)
+```
+
+Contradice la regla escrita en `replit.md`: *"Cantidades usan `DECIMAL(10,3)` y dinero `DECIMAL(12,2)`; nunca float."*
+
+Con las magnitudes reales del negocio no produce un error visible hoy, pero es exactamente el tipo de cosa que sí falla el día que alguien captura una cantidad grande. Pásalo a aritmética entera en milésimas, o déjalo que lo calcule Postgres.
+
+### `Number.EPSILON` decorativo
+
+`lib/pos.ts`, función `money`:
+
+```
+Math.round((parsed + Number.EPSILON) * 100)
+```
+
+`Number.EPSILON` vale 2.22e-16. Sumado a un importe de miles de pesos queda por debajo de la precisión del número y **no hace absolutamente nada**. Quítalo. Es ruido que sugiere una protección inexistente.
+
+---
+
+## BLOQUE 7 — Limpieza de la raíz del repositorio
+
+En la raíz hay borradores que no son parte del sistema:
+
+- `test-dialog.tsx` — una línea de comentario
+- `test-ui.tsx` — tres importaciones de iconos y un comentario que dice "just making sure"
+- `test-cobrodialog.tsx` — un comentario que dice "just a scratchpad"
+- `format.js` — cuatro líneas que imprimen la hora en consola
+
+Elimínalos. Ninguno está importado por nada.
+
+`attached_assets/` pesa 2.4 MB de prompts pegados e imágenes. **No lo borres**, es el histórico de la construcción. Confirma que `.replitignore` lo excluye del despliegue para no cargarlo en cada publicación; si no lo excluye, agrégalo.
+
+---
+
+## BLOQUE 8 — `replit.md` dice 26 módulos y el código tiene 30
+
+`replit.md` declara bajo *"Permission modules (26 total)"* una lista de 26, e incluso trae una nota explicando el conteo conservador que llevó a ese número.
+
+El código tiene **30**, y las dos fuentes coinciden entre sí: `artifacts/api-server/src/lib/permisos.ts` y `lib/db/src/lib/seed-permissions.mjs`. Los cuatro que faltan en la documentación son `auditoria_inventario`, `camionetas`, `choferes` y `viajes`.
+
+El código está bien. **La documentación es la que está atrasada.**
+
+Esto importa más de lo que parece: `replit.md` es el documento del que salen los prompts. Un conteo equivocado ahí se propaga a todo lo que se pida después.
+
+### Qué se hace
+
+1. Corrige la sección a 30 módulos con la lista completa y correcta.
+2. Retira la nota del conteo conservador de 25 versus 26, que ya no describe nada real.
+3. **Recorre el resto de `replit.md` buscando otras afirmaciones que el código ya no cumpla.** Este no fue el único punto de deriva, fue el que se detectó. Reporta cada una que encuentres, con el archivo y la línea que la contradice. **No las corrijas sin reportarlas.**
+
+---
+
+## BLOQUE 9 — Verificación
+
+**Concurrencia del kardex**
+
+- Existe una prueba de concurrencia real, con dos conexiones simultáneas, que **falla contra el código anterior** y pasa con la corrección
+- `existencias.cantidad_total` coincide con `SUM(movimientos.cantidad)` después de dos ventas simultáneas de rollos distintos del mismo producto y sitio
+- Los dos movimientos simultáneos tienen `saldo_posterior` distinto y encadenado
+- Todas las funciones del motor listadas toman el candado por par antes de leer saldos
+- Los candados se toman ordenados por (productoId, ubicacionId); `moverRollo` toma origen y destino
+- Conciliación verifica la cadena de saldos y la reporta en columna propia
+- Se reportaron —sin corregir— los renglones históricos dañados, si los hay
+
+**Acceso**
+
+- Cinco contraseñas malas desde una IP **no** bloquean al usuario en otra máquina
+- Un login exitoso limpia el conteo: cuatro fallos, un acierto, un fallo más, y el usuario sigue entrando
+- No se borró ningún renglón de `auditoria`
+- Existe y está documentada la ruta de recuperación de un ADMIN bloqueado
+
+**Bloqueos**
+
+- Ningún `pg_advisory_xact_lock` pasa un id crudo de tabla
+- Está la tabla completa de namespaces en el commit
+
+**Rendimiento**
+
+- Conciliación ya no ejecuta consultas dentro de un bucle
+- Está reportado el tiempo antes y después con catálogo completo
+- El pool tiene máximo y timeouts explícitos y comentados
+
+**Arranque**
+
+- Dos instancias arrancando juntas no ejecutan DDL concurrente
+- `SIGTERM` cierra sin cortar solicitudes en curso
+- Está reportado el tiempo de arranque actual
+
+**Limpieza**
+
+- `pnpm run typecheck` completo aprueba
+- Los cuatro archivos de la raíz están eliminados
+- `replit.md` dice 30 módulos con la lista correcta
+- Está la lista de otras derivas encontradas entre `replit.md` y el código
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Candado por par producto-ubicación:** toda función del motor de inventario que inserte movimientos toma primero un `pg_advisory_xact_lock` sobre el par (producto, ubicación), antes de leer cualquier saldo o suma. El `FOR UPDATE` sobre la fila del rollo no protege el par: dos rollos distintos del mismo producto en el mismo sitio son candados distintos, y en READ COMMITTED las dos transacciones calculan la misma existencia y la última sobrescribe a la primera. Cuando una transacción toca varios pares, los candados se toman ordenados por (productoId, ubicacionId) ascendente; sin ese orden fijo, dos transacciones que tocan los mismos pares en sentido inverso se traban.
+>
+> **Espacios de llaves de advisory lock:** ningún candado consultivo usa un id de tabla crudo como llave. Cada dominio tiene su constante de namespace y usa la forma de dos argumentos. Un id chico sin namespace hace que operaciones sin relación —la caja del sitio 3 y el proveedor 3— compitan por el mismo candado.
+>
+> **Conciliación:** verifica tres cosas, no dos. Además del caché contra la suma de movimientos y del conteo de rollos, valida que la cadena de `saldo_posterior` esté encadenada movimiento a movimiento. Esa tercera verificación es la que detecta escrituras concurrentes perdidas.
+>
+> **Bloqueo por intentos fallidos:** se cuenta por usuario e IP en conjunto, y un `LOGIN_EXITOSO` cierra la ventana. Contar solo por usuario permite que cualquiera deje fuera al ADMIN sin acertar ninguna contraseña. `auditoria` sigue siendo de solo lectura: esto se resuelve en la consulta, nunca borrando renglones.
+>
+> **Arranque:** las funciones `ensure*Schema` se serializan con un candado de sesión, porque el despliegue es autoscale y dos instancias pueden arrancar a la vez. El proceso cierra de forma gradual ante `SIGTERM` para no cortar una venta o una salida a medio ejecutar.
