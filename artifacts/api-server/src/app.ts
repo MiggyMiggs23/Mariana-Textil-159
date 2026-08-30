@@ -93,7 +93,8 @@ export const apiErrorHandler: ErrorRequestHandler = (
 
   req.log.error({ err: error }, "Unhandled API error");
   res.status(500).json({
-    error: "Ocurrió un error inesperado. Intenta de nuevo.",
+    error:
+      "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
     code: "INTERNAL_ERROR",
   });
 };

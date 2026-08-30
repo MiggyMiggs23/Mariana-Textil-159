@@ -73,13 +73,13 @@ export async function ensureDocumentFoliosSchema(pool: Pool): Promise<void> {
              FROM pg_constraint c
             WHERE c.conrelid = 'entradas'::regclass
               AND c.contype = 'u'
-              AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \(folio\)'
+               AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \\(folio\\)'
            UNION ALL
            SELECT 1
              FROM pg_index i
             WHERE i.indrelid = 'entradas'::regclass
               AND i.indisunique
-              AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \(folio\)$'
+               AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \\(folio\\)$'
          ) INTO has_global_unique;
 
          -- Remove every legacy unique constraint/index that applies only to
@@ -89,7 +89,7 @@ export async function ensureDocumentFoliosSchema(pool: Pool): Promise<void> {
              FROM pg_constraint c
             WHERE c.conrelid = 'entradas'::regclass
               AND c.contype = 'u'
-              AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \(folio\)'
+               AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \\(folio\\)'
          LOOP
            EXECUTE format(
              'ALTER TABLE entradas DROP CONSTRAINT %I',
@@ -101,7 +101,7 @@ export async function ensureDocumentFoliosSchema(pool: Pool): Promise<void> {
              FROM pg_index i
             WHERE i.indrelid = 'entradas'::regclass
               AND i.indisunique
-              AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \(folio\)$'
+               AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \\(folio\\)$'
          LOOP
            EXECUTE format('DROP INDEX %s', index_row.name);
          END LOOP;
@@ -163,25 +163,25 @@ export async function ensureDocumentFoliosSchema(pool: Pool): Promise<void> {
                FROM pg_constraint c
               WHERE c.conrelid = 'salidas'::regclass
                 AND c.contype = 'u'
-                AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \(folio\)'
+                 AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \\(folio\\)'
              UNION ALL
              SELECT 1
                FROM pg_index i
               WHERE i.indrelid = 'salidas'::regclass
                 AND i.indisunique
-                AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \(folio\)$'
+                 AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \\(folio\\)$'
            ) INTO has_global_unique;
            FOR constraint_row IN
              SELECT c.conname FROM pg_constraint c
               WHERE c.conrelid = 'salidas'::regclass AND c.contype = 'u'
-                AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \(folio\)'
+                 AND pg_get_constraintdef(c.oid) ~ '^UNIQUE \\(folio\\)'
            LOOP
              EXECUTE format('ALTER TABLE salidas DROP CONSTRAINT %I', constraint_row.conname);
            END LOOP;
            FOR index_row IN
              SELECT i.indexrelid::regclass AS name FROM pg_index i
               WHERE i.indrelid = 'salidas'::regclass AND i.indisunique
-                AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \(folio\)$'
+                 AND pg_get_indexdef(i.indexrelid) ~ 'UNIQUE INDEX .+ \\(folio\\)$'
            LOOP
              EXECUTE format('DROP INDEX %s', index_row.name);
            END LOOP;

@@ -702,8 +702,11 @@ export default function Entradas() {
         }
       },
       onError: (err: unknown) => {
-        const msg = getApiErrorMessage(err, "Error al procesar la entrada");
-        toast.error("Error", { description: msg });
+        const msg = getApiErrorMessage(
+          err,
+          "No se pudo registrar la entrada. Revisa los datos e intenta nuevamente.",
+        );
+        toast.error("No se registró la entrada", { description: msg });
       }
     });
   };

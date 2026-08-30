@@ -498,7 +498,28 @@ inventarioRouter.post(
         res.status(400).json({ error: e.message });
         return;
       }
-      next(e);
+      const databaseError = e as {
+        code?: string;
+        constraint?: string;
+      };
+      if (
+        databaseError.code === "23505" &&
+        databaseError.constraint?.includes("folio")
+      ) {
+        req.log.error({ err: e }, "Entry folio conflict");
+        res.status(409).json({
+          error:
+            "No se pudo asignar el folio de la entrada. No se guardó ningún cambio; intenta registrarla nuevamente.",
+          code: "ENTRY_FOLIO_CONFLICT",
+        });
+        return;
+      }
+      req.log.error({ err: e }, "Failed to create entry");
+      res.status(500).json({
+        error:
+          "No se pudo registrar la entrada. No se guardó ningún cambio; intenta nuevamente. Si el problema continúa, reporta el folio del sitio y la hora del intento.",
+        code: "ENTRY_CREATE_FAILED",
+      });
     }
   },
 );
