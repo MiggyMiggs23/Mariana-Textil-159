@@ -64,8 +64,8 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** ADMIN tiene acceso total a los 26 módulos sin consultar tablas. Para CAJA, SUPERVISOR y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
-- **Conteo conservador de módulos:** el plan esperaba 25 al incorporar `precios`, pero para entonces `etiquetas` ya era también un módulo configurable. Se conservan ambos; retirarlo para forzar el conteo rompería permisos operativos, por lo que el catálogo completo real contiene 26.
+- **Permisos:** ADMIN tiene acceso total a los 30 módulos sin consultar tablas. Para CAJA, SUPERVISOR y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
+- **Conteo de módulos:** el catálogo configurable contiene 30 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 - **Gobierno de precios:** `/precios` exige rol ADMIN directamente en el servidor. El costo actual es ponderado por cantidad disponible y unidad; sin costos válidos permanece pendiente (`null`), nunca cero.
@@ -196,9 +196,9 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Entradas: carta vertical 216 × 279 mm. Salidas: media carta horizontal 216 × 140 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida.
 
 
-## Permission modules (26 total)
+## Permission modules (30 total)
 
-`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`
+`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`
 
 ## Propuesta pendiente — base de pruebas permanente
 
