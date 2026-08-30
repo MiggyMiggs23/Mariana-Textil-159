@@ -45,6 +45,7 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { groupTicketLinesByModality, groupPrintLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { BrandLogo } from "@/components/brand-logo";
+import { printWhenReady, waitForPrintableAssets } from "@/lib/print";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
 import { QRCodeSVG } from "qrcode.react";
@@ -117,33 +118,36 @@ export default function TicketDetailPage() {
 
     const printClass = isNota ? "print-credito" : "print-80mm";
 
+    let cancelled = false;
+    const timers: number[] = [];
     document.body.classList.add(printClass);
-    const timers = [250, 900, 1550].map((delay) =>
-      window.setTimeout(() => window.print(), delay),
-    );
-    timers.push(
-      window.setTimeout(() => {
-        document.body.classList.remove(printClass);
-        window.history.replaceState({}, "", `/tickets/${ticket.id}`);
-      }, 2200),
-    );
-    return () => timers.forEach(window.clearTimeout);
+    void waitForPrintableAssets().then(() => {
+      if (cancelled) return;
+      timers.push(
+        ...[0, 650, 1_300].map((delay) =>
+          window.setTimeout(() => window.print(), delay),
+        ),
+      );
+      timers.push(
+        window.setTimeout(() => {
+          document.body.classList.remove(printClass);
+          window.history.replaceState({}, "", `/tickets/${ticket.id}`);
+        }, 2_000),
+      );
+    });
+    return () => {
+      cancelled = true;
+      timers.forEach(window.clearTimeout);
+      document.body.classList.remove(printClass);
+    };
   }, [ticket, isPrintReady, isNota]);
 
   const handlePrint80mm = () => {
-    document.body.classList.add("print-80mm");
-    window.print();
-    setTimeout(() => {
-      document.body.classList.remove("print-80mm");
-    }, 1000);
+    void printWhenReady("print-80mm");
   };
 
   const handlePrintCarta = () => {
-    document.body.classList.add("print-carta");
-    window.print();
-    setTimeout(() => {
-      document.body.classList.remove("print-carta");
-    }, 1000);
+    void printWhenReady("print-carta");
   };
 
   const handlePrintNota = () => {
@@ -151,22 +155,14 @@ export default function TicketDetailPage() {
     if (ticket?.clienteId && (ticket as TicketDetalle).esCredito) {
       reimprimirNota.mutate({ id: ticket.clienteId, ticketId }, {
         onSuccess: () => {
-          document.body.classList.add("print-credito");
-          window.print();
-          setTimeout(() => {
-            document.body.classList.remove("print-credito");
-          }, 1000);
+          void printWhenReady("print-credito");
         },
         onError: (err) => {
           toast({ title: "No se pudo auditar reimpresión", description: getApiErrorMessage(err), variant: "destructive" });
         }
       });
     } else {
-      document.body.classList.add("print-credito");
-      window.print();
-      setTimeout(() => {
-        document.body.classList.remove("print-credito");
-      }, 1000);
+      void printWhenReady("print-credito");
     }
   };
 

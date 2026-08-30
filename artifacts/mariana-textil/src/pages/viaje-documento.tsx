@@ -3,6 +3,8 @@ import { useGetViaje } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Printer, ArrowLeft } from "lucide-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { BrandLogo } from "@/components/brand-logo";
+import { printWhenReady } from "@/lib/print";
 
 /** Carta/216x279mm printable dispatch control sheet. */
 export default function ViajeDocumento() {
@@ -15,12 +17,15 @@ export default function ViajeDocumento() {
     <div className="min-h-screen bg-muted p-6 print:p-0">
       <div className="no-print mb-4 flex justify-between">
         <Link href={`/viajes/${id}`}><Button variant="outline"><ArrowLeft />Volver</Button></Link>
-        <Button onClick={() => { document.body.classList.add("print-viaje"); window.print(); }}><Printer />Imprimir</Button>
+        <Button onClick={() => void printWhenReady("print-viaje")}><Printer />Imprimir</Button>
       </div>
       <article className="viaje-page viaje-page-print mx-auto min-h-[279mm] w-[216mm] bg-white p-[14mm] text-sm">
-        <header className="border-b-2 border-slate-900 pb-4">
-          <h1 className="text-3xl font-black">HOJA DE VIAJE</h1>
-          <p className="text-lg font-bold">{viaje.folioFormateado}</p>
+        <header className="flex items-center justify-between border-b-2 border-slate-900 pb-4">
+          <div>
+            <h1 className="text-3xl font-black">HOJA DE VIAJE</h1>
+            <p className="text-lg font-bold">{viaje.folioFormateado}</p>
+          </div>
+          <BrandLogo variant="mark" className="h-16 w-16" />
         </header>
         <div className="my-5 grid grid-cols-2 gap-3">
           <p><b>Origen:</b> {viaje.nombreOrigen}</p><p><b>Salida:</b> {new Date(viaje.salidaAt).toLocaleString("es-MX")}</p>

@@ -19,6 +19,8 @@ import {
   useCreateProducto,
   useListProductos,
 } from "@workspace/api-client-react";
+import { BrandLogo } from "@/components/brand-logo";
+import { printWhenReady } from "@/lib/print";
 import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play, Shuffle, Plus } from "lucide-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { CampoEscaneo } from "@/components/campo-escaneo";
@@ -159,9 +161,7 @@ export default function AuditoriasInventario() {
   });
 
   const print = () => {
-    document.body.classList.add("print-auditoria-inventario");
-    window.print();
-    window.setTimeout(() => document.body.classList.remove("print-auditoria-inventario"), 0);
+    void printWhenReady("print-auditoria-inventario");
   };
 
   return (
@@ -517,11 +517,14 @@ export default function AuditoriasInventario() {
       {/* Print View */}
       {detail.data && (
         <article className="audit-inventory-print print-only bg-white text-black" data-testid="document-audit-print">
-          <header className="border-b-2 border-black pb-3">
-            <div className="text-sm font-bold uppercase tracking-widest">Mariana Textil · Auditoría de Inventario</div>
-            <h1 className="mt-1 text-2xl font-bold">{detail.data.folioFormateado}</h1>
-            <div>{detail.data.nombreUbicacion} · Estado: {detail.data.estado}</div>
-            <div className="text-sm">Apertura: {new Date(detail.data.abiertaAt).toLocaleString("es-MX")} · Cierre: {detail.data.cerradaAt ? new Date(detail.data.cerradaAt).toLocaleString("es-MX") : "En curso"} · Duración: {duration(detail.data.abiertaAt, detail.data.cerradaAt)}</div>
+          <header className="flex items-start justify-between gap-6 border-b-2 border-black pb-3">
+            <div>
+              <div className="text-sm font-bold uppercase tracking-widest">Mariana Textil · Auditoría de Inventario</div>
+              <h1 className="mt-1 text-2xl font-bold">{detail.data.folioFormateado}</h1>
+              <div>{detail.data.nombreUbicacion} · Estado: {detail.data.estado}</div>
+              <div className="text-sm">Apertura: {new Date(detail.data.abiertaAt).toLocaleString("es-MX")} · Cierre: {detail.data.cerradaAt ? new Date(detail.data.cerradaAt).toLocaleString("es-MX") : "En curso"} · Duración: {duration(detail.data.abiertaAt, detail.data.cerradaAt)}</div>
+            </div>
+            <BrandLogo variant="mark" className="h-14 w-14 shrink-0" />
           </header>
           <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">
             <div>Snapshot<br /><b>{detail.data.totalSnapshot}</b></div><div>Escaneados<br /><b>{detail.data.totalEscaneados}</b></div><div>Cuadro<br /><b>{detail.data.cuadros}</b></div><div>Faltante<br /><b>{detail.data.faltantes}</b></div><div>Sobrante<br /><b>{detail.data.sobrantes}</b></div><div>Mal Acomodado<br /><b>{detail.data.malAcomodados || 0}</b></div>

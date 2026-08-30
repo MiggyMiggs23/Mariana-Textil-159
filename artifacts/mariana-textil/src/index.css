@@ -224,6 +224,19 @@
 }
 
 @media print {
+  html,
+  body,
+  body * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  img[data-logo-variant],
+  img[data-logo-source] {
+    opacity: 1 !important;
+    object-fit: contain !important;
+  }
+
   body.print-viaje { background: white !important; }
   body.print-viaje .no-print { display: none !important; }
   body.print-viaje .viaje-page { width: 216mm !important; min-height: 279mm !important; margin: 0 !important; box-shadow: none !important; }

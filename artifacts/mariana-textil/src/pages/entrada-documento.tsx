@@ -6,6 +6,7 @@ import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from 
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { QRCodeSVG } from "qrcode.react";
+import { printWhenReady } from "@/lib/print";
 
 export default function EntradaDocumento() {
   const { id } = useParams();
@@ -42,7 +43,7 @@ export default function EntradaDocumento() {
     <div className="min-h-[100dvh] bg-muted/20 flex flex-col">
       <div className="no-print sticky top-0 z-10 flex flex-col gap-3 border-b bg-background p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-bold">Vista previa de impresión</h1>
-        <Button className="w-full sm:w-auto" onClick={() => window.print()}>
+        <Button className="w-full sm:w-auto" onClick={() => void printWhenReady()}>
           <Printer className="w-4 h-4 mr-2" />
           Imprimir / Guardar PDF
         </Button>

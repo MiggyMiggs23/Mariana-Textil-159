@@ -6,6 +6,7 @@ import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, MapPin, ArrowLeft
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { QRCodeSVG } from "qrcode.react";
+import { printWhenReady } from "@/lib/print";
 
 export default function SalidaDocumento() {
   const { id } = useParams();
@@ -60,7 +61,7 @@ export default function SalidaDocumento() {
           </Link>
           <h1 className="font-bold">Vista previa de impresión (SALIDA)</h1>
         </div>
-        <Button onClick={() => window.print()} data-testid="doc-print-button">
+        <Button onClick={() => void printWhenReady()} data-testid="doc-print-button">
           <Printer className="w-4 h-4 mr-2" />
           Imprimir / Guardar PDF
         </Button>

@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Printer, Loader2, CheckSquare } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
+import { printWhenReady } from "@/lib/print";
 
 export default function EntradaEtiquetas() {
   const { id } = useParams();
@@ -41,7 +42,7 @@ export default function EntradaEtiquetas() {
   }
 
   const handlePrint = () => {
-    window.print();
+    void printWhenReady(printMode === "thermal" ? "printing-labels" : undefined);
   };
 
   const toggleAll = () => {
