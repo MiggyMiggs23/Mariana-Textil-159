@@ -1854,6 +1854,102 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /inventario/salidas-extraordinarias:
+    get:
+      operationId: listSalidasExtraordinarias
+      tags: [inventario, salidas]
+      summary: Lista salidas extraordinarias (solo ADMIN con permiso salidas/ver)
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number, minimum: 1 }
+        - in: query
+          name: motivo
+          schema:
+            $ref: "#/components/schemas/MotivoSalidaExtraordinaria"
+        - in: query
+          name: fechaDesde
+          schema: { $ref: "#/components/schemas/CalendarDate" }
+        - in: query
+          name: fechaHasta
+          schema: { $ref: "#/components/schemas/CalendarDate" }
+        - in: query
+          name: page
+          schema: { type: number, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: number, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        "200":
+          description: Historial paginado de salidas extraordinarias
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidasExtraordinariasResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      operationId: createSalidaExtraordinaria
+      tags: [inventario, salidas]
+      summary: Da de baja un rollo completo por merma, robo o muestra (solo ADMIN con permiso salidas/crear)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalidaExtraordinariaInput"
+      responses:
+        "201":
+          description: Salida extraordinaria registrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalidaExtraordinaria"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /inventario/salidas-extraordinarias/{movimientoId}/revertir:
+    post:
+      operationId: revertSalidaExtraordinaria
+      tags: [inventario, salidas]
+      summary: Corrige una salida extraordinaria mediante revertirMovimiento (solo ADMIN con permiso salidas/editar)
+      parameters:
+        - in: path
+          name: movimientoId
+          required: true
+          schema: { type: number, minimum: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReversoSalidaExtraordinariaInput"
+      responses:
+        "200":
+          description: Salida extraordinaria revertida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RolloDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
   /inventario/rollos/{id}/vender:
     post:
       operationId: venderRollo
@@ -8492,6 +8588,9 @@ components:
           AJUSTE_NEGATIVO,
           CANCELACION,
         ]
+    MotivoSalidaExtraordinaria:
+      type: string
+      enum: [MERMA, ROBO, MUESTRA]
     RolloSummary:
       type: object
       required:
@@ -8539,6 +8638,7 @@ components:
           cantidad,
           saldoPosterior,
           usuarioId,
+          motivoSalidaExtraordinaria,
           revisado,
           createdAt,
         ]
@@ -8558,6 +8658,10 @@ components:
         documentoId: { type: ["string", "null"] }
         movimientoOrigenId: { type: ["number", "null"] }
         usuarioId: { type: number }
+        motivoSalidaExtraordinaria:
+          oneOf:
+            - $ref: "#/components/schemas/MotivoSalidaExtraordinaria"
+            - type: "null"
         justificacion: { type: ["string", "null"] }
         revisado: { type: boolean }
         revisadoPor: { type: ["number", "null"] }
@@ -8841,6 +8945,81 @@ components:
         movimientoOrigenId: { type: number }
         justificacion: { type: ["string", "null"] }
         uuidCliente: { type: ["string", "null"] }
+    SalidaExtraordinariaInput:
+      type: object
+      required: [rolloId, motivo, justificacion, uuidCliente]
+      properties:
+        rolloId: { type: number, minimum: 1 }
+        motivo:
+          $ref: "#/components/schemas/MotivoSalidaExtraordinaria"
+        justificacion: { type: string, minLength: 10 }
+        uuidCliente:
+          {
+            type: string,
+            pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
+          }
+    ReversoSalidaExtraordinariaInput:
+      type: object
+      required: [justificacion, uuidCliente]
+      properties:
+        justificacion: { type: string, minLength: 10 }
+        uuidCliente:
+          {
+            type: string,
+            pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
+          }
+    SalidaExtraordinaria:
+      type: object
+      required:
+        [
+          movimientoId,
+          rolloId,
+          serie,
+          productoId,
+          skuProducto,
+          telaProducto,
+          colorProducto,
+          unidadProducto,
+          ubicacionId,
+          nombreUbicacion,
+          cantidad,
+          motivo,
+          justificacion,
+          usuarioId,
+          nombreUsuario,
+          uuidCliente,
+          createdAt,
+        ]
+      properties:
+        movimientoId: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        cantidad: { type: string }
+        motivo:
+          $ref: "#/components/schemas/MotivoSalidaExtraordinaria"
+        justificacion: { type: string }
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        uuidCliente: { type: string }
+        createdAt: { type: string, format: date-time }
+    SalidasExtraordinariasResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalidaExtraordinaria"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
     RecalcularInput:
       type: object
       required: [productoId, ubicacionId]

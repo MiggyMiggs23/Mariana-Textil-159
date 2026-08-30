@@ -16,11 +16,14 @@ import { randomUUID } from "node:crypto";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   db,
+  auditoriaTable,
+  ensureExtraordinaryExitsSchema,
   existenciasTable,
   movimientosTable,
   productosTable,
   rollosTable,
   ubicacionesTable,
+  pool,
 } from "@workspace/db";
 import {
   crearRollo,
@@ -31,11 +34,15 @@ import {
   salidaMostrador,
   venderRollo,
   ajustarRollo,
+  crearSalidaExtraordinaria,
+  lockInventoryPairs,
   revertirMovimiento,
   conciliarTodo,
   InventarioError,
   type Tx,
 } from "./inventario";
+
+await ensureExtraordinaryExitsSchema(pool);
 
 // ── Test harness ──────────────────────────────────────────────────────────────
 
@@ -1407,6 +1414,205 @@ await test("T-CONCILIACION: reporta por separado cadena, caché y rollos sin rep
   assert.equal(persistedCache!.rollosCount, 0);
 });
 
+await test("T-SALIDA-EXTRAORDINARIA: baja completa, idempotente y reversible", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const uuidCliente = randomUUID();
+  const { rollo } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "18.375",
+      costoUnitario: "50.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+
+  const first = await db.transaction((tx) =>
+    crearSalidaExtraordinaria(tx, {
+      rolloId: rollo.id,
+      motivo: "ROBO",
+      justificacion: "Faltante confirmado en conteo",
+      usuarioId: 1,
+      uuidCliente,
+      ip: "127.0.0.1",
+    }),
+  );
+  assert.equal(first.rollo.estado, "BAJA");
+  assert.equal(first.rollo.cantidadActual, "0.000");
+  assert.equal(first.movimiento.tipo, "AJUSTE_NEGATIVO");
+  assert.equal(first.movimiento.cantidad, "-18.375");
+  assert.equal(first.movimiento.motivoSalidaExtraordinaria, "ROBO");
+
+  const duplicate = await db.transaction((tx) =>
+    crearSalidaExtraordinaria(tx, {
+      rolloId: rollo.id,
+      motivo: "ROBO",
+      justificacion: "Faltante confirmado en conteo",
+      usuarioId: 1,
+      uuidCliente,
+      ip: "127.0.0.1",
+    }),
+  );
+  assert.equal(duplicate.movimiento.id, first.movimiento.id);
+
+  const reversed = await db.transaction((tx) =>
+    revertirMovimiento(tx, {
+      movimientoOrigenId: Number(first.movimiento.id),
+      usuarioId: 1,
+      justificacion: "Corrección de captura extraordinaria",
+      uuidCliente: randomUUID(),
+    }),
+  );
+  assert.equal(reversed.rollo.estado, "DISPONIBLE");
+  assert.equal(reversed.rollo.cantidadActual, "18.375");
+  assert.equal(reversed.movimiento.motivoSalidaExtraordinaria, null);
+  assert.deepEqual(await readExistencia(productoId, ubicacionId), {
+    cantidadTotal: 18.375,
+    rollosCount: 1,
+  });
+});
+
+await test("T-SALIDA-EXTRAORDINARIA-CONCURRENCIA: transferencia gana sin deadlock ni par obsoleto", async () => {
+  const { id: productoId } = await mkProducto();
+  const origenId = await mkUbicacion();
+  const transitoId = await mkUbicacion();
+  const { rollo } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId: origenId,
+      cantidadInicial: "12.500",
+      costoUnitario: "50.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+
+  let releaseTransfer!: () => void;
+  let announcePrelock!: () => void;
+  const mayTransfer = new Promise<void>((resolve) => {
+    releaseTransfer = resolve;
+  });
+  const hasPrelock = new Promise<void>((resolve) => {
+    announcePrelock = resolve;
+  });
+  const transfer = db.transaction(async (tx) => {
+    await lockInventoryPairs(tx, [
+      { productoId, ubicacionId: origenId },
+      { productoId, ubicacionId: transitoId },
+    ]);
+    announcePrelock();
+    await mayTransfer;
+    return moverRollo(tx, {
+      rolloId: rollo.id,
+      ubicacionOrigenId: origenId,
+      ubicacionTransitoId: transitoId,
+      usuarioId: 1,
+      uuidCliente: randomUUID(),
+    });
+  });
+
+  await hasPrelock;
+  const extraordinary = db
+    .transaction((tx) =>
+      crearSalidaExtraordinaria(tx, {
+        rolloId: rollo.id,
+        motivo: "MERMA",
+        justificacion: "Merma concurrente verificada",
+        usuarioId: 1,
+        uuidCliente: randomUUID(),
+        ip: "127.0.0.1",
+      }),
+    )
+    .then(
+      (value) => ({ value, error: null }),
+      (error: unknown) => ({ value: null, error }),
+    );
+
+  const waitDeadline = Date.now() + 2_000;
+  let waitingOnAdvisory = false;
+  let waitError: unknown = null;
+  try {
+    while (Date.now() < waitDeadline) {
+      const waitState = await pool.query<{ waiting: boolean }>(
+        `SELECT EXISTS (
+           SELECT 1 FROM pg_stat_activity
+           WHERE pid <> pg_backend_pid()
+             AND wait_event_type = 'Lock'
+             AND wait_event = 'advisory'
+             AND query LIKE '%pg_advisory_xact_lock%'
+         ) AS waiting`,
+      );
+      waitingOnAdvisory = waitState.rows[0]?.waiting === true;
+      if (waitingOnAdvisory) break;
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+  } catch (error) {
+    waitError = error;
+  } finally {
+    releaseTransfer();
+  }
+
+  const [transferResult, extraordinaryResult] = await Promise.all([
+    transfer.then(
+      (value) => ({ value, error: null }),
+      (error: unknown) => ({ value: null, error }),
+    ),
+    extraordinary,
+  ]);
+  if (waitError) throw waitError;
+  assert.equal(
+    waitingOnAdvisory,
+    true,
+    "the extraordinary exit must wait on the pair before taking the roll row",
+  );
+  assert.equal(transferResult.error, null);
+  assert.equal(transferResult.value?.rollo.estado, "EN_TRANSITO");
+  assert.ok(extraordinaryResult.error instanceof InventarioError);
+  assert.equal(
+    (extraordinaryResult.error as InventarioError).code,
+    "INVENTORY_CHANGED_RETRY",
+  );
+
+  const [persistedRollo] = await db
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  assert.equal(persistedRollo?.estado, "EN_TRANSITO");
+  assert.equal(persistedRollo?.ubicacionId, transitoId);
+  const movements = await db
+    .select({
+      tipo: movimientosTable.tipo,
+      motivo: movimientosTable.motivoSalidaExtraordinaria,
+    })
+    .from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rollo.id));
+  assert.equal(
+    movements.filter((movement) => movement.tipo === "TRANSFERENCIA_SALIDA").length,
+    1,
+  );
+  assert.equal(
+    movements.filter((movement) => movement.tipo === "TRANSFERENCIA_ENTRADA").length,
+    1,
+  );
+  assert.equal(
+    movements.filter((movement) => movement.motivo != null).length,
+    0,
+    "the losing extraordinary exit must not write a movement",
+  );
+  assert.deepEqual(await readExistencia(productoId, origenId), {
+    cantidadTotal: 0,
+    rollosCount: 0,
+  });
+  assert.deepEqual(await readExistencia(productoId, transitoId), {
+    cantidadTotal: 12.5,
+    rollosCount: 0,
+  });
+});
+
 // =============================================================================
 // Cleanup
 // =============================================================================
@@ -1417,6 +1623,11 @@ process.stdout.write(`Results: ${passed} passed, ${failed} failed\n`);
 // Always cleanup, even on failures
 try {
   await db.transaction(async (tx) => {
+    if (createdUbicacionIds.length > 0) {
+      await tx
+        .delete(auditoriaTable)
+        .where(inArray(auditoriaTable.sitioId, createdUbicacionIds));
+    }
     // Delete movements referencing test rolls
     if (createdRolloSeries.length > 0) {
       const rollos = await tx

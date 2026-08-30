@@ -11,6 +11,7 @@ import {
   ensureSupervisorRole,
   ensureDocumentFoliosSchema,
   ensureEstadoRolloSchema,
+  ensureExtraordinaryExitsSchema,
   ensureProductMeterSchema,
   ensureProductUnitSchema,
   ensureProductPricingSchema,
@@ -67,7 +68,7 @@ export async function ensureStartupSchemas(): Promise<void> {
       await ensureSolicitudesPagoDirigidoSchema(startupPool); await ensureAplicacionesPagoProveedorSchema(startupPool);
     });
     await phase("inventory and products", async () => {
-      await ensureEstadoRolloSchema(startupPool); await ensureProductUnitSchema(startupPool); await ensureProductMeterSchema(startupPool);
+      await ensureEstadoRolloSchema(startupPool); await ensureExtraordinaryExitsSchema(startupPool); await ensureProductUnitSchema(startupPool); await ensureProductMeterSchema(startupPool);
       await ensureProductPricingSchema(startupPool); await ensureProductColorSchema(startupPool); await ensureProductSpecificationsSchema(startupPool);
     });
     await phase("roles and inventory audit", async () => {

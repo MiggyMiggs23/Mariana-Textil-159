@@ -172,6 +172,7 @@ import type {
   ListProductosParams,
   ListProveedorPagosParams,
   ListRollosParams,
+  ListSalidasExtraordinariasParams,
   ListSalidasParams,
   ListSolicitudesPagoDirigidoParams,
   ListViajesEligibleDocumentsParams,
@@ -241,6 +242,7 @@ import type {
   ReimpresionClienteNota,
   ReporteSeccion,
   ReportesCatalogos,
+  ReversoSalidaExtraordinariaInput,
   RevertirMovimientoInput,
   Role,
   RolloDetail,
@@ -252,10 +254,13 @@ import type {
   SalidaDetailResponseResponse,
   SalidaDineroCaja,
   SalidaDineroCajaInput,
+  SalidaExtraordinaria,
+  SalidaExtraordinariaInput,
   SalidaListResult,
   SalidaMostradorDocumentoInput,
   SalidaResumen,
   SalidasDineroCajaResponse,
+  SalidasExtraordinariasResult,
   ServerTime,
   SesionCaja,
   SesionCajaActual,
@@ -6410,6 +6415,233 @@ export const useActivarRollo = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getActivarRolloMutationOptions(options));
+    }
+
+export const getListSalidasExtraordinariasUrl = (params?: ListSalidasExtraordinariasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/salidas-extraordinarias?${stringifiedParams}` : `/api/inventario/salidas-extraordinarias`
+}
+
+/**
+ * @summary Lista salidas extraordinarias (solo ADMIN con permiso salidas/ver)
+ */
+export const listSalidasExtraordinarias = async (params?: ListSalidasExtraordinariasParams, options?: Parameters<typeof customFetch>[1]): Promise<SalidasExtraordinariasResult> => {
+
+  return customFetch<SalidasExtraordinariasResult>(getListSalidasExtraordinariasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSalidasExtraordinariasQueryKey = (params?: ListSalidasExtraordinariasParams,) => {
+    return [
+    `/api/inventario/salidas-extraordinarias`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSalidasExtraordinariasQueryOptions = <TData = Awaited<ReturnType<typeof listSalidasExtraordinarias>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListSalidasExtraordinariasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSalidasExtraordinarias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSalidasExtraordinariasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSalidasExtraordinarias>>> = ({ signal }) => listSalidasExtraordinarias(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSalidasExtraordinarias>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSalidasExtraordinariasQueryResult = NonNullable<Awaited<ReturnType<typeof listSalidasExtraordinarias>>>
+export type ListSalidasExtraordinariasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista salidas extraordinarias (solo ADMIN con permiso salidas/ver)
+ */
+
+export function useListSalidasExtraordinarias<TData = Awaited<ReturnType<typeof listSalidasExtraordinarias>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListSalidasExtraordinariasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSalidasExtraordinarias>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSalidasExtraordinariasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateSalidaExtraordinariaUrl = () => {
+
+
+
+
+  return `/api/inventario/salidas-extraordinarias`
+}
+
+/**
+ * @summary Da de baja un rollo completo por merma, robo o muestra (solo ADMIN con permiso salidas/crear)
+ */
+export const createSalidaExtraordinaria = async (salidaExtraordinariaInput: SalidaExtraordinariaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaExtraordinaria> => {
+
+  return customFetch<SalidaExtraordinaria>(getCreateSalidaExtraordinariaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(salidaExtraordinariaInput)
+  }
+);}
+
+
+
+
+
+export const getCreateSalidaExtraordinariaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSalidaExtraordinaria>>, TError,{data: BodyType<SalidaExtraordinariaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSalidaExtraordinaria>>, TError,{data: BodyType<SalidaExtraordinariaInput>}, TContext> => {
+
+const mutationKey = ['createSalidaExtraordinaria'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSalidaExtraordinaria>>, {data: BodyType<SalidaExtraordinariaInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSalidaExtraordinaria(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSalidaExtraordinariaMutationResult = NonNullable<Awaited<ReturnType<typeof createSalidaExtraordinaria>>>
+    export type CreateSalidaExtraordinariaMutationBody = BodyType<SalidaExtraordinariaInput>
+    export type CreateSalidaExtraordinariaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Da de baja un rollo completo por merma, robo o muestra (solo ADMIN con permiso salidas/crear)
+ */
+export const useCreateSalidaExtraordinaria = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSalidaExtraordinaria>>, TError,{data: BodyType<SalidaExtraordinariaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createSalidaExtraordinaria>>,
+        TError,
+        {data: BodyType<SalidaExtraordinariaInput>},
+        TContext
+      > => {
+      return useMutation(getCreateSalidaExtraordinariaMutationOptions(options));
+    }
+
+export const getRevertSalidaExtraordinariaUrl = (movimientoId: number,) => {
+
+
+
+
+  return `/api/inventario/salidas-extraordinarias/${movimientoId}/revertir`
+}
+
+/**
+ * @summary Corrige una salida extraordinaria mediante revertirMovimiento (solo ADMIN con permiso salidas/editar)
+ */
+export const revertSalidaExtraordinaria = async (movimientoId: number,
+    reversoSalidaExtraordinariaInput: ReversoSalidaExtraordinariaInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloDetail> => {
+
+  return customFetch<RolloDetail>(getRevertSalidaExtraordinariaUrl(movimientoId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(reversoSalidaExtraordinariaInput)
+  }
+);}
+
+
+
+
+
+export const getRevertSalidaExtraordinariaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revertSalidaExtraordinaria>>, TError,{movimientoId: number;data: BodyType<ReversoSalidaExtraordinariaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof revertSalidaExtraordinaria>>, TError,{movimientoId: number;data: BodyType<ReversoSalidaExtraordinariaInput>}, TContext> => {
+
+const mutationKey = ['revertSalidaExtraordinaria'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof revertSalidaExtraordinaria>>, {movimientoId: number;data: BodyType<ReversoSalidaExtraordinariaInput>}> = (props) => {
+          const {movimientoId,data} = props ?? {};
+
+          return  revertSalidaExtraordinaria(movimientoId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RevertSalidaExtraordinariaMutationResult = NonNullable<Awaited<ReturnType<typeof revertSalidaExtraordinaria>>>
+    export type RevertSalidaExtraordinariaMutationBody = BodyType<ReversoSalidaExtraordinariaInput>
+    export type RevertSalidaExtraordinariaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Corrige una salida extraordinaria mediante revertirMovimiento (solo ADMIN con permiso salidas/editar)
+ */
+export const useRevertSalidaExtraordinaria = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revertSalidaExtraordinaria>>, TError,{movimientoId: number;data: BodyType<ReversoSalidaExtraordinariaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof revertSalidaExtraordinaria>>,
+        TError,
+        {movimientoId: number;data: BodyType<ReversoSalidaExtraordinariaInput>},
+        TContext
+      > => {
+      return useMutation(getRevertSalidaExtraordinariaMutationOptions(options));
     }
 
 export const getVenderRolloUrl = (id: number,) => {

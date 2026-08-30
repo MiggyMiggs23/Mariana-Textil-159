@@ -3312,6 +3312,15 @@ export const TipoMovimiento = {
   CANCELACION: 'CANCELACION',
 } as const;
 
+export type MotivoSalidaExtraordinaria = typeof MotivoSalidaExtraordinaria[keyof typeof MotivoSalidaExtraordinaria];
+
+
+export const MotivoSalidaExtraordinaria = {
+  MERMA: 'MERMA',
+  ROBO: 'ROBO',
+  MUESTRA: 'MUESTRA',
+} as const;
+
 export interface RolloSummary {
   id: number;
   serie: string;
@@ -3358,6 +3367,7 @@ export interface MovimientoRow {
   /** @nullable */
   movimientoOrigenId?: number | null;
   usuarioId: number;
+  motivoSalidaExtraordinaria: MotivoSalidaExtraordinaria | null;
   /** @nullable */
   justificacion?: string | null;
   revisado: boolean;
@@ -3572,6 +3582,50 @@ export interface RevertirMovimientoInput {
   justificacion?: string | null;
   /** @nullable */
   uuidCliente?: string | null;
+}
+
+export interface SalidaExtraordinariaInput {
+  /** @minimum 1 */
+  rolloId: number;
+  motivo: MotivoSalidaExtraordinaria;
+  /** @minLength 10 */
+  justificacion: string;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+}
+
+export interface ReversoSalidaExtraordinariaInput {
+  /** @minLength 10 */
+  justificacion: string;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+}
+
+export interface SalidaExtraordinaria {
+  movimientoId: number;
+  rolloId: number;
+  serie: string;
+  productoId: number;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: string;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  cantidad: string;
+  motivo: MotivoSalidaExtraordinaria;
+  justificacion: string;
+  usuarioId: number;
+  nombreUsuario: string;
+  uuidCliente: string;
+  createdAt: string;
+}
+
+export interface SalidasExtraordinariasResult {
+  items: SalidaExtraordinaria[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 export interface RecalcularInput {
@@ -5535,6 +5589,25 @@ page?: number;
 /**
  * @minimum 1
  * @maximum 200
+ */
+pageSize?: number;
+};
+
+export type ListSalidasExtraordinariasParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId?: number;
+motivo?: MotivoSalidaExtraordinaria;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
  */
 pageSize?: number;
 };

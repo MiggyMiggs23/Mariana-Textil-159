@@ -50,10 +50,11 @@
 import assert from "node:assert/strict";
 import { createServer, type Server } from "node:http";
 import { randomUUID } from "node:crypto";
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, eq, inArray, sql } from "drizzle-orm";
 import {
   db,
   entradasTable,
+  auditoriaTable,
   ensureClientesSchema,
   ensureSalidasSchema,
   ensureSupervisorRole,
@@ -2276,9 +2277,14 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   assert.ok(clientStatementSheet);
   assert.equal(typeof clientStatementSheet.getCell("C2").value, "number");
   assert.equal(typeof clientStatementSheet.getCell("D2").value, "number");
-  assert.equal(typeof clientStatementSheet.getCell("E2").value, "string");
+  const projectedBalanceRow = clientStatementSheet
+    .getRows(2, Math.max(1, clientStatementSheet.rowCount - 1))
+    ?.find((row) => row.getCell(2).value === "SALDO ACTUAL PROYECTADO");
+  assert.ok(projectedBalanceRow);
+  assert.equal(typeof projectedBalanceRow.getCell(5).value, "number");
   assert.equal(clientStatementSheet.getColumn(3).numFmt, '"$"#,##0.00');
   assert.equal(clientStatementSheet.getColumn(4).numFmt, '"$"#,##0.00');
+  assert.equal(projectedBalanceRow.getCell(5).numFmt, '"$"#,##0.00');
 
   const carteraXlsx = await api(
     "GET",
@@ -2829,6 +2835,164 @@ await test("S-30: CAJA reads only its open corte; ADMIN lists and reads cross-lo
   }
 });
 
+await test("S-30A: extraordinary exits require direct ADMIN despite full salidas overrides", async () => {
+  const overrides = await db
+    .insert(permisosUsuarioTable)
+    .values([testSupervisor, testBodega].map((user) => ({
+      usuarioId: user.id,
+      modulo: "salidas",
+      puedeVer: true,
+      puedeCrear: true,
+      puedeEditar: true,
+      puedeAutorizar: true,
+    })))
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(...overrides.map((row) => row.id));
+
+  const productoId = await mkProducto();
+  const rolloId = await mkRolloDisponible(seedTienda.id, productoId, testAdmin.id);
+  const [adminLogin, supervisorLogin, bodegaLogin] = await Promise.all([
+    login(testAdmin.usuario, testAdmin.password),
+    login(testSupervisor.usuario, testSupervisor.password),
+    login(testBodega.usuario, testBodega.password),
+  ]);
+  for (const loginResult of [adminLogin, supervisorLogin, bodegaLogin]) {
+    assert.equal(loginResult.status, 200, JSON.stringify(loginResult.body));
+  }
+
+  const createBody = {
+    rolloId,
+    motivo: "MERMA",
+    justificacion: "Merma de seguridad comprobada",
+    uuidCliente: randomUUID(),
+  };
+  for (const actor of [supervisorLogin, bodegaLogin]) {
+    const create = await api(
+      "POST",
+      "/inventario/salidas-extraordinarias",
+      createBody,
+      actor.cookie,
+    );
+    assert.equal(create.status, 403, JSON.stringify(create.body));
+    const list = await api(
+      "GET",
+      "/inventario/salidas-extraordinarias",
+      undefined,
+      actor.cookie,
+    );
+    assert.equal(list.status, 403, JSON.stringify(list.body));
+  }
+
+  const created = await api(
+    "POST",
+    "/inventario/salidas-extraordinarias",
+    createBody,
+    adminLogin.cookie,
+  );
+  assert.equal(created.status, 201, JSON.stringify(created.body));
+  const movimientoId = Number((created.body as { movimientoId: number }).movimientoId);
+  assert.ok(movimientoId > 0);
+  const createdAt = new Date((created.body as { createdAt: string }).createdAt);
+  const dateParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(createdAt);
+  const datePart = (type: string) => dateParts.find((part) => part.type === type)!.value;
+  const mexicoDate = `${datePart("year")}-${datePart("month")}-${datePart("day")}`;
+  const filtered = await api(
+    "GET",
+    `/inventario/salidas-extraordinarias?fechaDesde=${mexicoDate}&fechaHasta=${mexicoDate}`,
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(filtered.status, 200, JSON.stringify(filtered.body));
+  assert.ok(
+    (filtered.body as { items: Array<{ movimientoId: number }> }).items.some(
+      (item) => item.movimientoId === movimientoId,
+    ),
+    "ADMIN date-filtered list must include the created exit",
+  );
+
+  const whitespaceDedicated = await api(
+    "POST",
+    `/inventario/salidas-extraordinarias/${movimientoId}/revertir`,
+    { justificacion: "            ", uuidCliente: randomUUID() },
+    adminLogin.cookie,
+  );
+  assert.equal(whitespaceDedicated.status, 400, JSON.stringify(whitespaceDedicated.body));
+  const whitespaceGeneric = await api(
+    "POST",
+    `/inventario/rollos/${rolloId}/revertir`,
+    {
+      movimientoOrigenId: movimientoId,
+      justificacion: "            ",
+      uuidCliente: randomUUID(),
+    },
+    adminLogin.cookie,
+  );
+  assert.equal(whitespaceGeneric.status, 400, JSON.stringify(whitespaceGeneric.body));
+
+  const reverseBody = {
+    justificacion: "   Corrección administrativa comprobada   ",
+    uuidCliente: randomUUID(),
+  };
+  for (const actor of [supervisorLogin, bodegaLogin]) {
+    const reverse = await api(
+      "POST",
+      `/inventario/salidas-extraordinarias/${movimientoId}/revertir`,
+      reverseBody,
+      actor.cookie,
+    );
+    assert.equal(reverse.status, 403, JSON.stringify(reverse.body));
+  }
+  const reversed = await api(
+    "POST",
+    `/inventario/salidas-extraordinarias/${movimientoId}/revertir`,
+    reverseBody,
+    adminLogin.cookie,
+  );
+  assert.equal(reversed.status, 200, JSON.stringify(reversed.body));
+  assert.equal((reversed.body as { estado: string }).estado, "DISPONIBLE");
+  const retried = await api(
+    "POST",
+    `/inventario/salidas-extraordinarias/${movimientoId}/revertir`,
+    reverseBody,
+    adminLogin.cookie,
+  );
+  assert.equal(retried.status, 200, JSON.stringify(retried.body));
+
+  const cancellations = await db
+    .select({
+      id: movimientosTable.id,
+      justificacion: movimientosTable.justificacion,
+    })
+    .from(movimientosTable)
+    .where(eq(movimientosTable.movimientoOrigenId, movimientoId));
+  assert.equal(cancellations.length, 1, "retry must keep one cancellation");
+  assert.equal(
+    cancellations[0]?.justificacion,
+    "Corrección administrativa comprobada",
+    "extraordinary reversal justification must be trimmed",
+  );
+  const [reversalAuditCount] = await db
+    .select({ value: count() })
+    .from(auditoriaTable)
+    .where(
+      and(
+        eq(auditoriaTable.accion, "REVERTIR_SALIDA_EXTRAORDINARIA"),
+        eq(auditoriaTable.entidad, "movimientos"),
+        eq(auditoriaTable.entidadId, String(movimientoId)),
+      ),
+    );
+  assert.equal(
+    Number(reversalAuditCount?.value ?? 0),
+    1,
+    "retry must keep one reversal audit",
+  );
+});
+
 // ─── Cleanup ──────────────────────────────────────────────────────────────────
 
 async function cleanup(): Promise<void> {
@@ -2864,6 +3028,9 @@ async function cleanup(): Promise<void> {
       await db.delete(sesionesTable).where(eq(sesionesTable.usuarioId, userId));
     } catch { /* best effort */ }
   }
+  try {
+    await db.delete(auditoriaTable).where(inArray(auditoriaTable.usuarioId, createdUserIds));
+  } catch { /* best effort */ }
 
   // Delete clientes
   for (const id of createdClienteIds) {

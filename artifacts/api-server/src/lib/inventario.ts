@@ -36,6 +36,7 @@ import {
   ubicacionesTable,
   usuariosTable,
   type EstadoRollo,
+  type MotivoSalidaExtraordinaria,
   type TipoMovimiento,
 } from "@workspace/db";
 import {
@@ -303,6 +304,7 @@ type InsertMovimientoArgs = {
   productoId: number;
   ubicacionId: number;
   tipo: TipoMovimiento;
+  motivoSalidaExtraordinaria?: MotivoSalidaExtraordinaria | null;
   cantidad: string; // signed
   usuarioId: number;
   justificacion?: string | null;
@@ -344,6 +346,7 @@ async function insertMovimientoWithDependencies(
       productoId: args.productoId,
       ubicacionId: args.ubicacionId,
       tipo: args.tipo,
+      motivoSalidaExtraordinaria: args.motivoSalidaExtraordinaria ?? null,
       cantidad,
       saldoPosterior,
       usuarioId: args.usuarioId,
@@ -1446,6 +1449,12 @@ export async function moverRollo(
   tx: Tx,
   input: MoverRolloInput,
 ): Promise<MoverRolloResult> {
+  const salidaUuid = input.uuidCliente
+    ? deriveUuid(input.uuidCliente, "salida")
+    : null;
+  const entradaTransitoUuid = input.uuidCliente
+    ? deriveUuid(input.uuidCliente, "entrada_transito")
+    : null;
   const [candidate] = await tx.select().from(rollosTable)
     .where(eq(rollosTable.id, input.rolloId)).limit(1);
   if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
@@ -1453,8 +1462,8 @@ export async function moverRollo(
     { productoId: candidate.productoId, ubicacionId: input.ubicacionOrigenId },
     { productoId: candidate.productoId, ubicacionId: input.ubicacionTransitoId },
   ]);
-  if (input.uuidCliente) {
-    const dup = await checkUuidCliente(tx, `${input.uuidCliente}:salida`);
+  if (salidaUuid) {
+    const dup = await checkUuidCliente(tx, salidaUuid);
     if (dup) {
       const [rollo] = await tx
         .select()
@@ -1464,7 +1473,7 @@ export async function moverRollo(
       const [ent] = await tx
         .select()
         .from(movimientosTable)
-        .where(eq(movimientosTable.uuidCliente, `${input.uuidCliente}:entrada_transito`))
+        .where(eq(movimientosTable.uuidCliente, entradaTransitoUuid!))
         .limit(1);
       return { rollo: rollo!, salidaMovimiento: dup, entradaTransitoMovimiento: ent! };
     }
@@ -1504,7 +1513,7 @@ export async function moverRollo(
     justificacion: input.justificacion ?? null,
     documentoTipo: input.documentoTipo ?? null,
     documentoId: input.documentoId ?? null,
-    uuidCliente: input.uuidCliente ? `${input.uuidCliente}:salida` : null,
+    uuidCliente: salidaUuid,
   });
 
   // TRANSFERENCIA_ENTRADA at transit location (positive)
@@ -1518,7 +1527,7 @@ export async function moverRollo(
     justificacion: input.justificacion ?? null,
     documentoTipo: input.documentoTipo ?? null,
     documentoId: input.documentoId ?? null,
-    uuidCliente: input.uuidCliente ? `${input.uuidCliente}:entrada_transito` : null,
+    uuidCliente: entradaTransitoUuid,
   });
 
   await refreshCache(tx, rollo.productoId, input.ubicacionOrigenId);
@@ -2050,6 +2059,172 @@ export async function ajustarRollo(
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+export type CrearSalidaExtraordinariaInput = {
+  rolloId: number;
+  motivo: MotivoSalidaExtraordinaria;
+  justificacion: string;
+  usuarioId: number;
+  uuidCliente: string;
+  ip: string;
+};
+
+/**
+ * Removes one complete DISPONIBLE roll for a non-sale, non-transfer reason.
+ * The pair advisory lock is acquired before the row lock and before reading
+ * the ledger balance through insertMovimiento.
+ */
+export async function crearSalidaExtraordinaria(
+  tx: Tx,
+  input: CrearSalidaExtraordinariaInput,
+): Promise<{
+  rollo: typeof rollosTable.$inferSelect;
+  movimiento: typeof movimientosTable.$inferSelect;
+}> {
+  const justificacion = input.justificacion.trim();
+  if (justificacion.length < 10) {
+    throw new InventarioError(
+      "La justificación debe tener al menos 10 caracteres.",
+      "JUSTIFICACION_REQUIRED",
+    );
+  }
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.EXTRAORDINARY_EXIT_IDEMPOTENCY,
+    input.uuidCliente,
+  );
+
+  const [candidate] = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId))
+    .limit(1);
+  if (!candidate) {
+    throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  }
+
+  await lockInventoryPairs(tx, [candidate]);
+  const [revalidated] = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId))
+    .limit(1);
+  if (
+    !revalidated ||
+    revalidated.productoId !== candidate.productoId ||
+    revalidated.ubicacionId !== candidate.ubicacionId ||
+    revalidated.estado !== candidate.estado
+  ) {
+    throw new InventarioError(
+      "El inventario cambió mientras se preparaba la salida; inténtalo de nuevo.",
+      "INVENTORY_CHANGED_RETRY",
+    );
+  }
+  const [rollo] = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, input.rolloId))
+    .for("update")
+    .limit(1);
+  if (!rollo) {
+    throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  }
+  if (
+    rollo.productoId !== revalidated.productoId ||
+    rollo.ubicacionId !== revalidated.ubicacionId ||
+    rollo.estado !== revalidated.estado
+  ) {
+    throw new InventarioError(
+      "El inventario cambió mientras se preparaba la salida; inténtalo de nuevo.",
+      "INVENTORY_CHANGED_RETRY",
+    );
+  }
+
+  const duplicate = await checkUuidCliente(tx, input.uuidCliente);
+  if (duplicate) {
+    if (
+      duplicate.rolloId !== input.rolloId ||
+      duplicate.motivoSalidaExtraordinaria == null
+    ) {
+      throw new InventarioError(
+        "El identificador de la operación ya fue utilizado.",
+        "UUID_ALREADY_USED",
+      );
+    }
+    const [duplicateRollo] = await tx
+      .select()
+      .from(rollosTable)
+      .where(eq(rollosTable.id, duplicate.rolloId))
+      .limit(1);
+    return { rollo: duplicateRollo!, movimiento: duplicate };
+  }
+
+  if (rollo.estado !== "DISPONIBLE") {
+    throw new InventarioError(
+      "Solo un rollo DISPONIBLE puede registrarse como salida extraordinaria.",
+      "ROLLO_NOT_AVAILABLE",
+    );
+  }
+  const cantidadAntes = quantityToThousandthsBigInt(rollo.cantidadActual);
+  if (cantidadAntes <= 0n) {
+    throw new InventarioError(
+      "El rollo no tiene cantidad disponible para dar de baja.",
+      "ROLLO_WITHOUT_QUANTITY",
+    );
+  }
+  assertTransition(rollo.estado, "BAJA");
+
+  await tx
+    .update(rollosTable)
+    .set({ cantidadActual: "0.000", estado: "BAJA" })
+    .where(eq(rollosTable.id, rollo.id));
+
+  const movimiento = await insertMovimiento(tx, {
+    rolloId: rollo.id,
+    productoId: rollo.productoId,
+    ubicacionId: rollo.ubicacionId,
+    tipo: "AJUSTE_NEGATIVO",
+    motivoSalidaExtraordinaria: input.motivo,
+    cantidad: formatQuantityThousandthsBigInt(-cantidadAntes),
+    usuarioId: input.usuarioId,
+    justificacion,
+    revisado: true,
+    uuidCliente: input.uuidCliente,
+  });
+  await refreshCache(tx, rollo.productoId, rollo.ubicacionId);
+
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    sitioId: rollo.ubicacionId,
+    modulo: "salidas",
+    accion: "CREAR_SALIDA_EXTRAORDINARIA",
+    entidad: "movimientos",
+    entidadId: String(movimiento.id),
+    datosAntes: {
+      rolloId: rollo.id,
+      estado: rollo.estado,
+      cantidadActual: rollo.cantidadActual,
+    },
+    datosDespues: {
+      rolloId: rollo.id,
+      estado: "BAJA",
+      cantidadActual: "0.000",
+      motivo: input.motivo,
+      justificacion,
+      movimientoId: Number(movimiento.id),
+    },
+    ip: input.ip,
+  });
+
+  const [updated] = await tx
+    .select()
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id))
+    .limit(1);
+  return { rollo: updated!, movimiento };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export type RevertirMovimientoInput = {
   movimientoOrigenId: number;
   usuarioId: number;
@@ -2080,9 +2255,29 @@ export async function revertirMovimiento(
   if (!orig) {
     throw new InventarioError("Movimiento no encontrado.", "MOVIMIENTO_NOT_FOUND");
   }
+  let justificacion =
+    input.justificacion ?? `Cancelación del movimiento #${input.movimientoOrigenId}`;
+  if (orig.motivoSalidaExtraordinaria != null) {
+    justificacion = input.justificacion?.trim() ?? "";
+    if (justificacion.length < 10) {
+      throw new InventarioError(
+        "La justificación debe tener al menos 10 caracteres.",
+        "JUSTIFICACION_REQUIRED",
+      );
+    }
+  }
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, input.uuidCliente);
     if (dup) {
+      if (
+        dup.tipo !== "CANCELACION" ||
+        dup.movimientoOrigenId !== input.movimientoOrigenId
+      ) {
+        throw new InventarioError(
+          "El identificador de la operación ya fue utilizado.",
+          "UUID_ALREADY_USED",
+        );
+      }
       const [duplicateRollo] = await tx.select().from(rollosTable)
         .where(eq(rollosTable.id, dup.rolloId)).limit(1);
       return { rollo: duplicateRollo!, movimiento: dup };
@@ -2161,7 +2356,7 @@ export async function revertirMovimiento(
     tipo: "CANCELACION",
     cantidad: inversaCantidad,
     usuarioId: input.usuarioId,
-    justificacion: input.justificacion ?? `Cancelación del movimiento #${input.movimientoOrigenId}`,
+    justificacion,
     movimientoOrigenId: input.movimientoOrigenId,
     uuidCliente: input.uuidCliente ?? null,
   });

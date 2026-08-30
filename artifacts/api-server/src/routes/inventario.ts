@@ -67,6 +67,13 @@ import {
   UpdateRolloPisoParams,
   UpdateRolloPisoBody,
   UpdateRolloPisoResponse,
+  CreateSalidaExtraordinariaBody,
+  CreateSalidaExtraordinariaResponse,
+  ListSalidasExtraordinariasQueryParams,
+  ListSalidasExtraordinariasResponse,
+  RevertSalidaExtraordinariaParams,
+  RevertSalidaExtraordinariaBody,
+  RevertSalidaExtraordinariaResponse,
 } from "@workspace/api-zod";
 import {
   db,
@@ -87,7 +94,7 @@ import type { AuthContext } from "../middlewares/auth";
 import { getRequestIp } from "../lib/request";
 import { parseMexicoDateQuery } from "../lib/mexico-date";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
-import { requierePermiso } from "../lib/permisos";
+import { requiereAdmin, requierePermiso } from "../lib/permisos";
 import {
   crearEntrada,
   buildEntradaResult,
@@ -100,6 +107,7 @@ import {
   recalcularExistencias,
   revisarAjuste,
   InventarioError,
+  crearSalidaExtraordinaria,
 } from "../lib/inventario";
 import {
   getKardex as queryKardex,
@@ -221,6 +229,7 @@ type MovimientoRow = {
   productoId: number;
   ubicacionId: number;
   tipo: string;
+  motivoSalidaExtraordinaria: "MERMA" | "ROBO" | "MUESTRA" | null;
   cantidad: string;
   saldoPosterior: string;
   documentoTipo: string | null;
@@ -244,6 +253,7 @@ async function enrichMovimiento(
     productoId: mov.productoId,
     ubicacionId: mov.ubicacionId,
     tipo: mov.tipo,
+    motivoSalidaExtraordinaria: mov.motivoSalidaExtraordinaria ?? null,
     cantidad: mov.cantidad,
     saldoPosterior: mov.saldoPosterior,
     documentoTipo: mov.documentoTipo ?? null,
@@ -322,6 +332,292 @@ async function getRolloDetail(rolloId: number) {
     updatedAt: rollo.updatedAt.toISOString(),
   };
 }
+
+async function getSalidaExtraordinaria(movimientoId: number) {
+  const [row] = await db
+    .select({
+      movimientoId: movimientosTable.id,
+      rolloId: rollosTable.id,
+      serie: rollosTable.serie,
+      productoId: productosTable.id,
+      skuProducto: productosTable.sku,
+      telaProducto: productosTable.tela,
+      colorProducto: productosTable.color,
+      unidadProducto: productosTable.unidad,
+      ubicacionId: ubicacionesTable.id,
+      nombreUbicacion: ubicacionesTable.nombre,
+      cantidad: movimientosTable.cantidad,
+      motivo: movimientosTable.motivoSalidaExtraordinaria,
+      justificacion: movimientosTable.justificacion,
+      usuarioId: usuariosTable.id,
+      nombreUsuario: usuariosTable.nombre,
+      uuidCliente: movimientosTable.uuidCliente,
+      createdAt: movimientosTable.createdAt,
+    })
+    .from(movimientosTable)
+    .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
+    .innerJoin(
+      productosTable,
+      eq(movimientosTable.productoId, productosTable.id),
+    )
+    .innerJoin(
+      ubicacionesTable,
+      eq(movimientosTable.ubicacionId, ubicacionesTable.id),
+    )
+    .innerJoin(usuariosTable, eq(movimientosTable.usuarioId, usuariosTable.id))
+    .where(
+      and(
+        eq(movimientosTable.id, movimientoId),
+        sql`${movimientosTable.motivoSalidaExtraordinaria} IS NOT NULL`,
+      ),
+    )
+    .limit(1);
+  if (
+    !row ||
+    row.motivo == null ||
+    row.justificacion == null ||
+    row.uuidCliente == null
+  ) {
+    return null;
+  }
+  return {
+    ...row,
+    movimientoId: Number(row.movimientoId),
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+// Salidas extraordinarias reuse the existing salidas permission module because
+// they are inventory exits; the direct ADMIN guard remains non-configurable.
+inventarioRouter.get(
+  "/salidas-extraordinarias",
+  requireSession,
+  requierePermiso("salidas", "ver"),
+  requiereAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const query = ListSalidasExtraordinariasQueryParams.safeParse(req.query);
+      if (!query.success) {
+        res.status(400).json({ error: "Filtros inválidos." });
+        return;
+      }
+      const desde = parseMexicoDateQuery(query.data.fechaDesde, "start");
+      const hasta = parseMexicoDateQuery(query.data.fechaHasta, "end");
+      if (desde === null || hasta === null) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
+      const page = query.data.page ?? 1;
+      const pageSize = query.data.pageSize ?? 20;
+      const conditions = [
+        sql`${movimientosTable.motivoSalidaExtraordinaria} IS NOT NULL`,
+      ];
+      if (query.data.ubicacionId) {
+        conditions.push(
+          eq(movimientosTable.ubicacionId, query.data.ubicacionId),
+        );
+      }
+      if (query.data.motivo) {
+        conditions.push(
+          eq(
+            movimientosTable.motivoSalidaExtraordinaria,
+            query.data.motivo,
+          ),
+        );
+      }
+      if (desde) conditions.push(gte(movimientosTable.createdAt, desde));
+      if (hasta) conditions.push(lte(movimientosTable.createdAt, hasta));
+      const where = and(...conditions);
+
+      const [[totalRow], rows] = await Promise.all([
+        db
+          .select({ value: count() })
+          .from(movimientosTable)
+          .where(where),
+        db
+          .select({
+            movimientoId: movimientosTable.id,
+            rolloId: rollosTable.id,
+            serie: rollosTable.serie,
+            productoId: productosTable.id,
+            skuProducto: productosTable.sku,
+            telaProducto: productosTable.tela,
+            colorProducto: productosTable.color,
+            unidadProducto: productosTable.unidad,
+            ubicacionId: ubicacionesTable.id,
+            nombreUbicacion: ubicacionesTable.nombre,
+            cantidad: movimientosTable.cantidad,
+            motivo: movimientosTable.motivoSalidaExtraordinaria,
+            justificacion: movimientosTable.justificacion,
+            usuarioId: usuariosTable.id,
+            nombreUsuario: usuariosTable.nombre,
+            uuidCliente: movimientosTable.uuidCliente,
+            createdAt: movimientosTable.createdAt,
+          })
+          .from(movimientosTable)
+          .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
+          .innerJoin(
+            productosTable,
+            eq(movimientosTable.productoId, productosTable.id),
+          )
+          .innerJoin(
+            ubicacionesTable,
+            eq(movimientosTable.ubicacionId, ubicacionesTable.id),
+          )
+          .innerJoin(
+            usuariosTable,
+            eq(movimientosTable.usuarioId, usuariosTable.id),
+          )
+          .where(where)
+          .orderBy(desc(movimientosTable.createdAt), desc(movimientosTable.id))
+          .limit(pageSize)
+          .offset((page - 1) * pageSize),
+      ]);
+      const items = rows.map((row) => ({
+        ...row,
+        movimientoId: Number(row.movimientoId),
+        createdAt: row.createdAt.toISOString(),
+      }));
+      res.json(
+        ListSalidasExtraordinariasResponse.parse({
+          items,
+          total: totalRow?.value ?? 0,
+          page,
+          pageSize,
+        }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.post(
+  "/salidas-extraordinarias",
+  requireSession,
+  requierePermiso("salidas", "crear"),
+  requiereAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const body = CreateSalidaExtraordinariaBody.parse(req.body);
+      const result = await db.transaction((tx) =>
+        crearSalidaExtraordinaria(tx, {
+          rolloId: body.rolloId,
+          motivo: body.motivo,
+          justificacion: body.justificacion,
+          usuarioId: req.auth!.user.id,
+          uuidCliente: body.uuidCliente,
+          ip: getRequestIp(req),
+        }),
+      );
+      const salida = await getSalidaExtraordinaria(Number(result.movimiento.id));
+      if (!salida) {
+        throw new Error("No se pudo leer la salida extraordinaria creada.");
+      }
+      res.status(201).json(CreateSalidaExtraordinariaResponse.parse(salida));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        const status =
+          error.code === "ROLLO_NOT_FOUND"
+            ? 404
+            : error.code === "UUID_ALREADY_USED"
+              ? 409
+              : 400;
+        res.status(status).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.post(
+  "/salidas-extraordinarias/:movimientoId/revertir",
+  requireSession,
+  requierePermiso("salidas", "editar"),
+  requiereAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = RevertSalidaExtraordinariaParams.parse(req.params);
+      const body = RevertSalidaExtraordinariaBody.parse(req.body);
+      const result = await db.transaction(async (tx) => {
+        const [origin] = await tx
+          .select({
+            id: movimientosTable.id,
+            motivo: movimientosTable.motivoSalidaExtraordinaria,
+          })
+          .from(movimientosTable)
+          .where(eq(movimientosTable.id, params.movimientoId))
+          .limit(1);
+        if (!origin || origin.motivo == null) {
+          throw new InventarioError(
+            "Salida extraordinaria no encontrada.",
+            "MOVIMIENTO_NOT_FOUND",
+          );
+        }
+        const reversed = await revertirMovimiento(tx, {
+          movimientoOrigenId: params.movimientoId,
+          usuarioId: req.auth!.user.id,
+          justificacion: body.justificacion,
+          uuidCliente: body.uuidCliente,
+        });
+        if (
+          reversed.movimiento.tipo !== "CANCELACION" ||
+          reversed.movimiento.movimientoOrigenId !== params.movimientoId
+        ) {
+          throw new InventarioError(
+            "El identificador de la operación ya fue utilizado.",
+            "UUID_ALREADY_USED",
+          );
+        }
+        const [existingAudit] = await tx
+          .select({ id: auditoriaTable.id })
+          .from(auditoriaTable)
+          .where(
+            and(
+              eq(auditoriaTable.accion, "REVERTIR_SALIDA_EXTRAORDINARIA"),
+              eq(auditoriaTable.entidad, "movimientos"),
+              eq(auditoriaTable.entidadId, String(params.movimientoId)),
+            ),
+          )
+          .limit(1);
+        if (!existingAudit) {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            sitioId: reversed.movimiento.ubicacionId,
+            modulo: "salidas",
+            accion: "REVERTIR_SALIDA_EXTRAORDINARIA",
+            entidad: "movimientos",
+            entidadId: String(params.movimientoId),
+            datosAntes: { motivo: origin.motivo },
+            datosDespues: {
+              movimientoReversoId: Number(reversed.movimiento.id),
+              justificacion: reversed.movimiento.justificacion,
+            },
+            ip: getRequestIp(req),
+          });
+        }
+        return reversed;
+      });
+      const detail = await getRolloDetail(result.rollo.id);
+      res.json(RevertSalidaExtraordinariaResponse.parse(detail));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        const status =
+          error.code === "MOVIMIENTO_NOT_FOUND" ||
+          error.code === "ROLLO_NOT_FOUND"
+            ? 404
+            : error.code === "ALREADY_CANCELLED" ||
+                error.code === "UUID_ALREADY_USED"
+              ? 409
+              : 400;
+        res.status(status).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
 
 // ── Crear entrada (entrada completa en una transacción) ───────────────────────
 
@@ -1078,6 +1374,8 @@ inventarioRouter.post(
         .select({
           ubicacionId: movimientosTable.ubicacionId,
           rolloId: movimientosTable.rolloId,
+          motivoSalidaExtraordinaria:
+            movimientosTable.motivoSalidaExtraordinaria,
         })
         .from(movimientosTable)
         .where(eq(movimientosTable.id, body.movimientoOrigenId))
@@ -1085,6 +1383,15 @@ inventarioRouter.post(
 
       if (!movCheck) {
         res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      if (
+        movCheck.motivoSalidaExtraordinaria != null &&
+        auth.user.rol !== "ADMIN"
+      ) {
+        res.status(403).json({
+          error: "Revertir una salida extraordinaria requiere rol ADMIN.",
+        });
         return;
       }
 

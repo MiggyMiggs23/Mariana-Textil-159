@@ -13,7 +13,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
-import { estadoRolloEnum, tipoMovimientoEnum } from "./enums";
+import {
+  estadoRolloEnum,
+  motivoSalidaExtraordinariaEnum,
+  tipoMovimientoEnum,
+} from "./enums";
 import { productosTable } from "./productos";
 import { pisosTable, ubicacionesTable } from "./locations";
 import { proveedoresTable } from "./proveedores";
@@ -96,6 +100,10 @@ export const movimientosTable = pgTable(
       .notNull()
       .references(() => ubicacionesTable.id),
     tipo: tipoMovimientoEnum("tipo").notNull(),
+    /** Present only for a whole-roll extraordinary write-off. */
+    motivoSalidaExtraordinaria: motivoSalidaExtraordinariaEnum(
+      "motivo_salida_extraordinaria",
+    ),
     /** Signed quantity: positive = stock in, negative = stock out */
     cantidad: numeric("cantidad", { precision: 10, scale: 3 }).notNull(),
     /** Running ledger total after this movement (producto × ubicacion) */
@@ -134,6 +142,9 @@ export const movimientosTable = pgTable(
       table.ubicacionId,
     ),
     index("movimientos_tipo_idx").on(table.tipo),
+    index("movimientos_motivo_salida_extraordinaria_idx").on(
+      table.motivoSalidaExtraordinaria,
+    ),
     index("movimientos_created_idx").on(table.createdAt),
     index("movimientos_revisado_idx").on(table.revisado),
     index("movimientos_uuid_cliente_idx").on(table.uuidCliente),

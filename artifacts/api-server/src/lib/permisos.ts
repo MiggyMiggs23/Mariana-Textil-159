@@ -289,6 +289,23 @@ export function requierePermiso(modulo: string, accion: AccionPermiso) {
   };
 }
 
+/** Non-configurable role guard for operations reserved directly to ADMIN. */
+export function requiereAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
+  if (!req.auth) {
+    res.status(401).json({ error: "Debes iniciar sesión." });
+    return;
+  }
+  if (req.auth.user.rol !== "ADMIN") {
+    res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+    return;
+  }
+  next();
+}
+
 /**
  * ADMIN is not configurable through either permission table.
  */

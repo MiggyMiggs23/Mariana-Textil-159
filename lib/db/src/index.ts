@@ -13,6 +13,7 @@ export { ensureEtiquetasSchema } from "./lib/etiquetas-schema";
 export { ensureSupervisorRole } from "./lib/role-migration";
 export { ensureDocumentFoliosSchema } from "./lib/document-folios-schema";
 export { ensureEstadoRolloSchema } from "./lib/estado-rollo-schema";
+export { ensureExtraordinaryExitsSchema } from "./lib/extraordinary-exits-schema";
 export { ensureProductMeterSchema } from "./lib/product-meter-schema";
 export { ensureProductUnitSchema } from "./lib/product-unit-schema";
 export { ensureProductPricingSchema } from "./lib/product-pricing-schema";

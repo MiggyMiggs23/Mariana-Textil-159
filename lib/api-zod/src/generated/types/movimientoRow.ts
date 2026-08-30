@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { MotivoSalidaExtraordinaria } from './motivoSalidaExtraordinaria';
 import type { TipoMovimiento } from './tipoMovimiento';
 
 export interface MovimientoRow {
@@ -25,6 +26,7 @@ export interface MovimientoRow {
   /** @nullable */
   movimientoOrigenId?: number | null;
   usuarioId: number;
+  motivoSalidaExtraordinaria: MotivoSalidaExtraordinaria | null;
   /** @nullable */
   justificacion?: string | null;
   revisado: boolean;

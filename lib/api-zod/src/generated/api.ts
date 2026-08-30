@@ -3356,6 +3356,159 @@ export const ActivarRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "revisadoPor": zod.number().nullish(),
+  "revisadoAt": zod.coerce.date().nullish(),
+  "uuidCliente": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Lista salidas extraordinarias (solo ADMIN con permiso salidas/ver)
+ */
+
+export const listSalidasExtraordinariasQueryFechaDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listSalidasExtraordinariasQueryFechaHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listSalidasExtraordinariasQueryPageDefault = 1;
+
+export const listSalidasExtraordinariasQueryPageSizeDefault = 20;
+export const listSalidasExtraordinariasQueryPageSizeMax = 100;
+
+
+
+export const ListSalidasExtraordinariasQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional(),
+  "motivo": zod.enum(['MERMA', 'ROBO', 'MUESTRA']).optional(),
+  "fechaDesde": zod.coerce.string().regex(listSalidasExtraordinariasQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(listSalidasExtraordinariasQueryFechaHastaRegExp).optional(),
+  "page": zod.coerce.number().min(1).default(listSalidasExtraordinariasQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(listSalidasExtraordinariasQueryPageSizeMax).default(listSalidasExtraordinariasQueryPageSizeDefault)
+})
+
+export const ListSalidasExtraordinariasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "movimientoId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "cantidad": zod.string(),
+  "motivo": zod.enum(['MERMA', 'ROBO', 'MUESTRA']),
+  "justificacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "uuidCliente": zod.string(),
+  "createdAt": zod.coerce.date()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Da de baja un rollo completo por merma, robo o muestra (solo ADMIN con permiso salidas/crear)
+ */
+
+export const createSalidaExtraordinariaBodyJustificacionMin = 10;
+
+export const createSalidaExtraordinariaBodyUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
+
+export const CreateSalidaExtraordinariaBody = zod.object({
+  "rolloId": zod.number().min(1),
+  "motivo": zod.enum(['MERMA', 'ROBO', 'MUESTRA']),
+  "justificacion": zod.string().min(createSalidaExtraordinariaBodyJustificacionMin),
+  "uuidCliente": zod.string().regex(createSalidaExtraordinariaBodyUuidClienteRegExp)
+})
+
+export const CreateSalidaExtraordinariaResponse = zod.object({
+  "movimientoId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "cantidad": zod.string(),
+  "motivo": zod.enum(['MERMA', 'ROBO', 'MUESTRA']),
+  "justificacion": zod.string(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "uuidCliente": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Corrige una salida extraordinaria mediante revertirMovimiento (solo ADMIN con permiso salidas/editar)
+ */
+
+
+
+export const RevertSalidaExtraordinariaParams = zod.object({
+  "movimientoId": zod.coerce.number().min(1)
+})
+
+export const revertSalidaExtraordinariaBodyJustificacionMin = 10;
+
+export const revertSalidaExtraordinariaBodyUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
+
+export const RevertSalidaExtraordinariaBody = zod.object({
+  "justificacion": zod.string().min(revertSalidaExtraordinariaBodyJustificacionMin),
+  "uuidCliente": zod.string().regex(revertSalidaExtraordinariaBodyUuidClienteRegExp)
+})
+
+export const RevertSalidaExtraordinariaResponse = zod.object({
+  "id": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "telaProducto": zod.string().optional(),
+  "colorProducto": zod.string().optional(),
+  "unidadProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "pisoId": zod.number().nullish(),
+  "nombrePiso": zod.string().nullish(),
+  "proveedorId": zod.number().nullish(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
+  "cantidadInicial": zod.string(),
+  "cantidadActual": zod.string(),
+  "costoUnitario": zod.string().nullish(),
+  "costoTotal": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().optional(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().optional(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().optional(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
@@ -3414,6 +3567,7 @@ export const VenderRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
@@ -3477,6 +3631,7 @@ export const AjustarRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
@@ -3536,6 +3691,7 @@ export const RevertirMovimientoResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
@@ -3589,6 +3745,7 @@ export const GetRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
@@ -3849,6 +4006,7 @@ export const ListAjustesPendientesResponseItem = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
@@ -3881,6 +4039,7 @@ export const RevisarAjusteResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
   "justificacion": zod.string().nullish(),
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullish(),
