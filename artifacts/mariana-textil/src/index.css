@@ -312,10 +312,9 @@
     visibility: visible;
   }
   body.print-entrada .entrada-print-root {
+    page: entrada-page;
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: static;
     width: 215.5mm;
     height: auto !important;
     overflow: visible !important;
@@ -587,14 +586,26 @@
 
   .entrada-page-print {
     page: entrada-page;
-    break-after: page;
+    break-after: auto;
     break-inside: avoid-page;
-    page-break-after: always;
+    page-break-after: auto;
     page-break-inside: avoid;
     /* 0.5 mm de tolerancia evita que el redondeo CSS px de la caja exacta cree una hoja fantasma. */
     width: 215.5mm !important;
     height: 278.5mm !important;
     margin: 0 !important;
+    overflow: clip !important;
+  }
+
+  .entrada-page-print .series-table,
+  .entrada-page-print .series-table table {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .entrada-page-print + .entrada-page-print {
+    break-before: page;
+    page-break-before: always;
   }
 
   .salida-page-print {

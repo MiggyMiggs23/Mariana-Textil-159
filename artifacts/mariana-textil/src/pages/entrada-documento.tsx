@@ -59,16 +59,16 @@ export default function EntradaDocumento() {
     }));
   });
 
-  // Medición Chromium a 96 dpi: 28 filas × 4 series = 112 series, overflow = 0.
-  // Caja 1052.59 px; header 162, título/subtítulo 44, tabla 608.5 y franja 16 px.
-  const seriesRowsPerPage = 28;
+  // Medición Chromium a 96 dpi: 40 filas × 24 px dejan 13.59 px libres dentro
+  // de la caja fija de 1052.59 px; 41 filas rebasan la hoja por 10.41 px.
+  const seriesRowsPerPage = 40;
   const seriesPageCount = Math.ceil(seriesRows.length / seriesRowsPerPage);
   const seriesPages = Array.from({ length: seriesPageCount }).map((_, i) =>
     seriesRows.slice(i * seriesRowsPerPage, (i + 1) * seriesRowsPerPage),
   );
   const totalPages = globalPages.length + seriesPages.length;
 
-  const renderHeader = (pageNumber: number) => (
+  const renderGlobalHeader = (pageNumber: number) => (
     <PrintableDocumentHeader
       className="document-header shrink-0 p-6"
       qrUrl={documentUrl}
@@ -83,6 +83,17 @@ export default function EntradaDocumento() {
         </div>
       </div>
     </PrintableDocumentHeader>
+  );
+
+  const renderSeriesHeader = (pageNumber: number) => (
+    <div className="series-page-header h-10 shrink-0 border-b border-[#1e3a8a] px-8 flex items-center justify-between gap-6 text-xs text-black">
+      <div className="min-w-0">
+        <span className="font-semibold uppercase text-gray-600">Folio </span>
+        <span className="font-black text-red-600">{entrada.folioFormateado}</span>
+      </div>
+      <div className="font-black uppercase tracking-wider text-[#1e3a8a]">Listado de series</div>
+      <div className="whitespace-nowrap font-semibold">Página {pageNumber} de {totalPages}</div>
+    </div>
   );
 
   return (
@@ -104,7 +115,7 @@ export default function EntradaDocumento() {
           >
 
             {/* Header */}
-            {renderHeader(pageIndex + 1)}
+            {renderGlobalHeader(pageIndex + 1)}
 
             {/* Form Data */}
             <div className="document-metadata px-8 py-4 shrink-0">
@@ -222,16 +233,9 @@ export default function EntradaDocumento() {
               data-page-kind="series"
               className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0"
             >
-              {renderHeader(pageNumber)}
+              {renderSeriesHeader(pageNumber)}
 
-              <div className="px-8 py-4 border-b border-gray-300 shrink-0">
-                <h2 className="text-lg font-black uppercase tracking-wide text-[#1e3a8a]">Listado de series</h2>
-                <p className="mt-0.5 text-xs font-semibold text-gray-600">
-                  Agrupado por producto · {formatNumber(entrada.rollos.length, { kind: "count" })} rollos
-                </p>
-              </div>
-
-              <div className="series-table px-8 py-3 flex-1 relative z-10">
+              <div className="series-table min-h-0 overflow-hidden px-8 py-2 flex-1 relative z-10">
                 <table className="w-full table-fixed text-left border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-[#1e3a8a] text-white">
@@ -249,12 +253,12 @@ export default function EntradaDocumento() {
                       <tr
                         key={`${row.productoId}-${seriesPageIndex}-${rowIndex}`}
                         data-product-id={row.productoId}
-                        className={`h-[24px] border-b border-gray-200 even:bg-gray-50 ${row.isFirstChunk ? "border-t-2 border-t-gray-400" : ""}`}
+                        className={`h-6 border-b border-gray-200 even:bg-gray-50 ${row.isFirstChunk ? "border-t-2 border-t-gray-400" : ""}`}
                       >
-                        <td className="py-1 px-2 text-[11px] font-bold text-black truncate">{row.producto}</td>
-                        <td className="py-1 px-2 text-[11px] font-mono text-gray-700 truncate">{row.sku}</td>
+                        <td className="py-0.5 px-2 text-[11px] leading-none font-bold text-black truncate">{row.producto}</td>
+                        <td className="py-0.5 px-2 text-[11px] leading-none font-mono text-gray-700 truncate">{row.sku}</td>
                         {Array.from({ length: seriesPerRow }).map((_, seriesIndex) => (
-                          <td key={seriesIndex} className="py-1 px-2 text-[11px] font-mono font-bold text-black">
+                          <td key={seriesIndex} className="py-0.5 px-2 text-[11px] leading-none font-mono font-bold text-black">
                             {row.series[seriesIndex]?.serie ?? ""}
                           </td>
                         ))}
@@ -263,8 +267,6 @@ export default function EntradaDocumento() {
                   </tbody>
                 </table>
               </div>
-
-              <div className="h-4 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
             </div>
           );
         })}

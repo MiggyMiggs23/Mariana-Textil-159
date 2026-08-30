@@ -21,7 +21,7 @@ test("Entrada keeps 216x279mm paper and uses its measured safe content box", asy
   assert.match(entrada, /qrLabel=\{`QR para ver entrada/);
   assert.match(entrada, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(entrada, /const seriesPerRow = 4;/);
-  assert.match(entrada, /const seriesRowsPerPage = 28;/);
+  assert.match(entrada, /const seriesRowsPerPage = 40;/);
   assert.match(entrada, /const totalPages = globalPages\.length \+ seriesPages\.length;/);
   assert.match(entrada, /pageIndex === globalPages\.length - 1/);
   assert.match(entrada, />Listado de series</);

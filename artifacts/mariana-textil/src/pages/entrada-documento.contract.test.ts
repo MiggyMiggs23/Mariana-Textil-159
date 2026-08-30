@@ -19,8 +19,9 @@ test("la entrada conserva su formato global y firma solo la última hoja global"
 
 test("la entrada agrega un listado compacto de todas las series por producto", () => {
   assert.match(documentPage, /const seriesPerRow = 4/);
-  assert.match(documentPage, /const seriesRowsPerPage = 28/);
-  assert.match(documentPage, /28 filas × 4 series = 112 series, overflow = 0/);
+  assert.match(documentPage, /const seriesRowsPerPage = 40/);
+  assert.match(documentPage, /40 filas × 24 px dejan 13\.59 px/);
+  assert.match(documentPage, /41 filas rebasan la hoja por 10\.41 px/);
   assert.match(documentPage, /rollosByProducto\.get\(linea\.productoId\)/);
   assert.match(documentPage, /productRollos\.slice\(chunkIndex \* seriesPerRow/);
   assert.match(documentPage, /data-page-kind="series"/);
@@ -28,10 +29,18 @@ test("la entrada agrega un listado compacto de todas las series por producto", (
   assert.match(documentPage, /Serie \{index \+ 1\}/);
   assert.match(documentPage, /row\.series\[seriesIndex\]\?\.serie/);
   assert.match(documentPage, /const totalPages = globalPages\.length \+ seriesPages\.length/);
-  assert.match(documentPage, /renderHeader\(pageNumber\)/);
+  assert.match(documentPage, /renderSeriesHeader\(pageNumber\)/);
+  assert.match(documentPage, /Folio/);
+  assert.match(documentPage, /Página \{pageNumber\} de \{totalPages\}/);
 
   const seriesSection = documentPage.slice(documentPage.indexOf("{seriesPages.map"));
   assert.doesNotMatch(seriesSection, /document-footer/);
+  assert.doesNotMatch(seriesSection, /PrintableDocumentHeader|DOCUMENT_QR_SIZE|Agrupado por producto/);
+  assert.doesNotMatch(seriesSection, /h-4 bg-\[#1e3a8a\] w-full shrink-0 mt-auto/);
+  assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*overflow:\s*clip !important/);
+  assert.match(styles, /\.entrada-page-print \+ \.entrada-page-print\s*\{[\s\S]*break-before:\s*page/);
+  assert.doesNotMatch(styles, /\.entrada-page-print\s*\{[\s\S]*?break-after:\s*page/);
+  assert.match(styles, /body\.print-entrada \.entrada-print-root\s*\{[\s\S]*page:\s*entrada-page/);
 });
 
 test("los globales conservan cada producto y unidad por separado", () => {
