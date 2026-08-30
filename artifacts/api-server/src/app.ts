@@ -6,13 +6,16 @@ import { ZodError } from "zod";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { omitSupervisorSensitiveFields } from "./lib/sensitive-data";
+import { createRequestDrain } from "./lib/server-lifecycle";
 
 const app: Express = express();
+export const requestDrain = createRequestDrain();
 
 // Honor forwarding headers only when the direct peer is on an explicitly
 // trusted proxy network. A public client reaching Express directly cannot
 // spoof its lockout/audit source with X-Forwarded-For.
 app.set("trust proxy", ["loopback", "linklocal", "uniquelocal"]);
+app.use(requestDrain.middleware);
 
 app.use(
   pinoHttp({

@@ -218,9 +218,22 @@ function toDate(val: Date | string | null): Date | null {
  *
  * Returns the number of rows inserted.
  */
-export async function backfillCompras(): Promise<number> {
+type BackfillExecutor = Pick<typeof db, "execute" | "transaction">;
+
+function throwIfAborted(signal?: AbortSignal): void {
+  if (signal?.aborted) {
+    throw new DOMException("Supplier purchase backfill was cancelled.", "AbortError");
+  }
+}
+
+export async function backfillCompras(opts: {
+  signal?: AbortSignal;
+  executor?: BackfillExecutor;
+} = {}): Promise<number> {
+  const executor = opts.executor ?? db;
+  throwIfAborted(opts.signal);
   // Find entradas with proveedor that have no COMPRA row yet
-  const missing = await db.execute<{
+  const missing = await executor.execute<{
     id: number;
     proveedor_id: number;
     total_costo: string;
@@ -248,8 +261,9 @@ export async function backfillCompras(): Promise<number> {
 
   if (rows.length === 0) return 0;
 
-  await db.transaction(async (tx) => {
+  await executor.transaction(async (tx) => {
     for (const row of rows) {
+      throwIfAborted(opts.signal);
       const fecha = toDate(row.fecha)!;
       await tx
         .insert(pagosProveedorTable)
@@ -266,6 +280,7 @@ export async function backfillCompras(): Promise<number> {
     }
   });
 
+  throwIfAborted(opts.signal);
   return rows.length;
 }
 
