@@ -298,25 +298,34 @@ async function getSaldo(
  * Record a movement row and return it. Computes saldo_posterior from the
  * current ledger total plus this movement's quantity.
  */
-async function insertMovimiento(
+type InsertMovimientoArgs = {
+  rolloId: number;
+  productoId: number;
+  ubicacionId: number;
+  tipo: TipoMovimiento;
+  cantidad: string; // signed
+  usuarioId: number;
+  justificacion?: string | null;
+  revisado?: boolean;
+  documentoTipo?: string | null;
+  documentoId?: string | null;
+  movimientoOrigenId?: number | null;
+  uuidCliente?: string | null;
+};
+
+type AfterSaldoRead = (
+  pair: InventoryPair,
+  saldoAntes: string,
+) => Promise<void>;
+
+async function insertMovimientoWithDependencies(
   tx: Tx,
-  args: {
-    rolloId: number;
-    productoId: number;
-    ubicacionId: number;
-    tipo: TipoMovimiento;
-    cantidad: string; // signed
-    usuarioId: number;
-    justificacion?: string | null;
-    revisado?: boolean;
-    documentoTipo?: string | null;
-    documentoId?: string | null;
-    movimientoOrigenId?: number | null;
-    uuidCliente?: string | null;
-  },
+  args: InsertMovimientoArgs,
+  afterSaldoRead: AfterSaldoRead,
 ): Promise<typeof movimientosTable.$inferSelect> {
   await lockInventoryPairs(tx, [args]);
   const saldoAntes = await getSaldo(tx, args.productoId, args.ubicacionId);
+  await afterSaldoRead(args, saldoAntes);
   // Every persisted movement quantity is canonical thousandths.  Keep this
   // conversion next to the ledger write so callers cannot introduce binary
   // floating-point quantities into cantidad or saldo_posterior.
@@ -349,6 +358,29 @@ async function insertMovimiento(
 
   return mov!;
 }
+
+const ignoreSaldoRead: AfterSaldoRead = async () => undefined;
+
+async function insertMovimiento(
+  tx: Tx,
+  args: InsertMovimientoArgs,
+): Promise<typeof movimientosTable.$inferSelect> {
+  return insertMovimientoWithDependencies(tx, args, ignoreSaldoRead);
+}
+
+/**
+ * Dependency-injected movement writer used only by concurrency tests. The
+ * production writer above contains no environment switch or mutable test hook.
+ */
+export const inventoryConcurrencyTestSeam = {
+  insertMovimiento(
+    tx: Tx,
+    args: InsertMovimientoArgs,
+    afterSaldoRead: AfterSaldoRead,
+  ) {
+    return insertMovimientoWithDependencies(tx, args, afterSaldoRead);
+  },
+};
 
 // ── State transition guard ────────────────────────────────────────────────────
 
