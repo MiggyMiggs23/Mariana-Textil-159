@@ -318,16 +318,29 @@ type AsignacionProveedor = {
   pagoProveedorId: number; compraProveedorId: number; importe: string;
   saldoAntes: string; saldoDespues: string;
 };
+type SupplierCreditRow = {
+  id: number;
+  tipo: "PAGO" | "COMPRA";
+  importe: string;
+  fecha: Date | string;
+  disponible: string;
+  saldo: string;
+};
+type SupplierPurchasePreviewRow = {
+  id: number;
+  entrada_id: number | null;
+  fecha: Date | string;
+  saldo: string;
+  folio: number | null;
+};
+type SupplierPaymentRow = typeof pagosProveedorTable.$inferSelect;
 
 async function aplicarCreditosProveedor(
   tx: Tx,
   proveedorId: number,
   compraIds?: number[],
 ): Promise<AsignacionProveedor[]> {
-  const rows = await tx.execute<{
-    id: number; tipo: "PAGO" | "COMPRA"; importe: string; fecha: Date | string;
-    disponible: string; saldo: string;
-  }>(sql`
+  const rows = await tx.execute<SupplierCreditRow>(sql`
     SELECT pp.id, pp.tipo, pp.importe, pp.fecha,
       CASE WHEN pp.tipo='PAGO' THEN -pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor source ON source.id=a.pago_proveedor_id WHERE a.pago_proveedor_id=pp.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.movimiento_origen_id=source.id AND r.tipo='REVERSO')),0) ELSE 0 END::text disponible,
       CASE WHEN pp.tipo='COMPRA' THEN pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor source ON source.id=a.pago_proveedor_id WHERE a.compra_proveedor_id=pp.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.movimiento_origen_id=source.id AND r.tipo='REVERSO')),0) ELSE 0 END::text saldo
@@ -336,9 +349,9 @@ async function aplicarCreditosProveedor(
       ${compraIds ? sql`AND (pp.tipo='PAGO' OR pp.id = ANY(ARRAY[${sql.raw(compraIds.join(","))}]::int[]))` : sql``}
     ORDER BY pp.fecha, pp.id FOR UPDATE
   `);
-  const sources = (rows.rows as any[]).filter((r) => r.tipo === "PAGO" && moneyToCents(r.disponible) > 0)
+  const sources = rows.rows.filter((r) => r.tipo === "PAGO" && moneyToCents(r.disponible) > 0)
     .map((r) => ({ id: Number(r.id), availableCents: moneyToCents(r.disponible) }));
-  const targets = (rows.rows as any[]).filter((r) => r.tipo === "COMPRA" && moneyToCents(r.saldo) > 0)
+  const targets = rows.rows.filter((r) => r.tipo === "COMPRA" && moneyToCents(r.saldo) > 0)
     .map((r) => ({ id: Number(r.id), balanceCents: moneyToCents(r.saldo), createdAt: toDate(r.fecha)! }));
   const result = allocateCreditFifo(sources, targets);
   const assignments: AsignacionProveedor[] = [];
@@ -357,16 +370,16 @@ async function aplicarCreditosProveedor(
 export async function previewPagoProveedor(opts: {
   proveedorId: number; importe: number;
 }): Promise<{ asignaciones: Array<AsignacionProveedor & { entradaId: number | null; folio: number | null; fecha: string; resultado: EstadoCompra }>; saldoAFavor: string }> {
-  const rows = await db.execute<any>(sql`
+  const rows = await db.execute<SupplierPurchasePreviewRow>(sql`
     SELECT pp.id,pp.entrada_id,pp.fecha,pp.importe-COALESCE((SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor source ON source.id=a.pago_proveedor_id WHERE a.compra_proveedor_id=pp.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=source.id)),0) saldo,e.folio
     FROM pagos_proveedor pp LEFT JOIN entradas e ON e.id=pp.entrada_id
     WHERE pp.proveedor_id=${opts.proveedorId} AND pp.tipo='COMPRA' ORDER BY pp.fecha,pp.id`);
-  const targets = rows.rows.filter((r: any) => moneyToCents(r.saldo) > 0)
-    .map((r: any) => ({ id: Number(r.id), balanceCents: moneyToCents(r.saldo), createdAt: toDate(r.fecha)! }));
+  const targets = rows.rows.filter((r) => moneyToCents(r.saldo) > 0)
+    .map((r) => ({ id: Number(r.id), balanceCents: moneyToCents(r.saldo), createdAt: toDate(r.fecha)! }));
   const allocated = allocateCreditFifo([{ id: 0, availableCents: moneyToCents(opts.importe) }], targets);
   return {
     asignaciones: allocated.allocations.map((a) => {
-      const row = rows.rows.find((r: any) => Number(r.id) === a.targetId)!;
+      const row = rows.rows.find((r) => Number(r.id) === a.targetId)!;
       return { ...a, pagoProveedorId: 0, compraProveedorId: a.targetId, importe: centsToMoney(a.appliedCents),
         saldoAntes: centsToMoney(a.balanceBeforeCents), saldoDespues: centsToMoney(a.balanceAfterCents),
         entradaId: row.entrada_id == null ? null : Number(row.entrada_id), folio: row.folio == null ? null : Number(row.folio),
@@ -437,7 +450,7 @@ export async function registrarPago(
         AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r
           WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id)),0))::text disponible
     FROM pagos_proveedor WHERE id=${row!.id}`);
-  return { pago: row!, asignaciones, saldoAFavor: parseFloat(disponible.rows[0]?.disponible ?? "0").toFixed(2) };
+  return { pago: row!, asignaciones, saldoAFavor: centsToMoney(moneyToCents(disponible.rows[0]?.disponible ?? "0")) };
 }
 
 /**
@@ -488,7 +501,7 @@ export async function reversarPago(
     ADVISORY_LOCK_NAMESPACES.SUPPLIER_LEDGER,
     opts.proveedorId,
   );
-  const original = await tx.execute<any>(sql`
+  const original = await tx.execute<SupplierPaymentRow>(sql`
     SELECT * FROM pagos_proveedor
     WHERE id=${opts.pagoId} AND proveedor_id=${opts.proveedorId} AND tipo='PAGO'
     FOR UPDATE`);

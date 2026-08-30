@@ -121,11 +121,22 @@ function priceBelowCostMessage(
 }
 
 function money(value: string | number): number {
-  const parsed = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(parsed)) {
+  const text = String(value).trim();
+  const match = /^([+-]?)(\d+)(?:\.(\d+))?$/.exec(text);
+  if (!match) {
     throw new PosError("Importe inválido.", "INVALID_AMOUNT");
   }
-  return Math.round((parsed + Number.EPSILON) * 100);
+  const fraction = (match[3] ?? "").padEnd(3, "0");
+  const cents = BigInt(match[2]!) * 100n + BigInt(fraction.slice(0, 2));
+  const rounded = cents + (fraction[2]! >= "5" ? 1n : 0n);
+  const signed = match[1] === "-" ? -rounded : rounded;
+  if (
+    signed > BigInt(Number.MAX_SAFE_INTEGER) ||
+    signed < BigInt(Number.MIN_SAFE_INTEGER)
+  ) {
+    throw new PosError("Importe inválido.", "INVALID_AMOUNT");
+  }
+  return Number(signed);
 }
 
 function decimalMoney(cents: number): string {

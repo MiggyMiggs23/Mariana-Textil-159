@@ -317,9 +317,15 @@ async function insertMovimiento(
 ): Promise<typeof movimientosTable.$inferSelect> {
   await lockInventoryPairs(tx, [args]);
   const saldoAntes = await getSaldo(tx, args.productoId, args.ubicacionId);
+  // Every persisted movement quantity is canonical thousandths.  Keep this
+  // conversion next to the ledger write so callers cannot introduce binary
+  // floating-point quantities into cantidad or saldo_posterior.
+  const cantidad = formatQuantityThousandthsBigInt(
+    quantityToThousandthsBigInt(args.cantidad),
+  );
   const saldoPosterior = formatQuantityThousandthsBigInt(
     quantityToThousandthsBigInt(saldoAntes) +
-      quantityToThousandthsBigInt(args.cantidad),
+      quantityToThousandthsBigInt(cantidad),
   );
 
   const [mov] = await tx
@@ -329,7 +335,7 @@ async function insertMovimiento(
       productoId: args.productoId,
       ubicacionId: args.ubicacionId,
       tipo: args.tipo,
-      cantidad: args.cantidad,
+      cantidad,
       saldoPosterior,
       usuarioId: args.usuarioId,
       justificacion: args.justificacion ?? null,
@@ -986,7 +992,7 @@ export async function buildEntradaResult(
     unidadProducto: string;
     costoUnitario: string | null;
     rollosCount: number;
-    cantidadTotal: number;
+    cantidadTotal: bigint;
     costoTotal: number | null;
   };
   const groups = new Map<number, Group>();
@@ -999,11 +1005,11 @@ export async function buildEntradaResult(
       unidadProducto: r.unidad,
       costoUnitario: r.costoUnitario,
       rollosCount: 0,
-      cantidadTotal: 0,
+      cantidadTotal: 0n,
       costoTotal: r.costoTotal == null ? null : 0,
     };
     g.rollosCount += 1;
-    g.cantidadTotal += parseFloat(r.cantidadInicial);
+    g.cantidadTotal += quantityToThousandthsBigInt(r.cantidadInicial);
     if (r.costoTotal == null) g.costoTotal = null;
     else if (g.costoTotal != null) g.costoTotal += parseFloat(r.costoTotal);
     groups.set(r.productoId, g);
@@ -1017,7 +1023,7 @@ export async function buildEntradaResult(
     unidadProducto: g.unidadProducto,
     costoUnitario: g.costoUnitario,
     rollosCount: g.rollosCount,
-    cantidadTotal: g.cantidadTotal.toFixed(3),
+    cantidadTotal: formatQuantityThousandthsBigInt(g.cantidadTotal),
     costoTotal: g.costoTotal == null ? null : g.costoTotal.toFixed(2),
   }));
 
@@ -1244,7 +1250,8 @@ export async function activarRollo(
 
   const cantidadReal = input.cantidadReal;
   const cantidadChanged =
-    parseFloat(cantidadReal) !== parseFloat(rollo.cantidadInicial);
+    quantityToThousandthsBigInt(cantidadReal) !==
+    quantityToThousandthsBigInt(rollo.cantidadInicial);
 
   let notas = input.notas ?? rollo.notas;
   if (cantidadChanged && !input.notas) {
@@ -1796,8 +1803,8 @@ export async function consumirBolsasFifo(
   tx: Tx,
   input: ConsumirBolsasFifoInput,
 ): Promise<Array<typeof movimientosTable.$inferSelect>> {
-  const requerida = Number(input.cantidad);
-  if (!Number.isSafeInteger(requerida) || requerida <= 0) {
+  const requerida = quantityToThousandthsBigInt(input.cantidad);
+  if (requerida <= 0n || requerida % 1000n !== 0n) {
     throw new InventarioError(
       "La cantidad de bolsas debe ser un número entero mayor a cero.",
       "BOLSA_INTEGER_QUANTITY_REQUIRED",
@@ -1819,8 +1826,8 @@ export async function consumirBolsasFifo(
     .for("update");
 
   const disponibles = cajas.reduce(
-    (total, caja) => total + Number(caja.cantidadActual),
-    0,
+    (total, caja) => total + quantityToThousandthsBigInt(caja.cantidadActual),
+    0n,
   );
   if (disponibles < requerida) {
     throw new InventarioError(
@@ -1832,17 +1839,17 @@ export async function consumirBolsasFifo(
   let pendiente = requerida;
   const movimientos: Array<typeof movimientosTable.$inferSelect> = [];
   for (const caja of cajas) {
-    if (pendiente === 0) break;
-    const actual = Number(caja.cantidadActual);
-    const consumida = Math.min(actual, pendiente);
-    if (consumida <= 0) continue;
+    if (pendiente === 0n) break;
+    const actual = quantityToThousandthsBigInt(caja.cantidadActual);
+    const consumida = actual < pendiente ? actual : pendiente;
+    if (consumida <= 0n) continue;
     const restante = actual - consumida;
 
     await tx
       .update(rollosTable)
       .set({
-        cantidadActual: restante.toFixed(3),
-        estado: restante === 0 ? "VENDIDO" : "DISPONIBLE",
+        cantidadActual: formatQuantityThousandthsBigInt(restante),
+        estado: restante === 0n ? "VENDIDO" : "DISPONIBLE",
       })
       .where(eq(rollosTable.id, caja.id));
 
@@ -1852,7 +1859,7 @@ export async function consumirBolsasFifo(
         productoId: input.productoId,
         ubicacionId: input.ubicacionId,
         tipo: "VENTA",
-        cantidad: (-consumida).toFixed(3),
+        cantidad: formatQuantityThousandthsBigInt(-consumida),
         usuarioId: input.usuarioId,
         justificacion: input.justificacion ?? null,
         documentoTipo: DOCUMENTO_TICKET_BOLSA_METREADO,

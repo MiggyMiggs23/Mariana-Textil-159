@@ -91,12 +91,14 @@ test("Bloque 6: antigüedad parte de vencimiento; plazo CAJA no se preselecciona
 });
 
 test("Bloque 6: aplicaciones activas son la única fuente y comparten lock de cliente", async () => {
-  const [clientes, proveedores, service, pos, clienteSchema, proveedorSchema, server] =
+  const [clientes, proveedores, service, pos, creditReadModel, creditAllocation, clienteSchema, proveedorSchema, server] =
     await Promise.all([
       source("./routes/clientes.ts"),
       source("./routes/proveedores.ts"),
       source("./lib/compras-proveedor.ts"),
       source("./lib/pos.ts"),
+      source("./lib/credit-aging-read-model.ts"),
+      source("./lib/credit-allocation.ts"),
       source("../../../lib/db/src/lib/clientes-schema.ts"),
       source("../../../lib/db/src/lib/aplicaciones-pago-proveedor-schema.ts"),
       source("./index.ts"),
@@ -105,7 +107,12 @@ test("Bloque 6: aplicaciones activas son la única fuente y comparten lock de cl
   assert.match(service, /aplicaciones_pago_proveedor[\s\S]*movimiento_origen_id/);
   assert.match(proveedores, /aplicaciones_pago_proveedor[\s\S]*movimiento_origen_id/);
   assert.match(clientes, /aplicaciones_credito[\s\S]*movimiento_origen_id/);
-  assert.match(pos, /eq\(movimientosCreditoTable\.tipo, "ABONO"\)[\s\S]*NOT EXISTS[\s\S]*movimiento_origen_id/);
+  // POS delegates credit evidence to the authoritative read model; the pure
+  // projection excludes reversed ABONOs using movimiento_origen_id.
+  assert.match(pos, /loadCustomerCreditLedgerInTransaction/);
+  assert.match(creditReadModel, /m\.movimiento_origen_id/);
+  assert.match(creditAllocation, /movement\.tipo === "ABONO"[\s\S]*!reversedAbonos\.has\(movement\.id\)/);
+  assert.match(creditAllocation, /m\.tipo === "REVERSO"[\s\S]*m\.movimientoOrigenId != null/);
   const lock = /ADVISORY_LOCK_NAMESPACES\.CUSTOMER_CREDIT,[\s\S]*clienteId/;
   assert.match(clientes, lock);
   assert.match(pos, lock);
@@ -115,5 +122,29 @@ test("Bloque 6: aplicaciones activas son la única fuente y comparten lock de cl
     server.indexOf("await ensurePagosProveedorSchema(pool)") <
       server.indexOf("await ensureAplicacionesPagoProveedorSchema(pool)"),
     "el enum y movimiento_origen_id deben existir antes de reconciliar aplicaciones",
+  );
+});
+
+test("Bloque 6: pagos y kardex conservan precisión exacta", async () => {
+  const [directed, suppliers, inventory, pos] = await Promise.all([
+    source("./routes/pagos-dirigidos.ts"),
+    source("./lib/compras-proveedor.ts"),
+    source("./lib/inventario.ts"),
+    source("./lib/pos.ts"),
+  ]);
+  assert.doesNotMatch(directed, /tx:\s*any|request:\s*any|execute<any>/);
+  assert.doesNotMatch(suppliers, /execute<any>|\(r:\s*any\)|as any\[\]/);
+  assert.match(directed, /execute<DirectedDocumentRow>/);
+  assert.match(suppliers, /execute<SupplierCreditRow>/);
+  assert.doesNotMatch(pos, /Number\.EPSILON/);
+  assert.match(pos, /const cents = BigInt/);
+  assert.match(inventory, /const cantidad = formatQuantityThousandthsBigInt/);
+  assert.match(inventory, /cantidad: formatQuantityThousandthsBigInt\(-consumida\)/);
+  assert.doesNotMatch(
+    inventory.slice(
+      inventory.indexOf("export async function consumirBolsasFifo"),
+      inventory.indexOf("// ─────────────────────────────────────────────────────────────────────────────", inventory.indexOf("export async function consumirBolsasFifo") + 1),
+    ),
+    /Number\(|parseFloat|toFixed/,
   );
 });

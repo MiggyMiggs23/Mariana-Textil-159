@@ -18,12 +18,43 @@ import { requireRole, requireSession } from "../middlewares/auth";
 import { resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { loadCustomerCreditProjectionInTransaction } from "../lib/credit-aging-read-model";
+import { centsToMoney, moneyToCents } from "../lib/credit-allocation";
+import type { Tx } from "../lib/inventario";
 
 const router: IRouter = Router();
 router.use("/pagos-dirigidos", requireSession);
 
 type Kind = "CLIENTE" | "PROVEEDOR";
 type Payment = { tipo: Kind; entidadId: number; documentoMovimientoId: number; importe: number; formaPago: string; cuentaDestino?: string | null; fechaEfectiva?: Date | null; referencia?: string | null; notas?: string | null; motivo: string };
+type DirectedPaymentRequest = Pick<
+  typeof solicitudesPagoDirigidoTable.$inferSelect,
+  "id" | "tipo" | "entidadId" | "documentoMovimientoId" | "importe" | "formaPago" |
+  "cuentaDestino" | "fechaEfectiva" | "referencia" | "notas" | "motivo"
+>;
+type DirectedPaymentInput = Omit<DirectedPaymentRequest, "importe"> & {
+  importe: string | number;
+};
+type DirectedDocumentRow = {
+  id: number; ticket_id?: number | null; importe: string;
+};
+type SupplierAppliedTotalRow = { total: string };
+type UserNameRow = { nombre: string };
+type DirectedSnapshotRow = {
+  contraparte: string; folio: string | null; ubicacion_id: number | null;
+  ubicacion_nombre: string | null;
+};
+type DirectedRequestRow = typeof solicitudesPagoDirigidoTable.$inferSelect;
+type DirectedRequestRawRow = {
+  id: number; tipo: Kind; entidad_id: number; documento_movimiento_id: number;
+  importe: string; forma_pago: string; cuenta_destino: string | null;
+  fecha_efectiva: Date | null; referencia: string | null; notas: string | null;
+  motivo: string; motivo_rechazo: string | null; solicitante_id: number;
+  solicitante_nombre: string; autorizador_id: number | null;
+  autorizador_nombre: string | null; contraparte_nombre: string;
+  documento_folio: string | null; ubicacion_id: number | null;
+  ubicacion_nombre: string | null; movimiento_id: number | null;
+  estado: "PENDIENTE" | "APROBADA" | "RECHAZADA"; created_at: Date;
+};
 const positiveId = (value: unknown) => Number.isInteger(Number(value)) && Number(value) > 0 ? Number(value) : null;
 function parsePayment(body: unknown): Payment | null {
   const parsed = CreateSolicitudPagoDirigidoBody.safeParse(body);
@@ -31,7 +62,7 @@ function parsePayment(body: unknown): Payment | null {
   return { ...parsed.data, motivo: parsed.data.motivo.trim(), referencia: parsed.data.referencia ?? null, notas: parsed.data.notas ?? null, cuentaDestino: parsed.data.cuentaDestino ?? null, fechaEfectiva: parsed.data.fechaEfectiva ?? null };
 }
 
-async function assertDocumentBalance(tx: any, request: any) {
+async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput, "tipo" | "entidadId" | "documentoMovimientoId" | "importe">) {
   const supplier = request.tipo === "PROVEEDOR";
   await transactionAdvisoryLock(
     tx,
@@ -40,7 +71,7 @@ async function assertDocumentBalance(tx: any, request: any) {
       : ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
     request.entidadId,
   );
-  const document = await tx.execute(supplier ? sql`
+  const document = await tx.execute<DirectedDocumentRow>(supplier ? sql`
     SELECT p.id,p.importe::text FROM pagos_proveedor p WHERE p.id=${request.documentoMovimientoId}
       AND p.proveedor_id=${request.entidadId} AND p.tipo='COMPRA' FOR UPDATE`
     : sql`SELECT m.id,m.ticket_id,m.importe::text FROM movimientos_credito m WHERE m.id=${request.documentoMovimientoId}
@@ -49,7 +80,7 @@ async function assertDocumentBalance(tx: any, request: any) {
   if (!doc) throw new Error("DIRECTED_DOCUMENT_NOT_FOUND");
   let availableCents: number;
   if (supplier) {
-    const used = await tx.execute(sql`
+    const used = await tx.execute<SupplierAppliedTotalRow>(sql`
       SELECT COALESCE(SUM(a.importe),0)::text total
       FROM aplicaciones_pago_proveedor a
       JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
@@ -60,8 +91,8 @@ async function assertDocumentBalance(tx: any, request: any) {
         )
     `);
     availableCents =
-      Math.round(Number(doc.importe) * 100) -
-      Math.round(Number(used.rows[0]?.total ?? 0) * 100);
+      moneyToCents(doc.importe) -
+      moneyToCents(used.rows[0]?.total ?? "0");
   } else {
     const projection = await loadCustomerCreditProjectionInTransaction(
       request.entidadId,
@@ -72,27 +103,27 @@ async function assertDocumentBalance(tx: any, request: any) {
         (charge) => charge.movimientoId === Number(doc.id),
       )?.pendienteCents ?? 0;
   }
-  const requestedCents = Math.round(Number(request.importe) * 100);
+  const requestedCents = moneyToCents(request.importe);
   if (requestedCents > availableCents) throw new Error("DIRECTED_AMOUNT_EXCEEDS_DOCUMENT");
   return doc;
 }
 
-async function apply(tx: any, request: any, userId: number) {
+async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number) {
   const supplier = request.tipo === "PROVEEDOR";
   const doc = await assertDocumentBalance(tx, request);
-  const requestedCents = Math.round(Number(request.importe) * 100);
-  const amount = (requestedCents / 100).toFixed(2);
+  const requestedCents = moneyToCents(request.importe);
+  const amount = centsToMoney(requestedCents);
   const [movement] = supplier
-    ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago, referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
-    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, ticketId: Number(doc.ticket_id), importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago, cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
+    ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "CHEQUE" | "OTRO", referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
+    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, ticketId: doc.ticket_id!, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA", cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
   if (supplier) await tx.insert(aplicacionesPagoProveedorTable).values({ pagoProveedorId: movement.id, compraProveedorId: doc.id, importe: amount });
   else await tx.insert(aplicacionesCreditoTable).values({ abonoMovimientoId: movement.id, ventaMovimientoId: doc.id, importe: amount });
   return movement;
 }
 
-async function snapshots(tx: any, data: Payment, userId: number) {
-  const user = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${userId}`);
-  const document = await tx.execute(data.tipo === "CLIENTE" ? sql`
+async function snapshots(tx: Tx, data: Payment, userId: number) {
+  const user = await tx.execute<UserNameRow>(sql`SELECT nombre FROM usuarios WHERE id=${userId}`);
+  const document = await tx.execute<DirectedSnapshotRow>(data.tipo === "CLIENTE" ? sql`
     SELECT c.nombre contraparte, CONCAT('Nota ',t.folio) folio, t.ubicacion_id, u.nombre ubicacion_nombre FROM movimientos_credito m
     JOIN clientes c ON c.id=m.cliente_id JOIN tickets t ON t.id=m.ticket_id JOIN ubicaciones u ON u.id=t.ubicacion_id
     WHERE m.id=${data.documentoMovimientoId} AND m.cliente_id=${data.entidadId} AND m.tipo='VENTA_CREDITO'`
@@ -104,19 +135,34 @@ async function snapshots(tx: any, data: Payment, userId: number) {
   return { solicitanteNombre: String(user.rows[0]?.nombre ?? ""), contraparteNombre: String(document.rows[0].contraparte), documentoFolio: String(document.rows[0].folio ?? "Sin folio"), ubicacionId: rawLocationId == null ? null : Number(rawLocationId), ubicacionNombre: document.rows[0].ubicacion_nombre == null ? null : String(document.rows[0].ubicacion_nombre) };
 }
 
-function present(row: any) {
+function present(row: DirectedRequestRow | DirectedRequestRawRow) {
+  if ("entidadId" in row) {
+    return {
+      id: Number(row.id), tipo: row.tipo, entidadId: Number(row.entidadId),
+      documentoMovimientoId: Number(row.documentoMovimientoId),
+      importe: String(row.importe), formaPago: row.formaPago,
+      cuentaDestino: row.cuentaDestino ?? null, fechaEfectiva: row.fechaEfectiva ?? null,
+      referencia: row.referencia ?? null, notas: row.notas ?? null, motivo: row.motivo,
+      motivoRechazo: row.motivoRechazo ?? null,
+      solicitanteId: Number(row.solicitanteId), solicitanteNombre: row.solicitanteNombre,
+      autorizadorId: row.autorizadorId ?? null, autorizadorNombre: row.autorizadorNombre ?? null,
+      contraparteNombre: row.contraparteNombre, documentoFolio: row.documentoFolio,
+      ubicacionId: row.ubicacionId ?? null, ubicacionNombre: row.ubicacionNombre ?? null,
+      movimientoId: row.movimientoId ?? null, estado: row.estado, createdAt: row.createdAt,
+    };
+  }
   return {
-    id: Number(row.id), tipo: row.tipo, entidadId: Number(row.entidadId ?? row.entidad_id),
-    documentoMovimientoId: Number(row.documentoMovimientoId ?? row.documento_movimiento_id),
-    importe: String(row.importe), formaPago: row.formaPago ?? row.forma_pago,
-    cuentaDestino: row.cuentaDestino ?? row.cuenta_destino ?? null, fechaEfectiva: row.fechaEfectiva ?? row.fecha_efectiva ?? null,
+    id: Number(row.id), tipo: row.tipo, entidadId: Number(row.entidad_id),
+    documentoMovimientoId: Number(row.documento_movimiento_id),
+    importe: String(row.importe), formaPago: row.forma_pago,
+    cuentaDestino: row.cuenta_destino ?? null, fechaEfectiva: row.fecha_efectiva ?? null,
     referencia: row.referencia ?? null, notas: row.notas ?? null, motivo: row.motivo,
-    motivoRechazo: row.motivoRechazo ?? row.motivo_rechazo ?? null,
-    solicitanteId: Number(row.solicitanteId ?? row.solicitante_id), solicitanteNombre: row.solicitanteNombre ?? row.solicitante_nombre,
-    autorizadorId: row.autorizadorId ?? row.autorizador_id ?? null, autorizadorNombre: row.autorizadorNombre ?? row.autorizador_nombre ?? null,
-    contraparteNombre: row.contraparteNombre ?? row.contraparte_nombre, documentoFolio: row.documentoFolio ?? row.documento_folio,
-    ubicacionId: row.ubicacionId ?? row.ubicacion_id ?? null, ubicacionNombre: row.ubicacionNombre ?? row.ubicacion_nombre ?? null,
-    movimientoId: row.movimientoId ?? row.movimiento_id ?? null, estado: row.estado, createdAt: row.createdAt ?? row.created_at,
+    motivoRechazo: row.motivo_rechazo ?? null,
+    solicitanteId: Number(row.solicitante_id), solicitanteNombre: row.solicitante_nombre,
+    autorizadorId: row.autorizador_id ?? null, autorizadorNombre: row.autorizador_nombre ?? null,
+    contraparteNombre: row.contraparte_nombre, documentoFolio: row.documento_folio,
+    ubicacionId: row.ubicacion_id ?? null, ubicacionNombre: row.ubicacion_nombre ?? null,
+    movimientoId: row.movimiento_id ?? null, estado: row.estado, createdAt: row.created_at,
   };
 }
 
@@ -137,7 +183,7 @@ router.get("/pagos-dirigidos", async (req, res, next): Promise<void> => {
       visible = ([cliente?.puedeVer || cliente?.puedeCrear ? "CLIENTE" : null, proveedor?.puedeVer || proveedor?.puedeCrear ? "PROVEEDOR" : null].filter(Boolean) as Kind[]);
     }
     if (!visible.length) { res.json(ListSolicitudesPagoDirigidoResponse.parse({ solicitudes: [] })); return; }
-    const rows = await db.execute(sql`SELECT * FROM solicitudes_pago_dirigido WHERE tipo = ANY(ARRAY[${sql.join(visible.map((v) => sql`${v}`), sql`, `)}]::tipo_solicitud_pago_dirigido[])
+    const rows = await db.execute<DirectedRequestRawRow>(sql`SELECT * FROM solicitudes_pago_dirigido WHERE tipo = ANY(ARRAY[${sql.join(visible.map((v) => sql`${v}`), sql`, `)}]::tipo_solicitud_pago_dirigido[])
       ${filters.tipo ? sql`AND tipo=${filters.tipo}` : sql``}
       ${filters.entidadId ? sql`AND entidad_id=${filters.entidadId}` : sql``}
       ${filters.estado ? sql`AND estado=${filters.estado}` : sql``}
@@ -203,10 +249,17 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
   try {
     const params = AprobarSolicitudPagoDirigidoParams.safeParse(req.params); if (!params.success) { res.status(400).json({ error: params.error.message }); return; } const id = params.data.id;
     const result = await db.transaction(async (tx) => {
-      const found = await tx.execute<any>(sql`SELECT * FROM solicitudes_pago_dirigido WHERE id=${id} FOR UPDATE`);
+      const found = await tx.execute<DirectedRequestRawRow>(sql`SELECT * FROM solicitudes_pago_dirigido WHERE id=${id} FOR UPDATE`);
       const request = found.rows[0]; if (!request) throw new Error("REQUEST_NOT_FOUND");
       if (request.estado !== "PENDIENTE") throw new Error("REQUEST_ALREADY_RESOLVED");
-      const movement = await apply(tx, { ...request, entidadId: Number(request.entidad_id), documentoMovimientoId: Number(request.documento_movimiento_id), importe: Number(request.importe), formaPago: request.forma_pago, cuentaDestino: request.cuenta_destino, fechaEfectiva: request.fecha_efectiva, referencia: request.referencia, notas: request.notas }, req.auth!.user.id);
+      const movement = await apply(tx, {
+        ...request,
+        entidadId: request.entidad_id,
+        documentoMovimientoId: request.documento_movimiento_id,
+        formaPago: request.forma_pago,
+        cuentaDestino: request.cuenta_destino,
+        fechaEfectiva: request.fecha_efectiva,
+      }, req.auth!.user.id);
       const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
       await tx.update(solicitudesPagoDirigidoTable).set({ estado: "APROBADA", autorizadorId: req.auth!.user.id, autorizadorNombre: String(authorizer.rows[0]?.nombre ?? ""), movimientoId: movement.id, resueltaAt: new Date() }).where(sql`${solicitudesPagoDirigidoTable.id}=${id}`);
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "APROBAR_APLICAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(id), datosDespues: { movimientoId: movement.id }, ip: getRequestIp(req) });
