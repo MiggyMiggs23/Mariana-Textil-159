@@ -206,6 +206,18 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 `dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`
 
+## Salidas extraordinarias
+
+**Salidas extraordinarias:** merma, robo y muestra sacan del inventario un rollo que no se vendió ni se transfirió. Son **siempre el rollo completo** —no existe la salida extraordinaria parcial— y **solo las registra ADMIN**, con guardia de rol en el servidor además de la matriz de permisos. La muestra no regresa por esta vía: los tres motivos se comportan igual frente al inventario y el motivo es información para reportar y auditar, nunca una rama de lógica.
+
+Mecánicamente reusan lo que ya existe: estado `BAJA`, movimiento `AJUSTE_NEGATIVO` por la cantidad completa en negativo, y `revertirMovimiento` para corregir un error. No hay tabla ni ciclo de vida propio.
+
+Viven en una **pestaña dentro de Salidas**, no en la barra lateral. La barra lateral no crece por cada operación nueva; las operaciones que sacan inventario entre ubicaciones o fuera de él viven en Salidas.
+
+El costo de las salidas extraordinarias es **pérdida de inventario, no costo de lo vendido**. Se reporta aparte y nunca se suma a la utilidad ni al margen de ventas.
+
+- Decisión conservadora: el módulo es `salidas` porque se trata de una salida de inventario; la guardia directa de rol ADMIN en el servidor es la autoridad.
+
 ## Propuesta pendiente — base de pruebas permanente
 
 **No está creada.** Antes de aprovisionarla, el propietario debe decidir si su plan de Neon y el costo operativo justifican mantener una rama, compute, almacenamiento y datos de prueba de larga duración.

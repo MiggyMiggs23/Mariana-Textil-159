@@ -32,3 +32,9 @@ Neon’s default returned connection string may use a `-pooler` host. Do not val
 **Why:** Concurrent startup appeared to bypass serialization and left a lock retained in a pooled backend; the direct endpoint produced deterministic serialization and clean unlock behavior.
 
 **How to apply:** Use a direct Neon endpoint for tests involving session advisory locks. Use pooled connections only for transaction-scoped behavior, or explicitly prove session affinity first.
+
+Do not rely on `/tmp` files containing an isolated database URL surviving workflow restarts or being visible to background/tester runtimes.
+
+**Why:** Workflow restarts and separate execution runtimes lost or could not read a temporary connection file, blocking an otherwise isolated browser test.
+
+**How to apply:** Finish dependent shell suites before restarting workflows. If another runtime needs the connection, reacquire it through Neon inside that runtime; never copy credentials into the workspace.

@@ -31,7 +31,10 @@ type ProductFixture = {
 type Json = Record<string, any>;
 
 test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () => {
-  const [{ pool }, { default: app }, { reconstruirCacheExistencias }] =
+  const [{ pool, db }, { default: app }, {
+    crearSalidaExtraordinaria,
+    reconstruirCacheExistencias,
+  }] =
     await Promise.all([
       import("@workspace/db"),
       import("./app"),
@@ -199,7 +202,7 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
       quantity: number,
       movements: Array<{ type: string; quantity: number }>,
       forcedCost?: number,
-    ) => {
+    ): Promise<number> => {
       const product = products[productIndex]!;
       const cost = forcedCost ?? nextCost++;
       const roll = await one(
@@ -242,9 +245,16 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
         );
         ids.movements.push(Number(inserted.id));
       }
+      return rollId;
     };
     const available = (q: number) => [{ type: "ALTA", quantity: q }];
-    await addRoll(0, ownId, "DISPONIBLE", 10, available(10));
+    const extraordinaryExitRolloId = await addRoll(
+      0,
+      ownId,
+      "DISPONIBLE",
+      10,
+      available(10),
+    );
     await addRoll(0, ownId, "DISPONIBLE", 15, available(15));
     await addRoll(1, ownId, "DISPONIBLE", 12, available(12));
     await addRoll(1, otherId, "DISPONIBLE", 8, available(8));
@@ -610,6 +620,107 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
       assert.equal(detail.rollos, 0);
     }
 
+    // A BAJA is deliberately exercised through the real engine, not through a
+    // fixture update. All six HTTP inventory surfaces must remove this one
+    // DISPONIBLE roll exactly once and subsequent reads must stay stable.
+    const beforeExtraordinaryExit = await captureSixViews(sessions.admin, "admin");
+    const extraordinaryExit = await db.transaction((tx) =>
+      crearSalidaExtraordinaria(tx, {
+        rolloId: extraordinaryExitRolloId,
+        motivo: "MERMA",
+        justificacion: `${tag} merma verificada`,
+        usuarioId: Number(adminUser.id),
+        uuidCliente: randomUUID(),
+        ip: "127.0.0.1",
+      })
+    );
+    ids.movements.push(Number(extraordinaryExit.movimiento.id));
+    assert.equal(extraordinaryExit.rollo.estado, "BAJA");
+    assert.equal(extraordinaryExit.rollo.cantidadActual, "0.000");
+    assert.equal(extraordinaryExit.movimiento.tipo, "AJUSTE_NEGATIVO");
+    assert.equal(extraordinaryExit.movimiento.cantidad, "-10.000");
+
+    const afterExtraordinaryExit = await captureSixViews(sessions.admin, "admin");
+    const stableExtraordinaryExit = await captureSixViews(sessions.admin, "admin");
+    assert.deepEqual(
+      stableExtraordinaryExit,
+      afterExtraordinaryExit,
+      "six inventory views must be stable after the single BAJA operation",
+    );
+    const productTotal = (
+      totals: Array<[number, Total]>,
+      productId: number,
+      label: string,
+    ) => {
+      const total = totals.find(([id]) => id === productId)?.[1];
+      assert.ok(total, `${label} must include the tagged product`);
+      return total!;
+    };
+    const assertProductDecrease = (
+      label: string,
+      before: Total,
+      after: Total,
+    ) => {
+      assert.equal(
+        after.quantity,
+        before.quantity - 10,
+        `${label} must exclude the BAJA quantity exactly once`,
+      );
+      assert.equal(
+        after.rolls,
+        before.rolls - 1,
+        `${label} must exclude the BAJA roll exactly once`,
+      );
+    };
+    assertProductDecrease(
+      "grouped",
+      productTotal(beforeExtraordinaryExit.totals.grouped, products[0]!.id, "grouped"),
+      productTotal(afterExtraordinaryExit.totals.grouped, products[0]!.id, "grouped"),
+    );
+    assertProductDecrease(
+      "product list",
+      productTotal(beforeExtraordinaryExit.totals.productList, products[0]!.id, "product list"),
+      productTotal(afterExtraordinaryExit.totals.productList, products[0]!.id, "product list"),
+    );
+    assertProductDecrease(
+      "report",
+      productTotal(beforeExtraordinaryExit.totals.report, products[0]!.id, "report"),
+      productTotal(afterExtraordinaryExit.totals.report, products[0]!.id, "report"),
+    );
+    const beforeDetail = beforeExtraordinaryExit.totals.productDetails.find(
+      (detail) => detail.productId === products[0]!.id,
+    )!;
+    const afterDetail = afterExtraordinaryExit.totals.productDetails.find(
+      (detail) => detail.productId === products[0]!.id,
+    )!;
+    assertProductDecrease("product detail", beforeDetail, afterDetail);
+    for (const [label, before, after] of [
+      [
+        "Vista Global",
+        beforeExtraordinaryExit.totals.vistaGlobal,
+        afterExtraordinaryExit.totals.vistaGlobal,
+      ],
+      [
+        "Dashboard",
+        beforeExtraordinaryExit.totals.dashboard,
+        afterExtraordinaryExit.totals.dashboard,
+      ],
+    ] as const) {
+      const beforeOwn = before.find((row: Json) => row.locationId === ownId)!;
+      const afterOwn = after.find((row: Json) => row.locationId === ownId)!;
+      assert.equal(
+        afterOwn.metres,
+        beforeOwn.metres - 10,
+        `${label} must exclude the BAJA quantity exactly once`,
+      );
+      assert.equal(
+        afterOwn.rolls,
+        beforeOwn.rolls - 1,
+        `${label} must exclude the BAJA roll exactly once`,
+      );
+      assert.equal(afterOwn.kilos, beforeOwn.kilos, `${label} must retain kilos`);
+    }
+
     const inventorySnapshot = async () =>
       (await pool.query(
         `SELECT producto_id,ubicacion_id,cantidad_total::text,rollos_count
@@ -723,6 +834,10 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
       await mutate("DELETE FROM pisos WHERE id=ANY($1::int[])", [ids.floors]);
     }
     if (ids.users.length) {
+      await mutate(
+        "DELETE FROM auditoria WHERE usuario_id=ANY($1::int[])",
+        [ids.users],
+      );
       await mutate(
         "DELETE FROM permisos_usuario WHERE usuario_id=ANY($1::int[])",
         [ids.users],
