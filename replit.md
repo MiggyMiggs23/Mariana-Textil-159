@@ -168,6 +168,11 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 - Decisión conservadora: la captura de Entradas recibe cantidades y la recepción de Salidas recibe URL/folio, no etiquetas de rollo. Ambos pasan por `CampoEscaneo` pero desactivan la sustitución por serie; sus endpoints reciben datos estructurados y no tienen un valor de etiqueta que interpretar.
 - La discrepancia de SKU se muestra sin bloquear en POS, Salida Nueva, Etiquetas y Ajustes. La serie siempre identifica el rollo.
 
+## Corrección — Orden y evidencia de candados del kardex
+
+- **Orden de candados en bucles:** `lockInventoryPairs` ordena los pares que recibe en una llamada, pero no puede ordenar lo que no ve. Toda operación que recorra varias líneas o varios rollos —crear un ticket, enviar una salida, recibirla— toma **todos** sus pares en una sola llamada antes de entrar al bucle. En POS esto ocurre antes de reservar el folio e insertar la cabecera del ticket. Llamar al motor par por par dentro de un ciclo deja el orden en manos del capturista o de Postgres, y dos operaciones con los mismos productos en sentido inverso se traban con `40P01`. Las consultas de rollos que preceden a un bucle con candados llevan `ORDER BY` explícito.
+- **Evidencia de correcciones de concurrencia:** una prueba basada en `Promise.all` demuestra que una carrera se reprodujo una vez, no que se reproduzca siempre; puede pasar por casualidad contra el código defectuoso. La regresión fuerte usa una barrera con tiempo límite en el punto crítico, y contra el código corregido **afirma que la segunda transacción nunca alcanza la barrera**, porque se queda esperando el candado. Una barrera que espera a las dos transacciones se cuelga para siempre. El tiempo límite se mantiene por debajo del `statement_timeout` del pool, porque la espera por un candado consultivo cuenta contra él. El resultado de ambas ejecuciones queda en `reports/`, no solo en la conversación.
+
 ## Corrección — Salida en una sola acción
 
 - Salida Nueva retoma el borrador `ARMANDO` del usuario para su origen. El primer escaneo crea cabecera, línea y asociación; cada escaneo posterior valida y guarda el rollo en la misma transacción.
