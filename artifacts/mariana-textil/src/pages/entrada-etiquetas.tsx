@@ -74,17 +74,6 @@ export default function EntradaEtiquetas() {
 
   const rollosToPrint = rollosFullData.filter(r => selectedRollos.has(r.id));
 
-  useEffect(() => {
-    if (printMode === 'thermal') {
-      document.body.classList.add('printing-labels');
-    } else {
-      document.body.classList.remove('printing-labels');
-    }
-    return () => {
-      document.body.classList.remove('printing-labels');
-    };
-  }, [printMode]);
-
   return (
     <div className={`min-h-[100dvh] bg-muted/20 flex flex-col`}>
       <div className="no-print p-4 border-b bg-background sticky top-0 z-10 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">

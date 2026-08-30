@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { printWhenReady } from "@/lib/print";
 import { etiquetasApi, type EtiquetaRollo, type HistorialReimpresion } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { CampoEscaneo } from "@/components/campo-escaneo";
@@ -79,6 +80,7 @@ export default function Etiquetas() {
   const [adminPassword, setAdminPassword] = useState("");
   const [printMode, setPrintMode] = useState<"thermal" | "sheet">("thermal");
   const [printData, setPrintData] = useState<{ rollos: EtiquetaRollo[]; createdAt: string } | null>(null);
+  const [pendingPrint, setPendingPrint] = useState(false);
 
   const [hDesde, setHDesde] = useState("");
   const [hHasta, setHHasta] = useState("");
@@ -190,7 +192,7 @@ export default function Etiquetas() {
       setSelected(new Set());
       queryClient.invalidateQueries({ queryKey: ["etiquetas"] });
       toast({ title: "Reimpresión autorizada", description: `${printable.length} etiqueta(s) registradas. Revisa la vista antes de imprimir.` });
-      requestAnimationFrame(() => window.print());
+      setPendingPrint(true);
     },
     onError: (error) => toast({ title: "No se pudo autorizar la reimpresión", description: getApiErrorMessage(error), variant: "destructive" }),
   });
@@ -252,15 +254,12 @@ export default function Etiquetas() {
   };
 
   useEffect(() => {
-    if (printMode === 'thermal') {
-      document.body.classList.add('printing-labels');
-    } else {
-      document.body.classList.remove('printing-labels');
-    }
-    return () => {
-      document.body.classList.remove('printing-labels');
-    };
-  }, [printMode]);
+    if (!pendingPrint || !printData) return;
+    setPendingPrint(false);
+    void printWhenReady(
+      printMode === "thermal" ? "printing-labels" : undefined,
+    );
+  }, [pendingPrint, printData, printMode]);
 
   return (
     <AppLayout>
