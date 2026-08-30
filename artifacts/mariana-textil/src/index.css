@@ -316,7 +316,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 216mm;
+    width: 215.5mm;
     height: auto !important;
     overflow: visible !important;
     margin: 0;
@@ -591,8 +591,9 @@
     break-inside: avoid-page;
     page-break-after: always;
     page-break-inside: avoid;
-    width: 216mm !important;
-    height: 279mm !important;
+    /* 0.5 mm de tolerancia evita que el redondeo CSS px de la caja exacta cree una hoja fantasma. */
+    width: 215.5mm !important;
+    height: 278.5mm !important;
     margin: 0 !important;
   }
 

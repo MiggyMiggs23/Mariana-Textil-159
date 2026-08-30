@@ -10,6 +10,7 @@ export function PrintableDocumentHeader({
   qrRenderAsCanvas,
   className = "",
   logoClassName = "h-28 w-28",
+  logoSize,
 }: {
   children: ReactNode;
   qrUrl?: string;
@@ -18,16 +19,19 @@ export function PrintableDocumentHeader({
   qrRenderAsCanvas?: boolean;
   className?: string;
   logoClassName?: string;
+  logoSize?: number;
 }) {
   return (
     <header
       className={`grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start border-b-2 border-black ${className}`}
     >
       <div className="min-w-0">{children}</div>
-      <BrandLogo
-        variant="mark"
+      <div
         className={`${logoClassName} justify-self-center`}
-      />
+        style={logoSize ? { width: logoSize, height: logoSize } : undefined}
+      >
+        <BrandLogo variant="mark" className="h-full w-full" />
+      </div>
       <div className="flex min-h-28 justify-end">
         {qrUrl && (
           <DocumentQrCode

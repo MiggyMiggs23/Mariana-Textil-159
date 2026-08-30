@@ -1,6 +1,7 @@
 import { useParams } from "wouter";
 import { useGetEntrada, getGetEntradaQueryKey } from "@workspace/api-client-react";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
+import { DOCUMENT_QR_SIZE } from "@/components/document-qr-code";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,9 @@ export default function EntradaDocumento() {
   const totalQty = entrada.lineas.reduce((sum, line) => sum + parseFloat(line.cantidadTotal), 0);
   const documentUrl = absoluteAppUrl(`/entradas/${entrada.id}/documento`);
 
-  const rowsPerPage = 20;
+  // Medición Chromium a 96 dpi: caja útil 278.5 mm = 1052.6 px.
+  // 162 header + 139 datos + 32.5 cabecera + (23 × 25) filas + 96 pie + 16 franja = 1020.5 px.
+  const rowsPerPage = 23;
   const totalPages = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
   const pages = Array.from({ length: totalPages }).map((_, i) => entrada.lineas.slice(i * rowsPerPage, (i + 1) * rowsPerPage));
 
@@ -53,10 +56,10 @@ export default function EntradaDocumento() {
 
             {/* Header */}
             <PrintableDocumentHeader
-              className="shrink-0 p-6"
+              className="document-header shrink-0 p-6"
               qrUrl={documentUrl}
               qrLabel={`QR para ver entrada ${entrada.folioFormateado}`}
-              logoClassName="h-[86px] w-[86px]"
+              logoSize={DOCUMENT_QR_SIZE}
             >
               <div className="flex items-center gap-4">
                 <div className="w-2 h-16 bg-[#1e3a8a] mr-2"></div>
@@ -68,7 +71,7 @@ export default function EntradaDocumento() {
             </PrintableDocumentHeader>
 
             {/* Form Data */}
-            <div className="px-8 py-4 shrink-0">
+            <div className="document-metadata px-8 py-4 shrink-0">
               <div className="grid grid-cols-2 gap-x-12 gap-y-4">
                 <div className="flex items-center border-b border-gray-300 pb-1">
                   <User className="w-4 h-4 text-gray-400 mr-2" />
@@ -104,7 +107,7 @@ export default function EntradaDocumento() {
             </div>
 
             {/* Table */}
-            <div className="px-8 mt-2 flex-1 relative z-10 flex flex-col">
+            <div className="document-table px-8 mt-2 flex-1 relative z-10 flex flex-col">
               <table className="w-full text-left border-collapse border border-gray-200">
                 <thead>
                   <tr className="bg-[#1e3a8a] text-white">
@@ -120,7 +123,7 @@ export default function EntradaDocumento() {
                   {pageLineas.map((linea, index) => {
                     const globalIndex = pageIndex * rowsPerPage + index + 1;
                     return (
-                      <tr key={index} className="border-b border-gray-200 even:bg-gray-50">
+                      <tr key={index} className="h-[25px] border-b border-gray-200 even:bg-gray-50">
                         <td className="py-1 px-3 text-center text-gray-500 text-xs">{formatNumber(globalIndex, { kind: "count" })}</td>
                         <td className="py-1 px-3 font-bold text-xs text-black truncate max-w-[250px]">{linea.skuProducto} - {linea.telaProducto} {linea.colorProducto}</td>
                         <td className="py-1 px-3 text-center font-bold text-xs">{formatNumber(linea.rollosCount, { kind: "count" })}</td>
@@ -132,7 +135,7 @@ export default function EntradaDocumento() {
                   })}
                   {/* Padding rows to ensure exact filling */}
                   {Array.from({ length: Math.max(0, rowsPerPage - pageLineas.length) }).map((_, i) => (
-                    <tr key={`pad-${i}`} className="border-b border-gray-100 h-[28px]">
+                    <tr key={`pad-${i}`} className="h-[25px] border-b border-gray-100">
                       <td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                   ))}
@@ -141,8 +144,7 @@ export default function EntradaDocumento() {
             </div>
 
             {/* Footer */}
-            {pageIndex === totalPages - 1 && (
-              <div className="px-8 mt-auto pb-4 shrink-0 relative z-10">
+            <div className="document-footer px-8 mt-auto pb-4 shrink-0 relative z-10">
                 <div className="flex justify-between items-end gap-8">
                   {/* Observaciones */}
                   <div className="w-[30%] bg-gray-50 border border-gray-200 rounded-md p-3 h-20">
@@ -168,8 +170,7 @@ export default function EntradaDocumento() {
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+            </div>
 
             <div className={`h-4 bg-[#1e3a8a] w-full shrink-0 ${pageIndex < totalPages - 1 ? 'mt-auto' : ''}`}></div>
 

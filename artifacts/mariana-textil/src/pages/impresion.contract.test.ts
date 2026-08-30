@@ -4,14 +4,14 @@ import test from "node:test";
 
 const root = new URL("../../../../", import.meta.url);
 
-test("Entrada page specifies 216x279mm and has exactly 20 rows for pagination", async () => {
+test("Entrada keeps 216x279mm paper and uses its measured safe content box", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const entrada = await readFile(new URL("artifacts/mariana-textil/src/pages/entrada-documento.tsx", root), "utf8");
 
   assert.match(css, /@page entrada-page\s*\{[\s\S]*size:\s*216mm 279mm;/);
   assert.match(css, /\.entrada-page-print\s*\{[\s\S]*page:\s*entrada-page;/);
   assert.match(entrada, /className=[\s\S]*?entrada-page-print[\s\S]*?w-\[216mm\]\s*h-\[279mm\]/);
-  assert.match(entrada, /const rowsPerPage = 20;/);
+  assert.match(entrada, /const rowsPerPage = 23;/);
   assert.match(entrada, /Math\.max\(0, rowsPerPage - pageLineas\.length\)/);
   assert.match(entrada, /RECIBIDO POR/i);
   assert.match(entrada, /REVISADO POR/i);
@@ -19,6 +19,8 @@ test("Entrada page specifies 216x279mm and has exactly 20 rows for pagination", 
   assert.match(entrada, /<PrintableDocumentHeader[\s\S]*qrUrl=\{documentUrl\}/);
   assert.match(entrada, /\/entradas\/\$\{entrada\.id\}\/documento/);
   assert.match(entrada, /qrLabel=\{`QR para ver entrada/);
+  assert.match(entrada, /logoSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.doesNotMatch(entrada, /pageIndex === totalPages - 1/);
 });
 
 test("Salida page specifies A6 landscape and has correct control signatures", async () => {
