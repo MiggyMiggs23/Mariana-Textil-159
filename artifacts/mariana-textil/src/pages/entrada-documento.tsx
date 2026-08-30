@@ -31,14 +31,59 @@ export default function EntradaDocumento() {
   }
 
   const createdAt = new Date(entrada.createdAt);
-  const totalQty = entrada.lineas.reduce((sum, line) => sum + parseFloat(line.cantidadTotal), 0);
   const documentUrl = absoluteAppUrl(`/entradas/${entrada.id}/documento`);
 
   // Medición Chromium a 96 dpi: caja útil 278.5 mm = 1052.6 px.
   // 162 header + 139 datos + 32.5 cabecera + (23 × 25) filas + 96 pie + 16 franja = 1020.5 px.
   const rowsPerPage = 23;
-  const totalPages = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
-  const pages = Array.from({ length: totalPages }).map((_, i) => entrada.lineas.slice(i * rowsPerPage, (i + 1) * rowsPerPage));
+  const globalPageCount = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
+  const globalPages = Array.from({ length: globalPageCount }).map((_, i) =>
+    entrada.lineas.slice(i * rowsPerPage, (i + 1) * rowsPerPage),
+  );
+
+  const rollosByProducto = new Map<number, typeof entrada.rollos>();
+  for (const rollo of entrada.rollos) {
+    const productRollos = rollosByProducto.get(rollo.productoId) ?? [];
+    productRollos.push(rollo);
+    rollosByProducto.set(rollo.productoId, productRollos);
+  }
+  const seriesPerRow = 4;
+  const seriesRows = entrada.lineas.flatMap((linea) => {
+    const productRollos = rollosByProducto.get(linea.productoId) ?? [];
+    return Array.from({ length: Math.ceil(productRollos.length / seriesPerRow) }).map((_, chunkIndex) => ({
+      productoId: linea.productoId,
+      producto: `${linea.telaProducto} ${linea.colorProducto}`,
+      sku: linea.skuProducto,
+      isFirstChunk: chunkIndex === 0,
+      series: productRollos.slice(chunkIndex * seriesPerRow, (chunkIndex + 1) * seriesPerRow),
+    }));
+  });
+
+  // Medición Chromium a 96 dpi: 28 filas × 4 series = 112 series, overflow = 0.
+  // Caja 1052.59 px; header 162, título/subtítulo 44, tabla 608.5 y franja 16 px.
+  const seriesRowsPerPage = 28;
+  const seriesPageCount = Math.ceil(seriesRows.length / seriesRowsPerPage);
+  const seriesPages = Array.from({ length: seriesPageCount }).map((_, i) =>
+    seriesRows.slice(i * seriesRowsPerPage, (i + 1) * seriesRowsPerPage),
+  );
+  const totalPages = globalPages.length + seriesPages.length;
+
+  const renderHeader = (pageNumber: number) => (
+    <PrintableDocumentHeader
+      className="document-header shrink-0 p-6"
+      qrUrl={documentUrl}
+      qrLabel={`QR para ver entrada ${entrada.folioFormateado}`}
+      logoSize={DOCUMENT_QR_SIZE}
+    >
+      <div className="flex items-center gap-4">
+        <div className="w-2 h-16 bg-[#1e3a8a] mr-2"></div>
+        <div>
+          <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter">ENTRADA</h1>
+          <div className="text-sm font-semibold mt-1">Página {pageNumber} de {totalPages}</div>
+        </div>
+      </div>
+    </PrintableDocumentHeader>
+  );
 
   return (
     <div className="entrada-document-shell min-h-[100dvh] bg-muted/20 flex flex-col">
@@ -51,24 +96,15 @@ export default function EntradaDocumento() {
       </div>
 
       <div className="entrada-print-root flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:overflow-visible print:p-0 print:block">
-        {pages.map((pageLineas, pageIndex) => (
-          <div key={pageIndex} className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0">
+        {globalPages.map((pageLineas, pageIndex) => (
+          <div
+            key={`global-${pageIndex}`}
+            data-page-kind="global"
+            className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0"
+          >
 
             {/* Header */}
-            <PrintableDocumentHeader
-              className="document-header shrink-0 p-6"
-              qrUrl={documentUrl}
-              qrLabel={`QR para ver entrada ${entrada.folioFormateado}`}
-              logoSize={DOCUMENT_QR_SIZE}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-2 h-16 bg-[#1e3a8a] mr-2"></div>
-                <div>
-                  <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter">ENTRADA</h1>
-                  <div className="text-sm font-semibold mt-1">Página {pageIndex + 1} de {totalPages}</div>
-                </div>
-              </div>
-            </PrintableDocumentHeader>
+            {renderHeader(pageIndex + 1)}
 
             {/* Form Data */}
             <div className="document-metadata px-8 py-4 shrink-0">
@@ -144,6 +180,7 @@ export default function EntradaDocumento() {
             </div>
 
             {/* Footer */}
+            {pageIndex === globalPages.length - 1 && (
             <div className="document-footer px-8 mt-auto pb-4 shrink-0 relative z-10">
                 <div className="flex justify-between items-end gap-8">
                   {/* Observaciones */}
@@ -171,11 +208,66 @@ export default function EntradaDocumento() {
                   </div>
                 </div>
             </div>
+            )}
 
-            <div className={`h-4 bg-[#1e3a8a] w-full shrink-0 ${pageIndex < totalPages - 1 ? 'mt-auto' : ''}`}></div>
+            <div className="h-4 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
 
           </div>
         ))}
+        {seriesPages.map((pageRows, seriesPageIndex) => {
+          const pageNumber = globalPages.length + seriesPageIndex + 1;
+          return (
+            <div
+              key={`series-${seriesPageIndex}`}
+              data-page-kind="series"
+              className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0"
+            >
+              {renderHeader(pageNumber)}
+
+              <div className="px-8 py-4 border-b border-gray-300 shrink-0">
+                <h2 className="text-lg font-black uppercase tracking-wide text-[#1e3a8a]">Listado de series</h2>
+                <p className="mt-0.5 text-xs font-semibold text-gray-600">
+                  Agrupado por producto · {formatNumber(entrada.rollos.length, { kind: "count" })} rollos
+                </p>
+              </div>
+
+              <div className="series-table px-8 py-3 flex-1 relative z-10">
+                <table className="w-full table-fixed text-left border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-[#1e3a8a] text-white">
+                      <th className="w-[240px] py-1.5 px-2 text-[11px] font-bold uppercase tracking-wider">Producto</th>
+                      <th className="w-[92px] py-1.5 px-2 text-[11px] font-bold uppercase tracking-wider">SKU</th>
+                      {Array.from({ length: seriesPerRow }).map((_, index) => (
+                        <th key={index} className="py-1.5 px-2 text-[11px] font-bold uppercase tracking-wider">
+                          Serie {index + 1}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pageRows.map((row, rowIndex) => (
+                      <tr
+                        key={`${row.productoId}-${seriesPageIndex}-${rowIndex}`}
+                        data-product-id={row.productoId}
+                        className={`h-[24px] border-b border-gray-200 even:bg-gray-50 ${row.isFirstChunk ? "border-t-2 border-t-gray-400" : ""}`}
+                      >
+                        <td className="py-1 px-2 text-[11px] font-bold text-black truncate">{row.producto}</td>
+                        <td className="py-1 px-2 text-[11px] font-mono text-gray-700 truncate">{row.sku}</td>
+                        {Array.from({ length: seriesPerRow }).map((_, seriesIndex) => (
+                          <td key={seriesIndex} className="py-1 px-2 text-[11px] font-mono font-bold text-black">
+                            {row.series[seriesIndex]?.serie ?? ""}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="h-4 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

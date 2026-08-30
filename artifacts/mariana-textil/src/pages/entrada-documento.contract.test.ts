@@ -8,13 +8,38 @@ const [documentPage, entryList, styles] = await Promise.all([
   readFile(new URL("../index.css", import.meta.url), "utf8"),
 ]);
 
-test("la entrada usa capacidad medida, tolerancia de impresión y pie en cada página", () => {
+test("la entrada conserva su formato global y firma solo la última hoja global", () => {
   assert.match(documentPage, /const rowsPerPage = 23/);
   assert.match(documentPage, /23 × 25/);
   assert.match(documentPage, /logoSize=\{DOCUMENT_QR_SIZE\}/);
-  assert.doesNotMatch(documentPage, /pageIndex === totalPages - 1/);
+  assert.match(documentPage, /pageIndex === globalPages\.length - 1/);
   assert.match(documentPage, /document-footer/);
   assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*width:\s*215\.5mm !important;[\s\S]*height:\s*278\.5mm !important;/);
+});
+
+test("la entrada agrega un listado compacto de todas las series por producto", () => {
+  assert.match(documentPage, /const seriesPerRow = 4/);
+  assert.match(documentPage, /const seriesRowsPerPage = 28/);
+  assert.match(documentPage, /28 filas × 4 series = 112 series, overflow = 0/);
+  assert.match(documentPage, /rollosByProducto\.get\(linea\.productoId\)/);
+  assert.match(documentPage, /productRollos\.slice\(chunkIndex \* seriesPerRow/);
+  assert.match(documentPage, /data-page-kind="series"/);
+  assert.match(documentPage, />Listado de series</);
+  assert.match(documentPage, /Serie \{index \+ 1\}/);
+  assert.match(documentPage, /row\.series\[seriesIndex\]\?\.serie/);
+  assert.match(documentPage, /const totalPages = globalPages\.length \+ seriesPages\.length/);
+  assert.match(documentPage, /renderHeader\(pageNumber\)/);
+
+  const seriesSection = documentPage.slice(documentPage.indexOf("{seriesPages.map"));
+  assert.doesNotMatch(seriesSection, /document-footer/);
+});
+
+test("los globales conservan cada producto y unidad por separado", () => {
+  assert.match(documentPage, /entrada\.lineas\.slice/);
+  assert.match(documentPage, /linea\.rollosCount/);
+  assert.match(documentPage, /linea\.cantidadTotal/);
+  assert.match(documentPage, /formatUnit\(linea\.unidadProducto\)/);
+  assert.doesNotMatch(documentPage, /const totalQty = entrada\.lineas\.reduce/);
 });
 
 test("la entrada se aísla para impresión sin ocultar su contenido", () => {

@@ -79,9 +79,9 @@ test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven"
   assert.match(route, /\.where\(eq\(salidasTable\.id, id\)\)/);
   assert.match(spec, /\/salidas\/recepcion\/\{id\}:/);
   assert.match(spec, /Obtiene por id interno una salida/);
-  assert.match(documentPage, /QRCodeSVG/);
+  assert.match(documentPage, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
   assert.match(documentPage, /tab=recepcion&id=\$\{salida\.id\}/);
-  assert.match(documentPage, /ESCANEAR PARA RECIBIR/);
+  assert.match(documentPage, /qrLabel=\{`QR para abrir salida/);
   assert.match(receptionPage, /setSalidaId\(salida\.id\)/);
   assert.match(receptionPage, /salida\.folioFormateado/);
 });
@@ -116,8 +116,11 @@ test("Block 1 counter exit is one-step, site-scoped, persisted and printable", a
   assert.match(listPage, /TabsTrigger value="mostrador">A mostrador/);
   assert.match(counterPage, /<CampoEscaneo/);
   assert.match(counterPage, /useCrearSalidaMostrador/);
-  assert.match(documentPage, /salida\.modalidad === "MOSTRADOR"/);
-  assert.match(documentPage, /<QRCodeSVG/);
+  assert.match(documentPage, /salida\.lineas\.slice/);
+  assert.match(documentPage, /formatNumber\(line\.rollosEnviados/);
+  assert.match(documentPage, /formatNumber\(line\.cantidadEnviada/);
+  assert.doesNotMatch(documentPage, /No\. de<br\/>Serie|\{rollo\.serie\}/);
+  assert.match(documentPage, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
 });
 
 test("Frontend finalizes from Salida Nueva and detail has no second send action", async () => {

@@ -1,16 +1,24 @@
 Los documentos impresos requieren `print-color-adjust: exact` para que el logo y los fondos lleguen al papel; sin esa regla el navegador los descarta.
 
-**El ticket, la nota y la nota de productos NO imprimen números de serie** y agrupan los rollos por producto. **La hoja de salida, la hoja de viaje y la hoja de auditoría SÍ imprimen las series**, porque son documentos de control interno. Al cliente se le resume; al control interno se le detalla.
+**El ticket, la nota, la nota de productos y la hoja de Salida NO imprimen números de serie** y agrupan los rollos por producto. Las series de Salida permanecen completas en el sistema y se consultan desde su detalle en pantalla. **La hoja de viaje y la hoja de auditoría SÍ imprimen las series**, porque son documentos de control interno.
 
 Todo documento imprimible debe poder abrirse en cualquier momento desde el folio de su lista, no solo al crearse.
 
 Todos los documentos impresos llevan el logo centrado arriba y el QR en la esquina superior derecha. El QR lleva al mismo destino que el folio en azul de su lista, con la dirección construida desde el origen en que corre la aplicación, nunca escrita a mano.
 
-**Documentos impresos:** el logo del encabezado va al mismo tamaño que el QR y toma la medida de la constante compartida, no de un número escrito en la página. Entrada y Salida usan el mismo tamaño de encabezado aunque el papel sea distinto —carta vertical y A6 apaisado.
+**Documentos impresos, agregación:** Entrada y Salida imprimen **un renglón por producto** con el total de rollos y la cantidad total, no un renglón por rollo. Como el producto ya incluye el color y la unidad es atributo del producto, agrupar por producto agrupa por tela y color y nunca mezcla metros con kilos ni bolsas. Agrupar por tela sí los mezclaría y está prohibido.
 
-Un documento cuyo contenido cabe imprime **una sola hoja**: si el navegador reporta "Page 1 of 2" con una línea de producto, hay una página fantasma por redondeo entre el `@page` y la altura del contenedor, y eso se corrige midiendo, nunca reduciendo tipografías hasta que quepa. Cuando las líneas sí se pasan, la segunda hoja lleva **encabezado y pie de firmas completos**; el pie nunca queda huérfano en la última página.
+El alta y la baja de rollos **siguen siendo rollo por rollo con su número de serie**, y el sistema conserva el detalle completo. Lo que cambia es solo qué se imprime.
+
+**Salida** no imprime números de serie: quedan en el sistema y se consultan en el detalle en pantalla. **Entrada** sí los imprime, pero después de las hojas de globales, en un listado compacto agrupado por producto, con numeración continua y sin repetir el pie de firmas —ese va solo en la última hoja de globales, que es la que se firma.
+
+**Escala del encabezado:** Entrada y Salida ya **no** comparten tamaño de encabezado. El mismo encabezado sobre A6 apaisado consume una cuarta parte de la hoja y deja cinco renglones. En Salida el encabezado va reducido; lo que se conserva es la rejilla de tres columnas, la alineación entre título, logo y QR, y que logo y QR midan lo mismo entre sí.
+
+Un documento cuyo contenido cabe no genera una hoja fantasma por redondeo entre el `@page` y la altura del contenedor; eso se corrige midiendo, nunca reduciendo tipografías. Todas las páginas reales repiten el encabezado. Los pies siguen la regla del documento: Salida los repite; Entrada firma solo la última hoja global y no imprime firmas en el listado de series.
 
 Las líneas por página de cada documento son un valor medido, comentado junto a la constante. Cambiar el pie —agregar firmas, por ejemplo— invalida ese número y obliga a recalcularlo.
+
+Decisión conservadora: el contrato vigente de `GET /entradas/:id` ya contiene tanto las líneas agregadas como cada rollo con serie, producto y cantidad. El documento reutiliza esa única respuesta; no se crea ni duplica un endpoint de series mientras el contrato siga completo.
 # Decisiones de la Parte 9
 
 El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.

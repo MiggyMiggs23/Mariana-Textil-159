@@ -20,7 +20,11 @@ test("Entrada keeps 216x279mm paper and uses its measured safe content box", asy
   assert.match(entrada, /\/entradas\/\$\{entrada\.id\}\/documento/);
   assert.match(entrada, /qrLabel=\{`QR para ver entrada/);
   assert.match(entrada, /logoSize=\{DOCUMENT_QR_SIZE\}/);
-  assert.doesNotMatch(entrada, /pageIndex === totalPages - 1/);
+  assert.match(entrada, /const seriesPerRow = 4;/);
+  assert.match(entrada, /const seriesRowsPerPage = 28;/);
+  assert.match(entrada, /const totalPages = globalPages\.length \+ seriesPages\.length;/);
+  assert.match(entrada, /pageIndex === globalPages\.length - 1/);
+  assert.match(entrada, />Listado de series</);
 });
 
 test("Salida page specifies A6 landscape and has correct control signatures", async () => {
