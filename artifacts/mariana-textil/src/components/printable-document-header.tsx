@@ -11,6 +11,7 @@ export function PrintableDocumentHeader({
   className = "",
   logoClassName = "h-28 w-28",
   logoSize,
+  qrContainerClassName = "min-h-28",
 }: {
   children: ReactNode;
   qrUrl?: string;
@@ -20,6 +21,7 @@ export function PrintableDocumentHeader({
   className?: string;
   logoClassName?: string;
   logoSize?: number;
+  qrContainerClassName?: string;
 }) {
   return (
     <header
@@ -32,7 +34,7 @@ export function PrintableDocumentHeader({
       >
         <BrandLogo variant="mark" className="h-full w-full" />
       </div>
-      <div className="flex min-h-28 justify-end">
+      <div className={`flex justify-end ${qrContainerClassName}`}>
         {qrUrl && (
           <DocumentQrCode
             url={qrUrl}

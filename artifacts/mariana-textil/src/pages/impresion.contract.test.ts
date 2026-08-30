@@ -38,8 +38,10 @@ test("Salida page specifies A6 landscape and has correct control signatures", as
   assert.match(salida, /tab=recepcion&id=\$\{salida\.id\}/);
   assert.match(salida, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
   assert.match(css, /\.salida-page-print:last-child\s*\{[\s\S]*page-break-after:\s*auto;/);
-  assert.match(salida, /const rollosPerPage = 5;/);
-  assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.match(salida, /const productRowsPerPage = 7;/);
+  assert.match(salida, /logoSize=\{SALIDA_HEADER_MEDIA_SIZE\}/);
+  assert.match(salida, /qrSize=\{SALIDA_HEADER_MEDIA_SIZE\}/);
+  assert.doesNotMatch(salida, /No\. de<br\/>Serie|\{rollo\.serie\}/);
   assert.doesNotMatch(salida, /pageIndex === totalPages - 1/);
 });
 

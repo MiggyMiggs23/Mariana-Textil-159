@@ -2,17 +2,20 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [page, styles] = await Promise.all([
+const [page, detailPage, styles] = await Promise.all([
   readFile(new URL("./salida-documento.tsx", import.meta.url), "utf8"),
+  readFile(new URL("./salida-detail.tsx", import.meta.url), "utf8"),
   readFile(new URL("../index.css", import.meta.url), "utf8"),
 ]);
 
-test("la salida usa A6 horizontal con cinco renglones medidos por página", () => {
+test("la salida usa A6 horizontal con siete productos medidos por página", () => {
   assert.match(styles, /@page salida-page[\s\S]*size:\s*148mm 105mm/);
   assert.match(page, /w-\[148mm\] h-\[105mm\]/);
-  assert.match(page, /const rollosPerPage = 5/);
-  assert.match(page, /5 × 20\.5/);
-  assert.match(page, /rollosPerPage - pageRollos\.length/);
+  assert.match(page, /const productRowsPerPage = 7/);
+  assert.match(page, /185\.95 tabla \(7 productos\)/);
+  assert.match(page, /overflow = 0/);
+  assert.match(page, /productRowsPerPage - pageLineas\.length/);
+  assert.match(page, /salida\.lineas\.slice/);
   assert.match(page, /Pág \{pageIndex \+ 1\}\/\{totalPages\}/);
 });
 
@@ -37,19 +40,27 @@ test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
     "No. de<br/>Rollos",
     "Cant. de<br/>Unidad",
     "SKU",
-    "No. de<br/>Serie",
   ]) {
     assert.ok(page.includes(heading), `falta la columna ${heading}`);
   }
-  assert.match(page, /formatUnit\(line\?\.unidadProducto\)/);
-  assert.match(page, /\{rollo\.serie\}/);
-  assert.match(page, /logoSize=\{DOCUMENT_QR_SIZE\}/);
-  assert.match(page, /w-\[112px\][\s\S]*>Producto</);
-  assert.match(page, /Catálogo aprobado \(154\): 106 px útiles cubren 141 nombres/);
+  assert.match(page, /formatUnit\(line\.unidadProducto\)/);
+  assert.match(page, /formatNumber\(line\.rollosEnviados/);
+  assert.match(page, /formatNumber\(line\.cantidadEnviada/);
+  assert.doesNotMatch(page, /No\. de<br\/>Serie|\{rollo\.serie\}/);
+  assert.match(page, /const SALIDA_HEADER_MEDIA_SIZE = 76/);
+  assert.match(page, /logoSize=\{SALIDA_HEADER_MEDIA_SIZE\}/);
+  assert.match(page, /qrSize=\{SALIDA_HEADER_MEDIA_SIZE\}/);
+  assert.match(page, /qrContainerClassName="min-h-\[76px\]"/);
   for (const signature of ["Revisó", "Entregó", "Recibió"]) {
     assert.match(page, new RegExp(`>${signature}<`));
   }
   assert.doesNotMatch(page, /pageIndex === totalPages - 1/);
+});
+
+test("las series permanecen completas en el detalle de pantalla", () => {
+  assert.match(detailPage, /Rollos Incluidos/);
+  assert.match(detailPage, />Serie<\/th>/);
+  assert.match(detailPage, /\{rollo\.serie\}/);
 });
 
 test("ningún texto impreso baja de 7.5 puntos", () => {

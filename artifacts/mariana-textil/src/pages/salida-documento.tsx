@@ -1,12 +1,13 @@
 import { useParams, Link } from "wouter";
 import { useGetDocumentoSalida, getGetDocumentoSalidaQueryKey } from "@workspace/api-client-react";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
-import { DOCUMENT_QR_SIZE } from "@/components/document-qr-code";
 import { format } from "date-fns";
 import { Loader2, Printer, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { absoluteAppUrl, printWhenReady } from "@/lib/print";
+
+const SALIDA_HEADER_MEDIA_SIZE = 76;
 
 export default function SalidaDocumento() {
   const { id } = useParams();
@@ -43,10 +44,12 @@ export default function SalidaDocumento() {
   const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
   // Medición Chromium a 96 dpi: caja útil 104.5 mm = 395 px.
-  // 114 header + 40 datos + 30 cabecera + (5 × 20.5) rollos + 84 pie = 370.5 px.
-  const rollosPerPage = 5;
-  const totalPages = Math.max(1, Math.ceil((salida.rollos?.length || 0) / rollosPerPage));
-  const pages = Array.from({ length: totalPages }).map((_, i) => (salida.rollos || []).slice(i * rollosPerPage, (i + 1) * rollosPerPage));
+  // 78 encabezado + 47 datos + 185.95 tabla (7 productos) + 84 pie = 394.95 px; overflow = 0.
+  const productRowsPerPage = 7;
+  const totalPages = Math.max(1, Math.ceil(salida.lineas.length / productRowsPerPage));
+  const pages = Array.from({ length: totalPages }).map((_, i) =>
+    salida.lineas.slice(i * productRowsPerPage, (i + 1) * productRowsPerPage),
+  );
 
   return (
     <div className="salida-document-shell min-h-[100dvh] bg-muted/20 flex flex-col">
@@ -66,7 +69,7 @@ export default function SalidaDocumento() {
       </div>
 
       <div className="salida-print-root flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:p-0 print:block">
-        {pages.map((pageRollos, pageIndex) => (
+        {pages.map((pageLineas, pageIndex) => (
           <div
             key={pageIndex}
             data-testid={`document-page-${pageIndex + 1}`}
@@ -85,11 +88,13 @@ export default function SalidaDocumento() {
               className="document-header relative z-10 shrink-0 bg-white px-2"
               qrUrl={qrUrl}
               qrLabel={`QR para abrir salida ${salida.folioFormateado}`}
-              logoSize={DOCUMENT_QR_SIZE}
+              logoSize={SALIDA_HEADER_MEDIA_SIZE}
+              qrSize={SALIDA_HEADER_MEDIA_SIZE}
+              qrContainerClassName="min-h-[76px]"
             >
-              <h1 className="text-[22px] font-black text-black tracking-tighter leading-none">Salida</h1>
+              <h1 className="text-[20px] font-black text-black tracking-tighter leading-none">Salida</h1>
               <div className="mt-0.5 text-[10px] font-bold uppercase text-gray-700">Mariana Textil</div>
-              <div className="mt-1 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
+              <div className="mt-0.5 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
               <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
             </PrintableDocumentHeader>
 
@@ -123,39 +128,33 @@ export default function SalidaDocumento() {
                 <thead>
                   <tr className="bg-gray-100 text-black border-b-2 border-black">
                     <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-6 text-center border-r border-gray-300">#</th>
-                    {/* Catálogo aprobado (154): 106 px útiles cubren 141 nombres; p90=103.65 px y 13 extremos conservan elipsis. */}
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[112px] border-r border-gray-300">Producto</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[84px] border-r border-gray-300">Color</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-14 text-center border-r border-gray-300 leading-tight">No. de<br/>Rollos</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[84px] text-right border-r border-gray-300 leading-tight">Cant. de<br/>Unidad</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[74px] border-r border-gray-300">SKU</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[107px] leading-tight">No. de<br/>Serie</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[172px] border-r border-gray-300">Producto</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[100px] border-r border-gray-300">Color</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-16 text-center border-r border-gray-300 leading-tight">No. de<br/>Rollos</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[100px] text-right border-r border-gray-300 leading-tight">Cant. de<br/>Unidad</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase">SKU</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {pageRollos.map((rollo, index) => {
-                    const line = salida.lineas.find(l => l.id === rollo.lineaId);
-                    const globalIndex = pageIndex * rollosPerPage + index + 1;
+                  {pageLineas.map((line, index) => {
+                    const globalIndex = pageIndex * productRowsPerPage + index + 1;
                     return (
-                      <tr key={index} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
+                      <tr key={line.id} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
                         <td className="py-0.5 px-1 text-center text-gray-600 text-[10px] border-r border-gray-200 font-medium">{globalIndex}</td>
                         <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate border-r border-gray-200">
-                          {line?.telaProducto}
+                          {line.telaProducto}
                         </td>
                         <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate border-r border-gray-200">
-                          {line?.colorProducto}
+                          {line.colorProducto}
                         </td>
-                        <td className="py-0.5 px-1 text-[10px] text-gray-900 text-center border-r border-gray-200">1</td>
-                        <td className="py-0.5 px-1 text-right text-[10px] font-medium text-black border-r border-gray-200">{formatNumber(rollo.cantidadEnviada, { kind: "quantity" })} {formatUnit(line?.unidadProducto)}</td>
-                        <td className="py-0.5 px-1 text-[10px] text-gray-700 border-r border-gray-200">{line?.skuProducto}</td>
-                        <td className="py-0.5 px-1 font-mono font-bold text-[10px] text-black border-r border-gray-200">{rollo.serie}</td>
+                        <td className="py-0.5 px-1 text-[10px] text-gray-900 text-center border-r border-gray-200">{formatNumber(line.rollosEnviados, { kind: "count" })}</td>
+                        <td className="py-0.5 px-1 text-right text-[10px] font-medium text-black border-r border-gray-200">{formatNumber(line.cantidadEnviada, { kind: "quantity" })} {formatUnit(line.unidadProducto)}</td>
+                        <td className="py-0.5 px-1 text-[10px] text-gray-700">{line.skuProducto}</td>
                       </tr>
                     );
                   })}
-                  {Array.from({ length: Math.max(0, rollosPerPage - pageRollos.length) }).map((_, i) => (
+                  {Array.from({ length: Math.max(0, productRowsPerPage - pageLineas.length) }).map((_, i) => (
                     <tr key={`pad-${i}`} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
-                      <td className="border-r border-gray-200"></td>
-                      <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
