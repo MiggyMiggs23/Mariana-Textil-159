@@ -265,6 +265,26 @@
     size: 216mm 279mm;
     margin: 0;
   }
+  body.print-entrada {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.print-entrada * {
+    visibility: hidden;
+  }
+  body.print-entrada .entrada-print-root,
+  body.print-entrada .entrada-print-root * {
+    visibility: visible;
+  }
+  body.print-entrada .entrada-print-root {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 216mm;
+    margin: 0;
+    padding: 0;
+  }
   @page salida-page {
     size: 216mm 140mm;
     margin: 0;
@@ -455,8 +475,13 @@
 
   .entrada-page-print {
     page: entrada-page;
+    break-after: page;
+    break-inside: avoid-page;
     page-break-after: always;
     page-break-inside: avoid;
+    width: 216mm !important;
+    height: 279mm !important;
+    margin: 0 !important;
   }
 
   .salida-page-print {

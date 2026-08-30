@@ -4,6 +4,7 @@ import { ProductCombobox } from "@/components/product-combobox";
 import {
   useGetCatalogosEntrada,
   getGetCatalogosEntradaQueryKey,
+  useListEntradas,
   useListLocations,
   useCrearEntrada,
   useGetCurrentUser,
@@ -38,7 +39,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw } from "lucide-react";
+import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw, ExternalLink } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "@/lib/api-error";
 import {
@@ -112,6 +113,15 @@ export default function Entradas() {
       refetchInterval: 60_000,
     },
   });
+  const { data: entradasRecientes, isError: entradasRecientesFailed } =
+    useListEntradas(
+      { page: 1, pageSize: 10 },
+      {
+        query: {
+          queryKey: getListEntradasQueryKey({ page: 1, pageSize: 10 }),
+        },
+      },
+    );
 
   const [ubicacionId, setUbicacionId] = useState<string>("");
   const { data: pisos } = useListPisosLocation(Number(ubicacionId), {
@@ -786,6 +796,7 @@ export default function Entradas() {
 
         {(catalogosFailed ||
           serverTimeFailed ||
+          entradasRecientesFailed ||
           (user?.rol === Role.ADMIN && ubicacionesFailed)) && (
           <div
             className="rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
@@ -797,6 +808,64 @@ export default function Entradas() {
             </p>
           </div>
         )}
+
+        <Card>
+          <CardHeader className="border-b">
+            <CardTitle className="text-lg">Entradas recientes</CardTitle>
+            <CardDescription>
+              Abre cualquier folio para consultar, imprimir o guardar nuevamente su documento.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Folio</TableHead>
+                    <TableHead>Fecha</TableHead>
+                    <TableHead>Sitio</TableHead>
+                    <TableHead>Proveedor</TableHead>
+                    <TableHead className="text-right">Rollos</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(entradasRecientes?.items ?? []).map((entrada) => (
+                    <TableRow key={entrada.id}>
+                      <TableCell>
+                        <Link
+                          href={`/entradas/${entrada.id}/documento`}
+                          className="inline-flex items-center gap-1 font-semibold text-blue-700 underline underline-offset-2 hover:text-blue-900"
+                          data-testid={`entrada-document-link-${entrada.id}`}
+                        >
+                          {entrada.folioFormateado}
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(entrada.createdAt).toLocaleString("es-MX", {
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
+                      </TableCell>
+                      <TableCell>{entrada.nombreUbicacion}</TableCell>
+                      <TableCell>{entrada.nombreProveedor ?? "Sin proveedor"}</TableCell>
+                      <TableCell className="text-right">
+                        {formatNumber(entrada.totalRollos, { kind: "count" })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {entradasRecientes && entradasRecientes.items.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
+                        Aún no hay entradas registradas.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card className="border-t-4 border-t-primary shadow-sm">
           <CardHeader className="bg-muted/10 border-b">

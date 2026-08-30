@@ -43,13 +43,13 @@ export default function EntradaDocumento() {
     <div className="min-h-[100dvh] bg-muted/20 flex flex-col">
       <div className="no-print sticky top-0 z-10 flex flex-col gap-3 border-b bg-background p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-bold">Vista previa de impresión</h1>
-        <Button className="w-full sm:w-auto" onClick={() => void printWhenReady()}>
+        <Button className="w-full sm:w-auto" onClick={() => void printWhenReady("print-entrada")}>
           <Printer className="w-4 h-4 mr-2" />
           Imprimir / Guardar PDF
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:p-0 print:block">
+      <div className="entrada-print-root flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:overflow-visible print:p-0 print:block">
         {pages.map((pageLineas, pageIndex) => (
           <div key={pageIndex} className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0">
 
