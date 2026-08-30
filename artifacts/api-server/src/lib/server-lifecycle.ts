@@ -14,29 +14,93 @@ type Log = {
 };
 
 type StartupLockClient = {
-  query(query: string | object, values?: readonly unknown[]): Promise<{ rows: Record<string, unknown>[] }>;
+  query(
+    query: string | Record<string, unknown>,
+    values?: readonly unknown[],
+  ): Promise<{ rows: Record<string, unknown>[] }>;
   release(): void;
+};
+
+const STARTUP_TIMEOUT_MS = 300_000;
+
+export type StartupSchemaExecutor = StartupLockClient & {
+  connect(): Promise<StartupLockClient>;
 };
 
 /** Runs all startup DDL while one session-level lock connection is retained. */
 export async function withSchemaStartupLock(
   pool: { connect(): Promise<StartupLockClient> },
-  operation: () => Promise<void>,
+  operation: (executor: StartupSchemaExecutor) => Promise<void>,
 ): Promise<void> {
   const client = await pool.connect();
+  const query: StartupLockClient["query"] = (query, values) => {
+    const config =
+      typeof query === "string"
+        ? { text: query, values, query_timeout: STARTUP_TIMEOUT_MS }
+        : { ...query, query_timeout: STARTUP_TIMEOUT_MS };
+    return client.query(config);
+  };
+  const executor: StartupSchemaExecutor = {
+    query,
+    async connect() {
+      return { query, release() {} };
+    },
+    release() {},
+  };
   let locked = false;
+  let previousStatementTimeout: string | undefined;
   try {
-    await sessionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_STARTUP);
+    const timeoutResult = await client.query(
+      "SELECT current_setting('statement_timeout') AS value",
+    );
+    const timeoutValue = timeoutResult.rows[0]?.value;
+    if (typeof timeoutValue !== "string") {
+      throw new Error("Unable to read PostgreSQL statement_timeout.");
+    }
+    previousStatementTimeout = timeoutValue;
+    await client.query(
+      "SELECT set_config('statement_timeout', $1, false)",
+      [`${STARTUP_TIMEOUT_MS}ms`],
+    );
+    await sessionAdvisoryLock(
+      client,
+      ADVISORY_LOCK_NAMESPACES.SCHEMA_STARTUP,
+      0,
+      { queryTimeoutMs: STARTUP_TIMEOUT_MS },
+    );
     locked = true;
-    await operation();
+    await operation(executor);
   } finally {
     try {
       if (locked) {
         await releaseSessionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_STARTUP);
       }
     } finally {
-      client.release();
+      try {
+        if (previousStatementTimeout !== undefined) {
+          await client.query(
+            "SELECT set_config('statement_timeout', $1, false)",
+            [previousStatementTimeout],
+          );
+        }
+      } finally {
+        client.release();
+      }
     }
+  }
+}
+
+export async function observeBackgroundTask<T>(
+  task: Promise<T>,
+  handlers: {
+    onFulfilled(value: T): void;
+    onRejected(error: unknown): void;
+  },
+): Promise<void> {
+  try {
+    handlers.onFulfilled(await task);
+  } catch (error) {
+    handlers.onRejected(error);
   }
 }
 

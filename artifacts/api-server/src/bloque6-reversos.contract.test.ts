@@ -118,9 +118,12 @@ test("Bloque 6: aplicaciones activas son la única fuente y comparten lock de cl
   assert.match(pos, lock);
   assert.match(clienteSchema, /La aplicación de crédito excede el saldo disponible/);
   assert.match(proveedorSchema, /Aplicación proveedor excede el saldo disponible/);
+  const pagosSchemaCall = /await ensurePagosProveedorSchema\((?:pool|startupPool)\)/;
+  const aplicacionesSchemaCall =
+    /await ensureAplicacionesPagoProveedorSchema\((?:pool|startupPool)\)/;
   assert.ok(
-    server.indexOf("await ensurePagosProveedorSchema(pool)") <
-      server.indexOf("await ensureAplicacionesPagoProveedorSchema(pool)"),
+    server.search(pagosSchemaCall) >= 0 &&
+      server.search(pagosSchemaCall) < server.search(aplicacionesSchemaCall),
     "el enum y movimiento_origen_id deben existir antes de reconciliar aplicaciones",
   );
 });

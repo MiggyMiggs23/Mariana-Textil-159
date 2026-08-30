@@ -20,3 +20,15 @@ If a Neon operation's response is blocked by Replit's security scanner, do not a
 **Why:** A blocked response hid a successful database drop while the following recreate step did not run, so blindly retrying the original sequence would have operated on unexpected state.
 
 **How to apply:** Treat blocked tool output as an unknown outcome, stop, obtain user direction, inspect state through a safe independent path, and resume from the observed state.
+
+The Neon MCP’s runtime schemas may differ from its bundled examples. Branch creation accepted only `project_id` and `parent_id`; connection lookup also required snake_case names and did not accept optional pool-selection fields.
+
+**Why:** Repeated calls using documented camelCase, branch naming, expiration, and pooled flags were rejected before a minimal runtime-accepted call succeeded.
+
+**How to apply:** Trust live validation over examples, begin with the minimal required snake_case arguments, and record the returned branch ID instead of assuming a requested name or expiration was applied.
+
+Neon’s default returned connection string may use a `-pooler` host. Do not validate session-scoped advisory locks through that endpoint because backend-session affinity is not guaranteed and a lock can outlive the logical client.
+
+**Why:** Concurrent startup appeared to bypass serialization and left a lock retained in a pooled backend; the direct endpoint produced deterministic serialization and clean unlock behavior.
+
+**How to apply:** Use a direct Neon endpoint for tests involving session advisory locks. Use pooled connections only for transaction-scoped behavior, or explicitly prove session affinity first.

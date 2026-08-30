@@ -16,6 +16,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
 import {
+  aplicacionesPagoProveedorTable,
   db,
   clientesTable,
   entradasTable,
@@ -345,7 +346,7 @@ await test("CP-05: Estado de compra Pendiente/Parcial/Pagada calculado correctam
   const r1 = await comprasPorProveedor({ proveedorId });
   const compra1 = r1.items.find((c) => c.entradaId === entradaId);
   assert.ok(compra1, "Compra debe estar en la lista");
-  assert.equal(compra1!.estado, "Pendiente", "Estado inicial debe ser Pendiente");
+  assert.equal(compra1!.estado, "PENDIENTE", "Estado inicial debe ser PENDIENTE");
   assert.equal(r1.total, 1, "El total debe incluir la compra del periodo");
   assert.equal(r1.totalCostoPeriodo, "200.00", "El total monetario del periodo debe ser exacto");
   assert.equal(r1.page, 1);
@@ -368,7 +369,7 @@ await test("CP-05: Estado de compra Pendiente/Parcial/Pagada calculado correctam
 
   const r2 = await comprasPorProveedor({ proveedorId });
   const compra2 = r2.items.find((c) => c.entradaId === entradaId)!;
-  assert.equal(compra2.estado, "Parcial", "Con abono parcial debe ser Parcial");
+  assert.equal(compra2.estado, "PARCIAL", "Con abono parcial debe ser PARCIAL");
   assert.equal(compra2.abonado, "100.00", "Abonado debe ser 100.00");
 
   // Pago total
@@ -378,7 +379,7 @@ await test("CP-05: Estado de compra Pendiente/Parcial/Pagada calculado correctam
 
   const r3 = await comprasPorProveedor({ proveedorId });
   const compra3 = r3.items.find((c) => c.entradaId === entradaId)!;
-  assert.equal(compra3.estado, "Pagada", "Con pago completo debe ser Pagada");
+  assert.equal(compra3.estado, "PAGADA", "Con pago completo debe ser PAGADA");
 });
 
 // =============================================================================
@@ -573,6 +574,23 @@ try {
       await tx.delete(ticketsTable).where(inArray(ticketsTable.id, createdTicketIds));
     }
     // Delete pagos first
+    if (createdProveedorIds.length > 0) {
+      const providerPayments = await tx
+        .select({ id: pagosProveedorTable.id })
+        .from(pagosProveedorTable)
+        .where(inArray(pagosProveedorTable.proveedorId, createdProveedorIds));
+      const providerPaymentIds = providerPayments.map((payment) => payment.id);
+      if (providerPaymentIds.length > 0) {
+        await tx
+          .delete(aplicacionesPagoProveedorTable)
+          .where(
+            inArray(
+              aplicacionesPagoProveedorTable.pagoProveedorId,
+              providerPaymentIds,
+            ),
+          );
+      }
+    }
     if (createdEntradaIds.length > 0) {
       await tx
         .delete(pagosProveedorTable)

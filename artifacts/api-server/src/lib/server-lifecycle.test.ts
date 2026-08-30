@@ -1,26 +1,36 @@
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import test from "node:test";
-import { createRequestDrain, installGracefulShutdown, withSchemaStartupLock } from "./server-lifecycle";
+import {
+  createRequestDrain,
+  installGracefulShutdown,
+  observeBackgroundTask,
+  withSchemaStartupLock,
+} from "./server-lifecycle";
 
 test("concurrent startup initializers serialize on the session lock", async () => {
   let held = false;
   const waiters: Array<() => void> = [];
-  const calls = new Map<number, number>();
+  let physicalConnections = 0;
+  const operationConnections: number[] = [];
   const pool = {
     async connect() {
-      const id = calls.size + 1;
-      calls.set(id, 0);
+      const id = ++physicalConnections;
       return {
-        async query() {
-          const call = (calls.get(id) ?? 0) + 1;
-          calls.set(id, call);
-          if (call === 1) {
+        async query(query: string | { text?: string }) {
+          const text = typeof query === "string" ? query : String(query.text);
+          if (text.includes("pg_advisory_lock")) {
             if (held) await new Promise<void>((resolve) => waiters.push(resolve));
             held = true;
-          } else {
+          } else if (text.includes("pg_advisory_unlock")) {
             held = false;
             waiters.shift()?.();
+          } else if (text.includes("current_setting")) {
+            return { rows: [{ value: "30s" }] };
+          } else if (text.includes("set_config")) {
+            return { rows: [{ value: "ok" }] };
+          } else {
+            operationConnections.push(id);
           }
           return { rows: [{ ok: true }] };
         },
@@ -30,10 +40,77 @@ test("concurrent startup initializers serialize on the session lock", async () =
   };
   const order: string[] = [];
   await Promise.all([
-    withSchemaStartupLock(pool, async () => { order.push("first-start"); await Promise.resolve(); order.push("first-end"); }),
-    withSchemaStartupLock(pool, async () => { order.push("second-start"); order.push("second-end"); }),
+    withSchemaStartupLock(pool, async (executor) => {
+      order.push("first-start");
+      await executor.query("SELECT 1");
+      const nested = await executor.connect();
+      await nested.query("SELECT 2");
+      nested.release();
+      order.push("first-end");
+    }),
+    withSchemaStartupLock(pool, async (executor) => {
+      order.push("second-start");
+      await executor.query("SELECT 3");
+      order.push("second-end");
+    }),
   ]);
   assert.deepEqual(order, ["first-start", "first-end", "second-start", "second-end"]);
+  assert.equal(physicalConnections, 2);
+  assert.deepEqual(operationConnections, [1, 1, 2]);
+});
+
+test("startup lock extends and restores the PostgreSQL statement timeout", async () => {
+  const queries: Array<{ query: string | object; values?: readonly unknown[] }> = [];
+  const pool = {
+    async connect() {
+      return {
+        async query(query: string | object, values?: readonly unknown[]) {
+          queries.push({ query, values });
+          if (typeof query === "string" && query.includes("current_setting")) {
+            return { rows: [{ value: "30s" }] };
+          }
+          return { rows: [{ ok: true }] };
+        },
+        release() {},
+      };
+    },
+  };
+  await withSchemaStartupLock(pool, async (executor) => {
+    await executor.query("SELECT pg_sleep(36)");
+  });
+  assert.deepEqual(queries[1]?.values, ["300000ms"]);
+  assert.deepEqual(queries.at(-1)?.values, ["30s"]);
+  const lockQuery = queries.find(
+    ({ query }) => typeof query === "object" && "query_timeout" in query,
+  );
+  assert.equal(
+    (lockQuery?.query as { query_timeout?: number }).query_timeout,
+    300_000,
+  );
+  const ddlQuery = queries.find(
+    ({ query }) =>
+      typeof query === "object" &&
+      "text" in query &&
+      query.text === "SELECT pg_sleep(36)",
+  );
+  assert.equal(
+    (ddlQuery?.query as { query_timeout?: number }).query_timeout,
+    300_000,
+  );
+});
+
+test("background task failures are observed and contained", async () => {
+  const failure = new Error("backfill failed");
+  let rejected: unknown;
+  await observeBackgroundTask(Promise.reject(failure), {
+    onFulfilled() {
+      assert.fail("rejected task must not fulfill");
+    },
+    onRejected(error) {
+      rejected = error;
+    },
+  });
+  assert.equal(rejected, failure);
 });
 
 test("request drain waits for in-flight work and rejects new requests", async () => {

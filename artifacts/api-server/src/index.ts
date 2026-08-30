@@ -30,7 +30,11 @@ import {
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
-import { installGracefulShutdown, withSchemaStartupLock } from "./lib/server-lifecycle";
+import {
+  installGracefulShutdown,
+  observeBackgroundTask,
+  withSchemaStartupLock,
+} from "./lib/server-lifecycle";
 
 const rawPort = process.env["PORT"];
 
@@ -55,28 +59,29 @@ export async function ensureStartupSchemas(): Promise<void> {
     await operation();
     logger.info({ durationMs: Math.round(performance.now() - phaseStartedAt) }, `Schema startup phase complete: ${name}`);
   };
-  await withSchemaStartupLock(pool, async () => {
+  await withSchemaStartupLock(pool, async (executor) => {
+    const startupPool = executor as unknown as typeof pool;
     await phase("audit and logistics", async () => {
-      await ensureAuditSchema(pool); await ensureCamionetasSchema(pool); await ensureChoferesSchema(pool);
-      await ensureViajesSchema(pool); await ensurePagosProveedorSchema(pool);
-      await ensureSolicitudesPagoDirigidoSchema(pool); await ensureAplicacionesPagoProveedorSchema(pool);
+      await ensureAuditSchema(startupPool); await ensureCamionetasSchema(startupPool); await ensureChoferesSchema(startupPool);
+      await ensureViajesSchema(startupPool); await ensurePagosProveedorSchema(startupPool);
+      await ensureSolicitudesPagoDirigidoSchema(startupPool); await ensureAplicacionesPagoProveedorSchema(startupPool);
     });
     await phase("inventory and products", async () => {
-      await ensureEstadoRolloSchema(pool); await ensureProductUnitSchema(pool); await ensureProductMeterSchema(pool);
-      await ensureProductPricingSchema(pool); await ensureProductColorSchema(pool); await ensureProductSpecificationsSchema(pool);
+      await ensureEstadoRolloSchema(startupPool); await ensureProductUnitSchema(startupPool); await ensureProductMeterSchema(startupPool);
+      await ensureProductPricingSchema(startupPool); await ensureProductColorSchema(startupPool); await ensureProductSpecificationsSchema(startupPool);
     });
     await phase("roles and inventory audit", async () => {
-      const migratedSupportUsers = await ensureSupervisorRole(pool);
-      await ensureAuditoriaInventarioSchema(pool); await ensurePisosSchema(pool);
+      const migratedSupportUsers = await ensureSupervisorRole(startupPool);
+      await ensureAuditoriaInventarioSchema(startupPool); await ensurePisosSchema(startupPool);
       logger.info({ migratedSupportUsers }, "Roles SUPERVISOR, SISTEMAS y CONTADOR verificados");
     });
     await phase("customers and tickets", async () => {
-      await ensureClientesSchema(pool); await ensureTicketIvaSchema(pool); await ensureCashSessionSchema(pool);
-      await ensureTicketLineTypesSchema(pool); await ensureSalidasSchema(pool); await ensureDocumentFoliosSchema(pool);
+      await ensureClientesSchema(startupPool); await ensureTicketIvaSchema(startupPool); await ensureCashSessionSchema(startupPool);
+      await ensureTicketLineTypesSchema(startupPool); await ensureSalidasSchema(startupPool); await ensureDocumentFoliosSchema(startupPool);
     });
     await phase("reporting and labels", async () => {
-      await ensurePendingCostsSchema(pool); await ensureAdminAnalyticsSchema(pool);
-      await ensureCuadreFiscalSchema(pool); await ensureEtiquetasSchema(pool);
+      await ensurePendingCostsSchema(startupPool); await ensureAdminAnalyticsSchema(startupPool);
+      await ensureCuadreFiscalSchema(startupPool); await ensureEtiquetasSchema(startupPool);
     });
     logger.info({ durationMs: Math.round(performance.now() - startedAt) }, "Schema startup complete");
   });
@@ -94,18 +99,21 @@ export async function startServer() {
     logger.info({ port }, "Server listening");
   });
   const backfillController = new AbortController();
-  const backfillPromise = backfillCompras({ signal: backfillController.signal })
-    .then((inserted) => {
+  const backfillPromise = observeBackgroundTask(
+    backfillCompras({ signal: backfillController.signal }),
+    {
+      onFulfilled(inserted) {
       logger.info({ inserted }, "Backfill de compras por proveedor completado");
-    })
-    .catch((err: unknown) => {
-      if ((err as { name?: string }).name === "AbortError") {
-        logger.info("Backfill de compras cancelado durante el apagado");
-      } else {
-        logger.error({ err }, "No se pudo completar el backfill de compras");
-      }
-      throw err;
-    });
+      },
+      onRejected(err) {
+        if ((err as { name?: string }).name === "AbortError") {
+          logger.info("Backfill de compras cancelado durante el apagado");
+        } else {
+          logger.error({ err }, "No se pudo completar el backfill de compras");
+        }
+      },
+    },
+  );
   installGracefulShutdown({
     app,
     server,

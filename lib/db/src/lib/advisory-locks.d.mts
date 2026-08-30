@@ -27,8 +27,13 @@ export declare const ADVISORY_LOCK_NAMESPACES: Readonly<{
 }>;
 
 type DrizzleExecutor = { execute(query: unknown): Promise<unknown> };
+type PgQueryConfig = {
+  text: string;
+  values: readonly unknown[];
+  query_timeout: number;
+};
 type PgExecutor = {
-  query(query: string, values?: readonly unknown[]): Promise<{ rows: Record<string, unknown>[] }>;
+  query(query: string | PgQueryConfig, values?: readonly unknown[]): Promise<{ rows: Record<string, unknown>[] }>;
 };
 type Executor = DrizzleExecutor | PgExecutor;
 
@@ -41,6 +46,7 @@ export declare function sessionAdvisoryLock(
   executor: Executor,
   namespace: AdvisoryLockNamespace,
   key?: number | string,
+  options?: { queryTimeoutMs?: number },
 ): Promise<void>;
 export declare function trySessionAdvisoryLock(
   executor: Executor,
