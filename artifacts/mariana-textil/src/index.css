@@ -348,7 +348,7 @@
     page: salida-page;
     display: block !important;
     position: static;
-    width: 148mm;
+    width: 147.5mm;
     height: auto !important;
     overflow: visible !important;
     margin: 0;
@@ -601,8 +601,9 @@
     page: salida-page;
     page-break-after: always;
     page-break-inside: avoid;
-    width: 148mm !important;
-    height: 105mm !important;
+    /* 0.5 mm de tolerancia evita que el redondeo CSS px de la caja exacta cree una hoja fantasma. */
+    width: 147.5mm !important;
+    height: 104.5mm !important;
     margin: 0 !important;
   }
 

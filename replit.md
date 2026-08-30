@@ -5,6 +5,12 @@ Los documentos impresos requieren `print-color-adjust: exact` para que el logo y
 Todo documento imprimible debe poder abrirse en cualquier momento desde el folio de su lista, no solo al crearse.
 
 Todos los documentos impresos llevan el logo centrado arriba y el QR en la esquina superior derecha. El QR lleva al mismo destino que el folio en azul de su lista, con la dirección construida desde el origen en que corre la aplicación, nunca escrita a mano.
+
+**Documentos impresos:** el logo del encabezado va al mismo tamaño que el QR y toma la medida de la constante compartida, no de un número escrito en la página. Entrada y Salida usan el mismo tamaño de encabezado aunque el papel sea distinto —carta vertical y A6 apaisado.
+
+Un documento cuyo contenido cabe imprime **una sola hoja**: si el navegador reporta "Page 1 of 2" con una línea de producto, hay una página fantasma por redondeo entre el `@page` y la altura del contenedor, y eso se corrige midiendo, nunca reduciendo tipografías hasta que quepa. Cuando las líneas sí se pasan, la segunda hoja lleva **encabezado y pie de firmas completos**; el pie nunca queda huérfano en la última página.
+
+Las líneas por página de cada documento son un valor medido, comentado junto a la constante. Cambiar el pie —agregar firmas, por ejemplo— invalida ese número y obliga a recalcularlo.
 # Decisiones de la Parte 9
 
 El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.

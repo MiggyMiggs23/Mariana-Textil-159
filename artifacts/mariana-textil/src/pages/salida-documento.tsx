@@ -1,6 +1,7 @@
 import { useParams, Link } from "wouter";
 import { useGetDocumentoSalida, getGetDocumentoSalidaQueryKey } from "@workspace/api-client-react";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
+import { DOCUMENT_QR_SIZE } from "@/components/document-qr-code";
 import { format } from "date-fns";
 import { Loader2, Printer, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,8 +42,9 @@ export default function SalidaDocumento() {
   const dateObj = new Date(salida.createdAt);
   const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
-  // Pagination logic: 10 rows per page for A6 landscape fit
-  const rollosPerPage = 10;
+  // Medición Chromium a 96 dpi: caja útil 104.5 mm = 395 px.
+  // 114 header + 40 datos + 30 cabecera + (5 × 20.5) rollos + 84 pie = 370.5 px.
+  const rollosPerPage = 5;
   const totalPages = Math.max(1, Math.ceil((salida.rollos?.length || 0) / rollosPerPage));
   const pages = Array.from({ length: totalPages }).map((_, i) => (salida.rollos || []).slice(i * rollosPerPage, (i + 1) * rollosPerPage));
 
@@ -80,59 +82,54 @@ export default function SalidaDocumento() {
 
             {/* Header */}
             <PrintableDocumentHeader
-              className="relative z-10 shrink-0 bg-white px-2"
+              className="document-header relative z-10 shrink-0 bg-white px-2"
               qrUrl={qrUrl}
               qrLabel={`QR para abrir salida ${salida.folioFormateado}`}
-              logoClassName="h-[72px] w-[72px]"
+              logoSize={DOCUMENT_QR_SIZE}
             >
-              <h1 className="text-[22px] font-black text-black tracking-tighter uppercase leading-none">HOJA DE SALIDA</h1>
+              <h1 className="text-[22px] font-black text-black tracking-tighter leading-none">Salida</h1>
               <div className="mt-0.5 text-[10px] font-bold uppercase text-gray-700">Mariana Textil</div>
               <div className="mt-1 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
               <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
             </PrintableDocumentHeader>
 
             {/* Form Data */}
-            <div className="px-2 py-1.5 border-b border-black bg-gray-50 shrink-0 flex flex-col gap-1 relative z-10">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-1 w-1/2 pr-2">
+            <div className="document-metadata px-2 py-1.5 border-b border-black bg-gray-50 shrink-0 grid grid-cols-6 gap-x-2 gap-y-1 relative z-10">
+                <div className="col-span-3 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Generó:</span>
                   <span className="text-[10px] truncate font-medium text-black">{salida.nombreArmadoPor || "N/A"}</span>
                 </div>
-                <div className="flex items-center gap-1 w-1/2">
+                <div className="col-span-3 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Entregó:</span>
                   <span className="text-[10px] truncate font-medium text-black" data-testid="doc-transportista">{salida.viaje ? `${salida.viaje.nombreCamioneta} · ${salida.viaje.nombreChofer}` : salida.transportista || "N/A"}</span>
                 </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="flex items-center gap-1 w-1/2 pr-2">
+                <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Origen:</span>
                   <span className="text-[10px] truncate font-medium text-black">{salida.nombreOrigen}</span>
                 </div>
-                <div className="flex items-center gap-1 w-1/2">
+                <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Destino:</span>
                   <span className="text-[10px] truncate font-medium text-black">{salida.nombreDestino}</span>
                 </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="flex items-center gap-1 w-1/2 pr-2">
+                <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Fecha:</span>
-                  <span className="text-[10px] font-medium text-black">{dateObj ? format(dateObj, "dd/MM/yyyy HH:mm") : "N/A"}</span>
+                  <span className="text-[10px] truncate font-medium text-black">{dateObj ? format(dateObj, "dd/MM/yyyy HH:mm") : "N/A"}</span>
                 </div>
-              </div>
             </div>
 
             {/* Table */}
-            <div className="flex-1 w-full relative z-10 bg-white">
-              <table className="w-full text-left border-collapse border-b border-black">
+            <div className="document-table flex-1 w-full relative z-10 bg-white">
+              <table className="w-full table-fixed text-left border-collapse border-b border-black">
                 <thead>
                   <tr className="bg-gray-100 text-black border-b-2 border-black">
                     <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-6 text-center border-r border-gray-300">#</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase border-r border-gray-300">Producto</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[72px] border-r border-gray-300">Color</th>
+                    {/* Catálogo aprobado (154): 106 px útiles cubren 141 nombres; p90=103.65 px y 13 extremos conservan elipsis. */}
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[112px] border-r border-gray-300">Producto</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[84px] border-r border-gray-300">Color</th>
                     <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-14 text-center border-r border-gray-300 leading-tight">No. de<br/>Rollos</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[72px] text-right border-r border-gray-300 leading-tight">Cant. de<br/>Unidad</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[64px] border-r border-gray-300">SKU</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[88px] leading-tight">No. de<br/>Serie</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[84px] text-right border-r border-gray-300 leading-tight">Cant. de<br/>Unidad</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[74px] border-r border-gray-300">SKU</th>
+                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[107px] leading-tight">No. de<br/>Serie</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -142,10 +139,10 @@ export default function SalidaDocumento() {
                     return (
                       <tr key={index} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
                         <td className="py-0.5 px-1 text-center text-gray-600 text-[10px] border-r border-gray-200 font-medium">{globalIndex}</td>
-                        <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate max-w-[100px] border-r border-gray-200">
+                        <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate border-r border-gray-200">
                           {line?.telaProducto}
                         </td>
-                        <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate max-w-[64px] border-r border-gray-200">
+                        <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate border-r border-gray-200">
                           {line?.colorProducto}
                         </td>
                         <td className="py-0.5 px-1 text-[10px] text-gray-900 text-center border-r border-gray-200">1</td>
@@ -171,18 +168,18 @@ export default function SalidaDocumento() {
             </div>
 
             {/* Footer */}
-            {pageIndex === totalPages - 1 && (
-              <div className="px-2 pb-1.5 mt-auto shrink-0 flex gap-4 w-full relative z-10 bg-white">
-                <div className="w-[45%] flex flex-col gap-1.5 justify-end">
+            <div className="document-footer px-2 pb-1.5 mt-auto shrink-0 flex gap-3 w-full relative z-10 bg-white">
+                <div className="w-[55%] flex flex-col gap-1.5 justify-end">
                   <div className="border border-gray-300 rounded p-1 h-8 overflow-hidden bg-gray-50/50">
                     <div className="text-[10px] font-bold uppercase leading-none text-gray-600">Observaciones</div>
                     <div className="text-[10px] leading-tight mt-0.5 truncate text-gray-900 font-medium">
                       {salida.notaEnvio || salida.observaciones || "Sin observaciones."}
                     </div>
                   </div>
-                  <div className="flex gap-2 h-10 items-end">
-                    <div className="flex-1 border-t border-black pt-0.5 text-center text-[10px] font-bold text-gray-700 leading-none">Firma de Entrega</div>
-                    <div className="flex-1 border-t border-black pt-0.5 text-center text-[10px] font-bold text-gray-700 leading-none">Firma de Recibe</div>
+                  <div className="grid grid-cols-3 gap-2 h-10 items-end">
+                    <div className="border-t border-black pt-0.5 text-center text-[10px] font-bold text-gray-700 leading-none">Revisó</div>
+                    <div className="border-t border-black pt-0.5 text-center text-[10px] font-bold text-gray-700 leading-none">Entregó</div>
+                    <div className="border-t border-black pt-0.5 text-center text-[10px] font-bold text-gray-700 leading-none">Recibió</div>
                   </div>
                 </div>
                 <div className="flex-1 flex justify-end items-end">
@@ -213,8 +210,7 @@ export default function SalidaDocumento() {
                     </tbody>
                   </table>
                 </div>
-              </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

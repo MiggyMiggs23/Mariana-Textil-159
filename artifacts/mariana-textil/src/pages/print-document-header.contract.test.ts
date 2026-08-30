@@ -36,8 +36,8 @@ test("los documentos usan logo centrado y QR derecho compartidos", () => {
 
 test("logo y QR usan el máximo seguro verificado para cada formato", () => {
   assert.equal(DOCUMENT_QR_SIZE, 112);
-  assert.match(entrada, /logoClassName="h-\[86px\] w-\[86px\]"/);
-  assert.match(salida, /logoClassName="h-\[72px\] w-\[72px\]"/);
+  assert.match(entrada, /logoSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(viaje, /qrSize=\{160\}/);
   assert.match(viaje, /qrRenderAsCanvas/);
   assert.match(viaje, /logoClassName="h-\[115px\] w-\[115px\]"/);

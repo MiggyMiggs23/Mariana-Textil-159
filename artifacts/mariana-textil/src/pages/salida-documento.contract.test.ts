@@ -7,17 +7,20 @@ const [page, styles] = await Promise.all([
   readFile(new URL("../index.css", import.meta.url), "utf8"),
 ]);
 
-test("la salida usa A6 horizontal con diez renglones por página", () => {
+test("la salida usa A6 horizontal con cinco renglones medidos por página", () => {
   assert.match(styles, /@page salida-page[\s\S]*size:\s*148mm 105mm/);
   assert.match(page, /w-\[148mm\] h-\[105mm\]/);
-  assert.match(page, /const rollosPerPage = 10/);
+  assert.match(page, /const rollosPerPage = 5/);
+  assert.match(page, /5 × 20\.5/);
   assert.match(page, /rollosPerPage - pageRollos\.length/);
   assert.match(page, /Pág \{pageIndex \+ 1\}\/\{totalPages\}/);
 });
 
 test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   assert.match(page, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
-  assert.match(page, /HOJA DE SALIDA/);
+  assert.match(page, />Salida<\/h1>/);
+  assert.doesNotMatch(page, /HOJA DE SALIDA/);
+  assert.doesNotMatch(page, /tracking-tighter uppercase leading-none">Salida/);
   assert.match(page, /printWhenReady\("print-salida"\)/);
   assert.match(page, /salida-document-shell/);
   assert.match(page, /salida-print-root/);
@@ -40,6 +43,13 @@ test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   }
   assert.match(page, /formatUnit\(line\?\.unidadProducto\)/);
   assert.match(page, /\{rollo\.serie\}/);
+  assert.match(page, /logoSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.match(page, /w-\[112px\][\s\S]*>Producto</);
+  assert.match(page, /Catálogo aprobado \(154\): 106 px útiles cubren 141 nombres/);
+  for (const signature of ["Revisó", "Entregó", "Recibió"]) {
+    assert.match(page, new RegExp(`>${signature}<`));
+  }
+  assert.doesNotMatch(page, /pageIndex === totalPages - 1/);
 });
 
 test("ningún texto impreso baja de 7.5 puntos", () => {

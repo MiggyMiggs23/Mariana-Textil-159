@@ -32,11 +32,15 @@ test("Salida page specifies A6 landscape and has correct control signatures", as
   assert.match(salida, /className=[\s\S]*?salida-page-print[\s\S]*?w-\[148mm\]\s*h-\[105mm\]/);
   assert.match(salida, /Generó:/);
   assert.match(salida, /Entregó:/);
-  assert.match(salida, /Firma de Entrega/);
-  assert.match(salida, /Firma de Recibe/);
+  assert.match(salida, /Revisó/);
+  assert.match(salida, /Entregó/);
+  assert.match(salida, /Recibió/);
   assert.match(salida, /tab=recepcion&id=\$\{salida\.id\}/);
   assert.match(salida, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
   assert.match(css, /\.salida-page-print:last-child\s*\{[\s\S]*page-break-after:\s*auto;/);
+  assert.match(salida, /const rollosPerPage = 5;/);
+  assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.doesNotMatch(salida, /pageIndex === totalPages - 1/);
 });
 
 test("Labels have exact physical size without padding", async () => {
