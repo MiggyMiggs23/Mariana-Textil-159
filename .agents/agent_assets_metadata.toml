@@ -56,3 +56,87 @@ mtime_ms = 1788059428906
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5573bcc5-cc3c-49fe-9206-f4261e24a0a4/abe4e0ec-60b2-4382-9b0d-7faf58656871"
 storage_version_token = "1788059429514650"
 content_type = "text/html"
+
+[[outputs]]
+id = "H2E3r2B23hhekcEPhtfKB"
+uri = "file://reports/task73-print-pdfs/entrada-1-linea.pdf"
+type = "pdf"
+title = "Entrada — 1 línea"
+description = "PDF carta de una hoja con encabezado y firmas completos."
+logical_id = "ea741d08-bcab-410a-ae8e-f00d3465e8b0"
+content_hash = "sha256:ab0aca3c1dfd58678c950eb551d77c12c8267608f8404bd5ce97394cf25d8bb6"
+size = 1081304
+mtime_ms = 1788123280905
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ea741d08-bcab-410a-ae8e-f00d3465e8b0/49d59b1f-0fa2-433d-b67e-2d8812b75fe8"
+storage_version_token = "1788123543492741"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "bMALFEgui9WpNt1kwYEVh"
+uri = "file://reports/task73-print-pdfs/entrada-23-lineas.pdf"
+type = "pdf"
+title = "Entrada — 23 líneas"
+description = "PDF carta al límite medido de una hoja."
+logical_id = "56702ac5-302c-43c4-8aed-cab7edbd3033"
+content_hash = "sha256:85fc2da2cc87ba23721630d5bc888562c21cadc23f57b5149dff00151891813b"
+size = 1099418
+mtime_ms = 1788123282685
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/56702ac5-302c-43c4-8aed-cab7edbd3033/4c74dc42-19e1-4613-92b5-bd93447ffb33"
+storage_version_token = "1788123543928415"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "I7p7yLMAPg9e1uAmJccCf"
+uri = "file://reports/task73-print-pdfs/entrada-24-lineas.pdf"
+type = "pdf"
+title = "Entrada — 24 líneas"
+description = "PDF carta de dos hojas con encabezado y firmas repetidos."
+logical_id = "cc49ebbf-a2b7-455a-b8a3-6e9a022a22b4"
+content_hash = "sha256:07ff354e27c2fb7a4998ca1136ee7dd3cb96148a0cd31dbee75d2f27eafdea2b"
+size = 1110988
+mtime_ms = 1788123284501
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cc49ebbf-a2b7-455a-b8a3-6e9a022a22b4/4c82237b-3d0e-407e-987e-1ac09997f87e"
+storage_version_token = "1788123544369785"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "c-ZWTVqmS87Qzl9ZzvL68"
+uri = "file://reports/task73-print-pdfs/salida-1-rollo.pdf"
+type = "pdf"
+title = "Salida — 1 rollo"
+description = "PDF A6 apaisado de una hoja con tres firmas."
+logical_id = "bed945db-6f38-4b98-9b7d-d95a95fc13fa"
+content_hash = "sha256:a6be666e1847803baa848f627ff3cd9cfdf6cbd4d9b43b23d69eb17dd2cf1fa1"
+size = 1067928
+mtime_ms = 1788123356550
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bed945db-6f38-4b98-9b7d-d95a95fc13fa/a81cefda-d9ec-48ef-9f9a-9e052755cc8b"
+storage_version_token = "1788123544882575"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "lYmLnCZvg3T8GK0VjfN5b"
+uri = "file://reports/task73-print-pdfs/salida-5-rollos.pdf"
+type = "pdf"
+title = "Salida — 5 rollos"
+description = "PDF A6 al límite medido de una hoja."
+logical_id = "9cd14f8b-90c6-490a-9b3a-827c9d2336c6"
+content_hash = "sha256:991c63ae0b932d3bb7cf22af18d1e2e11293b07583e8d9258f0fcfca2dec5e0e"
+size = 1076760
+mtime_ms = 1788123358726
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9cd14f8b-90c6-490a-9b3a-827c9d2336c6/eca04312-0e1b-48bb-8ff8-fa349f1b9fcb"
+storage_version_token = "1788123545297393"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "WbqmcJhd2mEC2mb-b6lzV"
+uri = "file://reports/task73-print-pdfs/salida-6-rollos.pdf"
+type = "pdf"
+title = "Salida — 6 rollos"
+description = "PDF A6 de dos hojas con encabezado y tres firmas repetidos."
+logical_id = "899a3bfd-6d26-4d4e-a588-9924dd676435"
+content_hash = "sha256:32c44bb877e0bcf575076b2eabdef6f4d2d043b77298b9aef43fd015bb4933f1"
+size = 1088796
+mtime_ms = 1788123360722
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/899a3bfd-6d26-4d4e-a588-9924dd676435/31c36dbd-6b78-4921-9836-57f2524e9219"
+storage_version_token = "1788123545748894"
+content_type = "application/pdf"
