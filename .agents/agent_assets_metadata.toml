@@ -42,3 +42,17 @@ mtime_ms = 1787822909400
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7b2c23b8-f1c7-49ed-886f-0e10c6d4ae4c/4f9087b8-6e7d-430e-a8fb-33ab8e2f216b"
 storage_version_token = "1787822956445315"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "nlIVb83jZduXrHtRaTqBz"
+uri = "file://reports/print-growth-60-fit-sample.html"
+type = "text"
+title = "Muestra: crecimiento adicional del 60%"
+description = "Comparación dimensional que muestra los encimamientos en ticket térmico, media carta y etiqueta de rollo."
+logical_id = "5573bcc5-cc3c-49fe-9206-f4261e24a0a4"
+content_hash = "sha256:29500926df8d16703c03424eeaf2298490c05d153276fee42ef11fdeaa9f9e32"
+size = 2891
+mtime_ms = 1788059428906
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5573bcc5-cc3c-49fe-9206-f4261e24a0a4/abe4e0ec-60b2-4382-9b0d-7faf58656871"
+storage_version_token = "1788059429514650"
+content_type = "text/html"
