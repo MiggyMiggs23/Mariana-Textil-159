@@ -9,6 +9,11 @@ import { omitSupervisorSensitiveFields } from "./lib/sensitive-data";
 
 const app: Express = express();
 
+// Honor forwarding headers only when the direct peer is on an explicitly
+// trusted proxy network. A public client reaching Express directly cannot
+// spoof its lockout/audit source with X-Forwarded-For.
+app.set("trust proxy", ["loopback", "linklocal", "uniquelocal"]);
+
 app.use(
   pinoHttp({
     logger,

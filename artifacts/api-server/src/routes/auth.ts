@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Router, type IRouter } from "express";
-import { and, count, eq, gt, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import {
   GetCurrentUserResponse,
   LoginBody,
@@ -22,9 +22,12 @@ import { presentUser } from "../lib/presenters";
 import { buildPermissionMatrix } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import {
+  getLoginLockoutReason,
+  LOGIN_LOCKOUT_WINDOW_MS,
+} from "../lib/login-lockout";
 
 const router: IRouter = Router();
-const LOCKOUT_WINDOW_MS = 15 * 60 * 1000;
 const INACTIVITY_MS = 30 * 60 * 1000;
 
 router.post("/auth/login", async (req, res): Promise<void> => {
@@ -36,21 +39,40 @@ router.post("/auth/login", async (req, res): Promise<void> => {
 
   const username = normalizeUsername(parsed.data.usuario);
   const ip = getRequestIp(req);
-  const since = new Date(Date.now() - LOCKOUT_WINDOW_MS);
+  const since = new Date(Date.now() - LOGIN_LOCKOUT_WINDOW_MS);
 
-  const [attempts] = await db
-    .select({ value: count() })
-    .from(auditoriaTable)
-    .where(
-      and(
-        eq(auditoriaTable.accion, "LOGIN_FALLIDO"),
-        eq(auditoriaTable.entidad, "usuarios"),
-        eq(auditoriaTable.entidadId, username),
-        gt(auditoriaTable.createdAt, since),
-      ),
-    );
+  // A successful login closes the prior failure window without mutating the
+  // append-only audit log. The source threshold limits one origin, while the
+  // higher global threshold still protects a username from distributed abuse.
+  const attemptsResult = await db.execute(sql`
+    WITH latest_success AS (
+      SELECT MAX(created_at) AS created_at
+      FROM auditoria
+      WHERE accion = 'LOGIN_EXITOSO'
+        AND datos_despues ->> 'usuario' = ${username}
+        AND created_at > ${since}
+    )
+    SELECT
+      COUNT(*) FILTER (WHERE ip = ${ip})::int AS "sourceFailures",
+      COUNT(*)::int AS "globalFailures"
+    FROM auditoria
+    WHERE accion = 'LOGIN_FALLIDO'
+      AND entidad = 'usuarios'
+      AND entidad_id = ${username}
+      AND created_at > GREATEST(
+        ${since},
+        COALESCE((SELECT created_at FROM latest_success), ${since})
+      )
+  `);
+  const attempts = attemptsResult.rows[0] as
+    | { sourceFailures: number; globalFailures: number }
+    | undefined;
+  const lockoutReason = getLoginLockoutReason({
+    sourceFailures: Number(attempts?.sourceFailures ?? 0),
+    globalFailures: Number(attempts?.globalFailures ?? 0),
+  });
 
-  if (Number(attempts?.value ?? 0) >= 5) {
+  if (lockoutReason) {
     res.status(429).json({
       error:
         "La cuenta está temporalmente bloqueada. Intenta de nuevo en 15 minutos.",
