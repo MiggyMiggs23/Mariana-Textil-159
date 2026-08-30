@@ -140,3 +140,73 @@ mtime_ms = 1788123360722
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/899a3bfd-6d26-4d4e-a588-9924dd676435/31c36dbd-6b78-4921-9836-57f2524e9219"
 storage_version_token = "1788123545748894"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "w3ee14A3GsVTkAXz-Vd7T"
+uri = "file://reports/task74-series-header-footer-correction-pdfs/entrada-750-rollos-2-productos.pdf"
+type = "pdf"
+title = "Entrada: 750 rollos"
+description = "Dos productos, una hoja global y cinco hojas compactas de series; 750 series completas."
+logical_id = "ff9e7c63-7de8-40f6-a030-d21f5938dfbb"
+content_hash = "sha256:7ae4f568f96492c538bb3fc39e97c8b5c90f1be4d13d3cba1575209533d969a7"
+size = 1506121
+mtime_ms = 1788133543866
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ff9e7c63-7de8-40f6-a030-d21f5938dfbb/1ad727c0-6fba-4c2e-be37-b72019fa20f1"
+storage_version_token = "1788133725569764"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "CP-Ik4yNhcXwSkRRtt4rA"
+uri = "file://reports/task74-series-header-footer-correction-pdfs/entrada-1-linea-1-serie.pdf"
+type = "pdf"
+title = "Entrada mínima"
+description = "Una línea y una serie en una sola hoja, con pie completo."
+logical_id = "bbd30c82-7aea-4f7c-97c4-815bfe2b04ad"
+content_hash = "sha256:f3b2c33b23c5b89ef78c0c596f9feb4156973746aa4fe24291dc3ca5ede8bf7a"
+size = 1131535
+mtime_ms = 1788133543998
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bbd30c82-7aea-4f7c-97c4-815bfe2b04ad/a6611555-5fa4-40d6-9846-eb91285dbd62"
+storage_version_token = "1788133726077860"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "Hs4iaeOF0SPr9Je6KJNRq"
+uri = "file://reports/task74-series-header-footer-correction-pdfs/entrada-80-rollos-limite-incrustado.pdf"
+type = "pdf"
+title = "Límite incrustado"
+description = "Veinte renglones de series, 80 rollos, en una sola hoja global."
+logical_id = "5e6a1cd5-d59b-4c30-a31c-8b3562a3cc7f"
+content_hash = "sha256:e0695a1edd1b5c86a81113083a938fc36557dd7c5a39b258aea5ed961a5878fb"
+size = 1137531
+mtime_ms = 1788133544130
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5e6a1cd5-d59b-4c30-a31c-8b3562a3cc7f/9d77ad45-5509-48e5-a728-5e6b6aed43a8"
+storage_version_token = "1788133726578415"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "XW0GieGMul26Uk5tiTlaT"
+uri = "file://reports/task74-series-header-footer-correction-pdfs/entrada-84-rollos-limite-mas-1.pdf"
+type = "pdf"
+title = "Límite más uno"
+description = "Veintiún renglones de series pasan completos a una segunda hoja compacta."
+logical_id = "d314c2ad-a99d-490d-92b9-353276eda35c"
+content_hash = "sha256:89bc9a396641f13f11ebc1af1195a2ca0c733138824b3ab1fa415369509e9789"
+size = 1170163
+mtime_ms = 1788133544254
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d314c2ad-a99d-490d-92b9-353276eda35c/aae627fa-ede7-45db-b26e-4e774a93ae62"
+storage_version_token = "1788133727142649"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "FI8qOhJiSpAu1Dlp1o73W"
+uri = "file://reports/task74-series-header-footer-correction-pdfs/entrada-23-productos-pie-completo.pdf"
+type = "pdf"
+title = "Pie completo con 23 productos"
+description = "Caso de capacidad global con firmas y leyendas indivisibles."
+logical_id = "c5e69b43-681c-418d-be51-f07a602f3017"
+content_hash = "sha256:bbe18474ac350bad38600a35461418c775d53fa1c5a39953bb981c4fae181a47"
+size = 1192071
+mtime_ms = 1788133544394
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c5e69b43-681c-418d-be51-f07a602f3017/f76cb3b9-5a65-4a1c-a0a9-dc0bf6ac71d2"
+storage_version_token = "1788133727663808"
+content_type = "application/pdf"
