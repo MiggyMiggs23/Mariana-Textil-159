@@ -19,6 +19,10 @@ import {
   productosTable,
   rollosTable,
 } from "@workspace/db";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
@@ -164,7 +168,11 @@ router.post("/precios/:id/cambiar", requierePermiso("precios", "editar"), async 
   const result = await db.transaction(async (tx) => {
     // Row lock serializes changes to this product; advisory lock protects the
     // aggregate snapshot against concurrent price changes for the same id.
-    await tx.execute(sql`SELECT pg_advisory_xact_lock(1347569993, ${params.data.id})`);
+    await transactionAdvisoryLock(
+      tx,
+      ADVISORY_LOCK_NAMESPACES.PRODUCT_PRICING,
+      params.data.id,
+    );
     const [before] = await tx.select().from(productosTable).where(eq(productosTable.id, params.data.id)).for("update").limit(1);
     if (!before) return null;
     const modoPrecio = body.data.modoPrecio ?? "ROLLO";

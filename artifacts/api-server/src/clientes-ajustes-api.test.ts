@@ -9,6 +9,10 @@ import { createServer, type Server } from "node:http";
 import { Readable } from "node:stream";
 import test, { after, before } from "node:test";
 import { db, ensureClientesSchema, pool } from "@workspace/db";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
 import app from "./app";
 import {
   setPrivateObjectStorageForTests,
@@ -267,7 +271,11 @@ test("crearTicket y baja se serializan con el mismo lock de cliente", async () =
   const id = await createClient("concurrent");
   const blocker = await pool.connect();
   await blocker.query("BEGIN");
-  await blocker.query("SELECT pg_advisory_xact_lock(240024,$1)", [id]);
+  await transactionAdvisoryLock(
+    blocker,
+    ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+    id,
+  );
   await blocker.query("SELECT id FROM clientes WHERE id=$1 FOR UPDATE", [id]);
   const ticketPromise = json("/tickets", {
     method: "POST",

@@ -39,6 +39,10 @@ import {
   type TipoMovimiento,
 } from "@workspace/db";
 import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
+import {
   isValidUnitCost,
   rollWithoutValidUnitCostMessage,
 } from "./unit-cost";
@@ -74,8 +78,10 @@ async function lockInventoryPairs(
   );
 
   for (const pair of ordered) {
-    await tx.execute(
-      sql`SELECT pg_advisory_xact_lock(${pair.productoId}, ${pair.ubicacionId})`,
+    await transactionAdvisoryLock(
+      tx,
+      ADVISORY_LOCK_NAMESPACES.INVENTORY_PAIR,
+      `${pair.productoId}:${pair.ubicacionId}`,
     );
   }
 }
@@ -84,16 +90,23 @@ async function lockInventoryPairForMovement(
   tx: Tx,
   movimientoId: number,
 ): Promise<void> {
-  await tx.execute(sql`
-    SELECT pg_advisory_xact_lock(producto_id, ubicacion_id)
+  const result = await tx.execute(sql`
+    SELECT producto_id, ubicacion_id
     FROM movimientos
     WHERE id = ${movimientoId}
   `);
+  const pair = result.rows[0];
+  if (pair) {
+    await lockInventoryPairs(tx, [{
+      productoId: Number(pair.producto_id),
+      ubicacionId: Number(pair.ubicacion_id),
+    }]);
+  }
 }
 
 async function lockAllExistingInventoryPairs(tx: Tx): Promise<void> {
-  await tx.execute(sql`
-    SELECT pg_advisory_xact_lock(producto_id, ubicacion_id)
+  const result = await tx.execute(sql`
+    SELECT producto_id, ubicacion_id
     FROM (
       SELECT producto_id, ubicacion_id FROM existencias
       UNION
@@ -103,6 +116,13 @@ async function lockAllExistingInventoryPairs(tx: Tx): Promise<void> {
     ) AS inventory_pairs
     ORDER BY producto_id, ubicacion_id
   `);
+  await lockInventoryPairs(
+    tx,
+    result.rows.map((pair) => ({
+      productoId: Number(pair.producto_id),
+      ubicacionId: Number(pair.ubicacion_id),
+    })),
+  );
 }
 
 function quantityToThousandthsBigInt(value: string): bigint {
@@ -588,8 +608,10 @@ export async function crearEntrada(
   // Serialize retries of the same client id before checking idempotency. This
   // prevents two concurrent requests from both observing no entrada and trying
   // to link the same container.
-  await tx.execute(
-    sql`SELECT pg_advisory_xact_lock(hashtext(${input.uuidCliente}))`,
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.INVENTORY_ENTRY_IDEMPOTENCY,
+    input.uuidCliente,
   );
   // Idempotency by entry uuid_cliente
   const [dup] = await tx

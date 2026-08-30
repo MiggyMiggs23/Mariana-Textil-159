@@ -26,6 +26,10 @@ import {
   type UnidadProducto,
 } from "@workspace/db";
 import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
+import {
   generateBaseSku,
   generateSku,
   normalizeCatalogTitleCase,
@@ -49,17 +53,13 @@ const router: IRouter = Router();
 
 router.use("/productos", requireSession);
 
-// ── advisory locking ─────────────────────────────────────────────────────────
-// A single application-defined key namespacing the product SKU/catalog. All
-// operations that allocate or mutate SKUs / variant uniqueness acquire the same
-// transaction-scoped advisory lock so concurrent transactions serialize.
-// The key is arbitrary but constant across the process; 0x50524f44 = "PROD".
-const PRODUCT_CATALOG_LOCK_KEY = 0x50524f44;
-
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 async function acquireCatalogLock(tx: Tx): Promise<void> {
-  await tx.execute(sql`SELECT pg_advisory_xact_lock(${PRODUCT_CATALOG_LOCK_KEY})`);
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.PRODUCT_CATALOG,
+  );
 }
 
 /**

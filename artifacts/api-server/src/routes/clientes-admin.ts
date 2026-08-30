@@ -1,5 +1,9 @@
 import { Router, type IRouter } from "express";
 import { pool } from "@workspace/db";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
 import { requireRole, requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
@@ -66,7 +70,11 @@ router.post(
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
-      await client.query("SELECT pg_advisory_xact_lock(240024,$1)", [id]);
+      await transactionAdvisoryLock(
+        client,
+        ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+        id,
+      );
       const locked = await client.query(
         `SELECT id,nombre,activo,es_sistema FROM clientes WHERE id=$1 FOR UPDATE`,
         [id],

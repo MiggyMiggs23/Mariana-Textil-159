@@ -1,4 +1,5 @@
 import type { Pool } from "pg";
+import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
 
 /** Repeatable, history-preserving schema upgrade for the driver catalog. */
 export async function ensureChoferesSchema(
@@ -7,7 +8,7 @@ export async function ensureChoferesSchema(
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(7003004)");
+    await transactionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_CHOFERES);
     await client.query(`
       CREATE TABLE IF NOT EXISTS choferes (
         id serial PRIMARY KEY,

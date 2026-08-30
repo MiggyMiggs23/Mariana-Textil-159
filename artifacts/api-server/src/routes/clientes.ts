@@ -21,6 +21,10 @@ import {
   ticketsTable,
 } from "@workspace/db";
 import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
+import {
   centsToMoney,
   isValidPaymentDestination,
   moneyToCents,
@@ -1733,7 +1737,11 @@ router.post(
         return;
       }
       const result = await db.transaction(async (tx) => {
-        await tx.execute(sql`SELECT pg_advisory_xact_lock(240024, ${id})`);
+        await transactionAdvisoryLock(
+          tx,
+          ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+          id,
+        );
         const [client] = await tx
           .select()
           .from(clientesTable)
@@ -1856,7 +1864,11 @@ router.post(
         res.status(400).json({ error: "ID y motivo son obligatorios." }); return;
       }
       const reverso = await db.transaction(async (tx) => {
-        await tx.execute(sql`SELECT pg_advisory_xact_lock(240024, ${clienteId})`);
+        await transactionAdvisoryLock(
+          tx,
+          ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+          clienteId,
+        );
         const original = await tx.execute<any>(sql`
           SELECT * FROM movimientos_credito
           WHERE id=${pagoId} AND cliente_id=${clienteId} AND tipo='ABONO' FOR UPDATE`);

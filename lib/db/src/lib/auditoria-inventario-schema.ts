@@ -1,4 +1,5 @@
 import type { Pool } from "pg";
+import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
 
 /** Repeatable schema application for physical inventory audits. */
 export async function ensureAuditoriaInventarioSchema(
@@ -7,7 +8,7 @@ export async function ensureAuditoriaInventarioSchema(
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(7003057)");
+    await transactionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_INVENTORY_AUDIT);
     await client.query(`
       CREATE TABLE IF NOT EXISTS auditoria_inventario_folio (
         ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id),

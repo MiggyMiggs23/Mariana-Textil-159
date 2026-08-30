@@ -1,11 +1,12 @@
 import type { Pool } from "pg";
+import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
 
 /** Repeatable upgrade for immutable trip headers, per-site counters and links. */
 export async function ensureViajesSchema(pool: Pick<Pool, "connect">): Promise<void> {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(7003005)");
+    await transactionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_VIAJES);
     await client.query(`
       CREATE TABLE IF NOT EXISTS viaje_folio (
         ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id),

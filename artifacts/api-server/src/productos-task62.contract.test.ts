@@ -20,7 +20,7 @@ test("POST, PATCH e importación usan normalización compartida y PATCH reasigna
   assert.match(route, /normalizeCatalogTitleCase\(parsed\.data\.tela\)/);
   assert.match(route, /normalizeCatalogTitleCase\(body\.data\.color\)/);
   assert.match(importer, /normalizeCatalogTitleCase\(telaRaw\)/);
-  assert.match(route, /pg_advisory_xact_lock/);
+  assert.match(route, /ADVISORY_LOCK_NAMESPACES\.PRODUCT_CATALOG/);
   assert.match(route, /newSku === undefined \|\| newSku === current\.sku/);
   assert.match(route, /ne\(productosTable\.id, params\.data\.id\)/);
   assert.match(route, /updates\.sku = generateSku/);

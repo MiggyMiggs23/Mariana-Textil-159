@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./advisory-locks": "./src/lib/advisory-locks.mjs",
     "./schema": "./src/schema/index.ts",
     "./sku": "./src/lib/sku.ts"
   },

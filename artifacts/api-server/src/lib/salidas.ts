@@ -34,6 +34,10 @@ import {
   type EstadoSalida,
 } from "@workspace/db";
 import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
+import {
   InventarioError,
   moverRollo,
   recibirTransferencia,
@@ -357,14 +361,18 @@ async function requireSalidaDetail(database: ReadDb, salidaId: number) {
 
 export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
   const rolloIds = input.rolloIds ?? [];
-  await tx.execute(
-    sql`SELECT pg_advisory_xact_lock(hashtextextended(${`salida-borrador:${input.usuarioSolicitaId}:${input.origenId}`}, 0))`,
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.OUTBOUND_DRAFT,
+    `${input.usuarioSolicitaId}:${input.origenId}`,
   );
   // Serialize retries for the same client UUID before the read/insert pair.
   // This makes concurrent duplicates return the first document instead of a
   // unique-constraint error.
-  await tx.execute(
-    sql`SELECT pg_advisory_xact_lock(hashtextextended(${input.uuidCliente}, 0))`,
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.OUTBOUND_IDEMPOTENCY,
+    input.uuidCliente,
   );
   const [duplicate] = await tx
     .select({ id: salidasTable.id })
@@ -486,8 +494,10 @@ export async function crearSalidaMostrador(
     throw new InventarioError("Las series deben ser válidas y no pueden repetirse.", "DUPLICATE_ROLL");
   }
 
-  await tx.execute(
-    sql`SELECT pg_advisory_xact_lock(hashtextextended(${input.uuidCliente}, 0))`,
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.OUTBOUND_IDEMPOTENCY,
+    input.uuidCliente,
   );
   const [duplicate] = await tx
     .select({
@@ -720,8 +730,10 @@ export async function agregarRolloBorradorSalida(
   tx: Tx,
   input: AgregarRolloBorradorSalidaInput,
 ) {
-  await tx.execute(
-    sql`SELECT pg_advisory_xact_lock(hashtextextended(${`salida-borrador:${input.usuarioId}:${input.origenId}`}, 0))`,
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.OUTBOUND_DRAFT,
+    `${input.usuarioId}:${input.origenId}`,
   );
   await validateOperationalLocations(tx, input.origenId, input.destinoId);
 
@@ -787,8 +799,10 @@ export async function agregarRolloBorradorSalida(
       return requireSalidaDetail(tx, salida.id);
     }
   } else {
-    await tx.execute(
-      sql`SELECT pg_advisory_xact_lock(hashtextextended(${input.uuidCliente}, 0))`,
+    await transactionAdvisoryLock(
+      tx,
+      ADVISORY_LOCK_NAMESPACES.OUTBOUND_IDEMPOTENCY,
+      input.uuidCliente,
     );
     const [duplicateUuid] = await tx
       .select({ id: salidasTable.id })

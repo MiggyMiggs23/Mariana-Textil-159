@@ -1,11 +1,12 @@
 import type { Pool } from "pg";
+import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
 
 /** Repeatable, history-preserving schema upgrade for the vehicle catalog. */
 export async function ensureCamionetasSchema(pool: Pick<Pool, "connect">): Promise<void> {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(7003003)");
+    await transactionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_CAMIONETAS);
     await client.query(`
       CREATE TABLE IF NOT EXISTS camionetas (
         id serial PRIMARY KEY,

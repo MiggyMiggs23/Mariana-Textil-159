@@ -31,7 +31,7 @@ test("Bloque 5: rutas delgadas usan el import del único asignador y exponen det
   const routes = await readFile(new URL("./routes/proveedores.ts", import.meta.url), "utf8");
   assert.match(service, /from "\.\/credit-allocation"/);
   assert.doesNotMatch(service, /function\s+allocate(?:Pago|Proveedor|Fifo)/);
-  assert.match(service, /pg_advisory_xact_lock/);
+  assert.match(service, /ADVISORY_LOCK_NAMESPACES\.SUPPLIER_LEDGER/);
   assert.match(service, /"PAGADA" \| "PARCIAL" \| "PENDIENTE"/);
   assert.match(routes, /\/proveedores\/:id\/pagos\/preview/);
   assert.match(routes, /\/proveedores\/:id\/compras\/:compraId/);

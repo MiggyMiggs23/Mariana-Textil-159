@@ -13,6 +13,6 @@ test("pagos dirigidos publishes queue and review contract", () => {
   assert.ok(spec.includes("SolicitudesPagoDirigidoResult"));
   assert.ok(route.includes("ListSolicitudesPagoDirigidoResponse"));
   assert.ok(route.includes("RechazarSolicitudPagoDirigidoBody"));
-  assert.ok(route.includes("pg_advisory_xact_lock"));
+  assert.ok(route.includes("transactionAdvisoryLock"));
   assert.ok(route.includes("DIRECTED_AMOUNT_EXCEEDS_DOCUMENT"));
 });

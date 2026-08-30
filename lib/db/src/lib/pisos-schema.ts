@@ -1,11 +1,12 @@
 import type { Pool } from "pg";
+import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
 
 /** Repeatable, data-preserving installation of the optional floor catalog. */
 export async function ensurePisosSchema(pool: Pick<Pool, "connect">): Promise<void> {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(7003058)");
+    await transactionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_PISOS);
     await client.query(`
       CREATE TABLE IF NOT EXISTS pisos (
         id serial PRIMARY KEY,

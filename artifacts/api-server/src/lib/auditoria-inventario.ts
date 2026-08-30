@@ -14,6 +14,10 @@ import {
   usuariosTable,
 } from "@workspace/db";
 import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
+import {
   ajustarRollo,
   recibirTransferencia,
   transferirRolloInmediato,
@@ -64,7 +68,11 @@ export async function createAuditoria(
   tx: Tx,
   input: { ubicacionId: number; usuarioId: number; ip: string },
 ) {
-  await tx.execute(sql`SELECT pg_advisory_xact_lock(570000 + ${input.ubicacionId})`);
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.INVENTORY_AUDIT_SITE,
+    input.ubicacionId,
+  );
   const [open] = await tx
     .select({ id: auditoriasInventarioTable.id })
     .from(auditoriasInventarioTable)

@@ -54,6 +54,10 @@ import {
   suggestedMeteredPrice,
 } from "@workspace/metered-pricing";
 import { ACCOUNT_DESTINATION_ORDER } from "@workspace/number-format";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
 import { meteredReferenceCost } from "./metered-reference-cost";
 
 const FOLIO_ROW_ID = 1;
@@ -575,8 +579,10 @@ export async function crearTicket(
   input: CrearTicketInput,
   includeCosts: boolean,
 ) {
-  await tx.execute(
-    sql`SELECT pg_advisory_xact_lock(hashtext(${input.uuidCliente}))`,
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.POS_TICKET_IDEMPOTENCY,
+    input.uuidCliente,
   );
   const [duplicate] = await tx
     .select({ id: ticketsTable.id })
@@ -1143,8 +1149,13 @@ export async function abrirSesionCaja(
   }
   // Serialize openings for a location even when there are no session rows yet.
   // The operating day comes from PostgreSQL so API hosts cannot disagree on timezone.
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.CASH_SESSION_SITE,
+    input.ubicacionId,
+  );
   const dayResult = await tx.execute(
-    sql<{ fecha_operativa: string }>`SELECT pg_advisory_xact_lock(${input.ubicacionId}), (now() AT TIME ZONE 'America/Mexico_City')::date::text AS fecha_operativa`,
+    sql<{ fecha_operativa: string }>`SELECT (now() AT TIME ZONE 'America/Mexico_City')::date::text AS fecha_operativa`,
   );
   const fechaOperativa = String(dayResult.rows[0]!.fecha_operativa);
   const [existing] = await tx
@@ -1360,8 +1371,10 @@ export async function cobrarTicket(
   {
     // Serialize credit issuance for this customer even when different tickets
     // are being charged in different cash sessions/locations.
-    await tx.execute(
-      sql`SELECT pg_advisory_xact_lock(240024, ${clienteId})`,
+    await transactionAdvisoryLock(
+      tx,
+      ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+      clienteId,
     );
     const [cliente] = await tx
       .select()

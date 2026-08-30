@@ -106,7 +106,7 @@ test("Bloque 6: aplicaciones activas son la única fuente y comparten lock de cl
   assert.match(proveedores, /aplicaciones_pago_proveedor[\s\S]*movimiento_origen_id/);
   assert.match(clientes, /aplicaciones_credito[\s\S]*movimiento_origen_id/);
   assert.match(pos, /eq\(movimientosCreditoTable\.tipo, "ABONO"\)[\s\S]*NOT EXISTS[\s\S]*movimiento_origen_id/);
-  const lock = /pg_advisory_xact_lock\(240024,\s*\$\{clienteId\}\)/;
+  const lock = /ADVISORY_LOCK_NAMESPACES\.CUSTOMER_CREDIT,[\s\S]*clienteId/;
   assert.match(clientes, lock);
   assert.match(pos, lock);
   assert.match(clienteSchema, /La aplicación de crédito excede el saldo disponible/);

@@ -17,6 +17,10 @@ import {
   type RolUsuario,
 } from "@workspace/db";
 import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
+import {
   SUPERVISOR_PERMISSION_CEILING,
   supervisorAllows,
 } from "./supervisor-policy";
@@ -319,7 +323,10 @@ export async function hasAdminRecoveryAccount(
   plannedUserHasFullAccess = false,
 ): Promise<boolean> {
   // This same lock is used by both Usuarios and Permisos mutation paths.
-  await database.execute(sql`select pg_advisory_xact_lock(73462026)`);
+  await transactionAdvisoryLock(
+    database,
+    ADVISORY_LOCK_NAMESPACES.ADMIN_RECOVERY,
+  );
 
   if (plannedUserHasFullAccess) return true;
 

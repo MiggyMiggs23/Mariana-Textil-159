@@ -1,4 +1,8 @@
 import type { Pool } from "pg";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "./advisory-locks.mjs";
 
 type Connectable = Pick<Pool, "connect">;
 
@@ -10,7 +14,7 @@ export async function ensureSupervisorRole(pool: Connectable): Promise<number> {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(310031)");
+    await transactionAdvisoryLock(client, ADVISORY_LOCK_NAMESPACES.SCHEMA_ROLE);
     const supportUsers = await client.query<{ count: number }>(`
       SELECT count(*)::int AS count
       FROM usuarios

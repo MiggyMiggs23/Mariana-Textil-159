@@ -192,7 +192,8 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
          SELECT cliente_id INTO cliente_bloqueo
            FROM movimientos_credito WHERE id = NEW.abono_movimiento_id;
          IF cliente_bloqueo IS NOT NULL THEN
-           PERFORM pg_advisory_xact_lock(240024, cliente_bloqueo);
+           PERFORM 1 FROM clientes
+             WHERE id = cliente_bloqueo FOR UPDATE;
          END IF;
          SELECT * INTO abono FROM movimientos_credito
            WHERE id = NEW.abono_movimiento_id FOR UPDATE;

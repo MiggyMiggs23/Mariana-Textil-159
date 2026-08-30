@@ -14,7 +14,7 @@ test("Bloque 4 keeps daily cash and Mariana safeguards wired", async () => {
   assert.match(ensure, /America\/Mexico_City/);
   assert.match(ensure, /sesiones_caja_dias/);
   assert.match(ensure, /DISTINCT ON \(ubicacion_id, fecha_operativa\)/);
-  assert.match(pos, /pg_advisory_xact_lock/);
+  assert.match(pos, /ADVISORY_LOCK_NAMESPACES\.CASH_SESSION_SITE/);
   assert.match(pos, /PREVIOUS_SESSION_OPEN/);
   assert.match(pos, /SESSION_ALREADY_EXISTS_TODAY/);
   assert.match(pos, /MARIANA_LOCATION_ID = 1/);

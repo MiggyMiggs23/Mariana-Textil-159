@@ -32,6 +32,10 @@ import {
   type FormaPagoProveedor,
 } from "@workspace/db";
 import type { Tx } from "./inventario";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
 import { allocateCreditFifo, centsToMoney, moneyToCents } from "./credit-allocation";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -381,7 +385,11 @@ export async function registrarPago(
     ip?: string | null;
   },
 ): Promise<{ pago: typeof pagosProveedorTable.$inferSelect; asignaciones: AsignacionProveedor[]; saldoAFavor: string }> {
-  await tx.execute(sql`SELECT pg_advisory_xact_lock(${opts.proveedorId})`);
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.SUPPLIER_LEDGER,
+    opts.proveedorId,
+  );
   const fecha = opts.fecha ?? new Date();
   const [row] = await tx
     .insert(pagosProveedorTable)
@@ -460,7 +468,11 @@ export async function reversarPago(
   tx: Tx,
   opts: { proveedorId: number; pagoId: number; motivo: string; usuarioId: number; ip?: string | null },
 ): Promise<typeof pagosProveedorTable.$inferSelect> {
-  await tx.execute(sql`SELECT pg_advisory_xact_lock(${opts.proveedorId})`);
+  await transactionAdvisoryLock(
+    tx,
+    ADVISORY_LOCK_NAMESPACES.SUPPLIER_LEDGER,
+    opts.proveedorId,
+  );
   const original = await tx.execute<any>(sql`
     SELECT * FROM pagos_proveedor
     WHERE id=${opts.pagoId} AND proveedor_id=${opts.proveedorId} AND tipo='PAGO'

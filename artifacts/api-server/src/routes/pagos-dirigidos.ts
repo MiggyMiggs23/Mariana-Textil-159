@@ -10,6 +10,10 @@ import {
   pagosProveedorTable,
   solicitudesPagoDirigidoTable,
 } from "@workspace/db";
+import {
+  ADVISORY_LOCK_NAMESPACES,
+  transactionAdvisoryLock,
+} from "@workspace/db/advisory-locks";
 import { requireRole, requireSession } from "../middlewares/auth";
 import { resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
@@ -29,9 +33,13 @@ function parsePayment(body: unknown): Payment | null {
 
 async function assertDocumentBalance(tx: any, request: any) {
   const supplier = request.tipo === "PROVEEDOR";
-  await tx.execute(supplier
-    ? sql`SELECT pg_advisory_xact_lock(${request.entidadId})`
-    : sql`SELECT pg_advisory_xact_lock(240024, ${request.entidadId})`);
+  await transactionAdvisoryLock(
+    tx,
+    supplier
+      ? ADVISORY_LOCK_NAMESPACES.SUPPLIER_LEDGER
+      : ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+    request.entidadId,
+  );
   const document = await tx.execute(supplier ? sql`
     SELECT p.id,p.importe::text FROM pagos_proveedor p WHERE p.id=${request.documentoMovimientoId}
       AND p.proveedor_id=${request.entidadId} AND p.tipo='COMPRA' FOR UPDATE`
