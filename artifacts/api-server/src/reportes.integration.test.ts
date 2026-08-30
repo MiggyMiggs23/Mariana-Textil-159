@@ -115,11 +115,27 @@ if (!testUrl) {
         ids.movements.push(Number(movement.id));
       }
       const adjustment = await one(
-        `INSERT INTO movimientos(tipo,producto_id,rollo_id,ubicacion_id,cantidad,saldo_posterior,usuario_id,created_at)
-         VALUES('AJUSTE_NEGATIVO',$1,$2,$3,-3,77,$4,$5) RETURNING id`,
+        `INSERT INTO movimientos(tipo,motivo_salida_extraordinaria,producto_id,rollo_id,ubicacion_id,cantidad,saldo_posterior,usuario_id,created_at)
+         VALUES('AJUSTE_NEGATIVO','MERMA',$1,$2,$3,-3,77,$4,$5) RETURNING id`,
         [ids.products[0], ids.rolls[0], ids.sites[0], ids.users[1], date(-2)],
       );
       ids.movements.push(Number(adjustment.id));
+      const reversedAdjustment = await one(
+        `INSERT INTO movimientos(tipo,motivo_salida_extraordinaria,producto_id,rollo_id,ubicacion_id,cantidad,saldo_posterior,usuario_id,created_at)
+         VALUES('AJUSTE_NEGATIVO','ROBO',$1,$2,$3,-2,78,$4,$5) RETURNING id`,
+        [ids.products[1], ids.rolls[1], ids.sites[1], ids.users[1], date(-2)],
+      );
+      ids.movements.push(Number(reversedAdjustment.id));
+      ids.movements.push(Number((await one(
+        `INSERT INTO movimientos(tipo,producto_id,rollo_id,ubicacion_id,cantidad,saldo_posterior,movimiento_origen_id,usuario_id,created_at)
+         VALUES('CANCELACION',$1,$2,$3,2,80,$4,$5,$6) RETURNING id`,
+        [ids.products[1], ids.rolls[1], ids.sites[1], reversedAdjustment.id, ids.users[0], date(-1)],
+      )).id));
+      ids.movements.push(Number((await one(
+        `INSERT INTO movimientos(tipo,motivo_salida_extraordinaria,producto_id,rollo_id,ubicacion_id,cantidad,saldo_posterior,usuario_id,created_at)
+         VALUES('AJUSTE_NEGATIVO','MUESTRA',$1,$2,$3,-4,76,$4,$5) RETURNING id`,
+        [ids.products[2], ids.rolls[2], ids.sites[0], ids.users[1], date(-9)],
+      )).id));
 
       const addTicket = async (input: { product: number; site: number; qty: number; price: number; cost: number;
         state?: "VENDIDO" | "CANCELADO"; roll?: boolean; client?: number; days?: number; facturado?: boolean }) => {
@@ -220,6 +236,10 @@ if (!testUrl) {
         assert.ok(table(inv, "existencia-actual").rows.some(r => Number(r.vendidoRollos) > 0));
         assert.ok(table(inv, "existencia-actual").rows.some(r => Number(r.vendidoMetraje) > 0));
         assert.ok(table(inv, "comprado-vendido").rows.some(r => r.ajusteNegativo === 3));
+        const extraordinary = table(inv, "perdidas-extraordinarias").rows;
+        assert.deepEqual(extraordinary.map(r => r.motivo), ["MERMA"], "reversed and out-of-period origins are excluded");
+        assert.equal(extraordinary[0]?.cantidad, 3);
+        assert.equal(extraordinary[0]?.costo, 60);
         assert.ok(table(inv, "sin-movimiento").rows.some(r => r.sku === `${tag}-K-VERDE`) === false);
         assert.ok(table(color, "ranking-color").rows.filter(r => r.color === "Rojo").length >= 2, "color ranks across fabrics");
         const colorHeatmap = (color.charts as any[]).find(c => c.id === "color-tela");

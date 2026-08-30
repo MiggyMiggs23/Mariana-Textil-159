@@ -9,6 +9,18 @@ export interface DomainReportContext {
 
 type Primitive = string | number | boolean | null;
 type Row = Record<string, Primitive>;
+export type ExtraordinaryLossReason = "MERMA" | "ROBO" | "MUESTRA";
+export type ExtraordinaryLossInput = {
+  motivo: unknown;
+  reversed?: unknown;
+  sku: unknown;
+  tela: unknown;
+  color: unknown;
+  unidad: unknown;
+  sitio: unknown;
+  cantidad: unknown;
+  costoUnitario: unknown;
+};
 const zone = "America/Mexico_City";
 const number = (value: unknown) => Number.isFinite(Number(value)) ? Number(value) : 0;
 const csv = (value: unknown) => typeof value === "string" ? value.split(",").map(x => x.trim()).filter(Boolean) : [];
@@ -45,6 +57,43 @@ export function classifyNoMovement(days: number | null): string {
 export function reconciles(existence: number, activeRollQuantity: number, ledger?: number | null, tolerance = 0.001): boolean {
   return Math.abs(existence - activeRollQuantity) <= tolerance &&
     (ledger == null || Math.abs(existence - ledger) <= tolerance);
+}
+/**
+ * Extraordinary exits remain operational inventory losses. They are grouped
+ * by reason, product, site and unit so unlike physical units can never merge.
+ * A missing frozen roll cost makes the economic group pending instead of zero.
+ */
+export function aggregateExtraordinaryLosses(source: ExtraordinaryLossInput[]): Row[] {
+  const reasons = new Set<ExtraordinaryLossReason>(["MERMA", "ROBO", "MUESTRA"]);
+  const groups = new Map<string, Row & { costo: number | null }>();
+  for (const item of source) {
+    const motivo = String(item.motivo) as ExtraordinaryLossReason;
+    if (!reasons.has(motivo) || item.reversed === true) continue;
+    const sku = String(item.sku);
+    const tela = String(item.tela);
+    const color = String(item.color);
+    const unidad = String(item.unidad);
+    const sitio = String(item.sitio);
+    const key = JSON.stringify([motivo, sku, tela, color, unidad, sitio]);
+    const current = groups.get(key) ?? {
+      motivo,
+      sku,
+      tela,
+      color,
+      unidad,
+      sitio,
+      cantidad: 0,
+      costo: 0,
+    };
+    const cantidad = Math.abs(number(item.cantidad));
+    current.cantidad = number(current.cantidad) + cantidad;
+    const costoUnitario = item.costoUnitario == null ? null : Number(item.costoUnitario);
+    current.costo = current.costo == null || costoUnitario == null || !Number.isFinite(costoUnitario)
+      ? null
+      : current.costo + cantidad * costoUnitario;
+    groups.set(key, current);
+  }
+  return [...groups.values()];
 }
 type TransitTotals = { cantidad: number; valor: number };
 /**
@@ -239,6 +288,36 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     FROM productos p JOIN movimientos m ON m.producto_id=p.id JOIN ubicaciones u ON u.id=m.ubicacion_id
     WHERE m.created_at >= $1 AND m.created_at <= $2 AND ${movementScope.text.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 2}`)}
     GROUP BY p.id,u.nombre`, [ctx.range.desde, ctx.range.hasta, ...movementScope.values]);
+  const extraordinaryScope = productScope(ctx, "p", "m.ubicacion_id");
+  const extraordinary = await pool.query(`SELECT m.motivo_salida_extraordinaria motivo,
+      p.sku,p.tela,p.color,p.unidad,u.nombre sitio,SUM(ABS(m.cantidad))::float cantidad,
+      r.costo_unitario::float costo_unitario
+    FROM movimientos m
+    JOIN rollos r ON r.id=m.rollo_id
+    JOIN productos p ON p.id=m.producto_id
+    JOIN ubicaciones u ON u.id=m.ubicacion_id
+    WHERE m.created_at >= $1 AND m.created_at <= $2
+      AND m.tipo='AJUSTE_NEGATIVO'
+      AND m.motivo_salida_extraordinaria IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM movimientos cancelacion
+        WHERE cancelacion.tipo='CANCELACION'
+          AND cancelacion.movimiento_origen_id=m.id
+      )
+      AND ${extraordinaryScope.text.replace(/\$(\d+)/g, (_, n) => `$${Number(n) + 2}`)}
+    GROUP BY m.motivo_salida_extraordinaria,p.id,u.id,r.costo_unitario
+    ORDER BY m.motivo_salida_extraordinaria,p.sku,u.nombre`,
+    [ctx.range.desde, ctx.range.hasta, ...extraordinaryScope.values]);
+  const extraordinaryRows = aggregateExtraordinaryLosses(extraordinary.rows.map(r => ({
+    motivo: r.motivo,
+    sku: r.sku,
+    tela: r.tela,
+    color: r.color,
+    unidad: r.unidad,
+    sitio: r.sitio,
+    cantidad: r.cantidad,
+    costoUnitario: r.costo_unitario,
+  })));
   const noMovement = await pool.query(`SELECT p.sku,p.tela,p.color,p.unidad,MAX(m.created_at) ultimo_movimiento
     FROM productos p LEFT JOIN movimientos m ON m.producto_id=p.id
     WHERE ${movementScope.text} GROUP BY p.id HAVING MAX(m.created_at) IS NULL OR MAX(m.created_at)<$${movementScope.values.length + 1}`,
@@ -282,6 +361,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
     ...transitKpis],
     charts: [{ id: "existencia-producto", title: "Existencia por producto", type: "treemap", categoryKey: "sku", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows }, ...(unreconciled.length ? [] : [{ id: "cierres-diarios", title: "Cierre diario de inventario", type: "line", categoryKey: "dia", series: [{ key: "cantidad", label: "Cantidad", kind: "quantity" }], rows: closeRows }])],
     tables: [table("existencia-actual", "Existencia actual y rotación por modalidad", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["rollos", "Rollos", "count"], ["valor", "Valor", "money", true], ["vendidoRollos", "Salida ROLLOS", "quantity"], ["vendidoMetraje", "Salida METRAJE", "quantity"], ["coberturaDias", "Cobertura días ROLLOS", "number"], ["coberturaDiasMetraje", "Cobertura días METRAJE", "number"], ["clasificacion", "Clasificación (ROLLOS)", "text"], ["zeroStockDays", "Días sin existencia", "count", false, true], ["perdidaCantidadEstimada", "Venta perdida estimada", "quantity", false, true], ["perdidaValorEstimada", "Valor perdido estimado", "money", true, true]], lostRows, ["cantidad", "valor", "vendidoRollos", "vendidoMetraje", "perdidaCantidadEstimada", "perdidaValorEstimada"]),
+      table("perdidas-extraordinarias", "Pérdidas extraordinarias", [["motivo", "Motivo", "text"], ["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["cantidad", "Cantidad", "quantity"], ["costo", "Costo congelado", "money", true]], extraordinaryRows, ["cantidad", "costo"]),
       table("comprado-vendido", "Comprado vs vendido", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["sitio", "Sitio", "text"], ["comprado", "Comprado", "quantity"], ["vendido", "Vendido", "quantity"], ["ajusteNegativo", "Ajuste negativo", "quantity"]], activity.rows.map(r => ({ sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, sitio: r.sitio, comprado: number(r.comprado), vendido: number(r.vendido), ajusteNegativo: number(r.ajuste_negativo) })), ["comprado", "vendido", "ajusteNegativo"]),
       table("sin-movimiento", "Sin movimiento", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["unidad", "Unidad", "text"], ["ultimoMovimiento", "Último movimiento", "text"], ["banda", "Banda", "text"]], noMovement.rows.map(r => { const last = r.ultimo_movimiento ? new Date(r.ultimo_movimiento) : null; const age = last ? Math.floor((ctx.range.hasta.getTime() - last.getTime()) / 86400000) : null; return { sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, ultimoMovimiento: last?.toISOString() ?? null, banda: classifyNoMovement(age) }; }))], warnings };
 }
