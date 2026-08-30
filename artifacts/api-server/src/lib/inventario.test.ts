@@ -1343,6 +1343,70 @@ await test("T-LOCK: ventas simultáneas de rollos distintos serializan saldo y c
   assert.equal(conciliacion!.discrepanciaRollos, false);
 });
 
+await test("T-CONCILIACION: reporta por separado cadena, caché y rollos sin reparar", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const { rollo, movimiento } = await db.transaction((tx) =>
+    crearRollo(tx, {
+      productoId,
+      ubicacionId,
+      cantidadInicial: "12.345",
+      costoUnitario: "20.00",
+      usuarioId: 1,
+      estado: "DISPONIBLE",
+    }),
+  );
+  trackRollo(rollo.serie);
+
+  // Deliberate test-only corruption verifies detection. conciliarTodo itself
+  // must remain report-only and leave these values untouched.
+  await db
+    .update(movimientosTable)
+    .set({ saldoPosterior: "99.999" })
+    .where(eq(movimientosTable.id, movimiento!.id));
+  await db
+    .update(existenciasTable)
+    .set({ cantidadTotal: "10.000", rollosCount: 0 })
+    .where(
+      and(
+        eq(existenciasTable.productoId, productoId),
+        eq(existenciasTable.ubicacionId, ubicacionId),
+      ),
+    );
+
+  const [row] = await conciliarTodo(productoId, ubicacionId);
+  assert.ok(row);
+  assert.equal(row.cantidadMovimientos, "12.345");
+  assert.equal(row.cantidadCache, "10.000");
+  assert.equal(row.rollosMovimientos, 1);
+  assert.equal(row.rollosCache, 0);
+  assert.equal(row.movimientosCadenaDiscrepantes, 1);
+  assert.equal(row.discrepanciaCadena, true);
+  assert.equal(row.discrepanciaCache, true);
+  assert.equal(row.discrepanciaRollos, true);
+  assert.equal(row.discrepancia, true);
+
+  const [persistedMovement] = await db
+    .select({ saldoPosterior: movimientosTable.saldoPosterior })
+    .from(movimientosTable)
+    .where(eq(movimientosTable.id, movimiento!.id));
+  const [persistedCache] = await db
+    .select({
+      cantidadTotal: existenciasTable.cantidadTotal,
+      rollosCount: existenciasTable.rollosCount,
+    })
+    .from(existenciasTable)
+    .where(
+      and(
+        eq(existenciasTable.productoId, productoId),
+        eq(existenciasTable.ubicacionId, ubicacionId),
+      ),
+    );
+  assert.equal(persistedMovement!.saldoPosterior, "99.999");
+  assert.equal(persistedCache!.cantidadTotal, "10.000");
+  assert.equal(persistedCache!.rollosCount, 0);
+});
+
 // =============================================================================
 // Cleanup
 // =============================================================================

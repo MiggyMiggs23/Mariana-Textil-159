@@ -2200,161 +2200,116 @@ export async function conciliarTodo(
   productoId?: number,
   ubicacionId?: number,
 ): Promise<ConciliacionFila[]> {
-  return db.transaction(async (tx) => {
-    // Aggregate movements
-    const conditions = [];
-    if (productoId !== undefined)
-      conditions.push(eq(movimientosTable.productoId, productoId));
-    if (ubicacionId !== undefined)
-      conditions.push(eq(movimientosTable.ubicacionId, ubicacionId));
+  const productoFilter = productoId === undefined
+    ? sql`TRUE`
+    : sql`producto_id = ${productoId}`;
+  const ubicacionFilter = ubicacionId === undefined
+    ? sql`TRUE`
+    : sql`ubicacion_id = ${ubicacionId}`;
 
-    const movAgg = await tx
-      .select({
-        productoId: movimientosTable.productoId,
-        ubicacionId: movimientosTable.ubicacionId,
-        total: sql<string>`SUM(cantidad)::text`,
-      })
-      .from(movimientosTable)
-      .where(conditions.length ? and(...conditions) : undefined)
-      .groupBy(movimientosTable.productoId, movimientosTable.ubicacionId);
+  // One statement gives every aggregate the same PostgreSQL snapshot. Besides
+  // avoiding N+1 queries, doing the running balance in NUMERIC SQL preserves
+  // the ledger's exact decimal semantics without loading every movement into
+  // application memory.
+  const query = await db.execute(sql`
+    WITH movimientos_filtrados AS (
+      SELECT
+        producto_id,
+        ubicacion_id,
+        cantidad,
+        saldo_posterior,
+        SUM(cantidad) OVER (
+          PARTITION BY producto_id, ubicacion_id
+          ORDER BY id
+          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS saldo_esperado
+      FROM movimientos
+      WHERE ${productoFilter} AND ${ubicacionFilter}
+    ),
+    movimientos_agregados AS (
+      SELECT
+        producto_id,
+        ubicacion_id,
+        SUM(cantidad) AS cantidad_total,
+        COUNT(*) FILTER (
+          WHERE saldo_posterior IS DISTINCT FROM saldo_esperado
+        )::int AS movimientos_cadena_discrepantes
+      FROM movimientos_filtrados
+      GROUP BY producto_id, ubicacion_id
+    ),
+    cache_filtrado AS (
+      SELECT producto_id, ubicacion_id, cantidad_total, rollos_count
+      FROM existencias
+      WHERE ${productoFilter} AND ${ubicacionFilter}
+    ),
+    rollos_agregados AS (
+      SELECT producto_id, ubicacion_id, COUNT(*)::int AS rollos_disponibles
+      FROM rollos
+      WHERE estado = 'DISPONIBLE'
+        AND ${productoFilter}
+        AND ${ubicacionFilter}
+      GROUP BY producto_id, ubicacion_id
+    ),
+    pares AS (
+      SELECT producto_id, ubicacion_id FROM movimientos_agregados
+      UNION
+      SELECT producto_id, ubicacion_id FROM cache_filtrado
+      UNION
+      SELECT producto_id, ubicacion_id FROM rollos_agregados
+    )
+    SELECT
+      pares.producto_id,
+      pares.ubicacion_id,
+      COALESCE(ubicaciones.nombre, 'Ubicación ' || pares.ubicacion_id::text)
+        AS ubicacion_nombre,
+      COALESCE(ubicaciones.activa, FALSE) AS ubicacion_activa,
+      COALESCE(movimientos_agregados.cantidad_total, 0)::text
+        AS cantidad_movimientos,
+      COALESCE(cache_filtrado.cantidad_total, 0)::text AS cantidad_cache,
+      COALESCE(rollos_agregados.rollos_disponibles, 0)::int
+        AS rollos_movimientos,
+      COALESCE(cache_filtrado.rollos_count, 0)::int AS rollos_cache,
+      COALESCE(
+        movimientos_agregados.movimientos_cadena_discrepantes,
+        0
+      )::int AS movimientos_cadena_discrepantes
+    FROM pares
+    LEFT JOIN movimientos_agregados USING (producto_id, ubicacion_id)
+    LEFT JOIN cache_filtrado USING (producto_id, ubicacion_id)
+    LEFT JOIN rollos_agregados USING (producto_id, ubicacion_id)
+    LEFT JOIN ubicaciones ON ubicaciones.id = pares.ubicacion_id
+    ORDER BY pares.producto_id, pares.ubicacion_id
+  `);
 
-    // Validate the append-only running-balance chain independently from the
-    // aggregate/cache comparison. Historical rows are only reported, never
-    // rewritten.
-    const movimientosOrdenados = await tx
-      .select({
-        productoId: movimientosTable.productoId,
-        ubicacionId: movimientosTable.ubicacionId,
-        cantidad: movimientosTable.cantidad,
-        saldoPosterior: movimientosTable.saldoPosterior,
-      })
-      .from(movimientosTable)
-      .where(conditions.length ? and(...conditions) : undefined)
-      .orderBy(
-        movimientosTable.productoId,
-        movimientosTable.ubicacionId,
-        movimientosTable.id,
-      );
-    const saldosPorPar = new Map<string, bigint>();
-    const discrepanciasCadena = new Map<string, number>();
-    for (const movimiento of movimientosOrdenados) {
-      const key = `${movimiento.productoId}:${movimiento.ubicacionId}`;
-      const esperado =
-        (saldosPorPar.get(key) ?? 0n) +
-        quantityToThousandthsBigInt(movimiento.cantidad);
-      if (
-        quantityToThousandthsBigInt(movimiento.saldoPosterior) !== esperado
-      ) {
-        discrepanciasCadena.set(
-          key,
-          (discrepanciasCadena.get(key) ?? 0) + 1,
-        );
-      }
-      saldosPorPar.set(key, esperado);
-    }
-
-    // Aggregate cache
-    const cacheConditions = [];
-    if (productoId !== undefined)
-      cacheConditions.push(eq(existenciasTable.productoId, productoId));
-    if (ubicacionId !== undefined)
-      cacheConditions.push(eq(existenciasTable.ubicacionId, ubicacionId));
-
-    const cacheRows = await tx
-      .select()
-      .from(existenciasTable)
-      .where(cacheConditions.length ? and(...cacheConditions) : undefined);
-
-    // Build union of keys
-    type Key = `${number}:${number}`;
-    const keyMap = new Map<
-      Key,
-      { movTotal: string; cacheTotal: string; rollosCache: number }
-    >();
-
-    for (const r of movAgg) {
-      const k: Key = `${r.productoId}:${r.ubicacionId}`;
-      const existing = keyMap.get(k);
-      keyMap.set(k, {
-        movTotal: r.total,
-        cacheTotal: existing?.cacheTotal ?? "0",
-        rollosCache: existing?.rollosCache ?? 0,
-      });
-    }
-    for (const r of cacheRows) {
-      const k: Key = `${r.productoId}:${r.ubicacionId}`;
-      const existing = keyMap.get(k) ?? { movTotal: "0", cacheTotal: "0", rollosCache: 0 };
-      keyMap.set(k, {
-        movTotal: existing.movTotal,
-        cacheTotal: r.cantidadTotal,
-        rollosCache: r.rollosCount,
-      });
-    }
-
-    const ubicacionIds = Array.from(
-      new Set(Array.from(keyMap.keys()).map((key) => Number(key.split(":")[1]))),
+  return query.rows.map((raw) => {
+    const row = raw as Record<string, unknown>;
+    const movTotal = quantityToThousandths(String(row.cantidad_movimientos));
+    const cacheTotal = quantityToThousandths(String(row.cantidad_cache));
+    const rollosMovimientos = Number(row.rollos_movimientos);
+    const rollosCache = Number(row.rollos_cache);
+    const movimientosCadenaDiscrepantes = Number(
+      row.movimientos_cadena_discrepantes,
     );
-    const ubicaciones =
-      ubicacionIds.length > 0
-        ? await tx
-            .select({
-              id: ubicacionesTable.id,
-              nombre: ubicacionesTable.nombre,
-              activa: ubicacionesTable.activa,
-            })
-            .from(ubicacionesTable)
-            .where(inArray(ubicacionesTable.id, ubicacionIds))
-        : [];
-    const ubicacionesMap = new Map(
-      ubicaciones.map((ubicacion) => [ubicacion.id, ubicacion]),
-    );
+    const discrepanciaCadena = movimientosCadenaDiscrepantes > 0;
+    const discrepanciaCache = movTotal !== cacheTotal;
+    const discrepanciaRollos = rollosMovimientos !== rollosCache;
 
-    const results: ConciliacionFila[] = [];
-    for (const [key, v] of keyMap) {
-      const [pId, uId] = key.split(":").map(Number) as [number, number];
-      const ubicacion = ubicacionesMap.get(uId);
-      const movTotal = quantityToThousandths(v.movTotal);
-      const cacheTotal = quantityToThousandths(v.cacheTotal);
-      const movTotalF = formatQuantityThousandths(movTotal);
-      const cacheTotalF = formatQuantityThousandths(cacheTotal);
-
-      // rollosMovimientos = count of DISPONIBLE rolls physically on hand
-      const [cntRow] = await tx
-        .select({ cnt: sql<number>`COUNT(*)::int` })
-        .from(rollosTable)
-        .where(
-          and(
-            eq(rollosTable.productoId, pId),
-            eq(rollosTable.ubicacionId, uId),
-            eq(rollosTable.estado, "DISPONIBLE"),
-          ),
-        );
-
-      const rollosMovimientos = cntRow?.cnt ?? 0;
-      const movimientosCadenaDiscrepantes =
-        discrepanciasCadena.get(key) ?? 0;
-      const discrepanciaCadena = movimientosCadenaDiscrepantes > 0;
-      const discrepanciaCache = movTotal !== cacheTotal;
-      const discrepanciaRollos = rollosMovimientos !== v.rollosCache;
-      results.push({
-        productoId: pId,
-        ubicacionId: uId,
-        ubicacionNombre: ubicacion?.nombre ?? `Ubicación ${uId}`,
-        ubicacionActiva: ubicacion?.activa ?? false,
-        cantidadMovimientos: movTotalF,
-        cantidadCache: cacheTotalF,
-        rollosMovimientos,
-        rollosCache: v.rollosCache,
-        movimientosCadenaDiscrepantes,
-        discrepanciaCadena,
-        discrepanciaCache,
-        discrepanciaRollos,
-        discrepancia:
-          discrepanciaCadena || discrepanciaCache || discrepanciaRollos,
-      });
-    }
-
-    return results;
+    return {
+      productoId: Number(row.producto_id),
+      ubicacionId: Number(row.ubicacion_id),
+      ubicacionNombre: String(row.ubicacion_nombre),
+      ubicacionActiva: Boolean(row.ubicacion_activa),
+      cantidadMovimientos: formatQuantityThousandths(movTotal),
+      cantidadCache: formatQuantityThousandths(cacheTotal),
+      rollosMovimientos,
+      rollosCache,
+      movimientosCadenaDiscrepantes,
+      discrepanciaCadena,
+      discrepanciaCache,
+      discrepanciaRollos,
+      discrepancia:
+        discrepanciaCadena || discrepanciaCache || discrepanciaRollos,
+    };
   });
 }
 

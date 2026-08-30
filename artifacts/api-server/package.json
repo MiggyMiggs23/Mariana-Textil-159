@@ -9,6 +9,8 @@
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:inventario": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/inventario.test.ts",
+    "test:inventario-conciliacion-contract": "tsx --test src/inventario-conciliacion.contract.test.ts",
+    "benchmark:conciliacion": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/scripts/benchmark-conciliacion.ts",
     "test:transferencias-block3": "tsx --test src/transferencias-block3-architecture.test.ts",
     "test:entradas": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/entradas.test.ts",
     "test:proveedores": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/compras-proveedor.test.ts",

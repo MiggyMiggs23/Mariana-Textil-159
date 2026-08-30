@@ -69,7 +69,41 @@ if (!connectionString) {
   throw new Error("DATABASE_URL must be set.");
 }
 
-export const pool = new Pool({ connectionString });
+function integerEnv(
+  name: string,
+  defaultValue: number,
+  minimum: number,
+  maximum: number,
+): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw.trim() === "") return defaultValue;
+  if (!/^\d+$/.test(raw)) {
+    throw new Error(`${name} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  const value = Number(raw);
+  if (!Number.isSafeInteger(value) || value < minimum || value > maximum) {
+    throw new Error(`${name} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return value;
+}
+
+// Seven sites with roughly three simultaneous operators each imply 21 active
+// requests. Thirty connections leave modest headroom for administrative work
+// while remaining an explicit, bounded per-instance ceiling.
+const poolMax = integerEnv("DB_POOL_MAX", 30, 1, 100);
+const idleTimeoutMillis = integerEnv("DB_POOL_IDLE_TIMEOUT_MS", 30_000, 1_000, 300_000);
+const connectionTimeoutMillis = integerEnv("DB_POOL_CONNECTION_TIMEOUT_MS", 5_000, 100, 60_000);
+const statementTimeoutMillis = integerEnv("DB_STATEMENT_TIMEOUT_MS", 30_000, 1_000, 600_000);
+const queryTimeoutMillis = integerEnv("DB_QUERY_TIMEOUT_MS", 35_000, 1_000, 600_000);
+
+export const pool = new Pool({
+  connectionString,
+  max: poolMax,
+  idleTimeoutMillis,
+  connectionTimeoutMillis,
+  statement_timeout: statementTimeoutMillis,
+  query_timeout: queryTimeoutMillis,
+});
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";
