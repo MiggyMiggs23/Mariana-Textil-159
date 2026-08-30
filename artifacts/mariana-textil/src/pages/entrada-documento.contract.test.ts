@@ -14,6 +14,7 @@ test("la entrada conserva su formato global y firma solo la última hoja global"
   assert.match(documentPage, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(documentPage, /pageIndex === globalPages\.length - 1/);
   assert.match(documentPage, /document-footer/);
+  assert.match(styles, /\.entrada-page-print \.document-footer\s*\{[\s\S]*break-inside:\s*avoid-page/);
   assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*width:\s*215\.5mm !important;[\s\S]*height:\s*278\.5mm !important;/);
 });
 
@@ -22,6 +23,11 @@ test("la entrada agrega un listado compacto de todas las series por producto", (
   assert.match(documentPage, /const seriesRowsPerPage = 40/);
   assert.match(documentPage, /40 filas × 24 px dejan 13\.59 px/);
   assert.match(documentPage, /41 filas rebasan la hoja por 10\.41 px/);
+  assert.match(documentPage, /const embeddedSeriesRowsCapacity/);
+  assert.match(documentPage, /seriesRows\.length <= embeddedSeriesRowsCapacity/);
+  assert.match(documentPage, /const standaloneSeriesRows = embedsAllSeries \? \[\] : seriesRows/);
+  assert.match(documentPage, /embedded-series/);
+  assert.match(documentPage, /embeddedRows\.length > 0 \? 0/);
   assert.match(documentPage, /rollosByProducto\.get\(linea\.productoId\)/);
   assert.match(documentPage, /productRollos\.slice\(chunkIndex \* seriesPerRow/);
   assert.match(documentPage, /data-page-kind="series"/);

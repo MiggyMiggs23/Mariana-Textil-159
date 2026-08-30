@@ -598,7 +598,9 @@
   }
 
   .entrada-page-print .series-table,
-  .entrada-page-print .series-table table {
+  .entrada-page-print .series-table table,
+  .entrada-page-print .embedded-series,
+  .entrada-page-print .document-footer {
     break-inside: avoid-page;
     page-break-inside: avoid;
   }

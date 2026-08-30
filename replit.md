@@ -14,7 +14,13 @@ El alta y la baja de rollos **siguen siendo rollo por rollo con su número de se
 
 **Escala del encabezado:** Entrada y Salida ya **no** comparten tamaño de encabezado. El mismo encabezado sobre A6 apaisado consume una cuarta parte de la hoja y deja cinco renglones. En Salida el encabezado va reducido; lo que se conserva es la rejilla de tres columnas, la alineación entre título, logo y QR, y que logo y QR midan lo mismo entre sí.
 
-Un documento cuyo contenido cabe no genera una hoja fantasma por redondeo entre el `@page` y la altura del contenedor; eso se corrige midiendo, nunca reduciendo tipografías. Todas las páginas reales repiten el encabezado. Los pies siguen la regla del documento: Salida los repite; Entrada firma solo la última hoja global y no imprime firmas en el listado de series.
+**Hojas de series:** el listado de series de una Entrada no repite el encabezado completo. Lleva una franja de una línea con folio, la leyenda "Listado de series" y la paginación —suficiente para volver a asociar una hoja suelta a su entrada—. El título grande, el logo y el QR van solo en las hojas de globales.
+
+**Pie de firmas indivisible:** el bloque de observaciones y las tres firmas con su leyenda nunca se parte entre hojas. Si no cabe, la hoja lleva menos renglones de producto; nunca se empuja el pie a una hoja propia ni se dejan las líneas sin su leyenda. Va en la última hoja de globales, que es la que se firma.
+
+**Desbordamiento acumulado:** cada hoja es un contenedor de altura fija que no puede desbordar. Un bloque más alto que la hoja empuja su sobrante arriba del encabezado de la siguiente y el error se suma hoja tras hoja, hasta que el navegador imprime más hojas de las que el documento numera. La señal de que existe es un renglón huérfano arriba de un encabezado, o que el conteo del navegador no coincida con la paginación. Se corrige midiendo, nunca bajando el número de renglones a ojo hasta que deje de verse.
+
+Decisión conservadora para Entradas pequeñas: si el listado completo de series cabe en el espacio libre de la última hoja global, se imprime allí después de los productos y antes del pie; se incrusta completo o no se incrusta. Así una Entrada de una línea y una serie ocupa una sola hoja sin perder la serie ni separar las firmas.
 
 Las líneas por página de cada documento son un valor medido, comentado junto a la constante. Cambiar el pie —agregar firmas, por ejemplo— invalida ese número y obliga a recalcularlo.
 

@@ -62,9 +62,20 @@ export default function EntradaDocumento() {
   // Medición Chromium a 96 dpi: 40 filas × 24 px dejan 13.59 px libres dentro
   // de la caja fija de 1052.59 px; 41 filas rebasan la hoja por 10.41 px.
   const seriesRowsPerPage = 40;
-  const seriesPageCount = Math.ceil(seriesRows.length / seriesRowsPerPage);
+  // En la última hoja global, cada fila global no usada libera 25 px. La
+  // sección incrustada necesita 68 px fijos (separación, título y cabecera)
+  // más 24 px por fila. Se incrusta completa o pasa completa a hojas propias.
+  const lastGlobalLineCount = globalPages.at(-1)?.length ?? 0;
+  const embeddedSeriesRowsCapacity = Math.max(
+    0,
+    Math.floor(((rowsPerPage - lastGlobalLineCount) * 25 - 68) / 24),
+  );
+  const embedsAllSeries =
+    seriesRows.length > 0 && seriesRows.length <= embeddedSeriesRowsCapacity;
+  const standaloneSeriesRows = embedsAllSeries ? [] : seriesRows;
+  const seriesPageCount = Math.ceil(standaloneSeriesRows.length / seriesRowsPerPage);
   const seriesPages = Array.from({ length: seriesPageCount }).map((_, i) =>
-    seriesRows.slice(i * seriesRowsPerPage, (i + 1) * seriesRowsPerPage),
+    standaloneSeriesRows.slice(i * seriesRowsPerPage, (i + 1) * seriesRowsPerPage),
   );
   const totalPages = globalPages.length + seriesPages.length;
 
@@ -107,7 +118,10 @@ export default function EntradaDocumento() {
       </div>
 
       <div className="entrada-print-root flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:overflow-visible print:p-0 print:block">
-        {globalPages.map((pageLineas, pageIndex) => (
+        {globalPages.map((pageLineas, pageIndex) => {
+          const isLastGlobalPage = pageIndex === globalPages.length - 1;
+          const embeddedRows = isLastGlobalPage && embedsAllSeries ? seriesRows : [];
+          return (
           <div
             key={`global-${pageIndex}`}
             data-page-kind="global"
@@ -154,7 +168,7 @@ export default function EntradaDocumento() {
             </div>
 
             {/* Table */}
-            <div className="document-table px-8 mt-2 flex-1 relative z-10 flex flex-col">
+            <div className={`document-table px-8 mt-2 relative z-10 flex flex-col ${embeddedRows.length > 0 ? "shrink-0" : "flex-1"}`}>
               <table className="w-full text-left border-collapse border border-gray-200">
                 <thead>
                   <tr className="bg-[#1e3a8a] text-white">
@@ -181,7 +195,7 @@ export default function EntradaDocumento() {
                     );
                   })}
                   {/* Padding rows to ensure exact filling */}
-                  {Array.from({ length: Math.max(0, rowsPerPage - pageLineas.length) }).map((_, i) => (
+                  {Array.from({ length: embeddedRows.length > 0 ? 0 : Math.max(0, rowsPerPage - pageLineas.length) }).map((_, i) => (
                     <tr key={`pad-${i}`} className="h-[25px] border-b border-gray-100">
                       <td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
@@ -190,9 +204,47 @@ export default function EntradaDocumento() {
               </table>
             </div>
 
+            {embeddedRows.length > 0 && (
+              <div className="embedded-series px-8 mt-2 shrink-0 relative z-10">
+                <div className="h-7 flex items-center border-b border-[#1e3a8a] text-xs font-black uppercase tracking-wider text-[#1e3a8a]">
+                  Listado de series
+                </div>
+                <table className="w-full table-fixed text-left border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-[#1e3a8a] text-white">
+                      <th className="w-[240px] py-1.5 px-2 text-[11px] font-bold uppercase tracking-wider">Producto</th>
+                      <th className="w-[92px] py-1.5 px-2 text-[11px] font-bold uppercase tracking-wider">SKU</th>
+                      {Array.from({ length: seriesPerRow }).map((_, index) => (
+                        <th key={index} className="py-1.5 px-2 text-[11px] font-bold uppercase tracking-wider">
+                          Serie {index + 1}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {embeddedRows.map((row, rowIndex) => (
+                      <tr
+                        key={`embedded-${row.productoId}-${rowIndex}`}
+                        data-product-id={row.productoId}
+                        className={`h-6 border-b border-gray-200 even:bg-gray-50 ${row.isFirstChunk ? "border-t-2 border-t-gray-400" : ""}`}
+                      >
+                        <td className="py-0.5 px-2 text-[11px] leading-none font-bold text-black truncate">{row.producto}</td>
+                        <td className="py-0.5 px-2 text-[11px] leading-none font-mono text-gray-700 truncate">{row.sku}</td>
+                        {Array.from({ length: seriesPerRow }).map((_, seriesIndex) => (
+                          <td key={seriesIndex} className="py-0.5 px-2 text-[11px] leading-none font-mono font-bold text-black">
+                            {row.series[seriesIndex]?.serie ?? ""}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
             {/* Footer */}
-            {pageIndex === globalPages.length - 1 && (
-            <div className="document-footer px-8 mt-auto pb-4 shrink-0 relative z-10">
+            {isLastGlobalPage && (
+              <div className="document-footer px-8 mt-auto pb-4 shrink-0 relative z-10">
                 <div className="flex justify-between items-end gap-8">
                   {/* Observaciones */}
                   <div className="w-[30%] bg-gray-50 border border-gray-200 rounded-md p-3 h-20">
@@ -218,13 +270,14 @@ export default function EntradaDocumento() {
                     </div>
                   </div>
                 </div>
-            </div>
+              </div>
             )}
 
             <div className="h-4 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
 
           </div>
-        ))}
+          );
+        })}
         {seriesPages.map((pageRows, seriesPageIndex) => {
           const pageNumber = globalPages.length + seriesPageIndex + 1;
           return (
