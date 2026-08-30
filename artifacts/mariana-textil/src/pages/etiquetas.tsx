@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Download, Filter, History, Loader2, Printer, Search, Tags, X } from "lucide-react";
@@ -257,7 +258,7 @@ export default function Etiquetas() {
     if (!pendingPrint || !printData) return;
     setPendingPrint(false);
     void printWhenReady(
-      printMode === "thermal" ? "printing-labels" : undefined,
+      printMode === "thermal" ? "printing-labels" : "printing-label-sheet",
     );
   }, [pendingPrint, printData, printMode]);
 
@@ -374,13 +375,16 @@ export default function Etiquetas() {
         </Tabs>
       </div>
 
-      {printData && <div className={`print-only etiquetas-print ${printMode === "sheet" ? "etiquetas-sheet-print" : ""}`}>
-        {printData.rollos.map((rollo) => <LabelPrint key={rollo.id} data={{
-          sku: rollo.sku, serie: rollo.serie, tela: rollo.tela || rollo.producto || "Producto",
-          color: rollo.color, cantidad: rollo.cantidad, unidad: rollo.unidad, reimpresaEn: printData.createdAt,
-        }} className={printMode === "sheet" ? "sheet-label" : ""} />)}
-      </div>}
-      {printData && printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
+      {printData && createPortal(
+        <div className={`print-only etiquetas-print ${printMode === "sheet" ? "etiquetas-sheet-print" : ""}`}>
+          {printData.rollos.map((rollo) => <LabelPrint key={rollo.id} data={{
+            sku: rollo.sku, serie: rollo.serie, tela: rollo.tela || rollo.producto || "Producto",
+            color: rollo.color, cantidad: rollo.cantidad, unidad: rollo.unidad, reimpresaEn: printData.createdAt,
+          }} className={printMode === "sheet" ? "sheet-label" : ""} />)}
+          {printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
+        </div>,
+        document.body,
+      )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-lg">

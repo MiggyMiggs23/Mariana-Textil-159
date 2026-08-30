@@ -1,12 +1,11 @@
 import { useParams } from "wouter";
 import { useGetEntrada, getGetEntradaQueryKey } from "@workspace/api-client-react";
-import { BrandLogo } from "@/components/brand-logo";
+import { PrintableDocumentHeader } from "@/components/printable-document-header";
 import { format } from "date-fns";
 import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
-import { QRCodeSVG } from "qrcode.react";
-import { printWhenReady } from "@/lib/print";
+import { absoluteAppUrl, printWhenReady } from "@/lib/print";
 
 export default function EntradaDocumento() {
   const { id } = useParams();
@@ -32,15 +31,14 @@ export default function EntradaDocumento() {
 
   const createdAt = new Date(entrada.createdAt);
   const totalQty = entrada.lineas.reduce((sum, line) => sum + parseFloat(line.cantidadTotal), 0);
-  const documentPath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/entradas/${entrada.id}/documento`;
-  const documentUrl = new URL(documentPath, window.location.origin).toString();
+  const documentUrl = absoluteAppUrl(`/entradas/${entrada.id}/documento`);
 
   const rowsPerPage = 20;
   const totalPages = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
   const pages = Array.from({ length: totalPages }).map((_, i) => entrada.lineas.slice(i * rowsPerPage, (i + 1) * rowsPerPage));
 
   return (
-    <div className="min-h-[100dvh] bg-muted/20 flex flex-col">
+    <div className="entrada-document-shell min-h-[100dvh] bg-muted/20 flex flex-col">
       <div className="no-print sticky top-0 z-10 flex flex-col gap-3 border-b bg-background p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-bold">Vista previa de impresión</h1>
         <Button className="w-full sm:w-auto" onClick={() => void printWhenReady("print-entrada")}>
@@ -54,33 +52,20 @@ export default function EntradaDocumento() {
           <div key={pageIndex} className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0">
 
             {/* Header */}
-            <div className="flex justify-between items-center p-6 border-b shrink-0">
+            <PrintableDocumentHeader
+              className="shrink-0 p-6"
+              qrUrl={documentUrl}
+              qrLabel={`QR para ver entrada ${entrada.folioFormateado}`}
+              logoClassName="h-[72px] w-[72px]"
+            >
               <div className="flex items-center gap-4">
                 <div className="w-2 h-16 bg-[#1e3a8a] mr-2"></div>
-                <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter">ENTRADA</h1>
-                <div className="ml-4 text-[#1e3a8a] font-bold text-xl leading-tight border-l-2 pl-4 border-gray-300">
-                  MARIANA<br/>TEXTIL
-                </div>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="flex flex-col items-center gap-1">
-                  <QRCodeSVG
-                    value={documentUrl}
-                    size={64}
-                    level="M"
-                    includeMargin
-                    aria-label={`QR para ver entrada ${entrada.folioFormateado}`}
-                  />
-                  <span className="text-[8px] font-bold uppercase">ESCANEAR PARA VER</span>
-                </div>
-                <div className="text-right">
-                  <div className="text-gray-500 font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
+                <div>
+                  <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter">ENTRADA</h1>
                   <div className="text-sm font-semibold mt-1">Página {pageIndex + 1} de {totalPages}</div>
                 </div>
-                <div className="w-px h-12 bg-gray-300"></div>
-                <BrandLogo variant="mark" className="w-12 h-12" />
               </div>
-            </div>
+            </PrintableDocumentHeader>
 
             {/* Form Data */}
             <div className="px-8 py-4 shrink-0">

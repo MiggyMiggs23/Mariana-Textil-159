@@ -13,8 +13,11 @@ test("la reimpresión espera a que los datos estén montados antes de imprimir",
   assert.match(labelsPage, /setPendingPrint\(true\)/);
   assert.match(labelsPage, /if \(!pendingPrint \|\| !printData\) return/);
   assert.match(labelsPage, /printWhenReady/);
+  assert.match(labelsPage, /createPortal/);
+  assert.match(labelsPage, /printing-label-sheet/);
   assert.doesNotMatch(labelsPage, /requestAnimationFrame\(\(\) => window\.print/);
   assert.doesNotMatch(entryLabelsPage, /classList\.add\('printing-labels'\)/);
+  assert.match(entryLabelsPage, /createPortal/);
 });
 
 test("el QR completo cabe dentro de la tercera columna con margen blanco", () => {

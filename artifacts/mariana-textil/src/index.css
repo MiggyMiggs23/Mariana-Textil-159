@@ -237,9 +237,35 @@
     object-fit: contain !important;
   }
 
-  body.print-viaje { background: white !important; }
-  body.print-viaje .no-print { display: none !important; }
-  body.print-viaje .viaje-page { width: 216mm !important; min-height: 279mm !important; margin: 0 !important; box-shadow: none !important; }
+  body.print-viaje {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.print-viaje .viaje-document-shell {
+    display: contents !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body.print-viaje * {
+    visibility: hidden;
+  }
+  body.print-viaje .viaje-page,
+  body.print-viaje .viaje-page * {
+    visibility: visible;
+  }
+  body.print-viaje .viaje-page {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 216mm !important;
+    min-height: 0 !important;
+    height: 279mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
   #replit-dev-banner,
   .replit-dev-banner,
   [data-replit-dev-banner],
@@ -270,6 +296,12 @@
     margin: 0 !important;
     padding: 0 !important;
   }
+  body.print-entrada .entrada-document-shell {
+    display: contents !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
   body.print-entrada * {
     visibility: hidden;
   }
@@ -280,8 +312,11 @@
   body.print-entrada .entrada-print-root {
     display: block !important;
     position: absolute;
-    inset: 0;
+    left: 0;
+    top: 0;
     width: 216mm;
+    height: auto !important;
+    overflow: visible !important;
     margin: 0;
     padding: 0;
   }
@@ -289,9 +324,52 @@
     size: 148mm 105mm;
     margin: 0;
   }
+  body.print-salida {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.print-salida .salida-document-shell {
+    display: contents !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body.print-salida * {
+    visibility: hidden;
+  }
+  body.print-salida .salida-print-root,
+  body.print-salida .salida-print-root * {
+    visibility: visible;
+  }
+  body.print-salida .salida-print-root {
+    page: salida-page;
+    display: block !important;
+    position: static;
+    width: 148mm;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0;
+    padding: 0;
+  }
+  body.print-salida #root,
+  body.print-salida #root *:has(.salida-print-root) {
+    display: contents !important;
+  }
+  body.print-salida #root *:not(:has(.salida-print-root)):not(.salida-print-root):not(.salida-print-root *) {
+    display: none !important;
+  }
   @page credito-page {
     size: 216mm 140mm;
     margin: 0;
+  }
+  @page ticket-page {
+    size: 80mm 200mm;
+    margin: 4mm;
+  }
+  @page carta-page {
+    size: 140mm 216mm;
+    margin: 8mm;
   }
   @page document {
     size: letter portrait;
@@ -324,6 +402,10 @@
     margin: 0;
     padding: 0;
   }
+  body.printing-labels #root,
+  body.printing-label-sheet #root {
+    display: none !important;
+  }
 
   body.printing-labels * {
     visibility: hidden;
@@ -335,9 +417,19 @@
   }
 
   body.printing-labels .etiquetas-print {
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: static;
+    left: auto;
+    top: auto;
+  }
+
+  body.printing-label-sheet {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  body.printing-label-sheet .etiquetas-print {
+    display: grid !important;
   }
 
   body.print-80mm {
@@ -402,14 +494,16 @@
   }
 
   .print-ticket-container {
-    width: 80mm;
+    page: ticket-page;
+    width: 72mm;
     margin: 0 auto;
     font-family: monospace;
     color: black;
   }
 
   .print-document-container {
-    width: 100%;
+    page: carta-page;
+    width: 123.7mm;
     max-width: 123.7mm;
     margin: 0 auto;
     background: white;
@@ -423,10 +517,15 @@
     visibility: visible;
   }
   body.print-80mm .print-80mm-only {
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: static;
     display: block !important;
+  }
+  body.print-80mm #root,
+  body.print-80mm #root *:has(.print-80mm-only) {
+    display: contents !important;
+  }
+  body.print-80mm #root *:not(:has(.print-80mm-only)):not(.print-80mm-only):not(.print-80mm-only *) {
+    display: none !important;
   }
 
   body.print-carta * {
@@ -437,9 +536,14 @@
   }
   body.print-carta .print-carta-only {
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: static;
+  }
+  body.print-carta #root,
+  body.print-carta #root *:has(.print-carta-only) {
+    display: contents !important;
+  }
+  body.print-carta #root *:not(:has(.print-carta-only)):not(.print-carta-only):not(.print-carta-only *) {
+    display: none !important;
   }
 
   body.print-credito * {
@@ -449,10 +553,16 @@
     visibility: visible;
   }
   body.print-credito .print-credito-only {
+    page: credito-page;
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: static;
+  }
+  body.print-credito #root,
+  body.print-credito #root *:has(.print-credito-only) {
+    display: contents !important;
+  }
+  body.print-credito #root *:not(:has(.print-credito-only)):not(.print-credito-only):not(.print-credito-only *) {
+    display: none !important;
   }
 
   .print-only {
@@ -488,6 +598,9 @@
     page: salida-page;
     page-break-after: always;
     page-break-inside: avoid;
+    width: 148mm !important;
+    height: 105mm !important;
+    margin: 0 !important;
   }
 
   .credito-page-print {
@@ -497,24 +610,29 @@
   }
 
   .entrada-page-print:last-child {
+    break-after: auto;
     page-break-after: auto;
   }
 
   .salida-page-print:last-child {
+    break-after: auto;
     page-break-after: auto;
   }
 
   .credito-page-print:last-child {
+    break-after: auto;
     page-break-after: auto;
   }
 
   .etiquetas-print {
+    page: label;
     width: 100mm;
     margin: 0;
     display: block !important;
   }
 
   .etiquetas-print .label-page:last-child {
+    break-after: auto;
     page-break-after: auto;
   }
 
@@ -545,7 +663,7 @@
     text-align: center;
   }
 
-  .document-page {
+  .document-page:not(.entrada-page-print):not(.salida-page-print):not(.credito-page-print) {
     page: document;
   }
 

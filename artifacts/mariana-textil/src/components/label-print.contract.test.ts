@@ -17,7 +17,7 @@ test("roll label preserves its 100 by 70 millimetre page and QR sizing", async (
   const source = await readFile(componentFile, "utf8");
 
   assert.match(source, /width: '100mm', height: '70mm'/);
-  assert.match(source, /width="29mm"/);
-  assert.match(source, /height="29mm"/);
-  assert.match(source, /style=\{\{ width: "29mm", height: "29mm"/);
+  assert.match(source, /width="26mm"/);
+  assert.match(source, /height="26mm"/);
+  assert.match(source, /style=\{\{ width: "26mm", height: "26mm"/);
 });

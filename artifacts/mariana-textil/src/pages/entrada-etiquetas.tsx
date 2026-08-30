@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useParams, Link } from "wouter";
 import { useGetEntrada, getGetEntradaQueryKey, EntradaRollo } from "@workspace/api-client-react";
 import { LabelPrint } from "@/components/label-print";
@@ -42,7 +43,9 @@ export default function EntradaEtiquetas() {
   }
 
   const handlePrint = () => {
-    void printWhenReady(printMode === "thermal" ? "printing-labels" : undefined);
+    void printWhenReady(
+      printMode === "thermal" ? "printing-labels" : "printing-label-sheet",
+    );
   };
 
   const toggleAll = () => {
@@ -134,29 +137,33 @@ export default function EntradaEtiquetas() {
           ))}
         </div>
 
-        {/* Print area */}
-        <div className={`print-only-container flex gap-[4mm] justify-center ${printMode === 'thermal' ? 'etiquetas-print flex-wrap print:block print:p-0' : 'etiquetas-sheet-print flex-wrap max-w-[8.5in] mx-auto print:max-w-none print:w-[8.5in] bg-white p-8 print:p-4 shadow-xl print:shadow-none print:m-0'}`}>
-          {rollosToPrint.map(rollo => (
-            <LabelPrint
-              key={rollo.id}
-              className={printMode === 'thermal' ? 'shadow-lg print:shadow-none' : 'sheet-label'}
-              data={{
-                sku: rollo.sku,
-                serie: rollo.serie,
-                tela: rollo.tela,
-                color: rollo.color,
-                cantidad: rollo.cantidadInicial,
-                unidad: rollo.unidad
-              }}
-            />
-          ))}
-        </div>
+        {/* Print area is portaled to body so named physical pages are not
+            affected by the screen layout's flex/overflow containers. */}
+        {createPortal(
+          <div className={`print-only flex gap-[4mm] justify-center ${printMode === 'thermal' ? 'etiquetas-print flex-wrap print:block print:p-0' : 'etiquetas-print etiquetas-sheet-print flex-wrap max-w-[8.5in] mx-auto print:max-w-none print:w-[8.5in] bg-white p-8 print:p-4 shadow-xl print:shadow-none print:m-0'}`}>
+            {rollosToPrint.map(rollo => (
+              <LabelPrint
+                key={rollo.id}
+                className={printMode === 'thermal' ? 'shadow-lg print:shadow-none' : 'sheet-label'}
+                data={{
+                  sku: rollo.sku,
+                  serie: rollo.serie,
+                  tela: rollo.tela,
+                  color: rollo.color,
+                  cantidad: rollo.cantidadInicial,
+                  unidad: rollo.unidad
+                }}
+              />
+            ))}
+            {printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
+          </div>,
+          document.body,
+        )}
 
         <div className="no-print text-center text-sm text-muted-foreground mt-12 bg-muted/50 py-4 rounded-md">
           <p className="font-bold">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</p>
           <p className="text-xs mt-1">Asegúrese de desactivar márgenes y encabezados en la configuración de impresión de su navegador.</p>
         </div>
-        {printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
       </div>
     </div>
   );

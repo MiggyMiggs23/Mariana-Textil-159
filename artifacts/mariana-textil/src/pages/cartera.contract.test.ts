@@ -10,7 +10,7 @@ test("Cartera functionality respects block 2 constraints", async () => {
   const ticketDetail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
 
   // 1. QR points to /cobros?tab=cartera&ticketId=<id>
-  assert.match(ticketDetail, /\/cobros\?tab=cartera&ticketId=\$\{ticket.id\}/);
+  assert.match(ticketDetail, /absoluteAppUrl\(`\/tickets\/\$\{ticket.id\}`\)/);
 
   // 2. Scan parsing handles URL and folio
   assert.match(cobros, /url\.pathname\.startsWith\("\/tickets\/"\)/);

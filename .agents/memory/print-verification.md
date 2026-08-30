@@ -3,8 +3,8 @@ name: Verificación de impresión
 description: Evita falsos positivos al comprobar vistas PDF basadas en CSS de impresión.
 ---
 
-Las vistas imprimibles deben verificarse emulando `media: print` y comprobando el estilo computado, el rectángulo y la participación en el layout de los elementos visibles y ocultos. En etiquetas físicas, medir también cada elemento crítico: un SVG con ancho declarado en milímetros aún puede encogerse dentro de flexbox, y los textos dinámicos pueden existir completos en el DOM pero quedar recortados.
+Las vistas imprimibles deben verificarse con el mismo estado corporal que activa el flujo real, emulando `media: print` y comprobando estilo computado, geometría y participación en el layout. En formatos físicos, medir todos los elementos críticos y validar el PDF natural completo, sin ocultar páginas mediante rangos.
 
-**Why:** Una comprobación basada solo en `textContent` reportó navegación y pestañas como visibles aunque sus ancestros tenían `display: none`, rectángulos de 0×0 y no participaban en la impresión. En otra etiqueta, el QR medía menos de lo declarado y un SKU largo se recortaba pese a conservar todo su texto en el DOM.
+**Why:** Comprobar solo el DOM o exportar sin el estado real de impresión produjo falsos positivos: contenido supuestamente visible con geometría 0×0, una hoja adicional y tamaños físicos incorrectos.
 
-**How to apply:** Para flujos de “Imprimir PDF”, confirmar que el contenido imprimible tiene tamaño real y que los elementos `no-print` tienen `display: none`, rectángulo 0×0 y `offsetParent` nulo; medir SVG y textos con rectángulo, `scrollWidth` y `clientWidth`; complementar con una captura en media print.
+**How to apply:** Activar el mismo estado que el botón, esperar recursos y exportar todas las páginas. Confirmar cantidad, tamaño físico, geometría y recortes; renderizar el PDF y decodificar sus QR, no limitarse a verificar que exista un SVG. Antes de exportar formatos nombrados, comprobar el valor computado de `page`: una regla genérica posterior puede sobrescribir el formato específico aunque ambos contratos existan en el CSS.

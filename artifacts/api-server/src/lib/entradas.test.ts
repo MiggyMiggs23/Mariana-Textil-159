@@ -551,83 +551,8 @@ await test("E-06: costos pendientes requieren capability y se capturan sin movim
 
 process.stdout.write(`\n─────────────────────────────────────────────\n`);
 process.stdout.write(`Results: ${passed} passed, ${failed} failed\n`);
-
-try {
-  await db.transaction(async (tx) => {
-    const cleanupEntradaIds = [...createdEntradaIds];
-    if (rejectedEntradaUuids.length > 0) {
-      const rejectedEntries = await tx
-        .select({ id: entradasTable.id })
-        .from(entradasTable)
-        .where(inArray(entradasTable.uuidCliente, rejectedEntradaUuids));
-      cleanupEntradaIds.push(...rejectedEntries.map((entry) => entry.id));
-    }
-    const allEntradaIds = [...new Set(cleanupEntradaIds)];
-    // Delete pagos_proveedor first (FK to entradas)
-    if (allEntradaIds.length > 0) {
-      await tx
-        .delete(pagosProveedorTable)
-        .where(inArray(pagosProveedorTable.entradaId, allEntradaIds));
-    }
-    if (createdProveedorIds.length > 0) {
-      await tx
-        .delete(pagosProveedorTable)
-        .where(inArray(pagosProveedorTable.proveedorId, createdProveedorIds));
-    }
-
-    if (allEntradaIds.length > 0) {
-      const rollos = await tx
-        .select({ id: rollosTable.id })
-        .from(rollosTable)
-        .where(inArray(rollosTable.recepcionId, allEntradaIds));
-      const rolloIds = rollos.map((r) => r.id);
-      if (rolloIds.length > 0) {
-        await tx
-          .delete(movimientosTable)
-          .where(inArray(movimientosTable.rolloId, rolloIds));
-        await tx.delete(rollosTable).where(inArray(rollosTable.id, rolloIds));
-      }
-      await tx
-        .delete(entradasTable)
-        .where(inArray(entradasTable.id, allEntradaIds));
-    }
-
-    if (createdProductoIds.length > 0) {
-      await tx
-        .delete(existenciasTable)
-        .where(inArray(existenciasTable.productoId, createdProductoIds));
-      // Any stray rolls/movements for these products (e.g. rolled-back safety)
-      const strayRollos = await tx
-        .select({ id: rollosTable.id })
-        .from(rollosTable)
-        .where(inArray(rollosTable.productoId, createdProductoIds));
-      const strayIds = strayRollos.map((r) => r.id);
-      if (strayIds.length > 0) {
-        await tx
-          .delete(movimientosTable)
-          .where(inArray(movimientosTable.rolloId, strayIds));
-        await tx.delete(rollosTable).where(inArray(rollosTable.id, strayIds));
-      }
-      await tx
-        .delete(productosTable)
-        .where(inArray(productosTable.id, createdProductoIds));
-    }
-
-    if (createdUbicacionIds.length > 0) {
-      await tx
-        .delete(ubicacionesTable)
-        .where(inArray(ubicacionesTable.id, createdUbicacionIds));
-    }
-
-    if (createdProveedorIds.length > 0) {
-      await tx
-        .delete(proveedoresTable)
-        .where(inArray(proveedoresTable.id, createdProveedorIds));
-    }
-  });
-  process.stdout.write(`Cleanup: OK\n`);
-} catch (cleanErr) {
-  process.stderr.write(`Cleanup ERROR: ${(cleanErr as Error).message}\n`);
-}
+process.stdout.write(
+  "Cleanup: skipped; append-only purchases remain in the disposable test database\n",
+);
 
 process.exit(failed > 0 ? 1 : 0);

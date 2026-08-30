@@ -58,3 +58,9 @@ export async function printWhenReady(bodyClass?: string): Promise<void> {
     window.setTimeout(cleanup, 1_000);
   }
 }
+
+export function absoluteAppUrl(path: string): string {
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return new URL(`${basePath}${normalizedPath}`, window.location.origin).toString();
+}

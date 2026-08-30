@@ -3,8 +3,8 @@ import { useGetViaje } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Printer, ArrowLeft } from "lucide-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
-import { BrandLogo } from "@/components/brand-logo";
-import { printWhenReady } from "@/lib/print";
+import { PrintableDocumentHeader } from "@/components/printable-document-header";
+import { absoluteAppUrl, printWhenReady } from "@/lib/print";
 
 /** Carta/216x279mm printable dispatch control sheet. */
 export default function ViajeDocumento() {
@@ -12,21 +12,26 @@ export default function ViajeDocumento() {
   const { data: rawViaje } = useGetViaje(Number(id));
   const viaje: any = rawViaje;
   if (!viaje) return <p>Cargando documento…</p>;
+  const documentUrl = absoluteAppUrl(`/viajes/${id}/documento`);
 
   return (
-    <div className="min-h-screen bg-muted p-6 print:p-0">
+    <div className="viaje-document-shell min-h-screen bg-muted p-6 print:p-0">
       <div className="no-print mb-4 flex justify-between">
         <Link href={`/viajes/${id}`}><Button variant="outline"><ArrowLeft />Volver</Button></Link>
         <Button onClick={() => void printWhenReady("print-viaje")}><Printer />Imprimir</Button>
       </div>
       <article className="viaje-page viaje-page-print mx-auto min-h-[279mm] w-[216mm] bg-white p-[14mm] text-sm">
-        <header className="flex items-center justify-between border-b-2 border-slate-900 pb-4">
+        <PrintableDocumentHeader
+          className="pb-4"
+          qrUrl={documentUrl}
+          qrLabel={`QR para abrir viaje ${viaje.folioFormateado}`}
+          logoClassName="h-[96px] w-[96px]"
+        >
           <div>
             <h1 className="text-3xl font-black">HOJA DE VIAJE</h1>
             <p className="text-lg font-bold">{viaje.folioFormateado}</p>
           </div>
-          <BrandLogo variant="mark" className="h-16 w-16" />
-        </header>
+        </PrintableDocumentHeader>
         <div className="my-5 grid grid-cols-2 gap-3">
           <p><b>Origen:</b> {viaje.nombreOrigen}</p><p><b>Salida:</b> {new Date(viaje.salidaAt).toLocaleString("es-MX")}</p>
           <p><b>Camioneta:</b> {viaje.camioneta}</p><p><b>Chofer:</b> {viaje.chofer}</p>

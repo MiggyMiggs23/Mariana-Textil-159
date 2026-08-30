@@ -1,3 +1,10 @@
+Los documentos impresos requieren `print-color-adjust: exact` para que el logo y los fondos lleguen al papel; sin esa regla el navegador los descarta.
+
+**El ticket, la nota y la nota de productos NO imprimen números de serie** y agrupan los rollos por producto. **La hoja de salida, la hoja de viaje y la hoja de auditoría SÍ imprimen las series**, porque son documentos de control interno. Al cliente se le resume; al control interno se le detalla.
+
+Todo documento imprimible debe poder abrirse en cualquier momento desde el folio de su lista, no solo al crearse.
+
+Todos los documentos impresos llevan el logo centrado arriba y el QR en la esquina superior derecha. El QR lleva al mismo destino que el folio en azul de su lista, con la dirección construida desde el origen en que corre la aplicación, nunca escrita a mano.
 # Decisiones de la Parte 9
 
 El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.

@@ -44,11 +44,11 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { groupTicketLinesByModality, groupPrintLinesByModality } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
-import { BrandLogo } from "@/components/brand-logo";
-import { printWhenReady, waitForPrintableAssets } from "@/lib/print";
+import { PrintableDocumentHeader } from "@/components/printable-document-header";
+import { absoluteAppUrl, printWhenReady, waitForPrintableAssets } from "@/lib/print";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
-import { QRCodeSVG } from "qrcode.react";
+import { DocumentQrCode } from "@/components/document-qr-code";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
 
 export default function TicketDetailPage() {
@@ -275,6 +275,7 @@ export default function TicketDetailPage() {
     hour: "2-digit",
     minute: "2-digit",
   });
+  const ticketDocumentUrl = absoluteAppUrl(`/tickets/${ticket.id}`);
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
@@ -575,8 +576,11 @@ export default function TicketDetailPage() {
 
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
-        <div className="text-center mb-4">
-          <MonochromeBrandLogo className="mx-auto mb-1 h-[43mm] w-[38mm] max-w-full" />
+        <div className="relative mb-4 pt-[27mm] text-center">
+          <div className="absolute right-0 top-0">
+            <DocumentQrCode url={ticketDocumentUrl} label={`QR para abrir ticket ${ticket.folio}`} />
+          </div>
+          <MonochromeBrandLogo className="mx-auto mb-1 h-[64.5mm] w-[57mm] max-w-full" />
           <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-2 border-t border-black" />
@@ -702,8 +706,11 @@ export default function TicketDetailPage() {
 
       {/* Media Carta */}
       <div className="hidden print-carta-only print-document-container">
-        <div className="mb-5 text-center">
-          <MonochromeBrandLogo className="mx-auto h-[43mm] w-[38mm]" />
+        <div className="relative mb-5 text-center">
+          <div className="absolute right-0 top-0">
+            <DocumentQrCode url={ticketDocumentUrl} label={`QR para abrir ticket ${ticket.folio}`} />
+          </div>
+          <MonochromeBrandLogo className="mx-auto h-[64.5mm] w-[57mm]" />
           <p className="text-lg font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-sm font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-3 border-t-2 border-black" />
@@ -846,7 +853,7 @@ export default function TicketDetailPage() {
           if (!printData) return null;
 
           const isInternal = printData.copia === "INTERNA";
-          const qrUrl = typeof window !== "undefined" ? new URL(`/cobros?tab=cartera&ticketId=${ticket.id}`, window.location.origin).toString() : "";
+          const qrUrl = ticketDocumentUrl;
           const isPriceless = !isInternal && printData.notaSinPrecios;
           const pageTitle = isPriceless ? "NOTA DE PRODUCTOS" : printData.documentoTipo === "NOTA" ? "NOTA" : "TICKET";
 
@@ -868,7 +875,12 @@ export default function TicketDetailPage() {
                 </div>
               )}
               {/* Header */}
-              <div className="flex justify-between items-center p-4 border-b shrink-0">
+              <PrintableDocumentHeader
+                className="shrink-0 p-4"
+                qrUrl={isInternal ? qrUrl : undefined}
+                qrLabel={isInternal ? `QR para abrir nota ${printData.folio}` : undefined}
+                logoClassName="h-[60px] w-[60px]"
+              >
                 <div className="flex items-center gap-4">
                   <div className="w-2 h-12 bg-[#1e3a8a] mr-2"></div>
                   <div className="flex flex-col">
@@ -883,25 +895,7 @@ export default function TicketDetailPage() {
                     MARIANA<br />TEXTIL
                   </div>
                 </div>
-                <div className="flex items-center gap-6">
-                  {isInternal && (
-                    <div className="flex flex-col items-center gap-1">
-                      <QRCodeSVG
-                        value={qrUrl}
-                        size={64}
-                        level="M"
-                        includeMargin
-                      />
-                    </div>
-                  )}
-                  <div className="text-right">
-                    <div className="text-gray-500 text-xs font-medium">MARIANA TEXTIL S.A. DE C.V.</div>
-                    <div className="text-xs font-semibold mt-1">{printData.nombreUbicacion}</div>
-                  </div>
-                  <div className="w-px h-10 bg-gray-300"></div>
-                  <BrandLogo variant="mark" className="w-10 h-10" />
-                </div>
-              </div>
+              </PrintableDocumentHeader>
 
               {/* Info section */}
               <div className="px-6 py-2 shrink-0 bg-gray-50/50">

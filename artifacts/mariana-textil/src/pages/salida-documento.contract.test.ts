@@ -16,10 +16,16 @@ test("la salida usa A6 horizontal con diez renglones por página", () => {
 });
 
 test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
-  const titleAt = page.indexOf("HOJA DE SALIDA");
-  const logoAt = page.indexOf('<BrandLogo variant="mark"', titleAt);
-  const qrAt = page.indexOf("<QRCodeSVG", logoAt);
-  assert.ok(titleAt >= 0 && logoAt > titleAt && qrAt > logoAt);
+  assert.match(page, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
+  assert.match(page, /HOJA DE SALIDA/);
+  assert.match(page, /printWhenReady\("print-salida"\)/);
+  assert.match(page, /salida-document-shell/);
+  assert.match(page, /salida-print-root/);
+  assert.match(styles, /body\.print-salida \.salida-print-root\s*\{[\s\S]*page:\s*salida-page;[\s\S]*position:\s*static;/);
+  assert.match(styles, /body\.print-salida #root \*:has\(\.salida-print-root\)\s*\{[\s\S]*display:\s*contents !important;/);
+  assert.match(styles, /\.document-page:not\(\.entrada-page-print\):not\(\.salida-page-print\):not\(\.credito-page-print\)/);
+  assert.match(page, /absoluteAppUrl\(`\/salidas\?tab=recepcion&id=\$\{salida.id\}`\)/);
+  assert.doesNotMatch(page, /modalidad === "MOSTRADOR"[\s\S]*qrUrl/);
   assert.match(page, />Generó:</);
   assert.match(page, />Entregó:</);
   for (const heading of [

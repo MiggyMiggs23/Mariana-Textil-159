@@ -1,12 +1,11 @@
 import { useParams, Link } from "wouter";
 import { useGetDocumentoSalida, getGetDocumentoSalidaQueryKey } from "@workspace/api-client-react";
-import { BrandLogo } from "@/components/brand-logo";
+import { PrintableDocumentHeader } from "@/components/printable-document-header";
 import { format } from "date-fns";
 import { Loader2, Printer, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
-import { QRCodeSVG } from "qrcode.react";
-import { printWhenReady } from "@/lib/print";
+import { absoluteAppUrl, printWhenReady } from "@/lib/print";
 
 export default function SalidaDocumento() {
   const { id } = useParams();
@@ -40,10 +39,7 @@ export default function SalidaDocumento() {
   }
 
   const dateObj = new Date(salida.createdAt);
-  const qrPath = salida.modalidad === "MOSTRADOR"
-    ? `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas/${salida.id}/documento/salida`
-    : `${import.meta.env.BASE_URL.replace(/\/$/, "")}/salidas?tab=recepcion&id=${salida.id}`;
-  const qrUrl = new URL(qrPath, window.location.origin).toString();
+  const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
   // Pagination logic: 10 rows per page for A6 landscape fit
   const rollosPerPage = 10;
@@ -51,7 +47,7 @@ export default function SalidaDocumento() {
   const pages = Array.from({ length: totalPages }).map((_, i) => (salida.rollos || []).slice(i * rollosPerPage, (i + 1) * rollosPerPage));
 
   return (
-    <div className="min-h-[100dvh] bg-muted/20 flex flex-col">
+    <div className="salida-document-shell min-h-[100dvh] bg-muted/20 flex flex-col">
       <div className="no-print p-4 border-b bg-background sticky top-0 z-10 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-4">
           <Link href={`/salidas/${salida.id}`}>
@@ -61,13 +57,13 @@ export default function SalidaDocumento() {
           </Link>
           <h1 className="font-bold">Vista previa de impresión (SALIDA - A6)</h1>
         </div>
-        <Button onClick={() => void printWhenReady()} data-testid="doc-print-button">
+        <Button onClick={() => void printWhenReady("print-salida")} data-testid="doc-print-button">
           <Printer className="w-4 h-4 mr-2" />
           Imprimir / Guardar PDF
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:p-0 print:block">
+      <div className="salida-print-root flex-1 overflow-auto p-8 flex flex-col items-center gap-8 print:p-0 print:block">
         {pages.map((pageRollos, pageIndex) => (
           <div
             key={pageIndex}
@@ -83,23 +79,17 @@ export default function SalidaDocumento() {
             )}
 
             {/* Header */}
-            <div className="flex justify-between items-start p-2 border-b-2 border-black shrink-0 relative z-10 bg-white">
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col">
-                  <h1 className="text-[22px] font-black text-black tracking-tighter uppercase leading-none">HOJA DE SALIDA</h1>
-                  <div className="text-[10px] font-bold text-gray-700 mt-0.5 uppercase">Mariana Textil</div>
-                </div>
-                <BrandLogo variant="mark" className="w-10 h-10" />
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="text-right">
-                  <div className="text-[10px] font-bold uppercase text-gray-500 leading-none">Folio</div>
-                  <div className="text-sm font-black text-red-600 leading-tight" data-testid="doc-folio">{salida.folioFormateado}</div>
-                  <div className="text-[10px] font-bold text-gray-600 mt-1">Pág {pageIndex + 1}/{totalPages}</div>
-                </div>
-                <QRCodeSVG value={qrUrl} size={44} level="M" />
-              </div>
-            </div>
+            <PrintableDocumentHeader
+              className="relative z-10 shrink-0 bg-white px-2"
+              qrUrl={qrUrl}
+              qrLabel={`QR para abrir salida ${salida.folioFormateado}`}
+              logoClassName="h-[60px] w-[60px]"
+            >
+              <h1 className="text-[22px] font-black text-black tracking-tighter uppercase leading-none">HOJA DE SALIDA</h1>
+              <div className="mt-0.5 text-[10px] font-bold uppercase text-gray-700">Mariana Textil</div>
+              <div className="mt-1 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
+              <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
+            </PrintableDocumentHeader>
 
             {/* Form Data */}
             <div className="px-2 py-1.5 border-b border-black bg-gray-50 shrink-0 flex flex-col gap-1 relative z-10">
@@ -150,7 +140,7 @@ export default function SalidaDocumento() {
                     const line = salida.lineas.find(l => l.id === rollo.lineaId);
                     const globalIndex = pageIndex * rollosPerPage + index + 1;
                     return (
-                      <tr key={index} className="border-b border-gray-200 h-[18px] even:bg-gray-50/50">
+                      <tr key={index} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
                         <td className="py-0.5 px-1 text-center text-gray-600 text-[10px] border-r border-gray-200 font-medium">{globalIndex}</td>
                         <td className="py-0.5 px-1 text-[10px] text-gray-900 truncate max-w-[100px] border-r border-gray-200">
                           {line?.telaProducto}
@@ -166,7 +156,7 @@ export default function SalidaDocumento() {
                     );
                   })}
                   {Array.from({ length: Math.max(0, rollosPerPage - pageRollos.length) }).map((_, i) => (
-                    <tr key={`pad-${i}`} className="border-b border-gray-200 h-[18px] even:bg-gray-50/50">
+                    <tr key={`pad-${i}`} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>

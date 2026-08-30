@@ -20,7 +20,7 @@ test("document and ticket actions stack safely on phones", async () => {
     entrada,
     /flex flex-col gap-3[^"]*sm:flex-row[^"]*sm:justify-between/,
   );
-  assert.match(entrada, /className="w-full sm:w-auto" onClick=\{\(\) => window\.print\(\)\}/);
+  assert.match(entrada, /className="w-full sm:w-auto" onClick=\{\(\) => void printWhenReady\("print-entrada"\)\}/);
 
   assert.match(
     ticket,

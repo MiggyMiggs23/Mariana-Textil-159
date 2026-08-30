@@ -35,7 +35,7 @@ test("Block 4 functionality in ticket detail", async () => {
   // - El botón imprimir/reimprimir de nota de crédito debe llamar primero useReimprimirClienteNota; solo en onSuccess ejecuta impresión
   assert.match(ticketDetail, /useReimprimirClienteNota\(\)/);
   assert.match(ticketDetail, /reimprimirNota\.mutate/);
-  assert.match(ticketDetail, /onSuccess:\s*\(\)\s*=>\s*\{\s*document\.body\.classList\.add\("print-credito"\);\s*window\.print\(\);/);
+  assert.match(ticketDetail, /onSuccess:\s*\(\)\s*=>\s*\{\s*void printWhenReady\("print-credito"\);/);
 });
 
 test("Block 4 functionality in cobros", async () => {
