@@ -25,11 +25,6 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
   );
   await assertIsolated();
   const tag = `PART5-${randomUUID()}`;
-  const initials = tag
-    .slice(-2)
-    .split("")
-    .map((character) => String.fromCharCode(65 + Number.parseInt(character, 16)))
-    .join("");
   const fixtureUsers: number[] = [];
   const fixtureSessions: string[] = [];
   const fixtureLocations: number[] = [];
@@ -39,6 +34,24 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
   try {
     const one = async (text: string, values: unknown[] = []) =>
       (await pool.query(text, values)).rows[0]!;
+    let initials = "";
+    do {
+      initials = randomUUID()
+        .replaceAll("-", "")
+        .slice(0, 3)
+        .split("")
+        .map((character) =>
+          String.fromCharCode(65 + Number.parseInt(character, 16))
+        )
+        .join("");
+    } while (
+      (
+        await pool.query(
+          "SELECT 1 FROM ubicaciones WHERE iniciales=$1 LIMIT 1",
+          [initials],
+        )
+      ).rowCount
+    );
     const location = await one(
       `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa)
        VALUES($1,$2,'TIENDA',true) RETURNING id`,
@@ -285,7 +298,16 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
         201,
         `customized ADMIN must still be able to create ${role}: ${JSON.stringify(response.body)}`,
       );
-      fixtureUsers.push(Number(response.body.id));
+      const createdUserId = Number(response.body.id);
+      fixtureUsers.push(createdUserId);
+      if (role === "ADMIN") {
+        await pool.query(
+          `INSERT INTO permisos_usuario(
+             usuario_id,modulo,puede_ver,puede_crear,puede_editar,puede_autorizar
+           ) VALUES($1,'dashboard',false,null,null,null)`,
+          [createdUserId],
+        );
+      }
     }
     const roleBefore = await pool.query(
       `SELECT puede_ver,puede_crear FROM permisos_rol WHERE rol='CAJA' AND modulo='dashboard'`,
