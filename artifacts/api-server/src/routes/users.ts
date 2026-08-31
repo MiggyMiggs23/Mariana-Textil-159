@@ -152,22 +152,6 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
 
   try {
     const created = await db.transaction(async (tx) => {
-      const recoveryAccountRemains = await hasAdminRecoveryAccount(
-        tx,
-        undefined,
-        role === "ADMIN",
-      );
-      if (!recoveryAccountRemains) {
-        await tx.insert(auditoriaTable).values({
-          usuarioId: req.auth!.user.id,
-          accion: "RECHAZAR_INVARIANTE",
-          entidad: "usuarios",
-          entidadId: normalizeUsername(parsed.data.usuario),
-          datosDespues: { motivo: "Debe conservarse al menos un ADMIN activo con acceso completo." },
-          ip: getRequestIp(req),
-        });
-        return null;
-      }
       const [user] = await tx
         .insert(usuariosTable)
         .values({
@@ -192,10 +176,6 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
       });
       return user;
     });
-    if (!created) {
-      res.status(409).json({ error: "Debe conservarse al menos un ADMIN activo con acceso completo." });
-      return;
-    }
     res
       .status(201)
       .json(CreateUserResponse.parse(presentUser(created, location ?? null)));

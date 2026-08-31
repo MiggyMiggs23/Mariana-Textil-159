@@ -262,6 +262,31 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
        VALUES($1,'dashboard',false,null,null,null)`,
       [actorId],
     );
+    for (const role of [
+      "ADMIN",
+      "TERMINAL",
+      "CAJA",
+      "SUPERVISOR",
+      "BODEGA",
+      "SISTEMAS",
+      "CONTADOR",
+    ] as const) {
+      const username = `${tag.toLowerCase()}-created-${role.toLowerCase()}`;
+      const globalRole = role === "ADMIN" || role === "SISTEMAS" || role === "CONTADOR";
+      const response = await request("POST", "/users", {
+        nombre: `${tag} created ${role}`,
+        usuario: username,
+        password: "integration-only-password",
+        rol: role,
+        ubicacionId: globalRole ? null : Number(location.id),
+      });
+      assert.equal(
+        response.status,
+        201,
+        `customized ADMIN must still be able to create ${role}: ${JSON.stringify(response.body)}`,
+      );
+      fixtureUsers.push(Number(response.body.id));
+    }
     const roleBefore = await pool.query(
       `SELECT puede_ver,puede_crear FROM permisos_rol WHERE rol='CAJA' AND modulo='dashboard'`,
     );
