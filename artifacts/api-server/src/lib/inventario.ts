@@ -1184,19 +1184,41 @@ export async function capturarCostosEntrada(
     .where(eq(entradasTable.id, input.entradaId));
 
   if (entrada.proveedorId != null) {
-    await tx.execute(sql`
+    const insertedPurchase = await tx.execute(sql`
       INSERT INTO pagos_proveedor
         (proveedor_id, entrada_id, importe, tipo, fecha, usuario_id)
       VALUES
         (${entrada.proveedorId}, ${entrada.id}, ${totalCosto}, 'COMPRA',
          ${entrada.fecha}, ${input.usuarioId})
       ON CONFLICT (entrada_id) WHERE tipo = 'COMPRA' AND entrada_id IS NOT NULL
-      DO UPDATE SET
-        proveedor_id = EXCLUDED.proveedor_id,
-        importe = EXCLUDED.importe,
-        fecha = EXCLUDED.fecha,
-        usuario_id = EXCLUDED.usuario_id
+      DO NOTHING
+      RETURNING id
     `);
+    if (insertedPurchase.rows.length === 0) {
+      const [existingPurchase] = await tx
+        .select({
+          proveedorId: pagosProveedorTable.proveedorId,
+          importe: pagosProveedorTable.importe,
+        })
+        .from(pagosProveedorTable)
+        .where(
+          and(
+            eq(pagosProveedorTable.entradaId, entrada.id),
+            eq(pagosProveedorTable.tipo, "COMPRA"),
+          ),
+        )
+        .limit(1);
+      if (
+        !existingPurchase ||
+        existingPurchase.proveedorId !== entrada.proveedorId ||
+        Number(existingPurchase.importe).toFixed(2) !== totalCosto
+      ) {
+        throw new InventarioError(
+          "La Entrada ya tiene una COMPRA con proveedor o importe diferente; concilia el cargo antes de capturar costos.",
+          "ENTRY_PURCHASE_CONFLICT",
+        );
+      }
+    }
   }
 
   await tx.insert(auditoriaTable).values({

@@ -785,7 +785,7 @@ export default function Entradas() {
             <p className="text-muted-foreground mt-1">Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
           </div>
           {user?.rol === Role.ADMIN && (
-            <Button asChild variant="outline" className="hidden sm:flex border-amber-500 text-amber-700 bg-amber-50 hover:bg-amber-100">
+            <Button asChild variant="outline" className="border-amber-500 text-amber-700 bg-amber-50 hover:bg-amber-100">
               <Link href="/entradas/pendientes-costo">
                 <AlertTriangle className="w-4 h-4 mr-2" />
                 Costos Pendientes

@@ -545,6 +545,51 @@ await test("E-06: costos pendientes requieren capability y se capturan sin movim
   assert.equal(comprasAfter[0]!.importe, "280.00");
 });
 
+await test("E-07: captura acepta una COMPRA inmutable existente si coincide", async () => {
+  const { id: productoId } = await mkProducto();
+  const ubicacionId = await mkUbicacion();
+  const proveedorId = await mkProveedor();
+  const pending = await db.transaction((tx) =>
+    crearEntrada(tx, {
+      ubicacionId,
+      proveedorId,
+      usuarioId: 1,
+      uuidCliente: randomUUID(),
+      allowPendingCosts: true,
+      lineas: [
+        { productoId, costoUnitario: null, cantidades: ["2.000"] },
+      ],
+    }),
+  );
+  createdEntradaIds.push(pending.id);
+  const [existingPurchase] = await db
+    .insert(pagosProveedorTable)
+    .values({
+      proveedorId,
+      entradaId: pending.id,
+      importe: "20.00",
+      tipo: "COMPRA",
+      fecha: new Date(pending.fecha),
+      usuarioId: 1,
+    })
+    .returning({ id: pagosProveedorTable.id });
+
+  const captured = await db.transaction((tx) =>
+    capturarCostosEntrada(tx, {
+      entradaId: pending.id,
+      usuarioId: 1,
+      costosProductos: [{ productoId, costoUnitario: "10.00" }],
+    }),
+  );
+
+  assert.equal(captured.totalCosto, "20.00");
+  const purchases = await db
+    .select({ id: pagosProveedorTable.id, importe: pagosProveedorTable.importe })
+    .from(pagosProveedorTable)
+    .where(eq(pagosProveedorTable.entradaId, pending.id));
+  assert.deepEqual(purchases, [{ id: existingPurchase!.id, importe: "20.00" }]);
+});
+
 // =============================================================================
 // Cleanup
 // =============================================================================

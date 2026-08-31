@@ -1,12 +1,30 @@
 import type { Pool } from "pg";
 
-/** Repeatable upgrade for immutable supplier-payment reversals. */
+/** Repeatable upgrades for supplier-payment idempotency and reversals. */
 export async function ensurePagosProveedorSchema(pool: Pool): Promise<void> {
   await pool.query("ALTER TYPE tipo_pago_proveedor ADD VALUE IF NOT EXISTS 'REVERSO'");
   await pool.query(`
     ALTER TABLE pagos_proveedor
       ADD COLUMN IF NOT EXISTS movimiento_origen_id integer
       REFERENCES pagos_proveedor(id);
+  `);
+  const duplicatePurchases = await pool.query<{ entrada_id: number }>(`
+    SELECT entrada_id
+    FROM pagos_proveedor
+    WHERE tipo='COMPRA' AND entrada_id IS NOT NULL
+    GROUP BY entrada_id
+    HAVING COUNT(*) > 1
+    LIMIT 1
+  `);
+  if (duplicatePurchases.rowCount) {
+    throw new Error(
+      "No se puede garantizar una sola COMPRA por Entrada: existen cargos duplicados que requieren conciliación manual.",
+    );
+  }
+  await pool.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS pagos_proveedor_entrada_compra_idx
+      ON pagos_proveedor(entrada_id)
+      WHERE tipo='COMPRA' AND entrada_id IS NOT NULL;
     CREATE UNIQUE INDEX IF NOT EXISTS pagos_proveedor_reverso_origen_uidx
       ON pagos_proveedor(movimiento_origen_id)
       WHERE tipo='REVERSO' AND movimiento_origen_id IS NOT NULL;

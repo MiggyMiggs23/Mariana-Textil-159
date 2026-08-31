@@ -1049,7 +1049,7 @@ inventarioRouter.get(
         LEFT JOIN proveedores p ON p.id = e.proveedor_id
         JOIN rollos r ON r.recepcion_id = e.id AND r.costo_unitario IS NULL
         JOIN productos pr ON pr.id = r.producto_id
-        GROUP BY e.id, u.nombre, p.nombre, us.nombre
+        GROUP BY e.id, u.iniciales, u.nombre, p.nombre, us.nombre
         ORDER BY e.created_at ASC, e.id ASC
         LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
       `);
