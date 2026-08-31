@@ -1,0 +1,125 @@
+# CORRECCIÓN A — Bugs bloqueantes
+
+Primera de dos tandas. Esta trae lo que impide operar. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## BLOQUE 1 — No se pueden crear usuarios
+
+### El diagnóstico
+
+Ya está localizado. No lo busques de nuevo, verifícalo.
+
+`routes/users.ts:155` llama a `hasAdminRecoveryAccount` **en la creación** de un usuario. Esa invariante existe para que nadie deje al sistema sin un ADMIN con acceso completo, y tiene sentido al **editar, desactivar o cambiar de rol** a alguien. **No tiene ningún sentido al crear**: dar de alta un usuario nuevo no le quita el acceso a ningún ADMIN existente.
+
+Peor, la consulta que la respalda (`lib/permisos.ts:352`) exige que exista un ADMIN activo que **no tenga ninguna fila** en `permisos_usuario` con `puede_ver`, `puede_crear`, `puede_editar` o `puede_autorizar` en falso. Basta con que alguien haya personalizado un solo permiso del ADMIN para que devuelva falso.
+
+Resultado: **se bloquea el alta de cualquier usuario, de cualquier rol**, con un 409 que dice "Debe conservarse al menos un ADMIN activo con acceso completo" — un mensaje que no corresponde a lo que el usuario estaba haciendo.
+
+Y es contradictorio con el resto del sistema: `resolvePermiso` deja pasar al ADMIN sin consultar la matriz, así que ese ADMIN sí tiene acceso total en la práctica. La consulta cuenta filas y concluye lo contrario.
+
+### Qué se hace
+
+1. **Quita la verificación de la ruta de creación.** Se conserva íntegra en editar, desactivar y cambiar de rol, que es donde protege algo real.
+2. **Revisa si la consulta refleja bien la invariante.** Un ADMIN con filas de override restrictivas sigue teniendo acceso total por el bypass de `resolvePermiso`. Si concluyes que la consulta está mal planteada, corrígela; si concluyes que está bien y el bypass es lo que sobra, **detente y repórtalo** antes de tocar nada: eso cambia el modelo de seguridad y lo decido yo.
+3. Revisa si el mismo patrón está mal aplicado en otras rutas de alta.
+
+### Verificación
+
+- Con un ADMIN que tenga permisos personalizados, se puede crear un usuario de cada rol
+- Sigue siendo imposible desactivar, degradar o restringir al último ADMIN con acceso completo
+- El mensaje de error de la invariante solo aparece cuando de verdad se está poniendo en riesgo
+
+---
+
+## BLOQUE 2 — El abono del mismo día no baja el saldo de la venta a crédito
+
+### El síntoma
+
+Se hace una venta a crédito. **El mismo día**, el cliente abona. La caja registra el efectivo correctamente, pero **el saldo de esa venta a crédito no baja**.
+
+Es frecuente en la operación: muchos clientes abonan el mismo día.
+
+### Qué hay que investigar
+
+El libro mayor de crédito ordena por `createdAt` y desempata por `id` (`lib/credit-allocation.ts:66` y `:124`). En principio un abono posterior al cargo debería aplicarse, porque su marca de tiempo es mayor.
+
+Así que la falla está en otro lado. Las hipótesis a descartar, en orden:
+
+1. El abono registrado por caja **no está entrando al libro mayor de crédito** como movimiento, o entra con un tipo que la proyección no considera abono.
+2. La proyección **filtra por fecha** en algún punto y excluye lo del mismo día.
+3. El abono se registra contra el cliente pero **sin ligarse** al cargo, y la asignación FIFO no lo toma.
+4. Hay dos caminos de registro de abono —el de caja y el de cobros— y solo uno alimenta el libro mayor.
+
+**Reproduce el caso primero y repórtalo antes de corregir.** Quiero saber cuál de estas es, o cuál otra, con el archivo y la línea. No apliques una corrección hasta haber explicado la causa.
+
+Este es dinero de clientes. Si tu corrección cambia cómo se asignan los abonos a los cargos, **detente y repórtalo** en vez de decidirlo tú.
+
+### Verificación
+
+- Venta a crédito y abono el mismo día: el saldo del cliente baja por el monto abonado
+- El efectivo sigue apareciendo en caja una sola vez, sin duplicarse
+- El estado de cuenta del cliente y el corte de caja cuadran entre sí
+- Abono parcial, abono exacto y abono mayor al saldo, los tres el mismo día
+- Abono al día siguiente sigue funcionando como antes
+
+---
+
+## BLOQUE 3 — El alta de entrada no afecta el saldo del proveedor
+
+Al registrar una entrada, **el saldo del proveedor no se mueve**. La mercancía entra al inventario pero la cuenta por pagar no se genera.
+
+Reproduce, diagnostica y **reporta la causa antes de corregir**. Igual que el bloque anterior: esto es dinero, y quiero entender por qué antes de que lo cambies.
+
+Revisa en particular si `backfillCompras` y el alta en vivo siguen el mismo camino, o si el saldo solo se construye en el respaldo diferido.
+
+### Verificación
+
+- Una entrada nueva genera el cargo correspondiente en el saldo del proveedor
+- El monto coincide con el costo de la entrada
+- Un pago al proveedor lo baja correctamente
+- No se duplica el cargo si la entrada se registra dos veces con el mismo `uuidCliente`
+
+---
+
+## BLOQUE 4 — Costos pendientes
+
+Dos fallas en el mismo módulo:
+
+1. **El botón amarillo no lleva a entradas pendientes de costo.** Al hacer clic no navega a donde debería.
+2. **No se pueden dar de alta costos pendientes.** Reproduce y reporta el error exacto que devuelve el servidor.
+
+Trátalos por separado: es probable que sean causas distintas aunque estén en la misma pantalla.
+
+---
+
+## BLOQUE 5 — Sonido de notificaciones al cambiar de categoría
+
+Cada vez que se cambia de categoría suena la notificación. Es una alerta disparándose por una navegación, no por un evento real.
+
+Localiza qué está disparando el sonido en el cambio de categoría y córtalo. El sonido debe quedar reservado para notificaciones auténticas.
+
+Verifica que las notificaciones reales sigan sonando.
+
+---
+
+## BLOQUE 6 — La notificación emergente tapa el botón
+
+Al generar una entrada aparece una notificación en la esquina inferior derecha que **estorba el botón**.
+
+Muévela al centro. Aplica el cambio de forma consistente a todas las notificaciones emergentes, no solo a la de entradas: si una tapa un botón, las demás en la misma posición también lo harán.
+
+Verifica en teléfono, que es donde el problema es peor.
+
+---
+
+## BLOQUE 7 — Verificación general
+
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de inventario, POS, Salidas, clientes y proveedores pasan enteras
+- Cada bug tiene una prueba que **falla contra el código anterior** y pasa con la corrección
+- Los diagnósticos de los bloques 2, 3 y 4 están escritos en `reports/`, fechados, con archivo y línea
+
+Los bloques 1, 2 y 3 tocan seguridad y dinero. Si en alguno tu corrección implica cambiar una regla de negocio en vez de arreglar un defecto, **detente y repórtalo**.
