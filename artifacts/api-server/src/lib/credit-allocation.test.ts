@@ -195,6 +195,73 @@ test("backdated preview from the full ledger matches the subsequently inserted A
   );
 });
 
+test("same-day and next-day ABONOs reduce the sale for partial, exact, and excess payments", () => {
+  const sale = {
+    id: 1,
+    ticketId: 10,
+    tipo: "VENTA_CREDITO" as const,
+    importe: "100.00",
+    createdAt: new Date("2026-08-31T14:00:00.000Z"),
+  };
+  const cases = [
+    {
+      name: "same-day partial",
+      amount: "-40.00",
+      paidAt: new Date("2026-08-31T18:00:00.000Z"),
+      balanceCents: 6_000,
+      overpaymentCents: 0,
+    },
+    {
+      name: "same-day exact",
+      amount: "-100.00",
+      paidAt: new Date("2026-08-31T18:00:00.000Z"),
+      balanceCents: 0,
+      overpaymentCents: 0,
+    },
+    {
+      name: "same-day excess",
+      amount: "-150.00",
+      paidAt: new Date("2026-08-31T18:00:00.000Z"),
+      balanceCents: 0,
+      overpaymentCents: 5_000,
+    },
+    {
+      name: "next-day partial",
+      amount: "-25.00",
+      paidAt: new Date("2026-09-01T18:00:00.000Z"),
+      balanceCents: 7_500,
+      overpaymentCents: 0,
+    },
+  ];
+
+  for (const scenario of cases) {
+    const projection = projectCreditLedger([
+      sale,
+      {
+        id: 2,
+        ticketId: null,
+        tipo: "ABONO",
+        importe: scenario.amount,
+        createdAt: scenario.paidAt,
+      },
+    ]);
+    assert.equal(projection.balanceCents, scenario.balanceCents, scenario.name);
+    assert.equal(
+      projection.overpaymentCents,
+      scenario.overpaymentCents,
+      scenario.name,
+    );
+    assert.deepEqual(
+      projection.allocations.map(({ sourceId, targetId }) => [
+        sourceId,
+        targetId,
+      ]),
+      [[2, 1]],
+      `${scenario.name}: the single ABONO is the only payment source`,
+    );
+  }
+});
+
 test("validates payment destination against its payment method", () => {
   assert.equal(isValidPaymentDestination("EFECTIVO", "CAJA_FISICA"), true);
   assert.equal(isValidPaymentDestination("TRANSFERENCIA", "CUENTA_FISCAL"), true);
