@@ -23,3 +23,4 @@
 - [Ventas completas frente a consumo FIFO](normal-vs-fifo-locking.md) — bloquear y validar unidades completas antes de permitir consumo parcial concurrente.
 - [Revalidación de candidatos tras prebloqueo](prelock-candidate-revalidation.md) — releer sin candados de fila y bloquear solo candidatos estables para no usar pares obsoletos.
 - [Cursor visual en PDFs automatizados](automated-pdf-cursor.md) — distinguir una hoja del controlador visual del desbordamiento real mediante objetos y texto del PDF.
+- [Deuda de Entradas con costos pendientes](pending-entry-supplier-debt.md) — no estimar una COMPRA; el cargo nace al capturar el costo real y la recepción sigue permitida.
