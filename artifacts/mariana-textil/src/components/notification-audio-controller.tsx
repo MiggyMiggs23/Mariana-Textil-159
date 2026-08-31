@@ -33,6 +33,27 @@ function eventKey(event: { id: string; updatedAt: string }): string {
   return `${event.id}:${event.updatedAt}`;
 }
 
+export function markKnownFeedAsSeen(
+  seenKeys: ReadonlySet<string>,
+  knownFeedKeys: ReadonlySet<string>,
+): Set<string> {
+  return new Set([...seenKeys, ...knownFeedKeys]);
+}
+
+export function unplayedFeedEvents<T extends {
+  id: string;
+  updatedAt: string;
+}>(
+  events: readonly T[],
+  seenKeys: ReadonlySet<string>,
+  queuedKeys: ReadonlySet<string>,
+): T[] {
+  return events.filter((event) => {
+    const key = eventKey(event);
+    return !seenKeys.has(key) && !queuedKeys.has(key);
+  });
+}
+
 function readSeen(storageKey: string): Set<string> {
   try {
     const value = JSON.parse(sessionStorage.getItem(storageKey) ?? "[]");
@@ -53,9 +74,11 @@ function persistSeen(storageKey: string, seen: Set<string>): void {
 export function NotificationAudioController({
   userId,
   role,
+  navigationKey,
 }: {
   userId: number;
   role: Role;
+  navigationKey: string;
 }) {
   const { toast } = useToast();
   const { data } = useGetNotificationFeed({
@@ -73,11 +96,15 @@ export function NotificationAudioController({
     desktop: HTMLElement | null;
   }>({ mobile: null, desktop: null });
   const audioContextRef = useRef<AudioContext | null>(null);
+  const activeSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const playbackGenerationRef = useRef(0);
   const buffersRef = useRef(new Map<NotificationFamily, AudioBuffer>());
   const queueRef = useRef<QueueItem[]>([]);
   const queuedKeysRef = useRef(new Set<string>());
   const seenRef = useRef(new Set<string>());
+  const feedKeysRef = useRef(new Set<string>());
   const baselineSessionRef = useRef<string | null>(null);
+  const previousNavigationRef = useRef(navigationKey);
   const playingRef = useRef(false);
   const leaderRef = useRef(false);
   const activatedRef = useRef(false);
@@ -109,7 +136,10 @@ export function NotificationAudioController({
     return buffer;
   }, []);
 
-  const playFamily = useCallback(async (family: NotificationFamily): Promise<void> => {
+  const playFamily = useCallback(async (
+    family: NotificationFamily,
+    generation: number,
+  ): Promise<boolean> => {
     const context = audioContextRef.current;
     if (!context || context.state !== "running") {
       setAudioState(context?.state === "closed" ? "unavailable" : "inactive");
@@ -117,15 +147,22 @@ export function NotificationAudioController({
     }
     const source = context.createBufferSource();
     source.buffer = await loadSound(family);
+    if (playbackGenerationRef.current !== generation) return false;
     source.connect(context.destination);
+    activeSourceRef.current = source;
     await new Promise<void>((resolve, reject) => {
-      source.addEventListener("ended", () => resolve(), { once: true });
+      source.addEventListener("ended", () => {
+        if (activeSourceRef.current === source) activeSourceRef.current = null;
+        resolve();
+      }, { once: true });
       try {
         source.start();
       } catch (error) {
+        if (activeSourceRef.current === source) activeSourceRef.current = null;
         reject(error);
       }
     });
+    return playbackGenerationRef.current === generation;
   }, [loadSound]);
 
   const drainQueue = useCallback(async () => {
@@ -134,8 +171,10 @@ export function NotificationAudioController({
     try {
       while (queueRef.current.length && leaderRef.current && audioContextRef.current?.state === "running") {
         const item = queueRef.current[0]!;
+        const generation = playbackGenerationRef.current;
         try {
-          await playFamily(item.family);
+          const completed = await playFamily(item.family, generation);
+          if (!completed || playbackGenerationRef.current !== generation) break;
           markPlayed(item.key);
           queueRef.current.shift();
           queuedKeysRef.current.delete(item.key);
@@ -220,21 +259,45 @@ export function NotificationAudioController({
   }, [activated, sessionKey, userId]);
 
   useEffect(() => {
+    if (previousNavigationRef.current === navigationKey) return;
+    previousNavigationRef.current = navigationKey;
+    playbackGenerationRef.current += 1;
+    try {
+      activeSourceRef.current?.stop();
+    } catch {
+      // The source may have ended between the reference check and stop().
+    }
+    activeSourceRef.current = null;
+    queueRef.current = [];
+    queuedKeysRef.current.clear();
+    if (!seenStorageKey) return;
+    seenRef.current = markKnownFeedAsSeen(
+      seenRef.current,
+      feedKeysRef.current,
+    );
+    persistSeen(seenStorageKey, seenRef.current);
+  }, [navigationKey, seenStorageKey]);
+
+  useEffect(() => {
     if (!sessionKey || !seenStorageKey || !data) return;
     if (baselineSessionRef.current !== sessionKey) {
       seenRef.current = readSeen(seenStorageKey);
       for (const event of data.events) seenRef.current.add(eventKey(event));
       persistSeen(seenStorageKey, seenRef.current);
       baselineSessionRef.current = sessionKey;
+      feedKeysRef.current = new Set(data.events.map(eventKey));
       return;
     }
-    if (!isLeader) return;
-    for (const event of data.events) {
+    const candidates = isLeader
+      ? unplayedFeedEvents(data.events, seenRef.current, queuedKeysRef.current)
+      : [];
+    for (const event of candidates) {
       const key = eventKey(event);
-      if (seenRef.current.has(key) || queuedKeysRef.current.has(key)) continue;
       queuedKeysRef.current.add(key);
       queueRef.current.push({ key, family: event.family });
     }
+    feedKeysRef.current = new Set(data.events.map(eventKey));
+    if (!isLeader) return;
     void drainQueue();
   }, [data, drainQueue, isLeader, seenStorageKey, sessionKey]);
 
@@ -275,6 +338,13 @@ export function NotificationAudioController({
   }, [role]);
 
   useEffect(() => () => {
+    playbackGenerationRef.current += 1;
+    try {
+      activeSourceRef.current?.stop();
+    } catch {
+      // The source may already be stopped.
+    }
+    activeSourceRef.current = null;
     queueRef.current = [];
     queuedKeysRef.current.clear();
     void audioContextRef.current?.close();
@@ -309,7 +379,10 @@ export function NotificationAudioController({
           "1",
         );
       }
-      await playFamily(NotificationFamily.AVISO);
+      await playFamily(
+        NotificationFamily.AVISO,
+        playbackGenerationRef.current,
+      );
       toast({ title: "Sonido activado", description: "Las nuevas notificaciones usarán audio local." });
       void drainQueue();
     } catch (error) {

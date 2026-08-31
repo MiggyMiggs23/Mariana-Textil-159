@@ -292,7 +292,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex bg-background">
-      <NotificationAudioController userId={user.id} role={user.rol} />
+      <NotificationAudioController
+        userId={user.id}
+        role={user.rol}
+        navigationKey={location}
+      />
       {/* Sidebar for Desktop */}
       {!isTerminal && (
         <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
