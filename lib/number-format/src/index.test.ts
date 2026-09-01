@@ -4,6 +4,7 @@ import {
   EXCEL_NUMBER_FORMAT,
   ACCOUNT_DESTINATION_ORDER,
   formatNumber,
+  formatQuantityForCsv,
   formatPackageQuantityLabel,
   formatAccountDestination,
   formatUnit,
@@ -13,7 +14,7 @@ import {
 
 test("formats every numeric semantic with es-MX rules", () => {
   assert.equal(formatNumber(1250, { kind: "money" }), "$1,250.00");
-  assert.equal(formatNumber(19845, { kind: "quantity" }), "19,845.000");
+  assert.equal(formatNumber(19845, { kind: "quantity" }), "19,845.00");
   assert.equal(formatNumber(16, { kind: "percentage" }), "16.00%");
   assert.equal(
     formatNumber(0.16, { kind: "percentage", percentageInput: "ratio" }),
@@ -27,7 +28,7 @@ test("formats every numeric semantic with es-MX rules", () => {
 test("defines numeric Excel display formats without changing cell values", () => {
   assert.deepEqual(EXCEL_NUMBER_FORMAT, {
     money: '"$"#,##0.00',
-    quantity: "#,##0.000",
+    quantity: "#,##0.00",
     percentage: "0.00%",
     count: "#,##0",
     identifier: "0",
@@ -36,10 +37,30 @@ test("defines numeric Excel display formats without changing cell values", () =>
 
 test("formats signs, presentation rounding, empty values, and identifiers safely", () => {
   assert.equal(formatNumber(-1250.555, { kind: "money" }), "-$1,250.56");
-  assert.equal(formatNumber(-47.3254, { kind: "quantity" }), "-47.325");
+  assert.equal(formatNumber(-47.3254, { kind: "quantity" }), "-47.33");
   assert.equal(formatNumber("001000027", { kind: "identifier" }), "001000027");
   assert.equal(formatNumber(null, { kind: "money" }), "—");
   assert.equal(formatNumber("not-a-number", { kind: "money" }), "—");
+});
+
+test("rounds quantity totals only after adding stored precision", () => {
+  const storedLines = [1.004, 1.004, 1.004];
+  assert.deepEqual(
+    storedLines.map((value) => formatNumber(value, { kind: "quantity" })),
+    ["1.00", "1.00", "1.00"],
+  );
+  assert.equal(
+    formatNumber(
+      storedLines.reduce((sum, value) => sum + value, 0),
+      { kind: "quantity" },
+    ),
+    "3.01",
+  );
+});
+
+test("uses the shared visible quantity precision in CSV numeric cells", () => {
+  assert.equal(formatQuantityForCsv("19845.325"), "19845.33");
+  assert.equal(formatQuantityForCsv(null), "");
 });
 
 test("keeps Excel cells numeric and rejects unsafe coercions", () => {

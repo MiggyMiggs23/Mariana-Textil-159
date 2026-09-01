@@ -107,7 +107,7 @@ export interface NumberFormatOptions {
 
 export const EXCEL_NUMBER_FORMAT = {
   money: '"$"#,##0.00',
-  quantity: "#,##0.000",
+  quantity: "#,##0.00",
   percentage: "0.00%",
   count: "#,##0",
   identifier: "0",
@@ -122,8 +122,8 @@ const numberFormatters = {
     maximumFractionDigits: 2,
   }),
   quantity: new Intl.NumberFormat("es-MX", {
-    minimumFractionDigits: 3,
-    maximumFractionDigits: 3,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }),
   percentage: new Intl.NumberFormat("es-MX", {
     style: "percent",
@@ -160,6 +160,14 @@ export function formatNumber(
     return numberFormatters.percentage.format(ratio);
   }
   return numberFormatters[options.kind].format(parsed);
+}
+
+/**
+ * Uses the shared visible quantity precision without locale grouping so the
+ * value remains one numeric cell in a comma-delimited CSV.
+ */
+export function formatQuantityForCsv(value: NumericValue): string {
+  return formatNumber(value, { kind: "quantity", empty: "" }).replaceAll(",", "");
 }
 
 /** Converts a database decimal to a real Excel numeric cell without silent invalid values. */

@@ -2263,7 +2263,7 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   assert.equal(analyticsSheet.getCell("H2").value, null);
   assert.equal(typeof analyticsSheet.getCell("B2").value, "string");
   assert.equal(analyticsSheet.getColumn(4).numFmt, '"$"#,##0.00');
-  assert.equal(analyticsSheet.getColumn(7).numFmt, "#,##0.000");
+  assert.equal(analyticsSheet.getColumn(7).numFmt, "#,##0.00");
   assert.equal(analyticsSheet.getColumn(8).numFmt, '"$"#,##0.00');
   await db
     .delete(ticketLineasTable)
@@ -2313,8 +2313,8 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   assert.equal(typeof salidasSheet.getCell("G2").value, "number");
   assert.equal(typeof salidasSheet.getCell("H2").value, "number");
   assert.equal(salidasSheet.getColumn(6).numFmt, "#,##0");
-  assert.equal(salidasSheet.getColumn(7).numFmt, "#,##0.000");
-  assert.equal(salidasSheet.getColumn(8).numFmt, "#,##0.000");
+  assert.equal(salidasSheet.getColumn(7).numFmt, "#,##0.00");
+  assert.equal(salidasSheet.getColumn(8).numFmt, "#,##0.00");
 
   const [provider] = await db
     .insert(proveedoresTable)

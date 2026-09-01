@@ -28,7 +28,7 @@ import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock, Download, Chevron
 import { generateSkuPreview } from "./productos";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { formatNumber, formatUnit } from "@workspace/number-format";
+import { formatNumber, formatQuantityForCsv, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
 
 // Helper for generic API errors
@@ -89,8 +89,8 @@ export default function ProductoDetail() {
       m.serie || "",
       m.tipo,
       m.nombreUbicacion || "",
-      m.cantidad,
-      m.saldoPosterior,
+      formatQuantityForCsv(m.cantidad),
+      formatQuantityForCsv(m.saldoPosterior),
       (m.justificacion || m.documentoId || "").replace(/,/g, " ")
     ]);
     const csvContent = [header.join(","), ...rows.map(r => r.join(","))].join("\n");
