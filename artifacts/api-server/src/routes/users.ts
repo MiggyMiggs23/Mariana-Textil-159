@@ -25,6 +25,7 @@ import {
 import { hasAdminRecoveryAccount, requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { formatUserValidationErrors } from "../lib/user-validation-errors";
 
 const router: IRouter = Router();
 
@@ -117,7 +118,9 @@ router.get("/users", async (_req, res): Promise<void> => {
 router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Promise<void> => {
   const parsed = CreateUserBody.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Los datos del usuario son inválidos." });
+    res.status(400).json({
+      error: formatUserValidationErrors(parsed.error.issues, req.body, "create"),
+    });
     return;
   }
 
@@ -191,8 +194,18 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
 router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, res): Promise<void> => {
   const params = UpdateUserParams.safeParse(req.params);
   const body = UpdateUserBody.safeParse(req.body);
-  if (!params.success || !body.success || Object.keys(body.data).length === 0) {
-    res.status(400).json({ error: "Los datos del usuario son inválidos." });
+  if (!params.success) {
+    res.status(400).json({ error: "Usuario: el identificador no es válido." });
+    return;
+  }
+  if (!body.success) {
+    res.status(400).json({
+      error: formatUserValidationErrors(body.error.issues, req.body, "update"),
+    });
+    return;
+  }
+  if (Object.keys(body.data).length === 0) {
+    res.status(400).json({ error: "Debes indicar al menos un cambio." });
     return;
   }
 

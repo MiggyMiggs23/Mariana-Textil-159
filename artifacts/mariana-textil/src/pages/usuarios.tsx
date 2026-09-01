@@ -26,6 +26,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Modules, hasPermission } from "@/lib/permisos";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
+import {
+  CREATE_USER_FIELD_LIMITS,
+  UPDATE_USER_FIELD_LIMITS,
+  type UserFormErrors,
+  type UserFormField,
+  validateUserForm,
+} from "@/lib/user-form-validation";
 
 export default function Usuarios() {
   const { data: currentUser } = useGetCurrentUser();
@@ -42,6 +49,7 @@ export default function Usuarios() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
   const [userConfirmationOpen, setUserConfirmationOpen] = useState(false);
+  const [formErrors, setFormErrors] = useState<UserFormErrors>({});
   const [estado, setEstado] = useState<"ACTIVE" | "INACTIVE" | "ALL">("ACTIVE");
 
   // Form states
@@ -56,6 +64,7 @@ export default function Usuarios() {
   });
 
   const resetForm = () => {
+    setFormErrors({});
     setFormData({
       nombre: "",
       usuario: "",
@@ -74,6 +83,7 @@ export default function Usuarios() {
   };
 
   const openEdit = (user: User) => {
+    setFormErrors({});
     setFormData({
       nombre: user.nombre,
       usuario: user.usuario,
@@ -88,6 +98,7 @@ export default function Usuarios() {
   };
 
   const closeDialogs = () => {
+    setFormErrors({});
     setIsCreateOpen(false);
     setEditingUser(null);
     setPasswordVisibilityResetKey((current) => current + 1);
@@ -95,8 +106,16 @@ export default function Usuarios() {
 
   const executeSave = () => {
     setPasswordVisibilityResetKey((current) => current + 1);
-    if (!formData.nombre.trim() || !formData.usuario.trim()) {
-      toast.error("Datos incompletos", { description: "Nombre y usuario son obligatorios" });
+    const errors = validateUserForm(
+      formData,
+      isCreateOpen ? "create" : "update",
+    );
+    setFormErrors(errors);
+    const messages = Object.values(errors);
+    if (messages.length > 0) {
+      toast.error("Revisa los campos marcados", {
+        description: messages.join(" "),
+      });
       return;
     }
 
@@ -109,10 +128,6 @@ export default function Usuarios() {
     };
 
     if (isCreateOpen) {
-      if (!formData.password) {
-        toast.error("Datos incompletos", { description: "La contraseña es obligatoria para nuevos usuarios" });
-        return;
-      }
       payload.password = formData.password;
 
       createUser.mutate(
@@ -160,6 +175,17 @@ export default function Usuarios() {
     }
     executeSave();
   };
+
+  const updateField = <Field extends UserFormField>(
+    field: Field,
+    value: string,
+  ) => {
+    setFormData((current) => ({ ...current, [field]: value }));
+    setFormErrors((current) => ({ ...current, [field]: undefined }));
+  };
+  const fieldLimits = isCreateOpen
+    ? CREATE_USER_FIELD_LIMITS
+    : UPDATE_USER_FIELD_LIMITS;
 
   if (isLoading) {
     return (
@@ -277,20 +303,48 @@ export default function Usuarios() {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Nombre completo</Label>
+                <Label htmlFor="user-name">
+                  Nombre completo{" "}
+                  <span className="font-normal text-muted-foreground">
+                    (mínimo {fieldLimits.nombre.min}, máximo{" "}
+                    {fieldLimits.nombre.max} caracteres)
+                  </span>
+                </Label>
                 <Input
+                  id="user-name"
                   value={formData.nombre}
-                  onChange={(e) => setFormData({...formData, nombre: e.target.value})}
+                  onChange={(e) => updateField("nombre", e.target.value)}
                   placeholder="Juan Pérez"
+                  aria-invalid={Boolean(formErrors.nombre)}
+                  aria-describedby={formErrors.nombre ? "user-name-error" : undefined}
                 />
+                {formErrors.nombre && (
+                  <p id="user-name-error" role="alert" className="text-sm text-destructive">
+                    {formErrors.nombre}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label>Nombre de usuario</Label>
+                <Label htmlFor="user-username">
+                  Nombre de usuario{" "}
+                  <span className="font-normal text-muted-foreground">
+                    (mínimo {fieldLimits.usuario.min}, máximo{" "}
+                    {fieldLimits.usuario.max} caracteres)
+                  </span>
+                </Label>
                 <Input
+                  id="user-username"
                   value={formData.usuario}
-                  onChange={(e) => setFormData({...formData, usuario: e.target.value})}
+                  onChange={(e) => updateField("usuario", e.target.value)}
                   placeholder="juan.p"
+                  aria-invalid={Boolean(formErrors.usuario)}
+                  aria-describedby={formErrors.usuario ? "user-username-error" : undefined}
                 />
+                {formErrors.usuario && (
+                  <p id="user-username-error" role="alert" className="text-sm text-destructive">
+                    {formErrors.usuario}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -370,16 +424,34 @@ export default function Usuarios() {
             </div>
 
             <div className="space-y-2 mt-2">
-              <Label htmlFor="user-password">Contraseña {editingUser && <span className="text-muted-foreground font-normal">(Dejar en blanco para no cambiar)</span>}</Label>
+              <Label htmlFor="user-password">
+                Contraseña{" "}
+                <span className="text-muted-foreground font-normal">
+                  (mínimo {fieldLimits.password.min}, máximo{" "}
+                  {fieldLimits.password.max} caracteres
+                  {editingUser ? "; dejar en blanco para no cambiar" : ""})
+                </span>
+              </Label>
               <PasswordInput
                 id="user-password"
                 value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
-                placeholder={editingUser ? "••••••••" : "Mínimo 10 caracteres"}
+                onChange={(e) => updateField("password", e.target.value)}
+                placeholder={
+                  editingUser
+                    ? "Dejar en blanco para no cambiar"
+                    : `Mínimo ${fieldLimits.password.min} caracteres`
+                }
                 autoComplete="new-password"
                 visibilityResetKey={passwordVisibilityResetKey}
                 toggleTestId="toggle-user-password"
+                aria-invalid={Boolean(formErrors.password)}
+                aria-describedby={formErrors.password ? "user-password-error" : undefined}
               />
+              {formErrors.password && (
+                <p id="user-password-error" role="alert" className="text-sm text-destructive">
+                  {formErrors.password}
+                </p>
+              )}
             </div>
 
             {editingUser && (

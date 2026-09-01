@@ -52,6 +52,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@workspace/api-client-react": "workspace:*",
+    "@workspace/api-zod": "workspace:*",
     "@workspace/metered-pricing": "workspace:*",
     "@workspace/number-format": "workspace:*",
     "@workspace/scanned-code": "workspace:*",

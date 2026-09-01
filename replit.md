@@ -341,6 +341,7 @@ La pantalla de acceso y los servicios quedaron disponibles después de la limpie
 
 ## Gotchas
 
+- **Mensajes de validación:** un formulario muestra los requisitos de sus campos antes de que el usuario escriba, y los toma de las constantes del contrato para que no se desincronicen. Un error de validación nombra el campo y la regla incumplida; "los datos son inválidos" no le sirve a nadie que esté dando de alta gente en el piso. La validación del cliente es comodidad y nunca sustituye a la del servidor.
 - Ejecuta `codegen` después de cada cambio en OpenAPI.
 - Ejecuta `push` y luego `NODE_ENV=development pnpm --filter @workspace/db run seed` al preparar la base de desarrollo.
 - Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
