@@ -71,3 +71,9 @@ test("la lista conserva enlaces permanentes y visibles al documento", () => {
   assert.match(entryList, /text-blue-700 underline/);
   assert.match(entryList, /imprimir o guardar nuevamente/);
 });
+
+test("el documento muestra el sitio y nunca expone el id interno del proveedor", () => {
+  assert.match(documentPage, />Sitio</);
+  assert.match(documentPage, /entrada\.nombreUbicacion \|\| "N\/A"/);
+  assert.doesNotMatch(documentPage, /Número de Prov|Numero de Prov|entrada\.proveedorId/);
+});

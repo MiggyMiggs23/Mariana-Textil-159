@@ -1225,7 +1225,10 @@ function SalidasDineroPanel({ sesionId }: { sesionId: number }) {
         <div><Label htmlFor="salida-proveedor">Proveedor (opcional)</Label><Select value={proveedorId} onValueChange={setProveedorId}><SelectTrigger id="salida-proveedor"><SelectValue placeholder="Sin proveedor" /></SelectTrigger><SelectContent>{proveedores.map((p) => <SelectItem key={p.id} value={String(p.id)}>{p.nombre}</SelectItem>)}</SelectContent></Select></div>
         <Button type="submit" disabled={crear.isPending} className="md:col-span-2">{crear.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Registrar salida</Button>
       </form>
-      {isLoading ? <p className="text-sm text-muted-foreground">Cargando salidas…</p> : isError ? <p role="alert" className="text-sm text-destructive">{getApiErrorMessage(error, "No se pudieron cargar las salidas.")}</p> : <div className="space-y-2">{data?.salidas.length ? data.salidas.map((salida) => <div key={salida.id} className="flex flex-wrap justify-between gap-2 border-t pt-2 text-sm"><span>{salida.motivo}{salida.proveedorId ? ` · Proveedor #${salida.proveedorId}` : ""}</span><span className="font-medium">{formatAccountDestination(salida.cuentaOrigen)} · {formatNumber(salida.monto, { kind: "money" })}</span></div>) : <p className="text-sm text-muted-foreground">Sin salidas registradas.</p>}</div>}
+      {isLoading ? <p className="text-sm text-muted-foreground">Cargando salidas…</p> : isError ? <p role="alert" className="text-sm text-destructive">{getApiErrorMessage(error, "No se pudieron cargar las salidas.")}</p> : <div className="space-y-2">{data?.salidas.length ? data.salidas.map((salida) => {
+        const nombreProveedor = proveedores.find((proveedor) => proveedor.id === salida.proveedorId)?.nombre;
+        return <div key={salida.id} className="flex flex-wrap justify-between gap-2 border-t pt-2 text-sm"><span>{salida.motivo}{nombreProveedor ? ` · ${nombreProveedor}` : ""}</span><span className="font-medium">{formatAccountDestination(salida.cuentaOrigen)} · {formatNumber(salida.monto, { kind: "money" })}</span></div>;
+      }) : <p className="text-sm text-muted-foreground">Sin salidas registradas.</p>}</div>}
     </CardContent>
   </Card>;
 }

@@ -3,7 +3,7 @@ import { useGetEntrada, getGetEntradaQueryKey } from "@workspace/api-client-reac
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
 import { DOCUMENT_QR_SIZE } from "@/components/document-qr-code";
 import { format } from "date-fns";
-import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, FileDigit } from "lucide-react";
+import { Loader2, Printer, User, Calendar, Truck, Clock, Hash, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { absoluteAppUrl, printWhenReady } from "@/lib/print";
@@ -160,9 +160,9 @@ export default function EntradaDocumento() {
                   <span className="font-medium text-sm text-black">{entrada.nombreProveedor || "N/A"}</span>
                 </div>
                 <div className="flex items-center border-b border-gray-300 pb-1">
-                  <FileDigit className="w-4 h-4 text-gray-400 mr-2" />
-                  <span className="font-bold w-32 text-xs uppercase text-gray-500 tracking-wider">Número de Prov.</span>
-                  <span className="font-medium text-sm text-black">{entrada.proveedorId || "N/A"}</span>
+                  <MapPin className="w-4 h-4 text-gray-400 mr-2" />
+                  <span className="font-bold w-32 text-xs uppercase text-gray-500 tracking-wider">Sitio</span>
+                  <span className="font-medium text-sm text-black">{entrada.nombreUbicacion || "N/A"}</span>
                 </div>
               </div>
             </div>

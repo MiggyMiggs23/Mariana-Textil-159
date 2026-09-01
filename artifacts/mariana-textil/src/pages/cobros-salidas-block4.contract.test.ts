@@ -12,4 +12,6 @@ test("Bloque 4 only renders cash outs in Mariana and warns old sessions", async 
   assert.match(source, /min="0\.01"/);
   assert.match(source, /!fondo\.trim\(\)/);
   assert.match(source, /required/);
+  assert.match(source, /const nombreProveedor = proveedores\.find/);
+  assert.doesNotMatch(source, /Proveedor #\$\{salida\.proveedorId\}/);
 });
