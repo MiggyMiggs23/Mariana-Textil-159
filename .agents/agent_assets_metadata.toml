@@ -294,3 +294,17 @@ mtime_ms = 1788324033997
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/da8dcff5-d2f6-41a3-a921-20c61cbcf147/c7038162-b69f-49b0-8d3e-17e2b727db68"
 storage_version_token = "1788324132945899"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "3iKFU9bVU7TbWux40oot4"
+uri = "file://reports/2026-09-02-nota-encabezado-pagare-plazo-iva.md"
+type = "text"
+title = "Reporte de verificación de la Nota"
+description = "Resultados de implementación, matriz de cuatro variantes, pruebas aprobadas y bloqueo reproducible de exportación PDF/impresión física."
+logical_id = "7f29f907-d958-45a7-9248-4978927287c5"
+content_hash = "sha256:0793b54e575c3c406cd85b3265fa33b213f8a231311282b39b31cd410943fcc1"
+size = 6507
+mtime_ms = 1788387523786
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7f29f907-d958-45a7-9248-4978927287c5/bdc17f15-2ca8-4fb5-aee0-2200a04ec4c1"
+storage_version_token = "1788387598883054"
+content_type = "text/markdown"
