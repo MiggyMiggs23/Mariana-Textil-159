@@ -79,6 +79,10 @@ export const rollosTable = pgTable(
     index("rollos_piso_idx").on(table.pisoId),
     index("rollos_estado_idx").on(table.estado),
     index("rollos_serie_idx").on(table.serie),
+    index("rollos_recepcion_producto_idx").on(
+      table.recepcionId,
+      table.productoId,
+    ),
   ],
 );
 

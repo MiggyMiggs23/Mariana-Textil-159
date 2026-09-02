@@ -55,6 +55,7 @@ export const entradasTable = pgTable(
     index("entradas_ubicacion_idx").on(table.ubicacionId),
     index("entradas_proveedor_idx").on(table.proveedorId),
     index("entradas_fecha_idx").on(table.fecha),
+    index("entradas_fecha_id_idx").on(table.fecha, table.id),
     index("entradas_uuid_cliente_idx").on(table.uuidCliente),
   ],
 );
