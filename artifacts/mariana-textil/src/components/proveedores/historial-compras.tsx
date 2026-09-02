@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { 
   useListHistorialComprasProveedores, 
   useListProveedores, 
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CombinedFilterBar, MultiSelectConfig } from "@/components/shared/combined-filter-bar";
+import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "-";
@@ -31,12 +32,13 @@ function formatDate(dateStr: string | null): string {
 type SortColumn = "fecha" | "producto" | "proveedor" | "color" | "sitio" | "cantidad";
 
 export function HistorialCompras() {
-  const [proveedorIds, setProveedorIds] = useState<number[]>([]);
-  const [ubicacionIds, setUbicacionIds] = useState<number[]>([]);
-  const [telas, setTelas] = useState<string[]>([]);
-  const [colores, setColores] = useState<string[]>([]);
-  const [desde, setDesde] = useState<string>("");
-  const [hasta, setHasta] = useState<string>("");
+  const initialCriteria = useMemo(() => readCombinedFilterCriteria(new URLSearchParams(window.location.search)), []);
+  const [proveedorIds, setProveedorIds] = useState<number[]>(initialCriteria.proveedorIds);
+  const [ubicacionIds, setUbicacionIds] = useState<number[]>(initialCriteria.ubicacionIds);
+  const [telas, setTelas] = useState<string[]>(initialCriteria.telas);
+  const [colores, setColores] = useState<string[]>(initialCriteria.colores);
+  const [desde, setDesde] = useState<string>(initialCriteria.desde ?? "");
+  const [hasta, setHasta] = useState<string>(initialCriteria.hasta ?? "");
 
   const [sort, setSort] = useState<SortColumn>("fecha");
   const [direction, setDirection] = useState<"asc" | "desc">("desc");
@@ -85,6 +87,33 @@ export function HistorialCompras() {
   const coloresOptions = useMemo(() => {
     return (historialData?.colores ?? []).map(c => ({ id: c, nombre: c }));
   }, [historialData?.colores]);
+
+  useEffect(() => {
+    if (!historialData || !proveedoresData?.items) return;
+    const sanitized = sanitizeCombinedFilterCriteria(
+      { proveedorIds, ubicacionIds, telas, colores, desde: desde || undefined, hasta: hasta || undefined },
+      {
+        proveedorIds: proveedoresData.items.map((item) => item.id),
+        ubicacionIds: historialData.sitios.map((item) => item.id),
+        telas: historialData.telas,
+        colores: historialData.colores,
+      },
+    );
+    setProveedorIds(sanitized.proveedorIds);
+    setUbicacionIds(sanitized.ubicacionIds);
+    setTelas(sanitized.telas);
+    setColores(sanitized.colores);
+  }, [historialData?.sitios, historialData?.telas, historialData?.colores, proveedoresData?.items]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    writeCombinedFilterCriteria(params, {
+      proveedorIds, ubicacionIds, telas, colores,
+      desde: desde || undefined,
+      hasta: hasta || undefined,
+    });
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}${params.size ? `?${params}` : ""}`);
+  }, [proveedorIds, ubicacionIds, telas, colores, desde, hasta]);
 
   const handleSort = (column: SortColumn) => {
     if (column === "fecha" && !fechaClicked) {

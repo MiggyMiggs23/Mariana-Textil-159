@@ -14,6 +14,7 @@ import { ReportCharts } from "@/components/reportes/report-charts";
 import { ReportTable } from "@/components/reportes/report-table";
 import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
 
 const TABS = [
   { id: "ventas", label: "Ventas" },
@@ -75,25 +76,29 @@ export default function Reportes() {
 
     const params = new URLSearchParams(searchString);
     const parseArray = (key: string) => params.getAll(key).flatMap(v => v.split(',')).filter(Boolean);
-    const parseNumArray = (key: string) => parseArray(key).map(Number).filter(n => !isNaN(n));
+    const parseNumArray = (key: string) => parseArray(key).map(Number).filter(n => Number.isInteger(n) && n > 0);
+    const combined = readCombinedFilterCriteria(params);
 
+    const requestedPeriod = params.get("periodo");
     const parsed = {
-      periodo: params.get("periodo") || DEFAULT_FILTERS.periodo,
+      periodo: ["diario", "semanal", "mensual", "trimestral", "semestral", "anual", "personalizado"].includes(requestedPeriod ?? "")
+        ? requestedPeriod!
+        : DEFAULT_FILTERS.periodo,
       modalidad: (["ROLLOS", "METRAJE"].includes(params.get("modalidad") || "")
         ? params.get("modalidad")
         : "TODO") as FilterState["modalidad"],
-      desde: params.get("desde") || undefined,
-      hasta: params.get("hasta") || undefined,
-      ubicacionIds: parseNumArray("ubicacionIds"),
+      desde: combined.desde,
+      hasta: combined.hasta,
+      ubicacionIds: combined.ubicacionIds,
       productoIds: parseNumArray("productoIds"),
-      telas: parseArray("telas"),
-      colores: parseArray("colores"),
+      telas: combined.telas,
+      colores: combined.colores,
       unidades: parseArray("unidades"),
       usuarioIds: parseNumArray("usuarioIds"),
       clienteIds: parseNumArray("clienteIds"),
-      proveedorIds: parseNumArray("proveedorIds"),
+      proveedorIds: combined.proveedorIds,
       formasPago: parseArray("formasPago"),
-      facturado: params.has("facturado") ? params.get("facturado") === "true" : undefined,
+      facturado: params.get("facturado") === "true" ? true : params.get("facturado") === "false" ? false : undefined,
     };
     return parsed;
   });
@@ -113,17 +118,11 @@ export default function Reportes() {
 
     if (newFilters.periodo !== "mensual") params.set("periodo", newFilters.periodo);
     if (newFilters.modalidad !== "TODO") params.set("modalidad", newFilters.modalidad);
-    if (newFilters.desde) params.set("desde", newFilters.desde);
-    if (newFilters.hasta) params.set("hasta", newFilters.hasta);
-
-    if (newFilters.ubicacionIds.length) params.set("ubicacionIds", newFilters.ubicacionIds.join(","));
+    writeCombinedFilterCriteria(params, newFilters);
     if (newFilters.productoIds.length) params.set("productoIds", newFilters.productoIds.join(","));
-    if (newFilters.telas.length) params.set("telas", newFilters.telas.join(","));
-    if (newFilters.colores.length) params.set("colores", newFilters.colores.join(","));
     if (newFilters.unidades.length) params.set("unidades", newFilters.unidades.join(","));
     if (newFilters.usuarioIds.length) params.set("usuarioIds", newFilters.usuarioIds.join(","));
     if (newFilters.clienteIds.length) params.set("clienteIds", newFilters.clienteIds.join(","));
-    if (newFilters.proveedorIds.length) params.set("proveedorIds", newFilters.proveedorIds.join(","));
     if (newFilters.formasPago.length) params.set("formasPago", newFilters.formasPago.join(","));
     if (newFilters.facturado !== undefined) params.set("facturado", String(newFilters.facturado));
 
@@ -136,6 +135,28 @@ export default function Reportes() {
 
   // Catalogos
   const { data: catalogos } = useGetReportesCatalogos();
+
+  useEffect(() => {
+    if (!catalogos) return;
+    const sanitized = sanitizeCombinedFilterCriteria(filters, {
+      proveedorIds: catalogos.suppliers.map((item) => item.id),
+      ubicacionIds: catalogos.sites.map((item) => item.id),
+      telas: catalogos.fabrics,
+      colores: catalogos.colors,
+    });
+    const next = {
+      ...filters,
+      ...sanitized,
+      productoIds: filters.productoIds.filter((id) => catalogos.products.some((item) => item.id === id)),
+      unidades: filters.unidades.filter((value) => catalogos.units.includes(value)),
+      usuarioIds: filters.usuarioIds.filter((id) => catalogos.users.some((item) => item.id === id)),
+      clienteIds: filters.clienteIds.filter((id) => catalogos.clients.some((item) => item.id === id)),
+      formasPago: filters.formasPago.filter((value) => catalogos.paymentMethods.includes(value)),
+    };
+    if (JSON.stringify(next) !== JSON.stringify(filters)) {
+      handleFilterChange(next);
+    }
+  }, [catalogos]);
 
   // Clean params for the API call (removing empty arrays/undefined)
   const apiParams = Object.fromEntries(
