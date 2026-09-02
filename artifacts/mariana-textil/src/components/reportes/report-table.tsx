@@ -6,8 +6,9 @@ import { ArrowUpDown } from "lucide-react";
 import { formatReportValue } from "./report-format";
 import { cn } from "@/lib/utils";
 import { formatUnit } from "@workspace/number-format";
+import { getReportBlockExplanation } from "./report-explanations";
 
-export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable, hasEconomicAccess: boolean }) {
+export function ReportTable({ block, hasEconomicAccess, section }: { block: ReporteTable, hasEconomicAccess: boolean; section?: string }) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -228,6 +229,9 @@ export function ReportTable({ block, hasEconomicAccess }: { block: ReporteTable,
             )}
           </Table>
         </div>
+        <p className="px-5 pb-4 pt-3 text-sm text-muted-foreground" data-testid={`report-explanation-${block.id}`}>
+          {getReportBlockExplanation(block.id, section)}
+        </p>
       </CardContent>
     </Card>
   );

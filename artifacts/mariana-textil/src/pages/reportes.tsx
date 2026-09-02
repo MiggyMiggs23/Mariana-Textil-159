@@ -269,7 +269,7 @@ export default function Reportes() {
                     hasEconomicAccess={reportData.hasEconomicAccess}
                   />
 
-                  <ReportCharts charts={reportData.charts || []} />
+                  <ReportCharts charts={reportData.charts || []} section={activeTab} />
 
                   <div className="grid grid-cols-1 gap-6">
                     {(reportData.tables || []).map((table: any) => (
@@ -277,6 +277,7 @@ export default function Reportes() {
                         key={table.id}
                         block={table}
                         hasEconomicAccess={reportData.hasEconomicAccess}
+                        section={activeTab}
                       />
                     ))}
                   </div>

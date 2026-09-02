@@ -748,7 +748,7 @@ export default function ProveedorDetail() {
                         { periodo: `Alto · ${estadisticas.estacionalidad.mesMayor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMayor?.total ?? 0) },
                         { periodo: `Bajo · ${estadisticas.estacionalidad.mesMenor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMenor?.total ?? 0) },
                       ]}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5}/><XAxis dataKey="periodo" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}/><Bar dataKey="total" fill={getCategoricalChartColor(0)} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
-                    </CardContent></Card>
+                    </CardContent><p className="px-6 pb-4 text-sm text-muted-foreground">Compara el monto monetario comprado al proveedor en su mes con mayor y menor compra dentro del rango seleccionado.</p></Card>
                     <Card><CardHeader><CardTitle className="text-lg">Antigüedad de deuda</CardTitle></CardHeader><CardContent className="h-48">
                       <ResponsiveContainer width="100%" height="100%"><BarChart data={[
                         { rango:"0–30", saldo:Number(estadisticas.antiguedadDeuda.hasta30) },
@@ -756,7 +756,7 @@ export default function ProveedorDetail() {
                         { rango:"61–90", saldo:Number(estadisticas.antiguedadDeuda.de61a90) },
                         { rango:"90+", saldo:Number(estadisticas.antiguedadDeuda.mas90) },
                       ]}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5}/><XAxis dataKey="rango" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}/><Bar dataKey="saldo" fill={REPORT_NEGATIVE_COLOR} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
-                    </CardContent></Card>
+                    </CardContent><p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa el saldo monetario pendiente del proveedor por días de antigüedad al corte actual.</p></Card>
                   </div>
 
                  <Card>
@@ -779,7 +779,8 @@ export default function ProveedorDetail() {
                          <div className="h-full flex items-center justify-center text-muted-foreground">No hay datos en el periodo</div>
                        )}
                      </div>
-                   </CardContent>
+                    </CardContent>
+                    <p className="px-6 pb-4 text-sm text-muted-foreground">Suma el costo monetario de compras de este proveedor por mes dentro del rango seleccionado.</p>
                  </Card>
 
                  <Card>
@@ -819,7 +820,7 @@ export default function ProveedorDetail() {
                                 <TableCell colSpan={5}>
                                  <div className="grid md:grid-cols-2 gap-4 py-2 text-xs">
                                    <div><b>Historial real por compra</b>
-                                      {prod.historialCostos.length ? <div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--report-stripe))"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${formatUnit(prod.unidad)}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke={getCategoricalChartColor(0)} strokeWidth={2} dot/></LineChart></ResponsiveContainer></div> : <span className="ml-2">Sin compras</span>}
+                                       {prod.historialCostos.length ? <><div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--report-stripe))"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${formatUnit(prod.unidad)}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke={getCategoricalChartColor(0)} strokeWidth={2} dot/></LineChart></ResponsiveContainer></div><p className="mt-2 text-muted-foreground">Traza el costo unitario monetario por {formatUnit(prod.unidad)} de cada compra histórica de este producto.</p></> : <span className="ml-2">Sin compras</span>}
                                    </div>
                                     <div><b>Comparación:</b> {prod.comparacionProveedores.map(c => `${c.proveedor}: ${formatNumber(c.costoUnitario, { kind: "money" })}`).join(" · ") || "Sin comparación"}<br/>Más barato: <b>{prod.proveedorMasBarato ?? "—"}</b> · Ahorro potencial: <b>{formatNumber(prod.ahorroPotencial, { kind: "money" })}</b></div>
                                  </div>
@@ -830,7 +831,8 @@ export default function ProveedorDetail() {
                          )}
                        </TableBody>
                      </Table>
-                   </CardContent>
+                    </CardContent>
+                    <p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa rollos, cantidad por unidad y costo monetario de compras de este proveedor dentro del rango seleccionado.</p>
                  </Card>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -861,7 +863,8 @@ export default function ProveedorDetail() {
                            ))}
                          </TableBody>
                        </Table>
-                     </CardContent>
+                      </CardContent>
+                      <p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa los rollos y el costo monetario comprado a este proveedor por tela dentro del rango seleccionado.</p>
                    </Card>
 
                    <Card>
@@ -890,7 +893,8 @@ export default function ProveedorDetail() {
                            ))}
                          </TableBody>
                        </Table>
-                     </CardContent>
+                      </CardContent>
+                      <p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa los rollos y el costo monetario comprado a este proveedor por color dentro del rango seleccionado.</p>
                    </Card>
                  </div>
                </>

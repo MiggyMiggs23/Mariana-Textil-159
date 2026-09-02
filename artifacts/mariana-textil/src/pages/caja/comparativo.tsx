@@ -201,6 +201,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
+                  <p className="mt-3 text-sm text-muted-foreground" data-testid="comparison-sales-chart-explanation">Suma ventas sin IVA por fecha y tienda dentro del periodo seleccionado, con líneas sin costo aún incluidas.</p>
                 </CardContent>
               </Card>
 
@@ -234,6 +235,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
+                  <p className="mt-3 text-sm text-muted-foreground" data-testid="comparison-share-chart-explanation">Distribuye las ventas sin IVA del periodo seleccionado entre todas las tiendas visibles, incluidas líneas sin costo.</p>
                 </CardContent>
               </Card>
             </div>
@@ -262,6 +264,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
+                  <p className="mt-3 text-sm text-muted-foreground" data-testid="comparison-payment-chart-explanation">Suma cobros monetarios por medio de pago y tienda dentro del periodo seleccionado.</p>
               </CardContent>
             </Card>
 
@@ -383,6 +386,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                     )}
                   </Table>
                 </div>
+                <p className="px-6 pb-4 pt-3 text-sm text-muted-foreground" data-testid="comparison-table-explanation">Compara por tienda ventas sin IVA, utilidad con costo congelado, tickets, cantidades por unidad y cobros del periodo seleccionado; la utilidad queda pendiente si falta costo.</p>
               </CardContent>
             </Card>
           </div>

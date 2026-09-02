@@ -126,6 +126,7 @@ export default function Dashboard() {
                 </TableBody>
               </Table>
             )}
+            <p className="px-6 pb-4 text-sm text-muted-foreground" data-testid="dashboard-inventory-explanation">Muestra la existencia física actual en metros, kilos, bolsas y rollos por cada sitio visible, sin periodo ni IVA.</p>
           </CardContent>
         </Card>
       </div>

@@ -6,8 +6,9 @@ import {
   getCategoricalChartColor,
   getReportSeriesColor,
 } from "@/lib/report-chart-colors";
+import { getReportBlockExplanation } from "./report-explanations";
 
-export function ReportCharts({ charts }: { charts: ReporteChart[] }) {
+export function ReportCharts({ charts, section }: { charts: ReporteChart[]; section?: string }) {
   if (!charts || charts.length === 0) return null;
 
   return (
@@ -133,6 +134,9 @@ export function ReportCharts({ charts }: { charts: ReporteChart[] }) {
                   </ResponsiveContainer>
                 </div>
               )}
+              <p className="mt-3 text-sm text-muted-foreground" data-testid={`report-explanation-${chart.id}`}>
+                {getReportBlockExplanation(chart.id, section)}
+              </p>
             </CardContent>
           </Card>
         );
@@ -152,7 +156,7 @@ function ChartRenderer({
 }) {
   const xAxisKey = (chart as any).categoryKey || (chart as any).xAxisKey || "name";
   const keys = (chart.series ? chart.series.map((s: any) => s.key) : Object.keys(chart.rows[0] || {})).filter(k => k !== xAxisKey);
-  const valueKindStr = String("count");
+  const valueKindStr = String(chart.series?.[0]?.kind ?? "count");
   const valueKind = valueKindStr as NumberFormatKind;
 
   const axisStyle = {
