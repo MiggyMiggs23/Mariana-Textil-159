@@ -7,6 +7,21 @@ const MEXICO_CITY_TIME_ZONE = "America/Mexico_City";
  * Keep this named value here so the business can tune it without changing SQL.
  */
 export const SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS = 24;
+/**
+ * A pending customer charge becomes actionable three calendar days before it
+ * is due. This gives ADMIN time to follow up without turning every distant
+ * credit sale into a permanent alert.
+ */
+export const CREDIT_RISK_ALERT_LEAD_DAYS = 3;
+
+export function isCreditRiskCharge(
+  charge: { pendienteCents: number; dueAt: string | null },
+  thresholdDate: string,
+): boolean {
+  return charge.pendienteCents > 0 &&
+    charge.dueAt != null &&
+    charge.dueAt <= thresholdDate;
+}
 
 /** Strict boundary rule shared by focused tests; exactly 24 hours is not overdue. */
 export function isSalidaEnTransitoOverdue(enviadaAt: Date, now = new Date()): boolean {
@@ -78,10 +93,10 @@ export async function getAdminAlertas() {
   const byMovement = new Map(creditResult.rows.map((row) => [Number(row.movimientoId), row]));
   const today = new Date().toLocaleDateString("en-CA", { timeZone: MEXICO_CITY_TIME_ZONE });
   const creditThreshold = new Date(
-    Date.parse(`${today}T00:00:00Z`) + 3 * 86_400_000,
+    Date.parse(`${today}T00:00:00Z`) + CREDIT_RISK_ALERT_LEAD_DAYS * 86_400_000,
   ).toISOString().slice(0, 10);
   const creditos = [...projections].flatMap(([clienteId, projection]) => projection.charges
-    .filter((charge) => charge.dueAt != null && charge.dueAt <= creditThreshold)
+    .filter((charge) => isCreditRiskCharge(charge, creditThreshold))
     .map((charge) => {
       const row = byMovement.get(charge.movimientoId);
       if (!row || charge.dueAt == null) {
