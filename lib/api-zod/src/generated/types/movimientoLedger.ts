@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { MovimientoLedgerDesgloseIva } from './movimientoLedgerDesgloseIva';
 import type { TipoPagoProveedor } from './tipoPagoProveedor';
 
 export interface MovimientoLedger {
@@ -19,6 +20,8 @@ export interface MovimientoLedger {
   folio?: number | null;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  desgloseIva?: MovimientoLedgerDesgloseIva;
   /** @nullable */
   referencia?: string | null;
   /** @nullable */

@@ -39,7 +39,7 @@ export function ClientePagoDialog({
 }: ClientePagoDialogProps) {
   const [step, setStep] = useState<Step>("form");
   const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"EFECTIVO" | "TRANSFERENCIA">("EFECTIVO");
+  const [paymentMethod, setPaymentMethod] = useState<"EFECTIVO" | "TRANSFERENCIA" | "FACTURADO">("EFECTIVO");
   const [destinationAccount, setDestinationAccount] = useState<"CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL" | "">("CAJA_FISICA");
   const [reference, setReference] = useState("");
   const [paymentNotes, setPaymentNotes] = useState("");
@@ -81,6 +81,8 @@ export function ClientePagoDialog({
   useEffect(() => {
     if (paymentMethod === "EFECTIVO") {
       setDestinationAccount("CAJA_FISICA");
+    } else if (paymentMethod === "FACTURADO") {
+      setDestinationAccount("CUENTA_FISCAL");
     } else if (paymentMethod === "TRANSFERENCIA") {
       if (destinationAccount === "CAJA_FISICA") {
         setDestinationAccount(""); // Force user to choose
@@ -228,7 +230,7 @@ export function ClientePagoDialog({
                 <Select
                   value={paymentMethod}
                   onValueChange={(value) => {
-                    if (value === "EFECTIVO" || value === "TRANSFERENCIA") {
+                    if (value === "EFECTIVO" || value === "TRANSFERENCIA" || value === "FACTURADO") {
                       setPaymentMethod(value);
                       handleInputChange();
                     }
@@ -240,15 +242,16 @@ export function ClientePagoDialog({
                   <SelectContent>
                     <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>
                     <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
+                    <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino</Label>
-                {paymentMethod === "EFECTIVO" ? (
+                {paymentMethod === "EFECTIVO" || paymentMethod === "FACTURADO" ? (
                   <div className="h-12 flex items-center px-3 bg-muted/50 border-2 rounded-md text-muted-foreground font-medium">
-                    {formatAccountDestination("CAJA_FISICA")}
+                    {formatAccountDestination(paymentMethod === "EFECTIVO" ? "CAJA_FISICA" : "CUENTA_FISCAL")}
                   </div>
                 ) : (
                   <Select

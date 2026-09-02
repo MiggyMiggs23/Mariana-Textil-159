@@ -15,4 +15,8 @@ export type ClientePagoDetalleFormaPago = typeof ClientePagoDetalleFormaPago[key
 export const ClientePagoDetalleFormaPago = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
+  CHEQUE: 'CHEQUE',
+  OTRO: 'OTRO',
+  CREDITO: 'CREDITO',
 } as const;

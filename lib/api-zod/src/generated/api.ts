@@ -1648,6 +1648,10 @@ export const EstadoCuentaProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "formaPago": zod.string().nullish(),
+  "desgloseIva": zod.object({
+  "subtotal": zod.string().optional(),
+  "iva": zod.string().optional()
+}).nullish(),
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "usuarioId": zod.number(),
@@ -1680,6 +1684,10 @@ export const ListProveedorPagosResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folio": zod.number().nullish(),
   "formaPago": zod.string().nullish(),
+  "desgloseIva": zod.object({
+  "subtotal": zod.string().optional(),
+  "iva": zod.string().optional()
+}).nullish(),
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "usuarioId": zod.number(),
@@ -1701,7 +1709,7 @@ export const registrarPagoProveedorBodyImporteMin = 0.01;
 
 export const RegistrarPagoProveedorBody = zod.object({
   "importe": zod.number().min(registrarPagoProveedorBodyImporteMin).describe('Importe positivo; se guarda como negativo internamente'),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),
   "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish()
@@ -1713,7 +1721,7 @@ export const RegistrarPagoProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
   "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
-  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
@@ -1752,7 +1760,7 @@ export const previewPagoProveedorBodyImporteMin = 0.01;
 
 export const PreviewPagoProveedorBody = zod.object({
   "importe": zod.number().min(previewPagoProveedorBodyImporteMin).describe('Importe positivo; se guarda como negativo internamente'),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),
   "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish()
@@ -1788,7 +1796,7 @@ export const GetProveedorCompraDetalleResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
   "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
-  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
@@ -1840,7 +1848,7 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
   "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
-  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
@@ -1902,7 +1910,7 @@ export const ReversarPagoProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
   "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
-  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
@@ -1950,7 +1958,7 @@ export const RegistrarAjusteProveedorResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "importe": zod.string(),
   "tipo": zod.enum(['COMPRA', 'PAGO', 'AJUSTE', 'REVERSO']),
-  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
+  "formaPago": zod.union([zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),zod.null()]).optional(),
   "referencia": zod.string().nullish(),
   "fecha": zod.coerce.date(),
   "usuarioId": zod.number(),
@@ -4517,6 +4525,10 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "ticketFolio": zod.number().nullish(),
   "nombreUsuario": zod.string().optional(),
   "formaPago": zod.string().nullish(),
+  "desgloseIva": zod.object({
+  "subtotal": zod.string().optional(),
+  "iva": zod.string().optional()
+}).nullish(),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish(),
   "referencia": zod.string().nullish(),
   "fechaEfectiva": zod.coerce.date().optional(),
@@ -4626,6 +4638,10 @@ export const GetClientePagosResponse = zod.object({
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
   "formaPago": zod.string().nullish(),
+  "desgloseIva": zod.object({
+  "subtotal": zod.string().optional(),
+  "iva": zod.string().optional()
+}).nullish(),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish(),
   "revertido": zod.boolean().optional(),
   "reversoMovimientoId": zod.number().nullish(),
@@ -4647,7 +4663,7 @@ export const createClientePagoBodyImporteMin = 0.01;
 
 export const CreateClientePagoBody = zod.object({
   "importe": zod.number().min(createClientePagoBodyImporteMin),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO']),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish(),
@@ -4812,7 +4828,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "fecha": zod.coerce.date(),
   "montoAplicado": zod.string(),
   "montoTotalAbono": zod.string(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']).nullable(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO', 'CREDITO']).nullable(),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullable(),
   "referencia": zod.string().nullable(),
   "usuarioRegistrador": zod.string(),
@@ -4834,7 +4850,7 @@ export const GetClientePagoDetalleResponse = zod.object({
   "clienteId": zod.number(),
   "fecha": zod.coerce.date(),
   "montoTotalAbono": zod.string(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']).nullable(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO', 'CREDITO']).nullable(),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullable(),
   "referencia": zod.string().nullable(),
   "usuarioRegistrador": zod.string(),
@@ -4879,6 +4895,10 @@ export const ReversarClientePagoResponse = zod.object({
   "ticketFolio": zod.number().nullish(),
   "nombreUsuario": zod.string().optional(),
   "formaPago": zod.string().nullish(),
+  "desgloseIva": zod.object({
+  "subtotal": zod.string().optional(),
+  "iva": zod.string().optional()
+}).nullish(),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).nullish(),
   "referencia": zod.string().nullish(),
   "fechaEfectiva": zod.coerce.date().optional(),

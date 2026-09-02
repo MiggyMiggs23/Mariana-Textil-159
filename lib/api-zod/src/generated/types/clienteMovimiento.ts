@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ClienteMovimientoCuentaDestino } from './clienteMovimientoCuentaDestino';
+import type { ClienteMovimientoDesgloseIva } from './clienteMovimientoDesgloseIva';
 import type { ClienteMovimientoDiasPlazo } from './clienteMovimientoDiasPlazo';
 import type { ClienteMovimientoEstado } from './clienteMovimientoEstado';
 
@@ -24,6 +25,8 @@ export interface ClienteMovimiento {
   nombreUsuario?: string;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  desgloseIva?: ClienteMovimientoDesgloseIva;
   /** @nullable */
   cuentaDestino?: ClienteMovimientoCuentaDestino;
   /** @nullable */

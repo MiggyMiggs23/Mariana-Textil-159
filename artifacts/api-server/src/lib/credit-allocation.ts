@@ -200,6 +200,7 @@ export function isValidPaymentDestination(
   return (
     (formaPago === "EFECTIVO" && cuentaDestino === "CAJA_FISICA") ||
     (formaPago === "TRANSFERENCIA" &&
-      (cuentaDestino === "CUENTA_FISCAL" || cuentaDestino === "CUENTA_NO_FISCAL"))
+      (cuentaDestino === "CUENTA_FISCAL" || cuentaDestino === "CUENTA_NO_FISCAL")) ||
+    (formaPago === "FACTURADO" && cuentaDestino === "CUENTA_FISCAL")
   );
 }

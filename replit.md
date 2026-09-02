@@ -27,6 +27,10 @@ Las líneas por página de cada documento son un valor medido, comentado junto a
 Decisión conservadora: el contrato vigente de `GET /entradas/:id` ya contiene tanto las líneas agregadas como cada rollo con serie, producto y cantidad. El documento reutiliza esa única respuesta; no se crea ni duplica un endpoint de series mientras el contrato siga completo.
 # Decisiones de la Parte 9
 
+**Formas de pago de clientes y proveedores:** EFECTIVO, TRANSFERENCIA y FACTURADO. CHEQUE y OTRO son valores **históricos no seleccionables**: siguen en la base para que los registros viejos se lean, y no se ofrecen en formularios. `formaPagoTicketEnum` es otra cosa y no cambia: CREDITO ahí es la modalidad de venta a crédito, no una forma de pago equivalente.
+
+**FACTURADO e IVA:** mueve el saldo por el **monto capturado, que ya incluye el IVA**. El sistema **nunca** le suma 16% a un monto capturado; solo desglosa cuánto fue subtotal y cuánto IVA donde el desglose aporte. La tasa vive en una sola constante compartida y no se escribe a mano en ningún lugar nuevo.
+
 El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.
 
 En toda tabla del sistema, el identificador principal del renglón es un enlace al detalle: un solo enlace por renglón, y ninguna columna de "Ver detalle".

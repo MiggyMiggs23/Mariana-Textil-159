@@ -591,8 +591,7 @@ router.post(
       const validFormas: FormaPagoProveedor[] = [
         "EFECTIVO",
         "TRANSFERENCIA",
-        "CHEQUE",
-        "OTRO",
+        "FACTURADO",
       ];
       if (
         typeof formaPago !== "string" ||
@@ -943,6 +942,8 @@ router.get(
         "Importe",
         "Saldo Acumulado",
         "Forma de Pago",
+        "Subtotal facturado",
+        "IVA facturado",
         "Referencia",
         "Notas",
       ]);
@@ -955,6 +956,8 @@ router.get(
           toExcelNumber(m.importe),
           toExcelNumber(m.saldoAcumulado),
           m.formaPago ?? "",
+          m.desgloseIva ? toExcelNumber(m.desgloseIva.subtotal) : "",
+          m.desgloseIva ? toExcelNumber(m.desgloseIva.iva) : "",
           m.referencia ?? "",
           m.notas ?? "",
         ]);
@@ -964,6 +967,8 @@ router.get(
       sheet.addRow(["Saldo actual:", toExcelNumber(saldoActual)]);
       sheet.getColumn(4).numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn(5).numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn(7).numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn(8).numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getRow(sheet.rowCount).getCell(2).numFmt = EXCEL_NUMBER_FORMAT.money;
 
       const filename = `estado-cuenta-${prov.nombre.replace(/\s+/g, "-").toLowerCase()}.xlsx`;

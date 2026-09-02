@@ -187,17 +187,12 @@ export function SolicitudPagoDirigidoDialog({
                   <SelectContent>
                     <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>
                     <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
-                    {tipo === SolicitudPagoDirigidoInputTipo.PROVEEDOR && (
-                      <>
-                        <SelectItem value="CHEQUE" className="font-medium py-3">Cheque</SelectItem>
-                        <SelectItem value="OTRO" className="font-medium py-3">Otro</SelectItem>
-                      </>
-                    )}
+                    <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && paymentMethod !== "EFECTIVO" ? (
+              {tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && paymentMethod === "TRANSFERENCIA" ? (
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino</Label>
                   <Select value={destinationAccount} onValueChange={setDestinationAccount}>
@@ -210,11 +205,11 @@ export function SolicitudPagoDirigidoDialog({
                     </SelectContent>
                   </Select>
                 </div>
-              ) : tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && paymentMethod === "EFECTIVO" ? (
+              ) : tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && (paymentMethod === "EFECTIVO" || paymentMethod === "FACTURADO") ? (
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino</Label>
                   <div className="h-12 flex items-center px-3 bg-muted/50 border-2 rounded-md text-muted-foreground font-medium">
-                    {formatAccountDestination("CAJA_FISICA")}
+                    {formatAccountDestination(paymentMethod === "EFECTIVO" ? "CAJA_FISICA" : "CUENTA_FISCAL")}
                   </div>
                 </div>
               ) : (

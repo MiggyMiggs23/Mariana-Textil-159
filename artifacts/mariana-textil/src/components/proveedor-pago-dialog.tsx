@@ -200,8 +200,7 @@ export function ProveedorPagoDialog({
                   <SelectContent>
                     <SelectItem value={FormaPagoProveedor.EFECTIVO} className="font-medium py-3">Efectivo</SelectItem>
                     <SelectItem value={FormaPagoProveedor.TRANSFERENCIA} className="font-medium py-3">Transferencia</SelectItem>
-                    <SelectItem value={FormaPagoProveedor.CHEQUE} className="font-medium py-3">Cheque</SelectItem>
-                    <SelectItem value={FormaPagoProveedor.OTRO} className="font-medium py-3">Otro</SelectItem>
+                    <SelectItem value={FormaPagoProveedor.FACTURADO} className="font-medium py-3">Facturado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -15,4 +15,8 @@ export type ClienteNotaAbonoFormaPago = typeof ClienteNotaAbonoFormaPago[keyof t
 export const ClienteNotaAbonoFormaPago = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
+  CHEQUE: 'CHEQUE',
+  OTRO: 'OTRO',
+  CREDITO: 'CREDITO',
 } as const;

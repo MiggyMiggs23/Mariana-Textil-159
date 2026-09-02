@@ -20,6 +20,7 @@ import { clientesTable } from "./clientes";
 import {
   estadoSesionCajaEnum,
   estadoTicketEnum,
+  formaPagoCuentaEnum,
   formaPagoTicketEnum,
   tipoMovimientoCreditoEnum,
   tipoTicketEnum,
@@ -281,7 +282,7 @@ export const movimientosCreditoTable = pgTable(
       .notNull()
       .references(() => usuariosTable.id),
     notas: text("notas"),
-    formaPago: formaPagoTicketEnum("forma_pago"),
+    formaPago: formaPagoCuentaEnum("forma_pago"),
     /** Destination declared when an external customer ABONO is recorded. */
     cuentaDestino: text("cuenta_destino"),
     referencia: text("referencia"),

@@ -1876,6 +1876,14 @@ export interface ClientePrecios {
 /**
  * @nullable
  */
+export type ClienteMovimientoDesgloseIva = {
+  subtotal?: string;
+  iva?: string;
+} | null;
+
+/**
+ * @nullable
+ */
 export type ClienteMovimientoCuentaDestino = typeof ClienteMovimientoCuentaDestino[keyof typeof ClienteMovimientoCuentaDestino] | null;
 
 
@@ -1927,6 +1935,8 @@ export interface ClienteMovimiento {
   nombreUsuario?: string;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  desgloseIva?: ClienteMovimientoDesgloseIva;
   /** @nullable */
   cuentaDestino?: ClienteMovimientoCuentaDestino;
   /** @nullable */
@@ -2002,6 +2012,14 @@ export interface ClienteEstadisticas {
 /**
  * @nullable
  */
+export type ClientePagoItemDesgloseIva = {
+  subtotal?: string;
+  iva?: string;
+} | null;
+
+/**
+ * @nullable
+ */
 export type ClientePagoItemCuentaDestino = typeof ClientePagoItemCuentaDestino[keyof typeof ClientePagoItemCuentaDestino] | null;
 
 
@@ -2017,6 +2035,8 @@ export interface ClientePagoItem {
   fecha?: string;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  desgloseIva?: ClientePagoItemDesgloseIva;
   /** @nullable */
   cuentaDestino?: ClientePagoItemCuentaDestino;
   revertido?: boolean;
@@ -2093,6 +2113,10 @@ export type ClienteNotaAbonoFormaPago = typeof ClienteNotaAbonoFormaPago[keyof t
 export const ClienteNotaAbonoFormaPago = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
+  CHEQUE: 'CHEQUE',
+  OTRO: 'OTRO',
+  CREDITO: 'CREDITO',
 } as const;
 
 /**
@@ -2381,6 +2405,10 @@ export type ClientePagoDetalleFormaPago = typeof ClientePagoDetalleFormaPago[key
 export const ClientePagoDetalleFormaPago = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
+  CHEQUE: 'CHEQUE',
+  OTRO: 'OTRO',
+  CREDITO: 'CREDITO',
 } as const;
 
 /**
@@ -2428,6 +2456,7 @@ export type ClientePagoInputFormaPago = typeof ClientePagoInputFormaPago[keyof t
 export const ClientePagoInputFormaPago = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
 } as const;
 
 export type ClientePagoInputCuentaDestino = typeof ClientePagoInputCuentaDestino[keyof typeof ClientePagoInputCuentaDestino];
@@ -2713,6 +2742,14 @@ export const TipoPagoProveedor = {
   REVERSO: 'REVERSO',
 } as const;
 
+/**
+ * @nullable
+ */
+export type MovimientoLedgerDesgloseIva = {
+  subtotal?: string;
+  iva?: string;
+} | null;
+
 export interface MovimientoLedger {
   id: number;
   tipo: TipoPagoProveedor;
@@ -2725,6 +2762,8 @@ export interface MovimientoLedger {
   folio?: number | null;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  desgloseIva?: MovimientoLedgerDesgloseIva;
   /** @nullable */
   referencia?: string | null;
   /** @nullable */
@@ -4069,6 +4108,7 @@ export type FormaPagoProveedor = typeof FormaPagoProveedor[keyof typeof FormaPag
 export const FormaPagoProveedor = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
   CHEQUE: 'CHEQUE',
   OTRO: 'OTRO',
 } as const;

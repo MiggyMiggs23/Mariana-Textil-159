@@ -3,6 +3,8 @@ import type { Pool } from "pg";
 /** Repeatable upgrades for supplier-payment idempotency and reversals. */
 export async function ensurePagosProveedorSchema(pool: Pool): Promise<void> {
   await pool.query("ALTER TYPE tipo_pago_proveedor ADD VALUE IF NOT EXISTS 'REVERSO'");
+  // Extending the enum retains CHEQUE and OTRO rows already in the ledger.
+  await pool.query("ALTER TYPE forma_pago_proveedor ADD VALUE IF NOT EXISTS 'FACTURADO'");
   await pool.query(`
     ALTER TABLE pagos_proveedor
       ADD COLUMN IF NOT EXISTS movimiento_origen_id integer

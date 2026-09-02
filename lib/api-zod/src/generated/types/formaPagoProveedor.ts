@@ -12,6 +12,7 @@ export type FormaPagoProveedor = typeof FormaPagoProveedor[keyof typeof FormaPag
 export const FormaPagoProveedor = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
   CHEQUE: 'CHEQUE',
   OTRO: 'OTRO',
 } as const;

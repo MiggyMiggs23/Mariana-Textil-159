@@ -23,9 +23,10 @@ test("Block 5 functionality in proveedor UI", async () => {
   assert.match(pagoDialog, /asig.saldoDespues/);
   assert.match(pagoDialog, /saldoAFavor/);
 
-  // - Forma de pago conserva EFECTIVO/TRANSFERENCIA/CHEQUE/OTRO
+  // - Captura nueva: solo EFECTIVO/TRANSFERENCIA/FACTURADO; CHEQUE/OTRO históricos no se seleccionan.
   assert.match(pagoDialog, /FormaPagoProveedor\.EFECTIVO/);
-  assert.match(pagoDialog, /FormaPagoProveedor\.CHEQUE/);
+  assert.match(pagoDialog, /FormaPagoProveedor\.FACTURADO/);
+  assert.doesNotMatch(pagoDialog, /FormaPagoProveedor\.(CHEQUE|OTRO)/);
 
   // - Si se edita cualquier dato tras preview, obliga a recalcular.
   assert.match(pagoDialog, /handleInputChange/);

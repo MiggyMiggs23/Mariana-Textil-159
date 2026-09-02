@@ -114,8 +114,8 @@ async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number) {
   const requestedCents = moneyToCents(request.importe);
   const amount = centsToMoney(requestedCents);
   const [movement] = supplier
-    ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "CHEQUE" | "OTRO", referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
-    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, ticketId: doc.ticket_id!, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA", cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
+    ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
+    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, ticketId: doc.ticket_id!, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
   if (supplier) await tx.insert(aplicacionesPagoProveedorTable).values({ pagoProveedorId: movement.id, compraProveedorId: doc.id, importe: amount });
   else await tx.insert(aplicacionesCreditoTable).values({ abonoMovimientoId: movement.id, ventaMovimientoId: doc.id, importe: amount });
   return movement;
@@ -204,8 +204,8 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
     const effectiveDate = data.fechaEfectiva ? new Date(data.fechaEfectiva) : new Date();
     if (Number.isNaN(effectiveDate.getTime()) || effectiveDate > new Date() || Math.round(data.importe * 100) < 1) { res.status(400).json({ error: "Fecha efectiva inválida o futura, o monto menor a un centavo." }); return; }
     const valid = data.tipo === "CLIENTE"
-      ? ["EFECTIVO", "TRANSFERENCIA"].includes(data.formaPago) && ((data.formaPago === "EFECTIVO" && data.cuentaDestino === "CAJA_FISICA") || (data.formaPago === "TRANSFERENCIA" && ["CUENTA_FISCAL", "CUENTA_NO_FISCAL"].includes(data.cuentaDestino ?? "")))
-      : ["EFECTIVO", "TRANSFERENCIA", "CHEQUE", "OTRO"].includes(data.formaPago);
+      ? ["EFECTIVO", "TRANSFERENCIA", "FACTURADO"].includes(data.formaPago) && ((data.formaPago === "EFECTIVO" && data.cuentaDestino === "CAJA_FISICA") || (data.formaPago === "TRANSFERENCIA" && ["CUENTA_FISCAL", "CUENTA_NO_FISCAL"].includes(data.cuentaDestino ?? "")) || (data.formaPago === "FACTURADO" && data.cuentaDestino === "CUENTA_FISCAL"))
+      : ["EFECTIVO", "TRANSFERENCIA", "FACTURADO"].includes(data.formaPago);
     if (!valid || (data.tipo === "CLIENTE" && data.formaPago === "TRANSFERENCIA" && !data.referencia)) { res.status(400).json({ error: "Forma de pago, cuenta destino o referencia inválida." }); return; }
     const result = await db.transaction(async (tx) => {
       const isAdmin = req.auth!.user.rol === "ADMIN";

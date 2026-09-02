@@ -60,6 +60,7 @@ import {
   transactionAdvisoryLock,
 } from "@workspace/db/advisory-locks";
 import { meteredReferenceCost } from "./metered-reference-cost";
+import { IVA_RATE_BASIS_POINTS } from "./iva";
 
 const FOLIO_ROW_ID = 1;
 
@@ -901,7 +902,6 @@ export async function crearTicket(
     (total, linea) => total + linea.importeCents,
     0,
   );
-  const IVA_RATE_BASIS_POINTS = 1600;
   const ivaCents = input.facturado
     ? Math.round((subtotalCents * IVA_RATE_BASIS_POINTS) / 10_000)
     : 0;

@@ -69,7 +69,10 @@ test("Block 3 functionality in payment dialog", async () => {
   // - EFECTIVO fija/solo permite CAJA_FISICA.
   assert.match(pagoDialog, /setDestinationAccount\("CAJA_FISICA"\)/);
   assert.match(pagoDialog, /paymentMethod === "EFECTIVO"/);
-  assert.match(pagoDialog, /formatAccountDestination\("CAJA_FISICA"\)/); // fixed display
+  assert.match(
+    pagoDialog,
+    /formatAccountDestination\(paymentMethod === "EFECTIVO" \? "CAJA_FISICA" : "CUENTA_FISCAL"\)/,
+  ); // EFECTIVO stays physical; FACTURADO is explicitly fiscal
 
   // - TRANSFERENCIA exige escoger CUENTA_FISCAL o CUENTA_NO_FISCAL sin preselección conservadora.
   assert.match(pagoDialog, /setDestinationAccount\(""\)/); // forces user to choose

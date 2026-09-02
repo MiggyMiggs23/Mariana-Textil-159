@@ -37,6 +37,7 @@ import {
   transactionAdvisoryLock,
 } from "@workspace/db/advisory-locks";
 import { allocateCreditFifo, centsToMoney, moneyToCents } from "./credit-allocation";
+import { breakdownIvaIncluded } from "./iva";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -73,6 +74,7 @@ export type MovimientoLedger = {
   entradaId: number | null;
   folio: number | null;
   formaPago: string | null;
+  desgloseIva: { subtotal: string; iva: string } | null;
   referencia: string | null;
   notas: string | null;
   usuarioId: number;
@@ -779,6 +781,17 @@ export async function estadoCuenta(opts: {
       entradaId: r.entradaId ?? null,
       folio: r.entradaId ? (folioMap.get(r.entradaId) ?? null) : null,
       formaPago: r.formaPago ?? null,
+      desgloseIva: r.formaPago === "FACTURADO"
+        ? (() => {
+            const breakdown = breakdownIvaIncluded(
+              Math.abs(moneyToCents(r.importe)),
+            );
+            return {
+              subtotal: centsToMoney(breakdown.subtotalCents),
+              iva: centsToMoney(breakdown.ivaCents),
+            };
+          })()
+        : null,
       referencia: r.referencia ?? null,
       notas: r.notas ?? null,
       usuarioId: r.usuarioId,

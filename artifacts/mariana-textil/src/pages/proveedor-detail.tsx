@@ -654,6 +654,7 @@ export default function ProveedorDetail() {
                             <TableCell className="max-w-[200px]">
                               {mov.folio ? <span className="block font-mono text-xs">Entrada #{formatNumber(mov.folio, { kind: "identifier" })}</span> : null}
                               {mov.formaPago ? <span className="block text-xs text-muted-foreground">{mov.formaPago}</span> : null}
+                              {mov.desgloseIva ? <span className="block text-xs text-muted-foreground">Subtotal {formatNumber(mov.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(mov.desgloseIva.iva, { kind: "money" })}</span> : null}
                               {mov.referencia ? <span className="block text-xs truncate">Ref: {mov.referencia}</span> : null}
                               {mov.notas ? <span className="block text-xs text-muted-foreground truncate">{mov.notas}</span> : null}
                             </TableCell>

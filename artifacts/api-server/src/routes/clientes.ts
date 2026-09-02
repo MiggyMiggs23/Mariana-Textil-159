@@ -53,6 +53,7 @@ import {
 } from "@workspace/number-format";
 import { ordenarEspanol } from "../lib/spanish-order";
 import { buildTicketDetail } from "../lib/pos";
+import { breakdownIvaIncluded } from "../lib/iva";
 
 const router: IRouter = Router();
 
@@ -1074,6 +1075,17 @@ router.get(
        const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
        const withBalance = movements.rows.map((movement) => ({
          ...movement,
+         desgloseIva: movement.formaPago === "FACTURADO"
+           ? (() => {
+               const breakdown = breakdownIvaIncluded(
+                 Math.abs(moneyToCents(movement.importe)),
+               );
+               return {
+                 subtotal: centsToMoney(breakdown.subtotalCents),
+                 iva: centsToMoney(breakdown.ivaCents),
+               };
+             })()
+           : null,
           saldoPendiente: movement.tipo === "VENTA_CREDITO"
              ? centsToMoney(projectedCharges.get(Number(movement.movimientoId))?.pendienteCents ?? 0) : null,
           estado: movement.tipo === "VENTA_CREDITO"
@@ -1169,12 +1181,26 @@ router.get(
         { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
         { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },
         { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
+        { header: "Subtotal facturado", key: "subtotalFacturado", width: 18 }, { header: "IVA facturado", key: "ivaFacturado", width: 16 },
         { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },
       ];
       sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
+      sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.addRows(result.rows.map((row) => ({
         ...row,
+        ...(row.formaPago === "FACTURADO"
+          ? (() => {
+              const breakdown = breakdownIvaIncluded(
+                Math.abs(moneyToCents(row.importe)),
+              );
+              return {
+                subtotalFacturado: breakdown.subtotalCents / 100,
+                ivaFacturado: breakdown.ivaCents / 100,
+              };
+            })()
+          : {}),
         folio: row.folio == null ? "" : String(row.folio),
         importe: toExcelNumber(row.importe),
         saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
@@ -1721,7 +1747,7 @@ router.post(
       }
 
       const body = CreateClientePagoBody.parse(req.body);
-      if (body.formaPago !== "EFECTIVO" && body.formaPago !== "TRANSFERENCIA") {
+      if (!["EFECTIVO", "TRANSFERENCIA", "FACTURADO"].includes(body.formaPago)) {
         res.status(400).json({ error: "Forma de pago inválida." });
         return;
       }
@@ -1768,7 +1794,7 @@ router.post(
             ]
               .filter(Boolean)
               .join(" · "),
-            formaPago: body.formaPago as "EFECTIVO" | "TRANSFERENCIA",
+            formaPago: body.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO",
             cuentaDestino: body.cuentaDestino,
             referencia: body.referencia ?? null,
             createdAt: fechaEfectiva,

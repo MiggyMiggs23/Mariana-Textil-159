@@ -1,6 +1,6 @@
 /** Typed callers for documented client endpoints that are newer than generated API hooks. */
 export type Period = { desde?: string; hasta?: string };
-export type AccountMovement = { id?: number; tipo?: string; importe?: string; fecha?: string; fechaEfectiva?: string; notas?: string | null; saldoCorrido?: string; nombreUsuario?: string | null; formaPago?: string | null; referencia?: string | null; ticketFolio?: string | null };
+export type AccountMovement = { id?: number; tipo?: string; importe?: string; fecha?: string; fechaEfectiva?: string; notas?: string | null; saldoCorrido?: string; nombreUsuario?: string | null; formaPago?: string | null; desgloseIva?: { subtotal: string; iva: string } | null; referencia?: string | null; ticketFolio?: string | null };
 export type Account = { clienteId: number; movimientos: AccountMovement[]; saldoActual: string };
 export type Purchase = { id?: number; folio?: string; fecha?: string; subtotal?: string; iva?: string; total?: string; metros?: string; kilos?: string; bolsas?: string; rollosMetros?: string; rollosKilos?: string; rollosBolsas?: string; metrajeMetros?: string; metrajeBolsas?: string; margen?: string | null; lineasSinCosto?: number };
 export type Purchases = { clienteId: number; periodo?: { desde: string | null; hasta: string | null }; compras: Purchase[]; total: number };

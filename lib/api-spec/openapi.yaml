@@ -7379,6 +7379,11 @@ components:
         ticketFolio: { type: ["number", "null"] }
         nombreUsuario: { type: string }
         formaPago: { type: ["string", "null"] }
+        desgloseIva:
+          type: ["object", "null"]
+          properties:
+            subtotal: { type: string }
+            iva: { type: string }
         cuentaDestino:
           {
             type: ["string", "null"],
@@ -7460,6 +7465,11 @@ components:
         importe: { type: string }
         fecha: { type: string, format: date-time }
         formaPago: { type: ["string", "null"] }
+        desgloseIva:
+          type: ["object", "null"]
+          properties:
+            subtotal: { type: string }
+            iva: { type: string }
         cuentaDestino:
           {
             type: ["string", "null"],
@@ -7546,7 +7556,7 @@ components:
         fecha: { type: string, format: date-time }
         montoAplicado: { type: string }
         montoTotalAbono: { type: string }
-        formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA] }
+        formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA, FACTURADO, CHEQUE, OTRO, CREDITO] }
         cuentaDestino:
           {
             type: ["string", "null"],
@@ -7620,7 +7630,7 @@ components:
         clienteId: { type: number }
         fecha: { type: string, format: date-time }
         montoTotalAbono: { type: string }
-        formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA] }
+        formaPago: { type: ["string", "null"], enum: [EFECTIVO, TRANSFERENCIA, FACTURADO, CHEQUE, OTRO, CREDITO] }
         cuentaDestino:
           {
             type: ["string", "null"],
@@ -7647,7 +7657,7 @@ components:
       required: [importe, formaPago, cuentaDestino]
       properties:
         importe: { type: number, minimum: 0.01 }
-        formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA] }
+        formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA, FACTURADO] }
         cuentaDestino:
           { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
         referencia: { type: ["string", "null"] }
@@ -9592,7 +9602,7 @@ components:
       enum: [COMPRA, PAGO, AJUSTE, REVERSO]
     FormaPagoProveedor:
       type: string
-      enum: [EFECTIVO, TRANSFERENCIA, CHEQUE, OTRO]
+      enum: [EFECTIVO, TRANSFERENCIA, FACTURADO, CHEQUE, OTRO]
     PagoProveedorRow:
       type: object
       required: [id, proveedorId, importe, tipo, fecha, usuarioId, createdAt]
@@ -9890,6 +9900,11 @@ components:
         entradaId: { type: ["number", "null"] }
         folio: { type: ["number", "null"] }
         formaPago: { type: ["string", "null"] }
+        desgloseIva:
+          type: ["object", "null"]
+          properties:
+            subtotal: { type: string }
+            iva: { type: string }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
         usuarioId: { type: number }

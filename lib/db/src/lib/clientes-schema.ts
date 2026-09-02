@@ -11,6 +11,16 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
   await pool.query(
     "ALTER TYPE tipo_movimiento_credito ADD VALUE IF NOT EXISTS 'AJUSTE'",
   );
+  // Do not repurpose forma_pago_ticket: its CREDITO value belongs to POS.
+  // This conversion preserves every historical value while enabling FACTURADO
+  // specifically for customer account movements.
+  await pool.query(`
+    DO $$ BEGIN
+      CREATE TYPE forma_pago_cuenta AS ENUM
+        ('EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO', 'CREDITO');
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END $$;
+  `);
   await pool.query("BEGIN");
   try {
     await pool.query(`
@@ -41,7 +51,10 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS es_sistema boolean NOT NULL DEFAULT false;
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS contacto_nombre text;
       ALTER TABLE clientes ADD COLUMN IF NOT EXISTS dias_credito integer NOT NULL DEFAULT 0;
-      ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS forma_pago forma_pago_ticket;
+       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS forma_pago forma_pago_cuenta;
+       ALTER TABLE movimientos_credito
+         ALTER COLUMN forma_pago TYPE forma_pago_cuenta
+         USING forma_pago::text::forma_pago_cuenta;
        ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS cuenta_destino text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS referencia text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS metadata text;

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ClientePagoItemCuentaDestino } from './clientePagoItemCuentaDestino';
+import type { ClientePagoItemDesgloseIva } from './clientePagoItemDesgloseIva';
 
 export interface ClientePagoItem {
   id?: number;
@@ -13,6 +14,8 @@ export interface ClientePagoItem {
   fecha?: Date;
   /** @nullable */
   formaPago?: string | null;
+  /** @nullable */
+  desgloseIva?: ClientePagoItemDesgloseIva;
   /** @nullable */
   cuentaDestino?: ClientePagoItemCuentaDestino;
   revertido?: boolean;

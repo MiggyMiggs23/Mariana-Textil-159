@@ -35,6 +35,7 @@ export const tipoPagoProveedorEnum = pgEnum("tipo_pago_proveedor", [
 export const formaPagoProveedorEnum = pgEnum("forma_pago_proveedor", [
   "EFECTIVO",
   "TRANSFERENCIA",
+  "FACTURADO",
   "CHEQUE",
   "OTRO",
 ]);

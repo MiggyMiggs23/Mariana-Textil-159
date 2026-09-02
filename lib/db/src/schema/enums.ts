@@ -93,6 +93,20 @@ export const formaPagoTicketEnum = pgEnum("forma_pago_ticket", [
   "CREDITO",
 ]);
 
+/**
+ * Account-payment methods are intentionally separate from ticket payments:
+ * ticket CREDITO remains a POS-only concept. CHEQUE and OTRO are retained for
+ * reading historical account movements but are not offered for new payments.
+ */
+export const formaPagoCuentaEnum = pgEnum("forma_pago_cuenta", [
+  "EFECTIVO",
+  "TRANSFERENCIA",
+  "FACTURADO",
+  "CHEQUE",
+  "OTRO",
+  "CREDITO",
+]);
+
 export const estadoSesionCajaEnum = pgEnum("estado_sesion_caja", [
   "ABIERTA",
   "CERRADA",
@@ -132,6 +146,8 @@ export type TipoTicket = (typeof tipoTicketEnum.enumValues)[number];
 export type EstadoTicket = (typeof estadoTicketEnum.enumValues)[number];
 export type FormaPagoTicket =
   (typeof formaPagoTicketEnum.enumValues)[number];
+export type FormaPagoCuenta =
+  (typeof formaPagoCuentaEnum.enumValues)[number];
 export type EstadoSesionCaja =
   (typeof estadoSesionCajaEnum.enumValues)[number];
 export type EstadoSalida = (typeof estadoSalidaEnum.enumValues)[number];
