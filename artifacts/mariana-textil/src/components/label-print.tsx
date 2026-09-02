@@ -3,6 +3,15 @@ import { QRCodeSVG } from 'qrcode.react';
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { formatPackageQuantityLabel } from "@workspace/number-format";
 
+/**
+ * Discrete print-safe steps. The minimum remains legible on paper while the
+ * largest step keeps short product names readable from a distance.
+ */
+export const LABEL_PRODUCT_NAME_FONT_STEPS_PX = [30, 24, 18, 14] as const;
+export const LABEL_QUANTITY_FONT_STEPS_PX = [29, 24, 19, 13] as const;
+const LABEL_SKU_FONT_STEPS_PX = [15, 12, 9, 6] as const;
+const LABEL_QR_PAYLOAD_FONT_STEPS_PX = [9, 7, 5, 4] as const;
+
 export interface LabelData {
   sku: string;
   serie: string;
@@ -21,14 +30,12 @@ function formatLabelQuantity(value: string): string {
 function AutoFitText({
   children,
   className,
-  maxFontSize,
-  minFontSize,
+  fontSteps,
   testId,
 }: {
   children: string;
   className: string;
-  maxFontSize: number;
-  minFontSize: number;
+  fontSteps: readonly number[];
   testId?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -40,12 +47,18 @@ function AutoFitText({
 
     const fit = () => {
       if (cancelled) return;
-      let fontSize = maxFontSize;
-      element.style.fontSize = `${fontSize}px`;
-      while (element.scrollWidth > element.clientWidth && fontSize > minFontSize) {
-        fontSize -= 1;
+      let selectedStep = fontSteps.at(-1) ?? 1;
+      let fits = false;
+      for (const fontSize of fontSteps) {
         element.style.fontSize = `${fontSize}px`;
+        selectedStep = fontSize;
+        // These labels are intentionally one line. Chromium rounds line-box
+        // height up by one CSS pixel, so width is the reliable cut-off signal.
+        fits = element.scrollWidth <= element.clientWidth + 0.5;
+        if (fits) break;
       }
+      element.dataset.fontStep = String(selectedStep);
+      element.dataset.fitState = fits ? "fits" : "overflow";
     };
 
     fit();
@@ -58,13 +71,13 @@ function AutoFitText({
       observer?.disconnect();
       window.removeEventListener("beforeprint", fit);
     };
-  }, [children, maxFontSize, minFontSize]);
+  }, [children, fontSteps]);
 
   return (
     <div
       ref={ref}
       className={className}
-      style={{ fontSize: `${maxFontSize}px` }}
+      style={{ fontSize: `${fontSteps[0] ?? 1}px` }}
       data-testid={testId}
     >
       {children}
@@ -83,9 +96,9 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
       style={{ width: '100mm', height: '70mm', boxSizing: 'border-box' }}
     >
       <AutoFitText
-        className="h-[11mm] px-[1mm] flex items-center justify-center font-black uppercase whitespace-nowrap overflow-hidden w-full flex-shrink-0 text-center leading-none tracking-[-0.02em]"
-        maxFontSize={30}
-        minFontSize={11}
+        className="h-[11mm] px-[1mm] flex items-center justify-center font-black uppercase whitespace-nowrap w-full flex-shrink-0 text-center leading-none tracking-[-0.02em]"
+        fontSteps={LABEL_PRODUCT_NAME_FONT_STEPS_PX}
+        testId="label-product-name"
       >
         {productName}
       </AutoFitText>
@@ -97,9 +110,8 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           <div className="flex-1 border-b border-gray-400 flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">SKU</div>
             <AutoFitText
-              className="w-full overflow-hidden font-black whitespace-nowrap leading-none mt-[1.5mm]"
-              maxFontSize={15}
-              minFontSize={5}
+              className="w-full font-black whitespace-nowrap leading-none mt-[1.5mm]"
+              fontSteps={LABEL_SKU_FONT_STEPS_PX}
             >
               {data.sku}
             </AutoFitText>
@@ -111,9 +123,8 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           <div className="flex-[1.25] flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">{unitLabel}</div>
             <AutoFitText
-              className="w-full min-w-0 max-w-full overflow-hidden whitespace-nowrap font-black tabular-nums tracking-tighter leading-none mt-[1.5mm]"
-              maxFontSize={29}
-              minFontSize={10}
+              className="w-full min-w-0 max-w-full whitespace-nowrap font-black tabular-nums tracking-tighter leading-none mt-[1.5mm]"
+              fontSteps={LABEL_QUANTITY_FONT_STEPS_PX}
               testId="label-quantity"
             >
               {formatLabelQuantity(data.cantidad)}
@@ -144,9 +155,8 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
             />
           </div>
           <AutoFitText
-            className="w-full overflow-hidden text-center font-black mt-[1.5mm] whitespace-nowrap leading-none text-black"
-            maxFontSize={9}
-            minFontSize={4}
+            className="w-full text-center font-black mt-[1.5mm] whitespace-nowrap leading-none text-black"
+            fontSteps={LABEL_QR_PAYLOAD_FONT_STEPS_PX}
           >
             {qrPayload}
           </AutoFitText>
