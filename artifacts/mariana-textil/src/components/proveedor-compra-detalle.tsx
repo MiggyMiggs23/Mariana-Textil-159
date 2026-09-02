@@ -80,7 +80,7 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                     <div className="text-2xl font-black tabular-nums text-sidebar">{formatNumber(Math.abs(Number(compraDetalle.compra.importe)), { kind: "money" })}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Fecha</div>
+                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Fecha de recepción</div>
                     <div className="font-medium">{format(parseDate(compraDetalle.compra.fecha), "dd/MM/yyyy")}</div>
                   </div>
                 </div>

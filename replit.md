@@ -419,3 +419,9 @@ Cada cantidad se muestra **con su unidad** y la tabla **no lleva renglón de tot
 El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la galleta sobrevive a la sesión del servidor y el usuario ve errores en vez de una petición limpia de volver a entrar.
 
 **Duraciones por rol y bloqueo con PIN quedan fuera a propósito.** El PIN es la solución correcta a la fricción de teclear una contraseña larga en una pantalla táctil, pero es desarrollo; alargar la sesión es el arreglo intermedio.
+
+## Semántica de compras y alcance
+
+**Fecha de compra** significa la fecha inmutable de recepción guardada en `entradas.fecha`. Las filas `COMPRA` se filtran y presentan con esa fecha; pagos, ajustes y reversos conservan su propia fecha contable en el ledger.
+
+**Alcance de lectura de compras y reportes:** siempre se deriva del actor con `resolveReadScope`, antes de aplicar cualquier filtro. Un usuario `PROPIA` no puede ampliar el sitio desde la dirección ni entrando directamente a un detalle; el sitio solicitado por el cliente nunca sustituye al alcance autorizado.

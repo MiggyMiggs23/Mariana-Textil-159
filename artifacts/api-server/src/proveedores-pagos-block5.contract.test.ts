@@ -35,9 +35,12 @@ test("Bloque 5: rutas delgadas usan el import del único asignador y exponen det
   assert.match(service, /"PAGADA" \| "PARCIAL" \| "PENDIENTE"/);
   assert.match(routes, /\/proveedores\/:id\/pagos\/preview/);
   assert.match(routes, /\/proveedores\/:id\/compras\/:compraId/);
-  assert.match(routes, /WHERE entrada_id=\$\{params\.data\.compraId\}/);
+  assert.match(routes, /resolveReadScope\(req\.auth!\)/);
+  assert.match(routes, /pp\.entrada_id=\$\{params\.data\.compraId\}/);
+  assert.match(routes, /e\.ubicacion_id=\$\{ubicacionId\}/);
+  assert.match(routes, /fecha: compra\.rows\[0\]\.fecha_recepcion/);
   assert.match(routes, /a\.compra_proveedor_id=\$\{compraMovimientoId\}/);
-  assert.match(routes, /compra: presentPagoProveedor\(compra\.rows\[0\]\)/);
+  assert.match(routes, /compra: presentPagoProveedor\(\{/);
   assert.match(routes, /pago: presentPagoProveedor\(pago\.rows\[0\]\)/);
   assert.match(routes, /movimiento_origen_id=a\.pago_proveedor_id\) AS revertido/);
   assert.match(routes, /\/proveedores\/:id\/pagos\/:pagoId/);

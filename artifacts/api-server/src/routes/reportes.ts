@@ -8,19 +8,15 @@ import { requierePermiso } from "../lib/permisos";
 import { createTextPdf } from "../lib/pdf";
 import { buildReport, getCatalogs, parseReportBooleanQuery, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
 import { createReportWorkbook, normalizeExportTables } from "../lib/report-export";
+import { resolveReadScope } from "./inventario";
 
 const router: IRouter = Router();
 router.use("/reportes", requireSession, requierePermiso("reportes", "ver"));
 
 function scopedLocations(req: Parameters<IRouter["get"]>[1] extends (...args: infer A) => unknown ? A[0] : never): number[] | undefined {
-  const user = req.auth!.user;
-  if (
-    user.rol === "ADMIN" ||
-    user.rol === "SUPERVISOR" ||
-    user.alcanceConsulta === "TODAS"
-  ) return undefined;
-  if (user.ubicacionId == null) throw new ReportInputError("El usuario no tiene una ubicación asignada.");
-  return [user.ubicacionId];
+  const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+  if (scopeError) throw new ReportInputError(scopeError);
+  return ubicacionId == null ? undefined : [ubicacionId];
 }
 function reportRows(report: Report) {
   const tables = report.tables as Array<{ id: string; title: string; columns: Array<{ key: string; label: string; kind: string }>; rows: Record<string, unknown>[]; totals: Record<string, unknown> }>;

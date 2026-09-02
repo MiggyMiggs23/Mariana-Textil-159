@@ -43,6 +43,15 @@ import {
 } from "./compras-proveedor";
 import { parseMexicoDateQuery } from "./mexico-date";
 
+if (
+  process.env.NODE_ENV !== "test" ||
+  process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1" ||
+  !process.env.TEST_DATABASE_URL ||
+  !/(test|ci|e2e)/i.test(process.env.TEST_DATABASE_URL)
+) {
+  throw new Error("La suite de proveedores requiere una base de prueba aislada explícita.");
+}
+
 // ── Test harness ──────────────────────────────────────────────────────────────
 
 const RUN = `CP${Date.now()}`;
@@ -117,7 +126,7 @@ async function mkUbicacion(): Promise<number> {
     .insert(ubicacionesTable)
     .values({
       nombre: `Ub${tag}`.slice(0, 120),
-      iniciales: `C${String.fromCharCode(65 + (seq % 26))}`,
+      iniciales: `C${String.fromCharCode(65 + (Math.floor(seq / 26) % 26))}${String.fromCharCode(65 + (seq % 26))}`,
       tipo: "BODEGA" as const,
     })
     .returning();
@@ -276,19 +285,30 @@ await test("CP-04: estadoCuenta devuelve movimientos cronológicos con saldo cor
 
 await test("CP-04b: estadoCuenta filtrado conserva saldo inicial y saldo actual global", async () => {
   const proveedorId = await mkProveedor();
-  const productoId = await mkProducto();
   const ubicacionId = await mkUbicacion();
 
-  await mkEntrada(proveedorId, productoId, ubicacionId, "1000.00");
-  await db
-    .update(pagosProveedorTable)
-    .set({ fecha: new Date("2024-01-10T18:00:00.000Z") })
-    .where(
-      and(
-        eq(pagosProveedorTable.proveedorId, proveedorId),
-        eq(pagosProveedorTable.tipo, "COMPRA"),
-      ),
-    );
+  const [entrada] = await db
+    .insert(entradasTable)
+    .values({
+      folio: 1_700_000_000 + seq,
+      ubicacionId,
+      proveedorId,
+      usuarioId: 1,
+      fecha: new Date("2024-01-10T18:00:00.000Z"),
+      totalRollos: 0,
+      totalCosto: "1000.00",
+      uuidCliente: randomUUID(),
+    })
+    .returning({ id: entradasTable.id });
+  createdEntradaIds.push(entrada!.id);
+  await db.insert(pagosProveedorTable).values({
+    proveedorId,
+    entradaId: entrada!.id,
+    importe: "1000.00",
+    tipo: "COMPRA",
+    fecha: new Date("2024-01-10T18:00:00.000Z"),
+    usuarioId: 1,
+  });
   await db.transaction(async (tx) =>
     registrarPago(tx, {
       proveedorId,
@@ -298,7 +318,7 @@ await test("CP-04b: estadoCuenta filtrado conserva saldo inicial y saldo actual 
       fecha: new Date("2024-02-10T18:00:00.000Z"),
     }),
   );
-  const ajuste = await db.transaction(async (tx) =>
+  await db.transaction(async (tx) =>
     registrarAjuste(tx, {
       proveedorId,
       importe: 50,
@@ -306,10 +326,6 @@ await test("CP-04b: estadoCuenta filtrado conserva saldo inicial y saldo actual 
       usuarioId: 1,
     }),
   );
-  await db
-    .update(pagosProveedorTable)
-    .set({ fecha: new Date("2024-03-10T18:00:00.000Z") })
-    .where(eq(pagosProveedorTable.id, ajuste.id));
 
   const { movimientos, saldoActual } = await estadoCuenta({
     proveedorId,
@@ -515,7 +531,7 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
     clienteId: cliente!.id,
     subtotal: "300.00",
     iva: "0.00",
-    tasaIva: "0.1600",
+    tasaIva: "0.0000",
     total: "300.00",
     uuidCliente: randomUUID(),
   }).returning();
@@ -527,7 +543,7 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
   ]);
   const [metreado] = await db.insert(ticketsTable).values({
     folio: 900000100 + seq, ubicacionId, usuarioTerminalId: 1, clienteId: cliente!.id,
-    subtotal: "70.00", iva: "0.00", tasaIva: "0.1600", total: "70.00", uuidCliente: randomUUID(),
+    subtotal: "70.00", iva: "0.00", tasaIva: "0.0000", total: "70.00", uuidCliente: randomUUID(),
   }).returning();
   createdTicketIds.push(metreado!.id);
   await db.insert(ticketLineasTable).values({
@@ -566,7 +582,9 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
 
 process.stdout.write(`\n─────────────────────────────────────────────\n`);
 process.stdout.write(`Results: ${passed} passed, ${failed} failed\n`);
+process.stdout.write("Fixtures append-only conservados para eliminarse con la rama desechable.\n");
 
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
 try {
   await db.transaction(async (tx) => {
     if (createdTicketIds.length > 0) {
@@ -658,6 +676,7 @@ try {
   process.stdout.write(`Cleanup: OK\n`);
 } catch (cleanErr) {
   process.stderr.write(`Cleanup ERROR: ${(cleanErr as Error).message}\n`);
+}
 }
 
 process.exit(failed > 0 ? 1 : 0);

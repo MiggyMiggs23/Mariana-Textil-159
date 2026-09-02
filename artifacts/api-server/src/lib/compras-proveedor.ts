@@ -542,6 +542,7 @@ export async function reversarPago(
  */
 export async function comprasPorProveedor(opts: {
   proveedorId: number;
+  ubicacionId?: number;
   desde?: Date | null;
   hasta?: Date | null;
   estado?: EstadoCompra | null;
@@ -557,15 +558,7 @@ export async function comprasPorProveedor(opts: {
   const page = opts.page ?? 1;
   const pageSize = opts.pageSize ?? 20;
 
-  // Fetch COMPRA rows with joined entrada info (folio, ubicacionId)
-  // We use a raw query to get everything in one pass
-  const whereClauses: string[] = [
-    `pp.proveedor_id = ${opts.proveedorId}`,
-    `pp.tipo = 'COMPRA'`,
-  ];
-  if (opts.desde) whereClauses.push(`pp.fecha >= '${opts.desde.toISOString()}'`);
-  if (opts.hasta) whereClauses.push(`pp.fecha <= '${opts.hasta.toISOString()}'`);
-
+  // A COMPRA is dated and scoped by its immutable inventory receipt.
   const comprasRaw = await db.execute<{
     pp_id: number;
     entrada_id: number | null;
@@ -585,7 +578,7 @@ export async function comprasPorProveedor(opts: {
       pp.id AS pp_id,
       pp.entrada_id,
       pp.importe,
-      pp.fecha,
+      e.fecha,
       e.folio,
       e.ubicacion_id,
       u.nombre AS nombre_ubicacion,
@@ -602,10 +595,11 @@ export async function comprasPorProveedor(opts: {
     LEFT JOIN productos pr ON pr.id = ro.producto_id
     WHERE pp.proveedor_id = ${opts.proveedorId}
       AND pp.tipo = 'COMPRA'
-      ${opts.desde ? sql`AND pp.fecha >= ${opts.desde}` : sql``}
-      ${opts.hasta ? sql`AND pp.fecha <= ${opts.hasta}` : sql``}
-    GROUP BY pp.id, pp.entrada_id, pp.importe, pp.fecha, e.folio, e.ubicacion_id, u.nombre
-    ORDER BY pp.fecha DESC, pp.id DESC
+      ${opts.ubicacionId === undefined ? sql`` : sql`AND e.ubicacion_id = ${opts.ubicacionId}`}
+      ${opts.desde ? sql`AND e.fecha >= ${opts.desde}` : sql``}
+      ${opts.hasta ? sql`AND e.fecha <= ${opts.hasta}` : sql``}
+    GROUP BY pp.id, pp.entrada_id, pp.importe, e.fecha, e.folio, e.ubicacion_id, u.nombre
+    ORDER BY e.fecha DESC, pp.id DESC
   `);
 
   const compras = comprasRaw.rows as Array<{

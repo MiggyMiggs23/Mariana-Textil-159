@@ -464,9 +464,15 @@ router.get(
         typeof req.query.pageSize === "string"
           ? parseInt(req.query.pageSize, 10)
           : 20;
+      const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
 
       const result = await comprasPorProveedor({
         proveedorId: params.data.id,
+        ubicacionId: ubicacionId ?? undefined,
         desde,
         hasta,
         estado,
@@ -803,11 +809,16 @@ router.get(
     try {
       const params = GetProveedorCompraDetalleParams.safeParse(req.params);
       if (!params.success) { res.status(400).json({ error: "ID inválido." }); return; }
+      const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+      if (scopeError) { res.status(403).json({ error: scopeError }); return; }
       const compra = await db.execute<any>(sql`
-        SELECT * FROM pagos_proveedor
-        WHERE entrada_id=${params.data.compraId}
-          AND proveedor_id=${params.data.id}
-          AND tipo='COMPRA'`);
+        SELECT pp.*, e.fecha AS fecha_recepcion
+        FROM pagos_proveedor pp
+        JOIN entradas e ON e.id=pp.entrada_id
+        WHERE pp.entrada_id=${params.data.compraId}
+          AND pp.proveedor_id=${params.data.id}
+          AND pp.tipo='COMPRA'
+          ${ubicacionId === undefined ? sql`` : sql`AND e.ubicacion_id=${ubicacionId}`}`);
       if (!compra.rows[0]) { res.status(404).json({ error: "Compra no encontrada." }); return; }
       const compraMovimientoId = Number(compra.rows[0].id);
       const apps = await db.execute<any>(sql`
@@ -824,7 +835,10 @@ router.get(
         FROM aplicaciones_pago_proveedor a JOIN pagos_proveedor p ON p.id=a.pago_proveedor_id
         JOIN pagos_proveedor c ON c.id=a.compra_proveedor_id LEFT JOIN entradas e ON e.id=c.entrada_id
         WHERE a.compra_proveedor_id=${compraMovimientoId} ORDER BY a.id`);
-      res.json(GetProveedorCompraDetalleResponse.parse({ compra: presentPagoProveedor(compra.rows[0]), aplicaciones: apps.rows.map((a: any) => ({
+      res.json(GetProveedorCompraDetalleResponse.parse({ compra: presentPagoProveedor({
+        ...compra.rows[0],
+        fecha: compra.rows[0].fecha_recepcion,
+      }), aplicaciones: apps.rows.map((a: any) => ({
         pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
         saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio,
          fecha: new Date(a.fecha).toISOString(), resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL",
@@ -849,7 +863,7 @@ router.get(
         FROM pagos_proveedor p WHERE p.id=${params.data.pagoId} AND p.proveedor_id=${params.data.id} AND p.tipo='PAGO'`);
       if (!pago.rows[0]) { res.status(404).json({ error: "Pago no encontrado." }); return; }
       const apps = await db.execute<any>(sql`
-        SELECT a.*,c.entrada_id,e.folio,c.fecha,
+        SELECT a.*,c.entrada_id,e.folio,e.fecha AS fecha_recepcion,
           (c.importe-COALESCE((SELECT SUM(x.importe) FROM aplicaciones_pago_proveedor x
             WHERE x.compra_proveedor_id=c.id AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r
               WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=x.pago_proveedor_id)),0))::text saldo
@@ -864,7 +878,7 @@ router.get(
         FROM pagos_proveedor WHERE id=${params.data.pagoId}`);
       res.json(GetProveedorPagoDetalleResponse.parse({ pago: presentPagoProveedor(pago.rows[0]), saldoDisponible: saldo.rows[0]?.saldo ?? "0.00",
         aplicaciones: apps.rows.map((a: any) => ({ pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
-          saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio, fecha: new Date(a.fecha).toISOString(),
+          saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio, fecha: new Date(a.fecha_recepcion).toISOString(),
           resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL" })) }));
     } catch (e) { next(e); }
   },
