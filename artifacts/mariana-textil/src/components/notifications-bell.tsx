@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Link } from "wouter";
 import {
   getGetNotificationFeedQueryKey,
+  getCountNotificacionesNoLeidasQueryKey,
+  getListNotificacionesQueryKey,
   getListSolicitudesPagoDirigidoQueryKey,
   NotificationFamily,
   useAprobarSolicitudPagoDirigido,
   useGetNotificationFeed,
+  useMarkAllNotificacionesRead,
   useRechazarSolicitudPagoDirigido,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,6 +16,7 @@ import {
   AlertTriangle,
   Bell,
   BellRing,
+  Check,
   ClipboardList,
   ExternalLink,
   Info,
@@ -65,6 +69,21 @@ export function NotificationsBell({
   const { toast } = useToast();
   const approve = useAprobarSolicitudPagoDirigido();
   const reject = useRechazarSolicitudPagoDirigido();
+  const markAllStored = useMarkAllNotificacionesRead({
+    mutation: {
+      onSuccess: ({ count }) => {
+        void queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
+        void queryClient.invalidateQueries({ queryKey: getCountNotificacionesNoLeidasQueryKey() });
+        void queryClient.invalidateQueries({ queryKey: getListNotificacionesQueryKey() });
+        toast({ title: `${count} notificación(es) marcada(s) como leídas` });
+      },
+      onError: (error) => toast({
+        title: "No se pudieron marcar como leídas",
+        description: getApiErrorMessage(error),
+        variant: "destructive",
+      }),
+    },
+  });
   const { data, isLoading, isError, refetch } = useGetNotificationFeed({
     query: {
       queryKey: getGetNotificationFeedQueryKey(),
@@ -74,6 +93,9 @@ export function NotificationsBell({
   });
 
   const events = data?.events ?? [];
+  const storedUnreadCount = events.filter(
+    (event) => event.kind === "SYSTEM" || event.kind === "CREDIT_NOTICE",
+  ).length;
   const refreshDirected = () => {
     queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
     queryClient.invalidateQueries({ queryKey: getListSolicitudesPagoDirigidoQueryKey() });
@@ -118,7 +140,20 @@ export function NotificationsBell({
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[min(92vw,420px)] p-0">
         <div className="border-b bg-muted/20 px-4 py-3">
-          <p className="font-semibold text-sidebar">Notificaciones</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-semibold text-sidebar">Notificaciones</p>
+            {isAdmin && (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={storedUnreadCount === 0 || markAllStored.isPending}
+                onClick={() => markAllStored.mutate()}
+              >
+                <Check className="mr-1 h-3.5 w-3.5" />
+                Marcar guardadas como leídas
+              </Button>
+            )}
+          </div>
           <p className="mt-0.5 text-xs text-muted-foreground">
             {events.length ? `${events.length} evento(s) activos` : "Sin eventos activos"}
           </p>
