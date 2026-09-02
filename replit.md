@@ -434,6 +434,16 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 **Los filtros viven en la dirección web**, para poder compartir una vista filtrada, guardarla como favorito y no perderla al volver de un detalle. Una dirección con un filtro inexistente lo ignora y avisa; nunca rompe la pantalla. El alcance de lectura por sitio se aplica siempre por encima de cualquier filtro, incluso escrito a mano en la dirección.
 
+**Encabezado de la Nota:** los campos opcionales vacíos —destinatario, dirección, contacto— **no se imprimen** y la rejilla se reacomoda. Cliente, folio y fecha de venta siempre aparecen. **Ninguna dirección de Mariana Textil se imprime en la Nota**, ni de matriz ni de sucursales.
+
+**El pagaré solo va en notas a crédito.** En una venta de contado no hay deuda y un reconocimiento de deuda por algo ya pagado no ampara nada; esa nota lleva solo el recibo de mercancía. El texto se reproduce **carácter por carácter** y **no menciona lugar de pago**, en coherencia con la decisión de no imprimir domicilios.
+
+**La fecha de pago se imprime en la nota a crédito**, junto con los días de plazo, tomada de `fechaVencimiento` sin recalcular. El pagaré remite a esa fecha: si no está impresa, la referencia queda vacía.
+
+**Días de plazo:** viven en el perfil del cliente con los valores 7, 15, 30 y 60. Al generar una nota se precargan y se pueden cambiar para esa venta; cambiarlos ahí **no** modifica el perfil. Un cliente sin plazo obliga a elegirlo, sin valor por omisión.
+
+**El renglón de IVA solo aparece en ventas facturadas.** Un impuesto en cero junto a un subtotal igual al total se contradice a sí mismo en un documento que el cliente firma.
+
 **Escaneo en POS:** un rollo escaneado que se identifica sin ambigüedad **se agrega al carrito directamente**, con el mismo criterio de Salidas: la serie manda y la discrepancia de SKU avisa sin bloquear. No se agrega nada cuando el escaneo devuelve varios resultados, ni cuando el rollo no está disponible, es de otro sitio o ya está en el carrito; esos casos se rechazan con aviso, porque un rechazo silencioso produce un ticket con menos rollos de los que se lleva el cliente. El tecleo manual sigue mostrando resultados para elegir.
 
 **Renglones agrupados:** los rollos del mismo producto forman **un solo renglón** con su conteo y cantidad total, y el precio se captura una vez para todos. Agrupar por tela mezclaría colores y unidades y está prohibido.

@@ -98,6 +98,47 @@ test("Credit Note (ticket-detail) prints exactly 216x140mm in two copies with in
   assert.match(cobros, /setLocation\(\`\/tickets\/\$\{printedTicketId\}\?print=3\`\);/);
 });
 
+test("Nota print conditionally renders customer header, credit terms, legal text, and IVA", async () => {
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+  const notaPrint = detail.slice(
+    detail.indexOf("{/* Nota Print Pages */}"),
+    detail.indexOf("<Dialog open={cancelOpen}"),
+  );
+
+  // The three optional customer fields are conditional grid children, not placeholder rows.
+  assert.match(notaPrint, /\{printedContact && \(/);
+  assert.match(notaPrint, /\{printedRecipient && \(/);
+  assert.match(notaPrint, /\{printedCustomerAddress && \(/);
+  assert.doesNotMatch(notaPrint, /"N\/A"|\|\| "—"/);
+  assert.match(notaPrint, />Cliente</);
+  assert.match(notaPrint, />Folio Venta</);
+  assert.match(notaPrint, />Fecha Venta</);
+
+  // Credit terms use the persisted sale fields; cash notes omit both conditional rows.
+  assert.match(notaPrint, /const creditTicket = printData\.esCredito;/);
+  assert.match(notaPrint, /const paymentDate = printData\.fechaVencimiento;/);
+  assert.match(notaPrint, /const termDays = printData\.diasPlazo;/);
+  assert.match(notaPrint, /formatDateOnlyMx\(paymentDate\)/);
+  assert.match(notaPrint, /\{creditTicket && paymentDate && \([\s\S]*>Fecha de pago</);
+  assert.match(notaPrint, /\{creditTicket && termDays && \([\s\S]*>Plazo</);
+
+  const legalParagraphs = [
+    "RECIBO DE MERCANCÍA Y PAGARÉ",
+    "Recibo a mi entera satisfacción la mercancía aquí detallada.",
+    "Por este pagaré, reconozco deber y me obligo incondicionalmente a pagar a la orden de MARIANA TEXTIL, en la fecha de pago señalada en esta nota, el monto de esta nota, por concepto de mercancía recibida.",
+    "El presente pagaré se rige por los artículos 170, fracciones I, II, III, IV, V y VI; 171; y 174, primer párrafo, de la LGTOC, y demás disposiciones aplicables.",
+  ];
+  for (const paragraph of legalParagraphs) {
+    assert.ok(notaPrint.includes(`<p${paragraph === legalParagraphs[0] ? ' className="font-bold"' : ""}>${paragraph}</p>`));
+  }
+  assert.doesNotMatch(notaPrint, /lugar de pago|domicilio/i);
+
+  // Subtotal always prints; IVA only does so for facturado and labels the persisted rate.
+  assert.match(notaPrint, /"subtotal" in printData/);
+  assert.match(notaPrint, /\{printData\.facturado && \([\s\S]*IVA \(\{formatNumber\(printData\.tasaIva/);
+  assert.doesNotMatch(notaPrint, /IVA \(16(?:\.00)?%\)/);
+});
+
 test("Ticket and media carta declare their own physical page sizes", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
