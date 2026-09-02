@@ -101,13 +101,30 @@ test("Credit Note (ticket-detail) prints exactly 216x140mm in two copies with in
 test("Ticket and media carta declare their own physical page sizes", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
-  assert.match(css, /@page ticket-page\s*\{[\s\S]*size:\s*80mm 200mm;/);
+  assert.match(css, /@page ticket-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
   assert.match(css, /\.print-ticket-container\s*\{[\s\S]*page:\s*ticket-page;/);
   assert.match(css, /body\.print-80mm #root \*:has\(\.print-80mm-only\)\s*\{[\s\S]*display:\s*contents !important;/);
   assert.match(css, /body\.print-80mm \.print-80mm-only\s*\{[\s\S]*position:\s*static;/);
   assert.match(css, /@page carta-page\s*\{[\s\S]*size:\s*140mm 216mm;/);
   assert.match(css, /\.print-document-container\s*\{[\s\S]*page:\s*carta-page;/);
   assert.equal((detail.match(/<DocumentQrCode/g) ?? []).length, 2);
+});
+
+test("tubular opt-in prints the ticket plus one isolated 80mm strip per color", async () => {
+  const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+
+  assert.match(css, /@page tubular-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
+  assert.match(css, /\.tubular-strip-page\s*\{[\s\S]*page:\s*tubular-page;[\s\S]*break-before:\s*page;/);
+  assert.match(detail, /get\("tubulares"\) === "1"/);
+  assert.match(detail, /printTubulares \? \[0\] : \[0, 650, 1_300\]/);
+  assert.match(detail, /tubularGroups\.map/);
+  assert.match(detail, /Folio:/);
+  assert.match(detail, /Color:/);
+  assert.match(detail, /rollo\.serie/);
+  assert.match(detail, /formatNumber\(rollo\.cantidad, \{ kind: "quantity" \}\)/);
+  assert.match(detail, /formatUnit\(rollo\.unidad\)/);
+  assert.match(detail, /group\.totales\[unidad\]/);
 });
 
 test("Viaje isolates one exact letter page for printing", async () => {

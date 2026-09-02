@@ -42,7 +42,11 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
-import { groupTicketLinesByModality, groupPrintLinesByModality } from "@/lib/ticket-lines";
+import {
+  groupIdentifiedNormalRollsByColor,
+  groupTicketLinesByModality,
+  groupPrintLinesByModality,
+} from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
 import { absoluteAppUrl, printWhenReady, waitForPrintableAssets } from "@/lib/print";
@@ -64,6 +68,8 @@ export default function TicketDetailPage() {
   const [adminPass, setAdminPass] = useState("");
   const [showRolls, setShowRolls] = useState(false);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
+  const printTubulares =
+    new URLSearchParams(window.location.search).get("tubulares") === "1";
 
   const { data: user } = useGetCurrentUser({
     query: { queryKey: getGetCurrentUserQueryKey() },
@@ -124,7 +130,7 @@ export default function TicketDetailPage() {
     void waitForPrintableAssets().then(() => {
       if (cancelled) return;
       timers.push(
-        ...[0, 650, 1_300].map((delay) =>
+        ...(printTubulares ? [0] : [0, 650, 1_300]).map((delay) =>
           window.setTimeout(() => window.print(), delay),
         ),
       );
@@ -140,7 +146,7 @@ export default function TicketDetailPage() {
       timers.forEach(window.clearTimeout);
       document.body.classList.remove(printClass);
     };
-  }, [ticket, isPrintReady, isNota]);
+  }, [ticket, isPrintReady, isNota, printTubulares]);
 
   const handlePrint80mm = () => {
     void printWhenReady("print-80mm");
@@ -276,6 +282,7 @@ export default function TicketDetailPage() {
     minute: "2-digit",
   });
   const ticketDocumentUrl = absoluteAppUrl(`/tickets/${ticket.id}`);
+  const tubularGroups = groupIdentifiedNormalRollsByColor(ticket.lineas);
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
@@ -702,6 +709,51 @@ export default function TicketDetailPage() {
           <br />
           Revise su mercancía, no hay devoluciones.
         </div>
+
+        {printTubulares &&
+          tubularGroups.map((group) => (
+            <section
+              key={group.color}
+              className="tubular-strip-page mt-4 border border-black p-3 text-xs"
+              aria-label={`Tubular color ${group.color}`}
+            >
+              <h2 className="text-center text-sm font-bold uppercase">
+                TUBULAR
+              </h2>
+              <div className="mt-2 flex justify-between border-b border-black pb-1">
+                <span className="font-semibold">Folio:</span>
+                <span>{ticket.folio}</span>
+              </div>
+              <div className="mt-1 flex justify-between">
+                <span className="font-semibold">Color:</span>
+                <span>{group.color}</span>
+              </div>
+              <div className="my-2 border-t border-black" />
+              <ul className="space-y-1">
+                {group.rollos.map((rollo) => (
+                  <li key={rollo.id} className="flex justify-between gap-2">
+                    <span className="font-mono">{rollo.serie}</span>
+                    <span>
+                      {formatNumber(rollo.cantidad, { kind: "quantity" })}{" "}
+                      {formatUnit(rollo.unidad)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-2 border-t border-black pt-2 font-bold">
+                {(["METRO", "KILO", "BOLSA"] as const).map((unidad) =>
+                  group.totales[unidad] == null ? null : (
+                    <div key={unidad} className="flex justify-between">
+                      <span>TOTAL {formatUnit(unidad)}:</span>
+                      <span>
+                        {formatNumber(group.totales[unidad], { kind: "quantity" })}
+                      </span>
+                    </div>
+                  ),
+                )}
+              </div>
+            </section>
+          ))}
       </div>
 
       {/* Media Carta */}

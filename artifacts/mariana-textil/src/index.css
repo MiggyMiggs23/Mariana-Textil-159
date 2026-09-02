@@ -365,7 +365,11 @@
     margin: 0;
   }
   @page ticket-page {
-    size: 80mm 200mm;
+    size: 80mm 250mm;
+    margin: 4mm;
+  }
+  @page tubular-page {
+    size: 80mm 250mm;
     margin: 4mm;
   }
   @page carta-page {
@@ -500,6 +504,19 @@
     margin: 0 auto;
     font-family: monospace;
     color: black;
+  }
+
+  .tubular-strip-page {
+    page: tubular-page;
+    break-before: page;
+    break-inside: avoid-page;
+    page-break-before: always;
+    page-break-inside: avoid;
+    width: 72mm;
+    margin-left: auto;
+    margin-right: auto;
+    color: black;
+    font-family: monospace;
   }
 
   .print-document-container {

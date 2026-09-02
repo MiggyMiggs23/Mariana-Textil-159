@@ -21,3 +21,14 @@ test("POS uses the BOLSA threshold and whole-bag quantity UX", async () => {
   );
   assert.doesNotMatch(page, /MAYOREO_THRESHOLD_METERS/);
 });
+
+test("tubular printing is unchecked client-only state and does not change TicketInput", async () => {
+  const page = await readFile(new URL("./pos.tsx", import.meta.url), "utf8");
+
+  assert.match(page, /useState\(false\).*imprimirTubulares|imprimirTubulares.*useState\(false\)/s);
+  assert.match(page, /id="imprimir-tubulares"/);
+  assert.match(page, /Imprimir tubulares/);
+  assert.match(page, /const input: TicketInput = \{[\s\S]*lineas,[\s\S]*\};/);
+  assert.doesNotMatch(page, /imprimirTubulares:/);
+  assert.match(page, /\?print=3\$\{imprimirTubulares \? "&tubulares=1" : ""\}/);
+});

@@ -6,6 +6,7 @@ import type {
   TicketLineaImpresionConPrecios,
 } from "@workspace/api-client-react";
 import {
+  groupIdentifiedNormalRollsByColor,
   groupPrintLinesByModality,
   groupTicketLinesByModality,
 } from "./ticket-lines";
@@ -101,4 +102,39 @@ test("priced print lines preserve grouped sale totals", () => {
   assert.equal(groups.rollos.lines.length, 1);
   assert.equal(groups.rollos.lines[0]?.importe, 125);
   assert.equal(groups.rollos.subtotal, 125);
+});
+
+test("tubular strips group only identified NORMAL rolls by color deterministically", () => {
+  const azul = { ...line(3, "NORMAL", "10.00"), colorProducto: "Azul", serieRollo: "B-02", cantidad: "4.125" };
+  const rojo = { ...line(2, "NORMAL", "10.00"), colorProducto: "Rojo", serieRollo: "A-01", cantidad: "2.500" };
+  const azulFirst = { ...line(1, "NORMAL", "10.00"), colorProducto: "Azul", serieRollo: "B-01", cantidad: "3.000" };
+  const metrado = { ...line(4, "METREADO", "10.00"), colorProducto: "Azul", cantidad: "99.000" };
+
+  const groups = groupIdentifiedNormalRollsByColor([rojo, metrado, azul, azulFirst]);
+
+  assert.deepEqual(groups, [
+    {
+      color: "Azul",
+      totales: { METRO: "7.125" },
+      rollos: [
+        { id: 1, serie: "B-01", cantidad: "3.000", unidad: "METRO" },
+        { id: 3, serie: "B-02", cantidad: "4.125", unidad: "METRO" },
+      ],
+    },
+    {
+      color: "Rojo",
+      totales: { METRO: "2.500" },
+      rollos: [{ id: 2, serie: "A-01", cantidad: "2.500", unidad: "METRO" }],
+    },
+  ]);
+});
+
+test("tubular strips never mix metres, kilos, and bags in one false total", () => {
+  const metro = { ...line(1, "NORMAL", "10.00"), colorProducto: "Negro", serieRollo: "M-1", cantidad: "1.004", unidadProducto: "METRO" as const };
+  const otroMetro = { ...line(2, "NORMAL", "10.00"), colorProducto: "Negro", serieRollo: "M-2", cantidad: "1.004", unidadProducto: "METRO" as const };
+  const kilo = { ...line(3, "NORMAL", "10.00"), colorProducto: "Negro", serieRollo: "K-1", cantidad: "2.500", unidadProducto: "KILO" as const };
+
+  const [group] = groupIdentifiedNormalRollsByColor([kilo, otroMetro, metro]);
+
+  assert.deepEqual(group?.totales, { METRO: "2.008", KILO: "2.500" });
 });

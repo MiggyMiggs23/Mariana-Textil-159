@@ -168,6 +168,87 @@ export function groupTicketLinesByModality(lineas: TicketLinea[], showIndividual
   return result;
 }
 
+export type TubularRoll = {
+  id: number;
+  serie: string;
+  cantidad: string;
+  unidad: TicketLinea["unidadProducto"];
+};
+
+export type TubularColorGroup = {
+  color: string;
+  rollos: TubularRoll[];
+  totales: Partial<Record<TicketLinea["unidadProducto"], string>>;
+};
+
+function addStoredQuantities(left: string | undefined, right: string): string {
+  const toThousandths = (value: string) => {
+    const match = /^([+-]?)(\d+)(?:\.(\d{1,3}))?$/.exec(value.trim());
+    if (!match) throw new TypeError(`Cantidad guardada inválida: ${value}`);
+    const fraction = (match[3] ?? "").padEnd(3, "0");
+    const coefficient = BigInt(`${match[2]}${fraction}`);
+    return match[1] === "-" ? -coefficient : coefficient;
+  };
+  const total = toThousandths(left ?? "0") + toThousandths(right);
+  const sign = total < 0n ? "-" : "";
+  const digits = (total < 0n ? -total : total).toString().padStart(4, "0");
+  return `${sign}${digits.slice(0, -3)}.${digits.slice(-3)}`;
+}
+
+/**
+ * Builds the optional tubular-print strips exclusively from persisted,
+ * identified NORMAL ticket lines. METREADO lines deliberately have no source
+ * roll and therefore cannot produce a physical-roll strip.
+ */
+export function groupIdentifiedNormalRollsByColor(
+  lineas: TicketLinea[],
+): TubularColorGroup[] {
+  const byColor = new Map<string, TubularColorGroup>();
+
+  for (const linea of lineas) {
+    if (
+      linea.tipo !== "NORMAL" ||
+      linea.rolloId == null ||
+      !linea.serieRollo?.trim()
+    ) {
+      continue;
+    }
+
+    const color = linea.colorProducto;
+    const group = byColor.get(color);
+    const rollo = {
+      id: linea.id,
+      serie: linea.serieRollo,
+      cantidad: linea.cantidad,
+      unidad: linea.unidadProducto,
+    };
+
+    if (group) {
+      group.rollos.push(rollo);
+      group.totales[linea.unidadProducto] = addStoredQuantities(
+        group.totales[linea.unidadProducto],
+        linea.cantidad,
+      );
+    } else {
+      byColor.set(color, {
+        color,
+        rollos: [rollo],
+        totales: { [linea.unidadProducto]: addStoredQuantities(undefined, linea.cantidad) },
+      });
+    }
+  }
+
+  return [...byColor.values()]
+    .sort((left, right) => left.color.localeCompare(right.color, "es-MX"))
+    .map((group) => ({
+      ...group,
+      rollos: [...group.rollos].sort(
+        (left, right) =>
+          left.serie.localeCompare(right.serie, "es-MX") || left.id - right.id,
+      ),
+    }));
+}
+
 type TicketPrintLine =
   | TicketLineaImpresionBase
   | TicketLineaImpresionConPrecios;

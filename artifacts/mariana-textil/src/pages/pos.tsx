@@ -388,6 +388,7 @@ export default function PosPage() {
   const [clientName, setClientName] = useState("Venta a Público");
   const [documentoTipo, setDocumentoTipo] = useState<"TICKET" | "NOTA" | null>(null);
   const [notaSinPrecios, setNotaSinPrecios] = useState(false);
+  const [imprimirTubulares, setImprimirTubulares] = useState(false);
   const [nombreDestinatario, setNombreDestinatario] = useState("");
   const [direccionEntregaSnapshot, setDireccionEntregaSnapshot] = useState("");
 
@@ -693,7 +694,10 @@ export default function PosPage() {
           setNotaSinPrecios(false);
           setNombreDestinatario("");
           setDireccionEntregaSnapshot("");
-          setLocation(`/tickets/${ticket.id}?print=3`);
+          setImprimirTubulares(false);
+          setLocation(
+            `/tickets/${ticket.id}?print=3${imprimirTubulares ? "&tubulares=1" : ""}`,
+          );
         },
         onError: (err: unknown) => {
           const message = getApiErrorMessage(
@@ -1051,6 +1055,26 @@ export default function PosPage() {
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   El precio negociado es antes de IVA.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2 bg-secondary/50 p-3 rounded-md">
+              <Checkbox
+                id="imprimir-tubulares"
+                checked={imprimirTubulares}
+                onCheckedChange={(value) => setImprimirTubulares(value === true)}
+                data-testid="imprimir-tubulares"
+              />
+              <div>
+                <Label
+                  htmlFor="imprimir-tubulares"
+                  className="font-semibold cursor-pointer"
+                >
+                  Imprimir tubulares
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Agrega una tira por color de los rollos identificados.
                 </p>
               </div>
             </div>
