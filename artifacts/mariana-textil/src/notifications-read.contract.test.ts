@@ -13,3 +13,9 @@ test("ADMIN can mark stored notifications read from the panel", () => {
   assert.match(bell, /getListNotificacionesQueryKey/);
   assert.doesNotMatch(bell, />\s*Limpiar\s*</);
 });
+
+test("stored and derived events are visibly explained", () => {
+  assert.match(bell, /Notificación guardada · se marca como leída/);
+  assert.match(bell, /Evento derivado · se resuelve al atender la condición/);
+  assert.match(bell, /Los eventos derivados\s+desaparecen cuando se atiende la condición/);
+});

@@ -55,6 +55,10 @@ function eventTime(value: string): string {
   }).format(new Date(value));
 }
 
+function isStoredEvent(kind: string): boolean {
+  return kind === "SYSTEM" || kind === "CREDIT_NOTICE";
+}
+
 export function NotificationsBell({
   mobile = false,
   isAdmin = false,
@@ -93,9 +97,8 @@ export function NotificationsBell({
   });
 
   const events = data?.events ?? [];
-  const storedUnreadCount = events.filter(
-    (event) => event.kind === "SYSTEM" || event.kind === "CREDIT_NOTICE",
-  ).length;
+  const storedUnreadCount = events.filter((event) => isStoredEvent(event.kind)).length;
+  const derivedCount = events.length - storedUnreadCount;
   const refreshDirected = () => {
     queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
     queryClient.invalidateQueries({ queryKey: getListSolicitudesPagoDirigidoQueryKey() });
@@ -192,6 +195,11 @@ export function NotificationsBell({
                         </span>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{event.message}</p>
+                      <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                        {isStoredEvent(event.kind)
+                          ? "Notificación guardada · se marca como leída"
+                          : "Evento derivado · se resuelve al atender la condición"}
+                      </p>
                       {isAdmin && event.kind === "DIRECTED_PAYMENT" && event.action ? (
                         <div className="mt-2 space-y-2" data-testid={`directed-payment-action-${event.action.requestId}`}>
                           <p className="text-xs"><strong>{event.action.documento}</strong> · {event.action.contraparte}</p>
@@ -212,6 +220,13 @@ export function NotificationsBell({
             </div>
           )}
         </ScrollArea>
+
+        {isAdmin && derivedCount > 0 && (
+          <p className="border-t px-4 py-2 text-xs text-muted-foreground">
+            Marcar como leídas solo afecta notificaciones guardadas. Los eventos derivados
+            desaparecen cuando se atiende la condición que los genera.
+          </p>
+        )}
 
         {isAdmin && (
           <div className="grid grid-cols-2 gap-1 border-t bg-muted/40 p-2">
