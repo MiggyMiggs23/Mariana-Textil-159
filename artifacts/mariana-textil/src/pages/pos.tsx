@@ -14,6 +14,8 @@ import {
   HelpCircle,
   Loader2,
   AlertTriangle,
+  ChevronDown,
+  ChevronUp,
   ArrowLeft,
   FileText,
 } from "lucide-react";
@@ -30,6 +32,7 @@ import {
   getListLocationsQueryKey,
   getListarTicketsQueryKey,
   getBuscarPosQueryKey,
+  getBuscarPosQueryOptions,
   TipoTicket,
   PosRolloDisponible,
   PosProducto,
@@ -63,6 +66,7 @@ import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { ClientSelector } from "@/components/client-selector";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import { requestAppSound } from "@/components/notification-audio-controller";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   advertenciaSkuEscaneado,
@@ -81,7 +85,9 @@ type PriceValidation = {
 type CartLineKey = string;
 
 function getCartLineKey(item: any): CartLineKey {
-  return item.rollo ? `rollo-${item.rollo.id}` : `producto-${item.producto.id}`;
+  return item.rollos
+    ? `producto-${item.producto.id}`
+    : `producto-metreado-${item.producto.id}`;
 }
 
 function meteredCostWarning(item: any): string | null {
@@ -94,6 +100,26 @@ function meteredCostWarning(item: any): string | null {
     return "El precio capturado está por debajo del costo de referencia metreado. La venta puede continuar.";
   }
   return null;
+}
+
+function cartLineSubtotalCents(item: any): number {
+  if (item.rollos) {
+    return item.rollos.reduce(
+      (sum: number, rollo: PosRolloDisponible) =>
+        sum +
+        Math.round(
+          (Math.round(Number(rollo.cantidadActual) * 1000) *
+            Math.round(Number(item.precioUnitario) * 100)) /
+            1000,
+        ),
+      0,
+    );
+  }
+  return Math.round(
+    (Math.round(Number(item.cantidad) * 1000) *
+      Math.round(Number(item.precioUnitario) * 100)) /
+      1000,
+  );
 }
 
 // Componente Cart Line para el POS
@@ -123,11 +149,12 @@ function CartLineItem({
 }) {
   const validarPrecio = useValidarPrecioPos();
   const validationSequence = useRef(0);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const sequence = ++validationSequence.current;
 
-    if (isMetreado || !item.rollo) {
+    if (isMetreado || !item.rollos) {
       onPriceValidationChange(lineKey, { status: "valid" });
       return;
     }
@@ -143,31 +170,34 @@ function CartLineItem({
     onPriceValidationChange(lineKey, { status: "checking" });
     let active = true;
     const timer = window.setTimeout(() => {
-      validarPrecio.mutate(
-        {
-          data: {
-            ubicacionId: locationId,
-            productoId: item.producto.id,
-            rolloId: item.rollo.id,
-            precioUnitario: item.precioUnitario,
-          },
-        },
-        {
-          onSuccess: (result) => {
+      void Promise.all(
+        item.rollos.map((rollo: PosRolloDisponible) =>
+          validarPrecio.mutateAsync({
+            data: {
+              ubicacionId: locationId,
+              productoId: item.producto.id,
+              rolloId: rollo.id,
+              precioUnitario: item.precioUnitario,
+            },
+          }),
+        ),
+      )
+        .then((results) => {
             if (!active || validationSequence.current !== sequence) return;
+            const rejected = results.find((result) => !result.valido);
             onPriceValidationChange(
               lineKey,
-              result.valido
+              !rejected
                 ? { status: "valid" }
                 : {
                     status: "invalid",
                     message:
-                      result.mensaje ??
+                      rejected.mensaje ??
                       "El precio está por debajo del mínimo permitido.",
                   },
             );
-          },
-          onError: (error) => {
+          })
+        .catch((error) => {
             if (!active || validationSequence.current !== sequence) return;
             onPriceValidationChange(lineKey, {
               status: "error",
@@ -176,9 +206,7 @@ function CartLineItem({
                 "No se pudo validar el precio. Intenta de nuevo.",
               ),
             });
-          },
-        },
-      );
+          });
     }, 300);
 
     return () => {
@@ -189,7 +217,7 @@ function CartLineItem({
     isMetreado,
     item.precioUnitario,
     item.producto.id,
-    item.rollo,
+    item.rollos,
     lineKey,
     locationId,
     onPriceValidationChange,
@@ -230,9 +258,9 @@ function CartLineItem({
                  )}
                </>
              )}
-            {!isMetreado && item.rollo && (
-              <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground font-mono">
-                {item.rollo.serie}
+             {!isMetreado && item.rollos && (
+               <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                 {item.rollos.length} {item.rollos.length === 1 ? "rollo" : "rollos"}
               </span>
             )}
           </div>
@@ -257,7 +285,7 @@ function CartLineItem({
                 }
                 className={`h-8 text-right font-mono ${priceIsBlocked ? "border-destructive ring-1 ring-destructive" : ""}`}
                 aria-invalid={priceIsBlocked}
-                data-testid={`input-precio-${item.rollo?.serie ?? item.producto.id}`}
+                 data-testid={`input-precio-${item.producto.id}`}
               />
               {priceValidation.status === "checking" && (
                 <Loader2 className="absolute left-2 top-2 h-4 w-4 animate-spin text-muted-foreground" />
@@ -283,14 +311,14 @@ function CartLineItem({
                 className="h-8 text-right font-mono"
               />
             </div>
-          ) : (
-            <div className="font-mono text-sm">
+           ) : (
+             <div className="font-mono text-sm whitespace-nowrap">
                {formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.producto.unidad)}
             </div>
           )}
 
           <div className="w-24 text-right font-bold">
-            {formatNumber(item.cantidad * item.precioUnitario, { kind: "money" })}
+            {formatNumber(cartLineSubtotalCents(item) / 100, { kind: "money" })}
           </div>
 
           <Button
@@ -303,11 +331,53 @@ function CartLineItem({
           </Button>
         </div>
       </div>
+      {!isMetreado && item.rollos && (
+        <div className="mt-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs"
+            onClick={() => setExpanded((current) => !current)}
+          >
+            {expanded ? <ChevronUp className="mr-1 h-3.5 w-3.5" /> : <ChevronDown className="mr-1 h-3.5 w-3.5" />}
+            {expanded ? "Ocultar series" : "Ver series"}
+          </Button>
+          {item.hasDifferentSuggestedPrices && (
+            <p className="mt-1 flex items-center gap-1 text-xs font-medium text-amber-800" role="alert">
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+              Los rollos tenían precios sugeridos distintos; este precio se aplica a todos.
+            </p>
+          )}
+          {expanded && (
+            <div className="mt-2 space-y-1 rounded-md bg-muted/50 p-2">
+              {item.rollos.map((rollo: PosRolloDisponible) => (
+                <div key={rollo.id} className="flex items-center justify-between gap-2 text-xs">
+                  <span className="font-mono">{rollo.serie}</span>
+                  <span className="text-muted-foreground">
+                    {formatNumber(rollo.cantidadActual, { kind: "quantity" })} {formatUnit(rollo.unidad)}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-destructive"
+                    onClick={() => item.onRemoveRollo(rollo.id)}
+                    aria-label={`Quitar rollo ${rollo.serie}`}
+                  >
+                    Quitar
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       {priceIsBlocked && priceValidation.message && (
         <p
           className="mt-2 text-xs font-medium text-destructive"
           role="alert"
-          data-testid={`precio-error-${item.rollo?.serie ?? item.producto.id}`}
+          data-testid={`precio-error-${item.producto.id}`}
         >
           {priceValidation.message}
         </p>
@@ -366,15 +436,6 @@ export default function PosPage() {
     setSkuWarning(null);
   }, []);
 
-  const handleSearchScan = useCallback(
-    (value: string, codigo: CodigoEscaneadoInterpretado) => {
-      setSearch(value);
-      setLastScannedCode(codigo.sku ? codigo : null);
-      setSkuWarning(null);
-    },
-    [],
-  );
-
   // Timer for debouncing search
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
@@ -383,6 +444,15 @@ export default function PosPage() {
 
   // Cart state
   const [cart, setCart] = useState<any[]>([]);
+  const cartRef = useRef<any[]>([]);
+  const commitCart = useCallback(
+    (update: (current: any[]) => any[]) => {
+      const next = update(cartRef.current);
+      cartRef.current = next;
+      setCart(next);
+    },
+    [],
+  );
   const [facturar, setFacturar] = useState(false);
   const [clientId, setClientId] = useState<string>("1");
   const [clientName, setClientName] = useState("Venta a Público");
@@ -413,40 +483,46 @@ export default function PosPage() {
     },
   });
 
-  useEffect(() => {
-    if (
-      isFetching ||
-      !lastScannedCode?.serie ||
-      lastScannedCode.serie !== debouncedSearch ||
-      !searchResults
-    ) {
-      return;
-    }
-    const rollo = searchResults.rollos.find(
-      (item) => item.serie === lastScannedCode.serie,
-    );
-    setSkuWarning(
-      rollo ? advertenciaSkuEscaneado(lastScannedCode, rollo.sku) : null,
-    );
-    setLastScannedCode(null);
-  }, [debouncedSearch, isFetching, lastScannedCode, searchResults]);
-
   const crearTicket = useCrearTicket();
 
-  const addToCart = (item: any) => {
+  const addToCart = useCallback((item: any, automatic = false) => {
     // Para NORMAL, añadir el rollo
     if (tipoTicket === TipoTicket.NORMAL) {
-      if (cart.find((c) => c.rollo?.id === item.id)) {
+      const current = cartRef.current;
+      if (current.some((group) => group.rollos?.some((rollo: PosRolloDisponible) => rollo.id === item.id))) {
+        if (automatic) requestAppSound("ALERTA");
         toast({
           title: "El rollo ya está en el ticket",
           variant: "destructive",
         });
         return;
       }
-      setCart([
-        ...cart,
-        {
-          rollo: item,
+      const existingIndex = current.findIndex(
+          (group) => group.rollos && group.producto.id === item.productoId,
+        );
+      let nextCart: any[];
+        if (existingIndex >= 0) {
+          const existing = current[existingIndex];
+          const suggestedPriceDiffers =
+            !existing.suggestedPrices.includes(Number(item.precioSugerido));
+          nextCart = [...current];
+          nextCart[existingIndex] = {
+            ...existing,
+            rollos: [...existing.rollos, item],
+            cantidad: existing.cantidad + Number(item.cantidadActual),
+            suggestedPrices: [
+              ...existing.suggestedPrices,
+              Number(item.precioSugerido),
+            ],
+            hasDifferentSuggestedPrices:
+              existing.hasDifferentSuggestedPrices || suggestedPriceDiffers,
+            priceValidation: { status: "idle" },
+          };
+        } else {
+          nextCart = [
+          ...current,
+          {
+          rollos: [item],
           producto: {
             id: item.productoId,
             sku: item.sku,
@@ -458,8 +534,13 @@ export default function PosPage() {
           precioUnitario: Number(item.precioSugerido),
           priceValidation: { status: "idle" },
           isMetreado: false,
+          suggestedPrices: [Number(item.precioSugerido)],
+          hasDifferentSuggestedPrices: false,
         },
-      ]);
+          ];
+        }
+      cartRef.current = nextCart;
+      setCart(nextCart);
     } else {
       // Para METREADO, cada producto-color is an independent line.
       if (cart.find((c) => c.producto.id === item.id && c.isMetreado)) {
@@ -469,8 +550,8 @@ export default function PosPage() {
         });
         return;
       }
-      setCart([
-        ...cart,
+      const nextCart = [
+        ...cartRef.current,
         (() => {
           const suggested = suggestedMeteredPrice(1, item, item.unidad);
           return {
@@ -484,13 +565,102 @@ export default function PosPage() {
           meteredPriceTierChanged: false,
         };
         })(),
-      ]);
+      ];
+      cartRef.current = nextCart;
+      setCart(nextCart);
     }
-    setSearch("");
-  };
+    if (automatic) {
+      requestAppSound("AVISO");
+      toast({
+        title: "Rollo agregado",
+        description: `${item.tela} - ${item.color} · Serie ${item.serie}`,
+      });
+    }
+    setSearch((current) =>
+      automatic && current !== String(item.serie) ? current : "",
+    );
+    return true;
+  }, [tipoTicket, toast]);
+
+  const handleSearchScan = useCallback(
+    async (
+      value: string,
+      codigo: CodigoEscaneadoInterpretado,
+      source: "scanner" | "manual" | "camera",
+    ) => {
+      setSearch(value);
+      setSkuWarning(null);
+      if (
+        tipoTicket !== TipoTicket.NORMAL ||
+        source === "manual" ||
+        !codigo.serie ||
+        !selectedLocationId
+      ) {
+        setLastScannedCode(codigo.sku ? codigo : null);
+        return;
+      }
+
+      try {
+        const results = await queryClient.fetchQuery(
+          getBuscarPosQueryOptions({
+            q: codigo.serie,
+            ubicacionId: selectedLocationId,
+          }),
+        );
+        const exactMatches = results.rollos.filter(
+          (rollo) => rollo.serie === codigo.serie,
+        );
+        if (exactMatches.length !== 1) {
+          requestAppSound("ALERTA");
+          toast({
+            title:
+              exactMatches.length > 1
+                ? "El escaneo es ambiguo"
+                : "No se pudo agregar el rollo",
+            description:
+              exactMatches.length > 1
+                ? "Elige el rollo correcto de la lista."
+                : "No está disponible en este sitio o el código no corresponde a un rollo disponible.",
+            variant: "destructive",
+          });
+          return;
+        }
+        const rollo = exactMatches[0];
+        setSkuWarning(advertenciaSkuEscaneado(codigo, rollo.sku));
+        addToCart(rollo, true);
+      } catch (error) {
+        requestAppSound("ALERTA");
+        toast({
+          title: "No se pudo verificar el rollo",
+          description: getApiErrorMessage(
+            error,
+            "Revisa la conexión e intenta escanear de nuevo.",
+          ),
+          variant: "destructive",
+        });
+      }
+    },
+    [addToCart, queryClient, selectedLocationId, tipoTicket, toast],
+  );
+
+  useEffect(() => {
+    if (
+      isFetching ||
+      !lastScannedCode?.serie ||
+      lastScannedCode.serie !== debouncedSearch ||
+      !searchResults
+    ) return;
+    const rollo = searchResults.rollos.find(
+      (item) => item.serie === lastScannedCode.serie,
+    );
+    setSkuWarning(
+      rollo ? advertenciaSkuEscaneado(lastScannedCode, rollo.sku) : null,
+    );
+    setLastScannedCode(null);
+  }, [debouncedSearch, isFetching, lastScannedCode, searchResults]);
 
   const updateCartQuantity = (index: number, qty: number) => {
-    setCart((current) =>
+    commitCart((current) =>
       current.map((item, itemIndex) =>
         itemIndex === index && item.isMetreado
           ? (() => {
@@ -519,7 +689,7 @@ export default function PosPage() {
   };
 
   const updateCartPrice = (index: number, price: number) => {
-    setCart((current) =>
+    commitCart((current) =>
       current.map((item, itemIndex) =>
         itemIndex === index
           ? {
@@ -538,7 +708,7 @@ export default function PosPage() {
 
   const updateCartPriceValidation = useCallback(
     (lineKey: CartLineKey, validation: PriceValidation) => {
-      setCart((current) =>
+      commitCart((current) =>
         current.map((item) =>
           getCartLineKey(item) === lineKey &&
           (item.priceValidation?.status !== validation.status ||
@@ -548,21 +718,36 @@ export default function PosPage() {
         ),
       );
     },
-    [],
+    [commitCart],
   );
 
   const removeFromCart = (index: number) => {
-    setCart((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    commitCart((current) =>
+      current.filter((_, itemIndex) => itemIndex !== index),
+    );
+  };
+
+  const removeRolloFromGroup = (groupIndex: number, rolloId: number) => {
+    commitCart((current) =>
+      current.flatMap((item, itemIndex) => {
+        if (itemIndex !== groupIndex || !item.rollos) return [item];
+        const rollos = item.rollos.filter((rollo: PosRolloDisponible) => rollo.id !== rolloId);
+        if (rollos.length === 0) return [];
+        return [{
+          ...item,
+          rollos,
+          cantidad: rollos.reduce(
+            (sum: number, rollo: PosRolloDisponible) => sum + Number(rollo.cantidadActual),
+            0,
+          ),
+          priceValidation: { status: "idle" },
+        }];
+      }),
+    );
   };
 
   const cartSubtotalCents = cart.reduce(
-    (sum, item) =>
-      sum +
-      Math.round(
-        (Math.round(Number(item.cantidad) * 1000) *
-          Math.round(Number(item.precioUnitario) * 100)) /
-          1000,
-      ),
+    (sum, item) => sum + cartLineSubtotalCents(item),
     0,
   );
   const cartSubtotal = cartSubtotalCents / 100;
@@ -655,13 +840,23 @@ export default function PosPage() {
     }
 
     const uuid = crypto.randomUUID();
-    const lineas: TicketLineaInput[] = cart.map((item) => ({
-      rolloId: item.rollo?.id || null,
+    const lineas: TicketLineaInput[] = cart.flatMap((item) =>
+      item.rollos
+        ? item.rollos.map((rollo: PosRolloDisponible) => ({
+      rolloId: rollo.id,
       productoId: item.producto.id,
-      tipo: item.isMetreado ? TipoTicket.METREADO : TipoTicket.NORMAL,
-      cantidad: Number(item.cantidad),
+      tipo: TipoTicket.NORMAL,
+      cantidad: Number(rollo.cantidadActual),
       precioUnitario: Number(item.precioUnitario),
-    }));
+    }))
+        : [{
+            rolloId: null,
+            productoId: item.producto.id,
+            tipo: TipoTicket.METREADO,
+            cantidad: Number(item.cantidad),
+            precioUnitario: Number(item.precioUnitario),
+          }],
+    );
 
     const hasNormal = cart.some((item) => !item.isMetreado);
     const input: TicketInput = {
@@ -685,7 +880,7 @@ export default function PosPage() {
             title: `${documentoTipo} creado correctamente`,
             description: `Folio: ${ticket.folio}`,
           });
-          setCart([]);
+          commitCart(() => []);
           setSearch("");
           setFacturar(false);
           setClientId("1");
@@ -717,9 +912,11 @@ export default function PosPage() {
             data?.code === "PRICE_BELOW_COST" ||
             data?.code === "ROLLO_SIN_COSTO"
           ) {
-            setCart((current) =>
+            commitCart((current) =>
               current.map((item) =>
-                item.rollo && message.includes(String(item.rollo.serie))
+                item.rollos?.some((rollo: PosRolloDisponible) =>
+                  message.includes(String(rollo.serie)),
+                )
                   ? {
                       ...item,
                       priceValidation: { status: "invalid", message },
@@ -821,7 +1018,7 @@ export default function PosPage() {
             onClick={() => {
               setDocumentoTipo(null);
               setNotaSinPrecios(false);
-              setCart([]);
+              commitCart(() => []);
             }}
             className="h-10 w-10 shrink-0 text-muted-foreground hover:text-sidebar"
             title="Cambiar tipo de documento"
@@ -1006,7 +1203,7 @@ export default function PosPage() {
             <CardTitle className="flex justify-between items-center text-lg">
               <span>Ticket de Venta</span>
               <span className="bg-white/20 text-white px-2 py-0.5 rounded text-sm">
-                {cart.length} líneas
+                {cart.length} renglones
               </span>
             </CardTitle>
           </CardHeader>
@@ -1022,7 +1219,10 @@ export default function PosPage() {
                 {cart.map((item, idx) => (
                   <CartLineItem
                     key={getCartLineKey(item)}
-                    item={item}
+                    item={{
+                      ...item,
+                      onRemoveRollo: (rolloId: number) => removeRolloFromGroup(idx, rolloId),
+                    }}
                     lineKey={getCartLineKey(item)}
                     locationId={selectedLocationId}
                     priceValidation={item.priceValidation ?? { status: "idle" }}
