@@ -401,3 +401,13 @@ Cada cantidad se muestra **con su unidad** y la tabla **no lleva renglón de tot
 **El globo y el panel cuentan lo mismo.** Contar solo las guardadas en el globo mientras el panel muestra guardadas y derivadas produce dos números que no miden lo mismo, y el usuario no sabe a cuál creerle.
 
 **Marcar como leídas nunca borra.** Las notificaciones guardadas siguen consultables, conforme a la regla de que las tablas operativas no usan DELETE. El botón se rotula por lo que hace y no como "limpiar", que promete que desaparecen. Las dos tablas tienen **ids independientes que pueden colisionar**: cualquier ruta que marque una notificación por id debe distinguir de qué tabla es, o marcará la equivocada.
+
+## Utilidad y explicaciones estadísticas
+
+**Utilidad contra margen:** todo **importe** que represente ganancia se llama **Utilidad**. Los **porcentajes** siguen siendo margen. La utilidad es una cantidad de dinero y el margen una razón; llamarle utilidad a un porcentaje deja al usuario sin saber si lee pesos o por ciento.
+
+**La tarjeta de utilidad por cliente arranca oculta en cada carga.** El ojo existe porque el cliente puede estar viendo la pantalla, y recordar el estado entre sesiones la dejaría destapada justo en ese momento. El ojo es **solo visual**: la cifra viaja al navegador. Restringir quién conoce la utilidad se hace en el servidor, no con el ojo.
+
+**La utilidad excluye las líneas sin costo asignado**, así que queda por debajo de la real. Toda pantalla que muestre utilidad declara cuántas líneas quedaron fuera, incluso cuando son cero: saber que la cifra está completa vale tanto como la cifra.
+
+**Las oraciones que explican una gráfica se escriben leyendo la consulta que la alimenta, nunca el título.** Una oración deducida del rótulo le da al usuario una confianza que el dato no respalda. Si el título y la consulta no coinciden, la oración describe la consulta y la discrepancia se reporta.

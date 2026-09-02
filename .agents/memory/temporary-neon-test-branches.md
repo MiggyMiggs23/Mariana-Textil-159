@@ -38,3 +38,9 @@ Do not rely on `/tmp` files containing an isolated database URL surviving workfl
 **Why:** Workflow restarts and separate execution runtimes lost or could not read a temporary connection file, blocking an otherwise isolated browser test.
 
 **How to apply:** Finish dependent shell suites before restarting workflows. If another runtime needs the connection, reacquire it through Neon inside that runtime; never copy credentials into the workspace.
+
+Append-only integration suites must not share the same prepared database when their assertions depend on global counts or totals. Use one empty database per suite within the disposable branch, then delete the branch as the only cleanup boundary.
+
+**Why:** A report suite left immutable credit evidence that changed a later Caja suite from one expected account-receivable movement to two; deleting the evidence would have violated the production append-only trigger.
+
+**How to apply:** Prepare schema, seed, startup initializers, and `current_database()` verification independently for each suite whose fixtures cannot be rolled back. Sharing the branch is safe; sharing the database is not.

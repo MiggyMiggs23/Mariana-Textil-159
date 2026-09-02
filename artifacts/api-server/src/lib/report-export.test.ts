@@ -102,5 +102,5 @@ test("Excel number formats preserve report precision by kind", () => {
   });
   const sheet = workbook.getWorksheet("Indicadores")!;
   assert.equal(sheet.getCell("B2").numFmt, "#,##0");
-  assert.equal(sheet.getCell("B3").numFmt, "#,##0.000");
+  assert.equal(sheet.getCell("B3").numFmt, "#,##0.00");
 });

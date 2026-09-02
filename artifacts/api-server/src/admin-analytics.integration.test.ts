@@ -451,19 +451,8 @@ if (!testUrl) {
         }
       }
     } finally {
-      if (ids.tickets.length) {
-        await pool.query(`DELETE FROM ticket_pagos WHERE ticket_id = ANY($1::int[])`, [ids.tickets]);
-         if (ids.creditApplications.length) await pool.query(`DELETE FROM aplicaciones_credito WHERE id = ANY($1::int[])`, [ids.creditApplications]);
-        if (ids.creditMovements.length) await pool.query(`DELETE FROM movimientos_credito WHERE id = ANY($1::int[])`, [ids.creditMovements]);
-        await pool.query(`DELETE FROM ticket_lineas WHERE ticket_id = ANY($1::int[])`, [ids.tickets]);
-        await pool.query(`DELETE FROM tickets WHERE id = ANY($1::int[])`, [ids.tickets]);
-      }
-      if (ids.sessions.length) await pool.query(`DELETE FROM sesiones_caja WHERE id = ANY($1::int[])`, [ids.sessions]);
-      if (ids.rollos.length) await pool.query(`DELETE FROM rollos WHERE id = ANY($1::int[])`, [ids.rollos]);
-      if (ids.products.length) await pool.query(`DELETE FROM productos WHERE id = ANY($1::int[])`, [ids.products]);
-      if (ids.clients.length) await pool.query(`DELETE FROM clientes WHERE id = ANY($1::int[])`, [ids.clients]);
-      if (ids.users.length) await pool.query(`DELETE FROM usuarios WHERE id = ANY($1::int[])`, [ids.users]);
-      if (ids.locations.length) await pool.query(`DELETE FROM ubicaciones WHERE id = ANY($1::int[])`, [ids.locations]);
+      // Financial records are append-only. The disposable Neon branch is the
+      // cleanup boundary for this integration fixture.
       await pool.end();
     }
   });

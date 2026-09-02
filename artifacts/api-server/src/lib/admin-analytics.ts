@@ -68,9 +68,9 @@ export function isAccountDestination(value: string): value is AccountDestination
  */
 function destinationReadModel() {
   return `WITH destination_movements AS (
-    SELECT p.id, p.created_at fecha, p.importe importe, p.forma_pago "formaPago",
+    SELECT p.id, p.created_at fecha, p.importe importe, p.forma_pago::text "formaPago",
       CASE WHEN p.forma_pago='EFECTIVO' THEN 'CAJA_FISICA'
-        WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END "cuentaDestino",
+        WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END::text "cuentaDestino",
       t.id "documentoId", t.folio, t.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
       p.usuario_id "registroId", t.facturado, 'POS' fuente
     FROM ticket_pagos p JOIN tickets t ON t.id=p.ticket_id
@@ -80,7 +80,7 @@ function destinationReadModel() {
       AND t.estado='VENDIDO' AND t.cobrado AND p.forma_pago <> 'CREDITO'
     UNION ALL
     SELECT m.id, m.created_at fecha, m.importe,
-      'CREDITO' "formaPago", 'CUENTAS_POR_COBRAR' "cuentaDestino",
+      'CREDITO'::text "formaPago", 'CUENTAS_POR_COBRAR'::text "cuentaDestino",
       t.id "documentoId", t.folio, m.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
       m.usuario_id "registroId", COALESCE(t.facturado,false) facturado, 'CREDITO' fuente
     FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
@@ -90,7 +90,7 @@ function destinationReadModel() {
       AND m.tipo='VENTA_CREDITO' AND t.estado='VENDIDO'
     UNION ALL
     SELECT (m.id * 1000000 + a.id),m.created_at fecha,a.importe,
-      COALESCE(m.forma_pago,'TRANSFERENCIA') "formaPago",m.cuenta_destino "cuentaDestino",
+      COALESCE(m.forma_pago::text,'TRANSFERENCIA') "formaPago",m.cuenta_destino::text "cuentaDestino",
       sale_ticket.id "documentoId",sale_ticket.folio,m.cliente_id "clienteId",sale_ticket.ubicacion_id "ubicacionId",
       m.usuario_id "registroId",COALESCE(sale_ticket.facturado,false) facturado,'ABONO' fuente
     FROM movimientos_credito m JOIN aplicaciones_credito a ON a.abono_movimiento_id=m.id
@@ -103,7 +103,7 @@ function destinationReadModel() {
     UNION ALL
     SELECT (m.id * 1000000),m.created_at fecha,
       -m.importe-COALESCE(aplicado.importe,0),
-      COALESCE(m.forma_pago,'TRANSFERENCIA') "formaPago",m.cuenta_destino "cuentaDestino",
+      COALESCE(m.forma_pago::text,'TRANSFERENCIA') "formaPago",m.cuenta_destino::text "cuentaDestino",
       m.cliente_id "documentoId",NULL::bigint folio,m.cliente_id "clienteId",NULL::int "ubicacionId",
       m.usuario_id "registroId",false facturado,'ABONO_SALDO_FAVOR' fuente
     FROM movimientos_credito m LEFT JOIN LATERAL (
@@ -120,7 +120,7 @@ function destinationReadModel() {
       AND -m.importe > COALESCE(aplicado.importe,0)
     UNION ALL
     SELECT (r.id * 1000000 + a.id),r.created_at fecha,-a.importe,
-      COALESCE(original.forma_pago,'TRANSFERENCIA') "formaPago",original.cuenta_destino "cuentaDestino",
+      COALESCE(original.forma_pago::text,'TRANSFERENCIA') "formaPago",original.cuenta_destino::text "cuentaDestino",
       sale_ticket.id "documentoId",sale_ticket.folio,original.cliente_id "clienteId",sale_ticket.ubicacion_id "ubicacionId",
       r.usuario_id "registroId",COALESCE(sale_ticket.facturado,false) facturado,'REVERSO_ABONO' fuente
     FROM movimientos_credito r JOIN movimientos_credito original ON original.id=r.movimiento_origen_id
@@ -135,7 +135,7 @@ function destinationReadModel() {
     UNION ALL
     SELECT (r.id * 1000000),r.created_at fecha,
       -( -original.importe-COALESCE(aplicado.importe,0) ),
-      COALESCE(original.forma_pago,'TRANSFERENCIA') "formaPago",original.cuenta_destino "cuentaDestino",
+      COALESCE(original.forma_pago::text,'TRANSFERENCIA') "formaPago",original.cuenta_destino::text "cuentaDestino",
       original.cliente_id "documentoId",NULL::bigint folio,original.cliente_id "clienteId",NULL::int "ubicacionId",
       r.usuario_id "registroId",false facturado,'REVERSO_ABONO_SALDO_FAVOR' fuente
     FROM movimientos_credito r JOIN movimientos_credito original ON original.id=r.movimiento_origen_id
