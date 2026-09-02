@@ -387,3 +387,9 @@ Los destinos de dinero conservan sus códigos internos y se presentan siempre en
 Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el sistema. Un usuario que aparece en la bitácora o en el kardex nunca se borra: perder su rastro rompe la trazabilidad.
 
 **Una sola sesión de caja por sitio y por día:** se registra el fondo de caja chica en la mañana, se opera, y se corta al terminar. Únicamente Tienda Mariana registra salidas de dinero a proveedores, y el sitio autorizado es una constante nombrada. Al cerrar se imprime la hoja de ventas del día, agrupada por producto y sin series.
+
+**Historial de compras:** vive en una **pestaña dentro de Proveedores**, no en la barra lateral. Muestra **un renglón por línea de entrada** —por producto, no por rollo—: una entrada de 750 rollos en dos productos son dos renglones. Solo existe para proveedores; a los clientes se les vende, no se les compra.
+
+Ordena por fecha de más reciente a más antigua por omisión, y cada columna alterna entre ascendente y descendente **sin un tercer estado**, porque "sin orden" no se distingue visualmente del predeterminado.
+
+Cada cantidad se muestra **con su unidad** y la tabla **no lleva renglón de totales**: sumar esa columna mezclaría metros con kilos. Al ordenar por cantidad se usa el valor numérico y se conserva la unidad visible; no existe ninguna equivalencia entre unidades y no se inventa una para ordenar.

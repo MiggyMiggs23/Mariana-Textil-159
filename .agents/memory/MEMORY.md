@@ -27,3 +27,4 @@
 - [Identificadores de proveedor en la interfaz](supplier-identifiers-ui.md) — nunca mostrar IDs numéricos; usar nombre de proveedor o sitio según el contexto.
 - [Pruebas sobre componentes realmente montados](mounted-component-tests.md) — una prueba visual debe verificar el componente importado por la app, no un duplicado sin uso.
 - [Inicializadores en bases de prueba](test-database-startup-initializers.md) — después de push/seed, arrancar la API antes de probar restricciones creadas por inicializadores.
+- [Índices aditivos con drift de esquema](additive-index-schema-drift.md) — si push propone truncar por drift ajeno, abortar y aplicar solo DDL aditivo explícito.

@@ -32,3 +32,13 @@ test("historial usa fecha descendente por omisión y orden estable", async () =>
   assert.match(source, /entrada_id DESC, producto_id ASC/);
   assert.doesNotMatch(source, /direction.*none|direction.*default/);
 });
+
+test("agrupa una línea por entrada y producto, no por rollo", async () => {
+  const source = await readFile(
+    new URL("./lib/historial-compras-proveedores.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /SUM\(ro\.cantidad_inicial\) AS cantidad/);
+  assert.match(source, /GROUP BY e\.id, e\.fecha, pr\.id/);
+  assert.doesNotMatch(source, /GROUP BY[^;]*ro\.id/);
+});
