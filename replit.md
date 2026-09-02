@@ -393,3 +393,11 @@ Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el 
 Ordena por fecha de más reciente a más antigua por omisión, y cada columna alterna entre ascendente y descendente **sin un tercer estado**, porque "sin orden" no se distingue visualmente del predeterminado.
 
 Cada cantidad se muestra **con su unidad** y la tabla **no lleva renglón de totales**: sumar esa columna mezclaría metros con kilos. Al ordenar por cantidad se usa el valor numérico y se conserva la unidad visible; no existe ninguna equivalencia entre unidades y no se inventa una para ordenar.
+
+**Dos clases de evento en el feed:** los **guardados** —`notificaciones_sistema`, `notificaciones_credito`— tienen `leidaAt` y se marcan como leídos. Los **derivados** —alertas de administración, solicitudes de pago dirigido, tickets sin cobrar— se calculan en vivo y **no tienen estado de lectura**: desaparecen cuando la condición que los genera deja de cumplirse. No se les agrega estado de lectura ni tabla de descartes; si un derivado no se va, la condición está mal definida.
+
+**Toda alerta necesita una condición de riesgo.** La alerta de crédito no la tenía: filtraba por tipo de movimiento y convertía **cada venta a crédito en un aviso permanente**. Una alerta sin condición es un listado disfrazado, y en operación real llena el panel hasta que nadie lo mira.
+
+**El globo y el panel cuentan lo mismo.** Contar solo las guardadas en el globo mientras el panel muestra guardadas y derivadas produce dos números que no miden lo mismo, y el usuario no sabe a cuál creerle.
+
+**Marcar como leídas nunca borra.** Las notificaciones guardadas siguen consultables, conforme a la regla de que las tablas operativas no usan DELETE. El botón se rotula por lo que hace y no como "limpiar", que promete que desaparecen. Las dos tablas tienen **ids independientes que pueden colisionar**: cualquier ruta que marque una notificación por id debe distinguir de qué tabla es, o marcará la equivocada.

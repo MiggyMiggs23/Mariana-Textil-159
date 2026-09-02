@@ -8,6 +8,7 @@ import {
   NotificationFamily,
   useAprobarSolicitudPagoDirigido,
   useGetNotificationFeed,
+  useListNotificaciones,
   useMarkAllNotificacionesRead,
   useRechazarSolicitudPagoDirigido,
 } from "@workspace/api-client-react";
@@ -95,10 +96,20 @@ export function NotificationsBell({
       refetchOnWindowFocus: true,
     },
   });
+  const storedNotifications = useListNotificaciones({
+    query: {
+      queryKey: getListNotificacionesQueryKey(),
+      enabled: isAdmin,
+      staleTime: 15_000,
+    },
+  });
 
   const events = data?.events ?? [];
-  const storedUnreadCount = events.filter((event) => isStoredEvent(event.kind)).length;
-  const derivedCount = events.length - storedUnreadCount;
+  const storedUnreadCount = storedNotifications.data
+    ? [...storedNotifications.data.sistema, ...storedNotifications.data.notificaciones]
+        .filter((notification) => !notification.leidaAt).length
+    : 0;
+  const derivedCount = events.filter((event) => !isStoredEvent(event.kind)).length;
   const refreshDirected = () => {
     queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
     queryClient.invalidateQueries({ queryKey: getListSolicitudesPagoDirigidoQueryKey() });

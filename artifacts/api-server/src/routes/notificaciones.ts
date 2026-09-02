@@ -109,7 +109,7 @@ function directedPaymentEvent(row: Record<string, unknown>, adminQueue: boolean)
   };
 }
 
-async function countAdminActiveEvents(adminUserId: number): Promise<number> {
+export async function countAdminActiveEvents(adminUserId: number): Promise<number> {
   const resolvedCutoff = new Date(
     Date.now() - RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS * 86_400_000,
   );

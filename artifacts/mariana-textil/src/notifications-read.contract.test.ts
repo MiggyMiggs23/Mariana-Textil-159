@@ -8,6 +8,8 @@ test("ADMIN can mark stored notifications read from the panel", () => {
   assert.match(bell, /isAdmin && \(/);
   assert.match(bell, /Marcar guardadas como leídas/);
   assert.match(bell, /storedUnreadCount === 0/);
+  assert.match(bell, /useListNotificaciones/);
+  assert.match(bell, /enabled: isAdmin/);
   assert.match(bell, /getGetNotificationFeedQueryKey/);
   assert.match(bell, /getCountNotificacionesNoLeidasQueryKey/);
   assert.match(bell, /getListNotificacionesQueryKey/);
@@ -18,4 +20,9 @@ test("stored and derived events are visibly explained", () => {
   assert.match(bell, /Notificación guardada · se marca como leída/);
   assert.match(bell, /Evento derivado · se resuelve al atender la condición/);
   assert.match(bell, /Los eventos derivados\s+desaparecen cuando se atiende la condición/);
+});
+
+test("notification popover remains bounded on phones", () => {
+  assert.match(bell, /w-\[min\(92vw,420px\)\]/);
+  assert.match(bell, /ScrollArea className="h-\[380px\]"/);
 });
