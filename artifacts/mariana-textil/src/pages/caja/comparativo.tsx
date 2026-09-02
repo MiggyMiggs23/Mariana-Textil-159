@@ -275,7 +275,7 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
                         <SortableHead label="Part. %" sortName="participacion" align="right" />
                         <SortableHead label="Ventas" sortName="ventas" align="right" />
                         <TableHead className="text-right">Tendencia</TableHead>
-                        <SortableHead label="Rentabilidad" sortName="margen" align="right" />
+                        <SortableHead label="Utilidad" sortName="margen" align="right" />
                         <SortableHead label="Tickets" sortName="tickets" align="right" />
                         <SortableHead label="Promedio" sortName="ticketPromedio" align="right" />
                         <SortableHead label="Rollos / Metraje" sortName="metros" align="right" />

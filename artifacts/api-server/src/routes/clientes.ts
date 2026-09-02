@@ -554,7 +554,7 @@ router.get(
         { header: "Modalidad", key: "modalidad", width: 14 },
         { header: "Unidad", key: "unidad", width: 12 },
         { header: "Cantidad", key: "cantidad", width: 14 },
-        { header: "Margen", key: "margen", width: 14 },
+        { header: "Utilidad", key: "margen", width: 14 },
       ];
       sheet.getColumn("subtotal").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn("cantidad").numFmt = EXCEL_NUMBER_FORMAT.quantity;

@@ -458,7 +458,7 @@ router.get("/admin/cortes/:id/export.xlsx", async (req, res, next): Promise<void
       { concepto: "Total cobrado", importe: toExcelNumber(corte.totalCobrado) },
       { concepto: "Efectivo esperado", importe: toExcelNumber(corte.efectivoEsperado) },
       { concepto: "Diferencia", importe: corte.diferencia == null ? null : toExcelNumber(corte.diferencia) },
-      { concepto: "Margen", importe: margin.margen == null ? "Pendiente" : toExcelNumber(margin.margen) },
+      { concepto: "Utilidad", importe: margin.margen == null ? "Pendiente" : toExcelNumber(margin.margen) },
       ...corte.formasPago.map((row) => ({ concepto: `Pago ${row.formaPago}`, importe: toExcelNumber(row.importe) })),
       ...corte.cuentasDestino.map((row) => ({ concepto: formatAccountDestination(row.cuentaDestino), importe: toExcelNumber(row.importe) })),
       ...corte.facturacion.flatMap((row) => [
@@ -489,7 +489,7 @@ router.get("/admin/cortes/:id/export.pdf", async (req, res, next): Promise<void>
       `Tienda: ${corte.sesion.nombreUbicacion}`,
       `Cobrado: ${formatNumber(corte.totalCobrado, { kind: "money" })}`,
       `Diferencia: ${formatNumber(corte.diferencia, { kind: "money" })}`,
-      `Margen: ${margin.margen == null ? "Pendiente" : formatNumber(margin.margen, { kind: "money" })}`,
+      `Utilidad: ${margin.margen == null ? "Pendiente" : formatNumber(margin.margen, { kind: "money" })}`,
       ...corte.formasPago.map((row) => `Pago ${row.formaPago}: ${formatNumber(row.importe, { kind: "money" })}`),
       ...corte.cuentasDestino.map((row) => `${formatAccountDestination(row.cuentaDestino)}: ${formatNumber(row.importe, { kind: "money" })}`),
       ...corte.facturacion.map((row) => `${row.facturado ? "Facturado" : "No facturado"}: ${formatNumber(row.importe, { kind: "money" })}; E ${row.efectivo}; T ${row.transferencia}; C ${row.credito}`),

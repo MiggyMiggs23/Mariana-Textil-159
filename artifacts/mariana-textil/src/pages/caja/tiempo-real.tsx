@@ -169,7 +169,7 @@ export default function CajaTiempoReal() {
 
               <Card className="border-sidebar/10 shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Rentabilidad Bruta</CardTitle>
+                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Utilidad</CardTitle>
                   <LineChart className="h-4 w-4 text-primary" />
                 </CardHeader>
                 <CardContent>
@@ -252,7 +252,7 @@ export default function CajaTiempoReal() {
 
                       <div className="bg-muted/50 rounded-md p-3 text-xs mb-3">
                         <div className="flex justify-between items-center mb-1 pb-1 border-b">
-                          <span className="font-medium text-muted-foreground">Rentabilidad</span>
+                          <span className="font-medium text-muted-foreground">Utilidad</span>
                           <span className="font-bold text-sidebar flex items-center gap-2">
                             {store.margen == null ? "Pendiente" : formatNumber(store.margen, { kind: "money" })}
                             <span className="text-muted-foreground text-[10px] bg-white dark:bg-black/20 px-1.5 py-0.5 rounded border">

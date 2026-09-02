@@ -75,7 +75,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
 
       {corte.lineasExcluidasMargen !== undefined && (
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-          <p className="text-xs uppercase font-bold tracking-wider text-primary mb-2">Rentabilidad del Turno</p>
+          <p className="text-xs uppercase font-bold tracking-wider text-primary mb-2">Utilidad del turno</p>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-xs text-muted-foreground">Subtotal</p>
@@ -86,7 +86,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
               <p className="font-mono font-medium text-destructive">{corte.costo == null ? "Pendiente" : formatNumber(corte.costo, { kind: "money" })}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Margen Operativo</p>
+              <p className="text-xs text-muted-foreground">Utilidad</p>
               <p className="font-mono font-bold text-sidebar">
                 {corte.margen == null ? "Pendiente" : formatNumber(corte.margen, { kind: "money" })}
                 <span className="text-xs font-normal ml-2 bg-sidebar/10 px-1.5 py-0.5 rounded text-sidebar">
@@ -97,7 +97,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
           </div>
           {Number(corte.lineasExcluidasMargen) > 0 && (
             <p className="text-xs text-amber-700 mt-2">
-               * Costo y margen pendientes por {corte.lineasExcluidasMargen} línea(s) sin costo congelado.
+               * Costo y utilidad pendientes por {corte.lineasExcluidasMargen} línea(s) sin costo congelado.
             </p>
           )}
         </div>
