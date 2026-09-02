@@ -1,0 +1,158 @@
+# FILTROS COMBINABLES — Historial de compras y Reportes
+
+Un componente de filtros y un criterio de consulta, compartidos entre las dos pantallas. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## BLOQUE 1 — Los filtros son Tela y Color, no Producto y Color
+
+### Por qué
+
+En este sistema **el producto ya incluye el color**. `productos` guarda `tela` y `color` en columnas separadas, con restricción de unicidad sobre esa pareja: "Tafetán Blanco" no es un producto que tenga un color, **es** la combinación.
+
+Si se ofrecen "Producto" y "Color" como filtros independientes, elegir Producto = "Tafetán Blanco" y Color = "Azul" devuelve **cero renglones siempre**. Los dos filtros se contradicen y el usuario no entiende por qué.
+
+Con Tela y Color separados se contestan preguntas que hoy no se pueden:
+
+- Todos los colores de Tafetán comprados este año
+- Todo lo blanco, de cualquier tela
+- Loneta y Manta, en crudo
+
+### Qué se hace
+
+Los filtros del historial de compras son **cinco**:
+
+1. **Tela** — selección múltiple
+2. **Color** — selección múltiple
+3. **Proveedor** — selección múltiple
+4. **Sitio** — selección múltiple
+5. **Rango de fechas**
+
+**La columna Producto de la tabla no cambia.** Se sigue mostrando como hoy. Lo que cambia es por qué se filtra.
+
+### Cómo se combinan
+
+- **Dentro de un filtro, los valores se suman.** Tela: Tafetán *o* Loneta.
+- **Entre filtros, se cruzan.** (Tafetán *o* Loneta) *y* (Blanco *o* Crudo) *y* Proveedor Insertex.
+- **Un filtro vacío no restringe nada.**
+
+Es lo que la gente espera sin que se lo expliquen. **No construyas nada más elaborado** — el Bloque 4 lo detalla.
+
+### Presentación
+
+- Se ve en todo momento **qué filtros están activos**, y cada uno se puede quitar por separado.
+- Un botón para **limpiar todos**.
+- Se muestra **cuántos renglones** quedaron tras filtrar.
+- Si el resultado es vacío, el mensaje dice **qué combinación** no arrojó nada, no solo "sin resultados". Con cinco filtros cruzados, el usuario no adivina cuál sobra.
+- Los catálogos de Tela y Color salen de los productos existentes, **no de una lista escrita a mano.**
+
+---
+
+## BLOQUE 2 — Un solo componente, compartido con Reportes
+
+Este es el punto que evita el trabajo duplicado.
+
+**El componente de filtros y el criterio de consulta se construyen una vez y los usan las dos pantallas.** Historial de compras y Reportes.
+
+Si se construyen por separado, en tres meses hay dos filtros que se comportan distinto ante el mismo caso y un usuario que no entiende por qué el mismo filtro da resultados diferentes en dos pantallas.
+
+Esto implica:
+
+- Un tipo compartido que representa el criterio —qué telas, qué colores, qué proveedores, qué sitios, qué rango.
+- Una forma compartida de traducir ese criterio a condiciones de consulta.
+- Un componente de interfaz compartido, que acepte **qué filtros mostrar**: puede que Reportes no necesite los cinco, o necesite alguno más.
+
+**Reportes tiene sus propios filtros hoy.** Revísalos antes de tocar nada y **reporta cuáles se pueden migrar al componente compartido y cuáles no**, con su razón. No los migres todos a la fuerza: un reporte con una necesidad legítimamente distinta no debe torcerse para caber en el molde.
+
+Si algún reporte filtra hoy de una forma que **contradice** el criterio nuevo, **detente y repórtalo** antes de cambiarlo.
+
+---
+
+## BLOQUE 3 — Los filtros viven en la dirección web
+
+El estado de los filtros se refleja en la dirección de la página.
+
+Esto resuelve tres cosas de golpe:
+
+- Una vista filtrada se puede **compartir por mensaje** y el otro ve exactamente lo mismo.
+- Se puede **guardar como favorito**.
+- Volver de un detalle **no borra** lo que se había filtrado, que es la molestia clásica de este tipo de pantallas.
+
+Cuida que la dirección no se vuelva ilegible con selecciones múltiples, y que una dirección inválida o de un filtro que ya no existe **no rompa la pantalla**: se ignora ese filtro y se avisa, no se muestra un error.
+
+---
+
+## BLOQUE 4 — Lo que NO se construye
+
+**No hagas un armador de consultas genérico.** Nada de condiciones anidadas, ni operadores "y / o / no" elegibles por el usuario, ni paréntesis, ni reglas encadenadas.
+
+Es la deriva natural cuando se pide "combinar filtros". Nadie en el mostrador lo va a usar, y es caro de mantener y de probar.
+
+Cinco filtros que se cruzan, con selección múltiple dentro de cada uno, cubren lo que se necesita. **Si crees que hace falta más, detente y repórtalo** con el caso de uso concreto que no se puede resolver.
+
+---
+
+## BLOQUE 5 — Rendimiento
+
+Cinco filtros cruzados sobre una tabla que crece indefinidamente.
+
+- **Mide** el tiempo de consulta con los filtros combinados sobre el volumen estimado a un año, el mismo que calculaste al construir el historial. Repórtalo.
+- Revisa qué índices hacen falta para las combinaciones más probables y **reporta cuáles agregaste**.
+- Respeta la decisión que ya tomaste sobre ordenar en servidor o en cliente. Si los filtros cambian esa conclusión, **dilo y justifícalo**.
+- El alcance de lectura por sitio (`resolveReadScope`) **se aplica siempre**, por encima de cualquier filtro. Un usuario con alcance PROPIA no debe poder ver otro sitio ni escribiendo la dirección a mano.
+
+---
+
+## BLOQUE 6 — Verificación
+
+**Filtros**
+
+- Los filtros son Tela, Color, Proveedor, Sitio y rango de fechas
+- Cada uno admite selección múltiple, salvo el rango
+- Los valores dentro de un filtro se suman; los filtros se cruzan entre sí
+- Un filtro vacío no restringe
+- Tela = Tafetán con Color = Blanco *o* Azul devuelve los renglones de ambos colores
+- Los catálogos salen de los productos existentes
+- Se ve qué filtros están activos y cada uno se quita por separado
+- El resultado vacío explica qué combinación no arrojó nada
+- Se muestra el conteo de renglones filtrados
+
+**Compartido**
+
+- Existe un solo componente y un solo criterio, usados por las dos pantallas
+- Está el reporte de qué filtros de Reportes se migraron y cuáles no, con su razón
+- Está reportada cualquier contradicción entre el criterio nuevo y un filtro existente
+
+**Dirección web**
+
+- Los filtros se reflejan en la dirección y se restauran al abrirla
+- Volver de un detalle conserva los filtros
+- Una dirección con un filtro inexistente lo ignora y avisa, sin romper la pantalla
+
+**Rendimiento y alcance**
+
+- Está medido y reportado el tiempo con filtros combinados sobre el volumen a un año
+- Están reportados los índices agregados
+- Un usuario con alcance PROPIA no ve otro sitio ni manipulando la dirección
+
+**General**
+
+- Revisado en teléfono: cinco filtros en pantalla angosta necesitan una presentación pensada
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de proveedores y reportes pasan enteras
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Filtros de producto:** se filtra por **Tela y Color por separado**, nunca por "Producto" y "Color" como filtros independientes. El producto **es** la pareja tela-color, con restricción de unicidad sobre ella; ofrecerlos como filtros distintos hace que Producto "Tafetán Blanco" con Color "Azul" devuelva siempre cero renglones. Tela y Color separados permiten "todos los colores de Tafetán" y "todo lo blanco, de cualquier tela".
+>
+> **Cómo combinan:** los valores **dentro** de un filtro se suman, los filtros **entre sí** se cruzan, y un filtro vacío no restringe. **No existe un armador de consultas genérico** —sin condiciones anidadas, operadores elegibles ni paréntesis— y no debe construirse: nadie en el mostrador lo usa y es caro de mantener.
+>
+> **Un solo componente de filtros y un solo criterio de consulta** para Historial de compras y Reportes. Construirlos por separado produce dos filtros que se comportan distinto ante el mismo caso.
+>
+> **Los filtros viven en la dirección web**, para poder compartir una vista filtrada, guardarla como favorito y no perderla al volver de un detalle. Una dirección con un filtro inexistente lo ignora y avisa; nunca rompe la pantalla. El alcance de lectura por sitio se aplica siempre por encima de cualquier filtro, incluso escrito a mano en la dirección.
