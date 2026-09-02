@@ -17,6 +17,8 @@ type Descriptor = {
   /** Exact discriminator already used by persisted audit/notification events. */
   entityName: EntidadPurgable;
   paymentPartyType?: "CLIENTE" | "PROVEEDOR";
+  /** FK-backed append-only ledger(s) whose mere existence permanently blocks purge. */
+  financialReferenceKeys?: readonly string[];
   activeColumn: string;
   visibleSql: string;
 };
@@ -25,8 +27,26 @@ const DESCRIPTORS: Record<EntidadPurgable, Descriptor> = {
   usuarios: { table: "usuarios", entityName: "usuarios", activeColumn: "activo", visibleSql: "nombre" },
   camionetas: { table: "camionetas", entityName: "camionetas", activeColumn: "activa", visibleSql: "nombre" },
   choferes: { table: "choferes", entityName: "choferes", activeColumn: "activo", visibleSql: "nombre_completo" },
-  clientes: { table: "clientes", entityName: "clientes", paymentPartyType: "CLIENTE", activeColumn: "activo", visibleSql: "nombre" },
-  proveedores: { table: "proveedores", entityName: "proveedores", paymentPartyType: "PROVEEDOR", activeColumn: "activo", visibleSql: "nombre" },
+  clientes: {
+    table: "clientes",
+    entityName: "clientes",
+    paymentPartyType: "CLIENTE",
+    financialReferenceKeys: [
+      "movimientos_credito.cliente_id",
+      // Kept for installations that still have the legacy payment table.
+      "pagos_cliente.cliente_id",
+    ],
+    activeColumn: "activo",
+    visibleSql: "nombre",
+  },
+  proveedores: {
+    table: "proveedores",
+    entityName: "proveedores",
+    paymentPartyType: "PROVEEDOR",
+    financialReferenceKeys: ["pagos_proveedor.proveedor_id"],
+    activeColumn: "activo",
+    visibleSql: "nombre",
+  },
   productos: {
     table: "productos",
     entityName: "productos",
@@ -86,6 +106,7 @@ const REFERENCE_LABELS: Record<string, string> = {
 
 type Executor = Pick<typeof db, "execute">;
 export type PurgaReferencia = { tipo: string; cantidad: number };
+type CountedPurgaReferencia = PurgaReferencia & { financialMovement?: boolean };
 export type PurgaPreflight = {
   entidad: EntidadPurgable;
   id: number;
@@ -131,7 +152,7 @@ async function countReferences(
   executor: Executor,
   descriptor: Descriptor,
   id: number,
-): Promise<PurgaReferencia[]> {
+): Promise<CountedPurgaReferencia[]> {
   const fkResult = await executor.execute(sql`
     SELECT child.relname AS table_name, child_col.attname AS column_name
     FROM pg_constraint fk
@@ -150,7 +171,7 @@ async function countReferences(
       AND parent.relname = ${descriptor.table}
       AND parent_col.attname = 'id'
   `);
-  const references: PurgaReferencia[] = [];
+  const references: CountedPurgaReferencia[] = [];
   const auditResult = await executor.execute(sql`
     SELECT count(*)::int AS count
     FROM auditoria
@@ -209,6 +230,7 @@ async function countReferences(
       references.push({
         tipo: REFERENCE_LABELS[key] ?? `Referencia en ${fk.table_name}.${fk.column_name}`,
         cantidad,
+        financialMovement: descriptor.financialReferenceKeys?.includes(key),
       });
     }
   }
@@ -232,29 +254,34 @@ export function sanitizeAuditSnapshot(value: unknown): unknown {
   );
 }
 
-function buildPreflight(
+export function buildPreflight(
   entidad: EntidadPurgable,
   id: number,
   row: Record<string, unknown>,
-  referencias: PurgaReferencia[],
+  referencias: CountedPurgaReferencia[],
 ): PurgaPreflight {
   const descriptor = DESCRIPTORS[entidad];
   const inactivo = row[descriptor.activeColumn] === false;
   const systemClient = entidad === "clientes" && row.es_sistema === true;
   const totalReferencias = referencias.reduce((sum, item) => sum + item.cantidad, 0);
+  const hasFinancialMovements =
+    (entidad === "clientes" || entidad === "proveedores") &&
+    referencias.some((item) => item.financialMovement && item.cantidad > 0);
   const motivoBloqueo = systemClient
     ? "Los clientes del sistema jamás se pueden purgar."
-    : !inactivo
-      ? "Solo se pueden purgar registros inactivos."
-      : totalReferencias > 0
-        ? "El registro conserva referencias y no se puede purgar."
-        : null;
+    : hasFinancialMovements
+      ? `Este ${entidad === "clientes" ? "cliente" : "proveedor"} tiene movimientos en su estado de cuenta y su histórico financiero no se puede borrar. Desactívalo en vez de purgarlo para conservar la historia consultable.`
+      : !inactivo
+        ? "Solo se pueden purgar registros inactivos."
+        : totalReferencias > 0
+          ? "El registro conserva referencias y no se puede purgar."
+          : null;
   return {
     entidad,
     id,
     nombreVisible: String(row.__nombre_visible),
     inactivo,
-    referencias,
+    referencias: referencias.map(({ tipo, cantidad }) => ({ tipo, cantidad })),
     totalReferencias,
     puedeEliminar: motivoBloqueo === null,
     motivoBloqueo,
@@ -301,7 +328,10 @@ export async function purgeInactiveRecord(input: {
     const references = await countReferences(tx, descriptor, input.id);
     const preflight = buildPreflight(input.entidad, input.id, row, references);
     if (!preflight.puedeEliminar) {
-      throw new PurgaConflictError(preflight.motivoBloqueo!, references);
+      throw new PurgaConflictError(
+        preflight.motivoBloqueo!,
+        references.map(({ tipo, cantidad }) => ({ tipo, cantidad })),
+      );
     }
     if (input.confirmacion !== preflight.nombreVisible) {
       throw new PurgaConflictError("El texto de confirmación no coincide exactamente.");

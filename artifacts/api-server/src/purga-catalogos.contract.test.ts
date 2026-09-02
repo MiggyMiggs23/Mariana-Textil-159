@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { sanitizeAuditSnapshot } from "./lib/purga-catalogos";
+import {
+  buildPreflight,
+  sanitizeAuditSnapshot,
+} from "./lib/purga-catalogos";
 
 test("la purga es ADMIN, transaccional, bloquea y vuelve a contar", async () => {
   const [route, engine] = await Promise.all([
@@ -70,6 +73,87 @@ test("el snapshot de purga nunca conserva credenciales ni campos artificiales", 
     perfil: { telefono: "555" },
   });
   assert.ok(!JSON.stringify(snapshot).toLowerCase().includes("password"));
+});
+
+test("clientes y proveedores con cualquier movimiento financiero jamás se purgan", () => {
+  for (const fixture of [
+    {
+      entidad: "clientes" as const,
+      tipo: "Movimientos de crédito",
+      noun: "cliente",
+    },
+    {
+      entidad: "proveedores" as const,
+      tipo: "Pagos del proveedor",
+      noun: "proveedor",
+    },
+  ]) {
+    for (const activo of [true, false]) {
+      for (const cantidad of [1, 7]) {
+        const result = buildPreflight(
+          fixture.entidad,
+          41,
+          { activo, es_sistema: false, __nombre_visible: "Histórico" },
+          [{ tipo: fixture.tipo, cantidad, financialMovement: true }],
+        );
+        assert.equal(result.puedeEliminar, false);
+        assert.match(result.motivoBloqueo!, new RegExp(fixture.noun));
+        assert.match(result.motivoBloqueo!, /movimientos en su estado de cuenta/);
+        assert.match(result.motivoBloqueo!, /Desactívalo en vez de purgarlo/);
+        assert.deepEqual(result.referencias, [
+          { tipo: fixture.tipo, cantidad },
+        ]);
+      }
+    }
+  }
+});
+
+test("cliente y proveedor inactivos sin movimientos conservan la purga previa", () => {
+  for (const entidad of ["clientes", "proveedores"] as const) {
+    const result = buildPreflight(
+      entidad,
+      42,
+      { activo: false, es_sistema: false, __nombre_visible: "Sin historia" },
+      [],
+    );
+    assert.equal(result.puedeEliminar, true);
+    assert.equal(result.motivoBloqueo, null);
+    assert.equal(result.totalReferencias, 0);
+  }
+});
+
+test("la baja y las consultas conservan el histórico de clientes inactivos", async () => {
+  const [adminRoute, clientRoutes, providerRoutes, providerLedger] =
+    await Promise.all([
+      readFile(new URL("./routes/clientes-admin.ts", import.meta.url), "utf8"),
+      readFile(new URL("./routes/clientes.ts", import.meta.url), "utf8"),
+      readFile(new URL("./routes/proveedores.ts", import.meta.url), "utf8"),
+      readFile(new URL("./lib/compras-proveedor.ts", import.meta.url), "utf8"),
+    ]);
+  assert.match(
+    adminRoute,
+    /saldo <= 0 && tickets === 0 && movimientos === 0[\s\S]*DELETE FROM clientes/,
+  );
+  assert.match(
+    adminRoute,
+    /if \(saldo <= 0\)[\s\S]*UPDATE clientes SET activo=false/,
+  );
+  assert.match(
+    clientRoutes,
+    /\/clientes\/:id\/estado-cuenta[\s\S]*WHERE m\.cliente_id=\$1/,
+  );
+  assert.doesNotMatch(
+    clientRoutes.slice(
+      clientRoutes.indexOf('"/clientes/:id/estado-cuenta"'),
+      clientRoutes.indexOf('"/clientes/:id/estado-cuenta/imprimir"'),
+    ),
+    /activo\s*=\s*true|WHERE activo/,
+  );
+  assert.match(
+    providerRoutes,
+    /\/proveedores\/:id\/estado-cuenta[\s\S]*estadoCuenta\(\{[\s\S]*proveedorId/,
+  );
+  assert.match(providerLedger, /WHERE pp\.proveedor_id = \$\{opts\.proveedorId\}/);
 });
 
 test("los seis catálogos cablean filtro y purga con componente común", async () => {
