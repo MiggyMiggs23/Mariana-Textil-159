@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useLocationScope } from "@/lib/location-scope";
@@ -23,6 +23,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { calculateGroupedInventoryTotals } from "@/lib/inventory-global-totals";
 
 export default function Inventario() {
   const [, setLocation] = useLocation();
@@ -78,6 +79,10 @@ export default function Inventario() {
     }
   });
   const hasBolsas = existenciasAgrupadas?.some((grupo) => Number(grupo.totalBolsas) > 0) ?? false;
+  const showBolsasColumn = consolidado || hasBolsas;
+  const globalTotals = consolidado && existenciasAgrupadas?.length
+    ? calculateGroupedInventoryTotals(existenciasAgrupadas)
+    : null;
 
   useEffect(() => {
     if (debouncedSearch && existenciasAgrupadas) {
@@ -167,28 +172,28 @@ export default function Inventario() {
 
             <Card>
               <CardContent className="p-0">
-                <Table>
+                <Table className="min-w-[720px]">
                   <TableHeader className="bg-muted/30">
                     <TableRow>
                       <TableHead className="w-8"></TableHead>
                       <TableHead>Tela / Producto</TableHead>
                       {isTodas && <TableHead>Sitio</TableHead>}
                       <TableHead className="text-right">Rollos</TableHead>
-                      <TableHead className="text-right">Total Mts.</TableHead>
-                      <TableHead className="text-right">Total Kg.</TableHead>
-                       {hasBolsas && <TableHead className="text-right">Total {formatUnit("BOLSA")}</TableHead>}
+                      <TableHead className="text-right">Total {formatUnit("METRO")}</TableHead>
+                      <TableHead className="text-right">Total {formatUnit("KILO")}</TableHead>
+                      {showBolsasColumn && <TableHead className="text-right">Total {formatUnit("BOLSA")}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loadingExistencias ? (
                       <TableRow>
-                        <TableCell colSpan={(isTodas ? 6 : 5) + (hasBolsas ? 1 : 0)} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           Cargando inventario...
                         </TableCell>
                       </TableRow>
                     ) : existenciasAgrupadas?.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={(isTodas ? 6 : 5) + (hasBolsas ? 1 : 0)} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           <Boxes className="w-8 h-8 mx-auto mb-2 opacity-20" />
                           No se encontraron existencias
                         </TableCell>
@@ -208,7 +213,7 @@ export default function Inventario() {
                             <TableCell className="text-right font-bold py-3">{formatNumber(grupo.rollosCount, { kind: "count" })}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? formatNumber(grupo.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? formatNumber(grupo.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
-                             {hasBolsas && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalBolsas) > 0 ? formatNumber(grupo.totalBolsas, { kind: "quantity" }) : "-"}</TableCell>}
+                             {showBolsasColumn && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalBolsas) > 0 ? formatNumber(grupo.totalBolsas, { kind: "quantity" }) : "-"}</TableCell>}
                           </TableRow>
                           {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => (
                             <TableRow key={hijo.productoId} className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
@@ -222,7 +227,7 @@ export default function Inventario() {
                               </TableCell>
                               {isTodas && <TableCell className="py-2"></TableCell>}
                                <TableCell className="text-right py-2">{formatNumber(hijo.rollosCount, { kind: "count" })}</TableCell>
-                              <TableCell className="text-right tabular-nums py-2" colSpan={hasBolsas ? 3 : 2}>
+                              <TableCell className="text-right tabular-nums py-2" colSpan={showBolsasColumn ? 3 : 2}>
                                 <div className="flex items-center justify-end gap-1">
                                    <span className="font-medium">{formatNumber(hijo.cantidadTotal, { kind: "quantity" })}</span>
                                   <span className="text-xs text-muted-foreground">{formatUnit(hijo.unidad)}</span>
@@ -234,6 +239,34 @@ export default function Inventario() {
                       ))
                     )}
                   </TableBody>
+                  {globalTotals && (
+                    <TableFooter className="border-t-2 border-primary/40 bg-primary/10" data-testid="global-filtered-totals">
+                      <TableRow className="hover:bg-primary/10">
+                        <TableCell></TableCell>
+                        <TableCell className="whitespace-nowrap py-4 font-bold">
+                          TOTALES
+                          <span className="ml-2 text-xs font-medium text-muted-foreground">
+                            filtro actual
+                          </span>
+                        </TableCell>
+                        {isTodas && <TableCell></TableCell>}
+                        <TableCell className="text-right font-bold tabular-nums">
+                          {formatNumber(globalTotals.rollosCount, { kind: "count" })}
+                        </TableCell>
+                        <TableCell className="text-right font-bold tabular-nums">
+                          {formatNumber(globalTotals.totalMetros, { kind: "quantity" })}
+                        </TableCell>
+                        <TableCell className="text-right font-bold tabular-nums">
+                          {formatNumber(globalTotals.totalKilos, { kind: "quantity" })}
+                        </TableCell>
+                        {showBolsasColumn && (
+                          <TableCell className="text-right font-bold tabular-nums">
+                            {formatNumber(globalTotals.totalBolsas, { kind: "quantity" })}
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    </TableFooter>
+                  )}
                 </Table>
               </CardContent>
             </Card>
