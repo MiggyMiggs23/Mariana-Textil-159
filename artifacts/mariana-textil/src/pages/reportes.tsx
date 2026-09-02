@@ -15,6 +15,7 @@ import { ReportTable } from "@/components/reportes/report-table";
 import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
+import { toast } from "sonner";
 
 const TABS = [
   { id: "ventas", label: "Ventas" },
@@ -154,6 +155,9 @@ export default function Reportes() {
       formasPago: filters.formasPago.filter((value) => catalogos.paymentMethods.includes(value)),
     };
     if (JSON.stringify(next) !== JSON.stringify(filters)) {
+      toast.info("Se ignoraron filtros que ya no existen", {
+        description: "La dirección se actualizó con los filtros válidos.",
+      });
       handleFilterChange(next);
     }
   }, [catalogos]);

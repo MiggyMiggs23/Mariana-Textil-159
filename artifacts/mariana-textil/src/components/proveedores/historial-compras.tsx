@@ -14,6 +14,7 @@ import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, PackageOpen } from "lu
 import { cn } from "@/lib/utils";
 import { CombinedFilterBar, MultiSelectConfig } from "@/components/shared/combined-filter-bar";
 import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
+import { toast } from "sonner";
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "-";
@@ -99,6 +100,14 @@ export function HistorialCompras() {
         colores: historialData.colores,
       },
     );
+    if (JSON.stringify(sanitized) !== JSON.stringify({
+      proveedorIds, ubicacionIds, telas, colores,
+      desde: desde || undefined, hasta: hasta || undefined,
+    })) {
+      toast.info("Se ignoraron filtros que ya no existen", {
+        description: "La dirección se actualizó con los filtros válidos.",
+      });
+    }
     setProveedorIds(sanitized.proveedorIds);
     setUbicacionIds(sanitized.ubicacionIds);
     setTelas(sanitized.telas);
@@ -177,6 +186,13 @@ export function HistorialCompras() {
       selected: colores,
     }
   ];
+  const emptyCombination = [
+    telas.length ? `Tela: ${telas.join(" o ")}` : "",
+    colores.length ? `Color: ${colores.join(" o ")}` : "",
+    proveedorIds.length ? `Proveedor: ${proveedorIds.length} seleccionado(s)` : "",
+    ubicacionIds.length ? `Sitio: ${ubicacionIds.length} seleccionado(s)` : "",
+    desde || hasta ? `Fechas: ${desde || "inicio"} a ${hasta || "fin"}` : "",
+  ].filter(Boolean).join("; ");
 
   const headers: { key: SortColumn; label: string; align?: "right" }[] = [
     { key: "fecha", label: "Fecha" },
@@ -257,8 +273,8 @@ export function HistorialCompras() {
                         <PackageOpen className="w-6 h-6 text-muted-foreground/50" />
                       </div>
                       <div className="space-y-1">
-                        <p className="font-medium text-foreground">No hay registros de compras</p>
-                        <p className="text-sm">Ajusta los filtros seleccionados para encontrar resultados.</p>
+                        <p className="font-medium text-foreground">La combinación no arrojó compras</p>
+                        <p className="text-sm">{emptyCombination || "No hay compras registradas en el alcance disponible."}</p>
                       </div>
                       <Button variant="outline" size="sm" onClick={handleClearAll} className="mt-2">
                         Limpiar filtros

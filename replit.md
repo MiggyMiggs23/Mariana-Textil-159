@@ -425,3 +425,5 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 **Fecha de compra** significa la fecha inmutable de recepción guardada en `entradas.fecha`. Las filas `COMPRA` se filtran y presentan con esa fecha; pagos, ajustes y reversos conservan su propia fecha contable en el ledger.
 
 **Alcance de lectura de compras y reportes:** siempre se deriva del actor con `resolveReadScope`, antes de aplicar cualquier filtro. Un usuario `PROPIA` no puede ampliar el sitio desde la dirección ni entrando directamente a un detalle; el sitio solicitado por el cliente nunca sustituye al alcance autorizado.
+
+**Cómo combinan:** los valores **dentro** de un filtro se suman, los filtros **entre sí** se cruzan, y un filtro vacío no restringe. **No existe un armador de consultas genérico** —sin condiciones anidadas, operadores elegibles ni paréntesis— y no debe construirse: nadie en el mostrador lo usa y es caro de mantener.
