@@ -9,11 +9,10 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { Link } from "wouter";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CombinedFilterBar, MultiSelectConfig } from "@/components/shared/combined-filter-bar";
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "-";
@@ -32,10 +31,13 @@ function formatDate(dateStr: string | null): string {
 type SortColumn = "fecha" | "producto" | "proveedor" | "color" | "sitio" | "cantidad";
 
 export function HistorialCompras() {
-  const [proveedorId, setProveedorId] = useState<string>("ALL");
-  const [ubicacionId, setUbicacionId] = useState<string>("ALL");
+  const [proveedorIds, setProveedorIds] = useState<number[]>([]);
+  const [ubicacionIds, setUbicacionIds] = useState<number[]>([]);
+  const [telas, setTelas] = useState<string[]>([]);
+  const [colores, setColores] = useState<string[]>([]);
   const [desde, setDesde] = useState<string>("");
   const [hasta, setHasta] = useState<string>("");
+
   const [sort, setSort] = useState<SortColumn>("fecha");
   const [direction, setDirection] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
@@ -53,15 +55,17 @@ export function HistorialCompras() {
   }, [proveedoresData]);
 
   const listParams = useMemo(() => ({
-    ...(proveedorId !== "ALL" && { proveedorId: Number(proveedorId) }),
-    ...(ubicacionId !== "ALL" && { ubicacionId: Number(ubicacionId) }),
+    ...(proveedorIds.length > 0 && { proveedorIds }),
+    ...(ubicacionIds.length > 0 && { ubicacionIds }),
+    ...(telas.length > 0 && { telas }),
+    ...(colores.length > 0 && { colores }),
     ...(desde && { desde }),
     ...(hasta && { hasta }),
     sort,
     direction,
     page,
     pageSize
-  }), [proveedorId, ubicacionId, desde, hasta, sort, direction, page, pageSize]);
+  }), [proveedorIds, ubicacionIds, telas, colores, desde, hasta, sort, direction, page, pageSize]);
 
   const { data: historialData, isLoading, isFetching } = useListHistorialComprasProveedores(listParams, {
     query: {
@@ -73,6 +77,14 @@ export function HistorialCompras() {
     return [...(historialData?.sitios ?? [])]
       .sort((a, b) => a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }));
   }, [historialData?.sitios]);
+
+  const telasOptions = useMemo(() => {
+    return (historialData?.telas ?? []).map(t => ({ id: t, nombre: t }));
+  }, [historialData?.telas]);
+
+  const coloresOptions = useMemo(() => {
+    return (historialData?.colores ?? []).map(c => ({ id: c, nombre: c }));
+  }, [historialData?.colores]);
 
   const handleSort = (column: SortColumn) => {
     if (column === "fecha" && !fechaClicked) {
@@ -92,10 +104,50 @@ export function HistorialCompras() {
     setPage(1);
   };
 
-  const handleFilterChange = (setter: (v: string) => void) => (val: string) => {
-    setter(val);
+  const handleClearAll = () => {
+    setProveedorIds([]);
+    setUbicacionIds([]);
+    setTelas([]);
+    setColores([]);
+    setDesde("");
+    setHasta("");
     setPage(1);
   };
+
+  const handleMultiSelectChange = (key: string, selected: string[]) => {
+    if (key === "proveedorIds") setProveedorIds(selected.map(Number));
+    if (key === "ubicacionIds") setUbicacionIds(selected.map(Number));
+    if (key === "telas") setTelas(selected);
+    if (key === "colores") setColores(selected);
+    setPage(1);
+  };
+
+  const multiSelects: MultiSelectConfig[] = [
+    {
+      key: "proveedorIds",
+      label: "Proveedores",
+      options: proveedoresOptions.map(p => ({ id: p.id, nombre: p.nombre })),
+      selected: proveedorIds.map(String),
+    },
+    {
+      key: "ubicacionIds",
+      label: "Sitios",
+      options: ubicacionesOptions.map(u => ({ id: u.id, nombre: u.nombre })),
+      selected: ubicacionIds.map(String),
+    },
+    {
+      key: "telas",
+      label: "Telas",
+      options: telasOptions,
+      selected: telas,
+    },
+    {
+      key: "colores",
+      label: "Colores",
+      options: coloresOptions,
+      selected: colores,
+    }
+  ];
 
   const headers: { key: SortColumn; label: string; align?: "right" }[] = [
     { key: "fecha", label: "Fecha" },
@@ -108,48 +160,20 @@ export function HistorialCompras() {
 
   return (
     <Card className="flex flex-col border-border shadow-sm">
-      <div className="p-4 border-b flex flex-col sm:flex-row gap-4 sm:items-center bg-muted/20">
-        <div className="flex-1 flex flex-col sm:flex-row gap-4">
-          <Select value={proveedorId} onValueChange={handleFilterChange(setProveedorId)}>
-            <SelectTrigger className="w-full sm:w-[220px] bg-background">
-              <SelectValue placeholder="Todos los proveedores" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">Todos los proveedores</SelectItem>
-              {proveedoresOptions.map(p => (
-                <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={ubicacionId} onValueChange={handleFilterChange(setUbicacionId)}>
-            <SelectTrigger className="w-full sm:w-[200px] bg-background">
-              <SelectValue placeholder="Todas las ubicaciones" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">Todas las ubicaciones</SelectItem>
-              {ubicacionesOptions.map(u => (
-                <SelectItem key={u.id} value={u.id.toString()}>{u.nombre}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Input
-            type="date"
-            value={desde}
-            onChange={(e) => handleFilterChange(setDesde)(e.target.value)}
-            className="w-[140px] bg-background text-sm h-9"
-          />
-          <span className="text-muted-foreground text-sm">a</span>
-          <Input
-            type="date"
-            value={hasta}
-            onChange={(e) => handleFilterChange(setHasta)(e.target.value)}
-            className="w-[140px] bg-background text-sm h-9"
-          />
-        </div>
+      <div className="p-4 border-b bg-muted/20">
+        <CombinedFilterBar
+          multiSelects={multiSelects}
+          onMultiSelectChange={handleMultiSelectChange}
+          showDateRange={true}
+          desde={desde}
+          hasta={hasta}
+          onDateRangeChange={(d, h) => {
+            setDesde(d || "");
+            setHasta(h || "");
+            setPage(1);
+          }}
+          onClearAll={handleClearAll}
+        />
       </div>
 
       <CardContent className="p-0 flex-1 relative">
@@ -198,8 +222,19 @@ export function HistorialCompras() {
                 </TableRow>
               ) : !historialData?.items || historialData.items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-48 text-center text-muted-foreground">
-                    No se encontraron registros de compras para estos filtros.
+                  <TableCell colSpan={6} className="h-64 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-muted/50 flex items-center justify-center">
+                        <PackageOpen className="w-6 h-6 text-muted-foreground/50" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="font-medium text-foreground">No hay registros de compras</p>
+                        <p className="text-sm">Ajusta los filtros seleccionados para encontrar resultados.</p>
+                      </div>
+                      <Button variant="outline" size="sm" onClick={handleClearAll} className="mt-2">
+                        Limpiar filtros
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (
