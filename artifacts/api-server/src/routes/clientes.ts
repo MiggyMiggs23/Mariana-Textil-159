@@ -44,6 +44,7 @@ import {
 } from "../lib/credit-aging-read-model";
 import {
   isActiveNonSystemNameConflict,
+  isClientCreditTerm,
   parseClientCreditTerms,
 } from "../lib/clientes-create";
 import {
@@ -870,15 +871,16 @@ router.patch(
     try {
       const id = parseId(req.params.id);
       const limiteCredito = Number(req.body?.limiteCredito);
-      const diasCredito = Number(req.body?.diasCredito);
+      const diasCredito = req.body?.diasCredito;
       if (
         !id ||
         !Number.isFinite(limiteCredito) ||
         limiteCredito < 0 ||
-        !Number.isInteger(diasCredito) ||
-        diasCredito < 0
+        !isClientCreditTerm(diasCredito)
       ) {
-        res.status(400).json({ error: "Límite y días de crédito válidos son obligatorios." });
+        res.status(400).json({
+          error: "El límite debe ser válido y los días de crédito deben ser 0, 7, 15, 30 o 60.",
+        });
         return;
       }
       const [client] = await db

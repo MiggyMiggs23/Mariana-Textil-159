@@ -7,6 +7,7 @@
  */
 import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { TicketCredito } from './ticketCredito';
+import type { TicketDetalleDiasCreditoCliente } from './ticketDetalleDiasCreditoCliente';
 import type { TicketLinea } from './ticketLinea';
 import type { TicketPago } from './ticketPago';
 import type { TicketResumen } from './ticketResumen';
@@ -20,8 +21,11 @@ export type TicketDetalle = TicketResumen & TicketCredito & ({
   direccionEntregaSnapshot?: string | null;
   /** Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito. */
   convertidoANotaPorCobro: boolean;
-  /** @nullable */
-  diasCreditoCliente?: number | null;
+  /**
+     * Plazo habitual permitido del cliente; null cuando no está configurado.
+     * @nullable
+     */
+  diasCreditoCliente?: TicketDetalleDiasCreditoCliente;
   viaje?: ViajeTicketLink | null;
   lineas: TicketLinea[];
   pagos?: TicketPago[];

@@ -5,10 +5,11 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClienteCreditoUpdateDiasCredito } from './clienteCreditoUpdateDiasCredito';
 
 export interface ClienteCreditoUpdate {
   /** @minimum 0 */
   limiteCredito: number;
-  /** @minimum 0 */
-  diasCredito: number;
+  /** 0 indica que el cliente no tiene un plazo habitual configurado. */
+  diasCredito: ClienteCreditoUpdateDiasCredito;
 }

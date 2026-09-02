@@ -81,6 +81,12 @@ import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  allowedCreditTerm,
+  creditTermOnSelectionChange,
+  CREDIT_TERMS,
+  type CreditTerm,
+} from "@/lib/credit-terms";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
@@ -378,9 +384,6 @@ function CarteraContent() {
   );
 }
 
-const CREDIT_TERMS = [7, 15, 30, 60] as const;
-type CreditTerm = (typeof CREDIT_TERMS)[number];
-
 function mexicoCityDate(date: Date): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Mexico_City",
@@ -593,11 +596,14 @@ function CobroDialog({
   const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
 
   const initializedForTicketId = useRef<number | null>(null);
+  const creditWasActive = useRef(false);
 
   useEffect(() => {
     if (ticket && open && initializedForTicketId.current !== ticket.id) {
       initializedForTicketId.current = ticket.id;
       setPagos([]);
+      setDiasPlazo(null);
+      creditWasActive.current = false;
     }
   }, [ticket, open]);
 
@@ -610,6 +616,7 @@ function CobroDialog({
       setPasswordVisibilityResetKey((current) => current + 1);
       setShowSplit(false);
       setDiasPlazo(null);
+      creditWasActive.current = false;
     }
   }, [open]);
 
@@ -626,17 +633,21 @@ function CobroDialog({
     (pago) => pago.formaPago === FormaPagoTicket.CREDITO,
   );
   const primaryPago = pagos[0];
-  const ticketCreditInfo = ticket as
-    | (typeof ticket & { diasCreditoCliente?: number })
-    | undefined;
   const fechaVencimiento =
     ticket && diasPlazo
       ? creditDueDate(ticket.createdAt, diasPlazo)
       : null;
 
   useEffect(() => {
-    if (!usaCredito) setDiasPlazo(null);
-  }, [usaCredito]);
+    const nextTerm = creditTermOnSelectionChange(
+      creditWasActive.current,
+      usaCredito,
+      diasPlazo,
+      ticket?.diasCreditoCliente,
+    );
+    if (nextTerm !== diasPlazo) setDiasPlazo(nextTerm);
+    creditWasActive.current = usaCredito;
+  }, [diasPlazo, ticket?.diasCreditoCliente, ticket?.id, usaCredito]);
 
   const handleCobrar = () => {
     setPasswordVisibilityResetKey((current) => current + 1);
@@ -1059,14 +1070,13 @@ function CobroDialog({
                         </Button>
                       ))}
                     </div>
-                    {ticketCreditInfo?.diasCreditoCliente != null &&
-                      ticketCreditInfo.diasCreditoCliente > 0 && (
+                    {allowedCreditTerm(ticket.diasCreditoCliente) !== null && (
                         <p className="text-sm text-amber-800">
                           Plazo habitual de este cliente:{" "}
                           <strong>
-                            {ticketCreditInfo.diasCreditoCliente} días
+                            {ticket.diasCreditoCliente} días
                           </strong>
-                          . Esta referencia no selecciona el plazo.
+                          . Puedes cambiarlo para esta venta sin modificar el perfil.
                         </p>
                       )}
                     {fechaVencimiento ? (

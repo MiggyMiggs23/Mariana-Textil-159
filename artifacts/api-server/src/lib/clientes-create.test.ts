@@ -15,10 +15,13 @@ test("a client without supplied terms is created without authorized credit", () 
   });
 });
 
-test("credit days are required when a limit is supplied", () => {
+test("a credit limit may be saved without a habitual term", () => {
   const result = parseClientCreditTerms("1000", undefined);
-  assert.equal(result.ok, false);
-  if (!result.ok) assert.match(result.error, /días de crédito son obligatorios/i);
+  assert.deepEqual(result, {
+    ok: true,
+    limiteCredito: "1000.00",
+    diasCredito: 0,
+  });
 });
 
 test("valid supplied credit terms are normalized", () => {
@@ -27,6 +30,17 @@ test("valid supplied credit terms are normalized", () => {
     limiteCredito: "1000.50",
     diasCredito: 30,
   });
+});
+
+test("only the optional zero value and supported habitual terms are accepted", () => {
+  for (const term of [0, 7, 15, 30, 60]) {
+    assert.equal(parseClientCreditTerms(undefined, term).ok, true);
+  }
+  for (const term of [-1, 1, 14, 31, 90, 7.5, "30"]) {
+    const result = parseClientCreditTerms(undefined, term);
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.match(result.error, /0, 7, 15, 30 o 60/);
+  }
 });
 
 test("active non-system names use a trimmed, case-insensitive key", () => {

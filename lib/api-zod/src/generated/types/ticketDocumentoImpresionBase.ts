@@ -8,6 +8,7 @@
 import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { EstadoTicket } from './estadoTicket';
 import type { TicketDocumentoImpresionBaseCopia } from './ticketDocumentoImpresionBaseCopia';
+import type { TicketDocumentoImpresionBaseDiasPlazo } from './ticketDocumentoImpresionBaseDiasPlazo';
 
 export interface TicketDocumentoImpresionBase {
   ticketId: number;
@@ -34,4 +35,10 @@ export interface TicketDocumentoImpresionBase {
   correoCliente: string | null;
   /** @nullable */
   direccionFiscalEfectiva: string | null;
+  facturado: boolean;
+  esCredito: boolean;
+  /** @nullable */
+  diasPlazo: TicketDocumentoImpresionBaseDiasPlazo;
+  /** @nullable */
+  fechaVencimiento: Date | null;
 }

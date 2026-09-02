@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ClienteCreditoAntiguedadItem } from './clienteCreditoAntiguedadItem';
+import type { ClienteCreditoDiasCredito } from './clienteCreditoDiasCredito';
 
 export interface ClienteCredito {
   clienteId: number;
@@ -13,7 +14,7 @@ export interface ClienteCredito {
   saldoActual: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
-  diasCredito: number;
+  diasCredito: ClienteCreditoDiasCredito;
   utilizacion: string;
   totalVencido: string;
   /** @nullable */

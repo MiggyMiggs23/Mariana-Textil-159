@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClienteDiasCredito } from './clienteDiasCredito';
 
 export interface Cliente {
   id: number;
@@ -28,8 +29,8 @@ export interface Cliente {
   /** @nullable */
   contactoNombre?: string | null;
   recibeNotaSinPrecios: boolean;
-  /** @minimum 0 */
-  diasCredito?: number;
+  /** 0 indica que el cliente no tiene un plazo habitual configurado. */
+  diasCredito: ClienteDiasCredito;
   createdAt: Date;
   updatedAt: Date;
 }

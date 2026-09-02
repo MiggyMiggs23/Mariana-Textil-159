@@ -35,6 +35,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatNumber } from "@workspace/number-format";
 import { toast } from "sonner";
 import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
+import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
 
 export default function Clientes() {
   const [search, setSearch] = useState("");
@@ -242,10 +243,6 @@ function CreateClienteDialog({ open, onClose, canCredit }: { open: boolean; onCl
       toast.error("El nombre es obligatorio.");
       return;
     }
-    if (form.limiteCredito.trim() && !form.diasCredito.trim()) {
-      toast.error("Los días de crédito son obligatorios al capturar un límite.");
-      return;
-    }
     setExistingId(null);
     create.mutate({
       data: {
@@ -258,10 +255,10 @@ function CreateClienteDialog({ open, onClose, canCredit }: { open: boolean; onCl
         contactoNombre: form.contactoNombre.trim() || null,
         notas: form.notas.trim() || null,
         recibeNotaSinPrecios: form.recibeNotaSinPrecios,
-        ...(form.limiteCredito.trim()
+        ...(canCredit
           ? {
-              limiteCredito: form.limiteCredito.trim(),
-              diasCredito: Number(form.diasCredito),
+              limiteCredito: form.limiteCredito.trim() || "0",
+              diasCredito: Number(form.diasCredito || 0) as ClientCreditTerm,
             }
           : {}),
       },
@@ -328,7 +325,20 @@ function CreateClienteDialog({ open, onClose, canCredit }: { open: boolean; onCl
           {canCredit && (
             <>
               <ClientField label="Límite de crédito" value={form.limiteCredito} onChange={(value) => set("limiteCredito", value)} type="number" />
-              <ClientField label={`Días de crédito${form.limiteCredito.trim() ? " *" : ""}`} value={form.diasCredito} onChange={(value) => set("diasCredito", value)} type="number" />
+              <div className="space-y-2">
+                <Label>Plazo habitual de crédito</Label>
+                <Select value={form.diasCredito || "0"} onValueChange={(value) => set("diasCredito", value)}>
+                  <SelectTrigger data-testid="select-create-client-credit-days">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Sin plazo habitual</SelectItem>
+                    {CREDIT_TERMS.map((term) => (
+                      <SelectItem key={term} value={String(term)}>{term} días</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </>
           )}
           <div className="sm:col-span-2">

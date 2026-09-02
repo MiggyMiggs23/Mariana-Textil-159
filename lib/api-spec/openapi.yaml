@@ -7256,6 +7256,7 @@ components:
           activo,
           esSistema,
           recibeNotaSinPrecios,
+          diasCredito,
           createdAt,
           updatedAt,
         ]
@@ -7273,7 +7274,10 @@ components:
         esSistema: { type: boolean }
         contactoNombre: { type: ["string", "null"] }
         recibeNotaSinPrecios: { type: boolean, default: false }
-        diasCredito: { type: number, minimum: 0 }
+        diasCredito:
+          type: number
+          enum: [0, 7, 15, 30, 60]
+          description: 0 indica que el cliente no tiene un plazo habitual configurado.
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
     ClienteInput:
@@ -7292,7 +7296,10 @@ components:
         limiteCredito:
           type: ["string", "null"]
           pattern: '^\d+(\.\d{1,2})?$'
-        diasCredito: { type: ["number", "null"], minimum: 0 }
+        diasCredito:
+          type: ["number", "null"]
+          enum: [0, 7, 15, 30, 60]
+          description: 0 o null indican que el cliente no tiene un plazo habitual configurado.
         recibeNotaSinPrecios: { type: boolean, default: false }
     ClienteDuplicateError:
       type: object
@@ -7360,7 +7367,7 @@ components:
         saldoActual: { type: string }
         creditoDisponible: { type: string }
         puedeComprarCredito: { type: boolean }
-        diasCredito: { type: number }
+        diasCredito: { type: number, enum: [0, 7, 15, 30, 60] }
         utilizacion: { type: string }
         totalVencido: { type: string }
         primerVencimiento: { type: ["string", "null"], format: date-time }
@@ -7374,7 +7381,10 @@ components:
       required: [limiteCredito, diasCredito]
       properties:
         limiteCredito: { type: number, minimum: 0 }
-        diasCredito: { type: number, minimum: 0 }
+        diasCredito:
+          type: number
+          enum: [0, 7, 15, 30, 60]
+          description: 0 indica que el cliente no tiene un plazo habitual configurado.
     ClientePrecios:
       type: object
       required: [clienteId, precios]
@@ -10704,7 +10714,10 @@ components:
             convertidoANotaPorCobro:
               type: boolean
               description: Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.
-            diasCreditoCliente: { type: ["number", "null"] }
+            diasCreditoCliente:
+              type: ["number", "null"]
+              enum: [7, 15, 30, 60]
+              description: Plazo habitual permitido del cliente; null cuando no está configurado.
             viaje: { $ref: "#/components/schemas/ViajeTicketLink" }
             lineas:
               type: array
@@ -10739,6 +10752,10 @@ components:
           telefonoCliente,
           correoCliente,
           direccionFiscalEfectiva,
+          facturado,
+          esCredito,
+          diasPlazo,
+          fechaVencimiento,
           lineas,
         ]
       properties:
@@ -10759,6 +10776,10 @@ components:
         telefonoCliente: { type: ["string", "null"] }
         correoCliente: { type: ["string", "null"] }
         direccionFiscalEfectiva: { type: ["string", "null"] }
+        facturado: { type: boolean }
+        esCredito: { type: boolean }
+        diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
+        fechaVencimiento: { type: ["string", "null"], format: date }
     TicketDocumentoImpresionConPrecios:
       allOf:
         - $ref: "#/components/schemas/TicketDocumentoImpresionBase"
@@ -10769,9 +10790,7 @@ components:
               iva,
               tasaIva,
               total,
-              esCredito,
               diasCreditoCliente,
-              fechaVencimiento,
               saldoPendiente,
               lineas,
             ]
@@ -10780,9 +10799,9 @@ components:
             iva: { type: string }
             tasaIva: { type: string }
             total: { type: string }
-            esCredito: { type: boolean }
-            diasCreditoCliente: { type: ["number", "null"] }
-            fechaVencimiento: { type: ["string", "null"], format: date }
+            diasCreditoCliente:
+              type: ["number", "null"]
+              enum: [7, 15, 30, 60]
             saldoPendiente: { type: string }
             lineas:
               type: array

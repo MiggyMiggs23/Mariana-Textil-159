@@ -1716,6 +1716,20 @@ export interface PermisosPreview {
  */
 export type PermissionMatrix = ModulePermission[];
 
+/**
+ * 0 indica que el cliente no tiene un plazo habitual configurado.
+ */
+export type ClienteDiasCredito = typeof ClienteDiasCredito[keyof typeof ClienteDiasCredito];
+
+
+export const ClienteDiasCredito = {
+  NUMBER_0: 0,
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
 export interface Cliente {
   id: number;
   nombre: string;
@@ -1738,11 +1752,26 @@ export interface Cliente {
   /** @nullable */
   contactoNombre?: string | null;
   recibeNotaSinPrecios: boolean;
-  /** @minimum 0 */
-  diasCredito?: number;
+  /** 0 indica que el cliente no tiene un plazo habitual configurado. */
+  diasCredito: ClienteDiasCredito;
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * 0 o null indican que el cliente no tiene un plazo habitual configurado.
+ * @nullable
+ */
+export type ClienteInputDiasCredito = typeof ClienteInputDiasCredito[keyof typeof ClienteInputDiasCredito] | null;
+
+
+export const ClienteInputDiasCredito = {
+  NUMBER_0: 0,
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
 
 export interface ClienteInput {
   /**
@@ -1772,10 +1801,10 @@ export interface ClienteInput {
      */
   limiteCredito?: string | null;
   /**
-     * @minimum 0
+     * 0 o null indican que el cliente no tiene un plazo habitual configurado.
      * @nullable
      */
-  diasCredito?: number | null;
+  diasCredito?: ClienteInputDiasCredito;
   recibeNotaSinPrecios?: boolean;
 }
 
@@ -1830,6 +1859,17 @@ export interface ClienteUpdate {
   recibeNotaSinPrecios?: boolean;
 }
 
+export type ClienteCreditoDiasCredito = typeof ClienteCreditoDiasCredito[keyof typeof ClienteCreditoDiasCredito];
+
+
+export const ClienteCreditoDiasCredito = {
+  NUMBER_0: 0,
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
 export type ClienteCreditoAntiguedadItem = { [key: string]: unknown };
 
 export interface ClienteCredito {
@@ -1838,7 +1878,7 @@ export interface ClienteCredito {
   saldoActual: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
-  diasCredito: number;
+  diasCredito: ClienteCreditoDiasCredito;
   utilizacion: string;
   totalVencido: string;
   /** @nullable */
@@ -1850,11 +1890,25 @@ export interface ClienteCredito {
   antiguedad?: ClienteCreditoAntiguedadItem[];
 }
 
+/**
+ * 0 indica que el cliente no tiene un plazo habitual configurado.
+ */
+export type ClienteCreditoUpdateDiasCredito = typeof ClienteCreditoUpdateDiasCredito[keyof typeof ClienteCreditoUpdateDiasCredito];
+
+
+export const ClienteCreditoUpdateDiasCredito = {
+  NUMBER_0: 0,
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
 export interface ClienteCreditoUpdate {
   /** @minimum 0 */
   limiteCredito: number;
-  /** @minimum 0 */
-  diasCredito: number;
+  /** 0 indica que el cliente no tiene un plazo habitual configurado. */
+  diasCredito: ClienteCreditoUpdateDiasCredito;
 }
 
 export type ClientePreciosPreciosItem = {
@@ -2257,6 +2311,20 @@ export const DocumentoTipoTicket = {
 } as const;
 
 /**
+ * Plazo habitual permitido del cliente; null cuando no está configurado.
+ * @nullable
+ */
+export type TicketDetalleDiasCreditoCliente = typeof TicketDetalleDiasCreditoCliente[keyof typeof TicketDetalleDiasCreditoCliente] | null;
+
+
+export const TicketDetalleDiasCreditoCliente = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
+/**
  * @nullable
  */
 export type ViajeTicketLink = {
@@ -2356,8 +2424,11 @@ export type TicketDetalle = TicketResumen & TicketCredito & ({
   direccionEntregaSnapshot?: string | null;
   /** Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito. */
   convertidoANotaPorCobro: boolean;
-  /** @nullable */
-  diasCreditoCliente?: number | null;
+  /**
+     * Plazo habitual permitido del cliente; null cuando no está configurado.
+     * @nullable
+     */
+  diasCreditoCliente?: TicketDetalleDiasCreditoCliente;
   viaje?: ViajeTicketLink | null;
   lineas: TicketLinea[];
   pagos?: TicketPago[];
@@ -4756,6 +4827,19 @@ export const TicketDocumentoImpresionBaseCopia = {
   CLIENTE: 'CLIENTE',
 } as const;
 
+/**
+ * @nullable
+ */
+export type TicketDocumentoImpresionBaseDiasPlazo = typeof TicketDocumentoImpresionBaseDiasPlazo[keyof typeof TicketDocumentoImpresionBaseDiasPlazo] | null;
+
+
+export const TicketDocumentoImpresionBaseDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
 export interface TicketDocumentoImpresionBase {
   ticketId: number;
   folio: number;
@@ -4781,7 +4865,26 @@ export interface TicketDocumentoImpresionBase {
   correoCliente: string | null;
   /** @nullable */
   direccionFiscalEfectiva: string | null;
+  facturado: boolean;
+  esCredito: boolean;
+  /** @nullable */
+  diasPlazo: TicketDocumentoImpresionBaseDiasPlazo;
+  /** @nullable */
+  fechaVencimiento: string | null;
 }
+
+/**
+ * @nullable
+ */
+export type TicketDocumentoImpresionConPreciosDiasCreditoCliente = typeof TicketDocumentoImpresionConPreciosDiasCreditoCliente[keyof typeof TicketDocumentoImpresionConPreciosDiasCreditoCliente] | null;
+
+
+export const TicketDocumentoImpresionConPreciosDiasCreditoCliente = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
 
 export interface TicketLineaImpresionBase {
   productoId: number;
@@ -4799,19 +4902,16 @@ export type TicketLineaImpresionConPrecios = TicketLineaImpresionBase & {
   importe: string;
 };
 
-export type TicketDocumentoImpresionConPrecios = TicketDocumentoImpresionBase & ({
+export type TicketDocumentoImpresionConPrecios = TicketDocumentoImpresionBase & {
   subtotal: string;
   iva: string;
   tasaIva: string;
   total: string;
-  esCredito: boolean;
   /** @nullable */
-  diasCreditoCliente: number | null;
-  /** @nullable */
-  fechaVencimiento: string | null;
+  diasCreditoCliente: TicketDocumentoImpresionConPreciosDiasCreditoCliente;
   saldoPendiente: string;
   lineas: TicketLineaImpresionConPrecios[];
-});
+};
 
 export type TicketLineaImpresionSinPrecios = TicketLineaImpresionBase;
 

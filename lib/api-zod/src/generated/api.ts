@@ -4196,9 +4196,6 @@ export const ListCuentasIncobrablesResponse = zod.object({
  * @summary Lista el catálogo operativo de clientes (sin datos financieros)
  */
 export const listClientesResponseRecibeNotaSinPreciosDefault = false;
-export const listClientesResponseDiasCreditoMin = 0;
-
-
 
 export const ListClientesResponseItem = zod.object({
   "id": zod.number(),
@@ -4214,7 +4211,7 @@ export const ListClientesResponseItem = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(listClientesResponseRecibeNotaSinPreciosDefault),
-  "diasCredito": zod.number().min(listClientesResponseDiasCreditoMin).optional(),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -4227,8 +4224,6 @@ export const ListClientesResponse = zod.array(ListClientesResponseItem)
 export const createClienteBodyNombreMax = 200;
 
 export const createClienteBodyLimiteCreditoRegExp = new RegExp('^\\d+(\\.\\d{1,2})?$');
-export const createClienteBodyDiasCreditoMin = 0;
-
 export const createClienteBodyRecibeNotaSinPreciosDefault = false;
 
 export const CreateClienteBody = zod.object({
@@ -4242,14 +4237,11 @@ export const CreateClienteBody = zod.object({
   "notas": zod.string().nullish(),
   "contactoNombre": zod.string().nullish(),
   "limiteCredito": zod.string().regex(createClienteBodyLimiteCreditoRegExp).nullish(),
-  "diasCredito": zod.number().min(createClienteBodyDiasCreditoMin).nullish(),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('0 o null indican que el cliente no tiene un plazo habitual configurado.'),
   "recibeNotaSinPrecios": zod.boolean().default(createClienteBodyRecibeNotaSinPreciosDefault)
 })
 
 export const createClienteResponseRecibeNotaSinPreciosDefault = false;
-export const createClienteResponseDiasCreditoMin = 0;
-
-
 
 export const CreateClienteResponse = zod.object({
   "id": zod.number(),
@@ -4265,7 +4257,7 @@ export const CreateClienteResponse = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(createClienteResponseRecibeNotaSinPreciosDefault),
-  "diasCredito": zod.number().min(createClienteResponseDiasCreditoMin).optional(),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -4334,9 +4326,6 @@ export const GetClienteParams = zod.object({
 })
 
 export const getClienteResponseRecibeNotaSinPreciosDefault = false;
-export const getClienteResponseDiasCreditoMin = 0;
-
-
 
 export const GetClienteResponse = zod.object({
   "id": zod.number(),
@@ -4352,7 +4341,7 @@ export const GetClienteResponse = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(getClienteResponseRecibeNotaSinPreciosDefault),
-  "diasCredito": zod.number().min(getClienteResponseDiasCreditoMin).optional(),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -4384,9 +4373,6 @@ export const UpdateClienteBody = zod.object({
 })
 
 export const updateClienteResponseRecibeNotaSinPreciosDefault = false;
-export const updateClienteResponseDiasCreditoMin = 0;
-
-
 
 export const UpdateClienteResponse = zod.object({
   "id": zod.number(),
@@ -4402,7 +4388,7 @@ export const UpdateClienteResponse = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(updateClienteResponseRecibeNotaSinPreciosDefault),
-  "diasCredito": zod.number().min(updateClienteResponseDiasCreditoMin).optional(),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
@@ -4502,7 +4488,7 @@ export const GetClienteCreditoResponse = zod.object({
   "saldoActual": zod.string(),
   "creditoDisponible": zod.string(),
   "puedeComprarCredito": zod.boolean(),
-  "diasCredito": zod.number(),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
   "utilizacion": zod.string(),
   "totalVencido": zod.string(),
   "primerVencimiento": zod.coerce.date().nullish(),
@@ -4518,13 +4504,11 @@ export const UpdateClienteCreditoParams = zod.object({
 
 export const updateClienteCreditoBodyLimiteCreditoMin = 0;
 
-export const updateClienteCreditoBodyDiasCreditoMin = 0;
-
 
 
 export const UpdateClienteCreditoBody = zod.object({
   "limiteCredito": zod.number().min(updateClienteCreditoBodyLimiteCreditoMin),
-  "diasCredito": zod.number().min(updateClienteCreditoBodyDiasCreditoMin)
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.')
 })
 
 export const UpdateClienteCreditoResponse = zod.record(zod.string(), zod.unknown())
@@ -4831,7 +4815,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
-  "diasCreditoCliente": zod.number().nullish(),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
   "viaje": zod.object({
   "id": zod.number(),
   "folio": zod.number()
@@ -5411,7 +5395,7 @@ export const CrearTicketResponse = zod.object({
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
-  "diasCreditoCliente": zod.number().nullish(),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
   "viaje": zod.object({
   "id": zod.number(),
   "folio": zod.number()
@@ -5612,7 +5596,7 @@ export const ObtenerTicketResponse = zod.object({
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
-  "diasCreditoCliente": zod.number().nullish(),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
   "viaje": zod.object({
   "id": zod.number(),
   "folio": zod.number()
@@ -5679,15 +5663,17 @@ export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "direccionEntregaEfectiva": zod.string().nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
-  "direccionFiscalEfectiva": zod.string().nullable()
+  "direccionFiscalEfectiva": zod.string().nullable(),
+  "facturado": zod.boolean(),
+  "esCredito": zod.boolean(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable()
 }).and(zod.object({
   "subtotal": zod.string(),
   "iva": zod.string(),
   "tasaIva": zod.string(),
   "total": zod.string(),
-  "esCredito": zod.boolean(),
-  "diasCreditoCliente": zod.number().nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "saldoPendiente": zod.string(),
   "lineas": zod.array(zod.object({
   "productoId": zod.number(),
@@ -5719,7 +5705,11 @@ export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "direccionEntregaEfectiva": zod.string().nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
-  "direccionFiscalEfectiva": zod.string().nullable()
+  "direccionFiscalEfectiva": zod.string().nullable(),
+  "facturado": zod.boolean(),
+  "esCredito": zod.boolean(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable()
 }).and(zod.object({
   "copia": zod.literal("CLIENTE"),
   "documentoTipo": zod.literal("NOTA"),
@@ -5804,7 +5794,7 @@ export const CancelarTicketResponse = zod.object({
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
-  "diasCreditoCliente": zod.number().nullish(),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
   "viaje": zod.object({
   "id": zod.number(),
   "folio": zod.number()
@@ -5918,7 +5908,7 @@ export const CobrarTicketResponse = zod.object({
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
-  "diasCreditoCliente": zod.number().nullish(),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
   "viaje": zod.object({
   "id": zod.number(),
   "folio": zod.number()

@@ -257,7 +257,8 @@ export async function buildTicketDetail(
       notaSinPrecios: ticketsTable.notaSinPrecios,
       nombreDestinatario: ticketsTable.nombreDestinatario,
       direccionEntregaSnapshot: ticketsTable.direccionEntregaSnapshot,
-      diasCreditoCliente: clientesTable.diasCredito,
+      diasCreditoCliente:
+        sql<number | null>`NULLIF(${clientesTable.diasCredito}, 0)`,
       telefonoCliente: clientesTable.telefono,
       correoCliente: clientesTable.correo,
       direccionFiscalEfectiva: clientesTable.direccionParticular,
@@ -465,6 +466,10 @@ export function projectTicketPrintDocument(
     telefonoCliente: ticket.telefonoCliente,
     correoCliente: ticket.correoCliente,
     direccionFiscalEfectiva: ticket.direccionFiscalEfectiva,
+    facturado: ticket.facturado,
+    esCredito: ticket.esCredito,
+    diasPlazo: ticket.diasPlazo,
+    fechaVencimiento: ticket.fechaVencimiento,
   };
   const sinPrecios =
     copia === "CLIENTE" &&
@@ -503,9 +508,7 @@ export function projectTicketPrintDocument(
     iva: ticket.iva,
     tasaIva: ticket.tasaIva,
     total: ticket.total,
-    esCredito: ticket.esCredito,
     diasCreditoCliente: ticket.diasCreditoCliente,
-    fechaVencimiento: ticket.fechaVencimiento,
     saldoPendiente: ticket.saldoPendiente,
   };
 }

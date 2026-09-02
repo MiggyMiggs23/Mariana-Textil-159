@@ -6,18 +6,16 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { TicketDocumentoImpresionBase } from './ticketDocumentoImpresionBase';
+import type { TicketDocumentoImpresionConPreciosDiasCreditoCliente } from './ticketDocumentoImpresionConPreciosDiasCreditoCliente';
 import type { TicketLineaImpresionConPrecios } from './ticketLineaImpresionConPrecios';
 
-export type TicketDocumentoImpresionConPrecios = TicketDocumentoImpresionBase & ({
+export type TicketDocumentoImpresionConPrecios = TicketDocumentoImpresionBase & {
   subtotal: string;
   iva: string;
   tasaIva: string;
   total: string;
-  esCredito: boolean;
   /** @nullable */
-  diasCreditoCliente: number | null;
-  /** @nullable */
-  fechaVencimiento: Date | null;
+  diasCreditoCliente: TicketDocumentoImpresionConPreciosDiasCreditoCliente;
   saldoPendiente: string;
   lineas: TicketLineaImpresionConPrecios[];
-});
+};
