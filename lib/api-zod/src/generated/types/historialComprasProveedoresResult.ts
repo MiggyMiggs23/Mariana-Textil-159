@@ -6,10 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { HistorialCompraProveedor } from './historialCompraProveedor';
+import type { HistorialComprasProveedoresResultSitiosItem } from './historialComprasProveedoresResultSitiosItem';
 
 export interface HistorialComprasProveedoresResult {
   items: HistorialCompraProveedor[];
   total: number;
   page: number;
   pageSize: number;
+  sitios: HistorialComprasProveedoresResultSitiosItem[];
 }

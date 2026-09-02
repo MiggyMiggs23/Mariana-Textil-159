@@ -9928,7 +9928,7 @@ components:
         cantidad: { type: string }
     HistorialComprasProveedoresResult:
       type: object
-      required: [items, total, page, pageSize]
+      required: [items, total, page, pageSize, sitios]
       properties:
         items:
           type: array
@@ -9936,6 +9936,14 @@ components:
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }
+        sitios:
+          type: array
+          items:
+            type: object
+            required: [id, nombre]
+            properties:
+              id: { type: number }
+              nombre: { type: string }
     MovimientoLedger:
       type: object
       required: [id, tipo, importe, saldoAcumulado, fecha, usuarioId, createdAt]

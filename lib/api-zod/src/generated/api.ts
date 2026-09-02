@@ -1491,7 +1491,11 @@ export const ListHistorialComprasProveedoresResponse = zod.object({
 })),
   "total": zod.number(),
   "page": zod.number(),
-  "pageSize": zod.number()
+  "pageSize": zod.number(),
+  "sitios": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}))
 })
 
 

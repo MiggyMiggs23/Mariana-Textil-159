@@ -317,6 +317,7 @@ export * from './healthStatus';
 export * from './historialCompraProveedor';
 export * from './historialCompraProveedorUnidad';
 export * from './historialComprasProveedoresResult';
+export * from './historialComprasProveedoresResultSitiosItem';
 export * from './hojaVentasDia';
 export * from './hojaVentasDiaLinea';
 export * from './hojaVentasDiaLineaUnidad';

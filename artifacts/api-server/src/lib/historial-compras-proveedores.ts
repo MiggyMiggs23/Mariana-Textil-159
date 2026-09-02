@@ -34,7 +34,7 @@ export async function listarHistorialComprasProveedores(options: {
   );
   const offset = (options.page - 1) * options.pageSize;
 
-  const rows = await db.execute<{
+  const [rows, sites] = await Promise.all([db.execute<{
     entrada_id: number;
     fecha: Date | string;
     producto_id: number;
@@ -78,7 +78,14 @@ export async function listarHistorialComprasProveedores(options: {
     ORDER BY ${orderBy}
     LIMIT ${options.pageSize}
     OFFSET ${offset}
-  `);
+  `), db.execute<{ id: number; nombre: string }>(sql`
+    SELECT DISTINCT u.id, u.nombre
+    FROM entradas e
+    JOIN ubicaciones u ON u.id = e.ubicacion_id
+    WHERE e.proveedor_id IS NOT NULL
+      AND (${options.ubicacionId ?? null}::int IS NULL OR e.ubicacion_id = ${options.ubicacionId ?? null})
+    ORDER BY u.nombre
+  `)]);
 
   return {
     items: rows.rows.map((row) => ({
@@ -97,5 +104,9 @@ export async function listarHistorialComprasProveedores(options: {
     total: Number(rows.rows[0]?.total ?? 0),
     page: options.page,
     pageSize: options.pageSize,
+    sitios: sites.rows.map((site) => ({
+      id: Number(site.id),
+      nombre: site.nombre,
+    })),
   };
 }

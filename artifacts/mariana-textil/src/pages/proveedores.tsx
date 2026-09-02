@@ -33,6 +33,7 @@ import {
   REPORT_NEGATIVE_COLOR,
 } from "@/lib/report-chart-colors";
 import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
+import { HistorialCompras } from "@/components/proveedores/historial-compras";
 
 
 // Helper for generic API errors
@@ -164,6 +165,7 @@ export default function Proveedores() {
         <Tabs defaultValue="proveedores">
           <TabsList>
             <TabsTrigger value="proveedores">Proveedores</TabsTrigger>
+            <TabsTrigger value="historial">Historial de compras</TabsTrigger>
             {canViewFinanzas && <TabsTrigger value="analisis">Análisis global</TabsTrigger>}
           </TabsList>
           <TabsContent value="proveedores">
@@ -306,6 +308,9 @@ export default function Proveedores() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+          <TabsContent value="historial">
+            <HistorialCompras />
           </TabsContent>
           {canViewFinanzas && (
             <TabsContent value="analisis" className="space-y-6">

@@ -4337,11 +4337,17 @@ export interface HistorialCompraProveedor {
   cantidad: string;
 }
 
+export type HistorialComprasProveedoresResultSitiosItem = {
+  id: number;
+  nombre: string;
+};
+
 export interface HistorialComprasProveedoresResult {
   items: HistorialCompraProveedor[];
   total: number;
   page: number;
   pageSize: number;
+  sitios: HistorialComprasProveedoresResultSitiosItem[];
 }
 
 export interface ProveedorEstadoCuenta {

@@ -305,6 +305,7 @@ export * from "./generated/types/healthStatus";
 export * from "./generated/types/historialCompraProveedor";
 export * from "./generated/types/historialCompraProveedorUnidad";
 export * from "./generated/types/historialComprasProveedoresResult";
+export * from "./generated/types/historialComprasProveedoresResultSitiosItem";
 export * from "./generated/types/hojaVentasDia";
 export * from "./generated/types/hojaVentasDiaLinea";
 export * from "./generated/types/hojaVentasDiaLineaUnidad";
