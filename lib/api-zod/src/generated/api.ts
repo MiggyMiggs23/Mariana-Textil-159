@@ -5300,7 +5300,7 @@ export const GetNotificationFeedResponse = zod.object({
 
 
 /**
- * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
+ * @summary Cuenta todos los eventos activos visibles para ADMIN
  */
 export const CountNotificacionesNoLeidasResponse = zod.object({
   "count": zod.number()

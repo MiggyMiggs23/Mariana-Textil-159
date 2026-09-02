@@ -109,6 +109,51 @@ function directedPaymentEvent(row: Record<string, unknown>, adminQueue: boolean)
   };
 }
 
+async function countAdminActiveEvents(adminUserId: number): Promise<number> {
+  const resolvedCutoff = new Date(
+    Date.now() - RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS * 86_400_000,
+  );
+  const [alerts, ownDirected, pendingDirected, [credit], [system]] =
+    await Promise.all([
+      getAdminAlertas(),
+      db
+        .select({ id: solicitudesPagoDirigidoTable.id })
+        .from(solicitudesPagoDirigidoTable)
+        .where(and(
+          eq(solicitudesPagoDirigidoTable.solicitanteId, adminUserId),
+          or(
+            eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
+            gt(solicitudesPagoDirigidoTable.resueltaAt, resolvedCutoff),
+          ),
+        ))
+        .limit(25),
+      db
+        .select({ id: solicitudesPagoDirigidoTable.id })
+        .from(solicitudesPagoDirigidoTable)
+        .where(eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"))
+        .limit(50),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(notificacionesCreditoTable)
+        .where(isNull(notificacionesCreditoTable.leidaAt)),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(notificacionesSistemaTable)
+        .where(isNull(notificacionesSistemaTable.leidaAt)),
+    ]);
+  const directedIds = new Set([
+    ...ownDirected.map(({ id }) => id),
+    ...pendingDirected.map(({ id }) => id),
+  ]);
+  return Math.min(
+    100,
+    alerts.total +
+      directedIds.size +
+      (credit?.count ?? 0) +
+      (system?.count ?? 0),
+  );
+}
+
 router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
   try {
     res.setHeader("Cache-Control", "private, no-store");
@@ -395,18 +440,8 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
 router.get("/notificaciones/no-leidas/count", async (req, res, next): Promise<void> => {
   try {
     if (!requireLiteralAdmin(req, res)) return;
-    const [[credit], [system]] = await Promise.all([
-      db
-        .select({ count: sql<number>`count(*)::int` })
-        .from(notificacionesCreditoTable)
-        .where(isNull(notificacionesCreditoTable.leidaAt)),
-      db
-        .select({ count: sql<number>`count(*)::int` })
-        .from(notificacionesSistemaTable)
-        .where(isNull(notificacionesSistemaTable.leidaAt)),
-    ]);
     res.json(CountNotificacionesNoLeidasResponse.parse({
-      count: (credit?.count ?? 0) + (system?.count ?? 0),
+      count: await countAdminActiveEvents(req.auth!.user.id),
     }));
   } catch (error) {
     next(error);

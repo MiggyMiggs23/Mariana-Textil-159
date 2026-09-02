@@ -41,3 +41,13 @@ test("resolved directed payments expire after the four-day notice window", () =>
   assert.match(route, /solicitudesPagoDirigidoTable\.resueltaAt/);
   assert.match(route, /RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS \* 86_400_000/);
 });
+
+test("badge count includes the same active stored and derived sources", () => {
+  assert.match(route, /async function countAdminActiveEvents/);
+  assert.match(route, /alerts\.total/);
+  assert.match(route, /directedIds\.size/);
+  assert.match(route, /\(credit\?\.count \?\? 0\)/);
+  assert.match(route, /\(system\?\.count \?\? 0\)/);
+  assert.match(route, /Math\.min\(\s*100,/);
+  assert.match(route, /count: await countAdminActiveEvents/);
+});

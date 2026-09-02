@@ -3330,10 +3330,10 @@ paths:
     get:
       operationId: countNotificacionesNoLeidas
       tags: [notificaciones]
-      summary: Cuenta notificaciones de crédito sin leer (ADMIN)
+      summary: Cuenta todos los eventos activos visibles para ADMIN
       responses:
         "200":
-          description: Conteo de no leídas
+          description: Conteo unificado de eventos activos
           content:
             application/json:
               schema:

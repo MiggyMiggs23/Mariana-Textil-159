@@ -11325,7 +11325,7 @@ export const getCountNotificacionesNoLeidasUrl = () => {
 }
 
 /**
- * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
+ * @summary Cuenta todos los eventos activos visibles para ADMIN
  */
 export const countNotificacionesNoLeidas = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesNoLeidasCount> => {
 
@@ -11372,7 +11372,7 @@ export type CountNotificacionesNoLeidasQueryError = ErrorType<UnauthorizedRespon
 
 
 /**
- * @summary Cuenta notificaciones de crédito sin leer (ADMIN)
+ * @summary Cuenta todos los eventos activos visibles para ADMIN
  */
 
 export function useCountNotificacionesNoLeidas<TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
