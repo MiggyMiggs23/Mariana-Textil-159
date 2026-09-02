@@ -210,3 +210,45 @@ mtime_ms = 1788133544394
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c5e69b43-681c-418d-be51-f07a602f3017/f76cb3b9-5a65-4a1c-a0a9-dc0bf6ac71d2"
 storage_version_token = "1788133727663808"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "xUT5V9ll-81cIkHBT44EG"
+uri = "file://reports/evidence/etiquetas-catalogo-real-154.pdf"
+type = "pdf"
+title = "154 etiquetas verificadas"
+description = "PDF de impresión: 154 páginas de 100 × 70 mm generadas con el componente real."
+logical_id = "0cc729b3-779f-4e17-8c8d-f9f8520a738f"
+content_hash = "sha256:faab14ef397c4729ecdba85804c2fdd6dd723ab6eca1c1c67345f8d4f2272f82"
+size = 1039880
+mtime_ms = 1788307168415
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0cc729b3-779f-4e17-8c8d-f9f8520a738f/b58c4a9c-f7b6-4e53-b94d-4b0ac4879496"
+storage_version_token = "1788307305450551"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "a0N_Gg01co98QKK19mD3e"
+uri = "file://reports/evidence/etiqueta-nombre-corto.png"
+type = "image"
+title = "Etiqueta — nombre corto"
+description = "RAZO - ROJO con el escalón tipográfico grande."
+logical_id = "0afb820e-8792-45ca-9c61-d758ed8b8b77"
+content_hash = "sha256:0681e086176ee3fe558069cbf38c68342ec71656f7869729e86b4f45a884afb2"
+size = 20082
+mtime_ms = 1788307168419
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0afb820e-8792-45ca-9c61-d758ed8b8b77/2c1f7b3f-f306-4255-81a5-62f9f3b5b347"
+storage_version_token = "1788307306004270"
+content_type = "image/png"
+
+[[outputs]]
+id = "T3uNJDc9GJIkCANgneQlC"
+uri = "file://reports/evidence/etiqueta-nombre-largo.png"
+type = "image"
+title = "Etiqueta — nombre largo"
+description = "MANTA CRESPONADA BLANCA CRUDA - BASE completo y sin corte."
+logical_id = "2c7d2dfb-05ad-4aaa-afbc-89e5f912a774"
+content_hash = "sha256:8eac09974ad3acf4499e0f333b0bbef12c39bc6ea513962e5904700838b1dbcc"
+size = 21175
+mtime_ms = 1788307168421
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2c7d2dfb-05ad-4aaa-afbc-89e5f912a774/39b3ecdd-0d95-41a4-8c7b-5eb1a2e36845"
+storage_version_token = "1788307306500110"
+content_type = "image/png"
