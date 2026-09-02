@@ -17,3 +17,17 @@ Medición de solo lectura sobre el volumen disponible de los últimos 12 meses: 
 No se agregaron índices. Ya existen `entradas(fecha,id)`, `entradas(proveedor_id)`, `entradas(ubicacion_id)`, `rollos(recepcion_id,producto_id)` y `productos(tela,color)`, que cubren fecha/orden, proveedor, sitio, unión y catálogos de Tela/Color. Añadir variantes sobre las mismas columnas en este volumen solo aumentaría el costo de escritura.
 
 El orden y la paginación permanecen en servidor. Los filtros no cambian esa decisión: la tabla crece indefinidamente y el navegador recibe como máximo 50 renglones por página. `resolveReadScope` se resuelve antes del criterio; para alcance PROPIA, el sitio autorizado reemplaza cualquier lista escrita en la URL.
+
+## Verificación final
+
+- Typecheck global: aprobado.
+- Build global: aprobado.
+- Proveedores: 11/11.
+- Alcance y fecha de recepción: 1/1.
+- Contrato del historial combinable: 4/4.
+- Reportes unitarios: 42/42.
+- Reportes integración: 4/4.
+- Restauración y saneamiento de URL: 3/3.
+- Workflows web/API: activos, sin errores de arranque.
+
+La presentación móvil se revisó en código y a un viewport de 390 × 844: la barra completa se oculta debajo de 1024 px y se reemplaza por un disparador compacto con conteo que abre una hoja lateral. La captura del navegador automatizado llegó al login porque no tenía sesión autenticada; se confirmó respuesta y adaptación del login, pero no se usó esa captura como evidencia visual de los filtros autenticados.

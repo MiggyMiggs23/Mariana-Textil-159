@@ -426,4 +426,10 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 **Alcance de lectura de compras y reportes:** siempre se deriva del actor con `resolveReadScope`, antes de aplicar cualquier filtro. Un usuario `PROPIA` no puede ampliar el sitio desde la dirección ni entrando directamente a un detalle; el sitio solicitado por el cliente nunca sustituye al alcance autorizado.
 
+**Filtros de producto:** se filtra por **Tela y Color por separado**, nunca por "Producto" y "Color" como filtros independientes. El producto **es** la pareja tela-color, con restricción de unicidad sobre ella; ofrecerlos como filtros distintos hace que Producto "Tafetán Blanco" con Color "Azul" devuelva siempre cero renglones. Tela y Color separados permiten "todos los colores de Tafetán" y "todo lo blanco, de cualquier tela".
+
 **Cómo combinan:** los valores **dentro** de un filtro se suman, los filtros **entre sí** se cruzan, y un filtro vacío no restringe. **No existe un armador de consultas genérico** —sin condiciones anidadas, operadores elegibles ni paréntesis— y no debe construirse: nadie en el mostrador lo usa y es caro de mantener.
+
+**Un solo componente de filtros y un solo criterio de consulta** para Historial de compras y Reportes. Construirlos por separado produce dos filtros que se comportan distinto ante el mismo caso.
+
+**Los filtros viven en la dirección web**, para poder compartir una vista filtrada, guardarla como favorito y no perderla al volver de un detalle. Una dirección con un filtro inexistente lo ignora y avisa; nunca rompe la pantalla. El alcance de lectura por sitio se aplica siempre por encima de cualquier filtro, incluso escrito a mano en la dirección.
