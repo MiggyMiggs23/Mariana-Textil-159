@@ -433,3 +433,9 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 **Un solo componente de filtros y un solo criterio de consulta** para Historial de compras y Reportes. Construirlos por separado produce dos filtros que se comportan distinto ante el mismo caso.
 
 **Los filtros viven en la dirección web**, para poder compartir una vista filtrada, guardarla como favorito y no perderla al volver de un detalle. Una dirección con un filtro inexistente lo ignora y avisa; nunca rompe la pantalla. El alcance de lectura por sitio se aplica siempre por encima de cualquier filtro, incluso escrito a mano en la dirección.
+
+**Escaneo en POS:** un rollo escaneado que se identifica sin ambigüedad **se agrega al carrito directamente**, con el mismo criterio de Salidas: la serie manda y la discrepancia de SKU avisa sin bloquear. No se agrega nada cuando el escaneo devuelve varios resultados, ni cuando el rollo no está disponible, es de otro sitio o ya está en el carrito; esos casos se rechazan con aviso, porque un rechazo silencioso produce un ticket con menos rollos de los que se lleva el cliente. El tecleo manual sigue mostrando resultados para elegir.
+
+**Renglones agrupados:** los rollos del mismo producto forman **un solo renglón** con su conteo y cantidad total, y el precio se captura una vez para todos. Agrupar por tela mezclaría colores y unidades y está prohibido.
+
+La agrupación es **presentación y captura de precio**: el renglón conserva por debajo las series de sus rollos, y el ticket sigue registrando línea por rollo, con descuento de inventario y costo congelado individuales. Si un cambio de presentación toca cómo se registra la venta, está mal planteado.
