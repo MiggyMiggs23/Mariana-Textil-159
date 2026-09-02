@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { createHash } from "node:crypto";
-import { asc, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, isNull, or, sql } from "drizzle-orm";
 import {
   CountNotificacionesNoLeidasResponse,
   GetNotificationFeedResponse,
@@ -23,6 +23,9 @@ import { loadCustomerCreditProjections } from "../lib/credit-aging-read-model";
 
 const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
+
+/** Four days lets a Friday resolution remain visible through the weekend. */
+export const RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS = 4;
 
 function requireLiteralAdmin(req: Request, res: Response): boolean {
   if (req.auth!.user.rol === "ADMIN") return true;
@@ -115,7 +118,16 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
     const ownDirectedPromise = db
       .select()
       .from(solicitudesPagoDirigidoTable)
-      .where(eq(solicitudesPagoDirigidoTable.solicitanteId, user.id))
+      .where(and(
+        eq(solicitudesPagoDirigidoTable.solicitanteId, user.id),
+        or(
+          eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
+          gt(
+            solicitudesPagoDirigidoTable.resueltaAt,
+            new Date(Date.now() - RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS * 86_400_000),
+          ),
+        ),
+      ))
       .orderBy(desc(sql`COALESCE(${solicitudesPagoDirigidoTable.resueltaAt}, ${solicitudesPagoDirigidoTable.createdAt})`))
       .limit(25);
 

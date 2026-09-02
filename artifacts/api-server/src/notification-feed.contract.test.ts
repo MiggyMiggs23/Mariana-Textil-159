@@ -35,3 +35,9 @@ test("notification feed is session scoped and publishes three sound families", (
   assert.match(spec, /enum: \[AVISO, SOLICITUD, ALERTA\]/);
   assert.match(spec, /\/notificaciones\/feed:/);
 });
+
+test("resolved directed payments expire after the four-day notice window", () => {
+  assert.match(route, /RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS = 4/);
+  assert.match(route, /solicitudesPagoDirigidoTable\.resueltaAt/);
+  assert.match(route, /RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS \* 86_400_000/);
+});
