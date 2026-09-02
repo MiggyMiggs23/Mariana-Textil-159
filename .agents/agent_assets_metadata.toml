@@ -252,3 +252,31 @@ mtime_ms = 1788307168421
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2c7d2dfb-05ad-4aaa-afbc-89e5f912a774/39b3ecdd-0d95-41a4-8c7b-5eb1a2e36845"
 storage_version_token = "1788307306500110"
 content_type = "image/png"
+
+[[outputs]]
+id = "dtIRcL2wnbcon3IAHAPOH"
+uri = "file://reports/2026-09-01-verificacion-utilidad-y-estadisticas.md"
+type = "text"
+title = "Reporte de verificación de utilidad"
+description = "Auditoría fechada de nomenclatura, tarjeta de cliente, explicaciones, discrepancias y pruebas aisladas."
+logical_id = "c4d6ac77-63f8-4894-91b0-bc4b02a1b4f4"
+content_hash = "sha256:0a78118e2326f2af082330f34517bfbc53fbf01eabc0ff1b1a0318a524d15452"
+size = 5897
+mtime_ms = 1788323248981
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c4d6ac77-63f8-4894-91b0-bc4b02a1b4f4/2271e8b3-0f6a-4fe2-aabf-62c8d650a82c"
+storage_version_token = "1788323268977892"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "8-ZMadkJPK4_kWfYEmqrl"
+uri = "file://reports/2026-09-01-verificacion-movil.jpg"
+type = "image"
+title = "Verificación móvil"
+description = "Captura final del frontend servido a 402 × 874 sin crear una sesión de development."
+logical_id = "f3a513d3-cc88-4eca-83c0-bc910dadbc5d"
+content_hash = "sha256:a0809cc380dde715392dc756a973d6b9a921836a457aeb1d48d1684c11824c76"
+size = 22569
+mtime_ms = 1788323230818
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f3a513d3-cc88-4eca-83c0-bc910dadbc5d/c76a6b1d-1257-4d20-b2f8-f84d79f874ea"
+storage_version_token = "1788323269446865"
+content_type = "image/jpeg"
