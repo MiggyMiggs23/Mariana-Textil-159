@@ -14,4 +14,6 @@ export interface HistorialComprasProveedoresResult {
   page: number;
   pageSize: number;
   sitios: HistorialComprasProveedoresResultSitiosItem[];
+  telas: string[];
+  colores: string[];
 }

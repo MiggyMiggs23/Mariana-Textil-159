@@ -4348,6 +4348,8 @@ export interface HistorialComprasProveedoresResult {
   page: number;
   pageSize: number;
   sitios: HistorialComprasProveedoresResultSitiosItem[];
+  telas: string[];
+  colores: string[];
 }
 
 export type NotificacionMarcadaLeidaTipo = typeof NotificacionMarcadaLeidaTipo[keyof typeof NotificacionMarcadaLeidaTipo];
@@ -5507,8 +5509,10 @@ modoPrecio?: ModoPrecio;
 };
 
 export type ListHistorialComprasProveedoresParams = {
-proveedorId?: number;
-ubicacionId?: number;
+telas?: string[];
+colores?: string[];
+proveedorIds?: number[];
+ubicacionIds?: number[];
 desde?: string;
 hasta?: string;
 sort?: ListHistorialComprasProveedoresSort;

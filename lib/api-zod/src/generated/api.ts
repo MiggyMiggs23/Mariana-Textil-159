@@ -1465,8 +1465,10 @@ export const listHistorialComprasProveedoresQueryPageSizeMax = 100;
 
 
 export const ListHistorialComprasProveedoresQueryParams = zod.object({
-  "proveedorId": zod.coerce.number().int().optional(),
-  "ubicacionId": zod.coerce.number().int().optional(),
+  "telas": zod.array(zod.coerce.string()).optional(),
+  "colores": zod.array(zod.coerce.string()).optional(),
+  "proveedorIds": zod.array(zod.coerce.number().int()).optional(),
+  "ubicacionIds": zod.array(zod.coerce.number().int()).optional(),
   "desde": zod.date().optional(),
   "hasta": zod.date().optional(),
   "sort": zod.enum(['fecha', 'producto', 'proveedor', 'color', 'sitio', 'cantidad']).default(listHistorialComprasProveedoresQuerySortDefault),
@@ -1495,7 +1497,9 @@ export const ListHistorialComprasProveedoresResponse = zod.object({
   "sitios": zod.array(zod.object({
   "id": zod.number(),
   "nombre": zod.string()
-}))
+})),
+  "telas": zod.array(zod.string()),
+  "colores": zod.array(zod.string())
 })
 
 

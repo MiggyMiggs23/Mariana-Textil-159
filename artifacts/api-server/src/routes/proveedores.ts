@@ -65,6 +65,14 @@ const router: IRouter = Router();
 
 router.use("/proveedores", requireSession);
 
+function queryArray(value: unknown): string[] | undefined {
+  const values = (Array.isArray(value) ? value : value == null ? [] : [value])
+    .flatMap((item) => String(item).split(","))
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return values.length ? values : undefined;
+}
+
 // ── helpers ────────────────────────────────────────────────────────────────
 
 function presentProveedor(row: typeof proveedoresTable.$inferSelect) {
@@ -166,13 +174,19 @@ router.get(
   requierePermiso("proveedores", "ver"),
   async (req, res, next): Promise<void> => {
     try {
-      const parsed = ListHistorialComprasProveedoresQueryParams.safeParse(req.query);
+      const parsed = ListHistorialComprasProveedoresQueryParams.safeParse({
+        ...req.query,
+        telas: queryArray(req.query.telas),
+        colores: queryArray(req.query.colores),
+        proveedorIds: queryArray(req.query.proveedorIds),
+        ubicacionIds: queryArray(req.query.ubicacionIds),
+      });
       if (!parsed.success) {
         res.status(400).json({ error: "Filtros del historial inválidos." });
         return;
       }
       const query = parsed.data;
-      const { ubicacionId, scopeError } = resolveReadScope(req.auth!, query.ubicacionId);
+      const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
       if (scopeError) {
         res.status(403).json({ error: scopeError });
         return;
@@ -184,8 +198,10 @@ router.get(
         return;
       }
       const result = await listarHistorialComprasProveedores({
-        ubicacionId: ubicacionId ?? undefined,
-        proveedorId: query.proveedorId,
+        ubicacionIds: ubicacionId == null ? query.ubicacionIds : [ubicacionId],
+        proveedorIds: query.proveedorIds,
+        telas: query.telas,
+        colores: query.colores,
         desde: desde ?? undefined,
         hasta: hasta ?? undefined,
         sort: query.sort ?? "fecha",

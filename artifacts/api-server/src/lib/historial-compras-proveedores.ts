@@ -12,8 +12,10 @@ export type HistorialCompraSort =
 export type HistorialCompraDirection = "asc" | "desc";
 
 export async function listarHistorialComprasProveedores(options: {
-  ubicacionId?: number;
-  proveedorId?: number;
+  ubicacionIds?: number[];
+  proveedorIds?: number[];
+  telas?: string[];
+  colores?: string[];
   desde?: Date;
   hasta?: Date;
   sort: HistorialCompraSort;
@@ -34,7 +36,11 @@ export async function listarHistorialComprasProveedores(options: {
   );
   const offset = (options.page - 1) * options.pageSize;
 
-  const [rows, sites] = await Promise.all([db.execute<{
+  const siteIds = options.ubicacionIds?.length ? options.ubicacionIds : null;
+  const providerIds = options.proveedorIds?.length ? options.proveedorIds : null;
+  const fabrics = options.telas?.length ? options.telas : null;
+  const colors = options.colores?.length ? options.colores : null;
+  const [rows, sites, catalogs] = await Promise.all([db.execute<{
     entrada_id: number;
     fecha: Date | string;
     producto_id: number;
@@ -66,8 +72,10 @@ export async function listarHistorialComprasProveedores(options: {
       JOIN ubicaciones u ON u.id = e.ubicacion_id
       JOIN rollos ro ON ro.recepcion_id = e.id
       JOIN productos pr ON pr.id = ro.producto_id
-      WHERE (${options.ubicacionId ?? null}::int IS NULL OR e.ubicacion_id = ${options.ubicacionId ?? null})
-        AND (${options.proveedorId ?? null}::int IS NULL OR e.proveedor_id = ${options.proveedorId ?? null})
+      WHERE (${siteIds}::int[] IS NULL OR e.ubicacion_id = ANY(${siteIds}))
+        AND (${providerIds}::int[] IS NULL OR e.proveedor_id = ANY(${providerIds}))
+        AND (${fabrics}::text[] IS NULL OR pr.tela = ANY(${fabrics}))
+        AND (${colors}::text[] IS NULL OR pr.color = ANY(${colors}))
         AND (${options.desde ?? null}::timestamptz IS NULL OR e.fecha >= ${options.desde ?? null})
         AND (${options.hasta ?? null}::timestamptz IS NULL OR e.fecha <= ${options.hasta ?? null})
       GROUP BY e.id, e.fecha, pr.id, pr.tela, pr.color, pr.unidad,
@@ -83,8 +91,12 @@ export async function listarHistorialComprasProveedores(options: {
     FROM entradas e
     JOIN ubicaciones u ON u.id = e.ubicacion_id
     WHERE e.proveedor_id IS NOT NULL
-      AND (${options.ubicacionId ?? null}::int IS NULL OR e.ubicacion_id = ${options.ubicacionId ?? null})
+      AND (${siteIds}::int[] IS NULL OR e.ubicacion_id = ANY(${siteIds}))
     ORDER BY u.nombre
+  `), db.execute<{ tela: string; color: string }>(sql`
+    SELECT DISTINCT tela, color
+    FROM productos
+    ORDER BY tela, color
   `)]);
 
   return {
@@ -108,5 +120,7 @@ export async function listarHistorialComprasProveedores(options: {
       id: Number(site.id),
       nombre: site.nombre,
     })),
+    telas: [...new Set(catalogs.rows.map((item) => item.tela))],
+    colores: [...new Set(catalogs.rows.map((item) => item.color))],
   };
 }

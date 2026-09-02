@@ -914,8 +914,10 @@ paths:
       tags: [proveedores]
       summary: Historial global de compras agrupado por entrada y producto
       parameters:
-        - { in: query, name: proveedorId, schema: { type: integer } }
-        - { in: query, name: ubicacionId, schema: { type: integer } }
+        - { in: query, name: telas, schema: { type: array, items: { type: string } } }
+        - { in: query, name: colores, schema: { type: array, items: { type: string } } }
+        - { in: query, name: proveedorIds, schema: { type: array, items: { type: integer } } }
+        - { in: query, name: ubicacionIds, schema: { type: array, items: { type: integer } } }
         - { in: query, name: desde, schema: { type: string, format: date } }
         - { in: query, name: hasta, schema: { type: string, format: date } }
         - { in: query, name: sort, schema: { type: string, enum: [fecha, producto, proveedor, color, sitio, cantidad], default: fecha } }
@@ -9932,7 +9934,7 @@ components:
         cantidad: { type: string }
     HistorialComprasProveedoresResult:
       type: object
-      required: [items, total, page, pageSize, sitios]
+      required: [items, total, page, pageSize, sitios, telas, colores]
       properties:
         items:
           type: array
@@ -9948,6 +9950,12 @@ components:
             properties:
               id: { type: number }
               nombre: { type: string }
+        telas:
+          type: array
+          items: { type: string }
+        colores:
+          type: array
+          items: { type: string }
     NotificacionMarcadaLeida:
       type: object
       required: [id, tipo, leidaAt]

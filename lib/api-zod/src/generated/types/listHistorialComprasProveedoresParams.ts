@@ -9,8 +9,10 @@ import type { ListHistorialComprasProveedoresDirection } from './listHistorialCo
 import type { ListHistorialComprasProveedoresSort } from './listHistorialComprasProveedoresSort';
 
 export type ListHistorialComprasProveedoresParams = {
-proveedorId?: number;
-ubicacionId?: number;
+telas?: string[];
+colores?: string[];
+proveedorIds?: number[];
+ubicacionIds?: number[];
 desde?: Date;
 hasta?: Date;
 sort?: ListHistorialComprasProveedoresSort;
