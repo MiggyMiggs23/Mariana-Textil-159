@@ -53,6 +53,7 @@ export type CampoEscaneoProps = Omit<
   onScan: (
     value: string,
     codigo: CodigoEscaneadoInterpretado,
+    source: "scanner" | "manual" | "camera",
   ) => void | Promise<void>;
   clearOnScan?: boolean;
   interpretRollCode?: boolean;
@@ -80,6 +81,10 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
     const fallbackControlsRef = useRef<{ stop: () => void } | null>(null);
     const animationRef = useRef<number | null>(null);
     const sessionRef = useRef(0);
+    const typingStartedAtRef = useRef<number | null>(null);
+    const lastTypingAtRef = useRef<number | null>(null);
+    const largestTypingGapRef = useRef(0);
+    const typedCharactersRef = useRef(0);
     const [cameraCapable, setCameraCapable] = useState(false);
     const [cameraOpen, setCameraOpen] = useState(false);
     const [cameraError, setCameraError] = useState("");
@@ -128,7 +133,10 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
     }, []);
 
     const deliver = useCallback(
-      async (rawValue: string) => {
+      async (
+        rawValue: string,
+        source: "scanner" | "manual" | "camera",
+      ) => {
         const codigo = interpretarCodigoEscaneado(rawValue);
         if (!codigo.textoOriginal.trim()) return;
         const scannedValue =
@@ -137,7 +145,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
             : codigo.textoOriginal;
         if (clearOnScan) onChange("");
         try {
-          await onScan(scannedValue, codigo);
+          await onScan(scannedValue, codigo, source);
         } finally {
           window.setTimeout(() => inputRef.current?.focus(), 0);
         }
@@ -159,7 +167,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
         if (session !== sessionRef.current) return;
         stopCamera();
         setCameraOpen(false);
-        void deliver(rawValue);
+        void deliver(rawValue, "camera");
       };
 
       const start = async () => {
@@ -261,7 +269,20 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
     }, [cameraOpen, deliver, stopCamera]);
 
     const submit = () => {
-      if (!disabled) void deliver(value);
+      if (disabled) return;
+      const startedAt = typingStartedAtRef.current;
+      const elapsed = startedAt == null ? Number.POSITIVE_INFINITY : performance.now() - startedAt;
+      const source =
+        typedCharactersRef.current >= 7 &&
+        elapsed <= 350 &&
+        largestTypingGapRef.current <= 50
+          ? "scanner"
+          : "manual";
+      typingStartedAtRef.current = null;
+      lastTypingAtRef.current = null;
+      largestTypingGapRef.current = 0;
+      typedCharactersRef.current = 0;
+      void deliver(value, source);
     };
 
     return (
@@ -272,7 +293,23 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
             ref={inputRef}
             value={value}
             disabled={disabled}
-            onChange={(event) => onChange(event.target.value)}
+            onChange={(event) => {
+              const now = performance.now();
+              if (typingStartedAtRef.current == null) {
+                typingStartedAtRef.current = now;
+                lastTypingAtRef.current = now;
+                largestTypingGapRef.current = 0;
+                typedCharactersRef.current = 0;
+              } else if (lastTypingAtRef.current != null) {
+                largestTypingGapRef.current = Math.max(
+                  largestTypingGapRef.current,
+                  now - lastTypingAtRef.current,
+                );
+              }
+              lastTypingAtRef.current = now;
+              typedCharactersRef.current += 1;
+              onChange(event.target.value);
+            }}
             onKeyDown={(event) => {
               inputProps.onKeyDown?.(event);
               if (event.defaultPrevented || event.key !== "Enter") return;

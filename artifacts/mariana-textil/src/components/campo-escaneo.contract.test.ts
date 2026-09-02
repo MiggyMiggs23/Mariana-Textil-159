@@ -14,9 +14,11 @@ test("CampoEscaneo keeps keyboard and camera scans on the same delivery path", a
   assert.match(source, /const deliver = useCallback/);
   assert.match(source, /interpretarCodigoEscaneado\(rawValue\)/);
   assert.match(source, /codigo\.serie[\s\S]*\? codigo\.serie[\s\S]*: codigo\.textoOriginal/);
-  assert.match(source, /await onScan\(scannedValue, codigo\)/);
-  assert.match(source, /const submit = \(\) => \{[\s\S]*deliver\(value\)/);
-  assert.match(source, /void deliver\(rawValue\)/);
+  assert.match(source, /await onScan\(scannedValue, codigo, source\)/);
+  assert.match(source, /const submit = \(\) => \{[\s\S]*deliver\(value, source\)/);
+  assert.match(source, /void deliver\(rawValue, "camera"\)/);
+  assert.match(source, /typedCharactersRef\.current >= 7[\s\S]*elapsed <= 350[\s\S]*largestTypingGapRef\.current <= 50/);
+  assert.match(source, /\? "scanner"[\s\S]*: "manual"/);
   assert.match(source, /clearOnScan\) onChange\(""\)/);
   assert.match(source, /inputRef\.current\?\.focus\(\)/);
 
@@ -48,7 +50,7 @@ test("CampoEscaneo releases camera resources and every scanning screen uses it",
   assert.match(component, /fallbackControlsRef\.current\?\.stop\(\)/);
   assert.match(component, /streamRef\.current\?\.getTracks\(\)\.forEach\(\(track\) => track\.stop\(\)\)/);
   assert.match(component, /if \(!cameraOpen\) \{[\s\S]*stopCamera\(\)/);
-  assert.match(component, /stopCamera\(\);[\s\S]*setCameraOpen\(false\);[\s\S]*void deliver\(rawValue\)/);
+  assert.match(component, /stopCamera\(\);[\s\S]*setCameraOpen\(false\);[\s\S]*void deliver\(rawValue, "camera"\)/);
   assert.match(component, /return stopCamera;/);
   assert.match(component, /onOpenChange=\{\(open\) => \{[\s\S]*if \(!open\) stopCamera\(\)/);
 

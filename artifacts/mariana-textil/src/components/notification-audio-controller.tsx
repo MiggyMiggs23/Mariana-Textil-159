@@ -28,6 +28,13 @@ const SOUND_FILES: Record<NotificationFamily, string> = {
   ALERTA: "alerta.ogg",
 };
 const MAX_SEEN_KEYS = 500;
+const APP_SOUND_EVENT = "mariana:app-sound";
+
+export function requestAppSound(family: NotificationFamily): void {
+  window.dispatchEvent(
+    new CustomEvent<NotificationFamily>(APP_SOUND_EVENT, { detail: family }),
+  );
+}
 
 function eventKey(event: { id: string; updatedAt: string }): string {
   return `${event.id}:${event.updatedAt}`;
@@ -196,6 +203,22 @@ export function NotificationAudioController({
     leaderRef.current = isLeader;
     if (isLeader) void drainQueue();
   }, [drainQueue, isLeader]);
+
+  useEffect(() => {
+    const handleAppSound = (event: Event) => {
+      if (!leaderRef.current || audioContextRef.current?.state !== "running") {
+        return;
+      }
+      const family = (event as CustomEvent<NotificationFamily>).detail;
+      if (typeof family !== "string" || !(family in SOUND_FILES)) return;
+      const key = `local:${crypto.randomUUID()}`;
+      queueRef.current.push({ key, family });
+      queuedKeysRef.current.add(key);
+      void drainQueue();
+    };
+    window.addEventListener(APP_SOUND_EVENT, handleAppSound);
+    return () => window.removeEventListener(APP_SOUND_EVENT, handleAppSound);
+  }, [drainQueue]);
 
   useEffect(() => {
     if (!sessionKey || !seenStorageKey) return;

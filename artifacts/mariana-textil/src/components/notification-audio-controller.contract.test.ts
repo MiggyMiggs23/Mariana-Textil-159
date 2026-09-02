@@ -56,3 +56,11 @@ test("a feed event arriving in the navigation render remains playable", () => {
     [newEvent],
   );
 });
+
+test("local operational sounds use the exclusive serialized audio queue", () => {
+  assert.match(source, /export function requestAppSound/);
+  assert.match(source, /new CustomEvent<NotificationFamily>/);
+  assert.match(source, /if \(!leaderRef\.current \|\| audioContextRef\.current\?\.state !== "running"\)/);
+  assert.match(source, /queueRef\.current\.push\(\{ key, family \}\)/);
+  assert.match(source, /void drainQueue\(\)/);
+});
