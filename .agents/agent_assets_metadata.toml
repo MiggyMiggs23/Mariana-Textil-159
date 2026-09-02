@@ -280,3 +280,17 @@ mtime_ms = 1788323230818
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f3a513d3-cc88-4eca-83c0-bc910dadbc5d/c76a6b1d-1257-4d20-b2f8-f84d79f874ea"
 storage_version_token = "1788323269446865"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "1b97p98GtjXnn0F750AbO"
+uri = "file://reports/2026-09-01-verificacion-duracion-sesiones.md"
+type = "text"
+title = "Verificación de duración de sesiones"
+description = "Resultados de seguridad, medición con 30 usuarios, costo de renovación y hallazgo sobre limpieza de sesiones vencidas."
+logical_id = "da8dcff5-d2f6-41a3-a921-20c61cbcf147"
+content_hash = "sha256:81ab2518720047b69b06ef472caf4588759c2fab8d75254f14ea0d5c8e09d1c9"
+size = 3488
+mtime_ms = 1788324033997
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/da8dcff5-d2f6-41a3-a921-20c61cbcf147/c7038162-b69f-49b0-8d3e-17e2b727db68"
+storage_version_token = "1788324132945899"
+content_type = "text/markdown"
