@@ -15,6 +15,7 @@ import {
 } from "@workspace/db";
 import {
   clearSessionCookie,
+  INACTIVITY_MS,
   requireSession,
   setSessionCookie,
 } from "../middlewares/auth";
@@ -28,7 +29,6 @@ import {
 } from "../lib/login-lockout";
 
 const router: IRouter = Router();
-const INACTIVITY_MS = 30 * 60 * 1000;
 
 router.post("/auth/login", async (req, res): Promise<void> => {
   const parsed = LoginBody.safeParse(req.body);

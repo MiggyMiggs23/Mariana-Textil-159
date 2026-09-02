@@ -411,3 +411,11 @@ Cada cantidad se muestra **con su unidad** y la tabla **no lleva renglón de tot
 **La utilidad excluye las líneas sin costo asignado**, así que queda por debajo de la real. Toda pantalla que muestre utilidad declara cuántas líneas quedaron fuera, incluso cuando son cero: saber que la cifra está completa vale tanto como la cifra.
 
 **Las oraciones que explican una gráfica se escriben leyendo la consulta que la alimenta, nunca el título.** Una oración deducida del rótulo le da al usuario una confianza que el dato no respalda. Si el título y la consulta no coinciden, la oración describe la consulta y la discrepancia se reporta.
+
+## Duración de sesiones
+
+**Duración de sesión:** inactividad de **8 horas**, tope absoluto de **16 horas**. Ocho horas cubren un turno completo sin obligar a volver a entrar por una hora tranquila, y la sesión muere sola durante la noche. Dieciséis horas evitan que un turno se corte a la mitad. El **tope absoluto no se renueva con actividad**: es el límite duro y no debe volverse deslizante.
+
+El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la galleta sobrevive a la sesión del servidor y el usuario ve errores en vez de una petición limpia de volver a entrar.
+
+**Duraciones por rol y bloqueo con PIN quedan fuera a propósito.** El PIN es la solución correcta a la fricción de teclear una contraseña larga en una pantalla táctil, pero es desarrollo; alargar la sesión es el arreglo intermedio.

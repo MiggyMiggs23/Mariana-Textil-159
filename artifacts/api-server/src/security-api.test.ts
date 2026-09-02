@@ -79,6 +79,7 @@ import {
 } from "@workspace/db";
 import { MODULOS } from "./lib/permisos";
 import { isSupervisorSensitiveKey } from "./lib/sensitive-data";
+import { ABSOLUTE_SESSION_MS, INACTIVITY_MS } from "./middlewares/auth";
 import app from "./app";
 import { crearEntrada, crearRollo } from "./lib/inventario";
 import ExcelJS from "exceljs";
@@ -162,6 +163,7 @@ type FetchResult = {
   status: number;
   body: unknown;
   cookie: string;
+  setCookie: string;
   contentType: string;
 };
 
@@ -194,6 +196,7 @@ async function api(
     status: res.status,
     body: parsed,
     cookie: sessionCookie,
+    setCookie,
     contentType: ct,
   };
 }
@@ -428,6 +431,63 @@ await test("S-01: All four roles login → 200 + permisos array present", async 
     assert.ok(Array.isArray(body.permisos) || (typeof body.permisos === "object" && body.permisos !== null),
       `permisos absent in login response for ${usuario}`);
   }
+});
+
+await test("S-01A: session lasts eight idle hours, stops at sixteen, and logout invalidates it", async () => {
+  const loginResult = await login(testAdmin.usuario, testAdmin.password);
+  assert.equal(loginResult.status, 200);
+  assert.match(loginResult.setCookie, new RegExp(`Max-Age=${ABSOLUTE_SESSION_MS / 1000}`));
+
+  const sessionId = loginResult.cookie.replace("mariana_session=", "");
+  const [initialSession] = await db
+    .select()
+    .from(sesionesTable)
+    .where(eq(sesionesTable.id, sessionId))
+    .limit(1);
+  assert.ok(initialSession);
+  const initialLifetime = initialSession.expiraAt.getTime() - initialSession.createdAt.getTime();
+  assert.ok(
+    Math.abs(initialLifetime - INACTIVITY_MS) < 2_000,
+    `initial inactivity lifetime was ${initialLifetime}ms`,
+  );
+
+  const createdAt = new Date(Date.now() - 15 * 60 * 60 * 1000);
+  await db
+    .update(sesionesTable)
+    .set({
+      createdAt,
+      expiraAt: new Date(Date.now() + 5 * 60 * 1000),
+    })
+    .where(eq(sesionesTable.id, sessionId));
+
+  const activeNearCeiling = await api("GET", "/auth/me", undefined, loginResult.cookie);
+  assert.equal(activeNearCeiling.status, 200);
+  const [renewedSession] = await db
+    .select()
+    .from(sesionesTable)
+    .where(eq(sesionesTable.id, sessionId))
+    .limit(1);
+  assert.ok(renewedSession);
+  assert.equal(
+    renewedSession.expiraAt.getTime(),
+    createdAt.getTime() + ABSOLUTE_SESSION_MS,
+    "activity must not move the fixed sixteen-hour deadline",
+  );
+
+  const logoutResult = await api("POST", "/auth/logout", undefined, loginResult.cookie);
+  assert.equal(logoutResult.status, 204);
+  const [deletedSession] = await db
+    .select({ id: sesionesTable.id })
+    .from(sesionesTable)
+    .where(eq(sesionesTable.id, sessionId))
+    .limit(1);
+  assert.equal(deletedSession, undefined);
+
+  const reusedSession = await api("GET", "/auth/me", undefined, loginResult.cookie);
+  assert.equal(reusedSession.status, 401);
+  assert.deepEqual(reusedSession.body, {
+    error: "La sesión venció. Inicia sesión de nuevo.",
+  });
 });
 
 // S-02: ADMIN /auth/me → matrix has every configured module, all full access

@@ -11,8 +11,17 @@ import {
 } from "@workspace/db";
 
 const SESSION_COOKIE = "mariana_session";
-const INACTIVITY_MS = 30 * 60 * 1000;
-const ABSOLUTE_SESSION_MS = 12 * 60 * 60 * 1000;
+// Eight idle hours cover a complete quiet shift but still let the session die
+// overnight. The fixed sixteen-hour ceiling protects unusually long shifts and
+// never slides with activity.
+export const INACTIVITY_MS = 8 * 60 * 60 * 1000;
+export const ABSOLUTE_SESSION_MS = 16 * 60 * 60 * 1000;
+
+export function calculateSessionExpiry(now: Date, createdAt: Date): Date {
+  const inactivityDeadline = now.getTime() + INACTIVITY_MS;
+  const absoluteDeadline = createdAt.getTime() + ABSOLUTE_SESSION_MS;
+  return new Date(Math.min(inactivityDeadline, absoluteDeadline));
+}
 
 export type AuthContext = {
   sessionId: string;
@@ -86,10 +95,7 @@ export async function requireSession(
     return;
   }
 
-  const inactivityDeadline = now.getTime() + INACTIVITY_MS;
-  const absoluteDeadline =
-    row.session.createdAt.getTime() + ABSOLUTE_SESSION_MS;
-  const nextExpiry = new Date(Math.min(inactivityDeadline, absoluteDeadline));
+  const nextExpiry = calculateSessionExpiry(now, row.session.createdAt);
 
   if (nextExpiry <= now) {
     clearSessionCookie(res);
