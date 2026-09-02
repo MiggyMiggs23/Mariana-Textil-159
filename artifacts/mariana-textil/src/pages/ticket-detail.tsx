@@ -10,9 +10,6 @@ import {
   getGetCurrentUserQueryKey,
   TicketDetalle,
   useObtenerDocumentoImpresionTicket,
-  TicketDocumentoImpresion,
-  TicketDocumentoImpresionConPrecios,
-  TicketDocumentoImpresionSinPrecios,
   getObtenerDocumentoImpresionTicketQueryKey,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -54,6 +51,7 @@ import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto"
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
 import { DocumentQrCode } from "@/components/document-qr-code";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
+import { formatDateOnlyMx } from "@/lib/date-only";
 
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
@@ -908,6 +906,15 @@ export default function TicketDetailPage() {
           const qrUrl = ticketDocumentUrl;
           const isPriceless = !isInternal && printData.notaSinPrecios;
           const pageTitle = isPriceless ? "NOTA DE PRODUCTOS" : printData.documentoTipo === "NOTA" ? "NOTA" : "TICKET";
+          const printedRecipient = printData.nombreDestinatario?.trim();
+          const printedContact =
+            printData.telefonoCliente?.trim() || printData.correoCliente?.trim();
+          const printedCustomerAddress =
+            printData.direccionEntregaEfectiva?.trim() ||
+            printData.direccionFiscalEfectiva?.trim();
+          const creditTicket = printData.esCredito;
+          const paymentDate = printData.fechaVencimiento;
+          const termDays = printData.diasPlazo;
 
           // Group lines according to the print data
           const { rollos: projRollos, metraje: projMetraje } = groupPrintLinesByModality(printData.lineas);
@@ -951,49 +958,59 @@ export default function TicketDetailPage() {
 
               {/* Info section */}
               <div className="px-6 py-2 shrink-0 bg-gray-50/50">
-                <div className="grid grid-cols-2 gap-x-12 gap-y-1.5">
-                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                <div className="grid grid-cols-2 auto-rows-min gap-x-12 gap-y-1.5">
+                  <div className="flex min-w-0 items-center border-b border-gray-200 pb-0.5">
                     <User className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Cliente</span>
                     <span className="font-medium text-xs text-black truncate">{printData.clienteId === 1 ? "VENTA AL PÚBLICO" : printData.nombreCliente || `Cliente #${printData.clienteId}`}</span>
                   </div>
-                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                  <div className="flex min-w-0 items-center border-b border-gray-200 pb-0.5">
                     <Hash className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Folio Venta</span>
                     <span className="font-bold text-xs text-red-600">{printData.folio}</span>
                   </div>
-                  <div className="flex items-center border-b border-gray-200 pb-0.5">
-                    <Phone className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
-                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Contacto</span>
-                    <span className="font-medium text-[10px] text-black truncate">{printData.telefonoCliente || printData.correoCliente || "N/A"}</span>
-                  </div>
-                  <div className="flex items-center border-b border-gray-200 pb-0.5">
+                  <div className="flex min-w-0 items-center border-b border-gray-200 pb-0.5">
                     <Calendar className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Fecha Venta</span>
                     <span className="font-medium text-xs text-black">{new Date(printData.createdAt).toLocaleDateString("es-MX")} {new Date(printData.createdAt).toLocaleTimeString("es-MX", {hour: "2-digit", minute: "2-digit"})}</span>
                   </div>
-                  <div className="flex items-center border-b border-gray-200 pb-0.5">
-                    <MapPin className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
-                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Destinatario</span>
-                    <span className="font-medium text-[10px] text-black truncate">{printData.nombreDestinatario || "—"}</span>
-                  </div>
-                  {"esCredito" in printData && printData.esCredito && !isPriceless ? (
-                    <div className="flex items-center border-b border-gray-200 pb-0.5 bg-red-50">
+                  {creditTicket && paymentDate && (
+                    <div className="flex min-w-0 items-center border-b border-gray-200 bg-red-50 pb-0.5">
                       <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
-                      <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Vencimiento</span>
+                      <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Fecha de pago</span>
                       <span className="font-bold text-xs text-red-700">
-                        {printData.fechaVencimiento ? new Date(printData.fechaVencimiento).toLocaleDateString("es-MX") : "N/A"}
-                        {printData.diasCreditoCliente ? ` (${printData.diasCreditoCliente} días)` : ""}
+                        {formatDateOnlyMx(paymentDate)}
                       </span>
                     </div>
-                  ) : (
-                    <div className="flex items-center border-b border-gray-200 pb-0.5"></div>
                   )}
-                  <div className="flex items-center border-b border-gray-200 pb-0.5 col-span-2">
-                    <MapPin className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
-                    <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Dirección</span>
-                    <span className="font-medium text-[10px] text-black truncate">{printData.direccionEntregaEfectiva || printData.direccionFiscalEfectiva || "—"}</span>
-                  </div>
+                  {creditTicket && termDays && (
+                    <div className="flex min-w-0 items-center border-b border-gray-200 bg-red-50 pb-0.5">
+                      <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
+                      <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Plazo</span>
+                      <span className="font-bold text-xs text-red-700">{termDays} días</span>
+                    </div>
+                  )}
+                  {printedContact && (
+                    <div className="flex min-w-0 items-center border-b border-gray-200 pb-0.5">
+                      <Phone className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                      <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Contacto</span>
+                      <span className="font-medium text-[10px] text-black truncate">{printedContact}</span>
+                    </div>
+                  )}
+                  {printedRecipient && (
+                    <div className="flex min-w-0 items-center border-b border-gray-200 pb-0.5">
+                      <User className="w-3 h-3 text-gray-400 mr-2 shrink-0" />
+                      <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Destinatario</span>
+                      <span className="font-medium text-[10px] text-black truncate">{printedRecipient}</span>
+                    </div>
+                  )}
+                  {printedCustomerAddress && (
+                    <div className="flex min-w-0 items-start border-b border-gray-200 pb-0.5">
+                      <MapPin className="w-3 h-3 text-gray-400 mr-2 mt-0.5 shrink-0" />
+                      <span className="font-bold w-24 shrink-0 text-[10px] uppercase text-gray-500 tracking-wider">Dirección</span>
+                      <span className="font-medium min-w-0 text-[10px] leading-tight text-black break-words">{printedCustomerAddress}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -1078,9 +1095,16 @@ export default function TicketDetailPage() {
               <div className="px-6 mt-2 mb-2 relative z-10 shrink-0 flex gap-4">
                 <div className="flex-1 flex flex-col justify-end">
                   <div className="text-[8px] text-gray-500 mb-4 pr-4 text-justify">
-                    Recibo a mi entera satisfacción la mercancía aquí detallada. Esta nota ampara
-                    exclusivamente los productos mencionados y no constituye un comprobante de pago
-                    ni un documento fiscal válido.
+                    {creditTicket ? (
+                      <>
+                        <p className="font-bold">RECIBO DE MERCANCÍA Y PAGARÉ</p>
+                        <p>Recibo a mi entera satisfacción la mercancía aquí detallada.</p>
+                        <p>Por este pagaré, reconozco deber y me obligo incondicionalmente a pagar a la orden de MARIANA TEXTIL, en la fecha de pago señalada en esta nota, el monto de esta nota, por concepto de mercancía recibida.</p>
+                        <p>El presente pagaré se rige por los artículos 170, fracciones I, II, III, IV, V y VI; 171; y 174, primer párrafo, de la LGTOC, y demás disposiciones aplicables.</p>
+                      </>
+                    ) : (
+                      <p>Recibo a mi entera satisfacción la mercancía aquí detallada.</p>
+                    )}
                   </div>
                   <div className="border-t border-black w-48 mx-auto mt-6 mb-1 h-0"></div>
                   <div className="text-[8px] font-bold uppercase text-gray-700 tracking-wider text-center">Firma de Conformidad</div>
@@ -1091,16 +1115,18 @@ export default function TicketDetailPage() {
                   <div className="w-[35%] shrink-0">
                     <table className="w-full text-xs border-collapse border border-gray-300 bg-white shadow-sm">
                       <tbody>
-                        {"subtotal" in printData && "tasaIva" in printData && "iva" in printData && (
+                        {"subtotal" in printData && (
                           <>
                             <tr>
                               <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">Subtotal</td>
                               <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(printData.subtotal, { kind: "money" })}</td>
                             </tr>
-                            <tr>
-                              <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">IVA ({formatNumber(printData.tasaIva, { kind: "percentage", percentageInput: "ratio" })})</td>
-                              <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(printData.iva, { kind: "money" })}</td>
-                            </tr>
+                            {printData.facturado && (
+                              <tr>
+                                <td className="py-0.5 px-2 border-b border-gray-200 text-gray-600 text-[10px] uppercase bg-gray-50">IVA ({formatNumber(printData.tasaIva, { kind: "percentage", percentageInput: "ratio" })})</td>
+                                <td className="py-0.5 px-2 border-b border-gray-200 font-medium text-right text-[11px]">{formatNumber(printData.iva, { kind: "money" })}</td>
+                              </tr>
+                            )}
                           </>
                         )}
                         <tr>
