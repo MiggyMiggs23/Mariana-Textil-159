@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useRoute, useSearch } from "wouter";
-import { ArrowLeft, Download, Loader2, LockKeyhole, Printer, FileText } from "lucide-react";
+import { ArrowLeft, Download, Eye, EyeOff, Loader2, LockKeyhole, Printer, FileText } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
   getGetClienteComprasQueryKey,
@@ -83,6 +83,7 @@ export default function ClienteDetail() {
   const requestedTab = new URLSearchParams(search).get("tab");
   const initialPaymentAmount = new URLSearchParams(search).get("importe") ?? "";
   const [activeTab, setActiveTab] = useState(requestedTab === "estado" ? "estado" : "datos");
+  const [utilityVisible, setUtilityVisible] = useState(false);
 
   useEffect(() => {
     if (requestedTab === "estado") setActiveTab("estado");
@@ -113,6 +114,7 @@ export default function ClienteDetail() {
   const account = useQuery({ queryKey: ["cliente-account", id], queryFn: () => getAccount(id), enabled: canFinances && Number.isFinite(id) });
   const purchases = useQuery({ queryKey: ["cliente-purchases", id, periodDates], queryFn: () => getPurchases(id, periodDates), enabled: canFinances && Number.isFinite(id) });
   const stats = useQuery({ queryKey: ["cliente-stats", id, periodDates], queryFn: () => getStats(id, periodDates), enabled: canFinances && Number.isFinite(id) });
+  const lifetimeStats = useQuery({ queryKey: ["cliente-lifetime-stats", id], queryFn: () => getStats(id, {}), enabled: canFinances && Number.isFinite(id) });
   const analytics = useQuery({ queryKey: ["cliente-analytics", id, periodDates], queryFn: () => getClientAnalytics(id, periodDates), enabled: canFinances && Number.isFinite(id) });
   const portfolio = useQuery({ queryKey: ["clientes-portfolio"], queryFn: getPortfolio, enabled: canCredit && Number.isFinite(id) });
   const payments = useGetClientePagos(id, { query: { enabled: canFinances && Number.isFinite(id), queryKey: getGetClientePagosQueryKey(id) } });
@@ -247,6 +249,37 @@ export default function ClienteDetail() {
             {canFinances && <><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.pdf`, `estado-cuenta-${id}.pdf`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />Descargar PDF</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></>}
           </div>
         </div>
+        {canFinances && (
+          <QueryState query={lifetimeStats}>
+            <Card data-testid="card-client-lifetime-utility">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm text-muted-foreground">Utilidad acumulada</CardTitle>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-11 w-11"
+                  aria-label={utilityVisible ? "Ocultar utilidad acumulada" : "Mostrar utilidad acumulada"}
+                  aria-pressed={utilityVisible}
+                  onClick={() => setUtilityVisible((visible) => !visible)}
+                  data-testid="button-toggle-client-utility"
+                >
+                  {utilityVisible ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <p className="text-2xl font-bold" data-testid="metric-client-lifetime-utility">
+                  {utilityVisible
+                    ? formatNumber(lifetimeStats.data?.utilidadAcumulada, { kind: "money" })
+                    : <span aria-label="Utilidad oculta">••••••</span>}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Se excluyeron {formatNumber(lifetimeStats.data?.lineasExcluidasSinCosto ?? 0, { kind: "count" })} línea(s) sin costo asignado.
+                </p>
+              </CardContent>
+            </Card>
+          </QueryState>
+        )}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="h-auto w-full justify-start overflow-x-auto">
             <TabsTrigger value="datos">Datos</TabsTrigger>

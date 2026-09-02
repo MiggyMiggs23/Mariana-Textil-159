@@ -16,6 +16,7 @@ const payload = {
   margenBruto: "5.00",
   utilidad: "3.00",
   utilidad_neta: "3.00",
+  utilidadAcumulada: "8.00",
   nested: [{ costo_unitario: "10.00", visible: true }],
   visible: "ok",
 };
@@ -32,6 +33,7 @@ for (const key of [
   "margenBruto",
   "utilidad",
   "utilidad_neta",
+  "utilidadAcumulada",
 ]) {
   assert.ok(!(key in terminal), `TERMINAL payload must omit ${key}`);
 }
@@ -54,6 +56,7 @@ const supervisorPayload = {
   credito: "100.00",
   plazoPago: 30,
   cobro: "10.00",
+  utilidadAcumulada: "8.00",
   ine: "secret",
   saldoPosterior: "12.500",
   documentoTipo: "SALIDA",

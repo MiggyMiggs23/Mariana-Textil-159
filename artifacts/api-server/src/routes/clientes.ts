@@ -1417,6 +1417,8 @@ router.get(
             ELSE COALESCE(SUM(l.costo_total_congelado),0)::text END AS costo,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
             ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END AS margen,
+          COALESCE(SUM(l.importe-l.costo_total_congelado)
+            FILTER (WHERE l.costo_total_congelado IS NOT NULL),0)::text AS "utilidadAcumulada",
           COUNT(*) FILTER
             (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto"
          FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
@@ -1436,6 +1438,8 @@ router.get(
         kilos: summary?.kilos ?? "0.000",
         costo: summary?.costo ?? "0.00",
         margen: summary?.margen ?? "0.00",
+        utilidadAcumulada: summary?.utilidadAcumulada ?? "0.00",
+        lineasExcluidasSinCosto: summary?.lineasSinCosto ?? 0,
         lineasSinCosto: summary?.lineasSinCosto ?? 0,
       });
     } catch (e) {
