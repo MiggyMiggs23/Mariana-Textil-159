@@ -379,6 +379,8 @@ export * from "./generated/types/movimientoRow";
 export * from "./generated/types/notFoundResponse";
 export * from "./generated/types/notificacionCredito";
 export * from "./generated/types/notificacionCreditoDiasPlazo";
+export * from "./generated/types/notificacionMarcadaLeida";
+export * from "./generated/types/notificacionMarcadaLeidaTipo";
 export * from "./generated/types/notificacionSistema";
 export * from "./generated/types/notificacionesNoLeidasCount";
 export * from "./generated/types/notificacionesPanel";

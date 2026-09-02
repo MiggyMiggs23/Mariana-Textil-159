@@ -3354,12 +3354,16 @@ paths:
                 $ref: "#/components/schemas/NotificacionesNoLeidasCount"
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-  /notificaciones/{id}/leer:
+  /notificaciones/{tipo}/{id}/leer:
     post:
       operationId: markNotificacionRead
       tags: [notificaciones]
       summary: Marca una notificación como leída sin eliminarla (ADMIN)
       parameters:
+        - in: path
+          name: tipo
+          required: true
+          schema: { type: string, enum: [credito, sistema] }
         - $ref: "#/components/parameters/NotificacionId"
       responses:
         "200":
@@ -3367,7 +3371,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NotificacionCredito"
+                $ref: "#/components/schemas/NotificacionMarcadaLeida"
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -9944,6 +9948,13 @@ components:
             properties:
               id: { type: number }
               nombre: { type: string }
+    NotificacionMarcadaLeida:
+      type: object
+      required: [id, tipo, leidaAt]
+      properties:
+        id: { type: number }
+        tipo: { type: string, enum: [credito, sistema] }
+        leidaAt: { type: string, format: date-time }
     MovimientoLedger:
       type: object
       required: [id, tipo, importe, saldoAcumulado, fecha, usuarioId, createdAt]

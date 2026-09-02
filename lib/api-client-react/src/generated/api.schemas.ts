@@ -4350,6 +4350,20 @@ export interface HistorialComprasProveedoresResult {
   sitios: HistorialComprasProveedoresResultSitiosItem[];
 }
 
+export type NotificacionMarcadaLeidaTipo = typeof NotificacionMarcadaLeidaTipo[keyof typeof NotificacionMarcadaLeidaTipo];
+
+
+export const NotificacionMarcadaLeidaTipo = {
+  credito: 'credito',
+  sistema: 'sistema',
+} as const;
+
+export interface NotificacionMarcadaLeida {
+  id: number;
+  tipo: NotificacionMarcadaLeidaTipo;
+  leidaAt: string;
+}
+
 export interface ProveedorEstadoCuenta {
   movimientos: MovimientoLedger[];
   saldoActual: string;

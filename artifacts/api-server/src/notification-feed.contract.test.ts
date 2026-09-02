@@ -51,3 +51,12 @@ test("badge count includes the same active stored and derived sources", () => {
   assert.match(route, /Math\.min\(\s*100,/);
   assert.match(route, /count: await countAdminActiveEvents/);
 });
+
+test("read endpoints return real counts and disambiguate both storage tables", () => {
+  assert.doesNotMatch(route, /count: 0/);
+  assert.match(route, /credit\.length \+ system\.length/);
+  assert.match(route, /\/notificaciones\/:tipo\/:id\/leer/);
+  assert.match(route, /params\.tipo === "credito"/);
+  assert.match(spec, /\/notificaciones\/\{tipo\}\/\{id\}\/leer:/);
+  assert.match(spec, /enum: \[credito, sistema\]/);
+});

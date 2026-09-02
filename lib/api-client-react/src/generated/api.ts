@@ -193,7 +193,7 @@ import type {
   MotivoSalidaInput,
   MovimientoRow,
   NotFoundResponse,
-  NotificacionCredito,
+  NotificacionMarcadaLeida,
   NotificacionesNoLeidasCount,
   NotificacionesPanel,
   NotificationFeed,
@@ -11464,20 +11464,22 @@ export const useMarkAllNotificacionesRead = <TError = ErrorType<UnauthorizedResp
       return useMutation(getMarkAllNotificacionesReadMutationOptions(options));
     }
 
-export const getMarkNotificacionReadUrl = (id: number,) => {
+export const getMarkNotificacionReadUrl = (tipo: 'credito' | 'sistema',
+    id: number,) => {
 
 
 
 
-  return `/api/notificaciones/${id}/leer`
+  return `/api/notificaciones/${tipo}/${id}/leer`
 }
 
 /**
  * @summary Marca una notificación como leída sin eliminarla (ADMIN)
  */
-export const markNotificacionRead = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<NotificacionCredito> => {
+export const markNotificacionRead = async (tipo: 'credito' | 'sistema',
+    id: number, options?: Parameters<typeof customFetch>[1]): Promise<NotificacionMarcadaLeida> => {
 
-  return customFetch<NotificacionCredito>(getMarkNotificacionReadUrl(id),
+  return customFetch<NotificacionMarcadaLeida>(getMarkNotificacionReadUrl(tipo,id),
   {
     ...options,
     method: 'POST'
@@ -11491,8 +11493,8 @@ export const markNotificacionRead = async (id: number, options?: Parameters<type
 
 
 export const getMarkNotificacionReadMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{id: number}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{tipo: 'credito' | 'sistema';id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{tipo: 'credito' | 'sistema';id: number}, TContext> => {
 
 const mutationKey = ['markNotificacionRead'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -11504,10 +11506,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markNotificacionRead>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markNotificacionRead>>, {tipo: 'credito' | 'sistema';id: number}> = (props) => {
+          const {tipo,id} = props ?? {};
 
-          return  markNotificacionRead(id,requestOptions)
+          return  markNotificacionRead(tipo,id,requestOptions)
         }
 
 
@@ -11525,11 +11527,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
  * @summary Marca una notificación como leída sin eliminarla (ADMIN)
  */
 export const useMarkNotificacionRead = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{tipo: 'credito' | 'sistema';id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof markNotificacionRead>>,
         TError,
-        {id: number},
+        {tipo: 'credito' | 'sistema';id: number},
         TContext
       > => {
       return useMutation(getMarkNotificacionReadMutationOptions(options));

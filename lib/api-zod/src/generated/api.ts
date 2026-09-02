@@ -5319,25 +5319,14 @@ export const MarkAllNotificacionesReadResponse = zod.object({
  * @summary Marca una notificación como leída sin eliminarla (ADMIN)
  */
 export const MarkNotificacionReadParams = zod.object({
+  "tipo": zod.enum(['credito', 'sistema']),
   "id": zod.coerce.number()
 })
 
 export const MarkNotificacionReadResponse = zod.object({
   "id": zod.number(),
-  "ticketId": zod.number(),
-  "clienteId": zod.number(),
-  "clienteNombre": zod.string(),
-  "folio": zod.number(),
-  "importe": zod.string(),
-  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
-  "fechaVencimiento": zod.coerce.date(),
-  "cajeroId": zod.number(),
-  "cajeroNombre": zod.string(),
-  "tiendaId": zod.number(),
-  "tiendaNombre": zod.string(),
-  "urgente": zod.boolean(),
-  "leidaAt": zod.coerce.date().nullable(),
-  "createdAt": zod.coerce.date()
+  "tipo": zod.enum(['credito', 'sistema']),
+  "leidaAt": zod.coerce.date()
 })
 
 

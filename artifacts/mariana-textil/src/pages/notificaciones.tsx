@@ -60,7 +60,7 @@ export default function Notificaciones() {
           <Card key={item.id} className={item.urgente ? "border-destructive bg-destructive/5" : item.leidaAt ? "opacity-70" : ""}>
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
               <div className="space-y-1"><p className="font-semibold">{item.urgente && <AlertTriangle className="mr-1 inline h-4 w-4 text-destructive" />}{item.clienteNombre} · Folio {item.folio}</p><p className="text-sm text-muted-foreground">{formatNumber(item.importe, { kind: "money" })} · {item.diasPlazo} días · vence {formatCalendarDate(item.fechaVencimiento)}</p><p className="text-xs text-muted-foreground">Cajero: {item.cajeroNombre} · Tienda: {item.tiendaNombre}</p></div>
-              {!item.leidaAt ? <Button size="sm" variant={item.urgente ? "destructive" : "outline"} onClick={() => markOne.mutate({ id: item.id })}><Check className="mr-1 h-4 w-4" />Leída</Button> : <span className="text-sm text-muted-foreground">Leída</span>}
+              {!item.leidaAt ? <Button size="sm" variant={item.urgente ? "destructive" : "outline"} onClick={() => markOne.mutate({ tipo: "credito", id: item.id })}><Check className="mr-1 h-4 w-4" />Leída</Button> : <span className="text-sm text-muted-foreground">Leída</span>}
             </CardContent>
           </Card>,
         )}</section>

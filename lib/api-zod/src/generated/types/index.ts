@@ -396,6 +396,8 @@ export * from './notificacionCredito';
 export * from './notificacionCreditoDiasPlazo';
 export * from './notificacionesNoLeidasCount';
 export * from './notificacionesPanel';
+export * from './notificacionMarcadaLeida';
+export * from './notificacionMarcadaLeidaTipo';
 export * from './notificacionSistema';
 export * from './notificationFamily';
 export * from './notificationFeed';

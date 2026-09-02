@@ -451,37 +451,48 @@ router.get("/notificaciones/no-leidas/count", async (req, res, next): Promise<vo
 router.post("/notificaciones/leer-todas", async (req, res, next): Promise<void> => {
   try {
     if (!requireLiteralAdmin(req, res)) return;
-    await db.transaction(async (tx) => {
-      await tx
+    const count = await db.transaction(async (tx) => {
+      const credit = await tx
         .update(notificacionesCreditoTable)
         .set({ leidaAt: new Date() })
-        .where(isNull(notificacionesCreditoTable.leidaAt));
-      await tx
+        .where(isNull(notificacionesCreditoTable.leidaAt))
+        .returning({ id: notificacionesCreditoTable.id });
+      const system = await tx
         .update(notificacionesSistemaTable)
         .set({ leidaAt: new Date() })
-        .where(isNull(notificacionesSistemaTable.leidaAt));
+        .where(isNull(notificacionesSistemaTable.leidaAt))
+        .returning({ id: notificacionesSistemaTable.id });
+      return credit.length + system.length;
     });
-    res.json(MarkAllNotificacionesReadResponse.parse({ count: 0 }));
+    res.json(MarkAllNotificacionesReadResponse.parse({ count }));
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/notificaciones/:id/leer", async (req, res, next): Promise<void> => {
+router.post("/notificaciones/:tipo/:id/leer", async (req, res, next): Promise<void> => {
   try {
     if (!requireLiteralAdmin(req, res)) return;
     const params = MarkNotificacionReadParams.parse(req.params);
+    const leidaAt = new Date();
+    const table = params.tipo === "credito"
+      ? notificacionesCreditoTable
+      : notificacionesSistemaTable;
     const [notification] = await db
-      .update(notificacionesCreditoTable)
-      .set({ leidaAt: new Date() })
-      .where(eq(notificacionesCreditoTable.id, params.id))
-      .returning();
+      .update(table)
+      .set({ leidaAt })
+      .where(eq(table.id, params.id))
+      .returning({ id: table.id });
     if (!notification) {
       res.status(404).json({ error: "Notificación no encontrada." });
       return;
     }
-    const parsed = MarkNotificacionReadResponse.parse(present(notification));
-    res.json(serializeNotificationDates(parsed));
+    const parsed = MarkNotificacionReadResponse.parse({
+      id: notification.id,
+      tipo: params.tipo,
+      leidaAt,
+    });
+    res.json({ ...parsed, leidaAt: parsed.leidaAt.toISOString() });
   } catch (error) {
     next(error);
   }
