@@ -4314,6 +4314,36 @@ export interface ProveedorComprasResult {
   pageSize: number;
 }
 
+export type HistorialCompraProveedorUnidad = typeof HistorialCompraProveedorUnidad[keyof typeof HistorialCompraProveedorUnidad];
+
+
+export const HistorialCompraProveedorUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+  BOLSA: 'BOLSA',
+} as const;
+
+export interface HistorialCompraProveedor {
+  entradaId: number;
+  fecha: string;
+  productoId: number;
+  producto: string;
+  color: string;
+  unidad: HistorialCompraProveedorUnidad;
+  proveedorId: number;
+  proveedor: string;
+  ubicacionId: number;
+  sitio: string;
+  cantidad: string;
+}
+
+export interface HistorialComprasProveedoresResult {
+  items: HistorialCompraProveedor[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface ProveedorEstadoCuenta {
   movimientos: MovimientoLedger[];
   saldoActual: string;
@@ -5455,6 +5485,44 @@ semaforo?: SemaforoPrecio;
  */
 modoPrecio?: ModoPrecio;
 };
+
+export type ListHistorialComprasProveedoresParams = {
+proveedorId?: number;
+ubicacionId?: number;
+desde?: string;
+hasta?: string;
+sort?: ListHistorialComprasProveedoresSort;
+direction?: ListHistorialComprasProveedoresDirection;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
+export type ListHistorialComprasProveedoresSort = typeof ListHistorialComprasProveedoresSort[keyof typeof ListHistorialComprasProveedoresSort];
+
+
+export const ListHistorialComprasProveedoresSort = {
+  fecha: 'fecha',
+  producto: 'producto',
+  proveedor: 'proveedor',
+  color: 'color',
+  sitio: 'sitio',
+  cantidad: 'cantidad',
+} as const;
+
+export type ListHistorialComprasProveedoresDirection = typeof ListHistorialComprasProveedoresDirection[keyof typeof ListHistorialComprasProveedoresDirection];
+
+
+export const ListHistorialComprasProveedoresDirection = {
+  asc: 'asc',
+  desc: 'desc',
+} as const;
 
 export type ListComprasProveedorParams = {
 /**

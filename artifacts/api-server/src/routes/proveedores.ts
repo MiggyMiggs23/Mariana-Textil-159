@@ -23,6 +23,8 @@ import {
   GetProveedorPagoDetalleParams,
   GetProveedorPagoDetalleResponse,
   ReversarPagoProveedorResponse,
+  ListHistorialComprasProveedoresQueryParams,
+  ListHistorialComprasProveedoresResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -51,6 +53,8 @@ import {
   analiticaGlobalProveedores,
   type EstadoCompra,
 } from "../lib/compras-proveedor";
+import { listarHistorialComprasProveedores } from "../lib/historial-compras-proveedores";
+import { resolveReadScope } from "./inventario";
 import {
   EXCEL_NUMBER_FORMAT,
   toExcelNumber,
@@ -153,6 +157,45 @@ router.get(
       res.json(await analiticaGlobalProveedores());
     } catch (e) {
       next(e);
+    }
+  },
+);
+
+router.get(
+  "/proveedores/historial-compras",
+  requierePermiso("proveedores", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const parsed = ListHistorialComprasProveedoresQueryParams.safeParse(req.query);
+      if (!parsed.success) {
+        res.status(400).json({ error: "Filtros del historial inválidos." });
+        return;
+      }
+      const query = parsed.data;
+      const { ubicacionId, scopeError } = resolveReadScope(req.auth!, query.ubicacionId);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      const desde = parseMexicoDateQuery(query.desde, "start");
+      const hasta = parseMexicoDateQuery(query.hasta, "end");
+      if (desde === null || hasta === null) {
+        res.status(400).json({ error: "Las fechas deben usar el formato YYYY-MM-DD." });
+        return;
+      }
+      const result = await listarHistorialComprasProveedores({
+        ubicacionId: ubicacionId ?? undefined,
+        proveedorId: query.proveedorId,
+        desde: desde ?? undefined,
+        hasta: hasta ?? undefined,
+        sort: query.sort ?? "fecha",
+        direction: query.direction ?? "desc",
+        page: query.page ?? 1,
+        pageSize: query.pageSize ?? 50,
+      });
+      res.json(ListHistorialComprasProveedoresResponse.parse(result));
+    } catch (error) {
+      next(error);
     }
   },
 );

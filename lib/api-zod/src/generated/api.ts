@@ -1453,6 +1453,49 @@ export const GetAnaliticaGlobalProveedoresResponse = zod.object({
 
 
 /**
+ * @summary Historial global de compras agrupado por entrada y producto
+ */
+export const listHistorialComprasProveedoresQuerySortDefault = `fecha`;
+export const listHistorialComprasProveedoresQueryDirectionDefault = `desc`;
+export const listHistorialComprasProveedoresQueryPageDefault = 1;
+
+export const listHistorialComprasProveedoresQueryPageSizeDefault = 50;
+export const listHistorialComprasProveedoresQueryPageSizeMax = 100;
+
+
+
+export const ListHistorialComprasProveedoresQueryParams = zod.object({
+  "proveedorId": zod.coerce.number().int().optional(),
+  "ubicacionId": zod.coerce.number().int().optional(),
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional(),
+  "sort": zod.enum(['fecha', 'producto', 'proveedor', 'color', 'sitio', 'cantidad']).default(listHistorialComprasProveedoresQuerySortDefault),
+  "direction": zod.enum(['asc', 'desc']).default(listHistorialComprasProveedoresQueryDirectionDefault),
+  "page": zod.coerce.number().int().min(1).default(listHistorialComprasProveedoresQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(listHistorialComprasProveedoresQueryPageSizeMax).default(listHistorialComprasProveedoresQueryPageSizeDefault)
+})
+
+export const ListHistorialComprasProveedoresResponse = zod.object({
+  "items": zod.array(zod.object({
+  "entradaId": zod.number(),
+  "fecha": zod.coerce.date(),
+  "productoId": zod.number(),
+  "producto": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "ubicacionId": zod.number(),
+  "sitio": zod.string(),
+  "cantidad": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
  * @summary Lista proveedores con métricas de compras
  */
 export const ListProveedoresResponse = zod.object({

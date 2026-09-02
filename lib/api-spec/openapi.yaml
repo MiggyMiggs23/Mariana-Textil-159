@@ -908,6 +908,30 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /proveedores/historial-compras:
+    get:
+      operationId: listHistorialComprasProveedores
+      tags: [proveedores]
+      summary: Historial global de compras agrupado por entrada y producto
+      parameters:
+        - { in: query, name: proveedorId, schema: { type: integer } }
+        - { in: query, name: ubicacionId, schema: { type: integer } }
+        - { in: query, name: desde, schema: { type: string, format: date } }
+        - { in: query, name: hasta, schema: { type: string, format: date } }
+        - { in: query, name: sort, schema: { type: string, enum: [fecha, producto, proveedor, color, sitio, cantidad], default: fecha } }
+        - { in: query, name: direction, schema: { type: string, enum: [asc, desc], default: desc } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+      responses:
+        "200":
+          description: Historial paginado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HistorialComprasProveedoresResult"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /proveedores:
     get:
       operationId: listProveedores
@@ -9885,6 +9909,31 @@ components:
             type: string,
             description: "Suma de compras que cumplen los filtros antes de paginar",
           }
+        page: { type: number }
+        pageSize: { type: number }
+    HistorialCompraProveedor:
+      type: object
+      required: [entradaId, fecha, productoId, producto, color, unidad, proveedorId, proveedor, ubicacionId, sitio, cantidad]
+      properties:
+        entradaId: { type: number }
+        fecha: { type: string, format: date-time }
+        productoId: { type: number }
+        producto: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        proveedorId: { type: number }
+        proveedor: { type: string }
+        ubicacionId: { type: number }
+        sitio: { type: string }
+        cantidad: { type: string }
+    HistorialComprasProveedoresResult:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/HistorialCompraProveedor" }
+        total: { type: number }
         page: { type: number }
         pageSize: { type: number }
     MovimientoLedger:

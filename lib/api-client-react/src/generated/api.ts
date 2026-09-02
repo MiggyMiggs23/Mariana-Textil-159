@@ -148,6 +148,7 @@ import type {
   GetReporteSeccionParams,
   GetResumenContenedoresParams,
   HealthStatus,
+  HistorialComprasProveedoresResult,
   ImportConfirmInput,
   ImportFileInput,
   ImportPreviewRow,
@@ -167,6 +168,7 @@ import type {
   ListCuentasIncobrablesParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
+  ListHistorialComprasProveedoresParams,
   ListKardexFiltersParams,
   ListPreciosParams,
   ListProductosParams,
@@ -3234,6 +3236,90 @@ export function useGetAnaliticaGlobalProveedores<TData = Awaited<ReturnType<type
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetAnaliticaGlobalProveedoresQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListHistorialComprasProveedoresUrl = (params?: ListHistorialComprasProveedoresParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/proveedores/historial-compras?${stringifiedParams}` : `/api/proveedores/historial-compras`
+}
+
+/**
+ * @summary Historial global de compras agrupado por entrada y producto
+ */
+export const listHistorialComprasProveedores = async (params?: ListHistorialComprasProveedoresParams, options?: Parameters<typeof customFetch>[1]): Promise<HistorialComprasProveedoresResult> => {
+
+  return customFetch<HistorialComprasProveedoresResult>(getListHistorialComprasProveedoresUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListHistorialComprasProveedoresQueryKey = (params?: ListHistorialComprasProveedoresParams,) => {
+    return [
+    `/api/proveedores/historial-compras`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListHistorialComprasProveedoresQueryOptions = <TData = Awaited<ReturnType<typeof listHistorialComprasProveedores>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListHistorialComprasProveedoresParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listHistorialComprasProveedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListHistorialComprasProveedoresQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listHistorialComprasProveedores>>> = ({ signal }) => listHistorialComprasProveedores(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listHistorialComprasProveedores>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListHistorialComprasProveedoresQueryResult = NonNullable<Awaited<ReturnType<typeof listHistorialComprasProveedores>>>
+export type ListHistorialComprasProveedoresQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Historial global de compras agrupado por entrada y producto
+ */
+
+export function useListHistorialComprasProveedores<TData = Awaited<ReturnType<typeof listHistorialComprasProveedores>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListHistorialComprasProveedoresParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listHistorialComprasProveedores>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListHistorialComprasProveedoresQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
