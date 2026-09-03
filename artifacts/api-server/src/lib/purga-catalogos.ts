@@ -107,6 +107,7 @@ const REFERENCE_LABELS: Record<string, string> = {
 type Executor = Pick<typeof db, "execute">;
 export type PurgaReferencia = { tipo: string; cantidad: number };
 type CountedPurgaReferencia = PurgaReferencia & { financialMovement?: boolean };
+const PRODUCT_STOCK_REFERENCE_PREFIX = "Existencia actual en ";
 export type PurgaPreflight = {
   entidad: EntidadPurgable;
   id: number;
@@ -172,15 +173,44 @@ async function countReferences(
       AND parent_col.attname = 'id'
   `);
   const references: CountedPurgaReferencia[] = [];
-  const auditResult = await executor.execute(sql`
-    SELECT count(*)::int AS count
-    FROM auditoria
-    WHERE entidad = ${descriptor.entityName}
-      AND entidad_id = ${String(id)}
-  `);
-  const auditCount = Number((auditResult.rows[0] as { count: number }).count);
-  if (auditCount > 0) {
-    references.push({ tipo: "Bitácora", cantidad: auditCount });
+  if (descriptor.table === "productos") {
+    const inventoryResult = await executor.execute(sql`
+      SELECT
+        u.nombre,
+        e.cantidad_total::text AS cantidad,
+        e.rollos_count::int AS rollos,
+        p.unidad
+      FROM existencias e
+      JOIN ubicaciones u ON u.id = e.ubicacion_id
+      JOIN productos p ON p.id = e.producto_id
+      WHERE e.producto_id = ${id}
+        AND (e.cantidad_total <> 0 OR e.rollos_count <> 0)
+      ORDER BY u.nombre
+    `);
+    for (const row of inventoryResult.rows as Array<{
+      nombre: string;
+      cantidad: string;
+      rollos: number;
+      unidad: string;
+    }>) {
+      references.push({
+        tipo: `${PRODUCT_STOCK_REFERENCE_PREFIX}${row.nombre}: ${row.cantidad} ${row.unidad} (${row.rollos} rollos)`,
+        cantidad: 1,
+      });
+    }
+  } else {
+    // Product audit rows intentionally survive deletion and reserve the SKU.
+    // For every other catalog, a prior audit event remains a purge blocker.
+    const auditResult = await executor.execute(sql`
+      SELECT count(*)::int AS count
+      FROM auditoria
+      WHERE entidad = ${descriptor.entityName}
+        AND entidad_id = ${String(id)}
+    `);
+    const auditCount = Number((auditResult.rows[0] as { count: number }).count);
+    if (auditCount > 0) {
+      references.push({ tipo: "Bitácora", cantidad: auditCount });
+    }
   }
 
   // This is the only other persisted generic type/id relation in the current
@@ -219,6 +249,12 @@ async function countReferences(
     }
   }
   for (const fk of fkResult.rows as Array<{ table_name: string; column_name: string }>) {
+    const key = `${fk.table_name}.${fk.column_name}`;
+    // Zero-valued existence rows are a derived cache, not operational history.
+    // Non-zero rows were represented above with site and quantity details.
+    if (descriptor.table === "productos" && key === "existencias.producto_id") {
+      continue;
+    }
     const countResult = await executor.execute(
       sql.raw(
         `SELECT count(*)::int AS count FROM ${quoteIdentifier(fk.table_name)} WHERE ${quoteIdentifier(fk.column_name)} = ${Number(id)}`,
@@ -226,7 +262,6 @@ async function countReferences(
     );
     const cantidad = Number((countResult.rows[0] as { count: number }).count);
     if (cantidad > 0) {
-      const key = `${fk.table_name}.${fk.column_name}`;
       references.push({
         tipo: REFERENCE_LABELS[key] ?? `Referencia en ${fk.table_name}.${fk.column_name}`,
         cantidad,
@@ -267,7 +302,37 @@ export function buildPreflight(
   const hasFinancialMovements =
     (entidad === "clientes" || entidad === "proveedores") &&
     referencias.some((item) => item.financialMovement && item.cantidad > 0);
-  const motivoBloqueo = systemClient
+  const productStock = entidad === "productos"
+    ? referencias.filter((item) =>
+        item.tipo.startsWith(PRODUCT_STOCK_REFERENCE_PREFIX),
+      )
+    : [];
+  const productHistory = entidad === "productos"
+    ? referencias.filter(
+        (item) => !item.tipo.startsWith(PRODUCT_STOCK_REFERENCE_PREFIX),
+      )
+    : [];
+  const productReasons: string[] = [];
+  if (productStock.length > 0) {
+    productReasons.push(
+      `El producto tiene existencia en estos sitios: ${productStock
+        .map((item) => item.tipo.slice(PRODUCT_STOCK_REFERENCE_PREFIX.length))
+        .join("; ")}.`,
+    );
+  }
+  if (productHistory.length > 0) {
+    const hasPriceHistory = productHistory.some(
+      (item) => item.tipo === "Historial de precios",
+    );
+    productReasons.push(
+      hasPriceHistory
+        ? "El producto tiene historial de precios. Pendiente de decisión: no se borra el producto ni ese historial; desactívalo mientras se define si cuenta como actividad."
+        : "El producto tiene historial operativo y no puede borrarse. Desactívalo para conservar tickets, kardex, documentos y reportes históricos.",
+    );
+  }
+  const motivoBloqueo = entidad === "productos"
+    ? productReasons.join(" ") || null
+    : systemClient
     ? "Los clientes del sistema jamás se pueden purgar."
     : hasFinancialMovements
       ? `Este ${entidad === "clientes" ? "cliente" : "proveedor"} tiene movimientos en su estado de cuenta y su histórico financiero no se puede borrar. Desactívalo en vez de purgarlo para conservar la historia consultable.`
@@ -315,6 +380,16 @@ export async function purgeInactiveRecord(input: {
       "LOCK TABLE auditoria, notificaciones_sistema, solicitudes_pago_dirigido IN SHARE ROW EXCLUSIVE MODE",
     ));
     const row = await loadTarget(tx, descriptor, input.id, true);
+    if (input.entidad === "productos") {
+      // Existing cache rows can change without inserting a new FK, so lock them
+      // before the authoritative recount. New rows are blocked by the product lock.
+      await tx.execute(sql`
+        SELECT producto_id
+        FROM existencias
+        WHERE producto_id = ${input.id}
+        FOR UPDATE
+      `);
+    }
     if (input.entidad === "usuarios") {
       const admins = await tx.execute(sql`
         SELECT id FROM usuarios
@@ -346,6 +421,14 @@ export async function purgeInactiveRecord(input: {
          ${JSON.stringify({ preflight: { referencias: references, totalReferencias: 0 } })}::jsonb,
          ${input.ip})
     `);
+    if (input.entidad === "productos") {
+      await tx.execute(sql`
+        DELETE FROM existencias
+        WHERE producto_id = ${input.id}
+          AND cantidad_total = 0
+          AND rollos_count = 0
+      `);
+    }
     await tx.execute(
       sql.raw(
         `DELETE FROM ${quoteIdentifier(descriptor.table)} WHERE id = ${Number(input.id)}`,

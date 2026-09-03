@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
@@ -12,6 +12,9 @@ import {
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
   useListLocations,
+  useGetPurgaPreflight,
+  getGetPurgaPreflightQueryKey,
+  useDeleteRegistroInactivo,
   Role,
   UnidadProducto
 } from "@workspace/api-client-react";
@@ -25,12 +28,13 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock, Download, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { ArrowLeft, MapPin, Package, Save, CheckCircle2, Lock, Download, ChevronLeft, ChevronRight, Filter, Trash2 } from "lucide-react";
 import { generateSkuPreview } from "./productos";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber, formatQuantityForCsv, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -49,8 +53,10 @@ function getErrorMessage(error: unknown): string {
 
 export default function ProductoDetail() {
   const { id } = useParams();
+  const [, navigate] = useLocation();
   const queryClient = useQueryClient();
   const updateProducto = useUpdateProducto();
+  const deleteProducto = useDeleteRegistroInactivo();
 
   const { data: user } = useGetCurrentUser({
     query: { queryKey: getGetCurrentUserQueryKey() }
@@ -61,6 +67,7 @@ export default function ProductoDetail() {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [kardexUbicacionId, setKardexUbicacionId] = useState<string>("all");
   const [kardexDesde, setKardexDesde] = useState<string>("");
   const [kardexHasta, setKardexHasta] = useState<string>("");
@@ -158,6 +165,13 @@ export default function ProductoDetail() {
   const canViewPurchaseCosts = user != null && user.rol !== Role.TERMINAL && !isSupervisor;
   const canViewPrices = user != null && !isSupervisor;
   const isBlocked = product?.skuBloqueado === true;
+  const productId = product?.id ?? Number(id);
+  const deletePreflight = useGetPurgaPreflight("productos", productId, {
+    query: {
+      enabled: isAdmin && isEditing && product != null,
+      queryKey: getGetPurgaPreflightQueryKey("productos", productId),
+    },
+  });
 
   const autoSku = generateSkuPreview(formData.tela, formData.color);
   const displaySku = formData.isCustomSku ? formData.sku : autoSku;
@@ -190,6 +204,36 @@ export default function ProductoDetail() {
         toast.error("Error al actualizar", { description: getErrorMessage(err) });
       }
     });
+  };
+
+  const handleDelete = (confirmacion: string) => {
+    if (!product) return;
+    deleteProducto.mutate(
+      {
+        entidad: "productos",
+        id: product.id,
+        data: { confirmacion },
+      },
+      {
+        onSuccess: () => {
+          queryClient.removeQueries({
+            queryKey: getGetProductoQueryKey(product.id),
+          });
+          queryClient.invalidateQueries({
+            queryKey: getListProductosQueryKey(),
+          });
+          toast.success("Producto borrado definitivamente", {
+            description: `${product.tela} / ${product.color} (${product.sku})`,
+          });
+          navigate("/productos");
+        },
+        onError: (error) => {
+          toast.error("No se pudo borrar el producto", {
+            description: getErrorMessage(error),
+          });
+        },
+      },
+    );
   };
 
   if (isLoading) {
@@ -473,6 +517,61 @@ export default function ProductoDetail() {
             </Card>
           </div>
         </div>
+
+        {isAdmin && isEditing && (
+          <Card className="border-destructive/50 bg-destructive/5">
+            <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-semibold text-destructive">
+                  Borrar producto permanentemente
+                </h3>
+                <p
+                  className={`text-sm ${
+                    deletePreflight.data?.puedeEliminar
+                      ? "text-muted-foreground"
+                      : "text-destructive"
+                  }`}
+                  data-testid="product-delete-reason"
+                >
+                  {deletePreflight.isLoading
+                    ? "Comprobando existencia e historial…"
+                    : deletePreflight.error
+                      ? getErrorMessage(deletePreflight.error)
+                      : deletePreflight.data?.motivoBloqueo ??
+                        "Este producto nunca tuvo actividad y puede borrarse. La acción es permanente."}
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                className="w-full shrink-0 sm:w-auto"
+                disabled={
+                  deletePreflight.isLoading ||
+                  deletePreflight.isError ||
+                  !deletePreflight.data?.puedeEliminar
+                }
+                onClick={() => setDeleteConfirmOpen(true)}
+                data-testid="button-delete-product"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Borrar producto
+              </Button>
+            </CardContent>
+            <ConfirmacionTextoExacto
+              open={deleteConfirmOpen}
+              onOpenChange={setDeleteConfirmOpen}
+              titulo="Borrar producto permanentemente"
+              descripcion={`Se borrará ${product.tela} / ${product.color} (${product.sku}). Esta acción no se puede deshacer.`}
+              textoRequerido={
+                deletePreflight.data?.nombreVisible ??
+                `${product.tela} / ${product.color} (${product.sku})`
+              }
+              textoConfirmar="Borrar definitivamente"
+              pendiente={deleteProducto.isPending}
+              onConfirm={handleDelete}
+            />
+          </Card>
+        )}
 
         {/* Rollos Disponibles Section */}
         <Card className="border-t-4 border-t-sidebar-primary">

@@ -55,11 +55,32 @@ const router: IRouter = Router();
 router.use("/productos", requireSession);
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type ProductSkuExecutor = Pick<typeof db, "execute">;
+
+class ProductSkuUnavailableError extends Error {}
 
 async function acquireCatalogLock(tx: Tx): Promise<void> {
   await transactionAdvisoryLock(
     tx,
     ADVISORY_LOCK_NAMESPACES.PRODUCT_CATALOG,
+  );
+}
+
+async function loadUnavailableProductSkus(
+  executor: ProductSkuExecutor,
+): Promise<Set<string>> {
+  const result = await executor.execute(sql`
+    SELECT upper(sku)::text AS sku
+    FROM productos
+    UNION
+    SELECT upper(datos_antes->>'sku')::text AS sku
+    FROM auditoria
+    WHERE entidad = 'productos'
+      AND accion = 'PURGAR'
+      AND datos_antes->>'sku' IS NOT NULL
+  `);
+  return new Set(
+    (result.rows as Array<{ sku: string }>).map((row) => row.sku),
   );
 }
 
@@ -360,20 +381,20 @@ router.post(
         // Serialize SKU allocation / variant uniqueness across concurrent txns.
         await acquireCatalogLock(tx);
 
+        const unavailableSkus = await loadUnavailableProductSkus(tx);
         let sku: string;
         if (customSku) {
-          // Custom SKU: allocated under the lock; unique constraint is final guard.
+          if (unavailableSkus.has(customSku)) {
+            throw new ProductSkuUnavailableError(
+              `El SKU "${customSku}" ya está en uso o quedó reservado por un producto borrado.`,
+            );
+          }
           sku = customSku;
         } else {
           // Auto SKU: look up existing SKUs and generate collision-safe value,
           // all inside the lock so no other txn can allocate the same value.
           const baseSku = generateBaseSku(tela, color);
-          const existingRows = await tx
-            .select({ sku: productosTable.sku })
-            .from(productosTable)
-            .where(ilike(productosTable.sku, `${baseSku}%`));
-          const existingSkus = new Set(existingRows.map((r) => r.sku));
-          sku = generateSku(tela, color, existingSkus);
+          sku = generateSku(tela, color, unavailableSkus);
         }
 
         const [producto] = await tx
@@ -407,6 +428,10 @@ router.post(
         ),
       );
     } catch (error) {
+      if (error instanceof ProductSkuUnavailableError) {
+        res.status(400).json({ error: error.message });
+        return;
+      }
       if (isPostgresUniqueViolation(error)) {
         res.status(400).json({
           error:
@@ -444,21 +469,21 @@ router.post(
       return;
     }
 
-    const existingRows = await db
-      .select({
-        tela: productosTable.tela,
-        color: productosTable.color,
-        sku: productosTable.sku,
-      })
-      .from(productosTable);
+    const [existingRows, existingSkus] = await Promise.all([
+      db
+        .select({
+          tela: productosTable.tela,
+          color: productosTable.color,
+        })
+        .from(productosTable),
+      loadUnavailableProductSkus(db),
+    ]);
 
     const existingVariants = new Set(
       existingRows.map(
         (r) => `${r.tela.toUpperCase()}|${r.color.toUpperCase()}`,
       ),
     );
-    const existingSkus = new Set(existingRows.map((r) => r.sku));
-
     let preview: PreviewRow[];
     try {
       preview = buildPreview({
@@ -522,7 +547,7 @@ router.post(
             (r) => `${r.tela.toUpperCase()}|${r.color.toUpperCase()}`,
           ),
         );
-        const existingSkus = new Set(existingRows.map((r) => r.sku));
+        const existingSkus = await loadUnavailableProductSkus(tx);
 
         // Build the authoritative preview from the freshly parsed sheet.
         const preview = buildPreview({
@@ -883,6 +908,14 @@ router.patch(
 
         // Enforce SKU uniqueness (excluding this product) under the lock.
         if (newSku !== undefined) {
+          if (
+            newSku !== current.sku &&
+            (await loadUnavailableProductSkus(tx)).has(newSku)
+          ) {
+            return {
+              error: `El SKU "${newSku}" ya está en uso o quedó reservado por un producto borrado.`,
+            } as const;
+          }
           const [skuConflict] = await tx
             .select({ id: productosTable.id })
             .from(productosTable)
@@ -915,20 +948,12 @@ router.patch(
           variantChanged &&
           (newSku === undefined || newSku === current.sku)
         ) {
-          const baseSku = generateBaseSku(targetTela, targetColor);
-          const existingRows = await tx
-            .select({ sku: productosTable.sku })
-            .from(productosTable)
-            .where(
-              and(
-                ilike(productosTable.sku, `${baseSku}%`),
-                ne(productosTable.id, params.data.id),
-              ),
-            );
+          const unavailableSkus = await loadUnavailableProductSkus(tx);
+          unavailableSkus.delete(current.sku.toUpperCase());
           updates.sku = generateSku(
             targetTela,
             targetColor,
-            new Set(existingRows.map((row) => row.sku)),
+            unavailableSkus,
           );
         }
 

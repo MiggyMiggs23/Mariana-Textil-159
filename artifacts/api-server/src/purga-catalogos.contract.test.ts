@@ -156,14 +156,79 @@ test("la baja y las consultas conservan el histórico de clientes inactivos", as
   assert.match(providerLedger, /WHERE pp\.proveedor_id = \$\{opts\.proveedorId\}/);
 });
 
-test("los seis catálogos cablean filtro y purga con componente común", async () => {
+test("productos solo se borran sin existencia ni historia, aunque estén activos", () => {
+  const clean = buildPreflight(
+    "productos",
+    50,
+    { activo: true, __nombre_visible: "Tela / Color (SKU)" },
+    [],
+  );
+  assert.equal(clean.puedeEliminar, true);
+  assert.equal(clean.motivoBloqueo, null);
+
+  const stock = buildPreflight(
+    "productos",
+    51,
+    { activo: true, __nombre_visible: "Tela / Color (SKU)" },
+    [
+      {
+        tipo: "Existencia actual en Mariana: 12.000 METRO (2 rollos)",
+        cantidad: 1,
+      },
+    ],
+  );
+  assert.equal(stock.puedeEliminar, false);
+  assert.match(stock.motivoBloqueo!, /Mariana: 12\.000 METRO/);
+
+  const moved = buildPreflight(
+    "productos",
+    52,
+    { activo: false, __nombre_visible: "Tela / Color (SKU)" },
+    [{ tipo: "Movimientos de producto", cantidad: 3 }],
+  );
+  assert.equal(moved.puedeEliminar, false);
+  assert.match(moved.motivoBloqueo!, /historial operativo/);
+  assert.match(moved.motivoBloqueo!, /Desactívalo/);
+
+  const priced = buildPreflight(
+    "productos",
+    53,
+    { activo: true, __nombre_visible: "Tela / Color (SKU)" },
+    [{ tipo: "Historial de precios", cantidad: 1 }],
+  );
+  assert.equal(priced.puedeEliminar, false);
+  assert.match(priced.motivoBloqueo!, /historial de precios/);
+  assert.match(priced.motivoBloqueo!, /Pendiente de decisión/);
+});
+
+test("la purga de producto conserva auditoría, limpia caché cero y reserva SKU", async () => {
+  const [engine, productsRoute] = await Promise.all([
+    readFile(new URL("./lib/purga-catalogos.ts", import.meta.url), "utf8"),
+    readFile(new URL("./routes/productos.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(engine, /Product audit rows intentionally survive deletion/);
+  assert.match(
+    engine,
+    /DELETE FROM existencias[\s\S]*cantidad_total = 0[\s\S]*rollos_count = 0/,
+  );
+  assert.ok(
+    engine.indexOf("INSERT INTO auditoria") <
+      engine.lastIndexOf("DELETE FROM existencias"),
+  );
+  assert.match(
+    productsRoute,
+    /accion = 'PURGAR'[\s\S]*datos_antes->>'sku'/,
+  );
+  assert.match(productsRoute, /loadUnavailableProductSkus/);
+});
+
+test("cinco catálogos conservan purga común y producto la mueve a su edición", async () => {
   const files = [
     ["usuarios", "../../../artifacts/mariana-textil/src/pages/usuarios.tsx"],
     ["camionetas", "../../../artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx"],
     ["choferes", "../../../artifacts/mariana-textil/src/pages/configuracion/choferes.tsx"],
     ["clientes", "../../../artifacts/mariana-textil/src/pages/clientes.tsx"],
     ["proveedores", "../../../artifacts/mariana-textil/src/pages/proveedores.tsx"],
-    ["productos", "../../../artifacts/mariana-textil/src/pages/productos.tsx"],
   ] as const;
   for (const [entity, path] of files) {
     const source = await readFile(new URL(path, import.meta.url), "utf8");
@@ -171,6 +236,28 @@ test("los seis catálogos cablean filtro y purga con componente común", async (
     assert.ok(source.includes(`entidad="${entity}"`));
     assert.match(source, /PurgaCatalogoButton/);
   }
+  const [products, productDetail] = await Promise.all([
+    readFile(
+      new URL(
+        "../../../artifacts/mariana-textil/src/pages/productos.tsx",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    readFile(
+      new URL(
+        "../../../artifacts/mariana-textil/src/pages/producto-detail.tsx",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ]);
+  assert.doesNotMatch(products, /PurgaCatalogoButton/);
+  assert.match(productDetail, /isAdmin && isEditing/);
+  assert.match(productDetail, /useGetPurgaPreflight\("productos"/);
+  assert.match(productDetail, /data-testid="product-delete-reason"/);
+  assert.match(productDetail, /ConfirmacionTextoExacto/);
+  assert.match(productDetail, /navigate\("\/productos"\)/);
   const common = await readFile(
     new URL(
       "../../../artifacts/mariana-textil/src/components/purga-catalogo-button.tsx",
