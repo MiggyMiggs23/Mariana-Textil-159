@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -85,6 +86,7 @@ export default function TiendaVentas() {
   const desde = searchParams.get("desde") || todayStr;
   const hasta = searchParams.get("hasta") || todayStr;
   const formaPago = readPaymentFilter(searchParams.get("formaPago"));
+  const activeTab = searchParams.get("tab") === "detail" ? "detail" : "global";
   const requestedPage = Number(searchParams.get("page"));
   const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const pageSize = 50;
@@ -118,6 +120,15 @@ export default function TiendaVentas() {
   };
 
   const apiFormaPago = formaPago !== "all" ? formaPago : undefined;
+  const changeTab = (tab: string) => {
+    const newParams = new URLSearchParams(window.location.search);
+    if (tab === "detail") {
+      newParams.set("tab", "detail");
+    } else {
+      newParams.delete("tab");
+    }
+    setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
+  };
 
   const { data, isLoading, isError, error, refetch, isRefetching } = useListCajaTiendaVentas(ubicacionId, {
     desde,
@@ -171,7 +182,9 @@ export default function TiendaVentas() {
                 Ventas de {data?.nombreUbicacion ?? `Tienda #${ubicacionId}`}
               </h1>
             </div>
-            <p className="text-sm text-muted-foreground">Listado detallado de tickets para la tienda seleccionada.</p>
+            <p className="text-sm text-muted-foreground">
+              Consulta global por tela o el detalle de tickets para la tienda seleccionada.
+            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -191,7 +204,7 @@ export default function TiendaVentas() {
               />
             </div>
 
-            <div className="flex items-center relative">
+            {activeTab === "detail" && <div className="flex items-center relative">
               <Filter className="w-4 h-4 absolute left-2.5 text-muted-foreground z-10" />
               <Select value={formaPago} onValueChange={v => updateFilters({ formaPago: v })}>
                 <SelectTrigger className="w-[180px] h-9 bg-background pl-8">
@@ -204,7 +217,7 @@ export default function TiendaVentas() {
                   <SelectItem value={ListCajaTiendaVentasFormaPago.CREDITO}>Crédito</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div>}
 
             <Button variant="outline" size="icon" onClick={() => refetch()} title="Actualizar" disabled={isRefetching}>
               <RefreshCw className={`h-4 w-4 ${isRefetching ? "animate-spin text-primary" : ""}`} />
@@ -212,7 +225,21 @@ export default function TiendaVentas() {
           </div>
         </div>
 
-        <Card>
+        <Tabs value={activeTab} onValueChange={changeTab}>
+          <TabsList className="flex w-full flex-wrap sm:w-auto">
+            <TabsTrigger value="global">Global</TabsTrigger>
+            <TabsTrigger value="detail">Detalle</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {activeTab === "global" ? (
+          <Card>
+            <CardContent className="p-10 text-center text-muted-foreground">
+              Preparando el resumen global por tela y color.
+            </CardContent>
+          </Card>
+        ) : <>
+          <Card>
           <CardContent className="p-0">
             {isLoading ? (
               <div className="p-10 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
@@ -295,9 +322,9 @@ export default function TiendaVentas() {
               </div>
             )}
           </CardContent>
-        </Card>
+          </Card>
 
-        {data && data.total > pageSize && (
+          {data && data.total > pageSize && (
           <div className="mt-4 flex flex-col items-center">
             <Pagination>
               <PaginationContent>
@@ -330,7 +357,8 @@ export default function TiendaVentas() {
               </PaginationContent>
             </Pagination>
           </div>
-        )}
+          )}
+        </>}
       </div>
     </AppLayout>
   );
