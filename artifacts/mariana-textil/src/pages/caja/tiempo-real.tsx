@@ -258,9 +258,9 @@ export default function CajaTiempoReal() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground font-semibold">Tickets (Promedio)</p>
+                          <p className="text-xs text-muted-foreground font-semibold">Tickets cobrados (Promedio)</p>
                           <p className="font-medium text-sidebar">
-                            {store.tickets} <span className="text-muted-foreground font-normal">({formatNumber(store.ticketPromedio, { kind: "money" })})</span>
+                            {store.ticketsCobrados} <span className="text-muted-foreground font-normal">({formatNumber(store.ticketPromedio, { kind: "money" })})</span>
                           </p>
                         </div>
                       </div>
@@ -308,6 +308,13 @@ export default function CajaTiempoReal() {
                         </div>
                       )}
                     </CardContent>
+                    <CardFooter className="pt-0 pb-4">
+                      <Button asChild variant="outline" className="w-full text-sm h-8" size="sm">
+                        <Link href={`/caja/tiendas/${store.ubicacionId}/ventas`}>
+                          Ver ventas
+                        </Link>
+                      </Button>
+                    </CardFooter>
                   </Card>
                 )
               })}
