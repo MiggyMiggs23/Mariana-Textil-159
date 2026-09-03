@@ -31,6 +31,7 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
 
   // Check generated hook and schema are used
   assert.match(tiendaVentas, /useListCajaTiendaVentas/);
+  assert.match(tiendaVentas, /useGetCajaTiendaVentasGlobal/);
   assert.match(tiendaVentas, /ListCajaTiendaVentasFormaPago/);
 
   // Check URL-backed filters
@@ -38,6 +39,12 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
   assert.match(tiendaVentas, /searchParams\.get\("hasta"\)/);
   assert.match(tiendaVentas, /searchParams\.get\("formaPago"\)/);
   assert.match(tiendaVentas, /searchParams\.get\("page"\)/);
+  assert.match(tiendaVentas, /searchParams\.get\("tab"\) === "detail" \? "detail" : "global"/);
+  assert.match(
+    tiendaVentas,
+    /activeTab !== "global"[\s\S]*newParams\.delete\("formaPago"\)[\s\S]*newParams\.delete\("page"\)/,
+    "Global must canonicalize away Detail-only payment and pagination filters",
+  );
 
   // Check updateFilters correctly modifies history
   assert.match(tiendaVentas, /newParams\.set\(key/);
@@ -66,9 +73,17 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
   assert.match(tiendaVentas, /Estado/);
 
   // Conditionally checking utilidad if server provides it
-  assert.match(tiendaVentas, /data\?\.items\.some\(\(item\) => "utilidad" in item\)/);
+  assert.match(tiendaVentas, /detailData\?\.items\.some\(\(item\) => "utilidad" in item\)/);
   assert.match(tiendaVentas, /row\.utilidad === undefined \|\| row\.utilidad === null/);
   assert.match(tiendaVentas, /formatNumber\(row\.utilidad, \{ kind: "money" \}\)/);
+
+  // Global keeps quantities and utility split by modality and exposes missing costs.
+  assert.match(tiendaVentas, /modalidad\.tipo === "NORMAL" \? "Rollos" : "Metraje"/);
+  assert.match(tiendaVentas, /Utilidad \(Rollos\)/);
+  assert.match(tiendaVentas, /Utilidad \(Metraje\)/);
+  assert.match(tiendaVentas, /status === "PENDIENTE"/);
+  assert.match(tiendaVentas, /data\.lineasExcluidasSinCosto/);
+  assert.match(tiendaVentas, /excluye tickets cancelados/);
 
   // Invalid ids never issue a request, and timestamps are rendered in Mexico City.
   assert.match(tiendaVentas, /enabled: isValidLocationId/);

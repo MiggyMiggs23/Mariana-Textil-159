@@ -463,3 +463,19 @@ La agrupación es **presentación y captura de precio**: el renglón conserva po
 **El orden de las tiendas es Mariana, Coco, Cruces**, y vive en un solo lugar compartido por todas las vistas. Repetirlo por componente hace que una vista quede desincronizada de las demás. Una tienda nueva nunca desaparece de una lista por no estar en el orden.
 
 **La vista de ventas por tienda** aplica `resolveReadScope` siempre: un usuario con alcance PROPIA no ve otra tienda ni manipulando la dirección. La utilidad no se envía al cliente cuando el rol no debe verla; taparla solo en pantalla no es una restricción.
+
+**Ventas por tienda** tiene dos pestañas: **Global** —agrupada por tela, desplegable por color— y **Detalle**, el listado de tickets. Global es la pestaña por omisión. Los filtros de fecha son compartidos: dos pestañas que muestren periodos distintos hacen que el usuario deje de confiar en los dos números.
+
+El filtro de forma de pago pertenece solo a **Detalle**. Al entrar a Global se limpia junto con la página de Detalle, conservando las fechas; así Global siempre representa todas las ventas del periodo y al volver a Detalle no queda un subconjunto oculto que contradiga el total.
+
+Agrupar "por producto y por color" sería una sola agrupación, porque **el producto es la pareja tela-color**. La jerarquía tela → color contesta cuánto se movió de cada tela y qué colores dentro de ella.
+
+**Rollos y metraje nunca comparten un mismo margen**, aquí como en el resto de los reportes: se costean distinto —costo exacto del rollo contra promedio de 12 meses congelado— y sumarlos produce un número que no significa nada. En Ventas por tienda se presentan en columnas de utilidad separadas y las cantidades se distinguen por modalidad y unidad.
+
+**El total de Global debe cuadrar siempre con la suma de Detalle** en el mismo periodo. Es la prueba objetiva de que las dos pestañas leen lo mismo. El total bruto de cada ticket se distribuye a centavos entre sus líneas para conservar también el IVA.
+
+Las **ventas a crédito cuentan** como ventas y los **cancelados no**. La utilidad excluye las líneas sin costo, así que toda vista que la muestre declara cuántas quedaron fuera, incluso cuando son cero. Si ninguna línea de una modalidad tiene costo conocido, la utilidad se presenta como **Pendiente**, nunca como cero.
+
+**Devoluciones y notas de crédito de producto:** el modelo actual no tiene líneas de devolución ni una nota de crédito que reste cantidades e importes por producto; `NOTA` es un tipo documental de venta. Ventas por tienda no inventa una resta sin un movimiento trazable.
+
+**SUPERVISOR y Ventas por tienda:** el techo de permisos actual niega `resumen_caja`, incluso con un permiso individual. La omisión recursiva de campos de utilidad/costo queda aplicada como defensa adicional si ese techo cambia; no se amplían permisos para mostrar este reporte.

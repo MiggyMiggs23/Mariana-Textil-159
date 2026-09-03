@@ -376,12 +376,23 @@ export default function TiendaVentas() {
   };
 
   const apiFormaPago = formaPago !== "all" ? formaPago : undefined;
+  React.useEffect(() => {
+    if (activeTab !== "global") return;
+    const newParams = new URLSearchParams(window.location.search);
+    if (!newParams.has("formaPago") && !newParams.has("page")) return;
+    newParams.delete("formaPago");
+    newParams.delete("page");
+    setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
+  }, [activeTab, setLocationStr]);
+
   const changeTab = (tab: string) => {
     const newParams = new URLSearchParams(window.location.search);
     if (tab === "detail") {
       newParams.set("tab", "detail");
     } else {
       newParams.delete("tab");
+      newParams.delete("formaPago");
+      newParams.delete("page");
     }
     setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
   };
