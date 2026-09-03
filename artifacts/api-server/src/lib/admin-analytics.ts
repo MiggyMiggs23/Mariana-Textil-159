@@ -569,6 +569,227 @@ export async function listStoreSales(
   };
 }
 
+type StoreSalesGlobalLine = {
+  ticketId: number;
+  tela: string;
+  color: string;
+  tipo: "NORMAL" | "METREADO";
+  unidad: "METRO" | "KILO" | "BOLSA";
+  cantidad: number;
+  importe: number;
+  allocatedGross: number;
+  costoTotal: number | null;
+};
+
+type GlobalAggregate = {
+  quantities: Map<StoreSalesGlobalLine["unidad"], number>;
+  tickets: Set<number>;
+  importe: number;
+  lines: StoreSalesGlobalLine[];
+};
+
+const UNIT_ORDER: StoreSalesGlobalLine["unidad"][] = ["METRO", "KILO", "BOLSA"];
+
+function aggregateGlobalLines(lines: StoreSalesGlobalLine[]): GlobalAggregate {
+  const aggregate: GlobalAggregate = {
+    quantities: new Map(),
+    tickets: new Set(),
+    importe: 0,
+    lines,
+  };
+  for (const line of lines) {
+    aggregate.quantities.set(
+      line.unidad,
+      (aggregate.quantities.get(line.unidad) ?? 0) + line.cantidad,
+    );
+    aggregate.tickets.add(line.ticketId);
+    aggregate.importe += line.allocatedGross;
+  }
+  return aggregate;
+}
+
+function quantities(aggregate: GlobalAggregate) {
+  return UNIT_ORDER
+    .filter((unit) => aggregate.quantities.has(unit))
+    .map((unidad) => ({
+      unidad,
+      cantidad: decimal(aggregate.quantities.get(unidad), 3),
+    }));
+}
+
+function utility(lines: StoreSalesGlobalLine[]) {
+  const known = lines.filter((line) => line.costoTotal != null);
+  const excluded = lines.length - known.length;
+  if (known.length === 0) {
+    return { value: null, status: "PENDIENTE" as const };
+  }
+  return {
+    value: decimal(known.reduce(
+      (sum, line) => sum + line.importe - line.costoTotal!,
+      0,
+    )),
+    status: excluded > 0 ? "PARCIAL" as const : "COMPLETA" as const,
+  };
+}
+
+function presentGlobalAggregate(aggregate: GlobalAggregate) {
+  const lineasSinCosto = aggregate.lines.filter((line) => line.costoTotal == null).length;
+  const modalidades = (["NORMAL", "METREADO"] as const).flatMap((tipo) =>
+    UNIT_ORDER.flatMap((unidad) => {
+      const lines = aggregate.lines.filter(
+        (line) => line.tipo === tipo && line.unidad === unidad,
+      );
+      if (lines.length === 0) return [];
+      const bucket = aggregateGlobalLines(lines);
+      const result = utility(lines);
+      const bucketLinesWithoutCost = lines.filter((line) => line.costoTotal == null).length;
+      return [{
+        tipo,
+        unidad,
+        cantidad: decimal(bucket.quantities.get(unidad), 3),
+        operaciones: bucket.tickets.size,
+        importe: decimal(bucket.importe),
+        utilidad: result.value,
+        utilidadStatus: result.status,
+        lineasSinCosto: bucketLinesWithoutCost,
+        lineasExcluidasSinCosto: bucketLinesWithoutCost,
+      }];
+    })
+  );
+  const presented: Record<string, unknown> = {
+    cantidades: quantities(aggregate),
+    operaciones: aggregate.tickets.size,
+    importe: decimal(aggregate.importe),
+    lineasSinCosto,
+    lineasExcluidasSinCosto: lineasSinCosto,
+    modalidades,
+  };
+  const rollos = aggregate.lines.filter((line) => line.tipo === "NORMAL");
+  if (rollos.length > 0) {
+    const result = utility(rollos);
+    presented.utilityRollos = result.value;
+    presented.utilityRollosStatus = result.status;
+  }
+  const metraje = aggregate.lines.filter((line) => line.tipo === "METREADO");
+  if (metraje.length > 0) {
+    const result = utility(metraje);
+    presented.utilityMetraje = result.value;
+    presented.utilityMetrajeStatus = result.status;
+  }
+  return presented;
+}
+
+/** Pure hierarchy builder; useful independently of the database read model. */
+export function summarizeStoreSalesGlobal(lines: StoreSalesGlobalLine[]) {
+  const telas = [...new Set(lines.map((line) => line.tela))]
+    .map((tela) => {
+      const telaLines = lines.filter((line) => line.tela === tela);
+      const colores = [...new Set(telaLines.map((line) => line.color))]
+        .sort((a, b) => a.localeCompare(b, "es"))
+        .map((color) => ({
+          color,
+          ...presentGlobalAggregate(aggregateGlobalLines(
+            telaLines.filter((line) => line.color === color),
+          )),
+        }));
+      return {
+        tela,
+        ...presentGlobalAggregate(aggregateGlobalLines(telaLines)),
+        colores,
+        sortImporte: aggregateGlobalLines(telaLines).importe,
+      };
+    })
+    .sort((a, b) =>
+      b.sortImporte - a.sortImporte ||
+      a.tela.localeCompare(b.tela, "es")
+    )
+    .map(({ sortImporte: _, ...tela }) => tela);
+  const period = aggregateGlobalLines(lines);
+  const lineasSinCosto = lines.filter((line) => line.costoTotal == null).length;
+  const periodPresented = presentGlobalAggregate(period);
+  return {
+    cantidadesPorUnidad: quantities(period),
+    modalidades: periodPresented.modalidades,
+    lineasSinCosto,
+    lineasExcluidasSinCosto: lineasSinCosto,
+    telas,
+  };
+}
+
+export async function getStoreSalesGlobal(
+  filters: AnalyticsFilters & { ubicacionId: number },
+) {
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId,
+  ];
+  const predicate = `t.ubicacion_id=$3
+    AND t.estado='VENDIDO'
+    AND ($1::timestamptz IS NULL OR t.created_at >= $1)
+    AND ($2::timestamptz IS NULL OR t.created_at <= $2)`;
+  const [store, totals, rows] = await Promise.all([
+    pool.query(
+      `SELECT id,nombre FROM ubicaciones
+       WHERE id=$1 AND tipo='TIENDA' AND activa`,
+      [filters.ubicacionId],
+    ),
+    pool.query(
+      `SELECT COALESCE(SUM(t.total),0)::text importe,
+         COUNT(DISTINCT t.id)::int operaciones
+       FROM tickets t WHERE ${predicate}`,
+      values,
+    ),
+    pool.query(
+       `WITH selected AS (
+         SELECT t.id,t.total,t.subtotal,COUNT(l.id) OVER (PARTITION BY t.id) line_count,
+            ROW_NUMBER() OVER (PARTITION BY t.id ORDER BY l.id) line_number,
+            l.id line_id,l.producto_id,l.tipo,l.cantidad,l.importe,l.costo_total_congelado
+         FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
+         WHERE ${predicate}
+       ), shares AS (
+         SELECT s.*,ROUND(CASE WHEN s.subtotal <> 0
+           THEN s.total*s.importe/s.subtotal
+           ELSE s.total/NULLIF(s.line_count,0)
+         END,2) rounded_gross
+         FROM selected s
+       )
+       SELECT s.id "ticketId",p.tela,p.color,s.tipo,p.unidad,
+         s.cantidad::text,s.importe::text,s.costo_total_congelado::text "costoTotal",
+          CASE WHEN s.line_number=s.line_count
+            THEN (s.total-COALESCE(SUM(s.rounded_gross) FILTER (
+              WHERE s.line_number<s.line_count
+            ) OVER (PARTITION BY s.id),0))::text
+            ELSE s.rounded_gross::text
+         END "allocatedGross"
+       FROM shares s JOIN productos p ON p.id=s.producto_id
+       ORDER BY p.tela,p.color,s.tipo,p.unidad,s.line_id`,
+      values,
+    ),
+  ]);
+  if (!store.rows[0]) {
+    throw new AnalyticsInputError("La tienda solicitada no existe o está inactiva.");
+  }
+  const lines: StoreSalesGlobalLine[] = rows.rows.map((row) => ({
+    ticketId: Number(row.ticketId),
+    tela: String(row.tela),
+    color: String(row.color),
+    tipo: row.tipo as StoreSalesGlobalLine["tipo"],
+    unidad: row.unidad as StoreSalesGlobalLine["unidad"],
+    cantidad: Number(row.cantidad),
+    importe: Number(row.importe),
+    allocatedGross: Number(row.allocatedGross),
+    costoTotal: row.costoTotal == null ? null : Number(row.costoTotal),
+  }));
+  return {
+    ubicacionId: Number(store.rows[0].id),
+    nombreUbicacion: String(store.rows[0].nombre),
+    totalImporte: decimal(totals.rows[0]!.importe),
+    totalOperaciones: Number(totals.rows[0]!.operaciones),
+    ...summarizeStoreSalesGlobal(lines),
+  };
+}
+
 export async function getRealtimeTickets(filters: AnalyticsFilters) {
   const condition = where(filters);
   const result = await pool.query(

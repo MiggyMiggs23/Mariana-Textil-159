@@ -49,6 +49,7 @@ import type {
   BuscarPosParams,
   BuscarRollosEtiquetas200,
   BuscarRollosEtiquetasParams,
+  CajaTiendaVentasGlobalResult,
   CajaTiendaVentasResult,
   CambiarPrecioInput,
   Camioneta,
@@ -137,6 +138,7 @@ import type {
   GetAdminRealtimeDashboardParams,
   GetAdminRealtimePendingParams,
   GetBorradorSalidaParams,
+  GetCajaTiendaVentasGlobalParams,
   GetClienteAnaliticaParams,
   GetClienteComprasParams,
   GetClienteEstadoCuentaParams,
@@ -14194,6 +14196,95 @@ export function useListCajaTiendaVentas<TData = Awaited<ReturnType<typeof listCa
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListCajaTiendaVentasQueryOptions(ubicacionId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetCajaTiendaVentasGlobalUrl = (ubicacionId: number,
+    params?: GetCajaTiendaVentasGlobalParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/caja/tiendas/${ubicacionId}/ventas/global?${stringifiedParams}` : `/api/caja/tiendas/${ubicacionId}/ventas/global`
+}
+
+/**
+ * @summary Ventas globales de una tienda agrupadas por tela y color
+ */
+export const getCajaTiendaVentasGlobal = async (ubicacionId: number,
+    params?: GetCajaTiendaVentasGlobalParams, options?: Parameters<typeof customFetch>[1]): Promise<CajaTiendaVentasGlobalResult> => {
+
+  return customFetch<CajaTiendaVentasGlobalResult>(getGetCajaTiendaVentasGlobalUrl(ubicacionId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCajaTiendaVentasGlobalQueryKey = (ubicacionId: number,
+    params?: GetCajaTiendaVentasGlobalParams,) => {
+    return [
+    `/api/caja/tiendas/${ubicacionId}/ventas/global`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetCajaTiendaVentasGlobalQueryOptions = <TData = Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(ubicacionId: number,
+    params?: GetCajaTiendaVentasGlobalParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCajaTiendaVentasGlobalQueryKey(ubicacionId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>> = ({ signal }) => getCajaTiendaVentasGlobal(ubicacionId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: ubicacionId !== null && ubicacionId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCajaTiendaVentasGlobalQueryResult = NonNullable<Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>>
+export type GetCajaTiendaVentasGlobalQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Ventas globales de una tienda agrupadas por tela y color
+ */
+
+export function useGetCajaTiendaVentasGlobal<TData = Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ ubicacionId: number,
+    params?: GetCajaTiendaVentasGlobalParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCajaTiendaVentasGlobal>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCajaTiendaVentasGlobalQueryOptions(ubicacionId,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

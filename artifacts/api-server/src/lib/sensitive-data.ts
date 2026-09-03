@@ -26,6 +26,7 @@ export function isSupervisorSensitiveKey(key: string): boolean {
     normalized.includes("precio") ||
     normalized.includes("margen") ||
     normalized.includes("utilidad") ||
+    normalized.includes("utility") ||
     normalized.includes("ganancia") ||
     normalized.includes("inventariovalor") ||
     normalized.includes("valorinventario") ||

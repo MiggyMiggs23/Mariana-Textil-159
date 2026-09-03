@@ -1,9 +1,12 @@
+import React from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { useLocation, useParams, Link } from "wouter";
 import {
   getListCajaTiendaVentasQueryKey,
   useListCajaTiendaVentas,
   ListCajaTiendaVentasFormaPago,
+  useGetCajaTiendaVentasGlobal,
+  getGetCajaTiendaVentasGlobalQueryKey,
 } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,15 +20,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from "@/components/ui/table";
-import { Loader2, AlertCircle, RefreshCw, Filter, ArrowLeft } from "lucide-react";
-import { formatNumber } from "@workspace/number-format";
+import { Loader2, AlertCircle, RefreshCw, Filter, ArrowLeft, ChevronDown, ChevronRight, AlertTriangle } from "lucide-react";
+import { formatNumber, formatUnit } from "@workspace/number-format";
 import { getApiErrorMessage } from "@/lib/api-error";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
+import { useQueryClient } from "@tanstack/react-query";
 
 function mexicoCityToday(): string {
   return new Intl.DateTimeFormat("en-CA", {
@@ -74,12 +79,261 @@ function collectionStatusLabel(value: string): string {
   }[value] ?? value;
 }
 
+function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: string, hasta: string }) {
+  const { data, isLoading, isError, error, refetch, isRefetching } = useGetCajaTiendaVentasGlobal(ubicacionId, { desde, hasta }, {
+    query: {
+      enabled: true,
+      queryKey: getGetCajaTiendaVentasGlobalQueryKey(ubicacionId, { desde, hasta })
+    }
+  });
+
+  const [expandedTelas, setExpandedTelas] = React.useState<Set<string>>(new Set());
+
+  const toggleTela = (tela: string) => {
+    setExpandedTelas(prev => {
+      const next = new Set(prev);
+      if (next.has(tela)) next.delete(tela);
+      else next.add(tela);
+      return next;
+    });
+  };
+
+  const showImporte = data?.totalImporte !== undefined || data?.telas.some(t => t.importe !== undefined);
+  const showUtilityRolls = data?.telas.some(t => t.utilityRollos !== undefined);
+  const showUtilityMetered = data?.telas.some(t => t.utilityMetraje !== undefined);
+
+  if (isLoading && !isRefetching) {
+    return (
+      <Card>
+        <CardContent className="p-10 flex justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Card>
+        <CardContent className="p-10 text-center text-destructive">
+          <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <p>{getApiErrorMessage(error, "Error al cargar el resumen global")}</p>
+          <Button variant="outline" className="mt-4" onClick={() => refetch()}>Reintentar</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!data || data.telas.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-10 flex flex-col items-center justify-center text-muted-foreground">
+          <p>No se encontraron ventas para los filtros seleccionados.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const renderModalidades = (
+    modalidades: Array<{ tipo: string; unidad: string; cantidad: string }>,
+  ) => {
+    if (!modalidades?.length) return "—";
+    return (
+      <div className="flex flex-col items-end gap-0.5">
+        {modalidades.map((modalidad) => (
+          <span key={`${modalidad.tipo}-${modalidad.unidad}`} className="whitespace-nowrap tabular-nums">
+            <span className="text-[10px] font-semibold text-muted-foreground">
+              {modalidad.tipo === "NORMAL" ? "Rollos" : "Metraje"}:
+            </span>{" "}
+            {formatNumber(modalidad.cantidad, { kind: "quantity" })}{" "}
+            <span className="text-[10px] text-muted-foreground">{formatUnit(modalidad.unidad)}</span>
+          </span>
+        ))}
+      </div>
+    );
+  };
+
+  const renderUtility = (
+    value: string | null | undefined,
+    status: string | undefined,
+    excluded: number,
+  ) => {
+    if (status === "PENDIENTE") {
+      return <span className="font-sans text-amber-700 dark:text-amber-400">Pendiente</span>;
+    }
+    if (value == null) return "—";
+    return (
+      <div className="flex items-center justify-end">
+        {formatNumber(value, { kind: "money" })}
+        {renderWarning(excluded)}
+      </div>
+    );
+  };
+
+  const renderWarning = (lineasSinCosto?: number) => {
+    if (!lineasSinCosto) return null;
+    return (
+      <span title={`${lineasSinCosto} operaci${lineasSinCosto === 1 ? 'ón' : 'ones'} sin costo registrado`} className="inline-flex ml-1.5 text-amber-500">
+        <AlertTriangle className="w-3.5 h-3.5" />
+      </span>
+    );
+  };
+
+  return (
+    <Card className={isRefetching ? "opacity-50 pointer-events-none transition-opacity duration-200" : ""}>
+      <CardContent className="p-0">
+        <div className="overflow-x-auto w-full custom-scrollbar">
+          <Table className="w-full text-sm min-w-[800px]">
+            <TableHeader>
+              <TableRow className="bg-muted/40 hover:bg-muted/40 whitespace-nowrap">
+                <TableHead className="w-8"></TableHead>
+                <TableHead>Tela / Color</TableHead>
+                <TableHead className="text-right">Cantidades</TableHead>
+                <TableHead className="text-right">Operaciones</TableHead>
+                {showImporte && <TableHead className="text-right">Importe</TableHead>}
+                {showUtilityRolls && <TableHead className="text-right">Utilidad (Rollos)</TableHead>}
+                {showUtilityMetered && <TableHead className="text-right">Utilidad (Metreado)</TableHead>}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.telas.map(tela => (
+                <React.Fragment key={tela.tela}>
+                  <TableRow
+                    className="bg-secondary/20 hover:bg-secondary/30 cursor-pointer border-b border-border/50"
+                    onClick={() => toggleTela(tela.tela)}
+                  >
+                    <TableCell className="p-3">
+                      {expandedTelas.has(tela.tela) ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                    </TableCell>
+                    <TableCell className="font-bold py-3">
+                      <Link href={`/inventario?search=${encodeURIComponent(tela.tela)}`} onClick={(e) => e.stopPropagation()} className="hover:underline text-foreground">
+                        {tela.tela}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="py-3 pr-4">
+                       {renderModalidades(tela.modalidades)}
+                    </TableCell>
+                    <TableCell className="text-right font-bold py-3">
+                      {formatNumber(tela.operaciones, { kind: "count" })}
+                    </TableCell>
+                    {showImporte && (
+                      <TableCell className="text-right font-mono font-medium py-3 text-foreground">
+                        {tela.importe !== undefined ? formatNumber(tela.importe, { kind: "money" }) : "—"}
+                      </TableCell>
+                    )}
+                    {showUtilityRolls && (
+                      <TableCell className="text-right font-mono font-medium text-green-700 dark:text-green-500 py-3">
+                         {renderUtility(
+                           tela.utilityRollos,
+                           tela.utilityRollosStatus,
+                           tela.modalidades
+                             .filter((item) => item.tipo === "NORMAL")
+                             .reduce((sum, item) => sum + (item.lineasExcluidasSinCosto ?? 0), 0),
+                         )}
+                      </TableCell>
+                    )}
+                    {showUtilityMetered && (
+                      <TableCell className="text-right font-mono font-medium text-green-700 dark:text-green-500 py-3">
+                         {renderUtility(
+                           tela.utilityMetraje,
+                           tela.utilityMetrajeStatus,
+                           tela.modalidades
+                             .filter((item) => item.tipo === "METREADO")
+                             .reduce((sum, item) => sum + (item.lineasExcluidasSinCosto ?? 0), 0),
+                         )}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                  {expandedTelas.has(tela.tela) && tela.colores.map((color, idx) => (
+                    <TableRow key={color.color} className={idx === tela.colores.length - 1 ? "border-b-2 border-border/50" : "border-b-0"}>
+                      <TableCell></TableCell>
+                      <TableCell className="pl-6 py-2.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary/40"></div>
+                          <span className="font-medium text-sm">
+                            <Link href={`/inventario?search=${encodeURIComponent(tela.tela + ' ' + color.color)}`} className="hover:underline text-foreground">
+                              {color.color}
+                            </Link>
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-2.5 pr-4">
+                         {renderModalidades(color.modalidades)}
+                      </TableCell>
+                      <TableCell className="text-right py-2.5 tabular-nums">
+                        {formatNumber(color.operaciones, { kind: "count" })}
+                      </TableCell>
+                      {showImporte && (
+                        <TableCell className="text-right font-mono py-2.5 text-muted-foreground">
+                          {color.importe !== undefined ? formatNumber(color.importe, { kind: "money" }) : "—"}
+                        </TableCell>
+                      )}
+                      {showUtilityRolls && (
+                        <TableCell className="text-right font-mono py-2.5 text-green-700/80 dark:text-green-500/80">
+                           {renderUtility(
+                             color.utilityRollos,
+                             color.utilityRollosStatus,
+                             color.modalidades
+                               .filter((item) => item.tipo === "NORMAL")
+                               .reduce((sum, item) => sum + (item.lineasExcluidasSinCosto ?? 0), 0),
+                           )}
+                        </TableCell>
+                      )}
+                      {showUtilityMetered && (
+                        <TableCell className="text-right font-mono py-2.5 text-green-700/80 dark:text-green-500/80">
+                           {renderUtility(
+                             color.utilityMetraje,
+                             color.utilityMetrajeStatus,
+                             color.modalidades
+                               .filter((item) => item.tipo === "METREADO")
+                               .reduce((sum, item) => sum + (item.lineasExcluidasSinCosto ?? 0), 0),
+                           )}
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
+                </React.Fragment>
+              ))}
+            </TableBody>
+            <TableFooter className="border-t-2 border-primary/40 bg-primary/10">
+              <TableRow className="hover:bg-primary/10">
+                <TableCell></TableCell>
+                <TableCell className="whitespace-nowrap py-4 font-bold text-foreground">TOTALES</TableCell>
+                <TableCell className="py-4 pr-4">
+                   {renderModalidades(data.modalidades)}
+                </TableCell>
+                <TableCell className="text-right font-bold tabular-nums text-foreground">
+                  {formatNumber(data.totalOperaciones, { kind: "count" })}
+                </TableCell>
+                {showImporte && (
+                  <TableCell className="text-right font-bold font-mono text-primary">
+                    {data.totalImporte !== undefined ? formatNumber(data.totalImporte, { kind: "money" }) : "—"}
+                  </TableCell>
+                )}
+                {showUtilityRolls && <TableCell></TableCell>}
+                {showUtilityMetered && <TableCell></TableCell>}
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </div>
+        {data.lineasExcluidasSinCosto !== undefined && (
+          <div className="border-t px-4 py-3 text-xs text-muted-foreground">
+            Costeo del periodo: {formatNumber(data.lineasExcluidasSinCosto, { kind: "count" })}{" "}
+            {data.lineasExcluidasSinCosto === 1 ? "línea quedó fuera" : "líneas quedaron fuera"} de la utilidad por no tener costo asignado.
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function TiendaVentas() {
   const params = useParams();
   const ubicacionId = Number(params.ubicacionId);
   const isValidLocationId = Number.isInteger(ubicacionId) && ubicacionId > 0;
   const [, setLocationStr] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
+  const queryClient = useQueryClient();
 
   const todayStr = mexicoCityToday();
 
@@ -130,7 +384,7 @@ export default function TiendaVentas() {
     setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
   };
 
-  const { data, isLoading, isError, error, refetch, isRefetching } = useListCajaTiendaVentas(ubicacionId, {
+  const { data: detailData, isLoading: detailLoading, isError: detailIsError, error: detailError, refetch: detailRefetch, isRefetching: detailIsRefetching } = useListCajaTiendaVentas(ubicacionId, {
     desde,
     hasta,
     formaPago: apiFormaPago,
@@ -138,7 +392,7 @@ export default function TiendaVentas() {
     pageSize
   }, {
     query: {
-      enabled: isValidLocationId,
+      enabled: isValidLocationId && activeTab === "detail",
       queryKey: getListCajaTiendaVentasQueryKey(ubicacionId, {
         desde,
         hasta,
@@ -148,8 +402,19 @@ export default function TiendaVentas() {
       }),
     },
   });
+
+  const handleRefresh = () => {
+    if (activeTab === "detail") {
+      detailRefetch();
+    } else {
+      queryClient.invalidateQueries({ queryKey: getGetCajaTiendaVentasGlobalQueryKey(ubicacionId, { desde, hasta }) });
+    }
+  };
+
   const showUtility =
-    data?.items.some((item) => "utilidad" in item) ?? false;
+    detailData?.items.some((item) => "utilidad" in item) ?? false;
+
+  const titleLocationName = detailData?.nombreUbicacion ?? `Tienda #${ubicacionId}`;
 
   if (!isValidLocationId) {
     return (
@@ -179,7 +444,7 @@ export default function TiendaVentas() {
                 </Link>
               </Button>
               <h1 className="text-2xl font-bold tracking-tight text-sidebar">
-                Ventas de {data?.nombreUbicacion ?? `Tienda #${ubicacionId}`}
+                Ventas de {titleLocationName}
               </h1>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -219,8 +484,8 @@ export default function TiendaVentas() {
               </Select>
             </div>}
 
-            <Button variant="outline" size="icon" onClick={() => refetch()} title="Actualizar" disabled={isRefetching}>
-              <RefreshCw className={`h-4 w-4 ${isRefetching ? "animate-spin text-primary" : ""}`} />
+            <Button variant="outline" size="icon" onClick={handleRefresh} title="Actualizar" disabled={activeTab === "detail" && detailIsRefetching}>
+              <RefreshCw className={`h-4 w-4 ${activeTab === "detail" && detailIsRefetching ? "animate-spin text-primary" : ""}`} />
             </Button>
           </div>
         </div>
@@ -233,23 +498,19 @@ export default function TiendaVentas() {
         </Tabs>
 
         {activeTab === "global" ? (
-          <Card>
-            <CardContent className="p-10 text-center text-muted-foreground">
-              Preparando el resumen global por tela y color.
-            </CardContent>
-          </Card>
+          <GlobalTab ubicacionId={ubicacionId} desde={desde} hasta={hasta} />
         ) : <>
           <Card>
           <CardContent className="p-0">
-            {isLoading ? (
+            {detailLoading ? (
               <div className="p-10 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-            ) : isError ? (
+            ) : detailIsError ? (
               <div className="p-10 text-center text-destructive">
                 <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p>{getApiErrorMessage(error, "Error al cargar las ventas")}</p>
-                <Button variant="outline" className="mt-4" onClick={() => refetch()}>Reintentar</Button>
+                <p>{getApiErrorMessage(detailError, "Error al cargar las ventas")}</p>
+                <Button variant="outline" className="mt-4" onClick={() => detailRefetch()}>Reintentar</Button>
               </div>
-            ) : data?.items.length === 0 ? (
+            ) : detailData?.items.length === 0 ? (
               <div className="p-10 flex flex-col items-center justify-center text-muted-foreground">
                  <p>No se encontraron ventas para los filtros seleccionados.</p>
                  <Button variant="outline" className="mt-4" onClick={() => updateFilters({ desde: null, hasta: null, formaPago: null })}>
@@ -258,7 +519,7 @@ export default function TiendaVentas() {
               </div>
             ) : (
               <div className="overflow-x-auto w-full custom-scrollbar">
-                <Table className="w-full text-sm">
+                <Table className="w-full text-sm min-w-[700px]">
                   <TableHeader>
                     <TableRow className="bg-muted/40 hover:bg-muted/40 whitespace-nowrap">
                       <TableHead>Fecha/Hora</TableHead>
@@ -273,7 +534,7 @@ export default function TiendaVentas() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {data?.items.map(row => {
+                    {detailData?.items.map(row => {
                       return (
                         <TableRow
                           key={row.id}
@@ -304,7 +565,7 @@ export default function TiendaVentas() {
                                {collectionStatusLabel(row.estadoCobro)}
                             </span>
                           </TableCell>
-                          <TableCell className="text-right font-mono font-medium">
+                          <TableCell className="text-right font-mono font-medium text-foreground">
                             {formatNumber(row.importe, { kind: "money" })}
                           </TableCell>
                            {showUtility && (
@@ -324,7 +585,7 @@ export default function TiendaVentas() {
           </CardContent>
           </Card>
 
-          {data && data.total > pageSize && (
+          {detailData && detailData.total > pageSize && (
           <div className="mt-4 flex flex-col items-center">
             <Pagination>
               <PaginationContent>
@@ -341,14 +602,14 @@ export default function TiendaVentas() {
 
                 {/* Simplified pagination logic for brevity, just showing current page text */}
                 <PaginationItem className="px-4 text-sm text-muted-foreground">
-                  Página {page} de {Math.ceil(data.total / pageSize)}
+                  Página {page} de {Math.ceil(detailData.total / pageSize)}
                 </PaginationItem>
 
                 <PaginationItem>
                   <Button
                     variant="outline"
                     className="gap-1 pr-2.5 h-9"
-                    disabled={page >= Math.ceil(data.total / pageSize)}
+                    disabled={page >= Math.ceil(detailData.total / pageSize)}
                     onClick={() => updateFilters({ page: page + 1 })}
                   >
                     Siguiente

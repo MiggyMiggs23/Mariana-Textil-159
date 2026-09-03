@@ -7710,6 +7710,102 @@ export const ListCajaTiendaVentasResponse = zod.object({
 
 
 /**
+ * @summary Ventas globales de una tienda agrupadas por tela y color
+ */
+
+
+
+export const GetCajaTiendaVentasGlobalParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1)
+})
+
+export const getCajaTiendaVentasGlobalQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCajaTiendaVentasGlobalQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetCajaTiendaVentasGlobalQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getCajaTiendaVentasGlobalQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getCajaTiendaVentasGlobalQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City')
+})
+
+export const GetCajaTiendaVentasGlobalResponse = zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "totalImporte": zod.string().optional(),
+  "totalOperaciones": zod.number(),
+  "cantidadesPorUnidad": zod.array(zod.object({
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "cantidad": zod.string()
+})),
+  "modalidades": zod.array(zod.object({
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "cantidad": zod.string(),
+  "operaciones": zod.number(),
+  "importe": zod.string().optional().describe('Importe bruto asignado proporcionalmente desde el total del ticket.'),
+  "utilidad": zod.string().nullish(),
+  "utilidadStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "lineasSinCosto": zod.number().optional(),
+  "lineasExcluidasSinCosto": zod.number().optional()
+})),
+  "lineasSinCosto": zod.number().optional(),
+  "lineasExcluidasSinCosto": zod.number().optional(),
+  "telas": zod.array(zod.object({
+  "tela": zod.string(),
+  "cantidades": zod.array(zod.object({
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "cantidad": zod.string()
+})),
+  "operaciones": zod.number(),
+  "importe": zod.string().optional(),
+  "utilityRollos": zod.string().nullish(),
+  "utilityRollosStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "utilityMetraje": zod.string().nullish(),
+  "utilityMetrajeStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "lineasSinCosto": zod.number().optional(),
+  "lineasExcluidasSinCosto": zod.number().optional(),
+  "modalidades": zod.array(zod.object({
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "cantidad": zod.string(),
+  "operaciones": zod.number(),
+  "importe": zod.string().optional().describe('Importe bruto asignado proporcionalmente desde el total del ticket.'),
+  "utilidad": zod.string().nullish(),
+  "utilidadStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "lineasSinCosto": zod.number().optional(),
+  "lineasExcluidasSinCosto": zod.number().optional()
+})),
+  "colores": zod.array(zod.object({
+  "color": zod.string(),
+  "cantidades": zod.array(zod.object({
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "cantidad": zod.string()
+})),
+  "operaciones": zod.number(),
+  "importe": zod.string().optional(),
+  "utilityRollos": zod.string().nullish(),
+  "utilityRollosStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "utilityMetraje": zod.string().nullish(),
+  "utilityMetrajeStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "lineasSinCosto": zod.number().optional(),
+  "lineasExcluidasSinCosto": zod.number().optional(),
+  "modalidades": zod.array(zod.object({
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "cantidad": zod.string(),
+  "operaciones": zod.number(),
+  "importe": zod.string().optional().describe('Importe bruto asignado proporcionalmente desde el total del ticket.'),
+  "utilidad": zod.string().nullish(),
+  "utilidadStatus": zod.enum(['PENDIENTE', 'PARCIAL', 'COMPLETA']).optional(),
+  "lineasSinCosto": zod.number().optional(),
+  "lineasExcluidasSinCosto": zod.number().optional()
+}))
+}))
+}))
+})
+
+
+/**
  * Calcula el estado actual sin consultar ni crear registros de notificaciones.
  * @summary Alertas vivas de cobro pendiente, crédito y salidas en tránsito sin recibir
  */

@@ -4199,6 +4199,27 @@ paths:
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /caja/tiendas/{ubicacionId}/ventas/global:
+    get:
+      operationId: getCajaTiendaVentasGlobal
+      tags: [caja]
+      summary: Ventas globales de una tienda agrupadas por tela y color
+      parameters:
+        - in: path
+          name: ubicacionId
+          required: true
+          schema: { type: integer, minimum: 1 }
+        - { $ref: "#/components/parameters/AnalyticsDesde" }
+        - { $ref: "#/components/parameters/AnalyticsHasta" }
+      responses:
+        "200":
+          description: Ventas agrupadas de la tienda, incluidas las ventas a crédito
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CajaTiendaVentasGlobalResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/alertas:
     get:
       operationId: getAdminAlertas
@@ -6694,6 +6715,87 @@ components:
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }
+    CajaVentasCantidadUnidad:
+      type: object
+      required: [unidad, cantidad]
+      properties:
+        unidad: { $ref: "#/components/schemas/UnidadProducto" }
+        cantidad: { type: string }
+    CajaVentasModalidadGlobal:
+      type: object
+      required: [tipo, unidad, cantidad, operaciones]
+      properties:
+        tipo: { type: string, enum: [NORMAL, METREADO] }
+        unidad: { $ref: "#/components/schemas/UnidadProducto" }
+        cantidad: { type: string }
+        operaciones: { type: number }
+        importe:
+          type: string
+          description: Importe bruto asignado proporcionalmente desde el total del ticket.
+        utilidad: { type: ["string", "null"] }
+        utilidadStatus: { type: string, enum: [PENDIENTE, PARCIAL, COMPLETA] }
+        lineasSinCosto: { type: number }
+        lineasExcluidasSinCosto: { type: number }
+    CajaVentasColorGlobal:
+      type: object
+      required: [color, cantidades, operaciones, modalidades]
+      properties:
+        color: { type: string }
+        cantidades:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasCantidadUnidad" }
+        operaciones: { type: number }
+        importe: { type: string }
+        utilityRollos: { type: ["string", "null"] }
+        utilityRollosStatus: { type: string, enum: [PENDIENTE, PARCIAL, COMPLETA] }
+        utilityMetraje: { type: ["string", "null"] }
+        utilityMetrajeStatus: { type: string, enum: [PENDIENTE, PARCIAL, COMPLETA] }
+        lineasSinCosto: { type: number }
+        lineasExcluidasSinCosto: { type: number }
+        modalidades:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasModalidadGlobal" }
+    CajaVentasTelaGlobal:
+      type: object
+      required: [tela, cantidades, operaciones, colores, modalidades]
+      properties:
+        tela: { type: string }
+        cantidades:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasCantidadUnidad" }
+        operaciones: { type: number }
+        importe: { type: string }
+        utilityRollos: { type: ["string", "null"] }
+        utilityRollosStatus: { type: string, enum: [PENDIENTE, PARCIAL, COMPLETA] }
+        utilityMetraje: { type: ["string", "null"] }
+        utilityMetrajeStatus: { type: string, enum: [PENDIENTE, PARCIAL, COMPLETA] }
+        lineasSinCosto: { type: number }
+        lineasExcluidasSinCosto: { type: number }
+        modalidades:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasModalidadGlobal" }
+        colores:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasColorGlobal" }
+    CajaTiendaVentasGlobalResult:
+      type: object
+      required: [ubicacionId, nombreUbicacion, cantidadesPorUnidad, modalidades, totalOperaciones, telas]
+      properties:
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        totalImporte: { type: string }
+        totalOperaciones: { type: number }
+        cantidadesPorUnidad:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasCantidadUnidad" }
+        modalidades:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasModalidadGlobal" }
+        lineasSinCosto: { type: number }
+        lineasExcluidasSinCosto: { type: number }
+        telas:
+          type: array
+          items: { $ref: "#/components/schemas/CajaVentasTelaGlobal" }
     AdminDiferenciaGroup:
       type: object
       required:

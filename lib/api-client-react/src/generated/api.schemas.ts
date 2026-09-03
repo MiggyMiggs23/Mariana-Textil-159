@@ -1115,6 +1115,132 @@ export interface CajaTiendaVentasResult {
   pageSize: number;
 }
 
+export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
+
+
+export const UnidadProducto = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+  BOLSA: 'BOLSA',
+} as const;
+
+export interface CajaVentasCantidadUnidad {
+  unidad: UnidadProducto;
+  cantidad: string;
+}
+
+export type CajaVentasModalidadGlobalTipo = typeof CajaVentasModalidadGlobalTipo[keyof typeof CajaVentasModalidadGlobalTipo];
+
+
+export const CajaVentasModalidadGlobalTipo = {
+  NORMAL: 'NORMAL',
+  METREADO: 'METREADO',
+} as const;
+
+export type CajaVentasModalidadGlobalUtilidadStatus = typeof CajaVentasModalidadGlobalUtilidadStatus[keyof typeof CajaVentasModalidadGlobalUtilidadStatus];
+
+
+export const CajaVentasModalidadGlobalUtilidadStatus = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  COMPLETA: 'COMPLETA',
+} as const;
+
+export interface CajaVentasModalidadGlobal {
+  tipo: CajaVentasModalidadGlobalTipo;
+  unidad: UnidadProducto;
+  cantidad: string;
+  operaciones: number;
+  /** Importe bruto asignado proporcionalmente desde el total del ticket. */
+  importe?: string;
+  /** @nullable */
+  utilidad?: string | null;
+  utilidadStatus?: CajaVentasModalidadGlobalUtilidadStatus;
+  lineasSinCosto?: number;
+  lineasExcluidasSinCosto?: number;
+}
+
+export type CajaVentasColorGlobalUtilityRollosStatus = typeof CajaVentasColorGlobalUtilityRollosStatus[keyof typeof CajaVentasColorGlobalUtilityRollosStatus];
+
+
+export const CajaVentasColorGlobalUtilityRollosStatus = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  COMPLETA: 'COMPLETA',
+} as const;
+
+export type CajaVentasColorGlobalUtilityMetrajeStatus = typeof CajaVentasColorGlobalUtilityMetrajeStatus[keyof typeof CajaVentasColorGlobalUtilityMetrajeStatus];
+
+
+export const CajaVentasColorGlobalUtilityMetrajeStatus = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  COMPLETA: 'COMPLETA',
+} as const;
+
+export interface CajaVentasColorGlobal {
+  color: string;
+  cantidades: CajaVentasCantidadUnidad[];
+  operaciones: number;
+  importe?: string;
+  /** @nullable */
+  utilityRollos?: string | null;
+  utilityRollosStatus?: CajaVentasColorGlobalUtilityRollosStatus;
+  /** @nullable */
+  utilityMetraje?: string | null;
+  utilityMetrajeStatus?: CajaVentasColorGlobalUtilityMetrajeStatus;
+  lineasSinCosto?: number;
+  lineasExcluidasSinCosto?: number;
+  modalidades: CajaVentasModalidadGlobal[];
+}
+
+export type CajaVentasTelaGlobalUtilityRollosStatus = typeof CajaVentasTelaGlobalUtilityRollosStatus[keyof typeof CajaVentasTelaGlobalUtilityRollosStatus];
+
+
+export const CajaVentasTelaGlobalUtilityRollosStatus = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  COMPLETA: 'COMPLETA',
+} as const;
+
+export type CajaVentasTelaGlobalUtilityMetrajeStatus = typeof CajaVentasTelaGlobalUtilityMetrajeStatus[keyof typeof CajaVentasTelaGlobalUtilityMetrajeStatus];
+
+
+export const CajaVentasTelaGlobalUtilityMetrajeStatus = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  COMPLETA: 'COMPLETA',
+} as const;
+
+export interface CajaVentasTelaGlobal {
+  tela: string;
+  cantidades: CajaVentasCantidadUnidad[];
+  operaciones: number;
+  importe?: string;
+  /** @nullable */
+  utilityRollos?: string | null;
+  utilityRollosStatus?: CajaVentasTelaGlobalUtilityRollosStatus;
+  /** @nullable */
+  utilityMetraje?: string | null;
+  utilityMetrajeStatus?: CajaVentasTelaGlobalUtilityMetrajeStatus;
+  lineasSinCosto?: number;
+  lineasExcluidasSinCosto?: number;
+  modalidades: CajaVentasModalidadGlobal[];
+  colores: CajaVentasColorGlobal[];
+}
+
+export interface CajaTiendaVentasGlobalResult {
+  ubicacionId: number;
+  nombreUbicacion: string;
+  totalImporte?: string;
+  totalOperaciones: number;
+  cantidadesPorUnidad: CajaVentasCantidadUnidad[];
+  modalidades: CajaVentasModalidadGlobal[];
+  lineasSinCosto?: number;
+  lineasExcluidasSinCosto?: number;
+  telas: CajaVentasTelaGlobal[];
+}
+
 export interface AdminDiferenciaGroup {
   id: number;
   nombre: string;
@@ -2397,15 +2523,6 @@ export type ViajeTicketLink = {
   id: number;
   folio: number;
 } | null;
-
-export type UnidadProducto = typeof UnidadProducto[keyof typeof UnidadProducto];
-
-
-export const UnidadProducto = {
-  METRO: 'METRO',
-  KILO: 'KILO',
-  BOLSA: 'BOLSA',
-} as const;
 
 /**
  * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
@@ -6225,6 +6342,19 @@ export const ListCajaTiendaVentasFormaPago = {
   TRANSFERENCIA: 'TRANSFERENCIA',
   CREDITO: 'CREDITO',
 } as const;
+
+export type GetCajaTiendaVentasGlobalParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+};
 
 export type ListAdminCortesParams = {
 /**
