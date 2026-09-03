@@ -14,6 +14,8 @@ test("la entrada conserva su formato global y firma solo la última hoja global"
   assert.match(documentPage, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(documentPage, /pageIndex === globalPages\.length - 1/);
   assert.match(documentPage, /document-footer/);
+  assert.match(documentPage, /document-product-grid/);
+  assert.match(styles, /\.document-product-grid th,[\s\S]*border:\s*0\.35mm solid #000 !important;/);
   assert.match(styles, /\.entrada-page-print \.document-footer\s*\{[\s\S]*break-inside:\s*avoid-page/);
   assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*width:\s*215\.5mm !important;[\s\S]*height:\s*278\.5mm !important;/);
 });
@@ -45,7 +47,7 @@ test("la entrada agrega un listado compacto de todas las series por producto", (
   assert.doesNotMatch(seriesSection, /h-4 bg-\[#1e3a8a\] w-full shrink-0 mt-auto/);
   assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*overflow:\s*clip !important/);
   assert.match(styles, /\.entrada-page-print \+ \.entrada-page-print\s*\{[\s\S]*break-before:\s*page/);
-  assert.doesNotMatch(styles, /\.entrada-page-print\s*\{[\s\S]*?break-after:\s*page/);
+  assert.doesNotMatch(styles, /\.entrada-page-print\s*\{[^}]*break-after:\s*page/);
   assert.match(styles, /body\.print-entrada \.entrada-print-root\s*\{[\s\S]*page:\s*entrada-page/);
 });
 

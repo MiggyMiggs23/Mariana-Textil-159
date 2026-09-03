@@ -42,7 +42,11 @@ test("Salida page specifies A5 landscape and has correct control signatures", as
   assert.match(salida, /tab=recepcion&id=\$\{salida\.id\}/);
   assert.match(salida, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
   assert.match(css, /\.salida-page-print:last-child\s*\{[\s\S]*page-break-after:\s*auto;/);
-  assert.match(salida, /const productRowsPerPage = 7;/);
+  assert.match(salida, /const SALIDA_PRODUCT_ROWS_PER_PAGE = 13;/);
+  assert.match(salida, /Math\.ceil\(salida\.lineas\.length \/ SALIDA_PRODUCT_ROWS_PER_PAGE\)/);
+  assert.match(salida, /SALIDA_PRODUCT_ROWS_PER_PAGE - pageLineas\.length/);
+  assert.match(salida, /document-product-grid/);
+  assert.match(css, /\.document-product-grid th,[\s\S]*border:\s*0\.35mm solid #000 !important;/);
   assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(salida, /qrSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(salida, /data-print-palette="monochrome"/);
@@ -101,6 +105,14 @@ test("Cash and credit notes print exactly A5 portrait in two copies with interna
 
   // Auto-print routing based on nota vs thermal
   assert.match(detail, /const printClass = isNota \? "print-credito" : "print-80mm";/);
+  assert.match(detail, /const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;/);
+  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 10;/);
+  assert.match(detail, /creditTicket && pageIndex === notePageCount - 1/);
+  assert.match(detail, /const notePageCount = Math\.max\(1, Math\.ceil\(noteLines\.length \/ noteRowsPerPage\)\)/);
+  assert.match(detail, /noteLines\.slice\(pageIndex \* noteRowsPerPage/);
+  assert.match(detail, /noteRowsPerPage - pageLines\.length/);
+  assert.match(detail, /pageIndex \* noteRowsPerPage \+ lineIndex \+ 1/);
+  assert.match(css, /\.credito-page-print\s*\{[\s\S]*height:\s*210mm !important;[\s\S]*overflow:\s*clip !important;/);
 
   // Cobros routing to detail with print parameter
   assert.match(cobros, /setLocation\(\`\/tickets\/\$\{printedTicketId\}\?print=3\`\);/);

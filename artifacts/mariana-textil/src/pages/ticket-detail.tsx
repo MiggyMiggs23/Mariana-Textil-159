@@ -916,15 +916,30 @@ export default function TicketDetailPage() {
           const paymentDate = printData.fechaVencimiento;
           const termDays = printData.diasPlazo;
 
+          // Chromium (96dpi): A5 useful height 793.70px; 112px header + 126px
+          // data + 22px table header + (14 × 24px) rows + 170px footer = 766px.
+          const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;
+          // Chromium (96dpi): A5 useful height 793.70px; 112px header + 126px
+          // data + 22px table header + (10 × 24px) rows + 286px pagaré/footer = 786px.
+          const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 10;
+
           // Group lines according to the print data
           const { rollos: projRollos, metraje: projMetraje } = groupPrintLinesByModality(printData.lineas);
+          const noteLines = [...projRollos.lines, ...projMetraje.lines];
+          const noteRowsPerPage = creditTicket
+            ? CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE
+            : CASH_NOTE_PRODUCT_ROWS_PER_PAGE;
+          const notePageCount = Math.max(1, Math.ceil(noteLines.length / noteRowsPerPage));
+          const notePages = Array.from({ length: notePageCount }, (_, pageIndex) =>
+            noteLines.slice(pageIndex * noteRowsPerPage, (pageIndex + 1) * noteRowsPerPage),
+          );
 
           return (
+            <>
+            {notePages.map((pageLines, pageIndex) => (
             <div
-              key={idx}
-              className={`credito-page-print bg-white print:shadow-none w-[148mm] h-[210mm] relative box-border flex flex-col overflow-hidden shrink-0 ${
-                idx === 0 ? "page-break" : ""
-              }`}
+              key={`${idx}-${pageIndex}`}
+              className="credito-page-print bg-white print:shadow-none w-[148mm] h-[210mm] relative box-border flex flex-col overflow-hidden shrink-0"
             >
               {printData.estado === EstadoTicket.CANCELADO && (
                 <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
@@ -948,6 +963,7 @@ export default function TicketDetailPage() {
                     </h1>
                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">
                       {isInternal ? "COPIA INTERNA" : "COPIA CLIENTE"}
+                      {" · "}Pág. {pageIndex + 1}/{notePageCount}
                     </span>
                   </div>
                   <div className="ml-4 text-[#1e3a8a] font-bold text-lg leading-tight border-l-2 pl-4 border-gray-300">
@@ -1017,7 +1033,7 @@ export default function TicketDetailPage() {
               {/* Items Table */}
               <div className="px-6 mt-1 flex-1 relative z-10 flex flex-col min-h-0">
                 <div className="flex-1 overflow-hidden border border-gray-200 flex flex-col">
-                  <table className="w-full text-left border-collapse">
+                    <table className="document-product-grid w-full table-fixed text-left border-collapse">
                     <thead className="sticky top-0 bg-[#1e3a8a] text-white">
                       <tr>
                         <th className="py-1 px-2 text-[9px] font-bold uppercase tracking-wider">Descripción</th>
@@ -1032,60 +1048,23 @@ export default function TicketDetailPage() {
                       </tr>
                     </thead>
                     <tbody className="overflow-y-auto block h-full w-full bg-white" style={{ display: "table-row-group" }}>
-                      {projRollos.lines.length > 0 && (
-                        <>
-                          <tr className="bg-gray-100/80"><td colSpan={isPriceless ? 3 : 5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700">ROLLOS</td></tr>
-                          {projRollos.lines.map(linea => (
-                            <tr key={linea.key} className="border-b border-gray-100 last:border-0">
-                              <td className="py-0.5 px-2 text-[10px] text-gray-800">
-                                {linea.telaProducto} {linea.colorProducto}
-                                <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
-                              </td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
-                              {!isPriceless && (
-                                <>
-                                  <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
-                                  <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
-                                </>
-                              )}
-                            </tr>
-                          ))}
-                          {!isPriceless && (
-                            <tr>
-                              <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Rollos</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(projRollos.subtotal, { kind: "money" })}</td>
-                            </tr>
-                          )}
-                        </>
-                      )}
-                      {projMetraje.lines.length > 0 && (
-                        <>
-                          <tr className="bg-gray-100/80"><td colSpan={isPriceless ? 3 : 5} className="py-0.5 px-2 text-[9px] font-bold text-gray-700 border-t border-gray-200">METRAJE</td></tr>
-                          {projMetraje.lines.map(linea => (
-                            <tr key={linea.key} className="border-b border-gray-100 last:border-0">
-                              <td className="py-0.5 px-2 text-[10px] text-gray-800">
-                                {linea.telaProducto} {linea.colorProducto}
-                                <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
-                              </td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
-                              {!isPriceless && (
-                                <>
-                                  <td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td>
-                                  <td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td>
-                                </>
-                              )}
-                            </tr>
-                          ))}
-                          {!isPriceless && (
-                            <tr>
-                              <td colSpan={4} className="py-0.5 px-2 text-[9px] text-right font-bold text-gray-600">Subtotal Metraje</td>
-                              <td className="py-0.5 px-2 text-[10px] text-right font-bold">{formatNumber(projMetraje.subtotal, { kind: "money" })}</td>
-                            </tr>
-                          )}
-                        </>
-                      )}
+                      {pageLines.map((linea, lineIndex) => (
+                        <tr key={linea.key} className="h-[24px]">
+                          <td className="py-0.5 px-2 text-[10px] text-gray-800 truncate">
+                            <span className="mr-1 text-gray-500">{pageIndex * noteRowsPerPage + lineIndex + 1}.</span>
+                            {linea.telaProducto} {linea.colorProducto}
+                            <span className="text-gray-500 ml-1">({linea.skuProducto})</span>
+                          </td>
+                          <td className="py-0.5 px-2 text-[10px] text-right font-mono">{linea.rollos}</td>
+                          <td className="py-0.5 px-2 text-[10px] text-right font-mono">{formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
+                          {!isPriceless && <><td className="py-0.5 px-2 text-[10px] text-right">{formatNumber(linea.precioUnitario, { kind: "money" })}</td><td className="py-0.5 px-2 text-[10px] text-right font-medium">{formatNumber(linea.importe, { kind: "money" })}</td></>}
+                        </tr>
+                      ))}
+                      {Array.from({ length: Math.max(0, noteRowsPerPage - pageLines.length) }, (_, blankIndex) => (
+                        <tr key={`blank-${blankIndex}`} className="h-[24px]">
+                          {Array.from({ length: isPriceless ? 3 : 5 }, (_, cellIndex) => <td key={cellIndex}></td>)}
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1095,7 +1074,7 @@ export default function TicketDetailPage() {
               <div className="px-6 mt-2 mb-2 relative z-10 shrink-0 flex gap-4">
                 <div className="flex-1 flex flex-col justify-end">
                   <div className="text-[8px] text-gray-500 mb-4 pr-4 text-justify">
-                    {creditTicket ? (
+                    {creditTicket && pageIndex === notePageCount - 1 ? (
                       <>
                         <p className="font-bold">RECIBO DE MERCANCÍA Y PAGARÉ</p>
                         <p>Recibo a mi entera satisfacción la mercancía aquí detallada.</p>
@@ -1147,6 +1126,8 @@ export default function TicketDetailPage() {
 
               <div className="h-1.5 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
             </div>
+            ))}
+            </>
           );
         })}
       </div>

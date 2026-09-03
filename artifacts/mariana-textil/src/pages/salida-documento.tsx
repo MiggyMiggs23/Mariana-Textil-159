@@ -42,12 +42,12 @@ export default function SalidaDocumento() {
   const dateObj = new Date(salida.createdAt);
   const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
-  // Se conserva la paginación existente; A5 horizontal aporta más espacio sin
-  // cambiar todavía las reglas de renglones del documento.
-  const productRowsPerPage = 7;
-  const totalPages = Math.max(1, Math.ceil(salida.lineas.length / productRowsPerPage));
+  // Chromium (96dpi): 148mm = 559.37px; 154px encabezado + 52px datos +
+  // 22px cabecera + (13 × 17px) renglones + 82px pie = 531px (< 559.37px).
+  const SALIDA_PRODUCT_ROWS_PER_PAGE = 13;
+  const totalPages = Math.max(1, Math.ceil(salida.lineas.length / SALIDA_PRODUCT_ROWS_PER_PAGE));
   const pages = Array.from({ length: totalPages }).map((_, i) =>
-    salida.lineas.slice(i * productRowsPerPage, (i + 1) * productRowsPerPage),
+    salida.lineas.slice(i * SALIDA_PRODUCT_ROWS_PER_PAGE, (i + 1) * SALIDA_PRODUCT_ROWS_PER_PAGE),
   );
 
   return (
@@ -138,7 +138,7 @@ export default function SalidaDocumento() {
 
             {/* Table */}
             <div className="document-table flex-1 w-full relative z-10 bg-white">
-              <table className="w-full table-fixed text-left border-collapse border-b border-black">
+              <table className="document-product-grid w-full table-fixed text-left border-collapse">
                 <thead>
                   <tr className="salida-table-header salida-dark-band bg-black text-white border-b-2 border-black">
                     <th className="py-0.5 px-1 text-[10px] font-black uppercase w-6 text-center border-r border-white">#</th>
@@ -151,7 +151,7 @@ export default function SalidaDocumento() {
                 </thead>
                 <tbody>
                   {pageLineas.map((line, index) => {
-                    const globalIndex = pageIndex * productRowsPerPage + index + 1;
+                    const globalIndex = pageIndex * SALIDA_PRODUCT_ROWS_PER_PAGE + index + 1;
                     return (
                       <tr key={line.id} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
                         <td className="py-0.5 px-1 text-center text-gray-600 text-[10px] border-r border-gray-200 font-medium">{globalIndex}</td>
@@ -167,13 +167,14 @@ export default function SalidaDocumento() {
                       </tr>
                     );
                   })}
-                  {Array.from({ length: Math.max(0, productRowsPerPage - pageLineas.length) }).map((_, i) => (
+                  {Array.from({ length: Math.max(0, SALIDA_PRODUCT_ROWS_PER_PAGE - pageLineas.length) }).map((_, i) => (
                     <tr key={`pad-${i}`} className="border-b border-gray-200 h-[17px] even:bg-gray-50/50">
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
                       <td className="border-r border-gray-200"></td>
+                      <td></td>
                     </tr>
                   ))}
                 </tbody>

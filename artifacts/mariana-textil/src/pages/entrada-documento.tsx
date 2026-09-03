@@ -169,7 +169,7 @@ export default function EntradaDocumento() {
 
             {/* Table */}
             <div className={`document-table px-8 mt-2 relative z-10 flex flex-col ${embeddedRows.length > 0 ? "shrink-0" : "flex-1"}`}>
-              <table className="w-full text-left border-collapse border border-gray-200">
+              <table className="document-product-grid w-full text-left border-collapse border border-gray-200">
                 <thead>
                   <tr className="bg-[#1e3a8a] text-white">
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider w-10 text-center">#</th>

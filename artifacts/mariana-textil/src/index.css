@@ -636,6 +636,7 @@
     margin: 0 !important;
     color: #000 !important;
     filter: grayscale(1);
+    overflow: clip !important;
   }
 
   .salida-page-print .salida-dark-band {
@@ -655,6 +656,22 @@
     page: credito-page;
     page-break-after: always;
     page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid-page;
+    width: 148mm !important;
+    height: 210mm !important;
+    margin: 0 !important;
+    overflow: clip !important;
+  }
+
+  /*
+   * A .35mm rule survives Chromium's PDF/printer rasterization.  Applying it
+   * per-cell (rather than relying on collapsed neighbours) guarantees each
+   * populated and intentionally blank product cell has all four black edges.
+   */
+  .document-product-grid th,
+  .document-product-grid td {
+    border: 0.35mm solid #000 !important;
   }
 
   .entrada-page-print:last-child {

@@ -8,14 +8,16 @@ const [page, detailPage, styles] = await Promise.all([
   readFile(new URL("../index.css", import.meta.url), "utf8"),
 ]);
 
-test("la salida usa A5 horizontal y conserva siete productos por página", () => {
+test("la salida usa A5 horizontal con trece renglones fijos por página", () => {
   assert.match(styles, /@page salida-page[\s\S]*size:\s*210mm 148mm/);
   assert.match(page, /w-\[210mm\] h-\[148mm\]/);
-  assert.match(page, /const productRowsPerPage = 7/);
-  assert.match(page, /Se conserva la paginación existente/);
-  assert.match(page, /productRowsPerPage - pageLineas\.length/);
+  assert.match(page, /const SALIDA_PRODUCT_ROWS_PER_PAGE = 13/);
+  assert.match(page, /13 × 17px/);
+  assert.match(page, /SALIDA_PRODUCT_ROWS_PER_PAGE - pageLineas\.length/);
   assert.match(page, /salida\.lineas\.slice/);
   assert.match(page, /Pág \{pageIndex \+ 1\}\/\{totalPages\}/);
+  assert.match(page, /pageIndex \* SALIDA_PRODUCT_ROWS_PER_PAGE \+ index \+ 1/);
+  assert.match(page, /document-product-grid/);
 });
 
 test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
