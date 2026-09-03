@@ -11,6 +11,7 @@ import type { ModalidadSalida } from './modalidadSalida';
 export interface SalidaResumen {
   id: number;
   folio: number;
+  /** Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales. */
   inicialesSitio: string;
   folioFormateado: string;
   modalidad: ModalidadSalida;

@@ -209,6 +209,23 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.origenId)?.cantidadTotal), 0);
     assert.equal(Number(cache.find((x) => x.ubicacionId === f.destinoId)?.cantidadTotal ?? 0), 0);
   });
+  test("detail exposes the initials stored on the origin location", async () => {
+    const f = await fx();
+    const item = await roll(f.productoId, f.origenId, "12");
+    const salida = await create(f.origenId, f.destinoId, [item.id]);
+    const [origin] = await db
+      .select({ iniciales: ubicacionesTable.iniciales })
+      .from(ubicacionesTable)
+      .where(eq(ubicacionesTable.id, f.origenId))
+      .limit(1);
+
+    assert.ok(origin);
+    assert.equal(salida.inicialesSitio, origin.iniciales);
+    assert.equal(
+      salida.folioFormateado,
+      `${origin.iniciales}-${String(salida.folio).padStart(6, "0")}`,
+    );
+  });
   test("uuid is idempotent; concurrent drafts are unique per user/origin; independent origins receive site folios", async () => {
     const first = await fx();
     const a = await roll(first.productoId, first.origenId, "10");

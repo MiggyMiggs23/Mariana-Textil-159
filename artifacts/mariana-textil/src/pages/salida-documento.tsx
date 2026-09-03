@@ -96,7 +96,15 @@ export default function SalidaDocumento() {
               <div className="flex items-center gap-4">
                 <div className="mr-2 h-16 w-2 bg-black"></div>
                 <div>
-                  <h1 className="text-5xl font-black text-black tracking-tighter leading-none">Salida</h1>
+                  <div className="flex items-end gap-3">
+                    <h1 className="text-5xl font-black text-black tracking-tighter leading-none">Salida</h1>
+                    <div
+                      className="text-5xl font-black uppercase leading-none tracking-wide text-black"
+                      data-testid="doc-origin-initials"
+                    >
+                      {salida.inicialesSitio}
+                    </div>
+                  </div>
                   <div className="mt-1 text-sm font-bold uppercase text-black">Mariana Textil</div>
                   <div className="mt-0.5 text-sm font-black leading-tight text-black underline decoration-2 underline-offset-2" data-testid="doc-folio">{salida.folioFormateado}</div>
                   <div className="text-[10px] font-bold text-black">Pág {pageIndex + 1}/{totalPages}</div>

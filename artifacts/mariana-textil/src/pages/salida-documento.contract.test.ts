@@ -55,6 +55,16 @@ test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   assert.doesNotMatch(page, /pageIndex === totalPages - 1/);
 });
 
+test("las iniciales grandes del origen llegan por el DTO de la salida", () => {
+  assert.match(page, /data-testid="doc-origin-initials"/);
+  assert.match(
+    page,
+    /className="text-5xl font-black uppercase leading-none tracking-wide text-black"/,
+  );
+  assert.match(page, /\{salida\.inicialesSitio\}/);
+  assert.doesNotMatch(page, /doc-origin-initials[\s\S]*>(DN|MTY|CDMX)</);
+});
+
 test("las series permanecen completas en el detalle de pantalla", () => {
   assert.match(detailPage, /Rollos Incluidos/);
   assert.match(detailPage, />Serie<\/th>/);
