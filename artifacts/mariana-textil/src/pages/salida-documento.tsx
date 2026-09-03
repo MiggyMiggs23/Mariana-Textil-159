@@ -1,13 +1,12 @@
 import { useParams, Link } from "wouter";
 import { useGetDocumentoSalida, getGetDocumentoSalidaQueryKey } from "@workspace/api-client-react";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
+import { DOCUMENT_QR_SIZE } from "@/components/document-qr-code";
 import { format } from "date-fns";
 import { Loader2, Printer, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { absoluteAppUrl, printWhenReady } from "@/lib/print";
-
-const SALIDA_HEADER_MEDIA_SIZE = 76;
 
 export default function SalidaDocumento() {
   const { id } = useParams();
@@ -43,8 +42,8 @@ export default function SalidaDocumento() {
   const dateObj = new Date(salida.createdAt);
   const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
-  // Medición Chromium a 96 dpi: caja útil 104.5 mm = 395 px.
-  // 78 encabezado + 47 datos + 185.95 tabla (7 productos) + 84 pie = 394.95 px; overflow = 0.
+  // Se conserva la paginación existente; A5 horizontal aporta más espacio sin
+  // cambiar todavía las reglas de renglones del documento.
   const productRowsPerPage = 7;
   const totalPages = Math.max(1, Math.ceil(salida.lineas.length / productRowsPerPage));
   const pages = Array.from({ length: totalPages }).map((_, i) =>
@@ -60,7 +59,7 @@ export default function SalidaDocumento() {
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <h1 className="font-bold">Vista previa de impresión (SALIDA - A6)</h1>
+          <h1 className="font-bold">Vista previa de impresión (SALIDA - A5 horizontal)</h1>
         </div>
         <Button onClick={() => void printWhenReady("print-salida")} data-testid="doc-print-button">
           <Printer className="w-4 h-4 mr-2" />
@@ -73,7 +72,7 @@ export default function SalidaDocumento() {
           <div
             key={pageIndex}
             data-testid={`document-page-${pageIndex + 1}`}
-            className={`document-page salida-page-print bg-white shadow-xl print:shadow-none w-[148mm] h-[105mm] relative box-border flex flex-col overflow-hidden shrink-0 ${pageIndex < totalPages - 1 ? 'page-break' : ''}`}
+            className={`document-page salida-page-print bg-white shadow-xl print:shadow-none w-[210mm] h-[148mm] relative box-border flex flex-col overflow-hidden shrink-0 ${pageIndex < totalPages - 1 ? 'page-break' : ''}`}
           >
             {salida.estado === 'CANCELADA' && (
               <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
@@ -85,17 +84,21 @@ export default function SalidaDocumento() {
 
             {/* Header */}
             <PrintableDocumentHeader
-              className="document-header relative z-10 shrink-0 bg-white px-2"
+              className="document-header relative z-10 shrink-0 bg-white p-6"
               qrUrl={qrUrl}
               qrLabel={`QR para abrir salida ${salida.folioFormateado}`}
-              logoSize={SALIDA_HEADER_MEDIA_SIZE}
-              qrSize={SALIDA_HEADER_MEDIA_SIZE}
-              qrContainerClassName="min-h-[76px]"
+              logoSize={DOCUMENT_QR_SIZE}
+              qrSize={DOCUMENT_QR_SIZE}
             >
-              <h1 className="text-[20px] font-black text-black tracking-tighter leading-none">Salida</h1>
-              <div className="mt-0.5 text-[10px] font-bold uppercase text-gray-700">Mariana Textil</div>
-              <div className="mt-0.5 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
-              <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
+              <div className="flex items-center gap-4">
+                <div className="mr-2 h-16 w-2 bg-[#1e3a8a]"></div>
+                <div>
+                  <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter leading-none">Salida</h1>
+                  <div className="mt-1 text-sm font-bold uppercase text-gray-700">Mariana Textil</div>
+                  <div className="mt-0.5 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
+                  <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
+                </div>
+              </div>
             </PrintableDocumentHeader>
 
             {/* Form Data */}

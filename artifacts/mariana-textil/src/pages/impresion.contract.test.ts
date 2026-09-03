@@ -27,13 +27,13 @@ test("Entrada keeps 216x279mm paper and uses its measured safe content box", asy
   assert.match(entrada, />Listado de series</);
 });
 
-test("Salida page specifies A6 landscape and has correct control signatures", async () => {
+test("Salida page specifies A5 landscape and has correct control signatures", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const salida = await readFile(new URL("artifacts/mariana-textil/src/pages/salida-documento.tsx", root), "utf8");
 
-  assert.match(css, /@page salida-page\s*\{[\s\S]*size:\s*148mm 105mm;/);
+  assert.match(css, /@page salida-page\s*\{[\s\S]*size:\s*210mm 148mm;/);
   assert.match(css, /\.salida-page-print\s*\{[\s\S]*page:\s*salida-page;/);
-  assert.match(salida, /className=[\s\S]*?salida-page-print[\s\S]*?w-\[148mm\]\s*h-\[105mm\]/);
+  assert.match(salida, /className=[\s\S]*?salida-page-print[\s\S]*?w-\[210mm\]\s*h-\[148mm\]/);
   assert.match(salida, /Generó:/);
   assert.match(salida, /Entregó:/);
   assert.match(salida, /Revisó/);
@@ -43,8 +43,8 @@ test("Salida page specifies A6 landscape and has correct control signatures", as
   assert.match(salida, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
   assert.match(css, /\.salida-page-print:last-child\s*\{[\s\S]*page-break-after:\s*auto;/);
   assert.match(salida, /const productRowsPerPage = 7;/);
-  assert.match(salida, /logoSize=\{SALIDA_HEADER_MEDIA_SIZE\}/);
-  assert.match(salida, /qrSize=\{SALIDA_HEADER_MEDIA_SIZE\}/);
+  assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.match(salida, /qrSize=\{DOCUMENT_QR_SIZE\}/);
   assert.doesNotMatch(salida, /No\. de<br\/>Serie|\{rollo\.serie\}/);
   assert.doesNotMatch(salida, /pageIndex === totalPages - 1/);
 });
@@ -72,16 +72,16 @@ test("Thermal label uses spacing instead of vertical dividers and enlarges logo 
   assert.match(label, /width="29mm"/);
 });
 
-test("Credit Note (ticket-detail) prints exactly 216x140mm in two copies with internal QR", async () => {
+test("Cash and credit notes print exactly A5 portrait in two copies with internal QR", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
   const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
 
   // CSS constraints
-  assert.match(css, /@page credito-page\s*\{[\s\S]*size:\s*216mm 140mm;/);
+  assert.match(css, /@page credito-page\s*\{[\s\S]*size:\s*148mm 210mm;/);
   assert.match(css, /\.credito-page-print\s*\{[\s\S]*page:\s*credito-page;/);
   assert.match(css, /body\.print-credito \.print-credito-only\s*\{[\s\S]*page:\s*credito-page;/);
-  assert.match(detail, /credito-page-print[\s\S]*w-\[216mm\][\s\S]*h-\[140mm\]/);
+  assert.match(detail, /credito-page-print[\s\S]*w-\[148mm\][\s\S]*h-\[210mm\]/);
 
   // Two copies logic (COPIA INTERNA / COPIA CLIENTE)
   assert.match(detail, /\[printInterna, printCliente\]\.map\(/);

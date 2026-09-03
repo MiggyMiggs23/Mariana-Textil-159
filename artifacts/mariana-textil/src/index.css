@@ -322,7 +322,7 @@
     padding: 0;
   }
   @page salida-page {
-    size: 148mm 105mm;
+    size: 210mm 148mm;
     margin: 0;
   }
   body.print-salida {
@@ -347,7 +347,7 @@
     page: salida-page;
     display: block !important;
     position: static;
-    width: 147.5mm;
+    width: 210mm;
     height: auto !important;
     overflow: visible !important;
     margin: 0;
@@ -361,7 +361,7 @@
     display: none !important;
   }
   @page credito-page {
-    size: 216mm 140mm;
+    size: 148mm 210mm;
     margin: 0;
   }
   @page ticket-page {
@@ -631,9 +631,8 @@
     page: salida-page;
     page-break-after: always;
     page-break-inside: avoid;
-    /* 0.5 mm de tolerancia evita que el redondeo CSS px de la caja exacta cree una hoja fantasma. */
-    width: 147.5mm !important;
-    height: 104.5mm !important;
+    width: 210mm !important;
+    height: 148mm !important;
     margin: 0 !important;
   }
 

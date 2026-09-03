@@ -922,7 +922,7 @@ export default function TicketDetailPage() {
           return (
             <div
               key={idx}
-              className={`credito-page-print bg-white print:shadow-none w-[216mm] h-[140mm] relative box-border flex flex-col overflow-hidden shrink-0 ${
+              className={`credito-page-print bg-white print:shadow-none w-[148mm] h-[210mm] relative box-border flex flex-col overflow-hidden shrink-0 ${
                 idx === 0 ? "page-break" : ""
               }`}
             >
