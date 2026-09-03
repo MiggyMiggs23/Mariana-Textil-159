@@ -32,6 +32,10 @@ import {
   advertenciaSkuEscaneado,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
+import {
+  toggleLabelSelection,
+  updateVisibleLabelSelection,
+} from "@/lib/label-selection";
 
 const ESTADOS = ["DISPONIBLE", "VENDIDO", "MOSTRADOR", "EN_TRANSITO", "BAJA", "PROGRAMADO"];
 const MOTIVOS = ["Etiqueta dañada", "Etiqueta despegada", "Etiqueta ilegible", "Etiqueta mojada", "Otro"];
@@ -73,7 +77,7 @@ export default function Etiquetas() {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [folioEntrada, setFolioEntrada] = useState("");
-  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [selected, setSelected] = useState<Map<number, EtiquetaRollo>>(new Map());
   const [dialogOpen, setDialogOpen] = useState(false);
   const [motivoOption, setMotivoOption] = useState("");
   const [otroMotivo, setOtroMotivo] = useState("");
@@ -160,8 +164,9 @@ export default function Etiquetas() {
   };
 
   useEffect(() => {
-    if (preselectedId && rollosQuery.data?.items.some((item) => item.id === preselectedId)) {
-      setSelected(new Set([preselectedId]));
+    const preselected = rollosQuery.data?.items.find((item) => item.id === preselectedId);
+    if (preselected) {
+      setSelected(new Map([[preselected.id, preselected]]));
     }
   }, [preselectedId, rollosQuery.data]);
 
@@ -180,9 +185,8 @@ export default function Etiquetas() {
   });
 
   const selectedRollos = useMemo(() => {
-    const byId = new Map((rollosQuery.data?.items ?? []).map((item) => [item.id, item]));
-    return [...selected].map((id) => byId.get(id)).filter((item): item is EtiquetaRollo => Boolean(item));
-  }, [rollosQuery.data, selected]);
+    return [...selected.values()];
+  }, [selected]);
 
   const mutation = useMutation({
     mutationFn: etiquetasApi.reimprimir,
@@ -190,7 +194,7 @@ export default function Etiquetas() {
       const printable = result.rollos?.length ? result.rollos : selectedRollos;
       setPrintData({ rollos: printable, createdAt: result.createdAt || new Date().toISOString() });
       setDialogOpen(false);
-      setSelected(new Set());
+      setSelected(new Map());
       queryClient.invalidateQueries({ queryKey: ["etiquetas"] });
       toast({ title: "Reimpresión autorizada", description: `${printable.length} etiqueta(s) registradas. Revisa la vista antes de imprimir.` });
       setPendingPrint(true);
@@ -216,17 +220,20 @@ export default function Etiquetas() {
   };
 
   const toggle = (id: number) => {
-    const next = new Set(selected);
-    if (next.has(id)) next.delete(id);
-    else if (next.size >= 50) {
+    const item = rollosQuery.data?.items.find((rollo) => rollo.id === id);
+    if (!item) {
+      toast({ title: "Etiqueta no disponible", description: "Actualiza los resultados e inténtalo de nuevo.", variant: "destructive" });
+      return;
+    }
+    if (!selected.has(id) && selected.size >= 50) {
       toast({ title: "Límite alcanzado", description: "Puedes reimprimir un máximo de 50 etiquetas por operación.", variant: "destructive" });
       return;
-    } else next.add(id);
-    setSelected(next);
+    }
+    setSelected(toggleLabelSelection(selected, item));
   };
 
   const openPrintDialog = (rollo?: EtiquetaRollo) => {
-    if (rollo) setSelected(new Set([rollo.id]));
+    if (rollo) setSelected(new Map([[rollo.id, rollo]]));
     if (!canPrint) {
       toast({ title: "Sin permiso", description: "Reimprimir requiere el permiso etiquetas.crear.", variant: "destructive" });
       return;
@@ -271,11 +278,13 @@ export default function Etiquetas() {
             <h1 className="text-3xl font-bold tracking-tight text-sidebar">Etiquetas</h1>
             <p className="mt-1 text-muted-foreground">Busca rollos y solicita reimpresiones con trazabilidad.</p>
           </div>
-          {selected.size > 0 && (
-            <Button size="lg" onClick={() => openPrintDialog()} disabled={!canPrint}>
-              <Printer className="mr-2 h-4 w-4" /> Reimprimir selección ({selected.size})
-            </Button>
-          )}
+          <Button
+            size="lg"
+            onClick={() => openPrintDialog()}
+            disabled={!canPrint || selected.size === 0}
+          >
+            <Printer className="mr-2 h-4 w-4" /> Reimprimir seleccionadas ({selected.size})
+          </Button>
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
@@ -331,7 +340,7 @@ export default function Etiquetas() {
                   <Table>
                     <TableHeader><TableRow>
                       <TableHead className="w-10"><Checkbox aria-label="Seleccionar resultados" checked={rollosQuery.data.items.length > 0 && rollosQuery.data.items.every((x) => selected.has(x.id))}
-                        onCheckedChange={(checked) => setSelected(checked ? new Set(rollosQuery.data.items.slice(0, 50).map((x) => x.id)) : new Set())} /></TableHead>
+                        onCheckedChange={(checked) => setSelected((current) => updateVisibleLabelSelection(current, rollosQuery.data.items, checked === true))} /></TableHead>
                       <TableHead>Serie</TableHead><TableHead>Producto</TableHead><TableHead>Color</TableHead><TableHead>SKU</TableHead>
                       <TableHead className="text-right">Cantidad</TableHead><TableHead>Unidad</TableHead><TableHead>Sitio</TableHead>
                       <TableHead>Estado</TableHead><TableHead>Entrada</TableHead><TableHead className="text-right">Acción</TableHead>

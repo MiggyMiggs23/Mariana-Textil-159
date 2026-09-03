@@ -20,6 +20,17 @@ test("la reimpresión espera a que los datos estén montados antes de imprimir",
   assert.match(entryLabelsPage, /createPortal/);
 });
 
+test("la acción superior imprime toda la selección y la acción por renglón se conserva", () => {
+  assert.match(labelsPage, /Reimprimir seleccionadas \(\{selected\.size\}\)/);
+  assert.match(labelsPage, /disabled=\{!canPrint \|\| selected\.size === 0\}/);
+  assert.match(labelsPage, /rolloIds: selectedRollos\.map\(\(item\) => item\.id\)/);
+  assert.match(labelsPage, /printData\.rollos\.map/);
+  assert.match(labelsPage, /onClick=\{\(\) => openPrintDialog\(rollo\)\}/);
+  assert.match(labelsPage, /useState<Map<number, EtiquetaRollo>>\(new Map\(\)\)/);
+  assert.match(labelsPage, /return \[\.\.\.selected\.values\(\)\]/);
+  assert.doesNotMatch(labelsPage, /new Map\(\(rollosQuery\.data\?\.items/);
+});
+
 test("el QR completo cabe dentro de la tercera columna con margen blanco", () => {
   assert.match(label, /grid-cols-\[31mm_30mm_minmax\(0,1fr\)\]/);
   assert.match(label, /width="29mm"/);
