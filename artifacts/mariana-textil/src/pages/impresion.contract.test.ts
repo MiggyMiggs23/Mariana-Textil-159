@@ -107,13 +107,14 @@ test("Cash and credit notes print exactly A5 portrait in two copies with interna
   // Auto-print routing based on nota vs thermal
   assert.match(detail, /const printClass = isNota \? "print-credito" : "print-80mm";/);
   assert.match(detail, /const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;/);
-  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 10;/);
+  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
   assert.match(detail, /creditTicket && pageIndex === notePageCount - 1/);
   assert.match(detail, /const notePageCount = Math\.max\(1, Math\.ceil\(noteLines\.length \/ noteRowsPerPage\)\)/);
   assert.match(detail, /noteLines\.slice\(pageIndex \* noteRowsPerPage/);
   assert.match(detail, /noteRowsPerPage - pageLines\.length/);
   assert.match(detail, /pageIndex \* noteRowsPerPage \+ lineIndex \+ 1/);
   assert.match(css, /\.credito-page-print\s*\{[\s\S]*height:\s*210mm !important;[\s\S]*overflow:\s*clip !important;/);
+  assert.match(css, /\.document-product-grid tr\s*\{[\s\S]*break-inside:\s*avoid-page !important;[\s\S]*page-break-inside:\s*avoid !important;/);
 
   // Cobros routing to detail with print parameter
   assert.match(cobros, /setLocation\(\`\/tickets\/\$\{printedTicketId\}\?print=3\`\);/);
@@ -170,8 +171,11 @@ test("Nota print conditionally renders customer header, credit terms, legal text
   );
   assert.match(
     notaPrint,
-    /className="text-\[10px\] leading-\[12px\] text-gray-500 mb-2 pr-2 text-justify"/,
+    /className="text-\[10px\] leading-\[12px\] text-gray-500 mb-2 pr-2 text-justify"[\s\S]*data-testid="note-legal-block"/,
   );
+  assert.match(notaPrint, /data-testid="note-signature-block"/);
+  assert.match(notaPrint, /data-testid="note-totals-block"/);
+  assert.match(notaPrint, /className="w-\[35%\] shrink-0 self-start"/);
 
   // Subtotal always prints; IVA only does so for facturado and labels the persisted rate.
   assert.match(notaPrint, /"subtotal" in printData/);
@@ -179,13 +183,13 @@ test("Nota print conditionally renders customer header, credit terms, legal text
   assert.doesNotMatch(notaPrint, /IVA \(16(?:\.00)?%\)/);
 });
 
-test("Credit-note pagination keeps ten rows with its measured readable legal footer", async () => {
+test("Credit-note pagination keeps eight complete rows with its measured readable legal footer", async () => {
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
 
-  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 10;/);
+  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
   assert.match(
     detail,
-    /112px header \+ 126px[\s\S]*\(10 × 24px\) rows \+ 280px footer\/legal box[\s\S]*\+ 6px bottom stripe = 786px \(7\.70px reserve\)\. The legal body is 10px[\s\S]*\(7\.5pt\) at an explicit 12px line-height \(9pt\); capacity: 10 credit rows\/page\./,
+    /Chromium PDF raster at 120dpi[\s\S]*Eight complete[\s\S]*Row nine crosses the[\s\S]*safe credit capacity is eight/,
   );
   assert.match(
     detail,

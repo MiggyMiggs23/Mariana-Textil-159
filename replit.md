@@ -492,6 +492,8 @@ Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser 
 
 Además del color del papel, la Salida imprime las **iniciales del sitio** en grande, tomadas de `ubicaciones`. Así se reconoce a distancia sin depender solo del color, y funciona el día que se abre un sitio antes de conseguir su papel.
 
-**Los renglones por hoja son tres mediciones independientes:** Nota de contado 14; Nota de crédito 10; Salida 10. Crédito y Salida coinciden en valor por razones distintas: la primera reserva el pagaré legible y la segunda reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En Salida, 11 o más renglones recortan el pie en el PDF de Chromium por el grosor impreso de los perímetros.
+**Los renglones por hoja son tres mediciones independientes y distintas:** Nota de contado 14; Nota de crédito 8; Salida 10. Crédito reserva el pagaré legible, mientras Salida reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En crédito, el noveno renglón invade el pie al rasterizar; en Salida, 11 o más renglones recortan el pie.
 
-Todo documento muestra al menos diez renglones cerrados con perímetro negro. Las hojas adicionales repiten encabezado y pie, conservan numeración continua y nunca desbordan. El pagaré usa 10 px (7.5 pt) con interlineado de 12 px (9 pt), conserva su texto literal y aparece solo en la última hoja de cada copia de crédito.
+Todo documento dibuja su capacidad completa con renglones cerrados y perímetro negro. Las hojas adicionales repiten encabezado y pie, conservan numeración continua y nunca desbordan. El pagaré usa 10 px (7.5 pt) con interlineado de 12 px (9 pt), conserva su texto literal y aparece solo en la última hoja de cada copia de crédito.
+
+**Un renglón de producto es indivisible**: o cabe entero en la hoja o pasa completo a la siguiente, nunca se parte a la mitad. Los renglones por hoja se miden contando el renglón completo más todo lo que va debajo de la tabla —totales, leyenda y firma—, y son tres números distintos, uno por documento.

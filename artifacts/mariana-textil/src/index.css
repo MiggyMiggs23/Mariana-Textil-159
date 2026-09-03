@@ -663,6 +663,11 @@
     border: 0.35mm solid #000 !important;
   }
 
+  .document-product-grid tr {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
+  }
+
   .entrada-page-print:last-child {
     break-after: auto;
     page-break-after: auto;
