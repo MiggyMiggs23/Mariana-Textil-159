@@ -211,6 +211,17 @@ test("Ticket and media carta declare their own physical page sizes", async () =>
   assert.equal((detail.match(/<MonochromeBrandLogo className="mx-auto (?:mb-1 )?h-auto w-\[25mm\]"/g) ?? []).length, 2);
 });
 
+test("Thermal ticket renders vertical product blocks with unit-safe quantities", async () => {
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+  assert.match(detail, /VENTA: \{modality\}/);
+  assert.match(detail, /modality === "POR ROLLO"/);
+  assert.match(detail, /line\.unidadProducto === "METRO" \? "Metros"[\s\S]*"KILO" \? "Kilos" : "Bolsas"/);
+  assert.match(detail, /<span>Precio:<\/span>/);
+  assert.match(detail, /<span>Importe:<\/span>/);
+  assert.match(detail, /TOTAL GENERAL:/);
+  assert.match(detail, /border-b border-dashed border-black/);
+});
+
 test("tubular opt-in prints the ticket plus one isolated 80mm strip per color", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");

@@ -273,6 +273,10 @@ export default function TicketDetailPage() {
 
   const { rollos: uiRollos, metraje: uiMetraje } = groupTicketLinesByModality(ticket.lineas, showRolls);
   const { rollos: printRollos, metraje: printMetraje } = groupTicketLinesByModality(ticket.lineas, false);
+  const printProductBlocks = [
+    ...printRollos.lines.map((line) => ({ line, modality: "POR ROLLO" as const })),
+    ...printMetraje.lines.map((line) => ({ line, modality: "METREADA" as const })),
+  ];
   const customerName =
     ticket.clienteId === 1 || !ticket.clienteId
       ? "VENTA AL PÚBLICO"
@@ -604,96 +608,36 @@ export default function TicketDetailPage() {
           )}
         </div>
 
-        <div className="border-t border-b border-black py-2 mb-2">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-black/20">
-                <th className="text-left font-normal pb-1">Producto</th>
-                <th className="text-right font-normal pb-1">Rollos</th>
-                <th className="text-right font-normal pb-1">Imp</th>
-              </tr>
-            </thead>
-            {printRollos.lines.length > 0 && (
-              <tbody className="border-b border-black/10">
-                <tr>
-                  <td colSpan={3} className="py-1 font-bold">ROLLOS</td>
-                </tr>
-                {printRollos.lines.map((linea) => (
-                  <tr key={linea.key}>
-                    <td className="py-1">
-                      <div className="font-semibold">
-                        {linea.telaProducto} {linea.colorProducto}
-                      </div>
-                      <div className="text-[9px]">
-                        {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
-                        {" · "}
-                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{formatUnit(linea.unidadProducto)}
-                      </div>
-                    </td>
-                    <td className="text-right align-top py-1 font-mono">
-                      {linea.rollos}
-                    </td>
-                    <td className="text-right align-top py-1">
-                      {formatNumber(linea.importe, { kind: "money" })}
-                    </td>
-                  </tr>
-                ))}
-                <tr>
-                  <td colSpan={2} className="py-1 text-right font-semibold">Subtotal Rollos</td>
-                  <td className="py-1 text-right font-semibold">{formatNumber(printRollos.subtotal, { kind: "money" })}</td>
-                </tr>
-              </tbody>
-            )}
-            {printMetraje.lines.length > 0 && (
-              <tbody className="border-b border-black/10">
-                <tr>
-                  <td colSpan={3} className="py-1 font-bold">METRAJE</td>
-                </tr>
-                {printMetraje.lines.map((linea) => (
-                  <tr key={linea.key}>
-                    <td className="py-1">
-                      <div className="font-semibold">
-                        {linea.telaProducto} {linea.colorProducto}
-                      </div>
-                      <div className="text-[9px]">
-                        {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
-                        {" · "}
-                        {formatNumber(linea.precioUnitario, { kind: "money" })}/{formatUnit(linea.unidadProducto)}
-                      </div>
-                    </td>
-                    <td className="text-right align-top py-1 font-mono">
-                      {linea.rollos}
-                    </td>
-                    <td className="text-right align-top py-1">
-                      {formatNumber(linea.importe, { kind: "money" })}
-                    </td>
-                  </tr>
-                ))}
-                <tr>
-                  <td colSpan={2} className="py-1 text-right font-semibold">Subtotal Metraje</td>
-                  <td className="py-1 text-right font-semibold">{formatNumber(printMetraje.subtotal, { kind: "money" })}</td>
-                </tr>
-              </tbody>
-            )}
-          </table>
+        <div className="border-t border-black">
+          {printProductBlocks.map(({ line, modality }) => (
+            <section key={`${modality}-${line.key}`} className="border-b border-dashed border-black py-2 text-xs">
+              <h2 className="text-sm font-black">{line.telaProducto} {line.colorProducto}</h2>
+              <div className="my-1 bg-black px-2 py-1 text-center font-black text-white">
+                VENTA: {modality}
+              </div>
+              {modality === "POR ROLLO" && (
+                <div className="flex justify-between gap-3"><span>Rollos:</span><span className="font-semibold">{line.rollos}</span></div>
+              )}
+              <div className="flex justify-between gap-3">
+                <span>{line.unidadProducto === "METRO" ? "Metros" : line.unidadProducto === "KILO" ? "Kilos" : "Bolsas"}:</span>
+                <span className="font-semibold">{formatNumber(line.cantidad, { kind: "quantity" })} {formatUnit(line.unidadProducto)}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span>Precio:</span>
+                <span>{formatNumber(line.precioUnitario, { kind: "money" })} / {formatUnit(line.unidadProducto)}</span>
+              </div>
+              <div className="mt-1 flex justify-between gap-3 border-t border-black pt-1 font-black">
+                <span>Importe:</span>
+                <span>{formatNumber(line.importe, { kind: "money" })}</span>
+              </div>
+            </section>
+          ))}
         </div>
 
-        <div className="text-right text-sm">
-          {ticket.facturado && (
-            <>
-              <div>
-                SUBTOTAL:{" "}
-                {formatNumber(ticket.subtotal, { kind: "money" })}
-              </div>
-              <div>
-                IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })}):{" "}
-                {formatNumber(ticket.iva, { kind: "money" })}
-              </div>
-            </>
-          )}
-          <div className="font-bold">
-            TOTAL:{" "}
-            {formatNumber(ticket.total, { kind: "money" })}
+        <div className="mt-2 border-2 border-black p-2 text-sm font-black">
+          <div className="flex justify-between gap-3">
+            <span>TOTAL GENERAL:</span>
+            <span>{formatNumber(ticket.total, { kind: "money" })}</span>
           </div>
         </div>
 
