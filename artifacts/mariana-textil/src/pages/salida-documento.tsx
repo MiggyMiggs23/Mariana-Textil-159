@@ -72,11 +72,12 @@ export default function SalidaDocumento() {
           <div
             key={pageIndex}
             data-testid={`document-page-${pageIndex + 1}`}
-            className={`document-page salida-page-print bg-white shadow-xl print:shadow-none w-[210mm] h-[148mm] relative box-border flex flex-col overflow-hidden shrink-0 ${pageIndex < totalPages - 1 ? 'page-break' : ''}`}
+            data-print-palette="monochrome"
+            className={`document-page salida-page-print salida-monochrome bg-white text-black shadow-xl print:shadow-none w-[210mm] h-[148mm] relative box-border flex flex-col overflow-hidden shrink-0 ${pageIndex < totalPages - 1 ? 'page-break' : ''}`}
           >
             {salida.estado === 'CANCELADA' && (
-              <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
-                <span className="text-6xl font-black text-red-600 rotate-[-30deg] tracking-widest border-4 border-red-600 p-4 rounded-xl">
+              <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-15">
+                <span className="text-6xl font-black text-black rotate-[-30deg] tracking-widest border-4 border-black p-4 rounded-xl">
                   CANCELADA
                 </span>
               </div>
@@ -88,40 +89,42 @@ export default function SalidaDocumento() {
               qrUrl={qrUrl}
               qrLabel={`QR para abrir salida ${salida.folioFormateado}`}
               logoSize={DOCUMENT_QR_SIZE}
+              logoVariant="monochrome"
               qrSize={DOCUMENT_QR_SIZE}
+              qrWrapperClassName="salida-qr-white-pad bg-white p-[2mm]"
             >
               <div className="flex items-center gap-4">
-                <div className="mr-2 h-16 w-2 bg-[#1e3a8a]"></div>
+                <div className="mr-2 h-16 w-2 bg-black"></div>
                 <div>
-                  <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter leading-none">Salida</h1>
-                  <div className="mt-1 text-sm font-bold uppercase text-gray-700">Mariana Textil</div>
-                  <div className="mt-0.5 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
-                  <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
+                  <h1 className="text-5xl font-black text-black tracking-tighter leading-none">Salida</h1>
+                  <div className="mt-1 text-sm font-bold uppercase text-black">Mariana Textil</div>
+                  <div className="mt-0.5 text-sm font-black leading-tight text-black underline decoration-2 underline-offset-2" data-testid="doc-folio">{salida.folioFormateado}</div>
+                  <div className="text-[10px] font-bold text-black">Pág {pageIndex + 1}/{totalPages}</div>
                 </div>
               </div>
             </PrintableDocumentHeader>
 
             {/* Form Data */}
-            <div className="document-metadata px-2 py-1.5 border-b border-black bg-gray-50 shrink-0 grid grid-cols-6 gap-x-2 gap-y-1 relative z-10">
+            <div className="document-metadata salida-dark-band px-2 py-1.5 border-b-2 border-black bg-gray-800 text-white shrink-0 grid grid-cols-6 gap-x-2 gap-y-1 relative z-10">
                 <div className="col-span-3 flex items-center gap-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Generó:</span>
-                  <span className="text-[10px] truncate font-medium text-black">{salida.nombreArmadoPor || "N/A"}</span>
+                  <span className="text-[10px] uppercase font-black text-white shrink-0">Generó:</span>
+                  <span className="text-[10px] truncate font-semibold text-white">{salida.nombreArmadoPor || "N/A"}</span>
                 </div>
                 <div className="col-span-3 flex items-center gap-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Entregó:</span>
-                  <span className="text-[10px] truncate font-medium text-black" data-testid="doc-transportista">{salida.viaje ? `${salida.viaje.nombreCamioneta} · ${salida.viaje.nombreChofer}` : salida.transportista || "N/A"}</span>
+                  <span className="text-[10px] uppercase font-black text-white shrink-0">Entregó:</span>
+                  <span className="text-[10px] truncate font-semibold text-white" data-testid="doc-transportista">{salida.viaje ? `${salida.viaje.nombreCamioneta} · ${salida.viaje.nombreChofer}` : salida.transportista || "N/A"}</span>
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Origen:</span>
-                  <span className="text-[10px] truncate font-medium text-black">{salida.nombreOrigen}</span>
+                  <span className="text-[10px] uppercase font-black text-white shrink-0">Origen:</span>
+                  <span className="text-[10px] truncate font-semibold text-white">{salida.nombreOrigen}</span>
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Destino:</span>
-                  <span className="text-[10px] truncate font-medium text-black">{salida.nombreDestino}</span>
+                  <span className="text-[10px] uppercase font-black text-white shrink-0">Destino:</span>
+                  <span className="text-[10px] truncate font-semibold text-white">{salida.nombreDestino}</span>
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Fecha:</span>
-                  <span className="text-[10px] truncate font-medium text-black">{dateObj ? format(dateObj, "dd/MM/yyyy HH:mm") : "N/A"}</span>
+                  <span className="text-[10px] uppercase font-black text-white shrink-0">Fecha:</span>
+                  <span className="text-[10px] truncate font-semibold text-white">{dateObj ? format(dateObj, "dd/MM/yyyy HH:mm") : "N/A"}</span>
                 </div>
             </div>
 
@@ -129,12 +132,12 @@ export default function SalidaDocumento() {
             <div className="document-table flex-1 w-full relative z-10 bg-white">
               <table className="w-full table-fixed text-left border-collapse border-b border-black">
                 <thead>
-                  <tr className="bg-gray-100 text-black border-b-2 border-black">
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-6 text-center border-r border-gray-300">#</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[172px] border-r border-gray-300">Producto</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[100px] border-r border-gray-300">Color</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-16 text-center border-r border-gray-300 leading-tight">No. de<br/>Rollos</th>
-                    <th className="py-0.5 px-1 text-[10px] font-bold uppercase w-[100px] text-right border-r border-gray-300 leading-tight">Cant. de<br/>Unidad</th>
+                  <tr className="salida-table-header salida-dark-band bg-black text-white border-b-2 border-black">
+                    <th className="py-0.5 px-1 text-[10px] font-black uppercase w-6 text-center border-r border-white">#</th>
+                    <th className="py-0.5 px-1 text-[10px] font-black uppercase w-[172px] border-r border-white">Producto</th>
+                    <th className="py-0.5 px-1 text-[10px] font-black uppercase w-[100px] border-r border-white">Color</th>
+                    <th className="py-0.5 px-1 text-[10px] font-black uppercase w-16 text-center border-r border-white leading-tight">No. de<br/>Rollos</th>
+                    <th className="py-0.5 px-1 text-[10px] font-black uppercase w-[100px] text-right border-r border-white leading-tight">Cant. de<br/>Unidad</th>
                     <th className="py-0.5 px-1 text-[10px] font-bold uppercase">SKU</th>
                   </tr>
                 </thead>
@@ -172,9 +175,9 @@ export default function SalidaDocumento() {
             {/* Footer */}
             <div className="document-footer px-2 pb-1.5 mt-auto shrink-0 flex gap-3 w-full relative z-10 bg-white">
                 <div className="w-[55%] flex flex-col gap-1.5 justify-end">
-                  <div className="border border-gray-300 rounded p-1 h-8 overflow-hidden bg-gray-50/50">
-                    <div className="text-[10px] font-bold uppercase leading-none text-gray-600">Observaciones</div>
-                    <div className="text-[10px] leading-tight mt-0.5 truncate text-gray-900 font-medium">
+                  <div className="border-2 border-black rounded p-1 h-8 overflow-hidden bg-white">
+                    <div className="text-[10px] font-black uppercase leading-none text-black">Observaciones</div>
+                    <div className="text-[10px] leading-tight mt-0.5 truncate text-black font-medium">
                       {salida.notaEnvio || salida.observaciones || "Sin observaciones."}
                     </div>
                   </div>
@@ -188,24 +191,24 @@ export default function SalidaDocumento() {
                   <table className="w-[90%] text-[10px] border-collapse border border-gray-300">
                     <tbody>
                       <tr>
-                        <td className="py-0.5 px-1 border border-gray-300 font-bold bg-gray-100 text-gray-700 w-1/2">Total Rollos</td>
+                        <td className="salida-dark-band py-0.5 px-1 border border-black font-black bg-gray-800 text-white w-1/2">Total Rollos</td>
                         <td className="py-0.5 px-1 border border-gray-300 text-right font-black text-black w-1/2">{formatNumber(salida.totalRollos ?? (salida.rollos?.length || 0), { kind: "count" })}</td>
                       </tr>
                       {Number(salida.totalMetros) > 0 && (
                       <tr>
-                        <td className="py-0.5 px-1 border border-gray-300 font-bold bg-gray-100 text-gray-700">Total {formatUnit("METRO")}</td>
+                        <td className="salida-dark-band py-0.5 px-1 border border-black font-black bg-gray-800 text-white">Total {formatUnit("METRO")}</td>
                         <td className="py-0.5 px-1 border border-gray-300 text-right font-black text-black">{formatNumber(salida.totalMetros, { kind: "quantity" })}</td>
                       </tr>
                       )}
                       {Number(salida.totalKilos) > 0 && (
                       <tr>
-                        <td className="py-0.5 px-1 border border-gray-300 font-bold bg-gray-100 text-gray-700">Total {formatUnit("KILO")}</td>
+                        <td className="salida-dark-band py-0.5 px-1 border border-black font-black bg-gray-800 text-white">Total {formatUnit("KILO")}</td>
                         <td className="py-0.5 px-1 border border-gray-300 text-right font-black text-black">{formatNumber(salida.totalKilos, { kind: "quantity" })}</td>
                       </tr>
                       )}
                       {Number(salida.totalBolsas) > 0 && (
                       <tr>
-                        <td className="py-0.5 px-1 border border-gray-300 font-bold bg-gray-100 text-gray-700">Total {formatUnit("BOLSA")}</td>
+                        <td className="salida-dark-band py-0.5 px-1 border border-black font-black bg-gray-800 text-white">Total {formatUnit("BOLSA")}</td>
                         <td className="py-0.5 px-1 border border-gray-300 text-right font-black text-black">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</td>
                       </tr>
                       )}

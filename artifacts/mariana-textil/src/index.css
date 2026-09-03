@@ -634,6 +634,21 @@
     width: 210mm !important;
     height: 148mm !important;
     margin: 0 !important;
+    color: #000 !important;
+    filter: grayscale(1);
+  }
+
+  .salida-page-print .salida-dark-band {
+    background-color: #1f2937 !important;
+    color: #fff !important;
+  }
+
+  .salida-page-print .salida-table-header {
+    background-color: #000 !important;
+  }
+
+  .salida-page-print .salida-qr-white-pad {
+    background-color: #fff !important;
   }
 
   .credito-page-print {

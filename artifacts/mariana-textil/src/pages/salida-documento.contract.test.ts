@@ -68,3 +68,19 @@ test("ningún texto impreso baja de 7.5 puntos", () => {
   assert.ok(pixelSizes.length > 0);
   assert.ok(Math.min(...pixelSizes) >= 10);
 });
+
+test("la salida declara una paleta monocromática sin depender del color", () => {
+  assert.match(page, /data-print-palette="monochrome"/);
+  assert.match(page, /salida-page-print salida-monochrome bg-white text-black/);
+  assert.match(page, /salida-table-header salida-dark-band bg-black text-white border-b-2 border-black/);
+  assert.match(page, /document-metadata salida-dark-band[\s\S]*bg-gray-800 text-white/);
+  assert.match(page, /logoVariant="monochrome"/);
+  assert.match(styles, /\.salida-page-print\s*\{[\s\S]*filter:\s*grayscale\(1\);/);
+  assert.match(styles, /\.salida-page-print \.salida-dark-band\s*\{[\s\S]*background-color:\s*#1f2937 !important;[\s\S]*color:\s*#fff !important;/);
+  assert.doesNotMatch(page, /text-red-|bg-\[#1e3a8a\]|text-\[#1e3a8a\]/);
+});
+
+test("el QR de salida conserva un pad blanco y zona de silencio adicional", () => {
+  assert.match(page, /qrWrapperClassName="salida-qr-white-pad bg-white p-\[2mm\]"/);
+  assert.match(styles, /\.salida-page-print \.salida-qr-white-pad\s*\{[\s\S]*background-color:\s*#fff !important;/);
+});

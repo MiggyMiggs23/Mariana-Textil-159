@@ -45,6 +45,11 @@ test("Salida page specifies A5 landscape and has correct control signatures", as
   assert.match(salida, /const productRowsPerPage = 7;/);
   assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(salida, /qrSize=\{DOCUMENT_QR_SIZE\}/);
+  assert.match(salida, /data-print-palette="monochrome"/);
+  assert.match(salida, /logoVariant="monochrome"/);
+  assert.match(salida, /qrWrapperClassName="salida-qr-white-pad bg-white p-\[2mm\]"/);
+  assert.match(css, /\.salida-page-print \.salida-dark-band\s*\{[\s\S]*background-color:\s*#1f2937 !important;/);
+  assert.match(css, /\.salida-page-print \.salida-qr-white-pad\s*\{[\s\S]*background-color:\s*#fff !important;/);
   assert.doesNotMatch(salida, /No\. de<br\/>Serie|\{rollo\.serie\}/);
   assert.doesNotMatch(salida, /pageIndex === totalPages - 1/);
 });
