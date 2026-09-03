@@ -76,6 +76,11 @@ if (!testUrl) {
         [`${tag}-NOCOST`, `${tag} Sin costo`, "Gris"],
       );
       ids.products.push(Number(noCostProduct.id));
+      const unpricedProduct = await one(
+        "INSERT INTO productos(sku,tela,color,unidad,precio_sugerido,activo) VALUES($1,$2,$3,'METRO',NULL,true) RETURNING id",
+        [`${tag}-UNPRICED`, `${tag} Sin precio`, "Crudo"],
+      );
+      ids.products.push(Number(unpricedProduct.id));
       // 2×10 + 8×20 => 18.00; all remaining rows must be excluded.
       for (const [serie, estado, cantidad, costo] of [["1","DISPONIBLE","2","10"], ["2","DISPONIBLE","8","20"], ["3","EN_TRANSITO","7","1"], ["4","MOSTRADOR","0","1"], ["5","DISPONIBLE","0","99"], ["6","DISPONIBLE","1",null]] as const) {
         const roll = await one(
@@ -133,6 +138,51 @@ if (!testUrl) {
       const noCost = await request("GET", "/api/precios?search=NOCOST", sessions[0]!);
       assert.equal(noCost.body[0].costoUnitarioPonderado, null);
       assert.equal(noCost.body[0].semaforo, "SIN_COSTO");
+      const firstPrice = await request(
+        "POST",
+        `/api/precios/${unpricedProduct.id}/cambiar`,
+        sessions[0]!,
+        { precioListaNuevo: "80.00", motivo: "primer precio capturado" },
+      );
+      assert.equal(firstPrice.response.status, 200);
+      assert.equal(firstPrice.body.producto.precioLista, "80.00");
+      assert.equal(firstPrice.body.cambio.precioListaAnterior, null);
+      assert.equal(firstPrice.body.cambio.precioListaNuevo, "80.00");
+      const firstPriceStored = await pool.query(
+        `SELECT p.precio_sugerido,
+                h.precio_lista_anterior,
+                h.precio_lista_nuevo,
+                h.usuario_id
+           FROM productos p
+           JOIN precio_historial h ON h.producto_id = p.id
+          WHERE p.id = $1
+          ORDER BY h.id DESC
+          LIMIT 1`,
+        [unpricedProduct.id],
+      );
+      assert.deepEqual(firstPriceStored.rows[0], {
+        precio_sugerido: "80.00",
+        precio_lista_anterior: null,
+        precio_lista_nuevo: "80.00",
+        usuario_id: ids.users[0],
+      });
+      const firstPriceAudit = await pool.query(
+        `SELECT usuario_id,
+                datos_antes->>'precioLista' AS precio_anterior,
+                datos_despues->>'precioLista' AS precio_nuevo
+           FROM auditoria
+          WHERE entidad = 'productos'
+            AND entidad_id = $1
+            AND accion = 'CAMBIAR_PRECIO'
+          ORDER BY id DESC
+          LIMIT 1`,
+        [String(unpricedProduct.id)],
+      );
+      assert.deepEqual(firstPriceAudit.rows[0], {
+        usuario_id: ids.users[0],
+        precio_anterior: null,
+        precio_nuevo: "80.00",
+      });
       assert.equal((await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, { precioListaNuevo: "90.00", motivo: "ajuste normal" })).response.status, 200);
       assert.equal((await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, { precioListaNuevo: "17.00", motivo: "   precio bajo costo   " })).response.status, 200);
       const wholesale = await request("POST", `/api/precios/${product.id}/cambiar`, sessions[0]!, {
