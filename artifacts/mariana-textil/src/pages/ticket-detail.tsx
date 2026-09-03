@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useRoute, Link } from "wouter";
 import {
   useObtenerTicket,
@@ -938,7 +938,7 @@ export default function TicketDetailPage() {
           );
 
           return (
-            <>
+            <Fragment key={idx}>
             {notePages.map((pageLines, pageIndex) => (
             <div
               key={`${idx}-${pageIndex}`}
@@ -1130,7 +1130,7 @@ export default function TicketDetailPage() {
               <div className="h-1.5 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
             </div>
             ))}
-            </>
+            </Fragment>
           );
         })}
       </div>

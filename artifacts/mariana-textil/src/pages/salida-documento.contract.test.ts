@@ -8,11 +8,12 @@ const [page, detailPage, styles] = await Promise.all([
   readFile(new URL("../index.css", import.meta.url), "utf8"),
 ]);
 
-test("la salida usa A5 horizontal con trece renglones fijos por página", () => {
+test("la salida usa A5 horizontal con diez renglones fijos por página", () => {
   assert.match(styles, /@page salida-page[\s\S]*size:\s*210mm 148mm/);
   assert.match(page, /w-\[210mm\] h-\[148mm\]/);
-  assert.match(page, /const SALIDA_PRODUCT_ROWS_PER_PAGE = 13/);
-  assert.match(page, /13 × 17px/);
+  assert.match(page, /const SALIDA_PRODUCT_ROWS_PER_PAGE = 10/);
+  assert.match(page, /10 × 20px/);
+  assert.match(page, /Once o más recortan el pie/);
   assert.match(page, /SALIDA_PRODUCT_ROWS_PER_PAGE - pageLineas\.length/);
   assert.match(page, /salida\.lineas\.slice/);
   assert.match(page, /Pág \{pageIndex \+ 1\}\/\{totalPages\}/);

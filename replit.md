@@ -12,7 +12,7 @@ El alta y la baja de rollos **siguen siendo rollo por rollo con su número de se
 
 **Salida** no imprime números de serie: quedan en el sistema y se consultan en el detalle en pantalla. **Entrada** sí los imprime, pero después de las hojas de globales, en un listado compacto agrupado por producto, con numeración continua y sin repetir el pie de firmas —ese va solo en la última hoja de globales, que es la que se firma.
 
-**Escala del encabezado:** Entrada y Salida ya **no** comparten tamaño de encabezado. El mismo encabezado sobre A6 apaisado consume una cuarta parte de la hoja y deja cinco renglones. En Salida el encabezado va reducido; lo que se conserva es la rejilla de tres columnas, la alineación entre título, logo y QR, y que logo y QR midan lo mismo entre sí.
+**Escala del encabezado:** Entrada y Salida usan el encabezado documental a la misma escala, con la rejilla de tres columnas, título a la izquierda, logo centrado y QR a la derecha. Salida es A5 horizontal —no A6— y conserva logo y QR de 112 px; nunca se reduce el encabezado para forzar más renglones.
 
 **Hojas de series:** el listado de series de una Entrada no repite el encabezado completo. Lleva una franja de una línea con folio, la leyenda "Listado de series" y la paginación —suficiente para volver a asociar una hoja suelta a su entrada—. El título grande, el logo y el QR van solo en las hojas de globales.
 
@@ -479,3 +479,19 @@ Las **ventas a crédito cuentan** como ventas y los **cancelados no**. La utilid
 **Devoluciones y notas de crédito de producto:** el modelo actual no tiene líneas de devolución ni una nota de crédito que reste cantidades e importes por producto; `NOTA` es un tipo documental de venta. Ventas por tienda no inventa una resta sin un movimiento trazable.
 
 **SUPERVISOR y Ventas por tienda:** el techo de permisos actual niega `resumen_caja`, incluso con un permiso individual. La omisión recursiva de campos de utilidad/costo queda aplicada como defensa adicional si ese techo cambia; no se amplían permisos para mostrar este reporte.
+
+## Formatos de impresión
+
+**Formatos de impresión.** Entrada: carta blanca, a color. Notas de contado y crédito: **A5 vertical, 148 × 210 mm**, papel blanco, a color. Salida: **A5 horizontal, 210 × 148 mm**, papel **de color distinto por sitio**, impresión **monocromática**.
+
+Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser admiten A5 en cajón; media carta solo entra por alimentación manual, hoja por hoja, lo que es inviable en un mostrador. No son el mismo tamaño: A5 es 148 × 210 mm y media carta 140 × 216 mm.
+
+**La Salida se diseña para monocromático:** el color lo aporta el papel, no la tinta. Ningún dato puede depender del color para entenderse; se distingue por grosor, fondo gris, borde o posición.
+
+**El QR de la Salida lleva recuadro blanco detrás.** Sobre papel de color el contraste puede caer y el código deja de leerse; si el QR no escanea, se rompe el flujo de recepción. Es una regla operativa, no estética, y aplica a cualquier color de papel presente o futuro.
+
+Además del color del papel, la Salida imprime las **iniciales del sitio** en grande, tomadas de `ubicaciones`. Así se reconoce a distancia sin depender solo del color, y funciona el día que se abre un sitio antes de conseguir su papel.
+
+**Los renglones por hoja son tres mediciones independientes:** Nota de contado 14; Nota de crédito 10; Salida 10. Crédito y Salida coinciden en valor por razones distintas: la primera reserva el pagaré legible y la segunda reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En Salida, 11 o más renglones recortan el pie en el PDF de Chromium por el grosor impreso de los perímetros.
+
+Todo documento muestra al menos diez renglones cerrados con perímetro negro. Las hojas adicionales repiten encabezado y pie, conservan numeración continua y nunca desbordan. El pagaré usa 10 px (7.5 pt) con interlineado de 12 px (9 pt), conserva su texto literal y aparece solo en la última hoja de cada copia de crédito.

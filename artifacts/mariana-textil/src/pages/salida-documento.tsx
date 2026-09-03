@@ -42,9 +42,11 @@ export default function SalidaDocumento() {
   const dateObj = new Date(salida.createdAt);
   const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
-  // Chromium (96dpi): 148mm = 559.37px; 154px encabezado + 52px datos +
-  // 22px cabecera + (13 × 17px) renglones + 82px pie = 531px (< 559.37px).
-  const SALIDA_PRODUCT_ROWS_PER_PAGE = 13;
+  // PDF de Chromium en A5: los bordes de 0.35mm hacen que cada renglón rasterizado
+  // ocupe ~20px efectivos. 154px encabezado + 52px datos + 22px cabecera +
+  // (10 × 20px) renglones + 82px pie = 510px (< 559.37px).
+  // Once o más recortan el pie; diez conservan observaciones, totales y firmas completos.
+  const SALIDA_PRODUCT_ROWS_PER_PAGE = 10;
   const totalPages = Math.max(1, Math.ceil(salida.lineas.length / SALIDA_PRODUCT_ROWS_PER_PAGE));
   const pages = Array.from({ length: totalPages }).map((_, i) =>
     salida.lineas.slice(i * SALIDA_PRODUCT_ROWS_PER_PAGE, (i + 1) * SALIDA_PRODUCT_ROWS_PER_PAGE),

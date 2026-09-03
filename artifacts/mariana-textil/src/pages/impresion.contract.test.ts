@@ -42,7 +42,7 @@ test("Salida page specifies A5 landscape and has correct control signatures", as
   assert.match(salida, /tab=recepcion&id=\$\{salida\.id\}/);
   assert.match(salida, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
   assert.match(css, /\.salida-page-print:last-child\s*\{[\s\S]*page-break-after:\s*auto;/);
-  assert.match(salida, /const SALIDA_PRODUCT_ROWS_PER_PAGE = 13;/);
+  assert.match(salida, /const SALIDA_PRODUCT_ROWS_PER_PAGE = 10;/);
   assert.match(salida, /Math\.ceil\(salida\.lineas\.length \/ SALIDA_PRODUCT_ROWS_PER_PAGE\)/);
   assert.match(salida, /SALIDA_PRODUCT_ROWS_PER_PAGE - pageLineas\.length/);
   assert.match(salida, /document-product-grid/);
