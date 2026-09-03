@@ -383,14 +383,14 @@ content_type = "application/pdf"
 id = "6zVkkghSj6TvpIp7Lhfk_"
 uri = "file://reports/a5-print-evidence/salida-10-lineas.pdf"
 type = "pdf"
-title = "Salida — 10 líneas"
-description = "A5 horizontal a color, iniciales MRA, QR sobre blanco y pie completo."
+title = "Salida — 10 líneas, sin iniciales"
+description = "Título “Salida”; ORIGEN “Mariana”; DESTINO “Cruces”; diseño a color y fondo blanco del QR conservados."
 logical_id = "4d2d65bb-7580-46f8-83c3-65442408e1be"
-content_hash = "sha256:1ab7132911dd0cd1f051b7ef43de08201cf31bf24995a89581286632b48edfa1"
-size = 1089014
-mtime_ms = 1788407274663
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4d2d65bb-7580-46f8-83c3-65442408e1be/021043be-40a9-428c-9abb-c17534ae5697"
-storage_version_token = "1788407522549112"
+content_hash = "sha256:cff291011a9b7302f85fcafd2ac2230c198ec272fc63b222f3586d00d5ca0e18"
+size = 1090597
+mtime_ms = 1788408295038
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4d2d65bb-7580-46f8-83c3-65442408e1be/fe06674e-2bfe-47d6-ae8e-e026cc7b03f0"
+storage_version_token = "1788408380507195"
 content_type = "application/pdf"
 
 [[outputs]]
