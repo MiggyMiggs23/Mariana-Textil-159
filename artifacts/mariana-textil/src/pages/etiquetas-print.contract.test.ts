@@ -31,6 +31,17 @@ test("la acción superior imprime toda la selección y la acción por renglón s
   assert.doesNotMatch(labelsPage, /new Map\(\(rollosQuery\.data\?\.items/);
 });
 
+test("el reporte renderizado recorre todo el catálogo y denuncia cualquier desbordamiento", () => {
+  assert.match(labelsPage, /get\("fitReport"\) === "1"/);
+  assert.match(labelsPage, /products\.map\(\(product\) => \(/);
+  assert.match(labelsPage, /data-testid="catalog-label-fit-report"/);
+  assert.match(labelsPage, /querySelectorAll<HTMLElement>\('\[data-testid="label-product-name"\]'\)/);
+  assert.match(labelsPage, /querySelectorAll<HTMLElement>\("\[data-fit-state\]"\)/);
+  assert.match(labelsPage, /Sin caber al mínimo: \{summary\.overflows\.length\}/);
+  assert.match(labelsPage, /document\.fonts\?\.ready/);
+  assert.match(labelsPage, /new Event\("beforeprint"\)/);
+});
+
 test("el QR completo cabe dentro de la tercera columna con margen blanco", () => {
   assert.match(label, /grid-cols-\[31mm_30mm_minmax\(0,1fr\)\]/);
   assert.match(label, /width="29mm"/);

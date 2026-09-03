@@ -38,11 +38,13 @@ function AutoFitText({
   fontSteps: readonly number[];
   testId?: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    const container = containerRef.current;
+    const text = textRef.current;
+    if (!container || !text) return;
     let cancelled = false;
 
     const fit = () => {
@@ -50,22 +52,30 @@ function AutoFitText({
       let selectedStep = fontSteps.at(-1) ?? 1;
       let fits = false;
       for (const fontSize of fontSteps) {
-        element.style.fontSize = `${fontSize}px`;
+        container.style.fontSize = `${fontSize}px`;
         selectedStep = fontSize;
-        // These labels are intentionally one line. Chromium rounds line-box
-        // height up by one CSS pixel, so width is the reliable cut-off signal.
-        fits = element.scrollWidth <= element.clientWidth + 0.5;
+        const styles = window.getComputedStyle(container);
+        const availableWidth =
+          container.getBoundingClientRect().width -
+          Number.parseFloat(styles.paddingLeft || "0") -
+          Number.parseFloat(styles.paddingRight || "0");
+        const textWidth = text.getBoundingClientRect().width;
+        fits = textWidth <= availableWidth + 0.5;
+        container.dataset.textWidth = textWidth.toFixed(2);
+        container.dataset.availableWidth = availableWidth.toFixed(2);
         if (fits) break;
       }
-      element.dataset.fontStep = String(selectedStep);
-      element.dataset.fitState = fits ? "fits" : "overflow";
+      container.dataset.fontStep = String(selectedStep);
+      container.dataset.fitState = fits ? "fits" : "overflow";
     };
 
     fit();
     void document.fonts?.ready.then(() => requestAnimationFrame(fit));
     window.addEventListener("beforeprint", fit);
     const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(fit);
-    observer?.observe(element);
+    observer?.observe(container);
+    const clippingAncestor = container.closest(".label-page");
+    if (clippingAncestor) observer?.observe(clippingAncestor);
     return () => {
       cancelled = true;
       observer?.disconnect();
@@ -75,12 +85,14 @@ function AutoFitText({
 
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       className={className}
       style={{ fontSize: `${fontSteps[0] ?? 1}px` }}
       data-testid={testId}
     >
-      {children}
+      <span ref={textRef} className="inline-block whitespace-nowrap">
+        {children}
+      </span>
     </div>
   );
 }
@@ -112,6 +124,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
             <AutoFitText
               className="w-full font-black whitespace-nowrap leading-none mt-[1.5mm]"
               fontSteps={LABEL_SKU_FONT_STEPS_PX}
+              testId="label-sku"
             >
               {data.sku}
             </AutoFitText>
@@ -157,6 +170,7 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           <AutoFitText
             className="w-full text-center font-black mt-[1.5mm] whitespace-nowrap leading-none text-black"
             fontSteps={LABEL_QR_PAYLOAD_FONT_STEPS_PX}
+            testId="label-qr-payload"
           >
             {qrPayload}
           </AutoFitText>

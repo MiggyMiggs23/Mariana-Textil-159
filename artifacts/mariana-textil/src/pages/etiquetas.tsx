@@ -64,6 +64,7 @@ export default function Etiquetas() {
   const canPrint = hasPermission(user, Modules.ETIQUETAS, "crear");
   const preselectedId = Number(new URLSearchParams(window.location.search).get("rolloId")) || undefined;
   const initialTab = new URLSearchParams(window.location.search).get("tab") === "historial" ? "historial" : "buscar";
+  const fitReportEnabled = new URLSearchParams(window.location.search).get("fitReport") === "1";
 
   const [tab, setTab] = useState(initialTab);
   const [searchDraft, setSearchDraft] = useState("");
@@ -269,6 +270,10 @@ export default function Etiquetas() {
     );
   }, [pendingPrint, printData, printMode]);
 
+  if (fitReportEnabled && products) {
+    return <CatalogLabelFitReport products={products} />;
+  }
+
   return (
     <AppLayout>
       <div className="no-print mx-auto max-w-[1500px] space-y-6">
@@ -423,6 +428,85 @@ export default function Etiquetas() {
           <DialogFooter><Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button><Button onClick={submit} disabled={mutation.isPending || selectedRollos.length === 0}>{mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Autorizar y generar</Button></DialogFooter>
         </DialogContent>
       </Dialog>
+    </AppLayout>
+  );
+}
+
+type FitReportProduct = {
+  id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: string;
+};
+
+function CatalogLabelFitReport({ products }: { products: FitReportProduct[] }) {
+  const reportRef = useRef<HTMLDivElement>(null);
+  const [summary, setSummary] = useState<{
+    steps: Record<string, number>;
+    overflows: string[];
+  } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const inspect = async () => {
+      await document.fonts?.ready;
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      window.dispatchEvent(new Event("beforeprint"));
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      if (cancelled || !reportRef.current) return;
+      const names = [...reportRef.current.querySelectorAll<HTMLElement>('[data-testid="label-product-name"]')];
+      const allFields = [...reportRef.current.querySelectorAll<HTMLElement>("[data-fit-state]")];
+      const steps: Record<string, number> = {};
+      for (const name of names) {
+        const step = name.dataset.fontStep ?? "sin medir";
+        steps[step] = (steps[step] ?? 0) + 1;
+      }
+      const overflows = allFields
+        .filter((field) => field.dataset.fitState !== "fits")
+        .map((field) => field.textContent?.trim() || "(texto vacío)");
+      setSummary({ steps, overflows });
+    };
+    void inspect();
+    return () => {
+      cancelled = true;
+    };
+  }, [products]);
+
+  return (
+    <AppLayout>
+      <div ref={reportRef} className="mx-auto max-w-[1500px] space-y-6 p-6" data-testid="catalog-label-fit-report">
+        <header className="rounded-lg border bg-white p-5">
+          <h1 className="text-2xl font-bold">Reporte renderizado de ajuste de etiquetas</h1>
+          <p>{products.length} productos del catálogo · todos los campos AutoFitText medidos con la fuente cargada.</p>
+          {!summary ? (
+            <p role="status">Midiendo…</p>
+          ) : (
+            <div data-testid="catalog-label-fit-summary">
+              <p>Escalones del nombre: {Object.entries(summary.steps).sort(([a], [b]) => Number(b) - Number(a)).map(([step, count]) => `${step}px: ${count}`).join(" · ")}</p>
+              <p className={summary.overflows.length ? "font-bold text-destructive" : "font-bold text-emerald-700"}>
+                Sin caber al mínimo: {summary.overflows.length}
+              </p>
+              {summary.overflows.length > 0 && <ul>{summary.overflows.map((text, index) => <li key={`${text}-${index}`}>{text}</li>)}</ul>}
+            </div>
+          )}
+        </header>
+        <div className="grid gap-4 xl:grid-cols-2">
+          {products.map((product) => (
+            <LabelPrint
+              key={product.id}
+              data={{
+                sku: product.sku,
+                serie: String(product.id).padStart(7, "0").slice(-7),
+                tela: product.tela,
+                color: product.color,
+                cantidad: "9999999.999",
+                unidad: product.unidad,
+              }}
+            />
+          ))}
+        </div>
+      </div>
     </AppLayout>
   );
 }

@@ -33,6 +33,10 @@ test("product name and quantity use named discrete font steps without silent tru
   assert.match(source, /testId="label-quantity"/);
   assert.match(source, /dataset\.fontStep/);
   assert.match(source, /dataset\.fitState = fits \? "fits" : "overflow"/);
+  assert.match(source, /text\.getBoundingClientRect\(\)\.width/);
+  assert.match(source, /container\.getBoundingClientRect\(\)\.width/);
+  assert.match(source, /container\.closest\("\.label-page"\)/);
+  assert.doesNotMatch(source, /element\.scrollWidth <= element\.clientWidth/);
   assert.doesNotMatch(source, /fontSize -= 1/);
 });
 
@@ -42,4 +46,6 @@ test("label refits after fonts load and before print while preserving three deci
   assert.match(source, /document\.fonts\?\.ready\.then\(\(\) => requestAnimationFrame\(fit\)\)/);
   assert.match(source, /window\.addEventListener\("beforeprint", fit\)/);
   assert.match(source, /parsed\.toFixed\(3\)/);
+  assert.match(source, /testId="label-sku"/);
+  assert.match(source, /testId="label-qr-payload"/);
 });
