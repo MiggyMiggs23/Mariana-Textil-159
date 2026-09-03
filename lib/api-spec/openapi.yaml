@@ -7627,6 +7627,7 @@ components:
       type: object
       properties:
         movimientoId: { type: number }
+        ticketId: { type: ["number", "null"] }
         tipo: { type: string }
         importe: { type: string }
         fecha: { type: string, format: date-time }

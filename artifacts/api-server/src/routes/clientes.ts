@@ -1048,7 +1048,7 @@ router.get(
       const [movements, balance] = await Promise.all([
         pool.query(
           `WITH ledger AS (
-             SELECT m.id, m.tipo, m.importe, m.created_at, m.notas,
+             SELECT m.id, m.ticket_id, m.tipo, m.importe, m.created_at, m.notas,
                 m.forma_pago, m.cuenta_destino, m.referencia, m.dias_plazo, m.fecha_vencimiento,
                 t.folio AS ticket_folio,
                u.nombre AS nombre_usuario,
@@ -1058,7 +1058,7 @@ router.get(
              JOIN usuarios u ON u.id=m.usuario_id
              WHERE m.cliente_id=$1
            )
-           SELECT id AS "movimientoId", tipo, importe::text, ledger.created_at AS fecha,
+           SELECT id AS "movimientoId", ticket_id AS "ticketId", tipo, importe::text, ledger.created_at AS fecha,
               ledger.created_at AS "fechaEfectiva",
               CASE WHEN tipo='VENTA_CREDITO' AND fecha_vencimiento IS NULL
                 THEN CONCAT_WS(' · ', notas, 'Sin plazo definido (crédito legado)')

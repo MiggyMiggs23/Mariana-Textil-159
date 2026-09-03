@@ -4551,6 +4551,7 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "clienteId": zod.number(),
   "movimientos": zod.array(zod.object({
   "movimientoId": zod.number().optional(),
+  "ticketId": zod.number().nullish(),
   "tipo": zod.string().optional(),
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
@@ -4921,6 +4922,7 @@ export const ReversarClientePagoBody = zod.object({
 
 export const ReversarClientePagoResponse = zod.object({
   "movimientoId": zod.number().optional(),
+  "ticketId": zod.number().nullish(),
   "tipo": zod.string().optional(),
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),

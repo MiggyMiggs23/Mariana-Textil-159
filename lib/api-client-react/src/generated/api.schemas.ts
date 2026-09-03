@@ -2168,6 +2168,8 @@ export const ClienteMovimientoEstado = {
 
 export interface ClienteMovimiento {
   movimientoId?: number;
+  /** @nullable */
+  ticketId?: number | null;
   tipo?: string;
   importe?: string;
   fecha?: string;

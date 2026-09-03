@@ -31,6 +31,8 @@ test("estado de cuenta projects current balances while retaining raw running his
     route,
     /SUM\(m\.importe\) OVER \(ORDER BY m\.created_at,m\.id\) AS saldo_corrido/,
   );
+  assert.match(route, /m\.ticket_id/);
+  assert.match(route, /ticket_id AS "ticketId"/);
   assert.match(route, /Saldo corrido histórico/);
   assert.match(route, /saldo actual proyectado/);
 });
