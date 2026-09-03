@@ -917,10 +917,13 @@ export default function TicketDetailPage() {
           const termDays = printData.diasPlazo;
 
           // Chromium (96dpi): A5 useful height 793.70px; 112px header + 126px
-          // data + 22px table header + (14 × 24px) rows + 170px footer = 766px.
+          // data + 22px table header + (14 × 24px) rows + 164px footer + 6px
+          // bottom stripe = 766px.
           const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;
           // Chromium (96dpi): A5 useful height 793.70px; 112px header + 126px
-          // data + 22px table header + (10 × 24px) rows + 286px pagaré/footer = 786px.
+          // data + 22px table header + (10 × 24px) rows + 280px footer/legal box
+          // + 6px bottom stripe = 786px (7.70px reserve). The legal body is 10px
+          // (7.5pt) at an explicit 12px line-height (9pt); capacity: 10 credit rows/page.
           const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 10;
 
           // Group lines according to the print data
@@ -1071,9 +1074,9 @@ export default function TicketDetailPage() {
               </div>
 
               {/* Totals & Signatures */}
-              <div className="px-6 mt-2 mb-2 relative z-10 shrink-0 flex gap-4">
+              <div className={`px-4 mt-1 mb-0 relative z-10 shrink-0 flex gap-2 ${creditTicket ? "h-[280px]" : "h-[164px]"}`}>
                 <div className="flex-1 flex flex-col justify-end">
-                  <div className="text-[8px] text-gray-500 mb-4 pr-4 text-justify">
+                  <div className="text-[10px] leading-[12px] text-gray-500 mb-2 pr-2 text-justify">
                     {creditTicket && pageIndex === notePageCount - 1 ? (
                       <>
                         <p className="font-bold">RECIBO DE MERCANCÍA Y PAGARÉ</p>
@@ -1085,7 +1088,7 @@ export default function TicketDetailPage() {
                       <p>Recibo a mi entera satisfacción la mercancía aquí detallada.</p>
                     )}
                   </div>
-                  <div className="border-t border-black w-48 mx-auto mt-6 mb-1 h-0"></div>
+                  <div className="border-t border-black w-48 mx-auto mt-3 mb-1 h-0"></div>
                   <div className="text-[8px] font-bold uppercase text-gray-700 tracking-wider text-center">Firma de Conformidad</div>
                   <div className="text-[7px] text-gray-500 text-center truncate px-4">{printData.nombreDestinatario || customerName}</div>
                 </div>

@@ -150,13 +150,46 @@ test("Nota print conditionally renders customer header, credit terms, legal text
   ];
   for (const paragraph of legalParagraphs) {
     assert.ok(notaPrint.includes(`<p${paragraph === legalParagraphs[0] ? ' className="font-bold"' : ""}>${paragraph}</p>`));
+    assert.equal(
+      notaPrint.split(paragraph).length - 1,
+      paragraph === legalParagraphs[1] ? 2 : 1,
+      paragraph === legalParagraphs[1]
+        ? "The receipt sentence is shared by the cash-only receipt branch and the final credit legal block."
+        : `The exact legal paragraph must have one source rendering location: ${paragraph}`,
+    );
   }
   assert.doesNotMatch(notaPrint, /lugar de pago|domicilio/i);
+  assert.match(
+    notaPrint,
+    /creditTicket && pageIndex === notePageCount - 1[\s\S]*RECIBO DE MERCANCÍA Y PAGARÉ[\s\S]*El presente pagaré se rige/,
+  );
+  assert.match(
+    notaPrint,
+    /\) : \(\s*<p>Recibo a mi entera satisfacción la mercancía aquí detallada\.<\/p>/,
+  );
+  assert.match(
+    notaPrint,
+    /className="text-\[10px\] leading-\[12px\] text-gray-500 mb-2 pr-2 text-justify"/,
+  );
 
   // Subtotal always prints; IVA only does so for facturado and labels the persisted rate.
   assert.match(notaPrint, /"subtotal" in printData/);
   assert.match(notaPrint, /\{printData\.facturado && \([\s\S]*IVA \(\{formatNumber\(printData\.tasaIva/);
   assert.doesNotMatch(notaPrint, /IVA \(16(?:\.00)?%\)/);
+});
+
+test("Credit-note pagination keeps ten rows with its measured readable legal footer", async () => {
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+
+  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 10;/);
+  assert.match(
+    detail,
+    /112px header \+ 126px[\s\S]*\(10 × 24px\) rows \+ 280px footer\/legal box[\s\S]*\+ 6px bottom stripe = 786px \(7\.70px reserve\)\. The legal body is 10px[\s\S]*\(7\.5pt\) at an explicit 12px line-height \(9pt\); capacity: 10 credit rows\/page\./,
+  );
+  assert.match(
+    detail,
+    /className=\{`px-4 mt-1 mb-0 relative z-10 shrink-0 flex gap-2 \$\{creditTicket \? "h-\[280px\]" : "h-\[164px\]"\}`\}/,
+  );
 });
 
 test("Ticket and media carta declare their own physical page sizes", async () => {
