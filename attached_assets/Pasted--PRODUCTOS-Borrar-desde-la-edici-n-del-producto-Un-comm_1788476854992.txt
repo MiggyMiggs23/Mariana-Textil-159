@@ -1,0 +1,104 @@
+# PRODUCTOS — Borrar desde la edición del producto
+
+Un commit. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Qué se necesita
+
+Poder **borrar un producto desde su propia pantalla de edición**, `pages/producto-detail.tsx`.
+
+Es donde tiene sentido: el usuario ya está viendo el producto, sabe cuál es y tiene sus datos enfrente. Al cargar 419 productos desde archivo van a sobrar algunos —telas que ya no se manejan, colores duplicados por escritura distinta, renglones capturados por error— y desactivarlos deja basura en las listas para siempre.
+
+`lib/purga-catalogos.ts:50` ya contempla productos. Revisa qué hace hoy, **reusa lo que sirva** y reporta en qué difiere de lo que se pide aquí.
+
+---
+
+## La regla
+
+**Un producto se borra solo si nunca tuvo actividad.** Las dos condiciones a la vez:
+
+1. **Existencia en cero en todos los sitios.** No en uno, en todos.
+2. **Sin ningún movimiento histórico.** Cero renglones en el kardex, en cualquier sitio, de cualquier tipo y de cualquier fecha.
+
+### Por qué la segunda
+
+"Existencia en cero" y "nunca se movió" **no son lo mismo.**
+
+Un producto que entró, se vendió completo y quedó en cero **sí tiene existencia cero**. Pero vive en tickets ya impresos y firmados por clientes, en notas de crédito con saldo pendiente, en el kardex y en los reportes de venta del periodo.
+
+Borrarlo dejaría documentos apuntando a un producto inexistente y reportes históricos con renglones rotos. Contradice la regla que ya está en `replit.md`: las tablas operativas no usan DELETE y el histórico es permanente.
+
+**Solo se borra lo que nunca existió operativamente.** Todo lo demás se **desactiva**, que ya funciona: sale de las listas y conserva su historia.
+
+---
+
+## Dónde y cómo va en la pantalla
+
+`producto-detail.tsx` ya tiene modo de edición con "Guardar" (línea 239) y la casilla de activo (línea 415).
+
+- El botón de borrar va **en el modo de edición**, no en la vista de solo lectura.
+- **Separado visualmente del guardado**, con tratamiento destructivo. No junto a "Guardar", donde se puede tocar por error en una pantalla táctil.
+- **Solo ADMIN.** Para los demás roles no aparece.
+
+### Cuando no se puede borrar
+
+**Muestra el botón deshabilitado con la razón, no lo escondas.**
+
+Si desaparece, el usuario cree que la función no existe. Si aparece deshabilitado y explica por qué, aprende la regla.
+
+El mensaje debe decir **cuál de las dos condiciones falló**:
+- Si es por existencia: **en qué sitios** y cuánto hay
+- Si es por movimientos: que tiene historial y que la vía es desactivarlo
+
+### Cuando sí se puede
+
+- **Confirmación por texto exacto.** Ya existe `ConfirmacionTextoExacto`; reúsalo. Es permanente.
+- La confirmación muestra **tela, color y SKU**, no solo un identificador.
+- Al terminar, **regresa al listado de productos** con aviso de que se borró. No dejes al usuario en la pantalla de un producto que ya no existe.
+
+---
+
+## Lo que no se toca
+
+- **El SKU borrado no se reusa.** Si se borra `TAF-BLA2` y mañana se da de alta Tafetán Blanco otra vez, debe recibir un SKU nuevo. Verifica cómo se comporta el generador tras un borrado y **repórtalo**.
+- **Queda registro en auditoría** de qué se borró y quién lo hizo. La bitácora es de solo lectura y sobrevive al producto.
+- **No borres precios históricos.** Si el producto tiene renglones en `precio_historial` pero ningún movimiento, **detente y repórtalo**: decido yo si eso cuenta como actividad.
+- **No agregues borrado en lote.** Se pidió desde la edición del producto, uno a la vez. Si crees que hace falta el lote, **repórtalo**, no lo construyas.
+
+---
+
+## Verificación
+
+- El botón aparece en modo edición, solo para ADMIN, separado del guardado
+- Un producto recién importado, sin movimientos y en cero, **se borra**
+- Un producto con existencia en cualquier sitio muestra el botón **deshabilitado**, indicando en qué sitios y cuánto
+- Un producto con existencia cero pero **con movimientos** muestra el botón deshabilitado, lo explica y sugiere desactivar
+- Un producto que se vendió completo y quedó en cero **no se puede borrar**
+- La confirmación por texto exacto es obligatoria y muestra tela, color y SKU
+- Tras borrar, regresa al listado con aviso
+- El producto desaparece de listas, búsquedas del POS, catálogos y filtros
+- **Ningún documento ni reporte histórico se rompe** — verificado con datos, no por inspección
+- El borrado queda en auditoría
+- Está reportado el comportamiento del generador de SKU tras un borrado
+- Está reportado el caso de historial de precios sin movimientos, **sin resolverlo**
+- Está reportado en qué difería la purga existente
+- Revisado en teléfono
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de productos, inventario y POS pasan enteras
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Borrar un producto** se hace desde su pantalla de edición, solo ADMIN, y exige **existencia en cero en todos los sitios** y **cero movimientos históricos**, las dos a la vez. Existencia en cero y nunca haberse movido no son lo mismo: un producto vendido por completo queda en cero pero vive en tickets firmados, en el kardex y en reportes del periodo, y borrarlo dejaría documentos apuntando a un producto inexistente.
+>
+> **Solo se borra lo que nunca existió operativamente** — típicamente renglones cargados por error en una importación. Todo lo demás se **desactiva**.
+>
+> Cuando no procede, el botón se muestra **deshabilitado con la razón**, no escondido: escondido hace creer que la función no existe; deshabilitado enseña la regla. El mensaje dice cuál de las dos condiciones falló y, si es por existencia, en qué sitios.
+>
+> **El SKU borrado no se reusa** y el borrado queda en auditoría.
