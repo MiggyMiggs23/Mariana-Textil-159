@@ -457,3 +457,9 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 **Renglones agrupados:** los rollos del mismo producto forman **un solo renglón** con su conteo y cantidad total, y el precio se captura una vez para todos. Agrupar por tela mezclaría colores y unidades y está prohibido.
 
 La agrupación es **presentación y captura de precio**: el renglón conserva por debajo las series de sus rollos, y el ticket sigue registrando línea por rollo, con descuento de inventario y costo congelado individuales. Si un cambio de presentación toca cómo se registra la venta, está mal planteado.
+
+**Cobrado (Caja) es dinero que está físicamente en el cajón o en la cuenta**: solo efectivo y transferencia. **Una venta a crédito nunca cuenta como cobrada** —la mercancía salió y el pago llega en su plazo—, y contarla infla el corte con dinero que nadie va a encontrar. Ventas (total) y Utilidad **sí** la incluyen: se vendió y la ganancia se generó al entregar. La identidad que debe cumplirse siempre es **Ventas = Cobrado + Pendiente de cobro + Ventas a crédito**.
+
+**El orden de las tiendas es Mariana, Coco, Cruces**, y vive en un solo lugar compartido por todas las vistas. Repetirlo por componente hace que una vista quede desincronizada de las demás. Una tienda nueva nunca desaparece de una lista por no estar en el orden.
+
+**La vista de ventas por tienda** aplica `resolveReadScope` siempre: un usuario con alcance PROPIA no ve otra tienda ni manipulando la dirección. La utilidad no se envía al cliente cuando el rol no debe verla; taparla solo en pantalla no es una restricción.
