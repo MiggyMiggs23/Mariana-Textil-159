@@ -308,3 +308,87 @@ mtime_ms = 1788387523786
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7f29f907-d958-45a7-9248-4978927287c5/bdc17f15-2ca8-4fb5-aee0-2200a04ec4c1"
 storage_version_token = "1788387598883054"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "dDM-m0DHYYi02GFR2rVf3"
+uri = "file://reports/a5-print-evidence/nota-contado-1-linea.pdf"
+type = "pdf"
+title = "Nota contado — 1 línea"
+description = "A5 vertical; dos copias, una hoja por copia y 14 casillas dibujadas."
+logical_id = "772b8bf7-0aa3-41c3-b463-1e5db96b419b"
+content_hash = "sha256:8a01166428f584d59e3fb088fc54365737626f77c05db62f55c6e07622d91247"
+size = 1097391
+mtime_ms = 1788403188455
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/772b8bf7-0aa3-41c3-b463-1e5db96b419b/672786d5-6552-46df-9966-927b5b0edb87"
+storage_version_token = "1788404143694772"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "4Hph9rYCzkOq8hH8t1p79"
+uri = "file://reports/a5-print-evidence/nota-contado-14-lineas.pdf"
+type = "pdf"
+title = "Nota contado — 14 líneas"
+description = "A5 vertical a capacidad exacta; dos páginas físicas, una por copia."
+logical_id = "5b010c64-232d-4529-938b-a01b9f6ba2fa"
+content_hash = "sha256:616e3044791336476c769f6b68a250e5f4f5bf29199db135462e9c198d1f0194"
+size = 1128371
+mtime_ms = 1788403227563
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5b010c64-232d-4529-938b-a01b9f6ba2fa/5867a446-0592-4ff1-8dd1-d86664378e3a"
+storage_version_token = "1788404144246699"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "9dpvIFY_zrkH0xF5zbgPW"
+uri = "file://reports/a5-print-evidence/nota-credito-1-linea.pdf"
+type = "pdf"
+title = "Nota crédito — 1 línea"
+description = "A5 vertical; pagaré legible en la única hoja de cada copia."
+logical_id = "98e68284-ae3b-47c3-b7e3-f11f66c346d1"
+content_hash = "sha256:a41857e6f94e3d9319db1482c4d848c956557624197673836fc9a48524f0c5fd"
+size = 1165240
+mtime_ms = 1788403347991
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/98e68284-ae3b-47c3-b7e3-f11f66c346d1/6212e1f8-e186-4b15-a843-113efbfefc7c"
+storage_version_token = "1788404144701745"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "thso39we8UjNMte6_p5H9"
+uri = "file://reports/a5-print-evidence/nota-credito-11-lineas.pdf"
+type = "pdf"
+title = "Nota crédito — 11 líneas"
+description = "A5 vertical; dos hojas por copia, pagaré solo en las hojas finales."
+logical_id = "8c1574c3-2049-4da1-8ed6-4308811cb45a"
+content_hash = "sha256:ed03ae7c91a9f0b710d82758df37da0b5ae4eb44ffefaa7b7c7c8f3001037ea4"
+size = 1217841
+mtime_ms = 1788403387139
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8c1574c3-2049-4da1-8ed6-4308811cb45a/236c7c13-293d-45b4-9b4b-d7161e8bd9fa"
+storage_version_token = "1788404145169426"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "lv82TdRujTSyhemjyT4Sm"
+uri = "file://reports/a5-print-evidence/salida-1-linea.pdf"
+type = "pdf"
+title = "Salida — 1 línea"
+description = "A5 horizontal monocromática; diez casillas, iniciales MRA y QR sobre blanco."
+logical_id = "87b2b784-3f8d-404f-a5a1-a739bebc0faa"
+content_hash = "sha256:7c8aea24d9090c5c1e2fea73a4d017c3b7ed55137b8d8b0ac4e048910c963999"
+size = 187519
+mtime_ms = 1788403685874
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/87b2b784-3f8d-404f-a5a1-a739bebc0faa/03075026-c93e-488a-90bf-0cc308ae8605"
+storage_version_token = "1788404145719169"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "6zVkkghSj6TvpIp7Lhfk_"
+uri = "file://reports/a5-print-evidence/salida-10-lineas.pdf"
+type = "pdf"
+title = "Salida — 10 líneas"
+description = "A5 horizontal a capacidad exacta; pie completo y una sola página física."
+logical_id = "4d2d65bb-7580-46f8-83c3-65442408e1be"
+content_hash = "sha256:1b74e0cf7970fb50eb21d814b70a6c19a3fe90acccaa2940febe68d3d6908b86"
+size = 261039
+mtime_ms = 1788403874954
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4d2d65bb-7580-46f8-83c3-65442408e1be/d54aa69e-f0ab-4365-b6d5-70c0ea8c864d"
+storage_version_token = "1788404146258620"
+content_type = "application/pdf"
