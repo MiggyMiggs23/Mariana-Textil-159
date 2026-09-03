@@ -380,6 +380,15 @@ export async function getPending(filters: AnalyticsFilters) {
   };
 }
 
+export function summarizeRealtimeCredit(
+  stores: Array<{ credito: string; creditoOperaciones: number }>,
+) {
+  return {
+    importe: decimal(stores.reduce((sum, store) => sum + Number(store.credito), 0)),
+    operaciones: stores.reduce((sum, store) => sum + store.creditoOperaciones, 0),
+  };
+}
+
 /** One read model powers both the five-minute dashboard and 30-second poll. */
 export async function getRealtimeStores(filters: AnalyticsFilters) {
   const condition = where(filters);
@@ -396,10 +405,19 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
      ), payment AS (
        SELECT t.id,
          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='EFECTIVO'),0) efectivo,
-         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia,
-         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='CREDITO'),0) credito
+          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia
        FROM filtered t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id
        WHERE t.estado='VENDIDO' AND t.cobrado GROUP BY t.id
+      ), credit_sales AS (
+        SELECT t.ubicacion_id,
+          COALESCE(SUM(m.importe),0) credito,
+          COUNT(DISTINCT m.ticket_id)::int credito_operaciones
+        FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
+        WHERE m.tipo='VENTA_CREDITO' AND t.estado='VENDIDO'
+          AND ($1::timestamptz IS NULL OR m.created_at >= $1)
+          AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+          AND ($3::int IS NULL OR t.ubicacion_id=$3)
+        GROUP BY t.ubicacion_id
      )
      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
        s.id "sesionCajaId",s.abierta_at "abiertaAt",caj.nombre cajero,
@@ -411,13 +429,15 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
         CASE WHEN COALESCE(SUM(m.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(m.margen),0)::text END margen,
         COALESCE(SUM(m.subtotal),0)::text subtotal,
        COALESCE(SUM(p.efectivo),0)::text efectivo,COALESCE(SUM(p.transferencia),0)::text transferencia,
-       COALESCE(SUM(p.credito),0)::text credito,
+        COALESCE(cs.credito,0)::text credito,
+        COALESCE(cs.credito_operaciones,0)::int "creditoOperaciones",
        COUNT(*) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado AND t.created_at < now()-interval '30 minutes')::int "pendientes30Min",
        COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones
      FROM ubicaciones u
      LEFT JOIN filtered t ON t.ubicacion_id=u.id
      LEFT JOIN line_margin m ON m.ticket_id=t.id
      LEFT JOIN payment p ON p.id=t.id
+      LEFT JOIN credit_sales cs ON cs.ubicacion_id=u.id
      LEFT JOIN LATERAL (
        SELECT sc.* FROM sesiones_caja sc WHERE sc.ubicacion_id=u.id AND sc.estado='ABIERTA'
        ORDER BY sc.abierta_at DESC LIMIT 1
@@ -428,7 +448,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        WHERE ft.ubicacion_id=u.id ORDER BY ft.created_at DESC LIMIT 1
      ) term ON true
      WHERE u.tipo='TIENDA' AND u.activa
-     GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre
+      GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre,cs.credito,cs.credito_operaciones
      ORDER BY u.nombre`,
     condition.values,
   );
@@ -452,7 +472,8 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
       margen: row.margen == null ? null : decimal(row.margen),
       margenPorcentaje: row.margen == null ? null : decimal(subtotal === 0 ? 0 : (Number(row.margen) / subtotal) * 100),
       efectivo: decimal(row.efectivo), transferencia: decimal(row.transferencia), credito: decimal(row.credito),
-      tickets, pendientes30Min: Number(row.pendientes30Min),
+       creditoOperaciones: Number(row.creditoOperaciones),
+       tickets, pendientes30Min: Number(row.pendientes30Min),
       cancelaciones: Number(row.cancelaciones), tasaCancelacion: decimal(cancellationRate), alertas: alerts,
     };
   });

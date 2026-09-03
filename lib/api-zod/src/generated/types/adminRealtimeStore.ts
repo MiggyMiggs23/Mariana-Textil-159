@@ -35,6 +35,7 @@ export interface AdminRealtimeStore {
   efectivo: string;
   transferencia: string;
   credito: string;
+  creditoOperaciones: number;
   pendientes30Min: number;
   cancelaciones: number;
   /** Porcentaje en unidades; 10.00 significa 10% */

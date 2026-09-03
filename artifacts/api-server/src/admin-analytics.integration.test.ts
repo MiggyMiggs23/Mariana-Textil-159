@@ -186,6 +186,17 @@ if (!testUrl) {
          [ids.clients[0], creditTicket, ids.users[1], now],
        );
        ids.creditMovements.push(Number(creditSale.id));
+        // Two CREDITO payment rows are one credit sale. Realtime credit must
+        // use the immutable VENTA_CREDITO ledger row, not these fragments.
+        await pool.query(
+          `UPDATE ticket_pagos SET importe=200 WHERE ticket_id=$1 AND forma_pago='CREDITO'`,
+          [creditTicket],
+        );
+        await pool.query(
+          `INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at)
+           VALUES($1,'CREDITO',200,$2,$3)`,
+          [creditTicket, ids.users[1], now],
+        );
        // Production payment flow: ABONO has no ticket. Its applications resolve
        // the paid sales/documents; unapplied remainder remains client credit.
        const fiscalAbono = await one(
@@ -283,6 +294,25 @@ if (!testUrl) {
       assert.equal(pending.tickets, 2);
       assert.ok(cards.some((card) => card.alertas.includes("PENDIENTE_MAS_30_MIN")));
       assert.ok(cards.reduce((sum, card) => sum + Number(card.margen), 0) > 0);
+      assert.deepEqual(analytics.summarizeRealtimeCredit(cards), {
+        importe: "400.00",
+        operaciones: 1,
+      });
+      const siteCreditCards = await analytics.getRealtimeStores({
+        ...filters,
+        ubicacionId: ids.locations[0],
+      });
+      assert.deepEqual(analytics.summarizeRealtimeCredit(siteCreditCards), {
+        importe: "0.00",
+        operaciones: 0,
+      });
+      assert.deepEqual(analytics.summarizeRealtimeCredit(await analytics.getRealtimeStores({
+        ...filters,
+        ubicacionId: ids.locations[1],
+      })), {
+        importe: "400.00",
+        operaciones: 1,
+      });
       assert.equal(cuts.total, 2);
       assert.equal(new Set(cuts.items.map((cut) => cut.ubicacionId)).size, 2);
       assert.deepEqual(cuts.items.map((cut) => Number(cut.diferencia)).sort((a, b) => a - b), [-200, 150]);

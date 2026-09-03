@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminPendingSummary } from './adminPendingSummary';
+import type { AdminRealtimeCreditSummary } from './adminRealtimeCreditSummary';
 import type { AdminRealtimeDashboardFullRefreshSeconds } from './adminRealtimeDashboardFullRefreshSeconds';
 import type { AdminRealtimeDashboardPendingRefreshSeconds } from './adminRealtimeDashboardPendingRefreshSeconds';
 import type { AdminRealtimeStore } from './adminRealtimeStore';
@@ -19,6 +20,7 @@ export interface AdminRealtimeDashboard {
   pendingRefreshSeconds: AdminRealtimeDashboardPendingRefreshSeconds;
   totales: AnalyticsMoneyTotals;
   cantidades: AnalyticsQuantity[];
+  ventasCredito: AdminRealtimeCreditSummary;
   pendientes: AdminPendingSummary;
   tiendas: AdminRealtimeStore[];
   comparativo: AdminRealtimeStore[];

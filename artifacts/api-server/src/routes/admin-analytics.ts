@@ -60,6 +60,7 @@ import {
   measureKpi,
   listCuts,
   parseAnalyticsFilters,
+  summarizeRealtimeCredit,
 } from "../lib/admin-analytics";
 
 const router: IRouter = Router();
@@ -98,6 +99,7 @@ router.get("/admin/dashboard/realtime", async (req, res, next): Promise<void> =>
       fullRefreshSeconds: 300,
       pendingRefreshSeconds: 30,
       totales, cantidades,
+      ventasCredito: summarizeRealtimeCredit(tiendas),
       pendientes: {
         ...pendientes,
         tiendas: tiendas.map((store) => ({

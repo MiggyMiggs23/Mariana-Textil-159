@@ -10,7 +10,9 @@ import {
   measureKpi,
   previousEqualPeriod,
   mexicoCityHour,
+  summarizeRealtimeCredit,
 } from "./admin-analytics";
+import { GetAdminRealtimeDashboardResponse } from "@workspace/api-zod";
 import { requireRole } from "../middlewares/auth";
 import {
   ExportAdminCortesPdfQueryParams,
@@ -36,6 +38,51 @@ test("account destinations preserve payment/facturado rules", () => {
   assert.equal(accountDestination("CREDITO", true), "CUENTAS_POR_COBRAR");
   assert.equal(accountDestination("TRANSFERENCIA", true), "CUENTA_FISCAL");
   assert.equal(accountDestination("TRANSFERENCIA", false), "CUENTA_NO_FISCAL");
+});
+
+test("realtime credit summary is exactly the sum of store credit lines", () => {
+  assert.deepEqual(summarizeRealtimeCredit([
+    { credito: "125.25", creditoOperaciones: 2 },
+    { credito: "74.75", creditoOperaciones: 1 },
+    { credito: "0.00", creditoOperaciones: 0 },
+  ]), {
+    importe: "200.00",
+    operaciones: 3,
+  });
+});
+
+test("realtime store credit uses dated immutable ledger sales, not payment fragments", async () => {
+  const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  const start = source.indexOf("export async function getRealtimeStores");
+  const end = source.indexOf("\nexport async function", start + 1);
+  const realtime = source.slice(start, end);
+
+  assert.match(realtime, /credit_sales AS \([\s\S]*FROM movimientos_credito m JOIN tickets t/);
+  assert.match(realtime, /m\.tipo='VENTA_CREDITO'/);
+  assert.match(realtime, /m\.created_at >= \$1/);
+  assert.match(realtime, /COUNT\(DISTINCT m\.ticket_id\)::int credito_operaciones/);
+  assert.match(realtime, /COALESCE\(cs\.credito,0\)::text credito/);
+});
+
+test("realtime dashboard contract requires credit amount and operation count", () => {
+  const result = GetAdminRealtimeDashboardResponse.safeParse({
+    generatedAt: new Date().toISOString(),
+    fullRefreshSeconds: 300,
+    pendingRefreshSeconds: 30,
+    totales: {
+      ventas: "0.00", cobrado: "0.00", pendiente: "0.00", subtotal: "0.00",
+      iva: "0.00", costo: "0.00", margen: "0.00", margenPorcentaje: "0.00",
+      tickets: 0, ticketsCobrados: 0, ticketsPendientes: 0, cancelaciones: 0,
+      lineasExcluidasMargen: 0,
+    },
+    cantidades: [],
+    ventasCredito: { importe: "200.00", operaciones: 3 },
+    pendientes: { tickets: 0, importe: "0.00", tiendas: [] },
+    tiendas: [],
+    comparativo: [],
+    ultimosTickets: [],
+  });
+  assert.equal(result.success, true);
 });
 
 test("destination movement contract validates account, pagination and real ticket links", () => {

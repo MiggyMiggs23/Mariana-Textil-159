@@ -12,7 +12,7 @@ import { useLocationScope } from "@/lib/location-scope";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
-import { RefreshCw, Activity, AlertCircle, Clock, Banknote, ShoppingBag, Loader2, Target, LineChart, Users, Store, Receipt } from "lucide-react";
+import { RefreshCw, Activity, AlertCircle, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
@@ -118,7 +118,7 @@ export default function CajaTiempoReal() {
           </div>
         ) : totals ? (
           <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               <Card className="border-sidebar/10 shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas (Total)</CardTitle>
@@ -163,6 +163,21 @@ export default function CajaTiempoReal() {
                   </div>
                   <p className="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1 font-bold">
                     {formatNumber(mergedPendingCount, { kind: "count" })} tickets en espera
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-sidebar/10 shadow-sm" data-testid="realtime-credit-card">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas a crédito</CardTitle>
+                  <CreditCard className="h-4 w-4 text-primary" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-black text-sidebar">
+                    {formatNumber(dashboard.ventasCredito.importe, { kind: "money" })}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">
+                    {formatNumber(dashboard.ventasCredito.operaciones, { kind: "count" })} operaciones a crédito
                   </p>
                 </CardContent>
               </Card>
