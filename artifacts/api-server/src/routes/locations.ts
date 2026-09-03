@@ -25,6 +25,7 @@ import {
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { presentLocation } from "../lib/presenters";
+import { isPostgresUniqueViolation } from "../lib/postgres-errors";
 import { getRequestIp } from "../lib/request";
 
 const router: IRouter = Router();
@@ -80,7 +81,7 @@ router.post(
       });
       res.status(201).json(CreateLocationResponse.parse(presentLocation(created)));
     } catch (error) {
-      if ((error as { code?: string }).code === "23505") {
+      if (isPostgresUniqueViolation(error)) {
         res.status(400).json({ error: "Ya existe un sitio con ese nombre o iniciales." });
         return;
       }
@@ -139,7 +140,7 @@ router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (
     });
     res.json(UpdateLocationResponse.parse(presentLocation(updated)));
   } catch (error) {
-      if ((error as { code?: string }).code === "23505") {
+      if (isPostgresUniqueViolation(error)) {
         res.status(400).json({ error: "Ya existe un sitio con ese nombre o iniciales." });
       return;
     }
@@ -200,7 +201,7 @@ router.post("/locations/:id/pisos", requierePermiso("ubicaciones", "crear"), asy
     if (!piso) { res.status(404).json({ error: "Ubicación no encontrada." }); return; }
     res.status(201).json(CreatePisoLocationResponse.parse(presentPiso(piso)));
   } catch (error) {
-    if ((error as { code?: string }).code === "23505") { res.status(409).json({ error: "Ya existe un piso con ese nombre en este sitio." }); return; }
+    if (isPostgresUniqueViolation(error)) { res.status(409).json({ error: "Ya existe un piso con ese nombre en este sitio." }); return; }
     throw error;
   }
 });
@@ -221,7 +222,7 @@ router.patch("/locations/:id/pisos/:pisoId", requierePermiso("ubicaciones", "edi
     });
     res.json(UpdatePisoLocationResponse.parse(presentPiso(after!)));
   } catch (error) {
-    if ((error as { code?: string }).code === "23505") { res.status(409).json({ error: "Ya existe un piso con ese nombre en este sitio." }); return; }
+    if (isPostgresUniqueViolation(error)) { res.status(409).json({ error: "Ya existe un piso con ese nombre en este sitio." }); return; }
     throw error;
   }
 });

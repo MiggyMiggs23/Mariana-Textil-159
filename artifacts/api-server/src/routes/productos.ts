@@ -38,6 +38,7 @@ import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
+import { isPostgresUniqueViolation } from "../lib/postgres-errors";
 import { resolveReadScope } from "./inventario";
 import {
   parseFileBase64,
@@ -406,7 +407,7 @@ router.post(
         ),
       );
     } catch (error) {
-      if ((error as { code?: string }).code === "23505") {
+      if (isPostgresUniqueViolation(error)) {
         res.status(400).json({
           error:
             "Ya existe un producto con ese SKU o con la misma combinación tela/color.",
@@ -967,7 +968,7 @@ router.patch(
       );
     } catch (error) {
       // Unique DB constraints remain the final protection.
-      if ((error as { code?: string }).code === "23505") {
+      if (isPostgresUniqueViolation(error)) {
         res.status(400).json({
           error:
             "Ya existe un producto con ese SKU o con la misma combinación tela/color.",

@@ -25,6 +25,7 @@ import {
 import { hasAdminRecoveryAccount, requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { isPostgresUniqueViolation } from "../lib/postgres-errors";
 import { formatUserValidationErrors } from "../lib/user-validation-errors";
 
 const router: IRouter = Router();
@@ -183,7 +184,7 @@ router.post("/users", requierePermiso("usuarios", "crear"), async (req, res): Pr
       .status(201)
       .json(CreateUserResponse.parse(presentUser(created, location ?? null)));
   } catch (error) {
-    if ((error as { code?: string }).code === "23505") {
+    if (isPostgresUniqueViolation(error)) {
       res.status(400).json({ error: "Ese nombre de usuario ya está en uso." });
       return;
     }
@@ -379,7 +380,7 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
       UpdateUserResponse.parse(presentUser(updated, location ?? null)),
     );
   } catch (error) {
-    if ((error as { code?: string }).code === "23505") {
+    if (isPostgresUniqueViolation(error)) {
       res.status(400).json({ error: "Ese nombre de usuario ya está en uso." });
       return;
     }

@@ -9,6 +9,7 @@ import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import { loadCustomerCreditProjection } from "../lib/credit-aging-read-model";
+import { isPostgresUniqueViolation } from "../lib/postgres-errors";
 
 const router: IRouter = Router();
 router.use("/clientes", requireSession);
@@ -238,7 +239,7 @@ router.post(
       res.json({ clienteId: id, activo: true });
     } catch (error) {
       await client.query("ROLLBACK").catch(() => undefined);
-      if ((error as { code?: string }).code === "23505") {
+      if (isPostgresUniqueViolation(error)) {
         res.status(409).json({ error: "Ya existe un cliente activo con ese nombre.", code: "CLIENT_NAME_CONFLICT" }); return;
       }
       next(error);

@@ -20,6 +20,8 @@
     "test:clientes-aging": "tsx --test src/lib/clientes-aging.test.ts",
     "test:clientes-ledger": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/lib/clientes-ledger.test.ts",
     "test:clientes-create": "tsx --test src/lib/clientes-create.test.ts",
+    "test:postgres-errors": "tsx --test src/lib/postgres-errors.test.ts src/lib/clientes-create.test.ts",
+    "test:postgres-unique-concurrency": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/postgres-unique-concurrency.integration.test.ts",
     "test:ticket-iva-schema": "tsx src/lib/ticket-iva-schema.test.ts",
     "test:ticket-credit-schema": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx src/lib/ticket-credit-schema.test.ts",
     "test:ticket-line-types-schema": "NODE_ENV=test tsx --test src/lib/ticket-line-types-schema.test.ts",
