@@ -50,7 +50,6 @@ import { PrintableDocumentHeader } from "@/components/printable-document-header"
 import { absoluteAppUrl, printWhenReady, waitForPrintableAssets } from "@/lib/print";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
-import { DocumentQrCode } from "@/components/document-qr-code";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
 import { formatDateOnlyMx } from "@/lib/date-only";
 
@@ -586,11 +585,8 @@ export default function TicketDetailPage() {
 
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
-        <div className="relative mb-4 pt-[29mm] text-center">
-          <div className="absolute right-0 top-0">
-            <DocumentQrCode url={ticketDocumentUrl} label={`QR para abrir ticket ${ticket.folio}`} />
-          </div>
-          <MonochromeBrandLogo className="mx-auto mb-1 h-[67.5mm] w-[59.5mm] max-w-full" />
+        <div className="relative mb-4 text-center">
+          <MonochromeBrandLogo className="mx-auto mb-1 h-auto w-[25mm]" />
           <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-2 border-t border-black" />
@@ -762,10 +758,7 @@ export default function TicketDetailPage() {
       {/* Media Carta */}
       <div className="hidden print-carta-only print-document-container">
         <div className="relative mb-5 text-center">
-          <div className="absolute right-0 top-0">
-            <DocumentQrCode url={ticketDocumentUrl} label={`QR para abrir ticket ${ticket.folio}`} />
-          </div>
-          <MonochromeBrandLogo className="mx-auto h-[67.5mm] w-[59.5mm]" />
+          <MonochromeBrandLogo className="mx-auto h-auto w-[25mm]" />
           <p className="text-lg font-bold">Mariana Textil S.A. de C.V.</p>
           <p className="text-sm font-semibold">{ticket.nombreUbicacion}</p>
           <div className="my-3 border-t-2 border-black" />

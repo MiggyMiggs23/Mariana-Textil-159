@@ -207,7 +207,8 @@ test("Ticket and media carta declare their own physical page sizes", async () =>
   assert.match(css, /body\.print-80mm \.print-80mm-only\s*\{[\s\S]*position:\s*static;/);
   assert.match(css, /@page carta-page\s*\{[\s\S]*size:\s*140mm 216mm;/);
   assert.match(css, /\.print-document-container\s*\{[\s\S]*page:\s*carta-page;/);
-  assert.equal((detail.match(/<DocumentQrCode/g) ?? []).length, 2);
+  assert.equal((detail.match(/<DocumentQrCode/g) ?? []).length, 0);
+  assert.equal((detail.match(/<MonochromeBrandLogo className="mx-auto (?:mb-1 )?h-auto w-\[25mm\]"/g) ?? []).length, 2);
 });
 
 test("tubular opt-in prints the ticket plus one isolated 80mm strip per color", async () => {
