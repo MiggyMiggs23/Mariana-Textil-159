@@ -4169,6 +4169,36 @@ paths:
               schema: { $ref: "#/components/schemas/AdminPendingSummary" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /caja/tiendas/{ubicacionId}/ventas:
+    get:
+      operationId: listCajaTiendaVentas
+      tags: [caja]
+      summary: Ventas paginadas de una tienda para el resumen de caja
+      parameters:
+        - in: path
+          name: ubicacionId
+          required: true
+          schema: { type: integer, minimum: 1 }
+        - { $ref: "#/components/parameters/AnalyticsDesde" }
+        - { $ref: "#/components/parameters/AnalyticsHasta" }
+        - in: query
+          name: formaPago
+          schema: { type: string, enum: [EFECTIVO, TRANSFERENCIA, CREDITO] }
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+      responses:
+        "200":
+          description: Ventas de la tienda
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CajaTiendaVentasResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/alertas:
     get:
       operationId: getAdminAlertas
@@ -6389,6 +6419,7 @@ components:
           cobrado,
           pendiente,
           tickets,
+          ticketsCobrados,
           ticketPromedio,
           margen,
           margenPorcentaje,
@@ -6412,6 +6443,9 @@ components:
         cobrado: { type: string }
         pendiente: { type: string }
         tickets: { type: number }
+        ticketsCobrados:
+          type: number
+          description: Tickets con al menos un pago EFECTIVO o TRANSFERENCIA; excluye CREDITO.
         ticketPromedio: { type: string }
         margen: { type: ["string", "null"] }
         margenPorcentaje:
@@ -6630,6 +6664,36 @@ components:
             efectivoContado: { type: string }
             diferencia: { type: string }
             tickets: { type: number }
+    CajaTiendaVenta:
+      type: object
+      required: [id, createdAt, folio, cliente, formaPago, importe, estadoCobro]
+      properties:
+        id: { type: number }
+        createdAt: { type: string, format: date-time }
+        folio: { type: number }
+        cliente: { type: string }
+        formaPago:
+          type: string
+          description: Método único o MIXTO cuando el ticket tiene más de un pago.
+          enum: [EFECTIVO, TRANSFERENCIA, CREDITO, MIXTO, SIN_COBRO]
+        importe: { type: string }
+        estadoCobro: { type: string, enum: [COBRADO, PENDIENTE, CREDITO] }
+        utilidad:
+          type: string
+          nullable: true
+          description: Solo disponible para roles financieros autorizados.
+    CajaTiendaVentasResult:
+      type: object
+      required: [ubicacionId, nombreUbicacion, items, total, page, pageSize]
+      properties:
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/CajaTiendaVenta" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
     AdminDiferenciaGroup:
       type: object
       required:

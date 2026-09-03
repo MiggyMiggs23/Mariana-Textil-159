@@ -43,6 +43,7 @@ import Permisos from "@/pages/permisos";
 import Auditoria from "@/pages/auditoria/index";
 import Alertas from "@/pages/alertas";
 import CajaTiempoReal from "@/pages/caja/tiempo-real";
+import TiendaVentas from "@/pages/caja/tienda-ventas";
 import CajaCortes from "@/pages/caja/cortes";
 import CajaCuentasDestino from "@/pages/caja/cuentas-destino";
 import CuentaDestinoDetalle from "@/pages/caja/cuenta-destino-detalle";
@@ -451,6 +452,15 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={CajaTiempoReal}
+              allowedModule={Modules.RESUMEN_CAJA}
+            />
+          )}
+        />
+        <Route
+          path="/caja/tiendas/:ubicacionId/ventas"
+          component={() => (
+            <ProtectedRoute
+              component={TiendaVentas}
               allowedModule={Modules.RESUMEN_CAJA}
             />
           )}

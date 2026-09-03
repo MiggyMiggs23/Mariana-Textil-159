@@ -923,6 +923,8 @@ export interface AdminRealtimeStore {
   cobrado: string;
   pendiente: string;
   tickets: number;
+  /** Tickets con al menos un pago EFECTIVO o TRANSFERENCIA; excluye CREDITO. */
+  ticketsCobrados: number;
   ticketPromedio: string;
   /** @nullable */
   margen: string | null;
@@ -1066,6 +1068,51 @@ export interface AdminCortesResult {
   page: number;
   pageSize: number;
   totales: AdminCortesResultTotales;
+}
+
+/**
+ * Método único o MIXTO cuando el ticket tiene más de un pago.
+ */
+export type CajaTiendaVentaFormaPago = typeof CajaTiendaVentaFormaPago[keyof typeof CajaTiendaVentaFormaPago];
+
+
+export const CajaTiendaVentaFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CREDITO: 'CREDITO',
+  MIXTO: 'MIXTO',
+  SIN_COBRO: 'SIN_COBRO',
+} as const;
+
+export type CajaTiendaVentaEstadoCobro = typeof CajaTiendaVentaEstadoCobro[keyof typeof CajaTiendaVentaEstadoCobro];
+
+
+export const CajaTiendaVentaEstadoCobro = {
+  COBRADO: 'COBRADO',
+  PENDIENTE: 'PENDIENTE',
+  CREDITO: 'CREDITO',
+} as const;
+
+export interface CajaTiendaVenta {
+  id: number;
+  createdAt: string;
+  folio: number;
+  cliente: string;
+  /** Método único o MIXTO cuando el ticket tiene más de un pago. */
+  formaPago: CajaTiendaVentaFormaPago;
+  importe: string;
+  estadoCobro: CajaTiendaVentaEstadoCobro;
+  /** Solo disponible para roles financieros autorizados. */
+  utilidad?: string | null;
+}
+
+export interface CajaTiendaVentasResult {
+  ubicacionId: number;
+  nombreUbicacion: string;
+  items: CajaTiendaVenta[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 export interface AdminDiferenciaGroup {
@@ -6146,6 +6193,38 @@ desde?: AnalyticsDesdeParameter;
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
 };
+
+export type ListCajaTiendaVentasParams = {
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+formaPago?: ListCajaTiendaVentasFormaPago;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
+export type ListCajaTiendaVentasFormaPago = typeof ListCajaTiendaVentasFormaPago[keyof typeof ListCajaTiendaVentasFormaPago];
+
+
+export const ListCajaTiendaVentasFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CREDITO: 'CREDITO',
+} as const;
 
 export type ListAdminCortesParams = {
 /**

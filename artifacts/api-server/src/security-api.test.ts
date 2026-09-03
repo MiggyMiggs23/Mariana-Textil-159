@@ -91,6 +91,8 @@ let failed = 0;
 const failures: string[] = [];
 
 async function test(name: string, fn: () => Promise<void>): Promise<void> {
+  const scenarioFilter = process.env.SECURITY_SCENARIO;
+  if (scenarioFilter && !name.includes(scenarioFilter)) return;
   try {
     await fn();
     process.stdout.write(`  ✓ ${name}\n`);
@@ -404,7 +406,7 @@ if (!seedAdminRow) throw new Error("Usuario admin no encontrado. Ejecuta el seed
 // Create test-specific admin (so we can do mutations without touching seed admin)
 const testAdmin = await mkUser("ADMIN", null);
 const testTerminal = await mkUser("TERMINAL", seedTienda.id);
-const testCaja = await mkUser("CAJA", seedTienda.id);
+const testCaja = await mkUser("CAJA", seedTienda.id, { alcanceConsulta: "PROPIA" });
 const testSupervisor = await mkUser("SUPERVISOR", seedTienda.id);
 const testBodega = await mkUser("BODEGA", seedTienda.id, { alcanceConsulta: "PROPIA" });
 // Second BODEGA with TODAS scope for S-23
@@ -572,6 +574,96 @@ await test("S-03A: Caja ticket list is location-scoped and denied to BODEGA", as
     bodegaLogin.cookie,
   );
   assert.equal(denied.status, 403, JSON.stringify(denied.body));
+});
+
+await test("S-03AA: Store sales requires resumen_caja.ver, scopes CAJA, and paginates without quantities", async () => {
+  // A per-user deny must override CAJA's role-level resumen_caja.ver grant.
+  const deniedCaja = await mkUser("CAJA", seedTienda.id, { alcanceConsulta: "PROPIA" });
+  const [deny] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: deniedCaja.id,
+      modulo: "resumen_caja",
+      puedeVer: false,
+      puedeCrear: null,
+      puedeEditar: null,
+      puedeAutorizar: null,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(deny!.id);
+
+  const deniedLogin = await login(deniedCaja.usuario, deniedCaja.password);
+  assert.equal(deniedLogin.status, 200);
+  const denied = await api(
+    "GET",
+    `/caja/tiendas/${seedTienda.id}/ventas?page=1&pageSize=1`,
+    undefined,
+    deniedLogin.cookie,
+  );
+  assert.equal(denied.status, 403, JSON.stringify(denied.body));
+
+  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  assert.equal(cajaLogin.status, 200);
+  const own = await api(
+    "GET",
+    `/caja/tiendas/${seedTienda.id}/ventas?page=1&pageSize=1`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(own.status, 200, JSON.stringify(own.body));
+  const ownBody = own.body as {
+    ubicacionId: number;
+    items: Array<Record<string, unknown>>;
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+  assert.equal(ownBody.ubicacionId, seedTienda.id);
+  assert.deepEqual(
+    Object.keys(ownBody).sort(),
+    ["ubicacionId", "nombreUbicacion", "items", "total", "page", "pageSize"].sort(),
+    "Store sales response must be the paginated ticket summary contract",
+  );
+  assert.ok(Array.isArray(ownBody.items), "Store sales items must be an array");
+  assert.equal(ownBody.page, 1);
+  assert.equal(ownBody.pageSize, 1);
+  assert.equal(typeof ownBody.total, "number");
+  assert.ok(ownBody.total >= ownBody.items.length);
+  for (const item of ownBody.items) {
+    assert.deepEqual(
+      Object.keys(item).sort(),
+      ["id", "createdAt", "folio", "cliente", "formaPago", "importe", "estadoCobro", "utilidad"].sort(),
+      "Store sales rows must expose sale totals, not line quantities",
+    );
+  }
+
+  const otherForCaja = await api(
+    "GET",
+    `/caja/tiendas/${otherTiendaId}/ventas?page=1&pageSize=1`,
+    undefined,
+    cajaLogin.cookie,
+  );
+  assert.equal(otherForCaja.status, 403, JSON.stringify(otherForCaja.body));
+
+  const adminLogin = await login(testAdmin.usuario, testAdmin.password);
+  assert.equal(adminLogin.status, 200);
+  const otherForAdmin = await api(
+    "GET",
+    `/caja/tiendas/${otherTiendaId}/ventas?page=1&pageSize=1`,
+    undefined,
+    adminLogin.cookie,
+  );
+  assert.equal(otherForAdmin.status, 200, JSON.stringify(otherForAdmin.body));
+  const adminBody = otherForAdmin.body as {
+    ubicacionId: number;
+    items: unknown[];
+    page: number;
+    pageSize: number;
+  };
+  assert.equal(adminBody.ubicacionId, otherTiendaId);
+  assert.ok(Array.isArray(adminBody.items), "ADMIN store sales items must be an array");
+  assert.equal(adminBody.page, 1);
+  assert.equal(adminBody.pageSize, 1);
 });
 
 await test("S-03B: TERMINAL API responses omit costs, margins and profits", async () => {
@@ -1564,6 +1656,10 @@ await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finan
     ["GET", "/pos/buscar"],
     ["GET", "/tickets/1"],
     ["GET", "/caja/tickets"],
+    // SUPERVISOR cannot reach this financial route even with an explicit
+    // resumen_caja grant, so its sensitive utilidad field has no reachable
+    // SUPERVISOR response to redact.
+    ["GET", `/caja/tiendas/${seedTienda.id}/ventas`],
     ["GET", "/sesiones-caja/actual"],
     ["GET", "/precios"],
     ["GET", "/locations"],
@@ -1588,6 +1684,33 @@ await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finan
       `${method} ${path} must be 403, got ${response.status}: ${JSON.stringify(response.body)}`,
     );
   }
+});
+
+await test("S-10A: SUPERVISOR ceiling keeps store-sales route unreachable despite resumen_caja grant", async () => {
+  const supervisorLogin = await login(testSupervisor.usuario, testSupervisor.password);
+  assert.equal(supervisorLogin.status, 200);
+  const me = await api("GET", "/auth/me", undefined, supervisorLogin.cookie);
+  assert.equal(me.status, 200);
+  const resumenCaja = (
+    (me.body as { permisos: Array<{ modulo: string; puedeVer: boolean }> }).permisos
+  ).find((permission) => permission.modulo === "resumen_caja");
+  assert.equal(
+    resumenCaja?.puedeVer,
+    false,
+    "SUPERVISOR ceiling must override the explicit resumen_caja.ver grant",
+  );
+
+  const sales = await api(
+    "GET",
+    `/caja/tiendas/${seedTienda.id}/ventas`,
+    undefined,
+    supervisorLogin.cookie,
+  );
+  assert.equal(
+    sales.status,
+    403,
+    `SUPERVISOR must not reach store-sales utilidad data: ${JSON.stringify(sales.body)}`,
+  );
 });
 
 // S-11: a malicious permissive override cannot exceed the SUPERVISOR ceiling

@@ -24,6 +24,8 @@ export interface AdminRealtimeStore {
   cobrado: string;
   pendiente: string;
   tickets: number;
+  /** Tickets con al menos un pago EFECTIVO o TRANSFERENCIA; excluye CREDITO. */
+  ticketsCobrados: number;
   ticketPromedio: string;
   /** @nullable */
   margen: string | null;

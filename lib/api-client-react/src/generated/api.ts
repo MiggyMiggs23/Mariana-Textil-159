@@ -49,6 +49,7 @@ import type {
   BuscarPosParams,
   BuscarRollosEtiquetas200,
   BuscarRollosEtiquetasParams,
+  CajaTiendaVentasResult,
   CambiarPrecioInput,
   Camioneta,
   CamionetaInput,
@@ -160,6 +161,7 @@ import type {
   ListAdminCuentaDestinoMovimientosParams,
   ListAuditoriaParams,
   ListAuditoriasInventarioParams,
+  ListCajaTiendaVentasParams,
   ListCamionetasParams,
   ListChoferesParams,
   ListComprasProveedorParams,
@@ -14103,6 +14105,95 @@ export function useGetAdminRealtimePending<TData = Awaited<ReturnType<typeof get
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetAdminRealtimePendingQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListCajaTiendaVentasUrl = (ubicacionId: number,
+    params?: ListCajaTiendaVentasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/caja/tiendas/${ubicacionId}/ventas?${stringifiedParams}` : `/api/caja/tiendas/${ubicacionId}/ventas`
+}
+
+/**
+ * @summary Ventas paginadas de una tienda para el resumen de caja
+ */
+export const listCajaTiendaVentas = async (ubicacionId: number,
+    params?: ListCajaTiendaVentasParams, options?: Parameters<typeof customFetch>[1]): Promise<CajaTiendaVentasResult> => {
+
+  return customFetch<CajaTiendaVentasResult>(getListCajaTiendaVentasUrl(ubicacionId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListCajaTiendaVentasQueryKey = (ubicacionId: number,
+    params?: ListCajaTiendaVentasParams,) => {
+    return [
+    `/api/caja/tiendas/${ubicacionId}/ventas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListCajaTiendaVentasQueryOptions = <TData = Awaited<ReturnType<typeof listCajaTiendaVentas>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(ubicacionId: number,
+    params?: ListCajaTiendaVentasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaTiendaVentas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListCajaTiendaVentasQueryKey(ubicacionId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCajaTiendaVentas>>> = ({ signal }) => listCajaTiendaVentas(ubicacionId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: ubicacionId !== null && ubicacionId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCajaTiendaVentas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCajaTiendaVentasQueryResult = NonNullable<Awaited<ReturnType<typeof listCajaTiendaVentas>>>
+export type ListCajaTiendaVentasQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Ventas paginadas de una tienda para el resumen de caja
+ */
+
+export function useListCajaTiendaVentas<TData = Awaited<ReturnType<typeof listCajaTiendaVentas>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ ubicacionId: number,
+    params?: ListCajaTiendaVentasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaTiendaVentas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListCajaTiendaVentasQueryOptions(ubicacionId,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

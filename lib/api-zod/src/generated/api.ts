@@ -7588,6 +7588,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "cobrado": zod.string(),
   "pendiente": zod.string(),
   "tickets": zod.number(),
+  "ticketsCobrados": zod.number().describe('Tickets con al menos un pago EFECTIVO o TRANSFERENCIA; excluye CREDITO.'),
   "ticketPromedio": zod.string(),
   "margen": zod.string().nullable(),
   "margenPorcentaje": zod.string().nullable().describe('Porcentaje en unidades; 15.00 significa 15%'),
@@ -7611,6 +7612,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "cobrado": zod.string(),
   "pendiente": zod.string(),
   "tickets": zod.number(),
+  "ticketsCobrados": zod.number().describe('Tickets con al menos un pago EFECTIVO o TRANSFERENCIA; excluye CREDITO.'),
   "ticketPromedio": zod.string(),
   "margen": zod.string().nullable(),
   "margenPorcentaje": zod.string().nullable().describe('Porcentaje en unidades; 15.00 significa 15%'),
@@ -7658,6 +7660,52 @@ export const GetAdminRealtimePendingResponse = zod.object({
   "pendientes30Min": zod.number(),
   "alertas": zod.array(zod.string())
 }))
+})
+
+
+/**
+ * @summary Ventas paginadas de una tienda para el resumen de caja
+ */
+
+
+
+export const ListCajaTiendaVentasParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1)
+})
+
+export const listCajaTiendaVentasQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listCajaTiendaVentasQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listCajaTiendaVentasQueryPageDefault = 1;
+
+export const listCajaTiendaVentasQueryPageSizeDefault = 50;
+export const listCajaTiendaVentasQueryPageSizeMax = 100;
+
+
+
+export const ListCajaTiendaVentasQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listCajaTiendaVentasQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(listCajaTiendaVentasQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']).optional(),
+  "page": zod.coerce.number().int().min(1).default(listCajaTiendaVentasQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(listCajaTiendaVentasQueryPageSizeMax).default(listCajaTiendaVentasQueryPageSizeDefault)
+})
+
+export const ListCajaTiendaVentasResponse = zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "folio": zod.number(),
+  "cliente": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO', 'MIXTO', 'SIN_COBRO']).describe('Método único o MIXTO cuando el ticket tiene más de un pago.'),
+  "importe": zod.string(),
+  "estadoCobro": zod.enum(['COBRADO', 'PENDIENTE', 'CREDITO']),
+  "utilidad": zod.string().nullish().describe('Solo disponible para roles financieros autorizados.')
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
 })
 
 
