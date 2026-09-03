@@ -93,3 +93,19 @@ test("Block 3 functionality in payment dialog", async () => {
   assert.match(pagoDialog, /setRealResult\(data\)/);
   assert.match(pagoDialog, /Resumen de aplicación/);
 });
+
+test("credit term and hard-limit UX live in POS, not Cobros", async () => {
+  const pos = await readFile(new URL("artifacts/mariana-textil/src/pages/pos.tsx", root), "utf8");
+  const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
+
+  assert.match(pos, /useGetPosClienteCreditoDisponible/);
+  assert.match(pos, /CREDIT_TERMS\.map/);
+  assert.match(pos, /creditoDisponible/);
+  assert.match(pos, /creditoFaltante/);
+  assert.match(pos, /límite de crédito en cero/);
+  assert.match(pos, /Venta a Público no admite compras a crédito/);
+  assert.match(cobros, /Plazo definido en POS/);
+  assert.match(cobros, /ticket\.fechaVencimiento/);
+  assert.doesNotMatch(cobros, /USUARIO ADMIN|CONTRASEÑA ADMIN|credencialesAdmin/);
+  assert.doesNotMatch(cobros, /setDiasPlazo|credit-term-/);
+});

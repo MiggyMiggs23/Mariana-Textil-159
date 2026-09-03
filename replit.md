@@ -444,6 +444,14 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 **El renglón de IVA solo aparece en ventas facturadas.** Un impuesto en cero junto a un subtotal igual al total se contradice a sí mismo en un documento que el cliente firma.
 
+**Pendiente de cobro y venta a crédito son tarjetas distintas** en Caja en Tiempo Real. La primera cuenta tickets vendidos que la caja aún no cobra, con alerta a los 30 minutos. La segunda cuenta lo prestado. Un crédito a 30 días no está atrasado a la media hora, así que la tarjeta de crédito **no lleva alerta de tiempo**: el vencimiento se vigila en Cartera.
+
+**El plazo de crédito se elige en POS**, al crear el ticket, no en el diálogo de cobro: la caja no tiene impresora y la nota con el pagaré se imprime desde el POS. Se precarga de `clientes.diasCredito` y se puede cambiar para esa venta sin modificar el perfil. Un cliente sin plazo obliga a elegirlo.
+
+**El límite de crédito es duro.** Debajo procede, arriba se rechaza, **sin excepción**: no existe autorización de ADMIN, ni aprobación remota, ni override posterior. Un límite que se puede saltar no es un límite. El cajero ve el crédito disponible al seleccionar al cliente, y el rechazo dice cuánto hay y cuánto falta, en vez de un "no se puede" genérico.
+
+**La notificación de venta a crédito es guardada**, no derivada: una venta es un hecho ocurrido, no una condición vigente, y como alerta derivada se quedaría para siempre.
+
 **Escaneo en POS:** un rollo escaneado que se identifica sin ambigüedad **se agrega al carrito directamente**, con el mismo criterio de Salidas: la serie manda y la discrepancia de SKU avisa sin bloquear. No se agrega nada cuando el escaneo devuelve varios resultados, ni cuando el rollo no está disponible, es de otro sitio o ya está en el carrito; esos casos se rechazan con aviso, porque un rechazo silencioso produce un ticket con menos rollos de los que se lleva el cliente. El tecleo manual sigue mostrando resultados para elegir.
 
 **Renglones agrupados:** los rollos del mismo producto forman **un solo renglón** con su conteo y cantidad total, y el precio se captura una vez para todos. Agrupar por tela mezclaría colores y unidades y está prohibido.
