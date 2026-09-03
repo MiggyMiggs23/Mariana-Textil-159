@@ -355,14 +355,14 @@ content_type = "application/pdf"
 id = "thso39we8UjNMte6_p5H9"
 uri = "file://reports/a5-print-evidence/nota-credito-11-lineas.pdf"
 type = "pdf"
-title = "Nota crédito — 11 líneas"
-description = "A5 vertical; dos hojas por copia, pagaré solo en las hojas finales."
+title = "Nota de crédito — 11 líneas"
+description = "A5 vertical, dos copias; división 8+3 sin renglones partidos."
 logical_id = "8c1574c3-2049-4da1-8ed6-4308811cb45a"
-content_hash = "sha256:ed03ae7c91a9f0b710d82758df37da0b5ae4eb44ffefaa7b7c7c8f3001037ea4"
-size = 1217841
-mtime_ms = 1788403387139
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8c1574c3-2049-4da1-8ed6-4308811cb45a/236c7c13-293d-45b4-9b4b-d7161e8bd9fa"
-storage_version_token = "1788404145169426"
+content_hash = "sha256:8a9102a0d4d7530f0fc3c757eafd444146a46b5962d6e91ae8a7843ed36f5eb3"
+size = 1240918
+mtime_ms = 1788407188743
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8c1574c3-2049-4da1-8ed6-4308811cb45a/67ffd616-e93f-4f05-bc13-9a3b16ab7e66"
+storage_version_token = "1788407523605713"
 content_type = "application/pdf"
 
 [[outputs]]
@@ -384,11 +384,39 @@ id = "6zVkkghSj6TvpIp7Lhfk_"
 uri = "file://reports/a5-print-evidence/salida-10-lineas.pdf"
 type = "pdf"
 title = "Salida — 10 líneas"
-description = "A5 horizontal a capacidad exacta; pie completo y una sola página física."
+description = "A5 horizontal a color, iniciales MRA, QR sobre blanco y pie completo."
 logical_id = "4d2d65bb-7580-46f8-83c3-65442408e1be"
-content_hash = "sha256:1b74e0cf7970fb50eb21d814b70a6c19a3fe90acccaa2940febe68d3d6908b86"
-size = 261039
-mtime_ms = 1788403874954
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4d2d65bb-7580-46f8-83c3-65442408e1be/d54aa69e-f0ab-4365-b6d5-70c0ea8c864d"
-storage_version_token = "1788404146258620"
+content_hash = "sha256:1ab7132911dd0cd1f051b7ef43de08201cf31bf24995a89581286632b48edfa1"
+size = 1089014
+mtime_ms = 1788407274663
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4d2d65bb-7580-46f8-83c3-65442408e1be/021043be-40a9-428c-9abb-c17534ae5697"
+storage_version_token = "1788407522549112"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "_xP2UUkjwjU1oQ8YtxkuW"
+uri = "file://reports/a5-print-evidence/nota-credito-9-lineas.pdf"
+type = "pdf"
+title = "Nota de crédito — 9 líneas"
+description = "A5 vertical, dos copias; división 8+1 sin renglones partidos."
+logical_id = "306c9a25-0524-43a4-a2d5-2dc2b4ce215d"
+content_hash = "sha256:2ef1a0ddb3fd0c73c4d5d0404d1ff3476d69b06e24951e2689bb6f6f8102628a"
+size = 1152295
+mtime_ms = 1788407203144
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/306c9a25-0524-43a4-a2d5-2dc2b4ce215d/412bf327-cac3-47c6-a8bb-955d50b5e619"
+storage_version_token = "1788407523094381"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "JkOIWRuMG1MCipgpwFiJr"
+uri = "file://reports/a5-print-evidence/nota-credito-15-lineas.pdf"
+type = "pdf"
+title = "Nota de crédito — 15 líneas"
+description = "A5 vertical, dos copias; división 8+7 sin renglones partidos."
+logical_id = "56de7031-a590-4bda-b6d5-612622966105"
+content_hash = "sha256:1c287b71c4b7668458cb8a4870ae3fb6caf13e205149e0e9dcbb1dd374e49d88"
+size = 1244567
+mtime_ms = 1788407158963
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/56de7031-a590-4bda-b6d5-612622966105/55d5af2b-f4fc-437e-b168-c3b4be4ae0c2"
+storage_version_token = "1788407524061816"
 content_type = "application/pdf"
