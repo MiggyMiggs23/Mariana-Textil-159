@@ -9670,7 +9670,6 @@ components:
         [
           id,
           folio,
-          inicialesSitio,
           folioFormateado,
           modalidad,
           estado,
@@ -9692,9 +9691,6 @@ components:
       properties:
         id: { type: number }
         folio: { type: number }
-        inicialesSitio:
-          type: string
-          description: Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.
         folioFormateado: { type: string, example: DN-000001 }
         modalidad:
           $ref: "#/components/schemas/ModalidadSalida"

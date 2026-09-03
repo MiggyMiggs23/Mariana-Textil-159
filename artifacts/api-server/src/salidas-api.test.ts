@@ -86,28 +86,20 @@ test("Block 3 reception is site-authoritative, one-step, audited, and QR-driven"
   assert.match(receptionPage, /salida\.folioFormateado/);
 });
 
-test("Salida document initials are sourced from the origin location DTO path", async () => {
+test("Salida document exposes full location names without a separate initials field", async () => {
   const [service, spec] = await Promise.all([
     readFile(serviceFile, "utf8"),
     readFile(specFile, "utf8"),
   ]);
-  assert.match(
-    service,
-    /iniciales:\s*ubicacionesTable\.iniciales/,
-  );
-  assert.match(
-    service,
-    /inicialesSitio:\s*locations\.get\(salida\.origenId\)\?\.iniciales/,
-  );
   const salidaContract = spec.slice(
     spec.indexOf("    SalidaResumen:"),
     spec.indexOf("    SalidaListResult:"),
   );
-  assert.match(salidaContract, /inicialesSitio,/);
-  assert.match(
-    salidaContract,
-    /inicialesSitio:\s*\n\s*type: string\s*\n\s*description: Iniciales vigentes del sitio de origen, obtenidas de ubicaciones\.iniciales\./,
-  );
+
+  assert.match(salidaContract, /nombreOrigen/);
+  assert.match(salidaContract, /nombreDestino/);
+  assert.doesNotMatch(salidaContract, /inicialesSitio/);
+  assert.doesNotMatch(service, /inicialesSitio:/);
 });
 
 test("Block 1 counter exit is one-step, site-scoped, persisted and printable", async () => {

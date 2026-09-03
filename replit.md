@@ -490,8 +490,6 @@ Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser 
 
 **El QR de la Salida lleva recuadro blanco detrás.** Sobre papel de color el contraste puede caer y el código deja de leerse; si el QR no escanea, se rompe el flujo de recepción. Es una regla operativa, no estética, y aplica a cualquier color de papel presente o futuro.
 
-Además del color del papel, la Salida imprime las **iniciales del sitio** en grande, tomadas de `ubicaciones`. Así se reconoce a distancia sin depender solo del color, y funciona el día que se abre un sitio antes de conseguir su papel.
-
 **Los renglones por hoja son tres mediciones independientes y distintas:** Nota de contado 14; Nota de crédito 8; Salida 10. Crédito reserva el pagaré legible, mientras Salida reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En crédito, el noveno renglón invade el pie al rasterizar; en Salida, 11 o más renglones recortan el pie.
 
 Todo documento dibuja su capacidad completa con renglones cerrados y perímetro negro. Las hojas adicionales repiten encabezado y pie, conservan numeración continua y nunca desbordan. El pagaré usa 10 px (7.5 pt) con interlineado de 12 px (9 pt), conserva su texto literal y aparece solo en la última hoja de cada copia de crédito.

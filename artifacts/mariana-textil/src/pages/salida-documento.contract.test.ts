@@ -23,7 +23,8 @@ test("la salida usa A5 horizontal con diez renglones fijos por página", () => {
 
 test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   assert.match(page, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
-  assert.match(page, /<h1[^>]*>[\s\S]*Salida[\s\S]*doc-origin-initials/);
+  assert.match(page, /<h1[^>]*>Salida<\/h1>/);
+  assert.doesNotMatch(page, /doc-origin-initials|salida\.inicialesSitio/);
   assert.doesNotMatch(page, /HOJA DE SALIDA/);
   assert.doesNotMatch(page, /tracking-tighter uppercase leading-none">Salida/);
   assert.match(page, /printWhenReady\("print-salida"\)/);
@@ -36,6 +37,8 @@ test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   assert.doesNotMatch(page, /modalidad === "MOSTRADOR"[\s\S]*qrUrl/);
   assert.match(page, />Generó:</);
   assert.match(page, />Entregó:</);
+  assert.match(page, /data-testid="doc-origin-name">\{salida\.nombreOrigen\}/);
+  assert.match(page, /data-testid="doc-destination-name">\{salida\.nombreDestino\}/);
   for (const heading of [
     "Producto",
     "Color",
@@ -56,16 +59,6 @@ test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
     assert.match(page, new RegExp(`>${signature}<`));
   }
   assert.doesNotMatch(page, /pageIndex === totalPages - 1/);
-});
-
-test("las iniciales grandes del origen llegan por el DTO de la salida", () => {
-  assert.match(page, /data-testid="doc-origin-initials"/);
-  assert.match(
-    page,
-    /className="uppercase tracking-wide"/,
-  );
-  assert.match(page, /\{salida\.inicialesSitio\}/);
-  assert.doesNotMatch(page, /doc-origin-initials[\s\S]*>(DN|MTY|CDMX)</);
 });
 
 test("las series permanecen completas en el detalle de pantalla", () => {

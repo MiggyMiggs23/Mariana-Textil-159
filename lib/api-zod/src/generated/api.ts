@@ -6409,7 +6409,6 @@ export const ListSalidasResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -6453,7 +6452,6 @@ export const GetBorradorSalidaResponse = zod.object({
   "salida": zod.union([zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -6557,7 +6555,6 @@ export const AgregarRolloBorradorSalidaBody = zod.object({
 export const AgregarRolloBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -6664,7 +6661,6 @@ export const CrearSalidaMostradorBody = zod.object({
 export const CrearSalidaMostradorResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -6786,7 +6782,6 @@ export const GetUbicacionesSalidaResponse = zod.array(GetUbicacionesSalidaRespon
 export const ListSalidasRecepcionResponseItem = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -6826,7 +6821,6 @@ export const GetSalidaRecepcionParams = zod.object({
 export const GetSalidaRecepcionResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -6922,7 +6916,6 @@ export const GetSalidaParams = zod.object({
 export const GetSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -7018,7 +7011,6 @@ export const GetDocumentoSalidaParams = zod.object({
 export const GetDocumentoSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -7115,7 +7107,6 @@ export const QuitarRolloBorradorSalidaParams = zod.object({
 export const QuitarRolloBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -7221,7 +7212,6 @@ export const CancelarSalidaBody = zod.object({
 export const CancelarSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -7325,7 +7315,6 @@ export const EnviarSalidaBody = zod.object({
 export const EnviarSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
@@ -7435,7 +7424,6 @@ export const RecibirSalidaBody = zod.object({
 export const RecibirSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "inicialesSitio": zod.string().describe('Iniciales vigentes del sitio de origen, obtenidas de ubicaciones.iniciales.'),
   "folioFormateado": zod.string(),
   "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
   "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),

@@ -55,12 +55,13 @@ las últimas hojas de crédito. La rasterización completa con `pdftoppm` confir
 firmas de las notas, filas completas y observaciones, dos totales y las tres firmas de
 Salida.
 
-## Diseño de Salida, iniciales y QR
+## Diseño de Salida y QR
 
 La Salida restauró exactamente el tratamiento visual previo a la conversión monocromática:
-logo a color, azul de marca en título, barra y cabecera de tabla, y folio rojo. Las
-iniciales grandes proceden de `ubicaciones.iniciales` y están integradas en el título.
-El QR conserva su zona de silencio y un recuadro blanco adicional de 2 mm. La impresora
+el título dice únicamente “Salida”; ORIGEN y DESTINO muestran los nombres completos de
+las ubicaciones; el logo está a color, con azul de marca en título, barra y cabecera de
+tabla, y folio rojo. El QR conserva su zona de silencio y un recuadro blanco adicional
+de 2 mm. La impresora
 puede convertir este diseño a grises al imprimir sobre papel de color; el documento no
 aplica filtros ni sustituye el logo por una versión gris.
 
@@ -85,5 +86,5 @@ Por ello no se afirma una prueba física inexistente. Antes de adopción operati
 4. Adjuntar la foto de la Salida sobre papel de color una vez realizada esa prueba.
 
 La comprobación automatizada sí cubre tamaño, orientación, número de páginas, ausencia de
-hojas fantasma, paginación continua, pagaré en última hoja, perímetros, recuadro blanco e
-iniciales. La lectura óptica sobre papel real queda deliberadamente fuera de lo declarado.
+hojas fantasma, paginación continua, pagaré en última hoja, perímetros y recuadro blanco.
+La lectura óptica sobre papel real queda deliberadamente fuera de lo declarado.

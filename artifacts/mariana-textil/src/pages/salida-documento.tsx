@@ -96,15 +96,7 @@ export default function SalidaDocumento() {
               <div className="flex items-center gap-4">
                 <div className="mr-2 h-16 w-2 bg-[#1e3a8a]"></div>
                 <div>
-                  <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter leading-none">
-                    Salida{" "}
-                    <span
-                      className="uppercase tracking-wide"
-                      data-testid="doc-origin-initials"
-                    >
-                      {salida.inicialesSitio}
-                    </span>
-                  </h1>
+                  <h1 className="text-5xl font-black text-[#1e3a8a] tracking-tighter leading-none">Salida</h1>
                   <div className="mt-1 text-sm font-bold uppercase text-gray-700">Mariana Textil</div>
                   <div className="mt-0.5 text-sm font-black leading-tight text-red-600" data-testid="doc-folio">{salida.folioFormateado}</div>
                   <div className="text-[10px] font-bold text-gray-600">Pág {pageIndex + 1}/{totalPages}</div>
@@ -124,11 +116,11 @@ export default function SalidaDocumento() {
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Origen:</span>
-                  <span className="text-[10px] truncate font-medium text-black">{salida.nombreOrigen}</span>
+                   <span className="text-[10px] truncate font-medium text-black" data-testid="doc-origin-name">{salida.nombreOrigen}</span>
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Destino:</span>
-                  <span className="text-[10px] truncate font-medium text-black">{salida.nombreDestino}</span>
+                   <span className="text-[10px] truncate font-medium text-black" data-testid="doc-destination-name">{salida.nombreDestino}</span>
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Fecha:</span>

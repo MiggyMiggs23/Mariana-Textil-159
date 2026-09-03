@@ -292,7 +292,6 @@ export async function buildSalidaDetail(
     id: salida.id,
     modalidad: salida.modalidad,
     folio: salida.folio,
-    inicialesSitio: locations.get(salida.origenId)?.iniciales ?? "",
     folioFormateado: `${locations.get(salida.origenId)?.iniciales ?? ""}-${String(salida.folio).padStart(6, "0")}`,
     origenId: salida.origenId,
     destinoId: salida.destinoId ?? null,

@@ -50,9 +50,10 @@ test("Salida page specifies A5 landscape and has correct control signatures", as
   assert.match(salida, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(salida, /qrSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(salida, /qrWrapperClassName="salida-qr-white-pad bg-white p-\[2mm\]"/);
-  assert.match(salida, /data-testid="doc-origin-initials"/);
-  assert.match(salida, /\{salida\.inicialesSitio\}/);
-  assert.match(salida, /className="uppercase tracking-wide"/);
+  assert.match(salida, /<h1[^>]*>Salida<\/h1>/);
+  assert.doesNotMatch(salida, /doc-origin-initials|salida\.inicialesSitio/);
+  assert.match(salida, /data-testid="doc-origin-name">\{salida\.nombreOrigen\}/);
+  assert.match(salida, /data-testid="doc-destination-name">\{salida\.nombreDestino\}/);
   assert.doesNotMatch(salida, /data-print-palette="monochrome"|logoVariant="monochrome"/);
   assert.doesNotMatch(css, /filter:\s*grayscale\(1\)/);
   assert.match(salida, /bg-\[#1e3a8a\]/);
