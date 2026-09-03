@@ -814,6 +814,12 @@ export async function crearTicket(
         "INVALID_PRODUCT",
       );
     }
+    if (producto.precioSugerido == null) {
+      throw new PosError(
+        `El producto ${productName(producto.tela, producto.color)} no tiene precio sugerido capturado. Captúralo en el módulo de Precios antes de venderlo.`,
+        "SUGGESTED_PRICE_NOT_CONFIGURED",
+      );
+    }
     if (producto.unidad === "BOLSA" && !Number.isInteger(Number(cantidad))) {
       throw new PosError(
         "La cantidad de bolsas debe ser un número entero.",

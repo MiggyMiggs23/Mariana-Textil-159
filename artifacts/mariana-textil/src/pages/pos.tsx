@@ -67,6 +67,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
+import {
+  hasCapturedSuggestedPrice,
+  PRODUCT_WITHOUT_PRICE_DESCRIPTION,
+  PRODUCT_WITHOUT_PRICE_TITLE,
+} from "@/lib/pos-product-price";
 import { ClientSelector } from "@/components/client-selector";
 import {
   allowedCreditTerm,
@@ -514,6 +519,16 @@ export default function PosPage() {
   });
 
   const addToCart = useCallback((item: any, automatic = false) => {
+    if (!hasCapturedSuggestedPrice(item)) {
+      if (automatic) requestAppSound("ALERTA");
+      toast({
+        title: PRODUCT_WITHOUT_PRICE_TITLE,
+        description: PRODUCT_WITHOUT_PRICE_DESCRIPTION,
+        variant: "destructive",
+      });
+      return false;
+    }
+
     // Para NORMAL, añadir el rollo
     if (tipoTicket === TipoTicket.NORMAL) {
       const current = cartRef.current;
@@ -1206,8 +1221,9 @@ export default function PosPage() {
                         </div>
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
-                            {formatNumber(rollo.precioSugerido, { kind: "money" })}
-                            /{formatUnit(rollo.unidad)}
+                            {rollo.precioSugerido == null
+                              ? "Sin precio"
+                              : <>{formatNumber(rollo.precioSugerido, { kind: "money" })}/{formatUnit(rollo.unidad)}</>}
                           </div>
                           <Button
                             size="sm"
@@ -1242,12 +1258,15 @@ export default function PosPage() {
                         </div>
                         <div className="flex flex-col items-end gap-3 shrink-0">
                           <div className="font-bold text-lg">
-                             {formatNumber(prod.precioMenudeo, { kind: "money" })}
-                            /{formatUnit(prod.unidad)}
+                            {prod.precioSugerido == null
+                              ? "Sin precio"
+                              : <>{formatNumber(prod.precioMenudeo, { kind: "money" })}/{formatUnit(prod.unidad)}</>}
                           </div>
-                           <div className="text-xs text-muted-foreground text-right">
-                             Mayoreo: {formatNumber(prod.precioMayoreo, { kind: "money" })} · desde {mayoreoThresholdForUnit(prod.unidad)} {formatUnit(prod.unidad)}
-                           </div>
+                          {prod.precioSugerido != null && (
+                            <div className="text-xs text-muted-foreground text-right">
+                              Mayoreo: {formatNumber(prod.precioMayoreo, { kind: "money" })} · desde {mayoreoThresholdForUnit(prod.unidad)} {formatUnit(prod.unidad)}
+                            </div>
+                          )}
                           <Button
                             size="sm"
                             onClick={() => addToCart(prod)}

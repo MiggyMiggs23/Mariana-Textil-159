@@ -110,7 +110,7 @@ async function makeLocation() {
 }
 
 async function makeProduct(
-  precioSugerido = "100.00",
+  precioSugerido: string | null = "100.00",
   unidad: "METRO" | "KILO" | "BOLSA" = "METRO",
   seVendePorMetro = unidad === "METRO",
 ) {
@@ -279,6 +279,33 @@ await test("POS-01 venta normal descuenta inventario e idempotencia conserva fol
       ),
     );
   assert.equal(ventas.length, 1);
+});
+
+await test("POS bloquea un producto sin precio antes de crear la venta", async () => {
+  const ubicacionId = await makeLocation();
+  const productoId = await makeProduct(null);
+  const rollo = await makeRollo(productoId, ubicacionId);
+
+  await assert.rejects(
+    () =>
+      sale({
+        ubicacionId,
+        productoId,
+        rolloId: rollo.id,
+        cantidad: "10",
+        precio: "75",
+      }),
+    (error: unknown) =>
+      error instanceof PosError &&
+      error.code === "SUGGESTED_PRICE_NOT_CONFIGURED" &&
+      /módulo de Precios/.test(error.message),
+  );
+
+  const [unchanged] = await db
+    .select({ estado: rollosTable.estado })
+    .from(rollosTable)
+    .where(eq(rollosTable.id, rollo.id));
+  assert.equal(unchanged?.estado, "DISPONIBLE");
 });
 
 await test("POS-LOCK: tickets inversos no se interbloquean por el orden de captura", async () => {
