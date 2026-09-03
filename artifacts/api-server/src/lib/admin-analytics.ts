@@ -4,6 +4,7 @@ import {
   type AccountDestinationCode,
 } from "@workspace/number-format";
 import { parseMexicoDateQuery } from "./mexico-date";
+import { orderStores } from "./store-order";
 
 export const ANALYTICS_TIME_ZONE = "America/Mexico_City";
 
@@ -278,6 +279,13 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
     `WITH filtered AS (
        SELECT t.id,t.estado,t.cobrado,t.total,t.subtotal,t.iva
        FROM tickets t WHERE ${condition.text}
+     ), caja_payments AS (
+       SELECT p.ticket_id,
+         COALESCE(SUM(p.importe),0) cobrado
+       FROM ticket_pagos p JOIN filtered f ON f.id=p.ticket_id
+       WHERE f.estado='VENDIDO' AND f.cobrado
+         AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA')
+       GROUP BY p.ticket_id
      ), lines AS (
        SELECT l.ticket_id,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
@@ -289,18 +297,20 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
      )
      SELECT
        COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO'),0)::text ventas,
-       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND f.cobrado),0)::text cobrado,
+       COALESCE(SUM(p.cobrado),0)::text cobrado,
        COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado),0)::text pendiente,
        COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO'),0)::text subtotal,
        COALESCE(SUM(f.iva) FILTER (WHERE f.estado='VENDIDO'),0)::text iva,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.costo),0)::text END costo,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.importe_margen-l.costo),0)::text END margen,
        COUNT(*) FILTER (WHERE f.estado='VENDIDO')::int tickets,
-       COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND f.cobrado)::int "ticketsCobrados",
+       COUNT(p.ticket_id)::int "ticketsCobrados",
        COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado)::int "ticketsPendientes",
        COUNT(*) FILTER (WHERE f.estado='CANCELADO')::int cancelaciones,
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen"
-     FROM filtered f LEFT JOIN lines l ON l.ticket_id=f.id`,
+     FROM filtered f
+     LEFT JOIN lines l ON l.ticket_id=f.id
+     LEFT JOIN caja_payments p ON p.ticket_id=f.id`,
     condition.values,
   );
   const row = result.rows[0]!;
@@ -406,8 +416,10 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        SELECT t.id,
          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='EFECTIVO'),0) efectivo,
           COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia
-       FROM filtered t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id
-       WHERE t.estado='VENDIDO' AND t.cobrado GROUP BY t.id
+        FROM filtered t JOIN ticket_pagos p ON p.ticket_id=t.id
+        WHERE t.estado='VENDIDO' AND t.cobrado
+          AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA')
+        GROUP BY t.id
       ), credit_sales AS (
         SELECT t.ubicacion_id,
           COALESCE(SUM(m.importe),0) credito,
@@ -423,9 +435,10 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        s.id "sesionCajaId",s.abierta_at "abiertaAt",caj.nombre cajero,
        term.nombre "usuarioTerminal",
        COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0)::text vendido,
-       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND t.cobrado),0)::text cobrado,
+        COALESCE(SUM(p.efectivo+p.transferencia),0)::text cobrado,
        COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado),0)::text pendiente,
        COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
+        COUNT(p.id)::int "ticketsCobrados",
         CASE WHEN COALESCE(SUM(m.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(m.margen),0)::text END margen,
         COALESCE(SUM(m.subtotal),0)::text subtotal,
        COALESCE(SUM(p.efectivo),0)::text efectivo,COALESCE(SUM(p.transferencia),0)::text transferencia,
@@ -452,10 +465,12 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
      ORDER BY u.nombre`,
     condition.values,
   );
-  return result.rows.map((row) => {
+  return orderStores(result.rows.map((row) => {
     const sold = Number(row.vendido);
+    const collected = Number(row.cobrado);
     const subtotal = Number(row.subtotal);
     const tickets = Number(row.tickets);
+    const ticketsCollected = Number(row.ticketsCobrados);
     const cancellationRate = tickets + Number(row.cancelaciones) === 0 ? 0 :
       (Number(row.cancelaciones) / (tickets + Number(row.cancelaciones))) * 100;
     const alerts: string[] = [];
@@ -468,15 +483,90 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
       ...row,
       abiertaAt: row.abiertaAt ? new Date(row.abiertaAt).toISOString() : null,
       vendido: decimal(sold), cobrado: decimal(row.cobrado), pendiente: decimal(row.pendiente),
-      ticketPromedio: decimal(tickets === 0 ? 0 : sold / tickets),
+      ticketPromedio: decimal(ticketsCollected === 0 ? 0 : collected / ticketsCollected),
       margen: row.margen == null ? null : decimal(row.margen),
       margenPorcentaje: row.margen == null ? null : decimal(subtotal === 0 ? 0 : (Number(row.margen) / subtotal) * 100),
       efectivo: decimal(row.efectivo), transferencia: decimal(row.transferencia), credito: decimal(row.credito),
        creditoOperaciones: Number(row.creditoOperaciones),
-       tickets, pendientes30Min: Number(row.pendientes30Min),
+       tickets, ticketsCobrados: Number(row.ticketsCobrados),
+       pendientes30Min: Number(row.pendientes30Min),
       cancelaciones: Number(row.cancelaciones), tasaCancelacion: decimal(cancellationRate), alertas: alerts,
     };
-  });
+  }));
+}
+
+export async function listStoreSales(
+  filters: AnalyticsFilters & { ubicacionId: number },
+  formaPago: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO" | undefined,
+  page = 1,
+  pageSize = 50,
+) {
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId,
+    formaPago ?? null,
+    pageSize,
+    (page - 1) * pageSize,
+  ];
+  const condition = `t.ubicacion_id=$3
+    AND t.estado='VENDIDO'
+    AND ($1::timestamptz IS NULL OR t.created_at >= $1)
+    AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+    AND ($4::text IS NULL OR (
+      $4='CREDITO' AND (t.credito OR EXISTS (
+        SELECT 1 FROM ticket_pagos fp WHERE fp.ticket_id=t.id AND fp.forma_pago='CREDITO'
+      ))
+    ) OR ($4 <> 'CREDITO' AND EXISTS (
+      SELECT 1 FROM ticket_pagos fp
+      WHERE fp.ticket_id=t.id AND fp.forma_pago=$4::forma_pago_ticket
+    )))`;
+  const base = `FROM tickets t LEFT JOIN clientes c ON c.id=t.cliente_id
+    LEFT JOIN LATERAL (
+      SELECT array_agg(DISTINCT p.forma_pago::text ORDER BY p.forma_pago::text) formas
+      FROM ticket_pagos p WHERE p.ticket_id=t.id
+    ) pagos ON true
+    LEFT JOIN LATERAL (
+      SELECT CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
+        ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END utilidad
+      FROM ticket_lineas l WHERE l.ticket_id=t.id
+    ) margen ON true
+    WHERE ${condition} AND t.estado='VENDIDO'`;
+  const [rows, count, store] = await Promise.all([
+    pool.query(`SELECT t.id,t.created_at "createdAt",t.folio,COALESCE(c.nombre,'Público general') cliente,
+      t.total::text importe,t.cobrado,t.credito,pagos.formas,margen.utilidad
+      ${base} ORDER BY t.created_at DESC,t.id DESC LIMIT $5 OFFSET $6`, values),
+    pool.query(`SELECT COUNT(*)::int total ${base}`, values.slice(0, 4)),
+    pool.query(
+      `SELECT id,nombre FROM ubicaciones
+       WHERE id=$1 AND tipo='TIENDA' AND activa`,
+      [filters.ubicacionId],
+    ),
+  ]);
+  if (!store.rows[0]) {
+    throw new AnalyticsInputError("La tienda solicitada no existe o está inactiva.");
+  }
+  return {
+    ubicacionId: Number(store.rows[0].id),
+    nombreUbicacion: String(store.rows[0].nombre),
+    items: rows.rows.map((row) => {
+      const forms = row.formas as string[] | null;
+      return {
+        id: Number(row.id),
+        createdAt: new Date(row.createdAt).toISOString(),
+        folio: Number(row.folio),
+        cliente: String(row.cliente),
+        formaPago: row.credito ? "CREDITO" : !forms?.length ? "SIN_COBRO" :
+          forms.length === 1 ? forms[0] : "MIXTO",
+        importe: decimal(row.importe),
+        estadoCobro: row.credito ? "CREDITO" : row.cobrado ? "COBRADO" : "PENDIENTE",
+        utilidad: row.utilidad == null ? null : decimal(row.utilidad),
+      };
+    }),
+    total: Number(count.rows[0]!.total),
+    page,
+    pageSize,
+  };
 }
 
 export async function getRealtimeTickets(filters: AnalyticsFilters) {
@@ -488,7 +578,8 @@ export async function getRealtimeTickets(filters: AnalyticsFilters) {
          ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
      FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
      LEFT JOIN clientes c ON c.id=t.cliente_id LEFT JOIN ticket_lineas l ON l.ticket_id=t.id
-     WHERE ${condition.text} GROUP BY t.id,u.nombre,c.nombre
+     WHERE ${condition.text} AND t.estado='VENDIDO'
+     GROUP BY t.id,u.nombre,c.nombre
      ORDER BY t.created_at DESC LIMIT 20`,
     condition.values,
   );
@@ -666,7 +757,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
       .map((row) => ({ ...row, importe: decimal(row.importe) })),
     ivaCobrado: decimal(fiscal.rows[0]!.iva),
     totalCobrado: decimal(total),
-    porTienda: [...byStore.rows.reduce((map, row) => {
+    porTienda: orderStores([...byStore.rows.reduce((map, row) => {
       const item = map.get(Number(row.ubicacionId)) ?? {
         ubicacionId: Number(row.ubicacionId), nombreUbicacion: String(row.nombreUbicacion),
         cajaFisica: 0, cuentaFiscal: 0, cuentaNoFiscal: 0, cuentasPorCobrar: 0,
@@ -682,7 +773,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
         ...row, cajaFisica: decimal(row.cajaFisica), cuentaFiscal: decimal(row.cuentaFiscal),
         cuentaNoFiscal: decimal(row.cuentaNoFiscal), cuentasPorCobrar: decimal(row.cuentasPorCobrar),
         total: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
-      })),
+       }))),
     facturacion: {
       facturadoTotal: decimal(rows.filter((r) => r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
       noFacturadoTotal: decimal(rows.filter((r) => !r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
@@ -1036,7 +1127,7 @@ export async function compareStores(filters: AnalyticsFilters) {
     items.push({ fecha: row.fecha, ventas: Number(row.ventas) });
     dailyMap.set(Number(row.ubicacionId), items);
   }
-  const tiendas = result.rows.map((row) => {
+  const tiendas = orderStores(result.rows.map((row) => {
     const sales = Number(row.ventas);
     const tickets = Number(row.tickets);
     const average = tickets === 0 ? 0 : sales / tickets;
@@ -1067,16 +1158,16 @@ export async function compareStores(filters: AnalyticsFilters) {
       diferenciaCaja: decimal(row.diferenciaCaja),
       participacion: decimal(totalSales === 0 ? 0 : (sales / totalSales) * 100),
     };
-  });
+  }));
   const sum = (key: string) => result.rows.reduce((total, row) => total + Number(row[key] ?? 0), 0);
   const facturado = sum("facturado");
   return {
     tiendas,
     promedioGeneralTicket: decimal(globalAverage),
-    ventasPorFecha: dailyRows.rows.map((row) => ({
+    ventasPorFecha: orderStores(dailyRows.rows.map((row) => ({
       fecha: row.fecha, ubicacionId: Number(row.ubicacionId),
       nombreUbicacion: row.nombreUbicacion, ventas: decimal(row.ventas),
-    })),
+    }))),
     totales: {
       ventas: decimal(totalSales), subtotal: decimal(sum("subtotal")),
       costo: result.rows.some((row) => row.costo == null) ? null : decimal(sum("costo")),

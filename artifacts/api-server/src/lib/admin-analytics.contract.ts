@@ -64,6 +64,23 @@ test("realtime store credit uses dated immutable ledger sales, not payment fragm
   assert.match(realtime, /COALESCE\(cs\.credito,0\)::text credito/);
 });
 
+test("realtime collected amount and counts only use cash and transfer payment rows", async () => {
+  const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  const summaryStart = source.indexOf("export async function getSalesSummary");
+  const summaryEnd = source.indexOf("\nexport async function", summaryStart + 1);
+  const summary = source.slice(summaryStart, summaryEnd);
+  const storesStart = source.indexOf("export async function getRealtimeStores");
+  const storesEnd = source.indexOf("\nexport async function", storesStart + 1);
+  const stores = source.slice(storesStart, storesEnd);
+
+  assert.match(summary, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA'\)/);
+  assert.match(summary, /COALESCE\(SUM\(p\.cobrado\),0\)::text cobrado/);
+  assert.match(summary, /COUNT\(p\.ticket_id\)::int "ticketsCobrados"/);
+  assert.match(stores, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA'\)/);
+  assert.match(stores, /COALESCE\(SUM\(p\.efectivo\+p\.transferencia\),0\)::text cobrado/);
+  assert.match(stores, /COUNT\(p\.id\)::int "ticketsCobrados"/);
+});
+
 test("realtime dashboard contract requires credit amount and operation count", () => {
   const result = GetAdminRealtimeDashboardResponse.safeParse({
     generatedAt: new Date().toISOString(),
@@ -266,6 +283,14 @@ test("four destinations preserve total and percentages/participation sum to 100"
   const total = [...totals.values()].reduce((sum, value) => sum + value, 0);
   assert.equal(total, 1000);
   assert.equal([...totals.values()].reduce((sum, value) => sum + value / total * 100, 0), 100);
+});
+
+test("every store-grouped caja view uses the shared canonical order", async () => {
+  const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  assert.match(source, /return orderStores\(result\.rows\.map/);
+  assert.match(source, /porTienda:\s*orderStores\(/);
+  assert.match(source, /const tiendas = orderStores\(result\.rows\.map/);
+  assert.match(source, /ventasPorFecha:\s*orderStores\(/);
 });
 
 test("meter and kilo quantities remain independent", () => {

@@ -31,6 +31,7 @@ if (!testUrl) {
     const now = new Date();
     const from = new Date(now.getTime() - 4 * 60 * 60_000);
     const to = new Date(now.getTime() + 60 * 60_000);
+    const creditAt = new Date(now.getTime() + 2 * 60_000);
     let folio = 1_500_000_000 + Math.floor(Math.random() * 100_000_000);
 
     try {
@@ -133,21 +134,25 @@ if (!testUrl) {
       const addTicket = async (input: {
         store: number; session: number; subtotal: number; iva?: number;
         state?: "VENDIDO" | "CANCELADO"; paid?: boolean; facturado?: boolean;
-        payment?: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO"; oldPending?: boolean;
+        payment?: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO"; credit?: boolean; oldPending?: boolean;
          unit?: 0 | 1; paymentCreatedAt?: Date; createdAt?: Date;
       }) => {
         const created = input.createdAt ?? (input.oldPending ? new Date(now.getTime() - 90 * 60_000) : now);
         const total = input.subtotal + (input.iva ?? 0);
         const ticket = await one(
           `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,
-             estado,cobrado,cobrado_at,usuario_caja_id,facturado,sesion_caja_id,uuid_cliente,created_at,
+             estado,cobrado,cobrado_at,usuario_caja_id,facturado,credito,dias_plazo,fecha_vencimiento,
+             sesion_caja_id,uuid_cliente,created_at,
              cancelado_at,cancelado_por,motivo_cancelacion)
-           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
            RETURNING id`,
           [folio++, ids.locations[input.store], ids.users[2], ids.clients[0], input.subtotal,
             input.iva ?? 0, total, input.state ?? "VENDIDO", input.paid ?? false,
             input.paid ? now : null, input.paid ? ids.users[1] : null,
-            input.facturado ?? false, ids.sessions[input.session], randomUUID(), created,
+             input.facturado ?? false, input.credit ?? false,
+             input.credit ? 30 : null,
+             input.credit ? new Date(created.getTime() + 30 * 86_400_000).toISOString().slice(0, 10) : null,
+             ids.sessions[input.session], randomUUID(), created,
             input.state === "CANCELADO" ? now : null,
             input.state === "CANCELADO" ? ids.users[0] : null,
             input.state === "CANCELADO" ? `${tag}-cancel` : null],
@@ -172,18 +177,25 @@ if (!testUrl) {
       };
 
       // Closed cut A gets 100 cash: expected=200, counted=0 => shortage 200.
-      await addTicket({ store: 0, session: 0, subtotal: 100, paid: true, payment: "EFECTIVO", unit: 0 });
+      const closedCashTicket =
+        await addTicket({ store: 0, session: 0, subtotal: 100, paid: true, payment: "EFECTIVO", unit: 0 });
       // A pending sold ticket in the same cut must not count as collected.
-      await addTicket({ store: 0, session: 0, subtotal: 75, unit: 0 });
+      const northPendingTicket = await addTicket({ store: 0, session: 0, subtotal: 75, unit: 0 });
       // Four destination cards across both stores.
-      await addTicket({ store: 0, session: 5, subtotal: 100, iva: 16, paid: true, payment: "EFECTIVO", unit: 0 });
-       await addTicket({ store: 0, session: 5, subtotal: 200, iva: 32, paid: true, payment: "TRANSFERENCIA", facturado: true, unit: 0, createdAt: new Date(from.getTime() - 60_000), paymentCreatedAt: new Date(now.getTime() + 10_000) });
-      await addTicket({ store: 1, session: 6, subtotal: 300, iva: 48, paid: true, payment: "TRANSFERENCIA", unit: 1 });
-       const creditTicket = await addTicket({ store: 1, session: 6, subtotal: 400, paid: true, payment: "CREDITO", unit: 1 });
+      const northCashTicket =
+        await addTicket({ store: 0, session: 5, subtotal: 100, iva: 16, paid: true, payment: "EFECTIVO", unit: 0 });
+       const northOutOfRangeTransferTicket =
+         await addTicket({ store: 0, session: 5, subtotal: 200, iva: 32, paid: true, payment: "TRANSFERENCIA", facturado: true, unit: 0, createdAt: new Date(from.getTime() - 60_000), paymentCreatedAt: new Date(now.getTime() + 10_000) });
+      const southTransferTicket =
+        await addTicket({ store: 1, session: 6, subtotal: 300, iva: 48, paid: true, payment: "TRANSFERENCIA", unit: 1 });
+       const creditTicket = await addTicket({
+         store: 1, session: 6, subtotal: 400, paid: true, payment: "CREDITO",
+         credit: true, unit: 1, createdAt: creditAt, paymentCreatedAt: creditAt,
+       });
        const creditSale = await one(
          `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,created_at)
           VALUES($1,$2,'VENTA_CREDITO',400,$3,$4) RETURNING id`,
-         [ids.clients[0], creditTicket, ids.users[1], now],
+          [ids.clients[0], creditTicket, ids.users[1], creditAt],
        );
        ids.creditMovements.push(Number(creditSale.id));
         // Two CREDITO payment rows are one credit sale. Realtime credit must
@@ -195,7 +207,7 @@ if (!testUrl) {
         await pool.query(
           `INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at)
            VALUES($1,'CREDITO',200,$2,$3)`,
-          [creditTicket, ids.users[1], now],
+           [creditTicket, ids.users[1], creditAt],
         );
        // Production payment flow: ABONO has no ticket. Its applications resolve
        // the paid sales/documents; unapplied remainder remains client credit.
@@ -252,10 +264,82 @@ if (!testUrl) {
          [cancelledSaleAbono.id, cancelledCreditSale.id],
        );
        ids.creditApplications.push(Number(cancelledSaleApplication.id));
-      await addTicket({ store: 0, session: 5, subtotal: 50, oldPending: true, unit: 0 });
-      await addTicket({ store: 1, session: 6, subtotal: 999, state: "CANCELADO", unit: 1 });
+       const oldNorthPendingTicket =
+         await addTicket({ store: 0, session: 5, subtotal: 50, oldPending: true, unit: 0 });
+       const cancelledSouthTicket =
+         await addTicket({ store: 1, session: 6, subtotal: 999, state: "CANCELADO", unit: 1 });
 
       const filters = { desde: from, hasta: to };
+      const northStoreFilters = { ...filters, ubicacionId: ids.locations[0] };
+      const southStoreFilters = { ...filters, ubicacionId: ids.locations[1] };
+      const [northSalesFirstPage, northSalesSecondPage, northCashSales, northTransferSales,
+         southTransferSales, southCreditSales, southSales] = await Promise.all([
+        analytics.listStoreSales(northStoreFilters, undefined, 1, 2),
+        analytics.listStoreSales(northStoreFilters, undefined, 2, 2),
+        analytics.listStoreSales(northStoreFilters, "EFECTIVO"),
+        analytics.listStoreSales(northStoreFilters, "TRANSFERENCIA"),
+        analytics.listStoreSales(southStoreFilters, "TRANSFERENCIA"),
+        analytics.listStoreSales(southStoreFilters, "CREDITO"),
+         analytics.listStoreSales(southStoreFilters, undefined),
+      ]);
+      assert.deepEqual(
+        {
+          ubicacionId: northSalesFirstPage.ubicacionId,
+          nombreUbicacion: northSalesFirstPage.nombreUbicacion,
+          total: northSalesFirstPage.total,
+          page: northSalesFirstPage.page,
+          pageSize: northSalesFirstPage.pageSize,
+          ids: northSalesFirstPage.items.map((item) => item.id),
+        },
+        {
+          ubicacionId: ids.locations[0],
+          nombreUbicacion: `${tag}-Norte`,
+          total: 4,
+          page: 1,
+          pageSize: 2,
+          ids: [northCashTicket, northPendingTicket],
+        },
+      );
+       assert.deepEqual(
+         northSalesSecondPage.items.map((item) => item.id),
+         [closedCashTicket, oldNorthPendingTicket],
+       );
+      assert.ok(northSalesFirstPage.items.every((item) =>
+        item.createdAt >= from.toISOString() && item.createdAt <= to.toISOString(),
+      ));
+      assert.deepEqual(northSalesFirstPage.items.map((item) => item.estadoCobro), ["COBRADO", "PENDIENTE"]);
+      assert.deepEqual(northCashSales.items.map((item) => ({
+        id: item.id, formaPago: item.formaPago, importe: item.importe, utilidad: item.utilidad,
+      })), [
+        { id: northCashTicket, formaPago: "EFECTIVO", importe: "116.00", utilidad: "50.00" },
+        { id: closedCashTicket, formaPago: "EFECTIVO", importe: "100.00", utilidad: "50.00" },
+      ]);
+      assert.equal(northTransferSales.total, 0, "the current date range excludes the older transfer");
+      assert.ok(!northSalesFirstPage.items.some((item) => item.id === northOutOfRangeTransferTicket));
+      assert.deepEqual(southTransferSales.items.map((item) => ({
+        id: item.id, formaPago: item.formaPago, estadoCobro: item.estadoCobro,
+        importe: item.importe, utilidad: item.utilidad,
+      })), [{
+        id: southTransferTicket, formaPago: "TRANSFERENCIA", estadoCobro: "COBRADO",
+        importe: "348.00", utilidad: "150.00",
+      }]);
+      assert.deepEqual(southCreditSales.items.map((item) => ({
+        id: item.id, formaPago: item.formaPago, estadoCobro: item.estadoCobro,
+        importe: item.importe, utilidad: item.utilidad,
+      })), [{
+        id: creditTicket, formaPago: "CREDITO", estadoCobro: "CREDITO",
+        importe: "400.00", utilidad: "200.00",
+      }]);
+       assert.ok(
+         !southSales.items.some((item) => item.id === cancelledSouthTicket),
+         "cancelled tickets are not store sales",
+       );
+       const realtimeTickets = await analytics.getRealtimeTickets(filters);
+       assert.ok(
+         !realtimeTickets.some((item) =>
+           item.id === cancelledSouthTicket || item.id === cancelledCreditTicket),
+         "cancelled tickets are not rendered as recent realtime sales",
+       );
       const timed =
         await Promise.all([
           analytics.measureKpi("resumen", () => analytics.getSalesSummary(filters)),
@@ -288,16 +372,70 @@ if (!testUrl) {
           timed[7].value,
         ] as const;
 
-      assert.equal(Number(summary.ventas), Number(summary.cobrado) + Number(summary.pendiente));
+      const realtimeCredit = analytics.summarizeRealtimeCredit(cards);
+      assert.equal(
+        Number(summary.ventas),
+        Number(summary.cobrado) + Number(summary.pendiente) + Number(realtimeCredit.importe),
+      );
       assert.ok(Number(summary.margen) > 0);
        assert.equal(summary.cancelaciones, 2);
       assert.equal(pending.tickets, 2);
       assert.ok(cards.some((card) => card.alertas.includes("PENDIENTE_MAS_30_MIN")));
       assert.ok(cards.reduce((sum, card) => sum + Number(card.margen), 0) > 0);
-      assert.deepEqual(analytics.summarizeRealtimeCredit(cards), {
+      assert.deepEqual(realtimeCredit, {
         importe: "400.00",
         operaciones: 1,
       });
+      assert.equal(cards.reduce((sum, card) => sum + Number(card.cobrado), 0), Number(summary.cobrado));
+      assert.equal(cards.reduce((sum, card) => sum + card.ticketsCobrados, 0), summary.ticketsCobrados);
+      const northStoreCard = cards.find((card) => card.ubicacionId === ids.locations[0]);
+      const southStoreCard = cards.find((card) => card.ubicacionId === ids.locations[1]);
+      assert.deepEqual(
+        northStoreCard && {
+          ticketPromedio: northStoreCard.ticketPromedio,
+          ticketsCobrados: northStoreCard.ticketsCobrados,
+        },
+        { ticketPromedio: "108.00", ticketsCobrados: 2 },
+      );
+      assert.deepEqual(
+        southStoreCard && {
+          ticketPromedio: southStoreCard.ticketPromedio,
+          ticketsCobrados: southStoreCard.ticketsCobrados,
+        },
+        { ticketPromedio: "348.00", ticketsCobrados: 1 },
+        "credit tickets must not inflate a store's collected ticket count or average",
+      );
+
+      const creditOnlyFilters = {
+        desde: new Date(creditAt.getTime() - 1_000),
+        hasta: new Date(creditAt.getTime() + 1_000),
+        ubicacionId: ids.locations[1],
+      };
+      const [creditOnlySummary, creditOnlyCards] = await Promise.all([
+        analytics.getSalesSummary(creditOnlyFilters),
+        analytics.getRealtimeStores(creditOnlyFilters),
+      ]);
+      const creditOnly = analytics.summarizeRealtimeCredit(creditOnlyCards);
+      assert.equal(creditOnlySummary.ventas, "400.00");
+      assert.equal(creditOnlySummary.cobrado, "0.00");
+      assert.equal(creditOnlySummary.ticketsCobrados, 0);
+      assert.equal(creditOnlySummary.pendiente, "0.00");
+      assert.equal(creditOnlySummary.margen, "200.00");
+      assert.deepEqual(creditOnly, { importe: "400.00", operaciones: 1 });
+      const creditOnlyStore = creditOnlyCards.find(
+        (card) => card.ubicacionId === ids.locations[1],
+      );
+      assert.equal(creditOnlyStore?.vendido, "400.00");
+      assert.equal(creditOnlyStore?.margen, "200.00");
+      assert.equal(creditOnlyStore?.credito, "400.00");
+      assert.equal(creditOnlyStore?.cobrado, "0.00");
+      assert.equal(creditOnlyStore?.ticketsCobrados, 0);
+      assert.equal(
+        Number(creditOnlySummary.ventas),
+        Number(creditOnlySummary.cobrado) +
+          Number(creditOnlySummary.pendiente) +
+          Number(creditOnly.importe),
+      );
       const siteCreditCards = await analytics.getRealtimeStores({
         ...filters,
         ubicacionId: ids.locations[0],
