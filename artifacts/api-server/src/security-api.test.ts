@@ -2238,6 +2238,42 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   const terminalLogin = await login(testTerminal.usuario, testTerminal.password);
   const preciosTerminal = await api("GET", `/clientes/${clienteId}/precios`, undefined, terminalLogin.cookie);
   assert.equal(preciosTerminal.status, 200, `TERMINAL should access precios: ${JSON.stringify(preciosTerminal.body)}`);
+  const disponibilidadTerminal = await api(
+    "GET",
+    `/pos/clientes/${clienteId}/credito-disponible?ubicacionId=${seedTienda.id}`,
+    undefined,
+    terminalLogin.cookie,
+  );
+  assert.equal(disponibilidadTerminal.status, 200, "TERMINAL with pos.crear receives minimal availability");
+  const disponibilidadBody = disponibilidadTerminal.body as Record<string, unknown>;
+  assert.deepEqual(
+    Object.keys(disponibilidadBody).sort(),
+    ["clienteId", "creditoDisponible", "limiteCredito", "puedeComprarCredito", "saldoComprometido"].sort(),
+  );
+
+  const posViewer = await mkUser("BODEGA", seedTienda.id);
+  const [posViewerOverride] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: posViewer.id,
+      modulo: "pos",
+      puedeVer: true,
+      puedeCrear: false,
+      puedeEditar: false,
+      puedeAutorizar: false,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(posViewerOverride!.id);
+  const posViewerLogin = await login(posViewer.usuario, posViewer.password);
+  const viewerDetailed = await api("GET", `/clientes/${clienteId}/credito`, undefined, posViewerLogin.cookie);
+  assert.equal(viewerDetailed.status, 403, "pos.ver alone cannot access detailed credit");
+  const viewerMinimal = await api(
+    "GET",
+    `/pos/clientes/${clienteId}/credito-disponible?ubicacionId=${seedTienda.id}`,
+    undefined,
+    posViewerLogin.cookie,
+  );
+  assert.equal(viewerMinimal.status, 403, "pos.ver alone cannot access sale availability");
 
   // BODEGA: denied all (no clientes access at all by default)
   // First check bodega is denied clientes

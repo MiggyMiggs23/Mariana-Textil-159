@@ -36,6 +36,9 @@ import {
   ObtenerSesionCajaActualResponse,
   ObtenerTicketParams,
   ObtenerTicketResponse,
+  GetPosClienteCreditoDisponibleParams,
+  GetPosClienteCreditoDisponibleQueryParams,
+  GetPosClienteCreditoDisponibleResponse,
   ValidarPrecioPosBody,
   ValidarPrecioPosResponse,
 } from "@workspace/api-zod";
@@ -77,6 +80,10 @@ import {
   validarPrecioPos,
 } from "../lib/pos";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import {
+  loadCustomerCreditProjection,
+  loadCustomerCreditReservationCents,
+} from "../lib/credit-aging-read-model";
 
 const router: IRouter = Router();
 router.use(["/pos", "/tickets", "/caja", "/sesiones-caja"], requireSession);
@@ -285,6 +292,54 @@ router.get(
   },
 );
 
+router.get(
+  "/pos/clientes/:clienteId/credito-disponible",
+  requierePermiso("pos", "crear"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const { clienteId } = GetPosClienteCreditoDisponibleParams.parse(req.params);
+      const { ubicacionId: requestedLocationId } =
+        GetPosClienteCreditoDisponibleQueryParams.parse(req.query);
+      const ubicacionId = scopedLocation(req, requestedLocationId);
+      assertOperationalLocation(req, ubicacionId);
+
+      const [cliente] = await db
+        .select({
+          id: clientesTable.id,
+          activo: clientesTable.activo,
+          limiteCredito: clientesTable.limiteCredito,
+        })
+        .from(clientesTable)
+        .where(eq(clientesTable.id, clienteId))
+        .limit(1);
+      if (!cliente?.activo) {
+        throw new PosError("Cliente no encontrado o inactivo.", "INVALID_CLIENT", 404);
+      }
+
+      const [projection, reservationCents] = await Promise.all([
+        loadCustomerCreditProjection(clienteId),
+        loadCustomerCreditReservationCents(clienteId),
+      ]);
+      const ledgerNetCents =
+        projection.balanceCents - projection.overpaymentCents;
+      const committedCents = ledgerNetCents + reservationCents;
+      const limitCents = Math.round(Number(cliente.limiteCredito) * 100);
+      const availableCents = Math.max(0, limitCents - committedCents);
+      res.json(
+        GetPosClienteCreditoDisponibleResponse.parse({
+          clienteId,
+          limiteCredito: (limitCents / 100).toFixed(2),
+          saldoComprometido: (committedCents / 100).toFixed(2),
+          creditoDisponible: (availableCents / 100).toFixed(2),
+          puedeComprarCredito: availableCents > 0,
+        }),
+      );
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
 router.post(
   "/pos/validar-precio",
   requierePermiso("pos", "crear"),
@@ -345,6 +400,8 @@ router.post(
             direccionEntregaSnapshot: body.direccionEntregaSnapshot,
             tipo: body.tipo,
             facturado: body.facturado,
+            credito: body.credito,
+            diasPlazo: body.diasPlazo,
             uuidCliente: body.uuidCliente,
             lineas: body.lineas.map((linea) => ({
               rolloId: linea.rolloId,
@@ -651,8 +708,6 @@ router.post(
     try {
       const params = CobrarTicketParams.parse(req.params);
       const body = CobrarTicketBody.parse(req.body);
-      const diasPlazo =
-        typeof req.body?.diasPlazo === "number" ? req.body.diasPlazo : null;
       const [ticket] = await db
         .select({
           ubicacionId: ticketsTable.ubicacionId,
@@ -682,9 +737,6 @@ router.post(
           409,
         );
       }
-      const autorizadoPor = await verifyAdminCredentials(
-        body.credencialesAdmin,
-      );
       const result = await db.transaction((tx) =>
         cobrarTicket(
           tx,
@@ -698,8 +750,6 @@ router.post(
               importe: String(pago.importe),
               referencia: pago.referencia,
             })),
-            autorizadoPor,
-            diasPlazo,
             ip: getRequestIp(req),
           },
           true,

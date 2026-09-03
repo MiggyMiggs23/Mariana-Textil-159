@@ -28,7 +28,10 @@ import {
   moneyToCents,
   projectCreditLedger,
 } from "./credit-allocation";
-import { loadCustomerCreditLedgerInTransaction } from "./credit-aging-read-model";
+import {
+  loadCustomerCreditLedgerInTransaction,
+  loadCustomerCreditReservationCentsInTransaction,
+} from "./credit-aging-read-model";
 import {
   consumirBolsasFifo,
   DOCUMENTO_TICKET_BOLSA_METREADO,
@@ -97,6 +100,8 @@ export type CrearTicketInput = {
   /** Legacy request default; new callers should send tipo on every line. */
   tipo?: "NORMAL" | "METREADO";
   facturado: boolean;
+  credito?: boolean;
+  diasPlazo?: number | null;
   uuidCliente: string;
   lineas: CrearTicketLineaInput[];
   ip: string;
@@ -280,6 +285,9 @@ export async function buildTicketDetail(
       cobradoAt: ticketsTable.cobradoAt,
       usuarioCajaId: ticketsTable.usuarioCajaId,
       facturado: ticketsTable.facturado,
+      credito: ticketsTable.credito,
+      diasPlazoTicket: ticketsTable.diasPlazo,
+      fechaVencimientoTicket: ticketsTable.fechaVencimiento,
       sesionCajaId: ticketsTable.sesionCajaId,
       uuidCliente: ticketsTable.uuidCliente,
       createdAt: ticketsTable.createdAt,
@@ -369,7 +377,16 @@ export async function buildTicketDetail(
         database,
       )
     : [];
-  const credit = deriveTicketCreditData(ticketId, pagos, creditMovements);
+  const derivedCredit = deriveTicketCreditData(ticketId, pagos, creditMovements);
+  const credit =
+    ticket.credito && !derivedCredit.esCredito
+      ? {
+          ...derivedCredit,
+          esCredito: true,
+          diasPlazo: ticket.diasPlazoTicket,
+          fechaVencimiento: ticket.fechaVencimientoTicket,
+        }
+      : derivedCredit;
   const [viaje] = await database.select({ id: viajesTable.id, folio: viajesTable.folio })
     .from(viajeTicketsTable).innerJoin(viajesTable, eq(viajeTicketsTable.viajeId, viajesTable.id))
     .where(eq(viajeTicketsTable.ticketId, ticketId)).limit(1);
@@ -632,11 +649,19 @@ export async function crearTicket(
       "INVALID_LOCATION",
     );
   }
+  if (input.credito === true) {
+    await transactionAdvisoryLock(
+      tx,
+      ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+      input.clienteId,
+    );
+  }
   const [clienteTicket] = await tx
     .select({
       id: clientesTable.id,
       activo: clientesTable.activo,
       esSistema: clientesTable.esSistema,
+      limiteCredito: clientesTable.limiteCredito,
     })
     .from(clientesTable)
     .where(eq(clientesTable.id, input.clienteId))
@@ -646,6 +671,25 @@ export async function crearTicket(
     throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
   }
   const documentoTipo = input.documentoTipo ?? "TICKET";
+  const credito = input.credito === true;
+  if (credito && clienteTicket.esSistema) {
+    throw new PosError(
+      "Venta a Público no admite compras a crédito.",
+      "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
+    );
+  }
+  if (credito && !isCreditTerm(input.diasPlazo)) {
+    throw new PosError(
+      "Debes elegir un plazo de crédito de 7, 15, 30 o 60 días.",
+      "CREDIT_TERM_REQUIRED",
+    );
+  }
+  if (!credito && input.diasPlazo != null) {
+    throw new PosError(
+      "El plazo solo se admite en una venta a crédito.",
+      "CREDIT_TERM_NOT_ALLOWED",
+    );
+  }
   const notaSinPrecios =
     documentoTipo === "NOTA" && input.notaSinPrecios === true;
   const nombreDestinatario = input.nombreDestinatario?.trim() || null;
@@ -909,6 +953,30 @@ export async function crearTicket(
     ? Math.round((subtotalCents * IVA_RATE_BASIS_POINTS) / 10_000)
     : 0;
   const totalCents = subtotalCents + ivaCents;
+  if (credito) {
+    const ledgerMovements = await loadCustomerCreditLedgerInTransaction(
+      input.clienteId,
+      tx,
+    );
+    const projection = projectCreditLedger(ledgerMovements);
+    const currentNetCents =
+      projection.balanceCents - projection.overpaymentCents;
+    const reservationCents = await loadCustomerCreditReservationCentsInTransaction(
+      input.clienteId,
+      tx,
+    );
+    const disponibleCents = Math.max(
+      0,
+      money(clienteTicket.limiteCredito) - currentNetCents - reservationCents,
+    );
+    if (totalCents > disponibleCents) {
+      throw new PosError(
+        `Crédito insuficiente: disponible $${decimalMoney(disponibleCents)}; faltan $${decimalMoney(totalCents - disponibleCents)}.`,
+        "CREDIT_LIMIT_EXCEEDED",
+        409,
+      );
+    }
+  }
   const folio = await reserveTicketFolio(tx);
   const [ticket] = await tx
     .insert(ticketsTable)
@@ -928,6 +996,11 @@ export async function crearTicket(
       estado: "VENDIDO",
       cobrado: false,
       facturado: input.facturado,
+      credito,
+      diasPlazo: credito ? input.diasPlazo as CreditTerm : null,
+      fechaVencimiento: credito
+        ? creditDueDate(ticketCreatedAt, input.diasPlazo as CreditTerm)
+        : null,
       uuidCliente: input.uuidCliente,
       createdAt: ticketCreatedAt,
     })
@@ -999,6 +1072,8 @@ export async function crearTicket(
       iva: decimalMoney(ivaCents),
       total: decimalMoney(totalCents),
       documentoTipo,
+      credito,
+      diasPlazo: credito ? input.diasPlazo : null,
        notaSinPrecios,
       nombreDestinatario,
       direccionEntregaSnapshot,
@@ -1041,6 +1116,16 @@ export async function cancelarTicket(
       "El ticket ya está cancelado.",
       "ALREADY_CANCELLED",
       409,
+    );
+  }
+  // Cancellation changes an uncobrado credit ticket from an active
+  // reservation to a released one; serialize that transition with POS
+  // creation/collection before any inventory work is performed.
+  if (ticket.credito) {
+    await transactionAdvisoryLock(
+      tx,
+      ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
+      ticket.clienteId,
     );
   }
 
@@ -1301,8 +1386,6 @@ export async function cobrarTicket(
     usuarioId: number;
     clienteId?: number | null;
     pagos: PagoTicketInput[];
-    autorizadoPor?: number | null;
-    diasPlazo?: number | null;
     ip: string;
   },
   includeCosts: boolean,
@@ -1386,14 +1469,6 @@ export async function cobrarTicket(
   const creditCents = pagos
     .filter((pago) => pago.formaPago === "CREDITO")
     .reduce((sum, pago) => sum + pago.cents, 0);
-  if (creditCents > 0 && !isCreditTerm(input.diasPlazo)) {
-    throw new PosError(
-      "Debes elegir un plazo de crédito de 7, 15, 30 o 60 días.",
-      "CREDIT_TERM_REQUIRED",
-    );
-  }
-  const diasPlazo =
-    creditCents > 0 ? (input.diasPlazo as CreditTerm) : null;
   const clienteId = input.clienteId ?? ticket.clienteId;
   if (clienteId !== ticket.clienteId) {
     throw new PosError(
@@ -1424,6 +1499,12 @@ export async function cobrarTicket(
         "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
       );
     }
+    if (creditCents > 0 && (!ticket.credito || !isCreditTerm(ticket.diasPlazo))) {
+      throw new PosError(
+        "El ticket no fue creado en POS con un plazo de crédito válido.",
+        "CREDIT_TERM_REQUIRED",
+      );
+    }
     const ledgerMovements = await loadCustomerCreditLedgerInTransaction(
       clienteId,
       tx,
@@ -1431,16 +1512,25 @@ export async function cobrarTicket(
     const currentProjection = projectCreditLedger(ledgerMovements);
     const currentNetCents =
       currentProjection.balanceCents - currentProjection.overpaymentCents;
+    const reservationCents = await loadCustomerCreditReservationCentsInTransaction(
+      clienteId,
+      tx,
+      ticket.id,
+    );
     if (
       creditCents > 0 &&
-      currentNetCents + creditCents >
-        money(cliente.limiteCredito) &&
-      input.autorizadoPor == null
+      currentNetCents + reservationCents + creditCents >
+        money(cliente.limiteCredito)
     ) {
+      const disponibleCents = Math.max(
+        0,
+        money(cliente.limiteCredito) - currentNetCents - reservationCents,
+      );
+      const faltanteCents = creditCents - disponibleCents;
       throw new PosError(
-        "El crédito excede el límite del cliente y requiere autorización de ADMIN.",
-        "CREDIT_AUTH_REQUIRED",
-        403,
+        `Crédito insuficiente: disponible $${decimalMoney(disponibleCents)}; faltan $${decimalMoney(faltanteCents)}.`,
+        "CREDIT_LIMIT_EXCEEDED",
+        409,
       );
     }
     if (creditCents > 0) {
@@ -1451,16 +1541,12 @@ export async function cobrarTicket(
         importe: decimalMoney(creditCents),
         usuarioId: input.usuarioId,
         formaPago: "CREDITO",
-        notas:
-          input.autorizadoPor == null
-            ? `Ticket ${ticket.folio}`
-            : `Ticket ${ticket.folio}, autorizado por ${input.autorizadoPor}`,
+        notas: `Ticket ${ticket.folio}`,
         metadata: JSON.stringify({
           origen: "COBRO_TICKET",
-          autorizadoPor: input.autorizadoPor ?? null,
         }),
-        diasPlazo: diasPlazo!,
-        fechaVencimiento: creditDueDate(ticket.createdAt, diasPlazo!),
+        diasPlazo: ticket.diasPlazo!,
+        fechaVencimiento: ticket.fechaVencimiento!,
       }).returning();
       // Project the complete immutable ledger again. Persisted applications are
       // evidence of links selected by the projection, never input to balances.
@@ -1496,15 +1582,13 @@ export async function cobrarTicket(
         clienteNombre: cliente.nombre,
         folio: ticket.folio,
         importe: decimalMoney(creditCents),
-        diasPlazo: diasPlazo!,
-        fechaVencimiento: creditDueDate(ticket.createdAt, diasPlazo!),
+        diasPlazo: ticket.diasPlazo!,
+        fechaVencimiento: ticket.fechaVencimiento!,
         cajeroId: input.usuarioId,
         cajeroNombre: cajero?.nombre ?? "Usuario eliminado",
         tiendaId: ticket.ubicacionId,
         tiendaNombre: tienda?.nombre ?? "Tienda eliminada",
-        urgente:
-          currentNetCents + creditCents >
-          money(cliente.limiteCredito),
+        urgente: false,
       });
     }
   }
@@ -1543,7 +1627,6 @@ export async function cobrarTicket(
         formaPago: pago.formaPago,
         importe: decimalMoney(pago.cents),
       })),
-      autorizadoPor: input.autorizadoPor ?? null,
       documentoTipo: creditCents > 0 ? "NOTA" : ticket.documentoTipo,
       convertidoANotaPorCobro,
     },

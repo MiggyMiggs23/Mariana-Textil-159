@@ -63,3 +63,36 @@ test("overpayment export distinguishes historical running balance from current o
     /saldo corrido histórico \$\{formatNumber\(row\.saldoCorridoHistorico/,
   );
 });
+
+test("POS sale capability receives only minimal credit availability", async () => {
+  const [clientesRoute, posRoute, spec] = await Promise.all([
+    readFile(new URL("artifacts/api-server/src/routes/clientes.ts", root), "utf8"),
+    readFile(new URL("artifacts/api-server/src/routes/pos.ts", root), "utf8"),
+    readFile(new URL("lib/api-spec/openapi.yaml", root), "utf8"),
+  ]);
+
+  const detailedRoute = clientesRoute.match(
+    /router\.get\(\s*"\/clientes\/:id\/credito",[\s\S]*?\n\);/,
+  )?.[0] ?? "";
+  assert.match(detailedRoute, /requierePermiso\("clientes_credito", "ver"\)/);
+  assert.doesNotMatch(detailedRoute, /requierePermiso\("pos", "ver"\)|resolvePermiso/);
+
+  const minimalRoute = posRoute.match(
+    /router\.get\(\s*"\/pos\/clientes\/:clienteId\/credito-disponible",[\s\S]*?\n\);/,
+  )?.[0] ?? "";
+  assert.match(minimalRoute, /requierePermiso\("pos", "crear"\)/);
+  assert.doesNotMatch(minimalRoute, /requierePermiso\("pos", "ver"\)/);
+  assert.match(minimalRoute, /scopedLocation/);
+  assert.match(minimalRoute, /assertOperationalLocation/);
+
+  const minimalSchema = spec.match(
+    /PosClienteCreditoDisponible:[\s\S]*?(?=\n    [A-Z][A-Za-z]+:)/,
+  )?.[0] ?? "";
+  assert.match(minimalSchema, /limiteCredito/);
+  assert.match(minimalSchema, /saldoComprometido/);
+  assert.match(minimalSchema, /creditoDisponible/);
+  assert.doesNotMatch(
+    minimalSchema,
+    /totalVencido|primerVencimiento|fechaVencimiento|primeraCompra|ultimaActividad|antiguedad/,
+  );
+});

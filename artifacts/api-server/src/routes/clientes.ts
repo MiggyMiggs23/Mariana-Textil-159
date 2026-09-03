@@ -41,6 +41,7 @@ import {
   loadCustomerCreditProjectionInTransaction,
   loadCustomerCreditProjection,
   loadCustomerCreditProjections,
+  loadCustomerCreditReservationCents,
 } from "../lib/credit-aging-read-model";
 import {
   isActiveNonSystemNameConflict,
@@ -819,12 +820,16 @@ router.get(
         return;
       }
 
-      const balance = await loadCustomerCreditProjection(id);
+      const [balance, reservationCents] = await Promise.all([
+        loadCustomerCreditProjection(id),
+        loadCustomerCreditReservationCents(id),
+      ]);
       const limite = parseFloat(row.limiteCredito ?? "0");
       const saldo = balance.balanceCents / 100;
       const saldoParaLimite =
         (balance.balanceCents - balance.overpaymentCents) / 100;
-      const disponible = Math.max(0, limite - saldoParaLimite);
+      const reservado = reservationCents / 100;
+      const disponible = Math.max(0, limite - saldoParaLimite - reservado);
       const puedeComprarCredito = disponible > 0;
       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
       const aging = balance.charges.map((charge) => {

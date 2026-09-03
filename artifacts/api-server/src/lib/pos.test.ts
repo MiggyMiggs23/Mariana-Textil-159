@@ -198,6 +198,8 @@ async function sale(input: {
   nombreDestinatario?: string | null;
   direccionEntregaSnapshot?: string | null;
   facturado?: boolean;
+  credito?: boolean;
+  diasPlazo?: 7 | 15 | 30 | 60;
   uuid?: string;
 }) {
   const result = await db.transaction((tx) =>
@@ -213,6 +215,8 @@ async function sale(input: {
         direccionEntregaSnapshot: input.direccionEntregaSnapshot,
         tipo: input.tipo ?? "NORMAL",
         facturado: input.facturado ?? false,
+        credito: input.credito,
+        diasPlazo: input.credito ? (input.diasPlazo ?? 30) : null,
         uuidCliente: input.uuid ?? randomUUID(),
         lineas: [
           {
@@ -1234,7 +1238,7 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId, "10", "40");
-  const clientId = await makeClient("500");
+  const clientId = await makeClient("1000");
   const ticket = await sale({
     ubicacionId,
     productoId,
@@ -1242,7 +1246,11 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
     cantidad: "10",
     precio: "60",
     clienteId: clientId,
+    credito: true,
   });
+  assert.equal(ticket.esCredito, true);
+  assert.equal(ticket.diasPlazo, 30);
+  assert.match(ticket.fechaVencimiento ?? "", /^\d{4}-\d{2}-\d{2}$/);
   const session = await db.transaction((tx) =>
     abrirSesionCaja(tx, {
       ubicacionId,
@@ -1263,9 +1271,9 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
         pagos: [
           { formaPago: "EFECTIVO", importe: "100" },
           { formaPago: "TRANSFERENCIA", importe: "200" },
-          { formaPago: "CREDITO", importe: "300" },
+          { formaPago: "CREDITO", importe: "125" },
+          { formaPago: "CREDITO", importe: "175" },
         ],
-        diasPlazo: 30,
         ip: "127.0.0.1",
       },
       true,
@@ -1283,6 +1291,19 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
     .from(movimientosCreditoTable)
     .where(eq(movimientosCreditoTable.clienteId, clientId));
   assert.equal(balance!.saldo, "300.00");
+  const notifications = await db
+    .select()
+    .from(notificacionesCreditoTable)
+    .where(eq(notificacionesCreditoTable.ticketId, ticket.id));
+  assert.equal(notifications.length, 1, "fragmented credit payments create one notification");
+  const [notification] = notifications;
+  assert.equal(notification?.clienteId, clientId);
+  assert.equal(notification?.folio, ticket.folio);
+  assert.equal(notification?.importe, "300.00");
+  assert.equal(notification?.diasPlazo, 30);
+  assert.match(notification?.fechaVencimiento ?? "", /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(notification?.tiendaId, ubicacionId);
+  assert.equal(notification?.leidaAt, null);
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.totalCobrado, "600.00");
   assert.equal(corte?.formasPago[0]?.importe, "100.00");
@@ -1306,7 +1327,7 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
   );
 });
 
-await test("POS-05B crédito concurrente serializa por cliente y respeta el límite", async () => {
+await test("POS-05B crédito concurrente reserva el límite desde la creación", async () => {
   const firstLocationId = await makeLocation();
   const secondLocationId = await makeLocation();
   const firstProductId = await makeProduct();
@@ -1314,71 +1335,9 @@ await test("POS-05B crédito concurrente serializa por cliente y respeta el lím
   const firstRoll = await makeRollo(firstProductId, firstLocationId, "10", "20");
   const secondRoll = await makeRollo(secondProductId, secondLocationId, "10", "20");
   const clientId = await makeClient("500");
-  const firstTicket = await sale({
-    ubicacionId: firstLocationId,
-    productoId: firstProductId,
-    rolloId: firstRoll.id,
-    cantidad: "10",
-    precio: "40",
-    clienteId: clientId,
-  });
-  const secondTicket = await sale({
-    ubicacionId: secondLocationId,
-    productoId: secondProductId,
-    rolloId: secondRoll.id,
-    cantidad: "10",
-    precio: "40",
-    clienteId: clientId,
-  });
-  const firstSession = await db.transaction((tx) =>
-    abrirSesionCaja(tx, {
-      ubicacionId: firstLocationId,
-      usuarioId: USER_ID,
-      fondoInicial: "0",
-      ip: "127.0.0.1",
-    }),
-  );
-  const secondSession = await db.transaction((tx) =>
-    abrirSesionCaja(tx, {
-      ubicacionId: secondLocationId,
-      usuarioId: USER_ID,
-      fondoInicial: "0",
-      ip: "127.0.0.1",
-    }),
-  );
-  createdSessionIds.push(firstSession.id, secondSession.id);
-
   const results = await Promise.allSettled([
-    db.transaction((tx) =>
-      cobrarTicket(
-        tx,
-        {
-          ticketId: firstTicket.id,
-          sesionCajaId: firstSession.id,
-          usuarioId: USER_ID,
-          clienteId: clientId,
-          pagos: [{ formaPago: "CREDITO", importe: "400" }],
-          diasPlazo: 30,
-          ip: "127.0.0.1",
-        },
-        true,
-      ),
-    ),
-    db.transaction((tx) =>
-      cobrarTicket(
-        tx,
-        {
-          ticketId: secondTicket.id,
-          sesionCajaId: secondSession.id,
-          usuarioId: USER_ID,
-          clienteId: clientId,
-          pagos: [{ formaPago: "CREDITO", importe: "400" }],
-          diasPlazo: 30,
-          ip: "127.0.0.1",
-        },
-        true,
-      ),
-    ),
+    sale({ ubicacionId: firstLocationId, productoId: firstProductId, rolloId: firstRoll.id, cantidad: "10", precio: "40", clienteId: clientId, credito: true }),
+    sale({ ubicacionId: secondLocationId, productoId: secondProductId, rolloId: secondRoll.id, cantidad: "10", precio: "40", clienteId: clientId, credito: true }),
   ]);
 
   assert.equal(results.filter((result) => result.status === "fulfilled").length, 1);
@@ -1388,15 +1347,15 @@ await test("POS-05B crédito concurrente serializa por cliente y respeta el lím
   assert.ok(rejected);
   assert.ok(
     rejected.reason instanceof PosError &&
-      rejected.reason.code === "CREDIT_AUTH_REQUIRED",
+      rejected.reason.code === "CREDIT_LIMIT_EXCEEDED",
   );
-  const [balance] = await db
+  const [reservation] = await db
     .select({
-      saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
+      reservado: sql<string>`COALESCE(SUM(${ticketsTable.total}), 0)::text`,
     })
-    .from(movimientosCreditoTable)
-    .where(eq(movimientosCreditoTable.clienteId, clientId));
-  assert.equal(balance!.saldo, "400.00");
+    .from(ticketsTable)
+    .where(and(eq(ticketsTable.clienteId, clientId), eq(ticketsTable.credito, true), eq(ticketsTable.cobrado, false)));
+  assert.equal(reservation!.reservado, "400.00");
 });
 
 await test("POS-05A ticket facturado persiste IVA, cobra 319 y conserva margen sin IVA", async () => {
@@ -1559,7 +1518,6 @@ await test("POS-05B cobro exige sesión abierta y cliente para crédito", async 
             sesionCajaId: session.id,
             usuarioId: USER_ID,
             pagos: [{ formaPago: "CREDITO", importe: "100" }],
-            diasPlazo: 30,
             ip: "127.0.0.1",
           },
           true,
@@ -1685,73 +1643,28 @@ await test("POS-05C lista y corte comparten todos los pendientes de la ubicació
   );
 });
 
-await test("POS-06 crédito sobre límite requiere autorización ADMIN", async () => {
+await test("POS-06 crédito sobre límite se rechaza sin override", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId, "2", "20");
   const clientId = await makeClient("10");
-  const ticket = await sale({
-    ubicacionId,
-    productoId,
-    rolloId: rollo.id,
-    cantidad: "2",
-    precio: "50",
-    clienteId: clientId,
-  });
-  const session = await db.transaction((tx) =>
-    abrirSesionCaja(tx, {
-      ubicacionId,
-      usuarioId: USER_ID,
-      fondoInicial: "0",
-      ip: "127.0.0.1",
-    }),
-  );
-  createdSessionIds.push(session.id);
   await assert.rejects(
     () =>
-      db.transaction((tx) =>
-        cobrarTicket(
-          tx,
-          {
-            ticketId: ticket.id,
-            sesionCajaId: session.id,
-            usuarioId: USER_ID,
-            clienteId: clientId,
-            pagos: [{ formaPago: "CREDITO", importe: "100" }],
-            diasPlazo: 30,
-            ip: "127.0.0.1",
-          },
-          true,
-        ),
-      ),
-    (error: unknown) =>
-      error instanceof PosError && error.code === "CREDIT_AUTH_REQUIRED",
-  );
-  await db.transaction((tx) =>
-    cobrarTicket(
-      tx,
-      {
-        ticketId: ticket.id,
-        sesionCajaId: session.id,
-        usuarioId: USER_ID,
+      sale({
+        ubicacionId,
+        productoId,
+        rolloId: rollo.id,
+        cantidad: "2",
+        precio: "50",
         clienteId: clientId,
-        pagos: [{ formaPago: "CREDITO", importe: "100" }],
-        autorizadoPor: USER_ID,
-        diasPlazo: 30,
-        ip: "127.0.0.1",
-      },
-      true,
-    ),
+        credito: true,
+      }),
+    (error: unknown) =>
+      error instanceof PosError &&
+      error.code === "CREDIT_LIMIT_EXCEEDED" &&
+      error.message.includes("disponible $10.00") &&
+      error.message.includes("faltan $90.00"),
   );
-  const [notification] = await db
-    .select({
-      urgente: notificacionesCreditoTable.urgente,
-      fechaVencimiento: notificacionesCreditoTable.fechaVencimiento,
-    })
-    .from(notificacionesCreditoTable)
-    .where(eq(notificacionesCreditoTable.ticketId, ticket.id));
-  assert.equal(notification?.urgente, true, "zero-limit credit must be urgent");
-  assert.match(notification?.fechaVencimiento ?? "", /^\d{4}-\d{2}-\d{2}$/);
 });
 
 await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos", async () => {
@@ -1766,6 +1679,7 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     cantidad: "3",
     precio: "50",
     clienteId: clientId,
+    credito: true,
   });
   const session = await db.transaction((tx) =>
     abrirSesionCaja(tx, {
@@ -1785,7 +1699,6 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
         usuarioId: USER_ID,
         clienteId: clientId,
         pagos: [{ formaPago: "CREDITO", importe: "150" }],
-        diasPlazo: 30,
         ip: "127.0.0.1",
       },
       true,
