@@ -7,12 +7,13 @@
  */
 
 /**
+ * Obligatorio cuando credito es true y vacío en cualquier otro caso.
  * @nullable
  */
-export type TicketCobroInputDiasPlazo = typeof TicketCobroInputDiasPlazo[keyof typeof TicketCobroInputDiasPlazo] | null;
+export type TicketInputDiasPlazo = typeof TicketInputDiasPlazo[keyof typeof TicketInputDiasPlazo] | null;
 
 
-export const TicketCobroInputDiasPlazo = {
+export const TicketInputDiasPlazo = {
   NUMBER_7: 7,
   NUMBER_15: 15,
   NUMBER_30: 30,

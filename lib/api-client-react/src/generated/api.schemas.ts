@@ -870,6 +870,14 @@ export interface AnalyticsQuantity {
   cantidad: string;
 }
 
+/**
+ * Ventas a crédito calculadas exclusivamente como suma del desglose por tienda.
+ */
+export interface AdminRealtimeCreditSummary {
+  importe: string;
+  operaciones: number;
+}
+
 export type AdminRealtimeDashboardFullRefreshSeconds = typeof AdminRealtimeDashboardFullRefreshSeconds[keyof typeof AdminRealtimeDashboardFullRefreshSeconds];
 
 
@@ -926,6 +934,7 @@ export interface AdminRealtimeStore {
   efectivo: string;
   transferencia: string;
   credito: string;
+  creditoOperaciones: number;
   pendientes30Min: number;
   cancelaciones: number;
   /** Porcentaje en unidades; 10.00 significa 10% */
@@ -952,6 +961,7 @@ export interface AdminRealtimeDashboard {
   pendingRefreshSeconds: AdminRealtimeDashboardPendingRefreshSeconds;
   totales: AnalyticsMoneyTotals;
   cantidades: AnalyticsQuantity[];
+  ventasCredito: AdminRealtimeCreditSummary;
   pendientes: AdminPendingSummary;
   tiendas: AdminRealtimeStore[];
   comparativo: AdminRealtimeStore[];
@@ -1888,6 +1898,15 @@ export interface ClienteCredito {
   /** @nullable */
   ultimaActividad?: string | null;
   antiguedad?: ClienteCreditoAntiguedadItem[];
+}
+
+export interface PosClienteCreditoDisponible {
+  clienteId: number;
+  limiteCredito: string;
+  /** Saldo neto del libro mayor más tickets de crédito reservados. */
+  saldoComprometido: string;
+  creditoDisponible: string;
+  puedeComprarCredito: boolean;
 }
 
 /**
@@ -4738,6 +4757,20 @@ export interface TicketLineaInput {
   precioUnitario: number;
 }
 
+/**
+ * Obligatorio cuando credito es true y vacío en cualquier otro caso.
+ * @nullable
+ */
+export type TicketInputDiasPlazo = typeof TicketInputDiasPlazo[keyof typeof TicketInputDiasPlazo] | null;
+
+
+export const TicketInputDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
 export interface TicketInput {
   /** Identificador UUID generado por la terminal */
   uuidCliente: string;
@@ -4760,6 +4793,13 @@ export interface TicketInput {
   /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
   tipo?: TipoTicket;
   facturado: boolean;
+  /** Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS. */
+  credito?: boolean;
+  /**
+     * Obligatorio cuando credito es true y vacío en cualquier otro caso.
+     * @nullable
+     */
+  diasPlazo?: TicketInputDiasPlazo;
   /** @minItems 1 */
   lineas: TicketLineaInput[];
 }
@@ -4772,27 +4812,11 @@ export interface TicketPagoInput {
   referencia?: string | null;
 }
 
-/**
- * @nullable
- */
-export type TicketCobroInputDiasPlazo = typeof TicketCobroInputDiasPlazo[keyof typeof TicketCobroInputDiasPlazo] | null;
-
-
-export const TicketCobroInputDiasPlazo = {
-  NUMBER_7: 7,
-  NUMBER_15: 15,
-  NUMBER_30: 30,
-  NUMBER_60: 60,
-} as const;
-
 export interface TicketCobroInput {
   /** @minItems 1 */
   pagos: TicketPagoInput[];
   /** @nullable */
   clienteId?: number | null;
-  /** @nullable */
-  diasPlazo?: TicketCobroInputDiasPlazo;
-  credencialesAdmin?: CredencialesAdmin | null;
 }
 
 export interface TicketCancelacionInput {
@@ -6017,6 +6041,13 @@ q: string;
  * Ubicación donde el rollo debe estar DISPONIBLE
  */
 ubicacionId?: number;
+};
+
+export type GetPosClienteCreditoDisponibleParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
 };
 
 export type ListarTicketsParams = {

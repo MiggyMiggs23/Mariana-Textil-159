@@ -2735,7 +2735,7 @@ paths:
     get:
       operationId: getClienteCredito
       tags: [clientes]
-      summary: Semáforo de crédito del cliente (clientes_credito requerido)
+      summary: Detalle financiero de crédito (clientes_credito requerido)
       parameters:
         - $ref: "#/components/parameters/ClienteId"
       responses:
@@ -3273,6 +3273,33 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /pos/clientes/{clienteId}/credito-disponible:
+    get:
+      operationId: getPosClienteCreditoDisponible
+      tags: [pos]
+      summary: Disponibilidad mínima de crédito para crear una venta en POS
+      parameters:
+        - name: clienteId
+          in: path
+          required: true
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+      responses:
+        "200":
+          description: Compromiso y disponibilidad actuales, sin detalle financiero
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PosClienteCreditoDisponible"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /pos/validar-precio:
     post:
       operationId: validarPrecioPos
@@ -6303,6 +6330,13 @@ components:
         tipo: { $ref: "#/components/schemas/TipoTicket" }
         unidad: { type: string, enum: [METRO, KILO, BOLSA] }
         cantidad: { type: string }
+    AdminRealtimeCreditSummary:
+      type: object
+      description: Ventas a crédito calculadas exclusivamente como suma del desglose por tienda.
+      required: [importe, operaciones]
+      properties:
+        importe: { type: string }
+        operaciones: { type: number }
     AdminRealtimeDashboard:
       type: object
       required:
@@ -6312,6 +6346,7 @@ components:
           pendingRefreshSeconds,
           totales,
           cantidades,
+          ventasCredito,
           pendientes,
           tiendas,
           comparativo,
@@ -6325,6 +6360,8 @@ components:
         cantidades:
           type: array
           items: { $ref: "#/components/schemas/AnalyticsQuantity" }
+        ventasCredito:
+          $ref: "#/components/schemas/AdminRealtimeCreditSummary"
         pendientes:
           $ref: "#/components/schemas/AdminPendingSummary"
         tiendas:
@@ -6358,6 +6395,7 @@ components:
           efectivo,
           transferencia,
           credito,
+          creditoOperaciones,
           pendientes30Min,
           cancelaciones,
           tasaCancelacion,
@@ -6382,6 +6420,7 @@ components:
         efectivo: { type: string }
         transferencia: { type: string }
         credito: { type: string }
+        creditoOperaciones: { type: number }
         pendientes30Min: { type: number }
         cancelaciones: { type: number }
         tasaCancelacion:
@@ -7376,6 +7415,18 @@ components:
         antiguedad:
           type: array
           items: { type: object, additionalProperties: true }
+    PosClienteCreditoDisponible:
+      type: object
+      required:
+        [clienteId, limiteCredito, saldoComprometido, creditoDisponible, puedeComprarCredito]
+      properties:
+        clienteId: { type: number }
+        limiteCredito: { type: string }
+        saldoComprometido:
+          type: string
+          description: Saldo neto del libro mayor más tickets de crédito reservados.
+        creditoDisponible: { type: string }
+        puedeComprarCredito: { type: boolean }
     ClienteCreditoUpdate:
       type: object
       required: [limiteCredito, diasCredito]
@@ -10461,6 +10512,14 @@ components:
           $ref: "#/components/schemas/TipoTicket"
           description: Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.
         facturado: { type: boolean }
+        credito:
+          type: boolean
+          default: false
+          description: Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS.
+        diasPlazo:
+          type: ["number", "null"]
+          enum: [7, 15, 30, 60]
+          description: Obligatorio cuando credito es true y vacío en cualquier otro caso.
         lineas:
           type: array
           minItems: 1
@@ -10484,11 +10543,6 @@ components:
           items:
             $ref: "#/components/schemas/TicketPagoInput"
         clienteId: { type: ["number", "null"] }
-        diasPlazo: { type: ["number", "null"], enum: [7, 15, 30, 60] }
-        credencialesAdmin:
-          oneOf:
-            - $ref: "#/components/schemas/CredencialesAdmin"
-            - type: "null"
     TicketCancelacionInput:
       type: object
       required: [motivo]

@@ -26,6 +26,8 @@ import {
   useCrearTicket,
   useValidarPrecioPos,
   useGetCurrentUser,
+  useGetPosClienteCreditoDisponible,
+  getGetPosClienteCreditoDisponibleQueryKey,
   useListLocations,
   useListarTickets,
   getGetCurrentUserQueryKey,
@@ -65,6 +67,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { ClientSelector } from "@/components/client-selector";
+import {
+  allowedCreditTerm,
+  CREDIT_TERMS,
+  type CreditTerm,
+} from "@/lib/credit-terms";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { requestAppSound } from "@/components/notification-audio-controller";
 import { formatNumber, formatUnit } from "@workspace/number-format";
@@ -456,6 +463,8 @@ export default function PosPage() {
   const [facturar, setFacturar] = useState(false);
   const [clientId, setClientId] = useState<string>("1");
   const [clientName, setClientName] = useState("Venta a Público");
+  const [credito, setCredito] = useState(false);
+  const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
   const [documentoTipo, setDocumentoTipo] = useState<"TICKET" | "NOTA" | null>(null);
   const [notaSinPrecios, setNotaSinPrecios] = useState(false);
   const [imprimirTubulares, setImprimirTubulares] = useState(false);
@@ -484,6 +493,23 @@ export default function PosPage() {
   });
 
   const crearTicket = useCrearTicket();
+  const {
+    data: clienteCredito,
+    isLoading: loadingClienteCredito,
+    isError: clienteCreditoFailed,
+  } = useGetPosClienteCreditoDisponible(
+    Number(clientId) || 0,
+    { ubicacionId: selectedLocationId || 0 },
+    {
+    query: {
+      enabled: Boolean(clientId) && clientId !== "1" && Boolean(selectedLocationId),
+      queryKey: getGetPosClienteCreditoDisponibleQueryKey(
+        Number(clientId) || 0,
+        { ubicacionId: selectedLocationId || 0 },
+      ),
+      staleTime: 10_000,
+    },
+  });
 
   const addToCart = useCallback((item: any, automatic = false) => {
     // Para NORMAL, añadir el rollo
@@ -754,6 +780,24 @@ export default function PosPage() {
   const cartIvaCents = facturar ? Math.round(cartSubtotalCents * 0.16) : 0;
   const cartIva = cartIvaCents / 100;
   const cartTotal = (cartSubtotalCents + cartIvaCents) / 100;
+  const creditoDisponible = Number(clienteCredito?.creditoDisponible ?? 0);
+  const limiteCredito = Number(clienteCredito?.limiteCredito ?? 0);
+  const creditoFaltante = credito
+    ? Math.max(0, cartTotal - creditoDisponible)
+    : 0;
+  const creditoCercaDelLimite =
+    credito &&
+    limiteCredito > 0 &&
+    creditoFaltante === 0 &&
+    creditoDisponible - cartTotal <= limiteCredito * 0.2;
+  const creditoBloqueado =
+    credito &&
+    (clientId === "1" ||
+      diasPlazo === null ||
+      clienteCreditoFailed ||
+      loadingClienteCredito ||
+      limiteCredito <= 0 ||
+      creditoFaltante > 0);
   const hasInvalidValues = cart.some(
     (item) =>
       !Number.isFinite(item.cantidad) ||
@@ -781,6 +825,9 @@ export default function PosPage() {
     hasInvalidValues ||
     validatingPrices ||
     Boolean(blockedPrice);
+    // Credit validation is intentionally based on the ledger-backed server
+    // projection and is repeated atomically by the server.
+  const finalConfirmDisabled = confirmDisabled || creditoBloqueado;
 
   const handleCreateTicket = () => {
     if (!selectedLocationId) {
@@ -803,6 +850,22 @@ export default function PosPage() {
       toast({
         title: "Selecciona un cliente",
         description: "Toda venta debe asociarse a un cliente.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (creditoBloqueado) {
+      toast({
+        title:
+          diasPlazo === null
+            ? "Elige el plazo de crédito"
+            : "Crédito insuficiente",
+        description:
+          creditoFaltante > 0
+            ? `Disponible: ${formatNumber(creditoDisponible, { kind: "money" })}. Faltan: ${formatNumber(creditoFaltante, { kind: "money" })}.`
+            : limiteCredito <= 0
+              ? "Este cliente tiene límite de crédito en cero."
+              : "No se pudo validar el crédito disponible.",
         variant: "destructive",
       });
       return;
@@ -865,6 +928,8 @@ export default function PosPage() {
       tipo: hasNormal ? TipoTicket.NORMAL : TipoTicket.METREADO,
       facturado: hasNormal ? facturar : false,
       clienteId: Number(clientId),
+      credito,
+      diasPlazo: credito ? diasPlazo : null,
       lineas,
       documentoTipo: documentoTipo as "TICKET" | "NOTA",
       notaSinPrecios: documentoTipo === "NOTA" ? notaSinPrecios : false,
@@ -885,6 +950,8 @@ export default function PosPage() {
           setFacturar(false);
           setClientId("1");
           setClientName("Venta a Público");
+          setCredito(false);
+          setDiasPlazo(null);
           setDocumentoTipo(null);
           setNotaSinPrecios(false);
           setNombreDestinatario("");
@@ -1322,6 +1389,8 @@ export default function PosPage() {
                 onChange={(client) => {
                   setClientId(String(client.id));
                   setClientName(client.nombre);
+                  setCredito(false);
+                  setDiasPlazo(allowedCreditTerm(client.diasCredito));
                   if (documentoTipo === "NOTA") {
                     setNotaSinPrecios(client.recibeNotaSinPrecios || false);
                   }
@@ -1330,6 +1399,70 @@ export default function PosPage() {
               <p className="text-xs text-muted-foreground" data-testid="text-ticket-client">
                 El ticket se emitirá a nombre de {clientName}.
               </p>
+              {clientId !== "1" && (
+                <div className="space-y-3 rounded-md border p-3">
+                  {loadingClienteCredito ? (
+                    <p className="text-sm text-muted-foreground">Consultando libro mayor de crédito…</p>
+                  ) : clienteCreditoFailed ? (
+                    <p className="text-sm text-destructive" role="alert">No se pudo consultar el crédito disponible.</p>
+                  ) : clienteCredito ? (
+                    <>
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-sm font-medium">Crédito disponible</span>
+                        <strong data-testid="credito-disponible">
+                          {formatNumber(creditoDisponible, { kind: "money" })}
+                        </strong>
+                      </div>
+                      {limiteCredito <= 0 && (
+                        <p className="text-sm font-medium text-destructive" role="alert">
+                          Este cliente tiene límite de crédito en cero y no puede comprar a crédito.
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="venta-credito"
+                          checked={credito}
+                          disabled={limiteCredito <= 0}
+                          onCheckedChange={(checked) => setCredito(checked === true)}
+                        />
+                        <Label htmlFor="venta-credito">Venta a crédito</Label>
+                      </div>
+                      {credito && (
+                        <div className="space-y-2">
+                          <Label>Plazo de esta venta</Label>
+                          <Select
+                            value={diasPlazo == null ? undefined : String(diasPlazo)}
+                            onValueChange={(value) => setDiasPlazo(Number(value) as CreditTerm)}
+                          >
+                            <SelectTrigger data-testid="select-credit-term">
+                              <SelectValue placeholder="Elige 7, 15, 30 o 60 días" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CREDIT_TERMS.map((term) => (
+                                <SelectItem key={term} value={String(term)}>{term} días</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {creditoFaltante > 0 ? (
+                            <p className="text-sm font-medium text-destructive" role="alert">
+                              Disponible: {formatNumber(creditoDisponible, { kind: "money" })}. Faltan: {formatNumber(creditoFaltante, { kind: "money" })}.
+                            </p>
+                          ) : creditoCercaDelLimite ? (
+                            <p className="text-sm font-medium text-amber-700" role="status">
+                              Esta venta está cerca del límite; quedarían {formatNumber(creditoDisponible - cartTotal, { kind: "money" })} disponibles.
+                            </p>
+                          ) : null}
+                        </div>
+                      )}
+                    </>
+                  ) : null}
+                </div>
+              )}
+              {clientId === "1" && (
+                <p className="text-sm font-medium text-muted-foreground">
+                  Venta a Público no admite compras a crédito.
+                </p>
+              )}
             </div>
 
             {documentoTipo === "NOTA" && (
@@ -1408,7 +1541,7 @@ export default function PosPage() {
             <Button
               size="lg"
               className="w-full h-14 text-lg font-bold mt-2"
-              disabled={confirmDisabled}
+              disabled={finalConfirmDisabled}
               onClick={handleCreateTicket}
               data-testid="button-confirmar-venta"
             >

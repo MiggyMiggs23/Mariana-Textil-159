@@ -33,7 +33,6 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { useLocationScope } from "@/lib/location-scope";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import {
   Card,
@@ -81,15 +80,18 @@ import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  allowedCreditTerm,
-  creditTermOnSelectionChange,
-  CREDIT_TERMS,
-  type CreditTerm,
-} from "@/lib/credit-terms";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
+
+function mexicoCityDate(date: Date): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
 
 function CarteraContent() {
   const [scannedInput, setScannedInput] = useState("");
@@ -384,27 +386,6 @@ function CarteraContent() {
   );
 }
 
-function mexicoCityDate(date: Date): string {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Mexico_City",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date);
-  const value = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((part) => part.type === type)?.value ?? "";
-  return `${value("year")}-${value("month")}-${value("day")}`;
-}
-
-function creditDueDate(saleDate: string, term: CreditTerm): string {
-  const [year, month, day] = mexicoCityDate(new Date(saleDate))
-    .split("-")
-    .map(Number);
-  return new Date(Date.UTC(year!, month! - 1, day! + term))
-    .toISOString()
-    .slice(0, 10);
-}
-
 function HistorialCortes() {
   const [sessionId, setSessionId] = useState<number | null>(null);
   const {
@@ -589,21 +570,14 @@ function CobroDialog({
   const [pagos, setPagos] = useState<
     { formaPago: FormaPagoTicket; importe: string; referencia?: string }[]
   >([]);
-  const [adminUser, setAdminUser] = useState("");
-  const [adminPass, setAdminPass] = useState("");
-  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
   const [showSplit, setShowSplit] = useState(false);
-  const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
 
   const initializedForTicketId = useRef<number | null>(null);
-  const creditWasActive = useRef(false);
 
   useEffect(() => {
     if (ticket && open && initializedForTicketId.current !== ticket.id) {
       initializedForTicketId.current = ticket.id;
       setPagos([]);
-      setDiasPlazo(null);
-      creditWasActive.current = false;
     }
   }, [ticket, open]);
 
@@ -611,12 +585,7 @@ function CobroDialog({
     if (!open) {
       initializedForTicketId.current = null;
       setPagos([]);
-      setAdminUser("");
-      setAdminPass("");
-      setPasswordVisibilityResetKey((current) => current + 1);
       setShowSplit(false);
-      setDiasPlazo(null);
-      creditWasActive.current = false;
     }
   }, [open]);
 
@@ -633,29 +602,12 @@ function CobroDialog({
     (pago) => pago.formaPago === FormaPagoTicket.CREDITO,
   );
   const primaryPago = pagos[0];
-  const fechaVencimiento =
-    ticket && diasPlazo
-      ? creditDueDate(ticket.createdAt, diasPlazo)
-      : null;
-
-  useEffect(() => {
-    const nextTerm = creditTermOnSelectionChange(
-      creditWasActive.current,
-      usaCredito,
-      diasPlazo,
-      ticket?.diasCreditoCliente,
-    );
-    if (nextTerm !== diasPlazo) setDiasPlazo(nextTerm);
-    creditWasActive.current = usaCredito;
-  }, [diasPlazo, ticket?.diasCreditoCliente, ticket?.id, usaCredito]);
-
   const handleCobrar = () => {
-    setPasswordVisibilityResetKey((current) => current + 1);
     if (!ticket || !isPaymentSelected) return;
-    if (usaCredito && diasPlazo === null) {
+    if (usaCredito && ticket.diasPlazo == null) {
       toast({
-        title: "Elige el plazo de crédito",
-        description: "Selecciona 7, 15, 30 o 60 días antes de confirmar.",
+        title: "El ticket no tiene plazo de crédito",
+        description: "El plazo debe definirse en POS al crear el ticket.",
         variant: "destructive",
       });
       return;
@@ -682,11 +634,6 @@ function CobroDialog({
         id: ticket.id,
         data: {
           pagos: pagosValidos,
-          diasPlazo,
-          credencialesAdmin:
-            adminUser && adminPass
-              ? { usuario: adminUser, password: adminPass }
-              : undefined,
         } as Parameters<typeof cobrarTicket.mutate>[0]["data"],
       },
       {
@@ -833,7 +780,7 @@ function CobroDialog({
                           : "outline"
                       }
                       className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.TRANSFERENCIA ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
-                      disabled={hasMetreadoLine}
+                      disabled={hasMetreadoLine || !ticket.esCredito}
                       onClick={() =>
                         setPrimaryFormaPago(FormaPagoTicket.TRANSFERENCIA)
                       }
@@ -958,12 +905,14 @@ function CobroDialog({
                                 >
                                   Transferencia
                                 </SelectItem>
-                                <SelectItem
-                                  value={FormaPagoTicket.CREDITO}
-                                  className="font-medium py-3 cursor-pointer"
-                                >
-                                  Crédito
-                                </SelectItem>
+                                {ticket.esCredito && (
+                                  <SelectItem
+                                    value={FormaPagoTicket.CREDITO}
+                                    className="font-medium py-3 cursor-pointer"
+                                  >
+                                    Crédito
+                                  </SelectItem>
+                                )}
                               </>
                             )}
                           </SelectContent>
@@ -1043,7 +992,7 @@ function CobroDialog({
                 </div>
               )}
 
-              {usaCredito && (
+              {ticket.esCredito && (
                 <div className="space-y-4 rounded-xl border-2 border-amber-200 bg-amber-50 p-5 animate-in fade-in slide-in-from-top-2">
                   <div className="flex items-center gap-2 text-amber-800 mb-2">
                     <AlertCircle className="h-5 w-5" />
@@ -1054,46 +1003,23 @@ function CobroDialog({
 
                   <div className="space-y-3">
                     <Label className="font-semibold text-amber-900">
-                      Elige el plazo de vencimiento
+                      Plazo definido en POS
                     </Label>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                      {CREDIT_TERMS.map((term) => (
-                        <Button
-                          key={term}
-                          type="button"
-                          variant={diasPlazo === term ? "default" : "outline"}
-                          className="h-16 text-base font-black"
-                          onClick={() => setDiasPlazo(term)}
-                          data-testid={`credit-term-${term}`}
-                        >
-                          {term} días
-                        </Button>
-                      ))}
-                    </div>
-                    {allowedCreditTerm(ticket.diasCreditoCliente) !== null && (
-                        <p className="text-sm text-amber-800">
-                          Plazo habitual de este cliente:{" "}
-                          <strong>
-                            {ticket.diasCreditoCliente} días
-                          </strong>
-                          . Puedes cambiarlo para esta venta sin modificar el perfil.
-                        </p>
-                      )}
-                    {fechaVencimiento ? (
+                    {ticket.diasPlazo != null && ticket.fechaVencimiento ? (
                       <p
                         className="rounded-md bg-white p-3 text-center font-bold text-amber-950"
                         data-testid="credit-due-date"
                       >
-                        Vence el{" "}
+                        {ticket.diasPlazo} días · vence el{" "}
                         {format(
-                          new Date(`${fechaVencimiento}T12:00:00`),
+                          new Date(`${ticket.fechaVencimiento}T12:00:00`),
                           "d 'de' MMMM 'de' yyyy",
                           { locale: es },
                         )}
                       </p>
                     ) : (
                       <p className="text-sm font-medium text-amber-800">
-                        Debes elegir un plazo para confirmar el cobro a crédito.
+                        Este ticket no fue creado como venta a crédito en POS.
                       </p>
                     )}
                   </div>
@@ -1113,39 +1039,6 @@ function CobroDialog({
                     </p>
                   </div>
 
-                  <div className="space-y-3 pt-3">
-                    <p className="text-xs font-medium text-amber-700/80">
-                      Si el importe rebasa el límite, captura la autorización de
-                      un ADMIN.
-                    </p>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-bold text-amber-900">
-                          USUARIO ADMIN
-                        </Label>
-                        <Input
-                          value={adminUser}
-                          onChange={(event) => setAdminUser(event.target.value)}
-                          autoComplete="off"
-                          className="bg-white border-amber-200 h-10 focus-visible:ring-amber-500"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="cobro-admin-password" className="text-xs font-bold text-amber-900">
-                          CONTRASEÑA ADMIN
-                        </Label>
-                        <PasswordInput
-                          id="cobro-admin-password"
-                          value={adminPass}
-                          onChange={(event) => setAdminPass(event.target.value)}
-                          autoComplete="new-password"
-                          className="bg-white border-amber-200 h-10 focus-visible:ring-amber-500"
-                          visibilityResetKey={`${open}:${passwordVisibilityResetKey}`}
-                          toggleTestId="toggle-cobro-admin-password"
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
@@ -1180,7 +1073,7 @@ function CobroDialog({
                 disabled={
                   Math.abs(faltante) > 0.01 ||
                   cobrarTicket.isPending ||
-                  (usaCredito && diasPlazo === null)
+                  (usaCredito && ticket.diasPlazo === null)
                 }
                 onClick={handleCobrar}
               >

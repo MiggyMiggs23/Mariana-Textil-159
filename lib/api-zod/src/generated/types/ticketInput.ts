@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { DocumentoTipoTicket } from './documentoTipoTicket';
+import type { TicketInputDiasPlazo } from './ticketInputDiasPlazo';
 import type { TicketLineaInput } from './ticketLineaInput';
 import type { TipoTicket } from './tipoTicket';
 
@@ -31,6 +32,13 @@ export interface TicketInput {
   /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
   tipo?: TipoTicket;
   facturado: boolean;
+  /** Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS. */
+  credito?: boolean;
+  /**
+     * Obligatorio cuando credito es true y vacío en cualquier otro caso.
+     * @nullable
+     */
+  diasPlazo?: TicketInputDiasPlazo;
   /** @minItems 1 */
   lineas: TicketLineaInput[];
 }

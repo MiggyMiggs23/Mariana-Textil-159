@@ -64,6 +64,24 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS motivo_incobrable text;
       ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS autorizado_por integer REFERENCES usuarios(id);
        ALTER TABLE movimientos_credito ADD COLUMN IF NOT EXISTS movimiento_origen_id integer REFERENCES movimientos_credito(id);
+       -- Credit intent is committed in POS before cash collection. Existing
+       -- tickets are historical non-reservations, so false/null is the safe
+       -- backfill and preserves the paired-value invariant.
+       ALTER TABLE tickets ADD COLUMN IF NOT EXISTS credito boolean NOT NULL DEFAULT false;
+       ALTER TABLE tickets ADD COLUMN IF NOT EXISTS dias_plazo integer;
+       ALTER TABLE tickets ADD COLUMN IF NOT EXISTS fecha_vencimiento date;
+       UPDATE tickets
+       SET credito = false, dias_plazo = NULL, fecha_vencimiento = NULL
+       WHERE credito IS NULL
+          OR (credito = false AND (dias_plazo IS NOT NULL OR fecha_vencimiento IS NOT NULL))
+          OR (credito = true AND (dias_plazo NOT IN (7, 15, 30, 60) OR fecha_vencimiento IS NULL));
+       ALTER TABLE tickets ALTER COLUMN credito SET DEFAULT false;
+       ALTER TABLE tickets ALTER COLUMN credito SET NOT NULL;
+       ALTER TABLE tickets DROP CONSTRAINT IF EXISTS tickets_credito_plazo_check;
+       ALTER TABLE tickets ADD CONSTRAINT tickets_credito_plazo_check CHECK (
+         (credito = false AND dias_plazo IS NULL AND fecha_vencimiento IS NULL)
+         OR (credito = true AND dias_plazo IN (7, 15, 30, 60) AND fecha_vencimiento IS NOT NULL)
+       );
        CREATE UNIQUE INDEX IF NOT EXISTS movimientos_credito_reverso_origen_uidx
          ON movimientos_credito(movimiento_origen_id)
          WHERE tipo = 'REVERSO' AND movimiento_origen_id IS NOT NULL;

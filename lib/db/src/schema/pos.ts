@@ -145,6 +145,9 @@ export const ticketsTable = pgTable(
       () => usuariosTable.id,
     ),
     facturado: boolean("facturado").notNull().default(false),
+    credito: boolean("credito").notNull().default(false),
+    diasPlazo: integer("dias_plazo"),
+    fechaVencimiento: date("fecha_vencimiento", { mode: "string" }),
     sesionCajaId: integer("sesion_caja_id").references(
       () => sesionesCajaTable.id,
     ),
@@ -172,6 +175,11 @@ export const ticketsTable = pgTable(
     ),
     index("tickets_created_at_idx").on(table.createdAt),
     index("tickets_sesion_estado_idx").on(table.sesionCajaId, table.estado),
+    check(
+      "tickets_credito_plazo_check",
+      sql`(${table.credito} = false AND ${table.diasPlazo} IS NULL AND ${table.fechaVencimiento} IS NULL)
+        OR (${table.credito} = true AND ${table.diasPlazo} IN (7, 15, 30, 60) AND ${table.fechaVencimiento} IS NOT NULL)`,
+    ),
     index("tickets_cobrado_created_at_idx")
       .on(table.createdAt, table.ubicacionId)
       .where(sql`${table.cobrado} = true`),

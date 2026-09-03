@@ -4476,7 +4476,7 @@ export const DownloadClienteDocumentoResponse = zod.unknown()
 
 
 /**
- * @summary Semáforo de crédito del cliente (clientes_credito requerido)
+ * @summary Detalle financiero de crédito (clientes_credito requerido)
  */
 export const GetClienteCreditoParams = zod.object({
   "id": zod.coerce.number()
@@ -5177,6 +5177,32 @@ export const BuscarPosResponse = zod.object({
 
 
 /**
+ * @summary Disponibilidad mínima de crédito para crear una venta en POS
+ */
+
+
+
+export const GetPosClienteCreditoDisponibleParams = zod.object({
+  "clienteId": zod.coerce.number().min(1)
+})
+
+
+
+
+export const GetPosClienteCreditoDisponibleQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1)
+})
+
+export const GetPosClienteCreditoDisponibleResponse = zod.object({
+  "clienteId": zod.number(),
+  "limiteCredito": zod.string(),
+  "saldoComprometido": zod.string().describe('Saldo neto del libro mayor más tickets de crédito reservados.'),
+  "creditoDisponible": zod.string(),
+  "puedeComprarCredito": zod.boolean()
+})
+
+
+/**
  * @summary Valida si el precio de un rollo puede venderse sin revelar costos
  */
 export const validarPrecioPosBodyPrecioUnitarioExclusiveMin = 0;
@@ -5324,6 +5350,7 @@ export const MarkNotificacionReadResponse = zod.object({
 
 export const crearTicketBodyDocumentoTipoDefault = `TICKET`;
 export const crearTicketBodyNotaSinPreciosDefault = false;
+export const crearTicketBodyCreditoDefault = false;
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
 
 export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
@@ -5341,6 +5368,8 @@ export const CrearTicketBody = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish().describe('Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.'),
   "tipo": zod.enum(['NORMAL', 'METREADO']).optional().describe('Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.'),
   "facturado": zod.boolean(),
+  "credito": zod.boolean().default(crearTicketBodyCreditoDefault).describe('Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS.'),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Obligatorio cuando credito es true y vacío en cualquier otro caso.'),
   "lineas": zod.array(zod.object({
   "rolloId": zod.number().nullable().describe('Obligatorio para línea NORMAL de rollo completo; debe ser null en línea METREADO.'),
   "productoId": zod.number(),
@@ -5843,10 +5872,6 @@ export const CobrarTicketParams = zod.object({
 export const cobrarTicketBodyPagosItemImporteExclusiveMin = 0;
 
 
-export const cobrarTicketBodyCredencialesAdminOneUsuarioMax = 64;
-
-export const cobrarTicketBodyCredencialesAdminOnePasswordMax = 128;
-
 
 
 export const CobrarTicketBody = zod.object({
@@ -5855,12 +5880,7 @@ export const CobrarTicketBody = zod.object({
   "importe": zod.number().gt(cobrarTicketBodyPagosItemImporteExclusiveMin),
   "referencia": zod.string().nullish()
 })).min(1),
-  "clienteId": zod.number().nullish(),
-  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
-  "credencialesAdmin": zod.union([zod.object({
-  "usuario": zod.string().min(1).max(cobrarTicketBodyCredencialesAdminOneUsuarioMax),
-  "password": zod.string().min(1).max(cobrarTicketBodyCredencialesAdminOnePasswordMax)
-}),zod.null()]).optional()
+  "clienteId": zod.number().nullish()
 })
 
 export const CobrarTicketResponse = zod.object({
@@ -7543,6 +7563,10 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
   "cantidad": zod.string()
 })),
+  "ventasCredito": zod.object({
+  "importe": zod.string(),
+  "operaciones": zod.number()
+}).describe('Ventas a crédito calculadas exclusivamente como suma del desglose por tienda.'),
   "pendientes": zod.object({
   "tickets": zod.number(),
   "importe": zod.string(),
@@ -7570,6 +7594,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "efectivo": zod.string(),
   "transferencia": zod.string(),
   "credito": zod.string(),
+  "creditoOperaciones": zod.number(),
   "pendientes30Min": zod.number(),
   "cancelaciones": zod.number(),
   "tasaCancelacion": zod.string().describe('Porcentaje en unidades; 10.00 significa 10%'),
@@ -7592,6 +7617,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "efectivo": zod.string(),
   "transferencia": zod.string(),
   "credito": zod.string(),
+  "creditoOperaciones": zod.number(),
   "pendientes30Min": zod.number(),
   "cancelaciones": zod.number(),
   "tasaCancelacion": zod.string().describe('Porcentaje en unidades; 10.00 significa 10%'),

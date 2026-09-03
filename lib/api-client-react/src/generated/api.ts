@@ -145,6 +145,7 @@ import type {
   GetExistenciasAgrupadasParams,
   GetExistenciasParams,
   GetKardexParams,
+  GetPosClienteCreditoDisponibleParams,
   GetReporteSeccionParams,
   GetResumenContenedoresParams,
   HealthStatus,
@@ -211,6 +212,7 @@ import type {
   PisoInput,
   PisoUpdate,
   PosBusquedaResult,
+  PosClienteCreditoDisponible,
   PosPrecioValidationInput,
   PosPrecioValidationResult,
   PrecioCambioResultado,
@@ -9132,7 +9134,7 @@ export const getGetClienteCreditoUrl = (id: number,) => {
 }
 
 /**
- * @summary Semáforo de crédito del cliente (clientes_credito requerido)
+ * @summary Detalle financiero de crédito (clientes_credito requerido)
  */
 export const getClienteCredito = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ClienteCredito> => {
 
@@ -9179,7 +9181,7 @@ export type GetClienteCreditoQueryError = ErrorType<UnauthorizedResponse | Forbi
 
 
 /**
- * @summary Semáforo de crédito del cliente (clientes_credito requerido)
+ * @summary Detalle financiero de crédito (clientes_credito requerido)
  */
 
 export function useGetClienteCredito<TData = Awaited<ReturnType<typeof getClienteCredito>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
@@ -11087,6 +11089,95 @@ export function useBuscarPos<TData = Awaited<ReturnType<typeof buscarPos>>, TErr
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getBuscarPosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetPosClienteCreditoDisponibleUrl = (clienteId: number,
+    params: GetPosClienteCreditoDisponibleParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pos/clientes/${clienteId}/credito-disponible?${stringifiedParams}` : `/api/pos/clientes/${clienteId}/credito-disponible`
+}
+
+/**
+ * @summary Disponibilidad mínima de crédito para crear una venta en POS
+ */
+export const getPosClienteCreditoDisponible = async (clienteId: number,
+    params: GetPosClienteCreditoDisponibleParams, options?: Parameters<typeof customFetch>[1]): Promise<PosClienteCreditoDisponible> => {
+
+  return customFetch<PosClienteCreditoDisponible>(getGetPosClienteCreditoDisponibleUrl(clienteId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPosClienteCreditoDisponibleQueryKey = (clienteId: number,
+    params?: GetPosClienteCreditoDisponibleParams,) => {
+    return [
+    `/api/pos/clientes/${clienteId}/credito-disponible`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetPosClienteCreditoDisponibleQueryOptions = <TData = Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(clienteId: number,
+    params: GetPosClienteCreditoDisponibleParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPosClienteCreditoDisponibleQueryKey(clienteId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>> = ({ signal }) => getPosClienteCreditoDisponible(clienteId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clienteId !== null && clienteId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPosClienteCreditoDisponibleQueryResult = NonNullable<Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>>
+export type GetPosClienteCreditoDisponibleQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Disponibilidad mínima de crédito para crear una venta en POS
+ */
+
+export function useGetPosClienteCreditoDisponible<TData = Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ clienteId: number,
+    params: GetPosClienteCreditoDisponibleParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPosClienteCreditoDisponible>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPosClienteCreditoDisponibleQueryOptions(clienteId,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
