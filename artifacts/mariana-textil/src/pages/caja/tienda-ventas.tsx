@@ -173,7 +173,7 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
   const renderWarning = (lineasSinCosto?: number) => {
     if (!lineasSinCosto) return null;
     return (
-      <span title={`${lineasSinCosto} operaci${lineasSinCosto === 1 ? 'ón' : 'ones'} sin costo registrado`} className="inline-flex ml-1.5 text-amber-500">
+      <span title={`${lineasSinCosto} ${lineasSinCosto === 1 ? "línea" : "líneas"} sin costo asignado`} className="inline-flex ml-1.5 text-amber-500">
         <AlertTriangle className="w-3.5 h-3.5" />
       </span>
     );
@@ -192,7 +192,7 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
                 <TableHead className="text-right">Operaciones</TableHead>
                 {showImporte && <TableHead className="text-right">Importe</TableHead>}
                 {showUtilityRolls && <TableHead className="text-right">Utilidad (Rollos)</TableHead>}
-                {showUtilityMetered && <TableHead className="text-right">Utilidad (Metreado)</TableHead>}
+                {showUtilityMetered && <TableHead className="text-right">Utilidad (Metraje)</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -318,7 +318,9 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
         </div>
         {data.lineasExcluidasSinCosto !== undefined && (
           <div className="border-t px-4 py-3 text-xs text-muted-foreground">
-            Costeo del periodo: {formatNumber(data.lineasExcluidasSinCosto, { kind: "count" })}{" "}
+            Ventas entregadas en {data.nombreUbicacion} del {desde} al {hasta}, agrupadas por tela y color;
+            incluye ventas a crédito, excluye tickets cancelados y separa la utilidad de Rollos y Metraje.{" "}
+            {formatNumber(data.lineasExcluidasSinCosto, { kind: "count" })}{" "}
             {data.lineasExcluidasSinCosto === 1 ? "línea quedó fuera" : "líneas quedaron fuera"} de la utilidad por no tener costo asignado.
           </div>
         )}
@@ -583,6 +585,14 @@ export default function TiendaVentas() {
               </div>
             )}
           </CardContent>
+          {detailData && (
+            <div className="border-t px-4 py-3 text-xs text-muted-foreground">
+              Tickets vendidos en {detailData.nombreUbicacion} del {desde} al {hasta};
+              {formaPago === "all"
+                ? " incluye todas las formas de pago, también crédito,"
+                : ` muestra solo ${paymentLabel(formaPago).toLowerCase()},`} y excluye tickets cancelados.
+            </div>
+          )}
           </Card>
 
           {detailData && detailData.total > pageSize && (
