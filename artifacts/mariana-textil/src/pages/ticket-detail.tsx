@@ -123,29 +123,19 @@ export default function TicketDetailPage() {
     const printClass = isNota ? "print-credito" : "print-80mm";
 
     let cancelled = false;
-    const timers: number[] = [];
     document.body.classList.add(printClass);
     void waitForPrintableAssets().then(() => {
       if (cancelled) return;
-      timers.push(
-        ...(printTabulares ? [0] : [0, 650, 1_300]).map((delay) =>
-          window.setTimeout(() => window.print(), delay),
-        ),
-      );
-      timers.push(
-        window.setTimeout(() => {
-          document.body.classList.remove(printClass);
-          window.history.replaceState(
-            window.history.state,
-            "",
-            appHref(`/tickets/${ticket.id}`),
-          );
-        }, 2_000),
+      window.print();
+      document.body.classList.remove(printClass);
+      window.history.replaceState(
+        window.history.state,
+        "",
+        appHref(`/tickets/${ticket.id}`),
       );
     });
     return () => {
       cancelled = true;
-      timers.forEach(window.clearTimeout);
       document.body.classList.remove(printClass);
     };
   }, [ticket, isPrintReady, isNota, printTabulares]);
@@ -589,69 +579,76 @@ export default function TicketDetailPage() {
 
       {/* 80mm Ticket */}
       <div className="hidden print-80mm-only print-ticket-container">
-        <div className="relative mb-4 text-center">
-          <MonochromeBrandLogo className="mx-auto mb-1 h-auto w-[25mm]" />
-          <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
-          <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
-          <div className="my-2 border-t border-black" />
-          <div className="text-left text-[10px] leading-relaxed">
-            <div><span className="font-semibold">Folio:</span> {ticket.folio}</div>
-            <div><span className="font-semibold">Fecha:</span> {formattedDate} · {formattedTime}</div>
-            <div><span className="font-semibold">Atendió:</span> {ticket.nombreUsuarioTerminal}</div>
-            <div><span className="font-semibold">Cliente:</span> {customerName}</div>
-          </div>
-          {ticket.facturado && <p className="text-xs font-bold">FACTURADO</p>}
-          {ticket.direccionEntregaEfectiva && (
-            <div className="text-left text-[10px] mt-1">
-              <span className="font-semibold">Entrega:</span> {ticket.direccionEntregaEfectiva}
-            </div>
-          )}
-        </div>
-
-        <div className="border-t border-black">
-          {printProductBlocks.map(({ line, modality }) => (
-            <section key={`${modality}-${line.key}`} className="border-b border-dashed border-black py-2 text-xs">
-              <h2 className="text-sm font-black">{line.telaProducto} {line.colorProducto}</h2>
-              <div className="my-1 bg-black px-2 py-1 text-center font-black text-white">
-                VENTA: {modality}
+        {(["CLIENTE", "CAJA", "ADMINISTRACIÓN"] as const).map((copyLabel) => (
+          <section key={copyLabel} className="ticket-copy">
+            <div className="relative mb-4 text-center">
+              <div className="mb-2 border-2 border-black bg-black px-2 py-1 text-sm font-black tracking-[0.18em] text-white">
+                {copyLabel}
               </div>
-              {modality === "POR ROLLO" && (
-                <div className="flex justify-between gap-3"><span>Rollos:</span><span className="font-semibold">{line.rollos}</span></div>
+              <MonochromeBrandLogo className="mx-auto mb-1 h-auto w-[25mm]" />
+              <p className="text-sm font-bold">Mariana Textil S.A. de C.V.</p>
+              <p className="text-xs font-semibold">{ticket.nombreUbicacion}</p>
+              <div className="my-2 border-t border-black" />
+              <div className="text-left text-[10px] leading-relaxed">
+                <div><span className="font-semibold">Folio:</span> {ticket.folio}</div>
+                <div><span className="font-semibold">Fecha:</span> {formattedDate} · {formattedTime}</div>
+                <div><span className="font-semibold">Atendió:</span> {ticket.nombreUsuarioTerminal}</div>
+                <div><span className="font-semibold">Cliente:</span> {customerName}</div>
+              </div>
+              {ticket.facturado && <p className="text-xs font-bold">FACTURADO</p>}
+              {ticket.direccionEntregaEfectiva && (
+                <div className="text-left text-[10px] mt-1">
+                  <span className="font-semibold">Entrega:</span> {ticket.direccionEntregaEfectiva}
+                </div>
               )}
+            </div>
+
+            <div className="border-t border-black">
+              {printProductBlocks.map(({ line, modality }) => (
+                <div key={`${modality}-${line.key}`} className="border-b border-dashed border-black py-2 text-xs">
+                  <h2 className="text-sm font-black">{line.telaProducto} {line.colorProducto}</h2>
+                  <div className="my-1 bg-black px-2 py-1 text-center font-black text-white">
+                    VENTA: {modality}
+                  </div>
+                  {modality === "POR ROLLO" && (
+                    <div className="flex justify-between gap-3"><span>Rollos:</span><span className="font-semibold">{line.rollos}</span></div>
+                  )}
+                  <div className="flex justify-between gap-3">
+                    <span>{line.unidadProducto === "METRO" ? "Metros" : line.unidadProducto === "KILO" ? "Kilos" : "Bolsas"}:</span>
+                    <span className="font-semibold">{formatNumber(line.cantidad, { kind: "quantity" })} {formatUnit(line.unidadProducto)}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span>Precio:</span>
+                    <span>{formatNumber(line.precioUnitario, { kind: "money" })} / {formatUnit(line.unidadProducto)}</span>
+                  </div>
+                  <div className="mt-1 flex justify-between gap-3 border-t border-black pt-1 font-black">
+                    <span>Importe:</span>
+                    <span>{formatNumber(line.importe, { kind: "money" })}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-2 border-2 border-black p-2 text-sm font-black">
               <div className="flex justify-between gap-3">
-                <span>{line.unidadProducto === "METRO" ? "Metros" : line.unidadProducto === "KILO" ? "Kilos" : "Bolsas"}:</span>
-                <span className="font-semibold">{formatNumber(line.cantidad, { kind: "quantity" })} {formatUnit(line.unidadProducto)}</span>
+                <span>TOTAL GENERAL:</span>
+                <span>{formatNumber(ticket.total, { kind: "money" })}</span>
               </div>
-              <div className="flex justify-between gap-3">
-                <span>Precio:</span>
-                <span>{formatNumber(line.precioUnitario, { kind: "money" })} / {formatUnit(line.unidadProducto)}</span>
+            </div>
+
+            {ticket.estado === EstadoTicket.CANCELADO && (
+              <div className="text-center mt-4 border border-black p-1 text-xs font-bold uppercase">
+                *** TICKET CANCELADO ***
               </div>
-              <div className="mt-1 flex justify-between gap-3 border-t border-black pt-1 font-black">
-                <span>Importe:</span>
-                <span>{formatNumber(line.importe, { kind: "money" })}</span>
-              </div>
-            </section>
-          ))}
-        </div>
+            )}
 
-        <div className="mt-2 border-2 border-black p-2 text-sm font-black">
-          <div className="flex justify-between gap-3">
-            <span>TOTAL GENERAL:</span>
-            <span>{formatNumber(ticket.total, { kind: "money" })}</span>
-          </div>
-        </div>
-
-        {ticket.estado === EstadoTicket.CANCELADO && (
-          <div className="text-center mt-4 border border-black p-1 text-xs font-bold uppercase">
-            *** TICKET CANCELADO ***
-          </div>
-        )}
-
-        <div className="text-center mt-6 text-[10px] italic">
-          ¡Gracias por su compra!
-          <br />
-          Revise su mercancía, no hay devoluciones.
-        </div>
+            <div className="text-center mt-6 text-[10px] italic">
+              ¡Gracias por su compra!
+              <br />
+              Revise su mercancía, no hay devoluciones.
+            </div>
+          </section>
+        ))}
 
         {printTabulares &&
           tabularGroups.map((group) => (

@@ -222,14 +222,16 @@ test("Thermal ticket renders vertical product blocks with unit-safe quantities",
   assert.match(detail, /border-b border-dashed border-black/);
 });
 
-test("tabular opt-in prints the ticket plus one isolated 80mm strip per color", async () => {
+test("three ticket copies print once and tabular add-ons remain single", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
 
   assert.match(css, /@page tabular-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
   assert.match(css, /\.tabular-strip-page\s*\{[\s\S]*page:\s*tabular-page;[\s\S]*break-before:\s*page;/);
   assert.match(detail, /get\("tabulares"\) === "1"/);
-  assert.match(detail, /printTabulares \? \[0\] : \[0, 650, 1_300\]/);
+  assert.match(detail, /\(\["CLIENTE", "CAJA", "ADMINISTRACIÓN"\] as const\)\.map/);
+  assert.equal((detail.match(/window\.print\(\)/g) ?? []).length, 1);
+  assert.match(css, /\.ticket-copy\s*\{[\s\S]*break-after:\s*page;/);
   assert.match(detail, /tabularGroups\.map/);
   assert.match(detail, /Folio:/);
   assert.match(detail, /Color:/);

@@ -506,6 +506,20 @@
     color: black;
   }
 
+  .ticket-copy {
+    page: ticket-page;
+    break-after: page;
+    break-inside: avoid-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width: 72mm;
+  }
+
+  .ticket-copy:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
   .tabular-strip-page {
     page: tabular-page;
     break-before: page;
