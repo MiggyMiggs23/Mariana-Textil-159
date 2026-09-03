@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Link } from "wouter";
 import {
@@ -90,7 +91,7 @@ export default function Productos() {
     query: { queryKey: getGetCurrentUserQueryKey() }
   });
 
-  const [filterExistencia, setFilterExistencia] = useState<ListProductosExistencia>(ListProductosExistencia.TODOS);
+  const [filterExistencia, setFilterExistencia] = useHistoryEntryState<ListProductosExistencia>("productos.existencia", ListProductosExistencia.TODOS);
 
   const queryParams = useMemo(() => ({
     existencia: filterExistencia !== "TODOS" ? filterExistencia : undefined
@@ -100,10 +101,10 @@ export default function Productos() {
     query: { queryKey: getListProductosQueryKey(queryParams) }
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterUnidad, setFilterUnidad] = useState("ALL");
-  const [filterEstado, setFilterEstado] = useState("ACTIVE");
-  const [visibleSpecificationColumns, setVisibleSpecificationColumns] = useState<Set<string>>(() => new Set());
+  const [searchTerm, setSearchTerm] = useHistoryEntryState("productos.search", "");
+  const [filterUnidad, setFilterUnidad] = useHistoryEntryState("productos.unidad", "ALL");
+  const [filterEstado, setFilterEstado] = useHistoryEntryState("productos.estado", "ACTIVE");
+  const [visibleSpecificationColumns, setVisibleSpecificationColumns] = useHistoryEntryState<Set<string>>("productos.spec-columns", () => new Set());
 
   const toggleSpecificationColumn = (column: string) => {
     setVisibleSpecificationColumns((current) => {
@@ -114,7 +115,7 @@ export default function Productos() {
     });
   };
 
-  const [expandedTelas, setExpandedTelas] = useState<Set<string>>(() => {
+  const [expandedTelas, setExpandedTelas] = useHistoryEntryState<Set<string>>("productos.expanded-telas", () => {
     try {
       const stored = sessionStorage.getItem("expandedTelas");
       return stored ? new Set(JSON.parse(stored)) : new Set();

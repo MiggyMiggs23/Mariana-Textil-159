@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
+import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetSalida,
@@ -102,7 +103,7 @@ export default function SalidaDetail() {
           <AlertCircle className="w-12 h-12 mb-4" />
           <p className="font-medium">Error al cargar la salida</p>
           <p className="text-sm mt-1">{getApiErrorMessage(error)}</p>
-          <Link href="/salidas" className="mt-4 text-blue-600 hover:underline">Volver a Salidas</Link>
+          <AppBackLink fallbackHref="/salidas" className="mt-4 text-blue-600 hover:underline">Volver a Salidas</AppBackLink>
         </div>
       </AppLayout>
     );
@@ -178,11 +179,11 @@ export default function SalidaDetail() {
     <div className="space-y-6 max-w-6xl mx-auto pb-12 animate-in fade-in duration-300">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
         <div className="flex min-w-0 items-start gap-3">
-          <Link href="/salidas">
-            <Button variant="ghost" size="icon" data-testid="btn-back" aria-label="Volver" className="shrink-0 text-slate-500 hover:text-slate-900">
+          <Button variant="ghost" size="icon" asChild>
+            <AppBackLink fallbackHref="/salidas" data-testid="btn-back" aria-label="Volver" className="shrink-0 text-slate-500 hover:text-slate-900">
               <ArrowLeft className="w-5 h-5" />
-            </Button>
-          </Link>
+            </AppBackLink>
+          </Button>
           <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
             <h1 data-testid="salida-folio" className={`text-3xl font-bold tracking-tight ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900'}`}>

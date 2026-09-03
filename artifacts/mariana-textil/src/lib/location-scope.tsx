@@ -2,10 +2,10 @@ import {
   createContext,
   useContext,
   useMemo,
-  useState,
   type ReactNode,
 } from "react";
 import { useGetCurrentUser, getGetCurrentUserQueryKey } from "@workspace/api-client-react";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 
 type LocationScopeContextValue = {
   selectedLocationId: number | null;
@@ -21,7 +21,8 @@ export function LocationScopeProvider({ children }: { children: ReactNode }) {
     query: { queryKey: getGetCurrentUserQueryKey() }
   });
 
-  const [selectedLocationIdState, setSelectedLocationId] = useState<number | null>(null);
+  const [selectedLocationIdState, setSelectedLocationId] =
+    useHistoryEntryState<number | null>("global.selected-location", null);
 
   const selectedLocationId = useMemo(() => {
     if (

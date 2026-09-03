@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Link } from "wouter";
 import {
@@ -75,10 +76,11 @@ export default function Proveedores() {
     query: { queryKey: getListProveedoresQueryKey() }
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterTipo, setFilterTipo] = useState("ALL");
-  const [filterEstado, setFilterEstado] = useState("ACTIVE");
-  const [sortOrder, setSortOrder] = useState<"AZ" | "SALDO">("AZ");
+  const [searchTerm, setSearchTerm] = useHistoryEntryState("proveedores.search", "");
+  const [filterTipo, setFilterTipo] = useHistoryEntryState("proveedores.tipo", "ALL");
+  const [filterEstado, setFilterEstado] = useHistoryEntryState("proveedores.estado", "ACTIVE");
+  const [sortOrder, setSortOrder] = useHistoryEntryState<"AZ" | "SALDO">("proveedores.sort", "AZ");
+  const [activeTab, setActiveTab] = useHistoryEntryState("proveedores.tab", "proveedores");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
   const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== "SUPERVISOR";
@@ -162,7 +164,7 @@ export default function Proveedores() {
           </Card>
         </div>
 
-        <Tabs defaultValue="proveedores">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="proveedores">Proveedores</TabsTrigger>
             <TabsTrigger value="historial">Historial de compras</TabsTrigger>

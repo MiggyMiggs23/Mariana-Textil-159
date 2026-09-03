@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetExistenciasAgrupadas,
@@ -41,12 +42,13 @@ export default function Inventario() {
       ? undefined
       : (selectedLocationId ?? user?.ubicacion?.id);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useHistoryEntryState("inventario.search", "");
   const debouncedSearch = useDebounce(search, 500);
 
-  const [estadoFilter, setEstadoFilter] = useState<string>("TODOS");
-  const [pisoFilter, setPisoFilter] = useState<string>("TODOS");
-  const [showZero, setShowZero] = useState(false);
+  const [estadoFilter, setEstadoFilter] = useHistoryEntryState<string>("inventario.estado", "TODOS");
+  const [pisoFilter, setPisoFilter] = useHistoryEntryState<string>("inventario.piso", "TODOS");
+  const [showZero, setShowZero] = useHistoryEntryState("inventario.show-zero", false);
+  const [activeTab, setActiveTab] = useHistoryEntryState("inventario.tab", "existencias");
 
   useEffect(() => {
     setPisoFilter("TODOS");
@@ -139,7 +141,7 @@ export default function Inventario() {
           </div>
         </div>
 
-        <Tabs defaultValue="existencias" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between gap-4">
             <TabsList className="bg-muted/50 p-1 w-full sm:w-auto h-12">
               <TabsTrigger value="existencias" className="h-10 px-6">Agrupado por Producto</TabsTrigger>

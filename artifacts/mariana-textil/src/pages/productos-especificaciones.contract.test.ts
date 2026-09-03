@@ -6,7 +6,10 @@ const root = new URL("./", import.meta.url);
 
 test("product catalog keeps textile specification columns hidden until selected", async () => {
   const page = await readFile(new URL("./productos.tsx", root), "utf8");
-  assert.match(page, /useState<Set<string>>\(\(\) => new Set\(\)\)/);
+  assert.match(
+    page,
+    /useHistoryEntryState<Set<string>>\("productos\.spec-columns", \(\) => new Set\(\)\)/,
+  );
   assert.match(page, /checkbox-product-column-\$\{column\}/);
   assert.match(page, /\["anchoCm", "Ancho"\]/);
   assert.match(page, /\["composicion", "Composición"\]/);

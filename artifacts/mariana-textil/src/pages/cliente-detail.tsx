@@ -36,6 +36,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { AppBackLink } from "@/lib/internal-navigation";
 import { getCategoricalChartColor } from "@/lib/report-chart-colors";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { createAdjustment, downloadClientFile, getAccount, getClientAnalytics, getPortfolio, getPurchases, getStats, updateCreditTerms } from "@/lib/clientes-api";
@@ -207,7 +208,7 @@ export default function ClienteDetail() {
   };
 
   if (clientQuery.isLoading) return <AppLayout><div className="mx-auto max-w-7xl space-y-4"><Skeleton className="h-12 w-72" /><Skeleton className="h-96 w-full" /></div></AppLayout>;
-  if (clientQuery.isError || !clientQuery.data) return <AppLayout><Card className="mx-auto max-w-xl border-destructive/30"><CardContent className="space-y-4 p-8 text-center"><p className="text-destructive" role="alert" data-testid="error-client-detail">{getApiErrorMessage(clientQuery.error, "No se pudo cargar el cliente.")}</p><Button asChild><Link href="/clientes">Volver a clientes</Link></Button></CardContent></Card></AppLayout>;
+  if (clientQuery.isError || !clientQuery.data) return <AppLayout><Card className="mx-auto max-w-xl border-destructive/30"><CardContent className="space-y-4 p-8 text-center"><p className="text-destructive" role="alert" data-testid="error-client-detail">{getApiErrorMessage(clientQuery.error, "No se pudo cargar el cliente.")}</p><Button asChild><AppBackLink fallbackHref="/clientes">Volver a clientes</AppBackLink></Button></CardContent></Card></AppLayout>;
   const client = clientQuery.data;
 
   return (
@@ -215,7 +216,7 @@ export default function ClienteDetail() {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <Button variant="ghost" size="icon" asChild><Link href="/clientes" aria-label="Volver a clientes" data-testid="link-back-clients"><ArrowLeft className="h-5 w-5" /></Link></Button>
+            <Button variant="ghost" size="icon" asChild><AppBackLink fallbackHref="/clientes" aria-label="Volver a clientes" data-testid="link-back-clients"><ArrowLeft className="h-5 w-5" /></AppBackLink></Button>
             <div><div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-sidebar" data-testid="text-client-name">{client.nombre}</h1>{client.id === 1 && <Badge variant="secondary"><LockKeyhole className="mr-1 h-3 w-3" />Cliente de sistema</Badge>}<Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></div><p className="text-sm text-muted-foreground">Cliente #{formatNumber(client.id, { kind: "identifier" })} · Alta {date(client.createdAt)}</p></div>
           </div>
           <div className="flex flex-wrap gap-2">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import {
   useListSalidas,
   getListSalidasQueryKey,
@@ -71,7 +72,7 @@ export default function Salidas() {
   const initialTab = requestedTab === "recepcion" || requestedTab === "mostrador"
     ? requestedTab
     : "historial";
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeTab, setActiveTab] = useHistoryEntryState("salidas.tab", initialTab);
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const isCaja = user?.rol === "CAJA";
@@ -79,16 +80,16 @@ export default function Salidas() {
   const { data: users } = useListUsers({ query: { enabled: !isCaja, queryKey: getListUsersQueryKey() } });
   const { data: products } = useListProductos(undefined, { query: { enabled: !isCaja, queryKey: getListProductosQueryKey() } });
 
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
+  const [page, setPage] = useHistoryEntryState("salidas.page", 1);
+  const [search, setSearch] = useHistoryEntryState("salidas.search", "");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [origenId, setOrigenId] = useState<string>("all");
-  const [destinoId, setDestinoId] = useState<string>("all");
-  const [estado, setEstado] = useState<string>("all");
-  const [usuarioId, setUsuarioId] = useState<string>("all");
-  const [productoId, setProductoId] = useState<string>("all");
-  const [fechaDesde, setFechaDesde] = useState<Date | undefined>();
-  const [fechaHasta, setFechaHasta] = useState<Date | undefined>();
+  const [origenId, setOrigenId] = useHistoryEntryState<string>("salidas.origen", "all");
+  const [destinoId, setDestinoId] = useHistoryEntryState<string>("salidas.destino", "all");
+  const [estado, setEstado] = useHistoryEntryState<string>("salidas.estado", "all");
+  const [usuarioId, setUsuarioId] = useHistoryEntryState<string>("salidas.usuario", "all");
+  const [productoId, setProductoId] = useHistoryEntryState<string>("salidas.producto", "all");
+  const [fechaDesde, setFechaDesde] = useHistoryEntryState<Date | undefined>("salidas.desde", undefined);
+  const [fechaHasta, setFechaHasta] = useHistoryEntryState<Date | undefined>("salidas.hasta", undefined);
 
   const [isExporting, setIsExporting] = useState(false);
   const [showFilters, setShowFilters] = useState(false);

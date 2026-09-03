@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
@@ -94,9 +95,9 @@ function mexicoCityDate(date: Date): string {
 }
 
 function CarteraContent() {
-  const [scannedInput, setScannedInput] = useState("");
+  const [scannedInput, setScannedInput] = useHistoryEntryState("cobros.scanned-input", "");
   const [resolvedTicketId, setResolvedTicketId] = useState<number | null>(null);
-  const [searchFolio, setSearchFolio] = useState<number | null>(null);
+  const [searchFolio, setSearchFolio] = useHistoryEntryState<number | null>("cobros.search-folio", null);
 
   const { data: currentUser } = useGetCurrentUser();
   const canViewFinances = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");

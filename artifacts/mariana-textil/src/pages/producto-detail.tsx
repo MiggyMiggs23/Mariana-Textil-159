@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "wouter";
+import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetProducto,
@@ -213,7 +214,7 @@ export default function ProductoDetail() {
         <div className="max-w-5xl mx-auto p-12 text-center text-muted-foreground flex flex-col items-center">
           <Package className="w-12 h-12 mb-4 opacity-20" />
           <h2 className="text-xl font-bold mb-2">Producto no encontrado</h2>
-          <Link href="/productos" className="text-primary hover:underline">Volver al catálogo</Link>
+          <AppBackLink fallbackHref="/productos" className="text-primary hover:underline">Volver al catálogo</AppBackLink>
         </div>
       </AppLayout>
     );
@@ -223,10 +224,10 @@ export default function ProductoDetail() {
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <Link href="/productos" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <AppBackLink fallbackHref="/productos" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al catálogo
-          </Link>
+          </AppBackLink>
           {canEditProduct && !isEditing && (
             <Button variant="outline" onClick={() => setIsEditing(true)} data-testid="button-edit-product">
               Editar Producto

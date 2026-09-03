@@ -30,3 +30,4 @@
 - [Índices aditivos con drift de esquema](additive-index-schema-drift.md) — si push propone truncar por drift ajeno, abortar y aplicar solo DDL aditivo explícito.
 - [Defectos ajenos detectados en validación](validation-discovered-security-fixes.md) — corregirlos con autorización y en commit separado; auditar equivalentes antes de ampliar la tanda.
 - [Regresiones concurrentes deterministas](concurrency-regression-baselines.md) — usar barrera con timeout y probar primero contra código anterior; Promise.all puede pasar por casualidad.
+- [Regreso seguro en detalles](safe-detail-back-navigation.md) — retroceder solo con una entrada previa de la sesión SPA; recargas y accesos directos usan fallback interno.

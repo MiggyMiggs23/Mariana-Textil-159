@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useLocation } from "wouter";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -430,8 +431,8 @@ export default function PosPage() {
     },
   });
 
-  const [tipoTicket, setTipoTicket] = useState<TipoTicket>(TipoTicket.NORMAL);
-  const [search, setSearch] = useState("");
+  const [tipoTicket, setTipoTicket] = useHistoryEntryState<TipoTicket>("pos.tipo-ticket", TipoTicket.NORMAL);
+  const [search, setSearch] = useHistoryEntryState("pos.search", "");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [lastScannedCode, setLastScannedCode] =
     useState<CodigoEscaneadoInterpretado | null>(null);
@@ -465,7 +466,8 @@ export default function PosPage() {
   const [clientName, setClientName] = useState("Venta a Público");
   const [credito, setCredito] = useState(false);
   const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
-  const [documentoTipo, setDocumentoTipo] = useState<"TICKET" | "NOTA" | null>(null);
+  const [documentoTipo, setDocumentoTipo] =
+    useHistoryEntryState<"TICKET" | "NOTA" | null>("pos.document-type", null);
   const [notaSinPrecios, setNotaSinPrecios] = useState(false);
   const [imprimirTubulares, setImprimirTubulares] = useState(false);
   const [nombreDestinatario, setNombreDestinatario] = useState("");

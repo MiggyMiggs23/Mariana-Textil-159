@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useRoute, Link } from "wouter";
+import { AppBackLink, appHref } from "@/lib/internal-navigation";
 import {
   useObtenerTicket,
   getObtenerTicketQueryKey,
@@ -135,7 +136,11 @@ export default function TicketDetailPage() {
       timers.push(
         window.setTimeout(() => {
           document.body.classList.remove(printClass);
-          window.history.replaceState({}, "", `/tickets/${ticket.id}`);
+          window.history.replaceState(
+            window.history.state,
+            "",
+            appHref(`/tickets/${ticket.id}`),
+          );
         }, 2_000),
       );
     });
@@ -258,11 +263,11 @@ export default function TicketDetailPage() {
         <h2 className="text-xl font-semibold text-destructive">
           Ticket no encontrado
         </h2>
-        <Link href={returnPath}>
-          <Button variant="link" className="mt-4">
-            Volver al POS
-          </Button>
-        </Link>
+        <Button variant="link" className="mt-4" asChild>
+          <AppBackLink fallbackHref={returnPath}>
+            Volver
+          </AppBackLink>
+        </Button>
       </div>
     );
   }
@@ -286,11 +291,11 @@ export default function TicketDetailPage() {
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
       <div className="flex flex-col gap-4 no-print sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <Link href={returnPath}>
-            <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" asChild>
+            <AppBackLink fallbackHref={returnPath} aria-label="Volver">
               <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
+            </AppBackLink>
+          </Button>
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-sidebar">
               Ticket #{ticket.folio}

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { ArrowUpDown, Loader2, LockKeyhole, Plus, Search, Users } from "lucide-react";
 import {
   getGetClientesResumenQueryKey,
@@ -38,10 +39,11 @@ import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
 
 export default function Clientes() {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("active");
-  const [sort, setSort] = useState<"name" | "recent">("name");
-  const [analyticsMonths, setAnalyticsMonths] = useState("12");
+  const [search, setSearch] = useHistoryEntryState("clientes.search", "");
+  const [status, setStatus] = useHistoryEntryState("clientes.status", "active");
+  const [sort, setSort] = useHistoryEntryState<"name" | "recent">("clientes.sort", "name");
+  const [analyticsMonths, setAnalyticsMonths] = useHistoryEntryState("clientes.analytics-months", "12");
+  const [activeTab, setActiveTab] = useHistoryEntryState("clientes.tab", "clientes");
   const [createOpen, setCreateOpen] = useState(false);
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") && user?.rol !== "SUPERVISOR";
@@ -88,7 +90,7 @@ export default function Clientes() {
             </Button>
           )}
         </div>
-        <Tabs defaultValue="clientes">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex w-full flex-wrap sm:w-auto">
             <TabsTrigger value="clientes" data-testid="tab-clientes">Clientes</TabsTrigger>
             {canFinances && <TabsTrigger value="cartera" data-testid="tab-cartera">Cartera</TabsTrigger>}

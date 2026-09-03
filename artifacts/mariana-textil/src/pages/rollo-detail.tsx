@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "wouter";
+import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey, useRevertSalidaExtraordinaria, getListSalidasExtraordinariasQueryKey } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -118,7 +119,7 @@ export default function RolloDetail() {
         <div className="max-w-5xl mx-auto p-12 text-center text-muted-foreground flex flex-col items-center">
           <Box className="w-12 h-12 mb-4 opacity-20" />
           <h2 className="text-xl font-bold mb-2">Rollo no encontrado</h2>
-          <Link href="/inventario" className="text-primary hover:underline">Volver a inventario</Link>
+          <AppBackLink fallbackHref="/inventario" className="text-primary hover:underline">Volver a inventario</AppBackLink>
         </div>
       </AppLayout>
     );
@@ -132,10 +133,10 @@ export default function RolloDetail() {
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Link href="/inventario" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <AppBackLink fallbackHref="/inventario" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver a inventario
-          </Link>
+          </AppBackLink>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

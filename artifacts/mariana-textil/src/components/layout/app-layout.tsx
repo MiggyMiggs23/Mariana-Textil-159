@@ -314,7 +314,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
 
-          <nav className="flex-1 overflow-y-auto custom-scrollbar">
+          <nav className="flex-1 overflow-y-auto custom-scrollbar" data-history-scroll-key="sidebar-desktop">
             {renderNavContent()}
           </nav>
         </aside>
@@ -425,14 +425,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </div>
 
-              <nav className="flex-1 overflow-y-auto">
+              <nav className="flex-1 overflow-y-auto" data-history-scroll-key="sidebar-mobile">
                 {renderNavContent(() => setMobileMenuOpen(false))}
               </nav>
             </div>
           </div>
         )}
 
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto">{children}</main>
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto" data-history-scroll-key="content">{children}</main>
       </div>
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
         <DialogContent>

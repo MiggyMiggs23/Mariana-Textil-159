@@ -1,5 +1,6 @@
 import { Fragment, useState, useRef, useEffect, useMemo } from "react";
 import { useParams, Link } from "wouter";
+import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetProveedor,
@@ -268,7 +269,7 @@ export default function ProveedorDetail() {
         <div className="max-w-5xl mx-auto p-12 text-center text-muted-foreground flex flex-col items-center">
           <Building2 className="w-12 h-12 mb-4 opacity-20" />
           <h2 className="text-xl font-bold mb-2">Proveedor no encontrado</h2>
-          <Link href="/proveedores" className="text-primary hover:underline">Volver al listado</Link>
+          <AppBackLink fallbackHref="/proveedores" className="text-primary hover:underline">Volver al listado</AppBackLink>
         </div>
       </AppLayout>
     );
@@ -279,10 +280,10 @@ export default function ProveedorDetail() {
       <div className="max-w-5xl mx-auto space-y-6 pb-24">
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
-          <Link href="/proveedores" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <AppBackLink fallbackHref="/proveedores" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver a proveedores
-          </Link>
+          </AppBackLink>
           <div className="flex items-center gap-2">
             {canViewFinanzas && (
               <>
