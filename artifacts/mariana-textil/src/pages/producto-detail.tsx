@@ -109,7 +109,6 @@ export default function ProductoDetail() {
     tela: string;
     color: string;
     unidad: UnidadProducto;
-    precioSugerido: string;
     notas: string;
     activo: boolean;
     sku: string;
@@ -122,7 +121,6 @@ export default function ProductoDetail() {
     tela: "",
     color: "",
     unidad: UnidadProducto.METRO,
-    precioSugerido: "",
     notas: "",
     activo: true,
     sku: "",
@@ -142,7 +140,6 @@ export default function ProductoDetail() {
         tela: product.tela,
         color: product.color,
         unidad: product.unidad,
-        precioSugerido: product.precioSugerido ?? "",
         notas: product.notas || "",
         activo: product.activo,
         sku: product.sku,
@@ -174,7 +171,6 @@ export default function ProductoDetail() {
         tela: formData.tela,
         color: formData.color,
         unidad: formData.unidad,
-        precioSugerido: formData.precioSugerido,
         notas: formData.notas || null,
         activo: formData.activo,
         sku: isBlocked || !formData.isCustomSku ? undefined : displaySku,
@@ -310,7 +306,7 @@ export default function ProductoDetail() {
                   <div className="space-y-1">
                     <Label className="text-muted-foreground">Precio de Lista</Label>
                     <div className="font-medium text-lg text-emerald-700 h-10 flex items-center justify-between">
-                      {formatNumber(product.precioSugerido ?? 0, { kind: "money" })}
+                      {product.precioSugerido == null ? "Sin precio" : formatNumber(product.precioSugerido, { kind: "money" })}
                       {isAdmin && !isEditing && (
                         <Link href={`/precios/${product.id}`}>
                           <Button variant="outline" size="sm" className="h-7 text-xs ml-4" data-testid="button-go-precios">

@@ -8388,6 +8388,7 @@ components:
           gramajeGm2,
           unidad,
           seVendePorMetro,
+          precioSugerido,
           notas,
           activo,
           rollos,
@@ -8420,7 +8421,7 @@ components:
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         seVendePorMetro: { type: boolean }
-        precioSugerido: { type: string }
+        precioSugerido: { type: ["string", "null"] }
         notas:
           type: ["string", "null"]
         activo: { type: boolean }
@@ -8446,6 +8447,7 @@ components:
           gramajeGm2,
           unidad,
           seVendePorMetro,
+          precioSugerido,
           notas,
           activo,
           rollos,
@@ -8478,7 +8480,7 @@ components:
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
         seVendePorMetro: { type: boolean }
-        precioSugerido: { type: string }
+        precioSugerido: { type: ["string", "null"] }
         notas:
           type: ["string", "null"]
         activo: { type: boolean }
@@ -8505,7 +8507,7 @@ components:
         updatedAt: { type: string, format: date-time }
     ProductoInput:
       type: object
-      required: [tela, color, unidad, precioSugerido]
+      required: [tela, color, unidad]
       properties:
         sku:
           type: string
@@ -8529,7 +8531,10 @@ components:
           multipleOf: 0.01
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
-        precioSugerido: { type: string }
+        precioSugerido:
+          type: ["string", "null"]
+          pattern: '^\d+(?:\.\d{1,2})?$'
+          description: Precio sugerido opcional; null o ausencia indican que todavía no se ha capturado.
         notas:
           type: ["string", "null"]
     ProductoUpdate:
@@ -8557,7 +8562,7 @@ components:
           multipleOf: 0.01
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
-        precioSugerido: { type: string }
+        precioSugerido: { type: ["string", "null"] }
         notas:
           type: ["string", "null"]
         activo: { type: boolean }
@@ -8741,7 +8746,7 @@ components:
         tela: { type: string }
         color: { type: string }
         unidad: { type: string }
-        precioSugerido: { type: string }
+        precioSugerido: { type: ["string", "null"] }
         notas:
           type: ["string", "null"]
         sku: { type: string }
@@ -10578,7 +10583,7 @@ components:
         ubicacionId: { type: number }
         nombreUbicacion: { type: string }
         cantidadActual: { type: string }
-        precioSugerido: { type: string }
+        precioSugerido: { type: ["string", "null"] }
     PosProducto:
       type: object
       required:
@@ -10602,7 +10607,7 @@ components:
         color: { type: string }
         unidad:
           $ref: "#/components/schemas/UnidadProducto"
-        precioSugerido: { type: string }
+        precioSugerido: { type: ["string", "null"] }
         precioMayoreo: { type: ["string", "null"] }
         precioMenudeo: { type: ["string", "null"] }
         costoReferenciaMetreado:

@@ -822,7 +822,7 @@ export const ListProductosResponseItem = zod.object({
   "gramajeGm2": zod.number().multipleOf(listProductosResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
   "seVendePorMetro": zod.boolean(),
-  "precioSugerido": zod.string().optional(),
+  "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
   "rollos": zod.number(),
@@ -851,6 +851,7 @@ export const createProductoBodyComposicionMax = 1000;
 export const createProductoBodyGramajeGm2Min = 0;
 export const createProductoBodyGramajeGm2MultipleOf = 0.01;
 
+export const createProductoBodyPrecioSugeridoRegExp = new RegExp('^\\d+(?:\\.\\d{1,2})?$');
 
 
 export const CreateProductoBody = zod.object({
@@ -862,7 +863,7 @@ export const CreateProductoBody = zod.object({
   "composicion": zod.string().max(createProductoBodyComposicionMax).nullish(),
   "gramajeGm2": zod.number().min(createProductoBodyGramajeGm2Min).multipleOf(createProductoBodyGramajeGm2MultipleOf).nullish(),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
-  "precioSugerido": zod.string(),
+  "precioSugerido": zod.string().regex(createProductoBodyPrecioSugeridoRegExp).nullish().describe('Precio sugerido opcional; null o ausencia indican que todavía no se ha capturado.'),
   "notas": zod.string().nullish()
 })
 
@@ -884,7 +885,7 @@ export const CreateProductoResponse = zod.object({
   "gramajeGm2": zod.number().multipleOf(createProductoResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
   "seVendePorMetro": zod.boolean(),
-  "precioSugerido": zod.string().optional(),
+  "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
   "rollos": zod.number(),
@@ -1221,7 +1222,7 @@ export const GetProductoResponse = zod.object({
   "gramajeGm2": zod.number().multipleOf(getProductoResponseGramajeGm2MultipleOf).nullable(),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
   "seVendePorMetro": zod.boolean(),
-  "precioSugerido": zod.string().optional(),
+  "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
   "rollos": zod.number(),
@@ -1298,7 +1299,7 @@ export const UpdateProductoBody = zod.object({
   "composicion": zod.string().max(updateProductoBodyComposicionMax).nullish(),
   "gramajeGm2": zod.number().min(updateProductoBodyGramajeGm2Min).multipleOf(updateProductoBodyGramajeGm2MultipleOf).nullish(),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional(),
-  "precioSugerido": zod.string().optional(),
+  "precioSugerido": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean().optional()
 })
@@ -1321,7 +1322,7 @@ export const UpdateProductoResponse = zod.object({
   "gramajeGm2": zod.number().multipleOf(updateProductoResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
   "seVendePorMetro": zod.boolean(),
-  "precioSugerido": zod.string().optional(),
+  "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
   "activo": zod.boolean(),
   "rollos": zod.number(),
@@ -1346,7 +1347,7 @@ export const PreviewImportProductosResponseItem = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.string(),
-  "precioSugerido": zod.string(),
+  "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
   "sku": zod.string(),
   "estado": zod.enum(['NUEVO', 'DUPLICADO', 'ERROR']),
@@ -5154,7 +5155,7 @@ export const BuscarPosResponse = zod.object({
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "cantidadActual": zod.string(),
-  "precioSugerido": zod.string()
+  "precioSugerido": zod.string().nullable()
 })).describe('Solo rollos con estado DISPONIBLE'),
   "productos": zod.array(zod.object({
   "id": zod.number(),
@@ -5162,7 +5163,7 @@ export const BuscarPosResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
-  "precioSugerido": zod.string(),
+  "precioSugerido": zod.string().nullable(),
   "precioMayoreo": zod.string().nullable(),
   "precioMenudeo": zod.string().nullable(),
   "costoReferenciaMetreado": zod.object({

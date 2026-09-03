@@ -30,7 +30,8 @@ export interface ProductoDetail {
   gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
-  precioSugerido?: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   notas: string | null;
   activo: boolean;

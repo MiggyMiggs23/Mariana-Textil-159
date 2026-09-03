@@ -14,7 +14,7 @@ export type ImportRow = {
   tela: string;
   color: string;
   unidad: string;
-  precioSugerido: string;
+  precioSugerido: string | null;
   notas: string | null;
   sku?: string;
 };
@@ -24,14 +24,14 @@ export type PreviewRow = {
   tela: string;
   color: string;
   unidad: string;
-  precioSugerido: string;
+  precioSugerido: string | null;
   notas: string | null;
   sku: string;
   estado: "NUEVO" | "DUPLICADO" | "ERROR";
   error?: string;
 };
 
-const EXPECTED_HEADERS = ["tela", "color", "unidad", "precio_sugerido"];
+const REQUIRED_HEADERS = ["tela", "color", "unidad"];
 
 function normalizeHeader(h: string): string {
   return h
@@ -171,8 +171,8 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
   const precioIdx = headers.indexOf("precio_sugerido");
   const notasIdx = headers.indexOf("notas");
 
-  if (telaIdx === -1 || colorIdx === -1 || unidadIdx === -1 || precioIdx === -1) {
-    const missing = EXPECTED_HEADERS.filter((h) => !headers.includes(h));
+  if (telaIdx === -1 || colorIdx === -1 || unidadIdx === -1) {
+    const missing = REQUIRED_HEADERS.filter((h) => !headers.includes(h));
     throw new Error(
       `Columnas requeridas faltantes: ${missing.join(", ")}. Encontradas: ${headers.join(", ")}`,
     );
@@ -192,7 +192,7 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
     const telaRaw = (row[telaIdx] ?? "").trim();
     const colorRaw = (row[colorIdx] ?? "").trim();
     const unidadRaw = (row[unidadIdx] ?? "").trim().toUpperCase();
-    const precioRaw = (row[precioIdx] ?? "").trim();
+    const precioRaw = precioIdx >= 0 ? (row[precioIdx] ?? "").trim() : "";
     const notasRaw = notasIdx >= 0 ? (row[notasIdx] ?? "").trim() || null : null;
 
     // Skip blank rows
@@ -213,10 +213,17 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
     ) {
       errors.push(`unidad inválida: "${unidadRaw}" (use METRO, KILO o BOLSA)`);
     }
-    if (!precioRaw) errors.push("precio vacío");
-    const precio = parseFloat(precioRaw.replace(",", "."));
-    if (precioRaw && isNaN(precio)) {
-      errors.push(`precio inválido: "${precioRaw}"`);
+    const precioNormalizado = precioRaw.replace(",", ".");
+    const precioValido =
+      !precioRaw || /^\d+(?:\.\d{1,2})?$/.test(precioNormalizado);
+    const precio = precioRaw ? Number(precioNormalizado) : null;
+    if (
+      precioRaw &&
+      (!precioValido || precio === null || !Number.isFinite(precio) || precio < 0)
+    ) {
+      errors.push(
+        `precio inválido: "${precioRaw}" (use un número mayor o igual a 0 con máximo dos decimales)`,
+      );
     }
 
     if (errors.length > 0) {
@@ -225,7 +232,7 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
         tela: telaRaw,
         color: colorRaw,
         unidad: unidadRaw,
-        precioSugerido: precioRaw,
+        precioSugerido: precioRaw || null,
         notas: notasRaw,
         sku: "",
         estado: "ERROR",
@@ -244,7 +251,7 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
         tela: telaNorm,
         color: colorNorm,
         unidad: unidadRaw,
-        precioSugerido: String(precio.toFixed(2)),
+        precioSugerido: precio === null ? null : precio.toFixed(2),
         notas: notasRaw,
         sku: "",
         estado: "DUPLICADO",
@@ -272,7 +279,7 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
       tela: telaNorm,
       color: colorNorm,
       unidad: unidadRaw,
-      precioSugerido: String(precio.toFixed(2)),
+      precioSugerido: precio === null ? null : precio.toFixed(2),
       notas: notasRaw,
       sku,
       estado: isDuplicate ? "DUPLICADO" : "NUEVO",

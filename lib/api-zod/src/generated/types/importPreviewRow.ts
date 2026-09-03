@@ -12,7 +12,8 @@ export interface ImportPreviewRow {
   tela: string;
   color: string;
   unidad: string;
-  precioSugerido: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   notas: string | null;
   sku: string;

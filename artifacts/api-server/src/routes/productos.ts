@@ -387,7 +387,7 @@ router.post(
             composicion: parsed.data.composicion ?? null,
             gramajeGm2: parsed.data.gramajeGm2 == null ? null : String(parsed.data.gramajeGm2),
             unidad: parsed.data.unidad as UnidadProducto,
-            precioSugerido: parsed.data.precioSugerido,
+            precioSugerido: parsed.data.precioSugerido ?? null,
             notas: parsed.data.notas ?? null,
           })
           .returning();
@@ -803,7 +803,7 @@ router.patch(
       composicion?: string | null;
       gramajeGm2?: string | null;
       unidad?: UnidadProducto;
-      precioSugerido?: string;
+      precioSugerido?: string | null;
       notas?: string | null;
       activo?: boolean;
     } = {};

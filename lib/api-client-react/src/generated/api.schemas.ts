@@ -3229,7 +3229,8 @@ export interface Producto {
   gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
-  precioSugerido?: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   notas: string | null;
   activo: boolean;
@@ -3261,7 +3262,8 @@ export interface ProductoDetail {
   gramajeGm2: number | null;
   unidad: UnidadProducto;
   seVendePorMetro: boolean;
-  precioSugerido?: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   notas: string | null;
   activo: boolean;
@@ -3313,7 +3315,12 @@ export interface ProductoInput {
      */
   gramajeGm2?: number | null;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  /**
+     * Precio sugerido opcional; null o ausencia indican que todavía no se ha capturado.
+     * @nullable
+     * @pattern ^\d+(?:\.\d{1,2})?$
+     */
+  precioSugerido?: string | null;
   /** @nullable */
   notas?: string | null;
 }
@@ -3353,7 +3360,8 @@ export interface ProductoUpdate {
      */
   gramajeGm2?: number | null;
   unidad?: UnidadProducto;
-  precioSugerido?: string;
+  /** @nullable */
+  precioSugerido?: string | null;
   /** @nullable */
   notas?: string | null;
   activo?: boolean;
@@ -3510,7 +3518,8 @@ export interface ImportPreviewRow {
   tela: string;
   color: string;
   unidad: string;
-  precioSugerido: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   notas: string | null;
   sku: string;
@@ -4869,7 +4878,8 @@ export interface PosRolloDisponible {
   ubicacionId: number;
   nombreUbicacion: string;
   cantidadActual: string;
-  precioSugerido: string;
+  /** @nullable */
+  precioSugerido: string | null;
 }
 
 export interface PosProducto {
@@ -4878,7 +4888,8 @@ export interface PosProducto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   precioMayoreo: string | null;
   /** @nullable */

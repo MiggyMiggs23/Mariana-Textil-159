@@ -389,10 +389,10 @@ export default function Productos() {
                                     <TableCell>
                                       <Badge variant="outline" className="text-[10px]">{formatUnit(p.unidad)}</Badge>
                                     </TableCell>
-                                     {visibleSpecificationColumns.has("anchoCm") && <TableCell className="text-right">{p.anchoCm == null ? "—" : `${p.anchoCm.toFixed(2)} cm`}</TableCell>}
-                                     {visibleSpecificationColumns.has("composicion") && <TableCell>{p.composicion || "—"}</TableCell>}
-                                     {visibleSpecificationColumns.has("gramajeGm2") && <TableCell className="text-right">{p.gramajeGm2 == null ? "—" : `${p.gramajeGm2.toFixed(2)} g/m²`}</TableCell>}
-                                    {canViewPrices && <TableCell className={`text-right ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.precioSugerido ?? 0, { kind: "money" })}</TableCell>}
+                                    {visibleSpecificationColumns.has("anchoCm") && <TableCell className="text-right">{p.anchoCm == null ? "—" : `${p.anchoCm.toFixed(2)} cm`}</TableCell>}
+                                    {visibleSpecificationColumns.has("composicion") && <TableCell>{p.composicion || "—"}</TableCell>}
+                                    {visibleSpecificationColumns.has("gramajeGm2") && <TableCell className="text-right">{p.gramajeGm2 == null ? "—" : `${p.gramajeGm2.toFixed(2)} g/m²`}</TableCell>}
+                                    {canViewPrices && <TableCell className={`text-right ${isZeroStock ? "text-muted-foreground" : ""}`}>{p.precioSugerido == null ? "Sin precio" : formatNumber(p.precioSugerido, { kind: "money" })}</TableCell>}
                                     <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.rollos, { kind: "count" })}</TableCell>
                                     <TableCell className={`text-right font-medium tabular-nums ${isZeroStock ? "text-muted-foreground" : ""}`}>
                                        {formatNumber(p.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{formatUnit(p.unidad)}</span>
@@ -473,7 +473,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
     tela: initialTela || "",
     color: "",
     unidad: UnidadProducto.METRO,
-    precioSugerido: "0.00",
+    precioSugerido: "",
     notas: "",
     anchoCm: "",
     composicion: "",
@@ -491,7 +491,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
         tela: initialTela || "",
         color: "",
         unidad: inherited?.unidad ?? UnidadProducto.METRO,
-        precioSugerido: inherited?.precioSugerido ?? "0.00",
+        precioSugerido: inherited?.precioSugerido ?? "",
         notas: "",
         anchoCm: inherited?.anchoCm == null ? "" : String(inherited.anchoCm),
         composicion: inherited?.composicion ?? "",
@@ -517,7 +517,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
         tela: formData.tela.trim(),
         color: formData.color.trim(),
         unidad: formData.unidad,
-        precioSugerido: formData.precioSugerido,
+        precioSugerido: formData.precioSugerido === "" ? null : formData.precioSugerido,
         notas: formData.notas.trim() || null,
         anchoCm: formData.anchoCm === "" ? null : Number(formData.anchoCm),
         composicion: formData.composicion.trim() || null,
@@ -592,7 +592,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
             </div>
             {canViewPrices && (
               <div className="space-y-2">
-                <Label>Precio Sugerido</Label>
+                <Label>Precio Sugerido (opcional)</Label>
                 <Input
                   type="number"
                   step="0.01"
@@ -749,9 +749,10 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
         <DialogHeader>
           <DialogTitle>Importar Productos (Excel/CSV)</DialogTitle>
           <DialogDescription>
-            Columnas requeridas: <strong>tela</strong>, <strong>color</strong>, <strong>unidad</strong>
-            {canViewPrices && <>, <strong>precio_sugerido</strong></>}. <br/>
-            <span className="text-xs text-muted-foreground">(Opcional: notas, sku)</span>
+            Columnas requeridas: <strong>tela</strong>, <strong>color</strong>, <strong>unidad</strong>. <br/>
+            <span className="text-xs text-muted-foreground">
+              (Opcional: {canViewPrices && <>precio_sugerido, </>}notas)
+            </span>
           </DialogDescription>
         </DialogHeader>
 
@@ -820,7 +821,7 @@ function ImportProductsDialog({ open, onClose, canViewPrices }: { open: boolean,
                           <div className="font-semibold text-sm">{row.tela} - {row.color}</div>
                           <div className="text-[10px] text-muted-foreground">
                             {formatUnit(row.unidad)}
-                            {canViewPrices && ` | ${formatNumber(row.precioSugerido, { kind: "money" })}`}
+                            {canViewPrices && <> | {row.precioSugerido == null ? "Sin precio" : formatNumber(row.precioSugerido, { kind: "money" })}</>}
                           </div>
                         </TableCell>
                         <TableCell className="font-mono text-xs">{row.sku || "Auto"}</TableCell>

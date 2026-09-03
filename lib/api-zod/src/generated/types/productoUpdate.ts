@@ -42,7 +42,8 @@ export interface ProductoUpdate {
      */
   gramajeGm2?: number | null;
   unidad?: UnidadProducto;
-  precioSugerido?: string;
+  /** @nullable */
+  precioSugerido?: string | null;
   /** @nullable */
   notas?: string | null;
   activo?: boolean;

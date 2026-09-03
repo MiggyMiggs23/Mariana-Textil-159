@@ -42,7 +42,12 @@ export interface ProductoInput {
      */
   gramajeGm2?: number | null;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  /**
+     * Precio sugerido opcional; null o ausencia indican que todavía no se ha capturado.
+     * @nullable
+     * @pattern ^\d+(?:\.\d{1,2})?$
+     */
+  precioSugerido?: string | null;
   /** @nullable */
   notas?: string | null;
 }

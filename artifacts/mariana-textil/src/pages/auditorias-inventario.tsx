@@ -604,7 +604,7 @@ export default function AuditoriasInventario() {
                     tela: inherited.tela,
                     color: addColor.trim(),
                     unidad: inherited.unidad,
-                    precioSugerido: inherited.precioSugerido ?? "0.00",
+                    precioSugerido: inherited.precioSugerido ?? null,
                     anchoCm: inherited.anchoCm,
                     composicion: inherited.composicion,
                     gramajeGm2: inherited.gramajeGm2,

@@ -14,7 +14,8 @@ export interface PosProducto {
   tela: string;
   color: string;
   unidad: UnidadProducto;
-  precioSugerido: string;
+  /** @nullable */
+  precioSugerido: string | null;
   /** @nullable */
   precioMayoreo: string | null;
   /** @nullable */

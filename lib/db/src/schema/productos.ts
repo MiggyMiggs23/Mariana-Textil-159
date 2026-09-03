@@ -35,7 +35,7 @@ export const productosTable = pgTable(
     precioSugerido: numeric("precio_sugerido", {
       precision: 12,
       scale: 2,
-    }).notNull(),
+    }),
     precioMayoreo: numeric("precio_mayoreo", {
       precision: 12,
       scale: 2,

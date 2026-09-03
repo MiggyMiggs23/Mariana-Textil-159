@@ -18,5 +18,6 @@ export interface PosRolloDisponible {
   ubicacionId: number;
   nombreUbicacion: string;
   cantidadActual: string;
-  precioSugerido: string;
+  /** @nullable */
+  precioSugerido: string | null;
 }
