@@ -492,6 +492,8 @@ Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser 
 
 **Los renglones por hoja son tres mediciones independientes y distintas:** Nota de contado 14; Nota de crédito 8; Salida 10. Crédito reserva el pagaré legible, mientras Salida reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En crédito, el noveno renglón invade el pie al rasterizar; en Salida, 11 o más renglones recortan el pie.
 
+**Captura de importes:** los campos de monto usan `type="text"` con `inputMode="decimal"`, no `type="number"`, porque este último **no admite comas** y deja al usuario capturando cifras largas sin separador. El separador de miles aparece **mientras se escribe**, en formato mexicano —coma para miles, punto para decimales—, y **el cursor no salta** al insertarlo. El separador es presentación y se retira antes de enviar: el servidor recibe el mismo valor de siempre. El comportamiento vive en un solo componente compartido.
+
 Todo documento dibuja su capacidad completa con renglones cerrados y perímetro negro. Las hojas adicionales repiten encabezado y pie, conservan numeración continua y nunca desbordan. El pagaré usa 10 px (7.5 pt) con interlineado de 12 px (9 pt), conserva su texto literal y aparece solo en la última hoja de cada copia de crédito.
 
 **Un renglón de producto es indivisible**: o cabe entero en la hoja o pasa completo a la siguiente, nunca se parte a la mitad. Los renglones por hoja se miden contando el renglón completo más todo lo que va debajo de la tabla —totales, leyenda y firma—, y son tres números distintos, uno por documento.

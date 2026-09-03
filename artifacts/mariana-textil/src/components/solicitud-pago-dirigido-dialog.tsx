@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MoneyInput } from "@/components/money-input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -160,15 +161,12 @@ export function SolicitudPagoDirigidoDialog({
                 </Label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xl">$</span>
-                  <Input
-                    type="number"
-                    min="0.01"
-                    max={Number(saldoPendiente)}
-                    step="0.01"
+                  <MoneyInput
                     value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onValueChange={setAmount}
                     className="pl-9 h-12 text-xl font-black bg-white border-2 focus-visible:ring-0 focus-visible:border-primary"
                     autoFocus
+                    data-testid="directed-payment-amount"
                   />
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium">
                     Máx: {formatNumber(saldoPendiente, { kind: "money" })}
