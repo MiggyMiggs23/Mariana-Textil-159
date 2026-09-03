@@ -21,12 +21,21 @@ export function normalizedClientName(nombre: string): string {
 export function isActiveNonSystemNameConflict(
   error: unknown,
 ): boolean {
-  if (!error || typeof error !== "object") return false;
-  const pgError = error as { code?: unknown; constraint?: unknown };
-  return (
-    pgError.code === "23505" &&
-    pgError.constraint === ACTIVE_CLIENT_NAME_UNIQUE_INDEX
-  );
+  const visited = new Set<object>();
+  let current = error;
+  for (let depth = 0; depth < 4 && current && typeof current === "object"; depth += 1) {
+    if (visited.has(current)) return false;
+    visited.add(current);
+    const pgError = current as { code?: unknown; constraint?: unknown; cause?: unknown };
+    if (
+      pgError.code === "23505" &&
+      pgError.constraint === ACTIVE_CLIENT_NAME_UNIQUE_INDEX
+    ) {
+      return true;
+    }
+    current = pgError.cause;
+  }
+  return false;
 }
 
 export function parseClientCreditTerms(

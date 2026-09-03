@@ -63,4 +63,13 @@ test("a unique-index result from concurrent creates is recognized as a name conf
     isActiveNonSystemNameConflict({ code: "23505", constraint: "other_index" }),
     false,
   );
+  assert.equal(
+    isActiveNonSystemNameConflict({
+      cause: {
+        code: "23505",
+        constraint: ACTIVE_CLIENT_NAME_UNIQUE_INDEX,
+      },
+    }),
+    true,
+  );
 });
