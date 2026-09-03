@@ -1,4 +1,4 @@
-# Verificación general — Totales, histórico, pagos y tubulares
+# Verificación general — Totales, histórico, pagos y tabulares
 
 Fecha: 2026-09-01  
 Zona horaria: America/Mexico_City
@@ -8,7 +8,7 @@ Zona horaria: America/Mexico_City
 1. Totales por unidad en Vista Global.
 2. Histórico financiero permanente de clientes y proveedores.
 3. Formas de pago EFECTIVO, TRANSFERENCIA y FACTURADO.
-4. Impresión opcional de tubulares por color.
+4. Impresión opcional de tabulares por color.
 
 ## Pruebas automatizadas
 
@@ -39,7 +39,7 @@ Viewport: 390 × 844 px, con lecturas interceptadas y sin mutaciones.
   - Kg.: 7.25
   - Bolsas: 4.00
 - El pie permaneció visible y legible dentro de la tabla horizontal móvil.
-- En POS, `Imprimir tubulares` estuvo visible y desmarcado por defecto.
+- En POS, `Imprimir tabulares` estuvo visible y desmarcado por defecto.
 - No se envió ninguna venta.
 
 ## Verificación de impresión
@@ -47,17 +47,17 @@ Viewport: 390 × 844 px, con lecturas interceptadas y sin mutaciones.
 Se renderizó el componente real de ticket con seis rollos NORMAL en tres colores y una línea METREADO:
 
 - Página 1: ticket normal.
-- Página 2: tubular Azul.
-- Página 3: tubular Rojo.
-- Página 4: tubular Verde.
+- Página 2: tabular Azul.
+- Página 3: tabular Rojo.
+- Página 4: tabular Verde.
 - Ancho físico: 80 mm.
 - Folio, color, series, cantidades a dos decimales y totales correctos.
 - La línea METREADO no creó una tira.
 - Sin desbordamiento horizontal.
 
-[Descargar evidencia PDF de cuatro páginas](./evidence/ticket-con-tubulares-80mm.pdf)
+[Descargar evidencia PDF de cuatro páginas](./evidence/ticket-con-tabulares-80mm.pdf)
 
-![Evidencia de ticket con tres tubulares](./evidence/ticket-con-tubulares.png)
+![Evidencia de ticket con tres tabulares](./evidence/ticket-con-tabulares.png)
 
 ## Resultado
 

@@ -368,7 +368,7 @@
     size: 80mm 250mm;
     margin: 4mm;
   }
-  @page tubular-page {
+  @page tabular-page {
     size: 80mm 250mm;
     margin: 4mm;
   }
@@ -506,8 +506,8 @@
     color: black;
   }
 
-  .tubular-strip-page {
-    page: tubular-page;
+  .tabular-strip-page {
+    page: tabular-page;
     break-before: page;
     break-inside: avoid-page;
     page-break-before: always;

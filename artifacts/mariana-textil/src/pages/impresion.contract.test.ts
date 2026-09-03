@@ -222,15 +222,15 @@ test("Thermal ticket renders vertical product blocks with unit-safe quantities",
   assert.match(detail, /border-b border-dashed border-black/);
 });
 
-test("tubular opt-in prints the ticket plus one isolated 80mm strip per color", async () => {
+test("tabular opt-in prints the ticket plus one isolated 80mm strip per color", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
 
-  assert.match(css, /@page tubular-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
-  assert.match(css, /\.tubular-strip-page\s*\{[\s\S]*page:\s*tubular-page;[\s\S]*break-before:\s*page;/);
-  assert.match(detail, /get\("tubulares"\) === "1"/);
-  assert.match(detail, /printTubulares \? \[0\] : \[0, 650, 1_300\]/);
-  assert.match(detail, /tubularGroups\.map/);
+  assert.match(css, /@page tabular-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
+  assert.match(css, /\.tabular-strip-page\s*\{[\s\S]*page:\s*tabular-page;[\s\S]*break-before:\s*page;/);
+  assert.match(detail, /get\("tabulares"\) === "1"/);
+  assert.match(detail, /printTabulares \? \[0\] : \[0, 650, 1_300\]/);
+  assert.match(detail, /tabularGroups\.map/);
   assert.match(detail, /Folio:/);
   assert.match(detail, /Color:/);
   assert.match(detail, /rollo\.serie/);

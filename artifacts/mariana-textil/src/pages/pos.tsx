@@ -474,7 +474,7 @@ export default function PosPage() {
   const [documentoTipo, setDocumentoTipo] =
     useHistoryEntryState<"TICKET" | "NOTA" | null>("pos.document-type", null);
   const [notaSinPrecios, setNotaSinPrecios] = useState(false);
-  const [imprimirTubulares, setImprimirTubulares] = useState(false);
+  const [imprimirTabulares, setImprimirTabulares] = useState(false);
   const [nombreDestinatario, setNombreDestinatario] = useState("");
   const [direccionEntregaSnapshot, setDireccionEntregaSnapshot] = useState("");
 
@@ -973,9 +973,9 @@ export default function PosPage() {
           setNotaSinPrecios(false);
           setNombreDestinatario("");
           setDireccionEntregaSnapshot("");
-          setImprimirTubulares(false);
+          setImprimirTabulares(false);
           setLocation(
-            `/tickets/${ticket.id}?print=3${imprimirTubulares ? "&tubulares=1" : ""}`,
+            `/tickets/${ticket.id}?print=3${imprimirTabulares ? "&tabulares=1" : ""}`,
           );
         },
         onError: (err: unknown) => {
@@ -1349,17 +1349,17 @@ export default function PosPage() {
 
             <div className="flex items-center space-x-2 bg-secondary/50 p-3 rounded-md">
               <Checkbox
-                id="imprimir-tubulares"
-                checked={imprimirTubulares}
-                onCheckedChange={(value) => setImprimirTubulares(value === true)}
-                data-testid="imprimir-tubulares"
+                id="imprimir-tabulares"
+                checked={imprimirTabulares}
+                onCheckedChange={(value) => setImprimirTabulares(value === true)}
+                data-testid="imprimir-tabulares"
               />
               <div>
                 <Label
-                  htmlFor="imprimir-tubulares"
+                  htmlFor="imprimir-tabulares"
                   className="font-semibold cursor-pointer"
                 >
-                  Imprimir tubulares
+                  Imprimir tabulares
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   Agrega una tira por color de los rollos identificados.

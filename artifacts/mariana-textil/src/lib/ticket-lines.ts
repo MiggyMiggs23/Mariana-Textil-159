@@ -168,16 +168,16 @@ export function groupTicketLinesByModality(lineas: TicketLinea[], showIndividual
   return result;
 }
 
-export type TubularRoll = {
+export type TabularRoll = {
   id: number;
   serie: string;
   cantidad: string;
   unidad: TicketLinea["unidadProducto"];
 };
 
-export type TubularColorGroup = {
+export type TabularColorGroup = {
   color: string;
-  rollos: TubularRoll[];
+  rollos: TabularRoll[];
   totales: Partial<Record<TicketLinea["unidadProducto"], string>>;
 };
 
@@ -196,14 +196,14 @@ function addStoredQuantities(left: string | undefined, right: string): string {
 }
 
 /**
- * Builds the optional tubular-print strips exclusively from persisted,
+ * Builds the optional tabular-print strips exclusively from persisted,
  * identified NORMAL ticket lines. METREADO lines deliberately have no source
  * roll and therefore cannot produce a physical-roll strip.
  */
 export function groupIdentifiedNormalRollsByColor(
   lineas: TicketLinea[],
-): TubularColorGroup[] {
-  const byColor = new Map<string, TubularColorGroup>();
+): TabularColorGroup[] {
+  const byColor = new Map<string, TabularColorGroup>();
 
   for (const linea of lineas) {
     if (

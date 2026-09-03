@@ -104,7 +104,7 @@ test("priced print lines preserve grouped sale totals", () => {
   assert.equal(groups.rollos.subtotal, 125);
 });
 
-test("tubular strips group only identified NORMAL rolls by color deterministically", () => {
+test("tabular strips group only identified NORMAL rolls by color deterministically", () => {
   const azul = { ...line(3, "NORMAL", "10.00"), colorProducto: "Azul", serieRollo: "B-02", cantidad: "4.125" };
   const rojo = { ...line(2, "NORMAL", "10.00"), colorProducto: "Rojo", serieRollo: "A-01", cantidad: "2.500" };
   const azulFirst = { ...line(1, "NORMAL", "10.00"), colorProducto: "Azul", serieRollo: "B-01", cantidad: "3.000" };
@@ -129,7 +129,7 @@ test("tubular strips group only identified NORMAL rolls by color deterministical
   ]);
 });
 
-test("tubular strips never mix metres, kilos, and bags in one false total", () => {
+test("tabular strips never mix metres, kilos, and bags in one false total", () => {
   const metro = { ...line(1, "NORMAL", "10.00"), colorProducto: "Negro", serieRollo: "M-1", cantidad: "1.004", unidadProducto: "METRO" as const };
   const otroMetro = { ...line(2, "NORMAL", "10.00"), colorProducto: "Negro", serieRollo: "M-2", cantidad: "1.004", unidadProducto: "METRO" as const };
   const kilo = { ...line(3, "NORMAL", "10.00"), colorProducto: "Negro", serieRollo: "K-1", cantidad: "2.500", unidadProducto: "KILO" as const };

@@ -39,9 +39,9 @@ Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una
 
 # Mariana Textil
 
-## Corrección — Bloque 4: Tubulares
+## Corrección — Bloque 4: Tabulares
 
-**Tubulares:** casilla opcional al cobrar, sin marcar por omisión. Genera **una tira por color** en 80 mm, con los metrajes de los rollos de ese color, su total y el folio del ticket. Son adicionales al ticket, nunca lo sustituyen, y no tocan el registro de la venta.
+**Tabulares:** casilla opcional al cobrar, sin marcar por omisión. Genera **una tira por color** en 80 mm, con los metrajes de los rollos de ese color, su total y el folio del ticket. Son adicionales al ticket, nunca lo sustituyen, y no tocan el registro de la venta.
 
 - Se excluye **METREADO** porque no tiene un rollo fuente identificado del cual obtener una etiqueta física.
 - Se imprime incluso cuando hay un solo color porque el usuario lo solicitó expresamente al activar la opción.

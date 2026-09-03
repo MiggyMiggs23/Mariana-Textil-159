@@ -66,8 +66,8 @@ export default function TicketDetailPage() {
   const [adminPass, setAdminPass] = useState("");
   const [showRolls, setShowRolls] = useState(false);
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
-  const printTubulares =
-    new URLSearchParams(window.location.search).get("tubulares") === "1";
+  const printTabulares =
+    new URLSearchParams(window.location.search).get("tabulares") === "1";
 
   const { data: user } = useGetCurrentUser({
     query: { queryKey: getGetCurrentUserQueryKey() },
@@ -128,7 +128,7 @@ export default function TicketDetailPage() {
     void waitForPrintableAssets().then(() => {
       if (cancelled) return;
       timers.push(
-        ...(printTubulares ? [0] : [0, 650, 1_300]).map((delay) =>
+        ...(printTabulares ? [0] : [0, 650, 1_300]).map((delay) =>
           window.setTimeout(() => window.print(), delay),
         ),
       );
@@ -148,7 +148,7 @@ export default function TicketDetailPage() {
       timers.forEach(window.clearTimeout);
       document.body.classList.remove(printClass);
     };
-  }, [ticket, isPrintReady, isNota, printTubulares]);
+  }, [ticket, isPrintReady, isNota, printTabulares]);
 
   const handlePrint80mm = () => {
     void printWhenReady("print-80mm");
@@ -288,7 +288,7 @@ export default function TicketDetailPage() {
     minute: "2-digit",
   });
   const ticketDocumentUrl = absoluteAppUrl(`/tickets/${ticket.id}`);
-  const tubularGroups = groupIdentifiedNormalRollsByColor(ticket.lineas);
+  const tabularGroups = groupIdentifiedNormalRollsByColor(ticket.lineas);
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
@@ -653,15 +653,15 @@ export default function TicketDetailPage() {
           Revise su mercancía, no hay devoluciones.
         </div>
 
-        {printTubulares &&
-          tubularGroups.map((group) => (
+        {printTabulares &&
+          tabularGroups.map((group) => (
             <section
               key={group.color}
-              className="tubular-strip-page mt-4 border border-black p-3 text-xs"
-              aria-label={`Tubular color ${group.color}`}
+              className="tabular-strip-page mt-4 border border-black p-3 text-xs"
+              aria-label={`Tabular color ${group.color}`}
             >
               <h2 className="text-center text-sm font-bold uppercase">
-                TUBULAR
+                TABULAR
               </h2>
               <div className="mt-2 flex justify-between border-b border-black pb-1">
                 <span className="font-semibold">Folio:</span>
