@@ -4,7 +4,7 @@ Los documentos impresos requieren `print-color-adjust: exact` para que el logo y
 
 Todo documento imprimible debe poder abrirse en cualquier momento desde el folio de su lista, no solo al crearse.
 
-Todos los documentos impresos llevan el logo centrado arriba y el QR en la esquina superior derecha. El QR lleva al mismo destino que el folio en azul de su lista, con la dirección construida desde el origen en que corre la aplicación, nunca escrita a mano.
+Los documentos impresos llevan el logo centrado arriba. Los documentos con QR lo muestran en la esquina superior derecha y lo dirigen al mismo destino que el folio en azul de su lista, con la dirección construida desde el origen en que corre la aplicación, nunca escrita a mano. El ticket de venta es la excepción: no lleva QR.
 
 **Documentos impresos, agregación:** Entrada y Salida imprimen **un renglón por producto** con el total de rollos y la cantidad total, no un renglón por rollo. Como el producto ya incluye el color y la unidad es atributo del producto, agrupar por producto agrupa por tela y color y nunca mezcla metros con kilos ni bolsas. Agrupar por tela sí los mezclaría y está prohibido.
 
@@ -49,6 +49,16 @@ Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una
 
 Sistema interno de inventarios, ventas y salidas entre ubicaciones para las tiendas y
 bodegas de Mariana Textil. No es un sistema contable ni fiscal.
+
+## Ticket y etiquetas
+
+**Ticket:** sin QR, logo de **2.5 cm** centrado arriba. Cada producto va en **bloque vertical** —nombre, modalidad de venta destacada, y renglones Rollos, Metros, Precio e Importe con rótulo a la izquierda y valor a la derecha—. **La venta metreada no lleva renglón de Rollos**: no hay rollos identificados. La abreviatura de cantidad depende de la unidad del producto y las cantidades **nunca se totalizan entre unidades distintas**.
+
+El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
+
+**Cada venta imprime tres copias** —CLIENTE, CAJA y ADMINISTRACIÓN— con contenido idéntico y una leyenda que las distingue, en una sola operación y separadas por el corte automático. Los tabulares son adicionales y **no se triplican**.
+
+**Ajuste de texto en etiquetas:** medir `scrollWidth` contra `clientWidth` en un contenedor flex **no detecta desbordamiento**, porque el flex no recorta a su hijo y ambos valores coinciden siempre. El recorte ocurre en el ancestro con `overflow-hidden`, y por eso el texto se corta de ambos lados al estar centrado. La medición compara el **ancho real del texto** contra el **ancho disponible**. Cualquier cambio a esta lógica se valida generando las etiquetas de todo el catálogo, no con dos ejemplos.
 
 ## Run & Operate
 
