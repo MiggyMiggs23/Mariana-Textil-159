@@ -482,11 +482,11 @@ Las **ventas a crédito cuentan** como ventas y los **cancelados no**. La utilid
 
 ## Formatos de impresión
 
-**Formatos de impresión.** Entrada: carta blanca, a color. Notas de contado y crédito: **A5 vertical, 148 × 210 mm**, papel blanco, a color. Salida: **A5 horizontal, 210 × 148 mm**, papel **de color distinto por sitio**, impresión **monocromática**.
+**Formatos de impresión.** Entrada: carta blanca, a color. Notas de contado y crédito: **A5 vertical, 148 × 210 mm**, papel blanco, a color. Salida: **A5 horizontal, 210 × 148 mm**, papel **de color distinto por sitio**, diseño a color.
 
 Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser admiten A5 en cajón; media carta solo entra por alimentación manual, hoja por hoja, lo que es inviable en un mostrador. No son el mismo tamaño: A5 es 148 × 210 mm y media carta 140 × 216 mm.
 
-**La Salida se diseña para monocromático:** el color lo aporta el papel, no la tinta. Ningún dato puede depender del color para entenderse; se distingue por grosor, fondo gris, borde o posición.
+**Los documentos no se diseñan para monocromático.** El color lo aporta el papel de la bandeja y la impresora convierte a grises por su cuenta. Un logo azul impreso en negro se ve bien; un logo dibujado en gris plano se ve mal en color y en negro. La Salida conserva su diseño a color aunque se imprima en monocromático sobre papel de color.
 
 **El QR de la Salida lleva recuadro blanco detrás.** Sobre papel de color el contraste puede caer y el código deja de leerse; si el QR no escanea, se rompe el flujo de recepción. Es una regla operativa, no estética, y aplica a cualquier color de papel presente o futuro.
 

@@ -23,7 +23,7 @@ test("la salida usa A5 horizontal con diez renglones fijos por página", () => {
 
 test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   assert.match(page, /<PrintableDocumentHeader[\s\S]*qrUrl=\{qrUrl\}/);
-  assert.match(page, />Salida<\/h1>/);
+  assert.match(page, /<h1[^>]*>[\s\S]*Salida[\s\S]*doc-origin-initials/);
   assert.doesNotMatch(page, /HOJA DE SALIDA/);
   assert.doesNotMatch(page, /tracking-tighter uppercase leading-none">Salida/);
   assert.match(page, /printWhenReady\("print-salida"\)/);
@@ -62,7 +62,7 @@ test("las iniciales grandes del origen llegan por el DTO de la salida", () => {
   assert.match(page, /data-testid="doc-origin-initials"/);
   assert.match(
     page,
-    /className="text-5xl font-black uppercase leading-none tracking-wide text-black"/,
+    /className="uppercase tracking-wide"/,
   );
   assert.match(page, /\{salida\.inicialesSitio\}/);
   assert.doesNotMatch(page, /doc-origin-initials[\s\S]*>(DN|MTY|CDMX)</);
@@ -82,15 +82,12 @@ test("ningún texto impreso baja de 7.5 puntos", () => {
   assert.ok(Math.min(...pixelSizes) >= 10);
 });
 
-test("la salida declara una paleta monocromática sin depender del color", () => {
-  assert.match(page, /data-print-palette="monochrome"/);
-  assert.match(page, /salida-page-print salida-monochrome bg-white text-black/);
-  assert.match(page, /salida-table-header salida-dark-band bg-black text-white border-b-2 border-black/);
-  assert.match(page, /document-metadata salida-dark-band[\s\S]*bg-gray-800 text-white/);
-  assert.match(page, /logoVariant="monochrome"/);
-  assert.match(styles, /\.salida-page-print\s*\{[\s\S]*filter:\s*grayscale\(1\);/);
-  assert.match(styles, /\.salida-page-print \.salida-dark-band\s*\{[\s\S]*background-color:\s*#1f2937 !important;[\s\S]*color:\s*#fff !important;/);
-  assert.doesNotMatch(page, /text-red-|bg-\[#1e3a8a\]|text-\[#1e3a8a\]/);
+test("la salida restaura el diseño a color anterior al monocromático", () => {
+  assert.doesNotMatch(page, /data-print-palette="monochrome"|logoVariant="monochrome"|salida-monochrome/);
+  assert.doesNotMatch(styles, /filter:\s*grayscale\(1\)/);
+  assert.match(page, /bg-\[#1e3a8a\]/);
+  assert.match(page, /text-\[#1e3a8a\]/);
+  assert.match(page, /text-red-600/);
 });
 
 test("el QR de salida conserva un pad blanco y zona de silencio adicional", () => {

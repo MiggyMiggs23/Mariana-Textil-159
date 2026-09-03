@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { DocumentQrCode } from "@/components/document-qr-code";
-import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 
 export function PrintableDocumentHeader({
   children,
@@ -12,7 +11,6 @@ export function PrintableDocumentHeader({
   className = "",
   logoClassName = "h-28 w-28",
   logoSize,
-  logoVariant = "color",
   qrContainerClassName = "min-h-28",
   qrWrapperClassName = "",
 }: {
@@ -24,7 +22,6 @@ export function PrintableDocumentHeader({
   className?: string;
   logoClassName?: string;
   logoSize?: number;
-  logoVariant?: "color" | "monochrome";
   qrContainerClassName?: string;
   qrWrapperClassName?: string;
 }) {
@@ -37,11 +34,7 @@ export function PrintableDocumentHeader({
         className={`${logoClassName} justify-self-center`}
         style={logoSize ? { width: logoSize, height: logoSize } : undefined}
       >
-        {logoVariant === "monochrome" ? (
-          <MonochromeBrandLogo className="h-full w-full" />
-        ) : (
-          <BrandLogo variant="mark" className="h-full w-full" />
-        )}
+        <BrandLogo variant="mark" className="h-full w-full" />
       </div>
       <div className={`flex justify-end ${qrContainerClassName}`}>
         {qrUrl && (
