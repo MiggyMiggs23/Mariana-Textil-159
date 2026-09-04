@@ -199,7 +199,7 @@ if (!testUrl) {
       )).id));
       ids.credit.push(Number((await one(
         `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,notas)
-         VALUES($1,$2,'REVERSO',-40,$3,$4) RETURNING id`,
+         VALUES($1,$2,'AJUSTE',-40,$3,$4) RETURNING id`,
         [ids.clients[0], sold, ids.users[0], `${tag}-reverso-ticket`],
       )).id));
 

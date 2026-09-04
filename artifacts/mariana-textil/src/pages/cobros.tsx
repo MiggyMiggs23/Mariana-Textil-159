@@ -1766,9 +1766,6 @@ function CobrosContent() {
                     />
                   </div>
                 </div>}
-                {corteData && (
-                  <HojaVentasDiaPrint hoja={corteData.hojaVentasDia} />
-                )}
               </>
             )}
           </div>
@@ -1867,67 +1864,6 @@ function CorteDetail({ corte }: { corte: CorteCaja }) {
       <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${formatUnit(row.unidad)}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
       <CorteSection title={`Tickets pendientes (${formatNumber(corte.pendientes.length, { kind: "count" })})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${formatNumber(row.folio, { kind: "identifier" })} · ${row.nombreCliente || "Venta a Público"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
     </div>
-  );
-}
-
-function HojaVentasDiaPrint({ hoja }: { hoja: CorteCaja["hojaVentasDia"] }) {
-  return (
-    <article className="hoja-ventas-print" aria-label="Hoja de ventas del día">
-      <header className="mb-5 border-b-2 border-black pb-3">
-        <h1 className="text-xl font-bold">Hoja de Ventas del Día</h1>
-        <div className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-          <p><strong>Sitio:</strong> {hoja.sitio}</p>
-          <p><strong>Fecha operativa:</strong> {hoja.fechaOperativa}</p>
-          <p><strong>Quien hizo el corte:</strong> {hoja.quienCerro ?? "Sesión aún no cerrada"}</p>
-          <p><strong>Estado:</strong> {hoja.cerrada ? "Corte cerrado" : "Previsualización — sesión abierta"}</p>
-        </div>
-      </header>
-      {hoja.secciones.map((seccion) => (
-        <section key={seccion.modalidad} className="mb-5">
-          <h2 className="mb-2 border-b font-bold">{seccion.modalidad}</h2>
-          {seccion.lineas.length === 0 ? (
-            <p className="text-sm italic">Sin ventas en esta sección.</p>
-          ) : (
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-black text-left">
-                  <th className="py-1 pr-2">Producto</th>
-                  <th className="py-1 pr-2">SKU</th>
-                  <th className="py-1 pr-2 text-right">Cantidad</th>
-                  <th className="py-1 pr-2">Unidad</th>
-                  <th className="py-1 text-right">Importe</th>
-                </tr>
-              </thead>
-              <tbody>
-                {seccion.lineas.map((linea) => (
-                  <tr key={`${linea.productoId}-${linea.tipo}`} className="border-b border-black/20">
-                    <td className="py-1 pr-2">{linea.tela} · {linea.color}</td>
-                    <td className="py-1 pr-2">{linea.sku}</td>
-                    <td className="py-1 pr-2 text-right">{formatNumber(linea.cantidad, { kind: "quantity" })}</td>
-                    <td className="py-1 pr-2">{formatUnit(linea.unidad)}</td>
-                    <td className="py-1 text-right">{formatNumber(linea.importe, { kind: "money" })}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="font-bold">
-                  <td colSpan={4} className="pt-2 text-right">Subtotal {seccion.modalidad}</td>
-                  <td className="pt-2 text-right">{formatNumber(seccion.subtotal, { kind: "money" })}</td>
-                </tr>
-              </tfoot>
-            </table>
-          )}
-        </section>
-      ))}
-      <footer className="grid grid-cols-2 gap-x-8 gap-y-1 border-t-2 border-black pt-3 text-sm">
-        <p>Total de rollos: <strong>{formatNumber(hoja.totalRollos, { kind: "quantity" })}</strong></p>
-        <p>Total de metros: <strong>{formatNumber(hoja.totalMetros, { kind: "quantity" })}</strong></p>
-        <p>Total de kilos: <strong>{formatNumber(hoja.totalKilos, { kind: "quantity" })}</strong></p>
-        <p>Subtotal antes de IVA: <strong>{formatNumber(hoja.subtotal, { kind: "money" })}</strong></p>
-        <p>IVA facturado: <strong>{formatNumber(hoja.ivaFacturado, { kind: "money" })}</strong></p>
-        <p className="text-base">Total general: <strong>{formatNumber(hoja.totalGeneral, { kind: "money" })}</strong></p>
-      </footer>
-    </article>
   );
 }
 

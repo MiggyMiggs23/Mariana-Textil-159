@@ -118,8 +118,8 @@ test("Cash and credit notes print exactly A5 portrait in two copies with interna
   assert.match(css, /\.credito-page-print\s*\{[\s\S]*height:\s*210mm !important;[\s\S]*overflow:\s*clip !important;/);
   assert.match(css, /\.document-product-grid tr\s*\{[\s\S]*break-inside:\s*avoid-page !important;[\s\S]*page-break-inside:\s*avoid !important;/);
 
-  // Cobros routing to detail with print parameter
-  assert.match(cobros, /setLocation\(\`\/tickets\/\$\{printedTicketId\}\?print=3\`\);/);
+  // Caja prints cuts only; sale-document printing remains outside Caja.
+  assert.doesNotMatch(cobros, /printedTicketId|\/tickets\/.*print=3|print=3/);
 });
 
 test("Nota print conditionally renders customer header, credit terms, legal text, and IVA", async () => {

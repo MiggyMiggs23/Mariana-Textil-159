@@ -98,13 +98,12 @@ test("credit term UX lives in note creation and ticket Cobros has no credit opti
   const pos = await readFile(new URL("artifacts/mariana-textil/src/pages/pos.tsx", root), "utf8");
   const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
 
-  assert.match(pos, /useGetPosClienteCreditoDisponible/);
   assert.match(pos, /CREDIT_TERMS\.map/);
-  assert.match(pos, /creditoDisponible/);
-  assert.match(pos, /creditoFaltante/);
-  assert.match(pos, /límite de crédito en cero/);
+  assert.doesNotMatch(pos, /useGetPosClienteCreditoDisponible/);
+  assert.doesNotMatch(pos, /creditoDisponible|creditoFaltante|límite de crédito en cero/);
   assert.match(pos, /Venta a Público no admite compras a crédito/);
-  assert.doesNotMatch(cobros, /Plazo definido en POS/);
+  assert.match(cobros, /useObtenerProyeccionAutorizacionNota/);
+  assert.match(cobros, /useAutorizarNota/);
   assert.doesNotMatch(cobros, /FormaPagoTicket\.CREDITO/);
   assert.match(cobros, /FormaPagoTicket\.FACTURADO/);
   assert.doesNotMatch(cobros, /USUARIO ADMIN|CONTRASEÑA ADMIN|credencialesAdmin/);

@@ -57,6 +57,12 @@ Diagnóstico de Precios: la consulta sí devolvía todo el catálogo, sin pagina
 
 **Comportamiento de pago:** cada Nota pesa igual. Liquidar el día del vencimiento cuenta a tiempo, sin gracia; una vencida impaga cuenta tarde y una abierta no vencida se excluye y se reporta aparte. Los colores son verde ≥90%, amarillo 70–89% y rojo <70%, pero se requieren **5 Notas liquidadas** para asignar color: es un mínimo conservador que evita llamar verde a dos operaciones aisladas. La sugerencia de revisar el límite exige verde, historial suficiente, cero vencidas y utilización sustancial de al menos **75%**; solo explica evidencia, nunca cambia el límite ni propone un monto. La fecha efectiva del movimiento de pago determina puntualidad y `aplicaciones_credito` queda como evidencia, no como fuente de saldo.
 
+**Ticket es contado, Nota es crédito.** No existe ticket a crédito ni nota de contado. **El plazo se elige en el POS**, no en caja: la nota se imprime en el POS con su pagaré, y el pagaré remite a la fecha de pago señalada en la nota; decidir el plazo después dejaría esa referencia vacía.
+
+**Caja distingue las dos operaciones:** un ticket se **cobra**, una nota se **autoriza**. **El límite de crédito es duro y se valida al autorizar la Nota** contra el saldo contable autorizado del libro de movimientos de crédito, bajo un candado transaccional por cliente que serializa autorizaciones concurrentes. Las Notas pendientes no reservan crédito. Si el saldo vigente más la Nota excede el límite, la autorización se rechaza sin excepción: no hay override con contraseña ni aprobación remota. La única vía es que un ADMIN suba antes el límite de crédito del cliente, como una decisión separada sobre su perfil y con su propia auditoría.
+
+**Caja no imprime documentos de venta.** El corte de caja es la única excepción.
+
 ## Corrección — Bloque 4: Tabulares
 
 **Tabulares:** casilla opcional al cobrar, sin marcar por omisión. Genera **una tira por color** en 80 mm, con los metrajes de los rollos de ese color, su total y el folio del ticket. Son adicionales al ticket, nunca lo sustituyen, y no tocan el registro de la venta.
@@ -517,7 +523,7 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 La agrupación es **presentación y captura de precio**: el renglón conserva por debajo las series de sus rollos, y el ticket sigue registrando línea por rollo, con descuento de inventario y costo congelado individuales. Si un cambio de presentación toca cómo se registra la venta, está mal planteado.
 
-**Cobrado (Caja) es dinero que está físicamente en el cajón o en la cuenta**: solo efectivo y transferencia. **Una venta a crédito nunca cuenta como cobrada** —la mercancía salió y el pago llega en su plazo—, y contarla infla el corte con dinero que nadie va a encontrar. Ventas (total) y Utilidad **sí** la incluyen: se vendió y la ganancia se generó al entregar. La identidad que debe cumplirse siempre es **Ventas = Cobrado + Pendiente de cobro + Ventas a crédito**.
+**Procesamiento contable de Ticket y Nota:** un Ticket pendiente no genera Ventas, Cobrado ni Utilidad; cuando Caja lo cobra, entra simultáneamente en los tres, incluida la forma no crediticia `FACTURADO`. Una Nota pendiente tampoco genera Ventas, Ventas a crédito ni Utilidad; cuando Caja la autoriza, entra simultáneamente en esos tres conceptos y nunca en Cobrado. Los abonos posteriores reducen el saldo de cartera, pero no vuelven a contar la venta ni cambian su clasificación histórica como venta a crédito. Por tanto, los pendientes son solo indicadores operativos y la identidad financiera es siempre **Ventas = Cobrado + Ventas a crédito**.
 
 **El orden de las tiendas es Mariana, Coco, Cruces**, y vive en un solo lugar compartido por todas las vistas. Repetirlo por componente hace que una vista quede desincronizada de las demás. Una tienda nueva nunca desaparece de una lista por no estar en el orden.
 

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import {
+  autorizacionesNotaTable,
   clientesTable,
   db,
   entradasTable,
@@ -23,6 +24,7 @@ import {
 import { crearRollo } from "./inventario";
 import {
   abrirSesionCaja,
+  autorizarNota,
   buildCorteCaja,
   buildTicketDetail,
   cancelarTicket,
@@ -287,8 +289,7 @@ await test("POS bloquea un producto sin precio antes de crear la venta", async (
   const rollo = await makeRollo(productoId, ubicacionId);
 
   await assert.rejects(
-    () =>
-      sale({
+    () => sale({
         ubicacionId,
         productoId,
         rolloId: rollo.id,
@@ -387,8 +388,9 @@ await test("POS documento NOTA de Venta a Público exige instantáneas de entreg
     }),
     (error: unknown) =>
       error instanceof PosError &&
-      error.code === "PUBLIC_NOTE_DELIVERY_REQUIRED",
+      error.code === "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
   );
+  const clientId = await makeClient();
   const nota = await sale({
     ubicacionId,
     productoId,
@@ -396,6 +398,8 @@ await test("POS documento NOTA de Venta a Público exige instantáneas de entreg
     cantidad: "10",
     precio: "75",
     documentoTipo: "NOTA",
+    clienteId: clientId,
+    credito: true,
     nombreDestinatario: "  Ana Pérez ",
     direccionEntregaSnapshot: "  Calle Uno 1 ",
   });
@@ -409,6 +413,7 @@ await test("POS impresión de nota sin precios omite toda economía y la interna
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId);
+  const clientId = await makeClient();
   const nota = await sale({
     ubicacionId,
     productoId,
@@ -416,6 +421,8 @@ await test("POS impresión de nota sin precios omite toda economía y la interna
     cantidad: "10",
     precio: "75",
     documentoTipo: "NOTA",
+    clienteId: clientId,
+    credito: true,
     notaSinPrecios: true,
     nombreDestinatario: "Ana Pérez",
     direccionEntregaSnapshot: "Calle Uno 1",
@@ -496,8 +503,7 @@ await test("POS-02 precio bajo costo falla sin revelar costo ni vender rollo", a
     { valido: true },
   );
   await assert.rejects(
-    () =>
-      sale({
+    () => sale({
         ubicacionId,
         productoId,
         rolloId: rollo.id,
@@ -1273,11 +1279,9 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
     cantidad: "10",
     precio: "60",
     clienteId: clientId,
-    credito: true,
+    documentoTipo: "TICKET",
   });
-  assert.equal(ticket.esCredito, true);
-  assert.equal(ticket.diasPlazo, 30);
-  assert.match(ticket.fechaVencimiento ?? "", /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(ticket.esCredito, false);
   const session = await db.transaction((tx) =>
     abrirSesionCaja(tx, {
       ubicacionId,
@@ -1297,22 +1301,23 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
         clienteId: clientId,
         pagos: [
           { formaPago: "EFECTIVO", importe: "100" },
-          { formaPago: "TRANSFERENCIA", importe: "200" },
-          { formaPago: "CREDITO", importe: "125" },
-          { formaPago: "CREDITO", importe: "175" },
+          { formaPago: "TRANSFERENCIA", importe: "500" },
         ],
         ip: "127.0.0.1",
       },
       true,
     ),
   );
-  assert.equal(cobrado?.documentoTipo, "NOTA");
+  assert.equal(cobrado?.documentoTipo, "TICKET");
   // Crédito se emite como NOTA desde el POS; nunca convierte un TICKET al
   // cobrar porque TICKET + CREDITO se rechaza explícitamente.
   assert.equal(cobrado?.convertidoANotaPorCobro, false);
   const persisted = await buildTicketDetail(db, ticket.id, true);
-  assert.equal(persisted?.documentoTipo, "NOTA");
+  assert.equal(persisted?.documentoTipo, "TICKET");
   assert.equal(persisted?.convertidoANotaPorCobro, false);
+  const creditRoll = await makeRollo(productoId, ubicacionId, "5", "40");
+  const note = await sale({ ubicacionId, productoId, rolloId: creditRoll.id, cantidad: "5", precio: "60", clienteId: clientId, credito: true });
+  await db.transaction((tx) => autorizarNota(tx, { ticketId: note.id, sesionCajaId: session.id, usuarioId: USER_ID, ip: "127.0.0.1" }, true));
   const [balance] = await db
     .select({
       saldo: sql<string>`COALESCE(SUM(${movimientosCreditoTable.importe}), 0)::text`,
@@ -1323,11 +1328,11 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
   const notifications = await db
     .select()
     .from(notificacionesCreditoTable)
-    .where(eq(notificacionesCreditoTable.ticketId, ticket.id));
-  assert.equal(notifications.length, 1, "fragmented credit payments create one notification");
+    .where(eq(notificacionesCreditoTable.ticketId, note.id));
+  assert.equal(notifications.length, 1, "la autorización de la Nota crea una notificación");
   const [notification] = notifications;
   assert.equal(notification?.clienteId, clientId);
-  assert.equal(notification?.folio, ticket.folio);
+  assert.equal(notification?.folio, note.folio);
   assert.equal(notification?.importe, "300.00");
   assert.equal(notification?.diasPlazo, 30);
   assert.match(notification?.fechaVencimiento ?? "", /^\d{4}-\d{2}-\d{2}$/);
@@ -1356,7 +1361,7 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
   );
 });
 
-await test("POS-05B crédito concurrente reserva el límite desde la creación", async () => {
+await test("POS-05B crédito concurrente reserva el límite al autorizar", async () => {
   const firstLocationId = await makeLocation();
   const secondLocationId = await makeLocation();
   const firstProductId = await makeProduct();
@@ -1364,11 +1369,17 @@ await test("POS-05B crédito concurrente reserva el límite desde la creación",
   const firstRoll = await makeRollo(firstProductId, firstLocationId, "10", "20");
   const secondRoll = await makeRollo(secondProductId, secondLocationId, "10", "20");
   const clientId = await makeClient("500");
-  const results = await Promise.allSettled([
+  const notes = await Promise.all([
     sale({ ubicacionId: firstLocationId, productoId: firstProductId, rolloId: firstRoll.id, cantidad: "10", precio: "40", clienteId: clientId, credito: true }),
     sale({ ubicacionId: secondLocationId, productoId: secondProductId, rolloId: secondRoll.id, cantidad: "10", precio: "40", clienteId: clientId, credito: true }),
   ]);
 
+  assert.equal(notes.length, 2, "dos notas pendientes pueden crearse");
+  const sessions = await Promise.all([firstLocationId, secondLocationId].map((ubicacionId) =>
+    db.transaction((tx) => abrirSesionCaja(tx, { ubicacionId, usuarioId: USER_ID, fondoInicial: "0", ip: "127.0.0.1" }))));
+  createdSessionIds.push(...sessions.map((session) => session.id));
+  const results = await Promise.allSettled(notes.map((note, index) =>
+    db.transaction((tx) => autorizarNota(tx, { ticketId: note.id, sesionCajaId: sessions[index]!.id, usuarioId: USER_ID, ip: "127.0.0.1" }, true))));
   assert.equal(results.filter((result) => result.status === "fulfilled").length, 1);
   const rejected = results.find(
     (result): result is PromiseRejectedResult => result.status === "rejected",
@@ -1383,7 +1394,7 @@ await test("POS-05B crédito concurrente reserva el límite desde la creación",
       reservado: sql<string>`COALESCE(SUM(${ticketsTable.total}), 0)::text`,
     })
     .from(ticketsTable)
-    .where(and(eq(ticketsTable.clienteId, clientId), eq(ticketsTable.credito, true), eq(ticketsTable.cobrado, false)));
+    .where(and(eq(ticketsTable.clienteId, clientId), eq(ticketsTable.autorizacionEstado, "AUTORIZADA")));
   assert.equal(reservation!.reservado, "400.00");
 });
 
@@ -1593,6 +1604,7 @@ await test("POS-05BB crear ticket exige cliente", async () => {
 await test("POS-05C lista y corte comparten todos los pendientes de la ubicación", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
+  const clientId = await makeClient("500");
   const rolloAnterior = await makeRollo(productoId, ubicacionId, "2", "20");
   const anterior = await sale({
     ubicacionId,
@@ -1645,6 +1657,17 @@ await test("POS-05C lista y corte comparten todos los pendientes de la ubicació
       true,
     ),
   );
+  const rolloNota = await makeRollo(productoId, ubicacionId, "1", "20");
+  const notaAutorizada = await sale({
+    ubicacionId, productoId, rolloId: rolloNota.id, cantidad: "1", precio: "50",
+    clienteId: clientId, credito: true,
+  });
+  await db.transaction((tx) =>
+    autorizarNota(tx, {
+      ticketId: notaAutorizada.id, sesionCajaId: session.id,
+      usuarioId: USER_ID, ip: "127.0.0.1",
+    }, true),
+  );
 
   const lista = await listarTicketsPendientesCaja(db, ubicacionId);
   const ticketsCaja = await listarTicketsCajaOperativa(db, {
@@ -1658,13 +1681,18 @@ await test("POS-05C lista y corte comparten todos los pendientes de la ubicació
     lista.map((ticket) => ticket.id),
     esperados,
   );
+  assert.equal(
+    lista.some((ticket) => ticket.id === notaAutorizada.id),
+    false,
+    "la Nota autorizada no vuelve a la cola pendiente aunque cobrado siga en falso",
+  );
   assert.deepEqual(
     corte?.pendientes.map((ticket) => ticket.ticketId),
     esperados,
   );
   assert.deepEqual(
     ticketsCaja.map((ticket) => ticket.id),
-    [anterior.id, actual.id, cobrado.id],
+    [anterior.id, actual.id, notaAutorizada.id, cobrado.id],
   );
   assert.deepEqual(
     ticketsCaja.find((ticket) => ticket.id === cobrado.id)?.formasPago,
@@ -1677,26 +1705,29 @@ await test("POS-06 crédito sobre límite se rechaza sin override", async () => 
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId, "2", "20");
   const clientId = await makeClient("10");
+  const note = await sale({
+    ubicacionId,
+    productoId,
+    rolloId: rollo.id,
+    cantidad: "2",
+    precio: "50",
+    clienteId: clientId,
+    credito: true,
+  });
+  assert.equal(note.autorizacionEstado, "PENDIENTE");
+  const session = await db.transaction((tx) => abrirSesionCaja(tx, { ubicacionId, usuarioId: USER_ID, fondoInicial: "0", ip: "127.0.0.1" }));
+  createdSessionIds.push(session.id);
   await assert.rejects(
-    () =>
-      sale({
-        ubicacionId,
-        productoId,
-        rolloId: rollo.id,
-        cantidad: "2",
-        precio: "50",
-        clienteId: clientId,
-        credito: true,
-      }),
+    () => db.transaction((tx) => autorizarNota(tx, { ticketId: note.id, sesionCajaId: session.id, usuarioId: USER_ID, ip: "127.0.0.1" }, true)),
     (error: unknown) =>
       error instanceof PosError &&
       error.code === "CREDIT_LIMIT_EXCEEDED" &&
-      error.message.includes("disponible $10.00") &&
-      error.message.includes("faltan $90.00"),
+      error.message.includes("El límite se rebasa por $90.00.") &&
+      error.message.includes("Un ADMIN debe subir el límite del cliente."),
   );
 });
 
-await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos", async () => {
+await test("POS-07 cancelación conserva evidencia de autorización y revierte crédito", async () => {
   const ubicacionId = await makeLocation();
   const productoId = await makeProduct();
   const rollo = await makeRollo(productoId, ubicacionId, "3", "25");
@@ -1720,14 +1751,12 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
   );
   createdSessionIds.push(session.id);
   await db.transaction((tx) =>
-    cobrarTicket(
+    autorizarNota(
       tx,
       {
         ticketId: ticket.id,
         sesionCajaId: session.id,
         usuarioId: USER_ID,
-        clienteId: clientId,
-        pagos: [{ formaPago: "CREDITO", importe: "150" }],
         ip: "127.0.0.1",
       },
       true,
@@ -1756,7 +1785,12 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     .select()
     .from(ticketPagosTable)
     .where(eq(ticketPagosTable.ticketId, ticket.id));
-  assert.equal(payments.length, 1);
+  assert.equal(payments.length, 0, "una Nota autorizada nunca crea ticket_pagos");
+  const autorizaciones = await db
+    .select()
+    .from(autorizacionesNotaTable)
+    .where(eq(autorizacionesNotaTable.ticketId, ticket.id));
+  assert.equal(autorizaciones.length, 1, "la evidencia de autorización permanece");
   const ledger = await db
     .select()
     .from(movimientosCreditoTable)
@@ -1765,6 +1799,16 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     "REVERSO",
     "VENTA_CREDITO",
   ]);
+  const directCharges = ledger.filter((movement) => movement.tipo === "VENTA_CREDITO");
+  const reversals = ledger.filter((movement) => movement.tipo === "REVERSO");
+  assert.equal(directCharges.length, 1, "la Nota conserva un único cargo directo");
+  assert.equal(reversals.length, 1, "la cancelación agrega un único reverso");
+  assert.equal(reversals[0]?.importe, "-150.00");
+  assert.equal(
+    reversals[0]?.movimientoOrigenId,
+    directCharges[0]?.id,
+    "el reverso queda ligado al cargo autorizado exacto",
+  );
   assert.equal(
     ledger.reduce((sum, movement) => sum + Number(movement.importe), 0),
     0,
@@ -1779,10 +1823,34 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
     "la cancelación conserva pero resuelve la notificación de crédito",
   );
   const corte = await buildCorteCaja(db, session.id);
-  assert.equal(corte?.ticketsCancelados, 1);
-  assert.equal(corte?.ticketsCobrados, 0);
-  assert.equal(corte?.totalCobrado, "0.00");
-  assert.equal(corte?.efectivoEsperado, "0.00");
+  assert.ok(corte);
+  assert.equal(corte.ticketsCancelados, 0);
+  assert.equal(corte.ticketsCobrados, 0);
+  assert.equal(corte.totalCobrado, "0.00");
+  assert.equal(corte.efectivoEsperado, "0.00");
+  assert.equal(corte.cancelaciones.length, 1);
+  const [cancellationAuthor] = await db
+    .select({ nombre: usuariosTable.nombre })
+    .from(usuariosTable)
+    .where(eq(usuariosTable.id, USER_ID))
+    .limit(1);
+  assert.deepEqual(
+    {
+      ticketId: corte.cancelaciones[0]?.ticketId,
+      folio: corte.cancelaciones[0]?.folio,
+      importe: corte.cancelaciones[0]?.importe,
+      motivo: corte.cancelaciones[0]?.motivo,
+      autor: corte.cancelaciones[0]?.autor,
+    },
+    {
+      ticketId: ticket.id,
+      folio: ticket.folio,
+      importe: "150.00",
+      motivo: "Prueba de devolución completa",
+      autor: cancellationAuthor?.nombre,
+    },
+  );
+  assert.match(corte.cancelaciones[0]?.canceladoAt ?? "", /^\d{4}-\d{2}-\d{2}T/);
 });
 
 await test("POS-08 costos se omiten por completo para TERMINAL", async () => {

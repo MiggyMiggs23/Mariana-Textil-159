@@ -46,6 +46,30 @@ test("Bloque 6: reversos conservan evidencia y restauran saldos en ambos ledgers
     const reversoCliente = (await write(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id,notas)
       VALUES($1,'REVERSO','100.00',$2,$3,'abono capturado por error') RETURNING id`, [clienteId, abono, usuarioId])).rows[0]!.id as number;
     assert.ok(reversoCliente > 0);
+    const reversoVenta = (await write(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id,notas)
+      VALUES($1,'REVERSO','-100.00',$2,$3,'cancelación de venta autorizada') RETURNING id`, [clienteId, venta, usuarioId])).rows[0]!.id as number;
+    assert.ok(reversoVenta > 0, "un reverso exacto de VENTA_CREDITO vinculada es válido");
+    await rejects(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id)
+      VALUES($1,'REVERSO','-99.00',$2,$3)`, [clienteId, venta, usuarioId]);
+    await rejects(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id)
+      VALUES($1,'REVERSO','100.00',$2,$3)`, [clienteId, venta, usuarioId]);
+    const otroClienteId = (await write(`INSERT INTO clientes(nombre,activo,es_sistema,dias_credito)
+      VALUES ('Cliente reverso ajeno ' || txid_current(),true,false,0) RETURNING id`)).rows[0]!.id as number;
+    await rejects(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id)
+      VALUES($1,'REVERSO','-100.00',$2,$3)`, [otroClienteId, venta, usuarioId]);
+    const ajuste = (await write(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id)
+      VALUES($1,'AJUSTE','100.00',$2) RETURNING id`, [clienteId, usuarioId])).rows[0]!.id as number;
+    await rejects(`INSERT INTO movimientos_credito(cliente_id,tipo,importe,movimiento_origen_id,usuario_id)
+      VALUES($1,'REVERSO','-100.00',$2,$3)`, [clienteId, ajuste, usuarioId]);
+    const ubicacionId = (await write("SELECT id FROM ubicaciones WHERE activa LIMIT 1")).rows[0]?.id as number | undefined;
+    if (!ubicacionId) throw new Error("La base temporal requiere una ubicación activa.");
+    const ticketId = (await write(`INSERT INTO tickets(
+      folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,estado,cobrado
+    ) VALUES(
+      (SELECT COALESCE(MAX(folio), 0) + 1 FROM tickets),md5(random()::text)::uuid,$1,$2,$3,100,0,100,'VENDIDO',false
+    ) RETURNING id`, [ubicacionId, usuarioId, clienteId])).rows[0]!.id as number;
+    await rejects(`INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id)
+      VALUES($1,$2,'REVERSO','-100.00',$3)`, [clienteId, ticketId, usuarioId]);
     const saldoActivoCliente = await client.query<{ saldo: string }>(`SELECT COALESCE(SUM(a.importe) FILTER (WHERE NOT EXISTS
       (SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.abono_movimiento_id)),0)::text saldo
       FROM aplicaciones_credito a WHERE a.venta_movimiento_id=$1`, [venta]);

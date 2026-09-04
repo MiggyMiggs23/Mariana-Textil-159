@@ -31,3 +31,4 @@
 - [Defectos ajenos detectados en validación](validation-discovered-security-fixes.md) — corregirlos con autorización y en commit separado; auditar equivalentes antes de ampliar la tanda.
 - [Regresiones concurrentes deterministas](concurrency-regression-baselines.md) — usar barrera con timeout y probar primero contra código anterior; Promise.all puede pasar por casualidad.
 - [Regreso seguro en detalles](safe-detail-back-navigation.md) — retroceder solo con una entrada previa de la sesión SPA; recargas y accesos directos usan fallback interno.
+- [Reglas sustituidas en replit.md](superseded-project-rules.md) — reescribir o eliminar la regla vieja; nunca conservar contradicciones con una nota de precedencia.

@@ -514,6 +514,7 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
   const proveedorB = await mkProveedor();
   const productoId = await mkProducto();
   const ubicacionId = await mkUbicacion();
+  const processedAt = new Date();
   const entradaA = await mkEntrada(proveedorA, productoId, ubicacionId, "40.00");
   const entradaB = await mkEntrada(proveedorB, productoId, ubicacionId, "100.00");
   const [cliente] = await db.insert(clientesTable).values({
@@ -534,6 +535,9 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
     tasaIva: "0.0000",
     total: "300.00",
     uuidCliente: randomUUID(),
+    estado: "VENDIDO",
+    cobrado: true,
+    cobradoAt: processedAt,
   }).returning();
   createdTicketIds.push(ticket!.id);
   await db.insert(ticketLineasTable).values([
@@ -544,13 +548,14 @@ await test("CP-09: margen se atribuye solo al rollo vendido de su proveedor", as
   const [metreado] = await db.insert(ticketsTable).values({
     folio: 900000100 + seq, ubicacionId, usuarioTerminalId: 1, clienteId: cliente!.id,
     subtotal: "70.00", iva: "0.00", tasaIva: "0.0000", total: "70.00", uuidCliente: randomUUID(),
+    estado: "VENDIDO", cobrado: true, cobradoAt: processedAt,
   }).returning();
   createdTicketIds.push(metreado!.id);
   await db.insert(ticketLineasTable).values({
     ticketId: metreado!.id, rolloId: null, productoId, tipo: "METREADO" as const, cantidad: "1", precioUnitario: "70", precioSugerido: "70", importe: "70", costoUnitarioCongelado: null, costoTotalCongelado: null,
   });
-  const desde = new Date(Date.now() - 60_000);
-  const hasta = new Date(Date.now() + 60_000);
+  const desde = new Date(processedAt.getTime() - 60_000);
+  const hasta = new Date(processedAt.getTime() + 60_000);
   const statsA = await estadisticasPeriodo({ proveedorId: proveedorA, desde, hasta });
   const statsB = await estadisticasPeriodo({ proveedorId: proveedorB, desde, hasta });
   assert.deepEqual(

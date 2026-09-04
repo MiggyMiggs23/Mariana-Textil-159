@@ -134,25 +134,30 @@ if (!testUrl) {
       const addTicket = async (input: {
         store: number; session: number; subtotal: number; iva?: number;
         state?: "VENDIDO" | "CANCELADO"; paid?: boolean; facturado?: boolean;
-        payment?: "EFECTIVO" | "TRANSFERENCIA" | "CREDITO"; credit?: boolean; oldPending?: boolean;
-         unit?: 0 | 1; paymentCreatedAt?: Date; createdAt?: Date;
+        payment?: "EFECTIVO" | "TRANSFERENCIA"; credit?: boolean; oldPending?: boolean;
+        documentoTipo?: "TICKET" | "NOTA";
+        autorizacionEstado?: "NO_APLICA" | "PENDIENTE" | "AUTORIZADA";
+        autorizadoAt?: Date;
+        unit?: 0 | 1; paymentCreatedAt?: Date; cobradoAt?: Date; createdAt?: Date;
       }) => {
         const created = input.createdAt ?? (input.oldPending ? new Date(now.getTime() - 90 * 60_000) : now);
         const total = input.subtotal + (input.iva ?? 0);
         const ticket = await one(
           `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,
              estado,cobrado,cobrado_at,usuario_caja_id,facturado,credito,dias_plazo,fecha_vencimiento,
-             sesion_caja_id,uuid_cliente,created_at,
+             documento_tipo,autorizacion_estado,autorizado_at,sesion_caja_id,uuid_cliente,created_at,
              cancelado_at,cancelado_por,motivo_cancelacion)
-           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)
            RETURNING id`,
           [folio++, ids.locations[input.store], ids.users[2], ids.clients[0], input.subtotal,
             input.iva ?? 0, total, input.state ?? "VENDIDO", input.paid ?? false,
-            input.paid ? now : null, input.paid ? ids.users[1] : null,
+            input.paid ? (input.cobradoAt ?? input.paymentCreatedAt ?? now) : null, input.paid ? ids.users[1] : null,
              input.facturado ?? false, input.credit ?? false,
              input.credit ? 30 : null,
              input.credit ? new Date(created.getTime() + 30 * 86_400_000).toISOString().slice(0, 10) : null,
-             ids.sessions[input.session], randomUUID(), created,
+             input.documentoTipo ?? "TICKET",
+             input.autorizacionEstado ?? (input.documentoTipo === "NOTA" ? "PENDIENTE" : "NO_APLICA"),
+             input.autorizadoAt ?? null, ids.sessions[input.session], randomUUID(), created,
             input.state === "CANCELADO" ? now : null,
             input.state === "CANCELADO" ? ids.users[0] : null,
             input.state === "CANCELADO" ? `${tag}-cancel` : null],
@@ -185,30 +190,28 @@ if (!testUrl) {
       const northCashTicket =
         await addTicket({ store: 0, session: 5, subtotal: 100, iva: 16, paid: true, payment: "EFECTIVO", unit: 0 });
        const northOutOfRangeTransferTicket =
-         await addTicket({ store: 0, session: 5, subtotal: 200, iva: 32, paid: true, payment: "TRANSFERENCIA", facturado: true, unit: 0, createdAt: new Date(from.getTime() - 60_000), paymentCreatedAt: new Date(now.getTime() + 10_000) });
+          await addTicket({ store: 0, session: 5, subtotal: 200, iva: 32, paid: true, payment: "TRANSFERENCIA", facturado: true, unit: 0, createdAt: new Date(from.getTime() - 60_000), paymentCreatedAt: new Date(from.getTime() - 60_000), cobradoAt: new Date(now.getTime() + 10_000) });
       const southTransferTicket =
         await addTicket({ store: 1, session: 6, subtotal: 300, iva: 48, paid: true, payment: "TRANSFERENCIA", unit: 1 });
        const creditTicket = await addTicket({
-         store: 1, session: 6, subtotal: 400, paid: true, payment: "CREDITO",
-         credit: true, unit: 1, createdAt: creditAt, paymentCreatedAt: creditAt,
+         store: 1, session: 6, subtotal: 400, credit: true, unit: 1,
+         documentoTipo: "NOTA", autorizacionEstado: "AUTORIZADA",
+         autorizadoAt: creditAt, createdAt: now,
        });
        const creditSale = await one(
          `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,created_at)
           VALUES($1,$2,'VENTA_CREDITO',400,$3,$4) RETURNING id`,
-          [ids.clients[0], creditTicket, ids.users[1], creditAt],
+           [ids.clients[0], creditTicket, ids.users[1], new Date(from.getTime() - 60_000)],
        );
        ids.creditMovements.push(Number(creditSale.id));
-        // Two CREDITO payment rows are one credit sale. Realtime credit must
-        // use the immutable VENTA_CREDITO ledger row, not these fragments.
-        await pool.query(
-          `UPDATE ticket_pagos SET importe=200 WHERE ticket_id=$1 AND forma_pago='CREDITO'`,
+        const creditEvidence = await one(
+          `SELECT
+             (SELECT COUNT(*)::int FROM ticket_pagos WHERE ticket_id=$1) AS payment_rows,
+             (SELECT COUNT(*)::int FROM movimientos_credito
+               WHERE ticket_id=$1 AND tipo='VENTA_CREDITO') AS ledger_rows`,
           [creditTicket],
         );
-        await pool.query(
-          `INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at)
-           VALUES($1,'CREDITO',200,$2,$3)`,
-           [creditTicket, ids.users[1], creditAt],
-        );
+        assert.deepEqual(creditEvidence, { payment_rows: 0, ledger_rows: 1 });
        // Production payment flow: ABONO has no ticket. Its applications resolve
        // the paid sales/documents; unapplied remainder remains client credit.
        const fiscalAbono = await one(
@@ -294,28 +297,32 @@ if (!testUrl) {
         {
           ubicacionId: ids.locations[0],
           nombreUbicacion: `${tag}-Norte`,
-          total: 4,
+          total: 3,
           page: 1,
           pageSize: 2,
-          ids: [northCashTicket, northPendingTicket],
+          ids: [northOutOfRangeTransferTicket, northCashTicket],
         },
       );
        assert.deepEqual(
          northSalesSecondPage.items.map((item) => item.id),
-         [closedCashTicket, oldNorthPendingTicket],
+         [closedCashTicket],
        );
       assert.ok(northSalesFirstPage.items.every((item) =>
         item.createdAt >= from.toISOString() && item.createdAt <= to.toISOString(),
       ));
-      assert.deepEqual(northSalesFirstPage.items.map((item) => item.estadoCobro), ["COBRADO", "PENDIENTE"]);
+      assert.deepEqual(northSalesFirstPage.items.map((item) => item.estadoCobro), ["COBRADO", "COBRADO"]);
       assert.deepEqual(northCashSales.items.map((item) => ({
         id: item.id, formaPago: item.formaPago, importe: item.importe, utilidad: item.utilidad,
       })), [
         { id: northCashTicket, formaPago: "EFECTIVO", importe: "116.00", utilidad: "50.00" },
         { id: closedCashTicket, formaPago: "EFECTIVO", importe: "100.00", utilidad: "50.00" },
       ]);
-      assert.equal(northTransferSales.total, 0, "the current date range excludes the older transfer");
-      assert.ok(!northSalesFirstPage.items.some((item) => item.id === northOutOfRangeTransferTicket));
+      assert.deepEqual(northTransferSales.items.map((item) => item.id), [northOutOfRangeTransferTicket]);
+      assert.equal(
+        northTransferSales.items[0]?.createdAt,
+        new Date(now.getTime() + 10_000).toISOString(),
+        "financial ranges use the Caja processing timestamp, not ticket creation",
+      );
       assert.deepEqual(southTransferSales.items.map((item) => ({
         id: item.id, formaPago: item.formaPago, estadoCobro: item.estadoCobro,
         importe: item.importe, utilidad: item.utilidad,
@@ -375,11 +382,24 @@ if (!testUrl) {
       const realtimeCredit = analytics.summarizeRealtimeCredit(cards);
       assert.equal(
         Number(summary.ventas),
-        Number(summary.cobrado) + Number(summary.pendiente) + Number(realtimeCredit.importe),
+         Number(summary.cobrado) + Number(realtimeCredit.importe),
       );
+       assert.equal(summary.ventas, "1196.00");
+       assert.equal(summary.cobrado, "796.00");
+       assert.equal(summary.pendiente, "125.00");
+       assert.notEqual(
+         Number(summary.ventas),
+         Number(summary.cobrado) + Number(realtimeCredit.importe) + Number(summary.pendiente),
+         "pending cash Tickets remain operational and never inflate Sales",
+       );
       assert.ok(Number(summary.margen) > 0);
-       assert.equal(summary.cancelaciones, 2);
+       assert.equal(
+         summary.cancelaciones,
+         0,
+         "un documento sin procesamiento financiero no entra al rango contable",
+       );
       assert.equal(pending.tickets, 2);
+      assert.equal(pending.importe, "125.00");
       assert.ok(cards.some((card) => card.alertas.includes("PENDIENTE_MAS_30_MIN")));
       assert.ok(cards.reduce((sum, card) => sum + Number(card.margen), 0) > 0);
       assert.deepEqual(realtimeCredit, {
@@ -395,7 +415,7 @@ if (!testUrl) {
           ticketPromedio: northStoreCard.ticketPromedio,
           ticketsCobrados: northStoreCard.ticketsCobrados,
         },
-        { ticketPromedio: "108.00", ticketsCobrados: 2 },
+        { ticketPromedio: "149.33", ticketsCobrados: 3 },
       );
       assert.deepEqual(
         southStoreCard && {
@@ -432,9 +452,7 @@ if (!testUrl) {
       assert.equal(creditOnlyStore?.ticketsCobrados, 0);
       assert.equal(
         Number(creditOnlySummary.ventas),
-        Number(creditOnlySummary.cobrado) +
-          Number(creditOnlySummary.pendiente) +
-          Number(creditOnly.importe),
+         Number(creditOnlySummary.cobrado) + Number(creditOnly.importe),
       );
       const siteCreditCards = await analytics.getRealtimeStores({
         ...filters,
@@ -491,7 +509,11 @@ if (!testUrl) {
         destinations.resumen.reduce((sum, row) => sum + Number(row.importe), 0),
         Number(destinations.totalCobrado),
       );
-       assert.equal(destinations.ivaCobrado, "64.00");
+       assert.equal(
+         destinations.ivaCobrado,
+         (16 + 32 + 48).toFixed(2),
+         "IVA includes the north invoiced transfer by its effective Caja payment date despite earlier creation",
+       );
        assert.equal(destinations.resumen.find((row) => row.cuentaDestino === "CUENTA_FISCAL")!.importe, "302.00");
        const destinationDetails = await Promise.all(
         (["CAJA_FISICA", "CUENTA_FISCAL", "CUENTA_NO_FISCAL", "CUENTAS_POR_COBRAR"] as const).map(
@@ -505,6 +527,22 @@ if (!testUrl) {
       );
        assert.deepEqual(destinationDetails.map((detail) => detail.total), [2, 7, 1, 1]);
        const fiscalDetail = destinationDetails[1]!;
+        const processedTransfer = fiscalDetail.items.find(
+          (item) => item.documentoTipo === "TICKET" && item.documentoId === northOutOfRangeTransferTicket,
+        );
+        assert.equal(
+          processedTransfer?.fecha,
+          new Date(now.getTime() + 10_000).toISOString(),
+          "destination detail dates a Ticket by cobrado_at, not its payment row creation",
+        );
+        const creditDestination = destinationDetails[3]!.items.find(
+          (item) => item.documentoTipo === "TICKET" && item.documentoId === creditTicket,
+        );
+        assert.equal(
+          creditDestination?.fecha,
+          creditAt.toISOString(),
+          "destination detail dates authorized credit by autorizado_at, not movement creation",
+        );
        const effectiveAbonoDate = new Date(now.getTime() + 20_000).toISOString();
        const appliedProjection = fiscalDetail.items.find(
          (item) => item.documentoTipo === "TICKET" && item.documentoId === creditTicket && item.monto === "30.00",

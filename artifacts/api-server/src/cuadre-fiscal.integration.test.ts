@@ -76,15 +76,28 @@ if (!testUrl) {
         cobrado: boolean;
         cobradoAt?: string;
         createdAt: string;
+        documentoTipo?: "TICKET" | "NOTA";
+        autorizacionEstado?: "NO_APLICA" | "PENDIENTE" | "AUTORIZADA";
+        autorizadoAt?: string;
+        credito?: boolean;
+        diasPlazo?: 7 | 15 | 30 | 60;
+        fechaVencimiento?: string;
       }) => {
         const ticket = await one(
           `INSERT INTO tickets(
              folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
-             subtotal,iva,total,estado,cobrado,cobrado_at,facturado,created_at
-           ) VALUES($1,$2,$3,$4,$5,$6,0,$6,'VENDIDO',$7,$8,true,$9) RETURNING id`,
+             subtotal,iva,total,estado,cobrado,cobrado_at,facturado,created_at,
+             documento_tipo,autorizacion_estado,autorizado_at,credito,dias_plazo,fecha_vencimiento
+           ) VALUES($1,$2,$3,$4,$5,$6,0,$6,'VENDIDO',$7,$8,true,$9,$10,$11,$12,$13,$14,$15)
+           RETURNING id`,
           [
             folio++, randomUUID(), location.id, admin.id, client.id, total,
             input.cobrado, input.cobradoAt ?? null, input.createdAt,
+            input.documentoTipo ?? "TICKET",
+            input.autorizacionEstado ??
+              (input.documentoTipo === "NOTA" ? "PENDIENTE" : "NO_APLICA"),
+            input.autorizadoAt ?? null, input.credito ?? false,
+            input.diasPlazo ?? null, input.fechaVencimiento ?? null,
           ],
         );
         ids.tickets.push(Number(ticket.id));
@@ -95,6 +108,12 @@ if (!testUrl) {
       const creditTicket = await addTicket(100, {
         cobrado: false,
         createdAt: "2031-02-10T12:00:00Z",
+        documentoTipo: "NOTA",
+        autorizacionEstado: "AUTORIZADA",
+        autorizadoAt: "2031-02-10T12:00:00Z",
+        credito: true,
+        diasPlazo: 30,
+        fechaVencimiento: "2031-03-12",
       });
       const credit = await one(
         `INSERT INTO movimientos_credito(
@@ -104,6 +123,11 @@ if (!testUrl) {
         [client.id, creditTicket, admin.id],
       );
       ids.creditMovements.push(Number(credit.id));
+      assert.equal(
+        (await one("SELECT count(*)::int count FROM ticket_pagos WHERE ticket_id=$1", [creditTicket])).count,
+        0,
+        "authorized credit is represented by its canonical ledger movement, never ticket payments",
+      );
       const fiscalAbono = await one(
         `INSERT INTO movimientos_credito(
            cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at
@@ -129,7 +153,7 @@ if (!testUrl) {
       // Collection is dated by the actual transfer entry, not a stale ticket flag.
       const transferTicket = await addTicket(75, {
         cobrado: true,
-        cobradoAt: "2031-02-09T23:00:00Z",
+        cobradoAt: "2031-02-10T14:00:00Z",
         createdAt: "2031-02-10T13:00:00Z",
       });
       const transfer = await one(
@@ -175,6 +199,20 @@ if (!testUrl) {
       ids.fiscalRecords.push(Number(confirmation.body.id));
 
       await addTicket(25, { cobrado: false, createdAt: "2031-02-10T15:00:00Z" });
+      const afterPending = await request("GET", `/admin/cuadre-fiscal?${range}`, undefined, contador.session);
+      assert.equal(afterPending.body.facturado, "175.00", "pending cash Tickets are not fiscal sales");
+
+      const processedTicket = await addTicket(25, {
+        cobrado: true,
+        cobradoAt: "2031-02-10T16:00:00Z",
+        createdAt: "2031-02-10T15:30:00Z",
+      });
+      const processedPayment = await one(
+        `INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id,created_at)
+         VALUES($1,'EFECTIVO',25,$2,'2031-02-10T16:00:00Z') RETURNING id`,
+        [processedTicket, admin.id],
+      );
+      ids.payments.push(Number(processedPayment.id));
       const afterNewSale = await request("GET", `/admin/cuadre-fiscal?${range}`, undefined, contador.session);
       assert.equal(afterNewSale.body.facturado, "200.00");
       const history = afterNewSale.body.historial as Array<Record<string, unknown>>;
@@ -235,30 +273,8 @@ if (!testUrl) {
     } finally {
       await assertIsolated();
       if (server) await new Promise<void>((resolve) => server!.close(() => resolve()));
-      if (ids.notifications.length) await pool.query(
-        "DELETE FROM notificaciones_sistema WHERE id = ANY($1::int[])", [ids.notifications],
-      );
-      if (ids.fiscalRecords.length) await pool.query(
-        "DELETE FROM cuadre_fiscal_registros WHERE id = ANY($1::int[])", [ids.fiscalRecords],
-      );
-      if (ids.payments.length) await pool.query(
-        "DELETE FROM ticket_pagos WHERE id = ANY($1::int[])", [ids.payments],
-      );
-      if (ids.creditApplications.length) await pool.query(
-        "DELETE FROM aplicaciones_credito WHERE id = ANY($1::int[])", [ids.creditApplications],
-      );
-      if (ids.creditMovements.length) await pool.query(
-        "DELETE FROM movimientos_credito WHERE id = ANY($1::int[])", [ids.creditMovements],
-      );
-      if (ids.tickets.length) await pool.query(
-        "DELETE FROM tickets WHERE id = ANY($1::int[])", [ids.tickets],
-      );
-      if (ids.sessions.length) await pool.query(
-        "DELETE FROM sesiones WHERE id = ANY($1::uuid[])", [ids.sessions],
-      );
-      if (ids.clients.length) await pool.query(
-        "DELETE FROM clientes WHERE id = ANY($1::int[])", [ids.clients],
-      );
+      // Financial evidence is append-only. This integration requires a
+      // disposable isolated database; cleanup is disposal of that DB/branch.
       await pool.end();
     }
   });

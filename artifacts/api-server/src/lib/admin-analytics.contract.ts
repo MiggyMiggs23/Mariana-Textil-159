@@ -59,12 +59,26 @@ test("realtime store credit uses dated immutable ledger sales, not payment fragm
 
   assert.match(realtime, /credit_sales AS \([\s\S]*FROM movimientos_credito m JOIN tickets t/);
   assert.match(realtime, /m\.tipo='VENTA_CREDITO'/);
-  assert.match(realtime, /m\.created_at >= \$1/);
+  assert.match(realtime, /where\(filters, "t", "ACCOUNTED"\)/);
+  assert.doesNotMatch(realtime, /m\.created_at >= \$1/);
   assert.match(realtime, /COUNT\(DISTINCT m\.ticket_id\)::int credito_operaciones/);
   assert.match(realtime, /COALESCE\(cs\.credito,0\)::text credito/);
 });
 
-test("realtime collected amount and counts only use cash and transfer payment rows", async () => {
+test("destination payment and credit sales use their document processing timestamps", async () => {
+  const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  const destination = source.slice(
+    source.indexOf("function destinationReadModel"),
+    source.indexOf("/** Sum from the same canonical rows"),
+  );
+  assert.match(destination, /SELECT p\.id, \$\{accountedDocumentAt\("t"\)\} fecha/);
+  assert.match(destination, /SELECT m\.id, \$\{accountedDocumentAt\("t"\)\} fecha/);
+  assert.match(destination, /AND \$\{accountedDocumentPredicate\("t"\)\} AND p\.forma_pago <> 'CREDITO'/);
+  assert.match(destination, /m\.tipo='VENTA_CREDITO' AND \$\{accountedDocumentPredicate\("t"\)\}/);
+  assert.doesNotMatch(destination.slice(0, destination.indexOf("UNION ALL", destination.indexOf("UNION ALL") + 1)), /p\.created_at >= \$1|m\.created_at >= \$1/);
+});
+
+test("realtime collected amount and counts use processed non-credit payment evidence", async () => {
   const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
   const summaryStart = source.indexOf("export async function getSalesSummary");
   const summaryEnd = source.indexOf("\nexport async function", summaryStart + 1);
@@ -73,12 +87,14 @@ test("realtime collected amount and counts only use cash and transfer payment ro
   const storesEnd = source.indexOf("\nexport async function", storesStart + 1);
   const stores = source.slice(storesStart, storesEnd);
 
-  assert.match(summary, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA'\)/);
-  assert.match(summary, /COALESCE\(SUM\(p\.cobrado\),0\)::text cobrado/);
+  assert.match(summary, /f\.estado='VENDIDO' AND f\.cobrado/);
+  assert.match(summary, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
   assert.match(summary, /COUNT\(p\.ticket_id\)::int "ticketsCobrados"/);
-  assert.match(stores, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA'\)/);
-  assert.match(stores, /COALESCE\(SUM\(p\.efectivo\+p\.transferencia\),0\)::text cobrado/);
+  assert.match(stores, /t\.estado='VENDIDO' AND t\.cobrado/);
+  assert.match(stores, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
+  assert.match(stores, /COALESCE\(SUM\(p\.cobrado\),0\)::text cobrado/);
   assert.match(stores, /COUNT\(p\.id\)::int "ticketsCobrados"/);
+  assert.doesNotMatch(stores.slice(stores.indexOf("), payment AS")), /forma_pago IN \([^)]*CREDITO/);
 });
 
 test("realtime dashboard contract requires credit amount and operation count", () => {

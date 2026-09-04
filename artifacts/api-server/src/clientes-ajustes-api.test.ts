@@ -226,7 +226,7 @@ test("resúmenes y baja usan aging ante reverso de ticket y ABONO revertido", as
   );
   await pool.query(
     `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id)
-     VALUES($1,$2,'REVERSO',-40,$3)`,
+      VALUES($1,$2,'AJUSTE',-40,$3)`,
     [id, ticketId, adminId],
   );
 

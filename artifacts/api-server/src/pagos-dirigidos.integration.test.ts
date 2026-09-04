@@ -586,7 +586,7 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     await pool.query(
       `INSERT INTO movimientos_credito(
          cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,created_at
-       ) VALUES($1,$2,'REVERSO','-60.00',$3,'EFECTIVO',now())`,
+        ) VALUES($1,$2,'AJUSTE','-60.00',$3,'EFECTIVO',now())`,
       [cliente.id, oldTicket.id, admin.id],
     );
     const paymentAfterLinkedReversalResponse = await post(

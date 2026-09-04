@@ -26,6 +26,20 @@ test("authorization uses the shared ledger projection and has no override", () =
   assert.match(route, /db\.transaction\(\(tx\) => autorizarNota/);
 });
 
+test("Note cancellation reverses its authorized ledger charge, never a payment", () => {
+  const pos = read("./lib/pos.ts");
+  const cancellation = pos.slice(
+    pos.indexOf("export async function cancelarTicket"),
+    pos.indexOf("export async function cobrarTicket"),
+  );
+  assert.match(cancellation, /movimientosCreditoTable\.tipo, "VENTA_CREDITO"/);
+  assert.match(cancellation, /for \(const charge of creditCharges\)/);
+  assert.match(cancellation, /movimientoOrigenId: charge\.id/);
+  assert.match(cancellation, /eq\(movimientosCreditoTable\.movimientoOrigenId, charge\.id\)/);
+  assert.match(cancellation, /importe: decimalMoney\(-creditCents\)/);
+  assert.doesNotMatch(cancellation, /ticketPagosTable/);
+});
+
 test("sales identity excludes operational pending amounts", () => {
   const collected = 12_345;
   const creditSales = 67_890;
@@ -68,6 +82,8 @@ test("summary and realtime sales require explicit Caja processing date basis", (
   const analytics = read("./lib/admin-analytics.ts");
   assert.match(analytics, /dateBasis: "ACCOUNTED" \| "CREATED"/);
   assert.match(analytics, /getSalesSummary[\s\S]*where\(filters, "t", "ACCOUNTED"\)/);
+  assert.match(analytics, /pendingCondition = where\(filters, "t", "CREATED"\)/);
+  assert.match(analytics, /WITH filtered AS \([\s\S]*?\), pending AS \([\s\S]*pendingTicketPredicate/);
   assert.match(analytics, /getRealtimeStores[\s\S]*where\(filters, "t", "ACCOUNTED"\)/);
   assert.match(analytics, /operationalCondition = where\(filters, "t", "CREATED"\)/);
   const pending = analytics.slice(analytics.indexOf("export async function getPending"), analytics.indexOf("export function summarizeRealtimeCredit"));
@@ -95,12 +111,11 @@ test("legacy authorized Notes receive deterministic authorization timestamps", (
   assert.match(migration, /m\.tipo='VENTA_CREDITO'/);
 });
 
-test("transactional reservations include only pending sold Notes", () => {
+test("pending Notes do not reserve customer credit before authorization", () => {
   const aging = read("./lib/credit-aging-read-model.ts");
-  const transactional = aging.slice(aging.indexOf("loadCustomerCreditReservationCentsInTransaction"));
-  assert.match(transactional, /documento_tipo='NOTA'/);
-  assert.match(transactional, /autorizacion_estado='PENDIENTE'/);
-  assert.doesNotMatch(transactional.slice(0, transactional.indexOf("/** Bulk adapter")), /credito=true|cobrado=false/);
+  const pos = read("./lib/pos.ts");
+  assert.doesNotMatch(aging, /CreditReservation/);
+  assert.doesNotMatch(pos.slice(pos.indexOf("export async function autorizarNota")), /reservas/);
 });
 
 test("Caja only retains cut printing", () => {
