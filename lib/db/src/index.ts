@@ -30,6 +30,7 @@ export { ensureViajesSchema } from "./lib/viajes-schema";
 export { ensureAuditoriaInventarioSchema } from "./lib/auditoria-inventario-schema";
 export { ensurePisosSchema } from "./lib/pisos-schema";
 export { ensureCuadreFiscalSchema } from "./lib/cuadre-fiscal-schema";
+export { ensureCajaPermissions } from "./lib/caja-permissions-schema";
 export { createTestDatabaseGuard } from "./lib/test-database-guard";
 
 const { Pool } = pg;

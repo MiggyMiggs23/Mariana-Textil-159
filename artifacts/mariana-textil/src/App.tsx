@@ -101,6 +101,7 @@ function ProtectedRoute({
   adminOnly,
   allowedRoles,
   allowedAnyModules,
+  requiredRoles,
 }: {
   component: React.ComponentType;
   allowedModule?: string;
@@ -108,6 +109,7 @@ function ProtectedRoute({
   adminOnly?: boolean;
   allowedRoles?: string[];
   allowedAnyModules?: string[];
+  requiredRoles?: string[];
 }) {
   const [location, setLocation] = useLocation();
   const {
@@ -141,6 +143,20 @@ function ProtectedRoute({
   }
 
   if (!user) return null;
+
+  if (requiredRoles && !requiredRoles.includes(user.rol)) {
+    return (
+      <div className="min-h-[100dvh] w-full flex items-center justify-center bg-background p-4 text-center">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold text-destructive">Sin acceso</h1>
+          <p className="text-muted-foreground">Tu rol no tiene acceso a esta sección.</p>
+          <button onClick={() => setLocation("/")} className="text-primary hover:underline font-medium">
+            Volver al inicio
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (adminOnly && user.rol !== "ADMIN") {
     return (
@@ -494,6 +510,7 @@ function Router() {
               component={CuentaDestinoDetalle}
               allowedModule={Modules.COBROS_PAGOS}
               allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+              requiredRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />
@@ -504,6 +521,7 @@ function Router() {
               component={CajaCuentasDestino}
               allowedModule={Modules.COBROS_PAGOS}
               allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+              requiredRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />
@@ -519,13 +537,13 @@ function Router() {
         <Route
           path="/alertas"
           component={() => (
-            <ProtectedRoute component={Alertas} allowedModule={Modules.COBROS_PAGOS} />
+            <ProtectedRoute component={Alertas} adminOnly />
           )}
         />
         <Route
           path="/notificaciones"
           component={() => (
-            <ProtectedRoute component={Notificaciones} />
+            <ProtectedRoute component={Notificaciones} adminOnly />
           )}
         />
         <Route

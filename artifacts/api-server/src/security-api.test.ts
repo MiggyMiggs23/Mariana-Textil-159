@@ -533,8 +533,8 @@ await test("S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores 
   assert.ok(provEntry, "proveedores module missing");
   assert.equal(posEntry.puedeVer, false, "CAJA must not use terminal POS");
   assert.equal(cobrosEntry?.puedeVer, true, "CAJA should see cobros_pagos");
-  assert.equal(inventarioEntry?.puedeVer, true, "CAJA should see inventory");
-  assert.equal(salidasEntry?.puedeVer, true, "CAJA should see received outputs");
+  assert.equal(inventarioEntry?.puedeVer, false, "CAJA must not see inventory");
+  assert.equal(salidasEntry?.puedeVer, false, "CAJA must not see outputs");
   assert.equal(salidasEntry?.puedeCrear, false, "CAJA must not create outputs");
   assert.equal(productosEntry?.puedeVer, false, "CAJA must not see products administration");
   assert.equal(movimientosEntry?.puedeVer, false, "CAJA must not see movements");
@@ -576,22 +576,8 @@ await test("S-03A: Caja ticket list is location-scoped and denied to BODEGA", as
   assert.equal(denied.status, 403, JSON.stringify(denied.body));
 });
 
-await test("S-03AA: Store sales requires resumen_caja.ver, scopes CAJA, and paginates without quantities", async () => {
-  // A per-user deny must override CAJA's role-level resumen_caja.ver grant.
+await test("S-03AA: Store sales requires an explicit override for CAJA and remains scoped", async () => {
   const deniedCaja = await mkUser("CAJA", seedTienda.id, { alcanceConsulta: "PROPIA" });
-  const [deny] = await db
-    .insert(permisosUsuarioTable)
-    .values({
-      usuarioId: deniedCaja.id,
-      modulo: "resumen_caja",
-      puedeVer: false,
-      puedeCrear: null,
-      puedeEditar: null,
-      puedeAutorizar: null,
-    })
-    .returning({ id: permisosUsuarioTable.id });
-  createdPermisosUsuarioIds.push(deny!.id);
-
   const deniedLogin = await login(deniedCaja.usuario, deniedCaja.password);
   assert.equal(deniedLogin.status, 200);
   const denied = await api(
@@ -602,7 +588,21 @@ await test("S-03AA: Store sales requires resumen_caja.ver, scopes CAJA, and pagi
   );
   assert.equal(denied.status, 403, JSON.stringify(denied.body));
 
-  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  const customizedCaja = await mkUser("CAJA", seedTienda.id, { alcanceConsulta: "PROPIA" });
+  const [grant] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: customizedCaja.id,
+      modulo: "resumen_caja",
+      puedeVer: true,
+      puedeCrear: null,
+      puedeEditar: null,
+      puedeAutorizar: null,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(grant!.id);
+
+  const cajaLogin = await login(customizedCaja.usuario, customizedCaja.password);
   assert.equal(cajaLogin.status, 200);
   const own = await api(
     "GET",
@@ -2336,8 +2336,8 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   // Use clienteId from S-25 if possible; otherwise look up
   let clienteId = createdClienteIds[createdClienteIds.length - 1];
   if (!clienteId) {
-    const cajaLogin = await login(testCaja.usuario, testCaja.password);
-    const cr = await api("POST", "/clientes", { nombre: `Cliente S26 ${RUN}` }, cajaLogin.cookie);
+    const adminLogin = await login(testAdmin.usuario, testAdmin.password);
+    const cr = await api("POST", "/clientes", { nombre: `Cliente S26 ${RUN}` }, adminLogin.cookie);
     clienteId = (cr.body as Record<string, unknown>).id as number;
     createdClienteIds.push(clienteId);
   }
@@ -2346,17 +2346,17 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   const bodegaLogin = await login(testBodega.usuario, testBodega.password);
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
 
-  // CAJA has clientes_credito.ver → 200
+  // Strict CAJA has no access to customer administration modules.
   const creditoCaja = await api("GET", `/clientes/${clienteId}/credito`, undefined, cajaLogin.cookie);
-  assert.equal(creditoCaja.status, 200, `CAJA should access credito: ${JSON.stringify(creditoCaja.body)}`);
+  assert.equal(creditoCaja.status, 403, `CAJA must not access credito: ${JSON.stringify(creditoCaja.body)}`);
 
   // CAJA does not receive terminal price history
   const preciosCaja = await api("GET", `/clientes/${clienteId}/precios`, undefined, cajaLogin.cookie);
   assert.equal(preciosCaja.status, 403, `CAJA must not access precios: ${JSON.stringify(preciosCaja.body)}`);
 
-  // CAJA has clientes_finanzas.ver → 200
+  // Cobros operational reads do not grant the broader customer finance module.
   const estadoCaja = await api("GET", `/clientes/${clienteId}/estado-cuenta`, undefined, cajaLogin.cookie);
-  assert.equal(estadoCaja.status, 200, `CAJA should access estado-cuenta: ${JSON.stringify(estadoCaja.body)}`);
+  assert.equal(estadoCaja.status, 403, `CAJA must not access estado-cuenta: ${JSON.stringify(estadoCaja.body)}`);
 
   const terminalLogin = await login(testTerminal.usuario, testTerminal.password);
   const preciosTerminal = await api("GET", `/clientes/${clienteId}/precios`, undefined, terminalLogin.cookie);
@@ -2943,10 +2943,48 @@ await test("S-29: promotion to ADMIN removes overrides and ADMIN override routes
   assert.equal(deleteOverride.status, 403);
 });
 
-await test("S-30: CAJA reads only its open corte; ADMIN lists and reads cross-location history", async () => {
+await test("S-30: explicit CAJA CORTES override authorizes cash management while location rules remain enforced", async () => {
   const cajaLocationId = await mkUbicacion();
   const otherLocationId = await mkUbicacion();
+  const createOnlyCaja = await mkUser("CAJA", cajaLocationId);
+  const [createOnlyOverride] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: createOnlyCaja.id,
+      modulo: "cortes",
+      puedeVer: false,
+      puedeCrear: true,
+      puedeEditar: null,
+      puedeAutorizar: null,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(createOnlyOverride!.id);
+  const createOnlyLogin = await login(createOnlyCaja.usuario, createOnlyCaja.password);
+  const createOnlyOpen = await api(
+    "POST",
+    "/sesiones-caja/abrir",
+    { ubicacionId: cajaLocationId, fondoInicial: 100 },
+    createOnlyLogin.cookie,
+  );
+  assert.equal(
+    createOnlyOpen.status,
+    403,
+    "cortes.crear without cortes.ver cannot manage cash",
+  );
+
   const caja = await mkUser("CAJA", cajaLocationId);
+  const [cortesOverride] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: caja.id,
+      modulo: "cortes",
+      puedeVer: true,
+      puedeCrear: true,
+      puedeEditar: null,
+      puedeAutorizar: null,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(cortesOverride!.id);
   const cajaLogin = await login(caja.usuario, caja.password);
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
   assert.equal(cajaLogin.status, 200);
@@ -2994,7 +3032,7 @@ await test("S-30: CAJA reads only its open corte; ADMIN lists and reads cross-lo
     undefined,
     cajaLogin.cookie,
   );
-  assert.equal(cajaClosedCorte.status, 403, JSON.stringify(cajaClosedCorte.body));
+  assert.equal(cajaClosedCorte.status, 200, JSON.stringify(cajaClosedCorte.body));
 
   const otherOpened = await api(
     "POST",

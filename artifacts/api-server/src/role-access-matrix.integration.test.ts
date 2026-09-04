@@ -235,7 +235,7 @@ test("Task 54 Block 6: configurable roles have real HTTP access boundaries", asy
     }> = [
       // Terminal and Bodega can consult stock, but neither may see its value.
       { role: "TERMINAL", allowed: { method: "GET", path: `/inventario/rollos?serie=${rollSerie}` }, denied: { method: "GET", path: "/proveedores" }, mustHideMoney: true },
-      { role: "CAJA", allowed: { method: "GET", path: "/inventario/rollos" }, denied: { method: "GET", path: "/productos" }, mustHideMoney: false },
+      { role: "CAJA", allowed: { method: "GET", path: "/caja/tickets" }, denied: { method: "GET", path: "/inventario/rollos" }, mustHideMoney: false },
       // The server ceiling must keep SUPERVISOR out of financial supplier data.
       { role: "SUPERVISOR", allowed: { method: "GET", path: "/proveedores" }, denied: { method: "GET", path: "/proveedores/resumen" }, mustHideMoney: true },
       { role: "BODEGA", allowed: { method: "GET", path: `/inventario/rollos?serie=${rollSerie}` }, denied: { method: "GET", path: "/proveedores" }, mustHideMoney: true },

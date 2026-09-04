@@ -1045,7 +1045,7 @@ function CobroDialog({
   );
 }
 
-function SalidasDineroPanel({ sesionId }: { sesionId: number }) {
+function SalidasDineroPanel({ sesionId, canCreate }: { sesionId: number; canCreate: boolean }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [monto, setMonto] = useState("");
@@ -1074,13 +1074,13 @@ function SalidasDineroPanel({ sesionId }: { sesionId: number }) {
   return <Card className="border-amber-200">
     <CardHeader><CardTitle className="text-lg">Salidas de dinero</CardTitle><CardDescription>Solo pagos operativos de Tienda Mariana.</CardDescription></CardHeader>
     <CardContent className="space-y-4">
-      <form onSubmit={submit} className="grid gap-3 md:grid-cols-2" aria-label="Registrar salida de dinero">
+      {canCreate && <form onSubmit={submit} className="grid gap-3 md:grid-cols-2" aria-label="Registrar salida de dinero">
         <div><Label htmlFor="salida-monto">Monto</Label><Input id="salida-monto" type="number" min="0.01" step="0.01" required value={monto} onChange={(e) => setMonto(e.target.value)} /></div>
         <div><Label htmlFor="salida-cuenta">Cuenta de origen</Label><Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as typeof cuentaOrigen)}><SelectTrigger id="salida-cuenta"><SelectValue /></SelectTrigger><SelectContent>{(["CAJA_FISICA", "CUENTA_NO_FISCAL", "CUENTA_FISCAL"] as const).map((cuenta) => <SelectItem key={cuenta} value={cuenta}>{formatAccountDestination(cuenta)}</SelectItem>)}</SelectContent></Select></div>
         <div><Label htmlFor="salida-motivo">Motivo</Label><Input id="salida-motivo" required maxLength={500} value={motivo} onChange={(e) => setMotivo(e.target.value)} /></div>
         <div><Label htmlFor="salida-proveedor">Proveedor (opcional)</Label><Select value={proveedorId} onValueChange={setProveedorId}><SelectTrigger id="salida-proveedor"><SelectValue placeholder="Sin proveedor" /></SelectTrigger><SelectContent>{proveedores.map((p) => <SelectItem key={p.id} value={String(p.id)}>{p.nombre}</SelectItem>)}</SelectContent></Select></div>
         <Button type="submit" disabled={crear.isPending} className="md:col-span-2">{crear.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Registrar salida</Button>
-      </form>
+      </form>}
       {isLoading ? <p className="text-sm text-muted-foreground">Cargando salidas…</p> : isError ? <p role="alert" className="text-sm text-destructive">{getApiErrorMessage(error, "No se pudieron cargar las salidas.")}</p> : <div className="space-y-2">{data?.salidas.length ? data.salidas.map((salida) => {
         const nombreProveedor = proveedores.find((proveedor) => proveedor.id === salida.proveedorId)?.nombre;
         return <div key={salida.id} className="flex flex-wrap justify-between gap-2 border-t pt-2 text-sm"><span>{salida.motivo}{nombreProveedor ? ` · ${nombreProveedor}` : ""}</span><span className="font-medium">{formatAccountDestination(salida.cuentaOrigen)} · {formatNumber(salida.monto, { kind: "money" })}</span></div>;
@@ -1091,6 +1091,12 @@ function SalidasDineroPanel({ sesionId }: { sesionId: number }) {
 
 function CobrosContent() {
   const { selectedLocationId } = useLocationScope();
+  const { data: currentUser } = useGetCurrentUser();
+  const canViewCashManagement = hasPermission(currentUser, Modules.CORTES, "ver");
+  // Cash-management writes also need the live cash state they operate on.
+  const canManageCash =
+    canViewCashManagement &&
+    hasPermission(currentUser, Modules.CORTES, "crear");
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
@@ -1261,6 +1267,18 @@ function CobrosContent() {
   }
 
   if (!sesionData || !sesionData.sesion) {
+    if (!canManageCash) {
+      return (
+        <Card className="mx-auto max-w-lg">
+          <CardHeader>
+            <CardTitle>No hay una sesión de caja abierta</CardTitle>
+            <CardDescription>
+              Solicita a un responsable que abra la sesión para comenzar a cobrar.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      );
+    }
     return (
       <AbrirCajaForm
         ubicacionId={selectedLocationId}
@@ -1292,13 +1310,13 @@ function CobrosContent() {
           <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold border border-emerald-200">
             Sesión Abierta
           </div>
-          <Button
+          {canViewCashManagement && <Button
             variant="outline"
             onClick={() => setCierreOpen(true)}
             className="border-destructive/30 text-destructive hover:bg-destructive/10"
           >
             Realizar Corte
-          </Button>
+          </Button>}
         </div>
       </div>
       {sesionEsAnterior && (
@@ -1309,7 +1327,7 @@ function CobrosContent() {
           </CardContent>
         </Card>
       )}
-      {sesionData.sesion.ubicacionId === MARIANA_LOCATION_ID && <SalidasDineroPanel sesionId={sesionId} />}
+      {canViewCashManagement && sesionData.sesion.ubicacionId === MARIANA_LOCATION_ID && <SalidasDineroPanel sesionId={sesionId} canCreate={canManageCash} />}
 
       <div className="flex flex-col flex-1 min-h-0">
         <Card className="flex-1 flex flex-col shadow-sm border-sidebar-border/10">
@@ -1674,7 +1692,7 @@ function CobrosContent() {
                 Imprimir hoja de ventas
               </Button>
             )}
-            {!closedCorte ? <Button
+            {!closedCorte && canManageCash ? <Button
               onClick={handleCerrarCaja}
               disabled={cerrarCaja.isPending || !efectivoContado}
             >
@@ -1682,12 +1700,12 @@ function CobrosContent() {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Confirmar Cierre
-            </Button> : <Button onClick={() => {
+            </Button> : closedCorte ? <Button onClick={() => {
               setCierreOpen(false);
               setClosedCorte(null);
               queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: selectedLocationId || 0 }) });
               queryClient.invalidateQueries({ queryKey: getListarSesionesCajaQueryKey() });
-            }}>Finalizar</Button>}
+            }}>Finalizar</Button> : null}
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1698,6 +1716,7 @@ function CobrosContent() {
 export default function CobrosPage() {
   const { data: currentUser } = useGetCurrentUser();
   const isAdmin = currentUser?.rol === Role.ADMIN;
+  const canUseCartera = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");
 
   const [location] = useLocation();
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : "");
@@ -1717,12 +1736,12 @@ export default function CobrosPage() {
       <div className="space-y-6">
         <div className="flex w-fit rounded-lg border bg-muted/30 p-1">
           <Button variant={view === "operativa" ? "default" : "ghost"} size="sm" onClick={() => setView("operativa")}>Caja operativa</Button>
-          <Button variant={view === "cartera" ? "default" : "ghost"} size="sm" onClick={() => setView("cartera")}>Cartera / Estado de cuenta</Button>
+          {canUseCartera && <Button variant={view === "cartera" ? "default" : "ghost"} size="sm" onClick={() => setView("cartera")}>Cartera / Estado de cuenta</Button>}
           {isAdmin && (
             <Button variant={view === "historial" ? "default" : "ghost"} size="sm" onClick={() => setView("historial")}>Historial de cortes</Button>
           )}
         </div>
-        {view === "cartera" ? <CarteraContent /> : (isAdmin && view === "historial" ? <HistorialCortes /> : <CobrosContent />)}
+        {canUseCartera && view === "cartera" ? <CarteraContent /> : (isAdmin && view === "historial" ? <HistorialCortes /> : <CobrosContent />)}
       </div>
     </AppLayout>
   );

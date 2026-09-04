@@ -31,6 +31,7 @@ export type NavItem = {
   icon: LucideIcon;
   module: Module;
   anyModules?: Module[];
+  allowedRoles?: CurrentUser["rol"][];
   isClickable: boolean;
 };
 
@@ -77,10 +78,10 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: "CAJA",
     items: [
-      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, isClickable: true },
+      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN", "CONTADOR", "SISTEMAS"], isClickable: true },
       { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
       { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.CORTES, isClickable: true },
-      { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, isClickable: true },
+      { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN"], isClickable: true },
     ],
   },
   {
@@ -120,13 +121,15 @@ export function getVisibleNavGroups(user: CurrentUser): NavGroup[] {
     if (group.hiddenForRoles?.includes(user.rol)) return [];
 
     const items = group.items.filter((item) =>
-      item.anyModules
+      item.allowedRoles
+        ? item.allowedRoles.includes(user.rol)
+        : (item.anyModules
         ? item.anyModules.some(
             (module) =>
               hasPermission(user, module, "ver") ||
               hasPermission(user, module, "crear"),
           )
-        : hasPermission(user, item.module, "ver"),
+        : hasPermission(user, item.module, "ver")),
     );
 
     return items.length > 0 ? [{ ...group, items }] : [];

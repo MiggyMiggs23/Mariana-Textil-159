@@ -29,6 +29,7 @@ import {
   ensureAuditoriaInventarioSchema,
   ensurePisosSchema,
   ensureCuadreFiscalSchema,
+  ensureCajaPermissions,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -84,6 +85,9 @@ export async function ensureStartupSchemas(): Promise<void> {
     await phase("reporting and labels", async () => {
       await ensurePendingCostsSchema(startupPool); await ensureAdminAnalyticsSchema(startupPool);
       await ensureCuadreFiscalSchema(startupPool); await ensureEtiquetasSchema(startupPool);
+      // Run after module-specific migrations, some of which maintain legacy
+      // defaults, so the strict inherited CAJA baseline is the final state.
+      await ensureCajaPermissions(startupPool);
     });
     logger.info({ durationMs: Math.round(performance.now() - startedAt) }, "Schema startup complete");
   });

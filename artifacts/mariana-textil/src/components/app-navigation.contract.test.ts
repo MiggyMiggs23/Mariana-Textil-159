@@ -57,14 +57,17 @@ const CONTADOR_MODULES = [
   Modules.VIAJES,
 ];
 
-test("SISTEMAS navigation follows its matrix without POS or CAJA", () => {
+test("SISTEMAS navigation follows its matrix without POS and with its account-destination policy", () => {
   const groups = getVisibleNavGroups(user("SISTEMAS", SISTEMAS_MODULES));
   const names = groups.flatMap((group) =>
     group.items.map((item) => item.name),
   );
 
   assert.ok(!names.includes("Ventas / POS"));
-  assert.ok(!groups.some((group) => group.title === "CAJA"));
+  assert.deepEqual(
+    groups.find((group) => group.title === "CAJA")?.items.map((item) => item.name),
+    ["Cuentas"],
+  );
   assert.deepEqual(
     names.filter((name) =>
       ["Entradas", "Salidas", "Viajes", "Movimientos"].includes(name),
@@ -95,7 +98,7 @@ test("CONTADOR gets complete CAJA and read-only destinations, without forbidden 
     groups
       .find((group) => group.title === "CAJA")
       ?.items.map((item) => item.name),
-    ["Cuentas", "Cobros", "Cortes", "Alertas"],
+    ["Cuentas", "Cobros", "Cortes"],
   );
   for (const expected of [
     "Tiempo Real",
@@ -122,11 +125,6 @@ test("permission filtering never returns an empty navigation section", () => {
       Modules.CLIENTES,
     ],
     CAJA: [
-      Modules.SALIDAS,
-      Modules.INVENTARIO,
-      Modules.CLIENTES,
-      Modules.RESUMEN_CAJA,
-      Modules.CORTES,
       Modules.COBROS_PAGOS,
     ],
     SUPERVISOR: [
@@ -179,6 +177,22 @@ test("permission filtering never returns an empty navigation section", () => {
     )?.module,
     Modules.CORTES,
   );
+  assert.deepEqual(namesFor(user("CAJA", [Modules.COBROS_PAGOS])), ["Cobros"]);
+});
+
+test("CAJA navigation follows effective overrides after the strict default", () => {
+  const names = namesFor(
+    user("CAJA", [
+      Modules.COBROS_PAGOS,
+      Modules.INVENTARIO,
+      Modules.CORTES,
+    ]),
+  );
+  assert.ok(names.includes("Cobros"));
+  assert.ok(names.includes("Inventario"));
+  assert.ok(names.includes("Cortes"));
+  assert.ok(!names.includes("Cuentas"), "account destinations retain their role policy");
+  assert.ok(!names.includes("Alertas"), "alerts retain their admin-only policy");
 });
 
 test("ticket detail preserves POS/Cobros readers and explicit fiscal reviewers", async () => {
@@ -227,5 +241,30 @@ test("routes use matrix permissions while notifications remain admin-only", asyn
     /component=\{Auditoria\}[\s\S]*?allowedModule=\{Modules\.AUDITORIA\}/,
   );
   assert.match(app, /component=\{Notificaciones\} adminOnly/);
-  assert.equal((app.match(/\badminOnly\s*\/?>/g) ?? []).length, 1);
+  assert.match(
+    app,
+    /component=\{Alertas\} adminOnly/,
+  );
+  assert.equal(
+    (
+      app.match(
+        /component=\{(?:CajaCuentasDestino|CuentaDestinoDetalle)\}[\s\S]*?requiredRoles=\{\["ADMIN", "CONTADOR", "SISTEMAS"\]\}/g,
+      ) ?? []
+    ).length,
+    2,
+  );
+  assert.equal((app.match(/\badminOnly\s*\/?>/g) ?? []).length, 2);
+});
+
+test("Cobros administrative controls follow effective CORTES permissions", async () => {
+  const cobros = await readFile(
+    new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root),
+    "utf8",
+  );
+  assert.match(cobros, /hasPermission\(currentUser, Modules\.CORTES, "ver"\)/);
+  assert.match(
+    cobros,
+    /canViewCashManagement\s*&&\s*hasPermission\(currentUser, Modules\.CORTES, "crear"\)/,
+  );
+  assert.doesNotMatch(cobros, /isCaja/);
 });

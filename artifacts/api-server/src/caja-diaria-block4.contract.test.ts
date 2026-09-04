@@ -24,3 +24,33 @@ test("Bloque 4 keeps daily cash and Mariana safeguards wired", async () => {
   assert.match(spec, /crearSalidaDineroCaja/);
   assert.match(spec, /listarProveedoresActivosCaja/);
 });
+
+test("cash management uses CORTES while ticket collection uses COBROS_PAGOS", async () => {
+  const routes = await readFile(new URL("./routes/pos.ts", import.meta.url), "utf8");
+  assert.match(
+    routes,
+    /"\/tickets\/:id\/cobrar",\s*requierePermiso\("cobros_pagos", "crear"\)/,
+  );
+  for (const path of [
+    "\\/sesiones-caja\\/abrir",
+    "\\/sesiones-caja\\/:id\\/cerrar",
+    "\\/sesiones-caja\\/:id\\/salidas-dinero",
+  ]) {
+    assert.match(
+      routes,
+      new RegExp(
+        `"${path}",\\s*requierePermiso\\("cortes", "ver"\\),\\s*requierePermiso\\("cortes", "crear"\\)`,
+      ),
+      path,
+    );
+  }
+  assert.match(
+    routes,
+    /"\/sesiones-caja\/:id\/salidas-dinero",\s*requierePermiso\("cortes", "ver"\)/,
+  );
+  assert.match(
+    routes,
+    /"\/caja\/proveedores-activos",\s*requierePermiso\("cortes", "ver"\)/,
+  );
+  assert.doesNotMatch(routes, /corte\.sesion\.estado|SESSION_CLOSED/);
+});

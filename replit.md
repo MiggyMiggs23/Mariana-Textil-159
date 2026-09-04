@@ -119,7 +119,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** ADMIN tiene acceso total a los 30 módulos sin consultar tablas. Para CAJA, SUPERVISOR y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar.
+- **Permisos:** ADMIN tiene acceso total a los 30 módulos sin consultar tablas. Para CAJA, SUPERVISOR y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
 - **Conteo de módulos:** el catálogo configurable contiene 30 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.

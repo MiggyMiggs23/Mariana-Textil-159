@@ -830,7 +830,8 @@ router.get(
 
 router.post(
   "/sesiones-caja/abrir",
-  requierePermiso("cobros_pagos", "crear"),
+  requierePermiso("cortes", "ver"),
+  requierePermiso("cortes", "crear"),
   async (req, res, next): Promise<void> => {
     try {
       const body = AbrirSesionCajaBody.parse(req.body);
@@ -864,16 +865,6 @@ router.get(
         return;
       }
       assertOperationalLocation(req, corte.sesion.ubicacionId);
-      if (
-        req.auth!.user.rol === "CAJA" &&
-        corte.sesion.estado !== "ABIERTA"
-      ) {
-        throw new PosError(
-          "Solo puedes consultar el corte de la sesión de caja abierta.",
-          "SESSION_CLOSED",
-          403,
-        );
-      }
       res.json(ObtenerCorteCajaResponse.parse(corte));
     } catch (error) {
       handlePosError(error, res, next);
@@ -883,6 +874,7 @@ router.get(
 
 router.post(
   "/sesiones-caja/:id/cerrar",
+  requierePermiso("cortes", "ver"),
   requierePermiso("cortes", "crear"),
   async (req, res, next): Promise<void> => {
     try {
@@ -911,7 +903,7 @@ router.post(
 
 router.get(
   "/sesiones-caja/:id/salidas-dinero",
-  requierePermiso("cobros_pagos", "ver"),
+  requierePermiso("cortes", "ver"),
   async (req, res, next): Promise<void> => {
     try {
       const sesionId = ListarSalidasDineroCajaParams.parse(req.params).id;
@@ -925,7 +917,8 @@ router.get(
 
 router.post(
   "/sesiones-caja/:id/salidas-dinero",
-  requierePermiso("cobros_pagos", "crear"),
+  requierePermiso("cortes", "ver"),
+  requierePermiso("cortes", "crear"),
   async (req, res, next): Promise<void> => {
     try {
       const sesionId = CrearSalidaDineroCajaParams.parse(req.params).id;
@@ -946,7 +939,7 @@ router.post(
 
 router.get(
   "/caja/proveedores-activos",
-  requierePermiso("cobros_pagos", "ver"),
+  requierePermiso("cortes", "ver"),
   async (_req, res, next): Promise<void> => {
     try {
       // Deliberately a minimal operational catalog: no balances, contact data, or purchases.

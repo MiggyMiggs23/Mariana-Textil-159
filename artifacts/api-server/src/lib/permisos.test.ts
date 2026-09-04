@@ -187,17 +187,8 @@ await test("P-06: CAJA puede ver cobros_pagos pero no POS", async () => {
 
 await test("P-06A: CAJA conserva exactamente los permisos operativos documentados", async () => {
   const matrix = await buildPermissionMatrix(cajaUserId, "CAJA");
-  const readable = new Set([
-    "salidas",
-    "inventario",
-    "clientes",
-    "clientes_credito",
-    "clientes_finanzas",
-    "resumen_caja",
-    "cortes",
-    "cobros_pagos",
-  ]);
-  const creatable = new Set(["cortes", "cobros_pagos"]);
+  const readable = new Set(["cobros_pagos"]);
+  const creatable = new Set(["cobros_pagos"]);
 
   for (const modulo of MODULOS) {
     const permission = matrix[modulo];
@@ -397,18 +388,18 @@ await test("P-17: CAJA has no access to proveedores_finanzas", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-18: CAJA can access clientes_finanzas", async () => {
+await test("P-18: CAJA cannot access clientes_finanzas", async () => {
   const matrix = await buildPermissionMatrix(cajaUserId, "CAJA");
   const p = matrix["clientes_finanzas"];
   assert.ok(p);
-  assert.equal(p.puedeVer, true);
+  assert.equal(p.puedeVer, false);
 });
 
-await test("P-19: CAJA can see clientes_credito", async () => {
+await test("P-19: CAJA cannot see clientes_credito", async () => {
   const matrix = await buildPermissionMatrix(cajaUserId, "CAJA");
   const p = matrix["clientes_credito"];
   assert.ok(p);
-  assert.equal(p.puedeVer, true);
+  assert.equal(p.puedeVer, false);
 });
 
 await test("P-20: Dynamically updating role matrix affects future permission checks", async () => {
@@ -494,10 +485,10 @@ await test("P-23: CAJA cannot see clientes_precios", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-24: CAJA can see clientes_finanzas", async () => {
+await test("P-24: CAJA cannot see clientes_finanzas", async () => {
   const p = await resolvePermiso(cajaUserId, "CAJA", "clientes_finanzas");
   assert.ok(p);
-  assert.equal(p.puedeVer, true);
+  assert.equal(p.puedeVer, false);
 });
 
 await test("P-25: user override with explicit true overrides role false", async () => {
