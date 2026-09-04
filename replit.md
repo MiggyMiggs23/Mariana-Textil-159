@@ -358,16 +358,17 @@ La pantalla de acceso y los servicios quedaron disponibles después de la limpie
 
 ### Pendientes antes del piloto
 
-- Definir y probar el procedimiento de salidas extraordinarias.
+El piloto se realizará en Cruces. La carga inicial de inventario es el bloqueo operativo para arrancarlo.
+
 - Configurar, ejecutar y comprobar respaldos y restauración.
-- Preparar la toma de inventario físico.
+- Preparar y ejecutar la toma y carga inicial de inventario físico.
 - Tomar la decisión final de impresora y validar el flujo físico.
 - Cambiar la contraseña inicial antes de producción.
 
 ## Product
 
 - Login sin registro público ni recuperación de contraseña
-- Sesiones de 12 horas con vencimiento por 30 minutos de inactividad
+- Sesiones con vencimiento por 8 horas de inactividad y tope absoluto de 16 horas
 - Bloqueo temporal después de cinco intentos fallidos
 - Dashboard con conteos iniciales e inventario por ubicación
 - Administración sin borrado de ubicaciones y usuarios
