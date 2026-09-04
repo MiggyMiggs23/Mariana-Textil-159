@@ -6,6 +6,7 @@ import type {
   TicketLineaImpresionConPrecios,
 } from "@workspace/api-client-react";
 import {
+  countNormalRollItems,
   groupIdentifiedNormalRollsByColor,
   groupPrintLinesByModality,
   groupTicketLinesByModality,
@@ -54,6 +55,31 @@ test("empty ticket modalities remain empty so their headings can be omitted", ()
 
   assert.equal(groups.rollos.lines.length, 0);
   assert.equal(groups.metraje.lines.length, 1);
+});
+
+test("thermal summary counts actual NORMAL items once across unlike units", () => {
+  const metro = line(1, "NORMAL", "120.00");
+  const kilo = { ...line(2, "NORMAL", "80.00"), unidadProducto: "KILO" as const };
+  const bolsa = { ...line(3, "NORMAL", "40.00"), unidadProducto: "BOLSA" as const };
+  const anotherMetro = line(4, "NORMAL", "60.00");
+  const metered = line(5, "METREADO", "25.00");
+  const meteredKilo = {
+    ...line(6, "METREADO", "15.00"),
+    unidadProducto: "KILO" as const,
+  };
+
+  assert.equal(
+    countNormalRollItems([
+      metro,
+      kilo,
+      bolsa,
+      anotherMetro,
+      metered,
+      meteredKilo,
+    ]),
+    4,
+  );
+  assert.equal(countNormalRollItems([metered, meteredKilo]), 0);
 });
 
 function printLine(

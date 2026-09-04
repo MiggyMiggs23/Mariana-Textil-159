@@ -224,9 +224,10 @@ test("Thermal ticket renders vertical product blocks with unit-safe quantities",
   assert.match(detail, /line\.unidadProducto === "METRO" \? "Metros"[\s\S]*"KILO" \? "Kilos" : "Bolsas"/);
   assert.match(detail, /<span>Precio:<\/span>/);
   assert.match(detail, /<span>Importe:<\/span>/);
-  assert.match(detail, /TOTAL GENERAL:/);
+  assert.match(detail, /Total de rollos:/);
+  assert.match(detail, /Total a pagar:/);
   assert.match(detail, /ticket-product-block border-b border-dashed border-black/);
-  assert.match(detail, /ticket-total mt-2 border-2 border-black/);
+  assert.match(detail, /ticket-summary mt-2 border-2 border-black bg-black/);
 });
 
 test("three complete logical ticket pages precede single tabular add-ons", async () => {
@@ -238,7 +239,7 @@ test("three complete logical ticket pages precede single tabular add-ons", async
   assert.match(detail, /className="ticket-copy" data-thermal-page=\{copyLabel\}/);
   assert.match(detail, /data-thermal-page=\{`TABULAR-\$\{group\.color\}`\}/);
   assert.match(css, /\.ticket-copy\s*\{[\s\S]*break-after:\s*page;/);
-  assert.match(css, /\.ticket-product-block,[\s\S]*\.ticket-total\s*\{[\s\S]*break-inside:\s*avoid-page;/);
+  assert.match(css, /\.ticket-product-block,[\s\S]*\.ticket-summary\s*\{[\s\S]*break-inside:\s*avoid-page;/);
   assert.match(css, /\.print-ticket-container > \[data-thermal-page\]:last-child\s*\{[\s\S]*break-after:\s*auto;/);
   assert.match(detail, /tabularGroups\.map/);
   assert.ok(detail.indexOf('["CLIENTE", "CAJA", "ADMINISTRACIÓN"]') < detail.indexOf("tabularGroups.map"));
@@ -248,6 +249,24 @@ test("three complete logical ticket pages precede single tabular add-ons", async
   assert.match(detail, /formatNumber\(rollo\.cantidad, \{ kind: "quantity" \}\)/);
   assert.match(detail, /formatUnit\(rollo\.unidad\)/);
   assert.match(detail, /group\.totales\[unidad\]/);
+});
+
+test("thermal summary is the same indivisible two-row box in all three copies", async () => {
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+  const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
+
+  assert.match(detail, /const totalNormalRolls = countNormalRollItems\(ticket\.lineas\)/);
+  assert.equal((detail.match(/Total de rollos:/g) ?? []).length, 1);
+  assert.equal((detail.match(/Total a pagar:/g) ?? []).length, 1);
+  assert.doesNotMatch(detail, /TOTAL GENERAL:/);
+  assert.match(
+    detail,
+    /\(\["CLIENTE", "CAJA", "ADMINISTRACIÓN"\] as const\)\.map\([\s\S]*ticket-summary[\s\S]*Total de rollos:[\s\S]*\{totalNormalRolls\}[\s\S]*Total a pagar:[\s\S]*ticket\.total[\s\S]*<\/section>/,
+  );
+  assert.match(
+    css,
+    /\.ticket-product-block,\s*\.ticket-summary\s*\{[\s\S]*break-inside:\s*avoid-page;[\s\S]*page-break-inside:\s*avoid;/,
+  );
 });
 
 test("six distinct products stay assigned to each measured logical copy", () => {

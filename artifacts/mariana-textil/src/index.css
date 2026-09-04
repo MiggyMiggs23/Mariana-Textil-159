@@ -525,7 +525,7 @@ body.measure-thermal-ticket .tabular-strip-page {
   }
 
   .ticket-product-block,
-  .ticket-total {
+  .ticket-summary {
     break-inside: avoid-page;
     page-break-inside: avoid;
   }

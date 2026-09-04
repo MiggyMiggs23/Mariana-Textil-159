@@ -31,6 +31,13 @@ export type ModalityGroups = {
   metraje: ModalitySection;
 };
 
+export function countNormalRollItems(lineas: TicketLinea[]): number {
+  return lineas.reduce(
+    (total, linea) => total + (linea.tipo === "NORMAL" ? 1 : 0),
+    0,
+  );
+}
+
 export function groupTicketLinesByModality(lineas: TicketLinea[], showIndividual = false): ModalityGroups {
   const result: ModalityGroups = {
     rollos: { lines: [], subtotal: 0 },

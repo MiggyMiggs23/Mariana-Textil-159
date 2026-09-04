@@ -41,6 +41,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
+  countNormalRollItems,
   groupIdentifiedNormalRollsByColor,
   groupTicketLinesByModality,
   groupPrintLinesByModality,
@@ -287,6 +288,7 @@ export default function TicketDetailPage() {
   });
   const ticketDocumentUrl = absoluteAppUrl(`/tickets/${ticket.id}`);
   const tabularGroups = groupIdentifiedNormalRollsByColor(ticket.lineas);
+  const totalNormalRolls = countNormalRollItems(ticket.lineas);
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
@@ -637,9 +639,13 @@ export default function TicketDetailPage() {
               ))}
             </div>
 
-            <div className="ticket-total mt-2 border-2 border-black p-2 text-sm font-black">
+            <div className="ticket-summary mt-2 border-2 border-black bg-black p-2 text-sm font-black text-white">
               <div className="flex justify-between gap-3">
-                <span>TOTAL GENERAL:</span>
+                <span>Total de rollos:</span>
+                <span>{totalNormalRolls}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span>Total a pagar:</span>
                 <span>{formatNumber(ticket.total, { kind: "money" })}</span>
               </div>
             </div>

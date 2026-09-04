@@ -66,6 +66,8 @@ bodegas de Mariana Textil. No es un sistema contable ni fiscal.
 
 **Corrección — Bloque 1 (continuidad del ticket térmico):** cada copia CLIENTE, CAJA y ADMINISTRACIÓN constituye una sola página lógica cuya altura física se calcula después de cargar fuentes, imágenes y completar el layout. Nunca se usa una altura fija para estas tiras. Los bloques de producto y TOTAL GENERAL son indivisibles; los cortes ocurren únicamente entre copias, luego se imprimen los tabulares una sola vez y el corte final queda después del último tabular.
 
+**Corrección — Bloque 2 (resumen del ticket térmico):** al terminar los productos, las tres copias muestran el mismo recuadro indivisible con exactamente **Total de rollos** y **Total a pagar**. Total de rollos cuenta cada renglón persistido de tipo NORMAL una vez, sin importar si su unidad es metro, kilo o bolsa; no incluye venta METREADA, no desglosa por producto y no suma cantidades de unidades incompatibles.
+
 **Ticket:** sin QR, logo de **2.5 cm** centrado arriba. Cada producto va en **bloque vertical** —nombre, modalidad de venta destacada, y renglones Rollos, Metros, Precio e Importe con rótulo a la izquierda y valor a la derecha—. **La venta metreada no lleva renglón de Rollos**: no hay rollos identificados. La abreviatura de cantidad depende de la unidad del producto y las cantidades **nunca se totalizan entre unidades distintas**.
 
 El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
