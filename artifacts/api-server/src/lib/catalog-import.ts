@@ -6,7 +6,6 @@
 import ExcelJS from "exceljs";
 import {
   generateBaseSku,
-  normalizeCatalogTitleCase,
 } from "@workspace/db/sku";
 
 export type ImportRow = {
@@ -241,8 +240,10 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
       continue;
     }
 
-    const telaNorm = normalizeCatalogTitleCase(telaRaw);
-    const colorNorm = normalizeCatalogTitleCase(colorRaw);
+    // Preserve human-entered catalog text. These raw values were trimmed at
+    // ingestion; casing is normalized only in the comparison key below.
+    const telaNorm = telaRaw;
+    const colorNorm = colorRaw;
     const variantKey = `${telaNorm.toUpperCase()}|${colorNorm.toUpperCase()}`;
 
     if (batchVariants.has(variantKey)) {

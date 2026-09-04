@@ -370,8 +370,8 @@ function CamionetaDialog({ open, onClose, camioneta }: { open: boolean, onClose:
               <Label>Alias / Nombre *</Label>
               <Input
                 value={formData.nombre}
-                onChange={e => setFormData({...formData, nombre: e.target.value.toUpperCase()})}
-                placeholder="CAMIONETA 1"
+                onChange={e => setFormData({...formData, nombre: e.target.value})}
+                placeholder="Camioneta 1"
               />
             </div>
             <div className="space-y-2">
@@ -403,15 +403,15 @@ function CamionetaDialog({ open, onClose, camioneta }: { open: boolean, onClose:
               <Label>Marca (Opcional)</Label>
               <Input
                 value={formData.marca || ""}
-                onChange={e => setFormData({...formData, marca: e.target.value.toUpperCase()})}
-                placeholder="NISSAN"
+                onChange={e => setFormData({...formData, marca: e.target.value})}
+                placeholder="Nissan"
               />
             </div>
             <div className="space-y-2">
               <Label>Modelo (Opcional)</Label>
               <Input
                 value={formData.modelo || ""}
-                onChange={e => setFormData({...formData, modelo: e.target.value.toUpperCase()})}
+                onChange={e => setFormData({...formData, modelo: e.target.value})}
                 placeholder="NP300 2024"
               />
             </div>

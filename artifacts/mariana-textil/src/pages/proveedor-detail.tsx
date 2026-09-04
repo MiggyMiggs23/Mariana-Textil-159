@@ -397,7 +397,7 @@ export default function ProveedorDetail() {
                     <>
                       <div className="space-y-2 md:col-span-2">
                          <Label>Razón Social / Nombre</Label>
-                         <Input value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value.toUpperCase()})} data-testid="input-edit-supplier-nombre" />
+                         <Input value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} data-testid="input-edit-supplier-nombre" />
                       </div>
                       <div className="space-y-2">
                         <Label>Tipo de Proveedor</Label>
@@ -425,7 +425,7 @@ export default function ProveedorDetail() {
                   <div className="space-y-1">
                     <Label className="text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3"/> País / Origen</Label>
                     {isEditing ? (
-                      <Input value={formData.pais} onChange={e => setFormData({...formData, pais: e.target.value.toUpperCase()})} data-testid="input-edit-supplier-pais" />
+                      <Input value={formData.pais} onChange={e => setFormData({...formData, pais: e.target.value})} data-testid="input-edit-supplier-pais" />
                     ) : (
                       <div className="font-medium h-10 flex items-center" data-testid="display-supplier-pais">{proveedor.pais || "-"}</div>
                     )}

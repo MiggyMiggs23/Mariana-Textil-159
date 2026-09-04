@@ -551,8 +551,8 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
               <Input
                 list="telas-list"
                 value={formData.tela}
-                onChange={e => setFormData({ ...formData, tela: e.target.value.toUpperCase() })}
-                placeholder="Ej. GABARDINA"
+                onChange={e => setFormData({ ...formData, tela: e.target.value })}
+                placeholder="Ej. Gabardina"
                 data-testid="input-product-tela"
               />
               <datalist id="telas-list">
@@ -564,8 +564,8 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
               <Input
                 list="colors-list"
                 value={formData.color}
-                onChange={e => setFormData({ ...formData, color: e.target.value.toUpperCase() })}
-                placeholder="Ej. AZUL MARINO"
+                onChange={e => setFormData({ ...formData, color: e.target.value })}
+                placeholder="Ej. Azul marino"
                 data-testid="input-product-color"
               />
               <datalist id="colors-list">

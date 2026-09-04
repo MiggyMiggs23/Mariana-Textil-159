@@ -304,7 +304,7 @@ router.post(
             contactoNombre: parsed.data.contactoNombre ?? null,
             telefono: parsed.data.telefono ?? null,
             correo: parsed.data.correo ?? null,
-            pais: parsed.data.pais ?? null,
+            pais: parsed.data.pais?.trim() ?? null,
             notas: parsed.data.notas ?? null,
           })
           .returning();
@@ -410,7 +410,7 @@ router.patch(
         updates.contactoNombre = body.data.contactoNombre ?? null;
       if ("telefono" in body.data) updates.telefono = body.data.telefono ?? null;
       if ("correo" in body.data) updates.correo = body.data.correo ?? null;
-      if ("pais" in body.data) updates.pais = body.data.pais ?? null;
+      if ("pais" in body.data) updates.pais = body.data.pais?.trim() ?? null;
       if ("notas" in body.data) updates.notas = body.data.notas ?? null;
       if (body.data.activo !== undefined) updates.activo = body.data.activo;
 

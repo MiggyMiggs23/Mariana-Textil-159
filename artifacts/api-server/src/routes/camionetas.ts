@@ -76,10 +76,11 @@ router.post("/camionetas", ...requiereGestorCamionetas("crear"), async (req, res
       if (duplicate) throw new Error("DUPLICATE_PLATES");
       const [row] = await tx.insert(camionetasTable).values({
         ...parsed.data,
+        nombre: parsed.data.nombre.trim(),
         placas,
         tipo: parsed.data.tipo as TipoCamioneta,
-        marca: parsed.data.marca ?? null,
-        modelo: parsed.data.modelo ?? null,
+        marca: parsed.data.marca?.trim() ?? null,
+        modelo: parsed.data.modelo?.trim() ?? null,
       }).returning();
       await tx.insert(auditoriaTable).values({
         usuarioId: req.auth!.user.id, sitioId: null, accion: "CREAR", entidad: "camionetas",
@@ -124,9 +125,12 @@ router.patch("/camionetas/:id", ...requiereGestorCamionetas("editar"), async (re
         if (duplicate) throw new Error("DUPLICATE_PLATES");
       }
       const [row] = await tx.update(camionetasTable).set({
-        ...parsed.data, placas, tipo: parsed.data.tipo as TipoCamioneta | undefined,
-        marca: parsed.data.marca === undefined ? undefined : parsed.data.marca ?? null,
-        modelo: parsed.data.modelo === undefined ? undefined : parsed.data.modelo ?? null,
+        ...parsed.data,
+        nombre: parsed.data.nombre?.trim(),
+        placas,
+        tipo: parsed.data.tipo as TipoCamioneta | undefined,
+        marca: parsed.data.marca === undefined ? undefined : parsed.data.marca?.trim() ?? null,
+        modelo: parsed.data.modelo === undefined ? undefined : parsed.data.modelo?.trim() ?? null,
         updatedAt: new Date(),
       }).where(eq(camionetasTable.id, id.data.id)).returning();
       await tx.insert(auditoriaTable).values({

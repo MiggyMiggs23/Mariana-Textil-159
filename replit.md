@@ -98,6 +98,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 
 ## Architecture decisions
 
+- **Casing de texto capturado:** los campos de texto humano (por ejemplo nombres, países, telas, colores, marcas y modelos) conservan exactamente mayúsculas/minúsculas y acentos capturados por la persona; al persistir solo se recortan los extremos. Nunca se aplica `toUpperCase()` por tecla ni Title Case irreversible. La normalización sigue siendo obligatoria para identificadores (SKU, placas, iniciales de sitio, RFC/IDs fiscales, folios), enums/estados/unidades, color hexadecimal y claves canónicas usadas únicamente para comparar o validar unicidad sin distinguir mayúsculas.
 - El kardex es la fuente de verdad del inventario: toda alteración inserta movimientos con cantidades firmadas.
 - El QR de la etiqueta contiene `SKU-SERIE`. La serie son los últimos 7 dígitos. Todo punto de escaneo pasa por `interpretarCodigoEscaneado`. La serie manda; el SKU solo verifica y genera advertencia si no coincide.
 - Las tablas operativas no usan DELETE; las correcciones son movimientos inversos que referencian el original.

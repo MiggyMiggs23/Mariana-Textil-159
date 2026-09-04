@@ -416,8 +416,8 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
             <Label>Razón Social / Nombre Comercial *</Label>
             <Input
               value={formData.nombre}
-              onChange={e => setFormData({...formData, nombre: e.target.value.toUpperCase()})}
-              placeholder="TEXTILES DE MÉXICO S.A. DE C.V."
+              onChange={e => setFormData({...formData, nombre: e.target.value})}
+              placeholder="Textiles de México S.A. de C.V."
               data-testid="input-create-supplier-nombre"
             />
           </div>
@@ -452,7 +452,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =
             </div>
             <div className="space-y-2">
               <Label>País de Origen</Label>
-              <Input value={formData.pais} onChange={e => setFormData({...formData, pais: e.target.value.toUpperCase()})} placeholder="Ej. MÉXICO, CHINA" data-testid="input-create-supplier-pais" />
+              <Input value={formData.pais} onChange={e => setFormData({...formData, pais: e.target.value})} placeholder="Ej. México, China" data-testid="input-create-supplier-pais" />
             </div>
           </div>
 

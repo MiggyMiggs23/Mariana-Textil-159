@@ -308,8 +308,8 @@ export default function ProductoDetail() {
                   <CardTitle className="text-2xl text-sidebar font-bold flex items-center gap-2">
                     {isEditing ? (
                       <div className="flex gap-2">
-                        <Input value={formData.tela} onChange={e => setFormData({...formData, tela: e.target.value.toUpperCase()})} className="font-bold w-40" data-testid="input-edit-tela" />
-                        <Input value={formData.color} onChange={e => setFormData({...formData, color: e.target.value.toUpperCase()})} className="font-bold w-40" data-testid="input-edit-color" />
+                        <Input value={formData.tela} onChange={e => setFormData({...formData, tela: e.target.value})} className="font-bold w-40" data-testid="input-edit-tela" />
+                        <Input value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} className="font-bold w-40" data-testid="input-edit-color" />
                       </div>
                     ) : (
                       <>{product.tela} <span className="text-muted-foreground font-light">/</span> {product.color}</>

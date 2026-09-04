@@ -2,26 +2,51 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { productosTable } from "@workspace/db";
-import { normalizeCatalogTitleCase } from "@workspace/db/sku";
 import { buildPreview } from "./lib/catalog-import";
 
-test("normalización Title Case compartida preserva acentos y colapsa espacios", () => {
-  assert.equal(normalizeCatalogTitleCase("  MANTA   LIBANO "), "Manta Libano");
-  assert.equal(normalizeCatalogTitleCase("VERDE BANDERA"), "Verde Bandera");
-  assert.equal(normalizeCatalogTitleCase("aZUL MARINO"), "Azul Marino");
-  assert.equal(normalizeCatalogTitleCase("MANTA DE CIELO"), "Manta de Cielo");
-  assert.equal(normalizeCatalogTitleCase("CASCABEL 15 MM"), "Cascabel 15 Mm");
-  assert.equal(normalizeCatalogTitleCase("PomPon 25 mm"), "PomPon 25 Mm");
-  assert.equal(normalizeCatalogTitleCase("pompon 25 mm"), "Pompon 25 Mm");
+test("importación conserva casing y acentos y recorta solo los extremos", () => {
+  const preview = buildPreview({
+    headers: ["tela", "color", "unidad"],
+    rows: [["  piqué Óptimo  ", "  azul Íñigo  ", "metro"]],
+    existingVariants: new Set(),
+    existingSkus: new Set(),
+  });
+
+  assert.equal(preview[0]?.estado, "NUEVO");
+  assert.equal(preview[0]?.tela, "piqué Óptimo");
+  assert.equal(preview[0]?.color, "azul Íñigo");
+
+  const duplicate = buildPreview({
+    headers: ["tela", "color", "unidad"],
+    rows: [["Piqué óptimo", "AZUL íñigo", "metro"]],
+    existingVariants: new Set(["PIQUÉ ÓPTIMO|AZUL ÍÑIGO"]),
+    existingSkus: new Set(),
+  });
+  assert.equal(duplicate[0]?.estado, "DUPLICADO");
+  assert.equal(duplicate[0]?.tela, "Piqué óptimo");
+  assert.equal(duplicate[0]?.color, "AZUL íñigo");
 });
 
-test("POST, PATCH e importación usan normalización compartida y PATCH reasigna SKU", async () => {
+test("POST, PATCH e importación preservan texto humano y PATCH reasigna SKU", async () => {
   const route = await readFile(new URL("./routes/productos.ts", import.meta.url), "utf8");
   const importer = await readFile(new URL("./lib/catalog-import.ts", import.meta.url), "utf8");
-  assert.match(route, /normalizeCatalogTitleCase\(parsed\.data\.tela\)/);
-  assert.match(route, /normalizeCatalogTitleCase\(body\.data\.color\)/);
-  assert.match(importer, /normalizeCatalogTitleCase\(telaRaw\)/);
+  assert.match(route, /const tela = parsed\.data\.tela\.trim\(\)/);
+  assert.match(route, /const color = parsed\.data\.color\.trim\(\)/);
+  assert.match(route, /\? body\.data\.tela\.trim\(\)/);
+  assert.match(route, /\? body\.data\.color\.trim\(\)/);
+  assert.doesNotMatch(route, /normalizeCatalogTitleCase/);
+  assert.match(importer, /const telaNorm = telaRaw/);
+  assert.match(importer, /const colorNorm = colorRaw/);
+  assert.doesNotMatch(importer, /normalizeCatalogTitleCase/);
+  assert.match(route, /lower\(\$\{productosTable\.tela\}\) = lower\(\$\{tela\}\)/);
+  assert.match(route, /lower\(\$\{productosTable\.color\}\) = lower\(\$\{color\}\)/);
+  assert.match(route, /lower\(\$\{productosTable\.tela\}\) = lower\(\$\{checkTela\}\)/);
+  assert.match(route, /lower\(\$\{productosTable\.color\}\) = lower\(\$\{checkColor\}\)/);
   assert.match(route, /ADVISORY_LOCK_NAMESPACES\.PRODUCT_CATALOG/);
+  assert.ok(
+    (route.match(/await acquireCatalogLock\(tx\)/g) ?? []).length >= 3,
+    "create, import confirm y edit deben compartir el candado del catálogo",
+  );
   assert.match(route, /newSku === undefined \|\| newSku === current\.sku/);
   assert.match(route, /ne\(productosTable\.id, params\.data\.id\)/);
   assert.match(route, /updates\.sku = generateSku/);

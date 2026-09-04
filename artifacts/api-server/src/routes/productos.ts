@@ -32,7 +32,6 @@ import {
 import {
   generateBaseSku,
   generateSku,
-  normalizeCatalogTitleCase,
 } from "@workspace/db/sku";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
@@ -353,8 +352,8 @@ router.post(
       return;
     }
 
-    const tela = normalizeCatalogTitleCase(parsed.data.tela);
-    const color = normalizeCatalogTitleCase(parsed.data.color);
+    const tela = parsed.data.tela.trim();
+    const color = parsed.data.color.trim();
     if ("colorHex" in parsed.data && !canEditProductColorHex(req.auth!.user.rol)) {
       res.status(403).json({
         error: "Solo ADMIN puede capturar el color hexadecimal del producto.",
@@ -380,6 +379,22 @@ router.post(
       const created = await db.transaction(async (tx) => {
         // Serialize SKU allocation / variant uniqueness across concurrent txns.
         await acquireCatalogLock(tx);
+
+        const [variantConflict] = await tx
+          .select({ id: productosTable.id })
+          .from(productosTable)
+          .where(
+            and(
+              sql`lower(${productosTable.tela}) = lower(${tela})`,
+              sql`lower(${productosTable.color}) = lower(${color})`,
+            ),
+          )
+          .limit(1);
+        if (variantConflict) {
+          throw new ProductSkuUnavailableError(
+            `Ya existe un producto con la combinación tela="${tela}" / color="${color}".`,
+          );
+        }
 
         const unavailableSkus = await loadUnavailableProductSkus(tx);
         let sku: string;
@@ -788,14 +803,14 @@ router.patch(
       return;
     }
 
-    // Normalize tela/color if provided
+    // Human-readable catalog text is trimmed but otherwise stored verbatim.
     const newTela =
       body.data.tela !== undefined
-        ? normalizeCatalogTitleCase(body.data.tela)
+        ? body.data.tela.trim()
         : undefined;
     const newColor =
       body.data.color !== undefined
-        ? normalizeCatalogTitleCase(body.data.color)
+        ? body.data.color.trim()
         : undefined;
     const newColorHex = body.data.colorHex === undefined
       ? undefined
@@ -893,8 +908,8 @@ router.patch(
             .from(productosTable)
             .where(
               and(
-                eq(productosTable.tela, checkTela),
-                eq(productosTable.color, checkColor),
+                sql`lower(${productosTable.tela}) = lower(${checkTela})`,
+                sql`lower(${productosTable.color}) = lower(${checkColor})`,
                 ne(productosTable.id, params.data.id),
               ),
             )
