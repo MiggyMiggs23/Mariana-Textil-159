@@ -1238,7 +1238,7 @@ export default function Entradas() {
                   <Button
                     type="button"
                     onClick={handleApplyUniformQty}
-                    disabled={!uniformQty}
+                    disabled={!uniformQty || blankRollCount === 0}
                     data-testid="button-apply-uniform"
                   >
                     {blankRollCount === Number(declaredCount)
