@@ -10,6 +10,8 @@ import {
   useObtenerTicket,
   useCobrarTicket,
   useAutorizarNota,
+  useObtenerProyeccionAutorizacionNota,
+  getObtenerProyeccionAutorizacionNotaQueryKey,
   useListarSesionesCaja,
   useGetCurrentUser,
   Role,
@@ -1102,6 +1104,14 @@ function AutorizacionNotaDialog({
   onAutorizada: () => void;
 }) {
   const autorizar = useAutorizarNota();
+  const { data: projection, isLoading, error } = useObtenerProyeccionAutorizacionNota(
+    ticketId || 0,
+    { query: {
+      enabled: open && !!ticketId,
+      queryKey: getObtenerProyeccionAutorizacionNotaQueryKey(ticketId || 0),
+    } },
+  );
+  const canAuthorize = projection?.autorizable === true && !autorizar.isPending;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -1111,10 +1121,43 @@ function AutorizacionNotaDialog({
             La autorización registra la venta a crédito en Caja.
           </DialogDescription>
         </DialogHeader>
+        {isLoading ? (
+          <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin" /></div>
+        ) : error ? (
+          <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+            {getApiErrorMessage(error, "No se pudo consultar el crédito del cliente.")}
+          </p>
+        ) : projection ? (
+          <div className="space-y-4">
+            <div className="rounded-lg bg-indigo-50 p-5 text-center">
+              <p className="text-xs font-bold uppercase text-indigo-700">Importe de la nota</p>
+              <p className="text-4xl font-black text-indigo-950">{formatNumber(projection.importe, { kind: "money" })}</p>
+            </div>
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border p-4 text-sm">
+              <dt className="text-muted-foreground">Nombre del cliente</dt>
+              <dd className="text-right font-bold">{projection.clienteNombre}</dd>
+              <dt className="text-muted-foreground">Saldo actual</dt>
+              <dd className="text-right font-bold">{formatNumber(projection.saldoActual, { kind: "money" })}</dd>
+              <dt className="text-muted-foreground">Importe por aprobar</dt>
+              <dd className="text-right font-bold">{formatNumber(projection.importe, { kind: "money" })}</dd>
+              <dt className="text-muted-foreground">Suma de los dos</dt>
+              <dd className="text-right font-bold">{formatNumber(projection.suma, { kind: "money" })}</dd>
+              <dt className="text-muted-foreground">Crédito disponible resultante</dt>
+              <dd className={`text-right text-lg font-black ${projection.autorizable ? "text-emerald-700" : "text-destructive"}`}>
+                {formatNumber(projection.creditoDisponibleResultante, { kind: "money" })}
+              </dd>
+            </dl>
+            {!projection.autorizable && (
+              <p className="rounded-md border border-destructive/30 bg-destructive/10 p-3 font-semibold text-destructive" role="alert">
+                El límite se rebasa por {formatNumber(projection.exceso, { kind: "money" })}. Un ADMIN debe subir el límite del cliente.
+              </p>
+            )}
+          </div>
+        ) : null}
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button
-            disabled={!ticketId || autorizar.isPending}
+            disabled={!ticketId || !canAuthorize}
             onClick={() => ticketId && autorizar.mutate(
               { id: ticketId },
               { onSuccess: onAutorizada },

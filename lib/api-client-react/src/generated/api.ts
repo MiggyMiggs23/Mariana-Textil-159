@@ -43,6 +43,7 @@ import type {
   AuditoriaInventarioResumen,
   AuditoriaInventarioSitio,
   AuditoriaListResult,
+  AutorizacionNotaProyeccion,
   BajaCliente200,
   BajaClienteBody,
   BorradorSalidaResult,
@@ -12272,6 +12273,83 @@ export const useCobrarTicket = <TError = ErrorType<ValidationErrorResponse | Una
       > => {
       return useMutation(getCobrarTicketMutationOptions(options));
     }
+
+export const getObtenerProyeccionAutorizacionNotaUrl = (id: number,) => {
+
+
+
+
+  return `/api/tickets/${id}/autorizar`
+}
+
+/**
+ * @summary Proyecta saldo y límite para autorizar una nota sin mutar datos
+ */
+export const obtenerProyeccionAutorizacionNota = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AutorizacionNotaProyeccion> => {
+
+  return customFetch<AutorizacionNotaProyeccion>(getObtenerProyeccionAutorizacionNotaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerProyeccionAutorizacionNotaQueryKey = (id: number,) => {
+    return [
+    `/api/tickets/${id}/autorizar`
+    ] as const;
+    }
+
+
+export const getObtenerProyeccionAutorizacionNotaQueryOptions = <TData = Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerProyeccionAutorizacionNotaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>> = ({ signal }) => obtenerProyeccionAutorizacionNota(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerProyeccionAutorizacionNotaQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>>
+export type ObtenerProyeccionAutorizacionNotaQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Proyecta saldo y límite para autorizar una nota sin mutar datos
+ */
+
+export function useObtenerProyeccionAutorizacionNota<TData = Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerProyeccionAutorizacionNota>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerProyeccionAutorizacionNotaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getAutorizarNotaUrl = (id: number,) => {
 

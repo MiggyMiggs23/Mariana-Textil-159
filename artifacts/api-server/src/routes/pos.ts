@@ -38,6 +38,8 @@ import {
   ObtenerSesionCajaActualResponse,
   ObtenerTicketParams,
   ObtenerTicketResponse,
+  ObtenerProyeccionAutorizacionNotaParams,
+  ObtenerProyeccionAutorizacionNotaResponse,
   GetPosClienteCreditoDisponibleParams,
   GetPosClienteCreditoDisponibleQueryParams,
   GetPosClienteCreditoDisponibleResponse,
@@ -85,7 +87,6 @@ import {
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   loadCustomerCreditProjection,
-  loadCustomerCreditReservationCents,
 } from "../lib/credit-aging-read-model";
 
 const router: IRouter = Router();
@@ -319,13 +320,10 @@ router.get(
         throw new PosError("Cliente no encontrado o inactivo.", "INVALID_CLIENT", 404);
       }
 
-      const [projection, reservationCents] = await Promise.all([
-        loadCustomerCreditProjection(clienteId),
-        loadCustomerCreditReservationCents(clienteId),
-      ]);
+      const projection = await loadCustomerCreditProjection(clienteId);
       const ledgerNetCents =
         projection.balanceCents - projection.overpaymentCents;
-      const committedCents = ledgerNetCents + reservationCents;
+      const committedCents = ledgerNetCents;
       const limitCents = Math.round(Number(cliente.limiteCredito) * 100);
       const availableCents = Math.max(0, limitCents - committedCents);
       res.json(
@@ -783,6 +781,44 @@ router.post(
         usuarioId: req.auth!.user.id, ip: getRequestIp(req),
       }, true));
       res.json(AutorizarNotaResponse.parse(result));
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
+router.get(
+  "/tickets/:id/autorizar",
+  requierePermiso("cobros_pagos", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const { id } = ObtenerProyeccionAutorizacionNotaParams.parse(req.params);
+      const [ticket] = await db.select({
+        id: ticketsTable.id, ubicacionId: ticketsTable.ubicacionId,
+        clienteId: ticketsTable.clienteId, documentoTipo: ticketsTable.documentoTipo,
+        total: ticketsTable.total,
+      }).from(ticketsTable).where(eq(ticketsTable.id, id)).limit(1);
+      if (!ticket || ticket.documentoTipo !== "NOTA") {
+        res.status(404).json({ error: "Nota no encontrada." }); return;
+      }
+      assertOperationalLocation(req, ticket.ubicacionId);
+      const [cliente, projection] = await Promise.all([
+        db.select({ nombre: clientesTable.nombre, limiteCredito: clientesTable.limiteCredito })
+          .from(clientesTable).where(eq(clientesTable.id, ticket.clienteId)).limit(1),
+        loadCustomerCreditProjection(ticket.clienteId),
+      ]);
+      const current = projection.balanceCents - projection.overpaymentCents;
+      const amount = Math.round(Number(ticket.total) * 100);
+      const sum = current + amount;
+      const limit = Math.round(Number(cliente[0]!.limiteCredito) * 100);
+      const resulting = limit - sum;
+      res.json(ObtenerProyeccionAutorizacionNotaResponse.parse({
+        ticketId: id, clienteNombre: cliente[0]!.nombre,
+        saldoActual: (current / 100).toFixed(2), importe: (amount / 100).toFixed(2),
+        suma: (sum / 100).toFixed(2), limiteCredito: (limit / 100).toFixed(2),
+        creditoDisponibleResultante: (resulting / 100).toFixed(2),
+        exceso: (Math.max(0, -resulting) / 100).toFixed(2), autorizable: resulting >= 0,
+      }));
     } catch (error) {
       handlePosError(error, res, next);
     }

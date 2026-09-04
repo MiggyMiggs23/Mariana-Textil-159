@@ -3625,6 +3625,22 @@ paths:
         "409":
           $ref: "#/components/responses/Conflict"
   /tickets/{id}/autorizar:
+    get:
+      operationId: obtenerProyeccionAutorizacionNota
+      tags: [caja]
+      summary: Proyecta saldo y límite para autorizar una nota sin mutar datos
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+      responses:
+        "200":
+          description: Proyección compartida del libro mayor y reservaciones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AutorizacionNotaProyeccion"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
     post:
       operationId: autorizarNota
       tags: [caja]
@@ -7631,7 +7647,7 @@ components:
         limiteCredito: { type: string }
         saldoComprometido:
           type: string
-          description: Saldo neto del libro mayor más tickets de crédito reservados.
+          description: Saldo neto del libro mayor de crédito autorizado.
         creditoDisponible: { type: string }
         puedeComprarCredito: { type: boolean }
     ClienteCreditoUpdate:
@@ -10974,6 +10990,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/FormaPagoTicket"
+    AutorizacionNotaProyeccion:
+      type: object
+      required: [ticketId, clienteNombre, saldoActual, importe, suma, limiteCredito, creditoDisponibleResultante, exceso, autorizable]
+      properties:
+        ticketId: { type: number }
+        clienteNombre: { type: string }
+        saldoActual: { type: string }
+        importe: { type: string }
+        suma: { type: string }
+        limiteCredito: { type: string }
+        creditoDisponibleResultante: { type: string }
+        exceso: { type: string }
+        autorizable: { type: boolean }
     TicketDetalle:
       allOf:
         - $ref: "#/components/schemas/TicketResumen"

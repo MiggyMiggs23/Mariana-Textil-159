@@ -93,6 +93,7 @@ export * from './auditoriaInventarioResumen';
 export * from './auditoriaInventarioResumenEstado';
 export * from './auditoriaInventarioSitio';
 export * from './auditoriaListResult';
+export * from './autorizacionNotaProyeccion';
 export * from './bajaCliente200';
 export * from './bajaClienteBody';
 export * from './borradorSalidaResult';

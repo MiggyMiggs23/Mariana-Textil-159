@@ -5,7 +5,6 @@ import { projectCreditLedger, type CreditLedgerMovement } from "./credit-allocat
 export type CustomerCreditProjection = ReturnType<typeof projectCreditLedger>;
 type CreditLedgerQuery = Pick<typeof pool, "query">;
 
-type CreditReservationQuery = Pick<typeof pool, "query">;
 
 type CreditLedgerRow = {
   cliente_id: number;
@@ -110,40 +109,6 @@ export async function loadCustomerCreditProjectionInTransaction(
   return projectCreditLedger(
     await loadCustomerCreditLedgerInTransaction(clienteId, tx),
   );
-}
-
-/**
- * POS credit intent is a committed reservation until the ticket is collected
- * or cancelled. It is intentionally separate from the immutable ledger: no
- * receivable has been issued yet.
- */
-export async function loadCustomerCreditReservationCents(
-  clienteId: number,
-  database: CreditReservationQuery = pool,
-  excludeTicketId?: number,
-): Promise<number> {
-  const result = await database.query<{ cents: string }>(
-    `SELECT COALESCE(ROUND(SUM(total) * 100), 0)::bigint::text AS cents
-       FROM tickets
-      WHERE cliente_id=$1 AND credito=true AND cobrado=false AND estado='VENDIDO'
-        AND ($2::integer IS NULL OR id <> $2)`,
-    [clienteId, excludeTicketId ?? null],
-  );
-  return Number(result.rows[0]?.cents ?? "0");
-}
-
-export async function loadCustomerCreditReservationCentsInTransaction(
-  clienteId: number,
-  tx: { execute(query: any): Promise<unknown> },
-  excludeTicketId?: number,
-): Promise<number> {
-  const result = await tx.execute(sql`
-    SELECT COALESCE(ROUND(SUM(total) * 100), 0)::bigint::text AS cents
-      FROM tickets
-     WHERE cliente_id=${clienteId} AND credito=true AND cobrado=false AND estado='VENDIDO'
-       AND (${excludeTicketId ?? null}::integer IS NULL OR id <> ${excludeTicketId ?? null})
-  `);
-  return Number((result as { rows: Array<{ cents: string }> }).rows[0]?.cents ?? "0");
 }
 
 /** Bulk adapter. It always performs at most one ledger query, including on a transaction. */

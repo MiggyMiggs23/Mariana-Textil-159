@@ -1099,9 +1099,8 @@ export async function cancelarTicket(
       409,
     );
   }
-  // Cancellation changes an uncobrado credit ticket from an active
-  // reservation to a released one; serialize that transition with POS
-  // creation/collection before any inventory work is performed.
+  // Serialize customer-credit cancellation with authorization before any
+  // inventory or ledger work is performed.
   if (ticket.credito) {
     await transactionAdvisoryLock(
       tx,
@@ -1146,19 +1145,24 @@ export async function cancelarTicket(
     });
   }
 
-  const [creditRow] = await tx
-    .select({
-      total: sql<string>`COALESCE(SUM(${ticketPagosTable.importe}), 0)::text`,
-    })
-    .from(ticketPagosTable)
-    .where(
-      and(
-        eq(ticketPagosTable.ticketId, ticket.id),
-        eq(ticketPagosTable.formaPago, "CREDITO"),
-      ),
-    );
-  const creditCents = money(creditRow?.total ?? "0");
-  if (ticket.clienteId != null && creditCents > 0) {
+  const creditCharges =
+    ticket.documentoTipo === "NOTA" &&
+    ticket.autorizacionEstado === "AUTORIZADA"
+      ? await tx
+          .select({
+            id: movimientosCreditoTable.id,
+            importe: movimientosCreditoTable.importe,
+          })
+          .from(movimientosCreditoTable)
+          .where(
+            and(
+              eq(movimientosCreditoTable.ticketId, ticket.id),
+              eq(movimientosCreditoTable.tipo, "VENTA_CREDITO"),
+            ),
+          )
+          .for("update")
+      : [];
+  if (ticket.clienteId != null && creditCharges.length > 0) {
     const [clienteCredito] = await tx
       .select({ id: clientesTable.id, activo: clientesTable.activo })
       .from(clientesTable)
@@ -1172,23 +1176,27 @@ export async function cancelarTicket(
         409,
       );
     }
-    const [existingReverse] = await tx
-      .select({ id: movimientosCreditoTable.id })
-      .from(movimientosCreditoTable)
-      .where(
-        and(
-          eq(movimientosCreditoTable.ticketId, ticket.id),
-          eq(movimientosCreditoTable.tipo, "REVERSO"),
-        ),
-      )
-      .limit(1);
-    if (!existingReverse) {
+    for (const charge of creditCharges) {
+      const creditCents = money(charge.importe);
+      if (creditCents <= 0) continue;
+      const [existingReverse] = await tx
+        .select({ id: movimientosCreditoTable.id })
+        .from(movimientosCreditoTable)
+        .where(
+          and(
+            eq(movimientosCreditoTable.movimientoOrigenId, charge.id),
+            eq(movimientosCreditoTable.tipo, "REVERSO"),
+          ),
+        )
+        .limit(1);
+      if (existingReverse) continue;
       await tx.insert(movimientosCreditoTable).values({
         clienteId: ticket.clienteId,
         ticketId: ticket.id,
         tipo: "REVERSO",
         importe: decimalMoney(-creditCents),
         usuarioId: input.usuarioId,
+        movimientoOrigenId: charge.id,
         notas: `Cancelación ticket ${ticket.folio}`,
         formaPago: "CREDITO",
         metadata: JSON.stringify({
@@ -1562,11 +1570,10 @@ export async function autorizarNota(
   const ledger = await loadCustomerCreditLedgerInTransaction(ticket.clienteId, tx);
   const projection = projectCreditLedger(ledger);
   const saldo = projection.balanceCents - projection.overpaymentCents;
-  const reservas = await loadCustomerCreditReservationCentsInTransaction(ticket.clienteId, tx, ticket.id);
   const limite = money(cliente.limiteCredito);
   const importe = money(ticket.total);
-  if (saldo + reservas + importe > limite) {
-    const exceso = saldo + reservas + importe - limite;
+  if (saldo + importe > limite) {
+    const exceso = saldo + importe - limite;
     throw new PosError(`El límite se rebasa por $${decimalMoney(exceso)}. Un ADMIN debe subir el límite del cliente.`, "CREDIT_LIMIT_EXCEEDED", 409);
   }
   const [movement] = await tx.insert(movimientosCreditoTable).values({
@@ -1584,6 +1591,18 @@ export async function autorizarNota(
     autorizacionEstado: "AUTORIZADA", autorizadoAt: now, autorizadoPor: input.usuarioId,
     sesionCajaId: sesion.id,
   }).where(eq(ticketsTable.id, ticket.id));
+  const [[cajero], [tienda]] = await Promise.all([
+    tx.select({ nombre: usuariosTable.nombre }).from(usuariosTable)
+      .where(eq(usuariosTable.id, input.usuarioId)).limit(1),
+    tx.select({ nombre: ubicacionesTable.nombre }).from(ubicacionesTable)
+      .where(eq(ubicacionesTable.id, ticket.ubicacionId)).limit(1),
+  ]);
+  await tx.insert(notificacionesCreditoTable).values({
+    ticketId: ticket.id, clienteId: ticket.clienteId, clienteNombre: cliente.nombre,
+    folio: ticket.folio, importe: decimalMoney(importe), diasPlazo: ticket.diasPlazo!,
+    fechaVencimiento: ticket.fechaVencimiento!, cajeroId: input.usuarioId,
+    cajeroNombre: cajero!.nombre, tiendaId: ticket.ubicacionId, tiendaNombre: tienda!.nombre,
+  });
   await tx.insert(auditoriaTable).values({
     usuarioId: input.usuarioId, accion: "AUTORIZAR_NOTA", entidad: "tickets",
     entidadId: String(ticket.id), datosDespues: { sesionCajaId: sesion.id, movimientoCreditoId: movement!.id }, ip: input.ip,

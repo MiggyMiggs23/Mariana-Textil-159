@@ -93,6 +93,7 @@ export * from "./generated/types/auditoriaInventarioResumen";
 export * from "./generated/types/auditoriaInventarioResumenEstado";
 export * from "./generated/types/auditoriaInventarioSitio";
 export * from "./generated/types/auditoriaListResult";
+export * from "./generated/types/autorizacionNotaProyeccion";
 export * from "./generated/types/bajaCliente200";
 export * from "./generated/types/borradorSalidaResult";
 export * from "./generated/types/buscarPosParams";

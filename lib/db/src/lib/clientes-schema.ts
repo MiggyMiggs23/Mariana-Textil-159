@@ -261,16 +261,26 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
        BEGIN
          IF NEW.tipo <> 'REVERSO' THEN RETURN NEW; END IF;
          IF NEW.movimiento_origen_id IS NULL THEN
-           -- Historical negative sale cancellation remains supported.
-           IF NEW.importe < 0 AND NEW.ticket_id IS NOT NULL THEN RETURN NEW; END IF;
            RAISE EXCEPTION 'El reverso debe referenciar su movimiento de origen.';
          END IF;
-         SELECT * INTO origen FROM movimientos_credito WHERE id=NEW.movimiento_origen_id;
-         IF NOT FOUND OR origen.cliente_id <> NEW.cliente_id OR origen.tipo <> 'ABONO'
-           OR origen.importe >= 0 OR NEW.importe <> -origen.importe THEN
-           RAISE EXCEPTION 'Un reverso de abono debe ser positivo, exacto y del mismo cliente.';
-         END IF;
-         RETURN NEW;
+          SELECT * INTO origen FROM movimientos_credito WHERE id=NEW.movimiento_origen_id;
+          IF NOT FOUND THEN
+            RAISE EXCEPTION 'El reverso de crédito debe tener un origen compatible, del mismo cliente y por el importe exacto.';
+          END IF;
+          IF origen.tipo = 'ABONO'
+            AND origen.cliente_id = NEW.cliente_id
+            AND origen.importe < 0
+            AND NEW.importe = -origen.importe THEN
+            RETURN NEW;
+          END IF;
+          IF origen.tipo = 'VENTA_CREDITO'
+            AND origen.cliente_id = NEW.cliente_id
+            AND origen.importe > 0
+            AND NEW.importe = -origen.importe
+            AND NEW.ticket_id IS NOT DISTINCT FROM origen.ticket_id THEN
+            RETURN NEW;
+          END IF;
+          RAISE EXCEPTION 'El reverso de crédito debe tener un origen compatible, del mismo cliente y por el importe exacto.';
        END $$;
       DROP TRIGGER IF EXISTS movimientos_credito_inmutables ON movimientos_credito;
       CREATE TRIGGER movimientos_credito_inmutables

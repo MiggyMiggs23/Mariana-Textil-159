@@ -5076,6 +5076,18 @@ export interface TicketCajaResumen {
   formasPago: FormaPagoTicket[];
 }
 
+export interface AutorizacionNotaProyeccion {
+  ticketId: number;
+  clienteNombre: string;
+  saldoActual: string;
+  importe: string;
+  suma: string;
+  limiteCredito: string;
+  creditoDisponibleResultante: string;
+  exceso: string;
+  autorizable: boolean;
+}
+
 export type TicketDocumentoImpresionBaseCopia = typeof TicketDocumentoImpresionBaseCopia[keyof typeof TicketDocumentoImpresionBaseCopia];
 
 

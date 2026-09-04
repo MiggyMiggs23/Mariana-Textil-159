@@ -5975,6 +5975,26 @@ export const CobrarTicketResponse = zod.object({
 
 
 /**
+ * @summary Proyecta saldo y límite para autorizar una nota sin mutar datos
+ */
+export const ObtenerProyeccionAutorizacionNotaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ObtenerProyeccionAutorizacionNotaResponse = zod.object({
+  "ticketId": zod.number(),
+  "clienteNombre": zod.string(),
+  "saldoActual": zod.string(),
+  "importe": zod.string(),
+  "suma": zod.string(),
+  "limiteCredito": zod.string(),
+  "creditoDisponibleResultante": zod.string(),
+  "exceso": zod.string(),
+  "autorizable": zod.boolean()
+})
+
+
+/**
  * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
  */
 export const AutorizarNotaParams = zod.object({
