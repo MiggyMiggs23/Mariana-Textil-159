@@ -198,6 +198,8 @@ export * from './clientesAnaliticaTopVentasItem';
 export * from './clientesCartera';
 export * from './clientesResumen';
 export * from './clienteUpdate';
+export * from './comportamientoPagoCliente';
+export * from './comportamientoPagoClienteColor';
 export * from './compraConEstado';
 export * from './compraConEstadoEstado';
 export * from './conciliacionRow';

@@ -26,6 +26,8 @@ import {
   useBajaCliente,
   useReactivarCliente,
   useUpdateCliente,
+  useObtenerComportamientoPagoCliente,
+  getObtenerComportamientoPagoClienteQueryKey,
 } from "@workspace/api-client-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/app-layout";
@@ -108,6 +110,9 @@ export default function ClienteDetail() {
 
   const clientQuery = useGetCliente(id, { query: { enabled: Number.isFinite(id), queryKey: getGetClienteQueryKey(id) } });
   const credit = useGetClienteCredito(id, { query: { enabled: canCredit && Number.isFinite(id), queryKey: getGetClienteCreditoQueryKey(id) } });
+  const behavior = useObtenerComportamientoPagoCliente(id, {
+    query: { enabled: canCredit && Number.isFinite(id), queryKey: getObtenerComportamientoPagoClienteQueryKey(id) },
+  });
   const periodDates = useMemo(() => {
     if (period === "1200") return {};
     const until = new Date(); const since = new Date(); since.setMonth(since.getMonth() - Number(period));
@@ -219,6 +224,22 @@ export default function ClienteDetail() {
             <Button variant="ghost" size="icon" asChild><AppBackLink fallbackHref="/clientes" aria-label="Volver a clientes" data-testid="link-back-clients"><ArrowLeft className="h-5 w-5" /></AppBackLink></Button>
             <div><div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-sidebar" data-testid="text-client-name">{client.nombre}</h1>{client.id === 1 && <Badge variant="secondary"><LockKeyhole className="mr-1 h-3 w-3" />Cliente de sistema</Badge>}<Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></div><p className="text-sm text-muted-foreground">Cliente #{formatNumber(client.id, { kind: "identifier" })} · Alta {date(client.createdAt)}</p></div>
           </div>
+          {canCredit && behavior.data && (
+            <Card>
+              <CardHeader><CardTitle className="flex flex-wrap items-center gap-3">
+                Comportamiento de pago
+                <Badge className={behavior.data.color === "GREEN" ? "bg-emerald-600" : behavior.data.color === "YELLOW" ? "bg-amber-500" : behavior.data.color === "RED" ? "bg-red-600" : "bg-slate-500"}>
+                  {behavior.data.color === "INSUFFICIENT" ? "Historial insuficiente" : behavior.data.color}
+                </Badge>
+              </CardTitle></CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-2xl font-black">{behavior.data.percentage}% <span className="text-sm font-normal text-muted-foreground">· {behavior.data.evaluatedNotes} notas evaluadas, {behavior.data.settledNotes} liquidadas</span></p>
+                <p>Abiertas vigentes excluidas: <strong>{behavior.data.openNotDueNotes}</strong> · Vencidas impagas: <strong>{behavior.data.overdueOpenNotes}</strong></p>
+                {behavior.data.suggestCreditIncrease && <p className="rounded-md bg-emerald-50 p-3 text-emerald-900"><strong>Candidato a revisión de límite:</strong> {behavior.data.suggestionReason} El ADMIN decide manualmente; no se sugiere monto.</p>}
+                <p className="text-sm text-muted-foreground">{behavior.data.period}. {behavior.data.explanation}</p>
+              </CardContent>
+            </Card>
+          )}
           <div className="flex flex-wrap gap-2">
             {canEditClient && !client.esSistema && (
               <Button variant="outline" onClick={() => {

@@ -197,6 +197,8 @@ export * from "./generated/types/clientesAnaliticaTopMargenItem";
 export * from "./generated/types/clientesAnaliticaTopVentasItem";
 export * from "./generated/types/clientesCartera";
 export * from "./generated/types/clientesResumen";
+export * from "./generated/types/comportamientoPagoCliente";
+export * from "./generated/types/comportamientoPagoClienteColor";
 export * from "./generated/types/compraConEstado";
 export * from "./generated/types/compraConEstadoEstado";
 export * from "./generated/types/conciliacionRow";

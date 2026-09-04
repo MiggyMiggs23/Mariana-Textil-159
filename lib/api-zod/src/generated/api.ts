@@ -5512,6 +5512,55 @@ export const ListarTicketsResponse = zod.array(ListarTicketsResponseItem)
 
 
 /**
+ * @summary Lista el comportamiento de pago proyectado desde el libro mayor FIFO
+ */
+export const ListarComportamientoPagoClientesResponseItem = zod.object({
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "percentage": zod.number(),
+  "settledNotes": zod.number(),
+  "evaluatedNotes": zod.number(),
+  "onTimeNotes": zod.number(),
+  "overdueOpenNotes": zod.number(),
+  "openNotDueNotes": zod.number(),
+  "color": zod.enum(['GREEN', 'YELLOW', 'RED', 'INSUFFICIENT']),
+  "sufficientHistory": zod.boolean(),
+  "utilizationPercent": zod.number(),
+  "suggestCreditIncrease": zod.boolean(),
+  "suggestionReason": zod.string().nullish(),
+  "period": zod.string(),
+  "explanation": zod.string()
+})
+export const ListarComportamientoPagoClientesResponse = zod.array(ListarComportamientoPagoClientesResponseItem)
+
+
+/**
+ * @summary Obtiene el comportamiento de pago compartido de un cliente
+ */
+export const ObtenerComportamientoPagoClienteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ObtenerComportamientoPagoClienteResponse = zod.object({
+  "clienteId": zod.number(),
+  "clienteNombre": zod.string(),
+  "percentage": zod.number(),
+  "settledNotes": zod.number(),
+  "evaluatedNotes": zod.number(),
+  "onTimeNotes": zod.number(),
+  "overdueOpenNotes": zod.number(),
+  "openNotDueNotes": zod.number(),
+  "color": zod.enum(['GREEN', 'YELLOW', 'RED', 'INSUFFICIENT']),
+  "sufficientHistory": zod.boolean(),
+  "utilizationPercent": zod.number(),
+  "suggestCreditIncrease": zod.boolean(),
+  "suggestionReason": zod.string().nullish(),
+  "period": zod.string(),
+  "explanation": zod.string()
+})
+
+
+/**
  * @summary Lista tickets vendidos y no cobrados de una ubicación
  */
 export const ListarTicketsPendientesQueryParams = zod.object({

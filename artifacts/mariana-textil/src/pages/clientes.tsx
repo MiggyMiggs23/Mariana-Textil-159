@@ -16,6 +16,8 @@ import {
   useListClientes,
   useCreateCliente,
   useListCuentasIncobrables,
+  useListarComportamientoPagoClientes,
+  getListarComportamientoPagoClientesQueryKey,
 } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +60,16 @@ export default function Clientes() {
   });
   const analyticsPeriod = useMemo(() => { const now = new Date(); const start = new Date(); start.setMonth(start.getMonth() - Number(analyticsMonths)); return { desde: start.toISOString().slice(0, 10), hasta: now.toISOString().slice(0, 10) }; }, [analyticsMonths]);
   const analyticsQuery = useQuery({ queryKey: ["clientes-global-analytics", analyticsPeriod], queryFn: () => getGlobalAnalytics(analyticsPeriod), enabled: canFinances });
+  const behaviorQuery = useListarComportamientoPagoClientes({
+    query: { enabled: canCredit, queryKey: getListarComportamientoPagoClientesQueryKey() },
+  });
+  const [behaviorColor, setBehaviorColor] = useState("ALL");
+  const [behaviorSort, setBehaviorSort] = useState("PERCENTAGE");
+  const behaviorRows = useMemo(() => [...(behaviorQuery.data ?? [])]
+    .filter((row) => behaviorColor === "ALL" || row.color === behaviorColor)
+    .sort((a, b) => behaviorSort === "NAME"
+      ? a.clienteNombre.localeCompare(b.clienteNombre, "es")
+      : b.percentage - a.percentage), [behaviorColor, behaviorQuery.data, behaviorSort]);
   const visible = useMemo(() => {
     const term = search.trim().toLowerCase();
     return [...(clientsQuery.data ?? [])]
@@ -95,6 +107,7 @@ export default function Clientes() {
             <TabsTrigger value="clientes" data-testid="tab-clientes">Clientes</TabsTrigger>
             {canFinances && <TabsTrigger value="cartera" data-testid="tab-cartera">Cartera</TabsTrigger>}
             {canFinances && <TabsTrigger value="analisis" data-testid="tab-analysis">Análisis</TabsTrigger>}
+            {canCredit && <TabsTrigger value="comportamiento">Comportamiento de pago</TabsTrigger>}
             {user?.rol === "ADMIN" && <TabsTrigger value="incobrables" data-testid="tab-incobrables">Incobrables</TabsTrigger>}
           </TabsList>
           <TabsContent value="clientes" className="space-y-4">
@@ -174,6 +187,45 @@ export default function Clientes() {
           <TabsContent value="analisis">
             <div className="mb-4 flex justify-end"><Select value={analyticsMonths} onValueChange={setAnalyticsMonths}><SelectTrigger className="w-52"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="3">Últimos 3 meses</SelectItem><SelectItem value="6">Últimos 6 meses</SelectItem><SelectItem value="12">Últimos 12 meses</SelectItem><SelectItem value="24">Últimos 24 meses</SelectItem></SelectContent></Select></div>
             {analyticsQuery.isLoading ? <Skeleton className="h-64 w-full" /> : analyticsQuery.isError ? <p className="text-destructive">No se pudo cargar la analítica.</p> : <div className="space-y-4"><SummaryPanel loading={false} error={null} values={[["Ventas", formatNumber(analyticsQuery.data?.ventas, { kind: "money" })], ["Utilidad", analyticsQuery.data?.margen == null ? "Pendiente" : formatNumber(analyticsQuery.data.margen, { kind: "money" })], ["Tickets", formatNumber(analyticsQuery.data?.tickets, { kind: "count" })], ["ROLLOS · METRO", formatNumber(analyticsQuery.data?.rollosMetros, { kind: "quantity" })], ["ROLLOS · KILO", formatNumber(analyticsQuery.data?.rollosKilos, { kind: "quantity" })], ["METRAJE · METRO", formatNumber(analyticsQuery.data?.metrajeMetros, { kind: "quantity" })]]} /><div className="grid gap-4 lg:grid-cols-2"><AnalyticsTable title="Top por ventas" rows={(analyticsQuery.data?.topVentas ?? []).map((item) => [item.nombre, formatNumber(item.ventas, { kind: "money" }), item.margen == null ? "Pendiente" : formatNumber(item.margen, { kind: "money" })])} /><AnalyticsTable title="Top por utilidad" rows={(analyticsQuery.data?.topMargen ?? []).map((item) => [item.nombre, formatNumber(item.ventas, { kind: "money" }), item.margen == null ? "Pendiente" : formatNumber(item.margen, { kind: "money" })])} /><AnalyticsTable title="Pareto de clientes" rows={(analyticsQuery.data?.pareto ?? []).map((item) => [item.nombre, formatNumber(item.ventas, { kind: "money" }), formatNumber(item.acumulado, { kind: "percentage", percentageInput: "ratio" })])} /><AnalyticsTable title="Público vs registrado" rows={(analyticsQuery.data?.publicoVsRegistrado ?? []).map((item) => [item.segmento, formatNumber(item.ventas, { kind: "money" }), `${formatNumber(item.tickets, { kind: "count" })} tickets`])} /></div><AnalyticsTable title="Evolución mensual" rows={(analyticsQuery.data?.mensual ?? []).map((item) => [item.mes, formatNumber(item.ventas, { kind: "money" }), item.margen == null ? "Pendiente" : formatNumber(item.margen, { kind: "money" })])} />{(analyticsQuery.data?.lineasSinCosto ?? 0) > 0 && <p className="rounded-md bg-amber-50 p-3 text-sm text-amber-900">Costo y utilidad pendientes por {formatNumber(analyticsQuery.data?.lineasSinCosto, { kind: "count" })} línea(s) sin costo congelado.</p>}<Button variant="outline" onClick={() => downloadClientFile(`/clientes/analitica.xlsx?desde=${analyticsPeriod.desde}&hasta=${analyticsPeriod.hasta}`, "analitica-clientes.xlsx")}>Exportar analítica Excel</Button></div>}
+          </TabsContent>
+          <TabsContent value="comportamiento" className="space-y-4">
+            <Card>
+              <CardHeader><CardTitle>Comportamiento de pago por cliente</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-3">
+                  <Select value={behaviorColor} onValueChange={setBehaviorColor}>
+                    <SelectTrigger className="w-56"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ALL">Todos los colores</SelectItem>
+                      <SelectItem value="GREEN">Verde</SelectItem>
+                      <SelectItem value="YELLOW">Amarillo</SelectItem>
+                      <SelectItem value="RED">Rojo</SelectItem>
+                      <SelectItem value="INSUFFICIENT">Historial insuficiente</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={behaviorSort} onValueChange={setBehaviorSort}>
+                    <SelectTrigger className="w-56"><SelectValue /></SelectTrigger>
+                    <SelectContent><SelectItem value="PERCENTAGE">Mayor porcentaje</SelectItem><SelectItem value="NAME">Nombre A–Z</SelectItem></SelectContent>
+                  </Select>
+                </div>
+                {behaviorQuery.isLoading ? <Skeleton className="h-48 w-full" /> : (
+                  <div className="overflow-x-auto"><Table>
+                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Semáforo</TableHead><TableHead>A tiempo / muestra</TableHead><TableHead>Abiertas vigentes</TableHead><TableHead>Vencidas impagas</TableHead><TableHead>Uso límite</TableHead><TableHead>Sugerencia</TableHead></TableRow></TableHeader>
+                    <TableBody>{behaviorRows.map((row) => <TableRow key={row.clienteId}>
+                      <TableCell><Link href={`/clientes/${row.clienteId}`} className="font-medium text-primary hover:underline">{row.clienteNombre}</Link></TableCell>
+                      <TableCell><Badge className={row.color === "GREEN" ? "bg-emerald-600" : row.color === "YELLOW" ? "bg-amber-500" : row.color === "RED" ? "bg-red-600" : "bg-slate-500"}>
+                        {row.color === "INSUFFICIENT" ? "Historial insuficiente" : row.color}
+                      </Badge></TableCell>
+                      <TableCell>{row.percentage}% · {row.onTimeNotes}/{row.evaluatedNotes} notas ({row.settledNotes} liquidadas)</TableCell>
+                      <TableCell>{row.openNotDueNotes}</TableCell><TableCell>{row.overdueOpenNotes}</TableCell>
+                      <TableCell>{row.utilizationPercent}%</TableCell>
+                      <TableCell>{row.suggestCreditIncrease ? row.suggestionReason : "—"}</TableCell>
+                    </TableRow>)}</TableBody>
+                  </Table></div>
+                )}
+                <p className="text-sm text-muted-foreground">{behaviorRows[0]?.period ?? "Todo el historial autorizado hasta hoy"}. {behaviorRows[0]?.explanation ?? "Las notas abiertas aún no vencidas se excluyen del porcentaje."}</p>
+              </CardContent>
+            </Card>
           </TabsContent>
           {user?.rol === "ADMIN" && (
             <TabsContent value="incobrables">

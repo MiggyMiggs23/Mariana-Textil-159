@@ -8,6 +8,9 @@ import {
   GetClientePagoDetalleResponse,
   PreviewClientePagoBody,
   ReimprimirClienteNotaResponse,
+  ListarComportamientoPagoClientesResponse,
+  ObtenerComportamientoPagoClienteParams,
+  ObtenerComportamientoPagoClienteResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -56,6 +59,7 @@ import { ordenarEspanol } from "../lib/spanish-order";
 import { buildTicketDetail } from "../lib/pos";
 import { breakdownIvaIncluded } from "../lib/iva";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
+import { loadPaymentBehaviorList } from "../lib/payment-behavior";
 
 const router: IRouter = Router();
 
@@ -634,6 +638,29 @@ router.get(
     } catch (error) {
       next(error);
     }
+  },
+);
+
+router.get(
+  "/clientes/comportamiento-pago",
+  requierePermiso("clientes_credito", "ver"),
+  async (_req, res, next) => {
+    try {
+      res.json(ListarComportamientoPagoClientesResponse.parse(await loadPaymentBehaviorList()));
+    } catch (error) { next(error); }
+  },
+);
+
+router.get(
+  "/clientes/:id/comportamiento-pago",
+  requierePermiso("clientes_credito", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = ObtenerComportamientoPagoClienteParams.parse(req.params);
+      const item = (await loadPaymentBehaviorList()).find((row) => row.clienteId === id);
+      if (!item) { res.status(404).json({ error: "Cliente no encontrado." }); return; }
+      res.json(ObtenerComportamientoPagoClienteResponse.parse(item));
+    } catch (error) { next(error); }
   },
 );
 

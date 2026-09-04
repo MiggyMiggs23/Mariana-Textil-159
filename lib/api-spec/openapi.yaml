@@ -3468,6 +3468,40 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+  /clientes/comportamiento-pago:
+    get:
+      operationId: listarComportamientoPagoClientes
+      tags: [clientes]
+      summary: Lista el comportamiento de pago proyectado desde el libro mayor FIFO
+      responses:
+        "200":
+          description: Comportamiento por cliente
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ComportamientoPagoCliente" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /clientes/{id}/comportamiento-pago:
+    get:
+      operationId: obtenerComportamientoPagoCliente
+      tags: [clientes]
+      summary: Obtiene el comportamiento de pago compartido de un cliente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: number }
+      responses:
+        "200":
+          description: Comportamiento del cliente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ComportamientoPagoCliente" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /tickets/pendientes:
     get:
       operationId: listarTicketsPendientes
@@ -10753,6 +10787,25 @@ components:
           minItems: 1
           items:
             $ref: "#/components/schemas/TicketLineaInput"
+    ComportamientoPagoCliente:
+      type: object
+      required: [clienteId, clienteNombre, percentage, settledNotes, evaluatedNotes, onTimeNotes, overdueOpenNotes, openNotDueNotes, color, sufficientHistory, utilizationPercent, suggestCreditIncrease, period, explanation]
+      properties:
+        clienteId: { type: number }
+        clienteNombre: { type: string }
+        percentage: { type: number }
+        settledNotes: { type: number }
+        evaluatedNotes: { type: number }
+        onTimeNotes: { type: number }
+        overdueOpenNotes: { type: number }
+        openNotDueNotes: { type: number }
+        color: { type: string, enum: [GREEN, YELLOW, RED, INSUFFICIENT] }
+        sufficientHistory: { type: boolean }
+        utilizationPercent: { type: number }
+        suggestCreditIncrease: { type: boolean }
+        suggestionReason: { type: ["string", "null"] }
+        period: { type: string }
+        explanation: { type: string }
     TicketPagoInput:
       type: object
       required: [formaPago, importe]

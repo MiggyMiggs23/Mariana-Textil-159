@@ -85,6 +85,7 @@ import type {
   ClientesAnalitica,
   ClientesCartera,
   ClientesResumen,
+  ComportamientoPagoCliente,
   ConciliacionRow,
   ConflictResponse,
   ContarAlertasEtiquetas200,
@@ -11784,6 +11785,160 @@ export function useListarTickets<TData = Awaited<ReturnType<typeof listarTickets
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListarTicketsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListarComportamientoPagoClientesUrl = () => {
+
+
+
+
+  return `/api/clientes/comportamiento-pago`
+}
+
+/**
+ * @summary Lista el comportamiento de pago proyectado desde el libro mayor FIFO
+ */
+export const listarComportamientoPagoClientes = async ( options?: Parameters<typeof customFetch>[1]): Promise<ComportamientoPagoCliente[]> => {
+
+  return customFetch<ComportamientoPagoCliente[]>(getListarComportamientoPagoClientesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarComportamientoPagoClientesQueryKey = () => {
+    return [
+    `/api/clientes/comportamiento-pago`
+    ] as const;
+    }
+
+
+export const getListarComportamientoPagoClientesQueryOptions = <TData = Awaited<ReturnType<typeof listarComportamientoPagoClientes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarComportamientoPagoClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarComportamientoPagoClientesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarComportamientoPagoClientes>>> = ({ signal }) => listarComportamientoPagoClientes({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarComportamientoPagoClientes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarComportamientoPagoClientesQueryResult = NonNullable<Awaited<ReturnType<typeof listarComportamientoPagoClientes>>>
+export type ListarComportamientoPagoClientesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista el comportamiento de pago proyectado desde el libro mayor FIFO
+ */
+
+export function useListarComportamientoPagoClientes<TData = Awaited<ReturnType<typeof listarComportamientoPagoClientes>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarComportamientoPagoClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarComportamientoPagoClientesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getObtenerComportamientoPagoClienteUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/comportamiento-pago`
+}
+
+/**
+ * @summary Obtiene el comportamiento de pago compartido de un cliente
+ */
+export const obtenerComportamientoPagoCliente = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ComportamientoPagoCliente> => {
+
+  return customFetch<ComportamientoPagoCliente>(getObtenerComportamientoPagoClienteUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getObtenerComportamientoPagoClienteQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/comportamiento-pago`
+    ] as const;
+    }
+
+
+export const getObtenerComportamientoPagoClienteQueryOptions = <TData = Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getObtenerComportamientoPagoClienteQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>> = ({ signal }) => obtenerComportamientoPagoCliente(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ObtenerComportamientoPagoClienteQueryResult = NonNullable<Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>>
+export type ObtenerComportamientoPagoClienteQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene el comportamiento de pago compartido de un cliente
+ */
+
+export function useObtenerComportamientoPagoCliente<TData = Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof obtenerComportamientoPagoCliente>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getObtenerComportamientoPagoClienteQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

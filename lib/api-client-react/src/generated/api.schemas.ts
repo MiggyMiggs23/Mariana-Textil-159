@@ -5022,6 +5022,35 @@ export interface TicketInput {
   lineas: TicketLineaInput[];
 }
 
+export type ComportamientoPagoClienteColor = typeof ComportamientoPagoClienteColor[keyof typeof ComportamientoPagoClienteColor];
+
+
+export const ComportamientoPagoClienteColor = {
+  GREEN: 'GREEN',
+  YELLOW: 'YELLOW',
+  RED: 'RED',
+  INSUFFICIENT: 'INSUFFICIENT',
+} as const;
+
+export interface ComportamientoPagoCliente {
+  clienteId: number;
+  clienteNombre: string;
+  percentage: number;
+  settledNotes: number;
+  evaluatedNotes: number;
+  onTimeNotes: number;
+  overdueOpenNotes: number;
+  openNotDueNotes: number;
+  color: ComportamientoPagoClienteColor;
+  sufficientHistory: boolean;
+  utilizationPercent: number;
+  suggestCreditIncrease: boolean;
+  /** @nullable */
+  suggestionReason?: string | null;
+  period: string;
+  explanation: string;
+}
+
 export interface TicketPagoInput {
   formaPago: FormaPagoTicket;
   /** @exclusiveMinimum 0 */
