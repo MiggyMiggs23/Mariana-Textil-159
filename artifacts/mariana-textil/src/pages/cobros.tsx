@@ -1180,7 +1180,6 @@ function CobrosContent() {
   const canManageCash =
     canViewCashManagement &&
     hasPermission(currentUser, Modules.CORTES, "crear");
-  const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [cobroOpen, setCobroOpen] = useState(false);
@@ -1259,11 +1258,6 @@ function CobrosContent() {
     document.body.classList.add("print-corte");
     window.print();
     window.setTimeout(() => document.body.classList.remove("print-corte"), 500);
-  };
-  const handlePrintHojaVentas = () => {
-    document.body.classList.add("print-hoja-ventas");
-    window.print();
-    window.setTimeout(() => document.body.classList.remove("print-hoja-ventas"), 500);
   };
 
   const handleCerrarCaja = () => {
@@ -1569,7 +1563,6 @@ function CobrosContent() {
         }}
         onCobrado={() => {
           setCobroOpen(false);
-          const printedTicketId = selectedTicketId;
           setSelectedTicketId(null);
           queryClient.invalidateQueries({
             queryKey: getListarTicketsCajaQueryKey({
@@ -1579,9 +1572,6 @@ function CobrosContent() {
           queryClient.invalidateQueries({
             queryKey: getObtenerCorteCajaQueryKey(sesionId),
           });
-          if (printedTicketId) {
-            setLocation(`/tickets/${printedTicketId}?print=3`);
-          }
         }}
       />
       <AutorizacionNotaDialog
@@ -1794,14 +1784,6 @@ function CobrosContent() {
             >
               Imprimir Corte
             </Button>
-            {closedCorte && corteData && (
-              <Button
-                variant="outline"
-                onClick={handlePrintHojaVentas}
-              >
-                Imprimir hoja de ventas
-              </Button>
-            )}
             {!closedCorte && canManageCash ? <Button
               onClick={handleCerrarCaja}
               disabled={cerrarCaja.isPending || !efectivoContado}
