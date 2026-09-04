@@ -47,6 +47,8 @@ La revisión del flujo encontró además un panel de validación y un bloqueo de
 
 Diagnóstico de Precios: la consulta sí devolvía todo el catálogo, sin paginación ni filtro por sitio o precio. La respuesta completa fallaba al validarse porque `PrecioProducto.precioLista` era no nulo en OpenAPI aunque la columna y la proyección permiten `null`; un catálogo de 566 elementos con valores nulos, por tanto, no llegaba a renderizar. La captura individual existente admite el primer precio y escribe `precio_historial` en la misma transacción. No existe captura en lote y no se agregó en este bloque.
 
+**Movimientos → ticket:** el único enlace de ticket de cada representación del renglón se construye exclusivamente con `ticketId`, el ID primario real validado contra un ticket existente; nunca con el índice visual ni con el folio. Los movimientos sin ticket real no muestran enlace. Búsqueda, filtros y página usan el estado de la entrada del historial SPA, por lo que Atrás restaura la vista y una entrada directa o recargada conserva el estado de `history.state` cuando existe, con valores seguros por omisión cuando no existe.
+
 # Mariana Textil
 
 ## Corrección — Bloque 4: Tabulares

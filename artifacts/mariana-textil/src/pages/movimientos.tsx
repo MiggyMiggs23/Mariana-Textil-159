@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
+import { hasPermission, Modules } from "@/lib/permisos";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetKardex,
@@ -25,7 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
-  Search, Download, ChevronDown, Filter, History, Loader2, AlertCircle
+  Search, Download, ChevronDown, Filter, History, Loader2, AlertCircle, ExternalLink
 } from "lucide-react";
 
 const TIMEZONE = "America/Mexico_City";
@@ -87,8 +89,8 @@ export default function Movimientos() {
   const { data: user } = useGetCurrentUser();
   const { toast } = useToast();
 
-  const [searchInput, setSearchInput] = useState("");
-  const [filters, setFilters] = useState<{
+  const [searchInput, setSearchInput] = useHistoryEntryState("movimientos.search-input", "");
+  const [filters, setFilters] = useHistoryEntryState<{
     buscar: string;
     desde: string;
     hasta: string;
@@ -98,7 +100,7 @@ export default function Movimientos() {
     tipos: TipoMovimiento[];
     modo?: "TODO_LO_QUE_SALIO";
     incluirUbicacionesInactivas: boolean;
-  }>({
+  }>("movimientos.filters", {
     buscar: "",
     desde: "",
     hasta: "",
@@ -110,8 +112,29 @@ export default function Movimientos() {
     incluirUbicacionesInactivas: false
   });
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useHistoryEntryState("movimientos.page", 1);
   const [isExporting, setIsExporting] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (![...params.keys()].some((key) => key !== "returnTo")) return;
+    const tipos = params.get("tipos")?.split(",").filter(Boolean) as TipoMovimiento[] | undefined;
+    setSearchInput(params.get("buscar") ?? "");
+    setFilters((current) => ({
+      ...current,
+      buscar: params.get("buscar") ?? "",
+      desde: params.get("desde") ?? "",
+      hasta: params.get("hasta") ?? "",
+      ubicacionId: params.get("ubicacionId") ?? "all",
+      productoId: params.get("productoId") ?? "all",
+      usuarioId: params.get("usuarioId") ?? "all",
+      tipos: tipos ?? [],
+      modo: params.get("modo") === "TODO_LO_QUE_SALIO" ? "TODO_LO_QUE_SALIO" : undefined,
+      incluirUbicacionesInactivas: params.get("incluirUbicacionesInactivas") === "true",
+    }));
+    const requestedPage = Number(params.get("page"));
+    if (Number.isInteger(requestedPage) && requestedPage > 0) setPage(requestedPage);
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -124,6 +147,19 @@ export default function Movimientos() {
   }, [searchInput, filters.buscar]);
 
   const showLocationFilter = user?.rol === "ADMIN" || user?.alcanceConsulta === "TODAS";
+  const canReadTicket =
+    user?.rol === "ADMIN" ||
+    user?.rol === "CONTADOR" ||
+    user?.rol === "SISTEMAS" ||
+    ((hasPermission(user, Modules.COBROS_PAGOS, "ver") ||
+      hasPermission(user, Modules.POS, "ver")) &&
+      user?.ubicacion?.id != null);
+  const canReadTicketAtLocation = (ubicacionId: number) =>
+    canReadTicket &&
+    (user?.rol === "ADMIN" ||
+      user?.rol === "CONTADOR" ||
+      user?.rol === "SISTEMAS" ||
+      user?.ubicacion?.id === ubicacionId);
 
   const filterParamsList = {
     incluirUbicacionesInactivas: filters.incluirUbicacionesInactivas || undefined,
@@ -147,6 +183,20 @@ export default function Movimientos() {
   };
 
   const queryParams = { ...filterParams, page, pageSize: 100 };
+  const movimientosReturnUrl = `/movimientos?${new URLSearchParams(
+    Object.entries({
+      buscar: filters.buscar || undefined,
+      desde: filters.desde || undefined,
+      hasta: filters.hasta || undefined,
+      ubicacionId: filters.ubicacionId !== "all" ? filters.ubicacionId : undefined,
+      productoId: filters.productoId !== "all" ? filters.productoId : undefined,
+      usuarioId: filters.usuarioId !== "all" ? filters.usuarioId : undefined,
+      tipos: filters.tipos.length ? filters.tipos.join(",") : undefined,
+      modo: filters.modo,
+      incluirUbicacionesInactivas: filters.incluirUbicacionesInactivas ? "true" : undefined,
+      page: String(page),
+    }).filter(([, value]) => value != null) as [string, string][]
+  ).toString()}`;
 
   const { data, isLoading, isError, isFetching } = useGetKardex(
     queryParams,
@@ -460,6 +510,7 @@ export default function Movimientos() {
                         <TableHead className="text-right whitespace-nowrap">Cantidad</TableHead>
                         <TableHead className="whitespace-nowrap">Usuario</TableHead>
                         <TableHead className="whitespace-nowrap">Documento</TableHead>
+                        <TableHead className="w-[90px] text-right">Ticket</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -523,6 +574,17 @@ export default function Movimientos() {
                                 </span>
                               )}
                             </TableCell>
+                            <TableCell className="align-top py-3 text-right">
+                              {canReadTicketAtLocation(row.ubicacionId) && row.ticketId != null && (
+                                <Link
+                                  href={`/tickets/${row.ticketId}?returnTo=${encodeURIComponent(movimientosReturnUrl)}`}
+                                  className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                                  data-testid={`link-ticket-${row.ticketId}`}
+                                >
+                                  Abrir <ExternalLink className="h-3.5 w-3.5" />
+                                </Link>
+                              )}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -553,6 +615,17 @@ export default function Movimientos() {
                           </div>
                            <div className="text-[11px] font-medium text-muted-foreground mt-1">Saldo: {formatNumber(row.saldoPosterior, { kind: "quantity" })}</div>
                         </div>
+                        {canReadTicketAtLocation(row.ubicacionId) && row.ticketId != null && (
+                          <div className="flex justify-end border-t border-border/50 pt-3">
+                            <Link
+                              href={`/tickets/${row.ticketId}?returnTo=${encodeURIComponent(movimientosReturnUrl)}`}
+                              className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                              data-testid={`mobile-link-ticket-${row.ticketId}`}
+                            >
+                              Abrir ticket <ExternalLink className="h-3.5 w-3.5" />
+                            </Link>
+                          </div>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-2 gap-x-3 gap-y-3 text-sm pt-3 border-t border-border/50">

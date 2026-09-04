@@ -105,7 +105,13 @@ export default function TicketDetailPage() {
   const cancelarTicket = useCancelarTicket();
   const autoPrintStarted = useRef(false);
   const reimprimirNota = useReimprimirClienteNota();
-  const returnPath = user?.rol === Role.CAJA ? "/cobros" : "/pos";
+  const requestedReturnPath =
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("returnTo");
+  const returnPath = requestedReturnPath?.startsWith("/movimientos")
+    ? requestedReturnPath
+    : user?.rol === Role.CAJA ? "/cobros" : "/pos";
   const canCancel =
     user?.rol === Role.ADMIN ||
     (user != null && hasPermission(user, Modules.POS, "crear"));

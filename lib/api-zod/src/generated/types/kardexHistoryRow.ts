@@ -34,6 +34,11 @@ export interface KardexHistoryRow {
   documentoEtiqueta: string | null;
   /** @nullable */
   documentoRuta: string | null;
+  /**
+     * ID primario real del ticket existente que originó el movimiento.
+     * @nullable
+     */
+  ticketId: number | null;
   /** @nullable */
   destinoEtiqueta: string | null;
   referenciaRolloRuta: string;

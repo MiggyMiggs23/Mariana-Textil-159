@@ -333,12 +333,19 @@ async function enrichDocuments(rows: JoinedMovement[]) {
     const salidaInmediata =
       (reference.tipo === "SALIDA" || reference.tipo === "RECEPCION_SALIDA") &&
       (row.tipo === "TRANSFERENCIA_SALIDA" || row.tipo === "TRANSFERENCIA_ENTRADA");
+    const referencedTicketId =
+      reference.tipo === "TICKET" &&
+      reference.id &&
+      ticketMap.has(Number(reference.id))
+        ? Number(reference.id)
+        : null;
     return {
       ...row,
       createdAt: row.createdAt.toISOString(),
       revisadoAt: row.revisadoAt?.toISOString() ?? null,
       documentoTipo: reference.tipo ?? null,
       documentoId: reference.id ?? null,
+      ticketId: referencedTicketId,
       movimientoOrigenId: row.movimientoOrigenId ?? null,
       justificacion: row.justificacion ?? null,
       revisadoPor: row.revisadoPor ?? null,

@@ -3978,6 +3978,7 @@ export const GetKardexResponse = zod.object({
   "documentoId": zod.string().nullable(),
   "documentoEtiqueta": zod.string().nullable(),
   "documentoRuta": zod.string().nullable(),
+  "ticketId": zod.number().nullable().describe('ID primario real del ticket existente que originó el movimiento.'),
   "destinoEtiqueta": zod.string().nullable(),
   "referenciaRolloRuta": zod.string(),
   "movimientoOrigenId": zod.number().nullable(),

@@ -355,6 +355,8 @@ test("history covers types, order, pagination, search, documents and safe fields
   assert.match(body.movimientos.find((row: any) => row.tipo === "RECEPCION").documentoRuta, /\/entradas\/\d+\/documento/);
   const sale = body.movimientos.find((row: any) => row.tipo === "VENTA");
   assert.equal(sale.documentoRuta, `/tickets/${ids.tickets[0]}`);
+  assert.equal(sale.ticketId, ids.tickets[0]);
+  assert.notEqual(sale.ticketId, body.movimientos.indexOf(sale) + 1);
   assert.equal(sale.documentoEtiqueta, `Ticket ${ticketFolio}`);
   const cancellation = body.movimientos.find((row: any) => row.tipo === "CANCELACION");
   assert.equal(cancellation.documentoRuta, `/tickets/${ids.tickets[0]}`);
@@ -367,6 +369,7 @@ test("history covers types, order, pagination, search, documents and safe fields
   const stale = body.movimientos.find((row: any) => row.tipo === "ALTA");
   assert.equal(stale.documentoTipo, "TICKET");
   assert.equal(stale.documentoRuta, null);
+  assert.equal(stale.ticketId, null);
   assert.equal(stale.documentoEtiqueta, null);
 
   const page = await request(

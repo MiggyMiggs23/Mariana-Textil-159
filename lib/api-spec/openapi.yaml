@@ -9078,6 +9078,7 @@ components:
           documentoId,
           documentoEtiqueta,
           documentoRuta,
+          ticketId,
           destinoEtiqueta,
           referenciaRolloRuta,
           movimientoOrigenId,
@@ -9110,6 +9111,9 @@ components:
         documentoId: { type: ["string", "null"] }
         documentoEtiqueta: { type: ["string", "null"] }
         documentoRuta: { type: ["string", "null"] }
+        ticketId:
+          type: ["number", "null"]
+          description: ID primario real del ticket existente que originó el movimiento.
         destinoEtiqueta: { type: ["string", "null"] }
         referenciaRolloRuta: { type: string }
         movimientoOrigenId: { type: ["number", "null"] }
