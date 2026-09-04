@@ -1,0 +1,100 @@
+# PRODUCTOS — Confirmar el borrado con contraseña en vez de texto exacto
+
+Un commit. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## El cambio
+
+Hoy, borrar un producto pide escribir el texto exacto —"Borrega / Base (BOR-BAS2)"— en un campo. Es tedioso, sobre todo en teléfono, y con SKU largos se vuelve pesado.
+
+**Sustitúyelo por usuario y contraseña de ADMIN.**
+
+- Dos campos: **usuario** y **contraseña**
+- La contraseña con el control de mostrar y ocultar que ya se usa en el resto del sistema
+- El diálogo sigue mostrando **qué producto se va a borrar** —tela, color y SKU—, para que quien confirma sepa exactamente qué está borrando
+- **Quita el campo de texto exacto** por completo
+
+**Reusa el mecanismo de verificación de credenciales que ya existe** en el sistema. No construyas uno nuevo.
+
+---
+
+## El punto que hay que resolver: el bloqueo por intentos fallidos
+
+El sistema bloquea una cuenta tras **cinco contraseñas fallidas en 15 minutos**, contadas por usuario e IP.
+
+Si este diálogo alimenta ese mismo contador, un ADMIN que teclee mal la contraseña unas cuantas veces borrando productos **se bloquea a sí mismo el acceso al sistema completo**. Con la carga de catálogo que viene, va a pasar.
+
+**Decide cómo evitarlo, justifícalo y anótalo.** Las opciones razonables:
+
+- Que las confirmaciones fallidas **no cuenten** para el bloqueo de acceso
+- Que tengan **su propio contador**, con su propio umbral y su propio efecto
+
+Lo que **no** puede pasar es que equivocarse en un diálogo de confirmación cierre la sesión del ADMIN.
+
+Si eliges un contador propio, define qué ocurre al agotarse: **no debe cerrar la sesión ni bloquear el acceso**, solo impedir el borrado por un rato.
+
+Revisa si hay otros diálogos que pidan contraseña y **repórtalos**: si comparten el mismo contador, tienen el mismo problema.
+
+---
+
+## Un defecto visible en el diálogo actual
+
+El texto dice: *"Esta acción no se puede deshacer. Esta acción no se puede deshacer."*
+
+**La frase está duplicada.** Córrígela.
+
+Revisa si esa duplicación viene del componente de confirmación compartido. Si es así, **repórtalo**, porque afectaría a todos los diálogos que lo usan.
+
+---
+
+## Lo que no cambia
+
+- **La regla de borrado sigue igual:** existencia en cero en todos los sitios **y** cero movimientos históricos. La contraseña confirma quién eres, **no autoriza saltarse la regla.**
+- Si el producto no cumple, el botón sigue **deshabilitado con la razón**, y el diálogo ni siquiera se abre.
+- **Solo ADMIN.**
+- El borrado sigue quedando en **auditoría**, ahora también con quién confirmó las credenciales.
+- El SKU borrado **no se reusa**.
+
+---
+
+## Una alternativa que debes evaluar
+
+Como el usuario ya inició sesión y solo ADMIN ve este botón, **pedir únicamente la contraseña del usuario en sesión** es más simple: un campo menos y ninguna ambigüedad sobre de quién son las credenciales.
+
+Pedir usuario y contraseña permitiría que un ADMIN distinto autorice desde la sesión de otro, lo cual puede ser deseable o no.
+
+**Impleméntalo con usuario y contraseña**, que es lo pedido, pero **reporta tu recomendación** entre las dos formas para poder decidirlo después.
+
+---
+
+## Verificación
+
+- El diálogo pide usuario y contraseña, **sin campo de texto exacto**
+- La contraseña tiene control de mostrar y ocultar
+- Se sigue viendo tela, color y SKU del producto a borrar
+- Credenciales correctas borran el producto
+- Credenciales incorrectas lo rechazan con mensaje claro **y no borran nada**
+- **Cinco intentos fallidos en el diálogo no bloquean el acceso del ADMIN al sistema**, verificado cerrando y volviendo a entrar
+- Está anotada la decisión sobre el contador y su justificación
+- La frase duplicada está corregida, y está reportado si venía del componente compartido
+- Están reportados otros diálogos que pidan contraseña y compartan contador
+- Un producto que no cumple la regla sigue con el botón deshabilitado y su razón
+- **Las credenciales no permiten saltarse la regla de borrado**
+- El borrado queda en auditoría con quién confirmó
+- Está reportada la recomendación entre usuario+contraseña y solo contraseña
+- Revisado en teléfono
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de productos y seguridad pasan enteras; si alguna afirmaba la confirmación por texto exacto, **actualízala, no la borres**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Borrar un producto se confirma con credenciales de ADMIN**, no con texto exacto. La contraseña **confirma quién está en el teclado**; no autoriza saltarse la regla de borrado, que sigue exigiendo existencia en cero y cero movimientos históricos.
+>
+> **Los intentos fallidos en un diálogo de confirmación no alimentan el bloqueo de acceso.** Cinco errores tecleando en un diálogo no pueden cerrarle la sesión al ADMIN ni dejarlo fuera del sistema 15 minutos; el bloqueo por intentos fallidos existe para el inicio de sesión, no para confirmar acciones.
