@@ -181,6 +181,17 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Se retienen las funciones de núcleo `moverRollo` y `recibirTransferencia`, porque el ciclo activo de Salidas las invoca. También se retienen las rutas e interfaz de Salidas, los enums del kardex y todo el ciclo de vida e interfaz de Contenedores.
 - El único alcance retirado fue el HTTP tombstone y su contrato generado; no se modificaron las superficies de Contenedores.
 
+## Bloque 3 — Regla de no solapamiento en Ticket de Venta
+
+- Cada renglón del carrito POS debe conservar celdas explícitas y separadas
+  para identidad (nombre/SKU/badges), precio unitario con su etiqueta,
+  cantidad/unidad, importe y borrar. Los datos largos pueden partirse o
+  truncarse dentro de su propia celda, pero nunca desplazar, cubrir ni invadir
+  el importe, control de cantidad, badge o acción de otro renglón.
+- La regla aplica a NORMAL y METREADO, incluida la expansión de series y los
+  estados de validación/error. Se debe comprobar en navegador autenticado a
+  1366×768 con varias líneas y los nombres/SKU más largos del catálogo.
+
 ## Parte 2, Bloque 2 — Salida a mostrador
 
 - `salidaMostrador` cambia `DISPONIBLE → MOSTRADOR`, deja `cantidad_actual = 0` e inserta el movimiento histórico `SALIDA_MOSTRADOR` por la cantidad completa negativa dentro de la misma transacción.

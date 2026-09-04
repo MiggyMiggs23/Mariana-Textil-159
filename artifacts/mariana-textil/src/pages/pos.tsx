@@ -245,50 +245,56 @@ function CartLineItem({
 
   return (
     <div className={`border-b py-3 last:border-0 ${isMetreado ? 'bg-amber-50/30' : ''}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex-1 overflow-hidden">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-sm truncate">
+      <div
+        className="grid grid-cols-[minmax(0,1fr)_6rem_5rem_6rem_2rem] items-start gap-2"
+        data-testid="pos-cart-line"
+      >
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="min-w-0 break-words font-semibold text-sm">
               {item.producto.tela} - {item.producto.color}
             </span>
-            <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm ${isMetreado ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
+            <span className={`shrink-0 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm ${isMetreado ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
               {isMetreado ? 'Metreado' : 'Rollo'}
             </span>
              {isMetreado && (
                <>
                  <span
-                   className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm bg-violet-100 text-violet-800"
+                    className="max-w-full truncate text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm bg-violet-100 text-violet-800"
                    data-testid={`precio-tipo-${item.producto.id}`}
+                    title={item.meteredPriceTier === "MAYOREO"
+                      ? `Mayoreo (${meteredThreshold} ${meteredUnit} o más)`
+                      : `Menudeo (menos de ${meteredThreshold} ${meteredUnit})`}
                  >
                    {item.meteredPriceTier === "MAYOREO"
                       ? `Mayoreo (${meteredThreshold} ${meteredUnit} o más)`
                       : `Menudeo (menos de ${meteredThreshold} ${meteredUnit})`}
                  </span>
                  {item.meteredPriceTierChanged && (
-                   <span className="text-xs font-medium text-violet-800" role="status">
+                  <span className="min-w-0 text-xs font-medium text-violet-800" role="status">
                      Precio sugerido actualizado al cruzar el umbral.
                    </span>
                  )}
                </>
              )}
              {!isMetreado && item.rollos && (
-               <span className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                <span className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
                  {item.rollos.length} {item.rollos.length === 1 ? "rollo" : "rollos"}
               </span>
             )}
           </div>
-          <div className="text-xs text-muted-foreground mt-0.5">
+          <div className="mt-0.5 break-all text-xs text-muted-foreground">
             {item.producto.sku}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="w-24">
-            <Label className="text-[10px] text-muted-foreground">
+        <div className="min-w-0">
+            <Label className="block text-[10px] text-muted-foreground" htmlFor={`precio-${lineKey}`}>
               Precio / {formatUnit(item.producto.unidad)}
             </Label>
             <div className="relative">
               <Input
+                id={`precio-${lineKey}`}
                 type="number"
                 min="0.01"
                 step="0.01"
@@ -304,10 +310,14 @@ function CartLineItem({
                 <Loader2 className="absolute left-2 top-2 h-4 w-4 animate-spin text-muted-foreground" />
               )}
             </div>
-          </div>
+        </div>
           {isMetreado ? (
-            <div className="w-20">
+            <div className="min-w-0 text-right">
+              <Label className="block text-[10px] text-muted-foreground" htmlFor={`cantidad-${lineKey}`}>
+                Cant. / {meteredUnit}
+              </Label>
               <Input
+                id={`cantidad-${lineKey}`}
                 type="number"
                 min={requiresWholeQuantity ? "1" : "0.001"}
                 step={requiresWholeQuantity ? "1" : "0.001"}
@@ -321,28 +331,28 @@ function CartLineItem({
                     onChangeQuantity(quantity);
                   }
                 }}
-                className="h-8 text-right font-mono"
+                className="h-8 w-full text-right font-mono"
               />
             </div>
            ) : (
-             <div className="font-mono text-sm whitespace-nowrap">
+              <div className="self-end text-right font-mono text-sm whitespace-nowrap">
                {formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.producto.unidad)}
             </div>
           )}
 
-          <div className="w-24 text-right font-bold">
+          <div className="self-end text-right font-bold whitespace-nowrap">
             {formatNumber(cartLineSubtotalCents(item) / 100, { kind: "money" })}
           </div>
 
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-destructive"
+            className="h-8 w-8 shrink-0 text-destructive"
             onClick={onRemove}
+            aria-label={`Quitar ${item.producto.tela} - ${item.producto.color} del ticket`}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
-        </div>
       </div>
       {!isMetreado && item.rollos && (
         <div className="mt-2">
@@ -365,16 +375,16 @@ function CartLineItem({
           {expanded && (
             <div className="mt-2 space-y-1 rounded-md bg-muted/50 p-2">
               {item.rollos.map((rollo: PosRolloDisponible) => (
-                <div key={rollo.id} className="flex items-center justify-between gap-2 text-xs">
-                  <span className="font-mono">{rollo.serie}</span>
-                  <span className="text-muted-foreground">
+                <div key={rollo.id} className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 text-xs">
+                  <span className="truncate font-mono" title={rollo.serie}>{rollo.serie}</span>
+                  <span className="whitespace-nowrap text-muted-foreground">
                     {formatNumber(rollo.cantidadActual, { kind: "quantity" })} {formatUnit(rollo.unidad)}
                   </span>
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-7 px-2 text-destructive"
+                    className="h-7 shrink-0 px-2 text-destructive"
                     onClick={() => item.onRemoveRollo(rollo.id)}
                     aria-label={`Quitar rollo ${rollo.serie}`}
                   >
