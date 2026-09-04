@@ -47,7 +47,7 @@ import {
 } from "@/lib/ticket-lines";
 import { MonochromeBrandLogo } from "@/components/monochrome-brand-logo";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
-import { absoluteAppUrl, printWhenReady, waitForPrintableAssets } from "@/lib/print";
+import { absoluteAppUrl, printThermalTicket, printWhenReady } from "@/lib/print";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
@@ -104,6 +104,7 @@ export default function TicketDetailPage() {
 
   const cancelarTicket = useCancelarTicket();
   const autoPrintStarted = useRef(false);
+  const thermalPrintRoot = useRef<HTMLDivElement>(null);
   const reimprimirNota = useReimprimirClienteNota();
   const requestedReturnPath =
     typeof window === "undefined"
@@ -126,14 +127,14 @@ export default function TicketDetailPage() {
       return;
     autoPrintStarted.current = true;
 
-    const printClass = isNota ? "print-credito" : "print-80mm";
-
     let cancelled = false;
-    document.body.classList.add(printClass);
-    void waitForPrintableAssets().then(() => {
+    const printPromise = isNota
+      ? printWhenReady("print-credito")
+      : thermalPrintRoot.current
+        ? printThermalTicket(thermalPrintRoot.current)
+        : Promise.reject(new Error("No se encontró el ticket térmico."));
+    void printPromise.then(() => {
       if (cancelled) return;
-      window.print();
-      document.body.classList.remove(printClass);
       window.history.replaceState(
         window.history.state,
         "",
@@ -142,12 +143,13 @@ export default function TicketDetailPage() {
     });
     return () => {
       cancelled = true;
-      document.body.classList.remove(printClass);
     };
   }, [ticket, isPrintReady, isNota, printTabulares]);
 
   const handlePrint80mm = () => {
-    void printWhenReady("print-80mm");
+    if (thermalPrintRoot.current) {
+      void printThermalTicket(thermalPrintRoot.current);
+    }
   };
 
   const handlePrintCarta = () => {
@@ -584,9 +586,9 @@ export default function TicketDetailPage() {
       {/* --- ESTRUCTURAS DE IMPRESIÓN --- */}
 
       {/* 80mm Ticket */}
-      <div className="hidden print-80mm-only print-ticket-container">
+      <div ref={thermalPrintRoot} className="hidden print-80mm-only print-ticket-container">
         {(["CLIENTE", "CAJA", "ADMINISTRACIÓN"] as const).map((copyLabel) => (
-          <section key={copyLabel} className="ticket-copy">
+          <section key={copyLabel} className="ticket-copy" data-thermal-page={copyLabel}>
             <div className="relative mb-4 text-center">
               <div className="mb-2 border-2 border-black bg-black px-2 py-1 text-sm font-black tracking-[0.18em] text-white">
                 {copyLabel}
@@ -611,7 +613,7 @@ export default function TicketDetailPage() {
 
             <div className="border-t border-black">
               {printProductBlocks.map(({ line, modality }) => (
-                <div key={`${modality}-${line.key}`} className="border-b border-dashed border-black py-2 text-xs">
+                <div key={`${modality}-${line.key}`} className="ticket-product-block border-b border-dashed border-black py-2 text-xs">
                   <h2 className="text-sm font-black">{line.telaProducto} {line.colorProducto}</h2>
                   <div className="my-1 bg-black px-2 py-1 text-center font-black text-white">
                     VENTA: {modality}
@@ -635,7 +637,7 @@ export default function TicketDetailPage() {
               ))}
             </div>
 
-            <div className="mt-2 border-2 border-black p-2 text-sm font-black">
+            <div className="ticket-total mt-2 border-2 border-black p-2 text-sm font-black">
               <div className="flex justify-between gap-3">
                 <span>TOTAL GENERAL:</span>
                 <span>{formatNumber(ticket.total, { kind: "money" })}</span>
@@ -661,6 +663,7 @@ export default function TicketDetailPage() {
             <section
               key={group.color}
               className="tabular-strip-page mt-4 border border-black p-3 text-xs"
+              data-thermal-page={`TABULAR-${group.color}`}
               aria-label={`Tabular color ${group.color}`}
             >
               <h2 className="text-center text-sm font-bold uppercase">

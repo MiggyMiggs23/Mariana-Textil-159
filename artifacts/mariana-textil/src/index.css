@@ -223,6 +223,24 @@
   display: none;
 }
 
+body.measure-thermal-ticket .print-ticket-container {
+  display: block !important;
+  position: absolute !important;
+  left: -10000px;
+  top: 0;
+  width: 72mm;
+  visibility: hidden;
+  pointer-events: none;
+  font-family: monospace;
+}
+
+body.measure-thermal-ticket .ticket-copy,
+body.measure-thermal-ticket .tabular-strip-page {
+  display: block;
+  width: 72mm;
+  margin: 0;
+}
+
 @media print {
   html,
   body,
@@ -364,14 +382,6 @@
     size: 148mm 210mm;
     margin: 0;
   }
-  @page ticket-page {
-    size: 80mm 250mm;
-    margin: 4mm;
-  }
-  @page tabular-page {
-    size: 80mm 250mm;
-    margin: 4mm;
-  }
   @page carta-page {
     size: 140mm 216mm;
     margin: 8mm;
@@ -499,7 +509,6 @@
   }
 
   .print-ticket-container {
-    page: ticket-page;
     width: 72mm;
     margin: 0 auto;
     font-family: monospace;
@@ -507,30 +516,34 @@
   }
 
   .ticket-copy {
-    page: ticket-page;
     break-after: page;
     break-inside: avoid-page;
     page-break-after: always;
     page-break-inside: avoid;
     width: 72mm;
+    margin: 0;
   }
 
-  .ticket-copy:last-child {
-    break-after: auto;
-    page-break-after: auto;
+  .ticket-product-block,
+  .ticket-total {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
   }
 
   .tabular-strip-page {
-    page: tabular-page;
-    break-before: page;
+    break-after: page;
     break-inside: avoid-page;
-    page-break-before: always;
+    page-break-after: always;
     page-break-inside: avoid;
     width: 72mm;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     color: black;
     font-family: monospace;
+  }
+
+  .print-ticket-container > [data-thermal-page]:last-child {
+    break-after: auto;
+    page-break-after: auto;
   }
 
   .print-document-container {

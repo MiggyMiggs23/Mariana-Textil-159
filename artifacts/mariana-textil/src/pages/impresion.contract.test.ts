@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { buildThermalPageRules } from "../lib/print";
 
 const root = new URL("../../../../", import.meta.url);
 
@@ -106,7 +107,7 @@ test("Cash and credit notes print exactly A5 portrait in two copies with interna
   assert.match(detail, /qrUrl=\{isInternal \? qrUrl : undefined\}/);
 
   // Auto-print routing based on nota vs thermal
-  assert.match(detail, /const printClass = isNota \? "print-credito" : "print-80mm";/);
+  assert.match(detail, /const printPromise = isNota[\s\S]*printWhenReady\("print-credito"\)[\s\S]*printThermalTicket\(thermalPrintRoot\.current\)/);
   assert.match(detail, /const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;/);
   assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
   assert.match(detail, /creditTicket && pageIndex === notePageCount - 1/);
@@ -198,11 +199,16 @@ test("Credit-note pagination keeps eight complete rows with its measured readabl
   );
 });
 
-test("Ticket and media carta declare their own physical page sizes", async () => {
+test("Ticket uses measured named pages and media carta keeps its physical size", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
-  assert.match(css, /@page ticket-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
-  assert.match(css, /\.print-ticket-container\s*\{[\s\S]*page:\s*ticket-page;/);
+  const print = await readFile(new URL("artifacts/mariana-textil/src/lib/print.ts", root), "utf8");
+  assert.doesNotMatch(css, /size:\s*80mm 250mm/);
+  assert.match(print, /await waitForPrintableAssets\(root\)/);
+  assert.match(print, /getBoundingClientRect\(\)\.height/);
+  assert.match(print, /page\.scrollHeight/);
+  assert.match(print, /@page thermal-page-\$\{index\}/);
+  assert.match(detail, /printThermalTicket\(thermalPrintRoot\.current\)/);
   assert.match(css, /body\.print-80mm #root \*:has\(\.print-80mm-only\)\s*\{[\s\S]*display:\s*contents !important;/);
   assert.match(css, /body\.print-80mm \.print-80mm-only\s*\{[\s\S]*position:\s*static;/);
   assert.match(css, /@page carta-page\s*\{[\s\S]*size:\s*140mm 216mm;/);
@@ -219,26 +225,59 @@ test("Thermal ticket renders vertical product blocks with unit-safe quantities",
   assert.match(detail, /<span>Precio:<\/span>/);
   assert.match(detail, /<span>Importe:<\/span>/);
   assert.match(detail, /TOTAL GENERAL:/);
-  assert.match(detail, /border-b border-dashed border-black/);
+  assert.match(detail, /ticket-product-block border-b border-dashed border-black/);
+  assert.match(detail, /ticket-total mt-2 border-2 border-black/);
 });
 
-test("three ticket copies print once and tabular add-ons remain single", async () => {
+test("three complete logical ticket pages precede single tabular add-ons", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
 
-  assert.match(css, /@page tabular-page\s*\{[\s\S]*size:\s*80mm 250mm;/);
-  assert.match(css, /\.tabular-strip-page\s*\{[\s\S]*page:\s*tabular-page;[\s\S]*break-before:\s*page;/);
   assert.match(detail, /get\("tabulares"\) === "1"/);
   assert.match(detail, /\(\["CLIENTE", "CAJA", "ADMINISTRACIÓN"\] as const\)\.map/);
-  assert.equal((detail.match(/window\.print\(\)/g) ?? []).length, 1);
+  assert.match(detail, /className="ticket-copy" data-thermal-page=\{copyLabel\}/);
+  assert.match(detail, /data-thermal-page=\{`TABULAR-\$\{group\.color\}`\}/);
   assert.match(css, /\.ticket-copy\s*\{[\s\S]*break-after:\s*page;/);
+  assert.match(css, /\.ticket-product-block,[\s\S]*\.ticket-total\s*\{[\s\S]*break-inside:\s*avoid-page;/);
+  assert.match(css, /\.print-ticket-container > \[data-thermal-page\]:last-child\s*\{[\s\S]*break-after:\s*auto;/);
   assert.match(detail, /tabularGroups\.map/);
+  assert.ok(detail.indexOf('["CLIENTE", "CAJA", "ADMINISTRACIÓN"]') < detail.indexOf("tabularGroups.map"));
   assert.match(detail, /Folio:/);
   assert.match(detail, /Color:/);
   assert.match(detail, /rollo\.serie/);
   assert.match(detail, /formatNumber\(rollo\.cantidad, \{ kind: "quantity" \}\)/);
   assert.match(detail, /formatUnit\(rollo\.unidad\)/);
   assert.match(detail, /group\.totales\[unidad\]/);
+});
+
+test("six distinct products stay assigned to each measured logical copy", () => {
+  const products = ["LINO", "SEDA", "GABARDINA", "MEZCLILLA", "SATIN", "MANTA"];
+  const logicalPages = ["CLIENTE", "CAJA", "ADMINISTRACIÓN"].map((copy) => ({
+    copy,
+    products: [...products],
+  }));
+
+  assert.equal(new Set(products).size, 6);
+  assert.deepEqual(
+    logicalPages.map(({ copy }) => copy),
+    ["CLIENTE", "CAJA", "ADMINISTRACIÓN"],
+  );
+  logicalPages.forEach(({ products: assignedProducts }) => {
+    assert.deepEqual(assignedProducts, products);
+  });
+
+  const rules = buildThermalPageRules([720, 720, 720, 180, 220]);
+  assert.deepEqual(
+    [...rules.matchAll(/@page (thermal-page-\d+)/g)].map((match) => match[1]),
+    [
+      "thermal-page-0",
+      "thermal-page-1",
+      "thermal-page-2",
+      "thermal-page-3",
+      "thermal-page-4",
+    ],
+  );
+  assert.doesNotMatch(rules, /250mm/);
 });
 
 test("Viaje isolates one exact letter page for printing", async () => {
