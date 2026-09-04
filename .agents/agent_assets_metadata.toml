@@ -420,3 +420,17 @@ mtime_ms = 1788407158963
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/56de7031-a590-4bda-b6d5-612622966105/55d5af2b-f4fc-437e-b168-c3b4be4ae0c2"
 storage_version_token = "1788407524061816"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "xyu8jOIH5k9N-lrRGwk1k"
+uri = "file://reports/2026-09-04-bloque-3-pos-cart-no-overlap.md"
+type = "text"
+title = "Reporte de tablas y carrito POS"
+description = "Auditoría del carrito corregido y riesgos documentados en Movimientos, Inventario, Historial de compras y Reportes."
+logical_id = "e25312d6-ad79-4556-acc3-58c5c6531592"
+content_hash = "sha256:dd477d17cc96983a48ff047a286a5a0f895ed061768e5e787119638376de1e67"
+size = 3334
+mtime_ms = 1788563255117
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e25312d6-ad79-4556-acc3-58c5c6531592/48eea1c3-8bce-4e47-b67c-03fb34da6b11"
+storage_version_token = "1788563312693237"
+content_type = "text/markdown"
