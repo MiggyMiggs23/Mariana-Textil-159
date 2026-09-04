@@ -1,0 +1,204 @@
+# TICKET Y ETIQUETAS — Rediseño del ticket, tres copias y ajuste de nombre en etiqueta
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## BLOQUE 1 — Quitar el QR y ajustar el logo del ticket
+
+### El QR se elimina
+
+**Quítalo por completo del ticket.** No lo escondas con CSS, no lo dejes condicionado: sale del código.
+
+El espacio que libera se aprovecha para el encabezado.
+
+### El logo a 2.5 cm
+
+Hoy mide cerca de **5 cm de ancho**. Debe medir **2.5 cm**, centrado en la parte superior.
+
+Es una medida física, en papel. Exprésala en centímetros o milímetros en el CSS de impresión y **verifícala con una regla sobre un ticket impreso**, no midiendo la vista previa en pantalla.
+
+---
+
+## BLOQUE 2 — El bloque de producto se reorganiza
+
+El formato actual —tabla con columnas Producto, Rollos e Importe— se sustituye por un **bloque vertical por producto**, con el rótulo a la izquierda y el valor alineado a la derecha.
+
+Por cada producto:
+
+```
+Pellón Bordatec Blanco
+VENTA: POR ROLLO
+Rollos:                          7
+Metros:                 700.00 mts
+Precio:                 $6.50 / mt
+Importe:                 $4,550.00
+```
+
+Reglas del bloque:
+
+- **El nombre del producto encabeza**, con más peso visual que el resto.
+- Debajo, la **modalidad de venta destacada**: `VENTA: POR ROLLO` o `VENTA: METREADA`. Con fondo contrastante, para que se distinga de un vistazo.
+- **En venta metreada no se imprime el renglón de Rollos**, porque no hay rollos identificados. Solo Metros, Precio e Importe.
+- Los rótulos van a la izquierda y los valores **alineados a la derecha**, en columna.
+- **Importe** cierra el bloque, con más peso que los renglones de arriba.
+- Entre un producto y otro, una **línea punteada** de separación.
+- Al final, **TOTAL GENERAL** recuadrado y destacado.
+
+### Un error en el ejemplo que te di
+
+En el diseño de referencia, el tercer producto rotula **"Metros"** dos veces: el segundo renglón debe decir **"Precio"**. Fue un error del ejemplo. **No lo copies.** La secuencia siempre es Rollos, Metros, Precio, Importe.
+
+### Unidades
+
+Metros, kilos y bolsas **nunca se suman entre sí**. El renglón de cantidad usa la abreviatura correcta según la unidad del producto: **Mts.**, **Kg.** o **Bolsas**. No escribas "mts" fijo.
+
+Si el ticket lleva productos de unidades distintas, el TOTAL GENERAL es de dinero y sí se suma; las cantidades no se totalizan entre unidades.
+
+---
+
+## BLOQUE 3 — "Tubular" pasa a "Tabular"
+
+El bloque que hoy dice **TUBULAR** debe decir **TABULAR**. Fue un error de captura.
+
+Cámbialo en todas partes: el ticket impreso, la interfaz, el código, las pruebas y `replit.md`. **No dejes ninguna ocurrencia de "tubular".**
+
+El diseño y el contenido de ese bloque **no cambian**.
+
+---
+
+## BLOQUE 4 — Tres copias de cada ticket
+
+Cada venta genera e imprime **tres copias**, en este orden:
+
+1. **CLIENTE**
+2. **CAJA**
+3. **ADMINISTRACIÓN**
+
+### Cómo se comportan
+
+- **Contenido idéntico** en las tres. Lo único que cambia es la leyenda que identifica cuál es.
+- La leyenda va **visible en el encabezado**, con contraste suficiente para leerse de reojo al separarlas.
+- Se imprimen **en una sola operación**, sin que el cajero tenga que presionar tres veces.
+- Si la impresora corta entre tickets, **cada copia debe quedar como un ticket independiente**, no las tres en una tira continua.
+
+Verifica que el corte automático funcione entre copias en la impresora térmica real.
+
+### Con tabulares
+
+Si la venta lleva tabulares, **estos siguen siendo adicionales y no se triplican**: tres copias del ticket, más los tabulares que correspondan.
+
+Si tu implementación los multiplica, **detente y repórtalo.**
+
+---
+
+## BLOQUE 5 — Reimpresión de varias etiquetas
+
+### El problema
+
+En la pantalla de etiquetas se pueden seleccionar varias, pero al imprimir **solo sale la del botón que se presionó**. La selección no hace nada.
+
+### Qué se hace
+
+- Un **botón en la parte superior** que imprima **todas las seleccionadas**, indicando cuántas van.
+- El botón de cada renglón se conserva, para imprimir solo esa.
+- Si no hay ninguna seleccionada, el botón superior queda **deshabilitado**, no escondido.
+
+Verifica con una selección de **15 etiquetas de varios productos distintos**: deben salir las 15, cada una con sus datos correctos.
+
+---
+
+## BLOQUE 6 — El nombre de la etiqueta se sigue cortando
+
+### El diagnóstico
+
+Ya está hecho. Verifícalo, no lo repitas desde cero.
+
+En la etiqueta impresa sale **"ELLON BORDATEC - BLANC"** en vez de **"PELLÓN BORDATEC - BLANCO"**: cortado de los dos lados.
+
+El ajuste automático existe en `components/label-print.tsx` pero **no funciona**. La comprobación de la línea 56 es:
+
+```
+fits = element.scrollWidth <= element.clientWidth + 0.5;
+```
+
+Pero el elemento medido, en la línea 99, es `flex items-center justify-center` con `whitespace-nowrap`. **Un contenedor flex no recorta a su hijo**: el texto desborda hacia afuera y `scrollWidth` nunca supera a `clientWidth`. La comprobación siempre dice que cabe, el bucle se rompe en el primer paso de 30 píxeles, y nunca reduce.
+
+Quien recorta es el contenedor de la etiqueta, con `overflow-hidden` en la línea 95. Por eso se corta **de ambos lados**: está centrado y desbordando un ancestro que lo clipa.
+
+### Qué se hace
+
+Corrige la medición para que compare el **ancho real del texto** contra el **ancho disponible**, no el `scrollWidth` de un contenedor que se expande.
+
+**El mismo defecto afecta al metraje, al SKU y al texto del QR**, que usan la misma función `AutoFitText`. Hoy no se nota porque son textos más cortos, pero está ahí. Corrígelos todos.
+
+### Verificación con datos, no por inspección
+
+Genera las etiquetas de los **419 productos del catálogo** y reporta:
+
+- Cuántas cayeron en cada escalón de tamaño
+- Cuántas, si alguna, siguen sin caber al tamaño mínimo
+- Que **ninguna se corta**, por ningún lado
+
+El nombre más largo es **"MANTA CRESPONADA BLANCA CRUDA - BASE"**, 36 caracteres. El más corto, "RAZO - ROJO", 11.
+
+Si alguna no cabe ni al mínimo, **repórtala, no la truncues en silencio.**
+
+---
+
+## BLOQUE 7 — Verificación
+
+**Ticket**
+
+- El QR **no existe** en el ticket, ni en el código
+- El logo mide **2.5 cm** medidos con regla sobre papel impreso, centrado arriba
+- Cada producto se presenta en bloque vertical, con nombre, modalidad destacada y renglones alineados a la derecha
+- **La venta metreada no muestra renglón de Rollos**
+- La secuencia de rótulos es Rollos, Metros, Precio, Importe — **"Metros" no aparece dos veces**
+- La abreviatura de unidad corresponde al producto: Mts., Kg. o Bolsas
+- Las cantidades no se totalizan entre unidades distintas
+- TOTAL GENERAL recuadrado al final
+- **No queda ninguna ocurrencia de "tubular"** en código, interfaz, pruebas ni `replit.md`
+
+**Tres copias**
+
+- Una venta imprime tres tickets: CLIENTE, CAJA, ADMINISTRACIÓN
+- Contenido idéntico, solo cambia la leyenda
+- La leyenda se lee de reojo
+- Se imprimen en una sola operación
+- El corte automático separa las tres, verificado en impresora térmica real
+- Los tabulares **no se triplican**
+
+**Etiquetas**
+
+- El botón superior imprime todas las seleccionadas e indica cuántas
+- Sin selección, queda deshabilitado
+- Una selección de 15 etiquetas de varios productos imprime las 15 correctas
+- El botón por renglón sigue funcionando
+- **Ninguna de las 419 etiquetas corta el nombre**
+- Está el reporte de cuántas cayeron en cada escalón
+- El metraje, el SKU y el texto del QR también quedaron corregidos
+
+**General**
+
+- **Verificado en impresión real**, no en vista previa
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de POS y etiquetas pasan enteras; si alguna afirmaba el QR, el tamaño del logo o "tubular", **actualízala, no la borres**
+
+Adjunta al reporte fotos de un ticket impreso con sus tres copias y de las etiquetas del nombre más largo y del más corto.
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Ticket:** sin QR, logo de **2.5 cm** centrado arriba. Cada producto va en **bloque vertical** —nombre, modalidad de venta destacada, y renglones Rollos, Metros, Precio e Importe con rótulo a la izquierda y valor a la derecha—. **La venta metreada no lleva renglón de Rollos**: no hay rollos identificados. La abreviatura de cantidad depende de la unidad del producto y las cantidades **nunca se totalizan entre unidades distintas**.
+>
+> El bloque se llama **TABULAR**, no "tubular", que era un error de captura.
+>
+> **Cada venta imprime tres copias** —CLIENTE, CAJA y ADMINISTRACIÓN— con contenido idéntico y una leyenda que las distingue, en una sola operación y separadas por el corte automático. Los tabulares son adicionales y **no se triplican**.
+>
+> **Ajuste de texto en etiquetas:** medir `scrollWidth` contra `clientWidth` en un contenedor flex **no detecta desbordamiento**, porque el flex no recorta a su hijo y ambos valores coinciden siempre. El recorte ocurre en el ancestro con `overflow-hidden`, y por eso el texto se corta de ambos lados al estar centrado. La medición compara el **ancho real del texto** contra el **ancho disponible**. Cualquier cambio a esta lógica se valida generando las etiquetas de todo el catálogo, no con dos ejemplos.
