@@ -377,7 +377,7 @@ export default function CajaTiempoReal() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Últimos Tickets</CardTitle>
+                  <CardTitle>Últimos documentos</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="divide-y">
@@ -385,11 +385,11 @@ export default function CajaTiempoReal() {
                       <Link key={t.id} href={`/tickets/${t.id}`} className="block hover:bg-muted/50 p-4 transition-colors">
                         <div className="flex justify-between items-start mb-1">
                           <span className="font-bold text-sidebar text-sm">
-                            Folio {formatNumber(t.folio, { kind: "identifier" })}
+                            {t.documentoTipo === "NOTA" ? "Nota" : "Ticket"} · Folio {formatNumber(t.folio, { kind: "identifier" })}
                           </span>
                           <div className="flex flex-col items-end gap-1">
-                            <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${t.cobrado ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}>
-                              {t.cobrado ? "Cobrado" : "Pdte"}
+                             <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${(t.documentoTipo === "TICKET" ? t.cobrado : t.autorizacionEstado === "AUTORIZADA") ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}>
+                               {t.documentoTipo === "TICKET" ? (t.cobrado ? "Ticket cobrado" : "Ticket pendiente") : (t.autorizacionEstado === "AUTORIZADA" ? "Nota autorizada" : "Nota pendiente")}
                             </span>
                             <span className="text-[10px] text-muted-foreground">{format(parseISO(t.createdAt), "HH:mm")}</span>
                           </div>

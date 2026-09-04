@@ -9,6 +9,7 @@ import {
   useListarTicketsCaja,
   useObtenerTicket,
   useCobrarTicket,
+  useAutorizarNota,
   useListarSesionesCaja,
   useGetCurrentUser,
   Role,
@@ -1089,6 +1090,45 @@ function SalidasDineroPanel({ sesionId, canCreate }: { sesionId: number; canCrea
   </Card>;
 }
 
+function AutorizacionNotaDialog({
+  ticketId,
+  open,
+  onOpenChange,
+  onAutorizada,
+}: {
+  ticketId: number | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAutorizada: () => void;
+}) {
+  const autorizar = useAutorizarNota();
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Autorizar nota de crédito</DialogTitle>
+          <DialogDescription>
+            La autorización registra la venta a crédito en Caja.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button
+            disabled={!ticketId || autorizar.isPending}
+            onClick={() => ticketId && autorizar.mutate(
+              { id: ticketId },
+              { onSuccess: onAutorizada },
+            )}
+          >
+            {autorizar.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Autorizar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function CobrosContent() {
   const { selectedLocationId } = useLocationScope();
   const { data: currentUser } = useGetCurrentUser();
@@ -1101,6 +1141,7 @@ function CobrosContent() {
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [cobroOpen, setCobroOpen] = useState(false);
+  const [autorizacionOpen, setAutorizacionOpen] = useState(false);
 
   // Dialogs
   const [cierreOpen, setCierreOpen] = useState(false);
@@ -1390,8 +1431,8 @@ function CobrosContent() {
                     <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                       <div>
                         <div className="flex items-center gap-3">
-                          <span className="font-bold text-xl text-sidebar">
-                            Folio: {formatNumber(t.folio, { kind: "identifier" })}
+                          <span className={`font-bold text-xl ${t.documentoTipo === "NOTA" ? "text-indigo-700" : "text-sidebar"}`}>
+                            {t.documentoTipo === "NOTA" ? "Nota" : "Ticket"} folio {formatNumber(t.folio, { kind: "identifier" })}
                           </span>
                         </div>
                         <div className="text-sm font-medium text-muted-foreground mt-1.5 flex flex-wrap items-center gap-2">
@@ -1423,9 +1464,7 @@ function CobrosContent() {
                                     ? "Efectivo"
                                     : fp === "TRANSFERENCIA"
                                       ? "Transferencia"
-                                      : fp === "CREDITO"
-                                        ? "Crédito"
-                                        : fp,
+                                      : fp,
                                 )
                                 .join(", ")}
                             </div>
@@ -1441,7 +1480,7 @@ function CobrosContent() {
                           </div>
                         </div>
 
-                        {!t.cobrado && (
+                        {t.documentoTipo === "TICKET" && !t.cobrado && (
                           <Button
                             size="lg"
                             className="font-black px-8 h-14 text-lg shadow-md hover:shadow-lg transition-shadow"
@@ -1451,6 +1490,19 @@ function CobrosContent() {
                             }}
                           >
                             Cobrar
+                          </Button>
+                        )}
+                        {t.documentoTipo === "NOTA" && t.autorizacionEstado === "PENDIENTE" && (
+                          <Button
+                            size="lg"
+                            variant="secondary"
+                            className="font-black px-8 h-14 text-lg border-2 border-indigo-300"
+                            onClick={() => {
+                              setSelectedTicketId(t.id);
+                              setAutorizacionOpen(true);
+                            }}
+                          >
+                            Autorizar
                           </Button>
                         )}
                       </div>
@@ -1487,6 +1539,21 @@ function CobrosContent() {
           if (printedTicketId) {
             setLocation(`/tickets/${printedTicketId}?print=3`);
           }
+        }}
+      />
+      <AutorizacionNotaDialog
+        ticketId={selectedTicketId}
+        open={autorizacionOpen}
+        onOpenChange={(open) => {
+          setAutorizacionOpen(open);
+          if (!open) setSelectedTicketId(null);
+        }}
+        onAutorizada={() => {
+          setAutorizacionOpen(false);
+          setSelectedTicketId(null);
+          queryClient.invalidateQueries({
+            queryKey: getListarTicketsCajaQueryKey({ ubicacionId: selectedLocationId }),
+          });
         }}
       />
 
