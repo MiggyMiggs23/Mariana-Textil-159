@@ -5,8 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { PurgaConfirmacionTexto } from './purgaConfirmacionTexto';
+import type { PurgaCredencialesAdmin } from './purgaCredencialesAdmin';
 
-export interface PurgaConfirmacion {
-  /** @minLength 1 */
-  confirmacion: string;
-}
+export type PurgaConfirmacion = PurgaConfirmacionTexto | PurgaCredencialesAdmin;

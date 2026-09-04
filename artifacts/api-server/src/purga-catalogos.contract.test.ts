@@ -12,6 +12,8 @@ test("la purga es ADMIN, transaccional, bloquea y vuelve a contar", async () => 
     readFile(new URL("./lib/purga-catalogos.ts", import.meta.url), "utf8"),
   ]);
   assert.match(route, /requireSession, requireRole\("ADMIN"\)/);
+  assert.doesNotMatch(route, /\/auth\/login/);
+  assert.doesNotMatch(route, /LOGIN_FALLIDO|sesionesTable|clearSessionCookie/);
   assert.match(route, /code === "23503"/);
   assert.match(engine, /db\.transaction/);
   assert.match(
@@ -32,6 +34,12 @@ test("la purga es ADMIN, transaccional, bloquea y vuelve a contar", async () => 
   assert.ok(engine.indexOf("INSERT INTO auditoria") < engine.lastIndexOf("DELETE FROM"));
   assert.match(engine, /row\.es_sistema === true/);
   assert.match(engine, /sanitizeAuditSnapshot\(row\)/);
+  assert.match(
+    engine,
+    /rol, "ADMIN"[\s\S]*activo, true[\s\S]*passwordHash\} = crypt/,
+  );
+  assert.match(engine, /confirmadorAdmin:[\s\S]*id:[\s\S]*usuario:/);
+  assert.doesNotMatch(engine, /LOGIN_FALLIDO|\/auth\/login|sesionesTable/);
   for (const entity of [
     "usuarios",
     "camionetas",
@@ -256,7 +264,24 @@ test("cinco catálogos conservan purga común y producto la mueve a su edición"
   assert.match(productDetail, /isAdmin && isEditing/);
   assert.match(productDetail, /useGetPurgaPreflight\("productos"/);
   assert.match(productDetail, /data-testid="product-delete-reason"/);
-  assert.match(productDetail, /ConfirmacionTextoExacto/);
+  assert.doesNotMatch(productDetail, /ConfirmacionTextoExacto/);
+  assert.doesNotMatch(productDetail, /textoRequerido|confirmacion:/);
+  assert.match(productDetail, /Usuario ADMIN/);
+  assert.match(productDetail, /PasswordInput/);
+  assert.match(productDetail, /toggle-product-delete-password/);
+  assert.match(productDetail, /product\.tela/);
+  assert.match(productDetail, /product\.color/);
+  assert.match(productDetail, /product\.sku/);
+  assert.match(productDetail, /w-\[calc\(100vw-2rem\)\]/);
+  assert.match(
+    productDetail,
+    /if \(deletePreflight\.data\?\.puedeEliminar\)[\s\S]*setDeleteConfirmOpen\(true\)/,
+  );
+  assert.equal(
+    productDetail.match(/Esta acción no se puede deshacer\./g)?.length,
+    1,
+    "La duplicación era local: producto repetía la advertencia que agregaba el componente compartido.",
+  );
   assert.match(productDetail, /navigate\("\/productos"\)/);
   const common = await readFile(
     new URL(
@@ -271,4 +296,16 @@ test("cinco catálogos conservan purga común y producto la mueve a su edición"
   assert.match(common, /totalReferencias/);
   assert.match(common, /isLoading/);
   assert.match(common, /preflight\.error/);
+  const exactConfirmation = await readFile(
+    new URL(
+      "../../../artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+  assert.equal(
+    exactConfirmation.match(/Esta acción no se puede deshacer\./g)?.length,
+    1,
+    "El componente compartido agrega una sola advertencia; la repetición no era global.",
+  );
 });

@@ -26,6 +26,8 @@ if (!testUrl) {
     const expectedDb = decodeURIComponent(new URL(testUrl).pathname.slice(1));
     const tag = `PURGE-${randomUUID()}`;
     const session = randomUUID();
+    const confirmingUsername = `purge.admin.${randomUUID()}`.toLowerCase();
+    const confirmingPassword = `Purge-${randomUUID()}!`;
     let server: Server | undefined;
     let baseUrl = "";
 
@@ -71,6 +73,12 @@ if (!testUrl) {
       );
       assert.ok(admin.rows[0], "La base aislada requiere el ADMIN del seed.");
       assert.ok(location.rows[0], "La base aislada requiere un sitio del seed.");
+      const confirmingAdmin = await mutate(
+        `INSERT INTO usuarios(nombre,usuario,password_hash,rol,alcance_consulta,activo)
+         VALUES($1,$2,crypt($3,gen_salt('bf',8)),'ADMIN','TODAS',true)
+         RETURNING id,usuario`,
+        [`${tag} Confirmador`, confirmingUsername, confirmingPassword],
+      );
       await mutate(
         "INSERT INTO sesiones(id,usuario_id,expira_at,ip,user_agent) VALUES($1,$2,now()+interval '1 hour','127.0.0.1',$3)",
         [session, admin.rows[0].id, tag],
@@ -124,19 +132,43 @@ if (!testUrl) {
       assert.equal(cleanPreflight.body.inactivo, false);
       assert.equal(cleanPreflight.body.totalReferencias, 0);
 
-      const wrongConfirmation = await request(
-        `/api/purga/productos/${original.id}`,
-        {
-          method: "DELETE",
-          body: { confirmacion: original.sku },
-        },
+      const loginFailuresBefore = await pool.query<{ count: number }>(
+        "SELECT count(*)::int AS count FROM auditoria WHERE accion='LOGIN_FALLIDO'",
       );
-      assert.equal(wrongConfirmation.response.status, 409);
-      assert.match(wrongConfirmation.body.error, /no coincide exactamente/);
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const invalid = await request(`/api/purga/productos/${original.id}`, {
+          method: "DELETE",
+          body:
+            attempt === 0
+              ? { usuario: "usuario-inexistente", password: confirmingPassword }
+              : { usuario: confirmingUsername, password: "incorrecta" },
+        });
+        assert.equal(invalid.response.status, 403);
+        assert.match(invalid.body.error, /credenciales|ADMIN activo/i);
+        assert.equal(
+          (await pool.query("SELECT id FROM productos WHERE id=$1", [original.id]))
+            .rowCount,
+          1,
+        );
+      }
+      const loginFailuresAfter = await pool.query<{ count: number }>(
+        "SELECT count(*)::int AS count FROM auditoria WHERE accion='LOGIN_FALLIDO'",
+      );
+      assert.equal(
+        loginFailuresAfter.rows[0]?.count,
+        loginFailuresBefore.rows[0]?.count,
+        "Las confirmaciones fallidas no alimentan LOGIN_FALLIDO.",
+      );
+      const currentSession = await request("/api/auth/me");
+      assert.equal(currentSession.response.status, 200);
+      assert.equal(currentSession.body.id, admin.rows[0].id);
 
       const deleted = await request(`/api/purga/productos/${original.id}`, {
         method: "DELETE",
-        body: { confirmacion: cleanPreflight.body.nombreVisible },
+        body: {
+          usuario: confirmingUsername,
+          password: confirmingPassword,
+        },
       });
       assert.equal(deleted.response.status, 200);
       assert.deepEqual(deleted.body, { eliminado: true });
@@ -154,8 +186,12 @@ if (!testUrl) {
       const purgeAudit = await pool.query<{
         usuario_id: number;
         sku: string;
+        confirmador_id: number;
+        confirmador_usuario: string;
       }>(
-        `SELECT usuario_id,(datos_antes->>'sku')::text AS sku
+        `SELECT usuario_id,(datos_antes->>'sku')::text AS sku,
+                (datos_despues->'confirmadorAdmin'->>'id')::int AS confirmador_id,
+                datos_despues->'confirmadorAdmin'->>'usuario' AS confirmador_usuario
          FROM auditoria
          WHERE accion='PURGAR' AND entidad='productos' AND entidad_id=$1
          ORDER BY id DESC LIMIT 1`,
@@ -163,6 +199,18 @@ if (!testUrl) {
       );
       assert.equal(purgeAudit.rows[0]?.usuario_id, admin.rows[0].id);
       assert.equal(purgeAudit.rows[0]?.sku, original.sku);
+      assert.equal(
+        purgeAudit.rows[0]?.confirmador_id,
+        confirmingAdmin.rows[0].id,
+      );
+      assert.equal(
+        purgeAudit.rows[0]?.confirmador_usuario,
+        confirmingUsername,
+      );
+      assert.ok(
+        !JSON.stringify(purgeAudit.rows[0]).includes(confirmingPassword),
+        "La auditoría nunca conserva la contraseña.",
+      );
 
       const catalog = await request("/api/productos");
       assert.equal(catalog.response.status, 200);
@@ -201,7 +249,10 @@ if (!testUrl) {
         `/api/purga/productos/${reimportedProduct.rows[0].id}`,
         {
           method: "DELETE",
-          body: { confirmacion: reimportedPreflight.body.nombreVisible },
+          body: {
+            usuario: confirmingUsername,
+            password: confirmingPassword,
+          },
         },
       );
       assert.equal(reimportedDelete.response.status, 200);
@@ -258,6 +309,23 @@ if (!testUrl) {
         stockPreflight.body.motivoBloqueo,
         new RegExp(location.rows[0].nombre),
       );
+      const blockedDelete = await request(
+        `/api/purga/productos/${stockProduct.rows[0].id}`,
+        {
+          method: "DELETE",
+          body: {
+            usuario: confirmingUsername,
+            password: confirmingPassword,
+          },
+        },
+      );
+      assert.equal(blockedDelete.response.status, 409);
+      assert.equal(
+        (await pool.query("SELECT id FROM productos WHERE id=$1", [
+          stockProduct.rows[0].id,
+        ])).rowCount,
+        1,
+      );
 
       const movedProduct = await mutate(
         `INSERT INTO productos(sku,tela,color,unidad,precio_sugerido)
@@ -308,7 +376,10 @@ if (!testUrl) {
         `/api/purga/productos/${movedProduct.rows[0].id}`,
         {
           method: "DELETE",
-          body: { confirmacion: movedPreflight.body.nombreVisible },
+          body: {
+            usuario: confirmingUsername,
+            password: confirmingPassword,
+          },
         },
       );
       assert.equal(movedDelete.response.status, 409);
@@ -349,7 +420,10 @@ if (!testUrl) {
         `/api/purga/productos/${raceProduct.rows[0].id}`,
         {
           method: "DELETE",
-          body: { confirmacion: racePreflight.body.nombreVisible },
+          body: {
+            usuario: confirmingUsername,
+            password: confirmingPassword,
+          },
         },
       );
       await new Promise((resolve) => setTimeout(resolve, 75));

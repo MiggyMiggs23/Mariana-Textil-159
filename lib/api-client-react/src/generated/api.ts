@@ -17281,7 +17281,8 @@ export const getDeleteRegistroInactivoUrl = (entidad: 'usuarios' | 'camionetas' 
 }
 
 /**
- * @summary Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+ * Los productos requieren credenciales de un ADMIN activo; los demás catálogos conservan la confirmación por texto exacto.
+ * @summary Purga definitivamente un registro sin referencias (solo ADMIN)
  */
 export const deleteRegistroInactivo = async (entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos',
     id: number,
@@ -17300,7 +17301,7 @@ export const deleteRegistroInactivo = async (entidad: 'usuarios' | 'camionetas' 
 
 
 
-export const getDeleteRegistroInactivoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | PurgaConflicto>,
+export const getDeleteRegistroInactivoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | Error | NotFoundResponse | PurgaConflicto>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRegistroInactivo>>, TError,{entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteRegistroInactivo>>, TError,{entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}, TContext> => {
 
@@ -17329,12 +17330,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type DeleteRegistroInactivoMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRegistroInactivo>>>
     export type DeleteRegistroInactivoMutationBody = BodyType<PurgaConfirmacion>
-    export type DeleteRegistroInactivoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | PurgaConflicto>
+    export type DeleteRegistroInactivoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | Error | NotFoundResponse | PurgaConflicto>
 
     /**
- * @summary Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+ * @summary Purga definitivamente un registro sin referencias (solo ADMIN)
  */
-export const useDeleteRegistroInactivo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | PurgaConflicto>,
+export const useDeleteRegistroInactivo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | Error | NotFoundResponse | PurgaConflicto>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRegistroInactivo>>, TError,{entidad: 'usuarios' | 'camionetas' | 'choferes' | 'clientes' | 'proveedores' | 'productos';id: number;data: BodyType<PurgaConfirmacion>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof deleteRegistroInactivo>>,

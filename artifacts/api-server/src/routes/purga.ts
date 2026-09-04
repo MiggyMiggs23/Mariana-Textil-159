@@ -11,6 +11,7 @@ import { getRequestIp } from "../lib/request";
 import {
   getPurgaPreflight,
   purgeInactiveRecord,
+  PurgaAuthorizationError,
   PurgaConflictError,
   PurgaNotFoundError,
 } from "../lib/purga-catalogos";
@@ -44,14 +45,36 @@ router.delete("/purga/:entidad/:id", async (req, res): Promise<void> => {
     return;
   }
   try {
+    const confirmation = body.data;
+    if (
+      (params.data.entidad === "productos" && !("usuario" in confirmation)) ||
+      (params.data.entidad !== "productos" && !("confirmacion" in confirmation))
+    ) {
+      res.status(400).json({
+        error:
+          params.data.entidad === "productos"
+            ? "Se requiere usuario y contraseña para confirmar el borrado."
+            : "Se requiere el texto de confirmación.",
+      });
+      return;
+    }
     await purgeInactiveRecord({
       ...params.data,
-      confirmacion: body.data.confirmacion,
+      ...("confirmacion" in confirmation
+        ? { confirmacion: confirmation.confirmacion }
+        : {
+            adminUsuario: confirmation.usuario,
+            adminPassword: confirmation.password,
+          }),
       actorId: req.auth!.user.id,
       ip: getRequestIp(req),
     });
     res.json(DeleteRegistroInactivoResponse.parse({ eliminado: true }));
   } catch (error) {
+    if (error instanceof PurgaAuthorizationError) {
+      res.status(403).json({ error: error.message });
+      return;
+    }
     if (error instanceof PurgaNotFoundError) {
       res.status(404).json({ error: error.message });
       return;

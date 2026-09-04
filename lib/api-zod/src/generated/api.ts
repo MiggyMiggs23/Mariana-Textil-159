@@ -9220,7 +9220,8 @@ export const GetPurgaPreflightResponse = zod.object({
 
 
 /**
- * @summary Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+ * Los productos requieren credenciales de un ADMIN activo; los demás catálogos conservan la confirmación por texto exacto.
+ * @summary Purga definitivamente un registro sin referencias (solo ADMIN)
  */
 
 
@@ -9231,11 +9232,18 @@ export const DeleteRegistroInactivoParams = zod.object({
 })
 
 
+export const deleteRegistroInactivoBodyTwoUsuarioMax = 100;
+
+export const deleteRegistroInactivoBodyTwoPasswordMax = 200;
 
 
-export const DeleteRegistroInactivoBody = zod.object({
+
+export const DeleteRegistroInactivoBody = zod.union([zod.object({
   "confirmacion": zod.string().min(1)
-})
+}),zod.object({
+  "usuario": zod.string().min(1).max(deleteRegistroInactivoBodyTwoUsuarioMax),
+  "password": zod.string().min(1).max(deleteRegistroInactivoBodyTwoPasswordMax)
+})])
 
 export const DeleteRegistroInactivoResponse = zod.object({
   "eliminado": zod.literal(true)

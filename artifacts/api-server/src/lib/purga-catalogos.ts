@@ -1,5 +1,6 @@
-import { sql } from "drizzle-orm";
-import { db } from "@workspace/db";
+import { and, eq, sql } from "drizzle-orm";
+import { db, usuariosTable } from "@workspace/db";
+import { normalizeUsername } from "./auth-identifiers";
 
 export const ENTIDADES_PURGABLES = [
   "usuarios",
@@ -120,6 +121,7 @@ export type PurgaPreflight = {
 };
 
 export class PurgaNotFoundError extends Error {}
+export class PurgaAuthorizationError extends Error {}
 export class PurgaConflictError extends Error {
   constructor(
     message: string,
@@ -365,7 +367,9 @@ export async function getPurgaPreflight(
 export async function purgeInactiveRecord(input: {
   entidad: EntidadPurgable;
   id: number;
-  confirmacion: string;
+  confirmacion?: string;
+  adminUsuario?: string;
+  adminPassword?: string;
   actorId: number;
   ip: string;
 }): Promise<void> {
@@ -408,7 +412,35 @@ export async function purgeInactiveRecord(input: {
         references.map(({ tipo, cantidad }) => ({ tipo, cantidad })),
       );
     }
-    if (input.confirmacion !== preflight.nombreVisible) {
+    let confirmingAdmin: { id: number; usuario: string } | null = null;
+    if (input.entidad === "productos") {
+      if (!input.adminUsuario || !input.adminPassword) {
+        throw new PurgaAuthorizationError(
+          "Se requiere usuario y contraseña de un ADMIN activo.",
+        );
+      }
+      const [admin] = await tx
+        .select({ id: usuariosTable.id, usuario: usuariosTable.usuario })
+        .from(usuariosTable)
+        .where(
+          and(
+            eq(
+              usuariosTable.usuario,
+              normalizeUsername(input.adminUsuario),
+            ),
+            eq(usuariosTable.rol, "ADMIN"),
+            eq(usuariosTable.activo, true),
+            sql`${usuariosTable.passwordHash} = crypt(${input.adminPassword}, ${usuariosTable.passwordHash})`,
+          ),
+        )
+        .limit(1);
+      if (!admin) {
+        throw new PurgaAuthorizationError(
+          "Las credenciales no son válidas o el usuario no es un ADMIN activo.",
+        );
+      }
+      confirmingAdmin = admin;
+    } else if (input.confirmacion !== preflight.nombreVisible) {
       throw new PurgaConflictError("El texto de confirmación no coincide exactamente.");
     }
     const snapshot = sanitizeAuditSnapshot(row);
@@ -418,7 +450,17 @@ export async function purgeInactiveRecord(input: {
       VALUES
         (${input.actorId}, 'PURGAR', ${input.entidad}, ${String(input.id)},
          ${JSON.stringify(snapshot)}::jsonb,
-         ${JSON.stringify({ preflight: { referencias: references, totalReferencias: 0 } })}::jsonb,
+         ${JSON.stringify({
+           preflight: { referencias: references, totalReferencias: 0 },
+           ...(confirmingAdmin
+             ? {
+                 confirmadorAdmin: {
+                   id: confirmingAdmin.id,
+                   usuario: confirmingAdmin.usuario,
+                 },
+               }
+             : {}),
+         })}::jsonb,
          ${input.ip})
     `);
     if (input.entidad === "productos") {

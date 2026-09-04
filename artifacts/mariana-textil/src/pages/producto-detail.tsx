@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -34,7 +35,14 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber, formatQuantityForCsv, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Helper for generic API errors
 function getErrorMessage(error: unknown): string {
@@ -68,6 +76,9 @@ export default function ProductoDetail() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deleteAdminUsername, setDeleteAdminUsername] = useState("");
+  const [deleteAdminPassword, setDeleteAdminPassword] = useState("");
+  const [deletePasswordResetKey, setDeletePasswordResetKey] = useState(0);
   const [kardexUbicacionId, setKardexUbicacionId] = useState<string>("all");
   const [kardexDesde, setKardexDesde] = useState<string>("");
   const [kardexHasta, setKardexHasta] = useState<string>("");
@@ -206,13 +217,16 @@ export default function ProductoDetail() {
     });
   };
 
-  const handleDelete = (confirmacion: string) => {
+  const handleDelete = () => {
     if (!product) return;
     deleteProducto.mutate(
       {
         entidad: "productos",
         id: product.id,
-        data: { confirmacion },
+        data: {
+          usuario: deleteAdminUsername,
+          password: deleteAdminPassword,
+        },
       },
       {
         onSuccess: () => {
@@ -228,6 +242,8 @@ export default function ProductoDetail() {
           navigate("/productos");
         },
         onError: (error) => {
+          setDeleteAdminPassword("");
+          setDeletePasswordResetKey((current) => current + 1);
           toast.error("No se pudo borrar el producto", {
             description: getErrorMessage(error),
           });
@@ -550,26 +566,106 @@ export default function ProductoDetail() {
                   deletePreflight.isError ||
                   !deletePreflight.data?.puedeEliminar
                 }
-                onClick={() => setDeleteConfirmOpen(true)}
+                onClick={() => {
+                  if (deletePreflight.data?.puedeEliminar) {
+                    setDeleteConfirmOpen(true);
+                  }
+                }}
                 data-testid="button-delete-product"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Borrar producto
               </Button>
             </CardContent>
-            <ConfirmacionTextoExacto
+            <Dialog
               open={deleteConfirmOpen}
-              onOpenChange={setDeleteConfirmOpen}
-              titulo="Borrar producto permanentemente"
-              descripcion={`Se borrará ${product.tela} / ${product.color} (${product.sku}). Esta acción no se puede deshacer.`}
-              textoRequerido={
-                deletePreflight.data?.nombreVisible ??
-                `${product.tela} / ${product.color} (${product.sku})`
-              }
-              textoConfirmar="Borrar definitivamente"
-              pendiente={deleteProducto.isPending}
-              onConfirm={handleDelete}
-            />
+              onOpenChange={(open) => {
+                if (!open) {
+                  setDeleteAdminUsername("");
+                  setDeleteAdminPassword("");
+                  setDeletePasswordResetKey((current) => current + 1);
+                }
+                setDeleteConfirmOpen(open);
+              }}
+            >
+              <DialogContent className="w-[calc(100vw-2rem)] max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-destructive">
+                    Borrar producto permanentemente
+                  </DialogTitle>
+                  <DialogDescription>
+                    Esta acción no se puede deshacer. Confirma con las credenciales
+                    de un ADMIN activo.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-2">
+                  <dl className="grid min-w-0 grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-md border bg-muted/30 p-3 text-sm">
+                    <dt className="text-muted-foreground">Tela</dt>
+                    <dd className="min-w-0 break-words font-medium">{product.tela}</dd>
+                    <dt className="text-muted-foreground">Color</dt>
+                    <dd className="min-w-0 break-words font-medium">{product.color}</dd>
+                    <dt className="text-muted-foreground">SKU</dt>
+                    <dd className="min-w-0 break-all font-mono font-medium">{product.sku}</dd>
+                  </dl>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-delete-admin-username">Usuario ADMIN</Label>
+                    <Input
+                      id="product-delete-admin-username"
+                      data-testid="input-product-delete-username"
+                      value={deleteAdminUsername}
+                      onChange={(event) => setDeleteAdminUsername(event.target.value)}
+                      autoComplete="username"
+                      disabled={deleteProducto.isPending}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-delete-admin-password">Contraseña</Label>
+                    <PasswordInput
+                      id="product-delete-admin-password"
+                      data-testid="input-product-delete-password"
+                      value={deleteAdminPassword}
+                      onChange={(event) => setDeleteAdminPassword(event.target.value)}
+                      autoComplete="current-password"
+                      visibilityResetKey={`${deleteConfirmOpen}:${deletePasswordResetKey}`}
+                      toggleTestId="toggle-product-delete-password"
+                      disabled={deleteProducto.isPending}
+                    />
+                  </div>
+                </div>
+                <DialogFooter className="flex-col-reverse gap-2 sm:flex-row">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                    onClick={() => {
+                      setDeleteConfirmOpen(false);
+                      setDeleteAdminUsername("");
+                      setDeleteAdminPassword("");
+                      setDeletePasswordResetKey((current) => current + 1);
+                    }}
+                    disabled={deleteProducto.isPending}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    className="w-full sm:w-auto"
+                    disabled={
+                      deleteProducto.isPending ||
+                      deleteAdminUsername.trim().length === 0 ||
+                      deleteAdminPassword.length === 0
+                    }
+                    onClick={handleDelete}
+                    data-testid="button-confirm-delete-product"
+                  >
+                    {deleteProducto.isPending
+                      ? "Borrando..."
+                      : "Borrar definitivamente"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </Card>
         )}
 

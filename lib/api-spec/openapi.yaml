@@ -5122,7 +5122,8 @@ paths:
     delete:
       operationId: deleteRegistroInactivo
       tags: [users, productos, proveedores, clientes]
-      summary: Purga definitivamente un registro inactivo sin referencias (solo ADMIN)
+      summary: Purga definitivamente un registro sin referencias (solo ADMIN)
+      description: Los productos requieren credenciales de un ADMIN activo; los demás catálogos conservan la confirmación por texto exacto.
       parameters:
         - $ref: "#/components/parameters/PurgaEntidad"
         - $ref: "#/components/parameters/PurgaId"
@@ -5139,10 +5140,14 @@ paths:
               schema: { $ref: "#/components/schemas/PurgaResultado" }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
-        "403": { $ref: "#/components/responses/Forbidden" }
+        "403":
+          description: Las credenciales no pertenecen a un ADMIN activo
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409":
-          description: Registro activo, confirmación incorrecta o referencias existentes
+          description: Registro bloqueado, confirmación incorrecta o referencias existentes
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PurgaConflicto" }
@@ -5410,11 +5415,22 @@ components:
         puedeEliminar: { type: boolean }
         motivoBloqueo: { type: [string, "null"] }
     PurgaConfirmacion:
+      oneOf:
+        - $ref: "#/components/schemas/PurgaConfirmacionTexto"
+        - $ref: "#/components/schemas/PurgaCredencialesAdmin"
+    PurgaConfirmacionTexto:
       type: object
       additionalProperties: false
       required: [confirmacion]
       properties:
         confirmacion: { type: string, minLength: 1 }
+    PurgaCredencialesAdmin:
+      type: object
+      additionalProperties: false
+      required: [usuario, password]
+      properties:
+        usuario: { type: string, minLength: 1, maxLength: 100 }
+        password: { type: string, minLength: 1, maxLength: 200 }
     PurgaResultado:
       type: object
       required: [eliminado]

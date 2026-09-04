@@ -231,7 +231,7 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     assert.equal(activePreflight.puedeEliminar, false);
     await assert.rejects(
       () => purge.purgeInactiveRecord({
-        entidad: "productos", id: Number(activeProduct.id), confirmacion: activePreflight.nombreVisible,
+        entidad: "productos", id: Number(activeProduct.id),
         actorId: Number(actor.id), ip: "127.0.0.1",
       }),
       /inactivos/,
@@ -241,7 +241,7 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     assert.ok(referencedPreflight.totalReferencias > 0);
     await assert.rejects(
       () => purge.purgeInactiveRecord({
-        entidad: "productos", id: Number(referencedProduct.id), confirmacion: referencedPreflight.nombreVisible,
+        entidad: "productos", id: Number(referencedProduct.id),
         actorId: Number(actor.id), ip: "127.0.0.1",
       }),
       /referencias/,

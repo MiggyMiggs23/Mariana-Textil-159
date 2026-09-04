@@ -34,10 +34,25 @@ export interface PurgaPreflight {
   motivoBloqueo?: string | null;
 }
 
-export interface PurgaConfirmacion {
+export interface PurgaConfirmacionTexto {
   /** @minLength 1 */
   confirmacion: string;
 }
+
+export interface PurgaCredencialesAdmin {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  usuario: string;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  password: string;
+}
+
+export type PurgaConfirmacion = PurgaConfirmacionTexto | PurgaCredencialesAdmin;
 
 export interface PurgaResultado {
   eliminado: true;
