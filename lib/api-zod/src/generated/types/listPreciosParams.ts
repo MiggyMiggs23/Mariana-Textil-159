@@ -14,6 +14,10 @@ search?: string;
 unidad?: UnidadProducto;
 semaforo?: SemaforoPrecio;
 /**
+ * Devuelve únicamente productos sin precio en el modo seleccionado.
+ */
+sinPrecio?: boolean;
+/**
  * Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
  */
 modoPrecio?: ModoPrecio;

@@ -3454,7 +3454,8 @@ export interface PrecioProducto {
   /** @nullable */
   costoUnitarioPonderado: string | null;
   costoReferenciaMetreado: CostoReferenciaMetreado;
-  precioLista: string;
+  /** @nullable */
+  precioLista: string | null;
   /** @nullable */
   precioMayoreo: string | null;
   /** @nullable */
@@ -5823,6 +5824,10 @@ export type ListPreciosParams = {
 search?: string;
 unidad?: UnidadProducto;
 semaforo?: SemaforoPrecio;
+/**
+ * Devuelve únicamente productos sin precio en el modo seleccionado.
+ */
+sinPrecio?: boolean;
 /**
  * Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
  */

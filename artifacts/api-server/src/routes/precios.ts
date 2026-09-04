@@ -128,8 +128,10 @@ router.get("/precios", requierePermiso("precios", "ver"), async (req, res): Prom
     .orderBy(productosTable.tela, productosTable.color);
   const rows = (await Promise.all(products.map((product) => presentProduct(product)))).filter(
     (row) =>
-      !query.data.semaforo ||
-      row.preciosPorModo[modoPrecio].semaforo === query.data.semaforo,
+      (!query.data.semaforo ||
+        row.preciosPorModo[modoPrecio].semaforo === query.data.semaforo) &&
+      (!query.data.sinPrecio ||
+        row.preciosPorModo[modoPrecio].precioLista == null),
   );
   res.json(ListPreciosResponse.parse(rows));
 });

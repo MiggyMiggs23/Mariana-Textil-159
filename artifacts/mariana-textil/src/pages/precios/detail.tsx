@@ -315,7 +315,7 @@ export default function PrecioDetail() {
                         Precio de Lista ({activeMode})
                       </p>
                       <div className="text-4xl font-bold text-white tracking-tighter" data-testid="text-current-price">
-                        {modeData?.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}
+                        {modeData?.precioLista == null ? "Sin precio" : formatNumber(modeData.precioLista, { kind: "money" })}
                       </div>
                     </div>
                   </div>
@@ -416,10 +416,10 @@ export default function PrecioDetail() {
                             {format(new Date(item.createdAt), "dd/MM/yy HH:mm")}
                           </TableCell>
                           <TableCell className="text-right text-muted-foreground line-through decoration-muted-foreground/40">
-                            {item.precioListaAnterior && Number(item.precioListaAnterior) > 0 ? formatNumber(item.precioListaAnterior, { kind: "money" }) : "—"}
+                            {item.precioListaAnterior == null ? "Sin precio" : formatNumber(item.precioListaAnterior, { kind: "money" })}
                           </TableCell>
                           <TableCell className="text-right font-bold text-foreground">
-                            {item.precioListaNuevo && Number(item.precioListaNuevo) > 0 ? formatNumber(item.precioListaNuevo, { kind: "money" }) : "—"}
+                            {item.precioListaNuevo == null ? "Sin precio" : formatNumber(item.precioListaNuevo, { kind: "money" })}
                           </TableCell>
                           <TableCell className="text-right">
                             {item.margenPorcentajeSubtotal && Number(item.margenPorcentajeSubtotal) !== 0 ? (
@@ -471,7 +471,7 @@ export default function PrecioDetail() {
                   <div className="space-y-2">
                     <Label className="text-muted-foreground uppercase text-xs font-bold tracking-wider">Precio Actual</Label>
                     <div className="text-2xl font-bold bg-muted/50 p-3 rounded-lg border border-border/50 text-muted-foreground">
-                      {modeData?.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}
+                      {modeData?.precioLista == null ? "Sin precio" : formatNumber(modeData.precioLista, { kind: "money" })}
                     </div>
                   </div>
 
@@ -555,7 +555,7 @@ export default function PrecioDetail() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-semibold">Anterior</p>
-                        <p className="text-lg font-medium text-muted-foreground line-through decoration-muted-foreground/40">{modeData?.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}</p>
+                        <p className="text-lg font-medium text-muted-foreground line-through decoration-muted-foreground/40">{modeData?.precioLista == null ? "Sin precio" : formatNumber(modeData.precioLista, { kind: "money" })}</p>
                         {modeData?.margenPorcentajeSubtotal && (
                           <p className="text-xs text-muted-foreground mt-1">Margen: {formatNumber(modeData.margenPorcentajeSubtotal, { kind: "percentage", percentageInput: "percent" })}</p>
                         )}

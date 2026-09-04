@@ -21,7 +21,8 @@ export interface PrecioProducto {
   /** @nullable */
   costoUnitarioPonderado: string | null;
   costoReferenciaMetreado: CostoReferenciaMetreado;
-  precioLista: string;
+  /** @nullable */
+  precioLista: string | null;
   /** @nullable */
   precioMayoreo: string | null;
   /** @nullable */

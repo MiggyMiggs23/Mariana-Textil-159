@@ -705,6 +705,12 @@ paths:
             name: semaforo,
             schema: { $ref: "#/components/schemas/SemaforoPrecio" },
           }
+        - {
+            in: query,
+            name: sinPrecio,
+            description: Devuelve únicamente productos sin precio en el modo seleccionado.,
+            schema: { type: boolean },
+          }
         - in: query
           name: modoPrecio
           description: Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.
@@ -8655,7 +8661,7 @@ components:
         costoUnitarioPonderado: { type: ["string", "null"] }
         costoReferenciaMetreado:
           { $ref: "#/components/schemas/CostoReferenciaMetreado" }
-        precioLista: { type: string }
+        precioLista: { type: ["string", "null"] }
         precioMayoreo: { type: ["string", "null"] }
         precioMenudeo: { type: ["string", "null"] }
         preciosPorModo:

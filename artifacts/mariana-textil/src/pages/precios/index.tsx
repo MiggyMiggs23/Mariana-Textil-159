@@ -30,6 +30,7 @@ export default function PreciosList() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [unidad, setUnidad] = useState<string>("all");
   const [semaforo, setSemaforo] = useState<string>("all");
+  const [sinPrecio, setSinPrecio] = useState(false);
   const [activeMode, setActiveMode] = useState<ModoPrecio>(ModoPrecio.ROLLO);
 
   const queryParams = {
@@ -37,6 +38,7 @@ export default function PreciosList() {
     unidad: unidad !== "all" ? (unidad as UnidadProducto) : undefined,
     semaforo: semaforo !== "all" ? (semaforo as SemaforoPrecio) : undefined,
     modoPrecio: activeMode,
+    sinPrecio: sinPrecio || undefined,
   };
 
   const { data: precios, isLoading } = useListPrecios(queryParams, {
@@ -138,6 +140,15 @@ export default function PreciosList() {
                   </SelectContent>
                 </Select>
               </div>
+              <Button
+                type="button"
+                variant={sinPrecio ? "default" : "outline"}
+                onClick={() => setSinPrecio((value) => !value)}
+                aria-pressed={sinPrecio}
+                data-testid="filter-sin-precio"
+              >
+                Sin precio
+              </Button>
             </div>
 
             <div className="pt-4 mt-2 border-t">
@@ -185,7 +196,7 @@ export default function PreciosList() {
                   ) : !precios || precios.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
-                        No se encontraron productos con precios para los filtros seleccionados.
+                        No se encontraron productos para los filtros seleccionados.
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -260,7 +271,7 @@ export default function PreciosList() {
                               )}
                             </TableCell>
                             <TableCell className="text-right font-bold text-foreground">
-                              {modeData.precioLista && Number(modeData.precioLista) > 0 ? formatNumber(modeData.precioLista, { kind: "money" }) : "—"}
+                              {modeData.precioLista == null ? "Sin precio" : formatNumber(modeData.precioLista, { kind: "money" })}
                             </TableCell>
                             <TableCell className="text-right font-medium">
                               {modeData.margenPesosUnidad && Number(modeData.margenPesosUnidad) !== 0 ? formatNumber(modeData.margenPesosUnidad, { kind: "money" }) : "—"}

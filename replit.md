@@ -43,6 +43,10 @@ Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una
 
 La revisión del flujo encontró además un panel de validación y un bloqueo del botón final condicionados a `esCredito`; ambos pertenecían a la antigua opción Crédito y se retiraron junto con ella.
 
+**La pantalla de Precios debe mostrar los productos sin precio**, marcados como "Sin precio" y nunca como $0.00. Es la única vía para capturar el precio de un producto que se importó sin él, así que filtrarlos la vuelve inservible justo cuando más se necesita.
+
+Diagnóstico de Precios: la consulta sí devolvía todo el catálogo, sin paginación ni filtro por sitio o precio. La respuesta completa fallaba al validarse porque `PrecioProducto.precioLista` era no nulo en OpenAPI aunque la columna y la proyección permiten `null`; un catálogo de 566 elementos con valores nulos, por tanto, no llegaba a renderizar. La captura individual existente admite el primer precio y escribe `precio_historial` en la misma transacción. No existe captura en lote y no se agregó en este bloque.
+
 # Mariana Textil
 
 ## Corrección — Bloque 4: Tabulares

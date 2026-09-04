@@ -904,6 +904,7 @@ export const ListPreciosQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional(),
   "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']).optional(),
+  "sinPrecio": zod.coerce.boolean().optional().describe('Devuelve únicamente productos sin precio en el modo seleccionado.'),
   "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']).optional().describe('Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.')
 })
 
@@ -923,7 +924,7 @@ export const ListPreciosResponseItem = zod.object({
   "rollosIncluidos": zod.number(),
   "fechaUltimaRecepcion": zod.coerce.date().nullable()
 }),
-  "precioLista": zod.string(),
+  "precioLista": zod.string().nullable(),
   "precioMayoreo": zod.string().nullable(),
   "precioMenudeo": zod.string().nullable(),
   "preciosPorModo": zod.object({
@@ -983,7 +984,7 @@ export const GetPrecioResponse = zod.object({
   "rollosIncluidos": zod.number(),
   "fechaUltimaRecepcion": zod.coerce.date().nullable()
 }),
-  "precioLista": zod.string(),
+  "precioLista": zod.string().nullable(),
   "precioMayoreo": zod.string().nullable(),
   "precioMenudeo": zod.string().nullable(),
   "preciosPorModo": zod.object({
@@ -1083,7 +1084,7 @@ export const ChangePrecioResponse = zod.object({
   "rollosIncluidos": zod.number(),
   "fechaUltimaRecepcion": zod.coerce.date().nullable()
 }),
-  "precioLista": zod.string(),
+  "precioLista": zod.string().nullable(),
   "precioMayoreo": zod.string().nullable(),
   "precioMenudeo": zod.string().nullable(),
   "preciosPorModo": zod.object({
@@ -1161,7 +1162,7 @@ export const UpdatePrecioVentaPorMetroResponse = zod.object({
   "rollosIncluidos": zod.number(),
   "fechaUltimaRecepcion": zod.coerce.date().nullable()
 }),
-  "precioLista": zod.string(),
+  "precioLista": zod.string().nullable(),
   "precioMayoreo": zod.string().nullable(),
   "precioMenudeo": zod.string().nullable(),
   "preciosPorModo": zod.object({
