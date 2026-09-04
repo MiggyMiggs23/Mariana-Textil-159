@@ -7,7 +7,9 @@ import {
   serial,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usuariosTable } from "./users";
@@ -42,7 +44,7 @@ export const auditoriaTable = pgTable(
   ],
 );
 
-/** Generic persistent administrator notifications emitted by operational flows. */
+/** Generic persistent notifications; null recipient keeps legacy ADMIN-global semantics. */
 export const notificacionesSistemaTable = pgTable(
   "notificaciones_sistema",
   {
@@ -52,6 +54,9 @@ export const notificacionesSistemaTable = pgTable(
     mensaje: text("mensaje").notNull(),
     entidad: text("entidad").notNull(),
     entidadId: text("entidad_id").notNull(),
+    destinatarioUsuarioId: integer("destinatario_usuario_id").references(
+      () => usuariosTable.id,
+    ),
     leidaAt: timestamp("leida_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -62,6 +67,14 @@ export const notificacionesSistemaTable = pgTable(
       table.leidaAt,
       table.createdAt,
     ),
+    index("notificaciones_sistema_destinatario_leida_idx").on(
+      table.destinatarioUsuarioId,
+      table.leidaAt,
+      table.createdAt,
+    ),
+    uniqueIndex("notificaciones_sistema_pago_dirigido_resuelto_uidx")
+      .on(table.entidad, table.entidadId, table.destinatarioUsuarioId)
+      .where(sql`${table.tipo} = 'PAGO_DIRIGIDO_RESUELTO'`),
   ],
 );
 

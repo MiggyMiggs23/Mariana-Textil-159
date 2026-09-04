@@ -5,11 +5,8 @@ import test, { after, before } from "node:test";
 import { ensureClientesSchema, pool } from "@workspace/db";
 import app from "../app";
 
-if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
-  throw new Error(
-    "Las pruebas HTTP de notificaciones requieren NODE_ENV=test y TEST_DATABASE_URL.",
-  );
-}
+const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const enabled = process.env.NODE_ENV === "test" && Boolean(testDatabaseUrl);
 
 const run = `NOT-${randomUUID()}`;
 const dueDate = "2030-02-03";
@@ -64,6 +61,10 @@ async function request(
 }
 
 before(async () => {
+  if (!enabled) return;
+  if (testDatabaseUrl === process.env.DATABASE_URL) {
+    throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
+  }
   await ensureClientesSchema(pool);
 
   const locationInitials = await unusedLocationInitials();
@@ -151,6 +152,7 @@ before(async () => {
 });
 
 after(async () => {
+  if (!enabled) return;
   if (server) {
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
@@ -181,9 +183,18 @@ after(async () => {
   await pool.end();
 });
 
-test("notification endpoints preserve calendar dates, authorization, and persistence", async () => {
-  const forbidden = await request("/notificaciones", nonAdminSession);
-  assert.equal(forbidden.status, 403);
+test("notification endpoints preserve calendar dates, authorization, and persistence", async (t) => {
+  if (!enabled) {
+    t.skip("TEST_DATABASE_URL no está configurada explícitamente.");
+    return;
+  }
+  const nonAdminList = await request("/notificaciones", nonAdminSession);
+  assert.equal(nonAdminList.status, 200);
+  assert.deepEqual(
+    ((await nonAdminList.json()) as { notificaciones: unknown[] }).notificaciones,
+    [],
+    "Un usuario no ADMIN no debe recibir notificaciones de crédito globales.",
+  );
 
   const listResponse = await request("/notificaciones", adminSession);
   assert.equal(listResponse.status, 200);

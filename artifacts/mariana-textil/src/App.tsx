@@ -525,7 +525,7 @@ function Router() {
         <Route
           path="/notificaciones"
           component={() => (
-            <ProtectedRoute component={Notificaciones} adminOnly />
+            <ProtectedRoute component={Notificaciones} />
           )}
         />
         <Route

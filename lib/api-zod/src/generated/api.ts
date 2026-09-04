@@ -5227,7 +5227,7 @@ export const ValidarPrecioPosResponse = zod.object({
 
 
 /**
- * @summary Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+ * @summary Lista notificaciones persistentes visibles para el usuario y alertas de crédito para ADMIN
  */
 export const ListNotificacionesResponse = zod.object({
   "notificaciones": zod.array(zod.object({
@@ -5317,7 +5317,7 @@ export const GetNotificationFeedResponse = zod.object({
 
 
 /**
- * @summary Cuenta todos los eventos activos visibles para ADMIN
+ * @summary Cuenta todos los eventos activos visibles para el usuario
  */
 export const CountNotificacionesNoLeidasResponse = zod.object({
   "count": zod.number()
@@ -5325,7 +5325,7 @@ export const CountNotificacionesNoLeidasResponse = zod.object({
 
 
 /**
- * @summary Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+ * @summary Marca las notificaciones visibles del usuario como leídas sin eliminarlas
  */
 export const MarkAllNotificacionesReadResponse = zod.object({
   "count": zod.number()
@@ -5333,7 +5333,7 @@ export const MarkAllNotificacionesReadResponse = zod.object({
 
 
 /**
- * @summary Marca una notificación como leída sin eliminarla (ADMIN)
+ * @summary Marca una notificación visible para el usuario como leída sin eliminarla
  */
 export const MarkNotificacionReadParams = zod.object({
   "tipo": zod.enum(['credito', 'sistema']),

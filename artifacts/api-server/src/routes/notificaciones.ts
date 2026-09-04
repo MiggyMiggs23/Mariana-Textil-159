@@ -1,6 +1,6 @@
-import { Router, type IRouter, type Request, type Response } from "express";
+import { Router, type IRouter } from "express";
 import { createHash } from "node:crypto";
-import { and, asc, desc, eq, gt, isNull, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, or, sql } from "drizzle-orm";
 import {
   CountNotificacionesNoLeidasResponse,
   GetNotificationFeedResponse,
@@ -24,13 +24,13 @@ import { loadCustomerCreditProjections } from "../lib/credit-aging-read-model";
 const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
 
-/** Four days lets a Friday resolution remain visible through the weekend. */
-export const RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS = 4;
-
-function requireLiteralAdmin(req: Request, res: Response): boolean {
-  if (req.auth!.user.rol === "ADMIN") return true;
-  res.status(403).json({ error: "Solo ADMIN puede consultar notificaciones." });
-  return false;
+function visibleSystemNotifications(user: { id: number; rol: string }) {
+  return user.rol === "ADMIN"
+    ? or(
+        isNull(notificacionesSistemaTable.destinatarioUsuarioId),
+        eq(notificacionesSistemaTable.destinatarioUsuarioId, user.id),
+      )
+    : eq(notificacionesSistemaTable.destinatarioUsuarioId, user.id);
 }
 
 function present(row: typeof notificacionesCreditoTable.$inferSelect) {
@@ -109,10 +109,24 @@ function directedPaymentEvent(row: Record<string, unknown>, adminQueue: boolean)
   };
 }
 
-export async function countAdminActiveEvents(adminUserId: number): Promise<number> {
-  const resolvedCutoff = new Date(
-    Date.now() - RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS * 86_400_000,
-  );
+export async function countActiveEvents(user: { id: number; rol: string }): Promise<number> {
+  if (user.rol !== "ADMIN") {
+    const [[pending], [system]] = await Promise.all([
+      db.select({ count: sql<number>`count(*)::int` })
+        .from(solicitudesPagoDirigidoTable)
+        .where(and(
+          eq(solicitudesPagoDirigidoTable.solicitanteId, user.id),
+          eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
+        )),
+      db.select({ count: sql<number>`count(*)::int` })
+        .from(notificacionesSistemaTable)
+        .where(and(
+          visibleSystemNotifications(user),
+          isNull(notificacionesSistemaTable.leidaAt),
+        )),
+    ]);
+    return Math.min(100, (pending?.count ?? 0) + (system?.count ?? 0));
+  }
   const [alerts, ownDirected, pendingDirected, [credit], [system]] =
     await Promise.all([
       getAdminAlertas(),
@@ -120,11 +134,8 @@ export async function countAdminActiveEvents(adminUserId: number): Promise<numbe
         .select({ id: solicitudesPagoDirigidoTable.id })
         .from(solicitudesPagoDirigidoTable)
         .where(and(
-          eq(solicitudesPagoDirigidoTable.solicitanteId, adminUserId),
-          or(
-            eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
-            gt(solicitudesPagoDirigidoTable.resueltaAt, resolvedCutoff),
-          ),
+          eq(solicitudesPagoDirigidoTable.solicitanteId, user.id),
+          eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
         ))
         .limit(25),
       db
@@ -139,7 +150,10 @@ export async function countAdminActiveEvents(adminUserId: number): Promise<numbe
       db
         .select({ count: sql<number>`count(*)::int` })
         .from(notificacionesSistemaTable)
-        .where(isNull(notificacionesSistemaTable.leidaAt)),
+        .where(and(
+          visibleSystemNotifications(user),
+          isNull(notificacionesSistemaTable.leidaAt),
+        )),
     ]);
   const directedIds = new Set([
     ...ownDirected.map(({ id }) => id),
@@ -165,13 +179,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
       .from(solicitudesPagoDirigidoTable)
       .where(and(
         eq(solicitudesPagoDirigidoTable.solicitanteId, user.id),
-        or(
-          eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
-          gt(
-            solicitudesPagoDirigidoTable.resueltaAt,
-            new Date(Date.now() - RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS * 86_400_000),
-          ),
-        ),
+        eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"),
       ))
       .orderBy(desc(sql`COALESCE(${solicitudesPagoDirigidoTable.resueltaAt}, ${solicitudesPagoDirigidoTable.createdAt})`))
       .limit(25);
@@ -189,7 +197,20 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
         )
       : Promise.resolve({ rows: [] });
 
-    const [ownDirected, cajaTickets] = await Promise.all([ownDirectedPromise, cajaTicketsPromise]);
+    const systemNotificationsPromise = db
+      .select()
+      .from(notificacionesSistemaTable)
+      .where(and(
+        visibleSystemNotifications(user),
+        isNull(notificacionesSistemaTable.leidaAt),
+      ))
+      .orderBy(desc(notificacionesSistemaTable.createdAt))
+      .limit(50);
+    const [ownDirected, cajaTickets, visibleSystem] = await Promise.all([
+      ownDirectedPromise,
+      cajaTicketsPromise,
+      systemNotificationsPromise,
+    ]);
 
     for (const row of ownDirected) {
       const event = directedPaymentEvent(row as unknown as Record<string, unknown>, false);
@@ -211,21 +232,28 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
       };
       events.set(event.id, event);
     }
+    for (const row of visibleSystem) {
+      events.set(`system:${row.id}`, {
+        id: `system:${row.id}`,
+        kind: "SYSTEM",
+        family: row.tipo.startsWith("SOLICITUD_") ? "SOLICITUD" : row.tipo.includes("INCOMPLETA") ? "ALERTA" : "AVISO",
+        title: row.titulo,
+        message: row.mensaje,
+        href: row.entidad === "solicitudes_pago_dirigido" ? "/pagos-dirigidos" : "/notificaciones",
+        updatedAt: row.createdAt.toISOString(),
+        siteId: null,
+        action: null,
+      });
+    }
 
     if (user.rol === "ADMIN") {
-      const [alerts, pendingDirected, systemNotifications, creditNotifications] = await Promise.all([
+      const [alerts, pendingDirected, creditNotifications] = await Promise.all([
         getAdminAlertas(),
         db
           .select()
           .from(solicitudesPagoDirigidoTable)
           .where(eq(solicitudesPagoDirigidoTable.estado, "PENDIENTE"))
           .orderBy(desc(solicitudesPagoDirigidoTable.createdAt))
-          .limit(50),
-        db
-          .select()
-          .from(notificacionesSistemaTable)
-          .where(isNull(notificacionesSistemaTable.leidaAt))
-          .orderBy(desc(notificacionesSistemaTable.createdAt))
           .limit(50),
         db
           .select()
@@ -238,19 +266,6 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
       for (const row of pendingDirected) {
         const event = directedPaymentEvent(row as unknown as Record<string, unknown>, true);
         events.set(event.id, event);
-      }
-      for (const row of systemNotifications) {
-        events.set(`system:${row.id}`, {
-          id: `system:${row.id}`,
-          kind: "SYSTEM",
-            family: row.tipo.startsWith("SOLICITUD_") ? "SOLICITUD" : row.tipo.includes("INCOMPLETA") ? "ALERTA" : "AVISO",
-          title: row.titulo,
-          message: row.mensaje,
-          href: "/notificaciones",
-          updatedAt: row.createdAt.toISOString(),
-          siteId: null,
-          action: null,
-        });
       }
       for (const row of creditNotifications) {
         events.set(`credit-notice:${row.id}`, {
@@ -331,17 +346,33 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
 
 router.get("/notificaciones", async (req, res, next): Promise<void> => {
   try {
-    if (!requireLiteralAdmin(req, res)) return;
+    const user = req.auth!.user;
     const [notifications, systemNotifications] = await Promise.all([
-      db
+      user.rol === "ADMIN" ? db
         .select()
         .from(notificacionesCreditoTable)
-        .orderBy(asc(notificacionesCreditoTable.leidaAt), desc(notificacionesCreditoTable.createdAt)),
+        .orderBy(asc(notificacionesCreditoTable.leidaAt), desc(notificacionesCreditoTable.createdAt)) : Promise.resolve([]),
       db
         .select()
         .from(notificacionesSistemaTable)
+        .where(visibleSystemNotifications(user))
         .orderBy(asc(notificacionesSistemaTable.leidaAt), desc(notificacionesSistemaTable.createdAt)),
     ]);
+    if (user.rol !== "ADMIN") {
+      const parsed = ListNotificacionesResponse.parse({
+        notificaciones: [],
+        sistema: systemNotifications.map((row) => ({
+          ...row,
+          leidaAt: row.leidaAt?.toISOString() ?? null,
+          createdAt: row.createdAt.toISOString(),
+        })),
+        porVencer: [],
+        vencidas: [],
+        clientesConMultiplesVencidas: [],
+      });
+      res.json(parsed);
+      return;
+    }
 
     // Aging is intentionally projected from the immutable ledger's current
     // FIFO balance.  Notification records are merely a review queue and must
@@ -439,9 +470,8 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
 
 router.get("/notificaciones/no-leidas/count", async (req, res, next): Promise<void> => {
   try {
-    if (!requireLiteralAdmin(req, res)) return;
     res.json(CountNotificacionesNoLeidasResponse.parse({
-      count: await countAdminActiveEvents(req.auth!.user.id),
+      count: await countActiveEvents(req.auth!.user),
     }));
   } catch (error) {
     next(error);
@@ -450,17 +480,20 @@ router.get("/notificaciones/no-leidas/count", async (req, res, next): Promise<vo
 
 router.post("/notificaciones/leer-todas", async (req, res, next): Promise<void> => {
   try {
-    if (!requireLiteralAdmin(req, res)) return;
+    const user = req.auth!.user;
     const count = await db.transaction(async (tx) => {
-      const credit = await tx
+      const credit = user.rol === "ADMIN" ? await tx
         .update(notificacionesCreditoTable)
         .set({ leidaAt: new Date() })
         .where(isNull(notificacionesCreditoTable.leidaAt))
-        .returning({ id: notificacionesCreditoTable.id });
+        .returning({ id: notificacionesCreditoTable.id }) : [];
       const system = await tx
         .update(notificacionesSistemaTable)
         .set({ leidaAt: new Date() })
-        .where(isNull(notificacionesSistemaTable.leidaAt))
+        .where(and(
+          visibleSystemNotifications(user),
+          isNull(notificacionesSistemaTable.leidaAt),
+        ))
         .returning({ id: notificacionesSistemaTable.id });
       return credit.length + system.length;
     });
@@ -472,17 +505,21 @@ router.post("/notificaciones/leer-todas", async (req, res, next): Promise<void> 
 
 router.post("/notificaciones/:tipo/:id/leer", async (req, res, next): Promise<void> => {
   try {
-    if (!requireLiteralAdmin(req, res)) return;
     const params = MarkNotificacionReadParams.parse(req.params);
     const leidaAt = new Date();
-    const table = params.tipo === "credito"
-      ? notificacionesCreditoTable
-      : notificacionesSistemaTable;
-    const [notification] = await db
-      .update(table)
-      .set({ leidaAt })
-      .where(eq(table.id, params.id))
-      .returning({ id: table.id });
+    const user = req.auth!.user;
+    const [notification] = params.tipo === "credito"
+      ? user.rol === "ADMIN"
+        ? await db.update(notificacionesCreditoTable).set({ leidaAt })
+            .where(eq(notificacionesCreditoTable.id, params.id))
+            .returning({ id: notificacionesCreditoTable.id })
+        : []
+      : await db.update(notificacionesSistemaTable).set({ leidaAt })
+          .where(and(
+            eq(notificacionesSistemaTable.id, params.id),
+            visibleSystemNotifications(user),
+          ))
+          .returning({ id: notificacionesSistemaTable.id });
     if (!notification) {
       res.status(404).json({ error: "Notificación no encontrada." });
       return;

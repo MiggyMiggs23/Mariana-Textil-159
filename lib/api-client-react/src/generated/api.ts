@@ -11274,7 +11274,7 @@ export const getListNotificacionesUrl = () => {
 }
 
 /**
- * @summary Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+ * @summary Lista notificaciones persistentes visibles para el usuario y alertas de crédito para ADMIN
  */
 export const listNotificaciones = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesPanel> => {
 
@@ -11298,7 +11298,7 @@ export const getListNotificacionesQueryKey = () => {
     }
 
 
-export const getListNotificacionesQueryOptions = <TData = Awaited<ReturnType<typeof listNotificaciones>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNotificaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getListNotificacionesQueryOptions = <TData = Awaited<ReturnType<typeof listNotificaciones>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNotificaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -11317,14 +11317,14 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListNotificacionesQueryResult = NonNullable<Awaited<ReturnType<typeof listNotificaciones>>>
-export type ListNotificacionesQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+export type ListNotificacionesQueryError = ErrorType<UnauthorizedResponse>
 
 
 /**
- * @summary Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+ * @summary Lista notificaciones persistentes visibles para el usuario y alertas de crédito para ADMIN
  */
 
-export function useListNotificaciones<TData = Awaited<ReturnType<typeof listNotificaciones>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+export function useListNotificaciones<TData = Awaited<ReturnType<typeof listNotificaciones>>, TError = ErrorType<UnauthorizedResponse>>(
   options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listNotificaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -11428,7 +11428,7 @@ export const getCountNotificacionesNoLeidasUrl = () => {
 }
 
 /**
- * @summary Cuenta todos los eventos activos visibles para ADMIN
+ * @summary Cuenta todos los eventos activos visibles para el usuario
  */
 export const countNotificacionesNoLeidas = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesNoLeidasCount> => {
 
@@ -11452,7 +11452,7 @@ export const getCountNotificacionesNoLeidasQueryKey = () => {
     }
 
 
-export const getCountNotificacionesNoLeidasQueryOptions = <TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getCountNotificacionesNoLeidasQueryOptions = <TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -11471,14 +11471,14 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type CountNotificacionesNoLeidasQueryResult = NonNullable<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>>
-export type CountNotificacionesNoLeidasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+export type CountNotificacionesNoLeidasQueryError = ErrorType<UnauthorizedResponse>
 
 
 /**
- * @summary Cuenta todos los eventos activos visibles para ADMIN
+ * @summary Cuenta todos los eventos activos visibles para el usuario
  */
 
-export function useCountNotificacionesNoLeidas<TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+export function useCountNotificacionesNoLeidas<TData = Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError = ErrorType<UnauthorizedResponse>>(
   options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof countNotificacionesNoLeidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -11505,7 +11505,7 @@ export const getMarkAllNotificacionesReadUrl = () => {
 }
 
 /**
- * @summary Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+ * @summary Marca las notificaciones visibles del usuario como leídas sin eliminarlas
  */
 export const markAllNotificacionesRead = async ( options?: Parameters<typeof customFetch>[1]): Promise<NotificacionesNoLeidasCount> => {
 
@@ -11522,7 +11522,7 @@ export const markAllNotificacionesRead = async ( options?: Parameters<typeof cus
 
 
 
-export const getMarkAllNotificacionesReadMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>,
+export const getMarkAllNotificacionesReadMutationOptions = <TError = ErrorType<UnauthorizedResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markAllNotificacionesRead>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof markAllNotificacionesRead>>, TError,void, TContext> => {
 
@@ -11551,12 +11551,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type MarkAllNotificacionesReadMutationResult = NonNullable<Awaited<ReturnType<typeof markAllNotificacionesRead>>>
 
-    export type MarkAllNotificacionesReadMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+    export type MarkAllNotificacionesReadMutationError = ErrorType<UnauthorizedResponse>
 
     /**
- * @summary Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+ * @summary Marca las notificaciones visibles del usuario como leídas sin eliminarlas
  */
-export const useMarkAllNotificacionesRead = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>,
+export const useMarkAllNotificacionesRead = <TError = ErrorType<UnauthorizedResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markAllNotificacionesRead>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof markAllNotificacionesRead>>,
@@ -11577,7 +11577,7 @@ export const getMarkNotificacionReadUrl = (tipo: 'credito' | 'sistema',
 }
 
 /**
- * @summary Marca una notificación como leída sin eliminarla (ADMIN)
+ * @summary Marca una notificación visible para el usuario como leída sin eliminarla
  */
 export const markNotificacionRead = async (tipo: 'credito' | 'sistema',
     id: number, options?: Parameters<typeof customFetch>[1]): Promise<NotificacionMarcadaLeida> => {
@@ -11627,7 +11627,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type MarkNotificacionReadMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
 
     /**
- * @summary Marca una notificación como leída sin eliminarla (ADMIN)
+ * @summary Marca una notificación visible para el usuario como leída sin eliminarla
  */
 export const useMarkNotificacionRead = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificacionRead>>, TError,{tipo: 'credito' | 'sistema';id: number}, TContext>, request?: SecondParameter<typeof customFetch>}

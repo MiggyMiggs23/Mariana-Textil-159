@@ -15,7 +15,7 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   }
 
-  const [{ db, pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema }, { default: app }, { buildCommercialReport }, { getAdminAlertas }] =
+  const [{ db, pool, ensureClientesSchema, ensureSolicitudesPagoDirigidoSchema, ensureNotificacionesSchema }, { default: app }, { buildCommercialReport }, { getAdminAlertas }] =
     await Promise.all([
       import("@workspace/db"),
       import("./app"),
@@ -35,6 +35,7 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
   await assertIsolated();
   await ensureClientesSchema(pool);
   await ensureSolicitudesPagoDirigidoSchema(pool);
+  await ensureNotificacionesSchema(pool);
 
   const tag = `DIRECTED-${randomUUID()}`;
   const one = async (text: string, values: unknown[] = []) =>
@@ -332,6 +333,63 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
       )).status,
       409,
     );
+    assert.equal(
+      Number((await one(
+        `SELECT COUNT(*)::int count FROM notificaciones_sistema
+         WHERE tipo='PAGO_DIRIGIDO_RESUELTO'
+           AND entidad='solicitudes_pago_dirigido' AND entidad_id=$1
+           AND destinatario_usuario_id=$2 AND leida_at IS NULL`,
+        [String(pending.id), caja.id],
+      )).count),
+      1,
+      "La resolución y su aviso no leído deben persistirse atómicamente para el solicitante.",
+    );
+    const cajaResolvedFeed = (await (await api(cajaSession, "/notificaciones/feed")).json()) as {
+      events: Array<{ id: string; kind: string; href: string }>;
+    };
+    assert.ok(
+      !cajaResolvedFeed.events.some((event) => event.id === `directed-payment:${pending.id}`),
+      "La solicitud resuelta debe salir inmediatamente del evento derivado.",
+    );
+    const approvalNotice = cajaResolvedFeed.events.find(
+      (event) => event.kind === "SYSTEM" && event.href === "/pagos-dirigidos",
+    );
+    assert.ok(approvalNotice, "El solicitante debe recibir el aviso persistido en su feed.");
+    const adminResolvedFeed = (await (await api(adminSession, "/notificaciones/feed")).json()) as {
+      events: Array<{ id: string }>;
+    };
+    assert.ok(
+      !adminResolvedFeed.events.some((event) => event.id === approvalNotice.id),
+      "Un usuario no relacionado no debe ver el aviso dirigido.",
+    );
+    const cajaUnread = (await (await api(cajaSession, "/notificaciones/no-leidas/count")).json()) as {
+      count: number;
+    };
+    assert.ok(cajaUnread.count >= 1);
+    const cajaHistory = (await (await api(cajaSession, "/notificaciones")).json()) as {
+      sistema: Array<{ id: number; entidadId: string; leidaAt: string | null }>;
+    };
+    const storedApproval = cajaHistory.sistema.find(
+      (notice) => notice.entidadId === String(pending.id),
+    );
+    assert.ok(storedApproval);
+    assert.equal(storedApproval.leidaAt, null);
+    assert.equal(
+      (await post(
+        cajaSession,
+        `/notificaciones/sistema/${storedApproval.id}/leer`,
+        {},
+      )).status,
+      200,
+    );
+    const cajaReadFeed = (await (await api(cajaSession, "/notificaciones/feed")).json()) as {
+      events: Array<{ id: string }>;
+    };
+    assert.ok(!cajaReadFeed.events.some((event) => event.id === approvalNotice.id));
+    const readHistory = (await (await api(cajaSession, "/notificaciones")).json()) as {
+      sistema: Array<{ id: number; leidaAt: string | null }>;
+    };
+    assert.ok(readHistory.sistema.find((notice) => notice.id === storedApproval.id)?.leidaAt);
     const directedApplication = await one(
       `SELECT importe::text
        FROM aplicaciones_credito
@@ -423,6 +481,33 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
       ).status,
       200,
     );
+    assert.equal(
+      (
+        await post(
+          adminSession,
+          `/pagos-dirigidos/${rejected.id}/rechazar`,
+          { motivoRechazo: "Segundo intento que no debe duplicar aviso" },
+        )
+      ).status,
+      409,
+    );
+    assert.equal(
+      Number((await one(
+        `SELECT COUNT(*)::int count FROM notificaciones_sistema
+         WHERE tipo='PAGO_DIRIGIDO_RESUELTO'
+           AND entidad_id=$1 AND destinatario_usuario_id=$2`,
+        [String(rejected.id), caja.id],
+      )).count),
+      1,
+      "Resolver por segunda vez no debe duplicar la notificación.",
+    );
+    const rejectedFeed = (await (await api(cajaSession, "/notificaciones/feed")).json()) as {
+      events: Array<{ id: string; kind: string; href: string }>;
+    };
+    assert.ok(!rejectedFeed.events.some((event) => event.id === `directed-payment:${rejected.id}`));
+    assert.ok(rejectedFeed.events.some(
+      (event) => event.kind === "SYSTEM" && event.href === "/pagos-dirigidos",
+    ));
     const fifoResponse = await post(
       cajaSession,
       `/clientes/${cliente.id}/pagos`,
@@ -543,10 +628,21 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
     });
     assert.equal(directAdminResponse.status, 201);
     const directAdmin = (await directAdminResponse.json()) as {
+      id: number;
       estado: string;
       movimientoId: number;
     };
     assert.equal(directAdmin.estado, "APROBADA");
+    assert.equal(
+      Number((await one(
+        `SELECT COUNT(*)::int count FROM notificaciones_sistema
+         WHERE tipo='PAGO_DIRIGIDO_RESUELTO'
+           AND entidad_id=$1 AND destinatario_usuario_id=$2`,
+        [String(directAdmin.id), admin.id],
+      )).count),
+      1,
+      "La autoaprobación inmediata también debe avisar al solicitante.",
+    );
 
     const supplierPendingResponse = await post(
       cajaSession,

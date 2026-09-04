@@ -23,6 +23,7 @@ export { ensureAuditSchema } from "./lib/audit-schema";
 export { ensureAplicacionesPagoProveedorSchema } from "./lib/aplicaciones-pago-proveedor-schema";
 export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";
 export { ensureSolicitudesPagoDirigidoSchema } from "./lib/solicitudes-pago-dirigido-schema";
+export { ensureNotificacionesSchema } from "./lib/notificaciones-schema";
 export { ensureCamionetasSchema } from "./lib/camionetas-schema";
 export { ensureChoferesSchema } from "./lib/choferes-schema";
 export { ensureViajesSchema } from "./lib/viajes-schema";

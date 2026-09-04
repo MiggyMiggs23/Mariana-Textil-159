@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Bell, Check, Clock, RefreshCw } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
+import { Link } from "wouter";
 
 function formatCalendarDate(value: string): string {
   const [year, month, day] = value.slice(0, 10).split("-").map(Number);
@@ -50,7 +51,7 @@ export default function Notificaciones() {
         {!data?.sistema.length ? <Card><CardContent className="p-6 text-muted-foreground">No hay avisos operativos.</CardContent></Card> : data.sistema.map((item) =>
           <Card key={item.id} className={item.leidaAt ? "opacity-70" : "border-amber-300 bg-amber-50/40"}>
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
-              <div className="space-y-1"><p className="font-semibold">{item.titulo}</p><p className="text-sm text-muted-foreground">{item.mensaje}</p><p className="text-xs text-muted-foreground">{new Date(item.createdAt).toLocaleString("es-MX")}</p></div>
+              <div className="space-y-1"><p className="font-semibold">{item.titulo}</p><p className="text-sm text-muted-foreground">{item.mensaje}</p>{item.entidad === "solicitudes_pago_dirigido" ? <Link href="/pagos-dirigidos" className="text-sm font-medium text-primary hover:underline">Ver pagos dirigidos</Link> : null}<p className="text-xs text-muted-foreground">{new Date(item.createdAt).toLocaleString("es-MX")}</p></div>
               {!item.leidaAt ? <Button size="sm" variant="outline" onClick={() => markOne.mutate({ tipo: "sistema", id: item.id })}><Check className="mr-1 h-4 w-4" />Leída</Button> : <span className="text-sm text-muted-foreground">Leída</span>}
             </CardContent>
           </Card>,

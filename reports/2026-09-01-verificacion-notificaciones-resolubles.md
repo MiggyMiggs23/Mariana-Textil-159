@@ -24,9 +24,9 @@ La desaparición es correcta: el único candidato no cumplía la condición comp
 
 ### Solicitudes resueltas
 
-Una solicitud PENDIENTE permanece activa. Una APROBADA o RECHAZADA se muestra al solicitante durante **cuatro días completos desde `resueltaAt`** y después desaparece. Cuatro días cubren una resolución del viernes hasta el martes siguiente.
+Una solicitud `PENDIENTE` permanece como evento derivado activo. Una `APROBADA` o `RECHAZADA` desaparece inmediatamente de ese evento.
 
-Se evaluó escribir una notificación guardada al resolver. Sería más durable y permitiría lectura explícita, pero duplicaría el evento en otra tabla, requeriría una escritura adicional y una política de idempotencia/migración. Para este alcance se conservó la ventana corta solicitada, sin tabla nueva.
+Decisión posterior que sustituye la ventana anterior: la misma transacción que resuelve guarda una notificación no leída e idempotente en `notificaciones_sistema`, dirigida exclusivamente al solicitante. Permanece en su historial después de leerse y enlaza a Pagos dirigidos.
 
 ### Identificadores
 

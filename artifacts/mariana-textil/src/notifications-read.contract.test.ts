@@ -4,12 +4,12 @@ import test from "node:test";
 
 const bell = readFileSync(new URL("./components/notifications-bell.tsx", import.meta.url), "utf8");
 
-test("ADMIN can mark stored notifications read from the panel", () => {
-  assert.match(bell, /isAdmin && \(/);
+test("each user can mark their visible stored notifications read from the panel", () => {
   assert.match(bell, /Marcar guardadas como leídas/);
   assert.match(bell, /storedUnreadCount === 0/);
   assert.match(bell, /useListNotificaciones/);
-  assert.match(bell, /enabled: isAdmin/);
+  assert.doesNotMatch(bell, /enabled: isAdmin/);
+  assert.match(bell, /useMarkNotificacionRead/);
   assert.match(bell, /getGetNotificationFeedQueryKey/);
   assert.match(bell, /getCountNotificacionesNoLeidasQueryKey/);
   assert.match(bell, /getListNotificacionesQueryKey/);

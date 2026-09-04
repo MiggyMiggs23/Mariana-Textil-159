@@ -22,6 +22,7 @@ import {
   ensureAplicacionesPagoProveedorSchema,
   ensurePagosProveedorSchema,
   ensureSolicitudesPagoDirigidoSchema,
+  ensureNotificacionesSchema,
   ensureCamionetasSchema,
   ensureChoferesSchema,
   ensureViajesSchema,
@@ -63,7 +64,7 @@ export async function ensureStartupSchemas(): Promise<void> {
   await withSchemaStartupLock(pool, async (executor) => {
     const startupPool = executor as unknown as typeof pool;
     await phase("audit and logistics", async () => {
-      await ensureAuditSchema(startupPool); await ensureCamionetasSchema(startupPool); await ensureChoferesSchema(startupPool);
+      await ensureAuditSchema(startupPool); await ensureNotificacionesSchema(startupPool); await ensureCamionetasSchema(startupPool); await ensureChoferesSchema(startupPool);
       await ensureViajesSchema(startupPool); await ensurePagosProveedorSchema(startupPool);
       await ensureSolicitudesPagoDirigidoSchema(startupPool); await ensureAplicacionesPagoProveedorSchema(startupPool);
     });

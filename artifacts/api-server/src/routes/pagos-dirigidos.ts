@@ -7,6 +7,7 @@ import {
   auditoriaTable,
   db,
   movimientosCreditoTable,
+  notificacionesSistemaTable,
   pagosProveedorTable,
   solicitudesPagoDirigidoTable,
 } from "@workspace/db";
@@ -55,6 +56,21 @@ type DirectedRequestRawRow = {
   ubicacion_nombre: string | null; movimiento_id: number | null;
   estado: "PENDIENTE" | "APROBADA" | "RECHAZADA"; created_at: Date;
 };
+
+async function notifyRequesterResolved(
+  tx: Tx,
+  request: { id: number; solicitanteId: number; estado: "APROBADA" | "RECHAZADA" },
+) {
+  const approved = request.estado === "APROBADA";
+  await tx.insert(notificacionesSistemaTable).values({
+    tipo: "PAGO_DIRIGIDO_RESUELTO",
+    titulo: `Pago dirigido ${approved ? "aprobado" : "rechazado"}`,
+    mensaje: `Tu solicitud de pago dirigido fue ${approved ? "aprobada" : "rechazada"}.`,
+    entidad: "solicitudes_pago_dirigido",
+    entidadId: String(request.id),
+    destinatarioUsuarioId: request.solicitanteId,
+  }).onConflictDoNothing();
+}
 const positiveId = (value: unknown) => Number.isInteger(Number(value)) && Number(value) > 0 ? Number(value) : null;
 function parsePayment(body: unknown): Payment | null {
   const parsed = CreateSolicitudPagoDirigidoBody.safeParse(body);
@@ -232,6 +248,11 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
       if (movement) {
         const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
         [saved] = await tx.update(solicitudesPagoDirigidoTable).set({ estado: "APROBADA", autorizadorId: req.auth!.user.id, autorizadorNombre: String(authorizer.rows[0]?.nombre ?? ""), movimientoId: movement.id, resueltaAt: new Date() }).where(sql`${solicitudesPagoDirigidoTable.id}=${request!.id}`).returning();
+        await notifyRequesterResolved(tx, {
+          id: saved!.id,
+          solicitanteId: saved!.solicitanteId,
+          estado: "APROBADA",
+        });
       }
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: isAdmin ? "APROBAR_APLICAR_PAGO_DIRIGIDO" : "SOLICITAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(request!.id), datosDespues: { ...data, movimientoId: movement?.id ?? null }, ip: getRequestIp(req) });
       return { request: saved, movement };
@@ -262,6 +283,11 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
       }, req.auth!.user.id);
       const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
       await tx.update(solicitudesPagoDirigidoTable).set({ estado: "APROBADA", autorizadorId: req.auth!.user.id, autorizadorNombre: String(authorizer.rows[0]?.nombre ?? ""), movimientoId: movement.id, resueltaAt: new Date() }).where(sql`${solicitudesPagoDirigidoTable.id}=${id}`);
+      await notifyRequesterResolved(tx, {
+        id,
+        solicitanteId: Number(request.solicitante_id),
+        estado: "APROBADA",
+      });
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "APROBAR_APLICAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(id), datosDespues: { movimientoId: movement.id }, ip: getRequestIp(req) });
       return movement;
     });
@@ -286,6 +312,11 @@ router.post("/pagos-dirigidos/:id/rechazar", requireRole("ADMIN"), async (req, r
       const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
       const updated = await tx.update(solicitudesPagoDirigidoTable).set({ estado: "RECHAZADA", autorizadorId: req.auth!.user.id, autorizadorNombre: String(authorizer.rows[0]?.nombre ?? ""), motivoRechazo: body.data.motivoRechazo.trim(), resueltaAt: new Date() }).where(sql`${solicitudesPagoDirigidoTable.id}=${id} AND ${solicitudesPagoDirigidoTable.estado}='PENDIENTE'`).returning();
       if (!updated[0]) throw new Error("REQUEST_NOT_PENDING");
+      await notifyRequesterResolved(tx, {
+        id,
+        solicitanteId: updated[0].solicitanteId,
+        estado: "RECHAZADA",
+      });
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "RECHAZAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(id), datosAntes: before.rows[0], datosDespues: present(updated[0]), ip: getRequestIp(req) });
       return updated[0];
     });

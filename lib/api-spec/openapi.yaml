@@ -40,7 +40,7 @@ tags:
   - name: admin-analytics
     description: Analítica financiera y operativa exclusiva para ADMIN
   - name: notificaciones
-    description: Notificaciones y alertas de crédito exclusivas para ADMIN
+    description: Notificaciones dirigidas al usuario y alertas de crédito exclusivas para ADMIN
   - name: etiquetas
     description: Búsqueda y reimpresión controlada de etiquetas de rollos
   - name: contenedores
@@ -3332,7 +3332,7 @@ paths:
     get:
       operationId: listNotificaciones
       tags: [notificaciones]
-      summary: Lista notificaciones persistentes y alertas dinámicas de crédito (ADMIN)
+      summary: Lista notificaciones persistentes visibles para el usuario y alertas de crédito para ADMIN
       responses:
         "200":
           description: Panel de notificaciones
@@ -3341,7 +3341,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/NotificacionesPanel"
         "401": { $ref: "#/components/responses/Unauthorized" }
-        "403": { $ref: "#/components/responses/Forbidden" }
   /notificaciones/feed:
     get:
       operationId: getNotificationFeed
@@ -3359,7 +3358,7 @@ paths:
     get:
       operationId: countNotificacionesNoLeidas
       tags: [notificaciones]
-      summary: Cuenta todos los eventos activos visibles para ADMIN
+      summary: Cuenta todos los eventos activos visibles para el usuario
       responses:
         "200":
           description: Conteo unificado de eventos activos
@@ -3368,12 +3367,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/NotificacionesNoLeidasCount"
         "401": { $ref: "#/components/responses/Unauthorized" }
-        "403": { $ref: "#/components/responses/Forbidden" }
   /notificaciones/leer-todas:
     post:
       operationId: markAllNotificacionesRead
       tags: [notificaciones]
-      summary: Marca todas las notificaciones como leídas sin eliminarlas (ADMIN)
+      summary: Marca las notificaciones visibles del usuario como leídas sin eliminarlas
       responses:
         "200":
           description: Notificaciones actualizadas
@@ -3382,12 +3380,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/NotificacionesNoLeidasCount"
         "401": { $ref: "#/components/responses/Unauthorized" }
-        "403": { $ref: "#/components/responses/Forbidden" }
   /notificaciones/{tipo}/{id}/leer:
     post:
       operationId: markNotificacionRead
       tags: [notificaciones]
-      summary: Marca una notificación como leída sin eliminarla (ADMIN)
+      summary: Marca una notificación visible para el usuario como leída sin eliminarla
       parameters:
         - in: path
           name: tipo

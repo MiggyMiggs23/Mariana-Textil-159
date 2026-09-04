@@ -10,6 +10,7 @@ import {
   useGetNotificationFeed,
   useListNotificaciones,
   useMarkAllNotificacionesRead,
+  useMarkNotificacionRead,
   useRechazarSolicitudPagoDirigido,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -89,6 +90,15 @@ export function NotificationsBell({
       }),
     },
   });
+  const markOneStored = useMarkNotificacionRead({
+    mutation: {
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
+        void queryClient.invalidateQueries({ queryKey: getCountNotificacionesNoLeidasQueryKey() });
+        void queryClient.invalidateQueries({ queryKey: getListNotificacionesQueryKey() });
+      },
+    },
+  });
   const { data, isLoading, isError, refetch } = useGetNotificationFeed({
     query: {
       queryKey: getGetNotificationFeedQueryKey(),
@@ -99,7 +109,6 @@ export function NotificationsBell({
   const storedNotifications = useListNotificaciones({
     query: {
       queryKey: getListNotificacionesQueryKey(),
-      enabled: isAdmin,
       staleTime: 15_000,
     },
   });
@@ -156,7 +165,7 @@ export function NotificationsBell({
         <div className="border-b bg-muted/20 px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <p className="font-semibold text-sidebar">Notificaciones</p>
-            {isAdmin && (
+            {storedUnreadCount > 0 && (
               <Button
                 size="sm"
                 variant="outline"
@@ -221,7 +230,21 @@ export function NotificationsBell({
                           </div>
                         </div>
                       ) : (
-                        <Link href={event.href} onClick={() => setOpen(false)} className="mt-2 inline-block text-xs font-medium text-primary hover:underline">Ver detalle</Link>
+                        <Link
+                          href={event.href}
+                          onClick={() => {
+                            const systemId = event.kind === "SYSTEM"
+                              ? Number(event.id.replace("system:", ""))
+                              : null;
+                            if (systemId && Number.isInteger(systemId)) {
+                              markOneStored.mutate({ tipo: "sistema", id: systemId });
+                            }
+                            setOpen(false);
+                          }}
+                          className="mt-2 inline-block text-xs font-medium text-primary hover:underline"
+                        >
+                          Ver detalle
+                        </Link>
                       )}
                       <p className="mt-2 text-[10px] text-muted-foreground">{eventTime(event.updatedAt)}</p>
                     </div>
@@ -239,15 +262,16 @@ export function NotificationsBell({
           </p>
         )}
 
-        {isAdmin && (
-          <div className="grid grid-cols-2 gap-1 border-t bg-muted/40 p-2">
-            <Link
-              href="/alertas"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-1 rounded-md py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              Alertas <ExternalLink className="h-3.5 w-3.5" />
-            </Link>
+        <div className={cn("grid gap-1 border-t bg-muted/40 p-2", isAdmin ? "grid-cols-2" : "grid-cols-1")}>
+            {isAdmin ? (
+              <Link
+                href="/alertas"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-1 rounded-md py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                Alertas <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            ) : <span />}
             <Link
               href="/notificaciones"
               onClick={() => setOpen(false)}
@@ -255,8 +279,7 @@ export function NotificationsBell({
             >
               Historial <ExternalLink className="h-3.5 w-3.5" />
             </Link>
-          </div>
-        )}
+        </div>
       </PopoverContent>
       <Dialog open={rejecting != null} onOpenChange={(value) => { if (!value) { setRejecting(null); setMotivoRechazo(""); } }}>
         <DialogContent>
