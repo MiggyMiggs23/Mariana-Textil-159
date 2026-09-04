@@ -959,6 +959,23 @@ export interface AdminRealtimeStore {
   alertas: string[];
 }
 
+export type AdminRealtimeTicketDocumentoTipo = typeof AdminRealtimeTicketDocumentoTipo[keyof typeof AdminRealtimeTicketDocumentoTipo];
+
+
+export const AdminRealtimeTicketDocumentoTipo = {
+  TICKET: 'TICKET',
+  NOTA: 'NOTA',
+} as const;
+
+export type AdminRealtimeTicketAutorizacionEstado = typeof AdminRealtimeTicketAutorizacionEstado[keyof typeof AdminRealtimeTicketAutorizacionEstado];
+
+
+export const AdminRealtimeTicketAutorizacionEstado = {
+  NO_APLICA: 'NO_APLICA',
+  PENDIENTE: 'PENDIENTE',
+  AUTORIZADA: 'AUTORIZADA',
+} as const;
+
 export interface AdminRealtimeTicket {
   id: number;
   folio: number;
@@ -970,6 +987,8 @@ export interface AdminRealtimeTicket {
   /** @nullable */
   margen: string | null;
   cobrado: boolean;
+  documentoTipo: AdminRealtimeTicketDocumentoTipo;
+  autorizacionEstado: AdminRealtimeTicketAutorizacionEstado;
 }
 
 export interface AdminRealtimeDashboard {
@@ -5029,6 +5048,15 @@ export interface TicketCancelacionInput {
   credencialesAdmin?: CredencialesAdmin | null;
 }
 
+export type TicketCajaResumenAutorizacionEstado = typeof TicketCajaResumenAutorizacionEstado[keyof typeof TicketCajaResumenAutorizacionEstado];
+
+
+export const TicketCajaResumenAutorizacionEstado = {
+  NO_APLICA: 'NO_APLICA',
+  PENDIENTE: 'PENDIENTE',
+  AUTORIZADA: 'AUTORIZADA',
+} as const;
+
 export interface TicketCajaResumen {
   id: number;
   folio: number;
@@ -5041,6 +5069,10 @@ export interface TicketCajaResumen {
   cobrado: boolean;
   /** @nullable */
   cobradoAt: string | null;
+  documentoTipo: DocumentoTipoTicket;
+  autorizacionEstado: TicketCajaResumenAutorizacionEstado;
+  /** @nullable */
+  autorizadoAt?: string | null;
   formasPago: FormaPagoTicket[];
 }
 

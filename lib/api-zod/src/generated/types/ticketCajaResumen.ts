@@ -5,7 +5,9 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { FormaPagoTicket } from './formaPagoTicket';
+import type { TicketCajaResumenAutorizacionEstado } from './ticketCajaResumenAutorizacionEstado';
 
 export interface TicketCajaResumen {
   id: number;
@@ -19,5 +21,9 @@ export interface TicketCajaResumen {
   cobrado: boolean;
   /** @nullable */
   cobradoAt: Date | null;
+  documentoTipo: DocumentoTipoTicket;
+  autorizacionEstado: TicketCajaResumenAutorizacionEstado;
+  /** @nullable */
+  autorizadoAt?: Date | null;
   formasPago: FormaPagoTicket[];
 }

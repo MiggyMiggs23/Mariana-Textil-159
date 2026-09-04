@@ -1,6 +1,7 @@
 import { db, pool } from "@workspace/db";
 import { meteredReferenceCost } from "./metered-reference-cost";
 import { loadCustomerCreditProjections } from "./credit-aging-read-model";
+import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
 
 type Primitive = string | number | boolean | null;
 type Row = Record<string, Primitive>;
@@ -69,7 +70,7 @@ function purchaseWhere(ctx: DomainReportContext) {
 }
 function salesWhere(ctx: DomainReportContext, dates = ctx.range) {
   const values: unknown[] = [dates.desde, dates.hasta];
-  const where = ["t.created_at >= $1", "t.created_at <= $2", "t.estado='VENDIDO'"];
+  const where = [`${accountedDocumentAt("t")} >= $1`, `${accountedDocumentAt("t")} <= $2`, accountedDocumentPredicate("t")];
   const add = (field: string, input: unknown[], cast = "int[]") => {
     if (input.length) { values.push(input); where.push(`${field}=ANY($${values.length}::${cast})`); }
   };
@@ -228,7 +229,7 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
         vencida:["1-30","31-60","61-90","91+"].includes(bucket), notas:charge.notas };
     }));
   const firstPurchases = await pool.query(`SELECT DISTINCT t.cliente_id FROM tickets t WHERE ${where.text}
-    AND NOT EXISTS (SELECT 1 FROM tickets prior_ticket WHERE prior_ticket.cliente_id=t.cliente_id AND prior_ticket.estado='VENDIDO' AND prior_ticket.created_at<$1)`, where.values);
+    AND NOT EXISTS (SELECT 1 FROM tickets prior_ticket WHERE prior_ticket.cliente_id=t.cliente_id AND ${accountedDocumentPredicate("prior_ticket")} AND prior_ticket.created_at<$1)`, where.values);
   const newClients = firstPurchases.rows.length;
   return { kpis: [{ id:"ventas-clientes",label:"Ventas",value:totalSales,kind:"money",economic:true },{ id:"utilidad-clientes",label:"Utilidad exacta",value:summary.rows[0]?.utilidad == null ? null : number(summary.rows[0].utilidad),kind:"money",economic:true},{id:"ticket-promedio",label:"Ticket promedio",value:tickets ? totalSales/tickets : 0,kind:"money",economic:true},{id:"clientes-nuevos",label:"Clientes nuevos",value:newClients,kind:"count"}],
     charts: [{ id:"clientes-top",title:"Ventas por cliente",type:"bar",categoryKey:"cliente",series:[{key:"ventas",label:"Ventas",kind:"money",economic:true}],rows:clientTable }],

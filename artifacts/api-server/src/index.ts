@@ -5,6 +5,7 @@ import {
   ensureSalidasSchema,
   ensureTicketIvaSchema,
   ensureCashSessionSchema,
+  ensureTicketAuthorizationSchema,
   ensureTicketLineTypesSchema,
   ensureAdminAnalyticsSchema,
   ensureEtiquetasSchema,
@@ -79,7 +80,7 @@ export async function ensureStartupSchemas(): Promise<void> {
       logger.info({ migratedSupportUsers }, "Roles SUPERVISOR, SISTEMAS y CONTADOR verificados");
     });
     await phase("customers and tickets", async () => {
-      await ensureClientesSchema(startupPool); await ensureTicketIvaSchema(startupPool); await ensureCashSessionSchema(startupPool);
+      await ensureClientesSchema(startupPool); await ensureTicketIvaSchema(startupPool); await ensureCashSessionSchema(startupPool); await ensureTicketAuthorizationSchema(startupPool);
       await ensureTicketLineTypesSchema(startupPool); await ensureSalidasSchema(startupPool); await ensureDocumentFoliosSchema(startupPool);
     });
     await phase("reporting and labels", async () => {

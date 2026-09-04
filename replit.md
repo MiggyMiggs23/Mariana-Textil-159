@@ -51,6 +51,10 @@ Diagnóstico de Precios: la consulta sí devolvía todo el catálogo, sin pagina
 
 # Mariana Textil
 
+## POS y Caja — regla contable vigente
+
+**Nada cuenta hasta que caja lo procesa.** Un Ticket entra a Ventas, Cobrado y Utilidad únicamente al cobrarse; una Nota entra a Ventas, Ventas a crédito y Utilidad únicamente al autorizarse. La identidad es **Ventas = Cobrado + Ventas a crédito**. Pendiente de cobro queda fuera de Ventas y es solo un indicador operativo. Esta regla sustituye expresamente cualquier regla anterior que sumara pendientes a Ventas. La autorización de Nota tiene estado y evento durable propios; nunca se infiere de `estado='VENDIDO'`.
+
 ## Corrección — Bloque 4: Tabulares
 
 **Tabulares:** casilla opcional al cobrar, sin marcar por omisión. Genera **una tira por color** en 80 mm, con los metrajes de los rollos de ese color, su total y el folio del ticket. Son adicionales al ticket, nunca lo sustituyen, y no tocan el registro de la venta.

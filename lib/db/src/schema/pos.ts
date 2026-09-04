@@ -159,6 +159,11 @@ export const ticketsTable = pgTable(
     canceladoPor: integer("cancelado_por").references(() => usuariosTable.id),
     motivoCancelacion: text("motivo_cancelacion"),
     autorizadoPor: integer("autorizado_por").references(() => usuariosTable.id),
+    autorizadoAt: timestamp("autorizado_at", { withTimezone: true }),
+    autorizacionEstado: text("autorizacion_estado")
+      .$type<"NO_APLICA" | "PENDIENTE" | "AUTORIZADA">()
+      .notNull()
+      .default("NO_APLICA"),
   },
   (table) => [
     index("tickets_ubicacion_created_at_idx").on(
@@ -176,6 +181,11 @@ export const ticketsTable = pgTable(
     index("tickets_created_at_idx").on(table.createdAt),
     index("tickets_sesion_estado_idx").on(table.sesionCajaId, table.estado),
     check(
+      "tickets_autorizacion_documento_check",
+      sql`(${table.documentoTipo} = 'TICKET' AND ${table.autorizacionEstado} = 'NO_APLICA')
+        OR (${table.documentoTipo} = 'NOTA' AND ${table.autorizacionEstado} IN ('PENDIENTE', 'AUTORIZADA'))`,
+    ),
+    check(
       "tickets_credito_plazo_check",
       sql`(${table.credito} = false AND ${table.diasPlazo} IS NULL AND ${table.fechaVencimiento} IS NULL)
         OR (${table.credito} = true AND ${table.diasPlazo} IN (7, 15, 30, 60) AND ${table.fechaVencimiento} IS NOT NULL)`,
@@ -184,6 +194,20 @@ export const ticketsTable = pgTable(
       .on(table.createdAt, table.ubicacionId)
       .where(sql`${table.cobrado} = true`),
   ],
+);
+
+/** Durable, append-only evidence that Caja authorized a credit note. */
+export const autorizacionesNotaTable = pgTable(
+  "autorizaciones_nota",
+  {
+    id: serial("id").primaryKey(),
+    ticketId: integer("ticket_id").notNull().unique().references(() => ticketsTable.id),
+    sesionCajaId: integer("sesion_caja_id").notNull().references(() => sesionesCajaTable.id),
+    usuarioId: integer("usuario_id").notNull().references(() => usuariosTable.id),
+    movimientoCreditoId: integer("movimiento_credito_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("autorizaciones_nota_sesion_idx").on(table.sesionCajaId, table.createdAt)],
 );
 
 export const ticketLineasTable = pgTable(

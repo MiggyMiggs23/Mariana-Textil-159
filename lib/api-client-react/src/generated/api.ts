@@ -12273,6 +12273,77 @@ export const useCobrarTicket = <TError = ErrorType<ValidationErrorResponse | Una
       return useMutation(getCobrarTicketMutationOptions(options));
     }
 
+export const getAutorizarNotaUrl = (id: number,) => {
+
+
+
+
+  return `/api/tickets/${id}/autorizar`
+}
+
+/**
+ * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
+ */
+export const autorizarNota = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+
+  return customFetch<TicketDetalle>(getAutorizarNotaUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getAutorizarNotaMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['autorizarNota'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof autorizarNota>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  autorizarNota(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AutorizarNotaMutationResult = NonNullable<Awaited<ReturnType<typeof autorizarNota>>>
+
+    export type AutorizarNotaMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
+ */
+export const useAutorizarNota = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof autorizarNota>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getAutorizarNotaMutationOptions(options));
+    }
+
 export const getObtenerSesionCajaActualUrl = (params?: ObtenerSesionCajaActualParams,) => {
   const normalizedParams = new URLSearchParams();
 

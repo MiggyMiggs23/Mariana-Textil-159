@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { accountedDocumentPredicate } from "./accounted-document";
 import { parseMexicoDateQuery } from "./mexico-date";
 import { buildCommercialReport } from "./reportes-commercial";
 import { buildInventoryReport } from "./reportes-inventory";
@@ -247,7 +248,7 @@ export async function getCatalogs(locations?: number[], economic = true) {
       values,
     ),
     pool.query(
-      `SELECT c.id,c.nombre label FROM clientes c WHERE c.activo${locations?.length ? " AND EXISTS (SELECT 1 FROM tickets t WHERE t.cliente_id=c.id AND t.estado='VENDIDO' AND t.ubicacion_id=ANY($1::int[]))" : ""} ORDER BY c.nombre`,
+      `SELECT c.id,c.nombre label FROM clientes c WHERE c.activo${locations?.length ? ` AND EXISTS (SELECT 1 FROM tickets t WHERE t.cliente_id=c.id AND ${accountedDocumentPredicate("t")} AND t.ubicacion_id=ANY($1::int[]))` : ""} ORDER BY c.nombre`,
       values,
     ),
     pool.query(

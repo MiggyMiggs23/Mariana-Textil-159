@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { accountedDocumentAt, accountedDocumentPredicate, pendingTicketPredicate } from "./accounted-document";
 import {
   ACCOUNT_DESTINATION_ORDER,
   type AccountDestinationCode,
@@ -69,26 +70,26 @@ export function isAccountDestination(value: string): value is AccountDestination
  */
 function destinationReadModel() {
   return `WITH destination_movements AS (
-    SELECT p.id, p.created_at fecha, p.importe importe, p.forma_pago::text "formaPago",
+    SELECT p.id, ${accountedDocumentAt("t")} fecha, p.importe importe, p.forma_pago::text "formaPago",
       CASE WHEN p.forma_pago='EFECTIVO' THEN 'CAJA_FISICA'
         WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END::text "cuentaDestino",
       t.id "documentoId", t.folio, t.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
       p.usuario_id "registroId", t.facturado, 'POS' fuente
     FROM ticket_pagos p JOIN tickets t ON t.id=p.ticket_id
-    WHERE ($1::timestamptz IS NULL OR p.created_at >= $1)
-      AND ($2::timestamptz IS NULL OR p.created_at <= $2)
+    WHERE ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
+      AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
       AND ($3::int IS NULL OR t.ubicacion_id=$3)
-      AND t.estado='VENDIDO' AND t.cobrado AND p.forma_pago <> 'CREDITO'
+      AND ${accountedDocumentPredicate("t")} AND p.forma_pago <> 'CREDITO'
     UNION ALL
-    SELECT m.id, m.created_at fecha, m.importe,
+    SELECT m.id, ${accountedDocumentAt("t")} fecha, m.importe,
       'CREDITO'::text "formaPago", 'CUENTAS_POR_COBRAR'::text "cuentaDestino",
       t.id "documentoId", t.folio, m.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
       m.usuario_id "registroId", COALESCE(t.facturado,false) facturado, 'CREDITO' fuente
     FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
-    WHERE ($1::timestamptz IS NULL OR m.created_at >= $1)
-      AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+    WHERE ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
+      AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
       AND ($3::int IS NULL OR t.ubicacion_id=$3)
-      AND m.tipo='VENTA_CREDITO' AND t.estado='VENDIDO'
+      AND m.tipo='VENTA_CREDITO' AND ${accountedDocumentPredicate("t")}
     UNION ALL
     SELECT (m.id * 1000000 + a.id),m.created_at fecha,a.importe,
       COALESCE(m.forma_pago::text,'TRANSFERENCIA') "formaPago",m.cuenta_destino::text "cuentaDestino",
@@ -259,11 +260,12 @@ export function mexicoCityHour(value = new Date()): number {
 function where(
   filters: AnalyticsFilters,
   alias = "t",
-  timestampColumn = "created_at",
+  dateBasis: "ACCOUNTED" | "CREATED",
 ) {
+  const timestamp = dateBasis === "ACCOUNTED" ? accountedDocumentAt(alias) : `${alias}.created_at`;
   return {
-    text: `($1::timestamptz IS NULL OR ${alias}.${timestampColumn} >= $1)
-      AND ($2::timestamptz IS NULL OR ${alias}.${timestampColumn} <= $2)
+    text: `($1::timestamptz IS NULL OR ${timestamp} >= $1)
+      AND ($2::timestamptz IS NULL OR ${timestamp} <= $2)
       AND ($3::int IS NULL OR ${alias}.ubicacion_id = $3)`,
     values: [
       filters.desde?.toISOString() ?? null,
@@ -274,17 +276,22 @@ function where(
 }
 
 export async function getSalesSummary(filters: AnalyticsFilters) {
-  const condition = where(filters);
+  const accountedCondition = where(filters, "t", "ACCOUNTED");
+  const pendingCondition = where(filters, "t", "CREATED");
   const result = await pool.query(
     `WITH filtered AS (
-       SELECT t.id,t.estado,t.cobrado,t.total,t.subtotal,t.iva
-       FROM tickets t WHERE ${condition.text}
+       SELECT t.id,t.estado,t.cobrado,t.total,t.subtotal,t.iva,t.documento_tipo,t.autorizacion_estado
+       FROM tickets t WHERE ${accountedCondition.text}
+     ), pending AS (
+       SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0)::text importe
+       FROM tickets t
+       WHERE ${pendingCondition.text} AND ${pendingTicketPredicate("t")}
      ), caja_payments AS (
        SELECT p.ticket_id,
          COALESCE(SUM(p.importe),0) cobrado
        FROM ticket_pagos p JOIN filtered f ON f.id=p.ticket_id
        WHERE f.estado='VENDIDO' AND f.cobrado
-         AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA')
+         AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
        GROUP BY p.ticket_id
      ), lines AS (
        SELECT l.ticket_id,
@@ -293,25 +300,32 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
           COALESCE(SUM(l.importe),0) importe_margen,
           COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas
        FROM ticket_lineas l JOIN filtered f ON f.id=l.ticket_id
-       WHERE f.estado='VENDIDO' GROUP BY l.ticket_id
+        WHERE f.estado='VENDIDO'
+          AND ((f.documento_tipo='TICKET' AND f.cobrado)
+            OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))
+        GROUP BY l.ticket_id
      )
      SELECT
-       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO'),0)::text ventas,
-       COALESCE(SUM(p.cobrado),0)::text cobrado,
-       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado),0)::text pendiente,
-       COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO'),0)::text subtotal,
-       COALESCE(SUM(f.iva) FILTER (WHERE f.estado='VENDIDO'),0)::text iva,
+       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND
+         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text ventas,
+       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND f.documento_tipo='TICKET' AND f.cobrado),0)::text cobrado,
+       (SELECT importe FROM pending) pendiente,
+       COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO' AND
+         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text subtotal,
+       COALESCE(SUM(f.iva) FILTER (WHERE f.estado='VENDIDO' AND
+         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text iva,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.costo),0)::text END costo,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.importe_margen-l.costo),0)::text END margen,
-       COUNT(*) FILTER (WHERE f.estado='VENDIDO')::int tickets,
+       COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND
+         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA')))::int tickets,
        COUNT(p.ticket_id)::int "ticketsCobrados",
-       COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND NOT f.cobrado)::int "ticketsPendientes",
+       (SELECT tickets FROM pending) "ticketsPendientes",
        COUNT(*) FILTER (WHERE f.estado='CANCELADO')::int cancelaciones,
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen"
      FROM filtered f
      LEFT JOIN lines l ON l.ticket_id=f.id
      LEFT JOIN caja_payments p ON p.ticket_id=f.id`,
-    condition.values,
+    accountedCondition.values,
   );
   const row = result.rows[0]!;
   const subtotal = Number(row.subtotal);
@@ -344,7 +358,9 @@ export async function getSessionMargin(sesionId: number) {
        COUNT(*) FILTER
           (WHERE l.costo_total_congelado IS NULL)::int excluidas
      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
-     WHERE t.sesion_caja_id=$1 AND t.estado='VENDIDO'`,
+      WHERE t.sesion_caja_id=$1 AND t.estado='VENDIDO'
+        AND ((t.documento_tipo='TICKET' AND t.cobrado)
+          OR (t.documento_tipo='NOTA' AND t.autorizacion_estado='AUTORIZADA'))`,
     [sesionId],
   );
   const row = result.rows[0]!;
@@ -359,7 +375,7 @@ export async function getSessionMargin(sesionId: number) {
 }
 
 export async function getQuantities(filters: AnalyticsFilters) {
-  const condition = where(filters);
+  const condition = where(filters, "t", "ACCOUNTED");
   const result = await pool.query(
     `SELECT l.tipo,p.unidad,COALESCE(SUM(l.cantidad),0)::text cantidad
      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
@@ -377,11 +393,11 @@ export async function getQuantities(filters: AnalyticsFilters) {
 }
 
 export async function getPending(filters: AnalyticsFilters) {
-  const condition = where(filters);
+  const condition = where(filters, "t", "CREATED");
   const result = await pool.query(
     `SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0)::text importe
      FROM tickets t WHERE ${condition.text}
-       AND t.estado='VENDIDO' AND NOT t.cobrado`,
+       AND ${pendingTicketPredicate("t")}`,
     condition.values,
   );
   return {
@@ -401,56 +417,71 @@ export function summarizeRealtimeCredit(
 
 /** One read model powers both the five-minute dashboard and 30-second poll. */
 export async function getRealtimeStores(filters: AnalyticsFilters) {
-  const condition = where(filters);
+  const condition = where(filters, "t", "ACCOUNTED");
+  const operationalCondition = where(filters, "t", "CREATED");
   const result = await pool.query(
     `WITH filtered AS (
        SELECT t.* FROM tickets t WHERE ${condition.text}
+     ), operational AS (
+       SELECT t.* FROM tickets t WHERE ${operationalCondition.text}
      ), line_margin AS (
        SELECT l.ticket_id,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
             ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0) END margen,
           COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas,
           COALESCE(SUM(l.importe),0) subtotal
-       FROM ticket_lineas l JOIN filtered t ON t.id=l.ticket_id GROUP BY l.ticket_id
+        FROM ticket_lineas l JOIN filtered t ON t.id=l.ticket_id
+        WHERE ${accountedDocumentPredicate("t")} GROUP BY l.ticket_id
      ), payment AS (
        SELECT t.id,
          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='EFECTIVO'),0) efectivo,
-          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia
+          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia,
+          COALESCE(SUM(p.importe) FILTER (
+            WHERE p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
+          ),0) cobrado
         FROM filtered t JOIN ticket_pagos p ON p.ticket_id=t.id
         WHERE t.estado='VENDIDO' AND t.cobrado
-          AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA')
+          AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
         GROUP BY t.id
       ), credit_sales AS (
         SELECT t.ubicacion_id,
           COALESCE(SUM(m.importe),0) credito,
           COUNT(DISTINCT m.ticket_id)::int credito_operaciones
         FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
-        WHERE m.tipo='VENTA_CREDITO' AND t.estado='VENDIDO'
-          AND ($1::timestamptz IS NULL OR m.created_at >= $1)
-          AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+        WHERE m.tipo='VENTA_CREDITO' AND ${accountedDocumentPredicate("t")}
+          AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
+          AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
           AND ($3::int IS NULL OR t.ubicacion_id=$3)
         GROUP BY t.ubicacion_id
      )
      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
        s.id "sesionCajaId",s.abierta_at "abiertaAt",caj.nombre cajero,
        term.nombre "usuarioTerminal",
-       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0)::text vendido,
-        COALESCE(SUM(p.efectivo+p.transferencia),0)::text cobrado,
-       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado),0)::text pendiente,
-       COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
+       COALESCE(SUM(t.total) FILTER (WHERE ${accountedDocumentPredicate("t")}),0)::text vendido,
+         COALESCE(SUM(p.cobrado),0)::text cobrado,
+       COALESCE(pending.importe,0)::text pendiente,
+       COUNT(*) FILTER (WHERE ${accountedDocumentPredicate("t")})::int tickets,
+       COALESCE(pending.tickets,0)::int "ticketsPendientes",
         COUNT(p.id)::int "ticketsCobrados",
         CASE WHEN COALESCE(SUM(m.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(m.margen),0)::text END margen,
         COALESCE(SUM(m.subtotal),0)::text subtotal,
        COALESCE(SUM(p.efectivo),0)::text efectivo,COALESCE(SUM(p.transferencia),0)::text transferencia,
         COALESCE(cs.credito,0)::text credito,
         COALESCE(cs.credito_operaciones,0)::int "creditoOperaciones",
-       COUNT(*) FILTER (WHERE t.estado='VENDIDO' AND NOT t.cobrado AND t.created_at < now()-interval '30 minutes')::int "pendientes30Min",
-       COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones
+       COALESCE(pending.antiguos,0)::int "pendientes30Min",
+       COALESCE(pending.cancelaciones,0)::int cancelaciones
      FROM ubicaciones u
      LEFT JOIN filtered t ON t.ubicacion_id=u.id
      LEFT JOIN line_margin m ON m.ticket_id=t.id
      LEFT JOIN payment p ON p.id=t.id
-      LEFT JOIN credit_sales cs ON cs.ubicacion_id=u.id
+       LEFT JOIN credit_sales cs ON cs.ubicacion_id=u.id
+      LEFT JOIN LATERAL (
+        SELECT COALESCE(SUM(ot.total) FILTER (WHERE ${pendingTicketPredicate("ot")}),0) importe,
+          COUNT(*) FILTER (WHERE ${pendingTicketPredicate("ot")})::int tickets,
+          COUNT(*) FILTER (WHERE ${pendingTicketPredicate("ot")} AND ot.created_at < now()-interval '30 minutes')::int antiguos,
+          COUNT(*) FILTER (WHERE ot.estado='CANCELADO')::int cancelaciones
+        FROM operational ot WHERE ot.ubicacion_id=u.id
+      ) pending ON true
      LEFT JOIN LATERAL (
        SELECT sc.* FROM sesiones_caja sc WHERE sc.ubicacion_id=u.id AND sc.estado='ABIERTA'
        ORDER BY sc.abierta_at DESC LIMIT 1
@@ -461,7 +492,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        WHERE ft.ubicacion_id=u.id ORDER BY ft.created_at DESC LIMIT 1
      ) term ON true
      WHERE u.tipo='TIENDA' AND u.activa
-      GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre,cs.credito,cs.credito_operaciones
+       GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre,cs.credito,cs.credito_operaciones,pending.importe,pending.tickets,pending.antiguos,pending.cancelaciones
      ORDER BY u.nombre`,
     condition.values,
   );
@@ -510,13 +541,11 @@ export async function listStoreSales(
     (page - 1) * pageSize,
   ];
   const condition = `t.ubicacion_id=$3
-    AND t.estado='VENDIDO'
-    AND ($1::timestamptz IS NULL OR t.created_at >= $1)
-    AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+    AND ${accountedDocumentPredicate("t")}
+    AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
+    AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
     AND ($4::text IS NULL OR (
-      $4='CREDITO' AND (t.credito OR EXISTS (
-        SELECT 1 FROM ticket_pagos fp WHERE fp.ticket_id=t.id AND fp.forma_pago='CREDITO'
-      ))
+      $4='CREDITO' AND t.documento_tipo='NOTA' AND t.autorizacion_estado='AUTORIZADA'
     ) OR ($4 <> 'CREDITO' AND EXISTS (
       SELECT 1 FROM ticket_pagos fp
       WHERE fp.ticket_id=t.id AND fp.forma_pago=$4::forma_pago_ticket
@@ -531,11 +560,11 @@ export async function listStoreSales(
         ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END utilidad
       FROM ticket_lineas l WHERE l.ticket_id=t.id
     ) margen ON true
-    WHERE ${condition} AND t.estado='VENDIDO'`;
+    WHERE ${condition}`;
   const [rows, count, store] = await Promise.all([
-    pool.query(`SELECT t.id,t.created_at "createdAt",t.folio,COALESCE(c.nombre,'Público general') cliente,
+    pool.query(`SELECT t.id,${accountedDocumentAt("t")} "createdAt",t.folio,COALESCE(c.nombre,'Público general') cliente,
       t.total::text importe,t.cobrado,t.credito,pagos.formas,margen.utilidad
-      ${base} ORDER BY t.created_at DESC,t.id DESC LIMIT $5 OFFSET $6`, values),
+      ${base} ORDER BY ${accountedDocumentAt("t")} DESC,t.id DESC LIMIT $5 OFFSET $6`, values),
     pool.query(`SELECT COUNT(*)::int total ${base}`, values.slice(0, 4)),
     pool.query(
       `SELECT id,nombre FROM ubicaciones
@@ -725,9 +754,9 @@ export async function getStoreSalesGlobal(
     filters.ubicacionId,
   ];
   const predicate = `t.ubicacion_id=$3
-    AND t.estado='VENDIDO'
-    AND ($1::timestamptz IS NULL OR t.created_at >= $1)
-    AND ($2::timestamptz IS NULL OR t.created_at <= $2)`;
+    AND ${accountedDocumentPredicate("t")}
+    AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
+    AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)`;
   const [store, totals, rows] = await Promise.all([
     pool.query(
       `SELECT id,nombre FROM ubicaciones
@@ -791,10 +820,11 @@ export async function getStoreSalesGlobal(
 }
 
 export async function getRealtimeTickets(filters: AnalyticsFilters) {
-  const condition = where(filters);
+  const condition = where(filters, "t", "CREATED");
   const result = await pool.query(
     `SELECT t.id,t.folio,t.created_at "createdAt",u.nombre "nombreUbicacion",c.nombre "nombreCliente",
-       t.total::text importe,t.cobrado,
+       t.total::text importe,t.cobrado,t.documento_tipo "documentoTipo",
+       t.autorizacion_estado "autorizacionEstado",
        CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
          ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
      FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
@@ -898,8 +928,8 @@ export async function listCuts(
 export async function getDestinationAccounts(filters: AnalyticsFilters) {
   // Account destinations are cash-flow reporting: a ticket sold yesterday and
   // charged today belongs to today's collected period.
-  const condition = where(filters, "t", "created_at");
-  const priorCondition = where(previousEqualPeriod(filters), "t", "created_at");
+  const condition = where(filters, "t", "ACCOUNTED");
+  const priorCondition = where(previousEqualPeriod(filters), "t", "ACCOUNTED");
   const accountSql = () => `${destinationReadModel()}
     SELECT (fecha AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
       "formaPago",facturado,"cuentaDestino",SUM(importe)::text importe,COUNT(*)::int operaciones
@@ -1249,11 +1279,12 @@ export function comparisonRange(
 }
 
 export async function compareStores(filters: AnalyticsFilters) {
-  const condition = where(filters);
+  const condition = where(filters, "t", "ACCOUNTED");
+  const effectiveCondition = condition.text.replaceAll("t.created_at", accountedDocumentAt("t"));
   const result = await pool.query(
     `WITH ticket_data AS (
-       SELECT t.id,t.ubicacion_id,t.estado,t.facturado,t.total,t.subtotal
-       FROM tickets t WHERE ${condition.text}
+       SELECT t.id,t.ubicacion_id,t.estado,t.facturado,t.total,t.subtotal,t.documento_tipo,t.cobrado,t.autorizacion_estado,t.cobrado_at,t.autorizado_at
+       FROM tickets t WHERE ${effectiveCondition}
      ), line_data AS (
        SELECT l.ticket_id,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
@@ -1269,14 +1300,14 @@ export async function compareStores(filters: AnalyticsFilters) {
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='METRO'),0) metraje_metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE l.tipo='METREADO' AND p.unidad='BOLSA'),0) metraje_bolsas
        FROM ticket_lineas l JOIN ticket_data t ON t.id=l.ticket_id
-       JOIN productos p ON p.id=l.producto_id WHERE t.estado='VENDIDO' GROUP BY l.ticket_id
+       JOIN productos p ON p.id=l.producto_id WHERE ${accountedDocumentPredicate("t")} GROUP BY l.ticket_id
      )
      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
-       COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0)::text ventas,
-       COALESCE(SUM(t.subtotal) FILTER (WHERE t.estado='VENDIDO'),0)::text subtotal,
+       COALESCE(SUM(t.total) FILTER (WHERE ${accountedDocumentPredicate("t")}),0)::text ventas,
+       COALESCE(SUM(t.subtotal) FILTER (WHERE ${accountedDocumentPredicate("t")}),0)::text subtotal,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.costo),0)::text END costo,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.margen_base-l.costo),0)::text END margen,
-       COUNT(*) FILTER (WHERE t.estado='VENDIDO')::int tickets,
+       COUNT(*) FILTER (WHERE ${accountedDocumentPredicate("t")})::int tickets,
        COUNT(*) FILTER (WHERE t.estado='CANCELADO')::int cancelaciones,
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen",
          COALESCE(SUM(l.metros),0)::text metros,COALESCE(SUM(l.kilos),0)::text kilos,COALESCE(SUM(l.bolsas),0)::text bolsas,
@@ -1287,20 +1318,28 @@ export async function compareStores(filters: AnalyticsFilters) {
          COALESCE(SUM(l.metraje_bolsas),0)::text "metrajeBolsas",
        COALESCE(pay.efectivo,0)::text efectivo,
        COALESCE(pay.transferencia,0)::text transferencia,
-       COALESCE(pay.credito,0)::text credito,
-       COALESCE(pay.facturado,0)::text facturado,
+       COALESCE(credit.credito,0)::text credito,
+       COALESCE(invoice.facturado,0)::text facturado,
        COALESCE(cash.diferencia,0)::text "diferenciaCaja"
      FROM ubicaciones u LEFT JOIN ticket_data t ON t.ubicacion_id=u.id
      LEFT JOIN line_data l ON l.ticket_id=t.id
      LEFT JOIN LATERAL (
        SELECT
          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='EFECTIVO'),0) efectivo,
-         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia,
-         COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='CREDITO'),0) credito,
-         COALESCE(SUM(p.importe) FILTER (WHERE ft.facturado),0) facturado
+          COALESCE(SUM(p.importe) FILTER (WHERE p.forma_pago='TRANSFERENCIA'),0) transferencia
        FROM ticket_data ft JOIN ticket_pagos p ON p.ticket_id=ft.id
-       WHERE ft.ubicacion_id=u.id AND ft.estado='VENDIDO'
+        WHERE ft.ubicacion_id=u.id AND ${accountedDocumentPredicate("ft")}
      ) pay ON true
+      LEFT JOIN LATERAL (
+        SELECT COALESCE(SUM(m.importe),0) credito
+        FROM ticket_data ft JOIN movimientos_credito m ON m.ticket_id=ft.id
+        WHERE ft.ubicacion_id=u.id AND ft.documento_tipo='NOTA'
+          AND ft.autorizacion_estado='AUTORIZADA' AND m.tipo='VENTA_CREDITO'
+      ) credit ON true
+      LEFT JOIN LATERAL (
+        SELECT COALESCE(SUM(ft.total),0) facturado FROM ticket_data ft
+        WHERE ft.ubicacion_id=u.id AND ${accountedDocumentPredicate("ft")} AND ft.facturado
+      ) invoice ON true
      LEFT JOIN LATERAL (
        SELECT COALESCE(SUM(s.efectivo_contado-s.fondo_inicial-x.efectivo),0) diferencia
        FROM sesiones_caja s LEFT JOIN LATERAL (
@@ -1313,26 +1352,27 @@ export async function compareStores(filters: AnalyticsFilters) {
          AND ($1::timestamptz IS NULL OR s.cerrada_at >= $1)
          AND ($2::timestamptz IS NULL OR s.cerrada_at <= $2)
       ) cash ON true WHERE u.tipo='TIENDA' AND u.activa
-     GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,pay.credito,pay.facturado,cash.diferencia
+      GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,credit.credito,invoice.facturado,cash.diferencia
      ORDER BY ventas DESC,u.nombre`,
     condition.values,
   );
   const previous = previousEqualPeriod(filters);
-  const priorWhere = where(previous);
+  const priorWhere = where(previous, "t", "ACCOUNTED");
+  const effectivePriorWhere = priorWhere.text.replaceAll("t.created_at", accountedDocumentAt("t"));
   const [priorRows, dailyRows] = await Promise.all([
     pool.query(
       `SELECT t.ubicacion_id "ubicacionId",COALESCE(SUM(t.total),0)::text ventas
        FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
-       WHERE ${priorWhere.text} AND t.estado='VENDIDO'
+       WHERE ${effectivePriorWhere} AND ${accountedDocumentPredicate("t")}
          AND u.tipo='TIENDA' AND u.activa
        GROUP BY t.ubicacion_id`,
       priorWhere.values,
     ),
     pool.query(
-      `SELECT (t.created_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
+      `SELECT (${accountedDocumentAt("t")} AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
         t.ubicacion_id "ubicacionId",u.nombre "nombreUbicacion",SUM(t.total)::text ventas
        FROM tickets t JOIN ubicaciones u ON u.id=t.ubicacion_id
-        WHERE ${condition.text} AND t.estado='VENDIDO'
+        WHERE ${effectiveCondition} AND ${accountedDocumentPredicate("t")}
           AND u.tipo='TIENDA' AND u.activa
        GROUP BY fecha,t.ubicacion_id,u.nombre ORDER BY fecha,u.nombre`,
       condition.values,

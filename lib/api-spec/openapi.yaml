@@ -3624,6 +3624,24 @@ paths:
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+  /tickets/{id}/autorizar:
+    post:
+      operationId: autorizarNota
+      tags: [caja]
+      summary: Autoriza una nota y emite su cargo de crédito de forma transaccional
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+      responses:
+        "200":
+          description: Nota autorizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketDetalle"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /sesiones-caja/actual:
     get:
       operationId: obtenerSesionCajaActual
@@ -6513,6 +6531,8 @@ components:
           importe,
           margen,
           cobrado,
+          documentoTipo,
+          autorizacionEstado,
         ]
       properties:
         id: { type: number }
@@ -6523,6 +6543,8 @@ components:
         importe: { type: string }
         margen: { type: ["string", "null"] }
         cobrado: { type: boolean }
+        documentoTipo: { type: string, enum: [TICKET, NOTA] }
+        autorizacionEstado: { type: string, enum: [NO_APLICA, PENDIENTE, AUTORIZADA] }
     AdminPendingSummary:
       type: object
       required: [tickets, importe, tiendas]
@@ -10931,6 +10953,8 @@ components:
           cobrado,
           cobradoAt,
           formasPago,
+          documentoTipo,
+          autorizacionEstado,
         ]
       properties:
         id: { type: number }
@@ -10943,6 +10967,9 @@ components:
         createdAt: { type: string, format: date-time }
         cobrado: { type: boolean }
         cobradoAt: { type: ["string", "null"], format: date-time }
+        documentoTipo: { $ref: "#/components/schemas/DocumentoTipoTicket" }
+        autorizacionEstado: { type: string, enum: [NO_APLICA, PENDIENTE, AUTORIZADA] }
+        autorizadoAt: { type: ["string", "null"], format: date-time }
         formasPago:
           type: array
           items:

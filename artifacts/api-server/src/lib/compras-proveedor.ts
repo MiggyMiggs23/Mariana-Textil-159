@@ -38,6 +38,7 @@ import {
 } from "@workspace/db/advisory-locks";
 import { allocateCreditFifo, centsToMoney, moneyToCents } from "./credit-allocation";
 import { breakdownIvaIncluded } from "./iva";
+import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -1233,7 +1234,8 @@ export async function estadisticasPeriodo(opts: {
     WITH lineas_periodo AS (
       SELECT tl.*, t.id AS ticket_id
       FROM ticket_lineas tl JOIN tickets t ON t.id=tl.ticket_id
-      WHERE t.estado='VENDIDO' AND t.created_at BETWEEN ${desde} AND ${hasta}
+      WHERE ${sql.raw(accountedDocumentPredicate("t"))}
+        AND ${sql.raw(accountedDocumentAt("t"))} BETWEEN ${desde} AND ${hasta}
     ), lineas_proveedor AS (
       SELECT lp.*
       FROM lineas_periodo lp

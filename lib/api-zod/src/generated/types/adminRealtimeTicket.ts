@@ -5,6 +5,8 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { AdminRealtimeTicketAutorizacionEstado } from './adminRealtimeTicketAutorizacionEstado';
+import type { AdminRealtimeTicketDocumentoTipo } from './adminRealtimeTicketDocumentoTipo';
 
 export interface AdminRealtimeTicket {
   id: number;
@@ -17,4 +19,6 @@ export interface AdminRealtimeTicket {
   /** @nullable */
   margen: string | null;
   cobrado: boolean;
+  documentoTipo: AdminRealtimeTicketDocumentoTipo;
+  autorizacionEstado: AdminRealtimeTicketAutorizacionEstado;
 }

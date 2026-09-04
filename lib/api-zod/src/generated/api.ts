@@ -5355,7 +5355,6 @@ export const MarkNotificacionReadResponse = zod.object({
 
 export const crearTicketBodyDocumentoTipoDefault = `TICKET`;
 export const crearTicketBodyNotaSinPreciosDefault = false;
-export const crearTicketBodyCreditoDefault = false;
 export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
 
 export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
@@ -5373,8 +5372,7 @@ export const CrearTicketBody = zod.object({
   "direccionEntregaSnapshot": zod.string().nullish().describe('Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.'),
   "tipo": zod.enum(['NORMAL', 'METREADO']).optional().describe('Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.'),
   "facturado": zod.boolean(),
-  "credito": zod.boolean().default(crearTicketBodyCreditoDefault).describe('Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS.'),
-  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Obligatorio cuando credito es true y vacío en cualquier otro caso.'),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Obligatorio para NOTA y vacío para TICKET; se elige y congela en POS.'),
   "lineas": zod.array(zod.object({
   "rolloId": zod.number().nullable().describe('Obligatorio para línea NORMAL de rollo completo; debe ser null en línea METREADO.'),
   "productoId": zod.number(),
@@ -5573,6 +5571,9 @@ export const ListarTicketsCajaResponseItem = zod.object({
   "createdAt": zod.coerce.date(),
   "cobrado": zod.boolean(),
   "cobradoAt": zod.coerce.date().nullable(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']),
+  "autorizadoAt": zod.coerce.date().nullish(),
   "formasPago": zod.array(zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'))
 })
 export const ListarTicketsCajaResponse = zod.array(ListarTicketsCajaResponseItem)
@@ -5890,6 +5891,97 @@ export const CobrarTicketBody = zod.object({
 })
 
 export const CobrarTicketResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+}).and(zod.object({
+  "esCredito": zod.boolean(),
+  "importeCredito": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionCliente": zod.string().nullable()
+}).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "cantidad": zod.string(),
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "serieRollo": zod.string().nullable(),
+  "nombreUbicacion": zod.string(),
+  "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoFuente": zod.union([zod.literal('EXACT_ROLL'),zod.literal('AVERAGE_12_MONTHS'),zod.literal('STALE_LAST_KNOWN'),zod.literal('NO_COST'),zod.literal(null)]).nullish().describe('Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico'),
+  "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
+})),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
+  "importe": zod.string(),
+  "referencia": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string()
+})).optional()
+}))
+
+
+/**
+ * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
+ */
+export const AutorizarNotaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AutorizarNotaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "ubicacionId": zod.number(),
@@ -7627,7 +7719,9 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "nombreCliente": zod.string().nullable(),
   "importe": zod.string(),
   "margen": zod.string().nullable(),
-  "cobrado": zod.boolean()
+  "cobrado": zod.boolean(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA'])
 })).max(getAdminRealtimeDashboardResponseUltimosTicketsMax)
 })
 

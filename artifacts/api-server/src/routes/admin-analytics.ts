@@ -62,6 +62,7 @@ import {
   parseAnalyticsFilters,
   summarizeRealtimeCredit,
 } from "../lib/admin-analytics";
+import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
 
 const router: IRouter = Router();
 router.use("/admin", requireSession);
@@ -204,8 +205,8 @@ router.get("/admin/cuentas-destino/:cuentaDestino/movimientos", async (req, res,
 async function fiscalFigures(filters: ReturnType<typeof parseAnalyticsFilters>) {
   const values = [filters.desde?.toISOString() ?? null, filters.hasta?.toISOString() ?? null, filters.ubicacionId ?? null];
   const [invoiced, collected, receivable] = await Promise.all([
-    pool.query(`SELECT COALESCE(SUM(t.total),0)::text amount FROM tickets t WHERE t.estado='VENDIDO' AND t.facturado
-      AND ($1::timestamptz IS NULL OR t.created_at >= $1) AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+    pool.query(`SELECT COALESCE(SUM(t.total),0)::text amount FROM tickets t WHERE ${accountedDocumentPredicate("t")} AND t.facturado
+      AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1) AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
       AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
     getDestinationCollectedAmount(filters, "CUENTA_FISCAL"),
     pool.query(`SELECT COALESCE(SUM(m.importe-COALESCE(a.aplicado,0)),0)::text amount
@@ -221,8 +222,8 @@ async function fiscalFigures(filters: ReturnType<typeof parseAnalyticsFilters>) 
               AND reverso.movimiento_origen_id=ap.abono_movimiento_id
           )
       ) a ON true
-      WHERE m.tipo='VENTA_CREDITO' AND t.facturado AND t.estado='VENDIDO'
-      AND ($1::timestamptz IS NULL OR t.created_at >= $1) AND ($2::timestamptz IS NULL OR t.created_at <= $2)
+      WHERE m.tipo='VENTA_CREDITO' AND t.facturado AND ${accountedDocumentPredicate("t")}
+      AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1) AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
       AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
   ]);
   return { facturado: Number(invoiced.rows[0]!.amount).toFixed(2), cobradoCuentaFiscal: collected, porCobrarFiscal: Number(receivable.rows[0]!.amount).toFixed(2) };

@@ -1,6 +1,7 @@
 import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import {
   auditoriaTable,
+  autorizacionesNotaTable,
   aplicacionesCreditoTable,
   clientesTable,
   db,
@@ -30,7 +31,6 @@ import {
 } from "./credit-allocation";
 import {
   loadCustomerCreditLedgerInTransaction,
-  loadCustomerCreditReservationCentsInTransaction,
 } from "./credit-aging-read-model";
 import {
   consumirBolsasFifo,
@@ -283,6 +283,8 @@ export async function buildTicketDetail(
       estado: ticketsTable.estado,
       cobrado: ticketsTable.cobrado,
       cobradoAt: ticketsTable.cobradoAt,
+      autorizacionEstado: ticketsTable.autorizacionEstado,
+      autorizadoAt: ticketsTable.autorizadoAt,
       usuarioCajaId: ticketsTable.usuarioCajaId,
       facturado: ticketsTable.facturado,
       credito: ticketsTable.credito,
@@ -955,30 +957,6 @@ export async function crearTicket(
     ? Math.round((subtotalCents * IVA_RATE_BASIS_POINTS) / 10_000)
     : 0;
   const totalCents = subtotalCents + ivaCents;
-  if (credito) {
-    const ledgerMovements = await loadCustomerCreditLedgerInTransaction(
-      input.clienteId,
-      tx,
-    );
-    const projection = projectCreditLedger(ledgerMovements);
-    const currentNetCents =
-      projection.balanceCents - projection.overpaymentCents;
-    const reservationCents = await loadCustomerCreditReservationCentsInTransaction(
-      input.clienteId,
-      tx,
-    );
-    const disponibleCents = Math.max(
-      0,
-      money(clienteTicket.limiteCredito) - currentNetCents - reservationCents,
-    );
-    if (totalCents > disponibleCents) {
-      throw new PosError(
-        `Crédito insuficiente: disponible $${decimalMoney(disponibleCents)}; faltan $${decimalMoney(totalCents - disponibleCents)}.`,
-        "CREDIT_LIMIT_EXCEEDED",
-        409,
-      );
-    }
-  }
   const folio = await reserveTicketFolio(tx);
   const [ticket] = await tx
     .insert(ticketsTable)
@@ -999,6 +977,7 @@ export async function crearTicket(
       cobrado: false,
       facturado: input.facturado,
       credito,
+      autorizacionEstado: credito ? "PENDIENTE" : "NO_APLICA",
       diasPlazo: credito ? input.diasPlazo as CreditTerm : null,
       fechaVencimiento: credito
         ? creditDueDate(ticketCreatedAt, input.diasPlazo as CreditTerm)
@@ -1423,6 +1402,9 @@ export async function cobrarTicket(
   if (ticket.cobrado) {
     throw new PosError("El ticket ya fue cobrado.", "ALREADY_CHARGED", 409);
   }
+  if (ticket.documentoTipo !== "TICKET") {
+    throw new PosError("Las notas se autorizan; no se cobran.", "NOTE_CHARGE_FORBIDDEN", 409);
+  }
   const [sesion] = await tx
     .select()
     .from(sesionesCajaTable)
@@ -1447,14 +1429,9 @@ export async function cobrarTicket(
     );
   }
   const pagos = input.pagos.map((pago) => {
-    if (
-      pago.formaPago === "CREDITO" &&
-      (ticket.documentoTipo !== "NOTA" ||
-        ticket.credito !== true ||
-        ticket.clienteId == null)
-    ) {
+    if (pago.formaPago === "CREDITO") {
       throw new PosError(
-        "El crédito solo puede liquidar notas emitidas a crédito con cliente.",
+        "Crédito no es una forma de cobro de tickets.",
         "TICKET_CREDIT_PAYMENT_FORBIDDEN",
       );
     }
@@ -1500,131 +1477,12 @@ export async function cobrarTicket(
     );
   }
 
-  const creditCents = pagos
-    .filter((pago) => pago.formaPago === "CREDITO")
-    .reduce((sum, pago) => sum + pago.cents, 0);
   const clienteId = input.clienteId ?? ticket.clienteId;
   if (clienteId !== ticket.clienteId) {
     throw new PosError(
       "El cliente del ticket no puede cambiarse durante el cobro.",
       "CLIENT_MISMATCH",
     );
-  }
-  {
-    // Serialize credit issuance for this customer even when different tickets
-    // are being charged in different cash sessions/locations.
-    await transactionAdvisoryLock(
-      tx,
-      ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
-      clienteId,
-    );
-    const [cliente] = await tx
-      .select()
-      .from(clientesTable)
-      .where(eq(clientesTable.id, clienteId))
-      .for("update")
-      .limit(1);
-    if (!cliente?.activo) {
-      throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
-    }
-    if (creditCents > 0 && cliente.esSistema) {
-      throw new PosError(
-        "Venta a Público no admite compras a crédito.",
-        "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
-      );
-    }
-    if (creditCents > 0 && (!ticket.credito || !isCreditTerm(ticket.diasPlazo))) {
-      throw new PosError(
-        "El ticket no fue creado en POS con un plazo de crédito válido.",
-        "CREDIT_TERM_REQUIRED",
-      );
-    }
-    const ledgerMovements = await loadCustomerCreditLedgerInTransaction(
-      clienteId,
-      tx,
-    );
-    const currentProjection = projectCreditLedger(ledgerMovements);
-    const currentNetCents =
-      currentProjection.balanceCents - currentProjection.overpaymentCents;
-    const reservationCents = await loadCustomerCreditReservationCentsInTransaction(
-      clienteId,
-      tx,
-      ticket.id,
-    );
-    if (
-      creditCents > 0 &&
-      currentNetCents + reservationCents + creditCents >
-        money(cliente.limiteCredito)
-    ) {
-      const disponibleCents = Math.max(
-        0,
-        money(cliente.limiteCredito) - currentNetCents - reservationCents,
-      );
-      const faltanteCents = creditCents - disponibleCents;
-      throw new PosError(
-        `Crédito insuficiente: disponible $${decimalMoney(disponibleCents)}; faltan $${decimalMoney(faltanteCents)}.`,
-        "CREDIT_LIMIT_EXCEEDED",
-        409,
-      );
-    }
-    if (creditCents > 0) {
-      const [creditMovement] = await tx.insert(movimientosCreditoTable).values({
-        clienteId,
-        ticketId: ticket.id,
-        tipo: "VENTA_CREDITO",
-        importe: decimalMoney(creditCents),
-        usuarioId: input.usuarioId,
-        formaPago: "CREDITO",
-        notas: `Ticket ${ticket.folio}`,
-        metadata: JSON.stringify({
-          origen: "COBRO_TICKET",
-        }),
-        diasPlazo: ticket.diasPlazo!,
-        fechaVencimiento: ticket.fechaVencimiento!,
-      }).returning();
-      // Project the complete immutable ledger again. Persisted applications are
-      // evidence of links selected by the projection, never input to balances.
-      const projectedMovements = [...ledgerMovements, creditMovement!];
-      const abonoIds = new Set(projectedMovements
-        .filter((movement) => movement.tipo === "ABONO")
-        .map((movement) => movement.id));
-      const allocations = projectCreditLedger(projectedMovements).allocations
-        .filter((item) =>
-          item.targetId === creditMovement!.id && abonoIds.has(item.sourceId));
-      if (allocations.length > 0) {
-        await tx.insert(aplicacionesCreditoTable).values(
-          allocations.map((item) => ({
-            abonoMovimientoId: item.sourceId,
-            ventaMovimientoId: item.targetId,
-            importe: centsToMoney(item.appliedCents),
-          })),
-        );
-      }
-      const [cajero] = await tx
-        .select({ nombre: usuariosTable.nombre })
-        .from(usuariosTable)
-        .where(eq(usuariosTable.id, input.usuarioId))
-        .limit(1);
-      const [tienda] = await tx
-        .select({ nombre: ubicacionesTable.nombre })
-        .from(ubicacionesTable)
-        .where(eq(ubicacionesTable.id, ticket.ubicacionId))
-        .limit(1);
-      await tx.insert(notificacionesCreditoTable).values({
-        ticketId: ticket.id,
-        clienteId,
-        clienteNombre: cliente.nombre,
-        folio: ticket.folio,
-        importe: decimalMoney(creditCents),
-        diasPlazo: ticket.diasPlazo!,
-        fechaVencimiento: ticket.fechaVencimiento!,
-        cajeroId: input.usuarioId,
-        cajeroNombre: cajero?.nombre ?? "Usuario eliminado",
-        tiendaId: ticket.ubicacionId,
-        tiendaNombre: tienda?.nombre ?? "Tienda eliminada",
-        urgente: false,
-      });
-    }
   }
 
   for (const pago of pagos) {
@@ -1637,8 +1495,6 @@ export async function cobrarTicket(
     });
   }
   const now = new Date();
-  const convertidoANotaPorCobro =
-    creditCents > 0 && ticket.documentoTipo === "TICKET";
   await tx
     .update(ticketsTable)
     .set({
@@ -1653,7 +1509,6 @@ export async function cobrarTicket(
         ? (IVA_RATE_BASIS_POINTS / 10_000).toFixed(4)
         : ticket.tasaIva,
       total: decimalMoney(totalCobroCents),
-      documentoTipo: creditCents > 0 ? "NOTA" : ticket.documentoTipo,
       cobrado: true,
       cobradoAt: now,
       usuarioCajaId: input.usuarioId,
@@ -1671,8 +1526,6 @@ export async function cobrarTicket(
         formaPago: pago.formaPago,
         importe: decimalMoney(pago.cents),
       })),
-      documentoTipo: creditCents > 0 ? "NOTA" : ticket.documentoTipo,
-      convertidoANotaPorCobro,
     },
     ip: input.ip,
   });
@@ -1680,8 +1533,62 @@ export async function cobrarTicket(
     tx,
     ticket.id,
     includeCosts,
-    convertidoANotaPorCobro,
+    false,
   );
+}
+
+export async function autorizarNota(
+  tx: Tx,
+  input: { ticketId: number; sesionCajaId: number; usuarioId: number; ip: string },
+  includeCosts: boolean,
+) {
+  const [ticket] = await tx.select().from(ticketsTable)
+    .where(eq(ticketsTable.id, input.ticketId)).for("update").limit(1);
+  if (!ticket) throw new PosError("Nota no encontrada.", "NOTE_NOT_FOUND", 404);
+  if (ticket.documentoTipo !== "NOTA" || !ticket.credito || !isCreditTerm(ticket.diasPlazo)) {
+    throw new PosError("El documento no es una nota de crédito válida.", "NOT_A_CREDIT_NOTE", 409);
+  }
+  if (ticket.estado !== "VENDIDO") throw new PosError("La nota está cancelada.", "NOTE_CANCELLED", 409);
+  if (ticket.autorizacionEstado === "AUTORIZADA") throw new PosError("La nota ya fue autorizada.", "ALREADY_AUTHORIZED", 409);
+  const [sesion] = await tx.select().from(sesionesCajaTable)
+    .where(eq(sesionesCajaTable.id, input.sesionCajaId)).for("update").limit(1);
+  if (!sesion || sesion.estado !== "ABIERTA" || sesion.ubicacionId !== ticket.ubicacionId) {
+    throw new PosError("Se requiere una sesión de caja abierta en la ubicación de la nota.", "OPEN_SESSION_REQUIRED", 409);
+  }
+  await transactionAdvisoryLock(tx, ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT, ticket.clienteId);
+  const [cliente] = await tx.select().from(clientesTable)
+    .where(eq(clientesTable.id, ticket.clienteId)).for("update").limit(1);
+  if (!cliente?.activo || cliente.esSistema) throw new PosError("Cliente de crédito inválido.", "INVALID_CLIENT", 409);
+  const ledger = await loadCustomerCreditLedgerInTransaction(ticket.clienteId, tx);
+  const projection = projectCreditLedger(ledger);
+  const saldo = projection.balanceCents - projection.overpaymentCents;
+  const reservas = await loadCustomerCreditReservationCentsInTransaction(ticket.clienteId, tx, ticket.id);
+  const limite = money(cliente.limiteCredito);
+  const importe = money(ticket.total);
+  if (saldo + reservas + importe > limite) {
+    const exceso = saldo + reservas + importe - limite;
+    throw new PosError(`El límite se rebasa por $${decimalMoney(exceso)}. Un ADMIN debe subir el límite del cliente.`, "CREDIT_LIMIT_EXCEEDED", 409);
+  }
+  const [movement] = await tx.insert(movimientosCreditoTable).values({
+    clienteId: ticket.clienteId, ticketId: ticket.id, tipo: "VENTA_CREDITO",
+    importe: decimalMoney(importe), usuarioId: input.usuarioId, formaPago: "CREDITO",
+    notas: `Nota ${ticket.folio}`, metadata: JSON.stringify({ origen: "AUTORIZACION_NOTA" }),
+    diasPlazo: ticket.diasPlazo, fechaVencimiento: ticket.fechaVencimiento!,
+  }).returning();
+  const now = new Date();
+  await tx.insert(autorizacionesNotaTable).values({
+    ticketId: ticket.id, sesionCajaId: sesion.id, usuarioId: input.usuarioId,
+    movimientoCreditoId: movement!.id, createdAt: now,
+  });
+  await tx.update(ticketsTable).set({
+    autorizacionEstado: "AUTORIZADA", autorizadoAt: now, autorizadoPor: input.usuarioId,
+    sesionCajaId: sesion.id,
+  }).where(eq(ticketsTable.id, ticket.id));
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId, accion: "AUTORIZAR_NOTA", entidad: "tickets",
+    entidadId: String(ticket.id), datosDespues: { sesionCajaId: sesion.id, movimientoCreditoId: movement!.id }, ip: input.ip,
+  });
+  return buildTicketDetail(tx, ticket.id, includeCosts);
 }
 
 export async function listarTicketsPendientesCaja(
@@ -1735,7 +1642,10 @@ export async function listarTicketsPendientesCaja(
       and(
         eq(ticketsTable.ubicacionId, ubicacionId),
         eq(ticketsTable.estado, "VENDIDO"),
-        eq(ticketsTable.cobrado, false),
+        or(
+          and(eq(ticketsTable.documentoTipo, "TICKET"), eq(ticketsTable.cobrado, false)),
+          and(eq(ticketsTable.documentoTipo, "NOTA"), eq(ticketsTable.autorizacionEstado, "PENDIENTE")),
+        ),
       ),
     )
     .groupBy(
@@ -1763,6 +1673,9 @@ export async function listarTicketsCajaOperativa(
       createdAt: ticketsTable.createdAt,
       cobrado: ticketsTable.cobrado,
       cobradoAt: ticketsTable.cobradoAt,
+      documentoTipo: ticketsTable.documentoTipo,
+      autorizacionEstado: ticketsTable.autorizacionEstado,
+      autorizadoAt: ticketsTable.autorizadoAt,
     })
     .from(ticketsTable)
     .where(
@@ -1770,11 +1683,14 @@ export async function listarTicketsCajaOperativa(
         eq(ticketsTable.ubicacionId, input.ubicacionId),
         eq(ticketsTable.estado, "VENDIDO"),
         or(
-          eq(ticketsTable.cobrado, false),
-          and(
-            eq(ticketsTable.cobrado, true),
-            eq(ticketsTable.sesionCajaId, input.sesionCajaId),
-          ),
+          and(eq(ticketsTable.documentoTipo, "TICKET"), or(
+            eq(ticketsTable.cobrado, false),
+            and(eq(ticketsTable.cobrado, true), eq(ticketsTable.sesionCajaId, input.sesionCajaId)),
+          )),
+          and(eq(ticketsTable.documentoTipo, "NOTA"), or(
+            eq(ticketsTable.autorizacionEstado, "PENDIENTE"),
+            and(eq(ticketsTable.autorizacionEstado, "AUTORIZADA"), eq(ticketsTable.sesionCajaId, input.sesionCajaId)),
+          )),
         ),
       ),
     )
@@ -1808,6 +1724,7 @@ export async function listarTicketsCajaOperativa(
     ...ticket,
     createdAt: ticket.createdAt.toISOString(),
     cobradoAt: ticket.cobradoAt?.toISOString() ?? null,
+    autorizadoAt: ticket.autorizadoAt?.toISOString() ?? null,
     formasPago: formasPagoPorTicket.get(ticket.id) ?? [],
   }));
 }

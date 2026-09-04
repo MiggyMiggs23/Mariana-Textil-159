@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { pendingTicketPredicate } from "./accounted-document";
 import { loadCustomerCreditProjections } from "./credit-aging-read-model";
 
 const MEXICO_CITY_TIME_ZONE = "America/Mexico_City";
@@ -55,8 +56,7 @@ export async function getAdminAlertas() {
       JOIN ubicaciones u ON u.id = t.ubicacion_id
       JOIN clientes c ON c.id = t.cliente_id
       JOIN usuarios creator ON creator.id = t.usuario_terminal_id
-      WHERE t.estado = 'VENDIDO'
-        AND NOT t.cobrado
+      WHERE ${pendingTicketPredicate("t")}
         AND t.created_at < now() - interval '30 minutes'
       ORDER BY t.created_at ASC, t.id ASC
     `),

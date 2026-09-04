@@ -7,7 +7,7 @@
  */
 
 /**
- * Obligatorio cuando credito es true y vacío en cualquier otro caso.
+ * Obligatorio para NOTA y vacío para TICKET; se elige y congela en POS.
  * @nullable
  */
 export type TicketInputDiasPlazo = typeof TicketInputDiasPlazo[keyof typeof TicketInputDiasPlazo] | null;

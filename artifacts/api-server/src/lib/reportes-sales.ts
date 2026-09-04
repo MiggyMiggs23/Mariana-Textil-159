@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
 
 export interface DomainReportContext {
   input: Record<string, unknown>;
@@ -99,7 +100,7 @@ export function trendDirection(current: number, previous: number): "rising" | "f
 
 function where(ctx: DomainReportContext, range = ctx.range, alias = "t") {
   const args: unknown[] = [range.desde.toISOString(), range.hasta.toISOString()];
-  const parts = [`${alias}.created_at >= $1`, `${alias}.created_at <= $2`];
+  const parts = [`${accountedDocumentAt(alias)} >= $1`, `${accountedDocumentAt(alias)} <= $2`];
   const add = (column: string, data: unknown[], cast = "int[]") => {
     if (data.length) { args.push(data); parts.push(`${column}=ANY($${args.length}::${cast})`); }
   };
@@ -127,14 +128,14 @@ const pendingCost = "l.costo_total_congelado IS NULL";
 
 export async function buildSalesReport(section: "ventas" | "utilidad", ctx: DomainReportContext): Promise<{ kpis: any[]; charts: any[]; tables: any[]; warnings: string[] }> {
   const normal = where(ctx);
-  const salesWhere = `${normal.text} AND t.estado='VENDIDO'`;
+  const salesWhere = `${normal.text} AND ${accountedDocumentPredicate("t")}`;
   const compare = async (range: { desde: Date; hasta: Date }) => {
     const condition = where(ctx, { ...ctx.range, ...range });
     const result = await pool.query(`SELECT COALESCE(SUM(l.importe),0)::float ventas, COUNT(DISTINCT t.id)::int tickets,
       CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.costo_total_congelado),0)::float END costo,
       CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
       COALESCE(SUM(l.importe),0)::float denominador
-      ${joins} WHERE ${condition.text} AND t.estado='VENDIDO'`, condition.values);
+      ${joins} WHERE ${condition.text} AND ${accountedDocumentPredicate("t")}`, condition.values);
     return result.rows[0]!;
   };
   const compareModalities = async (range: { desde: Date; hasta: Date }) => {
@@ -146,7 +147,7 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
       COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado='STALE_LAST_KNOWN')::int lineas_costo_vencido,
       COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado IS NULL)::int lineas_proveniencia_desconocida,
       COUNT(*) FILTER (WHERE l.tipo='METREADO' AND l.costo_referencia_estado='NO_COST')::int lineas_sin_costo
-      ${joins} WHERE ${condition.text} AND t.estado='VENDIDO' GROUP BY l.tipo`, condition.values);
+      ${joins} WHERE ${condition.text} AND ${accountedDocumentPredicate("t")} GROUP BY l.tipo`, condition.values);
     return new Map(result.rows.map((row) => [modalityLabel(row.tipo), row]));
   };
   const [current, previous, yearAgo, currentModalities, previousModalities, yearAgoModalities] = await Promise.all([
@@ -204,9 +205,9 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
 
   if (section === "ventas") {
     const [daily, weekday, hour, site, product, fabric, color, seller, client, invoice] = await Promise.all([
-      dimensions("ventas-diarias", "Día", `(t.created_at AT TIME ZONE '${zone}')::date::text`),
-      dimensions("por-dia-semana", "Día de semana", `trim(to_char(t.created_at AT TIME ZONE '${zone}','Day'))`, `EXTRACT(ISODOW FROM t.created_at AT TIME ZONE '${zone}'),trim(to_char(t.created_at AT TIME ZONE '${zone}','Day'))`),
-      dimensions("por-hora", "Hora", `to_char(t.created_at AT TIME ZONE '${zone}','HH24')`),
+       dimensions("ventas-diarias", "Día", `(${accountedDocumentAt("t")} AT TIME ZONE '${zone}')::date::text`),
+       dimensions("por-dia-semana", "Día de semana", `trim(to_char(${accountedDocumentAt("t")} AT TIME ZONE '${zone}','Day'))`, `EXTRACT(ISODOW FROM ${accountedDocumentAt("t")} AT TIME ZONE '${zone}'),trim(to_char(${accountedDocumentAt("t")} AT TIME ZONE '${zone}','Day'))`),
+       dimensions("por-hora", "Hora", `to_char(${accountedDocumentAt("t")} AT TIME ZONE '${zone}','HH24')`),
       dimensions("por-sitio", "Sitio", "u.nombre"), dimensions("por-producto", "Producto", "p.sku", "p.id,p.sku"),
       dimensions("por-tela", "Tela", "p.tela"), dimensions("por-color", "Color", "p.color"),
       dimensions("por-vendedor", "Vendedor", "vendedor.nombre"), dimensions("por-cliente", "Cliente", "cliente.nombre"),
@@ -252,7 +253,7 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
 
   const [fabric, product, color, site, seller, evolution, quality, prices, crossSite] = await Promise.all([
     dimensions("utilidad-tela", "Tela", "p.tela"), dimensions("utilidad-producto", "Producto", "p.sku", "p.id,p.sku"), dimensions("utilidad-color", "Color", "p.color"), dimensions("utilidad-sitio", "Sitio", "u.nombre"), dimensions("utilidad-vendedor", "Vendedor", "vendedor.nombre"),
-    dimensions("evolucion-margen", "Día", `(t.created_at AT TIME ZONE '${zone}')::date::text`),
+     dimensions("evolucion-margen", "Día", `(${accountedDocumentAt("t")} AT TIME ZONE '${zone}')::date::text`),
     pool.query(`SELECT l.tipo,CASE WHEN l.costo_total_congelado IS NULL THEN 'Costo pendiente' WHEN l.tipo='METREADO' AND l.costo_referencia_estado='STALE_LAST_KNOWN' THEN 'Último costo conocido (vencido)' WHEN l.tipo='METREADO' AND l.costo_referencia_estado IS NULL THEN 'Proveniencia histórica desconocida' WHEN l.costo_unitario_congelado<=0 OR l.costo_total_congelado<=0 THEN 'Costo nulo/cero' ELSE 'Válida' END calidad,COUNT(*)::int lineas FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY l.tipo,calidad`, normal.values),
     pool.query(`SELECT p.sku,p.tela,l.tipo,p.unidad,cliente.nombre cliente,vendedor.nombre vendedor,COUNT(*)::int lineas,MIN(l.precio_unitario)::float minimo,MAX(l.precio_unitario)::float maximo,AVG(l.precio_unitario)::float promedio,CASE WHEN SUM(l.cantidad)=0 THEN 0 ELSE SUM(l.precio_unitario*l.cantidad)/SUM(l.cantidad) END::float promedio_ponderado FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id LEFT JOIN clientes cliente ON cliente.id=t.cliente_id LEFT JOIN usuarios vendedor ON vendedor.id=t.usuario_terminal_id LEFT JOIN rollos r ON r.id=l.rollo_id WHERE ${salesWhere} GROUP BY p.id,l.tipo,p.unidad,cliente.nombre,vendedor.nombre ORDER BY promedio_ponderado DESC`, normal.values),
     pool.query(`WITH by_site AS (
@@ -263,7 +264,7 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
     CASE WHEN COUNT(*) FILTER (WHERE ${pendingCost})>0 THEN NULL ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::float END utilidad,
     COALESCE(SUM(l.cantidad),0)::float cantidad ${joins}
     WHERE ${where(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }).text}
-      AND t.estado='VENDIDO' GROUP BY p.sku,l.tipo,p.unidad`,
+       AND ${accountedDocumentPredicate("t")} GROUP BY p.sku,l.tipo,p.unidad`,
   where(ctx, { ...ctx.range, desde: ctx.range.previousDesde, hasta: ctx.range.previousHasta }).values);
   const productKey = (sku: unknown, tipo: unknown, unidad: unknown) => `${String(sku)}:${String(tipo)}:${String(unidad)}`;
   const prior = new Map(prevProduct.rows.map((r) => [productKey(r.sku, r.tipo, r.unidad), r]));

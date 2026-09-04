@@ -3,6 +3,8 @@ import { Router, type IRouter } from "express";
 import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import {
   AbrirSesionCajaBody,
+  AutorizarNotaParams,
+  AutorizarNotaResponse,
   AbrirSesionCajaResponse,
   CrearSalidaDineroCajaBody,
   CrearSalidaDineroCajaParams,
@@ -63,6 +65,7 @@ import { getRequestIp } from "../lib/request";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 import {
   abrirSesionCaja,
+  autorizarNota,
   buildCorteCaja,
   buildTicketDetail,
   buscarPos,
@@ -400,7 +403,6 @@ router.post(
             direccionEntregaSnapshot: body.direccionEntregaSnapshot,
             tipo: body.tipo,
             facturado: body.facturado,
-            credito: body.credito,
             diasPlazo: body.diasPlazo,
             uuidCliente: body.uuidCliente,
             lineas: body.lineas.map((linea) => ({
@@ -757,6 +759,30 @@ router.post(
         ),
       );
       res.json(CobrarTicketResponse.parse(result));
+    } catch (error) {
+      handlePosError(error, res, next);
+    }
+  },
+);
+
+router.post(
+  "/tickets/:id/autorizar",
+  requierePermiso("cobros_pagos", "crear"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = AutorizarNotaParams.parse(req.params);
+      const [ticket] = await db.select({ ubicacionId: ticketsTable.ubicacionId })
+        .from(ticketsTable).where(eq(ticketsTable.id, params.id)).limit(1);
+      if (!ticket) { res.status(404).json({ error: "Nota no encontrada." }); return; }
+      assertOperationalLocation(req, ticket.ubicacionId);
+      const [session] = await db.select({ id: sesionesCajaTable.id }).from(sesionesCajaTable)
+        .where(and(eq(sesionesCajaTable.ubicacionId, ticket.ubicacionId), eq(sesionesCajaTable.estado, "ABIERTA"))).limit(1);
+      if (!session) throw new PosError("Abre una sesión de caja antes de autorizar.", "OPEN_SESSION_REQUIRED", 409);
+      const result = await db.transaction((tx) => autorizarNota(tx, {
+        ticketId: params.id, sesionCajaId: session.id,
+        usuarioId: req.auth!.user.id, ip: getRequestIp(req),
+      }, true));
+      res.json(AutorizarNotaResponse.parse(result));
     } catch (error) {
       handlePosError(error, res, next);
     }

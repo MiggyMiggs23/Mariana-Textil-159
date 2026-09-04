@@ -56,6 +56,7 @@ import {
 import { ordenarEspanol } from "../lib/spanish-order";
 import { buildTicketDetail } from "../lib/pos";
 import { breakdownIvaIncluded } from "../lib/iva";
+import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
 
 const router: IRouter = Router();
 
@@ -442,9 +443,9 @@ router.get(
         FROM tickets t
         JOIN ticket_lineas l ON l.ticket_id = t.id
         JOIN productos p ON p.id = l.producto_id
-        WHERE t.estado = 'VENDIDO'
-          AND ($1::date IS NULL OR t.created_at >= $1::date)
-          AND ($2::date IS NULL OR t.created_at < $2::date + interval '1 day')`,
+        WHERE ${accountedDocumentPredicate("t")}
+          AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date)
+          AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date + interval '1 day')`,
         [desde, hasta],
       );
       const [tops, pareto, segmentos, mensual, productosGlobal, coloresGlobal, riesgo] = await Promise.all([
@@ -453,38 +454,38 @@ router.get(
              CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
                ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END AS margen
            FROM tickets t JOIN clientes c ON c.id=t.cliente_id JOIN ticket_lineas l ON l.ticket_id=t.id
-           WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date)
-             AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
+            WHERE ${accountedDocumentPredicate("t")} AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date)
+             AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date+interval '1 day')
            GROUP BY c.id,c.nombre ORDER BY ventas DESC LIMIT 20`, [desde, hasta]),
         pool.query(
-          `WITH x AS (SELECT c.id,c.nombre,SUM(l.importe) ventas FROM tickets t JOIN clientes c ON c.id=t.cliente_id JOIN ticket_lineas l ON l.ticket_id=t.id WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day') GROUP BY c.id,c.nombre)
+          `WITH x AS (SELECT c.id,c.nombre,SUM(l.importe) ventas FROM tickets t JOIN clientes c ON c.id=t.cliente_id JOIN ticket_lineas l ON l.ticket_id=t.id WHERE ${accountedDocumentPredicate("t")} AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date) AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date+interval '1 day') GROUP BY c.id,c.nombre)
            SELECT id,nombre,ventas::text, (SUM(ventas) OVER (ORDER BY ventas DESC)/NULLIF(SUM(ventas) OVER (),0))::text AS acumulado FROM x ORDER BY ventas DESC`, [desde, hasta]),
         pool.query(
           `SELECT CASE WHEN c.es_sistema THEN 'PUBLICO' ELSE 'REGISTRADO' END AS segmento,
              SUM(t.subtotal)::text AS ventas,COUNT(*)::int AS tickets
-           FROM tickets t JOIN clientes c ON c.id=t.cliente_id WHERE t.estado='VENDIDO'
-            AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
+           FROM tickets t JOIN clientes c ON c.id=t.cliente_id WHERE ${accountedDocumentPredicate("t")}
+            AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date) AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date+interval '1 day')
            GROUP BY c.es_sistema`, [desde, hasta]),
         pool.query(
-          `SELECT to_char(t.created_at,'YYYY-MM') mes,SUM(l.importe)::text ventas,
+          `SELECT to_char(${accountedDocumentAt("t")},'YYYY-MM') mes,SUM(l.importe)::text ventas,
               CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
                 ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
-           FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id WHERE t.estado='VENDIDO'
-            AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
+           FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id WHERE ${accountedDocumentPredicate("t")}
+            AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date) AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date+interval '1 day')
            GROUP BY mes ORDER BY mes`, [desde, hasta]),
         pool.query(
           `SELECT p.id,p.sku,p.tela,p.color,l.tipo,p.unidad,SUM(l.cantidad)::text cantidad,SUM(l.importe)::text ventas
            FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
-           WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
+            WHERE ${accountedDocumentPredicate("t")} AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date) AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date+interval '1 day')
             GROUP BY p.id,l.tipo,p.unidad ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
         pool.query(
           `SELECT p.color,l.tipo,p.unidad,SUM(l.importe)::text ventas,SUM(l.cantidad)::text cantidad
            FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
-           WHERE t.estado='VENDIDO' AND ($1::date IS NULL OR t.created_at >= $1::date) AND ($2::date IS NULL OR t.created_at < $2::date+interval '1 day')
+            WHERE ${accountedDocumentPredicate("t")} AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date) AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date+interval '1 day')
             GROUP BY p.color,l.tipo,p.unidad ORDER BY ventas DESC LIMIT 30`, [desde,hasta]),
         pool.query(
-          `SELECT c.id,c.nombre,MIN(t.created_at) AS "primeraCompra",MAX(t.created_at) AS "ultimaCompra"
-           FROM clientes c LEFT JOIN tickets t ON t.cliente_id=c.id AND t.estado='VENDIDO'
+          `SELECT c.id,c.nombre,MIN(${accountedDocumentAt("t")}) AS "primeraCompra",MAX(${accountedDocumentAt("t")}) AS "ultimaCompra"
+           FROM clientes c LEFT JOIN tickets t ON t.cliente_id=c.id AND ${accountedDocumentPredicate("t")}
            WHERE NOT c.es_sistema GROUP BY c.id,c.nombre`, []),
       ]);
       const riskProjections = await loadCustomerCreditProjections(
@@ -533,17 +534,17 @@ router.get(
     try {
       const { desde, hasta } = period(req);
       const result = await pool.query(
-        `SELECT c.nombre AS cliente, t.folio, t.created_at AS fecha,
+        `SELECT c.nombre AS cliente, t.folio, ${accountedDocumentAt("t")} AS fecha,
           t.subtotal::text,l.tipo,p.unidad,l.cantidad::text,
           CASE WHEN l.costo_total_congelado IS NOT NULL
             THEN (l.importe - l.costo_total_congelado)::text END AS margen
          FROM tickets t JOIN clientes c ON c.id=t.cliente_id
          JOIN ticket_lineas l ON l.ticket_id=t.id
          JOIN productos p ON p.id=l.producto_id
-         WHERE t.estado='VENDIDO'
-           AND ($1::date IS NULL OR t.created_at >= $1::date)
-           AND ($2::date IS NULL OR t.created_at < $2::date + interval '1 day')
-         ORDER BY t.created_at DESC`,
+          WHERE ${accountedDocumentPredicate("t")}
+           AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date)
+           AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date + interval '1 day')
+          ORDER BY ${accountedDocumentAt("t")} DESC`,
         [desde, hasta],
       );
       const workbook = new ExcelJS.Workbook();
@@ -1278,7 +1279,7 @@ router.get(
 
       const { desde, hasta } = period(req);
       const result = await pool.query(
-        `SELECT t.id, t.folio, t.created_at AS fecha, t.subtotal::text,
+        `SELECT t.id, t.folio, ${accountedDocumentAt("t")} AS fecha, t.subtotal::text,
           t.iva::text, t.total::text,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'), 0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'), 0)::text AS kilos,
@@ -1295,10 +1296,10 @@ router.get(
             (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto"
          FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
          JOIN productos p ON p.id=l.producto_id
-         WHERE t.cliente_id=$1 AND t.estado='VENDIDO'
-           AND ($2::date IS NULL OR t.created_at >= $2::date)
-           AND ($3::date IS NULL OR t.created_at < $3::date + interval '1 day')
-         GROUP BY t.id ORDER BY t.created_at DESC`,
+          WHERE t.cliente_id=$1 AND ${accountedDocumentPredicate("t")}
+           AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date)
+           AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date + interval '1 day')
+         GROUP BY t.id ORDER BY ${accountedDocumentAt("t")} DESC`,
         [id, desde, hasta],
       );
       res.json({
@@ -1331,31 +1332,31 @@ router.get(
       const args = [id, desde, hasta];
       const [productos, telas, tendencia, pagos, actividad, facturacion, financiero, semana] = await Promise.all([
         pool.query(`SELECT p.id,p.sku,p.tela,p.color,l.tipo,p.unidad,SUM(l.cantidad)::text cantidad,SUM(l.importe)::text ventas,
-          MAX(t.created_at) AS "ultimaCompra",
+          MAX(${accountedDocumentAt("t")}) AS "ultimaCompra",
           SUM((l.precio_sugerido*l.cantidad)-l.importe)::text AS descuento,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
             ELSE COALESCE(SUM(l.importe-l.costo_total_congelado),0)::text END margen
           FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
-          WHERE t.cliente_id=$1 AND t.estado='VENDIDO' AND ($2::date IS NULL OR t.created_at >= $2::date) AND ($3::date IS NULL OR t.created_at < $3::date+interval '1 day')
+          WHERE t.cliente_id=$1 AND ${accountedDocumentPredicate("t")} AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date) AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date+interval '1 day')
           GROUP BY p.id,l.tipo,p.unidad ORDER BY ventas DESC`, args),
         pool.query(`SELECT p.tela,p.color,l.tipo,p.unidad,SUM(l.importe)::text ventas,COUNT(DISTINCT t.id)::int tickets
           FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id
-          WHERE t.cliente_id=$1 AND t.estado='VENDIDO' AND ($2::date IS NULL OR t.created_at >= $2::date) AND ($3::date IS NULL OR t.created_at < $3::date+interval '1 day')
+          WHERE t.cliente_id=$1 AND ${accountedDocumentPredicate("t")} AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date) AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date+interval '1 day')
           GROUP BY p.tela,p.color,l.tipo,p.unidad ORDER BY ventas DESC`, args),
-        pool.query(`SELECT to_char(created_at,'YYYY-MM') mes,COUNT(*)::int tickets,SUM(subtotal)::text ventas
-          FROM tickets WHERE cliente_id=$1 AND estado='VENDIDO' AND ($2::date IS NULL OR created_at >= $2::date) AND ($3::date IS NULL OR created_at < $3::date+interval '1 day') GROUP BY mes ORDER BY mes`, args),
+        pool.query(`SELECT to_char(${accountedDocumentAt("t")},'YYYY-MM') mes,COUNT(*)::int tickets,SUM(subtotal)::text ventas
+          FROM tickets t WHERE cliente_id=$1 AND ${accountedDocumentPredicate("t")} AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date) AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date+interval '1 day') GROUP BY mes ORDER BY mes`, args),
         pool.query(`SELECT forma_pago AS forma,COALESCE(SUM(-importe),0)::text importe,COUNT(*)::int movimientos
           FROM movimientos_credito WHERE cliente_id=$1 AND tipo='ABONO' AND ($2::date IS NULL OR created_at >= $2::date) AND ($3::date IS NULL OR created_at < $3::date+interval '1 day') GROUP BY forma_pago`, args),
-        pool.query(`SELECT MAX(created_at) AS "ultimaCompra",COUNT(*)::int tickets,AVG(total)::text AS "ticketPromedio",
-          MAX(total)::text AS "ticketMaximo" FROM tickets WHERE cliente_id=$1 AND estado='VENDIDO' AND ($2::date IS NULL OR created_at >= $2::date) AND ($3::date IS NULL OR created_at < $3::date+interval '1 day')`, args),
-        pool.query(`SELECT facturado,COUNT(*)::int tickets,SUM(subtotal)::text subtotal,SUM(iva)::text iva FROM tickets
-          WHERE cliente_id=$1 AND estado='VENDIDO' AND ($2::date IS NULL OR created_at >= $2::date) AND ($3::date IS NULL OR created_at < $3::date+interval '1 day') GROUP BY facturado`, args),
+        pool.query(`SELECT MAX(${accountedDocumentAt("t")}) AS "ultimaCompra",COUNT(*)::int tickets,AVG(total)::text AS "ticketPromedio",
+          MAX(total)::text AS "ticketMaximo" FROM tickets t WHERE cliente_id=$1 AND ${accountedDocumentPredicate("t")} AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date) AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date+interval '1 day')`, args),
+        pool.query(`SELECT facturado,COUNT(*)::int tickets,SUM(subtotal)::text subtotal,SUM(iva)::text iva FROM tickets t
+          WHERE cliente_id=$1 AND ${accountedDocumentPredicate("t")} AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date) AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date+interval '1 day') GROUP BY facturado`, args),
         pool.query(`WITH s AS (SELECT created_at,SUM(importe) OVER (ORDER BY created_at,id) saldo FROM movimientos_credito WHERE cliente_id=$1)
           SELECT COALESCE(MAX(saldo),0)::text AS "saldoMaximo",
             (SELECT AVG(EXTRACT(day FROM m.created_at-t.created_at))::text FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id WHERE m.cliente_id=$1 AND m.tipo='ABONO') AS "diasPromedioPago"
           FROM s`, [id]),
-        pool.query(`SELECT EXTRACT(isodow FROM created_at)::int dia,COUNT(*)::int tickets,SUM(subtotal)::text ventas
-          FROM tickets WHERE cliente_id=$1 AND estado='VENDIDO' AND ($2::date IS NULL OR created_at >= $2::date) AND ($3::date IS NULL OR created_at < $3::date+interval '1 day') GROUP BY dia ORDER BY dia`, args),
+        pool.query(`SELECT EXTRACT(isodow FROM ${accountedDocumentAt("t")})::int dia,COUNT(*)::int tickets,SUM(subtotal)::text ventas
+          FROM tickets t WHERE cliente_id=$1 AND ${accountedDocumentPredicate("t")} AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date) AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date+interval '1 day') GROUP BY dia ORDER BY dia`, args),
       ]);
       const totalVentas = productos.rows.reduce((sum, item) => sum + Number(item.ventas), 0);
       res.json({
@@ -1430,9 +1431,9 @@ router.get(
             (WHERE l.costo_total_congelado IS NULL)::int AS "lineasSinCosto"
          FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
          JOIN productos p ON p.id=l.producto_id
-         WHERE t.cliente_id=$1 AND t.estado='VENDIDO'
-           AND ($2::date IS NULL OR t.created_at >= $2::date)
-           AND ($3::date IS NULL OR t.created_at < $3::date + interval '1 day')`,
+          WHERE t.cliente_id=$1 AND ${accountedDocumentPredicate("t")}
+           AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date)
+           AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date + interval '1 day')`,
         [id, desde, hasta],
       );
       const summary = result.rows[0];
