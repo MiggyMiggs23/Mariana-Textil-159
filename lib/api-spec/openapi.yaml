@@ -10706,14 +10706,10 @@ components:
           $ref: "#/components/schemas/TipoTicket"
           description: Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.
         facturado: { type: boolean }
-        credito:
-          type: boolean
-          default: false
-          description: Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS.
         diasPlazo:
           type: ["number", "null"]
           enum: [7, 15, 30, 60]
-          description: Obligatorio cuando credito es true y vacío en cualquier otro caso.
+          description: Obligatorio para NOTA y vacío para TICKET; se elige y congela en POS.
         lineas:
           type: array
           minItems: 1

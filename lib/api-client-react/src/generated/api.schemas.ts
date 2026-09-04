@@ -4959,7 +4959,7 @@ export interface TicketLineaInput {
 }
 
 /**
- * Obligatorio cuando credito es true y vacío en cualquier otro caso.
+ * Obligatorio para NOTA y vacío para TICKET; se elige y congela en POS.
  * @nullable
  */
 export type TicketInputDiasPlazo = typeof TicketInputDiasPlazo[keyof typeof TicketInputDiasPlazo] | null;
@@ -4994,10 +4994,8 @@ export interface TicketInput {
   /** Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea. */
   tipo?: TipoTicket;
   facturado: boolean;
-  /** Indica que el ticket se crea para venta a crédito; el plazo queda congelado desde POS. */
-  credito?: boolean;
   /**
-     * Obligatorio cuando credito es true y vacío en cualquier otro caso.
+     * Obligatorio para NOTA y vacío para TICKET; se elige y congela en POS.
      * @nullable
      */
   diasPlazo?: TicketInputDiasPlazo;

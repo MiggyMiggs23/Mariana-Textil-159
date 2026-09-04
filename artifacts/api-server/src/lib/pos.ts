@@ -649,7 +649,8 @@ export async function crearTicket(
       "INVALID_LOCATION",
     );
   }
-  if (input.credito === true) {
+  const documentoTipo = input.documentoTipo ?? "TICKET";
+  if (documentoTipo === "NOTA") {
     await transactionAdvisoryLock(
       tx,
       ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
@@ -670,27 +671,26 @@ export async function crearTicket(
   if (!clienteTicket?.activo) {
     throw new PosError("Cliente inválido o inactivo.", "INVALID_CLIENT");
   }
-  const documentoTipo = input.documentoTipo ?? "TICKET";
-  const credito = input.credito === true;
-  if (credito && documentoTipo !== "NOTA") {
+  const credito = documentoTipo === "NOTA";
+  if (documentoTipo === "TICKET" && input.credito === true) {
     throw new PosError(
       "El crédito es exclusivo de las notas.",
       "TICKET_CREDIT_FORBIDDEN",
     );
   }
-  if (credito && clienteTicket.esSistema) {
+  if (documentoTipo === "NOTA" && clienteTicket.esSistema) {
     throw new PosError(
       "Venta a Público no admite compras a crédito.",
       "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
     );
   }
-  if (credito && !isCreditTerm(input.diasPlazo)) {
+  if (documentoTipo === "NOTA" && !isCreditTerm(input.diasPlazo)) {
     throw new PosError(
       "Debes elegir un plazo de crédito de 7, 15, 30 o 60 días.",
       "CREDIT_TERM_REQUIRED",
     );
   }
-  if (!credito && input.diasPlazo != null) {
+  if (documentoTipo === "TICKET" && input.diasPlazo != null) {
     throw new PosError(
       "El plazo solo se admite en una venta a crédito.",
       "CREDIT_TERM_NOT_ALLOWED",
@@ -701,16 +701,6 @@ export async function crearTicket(
   const nombreDestinatario = input.nombreDestinatario?.trim() || null;
   const direccionEntregaSnapshot =
     input.direccionEntregaSnapshot?.trim() || null;
-  if (
-    documentoTipo === "NOTA" &&
-    clienteTicket.esSistema &&
-    (!nombreDestinatario || !direccionEntregaSnapshot)
-  ) {
-    throw new PosError(
-      "La NOTA de Venta a Público requiere nombre del destinatario y dirección de entrega.",
-      "PUBLIC_NOTE_DELIVERY_REQUIRED",
-    );
-  }
 
   // Acquire the complete, globally ordered inventory lock set before creating
   // any ticket row or locking individual rolls. Internal engine calls are
