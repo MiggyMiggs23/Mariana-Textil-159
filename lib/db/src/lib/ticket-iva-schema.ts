@@ -6,6 +6,9 @@ import type { Pool } from "pg";
  * historical rows receive zero IVA instead of being recalculated.
  */
 export async function ensureTicketIvaSchema(pool: Pool): Promise<void> {
+  await pool.query(
+    "ALTER TYPE forma_pago_ticket ADD VALUE IF NOT EXISTS 'FACTURADO'",
+  );
   await pool.query(`
     ALTER TABLE tickets
       ADD COLUMN IF NOT EXISTS iva numeric(12, 2) NOT NULL DEFAULT 0;

@@ -10558,7 +10558,8 @@ components:
       enum: [TICKET, NOTA]
     FormaPagoTicket:
       type: string
-      enum: [EFECTIVO, TRANSFERENCIA, CREDITO]
+      description: FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.
+      enum: [EFECTIVO, TRANSFERENCIA, FACTURADO, CREDITO]
     EstadoSesionCaja:
       type: string
       enum: [ABIERTA, CERRADA]
@@ -10726,6 +10727,9 @@ components:
           items:
             $ref: "#/components/schemas/TicketPagoInput"
         clienteId: { type: ["number", "null"] }
+        facturado:
+          type: boolean
+          description: Al cobrar, activa la factura y su IVA para el ticket completo en la misma transacción.
     TicketCancelacionInput:
       type: object
       required: [motivo]

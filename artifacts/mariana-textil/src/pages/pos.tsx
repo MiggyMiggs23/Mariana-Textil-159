@@ -474,6 +474,12 @@ export default function PosPage() {
   const [documentoTipo, setDocumentoTipo] =
     useHistoryEntryState<"TICKET" | "NOTA" | null>("pos.document-type", null);
   const [notaSinPrecios, setNotaSinPrecios] = useState(false);
+  useEffect(() => {
+    if (documentoTipo !== "NOTA") {
+      setCredito(false);
+      setDiasPlazo(null);
+    }
+  }, [documentoTipo]);
   const [imprimirTabulares, setImprimirTabulares] = useState(false);
   const [nombreDestinatario, setNombreDestinatario] = useState("");
   const [direccionEntregaSnapshot, setDireccionEntregaSnapshot] = useState("");
@@ -945,8 +951,8 @@ export default function PosPage() {
       tipo: hasNormal ? TipoTicket.NORMAL : TipoTicket.METREADO,
       facturado: hasNormal ? facturar : false,
       clienteId: Number(clientId),
-      credito,
-      diasPlazo: credito ? diasPlazo : null,
+      credito: documentoTipo === "NOTA" && credito,
+      diasPlazo: documentoTipo === "NOTA" && credito ? diasPlazo : null,
       lineas,
       documentoTipo: documentoTipo as "TICKET" | "NOTA",
       notaSinPrecios: documentoTipo === "NOTA" ? notaSinPrecios : false,
@@ -1420,7 +1426,7 @@ export default function PosPage() {
               <p className="text-xs text-muted-foreground" data-testid="text-ticket-client">
                 El ticket se emitirá a nombre de {clientName}.
               </p>
-              {clientId !== "1" && (
+              {documentoTipo === "NOTA" && clientId !== "1" && (
                 <div className="space-y-3 rounded-md border p-3">
                   {loadingClienteCredito ? (
                     <p className="text-sm text-muted-foreground">Consultando libro mayor de crédito…</p>

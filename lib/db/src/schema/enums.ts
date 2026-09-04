@@ -91,6 +91,7 @@ export const formaPagoTicketEnum = pgEnum("forma_pago_ticket", [
   "EFECTIVO",
   "TRANSFERENCIA",
   "CREDITO",
+  "FACTURADO",
 ]);
 
 /**

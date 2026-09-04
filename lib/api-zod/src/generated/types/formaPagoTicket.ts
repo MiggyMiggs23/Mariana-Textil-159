@@ -6,11 +6,15 @@
  * OpenAPI spec version: 0.1.0
  */
 
+/**
+ * FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.
+ */
 export type FormaPagoTicket = typeof FormaPagoTicket[keyof typeof FormaPagoTicket];
 
 
 export const FormaPagoTicket = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
   CREDITO: 'CREDITO',
 } as const;

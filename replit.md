@@ -37,6 +37,12 @@ En toda tabla del sistema, el identificador principal del renglón es un enlace 
 
 Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una venta con líneas metreadas.
 
+**Formas de cobro de un ticket:** Efectivo, Transferencia y Facturado. **El crédito es exclusivo de las notas** y no es una forma de cobrar un ticket. Ninguna forma de pago se condiciona a `esCredito`; hacerlo dejó la transferencia deshabilitada en toda venta de contado.
+
+**Cobro de METREADO:** si cualquier línea es METREADO, Caja ofrece únicamente Efectivo, también en pago dividido. Esta restricción conserva coherencia con el servidor (`METREADO_CASH_ONLY`) y con la regla existente que rechaza facturar ventas metreadas; no se permite construir en la interfaz una combinación que el servidor rechazará.
+
+La revisión del flujo encontró además un panel de validación y un bloqueo del botón final condicionados a `esCredito`; ambos pertenecían a la antigua opción Crédito y se retiraron junto con ella.
+
 # Mariana Textil
 
 ## Corrección — Bloque 4: Tabulares

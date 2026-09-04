@@ -745,6 +745,7 @@ router.post(
             sesionCajaId: session.id,
             usuarioId: req.auth!.user.id,
             clienteId: body.clienteId,
+            facturado: body.facturado,
             pagos: body.pagos.map((pago) => ({
               formaPago: pago.formaPago,
               importe: String(pago.importe),

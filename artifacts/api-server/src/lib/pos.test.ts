@@ -209,7 +209,7 @@ async function sale(input: {
         ubicacionId: input.ubicacionId,
         usuarioTerminalId: USER_ID,
         clienteId: input.clienteId ?? 1,
-        documentoTipo: input.documentoTipo,
+        documentoTipo: input.documentoTipo ?? (input.credito ? "NOTA" : undefined),
         notaSinPrecios: input.notaSinPrecios,
         nombreDestinatario: input.nombreDestinatario,
         direccionEntregaSnapshot: input.direccionEntregaSnapshot,
@@ -1307,7 +1307,9 @@ await test("POS-05 pago mixto exacto y crédito actualizan turno y cliente", asy
     ),
   );
   assert.equal(cobrado?.documentoTipo, "NOTA");
-  assert.equal(cobrado?.convertidoANotaPorCobro, true);
+  // Crédito se emite como NOTA desde el POS; nunca convierte un TICKET al
+  // cobrar porque TICKET + CREDITO se rechaza explícitamente.
+  assert.equal(cobrado?.convertidoANotaPorCobro, false);
   const persisted = await buildTicketDetail(db, ticket.id, true);
   assert.equal(persisted?.documentoTipo, "NOTA");
   assert.equal(persisted?.convertidoANotaPorCobro, false);
@@ -1552,7 +1554,7 @@ await test("POS-05B cobro exige sesión abierta y cliente para crédito", async 
       ),
     (error: unknown) =>
       error instanceof PosError &&
-      error.code === "SYSTEM_CLIENT_CREDIT_FORBIDDEN",
+      error.code === "TICKET_CREDIT_PAYMENT_FORBIDDEN",
   );
 });
 
@@ -1766,6 +1768,15 @@ await test("POS-07 cancelación revierte inventario y crédito sin borrar pagos"
   assert.equal(
     ledger.reduce((sum, movement) => sum + Number(movement.importe), 0),
     0,
+  );
+  const [resolvedCreditNotification] = await db
+    .select({ leidaAt: notificacionesCreditoTable.leidaAt })
+    .from(notificacionesCreditoTable)
+    .where(eq(notificacionesCreditoTable.ticketId, ticket.id))
+    .limit(1);
+  assert.ok(
+    resolvedCreditNotification?.leidaAt,
+    "la cancelación conserva pero resuelve la notificación de crédito",
   );
   const corte = await buildCorteCaja(db, session.id);
   assert.equal(corte?.ticketsCancelados, 1);

@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import {
   auditoriaTable,
   aplicacionesCreditoTable,
@@ -672,6 +672,12 @@ export async function crearTicket(
   }
   const documentoTipo = input.documentoTipo ?? "TICKET";
   const credito = input.credito === true;
+  if (credito && documentoTipo !== "NOTA") {
+    throw new PosError(
+      "El crédito es exclusivo de las notas.",
+      "TICKET_CREDIT_FORBIDDEN",
+    );
+  }
   if (credito && clienteTicket.esSistema) {
     throw new PosError(
       "Venta a Público no admite compras a crédito.",
@@ -1225,6 +1231,17 @@ export async function cancelarTicket(
   }
 
   const now = new Date();
+  // Preserve the immutable notification row as evidence, but atomically
+  // suppress any unread alert for the obligation that was just reversed.
+  await tx
+    .update(notificacionesCreditoTable)
+    .set({ leidaAt: now })
+    .where(
+      and(
+        eq(notificacionesCreditoTable.ticketId, ticket.id),
+        isNull(notificacionesCreditoTable.leidaAt),
+      ),
+    );
   await tx
     .update(ticketsTable)
     .set({
@@ -1392,6 +1409,7 @@ export async function cobrarTicket(
     usuarioId: number;
     clienteId?: number | null;
     pagos: PagoTicketInput[];
+    facturado?: boolean;
     ip: string;
   },
   includeCosts: boolean,
@@ -1439,6 +1457,17 @@ export async function cobrarTicket(
     );
   }
   const pagos = input.pagos.map((pago) => {
+    if (
+      pago.formaPago === "CREDITO" &&
+      (ticket.documentoTipo !== "NOTA" ||
+        ticket.credito !== true ||
+        ticket.clienteId == null)
+    ) {
+      throw new PosError(
+        "El crédito solo puede liquidar notas emitidas a crédito con cliente.",
+        "TICKET_CREDIT_PAYMENT_FORBIDDEN",
+      );
+    }
     const cents = money(pago.importe);
     if (cents <= 0) {
       throw new PosError(
@@ -1464,8 +1493,17 @@ export async function cobrarTicket(
       "METREADO_CASH_ONLY",
     );
   }
+  const activarFacturado =
+    ticket.facturado || input.facturado === true ||
+    pagos.some((pago) => pago.formaPago === "FACTURADO");
+  if (metreado && activarFacturado) {
+    throw new PosError("Las ventas con líneas metreadas no pueden marcarse como facturadas.", "METREADO_FACTURADO");
+  }
+  const totalCobroCents = activarFacturado
+    ? money(ticket.subtotal) + Math.round((money(ticket.subtotal) * IVA_RATE_BASIS_POINTS) / 10_000)
+    : money(ticket.total);
   const paymentTotal = pagos.reduce((sum, pago) => sum + pago.cents, 0);
-  if (paymentTotal !== money(ticket.total)) {
+  if (paymentTotal !== totalCobroCents) {
     throw new PosError(
       "La suma de los pagos debe ser exactamente igual al total del ticket.",
       "PAYMENT_TOTAL_MISMATCH",
@@ -1615,6 +1653,16 @@ export async function cobrarTicket(
     .update(ticketsTable)
     .set({
       clienteId,
+      facturado: activarFacturado,
+      iva: decimalMoney(
+        activarFacturado
+          ? totalCobroCents - money(ticket.subtotal)
+          : money(ticket.iva),
+      ),
+      tasaIva: activarFacturado
+        ? (IVA_RATE_BASIS_POINTS / 10_000).toFixed(4)
+        : ticket.tasaIva,
+      total: decimalMoney(totalCobroCents),
       documentoTipo: creditCents > 0 ? "NOTA" : ticket.documentoTipo,
       cobrado: true,
       cobradoAt: now,
@@ -2040,7 +2088,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     .groupBy(ticketLineasTable.tipo, productosTable.unidad)
     .orderBy(ticketLineasTable.tipo, productosTable.unidad);
 
-  const formas = { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 };
+  const formas = { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0, FACTURADO: 0 };
   const cuentas = {
     CAJA_FISICA: 0,
     CUENTA_FISCAL: 0,
@@ -2051,19 +2099,21 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
   let noFacturado = 0;
   let ivaCobrado = 0;
   const facturacionPagos = {
-    facturado: { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 },
-    noFacturado: { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0 },
+    facturado: { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0, FACTURADO: 0 },
+    noFacturado: { EFECTIVO: 0, TRANSFERENCIA: 0, CREDITO: 0, FACTURADO: 0 },
   };
   const ticketIds = new Set<number>();
   const formaPagoCounts: Record<FormaPagoTicket, number> = {
     EFECTIVO: 0,
     TRANSFERENCIA: 0,
     CREDITO: 0,
+    FACTURADO: 0,
   };
   const formaPagoTickets: Record<FormaPagoTicket, Set<number>> = {
     EFECTIVO: new Set<number>(),
     TRANSFERENCIA: new Set<number>(),
     CREDITO: new Set<number>(),
+    FACTURADO: new Set<number>(),
   };
   const facturadoTickets = new Set<number>();
   const noFacturadoTickets = new Set<number>();
@@ -2093,6 +2143,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     });
     if (pago.formaPago === "EFECTIVO") cuentas.CAJA_FISICA += cents;
     if (pago.formaPago === "CREDITO") cuentas.CUENTAS_POR_COBRAR += cents;
+    if (pago.formaPago === "FACTURADO") cuentas.CUENTA_FISCAL += cents;
     if (pago.formaPago === "TRANSFERENCIA") {
       if (pago.facturado) cuentas.CUENTA_FISCAL += cents;
       else cuentas.CUENTA_NO_FISCAL += cents;
@@ -2142,7 +2193,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     ticketsPendientes: pendientes.length,
     totalCobrado: decimalMoney(totalCobrado),
     ivaCobrado: decimalMoney(ivaCobrado),
-    formasPago: (["EFECTIVO", "TRANSFERENCIA", "CREDITO"] as const).map(
+    formasPago: (["EFECTIVO", "TRANSFERENCIA", "FACTURADO", "CREDITO"] as const).map(
       (formaPago) => ({
         formaPago,
         importe: decimalMoney(formas[formaPago]),

@@ -4846,7 +4846,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "pagos": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "referencia": zod.string().nullable(),
   "createdAt": zod.coerce.date(),
@@ -5456,7 +5456,7 @@ export const CrearTicketResponse = zod.object({
   "pagos": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "referencia": zod.string().nullable(),
   "createdAt": zod.coerce.date(),
@@ -5571,7 +5571,7 @@ export const ListarTicketsCajaResponseItem = zod.object({
   "createdAt": zod.coerce.date(),
   "cobrado": zod.boolean(),
   "cobradoAt": zod.coerce.date().nullable(),
-  "formasPago": zod.array(zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']))
+  "formasPago": zod.array(zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'))
 })
 export const ListarTicketsCajaResponse = zod.array(ListarTicketsCajaResponseItem)
 
@@ -5657,7 +5657,7 @@ export const ObtenerTicketResponse = zod.object({
   "pagos": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "referencia": zod.string().nullable(),
   "createdAt": zod.coerce.date(),
@@ -5855,7 +5855,7 @@ export const CancelarTicketResponse = zod.object({
   "pagos": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "referencia": zod.string().nullable(),
   "createdAt": zod.coerce.date(),
@@ -5879,11 +5879,12 @@ export const cobrarTicketBodyPagosItemImporteExclusiveMin = 0;
 
 export const CobrarTicketBody = zod.object({
   "pagos": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.number().gt(cobrarTicketBodyPagosItemImporteExclusiveMin),
   "referencia": zod.string().nullish()
 })).min(1),
-  "clienteId": zod.number().nullish()
+  "clienteId": zod.number().nullish(),
+  "facturado": zod.boolean().optional().describe('Al cobrar, activa la factura y su IVA para el ticket completo en la misma transacción.')
 })
 
 export const CobrarTicketResponse = zod.object({
@@ -5960,7 +5961,7 @@ export const CobrarTicketResponse = zod.object({
   "pagos": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "referencia": zod.string().nullable(),
   "createdAt": zod.coerce.date(),
@@ -6070,13 +6071,13 @@ export const ObtenerCorteCajaResponse = zod.object({
   "estado": zod.enum(['ABIERTA', 'CERRADA'])
 }),
   "formasPago": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "pagosCount": zod.number(),
   "ticketsCount": zod.number()
 })),
   "cuentasDestino": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),
@@ -6208,13 +6209,13 @@ export const CerrarSesionCajaResponse = zod.object({
   "estado": zod.enum(['ABIERTA', 'CERRADA'])
 }),
   "formasPago": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "pagosCount": zod.number(),
   "ticketsCount": zod.number()
 })),
   "cuentasDestino": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),
@@ -7917,13 +7918,13 @@ export const GetAdminCorteResponse = zod.object({
   "estado": zod.enum(['ABIERTA', 'CERRADA'])
 }),
   "formasPago": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "importe": zod.string(),
   "pagosCount": zod.number(),
   "ticketsCount": zod.number()
 })),
   "cuentasDestino": zod.array(zod.object({
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),

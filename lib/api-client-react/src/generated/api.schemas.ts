@@ -2595,12 +2595,16 @@ export interface TicketLinea {
   margen?: string | null;
 }
 
+/**
+ * FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.
+ */
 export type FormaPagoTicket = typeof FormaPagoTicket[keyof typeof FormaPagoTicket];
 
 
 export const FormaPagoTicket = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
   CREDITO: 'CREDITO',
 } as const;
 
@@ -5008,6 +5012,8 @@ export interface TicketCobroInput {
   pagos: TicketPagoInput[];
   /** @nullable */
   clienteId?: number | null;
+  /** Al cobrar, activa la factura y su IVA para el ticket completo en la misma transacción. */
+  facturado?: boolean;
 }
 
 export interface TicketCancelacionInput {

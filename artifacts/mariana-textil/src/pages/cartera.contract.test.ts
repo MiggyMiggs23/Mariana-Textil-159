@@ -94,7 +94,7 @@ test("Block 3 functionality in payment dialog", async () => {
   assert.match(pagoDialog, /Resumen de aplicación/);
 });
 
-test("credit term and hard-limit UX live in POS, not Cobros", async () => {
+test("credit term UX lives in note creation and ticket Cobros has no credit option", async () => {
   const pos = await readFile(new URL("artifacts/mariana-textil/src/pages/pos.tsx", root), "utf8");
   const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
 
@@ -104,8 +104,9 @@ test("credit term and hard-limit UX live in POS, not Cobros", async () => {
   assert.match(pos, /creditoFaltante/);
   assert.match(pos, /límite de crédito en cero/);
   assert.match(pos, /Venta a Público no admite compras a crédito/);
-  assert.match(cobros, /Plazo definido en POS/);
-  assert.match(cobros, /ticket\.fechaVencimiento/);
+  assert.doesNotMatch(cobros, /Plazo definido en POS/);
+  assert.doesNotMatch(cobros, /FormaPagoTicket\.CREDITO/);
+  assert.match(cobros, /FormaPagoTicket\.FACTURADO/);
   assert.doesNotMatch(cobros, /USUARIO ADMIN|CONTRASEÑA ADMIN|credencialesAdmin/);
   assert.doesNotMatch(cobros, /setDiasPlazo|credit-term-/);
 });

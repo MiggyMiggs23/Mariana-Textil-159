@@ -12,4 +12,6 @@ export interface TicketCobroInput {
   pagos: TicketPagoInput[];
   /** @nullable */
   clienteId?: number | null;
+  /** Al cobrar, activa la factura y su IVA para el ticket completo en la misma transacción. */
+  facturado?: boolean;
 }

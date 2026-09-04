@@ -594,25 +594,21 @@ function CobroDialog({
     (sum, p) => sum + (Number(p.importe) || 0),
     0,
   );
-  const totalTicket = Number(ticket?.total || 0);
+  const facturadoSeleccionado =
+    ticket?.facturado === true ||
+    pagos.some((pago) => pago.formaPago === FormaPagoTicket.FACTURADO);
+  const totalTicket = ticket
+    ? facturadoSeleccionado
+      ? Number(ticket.subtotal) * (1 + Number(ticket.tasaIva || "0.16"))
+      : Number(ticket.total || 0)
+    : 0;
   const hasMetreadoLine =
     ticket?.lineas.some((linea) => linea.tipo === "METREADO") ?? false;
   const isPaymentSelected = pagos.length > 0;
   const faltante = isPaymentSelected ? totalTicket - totalPagado : totalTicket;
-  const usaCredito = pagos.some(
-    (pago) => pago.formaPago === FormaPagoTicket.CREDITO,
-  );
   const primaryPago = pagos[0];
   const handleCobrar = () => {
     if (!ticket || !isPaymentSelected) return;
-    if (usaCredito && ticket.diasPlazo == null) {
-      toast({
-        title: "El ticket no tiene plazo de crédito",
-        description: "El plazo debe definirse en POS al crear el ticket.",
-        variant: "destructive",
-      });
-      return;
-    }
     if (Math.abs(faltante) > 0.01) {
       toast({
         title: "El pago no coincide",
@@ -635,6 +631,7 @@ function CobroDialog({
         id: ticket.id,
         data: {
           pagos: pagosValidos,
+          facturado: facturadoSeleccionado,
         } as Parameters<typeof cobrarTicket.mutate>[0]["data"],
       },
       {
@@ -670,7 +667,14 @@ function CobroDialog({
     if (newPagos.length > 0) {
       newPagos[0].formaPago = formaPago;
     } else {
-      newPagos.push({ formaPago, importe: ticket?.total || "0" });
+      newPagos.push({
+        formaPago,
+        importe: ticket
+          ? (formaPago === FormaPagoTicket.FACTURADO
+            ? Number(ticket.subtotal) * (1 + Number(ticket.tasaIva || "0.16"))
+            : Number(ticket.total)).toFixed(2)
+          : "0",
+      });
     }
     setPagos(newPagos);
   };
@@ -727,7 +731,7 @@ function CobroDialog({
                   </div>
                 </div>
               </div>
-              {ticket.facturado && (
+              {facturadoSeleccionado && (
                 <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm">
                   <div className="flex justify-between text-muted-foreground">
                     <span>Subtotal</span>
@@ -740,7 +744,7 @@ function CobroDialog({
                       IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })})
                     </span>
                     <span>
-                      {formatNumber(ticket.iva, { kind: "money" })}
+                      {formatNumber(totalTicket - Number(ticket.subtotal), { kind: "money" })}
                     </span>
                   </div>
                   <div className="mt-2 flex justify-between border-t border-primary/15 pt-2 font-bold text-primary">
@@ -781,7 +785,7 @@ function CobroDialog({
                           : "outline"
                       }
                       className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.TRANSFERENCIA ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
-                      disabled={hasMetreadoLine || !ticket.esCredito}
+                      disabled={hasMetreadoLine}
                       onClick={() =>
                         setPrimaryFormaPago(FormaPagoTicket.TRANSFERENCIA)
                       }
@@ -792,18 +796,18 @@ function CobroDialog({
                     <Button
                       type="button"
                       variant={
-                        primaryPago?.formaPago === FormaPagoTicket.CREDITO
+                        primaryPago?.formaPago === FormaPagoTicket.FACTURADO
                           ? "default"
                           : "outline"
                       }
-                      className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.CREDITO ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
+                      className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.FACTURADO ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
                       disabled={hasMetreadoLine}
                       onClick={() =>
-                        setPrimaryFormaPago(FormaPagoTicket.CREDITO)
+                        setPrimaryFormaPago(FormaPagoTicket.FACTURADO)
                       }
                     >
                       <CreditCard className="h-8 w-8" />
-                      <span className="font-bold text-base">Crédito</span>
+                      <span className="font-bold text-base">Facturado</span>
                     </Button>
                   </div>
 
@@ -906,14 +910,12 @@ function CobroDialog({
                                 >
                                   Transferencia
                                 </SelectItem>
-                                {ticket.esCredito && (
-                                  <SelectItem
-                                    value={FormaPagoTicket.CREDITO}
-                                    className="font-medium py-3 cursor-pointer"
-                                  >
-                                    Crédito
-                                  </SelectItem>
-                                )}
+                                <SelectItem
+                                  value={FormaPagoTicket.FACTURADO}
+                                  className="font-medium py-3 cursor-pointer"
+                                >
+                                  Facturado
+                                </SelectItem>
                               </>
                             )}
                           </SelectContent>
@@ -993,55 +995,6 @@ function CobroDialog({
                 </div>
               )}
 
-              {ticket.esCredito && (
-                <div className="space-y-4 rounded-xl border-2 border-amber-200 bg-amber-50 p-5 animate-in fade-in slide-in-from-top-2">
-                  <div className="flex items-center gap-2 text-amber-800 mb-2">
-                    <AlertCircle className="h-5 w-5" />
-                    <span className="font-bold text-sm uppercase tracking-wider">
-                      Validación de Crédito
-                    </span>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label className="font-semibold text-amber-900">
-                      Plazo definido en POS
-                    </Label>
-                    {ticket.diasPlazo != null && ticket.fechaVencimiento ? (
-                      <p
-                        className="rounded-md bg-white p-3 text-center font-bold text-amber-950"
-                        data-testid="credit-due-date"
-                      >
-                        {ticket.diasPlazo} días · vence el{" "}
-                        {format(
-                          new Date(`${ticket.fechaVencimiento}T12:00:00`),
-                          "d 'de' MMMM 'de' yyyy",
-                          { locale: es },
-                        )}
-                      </p>
-                    ) : (
-                      <p className="text-sm font-medium text-amber-800">
-                        Este ticket no fue creado como venta a crédito en POS.
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="font-semibold text-amber-900">
-                      Cliente del ticket
-                    </Label>
-                    <div className="rounded-md border border-amber-200 bg-white px-3 py-2 text-sm font-medium text-amber-950">
-                      {ticket?.nombreCliente ||
-                        (ticket?.clienteId === 1
-                          ? "VENTA AL PÚBLICO"
-                          : `Cliente #${ticket?.clienteId ?? "—"}`)}
-                    </div>
-                    <p className="text-xs text-amber-700">
-                      El cliente se fija al crear el ticket y no puede cambiarse durante el cobro.
-                    </p>
-                  </div>
-
-                </div>
-              )}
             </div>
           ) : null}
         </div>
@@ -1073,8 +1026,7 @@ function CobroDialog({
                 className="flex-1 h-14 text-lg font-black shadow-md hover:shadow-lg transition-all"
                 disabled={
                   Math.abs(faltante) > 0.01 ||
-                  cobrarTicket.isPending ||
-                  (usaCredito && ticket.diasPlazo === null)
+                  cobrarTicket.isPending
                 }
                 onClick={handleCobrar}
               >
