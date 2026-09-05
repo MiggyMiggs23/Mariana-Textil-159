@@ -24,3 +24,51 @@ test("tabla conserva seis columnas, enlace único, unidad, sticky y altura limit
   assert.match(source, /formatNumber\(row\.cantidad, \{ kind: "quantity" \}\).*formatUnit\(row\.unidad\)/s);
   assert.doesNotMatch(source, /Totales?|Ver detalle/i);
 });
+
+test("una acción de filtro escribe la dirección exactamente una vez", async () => {
+  const source = await readFile(
+    new URL("./components/proveedores/historial-compras.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(
+    source,
+    /useEffect\(\(\) => \{[\s\S]*?history\.replaceState[\s\S]*?\}, \[/,
+    "La dirección no debe escribirse desde un efecto reactivo",
+  );
+  assert.match(
+    source,
+    /handleMultiSelectChange[\s\S]*writeCombinedFilterCriteriaFromUserAction/,
+    "El cambio de selección debe escribir desde el handler de la acción",
+  );
+  const { writeCombinedFilterCriteriaFromUserAction } = await import(
+    "./components/shared/combined-filter-url"
+  );
+  const location = {
+    pathname: "/proveedores",
+    search: "?tab=historial",
+    hash: "",
+  };
+  let writes = 0;
+  const history = {
+    state: { preserved: true },
+    replaceState(_state: unknown, _unused: string, url?: string | URL | null) {
+      writes += 1;
+      const next = new URL(String(url), "https://example.test");
+      location.pathname = next.pathname;
+      location.search = next.search;
+      location.hash = next.hash;
+    },
+  };
+  const criteria = {
+    proveedorIds: [7],
+    ubicacionIds: [],
+    telas: [],
+    colores: [],
+  };
+
+  writeCombinedFilterCriteriaFromUserAction(criteria, location, history);
+  writeCombinedFilterCriteriaFromUserAction(criteria, location, history);
+
+  assert.equal(writes, 1);
+  assert.equal(location.search, "?tab=historial&proveedorIds=7");
+});

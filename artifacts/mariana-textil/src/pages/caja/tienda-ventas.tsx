@@ -376,14 +376,6 @@ export default function TiendaVentas() {
   };
 
   const apiFormaPago = formaPago !== "all" ? formaPago : undefined;
-  React.useEffect(() => {
-    if (activeTab !== "global") return;
-    const newParams = new URLSearchParams(window.location.search);
-    if (!newParams.has("formaPago") && !newParams.has("page")) return;
-    newParams.delete("formaPago");
-    newParams.delete("page");
-    setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
-  }, [activeTab, setLocationStr]);
 
   const changeTab = (tab: string) => {
     const newParams = new URLSearchParams(window.location.search);
@@ -394,7 +386,10 @@ export default function TiendaVentas() {
       newParams.delete("formaPago");
       newParams.delete("page");
     }
-    setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
+    const search = newParams.toString();
+    const nextLocation = `${window.location.pathname}${search ? `?${search}` : ""}`;
+    const currentLocation = `${window.location.pathname}${window.location.search}`;
+    if (nextLocation !== currentLocation) setLocationStr(nextLocation);
   };
 
   const { data: detailData, isLoading: detailLoading, isError: detailIsError, error: detailError, refetch: detailRefetch, isRefetching: detailIsRefetching } = useListCajaTiendaVentas(ubicacionId, {

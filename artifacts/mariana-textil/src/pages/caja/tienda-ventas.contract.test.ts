@@ -40,16 +40,17 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
   assert.match(tiendaVentas, /searchParams\.get\("formaPago"\)/);
   assert.match(tiendaVentas, /searchParams\.get\("page"\)/);
   assert.match(tiendaVentas, /searchParams\.get\("tab"\) === "detail" \? "detail" : "global"/);
-  assert.match(
+  assert.doesNotMatch(
     tiendaVentas,
-    /activeTab !== "global"[\s\S]*newParams\.delete\("formaPago"\)[\s\S]*newParams\.delete\("page"\)/,
-    "Global must canonicalize away Detail-only payment and pagination filters",
+    /React\.useEffect\(\(\) => \{[\s\S]*?setLocationStr\(/,
+    "La dirección no debe sincronizarse desde un efecto reactivo",
   );
 
   // Check updateFilters correctly modifies history
   assert.match(tiendaVentas, /newParams\.set\(key/);
   assert.match(tiendaVentas, /newParams\.delete\(key\)/);
-  assert.match(tiendaVentas, /setLocationStr\(`\$\{window\.location\.pathname\}\?\$\{newParams\.toString\(\)\}`\)/);
+  assert.match(tiendaVentas, /if \(changed\) \{[\s\S]*setLocationStr/);
+  assert.match(tiendaVentas, /if \(nextLocation !== currentLocation\) setLocationStr\(nextLocation\)/);
   assert.match(tiendaVentas, /newParams\.delete\("page"\)/, "Should reset to page 1 when changing other filters");
 
   // Check default dates are today (Mexico City)

@@ -13,7 +13,11 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CombinedFilterBar, MultiSelectConfig } from "@/components/shared/combined-filter-bar";
-import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
+import {
+  readCombinedFilterCriteria,
+  sanitizeCombinedFilterCriteria,
+  writeCombinedFilterCriteriaFromUserAction,
+} from "@/components/shared/combined-filter-url";
 import { toast } from "sonner";
 
 function formatDate(dateStr: string | null): string {
@@ -31,6 +35,10 @@ function formatDate(dateStr: string | null): string {
 }
 
 type SortColumn = "fecha" | "producto" | "proveedor" | "color" | "sitio" | "cantidad";
+
+function arraysEqual<T>(left: T[], right: T[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
 
 export function HistorialCompras() {
   const initialCriteria = useMemo(() => readCombinedFilterCriteria(new URLSearchParams(window.location.search)), []);
@@ -100,29 +108,19 @@ export function HistorialCompras() {
         colores: historialData.colores,
       },
     );
-    if (JSON.stringify(sanitized) !== JSON.stringify({
-      proveedorIds, ubicacionIds, telas, colores,
-      desde: desde || undefined, hasta: hasta || undefined,
-    })) {
-      toast.info("Se ignoraron filtros que ya no existen", {
-        description: "La dirección se actualizó con los filtros válidos.",
-      });
-    }
-    setProveedorIds(sanitized.proveedorIds);
-    setUbicacionIds(sanitized.ubicacionIds);
-    setTelas(sanitized.telas);
-    setColores(sanitized.colores);
-  }, [historialData?.sitios, historialData?.telas, historialData?.colores, proveedoresData?.items]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    writeCombinedFilterCriteria(params, {
-      proveedorIds, ubicacionIds, telas, colores,
-      desde: desde || undefined,
-      hasta: hasta || undefined,
+    const proveedoresChanged = !arraysEqual(proveedorIds, sanitized.proveedorIds);
+    const ubicacionesChanged = !arraysEqual(ubicacionIds, sanitized.ubicacionIds);
+    const telasChanged = !arraysEqual(telas, sanitized.telas);
+    const coloresChanged = !arraysEqual(colores, sanitized.colores);
+    if (!proveedoresChanged && !ubicacionesChanged && !telasChanged && !coloresChanged) return;
+    toast.info("Se ignoraron filtros que ya no existen", {
+      description: "La vista conserva únicamente los filtros válidos.",
     });
-    window.history.replaceState(window.history.state, "", `${window.location.pathname}${params.size ? `?${params}` : ""}`);
-  }, [proveedorIds, ubicacionIds, telas, colores, desde, hasta]);
+    if (proveedoresChanged) setProveedorIds(sanitized.proveedorIds);
+    if (ubicacionesChanged) setUbicacionIds(sanitized.ubicacionIds);
+    if (telasChanged) setTelas(sanitized.telas);
+    if (coloresChanged) setColores(sanitized.colores);
+  }, [historialData?.sitios, historialData?.telas, historialData?.colores, proveedoresData?.items]);
 
   const handleSort = (column: SortColumn) => {
     if (column === "fecha" && !fechaClicked) {
@@ -143,6 +141,12 @@ export function HistorialCompras() {
   };
 
   const handleClearAll = () => {
+    writeCombinedFilterCriteriaFromUserAction({
+      proveedorIds: [],
+      ubicacionIds: [],
+      telas: [],
+      colores: [],
+    });
     setProveedorIds([]);
     setUbicacionIds([]);
     setTelas([]);
@@ -153,10 +157,36 @@ export function HistorialCompras() {
   };
 
   const handleMultiSelectChange = (key: string, selected: string[]) => {
-    if (key === "proveedorIds") setProveedorIds(selected.map(Number));
-    if (key === "ubicacionIds") setUbicacionIds(selected.map(Number));
-    if (key === "telas") setTelas(selected);
-    if (key === "colores") setColores(selected);
+    const nextProveedorIds = key === "proveedorIds" ? selected.map(Number) : proveedorIds;
+    const nextUbicacionIds = key === "ubicacionIds" ? selected.map(Number) : ubicacionIds;
+    const nextTelas = key === "telas" ? selected : telas;
+    const nextColores = key === "colores" ? selected : colores;
+    writeCombinedFilterCriteriaFromUserAction({
+      proveedorIds: nextProveedorIds,
+      ubicacionIds: nextUbicacionIds,
+      telas: nextTelas,
+      colores: nextColores,
+      desde: desde || undefined,
+      hasta: hasta || undefined,
+    });
+    if (key === "proveedorIds") setProveedorIds(nextProveedorIds);
+    if (key === "ubicacionIds") setUbicacionIds(nextUbicacionIds);
+    if (key === "telas") setTelas(nextTelas);
+    if (key === "colores") setColores(nextColores);
+    setPage(1);
+  };
+
+  const handleDateRangeChange = (nextDesde?: string, nextHasta?: string) => {
+    writeCombinedFilterCriteriaFromUserAction({
+      proveedorIds,
+      ubicacionIds,
+      telas,
+      colores,
+      desde: nextDesde || undefined,
+      hasta: nextHasta || undefined,
+    });
+    setDesde(nextDesde || "");
+    setHasta(nextHasta || "");
     setPage(1);
   };
 
@@ -212,11 +242,7 @@ export function HistorialCompras() {
           showDateRange={true}
           desde={desde}
           hasta={hasta}
-          onDateRangeChange={(d, h) => {
-            setDesde(d || "");
-            setHasta(h || "");
-            setPage(1);
-          }}
+          onDateRangeChange={handleDateRangeChange}
           onClearAll={handleClearAll}
         />
       </div>

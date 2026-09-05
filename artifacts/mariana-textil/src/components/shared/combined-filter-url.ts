@@ -44,6 +44,24 @@ export function writeCombinedFilterCriteria(params: URLSearchParams, criteria: C
   if (criteria.hasta) params.set("hasta", criteria.hasta);
 }
 
+type FilterUrlLocation = Pick<Location, "pathname" | "search" | "hash">;
+type FilterUrlHistory = Pick<History, "state" | "replaceState">;
+
+export function writeCombinedFilterCriteriaFromUserAction(
+  criteria: CombinedFilterCriteria,
+  location: FilterUrlLocation = window.location,
+  history: FilterUrlHistory = window.history,
+): boolean {
+  const params = new URLSearchParams(location.search);
+  writeCombinedFilterCriteria(params, criteria);
+  const search = params.toString();
+  const nextUrl = `${location.pathname}${search ? `?${search}` : ""}${location.hash}`;
+  const currentUrl = `${location.pathname}${location.search}${location.hash}`;
+  if (nextUrl === currentUrl) return false;
+  history.replaceState(history.state, "", nextUrl);
+  return true;
+}
+
 export function sanitizeCombinedFilterCriteria(
   criteria: CombinedFilterCriteria,
   catalogs: { proveedorIds: number[]; ubicacionIds: number[]; telas: string[]; colores: string[] },
