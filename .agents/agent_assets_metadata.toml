@@ -44,20 +44,6 @@ storage_version_token = "1787822956445315"
 content_type = "text/markdown"
 
 [[outputs]]
-id = "nlIVb83jZduXrHtRaTqBz"
-uri = "file://reports/print-growth-60-fit-sample.html"
-type = "text"
-title = "Muestra: crecimiento adicional del 60%"
-description = "Comparación dimensional que muestra los encimamientos en ticket térmico, media carta y etiqueta de rollo."
-logical_id = "5573bcc5-cc3c-49fe-9206-f4261e24a0a4"
-content_hash = "sha256:29500926df8d16703c03424eeaf2298490c05d153276fee42ef11fdeaa9f9e32"
-size = 2891
-mtime_ms = 1788059428906
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5573bcc5-cc3c-49fe-9206-f4261e24a0a4/abe4e0ec-60b2-4382-9b0d-7faf58656871"
-storage_version_token = "1788059429514650"
-content_type = "text/html"
-
-[[outputs]]
 id = "H2E3r2B23hhekcEPhtfKB"
 uri = "file://reports/task73-print-pdfs/entrada-1-linea.pdf"
 type = "pdf"
@@ -308,34 +294,6 @@ mtime_ms = 1788387523786
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7f29f907-d958-45a7-9248-4978927287c5/bdc17f15-2ca8-4fb5-aee0-2200a04ec4c1"
 storage_version_token = "1788387598883054"
 content_type = "text/markdown"
-
-[[outputs]]
-id = "dDM-m0DHYYi02GFR2rVf3"
-uri = "file://reports/a5-print-evidence/nota-contado-1-linea.pdf"
-type = "pdf"
-title = "Nota contado — 1 línea"
-description = "A5 vertical; dos copias, una hoja por copia y 14 casillas dibujadas."
-logical_id = "772b8bf7-0aa3-41c3-b463-1e5db96b419b"
-content_hash = "sha256:8a01166428f584d59e3fb088fc54365737626f77c05db62f55c6e07622d91247"
-size = 1097391
-mtime_ms = 1788403188455
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/772b8bf7-0aa3-41c3-b463-1e5db96b419b/672786d5-6552-46df-9966-927b5b0edb87"
-storage_version_token = "1788404143694772"
-content_type = "application/pdf"
-
-[[outputs]]
-id = "4Hph9rYCzkOq8hH8t1p79"
-uri = "file://reports/a5-print-evidence/nota-contado-14-lineas.pdf"
-type = "pdf"
-title = "Nota contado — 14 líneas"
-description = "A5 vertical a capacidad exacta; dos páginas físicas, una por copia."
-logical_id = "5b010c64-232d-4529-938b-a01b9f6ba2fa"
-content_hash = "sha256:616e3044791336476c769f6b68a250e5f4f5bf29199db135462e9c198d1f0194"
-size = 1128371
-mtime_ms = 1788403227563
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5b010c64-232d-4529-938b-a01b9f6ba2fa/5867a446-0592-4ff1-8dd1-d86664378e3a"
-storage_version_token = "1788404144246699"
-content_type = "application/pdf"
 
 [[outputs]]
 id = "9dpvIFY_zrkH0xF5zbgPW"

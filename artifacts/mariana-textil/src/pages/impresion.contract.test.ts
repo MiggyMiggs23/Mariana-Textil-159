@@ -87,7 +87,7 @@ test("Thermal label uses spacing instead of vertical dividers and enlarges logo 
   assert.match(label, /width="29mm"/);
 });
 
-test("Cash and credit notes print exactly A5 portrait in two copies with internal QR", async () => {
+test("Credit notes print exactly A5 portrait in two copies with internal QR", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
   const cobros = await readFile(new URL("artifacts/mariana-textil/src/pages/cobros.tsx", root), "utf8");
@@ -108,9 +108,9 @@ test("Cash and credit notes print exactly A5 portrait in two copies with interna
 
   // Auto-print routing based on nota vs thermal
   assert.match(detail, /const printPromise = isNota[\s\S]*printWhenReady\("print-credito"\)[\s\S]*printThermalTicket\(thermalPrintRoot\.current\)/);
-  assert.match(detail, /const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;/);
-  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
-  assert.match(detail, /creditTicket && pageIndex === notePageCount - 1/);
+  assert.doesNotMatch(detail, /CASH_NOTE_PRODUCT_ROWS_PER_PAGE|Nota de contado/i);
+  assert.match(detail, /const NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
+  assert.match(detail, /pageIndex === notePageCount - 1/);
   assert.match(detail, /const notePageCount = Math\.max\(1, Math\.ceil\(noteLines\.length \/ noteRowsPerPage\)\)/);
   assert.match(detail, /noteLines\.slice\(pageIndex \* noteRowsPerPage/);
   assert.match(detail, /noteRowsPerPage - pageLines\.length/);
@@ -138,13 +138,13 @@ test("Nota print conditionally renders customer header, credit terms, legal text
   assert.match(notaPrint, />Folio Venta</);
   assert.match(notaPrint, />Fecha Venta</);
 
-  // Credit terms use the persisted sale fields; cash notes omit both conditional rows.
-  assert.match(notaPrint, /const creditTicket = printData\.esCredito;/);
+  // Credit terms use the persisted sale fields for every Nota.
+  assert.doesNotMatch(notaPrint, /const creditTicket = printData\.esCredito;/);
   assert.match(notaPrint, /const paymentDate = printData\.fechaVencimiento;/);
   assert.match(notaPrint, /const termDays = printData\.diasPlazo;/);
   assert.match(notaPrint, /formatDateOnlyMx\(paymentDate\)/);
-  assert.match(notaPrint, /\{creditTicket && paymentDate && \([\s\S]*>Fecha de pago</);
-  assert.match(notaPrint, /\{creditTicket && termDays && \([\s\S]*>Plazo</);
+  assert.match(notaPrint, /\{paymentDate && \([\s\S]*>Fecha de pago</);
+  assert.match(notaPrint, /\{termDays && \([\s\S]*>Plazo</);
 
   const legalParagraphs = [
     "RECIBO DE MERCANCÍA Y PAGARÉ",
@@ -158,14 +158,14 @@ test("Nota print conditionally renders customer header, credit terms, legal text
       notaPrint.split(paragraph).length - 1,
       paragraph === legalParagraphs[1] ? 2 : 1,
       paragraph === legalParagraphs[1]
-        ? "The receipt sentence is shared by the cash-only receipt branch and the final credit legal block."
+        ? "The receipt sentence appears on intermediate pages and inside the final-page promissory note."
         : `The exact legal paragraph must have one source rendering location: ${paragraph}`,
     );
   }
   assert.doesNotMatch(notaPrint, /lugar de pago|domicilio/i);
   assert.match(
     notaPrint,
-    /creditTicket && pageIndex === notePageCount - 1[\s\S]*RECIBO DE MERCANCÍA Y PAGARÉ[\s\S]*El presente pagaré se rige/,
+    /pageIndex === notePageCount - 1[\s\S]*RECIBO DE MERCANCÍA Y PAGARÉ[\s\S]*El presente pagaré se rige/,
   );
   assert.match(
     notaPrint,
@@ -188,18 +188,18 @@ test("Nota print conditionally renders customer header, credit terms, legal text
 test("Credit-note pagination keeps eight complete rows with its measured readable legal footer", async () => {
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
 
-  assert.match(detail, /const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
+  assert.match(detail, /const NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
   assert.match(
     detail,
     /Chromium PDF raster at 120dpi[\s\S]*Eight complete[\s\S]*Row nine crosses the[\s\S]*safe credit capacity is eight/,
   );
   assert.match(
     detail,
-    /className=\{`px-4 mt-1 mb-0 relative z-10 shrink-0 flex gap-2 \$\{creditTicket \? "h-\[280px\]" : "h-\[164px\]"\}`\}/,
+    /className="px-4 mt-1 mb-0 relative z-10 shrink-0 flex h-\[280px\] gap-2"/,
   );
 });
 
-test("Ticket uses measured named pages and media carta keeps its physical size", async () => {
+test("Cash Ticket only exposes the measured 80mm thermal format", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
   const print = await readFile(new URL("artifacts/mariana-textil/src/lib/print.ts", root), "utf8");
@@ -211,10 +211,10 @@ test("Ticket uses measured named pages and media carta keeps its physical size",
   assert.match(detail, /printThermalTicket\(thermalPrintRoot\.current\)/);
   assert.match(css, /body\.print-80mm #root \*:has\(\.print-80mm-only\)\s*\{[\s\S]*display:\s*contents !important;/);
   assert.match(css, /body\.print-80mm \.print-80mm-only\s*\{[\s\S]*position:\s*static;/);
-  assert.match(css, /@page carta-page\s*\{[\s\S]*size:\s*140mm 216mm;/);
-  assert.match(css, /\.print-document-container\s*\{[\s\S]*page:\s*carta-page;/);
+  assert.doesNotMatch(css, /carta-page|print-carta|print-document-container/);
+  assert.doesNotMatch(detail, /Imprimir Media Carta|handlePrintCarta|print-carta/);
   assert.equal((detail.match(/<DocumentQrCode/g) ?? []).length, 0);
-  assert.equal((detail.match(/<MonochromeBrandLogo className="mx-auto (?:mb-1 )?h-auto w-\[25mm\]"/g) ?? []).length, 2);
+  assert.equal((detail.match(/<MonochromeBrandLogo className="mx-auto (?:mb-1 )?h-auto w-\[25mm\]"/g) ?? []).length, 1);
 });
 
 test("Thermal ticket renders vertical product blocks with unit-safe quantities", async () => {

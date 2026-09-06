@@ -153,10 +153,6 @@ export default function TicketDetailPage() {
     }
   };
 
-  const handlePrintCarta = () => {
-    void printWhenReady("print-carta");
-  };
-
   const handlePrintNota = () => {
     if (!isPrintReady) return;
     if (ticket?.clienteId && (ticket as TicketDetalle).esCredito) {
@@ -325,14 +321,9 @@ export default function TicketDetailPage() {
               <FileText className="h-4 w-4 mr-2" /> Imprimir Nota
             </Button>
           ) : (
-            <>
-              <Button className="w-full sm:w-auto" variant="outline" onClick={handlePrintCarta}>
-                <Printer className="h-4 w-4 mr-2" /> Imprimir Media Carta
-              </Button>
-              <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
-                <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
-              </Button>
-            </>
+            <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
+              <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
+            </Button>
           )}
         </div>
       </div>
@@ -711,146 +702,6 @@ export default function TicketDetailPage() {
           ))}
       </div>
 
-      {/* Media Carta */}
-      <div className="hidden print-carta-only print-document-container">
-        <div className="relative mb-5 text-center">
-          <MonochromeBrandLogo className="mx-auto h-auto w-[25mm]" />
-          <p className="text-lg font-bold">Mariana Textil S.A. de C.V.</p>
-          <p className="text-sm font-semibold">{ticket.nombreUbicacion}</p>
-          <div className="my-3 border-t-2 border-black" />
-          <div className="grid grid-cols-2 gap-x-6 text-left text-sm">
-            <div><span className="font-bold">Folio:</span> {ticket.folio}</div>
-            <div><span className="font-bold">Fecha:</span> {formattedDate} · {formattedTime}</div>
-            <div><span className="font-bold">Atendió:</span> {ticket.nombreUsuarioTerminal}</div>
-            <div><span className="font-bold">Cliente:</span> {customerName}</div>
-          </div>
-        </div>
-
-        <div className="mb-4 flex justify-between gap-4 text-xs">
-          <div>
-            {ticket.direccionEntregaEfectiva && (
-              <><span className="font-bold">Dirección de entrega:</span> {ticket.direccionEntregaEfectiva}</>
-            )}
-          </div>
-          <div className="shrink-0 text-right font-bold">
-            {ticket.estado === EstadoTicket.CANCELADO
-              ? "CANCELADO"
-              : ticket.cobrado === true
-                ? "PAGADO"
-                : ticket.cobrado === false
-                  ? "PENDIENTE"
-                  : "REGISTRADO"}
-            {ticket.facturado && <div>FACTURADO</div>}
-          </div>
-        </div>
-
-        <table className="w-full text-xs border-collapse mb-6">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 p-2 text-left">SKU</th>
-              <th className="border border-gray-300 p-2 text-left">
-                Descripción
-              </th>
-              <th className="border border-gray-300 p-2 text-right">Rollos</th>
-              <th className="border border-gray-300 p-2 text-right">Cantidad</th>
-              <th className="border border-gray-300 p-2 text-right">Precio unit.</th>
-              <th className="border border-gray-300 p-2 text-right">Importe</th>
-            </tr>
-          </thead>
-          {printRollos.lines.length > 0 && (
-            <tbody>
-              <tr>
-                <td colSpan={6} className="border border-gray-300 bg-gray-50 p-2 font-bold text-center">ROLLOS</td>
-              </tr>
-              {printRollos.lines.map((linea) => (
-                <tr key={linea.key}>
-                  <td className="border border-gray-300 p-2 font-mono text-xs">
-                    {linea.skuProducto}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    {linea.telaProducto} - {linea.colorProducto}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right">
-                    {linea.rollos}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right font-mono">
-                    {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right">
-                    {formatNumber(linea.precioUnitario, { kind: "money" })}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right font-bold">
-                    {formatNumber(linea.importe, { kind: "money" })}
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <td colSpan={5} className="border border-gray-300 p-2 text-right font-semibold">Subtotal Rollos</td>
-                <td className="border border-gray-300 p-2 text-right font-bold">{formatNumber(printRollos.subtotal, { kind: "money" })}</td>
-              </tr>
-            </tbody>
-          )}
-          {printMetraje.lines.length > 0 && (
-            <tbody>
-              <tr>
-                <td colSpan={6} className="border border-gray-300 bg-gray-50 p-2 font-bold text-center">METRAJE</td>
-              </tr>
-              {printMetraje.lines.map((linea) => (
-                <tr key={linea.key}>
-                  <td className="border border-gray-300 p-2 font-mono text-xs">
-                    {linea.skuProducto}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    {linea.telaProducto} - {linea.colorProducto}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right">
-                    {linea.rollos}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right font-mono">
-                    {formatNumber(linea.cantidad, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right">
-                    {formatNumber(linea.precioUnitario, { kind: "money" })}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-right font-bold">
-                    {formatNumber(linea.importe, { kind: "money" })}
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <td colSpan={5} className="border border-gray-300 p-2 text-right font-semibold">Subtotal Metraje</td>
-                <td className="border border-gray-300 p-2 text-right font-bold">{formatNumber(printMetraje.subtotal, { kind: "money" })}</td>
-              </tr>
-            </tbody>
-          )}
-        </table>
-
-        <div className="flex justify-end">
-          <div className="w-64">
-            <div className="flex justify-between border-b border-gray-200 py-1">
-              <span>Subtotal:</span>
-              <span>
-                {formatNumber(ticket.subtotal, { kind: "money" })}
-              </span>
-            </div>
-            {ticket.facturado && (
-              <div className="flex justify-between border-b border-gray-200 py-1">
-                <span>IVA ({formatNumber(ticket.tasaIva, { kind: "percentage", percentageInput: "ratio" })}):</span>
-                <span>
-                  {formatNumber(ticket.iva, { kind: "money" })}
-                </span>
-              </div>
-            )}
-            <div className="flex justify-between py-2 text-xl font-bold">
-              <span>Total:</span>
-              <span>
-                {formatNumber(ticket.total, { kind: "money" })}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Nota Print Pages */}
       <div className="hidden print-credito-only w-full max-w-none">
         {isPrintReady && [printInterna, printCliente].map((printData, idx) => {
@@ -859,33 +710,26 @@ export default function TicketDetailPage() {
           const isInternal = printData.copia === "INTERNA";
           const qrUrl = ticketDocumentUrl;
           const isPriceless = !isInternal && printData.notaSinPrecios;
-          const pageTitle = isPriceless ? "NOTA DE PRODUCTOS" : printData.documentoTipo === "NOTA" ? "NOTA" : "TICKET";
+          const pageTitle = isPriceless ? "NOTA DE PRODUCTOS" : "NOTA";
           const printedRecipient = printData.nombreDestinatario?.trim();
           const printedContact =
             printData.telefonoCliente?.trim() || printData.correoCliente?.trim();
           const printedCustomerAddress =
             printData.direccionEntregaEfectiva?.trim() ||
             printData.direccionFiscalEfectiva?.trim();
-          const creditTicket = printData.esCredito;
           const paymentDate = printData.fechaVencimiento;
           const termDays = printData.diasPlazo;
 
-          // Chromium (96dpi): A5 useful height 793.70px; 112px header + 126px
-          // data + 22px table header + (14 × 24px) rows + 164px footer + 6px
-          // bottom stripe = 766px.
-          const CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14;
           // Chromium PDF raster at 120dpi: header, credit data and table header end
           // at ~375px; the totals/footer reserve begins at ~635px.  Eight complete
           // bordered rows occupy ~225px and end at ~600px.  Row nine crosses the
           // reserve and is clipped, so the safe credit capacity is eight.
-          const CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE = 8;
+          const NOTE_PRODUCT_ROWS_PER_PAGE = 8;
 
           // Group lines according to the print data
           const { rollos: projRollos, metraje: projMetraje } = groupPrintLinesByModality(printData.lineas);
           const noteLines = [...projRollos.lines, ...projMetraje.lines];
-          const noteRowsPerPage = creditTicket
-            ? CREDIT_NOTE_PRODUCT_ROWS_PER_PAGE
-            : CASH_NOTE_PRODUCT_ROWS_PER_PAGE;
+          const noteRowsPerPage = NOTE_PRODUCT_ROWS_PER_PAGE;
           const notePageCount = Math.max(1, Math.ceil(noteLines.length / noteRowsPerPage));
           const notePages = Array.from({ length: notePageCount }, (_, pageIndex) =>
             noteLines.slice(pageIndex * noteRowsPerPage, (pageIndex + 1) * noteRowsPerPage),
@@ -947,7 +791,7 @@ export default function TicketDetailPage() {
                     <span className="font-bold w-24 text-[10px] uppercase text-gray-500 tracking-wider">Fecha Venta</span>
                     <span className="font-medium text-xs text-black">{new Date(printData.createdAt).toLocaleDateString("es-MX")} {new Date(printData.createdAt).toLocaleTimeString("es-MX", {hour: "2-digit", minute: "2-digit"})}</span>
                   </div>
-                  {creditTicket && paymentDate && (
+                  {paymentDate && (
                     <div className="flex min-w-0 items-center border-b border-gray-200 bg-red-50 pb-0.5">
                       <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
                       <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Fecha de pago</span>
@@ -956,7 +800,7 @@ export default function TicketDetailPage() {
                       </span>
                     </div>
                   )}
-                  {creditTicket && termDays && (
+                  {termDays && (
                     <div className="flex min-w-0 items-center border-b border-gray-200 bg-red-50 pb-0.5">
                       <Clock className="w-3 h-3 text-red-400 mr-2 shrink-0" />
                       <span className="font-bold w-24 text-[10px] uppercase text-red-600 tracking-wider">Plazo</span>
@@ -1028,13 +872,13 @@ export default function TicketDetailPage() {
               </div>
 
               {/* Totals & Signatures */}
-              <div className={`px-4 mt-1 mb-0 relative z-10 shrink-0 flex gap-2 ${creditTicket ? "h-[280px]" : "h-[164px]"}`}>
+              <div className="px-4 mt-1 mb-0 relative z-10 shrink-0 flex h-[280px] gap-2">
                 <div className="flex-1 flex flex-col">
                   <div
                     className="text-[10px] leading-[12px] text-gray-500 mb-2 pr-2 text-justify"
                     data-testid="note-legal-block"
                   >
-                    {creditTicket && pageIndex === notePageCount - 1 ? (
+                    {pageIndex === notePageCount - 1 ? (
                       <>
                         <p className="font-bold">RECIBO DE MERCANCÍA Y PAGARÉ</p>
                         <p>Recibo a mi entera satisfacción la mercancía aquí detallada.</p>

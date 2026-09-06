@@ -43,7 +43,7 @@ test("logo y QR documentales conservan su escala y el ticket usa logo físico de
   assert.match(viaje, /qrRenderAsCanvas/);
   assert.match(viaje, /logoClassName="h-\[115px\] w-\[115px\]"/);
   assert.match(auditoria, /logoClassName="h-\[100px\] w-\[100px\]"/);
-  assert.equal((ticket.match(/h-auto w-\[25mm\]/g) ?? []).length, 2);
+  assert.equal((ticket.match(/h-auto w-\[25mm\]/g) ?? []).length, 1);
   assert.match(ticket, /logoClassName="h-\[72px\] w-\[72px\]"/);
 });
 

@@ -7,7 +7,6 @@ Fecha: 2 de septiembre de 2026
 | Documento | Papel CSS | Orientación | Tinta |
 |---|---|---|---|
 | Entrada | Carta, 216 × 279 mm | Vertical | Color |
-| Nota de contado | A5, 148 × 210 mm | Vertical | Color |
 | Nota de crédito | A5, 148 × 210 mm | Vertical | Color |
 | Salida | A5, 210 × 148 mm | Horizontal | Diseño a color |
 
@@ -16,9 +15,6 @@ criterio compartido añadido a su tabla de productos es el perímetro negro comp
 
 ## Capacidades medidas
 
-- **Nota de contado: 14 productos por hoja.** En Chromium a 96 dpi, la caja A5 útil
-  mide 793.70 px de alto: encabezado 112 px, datos 126 px, cabecera de tabla 22 px,
-  14 renglones de 24 px y pie reservado de 170 px suman 766 px.
 - **Nota de crédito: 8 productos por hoja.** En la rasterización a 120 dpi, encabezado,
   datos de crédito y cabecera de tabla terminan cerca de 375 px; ocho renglones completos
   terminan cerca de 600 px y la reserva de totales/pie inicia cerca de 635 px. El noveno
@@ -29,9 +25,9 @@ criterio compartido añadido a su tabla de productos es el perímetro negro comp
   Encabezado 154 px, datos 52 px, cabecera 22 px, diez renglones efectivos y pie 82 px
   suman 510 px dentro de 559.37 px. Con 11 o más se recorta el pie.
 
-Las tres capacidades se calculan por separado y son distintas: **14 contado, 8 crédito
-y 10 Salida**. No se redujo el encabezado de Salida ni el texto legal para forzar más
-renglones.
+Las capacidades se calculan por separado y son distintas: **8 en Nota de crédito y
+10 en Salida**. El Ticket de contado usa tira térmica de 80 mm y no tiene una capacidad
+A5. No se redujo el encabezado de Salida ni el texto legal para forzar más renglones.
 
 ## Evidencia PDF
 
@@ -41,15 +37,13 @@ interceptadas, identidad ADMIN simulada y sin mutaciones de base de datos. Chrom
 
 | Archivo | Páginas físicas | Resultado |
 |---|---:|---|
-| `a5-print-evidence/nota-contado-1-linea.pdf` | 2 | Una hoja por copia, 14 casillas dibujadas |
-| `a5-print-evidence/nota-contado-14-lineas.pdf` | 2 | Capacidad exacta, una hoja por copia |
 | `a5-print-evidence/nota-credito-9-lineas.pdf` | 4 | División 8+1 por copia; ningún renglón partido |
 | `a5-print-evidence/nota-credito-11-lineas.pdf` | 4 | División 8+3 por copia; ningún renglón partido |
 | `a5-print-evidence/nota-credito-15-lineas.pdf` | 4 | División 8+7 por copia; ningún renglón partido |
 | `a5-print-evidence/salida-1-linea.pdf` | 1 | Diez casillas; pie completo |
 | `a5-print-evidence/salida-10-lineas.pdf` | 1 | Capacidad exacta; pie completo |
 
-`pdfinfo` confirmó A5 de 420 × 594.96 puntos para notas y A5 horizontal de
+`pdfinfo` confirmó A5 de 420 × 594.96 puntos para Notas de crédito y A5 horizontal de
 594.96 × 420 puntos para Salidas. `pdftotext -layout` confirmó el pagaré únicamente en
 las últimas hojas de crédito. La rasterización completa con `pdftoppm` confirmó las
 firmas de las notas, filas completas y observaciones, dos totales y las tres firmas de

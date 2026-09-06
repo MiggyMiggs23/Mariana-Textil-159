@@ -382,10 +382,6 @@ body.measure-thermal-ticket .tabular-strip-page {
     size: 148mm 210mm;
     margin: 0;
   }
-  @page carta-page {
-    size: 140mm 216mm;
-    margin: 8mm;
-  }
   @page document {
     size: letter portrait;
     margin: 8mm;
@@ -448,10 +444,6 @@ body.measure-thermal-ticket .tabular-strip-page {
   }
 
   body.print-80mm {
-    background: white;
-  }
-
-  body.print-carta {
     background: white;
   }
 
@@ -546,15 +538,6 @@ body.measure-thermal-ticket .tabular-strip-page {
     page-break-after: auto;
   }
 
-  .print-document-container {
-    page: carta-page;
-    width: 123.7mm;
-    max-width: 123.7mm;
-    margin: 0 auto;
-    background: white;
-    color: black;
-  }
-
   body.print-80mm * {
     visibility: hidden;
   }
@@ -570,24 +553,6 @@ body.measure-thermal-ticket .tabular-strip-page {
     display: contents !important;
   }
   body.print-80mm #root *:not(:has(.print-80mm-only)):not(.print-80mm-only):not(.print-80mm-only *) {
-    display: none !important;
-  }
-
-  body.print-carta * {
-    visibility: hidden;
-  }
-  body.print-carta .print-carta-only, body.print-carta .print-carta-only * {
-    visibility: visible;
-  }
-  body.print-carta .print-carta-only {
-    display: block !important;
-    position: static;
-  }
-  body.print-carta #root,
-  body.print-carta #root *:has(.print-carta-only) {
-    display: contents !important;
-  }
-  body.print-carta #root *:not(:has(.print-carta-only)):not(.print-carta-only):not(.print-carta-only *) {
     display: none !important;
   }
 
