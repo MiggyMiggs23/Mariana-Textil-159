@@ -65,6 +65,7 @@ function paymentLabel(value: string): string {
   return {
     EFECTIVO: "Efectivo",
     TRANSFERENCIA: "Transferencia",
+    FACTURADO: "Facturado",
     CREDITO: "Crédito",
     MIXTO: "Mixto",
     SIN_COBRO: "Sin cobro",
@@ -87,11 +88,12 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
     }
   });
 
-  const [expandedTelas, setExpandedTelas] = React.useState<Set<string>>(new Set());
+  const [expandedTelas, setExpandedTelas] = React.useState<Set<string> | null>(null);
+  const visibleTelas = expandedTelas ?? new Set(data?.telas.map((item) => item.tela) ?? []);
 
   const toggleTela = (tela: string) => {
     setExpandedTelas(prev => {
-      const next = new Set(prev);
+      const next = new Set(prev ?? data?.telas.map((item) => item.tela) ?? []);
       if (next.has(tela)) next.delete(tela);
       else next.add(tela);
       return next;
@@ -187,7 +189,7 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
             <TableHeader>
               <TableRow className="bg-muted/40 hover:bg-muted/40 whitespace-nowrap">
                 <TableHead className="w-8"></TableHead>
-                <TableHead>Tela / Color</TableHead>
+                <TableHead>Producto / Color</TableHead>
                 <TableHead className="text-right">Cantidades</TableHead>
                 <TableHead className="text-right">Operaciones</TableHead>
                 {showImporte && <TableHead className="text-right">Importe</TableHead>}
@@ -203,7 +205,7 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
                     onClick={() => toggleTela(tela.tela)}
                   >
                     <TableCell className="p-3">
-                      {expandedTelas.has(tela.tela) ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                      {visibleTelas.has(tela.tela) ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
                     </TableCell>
                     <TableCell className="font-bold py-3">
                       <Link href={`/inventario?search=${encodeURIComponent(tela.tela)}`} onClick={(e) => e.stopPropagation()} className="hover:underline text-foreground">
@@ -244,7 +246,7 @@ function GlobalTab({ ubicacionId, desde, hasta }: { ubicacionId: number, desde: 
                       </TableCell>
                     )}
                   </TableRow>
-                  {expandedTelas.has(tela.tela) && tela.colores.map((color, idx) => (
+                  {visibleTelas.has(tela.tela) && tela.colores.map((color, idx) => (
                     <TableRow key={color.color} className={idx === tela.colores.length - 1 ? "border-b-2 border-border/50" : "border-b-0"}>
                       <TableCell></TableCell>
                       <TableCell className="pl-6 py-2.5">
@@ -346,6 +348,7 @@ export default function TiendaVentas() {
   const requestedPage = Number(searchParams.get("page"));
   const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const pageSize = 50;
+  const routePath = `/caja/tiendas/${ubicacionId}/ventas`;
 
   const updateFilters = (updates: Record<string, string | number | null>) => {
     const newParams = new URLSearchParams(window.location.search);
@@ -371,7 +374,8 @@ export default function TiendaVentas() {
     }
 
     if (changed) {
-      setLocationStr(`${window.location.pathname}?${newParams.toString()}`);
+      const search = newParams.toString();
+      setLocationStr(`${routePath}${search ? `?${search}` : ""}`);
     }
   };
 
@@ -387,8 +391,8 @@ export default function TiendaVentas() {
       newParams.delete("page");
     }
     const search = newParams.toString();
-    const nextLocation = `${window.location.pathname}${search ? `?${search}` : ""}`;
-    const currentLocation = `${window.location.pathname}${window.location.search}`;
+    const nextLocation = `${routePath}${search ? `?${search}` : ""}`;
+    const currentLocation = `${routePath}${window.location.search}`;
     if (nextLocation !== currentLocation) setLocationStr(nextLocation);
   };
 
@@ -456,7 +460,7 @@ export default function TiendaVentas() {
               </h1>
             </div>
             <p className="text-sm text-muted-foreground">
-              Consulta global por tela o el detalle de tickets para la tienda seleccionada.
+              Consulta cada venta en Detalle o los totales por producto y color en Global.
             </p>
           </div>
 
@@ -506,7 +510,7 @@ export default function TiendaVentas() {
         </Tabs>
 
         {activeTab === "global" ? (
-          <GlobalTab ubicacionId={ubicacionId} desde={desde} hasta={hasta} />
+          <GlobalTab key={`${ubicacionId}-${desde}-${hasta}`} ubicacionId={ubicacionId} desde={desde} hasta={hasta} />
         ) : <>
           <Card>
           <CardContent className="p-0">

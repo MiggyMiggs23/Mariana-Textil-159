@@ -33,6 +33,7 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
   assert.match(tiendaVentas, /useListCajaTiendaVentas/);
   assert.match(tiendaVentas, /useGetCajaTiendaVentasGlobal/);
   assert.match(tiendaVentas, /ListCajaTiendaVentasFormaPago/);
+  assert.match(tiendaVentas, /FACTURADO: "Facturado"/);
 
   // Check URL-backed filters
   assert.match(tiendaVentas, /searchParams\.get\("desde"\)/);
@@ -52,6 +53,8 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
   assert.match(tiendaVentas, /if \(changed\) \{[\s\S]*setLocationStr/);
   assert.match(tiendaVentas, /if \(nextLocation !== currentLocation\) setLocationStr\(nextLocation\)/);
   assert.match(tiendaVentas, /newParams\.delete\("page"\)/, "Should reset to page 1 when changing other filters");
+  assert.match(tiendaVentas, /const routePath = `\/caja\/tiendas\/\$\{ubicacionId\}\/ventas`/);
+  assert.doesNotMatch(tiendaVentas, /window\.location\.pathname/, "Las pestañas deben navegar con la ruta interna de Wouter");
 
   // Check default dates are today (Mexico City)
   assert.match(tiendaVentas, /timeZone: "America\/Mexico_City"/);
@@ -85,6 +88,8 @@ test("TiendaVentas page implements URL filters and responsive table", async () =
   assert.match(tiendaVentas, /status === "PENDIENTE"/);
   assert.match(tiendaVentas, /data\.lineasExcluidasSinCosto/);
   assert.match(tiendaVentas, /excluye tickets cancelados/);
+  assert.match(tiendaVentas, /expandedTelas \?\? new Set\(data\?\.telas\.map/, "Los colores deben mostrarse desde la primera carga");
+  assert.match(tiendaVentas, /Producto \/ Color/);
 
   // Invalid ids never issue a request, and timestamps are rendered in Mexico City.
   assert.match(tiendaVentas, /enabled: isValidLocationId/);

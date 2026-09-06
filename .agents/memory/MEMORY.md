@@ -33,3 +33,4 @@
 - [Regreso seguro en detalles](safe-detail-back-navigation.md) — retroceder solo con una entrada previa de la sesión SPA; recargas y accesos directos usan fallback interno.
 - [Reglas sustituidas en replit.md](superseded-project-rules.md) — reescribir o eliminar la regla vieja; nunca conservar contradicciones con una nota de precedencia.
 - [Conciliación de tarjetas y desgloses](dashboard-breakdown-reconciliation.md) — cifra y detalle deben compartir predicado, fecha y fuente financiera; Crédito conserva el ledger.
+- [Enums históricos de solo lectura](historical-read-enums.md) — retirar una opción seleccionable no permite retirarla de respuestas que aún leen registros antiguos.

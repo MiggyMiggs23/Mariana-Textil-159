@@ -15,6 +15,7 @@ export type CajaTiendaVentaFormaPago = typeof CajaTiendaVentaFormaPago[keyof typ
 export const CajaTiendaVentaFormaPago = {
   EFECTIVO: 'EFECTIVO',
   TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
   CREDITO: 'CREDITO',
   MIXTO: 'MIXTO',
   SIN_COBRO: 'SIN_COBRO',

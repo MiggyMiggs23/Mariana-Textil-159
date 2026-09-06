@@ -6845,7 +6845,7 @@ components:
         formaPago:
           type: string
           description: Método único o MIXTO cuando el ticket tiene más de un pago.
-          enum: [EFECTIVO, TRANSFERENCIA, CREDITO, MIXTO, SIN_COBRO]
+          enum: [EFECTIVO, TRANSFERENCIA, FACTURADO, CREDITO, MIXTO, SIN_COBRO]
         importe: { type: string }
         estadoCobro: { type: string, enum: [COBRADO, PENDIENTE, CREDITO] }
         utilidad:

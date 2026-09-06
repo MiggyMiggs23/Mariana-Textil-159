@@ -7902,7 +7902,7 @@ export const ListCajaTiendaVentasResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "folio": zod.number(),
   "cliente": zod.string(),
-  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO', 'MIXTO', 'SIN_COBRO']).describe('Método único o MIXTO cuando el ticket tiene más de un pago.'),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO', 'MIXTO', 'SIN_COBRO']).describe('Método único o MIXTO cuando el ticket tiene más de un pago.'),
   "importe": zod.string(),
   "estadoCobro": zod.enum(['COBRADO', 'PENDIENTE', 'CREDITO']),
   "utilidad": zod.string().nullish().describe('Solo disponible para roles financieros autorizados.')
