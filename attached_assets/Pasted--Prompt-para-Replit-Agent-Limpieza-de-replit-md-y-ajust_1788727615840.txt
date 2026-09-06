@@ -1,0 +1,202 @@
+# Prompt para Replit Agent — Limpieza de `replit.md` y ajustes de venta facturada, impresión y tablero
+
+Este trabajo tiene dos partes. La **Parte A** corrige documentación que derivó del código y no cambia comportamiento. La **Parte B** son ajustes de interfaz y de contrato.
+
+**Ninguna regla de negocio cambia.** Ticket sigue siendo contado, Nota sigue siendo crédito, el crédito se sigue decidiendo en el POS y caja únicamente autoriza. No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+Puedes ejecutar todo de corrido o cortar después de la Parte A; los bloques están numerados de forma continua.
+
+---
+
+# PARTE A — Limpieza de `replit.md`
+
+## Bloque 1 — Contradicción interna sobre el tamaño de la Salida
+
+En `replit.md` existe esta línea, que quedó de antes de la decisión A5:
+
+> `- Entradas: carta vertical 216 × 279 mm. Salidas: media carta horizontal 216 × 140 mm. Etiquetas: 100 × 70 mm. El diseño y la regla @page deben declarar siempre la misma medida.`
+
+Contradice directamente la sección **Formatos de impresión**, que fija A5 horizontal 210 × 148 mm y explica por qué se descartó media carta. El código implementa A5 (`artifacts/mariana-textil/src/index.css`, `@page salida-page { size: 210mm 148mm }`), así que la línea vieja es la equivocada.
+
+Sustitúyela por:
+
+> `- Entradas: carta vertical 216 × 279 mm. Salidas: A5 horizontal 210 × 148 mm. Etiquetas: 100 × 70 mm. El diseño y la regla @page deben declarar siempre la misma medida. El tamaño de la Salida está fijado en la sección Formatos de impresión; media carta se descartó por bandeja.`
+
+## Bloque 2 — Rutas de Entradas mal escritas
+
+`replit.md` cita `GET /entradas/:id`. La ruta real es `GET /inventario/entradas/{id}` (`lib/api-spec/openapi.yaml`), y no existe `routes/entradas.ts`: los endpoints de Entradas viven dentro de `artifacts/api-server/src/routes/inventario.ts`.
+
+Corrige esa mención y **revisa todo el archivo** buscando otras rutas escritas sin su prefijo real. Cada ruta citada en `replit.md` debe existir textualmente en `openapi.yaml`. Reporta cuántas corregiste y cuáles.
+
+## Bloque 3 — El rol TERMINAL no está documentado
+
+`rolUsuarioEnum` (`lib/db/src/schema/enums.ts`) tiene siete roles: ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR. `replit.md` documenta seis; TERMINAL no aparece en ningún lado, aunque está vivo: entra a `/pos` (`home-route.ts`), `sensitive-data.ts` le retira los campos financieros de las respuestas, y tiene fila propia en la matriz de permisos del seed.
+
+1. En la línea de **Permisos** que empieza con `**Permisos:** ADMIN tiene acceso total a los 30 módulos`, cambia `Para CAJA, SUPERVISOR y BODEGA la resolución es` por `Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es`.
+2. Agrega a la sección **Roles SISTEMAS y CONTADOR** un párrafo sobre TERMINAL, escrito **leyendo el código, no supuesto**. Debe decir qué pantalla abre al iniciar sesión, qué campos financieros se le omiten en el servidor y en qué archivo vive esa omisión.
+
+## Bloque 4 — Conteo del catálogo
+
+Hay tres números incompatibles en el archivo y uno de ellos se usa como criterio de validación.
+
+1. `Cualquier cambio a esta lógica se valida contra los 154 productos del catálogo, no contra dos ejemplos` → cámbialo a `Cualquier cambio a esta lógica se valida generando las etiquetas de todo el catálogo vigente, no contra dos ejemplos ni contra un conteo fijo.` Un número fijo caduca en la siguiente importación y deja la validación falsamente aprobada. Así queda además consistente con la sección **Ticket y etiquetas**, que ya dice "todo el catálogo".
+2. `los 154 productos del catálogo aprobado`, en la nota de **Limpieza para el piloto**, describe un hecho fechado. Déjala, pero agrégale que ese conteo corresponde al momento de la limpieza y no es el tamaño vigente del catálogo.
+3. `un catálogo de 566 elementos`, en el diagnóstico de Precios, describe la condición que reprodujo aquel error. Déjalo igual.
+
+## Bloque 5 — Dos precisiones de contrato
+
+1. **Formas de pago:** `formaPagoCuentaEnum` tiene seis valores en el código: EFECTIVO, TRANSFERENCIA, FACTURADO, CHEQUE, OTRO y **CREDITO**. `replit.md` solo describe cinco. Agrega que CREDITO existe en ese enum y lo escribe la autorización de nota (`autorizarNota` en `artifacts/api-server/src/lib/pos.ts`), y que tampoco es seleccionable en formularios. La regla de que solo EFECTIVO, TRANSFERENCIA y FACTURADO se ofrecen para movimientos de cuenta no cambia.
+2. **Devoluciones:** `DEVOLUCION` existe únicamente como valor de `tipoMovimientoEnum` y como etiqueta y color en `movimientos.tsx`. No hay ruta, servicio ni prueba que lo genere. Agrega una línea que diga exactamente eso, para que no se lea como funcionalidad a medio construir.
+
+---
+
+# PARTE B — Ajustes
+
+## Bloque 6 — Eliminar el documento de respaldo en papel
+
+El detalle de ticket tiene un botón que imprime el ticket en un documento aparte, de media carta. Ese documento se elimina completo. El respaldo cuando falle la impresora térmica es **mandar el mismo ticket de 80 mm a otra impresora desde el diálogo del navegador**; no se necesita ni se debe crear un segundo diseño.
+
+Según lo que ya esté aplicado, el botón dirá **"Imprimir Media Carta"** o **"Imprimir A5"**. En cualquiera de los dos casos se elimina igual.
+
+1. `artifacts/mariana-textil/src/pages/ticket-detail.tsx`: elimina el `<Button>` correspondiente, la función `handlePrintCarta` —o `handlePrintTicketA5`— y el bloque JSX que abre con `<div className="hidden print-carta-only print-document-container">`, o su equivalente renombrado, hasta su cierre, justo antes del comentario `{/* Nota Print Pages */}`. El botón `Imprimir Ticket (80mm)` se queda; deja de necesitar el fragmento `<>...</>` que agrupaba a los dos.
+2. `artifacts/mariana-textil/src/index.css`: elimina `@page carta-page` —o `ticket-a5-page`—, la regla `body.print-carta { background: white; }`, el bloque completo de reglas `body.print-carta *` / `.print-carta-only` / `#root`, y `.print-document-container`. **No toques** `print-80mm`, `print-credito`, `print-salida`, `print-entrada`, `viaje-page`, `audit-inventory` ni `label`.
+3. `artifacts/mariana-textil/src/pages/impresion.contract.test.ts`: elimina las dos aserciones de ese formato, la del `@page` con su medida y la de `.print-document-container`. En esa misma prueba, la aserción que cuenta ocurrencias de `<MonochromeBrandLogo ... w-[25mm]` espera **2**; al borrar el bloque queda **1**, así que ajústala a 1 o fallará.
+4. Grep final de `carta-page`, `print-carta`, `print-ticket-a5`, `print-document-container`, `handlePrintCarta`, `handlePrintTicketA5`, `140mm` y `media carta`: cero resultados. `216mm` solo debe sobrevivir en el documento de Entrada y en la hoja de viaje, que son carta.
+
+## Bloque 7 — Retirar FACTURADO como forma de pago en caja
+
+La factura se decide en el POS con la casilla "Requiere Factura". En caja no es una forma de pagar, es un atributo de la venta. Las únicas formas de pago que se ofrecen al cobrar son **Efectivo** y **Transferencia**.
+
+En `artifacts/mariana-textil/src/pages/cobros.tsx`:
+
+1. Elimina el botón **Facturado** de "Forma de Pago Principal" y la opción `FACTURADO` del selector de pago dividido. Los dos botones restantes deben repartirse el ancho de forma pareja, no quedarse angostos con un hueco donde estaba el tercero.
+2. `facturadoSeleccionado` hoy es `ticket?.facturado === true || pagos.some(p => p.formaPago === FACTURADO)`. Como la forma de pago desaparece, se reduce a leer únicamente `ticket.facturado`. El total no cambia de resultado: la venta facturada ya trae su IVA calculado desde el POS.
+3. En `setPrimaryFormaPago`, elimina la rama que calcula un importe distinto para `FACTURADO`. El importe inicial es siempre el total del ticket.
+
+**FACTURADO no se borra del enum `formaPagoTicketEnum`.** Se vuelve un valor histórico no seleccionable, exactamente como CHEQUE y OTRO en `formaPagoCuentaEnum`: sigue en la base para que los cobros ya registrados se lean, y no se ofrece en ningún formulario. Cortes y reportes anteriores deben seguir mostrándolo sin romperse.
+
+**No toques** `accountDestination()` en `admin-analytics.ts` ni el reparto de cuentas: la transferencia de una venta facturada ya cae en `CUENTA_FISCAL` por el campo `facturado` del ticket, y ese comportamiento no debe cambiar.
+
+## Bloque 8 — VENTA FACTURADA en la lista de caja
+
+En `cobros.tsx` el renglón de la lista de tickets dice hoy `{documentoTipo === "NOTA" ? "Nota" : "Ticket"} folio {folio}` y no mira el campo `facturado`. El cajero necesita distinguir de un vistazo una venta facturada, porque se maneja distinto.
+
+Cuando `facturado` es verdadero, el renglón debe decir **VENTA FACTURADA** en rojo, negritas y a mayor tamaño que el texto actual, con el folio a un lado y **sin la palabra Ticket ni Nota**. Cuando es falso, se queda exactamente como está hoy.
+
+El rojo aquí codifica "esta venta lleva factura", no un error. Deja ese significado escrito en un comentario junto al estilo, conforme a la regla de que todo color del sistema significa algo y debe poder explicarse en una frase.
+
+## Bloque 9 — Retirar la maquetación de nota de contado
+
+`pos.ts` hace `const credito = documentoTipo === "NOTA"` y más abajo rechaza toda Nota sin plazo de crédito válido: **el servidor ya impide una nota de contado**. Aun así, `ticket-detail.tsx` conserva `CASH_NOTE_PRODUCT_ROWS_PER_PAGE = 14` con su rama de maquetación, alimentada por una condición que para una nota nunca puede ser falsa.
+
+1. **Primero comprueba que esa rama está muerta, sin suponerlo:** revisa qué flujos llegan a la impresión A5 de nota y con qué valor de `esCredito`. Si algún camino real la alcanza, **detente y repórtalo sin borrar nada**.
+2. Si está muerta, elimina la constante de 14 renglones y la selección condicional. La nota usa siempre los 8 renglones de crédito, que es el valor medido que reserva el espacio del pagaré.
+
+## Bloque 10 — Orden y alcance de las tarjetas de Caja en Tiempo Real
+
+En `artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx` las cinco tarjetas están hoy en este orden: Ventas (Total), Cobrado (Caja), Pendiente de Cobro, Ventas a crédito, Utilidad.
+
+1. **Reordénalas así**, de izquierda a derecha:
+
+   `Ventas (Total)` → `Cobrado (Caja)` → `Ventas a crédito` → `Utilidad` → `Ventas pendientes de cobro o autorización`
+
+   La rejilla ya es de cinco columnas en pantalla ancha y no cambia; solo se mueve la tarjeta ámbar al final. Conserva sus colores, su anillo de alerta y su franja pulsante.
+
+2. **El rótulo nuevo obliga a corregir el dato.** El predicado que alimenta esa tarjeta es `pendingTicketPredicate` en `artifacts/api-server/src/lib/accounted-document.ts` y dice `estado='VENDIDO' AND documento_tipo='TICKET' AND cobrado=false`: cuenta únicamente tickets sin cobrar. Las notas emitidas y todavía sin autorizar no aparecen en ninguna parte del tablero. Amplía el predicado para que incluya también `documento_tipo='NOTA' AND autorizacion_estado <> 'AUTORIZADA'` con `estado='VENDIDO'`, de modo que la tarjeta cuente todo documento que está esperando a que caja lo procese, que es lo que su nombre promete.
+
+3. **La alerta de 30 minutos no cambia y sigue siendo solo de tickets.** Un ticket sin cobrar media hora después es un problema de mostrador; una nota sin autorizar no comparte esa urgencia y la regla vigente de que la tarjeta de crédito no lleva alerta de tiempo se conserva. Deja el cálculo de `pendientes30Min` restringido a tickets, con un comentario que explique por qué.
+
+4. Esta tarjeta **sigue fuera de Ventas**. La identidad `Ventas = Cobrado + Ventas a crédito` no se toca: pendiente es y sigue siendo un indicador operativo. Verifica que el importe de Ventas no se mueva ni un peso con este cambio.
+
+5. El texto secundario de la tarjeta dice hoy "tickets en espera". Cámbialo a un texto que no mienta cuando la cuenta mezcle tickets y notas, y que distinga cuántos son de cada tipo.
+
+## Bloque 11 — Desglose al hacer clic en las tarjetas
+
+Hoy las tarjetas son cifras muertas: el ADMIN ve un total y no tiene cómo saber de qué está compuesto sin salir a otra pantalla. Tres de ellas se vuelven clicables y abren el detalle de los documentos que forman ese número.
+
+**Tarjetas clicables:** `Cobrado (Caja)`, `Ventas a crédito` y `Ventas pendientes de cobro o autorización`.
+
+`Ventas (Total)` no se vuelve clicable, porque es exactamente la suma de las otras dos y su desglose ya son ellas. `Utilidad` tampoco, porque tiene reglas propias de ocultamiento y de líneas sin costo que no caben en esta lista; si más adelante se decide, será un bloque aparte.
+
+### Contrato
+
+Sigue el patrón que ya existe en el sistema para desglosar una cifra del tablero, `GET /admin/cuentas-destino/{cuentaDestino}/movimientos`: mismos parámetros de rango y ubicación, misma paginación, mismo estilo de respuesta. **No inventes una forma nueva.**
+
+Agrega un solo endpoint, no tres:
+
+`GET /admin/dashboard/realtime/desglose` con un parámetro `concepto` de valores `COBRADO`, `CREDITO` y `PENDIENTE`, más los parámetros de fecha y ubicación que ya usan `/admin/dashboard/realtime` y `/admin/dashboard/realtime/pendientes`, y paginación `page` / `pageSize` como el endpoint de cuentas destino.
+
+Cada concepto reutiliza **el mismo predicado** que alimenta su tarjeta, no una consulta paralela escrita a mano:
+
+- `COBRADO` → tickets con `documento_tipo='TICKET'` y `cobrado=true`, la misma condición que produce la cifra de Cobrado.
+- `CREDITO` → notas con `autorizacion_estado='AUTORIZADA'`, la misma condición que produce Ventas a crédito.
+- `PENDIENTE` → el `pendingTicketPredicate` ya ampliado en el Bloque 10.
+
+Si en algún momento se cambia un predicado, la tarjeta y su desglose deben moverse juntos. Dos consultas para el mismo número producen dos verdades que divergen en silencio.
+
+### Columnas por concepto
+
+Todos los renglones llevan **folio, hora, cliente e importe**. Además:
+
+- `COBRADO`: forma de pago y si la venta es facturada.
+- `CREDITO`: días de plazo y fecha de vencimiento.
+- `PENDIENTE`: si es Ticket o Nota, y cuánto lleva esperando.
+
+**El folio es el único enlace del renglón**, y lleva al detalle del documento, conforme a la regla de que en toda tabla del sistema el identificador principal es el enlace y no existe una columna de "Ver detalle".
+
+### Reglas que este bloque debe respetar
+
+1. **Alcance de lectura en el servidor.** Aplica `resolveReadScope` antes de cualquier filtro. Un usuario con alcance PROPIA no puede ver otra tienda ni pidiendo otra ubicación por la dirección.
+2. **Nada de utilidad ni costo en esta respuesta.** El desglose responde qué documentos componen una cifra de dinero cobrado o prestado; no lleva costo, utilidad ni margen. Omítelos en el servidor, no los tapes en pantalla.
+3. **La suma del desglose debe cuadrar con la tarjeta**, en el mismo rango y la misma ubicación. Es la prueba objetiva de que ambos leen lo mismo, igual que Global y Detalle en Ventas por tienda. Compruébalo con números reales, no por lectura del código.
+4. Ejecuta `codegen` después de tocar OpenAPI.
+5. La presentación es un panel o diálogo sobre el tablero; el tablero no pierde su refresco automático mientras el desglose está abierto, y cerrarlo devuelve al usuario donde estaba.
+6. Debe funcionar en teléfono: la tabla conserva desplazamiento horizontal y el diálogo limita su ancho al viewport, como los demás diálogos ya revisados para móvil.
+
+---
+
+# Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo.
+2. `pnpm --filter @workspace/api-spec run codegen` y confirma que no quedan diferencias sin generar.
+3. Las suites de impresión, POS, caja y analytics de administración.
+4. Los greps del Bloque 6: cero resultados para los ocho términos.
+5. Grep de `154 productos` en `replit.md`: solo debe quedar la mención fechada de la limpieza del piloto.
+6. Grep de `216 × 140` y `media carta horizontal` en `replit.md`: solo debe quedar la explicación de por qué se descartó.
+7. En navegador autenticado, cobra un ticket **no facturado**: solo aparecen Efectivo y Transferencia, y el total no cambió.
+8. Cobra un ticket **facturado**: el renglón de la lista dice VENTA FACTURADA en rojo con su folio, el total ya trae el IVA desde el POS, y una transferencia queda registrada en cuenta fiscal.
+9. Abre un corte de caja anterior que contenga cobros con forma de pago FACTURADO y confirma que se leen sin error.
+10. El detalle de ticket ya solo ofrece "Imprimir Ticket (80mm)".
+11. En Caja en Tiempo Real, las cinco tarjetas aparecen en el orden pedido y la de pendientes queda al extremo derecho.
+12. Emite una nota y **no la autorices**: debe aparecer contada en la tarjeta de pendientes, y **no** debe mover Ventas ni Ventas a crédito. Autorízala y comprueba que sale de pendientes y entra a Ventas a crédito.
+13. Abre el desglose de las tres tarjetas y comprueba que la suma de cada uno cuadra al centavo con la cifra de su tarjeta, en el mismo rango y ubicación.
+14. Entra al desglose con un usuario de alcance PROPIA e intenta pedir otra ubicación por la dirección: debe ser rechazado en el servidor.
+15. Revisa el tablero y el desglose en pantalla de teléfono.
+
+# Al terminar
+
+Escribe en `replit.md`:
+
+**En Formatos de impresión:**
+- Que el respaldo en papel del ticket es mandar el ticket de 80 mm a otra impresora desde el diálogo del navegador, y que no existe ni debe crearse un segundo diseño para eso. Que media carta quedó eliminada del software por no entrar en bandeja de láser.
+- Que los cuatro formatos vigentes son: Entrada carta, Salida A5 horizontal, Nota A5 vertical, Ticket 80 mm.
+
+**En POS y Caja:**
+- Que las formas de cobro de un ticket son **Efectivo y Transferencia**; que FACTURADO es un valor histórico no seleccionable del enum, conservado para leer cobros anteriores; y que la factura se decide en el POS y la cuenta destino se deriva del campo `facturado`, nunca de la forma de pago.
+- Que **Nota implica crédito siempre** y el servidor lo hace cumplir en `pos.ts`. Corrige las tres menciones que describen una nota de contado: la de la sección Parte 7 que dice que el tipo de documento aplica a contado y a crédito, la de Formatos de impresión que habla de "Notas de contado y crédito", y la regla de renglones que fija "Nota de contado 14". La Nota usa 8 renglones, siempre.
+- Que el crédito se decide en el POS y caja únicamente autoriza; nunca se ofrece crédito como forma de cobro.
+- Que una venta facturada se identifica en la lista de caja con la leyenda VENTA FACTURADA en rojo, y qué significa ese color.
+
+**En una sección nueva sobre Caja en Tiempo Real:**
+- El orden fijo de las cinco tarjetas y por qué pendientes va al extremo derecho.
+- Que la tarjeta de pendientes cuenta tickets sin cobrar **y** notas sin autorizar, que sigue fuera de Ventas, y que la alerta de 30 minutos es solo de tickets con la razón.
+- Que las tarjetas de Cobrado, Ventas a crédito y Pendientes abren un desglose que reutiliza el mismo predicado de su tarjeta, que la suma del desglose debe cuadrar con la cifra, y que el desglose no envía costo ni utilidad al cliente.
+- Por qué Ventas (Total) y Utilidad no son clicables.
+
+**En una sección nueva llamada Higiene de la documentación:**
+- Que este archivo derivó del código en rutas, conteos y roles, y que toda ruta citada aquí debe existir textualmente en `openapi.yaml`.
+- Que ninguna regla de validación se escribe contra un conteo fijo de productos: los conteos caducan en la siguiente importación y dejan la validación falsamente aprobada.
+- Que toda lista de roles escrita aquí debe cotejarse contra `rolUsuarioEnum` antes de darse por completa.
+- Un renglón con la fecha de esta limpieza y qué se corrigió.

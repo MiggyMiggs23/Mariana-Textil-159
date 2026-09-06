@@ -1,5 +1,12 @@
 import { pool } from "@workspace/db";
-import { accountedDocumentAt, accountedDocumentPredicate, pendingTicketPredicate } from "./accounted-document";
+import {
+  accountedDocumentAt,
+  accountedDocumentPredicate,
+  authorizedCreditPredicate,
+  collectedTicketPredicate,
+  pendingTicketPredicate,
+  unpaidTicketPredicate,
+} from "./accounted-document";
 import {
   ACCOUNT_DESTINATION_ORDER,
   type AccountDestinationCode,
@@ -308,7 +315,7 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
      SELECT
        COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND
          ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text ventas,
-       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND f.documento_tipo='TICKET' AND f.cobrado),0)::text cobrado,
+        COALESCE(SUM(f.total) FILTER (WHERE ${collectedTicketPredicate("f")}),0)::text cobrado,
        (SELECT importe FROM pending) pendiente,
        COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO' AND
          ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text subtotal,
@@ -395,13 +402,17 @@ export async function getQuantities(filters: AnalyticsFilters) {
 export async function getPending(filters: AnalyticsFilters) {
   const condition = where(filters, "t", "CREATED");
   const result = await pool.query(
-    `SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0)::text importe
+    `SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0)::text importe,
+       COUNT(*) FILTER (WHERE t.documento_tipo='TICKET')::int "ticketsSinCobrar",
+       COUNT(*) FILTER (WHERE t.documento_tipo='NOTA')::int "notasSinAutorizar"
      FROM tickets t WHERE ${condition.text}
        AND ${pendingTicketPredicate("t")}`,
     condition.values,
   );
   return {
     tickets: Number(result.rows[0]!.tickets),
+    ticketsSinCobrar: Number(result.rows[0]!.ticketsSinCobrar),
+    notasSinAutorizar: Number(result.rows[0]!.notasSinAutorizar),
     importe: decimal(result.rows[0]!.importe),
   };
 }
@@ -440,15 +451,15 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
             WHERE p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
           ),0) cobrado
         FROM filtered t JOIN ticket_pagos p ON p.ticket_id=t.id
-        WHERE t.estado='VENDIDO' AND t.cobrado
+         WHERE ${collectedTicketPredicate("t")}
           AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
         GROUP BY t.id
-      ), credit_sales AS (
-        SELECT t.ubicacion_id,
+       ), credit_sales AS (
+         SELECT t.ubicacion_id,
           COALESCE(SUM(m.importe),0) credito,
           COUNT(DISTINCT m.ticket_id)::int credito_operaciones
         FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
-        WHERE m.tipo='VENTA_CREDITO' AND ${accountedDocumentPredicate("t")}
+        WHERE m.tipo='VENTA_CREDITO' AND ${authorizedCreditPredicate("t")}
           AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
           AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
           AND ($3::int IS NULL OR t.ubicacion_id=$3)
@@ -457,7 +468,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",
        s.id "sesionCajaId",s.abierta_at "abiertaAt",caj.nombre cajero,
        term.nombre "usuarioTerminal",
-       COALESCE(SUM(t.total) FILTER (WHERE ${accountedDocumentPredicate("t")}),0)::text vendido,
+        COALESCE(SUM(t.total) FILTER (WHERE ${accountedDocumentPredicate("t")}),0)::text vendido,
          COALESCE(SUM(p.cobrado),0)::text cobrado,
        COALESCE(pending.importe,0)::text pendiente,
        COUNT(*) FILTER (WHERE ${accountedDocumentPredicate("t")})::int tickets,
@@ -476,9 +487,11 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
      LEFT JOIN payment p ON p.id=t.id
        LEFT JOIN credit_sales cs ON cs.ubicacion_id=u.id
       LEFT JOIN LATERAL (
-        SELECT COALESCE(SUM(ot.total) FILTER (WHERE ${pendingTicketPredicate("ot")}),0) importe,
+         SELECT COALESCE(SUM(ot.total) FILTER (WHERE ${pendingTicketPredicate("ot")}),0) importe,
           COUNT(*) FILTER (WHERE ${pendingTicketPredicate("ot")})::int tickets,
-          COUNT(*) FILTER (WHERE ${pendingTicketPredicate("ot")} AND ot.created_at < now()-interval '30 minutes')::int antiguos,
+           -- The 30-minute alert is a counter-service urgency for unpaid Tickets;
+           -- authorization of a credit Note intentionally has no time alert.
+           COUNT(*) FILTER (WHERE ${unpaidTicketPredicate("ot")} AND ot.created_at < now()-interval '30 minutes')::int antiguos,
           COUNT(*) FILTER (WHERE ot.estado='CANCELADO')::int cancelaciones
         FROM operational ot WHERE ot.ubicacion_id=u.id
       ) pending ON true
@@ -524,6 +537,95 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
       cancelaciones: Number(row.cancelaciones), tasaCancelacion: decimal(cancellationRate), alertas: alerts,
     };
   }));
+}
+
+export type RealtimeBreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE";
+
+/** Paginated rows behind realtime cards; predicates are shared with their aggregates. */
+export async function listRealtimeBreakdown(
+  filters: AnalyticsFilters,
+  concepto: RealtimeBreakdownConcept,
+  page = 1,
+  pageSize = 50,
+) {
+  const predicate = concepto === "COBRADO"
+    ? collectedTicketPredicate("t")
+    : concepto === "CREDITO"
+      ? authorizedCreditPredicate("t")
+      : pendingTicketPredicate("t");
+  const timestamp = concepto === "PENDIENTE" ? "t.created_at" : accountedDocumentAt("t");
+  const creditSource = concepto === "CREDITO"
+    ? `JOIN (
+        SELECT m.ticket_id,COALESCE(SUM(m.importe),0) importe
+        FROM movimientos_credito m
+        WHERE m.tipo='VENTA_CREDITO'
+        GROUP BY m.ticket_id
+      ) credit ON credit.ticket_id=t.id`
+    : "";
+  const amount = concepto === "CREDITO" ? "credit.importe" : "t.total";
+  const values = [
+    filters.desde?.toISOString() ?? null,
+    filters.hasta?.toISOString() ?? null,
+    filters.ubicacionId ?? null,
+    pageSize,
+    (page - 1) * pageSize,
+  ];
+  const condition = `($1::timestamptz IS NULL OR ${timestamp} >= $1)
+    AND ($2::timestamptz IS NULL OR ${timestamp} <= $2)
+    AND ($3::int IS NULL OR t.ubicacion_id=$3)
+    AND ${predicate}`;
+  const base = `FROM tickets t
+    ${creditSource}
+    LEFT JOIN clientes c ON c.id=t.cliente_id
+    LEFT JOIN LATERAL (
+      SELECT array_agg(DISTINCT p.forma_pago::text ORDER BY p.forma_pago::text) formas
+      FROM ticket_pagos p WHERE p.ticket_id=t.id
+    ) pagos ON true
+    WHERE ${condition}`;
+  const [rows, aggregate] = await Promise.all([
+    pool.query(
+      `SELECT t.id,t.folio,${timestamp} hora,COALESCE(c.nombre,'Público general') cliente,
+        ${amount}::text importe,t.documento_tipo "documentoTipo",t.facturado,
+        t.dias_plazo "diasPlazo",t.fecha_vencimiento "fechaVencimiento",pagos.formas,
+        GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (now()-t.created_at))/60))::int "minutosEspera"
+       ${base}
+       ORDER BY ${timestamp} DESC,t.id DESC LIMIT $4 OFFSET $5`,
+      values,
+    ),
+    pool.query(
+      `SELECT COUNT(*)::int total,COALESCE(SUM(${amount}),0)::text "montoTotal" ${base}`,
+      values.slice(0, 3),
+    ),
+  ]);
+  return {
+    concepto,
+    items: rows.rows.map((row) => {
+      const formas = row.formas as string[] | null;
+      return {
+        id: Number(row.id),
+        folio: Number(row.folio),
+        hora: new Date(row.hora).toISOString(),
+        cliente: String(row.cliente),
+        importe: decimal(row.importe),
+        formaPago: concepto === "COBRADO"
+          ? !formas?.length ? "SIN_COBRO" : formas.length === 1 ? formas[0] : "MIXTO"
+          : null,
+        facturado: concepto === "COBRADO" ? Boolean(row.facturado) : null,
+        diasPlazo: concepto === "CREDITO" ? Number(row.diasPlazo) : null,
+        fechaVencimiento: concepto === "CREDITO" && row.fechaVencimiento
+          ? row.fechaVencimiento instanceof Date
+            ? row.fechaVencimiento.toISOString().slice(0, 10)
+            : String(row.fechaVencimiento).slice(0, 10)
+          : null,
+        documentoTipo: concepto === "PENDIENTE" ? row.documentoTipo : null,
+        minutosEspera: concepto === "PENDIENTE" ? Number(row.minutosEspera) : null,
+      };
+    }),
+    total: Number(aggregate.rows[0]!.total),
+    page,
+    pageSize,
+    montoTotal: decimal(aggregate.rows[0]!.montoTotal),
+  };
 }
 
 export async function listStoreSales(

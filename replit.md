@@ -24,10 +24,10 @@ Decisión conservadora para Entradas pequeñas: si el listado completo de series
 
 Las líneas por página de cada documento son un valor medido, comentado junto a la constante. Cambiar el pie —agregar firmas, por ejemplo— invalida ese número y obliga a recalcularlo.
 
-Decisión conservadora: el contrato vigente de `GET /entradas/:id` ya contiene tanto las líneas agregadas como cada rollo con serie, producto y cantidad. El documento reutiliza esa única respuesta; no se crea ni duplica un endpoint de series mientras el contrato siga completo.
+Decisión conservadora: el contrato vigente de `GET /inventario/entradas/{id}` ya contiene tanto las líneas agregadas como cada rollo con serie, producto y cantidad. El documento reutiliza esa única respuesta; no se crea ni duplica un endpoint de series mientras el contrato siga completo.
 # Decisiones de la Parte 9
 
-**Formas de pago de clientes y proveedores:** EFECTIVO, TRANSFERENCIA y FACTURADO. CHEQUE y OTRO son valores **históricos no seleccionables**: siguen en la base para que los registros viejos se lean, y no se ofrecen en formularios. `formaPagoTicketEnum` es otra cosa y no cambia: CREDITO ahí es la modalidad de venta a crédito, no una forma de pago equivalente.
+**Formas de pago de clientes y proveedores:** EFECTIVO, TRANSFERENCIA y FACTURADO son las únicas opciones ofrecidas para movimientos de cuenta. CHEQUE, OTRO y CREDITO son valores **históricos no seleccionables** de `formaPagoCuentaEnum`: siguen en la base para que los registros viejos se lean y no se ofrecen en formularios. CREDITO lo escribe la autorización de Nota mediante `autorizarNota` en `artifacts/api-server/src/lib/pos.ts`; no es una opción que el operador capture.
 
 **FACTURADO e IVA:** mueve el saldo por el **monto capturado, que ya incluye el IVA**. El sistema **nunca** le suma 16% a un monto capturado; solo desglosa cuánto fue subtotal y cuánto IVA donde el desglose aporte. La tasa vive en una sola constante compartida y no se escribe a mano en ningún lugar nuevo.
 
@@ -37,7 +37,7 @@ En toda tabla del sistema, el identificador principal del renglón es un enlace 
 
 Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una venta con líneas metreadas.
 
-**Formas de cobro de un ticket:** Efectivo, Transferencia y Facturado. **El crédito es exclusivo de las notas** y no es una forma de cobrar un ticket. Ninguna forma de pago se condiciona a `esCredito`; hacerlo dejó la transferencia deshabilitada en toda venta de contado.
+**Formas de cobro de un ticket:** Efectivo y Transferencia. FACTURADO permanece en `formaPagoTicketEnum` únicamente como valor histórico no seleccionable para leer cobros anteriores. La factura se decide en el POS mediante el campo `facturado`, y la cuenta destino se deriva de ese campo, nunca de la forma de pago. **El crédito es exclusivo de las notas**, se decide en el POS y nunca se ofrece como forma de cobro; Caja únicamente autoriza la Nota.
 
 **Cobro de METREADO:** si cualquier línea es METREADO, Caja ofrece únicamente Efectivo, también en pago dividido. Esta restricción conserva coherencia con el servidor (`METREADO_CASH_ONLY`) y con la regla existente que rechaza facturar ventas metreadas; no se permite construir en la interfaz una combinación que el servidor rechazará.
 
@@ -62,6 +62,8 @@ Diagnóstico de Precios: la consulta sí devolvía todo el catálogo, sin pagina
 **Caja distingue las dos operaciones:** un ticket se **cobra**, una nota se **autoriza**. **El límite de crédito es duro y se valida al autorizar la Nota** contra el saldo contable autorizado del libro de movimientos de crédito, bajo un candado transaccional por cliente que serializa autorizaciones concurrentes. Las Notas pendientes no reservan crédito. Si el saldo vigente más la Nota excede el límite, la autorización se rechaza sin excepción: no hay override con contraseña ni aprobación remota. La única vía es que un ADMIN suba antes el límite de crédito del cliente, como una decisión separada sobre su perfil y con su propia auditoría.
 
 **Caja no imprime documentos de venta.** El corte de caja es la única excepción.
+
+En la lista de Caja, una venta con `facturado=true` se identifica como **VENTA FACTURADA** en rojo y con su folio, sin llamarla Ticket ni Nota. El rojo significa exclusivamente que la venta lleva factura; no representa un error.
 
 ## Corrección — Bloque 4: Tabulares
 
@@ -135,7 +137,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** ADMIN tiene acceso total a los 30 módulos sin consultar tablas. Para CAJA, SUPERVISOR y BODEGA la resolución es: override de usuario (non-null) > permiso de rol > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
+- **Permisos:** ADMIN tiene acceso total a los 30 módulos sin consultar tablas. Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es: override de usuario (non-null) > permiso de rol > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
 - **Conteo de módulos:** el catálogo configurable contiene 30 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
@@ -173,9 +175,9 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 
 ### Archivos revisados para existencia física (Bloque 1.4)
 
-- Cambiados: `lib/inventario.ts` (`refreshCache`, `conciliarTodo`, `reconstruirCacheExistencias`, `getInventarioPorUbicacion`); `routes/inventario.ts` (`GET /existencias/agrupadas`); `lib/reportes-inventory.ts` (`buildInventoryReport`).
+- Cambiados: `lib/inventario.ts` (`refreshCache`, `conciliarTodo`, `reconstruirCacheExistencias`, `getInventarioPorUbicacion`); `routes/inventario.ts` (`GET /inventario/existencias/agrupadas`); `lib/reportes-inventory.ts` (`buildInventoryReport`).
 - Sin cambio: `routes/dashboard.ts:12-137` (`GET /dashboard`, consume `getInventarioPorUbicacion`); `routes/precios.ts:37` (`currentCost`, delega al filtro `DISPONIBLE` de `weightedCurrentUnitCost`); `lib/precios.ts:21` (`weightedCurrentUnitCost`, ya era solo `DISPONIBLE`).
-- Sin cambio por ser listados, diagnósticos o historial y no existencia actual: `routes/inventario.ts:260` (`getRolloDetail`), `:1179` (`GET /rollos`) y `:642` (costos pendientes); `routes/etiquetas.ts:83,147,289` (listado, detalle e historial); `routes/productos.ts:468` (`GET /productos/:id`, compras por entrada); `lib/compras-proveedor.ts:1142` (`analiticaGlobalProveedores`, costos históricos).
+- Sin cambio por ser listados, diagnósticos o historial y no existencia actual: `routes/inventario.ts:260` (`getRolloDetail`), `:1179` (`GET /inventario/rollos`) y `:642` (costos pendientes); `routes/etiquetas.ts:83,147,289` (listado, detalle e historial); `routes/productos.ts:468` (`GET /productos/{id}`, compras por entrada); `lib/compras-proveedor.ts:1142` (`analiticaGlobalProveedores`, costos históricos).
 - Sin cambio por ser puertas operativas: el flujo de captura de Salidas; validaciones de estado para venta en POS; transiciones y ajustes de Inventario.
 - Sin cambio por pertenecer al dominio separado de contenedores: `lib/contenedores.ts:242` (`getContenedorDetail`) y `:509` (`getContenedoresSummary`), y `lib/contenedores-helpers.ts:88` (`canEditContenedor`).
 
@@ -188,7 +190,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 
 ## Parte 1, Bloque 3 — Auditoría de transferencias
 
-- Se eliminaron exclusivamente las rutas tombstone `POST /inventario/rollos/:id/mover` y `POST /inventario/rollos/:id/recibir`, que solo respondían `410`, junto con sus paths OpenAPI, schemas y hooks/tipos generados.
+- Se eliminaron exclusivamente las dos rutas tombstone históricas para mover y recibir rollos, que solo respondían `410`, junto con sus paths OpenAPI, schemas y hooks/tipos generados.
 - No existen los nombres solicitados `iniciarTransferencia`, `confirmarTransferencia` ni `cancelarTransferencia`. La transferencia directa activa equivalente es `transferirRolloInmediato`; el ajuste activo equivalente es `ajustarRollo`, que admite rollos `EN_TRANSITO`.
 - Se retienen las funciones de núcleo `moverRollo` y `recibirTransferencia`, porque el ciclo activo de Salidas las invoca. También se retienen las rutas e interfaz de Salidas, los enums del kardex y todo el ciclo de vida e interfaz de Contenedores.
 - El único alcance retirado fue el HTTP tombstone y su contrato generado; no se modificaron las superficies de Contenedores.
@@ -297,7 +299,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 ## Corrección — Folios e impresión por sitio
 
 - El folio de entradas y salidas es por sitio, no global. La identidad de un documento es ubicación + folio, y se presenta como `INICIALES-FOLIO` con 6 dígitos y sin comas. Cada sitio tiene un campo `iniciales` único que asigna ADMIN a mano.
-- Entradas: carta vertical 216 × 279 mm. Salidas: A5 horizontal 210 × 148 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida.
+- Entradas: carta vertical 216 × 279 mm. Salidas: A5 horizontal 210 × 148 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida. El tamaño de la Salida está fijado en la sección Formatos de impresión; media carta se descartó por bandeja.
 
 
 ## Permission modules (30 total)
@@ -370,7 +372,7 @@ El libro de movimientos de crédito es la fuente de verdad. El estado de una not
 
 ## Parte 7 — Tickets, notas y viajes
 
-El documento de venta se elige antes de vender: **TICKET** cuando el cliente se lleva la mercancía del mostrador, **NOTA** cuando sale a domicilio. Es una decisión sobre cómo sale la mercancía, no sobre cómo se paga; aplica a contado y a crédito. Una venta a crédito siempre emite Nota. La Nota se imprime con precios o como Nota de Productos sin ningún importe, a elección del operador; el filtrado de importes se hace en el servidor. La copia interna siempre lleva precios y QR. En el ticket y en las dos variantes de nota, las líneas de rollo se agrupan por producto mostrando la cantidad de rollos, y los números de serie no se imprimen; el detalle por rollo se conserva solo en el documento dentro del sistema, en la hoja de salida y en la hoja del viaje. Los viajes registran camioneta, chofer, origen y los documentos que se llevaron; no se cierran, no confirman entrega y no rastrean ubicación. Cuando una salida pertenece a un viaje, el chofer viene del viaje y no del campo de transportista.
+El documento de venta se elige antes de vender: **TICKET** para contado y **NOTA** para crédito. Nota implica crédito siempre y el servidor lo hace cumplir en `artifacts/api-server/src/lib/pos.ts`; el crédito y su plazo se deciden en el POS y Caja únicamente autoriza. La Nota se imprime con precios o como Nota de Productos sin ningún importe, a elección del operador; el filtrado de importes se hace en el servidor. La copia interna siempre lleva precios y QR. En el ticket y en las dos variantes de nota, las líneas de rollo se agrupan por producto mostrando la cantidad de rollos, y los números de serie no se imprimen; el detalle por rollo se conserva solo en el documento dentro del sistema, en la hoja de salida y en la hoja del viaje. Los viajes registran camioneta, chofer, origen y los documentos que se llevaron; no se cierran, no confirman entrega y no rastrean ubicación. Cuando una salida pertenece a un viaje, el chofer viene del viaje y no del campo de transportista.
 
 El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —pendiente, parcial, pagada— se deriva de los movimientos y nunca se marca a mano. Todo abono, de cliente o a proveedor, se aplica a la nota o compra más antigua por fecha; al saldarla, el sobrante pasa a la siguiente, y lo que sobre al final queda como saldo a favor. Clientes y proveedores usan el mismo algoritmo de reparto. Una venta a crédito imprime nota, no ticket: dos copias, la interna con QR y la del cliente sin él.
 
@@ -379,6 +381,8 @@ Para abonos de clientes, “cuenta destino” usa las categorías operativas exi
 El pago dirigido se solicita desde el cobro del cliente o el pago al proveedor, se autoriza desde la notificación sin entrar a otra pantalla, y su histórico vive en Reportes como registro de cuántas excepciones a la regla FIFO ha habido. No es una pantalla de trabajo diario. Solo `PENDIENTE` permanece como evento derivado activo. Al aprobar o rechazar, la solicitud desaparece inmediatamente del feed y, en la misma transacción, se guarda una notificación no leída dirigida exclusivamente al solicitante; al leerla sale del feed pero permanece en su historial y enlaza a Pagos dirigidos.
 
 ## Roles SISTEMAS y CONTADOR
+
+**TERMINAL** abre `/pos` al iniciar sesión, según `artifacts/mariana-textil/src/lib/home-route.ts`. El servidor le omite recursivamente de las respuestas toda clave cuyo nombre contenga costo, precio, margen o utilidad; esa defensa vive en `artifacts/api-server/src/lib/sensitive-data.ts`.
 
 **SISTEMAS** es el rol del técnico responsable de la aplicación. Opera todo y sí ve el dinero, porque diagnostica problemas de cartera y de precios. No vende ni cobra: sin POS, sin cortes, sin cobros. Lee la bitácora y no puede alterarla. No puede crear administradores ni tocar a un usuario que ya es ADMIN: esa llave se queda con el dueño.
 
@@ -392,7 +396,7 @@ Decisión conservadora: CONTADOR tiene `crear` en `cobros_pagos` y en `proveedor
 
 ### Limpieza para el piloto
 
-La limpieza autorizada dejó vacíos los datos operativos y conservó clientes, proveedores, sitios, usuarios reales, permisos y los 154 productos del catálogo aprobado. Los usuarios y sitios generados por pruebas que siguen referenciados por la bitácora inmutable se conservaron completos; nunca se fuerza su eliminación ni se altera la auditoría para borrarlos.
+La limpieza autorizada dejó vacíos los datos operativos y conservó clientes, proveedores, sitios, usuarios reales, permisos y los 154 productos del catálogo aprobado. Ese conteo corresponde al momento de la limpieza y no representa el tamaño vigente del catálogo. Los usuarios y sitios generados por pruebas que siguen referenciados por la bitácora inmutable se conservaron completos; nunca se fuerza su eliminación ni se altera la auditoría para borrarlos.
 
 La pantalla de acceso y los servicios quedaron disponibles después de la limpieza. La comprobación autenticada de las pantallas con una cuenta real queda pendiente para el usuario porque la contraseña vigente del administrador no está disponible en el workspace; no se restablecen contraseñas reales ni se crean sesiones artificiales para una prueba.
 
@@ -423,14 +427,14 @@ El piloto se realizará en Cruces. La carga inicial de inventario es el bloqueo 
 - **Mensajes de validación:** un formulario muestra los requisitos de sus campos antes de que el usuario escriba, y los toma de las constantes del contrato para que no se desincronicen. Un error de validación nombra el campo y la regla incumplida; "los datos son inválidos" no le sirve a nadie que esté dando de alta gente en el piso. La validación del cliente es comodidad y nunca sustituye a la del servidor.
 - **Decimales:** las cantidades se **guardan** en `DECIMAL(10,3)` y se **muestran** con dos decimales. La precisión de la base y la aritmética del motor —que convierte cantidad × precio a milésimas enteras— no dependen de cuántos decimales vea el usuario y nunca se modifican por un cambio de presentación. Los totales se calculan sobre los valores guardados y se redondean al final; sumar lo que se muestra hace que el documento se contradiga a sí mismo.
 - **La etiqueta es la excepción:** conserva tres decimales, porque va pegada al rollo físico y es donde se verifica el metraje exacto.
-- **Ajuste de fuente en la etiqueta:** el nombre del producto y el metraje usan el tamaño más grande con el que quepan completos, en escalones discretos, con un mínimo legible por debajo del cual no bajan. Nunca se cortan. Una fuente fija que haga caber al nombre más largo del catálogo —36 caracteres— dejaría ilegible al más corto —11—, y la etiqueta se lee de lejos entre los rollos. Cualquier cambio a esta lógica se valida contra los 154 productos del catálogo, no contra dos ejemplos.
+- **Ajuste de fuente en la etiqueta:** el nombre del producto y el metraje usan el tamaño más grande con el que quepan completos, en escalones discretos, con un mínimo legible por debajo del cual no bajan. Nunca se cortan. Una fuente fija que haga caber al nombre más largo del catálogo —36 caracteres— dejaría ilegible al más corto —11—, y la etiqueta se lee de lejos entre los rollos. Cualquier cambio a esta lógica se valida generando las etiquetas de todo el catálogo vigente, no contra dos ejemplos ni contra un conteo fijo.
 - Ejecuta `codegen` después de cada cambio en OpenAPI.
 - Ejecuta `push` y luego `NODE_ENV=development pnpm --filter @workspace/db run seed` al preparar la base de desarrollo.
 - Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
 - Toda E2E que necesite crear usuarios, sesiones o datos debe usar una rama Neon desechable con una base vacía, esquema y seed actuales. `TEST_DATABASE_URL` debe existir y ser distinta de `DATABASE_URL`.
 - Las suites mutantes exigen `NODE_ENV=test`, `REQUIRE_ISOLATED_TEST_DATABASE=1` y `TEST_DATABASE_URL`; además comparan `current_database()` con development antes de crear el pool. Las suites unitarias sin base usan una conexión local inutilizable para que una consulta accidental falle sin tocar development.
 - Está prohibido crear ADMIN temporales o limpiar usuarios/sesiones mediante `executeSql({ environment: "development" })`. La limpieza E2E consiste en eliminar únicamente la rama Neon desechable.
-- Los precios existentes solo se modifican por `/precios`; `PATCH /productos/:id` rechaza cualquier intento de evadir el historial. El precio inicial al crear producto sí está permitido.
+- Los precios existentes solo se modifican por `/precios`; `PATCH /productos/{id}` rechaza cualquier intento de evadir el historial. El precio inicial al crear producto sí está permitido.
 - Cambia la contraseña del usuario `admin` inmediatamente después del primer acceso.
 
 ## Parte 4 — Regla definitiva de reportes por tipo de venta
@@ -501,7 +505,7 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 **Encabezado de la Nota:** los campos opcionales vacíos —destinatario, dirección, contacto— **no se imprimen** y la rejilla se reacomoda. Cliente, folio y fecha de venta siempre aparecen. **Ninguna dirección de Mariana Textil se imprime en la Nota**, ni de matriz ni de sucursales.
 
-**El pagaré solo va en notas a crédito.** En una venta de contado no hay deuda y un reconocimiento de deuda por algo ya pagado no ampara nada; esa nota lleva solo el recibo de mercancía. El texto se reproduce **carácter por carácter** y **no menciona lugar de pago**, en coherencia con la decisión de no imprimir domicilios.
+**Toda Nota lleva pagaré porque Nota implica crédito siempre.** El texto se reproduce **carácter por carácter** y **no menciona lugar de pago**, en coherencia con la decisión de no imprimir domicilios.
 
 **La fecha de pago se imprime en la nota a crédito**, junto con los días de plazo, tomada de `fechaVencimiento` sin recalcular. El pagaré remite a esa fecha: si no está impresa, la referencia queda vacía.
 
@@ -509,9 +513,17 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 **El renglón de IVA solo aparece en ventas facturadas.** Un impuesto en cero junto a un subtotal igual al total se contradice a sí mismo en un documento que el cliente firma.
 
-**Pendiente de cobro y venta a crédito son tarjetas distintas** en Caja en Tiempo Real. La primera cuenta tickets vendidos que la caja aún no cobra, con alerta a los 30 minutos. La segunda cuenta lo prestado. Un crédito a 30 días no está atrasado a la media hora, así que la tarjeta de crédito **no lleva alerta de tiempo**: el vencimiento se vigila en Cartera.
+## Caja en Tiempo Real
 
-**El plazo de crédito se elige en POS**, al crear el ticket, no en el diálogo de cobro: la caja no tiene impresora y la nota con el pagaré se imprime desde el POS. Se precarga de `clientes.diasCredito` y se puede cambiar para esa venta sin modificar el perfil. Un cliente sin plazo obliga a elegirlo.
+El orden fijo de las cinco tarjetas, de izquierda a derecha, es: **Ventas (Total) → Cobrado (Caja) → Ventas a crédito → Utilidad → Ventas pendientes de cobro o autorización**. Pendientes va al extremo derecho porque es un indicador operativo fuera de Ventas, no un componente de la identidad contable **Ventas = Cobrado + Ventas a crédito**.
+
+La tarjeta de pendientes cuenta tanto tickets vendidos sin cobrar como notas vendidas sin autorizar. Permanece fuera de Ventas hasta que Caja procese el documento. La alerta de 30 minutos se calcula solo para tickets: un ticket sin cobrar media hora después es un problema de mostrador, mientras una Nota sin autorizar no comparte esa urgencia y su vencimiento se vigila en Cartera. El texto secundario distingue cuántos tickets y cuántas notas están esperando.
+
+**Cobrado (Caja)**, **Ventas a crédito** y **Ventas pendientes de cobro o autorización** son clicables y abren el desglose de los documentos que componen su cifra. Cada desglose reutiliza exactamente el mismo predicado de su tarjeta; con igual rango y ubicación, la suma debe cuadrar al centavo con la cifra mostrada. La respuesta del servidor no envía costo, utilidad ni margen al cliente.
+
+**Ventas (Total)** no es clicable porque ya es exactamente la suma de Cobrado y Ventas a crédito. **Utilidad** tampoco es clicable porque tiene reglas propias de ocultamiento y líneas sin costo que requieren un desglose independiente.
+
+**El plazo de crédito se elige en POS**, al crear la venta, no en el diálogo de cobro: la caja no tiene impresora y la nota con el pagaré se imprime desde el POS. Se precarga de `clientes.diasCredito` y se puede cambiar para esa venta sin modificar el perfil. Un cliente sin plazo obliga a elegirlo.
 
 **El límite de crédito es duro.** Debajo procede, arriba se rechaza, **sin excepción**: no existe autorización de ADMIN, ni aprobación remota, ni override posterior. Un límite que se puede saltar no es un límite. El cajero ve el crédito disponible al seleccionar al cliente, y el rechazo dice cuánto hay y cuánto falta, en vez de un "no se puede" genérico.
 
@@ -523,7 +535,7 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 La agrupación es **presentación y captura de precio**: el renglón conserva por debajo las series de sus rollos, y el ticket sigue registrando línea por rollo, con descuento de inventario y costo congelado individuales. Si un cambio de presentación toca cómo se registra la venta, está mal planteado.
 
-**Procesamiento contable de Ticket y Nota:** un Ticket pendiente no genera Ventas, Cobrado ni Utilidad; cuando Caja lo cobra, entra simultáneamente en los tres, incluida la forma no crediticia `FACTURADO`. Una Nota pendiente tampoco genera Ventas, Ventas a crédito ni Utilidad; cuando Caja la autoriza, entra simultáneamente en esos tres conceptos y nunca en Cobrado. Los abonos posteriores reducen el saldo de cartera, pero no vuelven a contar la venta ni cambian su clasificación histórica como venta a crédito. Por tanto, los pendientes son solo indicadores operativos y la identidad financiera es siempre **Ventas = Cobrado + Ventas a crédito**.
+**Procesamiento contable de Ticket y Nota:** un Ticket pendiente no genera Ventas, Cobrado ni Utilidad; cuando Caja lo cobra, entra simultáneamente en los tres, también cuando la venta está marcada como facturada. Una Nota pendiente tampoco genera Ventas, Ventas a crédito ni Utilidad; cuando Caja la autoriza, entra simultáneamente en esos tres conceptos y nunca en Cobrado. Los abonos posteriores reducen el saldo de cartera, pero no vuelven a contar la venta ni cambian su clasificación histórica como venta a crédito. Por tanto, los pendientes son solo indicadores operativos y la identidad financiera es siempre **Ventas = Cobrado + Ventas a crédito**.
 
 **El orden de las tiendas es Mariana, Coco, Cruces**, y vive en un solo lugar compartido por todas las vistas. Repetirlo por componente hace que una vista quede desincronizada de las demás. Una tienda nueva nunca desaparece de una lista por no estar en el orden.
 
@@ -543,22 +555,33 @@ Las **ventas a crédito cuentan** como ventas y los **cancelados no**. La utilid
 
 **Devoluciones y notas de crédito de producto:** el modelo actual no tiene líneas de devolución ni una nota de crédito que reste cantidades e importes por producto; `NOTA` es un tipo documental de venta. Ventas por tienda no inventa una resta sin un movimiento trazable.
 
+`DEVOLUCION` existe únicamente como valor de `tipoMovimientoEnum` y como etiqueta y color en `movimientos.tsx`; no hay ruta, servicio ni prueba que lo genere.
+
 **SUPERVISOR y Ventas por tienda:** el techo de permisos actual niega `resumen_caja`, incluso con un permiso individual. La omisión recursiva de campos de utilidad/costo queda aplicada como defensa adicional si ese techo cambia; no se amplían permisos para mostrar este reporte.
 
 ## Formatos de impresión
 
-**Formatos de impresión.** Entrada: carta blanca, a color. Ticket de contado: **tira térmica de 80 mm**. Nota de crédito: **A5 vertical, 148 × 210 mm**, papel blanco, a color. Salida: **A5 horizontal, 210 × 148 mm**, papel **de color distinto por sitio**, diseño a color. No existe Nota de contado.
+**Formatos de impresión.** Los cuatro formatos vigentes son: Entrada carta vertical 216 × 279 mm, Salida A5 horizontal 210 × 148 mm, Nota A5 vertical 148 × 210 mm y Ticket térmico de 80 mm. Entrada y Nota usan papel blanco a color; Salida usa papel **de color distinto por sitio** y diseño a color. No existe Nota de contado.
 
-Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser admiten A5 en cajón; media carta solo entra por alimentación manual, hoja por hoja, lo que es inviable en un mostrador. No son el mismo tamaño: A5 es 148 × 210 mm y media carta 140 × 216 mm.
+Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser admiten A5 en cajón; media carta solo entra por alimentación manual, hoja por hoja, lo que es inviable en un mostrador, y quedó eliminada del software. No son el mismo tamaño: A5 es 148 × 210 mm y media carta 140 × 216 mm.
+
+El respaldo cuando falla la impresora térmica consiste en mandar el mismo Ticket de 80 mm a otra impresora desde el diálogo del navegador. No existe ni debe crearse un segundo diseño en papel para ese respaldo.
 
 **Los documentos no se diseñan para monocromático.** El color lo aporta el papel de la bandeja y la impresora convierte a grises por su cuenta. Un logo azul impreso en negro se ve bien; un logo dibujado en gris plano se ve mal en color y en negro. La Salida conserva su diseño a color aunque se imprima en monocromático sobre papel de color.
 
 **El QR de la Salida lleva recuadro blanco detrás.** Sobre papel de color el contraste puede caer y el código deja de leerse; si el QR no escanea, se rompe el flujo de recepción. Es una regla operativa, no estética, y aplica a cualquier color de papel presente o futuro.
 
-**Los renglones por hoja son mediciones independientes por documento:** Nota de crédito 8; Salida 10. El Ticket de contado usa tira térmica de 80 mm y no tiene una capacidad A5. Crédito reserva el pagaré legible, mientras Salida reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En crédito, el noveno renglón invade el pie al rasterizar; en Salida, 11 o más renglones recortan el pie.
+**Los renglones por hoja son mediciones independientes por documento:** la Nota usa siempre 8; Salida usa 10. El Ticket de contado usa tira térmica de 80 mm y no tiene una capacidad A5. La Nota reserva el pagaré legible, mientras Salida reserva encabezado a escala de Entrada, observaciones, totales y tres firmas. En la Nota, el noveno renglón invade el pie al rasterizar; en Salida, 11 o más renglones recortan el pie.
 
 **Captura de importes:** los campos de monto usan `type="text"` con `inputMode="decimal"`, no `type="number"`, porque este último **no admite comas** y deja al usuario capturando cifras largas sin separador. El separador de miles aparece **mientras se escribe**, en formato mexicano —coma para miles, punto para decimales—, y **el cursor no salta** al insertarlo. El separador es presentación y se retira antes de enviar: el servidor recibe el mismo valor de siempre. El comportamiento vive en un solo componente compartido.
 
 Todo documento dibuja su capacidad completa con renglones cerrados y perímetro negro. Las hojas adicionales repiten encabezado y pie, conservan numeración continua y nunca desbordan. El pagaré usa 10 px (7.5 pt) con interlineado de 12 px (9 pt), conserva su texto literal y aparece solo en la última hoja de cada copia de crédito.
 
 **Un renglón de producto es indivisible**: o cabe entero en la hoja o pasa completo a la siguiente, nunca se parte a la mitad. En los documentos impresos por hoja, los renglones se miden contando el renglón completo más todo lo que va debajo de la tabla —totales, leyenda y firma—; cada formato tiene su propia capacidad.
+
+## Higiene de la documentación
+
+- Este archivo se deriva del código en rutas, conteos y roles. Toda ruta citada aquí debe existir textualmente en `lib/api-spec/openapi.yaml`.
+- Ninguna regla de validación se escribe contra un conteo fijo de productos: los conteos caducan en la siguiente importación y dejan la validación falsamente aprobada.
+- Toda lista de roles escrita aquí debe cotejarse contra `rolUsuarioEnum` antes de darse por completa.
+- **Limpieza del 2026-09-06:** se corrigieron rutas de Entradas y Productos, el formato A5 de Salida, la documentación de TERMINAL, los conteos caducos, CREDITO y DEVOLUCION, y las reglas vigentes de impresión, POS/Caja y Caja en Tiempo Real.

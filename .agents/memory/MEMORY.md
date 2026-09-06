@@ -32,3 +32,4 @@
 - [Regresiones concurrentes deterministas](concurrency-regression-baselines.md) — usar barrera con timeout y probar primero contra código anterior; Promise.all puede pasar por casualidad.
 - [Regreso seguro en detalles](safe-detail-back-navigation.md) — retroceder solo con una entrada previa de la sesión SPA; recargas y accesos directos usan fallback interno.
 - [Reglas sustituidas en replit.md](superseded-project-rules.md) — reescribir o eliminar la regla vieja; nunca conservar contradicciones con una nota de precedencia.
+- [Conciliación de tarjetas y desgloses](dashboard-breakdown-reconciliation.md) — cifra y detalle deben compartir predicado, fecha y fuente financiera; Crédito conserva el ledger.

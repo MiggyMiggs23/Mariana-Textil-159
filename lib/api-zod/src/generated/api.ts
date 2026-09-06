@@ -5201,7 +5201,7 @@ export const GetPosClienteCreditoDisponibleQueryParams = zod.object({
 export const GetPosClienteCreditoDisponibleResponse = zod.object({
   "clienteId": zod.number(),
   "limiteCredito": zod.string(),
-  "saldoComprometido": zod.string().describe('Saldo neto del libro mayor más tickets de crédito reservados.'),
+  "saldoComprometido": zod.string().describe('Saldo neto del libro mayor de crédito autorizado.'),
   "creditoDisponible": zod.string(),
   "puedeComprarCredito": zod.boolean()
 })
@@ -7724,6 +7724,8 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
 }).describe('Ventas a crédito calculadas exclusivamente como suma del desglose por tienda.'),
   "pendientes": zod.object({
   "tickets": zod.number(),
+  "ticketsSinCobrar": zod.number().optional(),
+  "notasSinAutorizar": zod.number().optional(),
   "importe": zod.string(),
   "tiendas": zod.array(zod.object({
   "ubicacionId": zod.number(),
@@ -7810,6 +7812,8 @@ export const GetAdminRealtimePendingQueryParams = zod.object({
 
 export const GetAdminRealtimePendingResponse = zod.object({
   "tickets": zod.number(),
+  "ticketsSinCobrar": zod.number().optional(),
+  "notasSinAutorizar": zod.number().optional(),
   "importe": zod.string(),
   "tiendas": zod.array(zod.object({
   "ubicacionId": zod.number(),
@@ -7817,6 +7821,49 @@ export const GetAdminRealtimePendingResponse = zod.object({
   "pendientes30Min": zod.number(),
   "alertas": zod.array(zod.string())
 }))
+})
+
+
+/**
+ * @summary Documentos paginados que componen una tarjeta de Caja en Tiempo Real
+ */
+export const listAdminRealtimeBreakdownQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAdminRealtimeBreakdownQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAdminRealtimeBreakdownQueryPageDefault = 1;
+
+export const listAdminRealtimeBreakdownQueryPageSizeDefault = 50;
+export const listAdminRealtimeBreakdownQueryPageSizeMax = 100;
+
+
+
+export const ListAdminRealtimeBreakdownQueryParams = zod.object({
+  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE']),
+  "desde": zod.coerce.string().regex(listAdminRealtimeBreakdownQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(listAdminRealtimeBreakdownQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionId": zod.coerce.number().optional(),
+  "page": zod.coerce.number().int().min(1).default(listAdminRealtimeBreakdownQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(listAdminRealtimeBreakdownQueryPageSizeMax).default(listAdminRealtimeBreakdownQueryPageSizeDefault)
+})
+
+export const ListAdminRealtimeBreakdownResponse = zod.object({
+  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE']),
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "hora": zod.coerce.date(),
+  "cliente": zod.string(),
+  "importe": zod.string(),
+  "formaPago": zod.string().nullable(),
+  "facturado": zod.boolean().nullable(),
+  "diasPlazo": zod.number().nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "documentoTipo": zod.union([zod.literal('TICKET'),zod.literal('NOTA'),zod.literal(null)]).nullable(),
+  "minutosEspera": zod.number().nullable()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number(),
+  "montoTotal": zod.string()
 })
 
 

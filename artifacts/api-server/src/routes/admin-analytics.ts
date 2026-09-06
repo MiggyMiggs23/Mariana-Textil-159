@@ -24,6 +24,8 @@ import {
   GetAdminRealtimeDashboardResponse,
   GetAdminRealtimePendingQueryParams,
   GetAdminRealtimePendingResponse,
+  ListAdminRealtimeBreakdownQueryParams,
+  ListAdminRealtimeBreakdownResponse,
   ListAdminCortesQueryParams,
   ListAdminCortesResponse,
   GetAdminCuadreFiscalQueryParams,
@@ -58,11 +60,13 @@ import {
   getSalesSummary,
   getSessionMargin,
   measureKpi,
+  listRealtimeBreakdown,
   listCuts,
   parseAnalyticsFilters,
   summarizeRealtimeCredit,
 } from "../lib/admin-analytics";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
+import { resolveReadScope } from "./inventario";
 
 const router: IRouter = Router();
 router.use("/admin", requireSession);
@@ -134,6 +138,37 @@ router.get("/admin/dashboard/realtime/pendientes", async (req, res, next): Promi
         alertas: store.alertas,
       })),
     }));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/dashboard/realtime/desglose", async (req, res, next): Promise<void> => {
+  try {
+    const query = ListAdminRealtimeBreakdownQueryParams.parse(req.query);
+    const scope = resolveReadScope(req.auth!, query.ubicacionId);
+    if (scope.scopeError) {
+      res.status(403).json({ error: scope.scopeError, code: "FORBIDDEN" });
+      return;
+    }
+    if (
+      query.ubicacionId !== undefined
+      && scope.ubicacionId !== undefined
+      && query.ubicacionId !== scope.ubicacionId
+    ) {
+      res.status(403).json({
+        error: "La ubicación solicitada está fuera de tu alcance de consulta.",
+        code: "FORBIDDEN",
+      });
+      return;
+    }
+    res.setHeader("Cache-Control", "private, no-store");
+    res.json(ListAdminRealtimeBreakdownResponse.parse(await listRealtimeBreakdown(
+      parseAnalyticsFilters({ ...query, ubicacionId: scope.ubicacionId ?? undefined }),
+      query.concepto,
+      query.page,
+      query.pageSize,
+    )));
   } catch (error) {
     if (!badInput(error, res)) next(error);
   }

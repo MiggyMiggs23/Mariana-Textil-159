@@ -597,14 +597,8 @@ function CobroDialog({
     (sum, p) => sum + (Number(p.importe) || 0),
     0,
   );
-  const facturadoSeleccionado =
-    ticket?.facturado === true ||
-    pagos.some((pago) => pago.formaPago === FormaPagoTicket.FACTURADO);
-  const totalTicket = ticket
-    ? facturadoSeleccionado
-      ? Number(ticket.subtotal) * (1 + Number(ticket.tasaIva || "0.16"))
-      : Number(ticket.total || 0)
-    : 0;
+  const facturadoSeleccionado = ticket?.facturado === true;
+  const totalTicket = ticket ? Number(ticket.total || 0) : 0;
   const hasMetreadoLine =
     ticket?.lineas.some((linea) => linea.tipo === "METREADO") ?? false;
   const isPaymentSelected = pagos.length > 0;
@@ -672,11 +666,7 @@ function CobroDialog({
     } else {
       newPagos.push({
         formaPago,
-        importe: ticket
-          ? (formaPago === FormaPagoTicket.FACTURADO
-            ? Number(ticket.subtotal) * (1 + Number(ticket.tasaIva || "0.16"))
-            : Number(ticket.total)).toFixed(2)
-          : "0",
+        importe: ticket ? Number(ticket.total).toFixed(2) : "0",
       });
     }
     setPagos(newPagos);
@@ -764,7 +754,7 @@ function CobroDialog({
                   <Label className="text-base font-semibold text-sidebar">
                     Forma de Pago Principal
                   </Label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Button
                       type="button"
                       variant={
@@ -795,22 +785,6 @@ function CobroDialog({
                     >
                       <ArrowRightLeft className="h-8 w-8" />
                       <span className="font-bold text-base">Transf.</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={
-                        primaryPago?.formaPago === FormaPagoTicket.FACTURADO
-                          ? "default"
-                          : "outline"
-                      }
-                      className={`h-28 flex flex-col items-center justify-center gap-3 transition-all ${primaryPago?.formaPago === FormaPagoTicket.FACTURADO ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground border-2"}`}
-                      disabled={hasMetreadoLine}
-                      onClick={() =>
-                        setPrimaryFormaPago(FormaPagoTicket.FACTURADO)
-                      }
-                    >
-                      <CreditCard className="h-8 w-8" />
-                      <span className="font-bold text-base">Facturado</span>
                     </Button>
                   </div>
 
@@ -906,20 +880,12 @@ function CobroDialog({
                               Efectivo
                             </SelectItem>
                             {!hasMetreadoLine && (
-                              <>
-                                <SelectItem
-                                  value={FormaPagoTicket.TRANSFERENCIA}
-                                  className="font-medium py-3 cursor-pointer"
-                                >
-                                  Transferencia
-                                </SelectItem>
-                                <SelectItem
-                                  value={FormaPagoTicket.FACTURADO}
-                                  className="font-medium py-3 cursor-pointer"
-                                >
-                                  Facturado
-                                </SelectItem>
-                              </>
+                              <SelectItem
+                                value={FormaPagoTicket.TRANSFERENCIA}
+                                className="font-medium py-3 cursor-pointer"
+                              >
+                                Transferencia
+                              </SelectItem>
                             )}
                           </SelectContent>
                         </Select>
@@ -1468,9 +1434,16 @@ function CobrosContent() {
                     <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                       <div>
                         <div className="flex items-center gap-3">
-                          <span className={`font-bold text-xl ${t.documentoTipo === "NOTA" ? "text-indigo-700" : "text-sidebar"}`}>
-                            {t.documentoTipo === "NOTA" ? "Nota" : "Ticket"} folio {formatNumber(t.folio, { kind: "identifier" })}
-                          </span>
+                          {t.facturado ? (
+                            // El rojo identifica una venta que lleva factura; no representa un error.
+                            <span className="text-2xl font-bold text-red-600">
+                              VENTA FACTURADA folio {formatNumber(t.folio, { kind: "identifier" })}
+                            </span>
+                          ) : (
+                            <span className={`font-bold text-xl ${t.documentoTipo === "NOTA" ? "text-indigo-700" : "text-sidebar"}`}>
+                              {t.documentoTipo === "NOTA" ? "Nota" : "Ticket"} folio {formatNumber(t.folio, { kind: "identifier" })}
+                            </span>
+                          )}
                         </div>
                         <div className="text-sm font-medium text-muted-foreground mt-1.5 flex flex-wrap items-center gap-2">
                           <span>

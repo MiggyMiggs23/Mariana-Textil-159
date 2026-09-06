@@ -4240,6 +4240,34 @@ paths:
               schema: { $ref: "#/components/schemas/AdminPendingSummary" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /admin/dashboard/realtime/desglose:
+    get:
+      operationId: listAdminRealtimeBreakdown
+      tags: [admin-analytics]
+      summary: Documentos paginados que componen una tarjeta de Caja en Tiempo Real
+      parameters:
+        - in: query
+          name: concepto
+          required: true
+          schema: { type: string, enum: [COBRADO, CREDITO, PENDIENTE] }
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+      responses:
+        "200":
+          description: Desglose sin datos de costo, utilidad ni margen
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminRealtimeBreakdown" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /caja/tiendas/{ubicacionId}/ventas:
     get:
       operationId: listCajaTiendaVentas
@@ -6600,6 +6628,8 @@ components:
       required: [tickets, importe, tiendas]
       properties:
         tickets: { type: number }
+        ticketsSinCobrar: { type: number }
+        notasSinAutorizar: { type: number }
         importe: { type: string }
         tiendas:
           type: array
@@ -6611,6 +6641,34 @@ components:
               pendiente: { type: string }
               pendientes30Min: { type: number }
               alertas: { type: array, items: { type: string } }
+    AdminRealtimeBreakdownItem:
+      type: object
+      required:
+        [id, folio, hora, cliente, importe, formaPago, facturado, diasPlazo, fechaVencimiento, documentoTipo, minutosEspera]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        hora: { type: string, format: date-time }
+        cliente: { type: string }
+        importe: { type: string }
+        formaPago: { type: ["string", "null"] }
+        facturado: { type: ["boolean", "null"] }
+        diasPlazo: { type: ["number", "null"] }
+        fechaVencimiento: { type: ["string", "null"], format: date }
+        documentoTipo: { type: ["string", "null"], enum: [TICKET, NOTA, null] }
+        minutosEspera: { type: ["number", "null"] }
+    AdminRealtimeBreakdown:
+      type: object
+      required: [concepto, items, total, page, pageSize, montoTotal]
+      properties:
+        concepto: { type: string, enum: [COBRADO, CREDITO, PENDIENTE] }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AdminRealtimeBreakdownItem" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+        montoTotal: { type: string }
     AdminAlertaTicket:
       type: object
       required:

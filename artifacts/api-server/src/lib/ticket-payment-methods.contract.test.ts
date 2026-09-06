@@ -11,6 +11,6 @@ test("ticket collection contract retains historical credit but rejects it for ne
 });
 
 test("credit issuance is notes-only while metreado stays cash-only", () => {
-  assert.match(pos, /credito && documentoTipo !== "NOTA"[\s\S]*TICKET_CREDIT_FORBIDDEN/);
+  assert.match(pos, /documentoTipo === "TICKET" && input\.credito === true[\s\S]*TICKET_CREDIT_FORBIDDEN/);
   assert.match(pos, /metreado && pagos\.some\(\(pago\) => pago\.formaPago !== "EFECTIVO"\)/);
 });

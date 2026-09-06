@@ -29,6 +29,7 @@ import type {
   AdminCuentasDestino,
   AdminDiferencias,
   AdminPendingSummary,
+  AdminRealtimeBreakdown,
   AdminRealtimeDashboard,
   AgregarRolloBorradorSalidaInput,
   AjusteProveedorInput,
@@ -163,6 +164,7 @@ import type {
   KardexResult,
   ListAdminCortesParams,
   ListAdminCuentaDestinoMovimientosParams,
+  ListAdminRealtimeBreakdownParams,
   ListAuditoriaParams,
   ListAuditoriasInventarioParams,
   ListCajaTiendaVentasParams,
@@ -14411,6 +14413,90 @@ export function useGetAdminRealtimePending<TData = Awaited<ReturnType<typeof get
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetAdminRealtimePendingQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListAdminRealtimeBreakdownUrl = (params: ListAdminRealtimeBreakdownParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/dashboard/realtime/desglose?${stringifiedParams}` : `/api/admin/dashboard/realtime/desglose`
+}
+
+/**
+ * @summary Documentos paginados que componen una tarjeta de Caja en Tiempo Real
+ */
+export const listAdminRealtimeBreakdown = async (params: ListAdminRealtimeBreakdownParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminRealtimeBreakdown> => {
+
+  return customFetch<AdminRealtimeBreakdown>(getListAdminRealtimeBreakdownUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAdminRealtimeBreakdownQueryKey = (params?: ListAdminRealtimeBreakdownParams,) => {
+    return [
+    `/api/admin/dashboard/realtime/desglose`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAdminRealtimeBreakdownQueryOptions = <TData = Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: ListAdminRealtimeBreakdownParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAdminRealtimeBreakdownQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>> = ({ signal }) => listAdminRealtimeBreakdown(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAdminRealtimeBreakdownQueryResult = NonNullable<Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>>
+export type ListAdminRealtimeBreakdownQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Documentos paginados que componen una tarjeta de Caja en Tiempo Real
+ */
+
+export function useListAdminRealtimeBreakdown<TData = Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: ListAdminRealtimeBreakdownParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminRealtimeBreakdown>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAdminRealtimeBreakdownQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

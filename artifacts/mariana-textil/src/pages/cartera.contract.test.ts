@@ -105,7 +105,8 @@ test("credit term UX lives in note creation and ticket Cobros has no credit opti
   assert.match(cobros, /useObtenerProyeccionAutorizacionNota/);
   assert.match(cobros, /useAutorizarNota/);
   assert.doesNotMatch(cobros, /FormaPagoTicket\.CREDITO/);
-  assert.match(cobros, /FormaPagoTicket\.FACTURADO/);
+  assert.doesNotMatch(cobros, /FormaPagoTicket\.FACTURADO/);
+  assert.match(cobros, /: fp,/);
   assert.doesNotMatch(cobros, /USUARIO ADMIN|CONTRASEÑA ADMIN|credencialesAdmin/);
   assert.doesNotMatch(cobros, /setDiasPlazo|credit-term-/);
 });

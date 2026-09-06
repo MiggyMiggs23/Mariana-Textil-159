@@ -7,8 +7,20 @@ export function accountedDocumentPredicate(alias = "t"): string {
   return `(${alias}.estado='VENDIDO' AND ((${alias}.documento_tipo='TICKET' AND ${alias}.cobrado=true) OR (${alias}.documento_tipo='NOTA' AND ${alias}.autorizacion_estado='AUTORIZADA')))`;
 }
 
-export function pendingTicketPredicate(alias = "t"): string {
+export function collectedTicketPredicate(alias = "t"): string {
+  return `(${alias}.estado='VENDIDO' AND ${alias}.documento_tipo='TICKET' AND ${alias}.cobrado=true)`;
+}
+
+export function authorizedCreditPredicate(alias = "t"): string {
+  return `(${alias}.estado='VENDIDO' AND ${alias}.documento_tipo='NOTA' AND ${alias}.autorizacion_estado='AUTORIZADA')`;
+}
+
+export function unpaidTicketPredicate(alias = "t"): string {
   return `(${alias}.estado='VENDIDO' AND ${alias}.documento_tipo='TICKET' AND ${alias}.cobrado=false)`;
+}
+
+export function pendingTicketPredicate(alias = "t"): string {
+  return `(${alias}.estado='VENDIDO' AND ((${alias}.documento_tipo='TICKET' AND ${alias}.cobrado=false) OR (${alias}.documento_tipo='NOTA' AND ${alias}.autorizacion_estado IS DISTINCT FROM 'AUTORIZADA')))`;
 }
 
 /** Caja processing instant used by every financial date range and grouping. */

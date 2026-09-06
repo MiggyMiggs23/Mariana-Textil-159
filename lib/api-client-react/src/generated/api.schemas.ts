@@ -916,6 +916,8 @@ export type AdminPendingSummaryTiendasItem = {
 
 export interface AdminPendingSummary {
   tickets: number;
+  ticketsSinCobrar?: number;
+  notasSinAutorizar?: number;
   importe: string;
   tiendas: AdminPendingSummaryTiendasItem[];
 }
@@ -1003,6 +1005,55 @@ export interface AdminRealtimeDashboard {
   comparativo: AdminRealtimeStore[];
   /** @maxItems 20 */
   ultimosTickets: AdminRealtimeTicket[];
+}
+
+/**
+ * @nullable
+ */
+export type AdminRealtimeBreakdownItemDocumentoTipo = typeof AdminRealtimeBreakdownItemDocumentoTipo[keyof typeof AdminRealtimeBreakdownItemDocumentoTipo] | null;
+
+
+export const AdminRealtimeBreakdownItemDocumentoTipo = {
+  TICKET: 'TICKET',
+  NOTA: 'NOTA',
+} as const;
+
+export interface AdminRealtimeBreakdownItem {
+  id: number;
+  folio: number;
+  hora: string;
+  cliente: string;
+  importe: string;
+  /** @nullable */
+  formaPago: string | null;
+  /** @nullable */
+  facturado: boolean | null;
+  /** @nullable */
+  diasPlazo: number | null;
+  /** @nullable */
+  fechaVencimiento: string | null;
+  /** @nullable */
+  documentoTipo: AdminRealtimeBreakdownItemDocumentoTipo;
+  /** @nullable */
+  minutosEspera: number | null;
+}
+
+export type AdminRealtimeBreakdownConcepto = typeof AdminRealtimeBreakdownConcepto[keyof typeof AdminRealtimeBreakdownConcepto];
+
+
+export const AdminRealtimeBreakdownConcepto = {
+  COBRADO: 'COBRADO',
+  CREDITO: 'CREDITO',
+  PENDIENTE: 'PENDIENTE',
+} as const;
+
+export interface AdminRealtimeBreakdown {
+  concepto: AdminRealtimeBreakdownConcepto;
+  items: AdminRealtimeBreakdownItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+  montoTotal: string;
 }
 
 export interface AdminAlertaTicket {
@@ -2110,7 +2161,7 @@ export interface ClienteCredito {
 export interface PosClienteCreditoDisponible {
   clienteId: number;
   limiteCredito: string;
-  /** Saldo neto del libro mayor más tickets de crédito reservados. */
+  /** Saldo neto del libro mayor de crédito autorizado. */
   saldoComprometido: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
@@ -6424,6 +6475,39 @@ desde?: AnalyticsDesdeParameter;
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
 };
+
+export type ListAdminRealtimeBreakdownParams = {
+concepto: ListAdminRealtimeBreakdownConcepto;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionId?: AnalyticsUbicacionIdParameter;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
+export type ListAdminRealtimeBreakdownConcepto = typeof ListAdminRealtimeBreakdownConcepto[keyof typeof ListAdminRealtimeBreakdownConcepto];
+
+
+export const ListAdminRealtimeBreakdownConcepto = {
+  COBRADO: 'COBRADO',
+  CREDITO: 'CREDITO',
+  PENDIENTE: 'PENDIENTE',
+} as const;
 
 export type ListCajaTiendaVentasParams = {
 /**

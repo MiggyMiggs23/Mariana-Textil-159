@@ -9,7 +9,7 @@
 export interface PosClienteCreditoDisponible {
   clienteId: number;
   limiteCredito: string;
-  /** Saldo neto del libro mayor más tickets de crédito reservados. */
+  /** Saldo neto del libro mayor de crédito autorizado. */
   saldoComprometido: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetAdminRealtimeDashboard,
@@ -17,9 +18,60 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "wouter";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE";
+type BreakdownItem = {
+  id: number;
+  folio: number;
+  hora: string;
+  cliente: string;
+  importe: string;
+  formaPago: string | null;
+  facturado: boolean | null;
+  diasPlazo: number | null;
+  fechaVencimiento: string | null;
+  documentoTipo: "TICKET" | "NOTA" | null;
+  minutosEspera: number | null;
+};
+type Breakdown = {
+  concepto: BreakdownConcept;
+  items: BreakdownItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+  montoTotal: string;
+};
+
+async function fetchBreakdown(
+  concepto: BreakdownConcept,
+  ubicacionId: number | null,
+  page: number,
+): Promise<Breakdown> {
+  const params = new URLSearchParams({ concepto, page: String(page), pageSize: "50" });
+  if (ubicacionId) params.set("ubicacionId", String(ubicacionId));
+  const response = await fetch(`/api/admin/dashboard/realtime/desglose?${params}`, {
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("No se pudo cargar el desglose.");
+  return response.json();
+}
 
 export default function CajaTiempoReal() {
   const { selectedLocationId } = useLocationScope();
+  const [breakdownConcept, setBreakdownConcept] = useState<BreakdownConcept | null>(null);
+  const [breakdownPage, setBreakdownPage] = useState(1);
+  const breakdown = useQuery({
+    queryKey: ["admin-realtime-breakdown", breakdownConcept, selectedLocationId, breakdownPage],
+    queryFn: () => fetchBreakdown(breakdownConcept!, selectedLocationId, breakdownPage),
+    enabled: breakdownConcept !== null,
+  });
 
   const {
     data: dashboard,
@@ -66,6 +118,16 @@ export default function CajaTiempoReal() {
   const totals = dashboard?.totales;
   const mergedPendingAmount = pending?.importe ?? totals?.pendiente ?? "0";
   const mergedPendingCount = pending?.tickets ?? totals?.ticketsPendientes ?? 0;
+  const pendingTickets = pending?.ticketsSinCobrar
+    ?? dashboard?.pendientes.ticketsSinCobrar
+    ?? mergedPendingCount;
+  const pendingNotes = pending?.notasSinAutorizar
+    ?? dashboard?.pendientes.notasSinAutorizar
+    ?? 0;
+  const openBreakdown = (concepto: BreakdownConcept) => {
+    setBreakdownPage(1);
+    setBreakdownConcept(concepto);
+  };
 
   // Merge tiendas with pending per store
   const mergedStores = (dashboard?.tiendas || []).map((store) => {
@@ -134,7 +196,13 @@ export default function CajaTiempoReal() {
                 </CardContent>
               </Card>
 
-              <Card className="border-green-500/20 bg-green-50/30 dark:bg-green-950/10 shadow-sm">
+              <Card
+                className="border-green-500/20 bg-green-50/30 dark:bg-green-950/10 shadow-sm cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("COBRADO")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("COBRADO")}
+              >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-semibold text-green-700 dark:text-green-400 uppercase">Cobrado (Caja)</CardTitle>
                   <Banknote className="h-4 w-4 text-green-600" />
@@ -149,25 +217,14 @@ export default function CajaTiempoReal() {
                 </CardContent>
               </Card>
 
-              <Card className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}>
-                {mergedPendingCount > 0 && (
-                  <div className="absolute top-0 right-0 w-2 h-full bg-amber-500/80 animate-pulse" />
-                )}
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-amber-700 dark:text-amber-400 uppercase">Pendiente de Cobro</CardTitle>
-                  <Clock className="h-4 w-4 text-amber-600" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-amber-700 dark:text-amber-400">
-                    {formatNumber(mergedPendingAmount, { kind: "money" })}
-                  </div>
-                  <p className="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1 font-bold">
-                    {formatNumber(mergedPendingCount, { kind: "count" })} tickets en espera
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-sidebar/10 shadow-sm" data-testid="realtime-credit-card">
+              <Card
+                className="border-sidebar/10 shadow-sm cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                data-testid="realtime-credit-card"
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("CREDITO")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("CREDITO")}
+              >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas a crédito</CardTitle>
                   <CreditCard className="h-4 w-4 text-primary" />
@@ -193,6 +250,33 @@ export default function CajaTiempoReal() {
                   </div>
                   <p className="text-xs text-muted-foreground mt-1 font-medium">
                     {totals.margenPorcentaje == null ? "Costo pendiente" : <>Margen {formatNumber(totals.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</>}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card
+                className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("PENDIENTE")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("PENDIENTE")}
+              >
+                {mergedPendingCount > 0 && (
+                  <div className="absolute top-0 right-0 w-2 h-full bg-amber-500/80 animate-pulse" />
+                )}
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-semibold text-amber-700 dark:text-amber-400 uppercase">
+                    Ventas pendientes de cobro o autorización
+                  </CardTitle>
+                  <Clock className="h-4 w-4 text-amber-600" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-black text-amber-700 dark:text-amber-400">
+                    {formatNumber(mergedPendingAmount, { kind: "money" })}
+                  </div>
+                  <p className="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1 font-bold">
+                    {formatNumber(pendingTickets, { kind: "count" })} tickets ·{" "}
+                    {formatNumber(pendingNotes, { kind: "count" })} notas
                   </p>
                 </CardContent>
               </Card>
@@ -416,6 +500,85 @@ export default function CajaTiempoReal() {
           </div>
         ) : null}
       </div>
+      <Dialog
+        open={breakdownConcept !== null}
+        onOpenChange={(open) => !open && setBreakdownConcept(null)}
+      >
+        <DialogContent className="w-[calc(100vw-1rem)] max-w-6xl max-h-[90vh] overflow-hidden p-4 sm:p-6">
+          <DialogHeader>
+            <DialogTitle>
+              {breakdownConcept === "COBRADO"
+                ? "Cobrado (Caja)"
+                : breakdownConcept === "CREDITO"
+                  ? "Ventas a crédito"
+                  : "Ventas pendientes de cobro o autorización"}
+            </DialogTitle>
+            <DialogDescription>
+              Documentos que componen la cifra de la tarjeta.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="overflow-auto max-h-[65vh]">
+            {breakdown.isLoading ? (
+              <div className="flex justify-center p-10"><Loader2 className="h-6 w-6 animate-spin" /></div>
+            ) : breakdown.isError ? (
+              <p className="p-6 text-center text-destructive">No se pudo cargar el desglose.</p>
+            ) : (
+              <Table className="min-w-[760px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Folio</TableHead>
+                    <TableHead>Hora</TableHead>
+                    <TableHead>Cliente</TableHead>
+                    <TableHead className="text-right">Importe</TableHead>
+                    {breakdownConcept === "COBRADO" && <><TableHead>Forma de pago</TableHead><TableHead>Facturada</TableHead></>}
+                    {breakdownConcept === "CREDITO" && <><TableHead>Plazo</TableHead><TableHead>Vencimiento</TableHead></>}
+                    {breakdownConcept === "PENDIENTE" && <><TableHead>Documento</TableHead><TableHead>Espera</TableHead></>}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {breakdown.data?.items.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Link href={`/tickets/${item.id}`} className="font-semibold text-primary underline-offset-4 hover:underline">
+                          {formatNumber(item.folio, { kind: "identifier" })}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{format(parseISO(item.hora), "HH:mm")}</TableCell>
+                      <TableCell>{item.cliente}</TableCell>
+                      <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
+                      {breakdownConcept === "COBRADO" && <><TableCell>{item.formaPago}</TableCell><TableCell>{item.facturado ? "Sí" : "No"}</TableCell></>}
+                      {breakdownConcept === "CREDITO" && <><TableCell>{item.diasPlazo} días</TableCell><TableCell>{item.fechaVencimiento}</TableCell></>}
+                      {breakdownConcept === "PENDIENTE" && <><TableCell>{item.documentoTipo === "NOTA" ? "Nota" : "Ticket"}</TableCell><TableCell>{item.minutosEspera} min</TableCell></>}
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3} className="font-semibold">Total ({breakdown.data?.total ?? 0})</TableCell>
+                    <TableCell className="text-right font-mono font-bold">
+                      {formatNumber(breakdown.data?.montoTotal ?? "0", { kind: "money" })}
+                    </TableCell>
+                    <TableCell colSpan={2} />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            )}
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <Button variant="outline" disabled={breakdownPage <= 1 || breakdown.isFetching} onClick={() => setBreakdownPage((page) => page - 1)}>
+              Anterior
+            </Button>
+            <span className="text-sm text-muted-foreground">Página {breakdownPage}</span>
+            <Button
+              variant="outline"
+              disabled={!breakdown.data || breakdownPage * breakdown.data.pageSize >= breakdown.data.total || breakdown.isFetching}
+              onClick={() => setBreakdownPage((page) => page + 1)}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }

@@ -90,7 +90,7 @@ test("realtime collected amount and counts use processed non-credit payment evid
   assert.match(summary, /f\.estado='VENDIDO' AND f\.cobrado/);
   assert.match(summary, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
   assert.match(summary, /COUNT\(p\.ticket_id\)::int "ticketsCobrados"/);
-  assert.match(stores, /t\.estado='VENDIDO' AND t\.cobrado/);
+  assert.match(stores, /collectedTicketPredicate\("t"\)/);
   assert.match(stores, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
   assert.match(stores, /COALESCE\(SUM\(p\.cobrado\),0\)::text cobrado/);
   assert.match(stores, /COUNT\(p\.id\)::int "ticketsCobrados"/);

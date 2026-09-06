@@ -9,6 +9,8 @@ import type { AdminPendingSummaryTiendasItem } from './adminPendingSummaryTienda
 
 export interface AdminPendingSummary {
   tickets: number;
+  ticketsSinCobrar?: number;
+  notasSinAutorizar?: number;
   importe: string;
   tiendas: AdminPendingSummaryTiendasItem[];
 }
