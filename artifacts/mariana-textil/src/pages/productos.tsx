@@ -167,8 +167,14 @@ export default function Productos() {
     if (searchTerm.length >= 2) {
       setExpandedTelas(prev => {
         const next = new Set(prev);
-        grouped.forEach(([tela]) => next.add(tela));
-        return next;
+        let changed = false;
+        grouped.forEach(([tela]) => {
+          if (!next.has(tela)) {
+            next.add(tela);
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
       });
     }
   }, [searchTerm, grouped]);

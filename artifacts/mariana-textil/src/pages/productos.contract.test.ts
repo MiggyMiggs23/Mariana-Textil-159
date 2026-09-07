@@ -32,3 +32,8 @@ test("precio sugerido opcional conserva null, cero y la presentación requerida"
   assert.match(source, /precio_sugerido, <\/>\}notas/);
   assert.doesNotMatch(source, /Opcional:[^)]*sku/);
 });
+
+test("la expansión automática no reescribe un Set que ya contiene los mismos grupos", async () => {
+  const source = await readFile(new URL("./productos.tsx", import.meta.url), "utf8");
+  assert.match(source, /let changed = false;[\s\S]*return changed \? next : prev;/);
+});

@@ -41,6 +41,36 @@ function objectState(state: unknown): Record<string, unknown> {
     : {};
 }
 
+export function historyValueEqual(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true;
+  if (left instanceof Date && right instanceof Date) {
+    return left.getTime() === right.getTime();
+  }
+  if (left instanceof Set && right instanceof Set) {
+    return left.size === right.size &&
+      Array.from(left).every((value) => right.has(value));
+  }
+  if (Array.isArray(left) && Array.isArray(right)) {
+    return left.length === right.length &&
+      left.every((value, index) => historyValueEqual(value, right[index]));
+  }
+  if (
+    left != null &&
+    right != null &&
+    typeof left === "object" &&
+    typeof right === "object"
+  ) {
+    const leftEntries = Object.entries(left);
+    const rightObject = right as Record<string, unknown>;
+    return leftEntries.length === Object.keys(rightObject).length &&
+      leftEntries.every(([key, value]) =>
+        Object.prototype.hasOwnProperty.call(rightObject, key) &&
+        historyValueEqual(value, rightObject[key])
+      );
+  }
+  return false;
+}
+
 function navigationEntry(state: unknown): NavigationEntryState | null {
   const entry = objectState(state)[NAVIGATION_STATE_KEY];
   if (
@@ -213,12 +243,29 @@ export function saveCurrentScrollPosition() {
   const current = navigationEntry(window.history.state);
   if (!tracker || current?.sessionId !== tracker.sessionId) return;
 
+  const scrollContainers = readScrollContainers();
+  const currentContainers = current.scrollContainers ?? {};
+  const containerKeys = Object.keys(scrollContainers);
+  const scrollUnchanged =
+    Math.abs(current.scrollX - window.scrollX) <= 1 &&
+    Math.abs(current.scrollY - window.scrollY) <= 1 &&
+    containerKeys.length === Object.keys(currentContainers).length &&
+    containerKeys.every((key) => {
+      const previous = currentContainers[key];
+      const next = scrollContainers[key];
+      return previous != null &&
+        next != null &&
+        Math.abs(previous.x - next.x) <= 1 &&
+        Math.abs(previous.y - next.y) <= 1;
+    });
+  if (scrollUnchanged) return;
+
   tracker.originalReplaceState(
     trackedState(window.history.state, {
       ...current,
       scrollX: window.scrollX,
       scrollY: window.scrollY,
-      scrollContainers: readScrollContainers(),
+      scrollContainers,
     }),
     "",
   );
@@ -306,6 +353,12 @@ function writePageState<T>(key: string, value: T) {
   if (key.startsWith("global.")) globalStateCache.set(key, value);
   const state = objectState(window.history.state);
   const pageState = objectState(state[PAGE_STATE_KEY]);
+  if (
+    Object.prototype.hasOwnProperty.call(pageState, key) &&
+    historyValueEqual(pageState[key], value)
+  ) {
+    return;
+  }
   window.history.replaceState(
     {
       ...state,
@@ -367,6 +420,7 @@ export function useHistoryEntryState<T>(
           typeof nextValue === "function"
             ? (nextValue as (current: T) => T)(currentValue)
             : nextValue;
+        if (historyValueEqual(currentValue, resolved)) return currentValue;
         writePageState(key, resolved);
         return resolved;
       });

@@ -35,3 +35,4 @@
 - [Conciliación de tarjetas y desgloses](dashboard-breakdown-reconciliation.md) — cifra y detalle deben compartir predicado, fecha y fuente financiera; Crédito conserva el ledger.
 - [Enums históricos de solo lectura](historical-read-enums.md) — retirar una opción seleccionable no permite retirarla de respuestas que aún leen registros antiguos.
 - [Enteros OpenAPI con Orval y Zod 3](openapi-orval-zod3-integers.md) — `type: integer` genera `zod.int()` incompatible; validar enteros en el servidor.
+- [Límite de history en Safari](safari-history-write-throttling.md) — deduplicar estado y scroll; Safari bloquea ráfagas de `replaceState` que Chromium tolera.

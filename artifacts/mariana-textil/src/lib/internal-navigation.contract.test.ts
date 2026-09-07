@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   appHref,
   hasSafeInternalPreviousEntry,
+  historyValueEqual,
   stateForNewEntry,
 } from "./internal-navigation";
 
@@ -55,6 +56,17 @@ test("new entries inherit the latest global session state", () => {
     "global.selected-location": 2,
     "products.search": "AZUL",
   });
+});
+
+test("equivalent page-state values do not require another history write", () => {
+  assert.equal(historyValueEqual(new Set(["Lino", "Mascotín"]), new Set(["Mascotín", "Lino"])), true);
+  assert.equal(historyValueEqual({ page: 1, filters: ["ACTIVO"] }, { page: 1, filters: ["ACTIVO"] }), true);
+  assert.equal(historyValueEqual(new Set(["Lino"]), new Set(["Mascotín"])), false);
+});
+
+test("scroll persistence skips replaceState when every position is unchanged", () => {
+  const source = readFileSync(new URL("./internal-navigation.tsx", import.meta.url), "utf8");
+  assert.match(source, /const scrollUnchanged =[\s\S]*if \(scrollUnchanged\) return;/);
 });
 
 test("all requested detail pages use the shared back link and fixed fallback", () => {
