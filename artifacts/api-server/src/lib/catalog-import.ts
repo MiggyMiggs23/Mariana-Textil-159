@@ -208,9 +208,12 @@ export function buildPreview(input: PreviewInput): PreviewRow[] {
       unidadRaw &&
       unidadRaw !== "METRO" &&
       unidadRaw !== "KILO" &&
-      unidadRaw !== "BOLSA"
+      unidadRaw !== "BOLSA" &&
+      unidadRaw !== "PIEZA"
     ) {
-      errors.push(`unidad inválida: "${unidadRaw}" (use METRO, KILO o BOLSA)`);
+      errors.push(
+        `unidad inválida: "${unidadRaw}" (use METRO, KILO, BOLSA o PIEZA)`,
+      );
     }
     const precioNormalizado = precioRaw.replace(",", ".");
     const precioValido =

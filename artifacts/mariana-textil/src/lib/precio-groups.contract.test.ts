@@ -34,6 +34,8 @@ test("groups trimmed case-insensitive telas and preserves first spelling", () =>
 test("bulk selectability follows mode and fragmented-sale constraints", () => {
   assert.equal(isBulkSelectable({ unidad: "KILO", seVendePorMetro: true }, "ROLLO"), true);
   assert.equal(isBulkSelectable({ unidad: "KILO", seVendePorMetro: true }, "MAYOREO"), false);
+  assert.equal(isBulkSelectable({ unidad: "PIEZA", seVendePorMetro: true }, "MAYOREO"), false);
+  assert.equal(isBulkSelectable({ unidad: "PIEZA", seVendePorMetro: true }, "MENUDEO"), false);
   assert.equal(isBulkSelectable({ unidad: "METRO", seVendePorMetro: false }, "MENUDEO"), false);
   assert.equal(isBulkSelectable({ unidad: "METRO", seVendePorMetro: true }, "MENUDEO"), true);
 });

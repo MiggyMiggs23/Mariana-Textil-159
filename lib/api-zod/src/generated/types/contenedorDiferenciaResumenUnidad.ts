@@ -13,4 +13,5 @@ export const ContenedorDiferenciaResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;

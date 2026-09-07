@@ -36,6 +36,7 @@ import {
   consumirBolsasFifo,
   DOCUMENTO_TICKET_BOLSA_METREADO,
   DOCUMENTO_TICKET_BOLSA_NORMAL,
+  DOCUMENTO_TICKET_PIEZA_NORMAL,
   InventarioError,
   lockInventoryPairs,
   revertirMovimiento,
@@ -152,7 +153,7 @@ function decimalMoney(cents: number): string {
 
 /** Pure aggregation behind the daily sheet; inputs must already be scoped to one valid paid session. */
 export function aggregateHojaVentasDia(
-  lineas: Array<{ productoId: number; sku: string; tela: string; color: string; tipo: "NORMAL" | "METREADO"; unidad: "METRO" | "KILO" | "BOLSA"; cantidad?: string; cantidadFisica?: string; cantidadRollos?: number; importe: string }>,
+  lineas: Array<{ productoId: number; sku: string; tela: string; color: string; tipo: "NORMAL" | "METREADO"; unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA"; cantidad?: string; cantidadFisica?: string; cantidadRollos?: number; importe: string }>,
   tickets: Array<{ subtotal: string; iva: string; total: string; facturado: boolean }>,
 ) {
   const grouped = new Map<string, { linea: typeof lineas[number]; fisica: number; rollos: number; importe: number }>();
@@ -183,6 +184,7 @@ export function aggregateHojaVentasDia(
     totalMetros: String(all.filter((item) => item.linea.unidad === "METRO").reduce((total, item) => total + item.fisica, 0)),
     totalKilos: String(all.filter((item) => item.linea.unidad === "KILO").reduce((total, item) => total + item.fisica, 0)),
     totalBolsas: String(all.filter((item) => item.linea.unidad === "BOLSA").reduce((total, item) => total + item.fisica, 0)),
+    totalPiezas: String(all.filter((item) => item.linea.unidad === "PIEZA").reduce((total, item) => total + item.fisica, 0)),
     subtotal: decimalMoney(tickets.reduce((total, ticket) => total + money(ticket.subtotal), 0)),
     ivaFacturado: decimalMoney(tickets.filter((ticket) => ticket.facturado).reduce((total, ticket) => total + money(ticket.iva), 0)),
     totalGeneral: decimalMoney(tickets.reduce((total, ticket) => total + money(ticket.total), 0)),
@@ -715,7 +717,7 @@ export async function crearTicket(
     })),
   );
 
-  // NORMAL lines identify one physical roll/box. METREADO BOLSA inventory is
+  // NORMAL lines identify one physical roll/box/piece record. METREADO BOLSA inventory is
   // allocated FIFO later and deliberately remains absent from ticket_linea.
   const rolloIds = input.lineas.flatMap((linea) =>
     (linea.tipo ?? input.tipo) === "NORMAL" && linea.rolloId != null
@@ -818,10 +820,13 @@ export async function crearTicket(
         "SUGGESTED_PRICE_NOT_CONFIGURED",
       );
     }
-    if (producto.unidad === "BOLSA" && !Number.isInteger(Number(cantidad))) {
+    if (
+      (producto.unidad === "BOLSA" || producto.unidad === "PIEZA") &&
+      !Number.isInteger(Number(cantidad))
+    ) {
       throw new PosError(
-        "La cantidad de bolsas debe ser un número entero.",
-        "BOLSA_INTEGER_QUANTITY_REQUIRED",
+        `La cantidad de ${producto.unidad === "PIEZA" ? "piezas" : "bolsas"} debe ser un número entero.`,
+        `${producto.unidad}_INTEGER_QUANTITY_REQUIRED`,
       );
     }
     if (tipo === "NORMAL" && linea.rolloId == null) {
@@ -999,9 +1004,12 @@ export async function crearTicket(
         documentoTipo:
           producto.unidad === "BOLSA"
             ? DOCUMENTO_TICKET_BOLSA_NORMAL
+            : producto.unidad === "PIEZA"
+              ? DOCUMENTO_TICKET_PIEZA_NORMAL
             : "TICKET",
         documentoId: String(ticket!.id),
-        vaciarCantidadActual: producto.unidad === "BOLSA",
+        vaciarCantidadActual:
+          producto.unidad === "BOLSA" || producto.unidad === "PIEZA",
       });
     }
   }
@@ -1124,6 +1132,10 @@ export async function cancelarTicket(
           eq(
             movimientosTable.documentoTipo,
             DOCUMENTO_TICKET_BOLSA_METREADO,
+          ),
+          eq(
+            movimientosTable.documentoTipo,
+            DOCUMENTO_TICKET_PIEZA_NORMAL,
           ),
         ),
         eq(movimientosTable.documentoId, String(ticket.id)),

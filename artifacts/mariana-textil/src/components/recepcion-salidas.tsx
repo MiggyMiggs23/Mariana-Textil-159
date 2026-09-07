@@ -62,6 +62,7 @@ export function RecepcionSalidas() {
     query: { enabled: destinoId != null, queryKey: ['pisosLocation', destinoId ?? 0] }
   });
   const pisosActivos = pisos?.filter(p => p.activo) || [];
+  const totalPiezas = detalle.data?.totalPiezas;
 
   const receive = useRecibirSalida({
     mutation: {
@@ -165,6 +166,12 @@ export function RecepcionSalidas() {
               <Summary label={formatUnit("KILO")} value={formatNumber(detalle.data.totalKilos ?? "0", { kind: "quantity" })} />
               {Number(detalle.data.totalBolsas ?? 0) > 0 && (
                 <Summary label={formatUnit("BOLSA")} value={formatNumber(detalle.data.totalBolsas ?? "0", { kind: "quantity" })} />
+              )}
+              {Number(totalPiezas ?? 0) > 0 && (
+                <Summary
+                  label={formatUnit("PIEZA")}
+                  value={formatNumber(totalPiezas, { kind: "quantity" })}
+                />
               )}
               <Summary label="Enviado por" value={detalle.data.nombreEnviadoPor || "—"} />
               <Summary

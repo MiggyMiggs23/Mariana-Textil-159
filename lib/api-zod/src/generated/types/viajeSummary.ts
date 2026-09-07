@@ -20,5 +20,6 @@ export interface ViajeSummary {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
   destinos: string[];
 }

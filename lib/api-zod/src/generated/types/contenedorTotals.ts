@@ -12,4 +12,5 @@ export interface ContenedorTotals {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
 }

@@ -43,8 +43,8 @@ const visibleUnitSurfaces = [
 
 test("unit labels have the prescribed visible values", () => {
   assert.deepEqual(
-    ["METRO", "KILO", "BOLSA"].map(formatUnit),
-    ["Mts.", "Kg.", "Bolsas"],
+    ["METRO", "KILO", "BOLSA", "PIEZA"].map(formatUnit),
+    ["Mts.", "Kg.", "Bolsas", "Pzas."],
   );
   assert.equal(formatPackageQuantityLabel("BOLSA"), "BOLSAS POR CAJA");
 });
@@ -91,4 +91,13 @@ test("Task 62 quantity surfaces render bag totals separately when present", asyn
     assert.match(source, /totalBolsas|item\.bolsas/, `${path} must render bag totals`);
     assert.match(source, /formatUnit\("BOLSA"\)/, `${path} must label bag totals with the shared formatter`);
   }
+});
+
+test("Task PIEZA reception summary uses the shared formatter", async () => {
+  const source = await readFile(
+    new URL("artifacts/mariana-textil/src/components/recepcion-salidas.tsx", root),
+    "utf8",
+  );
+  assert.match(source, /totalPiezas/, "reception must support piece totals");
+  assert.match(source, /formatUnit\("PIEZA"\)/, "reception must label pieces with the shared formatter");
 });

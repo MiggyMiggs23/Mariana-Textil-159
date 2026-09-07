@@ -13,4 +13,5 @@ export const ContenedorCatalogoProductoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;

@@ -46,7 +46,7 @@ export async function listarHistorialComprasProveedores(options: {
     producto_id: number;
     producto: string;
     color: string;
-    unidad: "METRO" | "KILO" | "BOLSA";
+    unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
     proveedor_id: number;
     proveedor: string;
     ubicacion_id: number;

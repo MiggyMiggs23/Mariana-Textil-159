@@ -52,7 +52,7 @@ test("POST, PATCH e importación preservan texto humano y PATCH reasigna SKU", a
   assert.match(route, /updates\.sku = generateSku/);
 });
 
-test("BOLSA está en contrato, importación y núcleo POS sin mezclarse con KILO", async () => {
+test("BOLSA y PIEZA están en contrato e importación", async () => {
   const preview = buildPreview({
     headers: ["tela", "color", "unidad", "precio_sugerido"],
     rows: [["Empaque", "Transparente", "bolsa", "12.50"]],
@@ -61,6 +61,14 @@ test("BOLSA está en contrato, importación y núcleo POS sin mezclarse con KILO
   });
   assert.equal(preview[0]?.estado, "NUEVO");
   assert.equal(preview[0]?.unidad, "BOLSA");
+  const pieza = buildPreview({
+    headers: ["tela", "color", "unidad"],
+    rows: [["Botón", "Negro", "pIeZa"]],
+    existingVariants: new Set(),
+    existingSkus: new Set(),
+  });
+  assert.equal(pieza[0]?.estado, "NUEVO");
+  assert.equal(pieza[0]?.unidad, "PIEZA");
 
   const [spec, enums, pos, inventory] = await Promise.all([
     readFile(
@@ -74,12 +82,33 @@ test("BOLSA está en contrato, importación y núcleo POS sin mezclarse con KILO
     readFile(new URL("./lib/pos.ts", import.meta.url), "utf8"),
     readFile(new URL("./routes/inventario.ts", import.meta.url), "utf8"),
   ]);
-  assert.match(spec, /enum: \[METRO, KILO, BOLSA\]/);
+  assert.match(spec, /enum: \[METRO, KILO, BOLSA, PIEZA\]/);
   assert.match(spec, /totalBolsas/);
-  assert.match(enums, /"METRO",\s*"KILO",\s*"BOLSA"/);
+  for (const schema of [
+    "ContenedorTotals",
+    "ContenedorResumenKpis",
+    "ContenedorProveedorResumen",
+    "ContenedorPeriodoResumen",
+    "ContenedorGrupoResumen",
+    "Dashboard",
+    "KardexResumen",
+    "EntradaPendienteCosto",
+    "ExistenciaAgrupada",
+    "SalidaResumen",
+    "HojaVentasDia",
+    "ViajeSummary",
+  ]) {
+    assert.match(
+      spec,
+      new RegExp(`${schema}:[\\s\\S]*?(?:piezas:|totalPiezas:|piezasPorLlegar:)`),
+      `${schema} debe exponer el total de piezas que entrega el servidor`,
+    );
+  }
+  assert.match(enums, /"METRO",\s*"KILO",\s*"BOLSA",\s*"PIEZA"/);
   assert.match(pos, /producto\.unidad !== "BOLSA"/);
   assert.match(pos, /item\.linea\.unidad === "BOLSA"/);
-  assert.match(pos, /BOLSA_INTEGER_QUANTITY_REQUIRED/);
+  assert.match(pos, /\$\{producto\.unidad\}_INTEGER_QUANTITY_REQUIRED/);
+  assert.match(pos, /producto\.unidad === "BOLSA" \|\| producto\.unidad === "PIEZA"/);
   assert.match(
     pos,
     /suggestedMeteredPrice\(Number\(cantidad\), producto, producto\.unidad\)/,
@@ -90,7 +119,8 @@ test("BOLSA está en contrato, importación y núcleo POS sin mezclarse con KILO
   );
   assert.match(inventory, /WHERE pr\.unidad = 'BOLSA'/);
   assert.match(inventory, /unidad === "KILO"/);
-  assert.match(inventory, /cantidad de bolsas por caja/);
+  assert.match(inventory, /unidad === "BOLSA" \|\|[\s\S]*unidad === "PIEZA"/);
+  assert.match(inventory, /\$\{productoMap\.get\(linea\.productoId\)\?\.unidad\}_INTEGER_QUANTITY_REQUIRED/);
 });
 
 test("la importación acepta precio ausente y conserva cero como precio real", () => {
@@ -130,7 +160,7 @@ test("la previsualización rechaza precios inválidos y unidades ausentes o desc
       ["Manta", "Rojo", "metro", "gratis"],
       ["Manta", "Azul", "metro", "-1"],
       ["Manta", "Verde", "", ""],
-      ["Manta", "Negro", "pieza", ""],
+      ["Manta", "Negro", "desconocida", ""],
     ],
     existingVariants: new Set(),
     existingSkus: new Set(),
@@ -139,7 +169,7 @@ test("la previsualización rechaza precios inválidos y unidades ausentes o desc
   assert.match(preview[0]?.error ?? "", /precio inválido: "gratis"/);
   assert.match(preview[1]?.error ?? "", /precio inválido: "-1"/);
   assert.match(preview[2]?.error ?? "", /unidad vacía/);
-  assert.match(preview[3]?.error ?? "", /unidad inválida: "PIEZA"/);
+  assert.match(preview[3]?.error ?? "", /unidad inválida: "DESCONOCIDA"/);
   assert.ok(preview.every((row) => row.estado === "ERROR"));
 });
 

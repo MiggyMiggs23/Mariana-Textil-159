@@ -287,6 +287,10 @@ export async function buildSalidaDetail(
     .filter((rollo) => rollo.unidad === "BOLSA")
     .reduce((sum, rollo) => sum + Number(rollo.cantidadEnviada), 0)
     .toFixed(3);
+  const totalPiezas = rollos
+    .filter((rollo) => rollo.unidad === "PIEZA")
+    .reduce((sum, rollo) => sum + Number(rollo.cantidadEnviada), 0)
+    .toFixed(3);
 
   return {
     id: salida.id,
@@ -327,6 +331,7 @@ export async function buildSalidaDetail(
     totalMetros,
     totalKilos,
     totalBolsas,
+    totalPiezas,
     usuarioId: salida.usuarioSolicitaId ?? null,
     nombreUsuario: users.get(salida.usuarioSolicitaId ?? 0) ?? null,
     observaciones: salida.notaSolicitud ?? null,

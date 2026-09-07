@@ -179,6 +179,9 @@ export default function PreciosList() {
   };
 
   const setVentaPorMetro = (product: PrecioProducto, checked: boolean) => {
+    if (product.unidad === UnidadProducto.KILO || product.unidad === UnidadProducto.PIEZA) {
+      return;
+    }
     const saleLabel =
       product.unidad === UnidadProducto.BOLSA
         ? "venta de bolsas sueltas"
@@ -257,6 +260,7 @@ export default function PreciosList() {
                     <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
                     <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
                     <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
+                    <SelectItem value={UnidadProducto.PIEZA}>{formatUnit(UnidadProducto.PIEZA)}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -507,8 +511,8 @@ export default function PreciosList() {
                                       </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      {precio.unidad === UnidadProducto.KILO
-                                        ? "Los productos por kilo no admiten este modo"
+                                      {precio.unidad === UnidadProducto.KILO || precio.unidad === UnidadProducto.PIEZA
+                                        ? `Los productos por ${precio.unidad === UnidadProducto.PIEZA ? "pieza" : "kilo"} no admiten este modo`
                                         : "Hay que encender la venta fraccionada primero"}
                                     </TooltipContent>
                                   </Tooltip>
@@ -531,9 +535,14 @@ export default function PreciosList() {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Switch
-                              checked={precio.seVendePorMetro}
+                              checked={
+                                precio.unidad === UnidadProducto.KILO || precio.unidad === UnidadProducto.PIEZA
+                                  ? false
+                                  : precio.seVendePorMetro
+                              }
                               disabled={
                                 precio.unidad === UnidadProducto.KILO ||
+                                precio.unidad === UnidadProducto.PIEZA ||
                                 (updateVentaPorMetro.isPending &&
                                   updateVentaPorMetro.variables?.id === precio.id)
                               }
@@ -545,7 +554,7 @@ export default function PreciosList() {
                               className="scale-75 origin-left"
                             />
                             <span className="text-[11px] font-medium text-muted-foreground">
-                              {precio.unidad === UnidadProducto.KILO
+                              {precio.unidad === UnidadProducto.KILO || precio.unidad === UnidadProducto.PIEZA
                                 ? formatUnit(precio.unidad)
                                 : precio.seVendePorMetro
                                   ? "Sí"

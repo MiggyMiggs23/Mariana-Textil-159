@@ -30,6 +30,7 @@ export interface SalidaResumen {
   totalMetros?: string;
   totalKilos?: string;
   totalBolsas?: string;
+  totalPiezas?: string;
   /** @nullable */
   usuarioId?: number | null;
   /** @nullable */

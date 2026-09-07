@@ -450,20 +450,20 @@ export type CrearRolloResult = {
   movimiento: typeof movimientosTable.$inferSelect | null;
 };
 
-function assertWholeBagQuantity(
+function assertWholeDiscreteQuantity(
   unidad: string,
   cantidad: string,
   allowZero = false,
 ): void {
-  if (unidad !== "BOLSA") return;
+  if (unidad !== "BOLSA" && unidad !== "PIEZA") return;
   const value = Number(cantidad);
   if (
     !Number.isSafeInteger(value) ||
     (allowZero ? value < 0 : value <= 0)
   ) {
     throw new InventarioError(
-      `La cantidad de bolsas debe ser un número entero ${allowZero ? "no negativo" : "mayor a cero"}.`,
-      "BOLSA_INTEGER_QUANTITY_REQUIRED",
+      `La cantidad de ${unidad === "PIEZA" ? "piezas" : "bolsas"} debe ser un número entero ${allowZero ? "no negativo" : "mayor a cero"}.`,
+      `${unidad}_INTEGER_QUANTITY_REQUIRED`,
     );
   }
 }
@@ -510,7 +510,7 @@ export async function crearRollo(
   if (!producto) {
     throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
   }
-  assertWholeBagQuantity(producto.unidad, input.cantidadInicial);
+  assertWholeDiscreteQuantity(producto.unidad, input.cantidadInicial);
 
   const [serie] = await reserveSeries(tx, 1);
   const estado: EstadoRollo = input.estado ?? "PROGRAMADO";
@@ -748,7 +748,7 @@ export async function crearEntrada(
       ubicacionId: input.ubicacionId,
     })),
   );
-  // BOLSA is an indivisible unit. Enforce this in the transactional engine as
+  // BOLSA and PIEZA are indivisible units. Enforce this in the transactional engine as
   // well as at the route boundary so every caller preserves the inventory
   // invariant before an entrada, roll, or movement can be persisted.
   const productUnits = await tx
@@ -765,12 +765,13 @@ export async function crearEntrada(
   );
   for (const linea of input.lineas) {
     if (
-      unitByProductId.get(linea.productoId) === "BOLSA" &&
+      (unitByProductId.get(linea.productoId) === "BOLSA" ||
+        unitByProductId.get(linea.productoId) === "PIEZA") &&
       linea.cantidades.some((cantidad) => !Number.isInteger(Number(cantidad)))
     ) {
       throw new InventarioError(
-        "La cantidad de bolsas por caja debe ser un número entero.",
-        "BOLSA_INTEGER_QUANTITY_REQUIRED",
+        `La cantidad de ${unitByProductId.get(linea.productoId) === "PIEZA" ? "piezas" : "bolsas"} por registro debe ser un número entero.`,
+        `${unitByProductId.get(linea.productoId)}_INTEGER_QUANTITY_REQUIRED`,
       );
     }
   }
@@ -1294,7 +1295,7 @@ export async function activarRollo(
   if (!producto) {
     throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
   }
-  assertWholeBagQuantity(producto.unidad, input.cantidadReal);
+  assertWholeDiscreteQuantity(producto.unidad, input.cantidadReal);
 
   if (!isValidUnitCost(rollo.costoUnitario)) {
     throw new InventarioError(
@@ -1768,12 +1769,13 @@ export type VenderRolloInput = {
   uuidCliente?: string | null;
   documentoTipo?: string | null;
   documentoId?: string | null;
-  /** BOLSA boxes physically become empty when sold whole. Legacy rolls do not. */
+  /** Discrete BOLSA/PIEZA records physically become empty when sold whole. */
   vaciarCantidadActual?: boolean;
 };
 
 export const DOCUMENTO_TICKET_BOLSA_NORMAL = "TICKET_BOLSA_NORMAL";
 export const DOCUMENTO_TICKET_BOLSA_METREADO = "TICKET_BOLSA_METREADO";
+export const DOCUMENTO_TICKET_PIEZA_NORMAL = "TICKET_PIEZA_NORMAL";
 
 /**
  * DISPONIBLE → VENDIDO. Records VENTA (negative).
@@ -2002,7 +2004,7 @@ export async function ajustarRollo(
     throw new InventarioError("Producto no encontrado.", "PRODUCTO_NOT_FOUND");
   }
   if (input.cantidadNueva != null) {
-    assertWholeBagQuantity(producto.unidad, input.cantidadNueva, true);
+    assertWholeDiscreteQuantity(producto.unidad, input.cantidadNueva, true);
   }
 
   if (!["DISPONIBLE", "EN_TRANSITO"].includes(rollo.estado)) {
@@ -2343,7 +2345,7 @@ export async function revertirMovimiento(
     assertTransition(rollo.estado, estadoAnterior);
   }
 
-  // BOLSA sale documents are the only VENTA movements that mutate
+  // Discrete-unit sale documents are the only VENTA movements that mutate
   // cantidadActual. Legacy METRO/KILO VENTA behavior remains unchanged.
   // SALIDA_MOSTRADOR is rejected by estadoAntesDe before quantity restoration.
   const movsThatChangeCantidad: TipoMovimiento[] = [
@@ -2355,7 +2357,8 @@ export async function revertirMovimiento(
   const ventaBolsa =
     orig.tipo === "VENTA" &&
     (orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_NORMAL ||
-      orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_METREADO);
+      orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_METREADO ||
+      orig.documentoTipo === DOCUMENTO_TICKET_PIEZA_NORMAL);
   const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo) || ventaBolsa
     ? formatQuantityThousandthsBigInt(
         quantityToThousandthsBigInt(rollo.cantidadActual) +
@@ -2634,11 +2637,12 @@ export type InventarioUbicacionSummary = {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
 };
 
 /**
  * Returns inventory totals per location for dashboard display.
- * Separates METRO, KILO and BOLSA products to avoid mixing units.
+ * Separates METRO, KILO, BOLSA and PIEZA products to avoid mixing units.
  */
 export async function getInventarioPorUbicacion(
   ubicacionIds?: number[],
@@ -2665,7 +2669,7 @@ export async function getInventarioPorUbicacion(
 
   const map = new Map<
     number,
-    { rollos: number; metros: number; kilos: number; bolsas: number }
+    { rollos: number; metros: number; kilos: number; bolsas: number; piezas: number }
   >();
   for (const row of rows) {
     const cur = map.get(row.ubicacionId) ?? {
@@ -2673,14 +2677,17 @@ export async function getInventarioPorUbicacion(
       metros: 0,
       kilos: 0,
       bolsas: 0,
+      piezas: 0,
     };
     cur.rollos += row.rollos;
     if (row.unidad === "METRO") {
       cur.metros += parseFloat(row.cantidad ?? "0");
     } else if (row.unidad === "KILO") {
       cur.kilos += parseFloat(row.cantidad ?? "0");
-    } else {
+    } else if (row.unidad === "BOLSA") {
       cur.bolsas += parseFloat(row.cantidad ?? "0");
+    } else {
+      cur.piezas += parseFloat(row.cantidad ?? "0");
     }
     map.set(row.ubicacionId, cur);
   }
@@ -2691,6 +2698,7 @@ export async function getInventarioPorUbicacion(
     metros: v.metros.toFixed(3),
     kilos: v.kilos.toFixed(3),
     bolsas: v.bolsas.toFixed(3),
+    piezas: v.piezas.toFixed(3),
   }));
 }
 

@@ -69,8 +69,9 @@ async function buildViajeDetails(viajes: any[]) {
     const totalMetros = quantities.filter(item => item.unidad === "METRO").reduce((sum, item) => sum + Number(item.cantidad), 0).toFixed(3);
     const totalKilos = quantities.filter(item => item.unidad === "KILO").reduce((sum, item) => sum + Number(item.cantidad), 0).toFixed(3);
     const totalBolsas = quantities.filter(item => item.unidad === "BOLSA").reduce((sum, item) => sum + Number(item.cantidad), 0).toFixed(3);
+    const totalPiezas = quantities.filter(item => item.unidad === "PIEZA").reduce((sum, item) => sum + Number(item.cantidad), 0).toFixed(3);
     const destinos = [...new Set([...attachedTickets.map(ticket => ticket.direccion || ticket.destinatario || ticket.cliente || "Sin destino"), ...attachedSalidas.map(salida => salida.destino || "Mostrador")])];
-    return [viaje.id, { documentos: attachedTickets.length + attachedSalidas.length, totalRollos: rollos.length, totalMetros, totalKilos, totalBolsas, destinos, tickets: attachedTickets.map(({ viajeId, ...ticket }) => ticket), salidas: attachedSalidas.map(({ viajeId, ...salida }) => salida), rollos }];
+    return [viaje.id, { documentos: attachedTickets.length + attachedSalidas.length, totalRollos: rollos.length, totalMetros, totalKilos, totalBolsas, totalPiezas, destinos, tickets: attachedTickets.map(({ viajeId, ...ticket }) => ticket), salidas: attachedSalidas.map(({ viajeId, ...salida }) => salida), rollos }];
   }));
 }
 

@@ -5,6 +5,7 @@ export const UNIT_LABELS = {
   METRO: "Mts.",
   KILO: "Kg.",
   BOLSA: "Bolsas",
+  PIEZA: "Pzas.",
 } as const;
 
 export type DisplayUnitCode = keyof typeof UNIT_LABELS;
@@ -23,6 +24,7 @@ export function formatPackageQuantityLabel(value: string | null | undefined): st
   const unit = value?.trim().toUpperCase();
   if (unit === "BOLSA") return "BOLSAS POR CAJA";
   if (unit === "KILO") return "KILOS DEL ROLLO";
+  if (unit === "PIEZA") return "PIEZAS";
   return "METROS DEL ROLLO";
 }
 

@@ -394,7 +394,7 @@ export async function getQuantities(filters: AnalyticsFilters) {
   return result.rows.map((row) => ({
     modalidad: row.tipo === "METREADO" ? "METRAJE" as const : "ROLLOS" as const,
     tipo: row.tipo as "NORMAL" | "METREADO",
-    unidad: row.unidad as "METRO" | "KILO" | "BOLSA",
+    unidad: row.unidad as "METRO" | "KILO" | "BOLSA" | "PIEZA",
     cantidad: decimal(row.cantidad, 3),
   }));
 }
@@ -705,7 +705,7 @@ type StoreSalesGlobalLine = {
   tela: string;
   color: string;
   tipo: "NORMAL" | "METREADO";
-  unidad: "METRO" | "KILO" | "BOLSA";
+  unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
   cantidad: number;
   importe: number;
   allocatedGross: number;
@@ -719,7 +719,7 @@ type GlobalAggregate = {
   lines: StoreSalesGlobalLine[];
 };
 
-const UNIT_ORDER: StoreSalesGlobalLine["unidad"][] = ["METRO", "KILO", "BOLSA"];
+const UNIT_ORDER: StoreSalesGlobalLine["unidad"][] = ["METRO", "KILO", "BOLSA", "PIEZA"];
 
 function aggregateGlobalLines(lines: StoreSalesGlobalLine[]): GlobalAggregate {
   const aggregate: GlobalAggregate = {

@@ -15,7 +15,7 @@ test("group and child selection honor active-mode selectability", () => {
   assert.match(source, /isBulkSelectable\(product, activeMode\)/);
   assert.match(source, /checked=\{groupIndeterminate \? "indeterminate" : groupChecked\}/);
   assert.match(source, /toggleGroup\(group\.products, checked === true\)/);
-  assert.match(source, /Los productos por kilo no admiten este modo/);
+  assert.match(source, /Los productos por \$\{precio\.unidad === UnidadProducto\.PIEZA \? "pieza" : "kilo"\} no admiten este modo/);
 });
 
 test("bulk contract validates, confirms below cost, mutates, and refreshes", () => {

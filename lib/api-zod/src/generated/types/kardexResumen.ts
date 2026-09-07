@@ -13,4 +13,6 @@ export interface KardexResumen {
   totalKilos: string;
   /** Suma absoluta de cantidades BOLSA del resultado filtrado completo. */
   totalBolsas: string;
+  /** Suma absoluta de cantidades PIEZA del resultado filtrado completo. */
+  totalPiezas: string;
 }

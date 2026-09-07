@@ -485,6 +485,7 @@ export const GetDashboardResponse = zod.object({
   "metros": zod.string(),
   "kilos": zod.string(),
   "bolsas": zod.string(),
+  "piezas": zod.string(),
   "rollos": zod.string()
 }))
 })
@@ -820,7 +821,7 @@ export const ListProductosResponseItem = zod.object({
   "anchoCm": zod.number().multipleOf(listProductosResponseAnchoCmMultipleOf).nullable().describe('Ancho capturado manualmente en centímetros; los productos históricos permanecen null.'),
   "composicion": zod.string().nullable().describe('Composición textil libre capturada manualmente; no se infiere.'),
   "gramajeGm2": zod.number().multipleOf(listProductosResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
@@ -862,7 +863,7 @@ export const CreateProductoBody = zod.object({
   "anchoCm": zod.number().min(createProductoBodyAnchoCmMin).multipleOf(createProductoBodyAnchoCmMultipleOf).nullish(),
   "composicion": zod.string().max(createProductoBodyComposicionMax).nullish(),
   "gramajeGm2": zod.number().min(createProductoBodyGramajeGm2Min).multipleOf(createProductoBodyGramajeGm2MultipleOf).nullish(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "precioSugerido": zod.string().regex(createProductoBodyPrecioSugeridoRegExp).nullish().describe('Precio sugerido opcional; null o ausencia indican que todavía no se ha capturado.'),
   "notas": zod.string().nullish()
 })
@@ -883,7 +884,7 @@ export const CreateProductoResponse = zod.object({
   "anchoCm": zod.number().multipleOf(createProductoResponseAnchoCmMultipleOf).nullable().describe('Ancho capturado manualmente en centímetros; los productos históricos permanecen null.'),
   "composicion": zod.string().nullable().describe('Composición textil libre capturada manualmente; no se infiere.'),
   "gramajeGm2": zod.number().multipleOf(createProductoResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
@@ -902,7 +903,7 @@ export const CreateProductoResponse = zod.object({
  */
 export const ListPreciosQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional(),
   "semaforo": zod.enum(['VERDE', 'AMBAR', 'ROJO', 'SIN_COSTO']).optional(),
   "sinPrecio": zod.coerce.boolean().optional().describe('Devuelve únicamente productos sin precio en el modo seleccionado.'),
   "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']).optional().describe('Modo cuyo semáforo se usa para filtrar; ROLLO por compatibilidad.')
@@ -913,7 +914,7 @@ export const ListPreciosResponseItem = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
@@ -973,7 +974,7 @@ export const GetPrecioResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
@@ -1073,7 +1074,7 @@ export const ChangePrecioResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
@@ -1177,7 +1178,7 @@ export const UpdatePrecioVentaPorMetroResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "activo": zod.boolean(),
   "costoUnitarioPonderado": zod.string().nullable(),
@@ -1247,7 +1248,7 @@ export const GetProductoResponse = zod.object({
   "anchoCm": zod.number().multipleOf(getProductoResponseAnchoCmMultipleOf).nullable(),
   "composicion": zod.string().nullable(),
   "gramajeGm2": zod.number().multipleOf(getProductoResponseGramajeGm2MultipleOf).nullable(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
@@ -1325,7 +1326,7 @@ export const UpdateProductoBody = zod.object({
   "anchoCm": zod.number().min(updateProductoBodyAnchoCmMin).multipleOf(updateProductoBodyAnchoCmMultipleOf).nullish(),
   "composicion": zod.string().max(updateProductoBodyComposicionMax).nullish(),
   "gramajeGm2": zod.number().min(updateProductoBodyGramajeGm2Min).multipleOf(updateProductoBodyGramajeGm2MultipleOf).nullish(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional(),
   "precioSugerido": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "activo": zod.boolean().optional()
@@ -1347,7 +1348,7 @@ export const UpdateProductoResponse = zod.object({
   "anchoCm": zod.number().multipleOf(updateProductoResponseAnchoCmMultipleOf).nullable().describe('Ancho capturado manualmente en centímetros; los productos históricos permanecen null.'),
   "composicion": zod.string().nullable().describe('Composición textil libre capturada manualmente; no se infiere.'),
   "gramajeGm2": zod.number().multipleOf(updateProductoResponseGramajeGm2MultipleOf).nullable().describe('Gramaje capturado manualmente en g\/m²; los productos históricos permanecen null.'),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "seVendePorMetro": zod.boolean(),
   "precioSugerido": zod.string().nullable(),
   "notas": zod.string().nullable(),
@@ -1512,7 +1513,7 @@ export const ListHistorialComprasProveedoresResponse = zod.object({
   "productoId": zod.number(),
   "producto": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "proveedorId": zod.number(),
   "proveedor": zod.string(),
   "ubicacionId": zod.number(),
@@ -2193,7 +2194,7 @@ export const GetCatalogosContenedoresResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA'])
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA'])
 })),
   "proveedores": zod.array(zod.object({
   "id": zod.number(),
@@ -2250,7 +2251,7 @@ export const ListContenedoresResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidadEsperada": zod.string(),
   "rollosEsperados": zod.number().nullable(),
   "nota": zod.string().nullable()
@@ -2261,7 +2262,8 @@ export const ListContenedoresResponse = zod.object({
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "costoTotal": zod.string().nullish().describe('Solo ADMIN')
 })),
@@ -2326,14 +2328,16 @@ export const CreateContenedorResponse = zod.object({
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "totalesRecibidos": zod.object({
   "lineas": zod.number(),
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "lineas": zod.array(zod.object({
   "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
@@ -2341,7 +2345,7 @@ export const CreateContenedorResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidadEsperada": zod.string(),
   "rollosEsperados": zod.number().nullable(),
   "nota": zod.string().nullable(),
@@ -2384,6 +2388,7 @@ export const GetResumenContenedoresResponse = zod.object({
   "metrosPorLlegar": zod.string(),
   "kilosPorLlegar": zod.string(),
   "bolsasPorLlegar": zod.string(),
+  "piezasPorLlegar": zod.string(),
   "retrasados": zod.number(),
   "proximo": zod.union([zod.object({
   "folio": zod.number(),
@@ -2398,6 +2403,7 @@ export const GetResumenContenedoresResponse = zod.object({
   "metros": zod.string(),
   "kilos": zod.string(),
   "bolsas": zod.string(),
+  "piezas": zod.string(),
   "diasPromedio": zod.string().nullable(),
   "antes": zod.number(),
   "aTiempo": zod.number(),
@@ -2413,6 +2419,7 @@ export const GetResumenContenedoresResponse = zod.object({
   "metros": zod.string(),
   "kilos": zod.string(),
   "bolsas": zod.string(),
+  "piezas": zod.string(),
   "diasPromedioTransito": zod.string().nullable(),
   "antes": zod.number(),
   "aTiempo": zod.number(),
@@ -2425,7 +2432,7 @@ export const GetResumenContenedoresResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "contenedores": zod.number(),
   "rollos": zod.number(),
   "cantidad": zod.string(),
@@ -2435,24 +2442,26 @@ export const GetResumenContenedoresResponse = zod.object({
   "porTela": zod.array(zod.object({
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "contenedores": zod.number(),
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
   "bolsas": zod.string(),
+  "piezas": zod.string(),
   "costoTotal": zod.string().nullish().describe('Solo ADMIN'),
   "costoUnitarioReal": zod.string().nullish().describe('Solo ADMIN')
 })),
   "porColor": zod.array(zod.object({
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "contenedores": zod.number(),
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
   "bolsas": zod.string(),
+  "piezas": zod.string(),
   "costoTotal": zod.string().nullish().describe('Solo ADMIN'),
   "costoUnitarioReal": zod.string().nullish().describe('Solo ADMIN')
 })),
@@ -2466,7 +2475,7 @@ export const GetResumenContenedoresResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "esperado": zod.string(),
   "recibido": zod.string()
 }))
@@ -2564,14 +2573,16 @@ export const GetContenedorResponse = zod.object({
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "totalesRecibidos": zod.object({
   "lineas": zod.number(),
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "lineas": zod.array(zod.object({
   "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
@@ -2579,7 +2590,7 @@ export const GetContenedorResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidadEsperada": zod.string(),
   "rollosEsperados": zod.number().nullable(),
   "nota": zod.string().nullable(),
@@ -2652,14 +2663,16 @@ export const UpdateContenedorResponse = zod.object({
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "totalesRecibidos": zod.object({
   "lineas": zod.number(),
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "lineas": zod.array(zod.object({
   "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
@@ -2667,7 +2680,7 @@ export const UpdateContenedorResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidadEsperada": zod.string(),
   "rollosEsperados": zod.number().nullable(),
   "nota": zod.string().nullable(),
@@ -2723,14 +2736,16 @@ export const CancelContenedorResponse = zod.object({
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "totalesRecibidos": zod.object({
   "lineas": zod.number(),
   "rollos": zod.number(),
   "metros": zod.string(),
   "kilos": zod.string(),
-  "bolsas": zod.string()
+  "bolsas": zod.string(),
+  "piezas": zod.string()
 }),
   "lineas": zod.array(zod.object({
   "id": zod.number().nullable().describe('Null when the product was received but was not expected'),
@@ -2738,7 +2753,7 @@ export const CancelContenedorResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidadEsperada": zod.string(),
   "rollosEsperados": zod.number().nullable(),
   "nota": zod.string().nullable(),
@@ -3231,7 +3246,7 @@ export const GetCatalogosEntradaResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "activo": zod.boolean()
 })),
   "proveedores": zod.array(zod.object({
@@ -3387,6 +3402,7 @@ export const ListEntradasPendientesCostoResponse = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "nombreUsuario": zod.string(),
   "overdue48h": zod.boolean()
 })),
@@ -3943,13 +3959,14 @@ export const GetExistenciasAgrupadasResponseItem = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "colores": zod.array(zod.object({
   "productoId": zod.number(),
   "color": zod.string(),
   "sku": zod.string(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA'])
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA'])
 }))
 })
 export const GetExistenciasAgrupadasResponse = zod.array(GetExistenciasAgrupadasResponseItem)
@@ -4020,7 +4037,8 @@ export const GetKardexResponse = zod.object({
   "resumen": zod.object({
   "totalMetros": zod.string().describe('Suma absoluta de cantidades METRO del resultado filtrado completo.'),
   "totalKilos": zod.string().describe('Suma absoluta de cantidades KILO del resultado filtrado completo.'),
-  "totalBolsas": zod.string().describe('Suma absoluta de cantidades BOLSA del resultado filtrado completo.')
+  "totalBolsas": zod.string().describe('Suma absoluta de cantidades BOLSA del resultado filtrado completo.'),
+  "totalPiezas": zod.string().describe('Suma absoluta de cantidades PIEZA del resultado filtrado completo.')
 })
 })
 
@@ -4863,7 +4881,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "serieRollo": zod.string().nullable(),
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
@@ -5179,7 +5197,7 @@ export const BuscarPosResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "cantidadActual": zod.string(),
@@ -5190,7 +5208,7 @@ export const BuscarPosResponse = zod.object({
   "sku": zod.string(),
   "tela": zod.string(),
   "color": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "precioSugerido": zod.string().nullable(),
   "precioMayoreo": zod.string().nullable(),
   "precioMenudeo": zod.string().nullable(),
@@ -5471,7 +5489,7 @@ export const CrearTicketResponse = zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "serieRollo": zod.string().nullable(),
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
@@ -5724,7 +5742,7 @@ export const ObtenerTicketResponse = zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "serieRollo": zod.string().nullable(),
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
@@ -5791,7 +5809,7 @@ export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string()
 }).and(zod.object({
   "precioUnitario": zod.string(),
@@ -5830,7 +5848,7 @@ export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string()
 }))
 }))])
@@ -5922,7 +5940,7 @@ export const CancelarTicketResponse = zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "serieRollo": zod.string().nullable(),
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
@@ -6028,7 +6046,7 @@ export const CobrarTicketResponse = zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "serieRollo": zod.string().nullable(),
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
@@ -6139,7 +6157,7 @@ export const AutorizarNotaResponse = zod.object({
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
   "colorProducto": zod.string(),
-  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "serieRollo": zod.string().nullable(),
   "nombreUbicacion": zod.string(),
   "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
@@ -6292,7 +6310,7 @@ export const ObtenerCorteCajaResponse = zod.object({
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "ticketsCount": zod.number(),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -6303,7 +6321,7 @@ export const ObtenerCorteCajaResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "importe": zod.string()
 })),
@@ -6348,7 +6366,7 @@ export const ObtenerCorteCajaResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "importe": zod.string()
 })),
@@ -6358,6 +6376,7 @@ export const ObtenerCorteCajaResponse = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "subtotal": zod.string(),
   "ivaFacturado": zod.string(),
   "totalGeneral": zod.string()
@@ -6430,7 +6449,7 @@ export const CerrarSesionCajaResponse = zod.object({
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "ticketsCount": zod.number(),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -6441,7 +6460,7 @@ export const CerrarSesionCajaResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "importe": zod.string()
 })),
@@ -6486,7 +6505,7 @@ export const CerrarSesionCajaResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "importe": zod.string()
 })),
@@ -6496,6 +6515,7 @@ export const CerrarSesionCajaResponse = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "subtotal": zod.string(),
   "ivaFacturado": zod.string(),
   "totalGeneral": zod.string()
@@ -6620,6 +6640,7 @@ export const ListSalidasResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullish(),
@@ -6663,6 +6684,7 @@ export const GetBorradorSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -6725,7 +6747,7 @@ export const GetBorradorSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 })),zod.null()])
 })
@@ -6766,6 +6788,7 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -6828,7 +6851,7 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -6872,6 +6895,7 @@ export const CrearSalidaMostradorResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -6934,7 +6958,7 @@ export const CrearSalidaMostradorResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -6993,6 +7017,7 @@ export const ListSalidasRecepcionResponseItem = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullish(),
@@ -7032,6 +7057,7 @@ export const GetSalidaRecepcionResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7094,7 +7120,7 @@ export const GetSalidaRecepcionResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7127,6 +7153,7 @@ export const GetSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7189,7 +7216,7 @@ export const GetSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7222,6 +7249,7 @@ export const GetDocumentoSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7284,7 +7312,7 @@ export const GetDocumentoSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7318,6 +7346,7 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7380,7 +7409,7 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7423,6 +7452,7 @@ export const CancelarSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7485,7 +7515,7 @@ export const CancelarSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7526,6 +7556,7 @@ export const EnviarSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7588,7 +7619,7 @@ export const EnviarSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7635,6 +7666,7 @@ export const RecibirSalidaResponse = zod.object({
   "totalMetros": zod.string().optional(),
   "totalKilos": zod.string().optional(),
   "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
   "usuarioId": zod.number().nullish(),
   "nombreUsuario": zod.string().nullish(),
   "transportista": zod.string().nullable(),
@@ -7697,7 +7729,7 @@ export const RecibirSalidaResponse = zod.object({
   "sku": zod.string().optional(),
   "tela": zod.string().optional(),
   "color": zod.string().optional(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']).optional()
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
 }))
 }))
 
@@ -7741,7 +7773,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "cantidades": zod.array(zod.object({
   "modalidad": zod.enum(['ROLLOS', 'METRAJE']),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string()
 })),
   "ventasCredito": zod.object({
@@ -7964,12 +7996,12 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
   "totalImporte": zod.string().optional(),
   "totalOperaciones": zod.number(),
   "cantidadesPorUnidad": zod.array(zod.object({
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string()
 })),
   "modalidades": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "operaciones": zod.number(),
   "importe": zod.string().optional().describe('Importe bruto asignado proporcionalmente desde el total del ticket.'),
@@ -7983,7 +8015,7 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
   "telas": zod.array(zod.object({
   "tela": zod.string(),
   "cantidades": zod.array(zod.object({
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string()
 })),
   "operaciones": zod.number(),
@@ -7996,7 +8028,7 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
   "lineasExcluidasSinCosto": zod.number().optional(),
   "modalidades": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "operaciones": zod.number(),
   "importe": zod.string().optional().describe('Importe bruto asignado proporcionalmente desde el total del ticket.'),
@@ -8008,7 +8040,7 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
   "colores": zod.array(zod.object({
   "color": zod.string(),
   "cantidades": zod.array(zod.object({
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string()
 })),
   "operaciones": zod.number(),
@@ -8021,7 +8053,7 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
   "lineasExcluidasSinCosto": zod.number().optional(),
   "modalidades": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "operaciones": zod.number(),
   "importe": zod.string().optional().describe('Importe bruto asignado proporcionalmente desde el total del ticket.'),
@@ -8188,7 +8220,7 @@ export const GetAdminCorteResponse = zod.object({
 })).describe('Desglose facturado y no facturado'),
   "metreado": zod.array(zod.object({
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "ticketsCount": zod.number(),
   "cantidad": zod.string(),
   "importe": zod.string()
@@ -8199,7 +8231,7 @@ export const GetAdminCorteResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "importe": zod.string()
 })),
@@ -8244,7 +8276,7 @@ export const GetAdminCorteResponse = zod.object({
   "tela": zod.string(),
   "color": zod.string(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
-  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['ROLLOS', 'METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "cantidad": zod.string(),
   "importe": zod.string()
 })),
@@ -8254,6 +8286,7 @@ export const GetAdminCorteResponse = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "subtotal": zod.string(),
   "ivaFacturado": zod.string(),
   "totalGeneral": zod.string()
@@ -8812,7 +8845,7 @@ export const BuscarRollosEtiquetasResponse = zod.object({
   "color": zod.string().optional(),
   "sku": zod.string(),
   "cantidad": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "sitioId": zod.number(),
   "sitio": zod.string(),
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
@@ -8844,7 +8877,7 @@ export const ObtenerRolloEtiquetaResponse = zod.object({
   "color": zod.string().optional(),
   "sku": zod.string(),
   "cantidad": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "sitioId": zod.number(),
   "sitio": zod.string(),
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
@@ -8884,7 +8917,7 @@ export const CrearReimpresionEtiquetasResponse = zod.object({
   "sku": zod.string(),
   "serie": zod.string(),
   "cantidad": zod.string(),
-  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA']),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
   "qr": zod.string().describe('Carga exacta SKU-SERIE'),
   "marca": zod.literal("REIMPRESA"),
   "fechaReimpresion": zod.coerce.date(),
@@ -9355,6 +9388,7 @@ export const ListViajesResponseItem = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "destinos": zod.array(zod.string())
 })
 export const ListViajesResponse = zod.array(ListViajesResponseItem)
@@ -9393,6 +9427,7 @@ export const CreateViajeResponse = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "destinos": zod.array(zod.string())
 }).and(zod.object({
   "observaciones": zod.string().nullable(),
@@ -9423,6 +9458,7 @@ export const GetViajeResponse = zod.object({
   "totalMetros": zod.string(),
   "totalKilos": zod.string(),
   "totalBolsas": zod.string(),
+  "totalPiezas": zod.string(),
   "destinos": zod.array(zod.string())
 }).and(zod.object({
   "observaciones": zod.string().nullable(),

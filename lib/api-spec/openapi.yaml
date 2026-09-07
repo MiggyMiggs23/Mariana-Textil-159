@@ -5714,7 +5714,7 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
     ContenedorCatalogoSimple:
       type: object
       required: [id, nombre]
@@ -5795,7 +5795,7 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         cantidadEsperada: { type: string }
         rollosEsperados: { type: ["number", "null"] }
         nota: { type: ["string", "null"] }
@@ -5810,13 +5810,14 @@ components:
           description: Costo ponderado por cantidad; solo presente para ADMIN
     ContenedorTotals:
       type: object
-      required: [lineas, rollos, metros, kilos, bolsas]
+      required: [lineas, rollos, metros, kilos, bolsas, piezas]
       properties:
         lineas: { type: number }
         rollos: { type: number }
         metros: { type: string }
         kilos: { type: string }
         bolsas: { type: string }
+        piezas: { type: string }
     ContenedorListLinea:
       type: object
       required:
@@ -5835,7 +5836,7 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         cantidadEsperada: { type: string }
         rollosEsperados: { type: ["number", "null"] }
         nota: { type: ["string", "null"] }
@@ -5970,6 +5971,7 @@ components:
           metrosPorLlegar,
           kilosPorLlegar,
           bolsasPorLlegar,
+          piezasPorLlegar,
           retrasados,
           proximo,
         ]
@@ -5979,6 +5981,7 @@ components:
         metrosPorLlegar: { type: string }
         kilosPorLlegar: { type: string }
         bolsasPorLlegar: { type: string }
+        piezasPorLlegar: { type: string }
         retrasados: { type: number }
         proximo:
           anyOf:
@@ -6006,6 +6009,7 @@ components:
           metros,
           kilos,
           bolsas,
+          piezas,
           diasPromedioTransito,
           antes,
           aTiempo,
@@ -6019,6 +6023,7 @@ components:
         metros: { type: string }
         kilos: { type: string }
         bolsas: { type: string }
+        piezas: { type: string }
         diasPromedioTransito: { type: ["string", "null"] }
         antes: { type: number }
         aTiempo: { type: number }
@@ -6034,6 +6039,7 @@ components:
           metros,
           kilos,
           bolsas,
+          piezas,
           diasPromedio,
           antes,
           aTiempo,
@@ -6045,6 +6051,7 @@ components:
         metros: { type: string }
         kilos: { type: string }
         bolsas: { type: string }
+        piezas: { type: string }
         diasPromedio: { type: ["string", "null"] }
         antes: { type: number }
         aTiempo: { type: number }
@@ -6068,7 +6075,7 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         contenedores: { type: number }
         rollos: { type: number }
         cantidad: { type: string }
@@ -6076,16 +6083,17 @@ components:
         costoUnitarioReal: { type: ["string", "null"], description: Solo ADMIN }
     ContenedorGrupoResumen:
       type: object
-      required: [unidad, contenedores, rollos, metros, kilos, bolsas]
+      required: [unidad, contenedores, rollos, metros, kilos, bolsas, piezas]
       properties:
         tela: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         contenedores: { type: number }
         rollos: { type: number }
         metros: { type: string }
         kilos: { type: string }
         bolsas: { type: string }
+        piezas: { type: string }
         costoTotal: { type: ["string", "null"], description: Solo ADMIN }
         costoUnitarioReal: { type: ["string", "null"], description: Solo ADMIN }
     ContenedorMesResumen:
@@ -6111,7 +6119,7 @@ components:
         sku: { type: string }
         tela: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         esperado: { type: string }
         recibido: { type: string }
     ContenedorResumen:
@@ -6403,7 +6411,7 @@ components:
         color: { type: string }
         sku: { type: string }
         cantidad: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         sitioId: { type: number }
         sitio: { type: string }
         estado: { $ref: "#/components/schemas/EstadoRollo" }
@@ -6440,7 +6448,7 @@ components:
         sku: { type: string }
         serie: { type: string }
         cantidad: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         qr: { type: string, description: "Carga exacta SKU-SERIE" }
         marca: { type: string, const: REIMPRESA }
         fechaReimpresion: { type: string, format: date-time }
@@ -6522,7 +6530,7 @@ components:
       properties:
         modalidad: { type: string, enum: [ROLLOS, METRAJE] }
         tipo: { $ref: "#/components/schemas/TipoTicket" }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         cantidad: { type: string }
     AdminRealtimeCreditSummary:
       type: object
@@ -8474,17 +8482,18 @@ components:
           type: array
           items:
             type: object
-            required: [ubicacionId, nombre, metros, kilos, bolsas, rollos]
+            required: [ubicacionId, nombre, metros, kilos, bolsas, piezas, rollos]
             properties:
               ubicacionId: { type: number }
               nombre: { type: string }
               metros: { type: string, example: "0.000" }
               kilos: { type: string, example: "0.000" }
               bolsas: { type: string, example: "0.000" }
+              piezas: { type: string, example: "0.000" }
               rollos: { type: string, example: "0.000" }
     UnidadProducto:
       type: string
-      enum: [METRO, KILO, BOLSA]
+      enum: [METRO, KILO, BOLSA, PIEZA]
     TipoProveedor:
       type: string
       enum: [NACIONAL, IMPORTACION]
@@ -9241,7 +9250,7 @@ components:
           $ref: "#/components/schemas/KardexResumen"
     KardexResumen:
       type: object
-      required: [totalMetros, totalKilos, totalBolsas]
+      required: [totalMetros, totalKilos, totalBolsas, totalPiezas]
       properties:
         totalMetros:
           type: string
@@ -9252,6 +9261,9 @@ components:
         totalBolsas:
           type: string
           description: Suma absoluta de cantidades BOLSA del resultado filtrado completo.
+        totalPiezas:
+          type: string
+          description: Suma absoluta de cantidades PIEZA del resultado filtrado completo.
     KardexHistoryRow:
       type: object
       required:
@@ -9701,6 +9713,7 @@ components:
           totalMetros,
           totalKilos,
           totalBolsas,
+          totalPiezas,
           nombreUsuario,
           overdue48h,
         ]
@@ -9716,6 +9729,7 @@ components:
         totalMetros: { type: string }
         totalKilos: { type: string }
         totalBolsas: { type: string }
+        totalPiezas: { type: string }
         nombreUsuario: { type: string }
         overdue48h: { type: boolean }
     EntradasPendientesCostoResult:
@@ -9748,7 +9762,7 @@ components:
         sku: { type: string }
         rollosCount: { type: number }
         cantidadTotal: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
     ExistenciaAgrupada:
       type: object
       required:
@@ -9760,6 +9774,7 @@ components:
           totalMetros,
           totalKilos,
           totalBolsas,
+          totalPiezas,
           colores,
         ]
       properties:
@@ -9770,6 +9785,7 @@ components:
         totalMetros: { type: string }
         totalKilos: { type: string }
         totalBolsas: { type: string }
+        totalPiezas: { type: string }
         colores:
           type: array
           items:
@@ -9940,6 +9956,7 @@ components:
         totalMetros: { type: string }
         totalKilos: { type: string }
         totalBolsas: { type: string }
+        totalPiezas: { type: string }
         usuarioId: { type: ["number", "null"] }
         nombreUsuario: { type: ["string", "null"] }
         transportista: { type: ["string", "null"] }
@@ -10380,7 +10397,7 @@ components:
         productoId: { type: number }
         producto: { type: string }
         color: { type: string }
-        unidad: { type: string, enum: [METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
         proveedorId: { type: number }
         proveedor: { type: string }
         ubicacionId: { type: number }
@@ -11505,7 +11522,7 @@ components:
         tela: { type: string }
         color: { type: string }
         tipo: { $ref: "#/components/schemas/TipoTicket" }
-        unidad: { type: string, enum: [ROLLOS, METRO, KILO, BOLSA] }
+        unidad: { type: string, enum: [ROLLOS, METRO, KILO, BOLSA, PIEZA] }
         cantidad: { type: string }
         importe: { type: string }
     HojaVentasDiaSeccion:
@@ -11517,7 +11534,7 @@ components:
         subtotal: { type: string }
     HojaVentasDia:
       type: object
-      required: [sitio, fechaOperativa, cerrada, quienCerro, secciones, totalRollos, totalMetros, totalKilos, totalBolsas, subtotal, ivaFacturado, totalGeneral]
+      required: [sitio, fechaOperativa, cerrada, quienCerro, secciones, totalRollos, totalMetros, totalKilos, totalBolsas, totalPiezas, subtotal, ivaFacturado, totalGeneral]
       properties:
         sitio: { type: string }
         fechaOperativa: { type: string, format: date }
@@ -11528,6 +11545,7 @@ components:
         totalMetros: { type: string }
         totalKilos: { type: string }
         totalBolsas: { type: string }
+        totalPiezas: { type: string }
         subtotal: { type: string }
         ivaFacturado: { type: string }
         totalGeneral: { type: string }
@@ -11717,7 +11735,7 @@ components:
         salidaIds: { type: array, items: { type: number, minimum: 1 }, default: [] }
     ViajeSummary:
       type: object
-      required: [id, folio, folioFormateado, origenId, nombreOrigen, salidaAt, camioneta, chofer, documentos, totalRollos, totalMetros, totalKilos, totalBolsas, destinos]
+      required: [id, folio, folioFormateado, origenId, nombreOrigen, salidaAt, camioneta, chofer, documentos, totalRollos, totalMetros, totalKilos, totalBolsas, totalPiezas, destinos]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -11732,6 +11750,7 @@ components:
         totalMetros: { type: string }
         totalKilos: { type: string }
         totalBolsas: { type: string }
+        totalPiezas: { type: string }
         destinos: { type: array, items: { type: string } }
     ViajeDetail:
       allOf:

@@ -92,7 +92,9 @@ export function isBulkSelectable(
 ): boolean {
   return (
     mode === "ROLLO" ||
-    (product.unidad !== "KILO" && product.seVendePorMetro)
+    (product.unidad !== "KILO" &&
+      product.unidad !== "PIEZA" &&
+      product.seVendePorMetro)
   );
 }
 

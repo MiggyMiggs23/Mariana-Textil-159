@@ -97,7 +97,11 @@ async function validateInput(tx: Tx, input: ContenedorInput): Promise<void> {
       .where(eq(ubicacionesTable.id, input.sitioDestinoId))
       .limit(1),
     tx
-      .select({ id: productosTable.id, activo: productosTable.activo })
+      .select({
+        id: productosTable.id,
+        activo: productosTable.activo,
+        unidad: productosTable.unidad,
+      })
       .from(productosTable)
       .where(inArray(productosTable.id, ids)),
   ]);
@@ -117,6 +121,19 @@ async function validateInput(tx: Tx, input: ContenedorInput): Promise<void> {
     throw new ContenedorError(
       "Uno o más productos son inválidos o inactivos.",
       "INVALID_PRODUCT",
+    );
+  }
+  const productById = new Map(products.map((product) => [product.id, product]));
+  if (
+    input.lineas.some((line) => {
+      const product = productById.get(line.productoId);
+      return product?.unidad === "PIEZA" &&
+        !Number.isSafeInteger(Number(line.cantidadEsperada));
+    })
+  ) {
+    throw new ContenedorError(
+      "La cantidad esperada de piezas debe ser un número entero.",
+      "PIEZA_INTEGER_QUANTITY_REQUIRED",
     );
   }
 }
@@ -365,6 +382,15 @@ export async function getContenedorDetail(id: number, scope: Scope) {
         0,
       )
       .toFixed(3),
+    piezas: lines
+      .filter((line) => line.unidad === "PIEZA")
+      .reduce(
+        (sum, line) =>
+          sum +
+          Number(received ? line.cantidadRecibida : line.cantidadEsperada),
+        0,
+      )
+      .toFixed(3),
   });
   const realDate = h.fecha_real_llegada == null ? null : String(h.fecha_real_llegada);
   const orderDate = h.fecha_pedido == null ? null : String(h.fecha_pedido);
@@ -529,6 +555,7 @@ export async function getContenedoresSummary(
       COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
       COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='KILO'),0)::text kilos,
       COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='BOLSA'),0)::text bolsas,
+      COALESCE(SUM(cl.cantidad_esperada) FILTER (WHERE pr.unidad='PIEZA'),0)::text piezas,
       COUNT(DISTINCT c.id) FILTER (WHERE c.fecha_estimada_llegada<CURRENT_DATE)::int retrasados
     FROM contenedores c JOIN contenedor_lineas cl ON cl.contenedor_id=c.id
     JOIN productos pr ON pr.id=cl.producto_id
@@ -558,6 +585,7 @@ export async function getContenedoresSummary(
       COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='METRO'),0)::text metros,
       COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='KILO'),0)::text kilos,
       COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='BOLSA'),0)::text bolsas,
+      COALESCE(SUM(cantidad_inicial) FILTER (WHERE unidad='PIEZA'),0)::text piezas,
       (SELECT AVG(fecha_real_llegada-fecha_pedido)::numeric(12,2)::text FROM received WHERE fecha_pedido IS NOT NULL) dias_promedio,
       (SELECT COUNT(*) FILTER (WHERE fecha_real_llegada<fecha_estimada_llegada)::int FROM received) antes,
       (SELECT COUNT(*) FILTER (WHERE fecha_real_llegada=fecha_estimada_llegada)::int FROM received) a_tiempo,
@@ -583,6 +611,7 @@ export async function getContenedoresSummary(
           COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='METRO'),0)::text metros,
           COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='KILO'),0)::text kilos,
           COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='BOLSA'),0)::text bolsas,
+          COALESCE(SUM(rolls.cantidad_inicial) FILTER (WHERE rolls.unidad='PIEZA'),0)::text piezas,
           (SELECT AVG(avg_rc.fecha_real_llegada-avg_rc.fecha_pedido)::numeric(12,2)::text
             FROM received avg_rc WHERE avg_rc.proveedor_id=pv.id AND avg_rc.fecha_pedido IS NOT NULL) "diasPromedioTransito",
           COUNT(DISTINCT rc.id) FILTER (WHERE rc.fecha_real_llegada<rc.fecha_estimada_llegada)::int antes,
@@ -611,6 +640,7 @@ export async function getContenedoresSummary(
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='KILO'),0)::text kilos
           ,COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='BOLSA'),0)::text bolsas
+          ,COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='PIEZA'),0)::text piezas
           ${scope.admin ? sql`, CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 THEN NULL ELSE SUM(r.costo_total)::text END AS "costoTotal",
           CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 OR SUM(r.cantidad_inicial)=0 THEN NULL ELSE (SUM(r.costo_total)/SUM(r.cantidad_inicial))::numeric(14,4)::text END AS "costoUnitarioReal"` : sql``}
         FROM contenedores c JOIN entradas e ON e.id=c.entrada_id JOIN rollos r ON r.recepcion_id=e.id JOIN productos pr ON pr.id=r.producto_id
@@ -622,6 +652,7 @@ export async function getContenedoresSummary(
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='METRO'),0)::text metros,
           COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='KILO'),0)::text kilos
           ,COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='BOLSA'),0)::text bolsas
+          ,COALESCE(SUM(r.cantidad_inicial) FILTER (WHERE pr.unidad='PIEZA'),0)::text piezas
           ${scope.admin ? sql`, CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 THEN NULL ELSE SUM(r.costo_total)::text END AS "costoTotal",
           CASE WHEN COUNT(*) FILTER (WHERE e.total_costo IS NULL OR r.costo_total IS NULL)>0 OR SUM(r.cantidad_inicial)=0 THEN NULL ELSE (SUM(r.costo_total)/SUM(r.cantidad_inicial))::numeric(14,4)::text END AS "costoUnitarioReal"` : sql``}
         FROM contenedores c JOIN entradas e ON e.id=c.entrada_id JOIN rollos r ON r.recepcion_id=e.id JOIN productos pr ON pr.id=r.producto_id
@@ -680,6 +711,7 @@ export async function getContenedoresSummary(
       metrosPorLlegar: Number(c.metros).toFixed(3),
       kilosPorLlegar: Number(c.kilos).toFixed(3),
       bolsasPorLlegar: Number(c.bolsas).toFixed(3),
+      piezasPorLlegar: Number(c.piezas).toFixed(3),
       retrasados: Number(c.retrasados),
       proximo: nextRow
         ? {
@@ -696,6 +728,7 @@ export async function getContenedoresSummary(
       metros: Number(p.metros).toFixed(3),
       kilos: Number(p.kilos).toFixed(3),
       bolsas: Number(p.bolsas).toFixed(3),
+      piezas: Number(p.piezas).toFixed(3),
       diasPromedio: p.dias_promedio == null ? null : String(p.dias_promedio),
       antes: Number(p.antes),
       aTiempo: Number(p.a_tiempo),

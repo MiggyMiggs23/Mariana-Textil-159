@@ -243,7 +243,12 @@ router.post("/precios/:id/cambiar", requierePermiso("precios", "editar"), async 
     if (!before) return null;
     const modoPrecio = body.data.modoPrecio ?? "ROLLO";
     const isMeteredMode = modoPrecio !== "ROLLO";
-    if (isMeteredMode && !before.seVendePorMetro) {
+    if (
+      isMeteredMode &&
+      (!before.seVendePorMetro ||
+        before.unidad === "KILO" ||
+        before.unidad === "PIEZA")
+    ) {
       return { kind: "metered-disabled" } as const;
     }
     return mutateLockedPrecio(tx, before, {
@@ -314,7 +319,9 @@ router.post("/precios/cambiar-masivo", requierePermiso("precios", "editar"), asy
     }
     if (body.data.modoPrecio !== "ROLLO") {
       const invalid = products.filter((product) =>
-        !product.seVendePorMetro || product.unidad === "KILO"
+        !product.seVendePorMetro ||
+          product.unidad === "KILO" ||
+          product.unidad === "PIEZA"
       );
       if (invalid.length) {
         return { kind: "metered-disabled", skus: invalid.map((product) => product.sku) } as const;
@@ -376,8 +383,8 @@ router.patch("/precios/:id/venta-por-metro", requierePermiso("precios", "editar"
       .for("update")
       .limit(1);
     if (!before) return { kind: "not-found" } as const;
-    if (before.unidad === "KILO") {
-      return { kind: "kilo" } as const;
+    if (before.unidad === "KILO" || before.unidad === "PIEZA") {
+      return { kind: "indivisible-unit", unidad: before.unidad } as const;
     }
     const [updated] = await tx
       .update(productosTable)
@@ -399,10 +406,10 @@ router.patch("/precios/:id/venta-por-metro", requierePermiso("precios", "editar"
     res.status(404).json({ error: "Producto no encontrado." });
     return;
   }
-  if (result.kind === "kilo") {
+  if (result.kind === "indivisible-unit") {
     res.status(400).json({
-      error: "Los productos por KILO nunca pueden habilitarse para venta por metro.",
-      code: "KILO_VENTA_POR_METRO_NO_PERMITIDA",
+      error: `Los productos por ${result.unidad} nunca pueden habilitarse para venta por metro.`,
+      code: `${result.unidad}_VENTA_POR_METRO_NO_PERMITIDA`,
     });
     return;
   }

@@ -21,6 +21,7 @@ export const unidadProductoEnum = pgEnum("unidad_producto", [
   "METRO",
   "KILO",
   "BOLSA",
+  "PIEZA",
 ]);
 export const precioModoEnum = pgEnum("precio_modo", ["ROLLO", "MAYOREO", "MENUDEO"]);
 

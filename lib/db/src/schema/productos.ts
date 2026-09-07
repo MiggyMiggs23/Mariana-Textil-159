@@ -61,7 +61,7 @@ export const productosTable = pgTable(
     index("productos_sku_idx").on(table.sku),
     check(
       "productos_kilo_no_venta_metro_check",
-      sql`${table.unidad} <> 'KILO' OR ${table.seVendePorMetro} = false`,
+      sql`${table.unidad} NOT IN ('KILO', 'PIEZA') OR ${table.seVendePorMetro} = false`,
     ),
     check(
       "productos_color_hex_check",

@@ -31,6 +31,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
 
+// Keep the UI buildable while the generated client is being refreshed with PIEZA.
+function physicalCountLabel(unidad: string): string {
+  if (unidad === UnidadProducto.BOLSA) return "cajas";
+  if (unidad === "PIEZA") return "piezas";
+  return "rollos";
+}
+
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
   const apiError = error as { data?: unknown; message?: unknown };
@@ -249,6 +256,7 @@ export default function Productos() {
                   <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
                   <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
                   <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
+                  <SelectItem value={UnidadProducto.PIEZA}>{formatUnit(UnidadProducto.PIEZA)}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={filterEstado} onValueChange={setFilterEstado}>
@@ -333,7 +341,7 @@ export default function Productos() {
                                 <Badge key={unidad} variant="outline" data-testid={`total-tela-${tela}-${unidad}`}>
                                   {formatNumber(total.cantidad, { kind: "quantity" })} {formatUnit(unidad)}
                                   <span className="ml-1 text-muted-foreground">
-                                    · {formatNumber(total.rollos, { kind: "count" })} {unidad === UnidadProducto.BOLSA ? "cajas" : "rollos"}
+                                    · {formatNumber(total.rollos, { kind: "count" })} {physicalCountLabel(unidad)}
                                   </span>
                                 </Badge>
                               ))}
@@ -363,7 +371,7 @@ export default function Productos() {
                                    {visibleSpecificationColumns.has("composicion") && <TableHead>Composición</TableHead>}
                                    {visibleSpecificationColumns.has("gramajeGm2") && <TableHead className="text-right">Gramaje</TableHead>}
                                   {canViewPrices && <TableHead className="text-right">Precio</TableHead>}
-                                  <TableHead className="text-right">Rollos</TableHead>
+                                   <TableHead className="text-right">Unidades físicas</TableHead>
                                   <TableHead className="text-right">Cantidad</TableHead>
                                   <TableHead className="text-right">Sitios</TableHead>
                                   <TableHead className="text-right">Estado</TableHead>
@@ -398,7 +406,9 @@ export default function Productos() {
                                     {visibleSpecificationColumns.has("composicion") && <TableCell>{p.composicion || "—"}</TableCell>}
                                     {visibleSpecificationColumns.has("gramajeGm2") && <TableCell className="text-right">{p.gramajeGm2 == null ? "—" : `${p.gramajeGm2.toFixed(2)} g/m²`}</TableCell>}
                                     {canViewPrices && <TableCell className={`text-right ${isZeroStock ? "text-muted-foreground" : ""}`}>{p.precioSugerido == null ? "Sin precio" : formatNumber(p.precioSugerido, { kind: "money" })}</TableCell>}
-                                    <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>{formatNumber(p.rollos, { kind: "count" })}</TableCell>
+                                    <TableCell className={`text-right font-medium ${isZeroStock ? "text-muted-foreground" : ""}`}>
+                                      {formatNumber(p.rollos, { kind: "count" })} <span className="text-[10px] font-normal text-muted-foreground">{physicalCountLabel(p.unidad)}</span>
+                                    </TableCell>
                                     <TableCell className={`text-right font-medium tabular-nums ${isZeroStock ? "text-muted-foreground" : ""}`}>
                                        {formatNumber(p.cantidad, { kind: "quantity" })} <span className="text-[10px] font-normal text-muted-foreground">{formatUnit(p.unidad)}</span>
                                     </TableCell>
@@ -591,6 +601,7 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
                   <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
                   <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
                   <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
+                  <SelectItem value={UnidadProducto.PIEZA}>{formatUnit(UnidadProducto.PIEZA)}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

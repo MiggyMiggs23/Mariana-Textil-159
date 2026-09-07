@@ -126,6 +126,19 @@ test("summary propagates pending costs and splits fabric/color by unit", () => {
   assert.match(source, /GROUP BY pr\.color,pr\.unidad/);
 });
 
+test("summary includes PIEZA in transit, received, provider, fabric and color aggregates", () => {
+  const source = readFileSync(new URL("./contenedores.ts", import.meta.url), "utf8");
+  const summary = source.slice(
+    source.indexOf("export async function getContenedoresSummary"),
+  );
+  assert.equal(
+    (summary.match(/unidad='PIEZA'/g) ?? []).length,
+    5,
+  );
+  assert.match(summary, /piezasPorLlegar: Number\(c\.piezas\)\.toFixed\(3\)/);
+  assert.match(summary, /piezas: Number\(p\.piezas\)\.toFixed\(3\)/);
+});
+
 test("detail compares the complete union of expected and received products", () => {
   const source = readFileSync(new URL("./contenedores.ts", import.meta.url), "utf8");
   assert.match(source, /FROM expected e FULL OUTER JOIN received r/);
@@ -222,23 +235,28 @@ test("list projection includes every complete expected multiproduct line", () =>
   }
 });
 
-test("list totals keep rolls, metres, kilos and bags separate", () => {
+test("list totals keep rolls, metres, kilos, bags and pieces separate", () => {
   assert.deepEqual(summarizeExpectedLines(listRow.lineas), {
     lineas: 3,
     rollos: 6,
     metros: "150.750",
     kilos: "42.750",
     bolsas: "0.000",
+    piezas: "0.000",
   });
 });
 
-test("container totals preserve BOLSA as its own quantity", () => {
+test("container totals preserve BOLSA and PIEZA as their own quantities", () => {
   assert.deepEqual(summarizeExpectedLines([{
     productoId: 14, sku: "BOL-TR", tela: "Bolsa", color: "Transparente",
     unidad: "BOLSA", cantidadEsperada: "24", rollosEsperados: 1, nota: null,
   }]), {
-    lineas: 1, rollos: 1, metros: "0.000", kilos: "0.000", bolsas: "24.000",
+    lineas: 1, rollos: 1, metros: "0.000", kilos: "0.000", bolsas: "24.000", piezas: "0.000",
   });
+  assert.equal(summarizeExpectedLines([{
+    productoId: 15, sku: "PZA", tela: "Pieza", color: "Natural",
+    unidad: "PIEZA", cantidadEsperada: "8", rollosEsperados: 1, nota: null,
+  }]).piezas, "8.000");
 });
 
 test("non-admin list projection contains no economic fields", () => {

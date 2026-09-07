@@ -96,7 +96,7 @@ export type ContenedorListLinea = {
   sku: string;
   tela: string;
   color: string;
-  unidad: "METRO" | "KILO" | "BOLSA";
+  unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
   cantidadEsperada: string;
   rollosEsperados: number | null;
   nota: string | null;
@@ -121,6 +121,10 @@ export function summarizeExpectedLines(lineas: ContenedorListLinea[]) {
       .filter((linea) => linea.unidad === "BOLSA")
       .reduce((sum, linea) => sum + Number(linea.cantidadEsperada), 0)
       .toFixed(3),
+    piezas: lineas
+      .filter((linea) => linea.unidad === "PIEZA")
+      .reduce((sum, linea) => sum + Number(linea.cantidadEsperada), 0)
+      .toFixed(3),
   };
 }
 
@@ -134,7 +138,7 @@ function parseListLines(value: unknown): ContenedorListLinea[] {
   return raw.map((line) => {
     const row = line as Record<string, unknown>;
     const unidad = String(row.unidad);
-    if (unidad !== "METRO" && unidad !== "KILO" && unidad !== "BOLSA") {
+    if (unidad !== "METRO" && unidad !== "KILO" && unidad !== "BOLSA" && unidad !== "PIEZA") {
       throw new ContenedorValidationError(
         "La unidad de una línea del contenedor no es válida.",
       );

@@ -16,6 +16,7 @@ export interface ContenedorGrupoResumen {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
   /**
      * Solo ADMIN
      * @nullable

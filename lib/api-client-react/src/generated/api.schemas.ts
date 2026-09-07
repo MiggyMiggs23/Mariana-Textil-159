@@ -233,6 +233,7 @@ export const ContenedorCatalogoProductoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ContenedorCatalogoProducto {
@@ -294,6 +295,7 @@ export const ContenedorLineaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ContenedorLinea {
@@ -333,6 +335,7 @@ export interface ContenedorTotals {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
 }
 
 export type ContenedorListLineaUnidad = typeof ContenedorListLineaUnidad[keyof typeof ContenedorListLineaUnidad];
@@ -342,6 +345,7 @@ export const ContenedorListLineaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ContenedorListLinea {
@@ -447,6 +451,7 @@ export interface ContenedorResumenKpis {
   metrosPorLlegar: string;
   kilosPorLlegar: string;
   bolsasPorLlegar: string;
+  piezasPorLlegar: string;
   retrasados: number;
   proximo: ContenedorResumenKpisProximo | null;
 }
@@ -461,6 +466,7 @@ export interface ContenedorProveedorResumen {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
   /** @nullable */
   diasPromedioTransito: string | null;
   antes: number;
@@ -484,6 +490,7 @@ export interface ContenedorPeriodoResumen {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
   /** @nullable */
   diasPromedio: string | null;
   antes: number;
@@ -508,6 +515,7 @@ export const ContenedorProductoResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ContenedorProductoResumen {
@@ -538,6 +546,7 @@ export const ContenedorGrupoResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ContenedorGrupoResumen {
@@ -549,6 +558,7 @@ export interface ContenedorGrupoResumen {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
   /**
      * Solo ADMIN
      * @nullable
@@ -582,6 +592,7 @@ export const ContenedorDiferenciaResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ContenedorDiferenciaResumen {
@@ -746,6 +757,7 @@ export const RolloEtiquetaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export type EstadoRollo = typeof EstadoRollo[keyof typeof EstadoRollo];
@@ -791,6 +803,7 @@ export const EtiquetaImprimibleUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export type EtiquetaImprimibleFormatoMm = {
@@ -868,6 +881,7 @@ export const AnalyticsQuantityUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export type TipoTicket = typeof TipoTicket[keyof typeof TipoTicket];
@@ -1208,6 +1222,7 @@ export const UnidadProducto = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface CajaVentasCantidadUnidad {
@@ -3209,6 +3224,7 @@ export type DashboardInventarioPorUbicacionItem = {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
   rollos: string;
 };
 
@@ -3917,6 +3933,8 @@ export interface KardexResumen {
   totalKilos: string;
   /** Suma absoluta de cantidades BOLSA del resultado filtrado completo. */
   totalBolsas: string;
+  /** Suma absoluta de cantidades PIEZA del resultado filtrado completo. */
+  totalPiezas: string;
 }
 
 export interface KardexResult {
@@ -4198,6 +4216,7 @@ export interface EntradaPendienteCosto {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
   nombreUsuario: string;
   overdue48h: boolean;
 }
@@ -4233,6 +4252,7 @@ export const ExistenciaAgrupadaHijoUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface ExistenciaAgrupadaHijo {
@@ -4252,6 +4272,7 @@ export interface ExistenciaAgrupada {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
   colores: ExistenciaAgrupadaHijo[];
 }
 
@@ -4359,6 +4380,7 @@ export interface SalidaResumen {
   totalMetros?: string;
   totalKilos?: string;
   totalBolsas?: string;
+  totalPiezas?: string;
   /** @nullable */
   usuarioId?: number | null;
   /** @nullable */
@@ -4721,6 +4743,7 @@ export const HistorialCompraProveedorUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface HistorialCompraProveedor {
@@ -5424,6 +5447,7 @@ export const HojaVentasDiaLineaUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;
 
 export interface HojaVentasDiaLinea {
@@ -5462,6 +5486,7 @@ export interface HojaVentasDia {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
   subtotal: string;
   ivaFacturado: string;
   totalGeneral: string;
@@ -5631,6 +5656,7 @@ export interface ViajeSummary {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
   destinos: string[];
 }
 

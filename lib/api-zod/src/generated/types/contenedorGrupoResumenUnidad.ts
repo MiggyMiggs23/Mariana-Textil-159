@@ -13,4 +13,5 @@ export const ContenedorGrupoResumenUnidad = {
   METRO: 'METRO',
   KILO: 'KILO',
   BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
 } as const;

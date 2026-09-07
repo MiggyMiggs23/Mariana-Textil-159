@@ -15,5 +15,6 @@ export interface ExistenciaAgrupada {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
   colores: ExistenciaAgrupadaHijo[];
 }

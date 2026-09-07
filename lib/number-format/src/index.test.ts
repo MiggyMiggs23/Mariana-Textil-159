@@ -95,6 +95,8 @@ test("uses one visible product-unit contract", () => {
   assert.equal(formatUnit("METRO"), "Mts.");
   assert.equal(formatUnit("KILO"), "Kg.");
   assert.equal(formatUnit("BOLSA"), "Bolsas");
+  assert.equal(formatUnit("PIEZA"), "Pzas.");
   assert.equal(formatUnit("HISTORICA"), "HISTORICA");
   assert.equal(formatPackageQuantityLabel("BOLSA"), "BOLSAS POR CAJA");
+  assert.equal(formatPackageQuantityLabel("PIEZA"), "PIEZAS");
 });

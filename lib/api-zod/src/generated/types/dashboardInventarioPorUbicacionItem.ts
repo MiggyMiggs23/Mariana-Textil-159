@@ -12,5 +12,6 @@ export type DashboardInventarioPorUbicacionItem = {
   metros: string;
   kilos: string;
   bolsas: string;
+  piezas: string;
   rollos: string;
 };

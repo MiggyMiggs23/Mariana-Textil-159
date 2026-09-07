@@ -419,12 +419,13 @@ export async function getKardex(
   pagination?: { page: number; pageSize: number },
 ) {
   const conditions = whereConditions(filters);
-  const [{ total, totalMetros, totalKilos, totalBolsas }] = await db
+  const [{ total, totalMetros, totalKilos, totalBolsas, totalPiezas }] = await db
     .select({
       total: count(),
       totalMetros: sql<string>`coalesce(sum(abs(${movimientosTable.cantidad})) filter (where ${productosTable.unidad} = 'METRO'), 0)::text`,
       totalKilos: sql<string>`coalesce(sum(abs(${movimientosTable.cantidad})) filter (where ${productosTable.unidad} = 'KILO'), 0)::text`,
       totalBolsas: sql<string>`coalesce(sum(abs(${movimientosTable.cantidad})) filter (where ${productosTable.unidad} = 'BOLSA'), 0)::text`,
+      totalPiezas: sql<string>`coalesce(sum(abs(${movimientosTable.cantidad})) filter (where ${productosTable.unidad} = 'PIEZA'), 0)::text`,
     })
     .from(movimientosTable)
     .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))
@@ -451,6 +452,7 @@ export async function getKardex(
       totalMetros: totalMetros ?? "0",
       totalKilos: totalKilos ?? "0",
       totalBolsas: totalBolsas ?? "0",
+      totalPiezas: totalPiezas ?? "0",
     },
   };
 }

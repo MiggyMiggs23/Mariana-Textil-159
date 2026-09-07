@@ -104,7 +104,7 @@ export function buildTransitVisibilityKpis(
   containerByUnit: Map<string, TransitTotals>,
   interSiteTransitByUnit: Map<string, TransitTotals>,
 ) {
-  return ["METRO", "KILO", "BOLSA"].flatMap(unidad => [
+  return ["METRO", "KILO", "BOLSA", "PIEZA"].flatMap(unidad => [
     { id: `en-contenedor-cantidad-${unidad}`, label: `En contenedor cantidad ${unidad}`, value: containerByUnit.get(unidad)?.cantidad ?? 0, kind: "quantity" },
     { id: `en-contenedor-valor-${unidad}`, label: `En contenedor valor ${unidad}`, value: containerByUnit.get(unidad)?.valor ?? 0, kind: "money", economic: true },
     { id: `en-transito-entre-sitios-cantidad-${unidad}`, label: `En tránsito entre sitios cantidad ${unidad}`, value: interSiteTransitByUnit.get(unidad)?.cantidad ?? 0, kind: "quantity" },

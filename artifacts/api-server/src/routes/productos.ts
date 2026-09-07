@@ -351,6 +351,15 @@ router.post(
       res.status(400).json({ error: "Datos del producto inválidos." });
       return;
     }
+    if (
+      (parsed.data.unidad === "KILO" || parsed.data.unidad === "PIEZA") &&
+      req.body?.seVendePorMetro === true
+    ) {
+      res.status(400).json({
+        error: `Los productos por ${parsed.data.unidad} nunca pueden habilitarse para venta por metro.`,
+      });
+      return;
+    }
 
     const tela = parsed.data.tela.trim();
     const color = parsed.data.color.trim();
@@ -795,10 +804,23 @@ router.patch(
       });
       return;
     }
-    if (body.data.unidad === "KILO" && before.seVendePorMetro) {
+    if (
+      (body.data.unidad === "KILO" || body.data.unidad === "PIEZA") &&
+      before.seVendePorMetro
+    ) {
       res.status(400).json({
         error:
           "Deshabilita primero la venta por metro desde el módulo de Precios.",
+      });
+      return;
+    }
+    const unidadResultante = body.data.unidad ?? before.unidad;
+    if (
+      (unidadResultante === "KILO" || unidadResultante === "PIEZA") &&
+      req.body?.seVendePorMetro === true
+    ) {
+      res.status(400).json({
+        error: `Los productos por ${unidadResultante} nunca pueden habilitarse para venta por metro.`,
       });
       return;
     }
