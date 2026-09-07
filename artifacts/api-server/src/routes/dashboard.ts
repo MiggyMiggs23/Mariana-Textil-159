@@ -125,6 +125,7 @@ router.get(
             metros: inv?.metros ?? "0.000",
             kilos: inv?.kilos ?? "0.000",
             bolsas: inv?.bolsas ?? "0.000",
+            piezas: inv?.piezas ?? "0.000",
             rollos: String(inv?.rollos ?? 0),
           };
         }),

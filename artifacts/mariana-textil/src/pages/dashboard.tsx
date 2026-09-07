@@ -44,6 +44,7 @@ export default function Dashboard() {
 
   const inventario = dashboard.inventarioPorUbicacion;
   const hasBolsas = inventario.some((item) => Number(item.bolsas) > 0);
+  const hasPiezas = inventario.some((item) => Number(item.piezas) > 0);
   const selectedLocationName =
     selectedLocationId === null ? null : inventario[0]?.nombre;
 
@@ -110,6 +111,7 @@ export default function Dashboard() {
                     <TableHead className="text-right">{formatUnit("METRO")}</TableHead>
                     <TableHead className="text-right">{formatUnit("KILO")}</TableHead>
                     {hasBolsas && <TableHead className="text-right">{formatUnit("BOLSA")}</TableHead>}
+                    {hasPiezas && <TableHead className="text-right">{formatUnit("PIEZA")}</TableHead>}
                     <TableHead className="text-right">Rollos</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -120,13 +122,14 @@ export default function Dashboard() {
                        <TableCell className="text-right tabular-nums">{formatNumber(item.metros, { kind: "quantity" })}</TableCell>
                        <TableCell className="text-right tabular-nums">{formatNumber(item.kilos, { kind: "quantity" })}</TableCell>
                         {hasBolsas && <TableCell className="text-right tabular-nums">{formatNumber(item.bolsas, { kind: "quantity" })}</TableCell>}
+                         {hasPiezas && <TableCell className="text-right tabular-nums">{formatNumber(item.piezas, { kind: "quantity" })}</TableCell>}
                        <TableCell className="text-right tabular-nums">{formatNumber(item.rollos, { kind: "count" })}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             )}
-            <p className="px-6 pb-4 text-sm text-muted-foreground" data-testid="dashboard-inventory-explanation">Muestra la existencia física actual en metros, kilos, bolsas y rollos por cada sitio visible, sin periodo ni IVA.</p>
+            <p className="px-6 pb-4 text-sm text-muted-foreground" data-testid="dashboard-inventory-explanation">Muestra la existencia física actual en metros, kilos, bolsas, piezas y rollos por cada sitio visible, sin periodo ni IVA.</p>
           </CardContent>
         </Card>
       </div>

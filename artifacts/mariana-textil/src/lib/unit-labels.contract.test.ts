@@ -93,11 +93,19 @@ test("Task 62 quantity surfaces render bag totals separately when present", asyn
   }
 });
 
-test("Task PIEZA reception summary uses the shared formatter", async () => {
-  const source = await readFile(
+test("Task PIEZA dashboard and reception summaries use the shared formatter", async () => {
+  const [dashboard, source] = await Promise.all([
+    readFile(
+      new URL("artifacts/mariana-textil/src/pages/dashboard.tsx", root),
+      "utf8",
+    ),
+    readFile(
     new URL("artifacts/mariana-textil/src/components/recepcion-salidas.tsx", root),
     "utf8",
-  );
+    ),
+  ]);
+  assert.match(dashboard, /item\.piezas/, "dashboard must render piece totals");
+  assert.match(dashboard, /formatUnit\("PIEZA"\)/, "dashboard must label pieces with the shared formatter");
   assert.match(source, /totalPiezas/, "reception must support piece totals");
   assert.match(source, /formatUnit\("PIEZA"\)/, "reception must label pieces with the shared formatter");
 });
