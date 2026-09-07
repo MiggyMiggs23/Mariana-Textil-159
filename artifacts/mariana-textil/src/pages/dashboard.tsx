@@ -58,7 +58,7 @@ export default function Dashboard() {
               : `Dashboard - ${user?.ubicacion?.nombre || "General"}`}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Resumen de la operación al momento.
+            Resumen de existencias por sitio.
           </p>
         </div>
 
@@ -129,7 +129,6 @@ export default function Dashboard() {
                 </TableBody>
               </Table>
             )}
-            <p className="px-6 pb-4 text-sm text-muted-foreground" data-testid="dashboard-inventory-explanation">Muestra la existencia física actual en metros, kilos, bolsas, piezas y rollos por cada sitio visible, sin periodo ni IVA.</p>
           </CardContent>
         </Card>
       </div>
