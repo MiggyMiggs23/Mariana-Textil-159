@@ -765,6 +765,34 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
+  /precios/cambiar-masivo:
+    post:
+      operationId: changePreciosMasivo
+      tags: [precios]
+      summary: Cambia el mismo precio por modo para hasta 200 productos en una sola transacción (permiso precios/editar)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PrecioCambioMasivoInput" }
+      responses:
+        "200":
+          description: Todos los precios fueron actualizados
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PrecioCambioMasivoResultado" }
+        "400":
+          description: Solicitud inválida, unidades mixtas o productos incompatibles con venta metreada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PrecioCambioMasivoError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404":
+          description: Uno o más productos no existen
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PrecioCambioMasivoError" }
   /precios/{id}/venta-por-metro:
     patch:
       operationId: updatePrecioVentaPorMetro
@@ -8878,6 +8906,48 @@ components:
       properties:
         producto: { $ref: "#/components/schemas/PrecioProducto" }
         cambio: { $ref: "#/components/schemas/PrecioHistorialItem" }
+    PrecioCambioMasivoInput:
+      type: object
+      additionalProperties: false
+      required: [productoIds, precioListaNuevo, modoPrecio, motivo]
+      properties:
+        productoIds:
+          type: array
+          minItems: 1
+          maxItems: 200
+          uniqueItems: true
+          items: { type: number, minimum: 1 }
+        precioListaNuevo:
+          type: string
+          description: Importe positivo con máximo dos decimales
+        modoPrecio: { $ref: "#/components/schemas/ModoPrecio" }
+        motivo: { type: string, minLength: 5 }
+    PrecioCambioMasivoResultado:
+      type: object
+      required: [actualizados]
+      properties:
+        actualizados: { type: number, minimum: 1, maximum: 200 }
+    PrecioCambioMasivoError:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        code:
+          type: string
+          enum:
+            [
+              PRODUCTOS_DUPLICADOS,
+              UNIDADES_MIXTAS,
+              VENTA_POR_METRO_DESHABILITADA,
+            ]
+        skus:
+          type: array
+          items: { type: string }
+          description: SKUs concretos involucrados en unidades mixtas o incompatibles con venta metreada
+        productoIds:
+          type: array
+          items: { type: number }
+          description: IDs solicitados que no existen
     ImportFileInput:
       type: object
       required: [fileName, content]

@@ -3589,6 +3589,46 @@ export interface PrecioCambioResultado {
   cambio: PrecioHistorialItem;
 }
 
+export interface PrecioCambioMasivoInput {
+  /**
+     * @minItems 1
+     * @maxItems 200
+     * @items.minimum 1
+     */
+  productoIds: number[];
+  /** Importe positivo con máximo dos decimales */
+  precioListaNuevo: string;
+  modoPrecio: ModoPrecio;
+  /** @minLength 5 */
+  motivo: string;
+}
+
+export interface PrecioCambioMasivoResultado {
+  /**
+     * @minimum 1
+     * @maximum 200
+     */
+  actualizados: number;
+}
+
+export type PrecioCambioMasivoErrorCode = typeof PrecioCambioMasivoErrorCode[keyof typeof PrecioCambioMasivoErrorCode];
+
+
+export const PrecioCambioMasivoErrorCode = {
+  PRODUCTOS_DUPLICADOS: 'PRODUCTOS_DUPLICADOS',
+  UNIDADES_MIXTAS: 'UNIDADES_MIXTAS',
+  VENTA_POR_METRO_DESHABILITADA: 'VENTA_POR_METRO_DESHABILITADA',
+} as const;
+
+export interface PrecioCambioMasivoError {
+  error: string;
+  code?: PrecioCambioMasivoErrorCode;
+  /** SKUs concretos involucrados en unidades mixtas o incompatibles con venta metreada */
+  skus?: string[];
+  /** IDs solicitados que no existen */
+  productoIds?: number[];
+}
+
 export interface ImportFileInput {
   fileName: string;
   /** Contenido del archivo en base64 */

@@ -1136,6 +1136,32 @@ export const ChangePrecioResponse = zod.object({
 
 
 /**
+ * @summary Cambia el mismo precio por modo para hasta 200 productos en una sola transacción (permiso precios/editar)
+ */
+
+export const changePreciosMasivoBodyProductoIdsMax = 200;
+
+export const changePreciosMasivoBodyMotivoMin = 5;
+
+
+
+export const ChangePreciosMasivoBody = zod.object({
+  "productoIds": zod.array(zod.number().min(1)).min(1).max(changePreciosMasivoBodyProductoIdsMax),
+  "precioListaNuevo": zod.string().describe('Importe positivo con máximo dos decimales'),
+  "modoPrecio": zod.enum(['ROLLO', 'MAYOREO', 'MENUDEO']),
+  "motivo": zod.string().min(changePreciosMasivoBodyMotivoMin)
+})
+
+export const changePreciosMasivoResponseActualizadosMax = 200;
+
+
+
+export const ChangePreciosMasivoResponse = zod.object({
+  "actualizados": zod.number().min(1).max(changePreciosMasivoResponseActualizadosMax)
+})
+
+
+/**
  * @summary Habilita o bloquea la venta metreada de un producto (permiso precios/editar)
  */
 export const UpdatePrecioVentaPorMetroParams = zod.object({

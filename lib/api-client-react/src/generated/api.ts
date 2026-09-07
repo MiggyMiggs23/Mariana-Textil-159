@@ -223,6 +223,9 @@ import type {
   PosClienteCreditoDisponible,
   PosPrecioValidationInput,
   PosPrecioValidationResult,
+  PrecioCambioMasivoError,
+  PrecioCambioMasivoInput,
+  PrecioCambioMasivoResultado,
   PrecioCambioResultado,
   PrecioProducto,
   PrecioProductoDetail,
@@ -2739,6 +2742,77 @@ export const useChangePrecio = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getChangePrecioMutationOptions(options));
+    }
+
+export const getChangePreciosMasivoUrl = () => {
+
+
+
+
+  return `/api/precios/cambiar-masivo`
+}
+
+/**
+ * @summary Cambia el mismo precio por modo para hasta 200 productos en una sola transacción (permiso precios/editar)
+ */
+export const changePreciosMasivo = async (precioCambioMasivoInput: PrecioCambioMasivoInput, options?: Parameters<typeof customFetch>[1]): Promise<PrecioCambioMasivoResultado> => {
+
+  return customFetch<PrecioCambioMasivoResultado>(getChangePreciosMasivoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(precioCambioMasivoInput)
+  }
+);}
+
+
+
+
+
+export const getChangePreciosMasivoMutationOptions = <TError = ErrorType<PrecioCambioMasivoError | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePreciosMasivo>>, TError,{data: BodyType<PrecioCambioMasivoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof changePreciosMasivo>>, TError,{data: BodyType<PrecioCambioMasivoInput>}, TContext> => {
+
+const mutationKey = ['changePreciosMasivo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changePreciosMasivo>>, {data: BodyType<PrecioCambioMasivoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  changePreciosMasivo(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangePreciosMasivoMutationResult = NonNullable<Awaited<ReturnType<typeof changePreciosMasivo>>>
+    export type ChangePreciosMasivoMutationBody = BodyType<PrecioCambioMasivoInput>
+    export type ChangePreciosMasivoMutationError = ErrorType<PrecioCambioMasivoError | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Cambia el mismo precio por modo para hasta 200 productos en una sola transacción (permiso precios/editar)
+ */
+export const useChangePreciosMasivo = <TError = ErrorType<PrecioCambioMasivoError | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePreciosMasivo>>, TError,{data: BodyType<PrecioCambioMasivoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof changePreciosMasivo>>,
+        TError,
+        {data: BodyType<PrecioCambioMasivoInput>},
+        TContext
+      > => {
+      return useMutation(getChangePreciosMasivoMutationOptions(options));
     }
 
 export const getUpdatePrecioVentaPorMetroUrl = (id: number,) => {

@@ -1,0 +1,138 @@
+# Prompt para Replit Agent — Pantalla de Precios: agrupación por producto y captura masiva
+
+Trabajo sobre `artifacts/mariana-textil/src/pages/precios/index.tsx` y `artifacts/api-server/src/routes/precios.ts`.
+
+No cambies ninguna regla de negocio ni la forma en que se calcula un precio, un costo o un margen. No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+Recordatorio de las tres modalidades, que ya están implementadas y **no se tocan**: rollo es rollo completo; mayoreo aplica de 10 unidades en adelante; menudeo es menos de 10. El umbral vive en `lib/metered-pricing/src/index.ts` como `MAYOREO_THRESHOLD_UNITS = 10`. No lo dupliques ni lo reescribas: si necesitas el número, impórtalo de ahí.
+
+---
+
+## Bloque 1 — Renombrar la pantalla
+
+El título dice **"Gobernanza de Precios"**. Cámbialo a **"Precios"**, a secas. El subtítulo se queda igual.
+
+Busca en todo el repositorio si ese nombre aparece en otro lado —menú lateral, breadcrumbs, título del documento, matriz de permisos, pruebas— y déjalo consistente. Reporta cada lugar que cambiaste.
+
+## Bloque 2 — Agrupar el listado por producto
+
+Hoy la tabla lista un renglón por cada combinación de tela y color, lo que la vuelve interminable. Debe listar **un renglón por producto**, con sus colores plegados debajo.
+
+### Cómo se agrupa
+
+`tela` y `color` son columnas de texto en la tabla `productos`, con un constraint único sobre el par. **No existe un catálogo de telas**, así que la agrupación es por la cadena `tela`.
+
+Agrupa usando la tela **normalizada** —recortando espacios de los extremos y sin distinguir mayúsculas— y muestra el nombre tal como está guardado en el primer producto del grupo. Si al agrupar detectas dos escrituras distintas de la misma tela que colapsan en un grupo, **repórtalo al terminar con los nombres exactos**: es suciedad de catálogo que hay que limpiar aparte.
+
+El orden de los grupos y el de los colores dentro de cada grupo sigue el ordenamiento en español que ya usa el sistema. No inventes uno nuevo.
+
+### El renglón de grupo
+
+Ocupa las mismas columnas de la tabla actual:
+
+- **SKU:** una flecha para plegar y desplegar, del lado izquierdo. Todos los grupos arrancan **plegados**.
+- **Producto:** el nombre de la tela, el conteo de colores que contiene, y la casilla de "seleccionar todo" que define el Bloque 3.
+- **Unidad:** la unidad del producto.
+- **Venta fraccionada, Costo base, Precio Lista, Margen $ y Margen %:** vacías, con guion.
+- **Estado:** cuántos colores del grupo están sin precio, si hay alguno.
+
+**En el renglón de grupo no se suma ni se promedia ningún precio, costo ni margen.** Un promedio de precios no significa nada operativamente y se leería como si fuera un precio real. Deja un comentario en el código explicando por qué esas celdas van vacías, para que nadie las "complete" después.
+
+### El renglón de color
+
+Al desplegar, cada color conserva exactamente las columnas y el comportamiento que tiene hoy: el SKU como enlace al detalle, el interruptor de venta fraccionada, el costo, el precio, los dos márgenes y la insignia de estado, incluido el candado de "Bloqueado para este modo". No cambies ninguna de esas celdas.
+
+### Búsqueda y filtros
+
+- Los filtros de unidad, estado y "sin precio" siguen aplicando **a nivel de color**. Un grupo aparece si le sobrevive al menos un color, y muestra únicamente los colores que sobrevivieron. El conteo del renglón de grupo refleja los colores visibles, no el total del catálogo.
+- Cuando hay búsqueda activa, los grupos con coincidencias se **despliegan solos**, para que el usuario vea el color que buscó sin tener que abrir nada.
+- Al limpiar la búsqueda, los grupos vuelven a plegarse.
+
+## Bloque 3 — Selección de colores
+
+### Dónde van las casillas
+
+- **Casilla de color:** a la izquierda del nombre del color, dentro del grupo desplegado.
+- **Casilla de grupo:** al lado del nombre del producto, en el renglón de grupo. Marca y desmarca **todos los colores de ese producto y nada más**. Nunca toca otro producto. Debe mostrar estado intermedio cuando solo hay algunos colores marcados.
+
+### Qué se puede seleccionar
+
+1. **La casilla de grupo solo marca los colores visibles con los filtros actuales.** Si un filtro escondió tres colores, esos tres no se marcan. Aplicar un precio a un renglón que el usuario no tiene en pantalla es la peor forma de perder dinero.
+2. **En Mayoreo y Menudeo, los colores bloqueados no se pueden seleccionar.** Un color está bloqueado cuando su interruptor de venta fraccionada está apagado o su unidad es kilo; es el mismo criterio que hoy pinta el candado, y el servidor los rechaza con `VENTA_POR_METRO_DESHABILITADA`. Su casilla va deshabilitada, con un texto al pasar el cursor que diga que hay que encender la venta fraccionada primero. La casilla de grupo los ignora y su conteo no los incluye.
+3. **Al cambiar de pestaña —Rollo, Mayoreo, Menudeo— la selección se vacía.** Una selección hecha en Rollo puede contener colores que en Mayoreo están bloqueados, y arrastrarla produciría un error a media aplicación.
+4. La selección **puede abarcar varios productos** si el usuario marca colores en más de un grupo a mano. Lo que nunca cruza productos es el botón de seleccionar todo. El diálogo de confirmación del Bloque 4 le muestra al usuario, agrupado por tela, todo lo que está por cambiar.
+
+## Bloque 4 — Herramienta de precio masivo
+
+Va en el espacio en blanco que hoy queda **entre la fila de filtros y las pestañas de modalidad**, ocupando el ancho disponible. Está siempre visible, con los controles inertes mientras no haya nada seleccionado, para que el usuario sepa que existe.
+
+Es el mismo patrón de selección múltiple más acción en bloque que ya usa la pantalla de etiquetas de entrada (`entrada-etiquetas.tsx`): casillas, un botón de seleccionar todo y una acción sobre lo seleccionado. **Sigue ese patrón, no inventes uno nuevo.**
+
+### Qué contiene
+
+- El conteo de colores seleccionados.
+- Un campo de **precio**.
+- Un campo de **motivo**.
+- Un botón para aplicar.
+- Una leyenda que diga sin ambigüedad a qué modalidad se va a aplicar, tomada de la pestaña activa.
+
+El botón se habilita solo con al menos un color seleccionado, un precio positivo válido y un motivo de al menos cinco caracteres. **El motivo es obligatorio y no se rellena solo con un texto genérico:** es lo que después permite saber por qué un producto quedó en cierto precio, y ya lo exige el cambio individual.
+
+### Confirmación antes de aplicar
+
+Al presionar el botón se abre un diálogo que muestra:
+
+- El precio nuevo y la modalidad a la que se aplica.
+- Los colores afectados **agrupados por producto**, con su SKU.
+- **Cuántos de ellos quedarían por debajo de su costo** con ese precio, usando el mismo criterio de `advertenciaBajoCosto` que ya calcula el cambio individual. Si hay al menos uno, la advertencia va destacada y el usuario tiene que confirmar explícitamente. **No lo bloquees**: el cambio individual tampoco lo bloquea, solo lo advierte y lo registra.
+
+Al terminar, un aviso con cuántos precios se cambiaron, y la lista se refresca sola.
+
+## Bloque 5 — Endpoint de cambio masivo
+
+Agrega `POST /precios/cambiar-masivo`, con el mismo permiso que el cambio individual: `requierePermiso("precios", "editar")`.
+
+Cuerpo: los identificadores de producto, el precio nuevo, la modalidad y el motivo. Limita la tanda a **200 productos** como máximo, para que la transacción y sus candados no se queden abiertos demasiado tiempo.
+
+### Reglas de implementación, todas obligatorias
+
+1. **Extrae la lógica que ya existe en `POST /precios/:id/cambiar` a una función compartida** y haz que los dos endpoints la usen. El cálculo del costo, las métricas de margen, el renglón de `precio_historial` y el de auditoría deben escribirse en un solo lugar. **No dupliques ese código:** dos implementaciones del mismo cálculo divergen en silencio y es exactamente lo que las reglas del proyecto prohíben.
+2. **Una sola transacción para toda la tanda.** Si algo falla, no se cambia ningún precio. Nunca debe quedar media selección aplicada.
+3. **Los candados se toman en orden ascendente de identificador de producto**, tanto el candado consultivo `PRODUCT_PRICING` como el bloqueo de renglón. Es la regla del proyecto para cuando se toman varios candados y aquí es lo único que evita un abrazo mortal entre dos usuarios cambiando precios de los mismos productos en distinto orden.
+4. **Valida todos los productos antes de escribir nada:** que existan, y si la modalidad es mayoreo o menudeo, que tengan la venta fraccionada encendida y que no sean de kilo. Si alguno no pasa, rechaza la tanda completa y devuelve **los SKU concretos que fallaron**, no un mensaje genérico. La interfaz ya impide seleccionarlos, así que esto es la red de seguridad, no el camino normal.
+5. **Rechaza la tanda si mezcla unidades.** Un producto no debería tener colores en metros y en kilos, pero nada en la base lo impide. Si llega una tanda con unidades mezcladas, no la apliques: devuelve el error nombrando los SKU. Metros y kilos no comparten precio, y un dato así es un problema de catálogo que hay que ver, no algo que se resuelve solo.
+6. **Un renglón de `precio_historial` y uno de auditoría por cada producto afectado**, todos con el mismo motivo. No un renglón por la tanda: el historial se consulta por producto y tiene que poder responder qué pasó con ese color en particular.
+7. Declara el endpoint en `lib/api-spec/openapi.yaml` y ejecuta `codegen`.
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo.
+2. `pnpm --filter @workspace/api-spec run codegen`, sin diferencias pendientes.
+3. Las suites de precios: `precios.test.ts`, `precios.integration.test.ts`, `precios-null.contract.test.ts` y la de contrato del cliente.
+4. Grep de "Gobernanza": cero resultados fuera del historial.
+5. En navegador autenticado, en la pestaña de Rollo: los grupos aparecen plegados, la flecha los abre, y el conteo de colores del grupo coincide con los colores que se despliegan.
+6. Con un filtro que esconda parte de los colores de un producto, marca la casilla de grupo y confirma que **solo se seleccionaron los visibles**.
+7. En Mayoreo, confirma que los colores bloqueados no se pueden marcar y que la casilla de grupo los ignora en su conteo.
+8. Selecciona colores en Rollo, cambia a Menudeo y confirma que la selección quedó vacía.
+9. Aplica un precio a varios colores de un mismo producto. Comprueba en la base que se escribió **un renglón de historial por color**, todos con el mismo motivo, y que la auditoría registró lo mismo.
+10. Aplica un precio deliberadamente por debajo del costo a una selección y confirma que el diálogo cuenta bien cuántos quedan bajo costo, que exige confirmación adicional y que aun así el cambio se guarda con su advertencia.
+11. Manda una tanda con un producto de mayoreo bloqueado directamente al endpoint, saltándote la interfaz: debe rechazarla completa, nombrar el SKU y **no haber cambiado ningún otro precio**.
+12. Verifica que un usuario sin permiso de editar precios recibe 403 en el endpoint nuevo.
+13. Revisa la pantalla en teléfono: los grupos, las casillas y la barra de captura masiva deben ser usables, y la tabla conserva su desplazamiento horizontal.
+
+## Al terminar
+
+Escribe en `replit.md`, en la sección de Precios:
+
+- Que la pantalla se llama **Precios** y que el listado se agrupa por producto con los colores plegados.
+- Que la agrupación es por la cadena `tela` normalizada porque **no existe un catálogo de telas**, y que por eso dos escrituras distintas de la misma tela pueden partir un grupo. Deja anotado que un catálogo de telas es la solución de fondo y que está pendiente.
+- Que el renglón de grupo **nunca suma ni promedia precios, costos ni márgenes**, y por qué.
+- Que "seleccionar todo" abarca únicamente los colores visibles de **un solo producto**, y que cambiar de modalidad vacía la selección.
+- Que en mayoreo y menudeo los colores sin venta fraccionada y los de kilo no son seleccionables, y que la condición es la misma que usa el servidor.
+- Que el cambio masivo **exige motivo** y escribe un renglón de historial y uno de auditoría **por producto**, nunca uno por tanda.
+- Que el cambio masivo corre en una sola transacción, con candados tomados en orden ascendente de identificador, es todo o nada, y comparte la misma función de cálculo que el cambio individual.
+- Que el límite de la tanda son 200 productos y por qué.
+- Confirma que el umbral de mayoreo son 10 unidades, vive en `lib/metered-pricing/src/index.ts` y no se duplica en ningún otro lado.
+- Un renglón con la fecha de este cambio y qué se hizo.

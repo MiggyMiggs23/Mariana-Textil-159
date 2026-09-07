@@ -6,7 +6,7 @@ const list = readFileSync(new URL("./index.tsx", import.meta.url), "utf8");
 const detail = readFileSync(new URL("./detail.tsx", import.meta.url), "utf8");
 
 test("price list renders and filters missing prices explicitly", () => {
-  assert.match(list, /modeData\.precioLista == null \? "Sin precio"/);
+  assert.match(list, /modeData\.precioLista == null \? [\s\S]*?>Sin precio</);
   assert.match(list, /data-testid="filter-sin-precio"/);
   assert.match(list, /sinPrecio: sinPrecio \|\| undefined/);
   assert.doesNotMatch(list, /precioLista[^;\n]*\?\s*formatNumber[^;\n]*:\s*["']\$?0\.00/);

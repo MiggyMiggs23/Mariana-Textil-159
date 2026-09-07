@@ -1,9 +1,12 @@
 import { Router, type IRouter } from "express";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { z } from "zod";
 import {
   ChangePrecioBody,
   ChangePrecioParams,
   ChangePrecioResponse,
+  ChangePreciosMasivoBody,
+  ChangePreciosMasivoResponse,
   GetPrecioParams,
   GetPrecioResponse,
   ListPreciosQueryParams,
@@ -34,6 +37,12 @@ router.use("/precios", requireSession);
 
 type Product = typeof productosTable.$inferSelect;
 type History = typeof precioHistorialTable.$inferSelect;
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type ModoPrecio = "ROLLO" | "MAYOREO" | "MENUDEO";
+
+const StrictChangePreciosMasivoBody = ChangePreciosMasivoBody.extend({
+  productoIds: z.array(z.number().int().positive()).min(1).max(200),
+}).strict();
 
 async function currentCost(database: Pick<typeof db, "select">, productId: number) {
   const rows = await database
@@ -62,6 +71,61 @@ function presentHistory(row: History) {
     usuarioId: row.usuarioId,
     createdAt: row.createdAt,
   };
+}
+
+async function mutateLockedPrecio(
+  tx: Tx,
+  before: Product,
+  input: {
+    precioListaNuevo: string;
+    modoPrecio: ModoPrecio;
+    motivo: string;
+    usuarioId: number;
+    ip: string;
+  },
+) {
+  const isMeteredMode = input.modoPrecio !== "ROLLO";
+  const cost = isMeteredMode
+    ? (await meteredReferenceCost(tx, before.id, new Date())).cost
+    : await currentCost(tx, before.id);
+  const metrics = priceMetrics(input.precioListaNuevo, cost);
+  const previousPrice = input.modoPrecio === "ROLLO"
+    ? before.precioSugerido
+    : input.modoPrecio === "MAYOREO" ? before.precioMayoreo : before.precioMenudeo;
+  const updateValues = input.modoPrecio === "ROLLO"
+    ? { precioSugerido: input.precioListaNuevo }
+    : input.modoPrecio === "MAYOREO"
+      ? { precioMayoreo: input.precioListaNuevo }
+      : { precioMenudeo: input.precioListaNuevo };
+  const [updated] = await tx.update(productosTable).set(updateValues).where(eq(productosTable.id, before.id)).returning();
+  const [change] = await tx.insert(precioHistorialTable).values({
+    productoId: before.id,
+    precioListaAnterior: previousPrice,
+    precioListaNuevo: input.precioListaNuevo,
+    costoUnitarioPonderado: cost,
+    modoPrecio: input.modoPrecio,
+    margenPesosUnidad: metrics.margenPesosUnidad,
+    margenPorcentajeSubtotal: metrics.margenPorcentajeSubtotal,
+    motivo: input.motivo,
+    advertenciaBajoCosto: cost !== null && Number(input.precioListaNuevo) < Number(cost),
+    usuarioId: input.usuarioId,
+  }).returning();
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId,
+    accion: "CAMBIAR_PRECIO",
+    entidad: "productos",
+    entidadId: String(before.id),
+    datosAntes: { modoPrecio: input.modoPrecio, precioLista: previousPrice },
+    datosDespues: {
+      modoPrecio: input.modoPrecio,
+      precioLista: input.precioListaNuevo,
+      motivo: input.motivo,
+      ...metrics,
+      advertenciaBajoCosto: change!.advertenciaBajoCosto,
+    },
+    ip: input.ip,
+  });
+  return { kind: "updated", product: updated!, change: change! } as const;
 }
 
 async function presentProduct(product: Product, database: Pick<typeof db, "select"> = db) {
@@ -182,34 +246,13 @@ router.post("/precios/:id/cambiar", requierePermiso("precios", "editar"), async 
     if (isMeteredMode && !before.seVendePorMetro) {
       return { kind: "metered-disabled" } as const;
     }
-    const cost = isMeteredMode
-      ? (await meteredReferenceCost(tx, before.id, new Date())).cost
-      : await currentCost(tx, before.id);
-    const metrics = priceMetrics(body.data.precioListaNuevo, cost);
-    const previousPrice = modoPrecio === "ROLLO"
-      ? before.precioSugerido
-      : modoPrecio === "MAYOREO" ? before.precioMayoreo : before.precioMenudeo;
-    const updateValues = modoPrecio === "ROLLO"
-      ? { precioSugerido: body.data.precioListaNuevo }
-      : modoPrecio === "MAYOREO"
-        ? { precioMayoreo: body.data.precioListaNuevo }
-        : { precioMenudeo: body.data.precioListaNuevo };
-    const [updated] = await tx.update(productosTable).set(updateValues).where(eq(productosTable.id, before.id)).returning();
-    const [change] = await tx.insert(precioHistorialTable).values({
-      productoId: before.id, precioListaAnterior: previousPrice,
-      precioListaNuevo: body.data.precioListaNuevo, costoUnitarioPonderado: cost,
+    return mutateLockedPrecio(tx, before, {
+      precioListaNuevo: body.data.precioListaNuevo,
       modoPrecio,
-      margenPesosUnidad: metrics.margenPesosUnidad, margenPorcentajeSubtotal: metrics.margenPorcentajeSubtotal,
-      motivo: reason, advertenciaBajoCosto: cost !== null && Number(body.data.precioListaNuevo) < Number(cost),
+      motivo: reason,
       usuarioId: req.auth!.user.id,
-    }).returning();
-    await tx.insert(auditoriaTable).values({
-      usuarioId: req.auth!.user.id, accion: "CAMBIAR_PRECIO", entidad: "productos", entidadId: String(before.id),
-      datosAntes: { modoPrecio, precioLista: previousPrice },
-      datosDespues: { modoPrecio, precioLista: body.data.precioListaNuevo, motivo: reason, ...metrics, advertenciaBajoCosto: change!.advertenciaBajoCosto },
       ip: getRequestIp(req),
     });
-    return { product: updated!, change: change! };
   });
   if (!result) {
     res.status(404).json({ error: "Producto no encontrado." });
@@ -221,6 +264,100 @@ router.post("/precios/:id/cambiar", requierePermiso("precios", "editar"), async 
   }
   const product = await presentProduct(result.product);
   res.json(ChangePrecioResponse.parse({ producto: { ...product, ultimoCambioPrecio: result.change.createdAt }, cambio: presentHistory(result.change) }));
+});
+
+router.post("/precios/cambiar-masivo", requierePermiso("precios", "editar"), async (req, res): Promise<void> => {
+  const body = StrictChangePreciosMasivoBody.safeParse(req.body);
+  const reason = body.success ? body.data.motivo.trim() : "";
+  const newPrice = body.success ? body.data.precioListaNuevo : "";
+  if (!body.success || reason.length < 5 || !validPositiveMoney(newPrice)) {
+    res.status(400).json({ error: "El precio debe ser positivo, debe seleccionar de 1 a 200 productos y el motivo debe tener al menos 5 caracteres." });
+    return;
+  }
+  if (new Set(body.data.productoIds).size !== body.data.productoIds.length) {
+    res.status(400).json({ error: "Los IDs de producto no pueden repetirse.", code: "PRODUCTOS_DUPLICADOS" });
+    return;
+  }
+
+  const productoIds = [...body.data.productoIds].sort((a, b) => a - b);
+  const result = await db.transaction(async (tx) => {
+    // A globally consistent ordering prevents two overlapping batches from
+    // deadlocking. Every advisory lock is acquired before any row lock.
+    for (const productoId of productoIds) {
+      await transactionAdvisoryLock(
+        tx,
+        ADVISORY_LOCK_NAMESPACES.PRODUCT_PRICING,
+        productoId,
+      );
+    }
+    const products: Product[] = [];
+    for (const productoId of productoIds) {
+      const [product] = await tx
+        .select()
+        .from(productosTable)
+        .where(eq(productosTable.id, productoId))
+        .for("update")
+        .limit(1);
+      if (product) products.push(product);
+    }
+
+    // All batch-level validation deliberately happens after all locks and
+    // before the shared helper performs the first write.
+    const foundIds = new Set(products.map((product) => product.id));
+    const missingIds = productoIds.filter((id) => !foundIds.has(id));
+    if (missingIds.length) return { kind: "not-found", productoIds: missingIds } as const;
+    if (new Set(products.map((product) => product.unidad)).size > 1) {
+      return {
+        kind: "mixed-units",
+        products: products.map((product) => ({ sku: product.sku, unidad: product.unidad })),
+      } as const;
+    }
+    if (body.data.modoPrecio !== "ROLLO") {
+      const invalid = products.filter((product) =>
+        !product.seVendePorMetro || product.unidad === "KILO"
+      );
+      if (invalid.length) {
+        return { kind: "metered-disabled", skus: invalid.map((product) => product.sku) } as const;
+      }
+    }
+
+    const changes = [];
+    for (const product of products) {
+      changes.push(await mutateLockedPrecio(tx, product, {
+        precioListaNuevo: body.data.precioListaNuevo,
+        modoPrecio: body.data.modoPrecio,
+        motivo: reason,
+        usuarioId: req.auth!.user.id,
+        ip: getRequestIp(req),
+      }));
+    }
+    return { kind: "updated", changes } as const;
+  });
+
+  if (result.kind === "not-found") {
+    res.status(404).json({ error: "Uno o más productos no fueron encontrados.", productoIds: result.productoIds });
+    return;
+  }
+  if (result.kind === "mixed-units") {
+    const labels = result.products.map((product) => `${product.sku} (${product.unidad})`);
+    res.status(400).json({
+      error: `No se pueden mezclar unidades: ${labels.join(", ")}.`,
+      code: "UNIDADES_MIXTAS",
+      skus: result.products.map((product) => product.sku),
+    });
+    return;
+  }
+  if (result.kind === "metered-disabled") {
+    res.status(400).json({
+      error: `Productos no habilitados para venta por metro: ${result.skus.join(", ")}.`,
+      code: "VENTA_POR_METRO_DESHABILITADA",
+      skus: result.skus,
+    });
+    return;
+  }
+  res.json(ChangePreciosMasivoResponse.parse({
+    actualizados: result.changes.length,
+  }));
 });
 
 router.patch("/precios/:id/venta-por-metro", requierePermiso("precios", "editar"), async (req, res): Promise<void> => {
