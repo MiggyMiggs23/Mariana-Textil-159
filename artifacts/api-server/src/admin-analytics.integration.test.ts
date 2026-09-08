@@ -510,8 +510,8 @@ if (!testUrl) {
        assert.equal(destinations.encabezado.vendido.contado, "796.00");
        assert.equal(destinations.encabezado.vendido.credito, "400.00");
        assert.equal(destinations.encabezado.cobrado.contado, "796.00");
-       assert.equal(destinations.encabezado.cobrado.abonos, "40.00");
-       assert.equal(destinations.encabezado.cobrado.saldosFavor, "80.00");
+       assert.equal(destinations.encabezado.cobrado.abonos, "10.00");
+       assert.equal(destinations.encabezado.cobrado.saldosFavor, "60.00");
        assert.notEqual(
          Number(destinations.encabezado.cobrado.total)
            + Number(destinations.encabezado.porCobrar.periodo),
@@ -544,7 +544,7 @@ if (!testUrl) {
          (16 + 32 + 48).toFixed(2),
          "IVA includes the north invoiced transfer by its effective Caja payment date despite earlier creation",
        );
-       assert.equal(destinations.resumen.find((row) => row.cuentaDestino === "CUENTA_FISCAL")!.importe, "352.00");
+       assert.equal(destinations.resumen.find((row) => row.cuentaDestino === "CUENTA_FISCAL")!.importe, "302.00");
        const destinationDetails = await Promise.all(
         (["CAJA_FISICA", "CUENTA_FISCAL", "CUENTA_NO_FISCAL", "CUENTAS_POR_COBRAR"] as const).map(
           (destination) => analytics.listDestinationAccountMovements(
@@ -654,7 +654,7 @@ if (!testUrl) {
         assert.ok(incongruentFiscalDetail.items.every((item) =>
           item.incongruente && item.facturado === false),
         );
-       assert.equal(await analytics.getDestinationCollectedAmount(filters, "CUENTA_FISCAL"), "352.00");
+       assert.equal(await analytics.getDestinationCollectedAmount(filters, "CUENTA_FISCAL"), "302.00");
        assert.equal(await analytics.getDestinationCollectedAmount(
          { ...filters, ubicacionId: ids.locations[1] },
          "CUENTA_FISCAL",
@@ -730,6 +730,61 @@ if (!testUrl) {
        assert.equal(paymentPeriod.encabezado.vendido.total, "0.00");
        assert.equal(paymentPeriod.encabezado.cobrado.total, "70.00");
        assert.equal(paymentPeriod.encabezado.cobrado.abonos, "70.00");
+
+       // A partial reversal is a separate immutable movement. Analytics must
+       // subtract the reversal's own amount, never the full original payment.
+       const partialPaymentAt = new Date(now.getTime() + 30 * 86_400_000);
+       const partialReversalAt = new Date(partialPaymentAt.getTime() + 1_000);
+       const partialAbono = await one(
+         `INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at)
+          VALUES($1,'ABONO',-50,$2,'TRANSFERENCIA','CUENTA_FISCAL',$3) RETURNING id`,
+         [ids.clients[0], ids.users[1], partialPaymentAt],
+       );
+       ids.creditMovements.push(Number(partialAbono.id));
+       const partialApplication = await one(
+         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
+          VALUES($1,$2,30) RETURNING id`,
+         [partialAbono.id, creditSale.id],
+       );
+       ids.creditApplications.push(Number(partialApplication.id));
+       const partialReversal = await one(
+         `INSERT INTO movimientos_credito(
+            cliente_id,tipo,importe,movimiento_origen_id,usuario_id,created_at
+          ) VALUES($1,'REVERSO',20,$2,$3,$4) RETURNING id`,
+         [ids.clients[0], partialAbono.id, ids.users[0], partialReversalAt],
+       );
+       ids.creditMovements.push(Number(partialReversal.id));
+       const partialPeriod = {
+         desde: new Date(partialPaymentAt.getTime() - 1_000),
+         hasta: new Date(partialReversalAt.getTime() + 1_000),
+       };
+       const [partialSummary, partialAbonos, partialCreditBalance] = await Promise.all([
+         analytics.getDestinationAccounts(partialPeriod, false),
+         analytics.listDestinationAccountMovements(
+           partialPeriod,
+           "CUENTA_FISCAL",
+           1,
+           100,
+           { fuentes: ["ABONO"] },
+         ),
+         analytics.listDestinationAccountMovements(
+           partialPeriod,
+           "CUENTA_FISCAL",
+           1,
+           100,
+           { fuentes: ["ABONO_SALDO_FAVOR"] },
+         ),
+       ]);
+       assert.equal(partialSummary.encabezado.vendido.total, "0.00");
+       assert.equal(partialSummary.encabezado.cobrado.total, "30.00");
+       assert.equal(partialSummary.encabezado.cobrado.abonos, "10.00");
+       assert.equal(partialSummary.encabezado.cobrado.saldosFavor, "20.00");
+       assert.equal(partialAbonos.montoTotal, "10.00");
+       assert.equal(partialCreditBalance.montoTotal, "20.00");
+       assert.equal(
+         Number(partialAbonos.montoTotal) + Number(partialCreditBalance.montoTotal),
+         Number(partialSummary.encabezado.cobrado.total),
+       );
 
       // The router applies this same literal middleware to every /admin route.
       for (const role of ["CAJA", "TERMINAL"] as const) {
