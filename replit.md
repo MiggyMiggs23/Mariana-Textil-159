@@ -427,6 +427,14 @@ Decisión conservadora: CONTADOR tiene `crear` en `cobros_pagos` y en `proveedor
 
 La limpieza autorizada dejó vacíos los datos operativos y conservó clientes, proveedores, sitios, usuarios reales, permisos y los 154 productos del catálogo aprobado. Ese conteo corresponde al momento de la limpieza y no representa el tamaño vigente del catálogo. Los usuarios y sitios generados por pruebas que siguen referenciados por la bitácora inmutable se conservaron completos; nunca se fuerza su eliminación ni se altera la auditoría para borrarlos.
 
+**Purga operativa del 7 de septiembre de 2026:** antes de borrar se creó y restauró para verificar el respaldo completo de `heliumdb` llamado `mariana-textil-heliumdb-antes-purga-2026-09-08.dump`, conservado en Google Drive con SHA-256 `89403da91a677b30b3acbfbdf2b550b2008893d8e7dae0c2612c7acedf4b791a`. No se usó una rama Neon porque el proyecto conectado no contenía la base real.
+
+- **Lista A, vaciada dentro de una sola transacción:** `aplicaciones_credito`, `aplicaciones_pago_proveedor`, `auditoria_inventario_escaneos`, `auditoria_inventario_participantes`, `auditoria_inventario_snapshot`, `auditorias_inventario`, `autorizaciones_nota`, `contenedor_lineas`, `contenedores`, `cuadre_fiscal_registros`, `entradas`, `movimientos`, `movimientos_credito`, `notificaciones_credito`, `notificaciones_sistema`, `pagos_proveedor`, `reimpresiones_etiqueta`, `rollos`, `salida_lineas`, `salida_rollos`, `salidas`, `salidas_dinero_caja`, `sesiones_caja`, `sesiones_caja_dias`, `solicitudes_pago_dirigido`, `ticket_lineas`, `ticket_pagos`, `tickets`, `viaje_salidas`, `viaje_tickets` y `viajes`.
+- **Lista B, reiniciada:** `ticket_folio` a 999; `series_consecutivo` a 1000000; `entrada_folio`, `salida_folio`, `viaje_folio` y `auditoria_inventario_folio` a 0 por sitio; `contenedores_folio_seq` para que el siguiente folio sea 1. `existencias` no se vació manualmente: se reconstruyeron sus 28 pares con el algoritmo canónico y quedaron con cantidad y rollos en cero, sin descuadres.
+- **Lista C, conservada íntegramente:** `auditoria`, `camionetas`, `choferes`, `cliente_documentos`, `clientes`, `permisos_rol`, `permisos_usuario`, `pisos`, `precio_historial`, `productos`, `proveedores`, `sesiones`, `ubicaciones` y `usuarios`.
+
+La comprobación posterior confirmó toda la Lista A en cero, los conteos preflight intactos para la Lista C, los seis triggers financieros append-only nuevamente habilitados y un ticket técnico con folio 1000; ese ticket se eliminó y el contador regresó a 999.
+
 La pantalla de acceso y los servicios quedaron disponibles después de la limpieza. La comprobación autenticada de las pantallas con una cuenta real queda pendiente para el usuario porque la contraseña vigente del administrador no está disponible en el workspace; no se restablecen contraseñas reales ni se crean sesiones artificiales para una prueba.
 
 ### Pendientes antes del piloto
