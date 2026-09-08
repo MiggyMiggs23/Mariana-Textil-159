@@ -79,6 +79,33 @@ test("Replit development banner is hidden from every print medium", async () => 
   assert.match(css, /@media print\s*\{[\s\S]*#replit-dev-banner,[\s\S]*\[data-replit-dev-banner\][\s\S]*display:\s*none !important;/);
 });
 
+test("every print mode collapses body siblings outside the application root", async () => {
+  const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
+  const printModes = [
+    "print-80mm",
+    "print-credito",
+    "print-salida",
+    "print-entrada",
+    "print-viaje",
+    "print-corte",
+    "printing-labels",
+    "printing-label-sheet",
+  ];
+
+  for (const mode of printModes) {
+    assert.match(
+      css,
+      new RegExp(`body\\.${mode} > \\*:not\\(#root\\)\\s*\\{[\\s\\S]*?display:\\s*none !important;`),
+      `${mode} must collapse every body sibling outside #root`,
+    );
+  }
+
+  assert.match(css, /body\.print-viaje > \.viaje-page:not\(#root\)\s*\{[\s\S]*?display:\s*block !important;/);
+  assert.match(css, /body\.printing-labels > \.etiquetas-print:not\(#root\)\s*\{[\s\S]*?display:\s*block !important;/);
+  assert.match(css, /body\.printing-label-sheet > \.etiquetas-print:not\(#root\)\s*\{[\s\S]*?display:\s*grid !important;/);
+  assert.match(css, /body\.print-corte > \*:not\(#root\):has\(\.corte-print\)\s*\{[\s\S]*?display:\s*contents !important;/);
+});
+
 test("Thermal label uses spacing instead of vertical dividers and enlarges logo and QR", async () => {
   const label = await readFile(new URL("artifacts/mariana-textil/src/components/label-print.tsx", root), "utf8");
   assert.doesNotMatch(label, /border-l border-gray-400/);

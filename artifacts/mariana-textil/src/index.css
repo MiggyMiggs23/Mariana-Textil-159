@@ -249,6 +249,44 @@ body.measure-thermal-ticket .tabular-strip-page {
     print-color-adjust: exact !important;
   }
 
+  body.print-80mm > *:not(#root) {
+    display: none !important;
+  }
+  body.print-credito > *:not(#root) {
+    display: none !important;
+  }
+  body.print-salida > *:not(#root) {
+    display: none !important;
+  }
+  body.print-entrada > *:not(#root) {
+    display: none !important;
+  }
+  body.print-viaje > *:not(#root) {
+    display: none !important;
+  }
+  body.print-corte > *:not(#root) {
+    display: none !important;
+  }
+  body.printing-labels > *:not(#root) {
+    display: none !important;
+  }
+  body.printing-label-sheet > *:not(#root) {
+    display: none !important;
+  }
+
+  body.print-viaje > .viaje-page:not(#root) {
+    display: block !important;
+  }
+  body.printing-labels > .etiquetas-print:not(#root) {
+    display: block !important;
+  }
+  body.printing-label-sheet > .etiquetas-print:not(#root) {
+    display: grid !important;
+  }
+  body.print-corte > *:not(#root):has(.corte-print) {
+    display: contents !important;
+  }
+
   img[data-logo-variant],
   img[data-logo-source] {
     opacity: 1 !important;
