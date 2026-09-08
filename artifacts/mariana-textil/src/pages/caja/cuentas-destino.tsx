@@ -299,14 +299,17 @@ export default function CajaCuentasDestino() {
                           </span>
                         </div>
                         <div className="flex items-center justify-between mt-2 text-xs">
-                          {row.cuentaDestino === "CAJA_FISICA" ? (
-                            <span className="font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Facturado: {formatNumber(row.cajaFisicaFacturado, { kind: "money" })}</span>
-                          ) : <span />}
+                          <span className="text-muted-foreground">Ant: {formatNumber(row.importeAnterior, { kind: "money" })}</span>
                           <div className={`flex items-center gap-0.5 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
                             {isPositive ? <ArrowUpRight className="w-3 h-3" /> : varPct < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
-                            {formatNumber(row.variacionPorcentaje, { kind: "percentage", percentageInput: "percent" })} vs ant.
+                            {formatNumber(row.variacionPorcentaje, { kind: "percentage", percentageInput: "percent" })}
                           </div>
                         </div>
+                        {row.cuentaDestino === "CAJA_FISICA" && (
+                          <div className="mt-2 text-xs">
+                            <span className="font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Facturado: {formatNumber(row.cajaFisicaFacturado, { kind: "money" })}</span>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   </Link>

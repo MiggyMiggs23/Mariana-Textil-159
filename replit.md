@@ -407,7 +407,7 @@ Para contar cobros se excluye explícitamente `CREDITO` en vez de enumerar las f
 
 La divergencia hallada en el feed de Caja se corrigió: `artifacts/api-server/src/routes/notificaciones.ts:194` usa `pendingTicketPredicate()`, por lo que muestra tickets sin cobrar y notas sin autorizar, pero retira una nota en cuanto queda autorizada.
 
-**Cambio del 7 de septiembre de 2026:** se reconstruyó Cuentas Destino con encabezado Cobrado/Por cobrar/Vendido, cuentas reales, matriz conciliada, IVA facturado, detalles filtrados, incongruencias y desglose por tienda; además se corrigieron el conteo abierto de formas de cobro y el feed pendiente de Caja.
+**Cambio del 7 de septiembre de 2026:** se reconstruyó Cuentas Destino con encabezado Cobrado/Por cobrar/Vendido, cuentas reales, matriz conciliada, IVA facturado, detalles filtrados, incongruencias y desglose por tienda; además se corrigieron el conteo abierto de formas de cobro y el feed pendiente de Caja. Se retiraron los borradores sueltos de la raíz: ningún cálculo de variación se replica fuera del servidor, ni siquiera como archivo de prueba manual. Las tarjetas de cuenta muestran el importe del periodo anterior junto a su porcentaje, por la misma razón que el encabezado.
 
 ## Roles SISTEMAS y CONTADOR
 

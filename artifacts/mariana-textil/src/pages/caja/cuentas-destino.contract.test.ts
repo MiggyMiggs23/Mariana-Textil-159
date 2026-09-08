@@ -54,6 +54,8 @@ describe("Cuentas Destino Contract", () => {
     assert.match(summary, /cobradoVariacionPorcentaje/);
     assert.match(summary, /porCobrarVariacionPorcentaje/);
     assert.match(summary, /vendidoVariacionPorcentaje/);
+    assert.match(summary, /Ant: \{formatNumber\(row\.importeAnterior, \{ kind: "money" \}\)\}/);
+    assert.match(summary, /formatNumber\(row\.variacionPorcentaje, \{ kind: "percentage", percentageInput: "percent" \}\)/);
     assert.doesNotMatch(summary, /getVariation|cobrado\s*\+\s*porCobrar|reduce\([^)]*importe/);
     assert.match(summary, /data\.matriz\.cierra/);
     assert.match(summary, /overflow-x-auto[\s\S]*data\.matriz\.filas/);
