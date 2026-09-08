@@ -3,7 +3,8 @@ import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetAdminCuentasDestino,
   exportAdminCuentasDestinoXlsx,
-  exportAdminCuentasDestinoPdf
+  exportAdminCuentasDestinoPdf,
+  type AdminMatrizDestinoCell
 } from "@workspace/api-client-react";
 import { useLocationScope } from "@/lib/location-scope";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -18,6 +19,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { Download, FileText, Wallet, RefreshCw, Loader2, AlertCircle, ArrowUpRight, ArrowDownRight, Store } from "lucide-react";
@@ -28,6 +30,52 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { getAccountDestinationChartColor } from "@/lib/report-chart-colors";
 import { Link } from "wouter";
+
+const getVariation = (current: string, prev: string) => {
+  const c = Number(current);
+  const p = Number(prev);
+  if (p === 0) return c > 0 ? 100 : 0;
+  return ((c - p) / Math.abs(p)) * 100;
+};
+
+const MatrixCellView = ({ 
+  cell, 
+  facturado, 
+  formaPago, 
+  inheritedParams 
+}: { 
+  cell: AdminMatrizDestinoCell; 
+  facturado: boolean | null; 
+  formaPago: string;
+  inheritedParams: URLSearchParams;
+}) => {
+  if (!cell || Number(cell.importe) === 0) return <span className="text-muted-foreground">-</span>;
+  
+  const params = new URLSearchParams(inheritedParams.toString());
+  if (facturado !== null) params.set('facturado', String(facturado));
+  params.set('formaPago', formaPago);
+
+  return (
+    <div className="flex flex-col items-start">
+      {cell.cuentaDestino ? (
+         <Link 
+           href={`/caja/cuentas-destino/${cell.cuentaDestino}?${params.toString()}`} 
+           className="text-primary hover:underline font-mono font-medium"
+           data-testid={`link-matriz-${cell.cuentaDestino}-${formaPago}`}
+         >
+           {formatNumber(cell.importe, { kind: 'money' })}
+         </Link>
+      ) : (
+         <span className="font-mono font-medium">{formatNumber(cell.importe, { kind: 'money' })}</span>
+      )}
+      {cell.cuentaDestino && (
+        <span className="text-[10px] text-muted-foreground mt-0.5 leading-tight uppercase font-semibold tracking-wider">
+          {formatAccountDestination(cell.cuentaDestino)}
+        </span>
+      )}
+    </div>
+  );
+};
 
 export default function CajaCuentasDestino() {
   const { selectedLocationId } = useLocationScope();
@@ -107,9 +155,20 @@ export default function CajaCuentasDestino() {
         .filter((destination) => !normalizeAccountDestination(destination)),
     )),
   ];
+
+  const inheritedFilters = new URLSearchParams({ desde, hasta });
+  if (selectedLocationId != null) inheritedFilters.set("ubicacionId", String(selectedLocationId));
+
+  const showOtras = data?.matriz?.filas.some(f => Number(f.otras.importe) !== 0) ?? false;
+
+  const orderMap: Record<string, number> = { "CAJA_FISICA": 1, "CUENTA_NO_FISCAL": 2, "CUENTA_FISCAL": 3 };
+  const cuentasSegundaFila = (data?.resumen ?? [])
+    .filter(r => ["CAJA_FISICA", "CUENTA_NO_FISCAL", "CUENTA_FISCAL"].includes(r.cuentaDestino))
+    .sort((a, b) => orderMap[a.cuentaDestino] - orderMap[b.cuentaDestino]);
+
   return (
     <AppLayout>
-      <div className="max-w-[1600px] mx-auto space-y-6">
+      <div className="max-w-[1600px] mx-auto space-y-6 pb-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-sidebar flex items-center gap-2">
@@ -166,14 +225,41 @@ export default function CajaCuentasDestino() {
             <Button variant="outline" className="mt-4" onClick={() => refetch()}>Intentar de nuevo</Button>
           </div>
         ) : (
-          <div className="space-y-6 animate-in fade-in">
-            {/* Top Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              {data.resumen.slice(0, 4).map((row, i) => {
+          <div className="space-y-8 animate-in fade-in">
+            {/* Top Cards: Cobrado, Por Cobrar, Vendido */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { title: "Cobrado", amount: data.encabezado.cobrado, prev: data.encabezado.cobradoAnterior, className: "border-l-4 border-l-primary" },
+                { title: "Por Cobrar", amount: data.encabezado.porCobrar, prev: data.encabezado.porCobrarAnterior, className: "border-l-4 border-l-amber-500/50 bg-amber-50/30 dark:bg-amber-950/10 border-dashed" },
+                { title: "Vendido", amount: data.encabezado.vendido, prev: data.encabezado.vendidoAnterior, className: "border-l-4 border-l-sidebar" },
+              ].map((stat, i) => {
+                const varPct = getVariation(stat.amount, stat.prev);
+                const isPositive = varPct > 0;
+                return (
+                  <Card key={i} className={`relative overflow-hidden ${stat.className}`}>
+                    <CardContent className="pt-6">
+                      <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{stat.title}</p>
+                      <h2 className="text-3xl font-black text-sidebar mt-2" data-testid={`text-monto-${stat.title.toLowerCase().replace(' ', '-')}`}>
+                        {formatNumber(stat.amount, { kind: "money" })}
+                      </h2>
+                      <div className="flex items-center justify-between mt-3 text-sm">
+                        <span className="text-muted-foreground">Ant: {formatNumber(stat.prev, { kind: "money" })}</span>
+                        <div className={`flex items-center gap-1 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : varPct < 0 ? <ArrowDownRight className="w-4 h-4" /> : null}
+                          {formatNumber(Math.abs(varPct), { kind: "percentage", percentageInput: "percent" })}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* Second Row: Caja Fisica, No Fiscal, Fiscal */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {cuentasSegundaFila.map((row, i) => {
                 const varPct = Number(row.variacionPorcentaje);
                 const isPositive = varPct > 0;
-                const inheritedFilters = new URLSearchParams({ desde, hasta });
-                if (selectedLocationId != null) inheritedFilters.set("ubicacionId", String(selectedLocationId));
                 return (
                   <Link
                     key={i}
@@ -182,20 +268,20 @@ export default function CajaCuentasDestino() {
                     data-testid={`link-cuenta-destino-${row.cuentaDestino}`}
                   >
                     <Card className="relative h-full overflow-hidden transition-colors hover:border-primary/60 hover:bg-muted/20">
-                      <div className="absolute top-0 right-0 p-4 opacity-10">
-                        <Wallet className="w-12 h-12" />
-                      </div>
-                      <CardContent className="pt-6">
-                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{formatAccountDestination(row.cuentaDestino)}</p>
-                        <div className="flex items-end gap-2 mt-2">
-                          <h2 className="text-3xl font-black text-sidebar">{formatNumber(row.importe, { kind: "money" })}</h2>
-                        </div>
-                        <div className="flex items-center justify-between mt-3 text-sm">
-                          <span className="font-bold text-sidebar bg-sidebar/10 px-2 py-0.5 rounded">
+                      <CardContent className="pt-5 pb-5">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{formatAccountDestination(row.cuentaDestino)}</p>
+                        <div className="flex items-end justify-between mt-1">
+                          <h3 className="text-2xl font-bold text-sidebar">{formatNumber(row.importe, { kind: "money" })}</h3>
+                          <span className="font-bold text-sidebar bg-sidebar/5 px-2 py-0.5 rounded text-xs">
                             {formatNumber(row.porcentaje, { kind: "percentage", percentageInput: "percent" })}
                           </span>
-                          <div className={`flex items-center gap-1 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
-                            {isPositive ? <ArrowUpRight className="w-4 h-4" /> : varPct < 0 ? <ArrowDownRight className="w-4 h-4" /> : null}
+                        </div>
+                        <div className="flex items-center justify-between mt-2 text-xs">
+                          {row.cuentaDestino === 'CAJA_FISICA' ? (
+                            <span className="font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Facturado: {formatNumber(row.cajaFisicaFacturado, { kind: "money" })}</span>
+                          ) : <span />}
+                          <div className={`flex items-center gap-0.5 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                            {isPositive ? <ArrowUpRight className="w-3 h-3" /> : varPct < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
                             {formatNumber(Math.abs(varPct), { kind: "percentage", percentageInput: "percent" })} vs ant.
                           </div>
                         </div>
@@ -206,13 +292,32 @@ export default function CajaCuentasDestino() {
               })}
             </div>
 
+            {/* Incongruencias Alert */}
+            {data.incongruencias.conteo > 0 && (
+              <Alert className="border-amber-500/50 bg-amber-500/10 text-amber-900 dark:text-amber-400">
+                <AlertCircle className="h-4 w-4 stroke-amber-600 dark:stroke-amber-400" />
+                <AlertTitle className="text-amber-800 dark:text-amber-300 font-bold">Incongruencias detectadas</AlertTitle>
+                <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2">
+                  <span className="text-amber-700 dark:text-amber-400/90 font-medium">Se encontraron {data.incongruencias.conteo} movimientos con destinos incongruentes por un total de {formatNumber(data.incongruencias.importe, { kind: "money" })}.</span>
+                  <Link href={`/caja/cuentas-destino/CUENTA_NO_FISCAL?incongruente=true&${inheritedFilters.toString()}`}>
+                    <Button variant="outline" size="sm" className="border-amber-500/50 text-amber-800 dark:text-amber-300 hover:bg-amber-500/20" data-testid="link-incongruencias">
+                      Revisar detalle
+                    </Button>
+                  </Link>
+                </AlertDescription>
+              </Alert>
+            )}
+
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
               {/* Stacked Chart */}
               <div className="xl:col-span-2">
                 <Card className="h-full">
                   <CardHeader>
                     <CardTitle className="text-lg">Flujos Diarios por Cuenta</CardTitle>
-                    <CardDescription>Monto cobrado por día y destino</CardDescription>
+                    <CardDescription>
+                      Flujos reconocidos (cobrado y por cobrar)
+                      {/* Documentación: Se elige mantener crédito/por cobrar en la gráfica porque representa flujos reconocidos de ventas, vitales para visualizar el total de ingresos generados en el periodo aunque su liquidación sea diferida. */}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     {chartData.length > 0 ? (
@@ -282,52 +387,58 @@ export default function CajaCuentasDestino() {
                 </Card>
               </div>
 
-              {/* Facturacion & IVA */}
+              {/* Matriz and Fiscal Resumen */}
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">Resumen Fiscal</CardTitle>
-                    <CardDescription>Impacto de IVA y comprobantes</CardDescription>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      Matriz de Operaciones
+                      {!data.matriz.cierra && (
+                         <div className="bg-destructive text-destructive-foreground text-[10px] px-1.5 py-0.5 rounded font-bold uppercase" title="Los importes no cuadran perfectamente">
+                           Descuadre
+                         </div>
+                      )}
+                    </CardTitle>
+                    <CardDescription>Resumen de cobros por tipo de comprobante</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="bg-muted/40 p-4 rounded-lg border">
-                      <div className="flex justify-between items-end">
-                        <div>
-                          <p className="text-xs text-muted-foreground uppercase font-semibold">Total Ingresado</p>
-                          <p className="text-2xl font-black text-sidebar mt-1">{formatNumber(data.totalCobrado, { kind: "money" })}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs text-muted-foreground uppercase font-semibold">IVA Recaudado</p>
-                          <p className="text-xl font-bold mt-1">{formatNumber(data.ivaCobrado, { kind: "money" })}</p>
-                        </div>
-                      </div>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <Table className="min-w-[500px]">
+                        <TableHeader>
+                          <TableRow className="bg-muted/40">
+                            <TableHead>Comprobante</TableHead>
+                            <TableHead>Efectivo</TableHead>
+                            <TableHead>Transferencia</TableHead>
+                            <TableHead>Por cobrar</TableHead>
+                            {showOtras && <TableHead>Otras</TableHead>}
+                            <TableHead className="font-bold border-l text-right">Total</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {data.matriz.filas.map((row, i) => (
+                            <TableRow key={i} className={row.facturado === null ? "bg-muted/20 font-bold border-t-2" : ""}>
+                              <TableCell className="font-medium">
+                                {row.facturado === true ? 'Facturado' : row.facturado === false ? 'Sin factura' : 'Total'}
+                              </TableCell>
+                              <TableCell><MatrixCellView cell={row.efectivo} facturado={row.facturado} formaPago="EFECTIVO" inheritedParams={inheritedFilters} /></TableCell>
+                              <TableCell><MatrixCellView cell={row.transferencia} facturado={row.facturado} formaPago="TRANSFERENCIA" inheritedParams={inheritedFilters} /></TableCell>
+                              <TableCell><MatrixCellView cell={row.porCobrar} facturado={row.facturado} formaPago="POR_COBRAR" inheritedParams={inheritedFilters} /></TableCell>
+                              {showOtras && <TableCell><MatrixCellView cell={row.otras} facturado={row.facturado} formaPago="OTRAS" inheritedParams={inheritedFilters} /></TableCell>}
+                              <TableCell className="font-mono font-black text-right border-l text-sidebar">{formatNumber(row.total, { kind: "money" })}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
 
-                    <div className="space-y-3 pt-2">
-                      <div className="flex justify-between items-center pb-2 border-b">
-                        <span className="font-semibold text-sidebar">Operaciones Facturadas</span>
-                        <span className="font-mono font-bold text-green-700">{formatNumber(data.facturacion.facturadoTotal, { kind: "money" })}</span>
+                    <div className="p-4 border-t bg-muted/10 grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-muted-foreground uppercase font-semibold">Base Facturada</p>
+                        <p className="text-lg font-bold text-sidebar mt-1">{formatNumber(data.ivaFacturado.base, { kind: "money" })}</p>
                       </div>
-                      <div className="flex justify-between items-center text-sm pl-4">
-                        <span className="text-muted-foreground">Efectivo</span>
-                        <span className="font-mono">{formatNumber(data.facturacion.facturadoEfectivo, { kind: "money" })}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm pl-4 pb-2 border-b">
-                        <span className="text-muted-foreground">Transferencia</span>
-                        <span className="font-mono">{formatNumber(data.facturacion.facturadoTransferencia, { kind: "money" })}</span>
-                      </div>
-
-                      <div className="flex justify-between items-center pb-2 border-b pt-2">
-                        <span className="font-semibold text-sidebar">Público General (No Fact.)</span>
-                        <span className="font-mono font-bold">{formatNumber(data.facturacion.noFacturadoTotal, { kind: "money" })}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm pl-4">
-                        <span className="text-muted-foreground">Efectivo</span>
-                        <span className="font-mono">{formatNumber(data.facturacion.noFacturadoEfectivo, { kind: "money" })}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm pl-4">
-                        <span className="text-muted-foreground">Transferencia</span>
-                        <span className="font-mono">{formatNumber(data.facturacion.noFacturadoTransferencia, { kind: "money" })}</span>
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground uppercase font-semibold">IVA Facturado</p>
+                        <p className="text-lg font-bold text-sidebar mt-1">{formatNumber(data.ivaFacturado.iva, { kind: "money" })}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -339,7 +450,7 @@ export default function CajaCuentasDestino() {
             <Card>
               <CardHeader>
                 <CardTitle>Desglose por Tienda</CardTitle>
-                <CardDescription>Acumulados por cuenta destino a nivel ubicación</CardDescription>
+                <CardDescription>Acumulados de venta y cobro a nivel ubicación</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
@@ -347,11 +458,9 @@ export default function CajaCuentasDestino() {
                     <TableHeader>
                       <TableRow className="bg-muted/40">
                         <TableHead>Tienda</TableHead>
-                         <TableHead className="text-right">{formatAccountDestination("CAJA_FISICA")}</TableHead>
-                         <TableHead className="text-right">{formatAccountDestination("CUENTA_NO_FISCAL")}</TableHead>
-                         <TableHead className="text-right">{formatAccountDestination("CUENTA_FISCAL")}</TableHead>
-                         <TableHead className="text-right border-l">{formatAccountDestination("CUENTAS_POR_COBRAR")}</TableHead>
-                        <TableHead className="text-right font-bold border-l">Total General</TableHead>
+                        <TableHead className="text-right">Cobrado</TableHead>
+                        <TableHead className="text-right border-l">Por Cobrar</TableHead>
+                        <TableHead className="text-right font-bold border-l">Vendido</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -361,16 +470,14 @@ export default function CajaCuentasDestino() {
                             <Store className="w-4 h-4 text-muted-foreground" />
                             {t.nombreUbicacion}
                           </TableCell>
-                          <TableCell className="text-right font-mono">{formatNumber(t.cajaFisica, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-mono text-amber-700">{formatNumber(t.cuentaNoFiscal, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-mono text-green-700">{formatNumber(t.cuentaFiscal, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-mono border-l text-muted-foreground">{formatNumber(t.cuentasPorCobrar, { kind: "money" })}</TableCell>
-                          <TableCell className="text-right font-mono font-black border-l text-sidebar">{formatNumber(t.total, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-mono">{formatNumber(t.cobrado, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-mono border-l text-muted-foreground">{formatNumber(t.porCobrar, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-mono font-black border-l text-sidebar">{formatNumber(t.vendido, { kind: "money" })}</TableCell>
                         </TableRow>
                       ))}
                       {data.porTienda.length === 0 && (
                         <TableRow>
-                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                          <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                             Sin movimientos en el periodo
                           </TableCell>
                         </TableRow>

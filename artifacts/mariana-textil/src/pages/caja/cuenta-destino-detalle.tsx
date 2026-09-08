@@ -28,7 +28,7 @@ import {
 import { useLocationScope } from "@/lib/location-scope";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react";
+import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, Download, Loader2, X } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -56,8 +56,14 @@ export default function CuentaDestinoDetalle() {
   const ubicacionId = selectedLocationId ?? (Number.isInteger(inheritedLocation) && inheritedLocation > 0
     ? inheritedLocation
     : undefined);
+  
   const [desde, setDesde] = useState(inherited.get("desde") ?? "");
   const [hasta, setHasta] = useState(inherited.get("hasta") ?? "");
+  
+  const [facturado, setFacturado] = useState<string>(inherited.get("facturado") ?? "");
+  const [formaPago, setFormaPago] = useState<string>(inherited.get("formaPago") ?? "");
+  const [incongruente, setIncongruente] = useState<boolean>(inherited.get("incongruente") === "true");
+
   const [page, setPage] = useState(1);
   const pageSize = 50;
   const { toast } = useToast();
@@ -74,15 +80,19 @@ export default function CuentaDestinoDetalle() {
   const [differenceDescription, setDifferenceDescription] = useState("");
   const [resolutionNotes, setResolutionNotes] = useState<Record<number, string>>({});
 
-  useEffect(() => setPage(1), [desde, hasta, ubicacionId]);
+  useEffect(() => setPage(1), [desde, hasta, ubicacionId, facturado, formaPago, incongruente]);
 
   const params = {
     desde: desde || undefined,
     hasta: hasta || undefined,
     ubicacionId,
+    facturado: facturado === "true" ? true : facturado === "false" ? false : undefined,
+    formaPago: formaPago as any || undefined,
+    incongruente: incongruente || undefined,
     page,
     pageSize,
   };
+  
   const query = useListAdminCuentaDestinoMovimientos(destination, params, {
     query: {
       enabled: isDestination(routeParams?.cuentaDestino),
@@ -101,6 +111,9 @@ export default function CuentaDestinoDetalle() {
         desde: desde || undefined,
         hasta: hasta || undefined,
         ubicacionId,
+        facturado: facturado === "true" ? true : facturado === "false" ? false : undefined,
+        formaPago: formaPago as any || undefined,
+        incongruente: incongruente || undefined,
       });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -130,6 +143,8 @@ export default function CuentaDestinoDetalle() {
   }
 
   const totalPages = Math.max(1, Math.ceil((query.data?.total ?? 0) / pageSize));
+  
+  const hasFilters = facturado !== "" || formaPago !== "" || incongruente;
 
   return (
     <AppLayout>
@@ -146,7 +161,32 @@ export default function CuentaDestinoDetalle() {
             <h1 className="text-2xl font-bold tracking-tight text-sidebar" data-testid="text-cuenta-destino">
               {formatAccountDestination(destination)}
             </h1>
-            <p className="text-sm text-muted-foreground">Movimientos financieros del periodo seleccionado.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
+               <p className="text-sm text-muted-foreground">Movimientos financieros del periodo seleccionado.</p>
+               {hasFilters && (
+                 <div className="flex flex-wrap items-center gap-2">
+                   <span className="text-xs text-muted-foreground px-2">Filtros activos:</span>
+                   {facturado !== "" && (
+                     <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-medium px-2 py-0.5 rounded">
+                       {facturado === "true" ? "Facturado" : "Sin factura"}
+                       <button onClick={() => setFacturado("")} className="hover:text-primary/70"><X className="h-3 w-3" /></button>
+                     </span>
+                   )}
+                   {formaPago !== "" && (
+                     <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-medium px-2 py-0.5 rounded">
+                       {formaPago}
+                       <button onClick={() => setFormaPago("")} className="hover:text-primary/70"><X className="h-3 w-3" /></button>
+                     </span>
+                   )}
+                   {incongruente && (
+                     <span className="inline-flex items-center gap-1 bg-amber-500/20 text-amber-900 dark:text-amber-300 text-xs font-medium px-2 py-0.5 rounded">
+                       Incongruentes
+                       <button onClick={() => setIncongruente(false)} className="hover:text-amber-700"><X className="h-3 w-3" /></button>
+                     </span>
+                   )}
+                 </div>
+               )}
+            </div>
           </div>
           <div className="flex flex-wrap items-end gap-3">
             <label className="space-y-1 text-xs font-medium text-muted-foreground">
@@ -237,7 +277,7 @@ export default function CuentaDestinoDetalle() {
                     {query.data?.items.length === 0 && (
                       <TableRow>
                         <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
-                          Sin movimientos en el periodo.
+                          Sin movimientos en el periodo con los filtros seleccionados.
                         </TableCell>
                       </TableRow>
                     )}
