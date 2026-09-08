@@ -4,7 +4,9 @@ import {
   useGetAdminCuentasDestino,
   exportAdminCuentasDestinoXlsx,
   exportAdminCuentasDestinoPdf,
-  type AdminMatrizDestinoCell
+  type AdminCuentasDestino,
+  type AdminMatrizDestinoCell,
+  type ListAdminCuentaDestinoMovimientosFormaPago,
 } from "@workspace/api-client-react";
 import { useLocationScope } from "@/lib/location-scope";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -20,7 +22,6 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { Download, FileText, Wallet, RefreshCw, Loader2, AlertCircle, ArrowUpRight, ArrowDownRight, Store } from "lucide-react";
 import { ACCOUNT_DESTINATION_ORDER, formatAccountDestination, formatNumber, normalizeAccountDestination } from "@workspace/number-format";
@@ -31,42 +32,41 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { getAccountDestinationChartColor } from "@/lib/report-chart-colors";
 import { Link } from "wouter";
 
-const getVariation = (current: string, prev: string) => {
-  const c = Number(current);
-  const p = Number(prev);
-  if (p === 0) return c > 0 ? 100 : 0;
-  return ((c - p) / Math.abs(p)) * 100;
+type ReconciledHeader = AdminCuentasDestino["encabezado"] & {
+  cobradoVariacionPorcentaje: string;
+  porCobrarVariacionPorcentaje: string;
+  vendidoVariacionPorcentaje: string;
 };
 
-const MatrixCellView = ({ 
-  cell, 
-  facturado, 
-  formaPago, 
-  inheritedParams 
-}: { 
-  cell: AdminMatrizDestinoCell; 
-  facturado: boolean | null; 
-  formaPago: string;
+const MatrixCellView = ({
+  cell,
+  facturado,
+  formaPago,
+  inheritedParams,
+}: {
+  cell: AdminMatrizDestinoCell;
+  facturado: boolean | null;
+  formaPago: ListAdminCuentaDestinoMovimientosFormaPago;
   inheritedParams: URLSearchParams;
 }) => {
-  if (!cell || Number(cell.importe) === 0) return <span className="text-muted-foreground">-</span>;
-  
+  if (Number(cell.importe) === 0) return <span className="text-muted-foreground">-</span>;
+
   const params = new URLSearchParams(inheritedParams.toString());
-  if (facturado !== null) params.set('facturado', String(facturado));
-  params.set('formaPago', formaPago);
+  if (facturado !== null) params.set("facturado", String(facturado));
+  params.set("formaPago", formaPago);
 
   return (
     <div className="flex flex-col items-start">
       {cell.cuentaDestino ? (
-         <Link 
-           href={`/caja/cuentas-destino/${cell.cuentaDestino}?${params.toString()}`} 
-           className="text-primary hover:underline font-mono font-medium"
-           data-testid={`link-matriz-${cell.cuentaDestino}-${formaPago}`}
-         >
-           {formatNumber(cell.importe, { kind: 'money' })}
-         </Link>
+        <Link
+          href={`/caja/cuentas-destino/${cell.cuentaDestino}?${params.toString()}`}
+          className="text-primary hover:underline font-mono font-medium"
+          data-testid={`link-matriz-${cell.cuentaDestino}-${formaPago}`}
+        >
+          {formatNumber(cell.importe, { kind: "money" })}
+        </Link>
       ) : (
-         <span className="font-mono font-medium">{formatNumber(cell.importe, { kind: 'money' })}</span>
+        <span className="font-mono font-medium">{formatNumber(cell.importe, { kind: "money" })}</span>
       )}
       {cell.cuentaDestino && (
         <span className="text-[10px] text-muted-foreground mt-0.5 leading-tight uppercase font-semibold tracking-wider">
@@ -165,6 +165,32 @@ export default function CajaCuentasDestino() {
   const cuentasSegundaFila = (data?.resumen ?? [])
     .filter(r => ["CAJA_FISICA", "CUENTA_NO_FISCAL", "CUENTA_FISCAL"].includes(r.cuentaDestino))
     .sort((a, b) => orderMap[a.cuentaDestino] - orderMap[b.cuentaDestino]);
+  const header = data?.encabezado as ReconciledHeader | undefined;
+  const topStats = header
+    ? [
+        {
+          title: "Cobrado",
+          amount: header.cobrado,
+          prev: header.cobradoAnterior,
+          variation: header.cobradoVariacionPorcentaje,
+          className: "border-l-4 border-l-primary",
+        },
+        {
+          title: "Por Cobrar",
+          amount: header.porCobrar,
+          prev: header.porCobrarAnterior,
+          variation: header.porCobrarVariacionPorcentaje,
+          className: "border-l-4 border-l-amber-500/50 bg-amber-50/30 dark:bg-amber-950/10 border-dashed",
+        },
+        {
+          title: "Vendido",
+          amount: header.vendido,
+          prev: header.vendidoAnterior,
+          variation: header.vendidoVariacionPorcentaje,
+          className: "border-l-4 border-l-sidebar",
+        },
+      ]
+    : [];
 
   return (
     <AppLayout>
@@ -228,15 +254,11 @@ export default function CajaCuentasDestino() {
           <div className="space-y-8 animate-in fade-in">
             {/* Top Cards: Cobrado, Por Cobrar, Vendido */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { title: "Cobrado", amount: data.encabezado.cobrado, prev: data.encabezado.cobradoAnterior, className: "border-l-4 border-l-primary" },
-                { title: "Por Cobrar", amount: data.encabezado.porCobrar, prev: data.encabezado.porCobrarAnterior, className: "border-l-4 border-l-amber-500/50 bg-amber-50/30 dark:bg-amber-950/10 border-dashed" },
-                { title: "Vendido", amount: data.encabezado.vendido, prev: data.encabezado.vendidoAnterior, className: "border-l-4 border-l-sidebar" },
-              ].map((stat, i) => {
-                const varPct = getVariation(stat.amount, stat.prev);
+              {topStats.map((stat) => {
+                const varPct = Number(stat.variation);
                 const isPositive = varPct > 0;
                 return (
-                  <Card key={i} className={`relative overflow-hidden ${stat.className}`}>
+                  <Card key={stat.title} className={`relative overflow-hidden ${stat.className}`}>
                     <CardContent className="pt-6">
                       <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{stat.title}</p>
                       <h2 className="text-3xl font-black text-sidebar mt-2" data-testid={`text-monto-${stat.title.toLowerCase().replace(' ', '-')}`}>
@@ -246,7 +268,7 @@ export default function CajaCuentasDestino() {
                         <span className="text-muted-foreground">Ant: {formatNumber(stat.prev, { kind: "money" })}</span>
                         <div className={`flex items-center gap-1 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
                           {isPositive ? <ArrowUpRight className="w-4 h-4" /> : varPct < 0 ? <ArrowDownRight className="w-4 h-4" /> : null}
-                          {formatNumber(Math.abs(varPct), { kind: "percentage", percentageInput: "percent" })}
+                          {formatNumber(stat.variation, { kind: "percentage", percentageInput: "percent" })}
                         </div>
                       </div>
                     </CardContent>
@@ -257,12 +279,12 @@ export default function CajaCuentasDestino() {
 
             {/* Second Row: Caja Fisica, No Fiscal, Fiscal */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {cuentasSegundaFila.map((row, i) => {
+              {cuentasSegundaFila.map((row) => {
                 const varPct = Number(row.variacionPorcentaje);
                 const isPositive = varPct > 0;
                 return (
                   <Link
-                    key={i}
+                    key={row.cuentaDestino}
                     href={`/caja/cuentas-destino/${row.cuentaDestino}?${inheritedFilters.toString()}`}
                     className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     data-testid={`link-cuenta-destino-${row.cuentaDestino}`}
@@ -277,12 +299,12 @@ export default function CajaCuentasDestino() {
                           </span>
                         </div>
                         <div className="flex items-center justify-between mt-2 text-xs">
-                          {row.cuentaDestino === 'CAJA_FISICA' ? (
+                          {row.cuentaDestino === "CAJA_FISICA" ? (
                             <span className="font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Facturado: {formatNumber(row.cajaFisicaFacturado, { kind: "money" })}</span>
                           ) : <span />}
                           <div className={`flex items-center gap-0.5 font-semibold ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
                             {isPositive ? <ArrowUpRight className="w-3 h-3" /> : varPct < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
-                            {formatNumber(Math.abs(varPct), { kind: "percentage", percentageInput: "percent" })} vs ant.
+                            {formatNumber(row.variacionPorcentaje, { kind: "percentage", percentageInput: "percent" })} vs ant.
                           </div>
                         </div>
                       </CardContent>
@@ -299,11 +321,23 @@ export default function CajaCuentasDestino() {
                 <AlertTitle className="text-amber-800 dark:text-amber-300 font-bold">Incongruencias detectadas</AlertTitle>
                 <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2">
                   <span className="text-amber-700 dark:text-amber-400/90 font-medium">Se encontraron {data.incongruencias.conteo} movimientos con destinos incongruentes por un total de {formatNumber(data.incongruencias.importe, { kind: "money" })}.</span>
-                  <Link href={`/caja/cuentas-destino/CUENTA_NO_FISCAL?incongruente=true&${inheritedFilters.toString()}`}>
-                    <Button variant="outline" size="sm" className="border-amber-500/50 text-amber-800 dark:text-amber-300 hover:bg-amber-500/20" data-testid="link-incongruencias">
-                      Revisar detalle
-                    </Button>
-                  </Link>
+                  <span className="flex flex-wrap gap-2">
+                    {(["CUENTA_NO_FISCAL", "CUENTA_FISCAL"] as const).map((destination) => (
+                      <Link
+                        key={destination}
+                        href={`/caja/cuentas-destino/${destination}?incongruente=true&${inheritedFilters.toString()}`}
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-amber-500/50 text-amber-800 dark:text-amber-300 hover:bg-amber-500/20"
+                          data-testid={`link-incongruencias-${destination}`}
+                        >
+                          {formatAccountDestination(destination)}
+                        </Button>
+                      </Link>
+                    ))}
+                  </span>
                 </AlertDescription>
               </Alert>
             )}
@@ -415,10 +449,10 @@ export default function CajaCuentasDestino() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {data.matriz.filas.map((row, i) => (
-                            <TableRow key={i} className={row.facturado === null ? "bg-muted/20 font-bold border-t-2" : ""}>
+                          {data.matriz.filas.map((row) => (
+                            <TableRow key={String(row.facturado)} className={row.facturado === null ? "bg-muted/20 font-bold border-t-2" : ""}>
                               <TableCell className="font-medium">
-                                {row.facturado === true ? 'Facturado' : row.facturado === false ? 'Sin factura' : 'Total'}
+                                {row.facturado === true ? "Facturado" : row.facturado === false ? "Sin factura" : "Total"}
                               </TableCell>
                               <TableCell><MatrixCellView cell={row.efectivo} facturado={row.facturado} formaPago="EFECTIVO" inheritedParams={inheritedFilters} /></TableCell>
                               <TableCell><MatrixCellView cell={row.transferencia} facturado={row.facturado} formaPago="TRANSFERENCIA" inheritedParams={inheritedFilters} /></TableCell>

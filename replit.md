@@ -386,6 +386,29 @@ Para abonos de clientes, “cuenta destino” usa las categorías operativas exi
 
 El pago dirigido se solicita desde el cobro del cliente o el pago al proveedor, se autoriza desde la notificación sin entrar a otra pantalla, y su histórico vive en Reportes como registro de cuántas excepciones a la regla FIFO ha habido. No es una pantalla de trabajo diario. Solo `PENDIENTE` permanece como evento derivado activo. Al aprobar o rechazar, la solicitud desaparece inmediatamente del feed y, en la misma transacción, se guarda una notificación no leída dirigida exclusivamente al solicitante; al leerla sale del feed pero permanece en su historial y enlaza a Pagos dirigidos.
 
+## Cuentas Destino
+
+Facturación y forma de cobro son preguntas independientes. Efectivo siempre cae en `CAJA_FISICA`; una transferencia cae en `CUENTA_FISCAL` si la venta está facturada y en `CUENTA_NO_FISCAL` si no; el crédito puede combinarse con cualquiera de los dos estados fiscales y representa una promesa, no una cuenta con dinero. Esta derivación vive exclusivamente en `destinationReadModel()` y `accountDestination()` y no debe duplicarse.
+
+La caja física mezcla ventas facturadas y sin factura porque el cajón es uno solo. Es la única cuenta cuyo estatus fiscal no se deduce de la cuenta destino, por eso su tarjeta declara por separado cuánto efectivo corresponde a ventas facturadas.
+
+El encabezado contiene **Cobrado**, **Por cobrar** y **Vendido**. Cuentas por cobrar nunca se suma con las tres cuentas reales bajo una etiqueta de ingreso. Los porcentajes de Caja física, Cuenta fiscal y Cuenta no fiscal se calculan sobre Cobrado.
+
+La matriz cruza facturación con forma de cobro y debe cerrar por renglón y por columna. El servidor verifica el cierre y la interfaz muestra cualquier descuadre en vez de ajustarlo u ocultarlo. Toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio. Ninguna cifra financiera de esta pantalla se calcula en el navegador.
+
+Para contar cobros se excluye explícitamente `CREDITO` en vez de enumerar las formas conocidas que sí cobran. Así, una forma nueva entra por omisión y no desaparece del importe o del conteo.
+
+**Pendiente de decisión:** `isValidPaymentDestination` permite cobrar el abono de una venta facturada a una cuenta no fiscal y `cliente-pago-dialog.tsx` todavía ofrece “Facturado” como forma de pago del abono. La pantalla lo señala, pero no lo impide. `allocateCreditFifo` puede repartir un solo depósito entre notas facturadas y sin factura; cualquier regla futura debe resolver esa combinación.
+
+**Reglas duplicadas encontradas, no unificadas en este cambio:**
+- `artifacts/api-server/src/lib/pos.ts:2082-2088` deriva las cuentas del corte con condicionales propios; hoy coincide con la regla canónica.
+- `artifacts/api-server/src/lib/admin-analytics.ts:324-335` repite el predicado de documento contabilizado en ventas, subtotal, IVA y conteo; hoy coincide con `accountedDocumentPredicate()`.
+- `artifacts/api-server/src/lib/admin-analytics.ts:376-378` repite el mismo predicado para margen por sesión; hoy coincide con la regla canónica.
+
+La divergencia hallada en el feed de Caja se corrigió: `artifacts/api-server/src/routes/notificaciones.ts:194` usa `pendingTicketPredicate()`, por lo que muestra tickets sin cobrar y notas sin autorizar, pero retira una nota en cuanto queda autorizada.
+
+**Cambio del 7 de septiembre de 2026:** se reconstruyó Cuentas Destino con encabezado Cobrado/Por cobrar/Vendido, cuentas reales, matriz conciliada, IVA facturado, detalles filtrados, incongruencias y desglose por tienda; además se corrigieron el conteo abierto de formas de cobro y el feed pendiente de Caja.
+
 ## Roles SISTEMAS y CONTADOR
 
 **TERMINAL** abre `/pos` al iniciar sesión, según `artifacts/mariana-textil/src/lib/home-route.ts`. El servidor le omite recursivamente de las respuestas toda clave cuyo nombre contenga costo, precio, margen o utilidad; esa defensa vive en `artifacts/api-server/src/lib/sensitive-data.ts`.

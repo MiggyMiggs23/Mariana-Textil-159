@@ -157,7 +157,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
             <TableBody>
               {corte.facturacion.map((f, i) => (
                 <TableRow key={i}>
-                  <TableCell className="font-medium">{f.facturado ? "Facturado" : "Público General"}</TableCell>
+                  <TableCell className="font-medium">{f.facturado ? "Facturado" : "Sin factura"}</TableCell>
                   <TableCell className="text-right">{f.ticketsCount}</TableCell>
                   <TableCell className="text-right font-mono text-muted-foreground">{formatNumber(f.subtotal, { kind: "money" })}</TableCell>
                   <TableCell className="text-right font-mono text-muted-foreground">{formatNumber(f.iva, { kind: "money" })}</TableCell>

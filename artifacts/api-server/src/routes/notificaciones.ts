@@ -18,6 +18,7 @@ import {
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { getAdminAlertas } from "../lib/admin-alertas";
+import { pendingTicketPredicate } from "../lib/accounted-document";
 import { centsToMoney } from "../lib/credit-allocation";
 import { loadCustomerCreditProjections } from "../lib/credit-aging-read-model";
 
@@ -190,7 +191,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
              c.nombre AS "clienteNombre"
            FROM tickets t
            JOIN clientes c ON c.id=t.cliente_id
-           WHERE t.estado='VENDIDO' AND NOT t.cobrado AND t.ubicacion_id=$1
+           WHERE ${pendingTicketPredicate("t")} AND t.ubicacion_id=$1
            ORDER BY t.created_at DESC,t.id DESC
            LIMIT 50`,
           [user.ubicacionId],

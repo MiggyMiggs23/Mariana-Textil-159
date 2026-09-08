@@ -155,7 +155,7 @@ export default function Alertas() {
                              Creado a las {ticketTime(ticket.createdAt)}
                            </div>
                           <div className="text-xs truncate text-foreground font-medium">
-                            Cliente: {ticket.nombreCliente || 'Público General'}
+                            Cliente: {ticket.nombreCliente || "Sin cliente"}
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-2 shrink-0">

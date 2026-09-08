@@ -123,6 +123,21 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
   const oldTicket = await ticket(location.id, 120);
   const newTicket = await ticket(location.id, 90);
   const otherSiteTicket = await ticket(otherLocation.id, 70);
+  const note = async (authorizationState: "PENDIENTE" | "AUTORIZADA") =>
+    one(
+      `INSERT INTO tickets(
+         folio,uuid_cliente,ubicacion_id,usuario_terminal_id,cliente_id,
+         subtotal,iva,tasa_iva,total,estado,cobrado,facturado,credito,dias_plazo,
+         fecha_vencimiento,documento_tipo,autorizacion_estado,autorizado_at,created_at
+       ) VALUES(
+         $1,gen_random_uuid(),$2,$3,$4,80,0,0,80,
+         'VENDIDO',false,true,true,30,current_date+30,'NOTA',$5,
+         CASE WHEN $5='AUTORIZADA' THEN now() ELSE NULL END,now()
+       ) RETURNING id,folio`,
+      [folio++, location.id, caja.id, cliente.id, authorizationState],
+    );
+  const pendingNote = await note("PENDIENTE");
+  const authorizedNote = await note("AUTORIZADA");
   const oldSale = await one(
     `INSERT INTO movimientos_credito(
         cliente_id,ticket_id,tipo,importe,usuario_id,forma_pago,fecha_vencimiento,created_at
@@ -295,6 +310,18 @@ test("pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte"
           event.family === "AVISO" &&
           event.siteId === Number(location.id),
       ),
+    );
+    assert.ok(
+      cajaFeed.events.some(
+        (event) => event.id === `ticket-ready:${pendingNote.id}`,
+      ),
+      "Caja debe ver las notas pendientes de autorización.",
+    );
+    assert.ok(
+      !cajaFeed.events.some(
+        (event) => event.id === `ticket-ready:${authorizedNote.id}`,
+      ),
+      "Una nota autorizada debe desaparecer del trabajo pendiente de Caja.",
     );
     assert.ok(
       !cajaFeed.events.some(

@@ -10,6 +10,7 @@ import {
   useCreateAdminCuadreFiscalDiferencia,
   useResolveAdminCuadreFiscalDiferencia,
   getGetAdminCuadreFiscalQueryKey,
+  type ListAdminCuentaDestinoMovimientosFormaPago,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatAccountDestination, formatNumber } from "@workspace/number-format";
@@ -44,6 +45,14 @@ function isDestination(value: string | undefined): value is Destination {
   return DESTINATIONS.some((destination) => destination === value);
 }
 
+const PAYMENT_CATEGORIES = ["EFECTIVO", "TRANSFERENCIA", "POR_COBRAR", "OTRAS"] as const;
+
+function isPaymentCategory(
+  value: string,
+): value is ListAdminCuentaDestinoMovimientosFormaPago {
+  return PAYMENT_CATEGORIES.some((category) => category === value);
+}
+
 export default function CuentaDestinoDetalle() {
   const [, routeParams] = useRoute("/caja/cuentas-destino/:cuentaDestino");
   const search = useSearch();
@@ -56,12 +65,14 @@ export default function CuentaDestinoDetalle() {
   const ubicacionId = selectedLocationId ?? (Number.isInteger(inheritedLocation) && inheritedLocation > 0
     ? inheritedLocation
     : undefined);
-  
   const [desde, setDesde] = useState(inherited.get("desde") ?? "");
   const [hasta, setHasta] = useState(inherited.get("hasta") ?? "");
-  
+
   const [facturado, setFacturado] = useState<string>(inherited.get("facturado") ?? "");
-  const [formaPago, setFormaPago] = useState<string>(inherited.get("formaPago") ?? "");
+  const inheritedPaymentCategory = inherited.get("formaPago") ?? "";
+  const [formaPago, setFormaPago] = useState<ListAdminCuentaDestinoMovimientosFormaPago | "">(
+    isPaymentCategory(inheritedPaymentCategory) ? inheritedPaymentCategory : "",
+  );
   const [incongruente, setIncongruente] = useState<boolean>(inherited.get("incongruente") === "true");
 
   const [page, setPage] = useState(1);
@@ -87,12 +98,12 @@ export default function CuentaDestinoDetalle() {
     hasta: hasta || undefined,
     ubicacionId,
     facturado: facturado === "true" ? true : facturado === "false" ? false : undefined,
-    formaPago: formaPago as any || undefined,
+    formaPago: formaPago || undefined,
     incongruente: incongruente || undefined,
     page,
     pageSize,
   };
-  
+
   const query = useListAdminCuentaDestinoMovimientos(destination, params, {
     query: {
       enabled: isDestination(routeParams?.cuentaDestino),
@@ -111,9 +122,6 @@ export default function CuentaDestinoDetalle() {
         desde: desde || undefined,
         hasta: hasta || undefined,
         ubicacionId,
-        facturado: facturado === "true" ? true : facturado === "false" ? false : undefined,
-        formaPago: formaPago as any || undefined,
-        incongruente: incongruente || undefined,
       });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -143,7 +151,7 @@ export default function CuentaDestinoDetalle() {
   }
 
   const totalPages = Math.max(1, Math.ceil((query.data?.total ?? 0) / pageSize));
-  
+
   const hasFilters = facturado !== "" || formaPago !== "" || incongruente;
 
   return (

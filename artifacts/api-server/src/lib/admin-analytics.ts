@@ -244,6 +244,12 @@ function decimal(value: unknown, scale = 2): string {
   return (Number.isFinite(number) ? number : 0).toFixed(scale);
 }
 
+function percentageChange(current: number, previous: number): string {
+  return decimal(previous === 0
+    ? (current === 0 ? 0 : 100)
+    : ((current - previous) / previous) * 100);
+}
+
 function dateMexico(value = new Date()): string {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: ANALYTICS_TIME_ZONE,
@@ -298,7 +304,9 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
          COALESCE(SUM(p.importe),0) cobrado
        FROM ticket_pagos p JOIN filtered f ON f.id=p.ticket_id
        WHERE f.estado='VENDIDO' AND f.cobrado
-         AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
+          -- Exclude what is not a collection instead of whitelisting known
+          -- collection methods, so a new payment method cannot vanish silently.
+          AND p.forma_pago <> 'CREDITO'
        GROUP BY p.ticket_id
      ), lines AS (
        SELECT l.ticket_id,
@@ -1146,6 +1154,9 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
       cobradoAnterior: decimal(priorCollected),
       porCobrarAnterior: decimal(priorReceivable),
       vendidoAnterior: decimal(priorSold),
+      cobradoVariacionPorcentaje: percentageChange(collected, priorCollected),
+      porCobrarVariacionPorcentaje: percentageChange(receivable, priorReceivable),
+      vendidoVariacionPorcentaje: percentageChange(sold, priorSold),
     },
     matriz: matrix,
     ivaFacturado: {

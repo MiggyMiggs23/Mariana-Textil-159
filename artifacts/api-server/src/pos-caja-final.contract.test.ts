@@ -71,6 +71,27 @@ test("all financial report read models use the canonical accounted predicate", (
   assert.match(analytics, /getStoreSalesGlobal[\s\S]*accountedDocumentPredicate\("t"\)[\s\S]*accountedDocumentAt\("t"\)/);
 });
 
+test("Caja feed uses the canonical pending-document predicate", () => {
+  const notifications = read("./routes/notificaciones.ts");
+  const feed = notifications.slice(
+    notifications.indexOf('router.get("/notificaciones/feed"'),
+    notifications.indexOf('router.get("/notificaciones/feed"', notifications.indexOf('router.get("/notificaciones/feed"') + 1),
+  );
+  assert.match(notifications, /import \{ pendingTicketPredicate \} from "\.\.\/lib\/accounted-document"/);
+  assert.match(feed, /pendingTicketPredicate\("t"\)/);
+  assert.doesNotMatch(feed, /t\.estado='VENDIDO' AND NOT t\.cobrado/);
+});
+
+test("sales summary excludes only credit from collected payment methods", () => {
+  const analytics = read("./lib/admin-analytics.ts");
+  const summary = analytics.slice(
+    analytics.indexOf("export async function getSalesSummary"),
+    analytics.indexOf("export async function getSessionMargin"),
+  );
+  assert.match(summary, /p\.forma_pago <> 'CREDITO'/);
+  assert.doesNotMatch(summary, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
+});
+
 test("fiscal financial ranges use Caja processing timestamps", () => {
   const route = read("./routes/admin-analytics.ts");
   const fiscal = route.slice(route.indexOf("async function fiscalFigures"), route.indexOf("function presentFiscalRecord"));
