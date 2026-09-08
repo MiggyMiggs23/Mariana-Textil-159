@@ -6,11 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type AdminCuentaDestinoMovimientosCuentaDestino = typeof AdminCuentaDestinoMovimientosCuentaDestino[keyof typeof AdminCuentaDestinoMovimientosCuentaDestino];
+export type AdminCuentasDestinoCobrosAnterioresItemCuentaDestino = typeof AdminCuentasDestinoCobrosAnterioresItemCuentaDestino[keyof typeof AdminCuentasDestinoCobrosAnterioresItemCuentaDestino];
 
 
-export const AdminCuentaDestinoMovimientosCuentaDestino = {
-  TODAS: 'TODAS',
+export const AdminCuentasDestinoCobrosAnterioresItemCuentaDestino = {
   CAJA_FISICA: 'CAJA_FISICA',
   CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
   CUENTA_FISCAL: 'CUENTA_FISCAL',

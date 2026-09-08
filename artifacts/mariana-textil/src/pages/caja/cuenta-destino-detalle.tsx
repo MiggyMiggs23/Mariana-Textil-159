@@ -11,6 +11,9 @@ import {
   useResolveAdminCuadreFiscalDiferencia,
   getGetAdminCuadreFiscalQueryKey,
   type ListAdminCuentaDestinoMovimientosFormaPago,
+  type ListAdminCuentaDestinoMovimientosFuenteItem,
+  type ListAdminCuentaDestinoMovimientosParams,
+  type ListAdminCuentaDestinoMovimientosPreset,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatAccountDestination, formatNumber } from "@workspace/number-format";
@@ -29,11 +32,13 @@ import {
 import { useLocationScope } from "@/lib/location-scope";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, Download, Loader2, X } from "lucide-react";
+import { AlertCircle, ArrowDownRight, ArrowLeft, ArrowUpRight, ChevronLeft, ChevronRight, Download, Loader2, X } from "lucide-react";
 import { format, parseISO } from "date-fns";
+
 import { es } from "date-fns/locale";
 
 const DESTINATIONS = [
+  "TODAS",
   "CAJA_FISICA",
   "CUENTA_NO_FISCAL",
   "CUENTA_FISCAL",
@@ -46,11 +51,32 @@ function isDestination(value: string | undefined): value is Destination {
 }
 
 const PAYMENT_CATEGORIES = ["EFECTIVO", "TRANSFERENCIA", "POR_COBRAR", "OTRAS"] as const;
+const SOURCE_CATEGORIES = ["POS", "CREDITO", "ABONO", "ABONO_SALDO_FAVOR"] as const;
 
 function isPaymentCategory(
   value: string,
 ): value is ListAdminCuentaDestinoMovimientosFormaPago {
   return PAYMENT_CATEGORIES.some((category) => category === value);
+}
+
+function isSourceCategory(value: string): value is ListAdminCuentaDestinoMovimientosFuenteItem {
+  return SOURCE_CATEGORIES.some((source) => source === value);
+}
+
+function comparisonLabel(
+  preset: ListAdminCuentaDestinoMovimientosPreset,
+  previousDesde: string,
+  previousHasta: string,
+) {
+  const end = parseISO(previousHasta);
+  if (preset === "hoy") return "Ayer a esta hora";
+  if (preset === "semana") {
+    return `Semana pasada al ${format(end, "EEEE", { locale: es })}`;
+  }
+  if (preset === "mes") {
+    return `${format(parseISO(previousDesde), "MMMM", { locale: es })} al día ${format(end, "d")}`;
+  }
+  return `${format(parseISO(previousDesde), "d MMM", { locale: es })}–${format(end, "d MMM", { locale: es })}`;
 }
 
 export default function CuentaDestinoDetalle() {
@@ -70,6 +96,9 @@ export default function CuentaDestinoDetalle() {
 
   const [facturado, setFacturado] = useState<string>(inherited.get("facturado") ?? "");
   const inheritedPaymentCategory = inherited.get("formaPago") ?? "";
+  const [fuentes, setFuentes] = useState<ListAdminCuentaDestinoMovimientosFuenteItem[]>(
+    inherited.getAll("fuente").filter(isSourceCategory),
+  );
   const [formaPago, setFormaPago] = useState<ListAdminCuentaDestinoMovimientosFormaPago | "">(
     isPaymentCategory(inheritedPaymentCategory) ? inheritedPaymentCategory : "",
   );
@@ -91,17 +120,20 @@ export default function CuentaDestinoDetalle() {
   const [differenceDescription, setDifferenceDescription] = useState("");
   const [resolutionNotes, setResolutionNotes] = useState<Record<number, string>>({});
 
-  useEffect(() => setPage(1), [desde, hasta, ubicacionId, facturado, formaPago, incongruente]);
+  useEffect(() => setPage(1), [desde, hasta, ubicacionId, facturado, formaPago, incongruente, fuentes]);
 
-  const params = {
+  const preset = (inherited.get("preset") ?? "custom") as ListAdminCuentaDestinoMovimientosPreset;
+  const params: ListAdminCuentaDestinoMovimientosParams = {
     desde: desde || undefined,
     hasta: hasta || undefined,
     ubicacionId,
     facturado: facturado === "true" ? true : facturado === "false" ? false : undefined,
     formaPago: formaPago || undefined,
+    fuente: fuentes.length ? fuentes : undefined,
     incongruente: incongruente || undefined,
     page,
     pageSize,
+    preset,
   };
 
   const query = useListAdminCuentaDestinoMovimientos(destination, params, {
@@ -111,12 +143,34 @@ export default function CuentaDestinoDetalle() {
     },
   });
 
+
+  const renderVariation = (variation: string | null | undefined) => {
+    if (variation == null) {
+      return (
+        <span className="flex items-center gap-1 font-semibold text-muted-foreground text-sm" title="Sin periodo anterior para comparar">
+          - sin periodo anterior
+        </span>
+      );
+    }
+    const varPct = Number(variation);
+    const isPositive = varPct > 0;
+    return (
+      <span className={`flex items-center gap-1 font-semibold text-sm ${isPositive ? "text-green-600" : varPct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
+        {isPositive ? <ArrowUpRight className="w-4 h-4" /> : varPct < 0 ? <ArrowDownRight className="w-4 h-4" /> : null}
+        {formatNumber(variation, { kind: "percentage", percentageInput: "percent" })}
+      </span>
+    );
+  };
+
   const parentParams = new URLSearchParams();
   if (desde) parentParams.set("desde", desde);
   if (hasta) parentParams.set("hasta", hasta);
   if (ubicacionId != null) parentParams.set("ubicacionId", String(ubicacionId));
+  if (inherited.has("preset")) parentParams.set("preset", inherited.get("preset")!);
+  if (inherited.get("compare") === "true") parentParams.set("compare", "true");
 
   const handleExport = async () => {
+    if (destination === "TODAS") return;
     try {
       const blob = await exportAdminCuentaDestinoMovimientosXlsx(destination, {
         desde: desde || undefined,
@@ -152,7 +206,10 @@ export default function CuentaDestinoDetalle() {
 
   const totalPages = Math.max(1, Math.ceil((query.data?.total ?? 0) / pageSize));
 
-  const hasFilters = facturado !== "" || formaPago !== "" || incongruente;
+  const hasFilters = facturado !== "" || formaPago !== "" || incongruente || fuentes.length > 0;
+  const destinationLabel = destination === "TODAS"
+    ? "Todas las cuentas"
+    : formatAccountDestination(destination);
 
   return (
     <AppLayout>
@@ -167,13 +224,19 @@ export default function CuentaDestinoDetalle() {
               <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Cuentas
             </Link>
             <h1 className="text-2xl font-bold tracking-tight text-sidebar" data-testid="text-cuenta-destino">
-              {formatAccountDestination(destination)}
+              {destinationLabel}
             </h1>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
                <p className="text-sm text-muted-foreground">Movimientos financieros del periodo seleccionado.</p>
                {hasFilters && (
                  <div className="flex flex-wrap items-center gap-2">
                    <span className="text-xs text-muted-foreground px-2">Filtros activos:</span>
+                    {fuentes.length > 0 && (
+                     <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-medium px-2 py-0.5 rounded">
+                        {fuentes.join(" + ")}
+                        <button onClick={() => setFuentes([])} className="hover:text-primary/70"><X className="h-3 w-3" /></button>
+                     </span>
+                   )}
                    {facturado !== "" && (
                      <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs font-medium px-2 py-0.5 rounded">
                        {facturado === "true" ? "Facturado" : "Sin factura"}
@@ -217,11 +280,34 @@ export default function CuentaDestinoDetalle() {
                 data-testid="input-movimientos-hasta"
               />
             </label>
-            <Button variant="outline" onClick={handleExport} data-testid="button-exportar-movimientos">
-              <Download className="mr-2 h-4 w-4" /> Excel
-            </Button>
+            {destination !== "TODAS" && (
+              <Button variant="outline" onClick={handleExport} data-testid="button-exportar-movimientos">
+                <Download className="mr-2 h-4 w-4" /> Excel
+              </Button>
+            )}
           </div>
         </div>
+
+        {query.data && (
+          <Card>
+            <CardContent className="grid gap-4 pt-6 sm:grid-cols-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Periodo seleccionado</p>
+                <p className="mt-1 text-2xl font-bold">{formatNumber(query.data.montoTotal, { kind: "money" })}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {comparisonLabel(preset, query.data.previousDesde, query.data.previousHasta)}
+                </p>
+                <p className="mt-1 text-2xl font-bold">{formatNumber(query.data.montoTotalAnterior, { kind: "money" })}</p>
+              </div>
+              <div className="sm:text-right">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Variación</p>
+                <div className="mt-2 inline-flex">{renderVariation(query.data.variacionPorcentaje)}</div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardHeader>

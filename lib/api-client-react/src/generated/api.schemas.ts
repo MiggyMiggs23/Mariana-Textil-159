@@ -1417,9 +1417,13 @@ export interface AdminCuentaDestinoRow {
   cuentaDestino: string;
   formaPago: AdminCuentaDestinoRowFormaPago;
   importe: string;
-  importeAnterior: string;
-  /** Porcentaje en unidades; 12.50 significa 12.5% */
-  variacionPorcentaje: string;
+  /** @nullable */
+  importeAnterior: string | null;
+  /**
+     * Porcentaje en unidades; 12.50 significa 12.5%
+     * @nullable
+     */
+  variacionPorcentaje: string | null;
   porcentaje: string;
   operaciones: number;
   /** Efectivo facturado; solo es distinto de cero en la tarjeta de caja física. */
@@ -1551,6 +1555,18 @@ export const AdminCuentaDestinoMovimientoDocumentoTipo = {
   CLIENTE: 'CLIENTE',
 } as const;
 
+export type AdminCuentaDestinoMovimientoFuente = typeof AdminCuentaDestinoMovimientoFuente[keyof typeof AdminCuentaDestinoMovimientoFuente];
+
+
+export const AdminCuentaDestinoMovimientoFuente = {
+  POS: 'POS',
+  CREDITO: 'CREDITO',
+  ABONO: 'ABONO',
+  ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
+  REVERSO_ABONO: 'REVERSO_ABONO',
+  REVERSO_ABONO_SALDO_FAVOR: 'REVERSO_ABONO_SALDO_FAVOR',
+} as const;
+
 export interface AdminCuentaDestinoMovimiento {
   id: number;
   fecha: string;
@@ -1568,6 +1584,7 @@ export interface AdminCuentaDestinoMovimiento {
   registro: string;
   formaPago: string;
   facturado: boolean;
+  fuente: AdminCuentaDestinoMovimientoFuente;
   incongruente: boolean;
 }
 
@@ -1575,6 +1592,7 @@ export type AdminCuentaDestinoMovimientosCuentaDestino = typeof AdminCuentaDesti
 
 
 export const AdminCuentaDestinoMovimientosCuentaDestino = {
+  TODAS: 'TODAS',
   CAJA_FISICA: 'CAJA_FISICA',
   CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
   CUENTA_FISCAL: 'CUENTA_FISCAL',
@@ -1588,6 +1606,11 @@ export interface AdminCuentaDestinoMovimientos {
   page: number;
   pageSize: number;
   montoTotal: string;
+  montoTotalAnterior: string;
+  /** @nullable */
+  variacionPorcentaje: string | null;
+  previousDesde: string;
+  previousHasta: string;
 }
 
 export interface AdminCuentaTrend {
@@ -1609,13 +1632,73 @@ export type AdminCuentasDestinoPorTiendaItem = {
   total: string;
 };
 
+export type AdminCuentasDestinoEncabezadoVendido = {
+  contado: string;
+  credito: string;
+  total: string;
+  /** @nullable */
+  totalAnterior: string | null;
+  /** @nullable */
+  variacionPorcentaje: string | null;
+};
+
+export type AdminCuentasDestinoEncabezadoPorCobrar = {
+  /** Notas de venta a crédito creadas en el periodo; no es saldo de cartera. */
+  periodo: string;
+  /** @nullable */
+  periodoAnterior: string | null;
+  /** @nullable */
+  variacionPorcentaje: string | null;
+};
+
+export type AdminCuentasDestinoEncabezadoCobrado = {
+  /** Cobranza POS; también forma parte de Vendido. */
+  contado: string;
+  abonos: string;
+  saldosFavor: string;
+  total: string;
+  /** @nullable */
+  totalAnterior: string | null;
+  /** @nullable */
+  variacionPorcentaje: string | null;
+};
+
 export type AdminCuentasDestinoEncabezado = {
-  cobrado: string;
-  porCobrar: string;
-  vendido: string;
-  cobradoAnterior: string;
-  porCobrarAnterior: string;
-  vendidoAnterior: string;
+  vendido: AdminCuentasDestinoEncabezadoVendido;
+  porCobrar: AdminCuentasDestinoEncabezadoPorCobrar;
+  cobrado: AdminCuentasDestinoEncabezadoCobrado;
+  /** @nullable */
+  previousDesde: string | null;
+  /** @nullable */
+  previousHasta: string | null;
+};
+
+export type AdminCuentasDestinoCobrosAnterioresItemCuentaDestino = typeof AdminCuentasDestinoCobrosAnterioresItemCuentaDestino[keyof typeof AdminCuentasDestinoCobrosAnterioresItemCuentaDestino];
+
+
+export const AdminCuentasDestinoCobrosAnterioresItemCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTAS_POR_COBRAR: 'CUENTAS_POR_COBRAR',
+} as const;
+
+export type AdminCuentasDestinoCobrosAnterioresItemFuente = typeof AdminCuentasDestinoCobrosAnterioresItemFuente[keyof typeof AdminCuentasDestinoCobrosAnterioresItemFuente];
+
+
+export const AdminCuentasDestinoCobrosAnterioresItemFuente = {
+  ABONO: 'ABONO',
+  ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
+} as const;
+
+export type AdminCuentasDestinoCobrosAnterioresItem = {
+  cuentaDestino: AdminCuentasDestinoCobrosAnterioresItemCuentaDestino;
+  fuente: AdminCuentasDestinoCobrosAnterioresItemFuente;
+  importe: string;
+  /** @nullable */
+  importeAnterior: string | null;
+  /** @nullable */
+  variacionPorcentaje: string | null;
 };
 
 export type AdminCuentasDestinoMatriz = {
@@ -1651,6 +1734,8 @@ export interface AdminCuentasDestino {
   tendencia: AdminCuentaTrend[];
   porTienda: AdminCuentasDestinoPorTiendaItem[];
   encabezado: AdminCuentasDestinoEncabezado;
+  /** Abonos y saldos a favor cobrados en el periodo, separados por cuenta destino. */
+  cobrosAnteriores: AdminCuentasDestinoCobrosAnterioresItem[];
   matriz: AdminCuentasDestinoMatriz;
   ivaFacturado: AdminCuentasDestinoIvaFacturado;
   incongruencias: AdminCuentasDestinoIncongruencias;
@@ -6760,7 +6845,28 @@ desde?: AnalyticsDesdeParameter;
  */
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
+/**
+ * Ejecuta la comparación contra un periodo anterior de igual duración. Cuando es false no se consulta el periodo anterior.
+ */
+compare?: boolean;
+/**
+ * Identifica el periodo de calendario para comparar tramos en curso equivalentes.
+ */
+preset?: GetAdminCuentasDestinoPreset;
 };
+
+export type GetAdminCuentasDestinoPreset = typeof GetAdminCuentasDestinoPreset[keyof typeof GetAdminCuentasDestinoPreset];
+
+
+export const GetAdminCuentasDestinoPreset = {
+  hoy: 'hoy',
+  semana: 'semana',
+  mes: 'mes',
+  trimestre: 'trimestre',
+  semestre: 'semestre',
+  ano: 'ano',
+  custom: 'custom',
+} as const;
 
 export type ListAdminCuentaDestinoMovimientosParams = {
 /**
@@ -6784,6 +6890,14 @@ formaPago?: ListAdminCuentaDestinoMovimientosFormaPago;
  */
 incongruente?: boolean;
 /**
+ * Filtra el mismo detalle canónico que alimenta los agregados.
+ */
+fuente?: ListAdminCuentaDestinoMovimientosFuenteItem[];
+/**
+ * Identifica el periodo de calendario para comparar el mismo tramo transcurrido.
+ */
+preset?: ListAdminCuentaDestinoMovimientosPreset;
+/**
  * @minimum 1
  */
 page?: number;
@@ -6802,6 +6916,29 @@ export const ListAdminCuentaDestinoMovimientosFormaPago = {
   TRANSFERENCIA: 'TRANSFERENCIA',
   POR_COBRAR: 'POR_COBRAR',
   OTRAS: 'OTRAS',
+} as const;
+
+export type ListAdminCuentaDestinoMovimientosFuenteItem = typeof ListAdminCuentaDestinoMovimientosFuenteItem[keyof typeof ListAdminCuentaDestinoMovimientosFuenteItem];
+
+
+export const ListAdminCuentaDestinoMovimientosFuenteItem = {
+  POS: 'POS',
+  CREDITO: 'CREDITO',
+  ABONO: 'ABONO',
+  ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
+} as const;
+
+export type ListAdminCuentaDestinoMovimientosPreset = typeof ListAdminCuentaDestinoMovimientosPreset[keyof typeof ListAdminCuentaDestinoMovimientosPreset];
+
+
+export const ListAdminCuentaDestinoMovimientosPreset = {
+  hoy: 'hoy',
+  semana: 'semana',
+  mes: 'mes',
+  trimestre: 'trimestre',
+  semestre: 'semestre',
+  ano: 'ano',
+  custom: 'custom',
 } as const;
 
 export type GetAdminCuadreFiscalParams = {

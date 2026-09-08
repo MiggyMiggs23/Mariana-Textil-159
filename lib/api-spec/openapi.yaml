@@ -4482,6 +4482,18 @@ paths:
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - {
+            in: query,
+            name: compare,
+            description: Ejecuta la comparación contra un periodo anterior de igual duración. Cuando es false no se consulta el periodo anterior.,
+            schema: { type: boolean, default: false },
+          }
+        - {
+            in: query,
+            name: preset,
+            description: Identifica el periodo de calendario para comparar tramos en curso equivalentes.,
+            schema: { type: string, enum: [hoy, semana, mes, trimestre, semestre, ano, custom] },
+          }
       responses:
         "200":
           description: Cuentas destino
@@ -4496,7 +4508,12 @@ paths:
       tags: [admin-analytics]
       summary: Lista los movimientos reales de una cuenta destino
       parameters:
-        - $ref: "#/components/parameters/AccountDestination"
+        - {
+            in: path,
+            name: cuentaDestino,
+            required: true,
+            schema: { type: string, enum: [TODAS, CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR] },
+          }
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
@@ -4512,6 +4529,18 @@ paths:
             name: incongruente,
             description: Limita el detalle a abonos cuyo destino contradice la facturación de la venta.,
             schema: { type: boolean },
+          }
+        - {
+            in: query,
+            name: fuente,
+            description: Filtra el mismo detalle canónico que alimenta los agregados.,
+            schema: { type: array, uniqueItems: true, items: { type: string, enum: [POS, CREDITO, ABONO, ABONO_SALDO_FAVOR] } },
+          }
+        - {
+            in: query,
+            name: preset,
+            description: Identifica el periodo de calendario para comparar el mismo tramo transcurrido.,
+            schema: { type: string, enum: [hoy, semana, mes, trimestre, semestre, ano, custom] },
           }
         - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
         - { in: query, name: pageSize, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
@@ -7111,9 +7140,9 @@ components:
         cuentaDestino: { type: string }
         formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA, CREDITO] }
         importe: { type: string }
-        importeAnterior: { type: string }
+        importeAnterior: { type: ["string", "null"] }
         variacionPorcentaje:
-          type: string
+          type: ["string", "null"]
           description: Porcentaje en unidades; 12.50 significa 12.5%
         porcentaje: { type: string }
         operaciones: { type: number }
@@ -7191,7 +7220,7 @@ components:
     AdminCuentaDestinoMovimiento:
       type: object
       required:
-        [id, fecha, tipo, documentoTipo, documentoId, documento, cliente, ubicacionId, sitio, monto, registroId, registro, formaPago, facturado, incongruente]
+         [id, fecha, tipo, documentoTipo, documentoId, documento, cliente, ubicacionId, sitio, monto, registroId, registro, formaPago, facturado, fuente, incongruente]
       properties:
         id: { type: number }
         fecha: { type: string, format: date-time }
@@ -7207,14 +7236,15 @@ components:
         registro: { type: string }
         formaPago: { type: string }
         facturado: { type: boolean }
+        fuente: { type: string, enum: [POS, CREDITO, ABONO, ABONO_SALDO_FAVOR, REVERSO_ABONO, REVERSO_ABONO_SALDO_FAVOR] }
         incongruente: { type: boolean }
     AdminCuentaDestinoMovimientos:
       type: object
-      required: [cuentaDestino, items, total, page, pageSize, montoTotal]
+      required: [cuentaDestino, items, total, page, pageSize, montoTotal, montoTotalAnterior, variacionPorcentaje, previousDesde, previousHasta]
       properties:
         cuentaDestino:
           type: string
-          enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR]
+          enum: [TODAS, CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR]
         items:
           type: array
           items: { $ref: "#/components/schemas/AdminCuentaDestinoMovimiento" }
@@ -7222,6 +7252,10 @@ components:
         page: { type: number }
         pageSize: { type: number }
         montoTotal: { type: string }
+        montoTotalAnterior: { type: string }
+        variacionPorcentaje: { type: ["string", "null"] }
+        previousDesde: { type: string, format: date-time }
+        previousHasta: { type: string, format: date-time }
     AdminCuentaTrend:
       type: object
       required: [fecha, cuentaDestino, importe]
@@ -7232,7 +7266,7 @@ components:
     AdminCuentasDestino:
       type: object
       required:
-        [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado, encabezado, matriz, ivaFacturado, incongruencias]
+         [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado, encabezado, cobrosAnteriores, matriz, ivaFacturado, incongruencias]
       properties:
         resumen:
           {
@@ -7274,14 +7308,50 @@ components:
               total: { type: string }
         encabezado:
           type: object
-          required: [cobrado, porCobrar, vendido, cobradoAnterior, porCobrarAnterior, vendidoAnterior]
+          required: [vendido, porCobrar, cobrado, previousDesde, previousHasta]
           properties:
-            cobrado: { type: string }
-            porCobrar: { type: string }
-            vendido: { type: string }
-            cobradoAnterior: { type: string }
-            porCobrarAnterior: { type: string }
-            vendidoAnterior: { type: string }
+            vendido:
+              type: object
+              required: [contado, credito, total, totalAnterior, variacionPorcentaje]
+              properties:
+                contado: { type: string }
+                credito: { type: string }
+                total: { type: string }
+                totalAnterior: { type: ["string", "null"] }
+                variacionPorcentaje: { type: ["string", "null"] }
+            porCobrar:
+              type: object
+              required: [periodo, periodoAnterior, variacionPorcentaje]
+              properties:
+                periodo: { type: string, description: Notas de venta a crédito creadas en el periodo; no es saldo de cartera. }
+                periodoAnterior: { type: ["string", "null"] }
+                variacionPorcentaje: { type: ["string", "null"] }
+            cobrado:
+              type: object
+              required: [contado, abonos, saldosFavor, total, totalAnterior, variacionPorcentaje]
+              properties:
+                contado: { type: string, description: Cobranza POS; también forma parte de Vendido. }
+                abonos: { type: string }
+                saldosFavor: { type: string }
+                total: { type: string }
+                totalAnterior: { type: ["string", "null"] }
+                variacionPorcentaje: { type: ["string", "null"] }
+            previousDesde: { type: ["string", "null"], format: date-time }
+            previousHasta: { type: ["string", "null"], format: date-time }
+        cobrosAnteriores:
+          type: array
+          description: Abonos y saldos a favor cobrados en el periodo, separados por cuenta destino.
+          items:
+            type: object
+            required: [cuentaDestino, fuente, importe, importeAnterior, variacionPorcentaje]
+            properties:
+              cuentaDestino:
+                type: string
+                enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR]
+              fuente: { type: string, enum: [ABONO, ABONO_SALDO_FAVOR] }
+              importe: { type: string }
+              importeAnterior: { type: ["string", "null"] }
+              variacionPorcentaje: { type: ["string", "null"] }
         matriz:
           type: object
           required: [filas, cierra]

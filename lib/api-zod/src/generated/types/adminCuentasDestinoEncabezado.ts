@@ -5,12 +5,16 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { AdminCuentasDestinoEncabezadoCobrado } from './adminCuentasDestinoEncabezadoCobrado';
+import type { AdminCuentasDestinoEncabezadoPorCobrar } from './adminCuentasDestinoEncabezadoPorCobrar';
+import type { AdminCuentasDestinoEncabezadoVendido } from './adminCuentasDestinoEncabezadoVendido';
 
 export type AdminCuentasDestinoEncabezado = {
-  cobrado: string;
-  porCobrar: string;
-  vendido: string;
-  cobradoAnterior: string;
-  porCobrarAnterior: string;
-  vendidoAnterior: string;
+  vendido: AdminCuentasDestinoEncabezadoVendido;
+  porCobrar: AdminCuentasDestinoEncabezadoPorCobrar;
+  cobrado: AdminCuentasDestinoEncabezadoCobrado;
+  /** @nullable */
+  previousDesde: Date | null;
+  /** @nullable */
+  previousHasta: Date | null;
 };

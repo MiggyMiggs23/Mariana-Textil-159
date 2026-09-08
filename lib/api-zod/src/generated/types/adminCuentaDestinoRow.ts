@@ -11,9 +11,13 @@ export interface AdminCuentaDestinoRow {
   cuentaDestino: string;
   formaPago: AdminCuentaDestinoRowFormaPago;
   importe: string;
-  importeAnterior: string;
-  /** Porcentaje en unidades; 12.50 significa 12.5% */
-  variacionPorcentaje: string;
+  /** @nullable */
+  importeAnterior: string | null;
+  /**
+     * Porcentaje en unidades; 12.50 significa 12.5%
+     * @nullable
+     */
+  variacionPorcentaje: string | null;
   porcentaje: string;
   operaciones: number;
   /** Efectivo facturado; solo es distinto de cero en la tarjeta de caja física. */

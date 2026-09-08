@@ -392,9 +392,17 @@ Facturación y forma de cobro son preguntas independientes. Efectivo siempre cae
 
 La caja física mezcla ventas facturadas y sin factura porque el cajón es uno solo. Es la única cuenta cuyo estatus fiscal no se deduce de la cuenta destino, por eso su tarjeta declara por separado cuánto efectivo corresponde a ventas facturadas.
 
-El encabezado contiene **Cobrado**, **Por cobrar** y **Vendido**. Cuentas por cobrar nunca se suma con las tres cuentas reales bajo una etiqueta de ingreso. Los porcentajes de Caja física, Cuenta fiscal y Cuenta no fiscal se calculan sobre Cobrado.
+Venta y cobranza son dos preguntas distintas y no se suman en una sola identidad. **Vendido = Contado + Crédito** y solo usa las fuentes de venta `POS` y `CREDITO`. **Cobrado = Contado + Abonos + Saldos a favor** y usa `POS`, `ABONO` y `ABONO_SALDO_FAVOR`. El contado aparece en ambas porque una venta de contado es venta y entrada de dinero al mismo tiempo; en cambio, `Cobrado + Por cobrar` no equivale a Vendido.
 
-La matriz cruza facturación con forma de cobro y debe cerrar por renglón y por columna. El servidor verifica el cierre y la interfaz muestra cualquier descuadre en vez de ajustarlo u ocultarlo. Toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio. Ninguna cifra financiera de esta pantalla se calcula en el navegador.
+La columna `fuente` de `destinationReadModel()` separa las cuatro categorías operativas: `POS` es venta cobrada al momento, `CREDITO` es venta prometida, `ABONO` es cobro posterior aplicado y `ABONO_SALDO_FAVOR` es dinero recibido aún sin aplicar. Los reversos internos se netean dentro de la categoría de abono correspondiente. El cobro de una nota de un periodo anterior es dinero que entra, pero no una venta nueva: aparece en Cobrado como cobranza de notas anteriores; sumarlo de nuevo en Vendido lo duplicaría contra el periodo donde sí se vendió.
+
+El encabezado contiene **Vendido**, **Por cobrar (notas de crédito al día)** y **Cobrado**. Cuentas por cobrar nunca se suma con las tres cuentas reales bajo una etiqueta de ingreso. Los porcentajes de Caja física, Cuenta fiscal y Cuenta no fiscal se calculan sobre Cobrado.
+
+La matriz cruza facturación con forma de cobro, contiene solo ventas (`POS` y `CREDITO`) y cuadra con Vendido por renglón y por columna. Abonos y saldos a favor van en un renglón separado de cobranza anterior. El servidor verifica el cierre y la interfaz muestra cualquier descuadre en vez de ajustarlo u ocultarlo. Toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio. Ninguna cifra financiera de esta pantalla se calcula en el navegador.
+
+Ninguna cifra de Cuentas Destino es un callejón sin salida: cada importe abre el mismo detalle canónico de movimientos, con sus filtros, y desde ahí el folio lleva al documento de origen. La suma del detalle debe cuadrar al centavo con la cifra que lo abrió.
+
+La comparación con el periodo anterior es opcional, usa un solo interruptor y arranca apagada; el rango inicial es Hoy. Cuando está apagada, el resumen no consulta el periodo anterior. Dentro del detalle se compara siempre. Un periodo en curso se compara contra el mismo tramo transcurrido —medio día contra medio día, no contra un día completo— y un periodo cerrado contra el periodo anterior completo. Si no existe base anterior, la variación es un guion con “sin periodo anterior”, nunca 100%.
 
 Para contar cobros se excluye explícitamente `CREDITO` en vez de enumerar las formas conocidas que sí cobran. Así, una forma nueva entra por omisión y no desaparece del importe o del conteo.
 
@@ -408,6 +416,8 @@ Para contar cobros se excluye explícitamente `CREDITO` en vez de enumerar las f
 La divergencia hallada en el feed de Caja se corrigió: `artifacts/api-server/src/routes/notificaciones.ts:194` usa `pendingTicketPredicate()`, por lo que muestra tickets sin cobrar y notas sin autorizar, pero retira una nota en cuanto queda autorizada.
 
 **Cambio del 7 de septiembre de 2026:** se reconstruyó Cuentas Destino con encabezado Cobrado/Por cobrar/Vendido, cuentas reales, matriz conciliada, IVA facturado, detalles filtrados, incongruencias y desglose por tienda; además se corrigieron el conteo abierto de formas de cobro y el feed pendiente de Caja. Se retiraron los borradores sueltos de la raíz: ningún cálculo de variación se replica fuera del servidor, ni siquiera como archivo de prueba manual. Las tarjetas de cuenta muestran el importe del periodo anterior junto a su porcentaje, por la misma razón que el encabezado.
+
+**Cambio del 7 de septiembre de 2026:** se separaron venta y cobranza mediante `fuente`, la comparación pasó a ser bajo demanda en el resumen y permanente en el detalle, los periodos en curso usan tramos equivalentes y las cifras navegan al detalle canónico.
 
 ## Roles SISTEMAS y CONTADOR
 

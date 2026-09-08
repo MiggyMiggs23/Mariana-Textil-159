@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminCuentaDestinoMovimientoDocumentoTipo } from './adminCuentaDestinoMovimientoDocumentoTipo';
+import type { AdminCuentaDestinoMovimientoFuente } from './adminCuentaDestinoMovimientoFuente';
 
 export interface AdminCuentaDestinoMovimiento {
   id: number;
@@ -24,5 +25,6 @@ export interface AdminCuentaDestinoMovimiento {
   registro: string;
   formaPago: string;
   facturado: boolean;
+  fuente: AdminCuentaDestinoMovimientoFuente;
   incongruente: boolean;
 }

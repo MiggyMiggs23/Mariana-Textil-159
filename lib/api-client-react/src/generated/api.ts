@@ -15322,11 +15322,19 @@ export function useGetAdminCuentasDestino<TData = Awaited<ReturnType<typeof getA
 
 
 
-export const getListAdminCuentaDestinoMovimientosUrl = (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+export const getListAdminCuentaDestinoMovimientosUrl = (cuentaDestino: 'TODAS' | 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
     params?: ListAdminCuentaDestinoMovimientosParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["fuente"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : String(v));
+      });
+      return;
+    }
 
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : String(value))
@@ -15341,7 +15349,7 @@ export const getListAdminCuentaDestinoMovimientosUrl = (cuentaDestino: 'CAJA_FIS
 /**
  * @summary Lista los movimientos reales de una cuenta destino
  */
-export const listAdminCuentaDestinoMovimientos = async (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+export const listAdminCuentaDestinoMovimientos = async (cuentaDestino: 'TODAS' | 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
     params?: ListAdminCuentaDestinoMovimientosParams, options?: Parameters<typeof customFetch>[1]): Promise<AdminCuentaDestinoMovimientos> => {
 
   return customFetch<AdminCuentaDestinoMovimientos>(getListAdminCuentaDestinoMovimientosUrl(cuentaDestino,params),
@@ -15357,7 +15365,7 @@ export const listAdminCuentaDestinoMovimientos = async (cuentaDestino: 'CAJA_FIS
 
 
 
-export const getListAdminCuentaDestinoMovimientosQueryKey = (cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+export const getListAdminCuentaDestinoMovimientosQueryKey = (cuentaDestino: 'TODAS' | 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
     params?: ListAdminCuentaDestinoMovimientosParams,) => {
     return [
     `/api/admin/cuentas-destino/${cuentaDestino}/movimientos`, ...(params ? [params] : [])
@@ -15365,7 +15373,7 @@ export const getListAdminCuentaDestinoMovimientosQueryKey = (cuentaDestino: 'CAJ
     }
 
 
-export const getListAdminCuentaDestinoMovimientosQueryOptions = <TData = Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+export const getListAdminCuentaDestinoMovimientosQueryOptions = <TData = Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(cuentaDestino: 'TODAS' | 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
     params?: ListAdminCuentaDestinoMovimientosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -15393,7 +15401,7 @@ export type ListAdminCuentaDestinoMovimientosQueryError = ErrorType<ValidationEr
  */
 
 export function useListAdminCuentaDestinoMovimientos<TData = Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
- cuentaDestino: 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
+ cuentaDestino: 'TODAS' | 'CAJA_FISICA' | 'CUENTA_NO_FISCAL' | 'CUENTA_FISCAL' | 'CUENTAS_POR_COBRAR',
     params?: ListAdminCuentaDestinoMovimientosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminCuentaDestinoMovimientos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {

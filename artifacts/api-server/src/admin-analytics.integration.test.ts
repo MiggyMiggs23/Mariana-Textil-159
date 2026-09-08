@@ -48,14 +48,11 @@ if (!testUrl) {
         );
         ids.locations.push(Number(row.id));
       }
-      for (const [index, role] of ["ADMIN", "CAJA", "TERMINAL"].entries()) {
-        const row = await one(
-          `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo)
-           VALUES($1,$2,'integration-only',$3,$4,true) RETURNING id`,
-          [`${tag}-U${index}`, `${tag.toLowerCase()}-${index}`, role, ids.locations[index % 2]],
-        );
-        ids.users.push(Number(row.id));
-      }
+      const seededAdmin = await one(
+        `SELECT id FROM usuarios WHERE rol='ADMIN' AND activo=true ORDER BY id LIMIT 1`,
+      );
+      assert.ok(seededAdmin?.id, "the isolated seed must provide its canonical ADMIN actor");
+      ids.users.push(Number(seededAdmin.id), Number(seededAdmin.id), Number(seededAdmin.id));
       const client = await one(
         `INSERT INTO clientes(nombre,activo) VALUES($1,true) RETURNING id`,
         [`${tag}-Cliente`],
@@ -507,19 +504,21 @@ if (!testUrl) {
       assert.equal(destinations.resumen.length, 4);
       assert.equal(
         destinations.resumen.reduce((sum, row) => sum + Number(row.importe), 0),
-         Number(destinations.encabezado.vendido),
+         Number(destinations.encabezado.cobrado.total),
       );
-       assert.equal(
-         destinations.resumen
-           .filter((row) => row.cuentaDestino !== "CUENTAS_POR_COBRAR")
-           .reduce((sum, row) => sum + Number(row.importe), 0),
-         Number(destinations.encabezado.cobrado),
+       assert.equal(destinations.encabezado.vendido.total, "1196.00");
+       assert.equal(destinations.encabezado.vendido.contado, "796.00");
+       assert.equal(destinations.encabezado.vendido.credito, "400.00");
+       assert.equal(destinations.encabezado.cobrado.contado, "796.00");
+       assert.equal(destinations.encabezado.cobrado.abonos, "40.00");
+       assert.equal(destinations.encabezado.cobrado.saldosFavor, "80.00");
+       assert.notEqual(
+         Number(destinations.encabezado.cobrado.total)
+           + Number(destinations.encabezado.porCobrar.periodo),
+         Number(destinations.encabezado.vendido.total),
+         "current collections include payments of credit from other periods",
        );
-       assert.equal(
-         Number(destinations.encabezado.cobrado) + Number(destinations.encabezado.porCobrar),
-         Number(destinations.encabezado.vendido),
-       );
-       assert.equal(destinations.totalCobrado, destinations.encabezado.cobrado);
+       assert.equal(destinations.totalCobrado, destinations.encabezado.cobrado.total);
        assert.equal(destinations.matriz.cierra, true);
        assert.deepEqual(destinations.incongruencias, {
          conteo: 2,
@@ -539,13 +538,13 @@ if (!testUrl) {
            Number(matrixTotal![column].importe),
          );
        }
-       assert.equal(matrixTotal!.total, destinations.encabezado.vendido);
+       assert.equal(matrixTotal!.total, destinations.encabezado.vendido.total);
        assert.equal(
          destinations.ivaCobrado,
          (16 + 32 + 48).toFixed(2),
          "IVA includes the north invoiced transfer by its effective Caja payment date despite earlier creation",
        );
-       assert.equal(destinations.resumen.find((row) => row.cuentaDestino === "CUENTA_FISCAL")!.importe, "302.00");
+       assert.equal(destinations.resumen.find((row) => row.cuentaDestino === "CUENTA_FISCAL")!.importe, "352.00");
        const destinationDetails = await Promise.all(
         (["CAJA_FISICA", "CUENTA_FISCAL", "CUENTA_NO_FISCAL", "CUENTAS_POR_COBRAR"] as const).map(
           (destination) => analytics.listDestinationAccountMovements(
@@ -655,15 +654,24 @@ if (!testUrl) {
         assert.ok(incongruentFiscalDetail.items.every((item) =>
           item.incongruente && item.facturado === false),
         );
-       assert.equal(await analytics.getDestinationCollectedAmount(filters, "CUENTA_FISCAL"), "302.00");
+       assert.equal(await analytics.getDestinationCollectedAmount(filters, "CUENTA_FISCAL"), "352.00");
        assert.equal(await analytics.getDestinationCollectedAmount(
          { ...filters, ubicacionId: ids.locations[1] },
          "CUENTA_FISCAL",
-       ), "10.00");
-      for (const detail of destinationDetails) {
-        assert.equal(detail.montoTotal, destinations.resumen.find(
-          (row) => row.cuentaDestino === detail.cuentaDestino,
-        )!.importe);
+       ), "40.00");
+       for (const detail of destinationDetails) {
+         const collectionDetails = await Promise.all(
+           (["POS", "ABONO", "ABONO_SALDO_FAVOR"] as const).map((fuente) =>
+             analytics.listDestinationAccountMovements(
+               filters, detail.cuentaDestino, 1, 100, { fuentes: [fuente] },
+             )),
+         );
+         assert.equal(
+           collectionDetails.reduce((sum, item) => sum + Number(item.montoTotal), 0),
+           Number(destinations.resumen.find(
+             (row) => row.cuentaDestino === detail.cuentaDestino,
+           )!.importe),
+         );
       }
       assert.equal(
         Math.round(comparison.tiendas.reduce((sum, store) => sum + Number(store.participacion), 0)),
@@ -680,6 +688,48 @@ if (!testUrl) {
           `${period} must include an integration store`,
         );
       }
+
+       // Isolated chronology: the credit note is a sale only in its document
+       // period; a later ABONO is collection only and must not create a sale.
+       const laterSaleAt = new Date(now.getTime() + 10 * 86_400_000);
+       const laterPaymentAt = new Date(now.getTime() + 20 * 86_400_000);
+       const laterTicket = await addTicket({
+         store: 1, session: 6, subtotal: 70, credit: true, unit: 1,
+         documentoTipo: "NOTA", autorizacionEstado: "AUTORIZADA",
+         autorizadoAt: laterSaleAt, createdAt: laterSaleAt,
+       });
+       const laterSale = await one(
+         `INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,created_at)
+          VALUES($1,$2,'VENTA_CREDITO',70,$3,$4) RETURNING id`,
+         [ids.clients[0], laterTicket, ids.users[1], laterSaleAt],
+       );
+       ids.creditMovements.push(Number(laterSale.id));
+       const laterAbono = await one(
+         `INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at)
+          VALUES($1,'ABONO',-70,$2,'TRANSFERENCIA','CUENTA_FISCAL',$3) RETURNING id`,
+         [ids.clients[0], ids.users[1], laterPaymentAt],
+       );
+       ids.creditMovements.push(Number(laterAbono.id));
+       const laterApplication = await one(
+         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
+          VALUES($1,$2,70) RETURNING id`,
+         [laterAbono.id, laterSale.id],
+       );
+       ids.creditApplications.push(Number(laterApplication.id));
+       const around = (date: Date) => ({
+         desde: new Date(date.getTime() - 1_000),
+         hasta: new Date(date.getTime() + 1_000),
+       });
+       const [salePeriod, paymentPeriod] = await Promise.all([
+         analytics.getDestinationAccounts(around(laterSaleAt), false),
+         analytics.getDestinationAccounts(around(laterPaymentAt), false),
+       ]);
+       assert.equal(salePeriod.encabezado.vendido.total, "70.00");
+       assert.equal(salePeriod.encabezado.porCobrar.periodo, "70.00");
+       assert.equal(salePeriod.encabezado.cobrado.total, "0.00");
+       assert.equal(paymentPeriod.encabezado.vendido.total, "0.00");
+       assert.equal(paymentPeriod.encabezado.cobrado.total, "70.00");
+       assert.equal(paymentPeriod.encabezado.cobrado.abonos, "70.00");
 
       // The router applies this same literal middleware to every /admin route.
       for (const role of ["CAJA", "TERMINAL"] as const) {

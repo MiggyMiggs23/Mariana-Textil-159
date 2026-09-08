@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminCuentaDestinoRow } from './adminCuentaDestinoRow';
+import type { AdminCuentasDestinoCobrosAnterioresItem } from './adminCuentasDestinoCobrosAnterioresItem';
 import type { AdminCuentasDestinoEncabezado } from './adminCuentasDestinoEncabezado';
 import type { AdminCuentasDestinoFacturacion } from './adminCuentasDestinoFacturacion';
 import type { AdminCuentasDestinoIncongruencias } from './adminCuentasDestinoIncongruencias';
@@ -19,6 +20,8 @@ export interface AdminCuentasDestino {
   tendencia: AdminCuentaTrend[];
   porTienda: AdminCuentasDestinoPorTiendaItem[];
   encabezado: AdminCuentasDestinoEncabezado;
+  /** Abonos y saldos a favor cobrados en el periodo, separados por cuenta destino. */
+  cobrosAnteriores: AdminCuentasDestinoCobrosAnterioresItem[];
   matriz: AdminCuentasDestinoMatriz;
   ivaFacturado: AdminCuentasDestinoIvaFacturado;
   incongruencias: AdminCuentasDestinoIncongruencias;

@@ -9,6 +9,8 @@ import type { AnalyticsDesdeParameter } from './analyticsDesdeParameter';
 import type { AnalyticsHastaParameter } from './analyticsHastaParameter';
 import type { AnalyticsUbicacionIdParameter } from './analyticsUbicacionIdParameter';
 import type { ListAdminCuentaDestinoMovimientosFormaPago } from './listAdminCuentaDestinoMovimientosFormaPago';
+import type { ListAdminCuentaDestinoMovimientosFuenteItem } from './listAdminCuentaDestinoMovimientosFuenteItem';
+import type { ListAdminCuentaDestinoMovimientosPreset } from './listAdminCuentaDestinoMovimientosPreset';
 
 export type ListAdminCuentaDestinoMovimientosParams = {
 /**
@@ -31,6 +33,14 @@ formaPago?: ListAdminCuentaDestinoMovimientosFormaPago;
  * Limita el detalle a abonos cuyo destino contradice la facturación de la venta.
  */
 incongruente?: boolean;
+/**
+ * Filtra el mismo detalle canónico que alimenta los agregados.
+ */
+fuente?: ListAdminCuentaDestinoMovimientosFuenteItem[];
+/**
+ * Identifica el periodo de calendario para comparar el mismo tramo transcurrido.
+ */
+preset?: ListAdminCuentaDestinoMovimientosPreset;
 /**
  * @minimum 1
  */

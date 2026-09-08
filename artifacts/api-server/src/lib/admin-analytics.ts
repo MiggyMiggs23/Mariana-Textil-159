@@ -30,18 +30,64 @@ export type AnalyticsFilters = {
   desde?: Date;
   hasta?: Date;
   ubicacionId?: number;
+  preset?: "hoy" | "semana" | "mes" | "trimestre" | "semestre" | "ano" | "custom";
 };
 
-export function previousEqualPeriod(filters: AnalyticsFilters): AnalyticsFilters {
+export function previousEqualPeriod(
+  filters: AnalyticsFilters,
+  now = new Date(),
+): AnalyticsFilters {
   if (!filters.desde || !filters.hasta) {
     throw new AnalyticsInputError("El periodo requiere límites para calcular su comparación.");
   }
-  const duration = filters.hasta.getTime() - filters.desde.getTime() + 1;
+  const inProgress = now >= filters.desde && now <= filters.hasta;
+  const effectiveEnd = inProgress ? now : filters.hasta;
+  const [startYear, startMonth, startDay] = dateMexico(filters.desde).split("-").map(Number);
+  const [rangeEndYear, rangeEndMonth, rangeEndDay] = dateMexico(filters.hasta).split("-").map(Number);
+  const legacyFullCalendarMonth = filters.preset === undefined
+    && startDay === 1
+    && startYear === rangeEndYear
+    && startMonth === rangeEndMonth
+    && rangeEndDay === new Date(Date.UTC(rangeEndYear!, rangeEndMonth!, 0)).getUTCDate();
+  const calendarMonths = filters.preset === "mes"
+    ? 1
+    : filters.preset === "trimestre"
+      ? 3
+      : filters.preset === "ano"
+        ? 12
+        : legacyFullCalendarMonth
+          ? 1
+          : null;
+  if (inProgress && calendarMonths !== null) {
+    const shiftDate = (value: Date, months: number) => {
+      const [year, month, day] = dateMexico(value).split("-").map(Number);
+      const shiftedMonth = new Date(Date.UTC(year!, month! - 1 + months, 1));
+      const shiftedYear = shiftedMonth.getUTCFullYear();
+      const shiftedMonthNumber = shiftedMonth.getUTCMonth() + 1;
+      const lastDay = new Date(Date.UTC(shiftedYear, shiftedMonthNumber, 0)).getUTCDate();
+      const date = [
+        shiftedYear,
+        String(shiftedMonthNumber).padStart(2, "0"),
+        String(Math.min(day!, lastDay)).padStart(2, "0"),
+      ].join("-");
+      const shiftedStart = parseMexicoDateQuery(date, "start")!;
+      const originalDayStart = parseMexicoDateQuery(dateMexico(value), "start")!;
+      return new Date(shiftedStart.getTime() + value.getTime() - originalDayStart.getTime());
+    };
+    return {
+      desde: shiftDate(filters.desde, -calendarMonths),
+      hasta: shiftDate(effectiveEnd, -calendarMonths),
+      ubicacionId: filters.ubicacionId,
+      preset: filters.preset,
+    };
+  }
+  const duration = effectiveEnd.getTime() - filters.desde.getTime() + 1;
   const hasta = new Date(filters.desde.getTime() - 1);
   return {
     desde: new Date(hasta.getTime() - duration + 1),
     hasta,
     ubicacionId: filters.ubicacionId,
+    preset: filters.preset,
   };
 }
 
@@ -176,7 +222,9 @@ export async function getDestinationCollectedAmount(
   const result = await pool.query(
     `${destinationReadModel()}
      SELECT COALESCE(SUM(importe),0)::text amount
-     FROM destination_movements WHERE "cuentaDestino"=$4`,
+     FROM destination_movements
+     WHERE "cuentaDestino"=$4
+       AND fuente IN ('POS','ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')`,
     [...values, destination],
   );
   return decimal(result.rows[0]!.amount);
@@ -244,10 +292,9 @@ function decimal(value: unknown, scale = 2): string {
   return (Number.isFinite(number) ? number : 0).toFixed(scale);
 }
 
-function percentageChange(current: number, previous: number): string {
-  return decimal(previous === 0
-    ? (current === 0 ? 0 : 100)
-    : ((current - previous) / previous) * 100);
+export function percentageChange(current: number, previous: number): string | null {
+  if (previous === 0) return current === 0 ? decimal(0) : null;
+  return decimal(((current - previous) / previous) * 100);
 }
 
 function dateMexico(value = new Date()): string {
@@ -1035,22 +1082,22 @@ export async function listCuts(
   };
 }
 
-export async function getDestinationAccounts(filters: AnalyticsFilters) {
+export async function getDestinationAccounts(filters: AnalyticsFilters, compare = false) {
   // Account destinations are cash-flow reporting: a ticket sold yesterday and
   // charged today belongs to today's collected period.
   const condition = where(filters, "t", "ACCOUNTED");
-  const priorCondition = where(previousEqualPeriod(filters), "t", "ACCOUNTED");
+  const previousFilters = compare ? previousEqualPeriod(filters) : null;
   const accountSql = () => `${destinationReadModel()}
     SELECT (fecha AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
-      "formaPago",facturado,"cuentaDestino",SUM(importe)::text importe,COUNT(*)::int operaciones,
+      "formaPago",facturado,"cuentaDestino",fuente,SUM(importe)::text importe,COUNT(*)::int operaciones,
       COUNT(DISTINCT (id / 1000000)) FILTER (WHERE fuente='ABONO' AND
         ((facturado AND "cuentaDestino"='CUENTA_NO_FISCAL') OR
          (NOT facturado AND "cuentaDestino"='CUENTA_FISCAL')))::int incongruencias,
       COALESCE(SUM(importe) FILTER (WHERE fuente='ABONO' AND
         ((facturado AND "cuentaDestino"='CUENTA_NO_FISCAL') OR
          (NOT facturado AND "cuentaDestino"='CUENTA_FISCAL'))),0)::text "importeIncongruente"
-    FROM destination_movements GROUP BY fecha,"formaPago",facturado,"cuentaDestino"`;
-  const [result, fiscal, prior, byStore] = await Promise.all([pool.query(
+    FROM destination_movements GROUP BY fecha,"formaPago",facturado,"cuentaDestino",fuente`;
+  const currentQueries = await Promise.all([pool.query(
     accountSql(),
     condition.values,
   ), pool.query(
@@ -1060,21 +1107,38 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
      FROM tickets t WHERE ${condition.text}
        AND ${accountedDocumentPredicate("t")}`,
     condition.values,
-   ), pool.query(accountSql(), priorCondition.values),
-   pool.query(
+   ), pool.query(
      `${destinationReadModel()}
-      SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",d."formaPago",d.facturado,d."cuentaDestino",SUM(d.importe)::text importe
+       SELECT u.id "ubicacionId",u.nombre "nombreUbicacion",d."formaPago",d.facturado,d."cuentaDestino",d.fuente,SUM(d.importe)::text importe
       FROM destination_movements d JOIN ubicaciones u ON u.id=d."ubicacionId"
-      GROUP BY u.id,u.nombre,d."formaPago",d.facturado,d."cuentaDestino" ORDER BY u.nombre`,
+       GROUP BY u.id,u.nombre,d."formaPago",d.facturado,d."cuentaDestino",d.fuente ORDER BY u.nombre`,
     condition.values,
   )]);
-  const rows = result.rows.map((row) => ({
-    ...row,
-     cuentaDestino: row.cuentaDestino,
-  }));
+  const [result, fiscal, byStore] = currentQueries;
+  // compare=false intentionally does not enqueue or execute a previous-period query.
+  const prior = previousFilters
+    ? await pool.query(accountSql(), [
+      previousFilters.desde!.toISOString(),
+      previousFilters.hasta!.toISOString(),
+      previousFilters.ubicacionId ?? null,
+    ])
+    : { rows: [] };
+  const rows = result.rows;
+  const saleSources = new Set(["POS", "CREDITO"]);
+  const collectionSources = new Set([
+    "POS",
+    "ABONO",
+    "REVERSO_ABONO",
+    "ABONO_SALDO_FAVOR",
+    "REVERSO_ABONO_SALDO_FAVOR",
+  ]);
+  const saleRows = rows.filter((row) => saleSources.has(row.fuente));
+  const collectionRows = rows.filter((row) => collectionSources.has(row.fuente));
+  const priorSaleRows = prior.rows.filter((row) => saleSources.has(row.fuente));
+  const priorCollectionRows = prior.rows.filter((row) => collectionSources.has(row.fuente));
   const priorTotals = new Map<AccountDestination, number>();
-  for (const row of prior.rows) {
-     const destination = row.cuentaDestino as AccountDestination;
+  for (const row of priorCollectionRows) {
+    const destination = row.cuentaDestino as AccountDestination;
     priorTotals.set(destination, (priorTotals.get(destination) ?? 0) + Number(row.importe));
   }
   const destinationPaymentMethod: Record<AccountDestination, string> = {
@@ -1089,7 +1153,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
       { cuentaDestino, formaPago: destinationPaymentMethod[cuentaDestino], importe: 0, operaciones: 0 },
     ]),
   );
-  for (const row of rows) {
+  for (const row of collectionRows) {
     const current = summary.get(row.cuentaDestino) ?? {
       cuentaDestino: row.cuentaDestino,
       formaPago: row.formaPago,
@@ -1100,13 +1164,36 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
     current.operaciones += Number(row.operaciones);
     summary.set(row.cuentaDestino, current);
   }
-  const sold = [...summary.values()].reduce((sum, row) => sum + row.importe, 0);
-  const receivable = summary.get("CUENTAS_POR_COBRAR")?.importe ?? 0;
-  const collected = sold - receivable;
-  const priorSold = [...priorTotals.values()].reduce((sum, amount) => sum + amount, 0);
-  const priorReceivable = priorTotals.get("CUENTAS_POR_COBRAR") ?? 0;
-  const priorCollected = priorSold - priorReceivable;
-  const matrix = reconcileDestinationMatrix(rows);
+  const sumSources = (sourceRows: any[], fuentes: string[]) => sourceRows
+    .filter((row) => fuentes.includes(row.fuente))
+    .reduce((sum, row) => sum + Number(row.importe), 0);
+  const contado = sumSources(saleRows, ["POS"]);
+  const credito = sumSources(saleRows, ["CREDITO"]);
+  const sold = contado + credito;
+  // Identity: POS is simultaneously evidence of a cash sale and its collection,
+  // so it intentionally belongs to both Vendido and Cobrado without duplication
+  // inside either measure.
+  const pos = sumSources(collectionRows, ["POS"]);
+  const abonos = sumSources(collectionRows, ["ABONO", "REVERSO_ABONO"]);
+  const abonosSaldoFavor = sumSources(collectionRows, [
+    "ABONO_SALDO_FAVOR",
+    "REVERSO_ABONO_SALDO_FAVOR",
+  ]);
+  const collected = pos + abonos + abonosSaldoFavor;
+  // Cobrado + Por cobrar is not an identity for Vendido: Cobrado includes ABONOs
+  // settling credit sales from earlier periods, while Por cobrar means only the
+  // credit notes created in this reporting period (not their outstanding balance).
+  const priorContado = sumSources(priorSaleRows, ["POS"]);
+  const priorCredito = sumSources(priorSaleRows, ["CREDITO"]);
+  const priorSold = priorContado + priorCredito;
+  const priorPos = sumSources(priorCollectionRows, ["POS"]);
+  const priorAbonos = sumSources(priorCollectionRows, ["ABONO", "REVERSO_ABONO"]);
+  const priorAbonosSaldoFavor = sumSources(priorCollectionRows, [
+    "ABONO_SALDO_FAVOR",
+    "REVERSO_ABONO_SALDO_FAVOR",
+  ]);
+  const priorCollected = priorPos + priorAbonos + priorAbonosSaldoFavor;
+  const matrix = reconcileDestinationMatrix(saleRows);
   const incongruenceCount = rows.reduce(
     (sum, row) => sum + Number(row.incongruencias ?? 0),
     0,
@@ -1119,20 +1206,19 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
     resumen: [...summary.values()].map((row) => ({
       ...row,
       importe: decimal(row.importe),
-      importeAnterior: decimal(priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0),
-      variacionPorcentaje: decimal((priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0) === 0
-        ? (row.importe === 0 ? 0 : 100)
-        : ((row.importe - (priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0)) /
-          (priorTotals.get(row.cuentaDestino as AccountDestination) ?? 1)) * 100),
-      porcentaje: decimal(row.cuentaDestino === "CUENTAS_POR_COBRAR"
-        ? (sold === 0 ? 0 : (row.importe / sold) * 100)
-        : (collected === 0 ? 0 : (row.importe / collected) * 100)),
+      importeAnterior: compare
+        ? decimal(priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0)
+        : null,
+      variacionPorcentaje: compare
+        ? percentageChange(row.importe, priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0)
+        : null,
+      porcentaje: decimal(collected === 0 ? 0 : (row.importe / collected) * 100),
       cajaFisicaFacturado: decimal(row.cuentaDestino === "CAJA_FISICA"
-        ? rows.filter((item) => item.cuentaDestino === "CAJA_FISICA" && item.facturado)
+        ? collectionRows.filter((item) => item.cuentaDestino === "CAJA_FISICA" && item.facturado)
           .reduce((sum, item) => sum + Number(item.importe), 0)
         : 0),
     })),
-    tendencia: [...rows.reduce((map, row) => {
+    tendencia: [...saleRows.reduce((map, row) => {
       const key = `${row.fecha}|${row.cuentaDestino}`;
       const current = map.get(key) ?? {
         fecha: row.fecha,
@@ -1145,19 +1231,51 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
     }, new Map<string, { fecha: string; cuentaDestino: string; importe: number }>()).values()]
       .map((row) => ({ ...row, importe: decimal(row.importe) })),
     ivaCobrado: decimal(fiscal.rows[0]!.iva),
-    // Backward-compatible field, corrected to match its name: receivables are not cash.
     totalCobrado: decimal(collected),
     encabezado: {
-      cobrado: decimal(collected),
-      porCobrar: decimal(receivable),
-      vendido: decimal(sold),
-      cobradoAnterior: decimal(priorCollected),
-      porCobrarAnterior: decimal(priorReceivable),
-      vendidoAnterior: decimal(priorSold),
-      cobradoVariacionPorcentaje: percentageChange(collected, priorCollected),
-      porCobrarVariacionPorcentaje: percentageChange(receivable, priorReceivable),
-      vendidoVariacionPorcentaje: percentageChange(sold, priorSold),
+      vendido: {
+        contado: decimal(contado),
+        credito: decimal(credito),
+        total: decimal(sold),
+        totalAnterior: compare ? decimal(priorSold) : null,
+        variacionPorcentaje: compare ? percentageChange(sold, priorSold) : null,
+      },
+      porCobrar: {
+        periodo: decimal(credito),
+        periodoAnterior: compare ? decimal(priorCredito) : null,
+        variacionPorcentaje: compare ? percentageChange(credito, priorCredito) : null,
+      },
+      cobrado: {
+        contado: decimal(pos),
+        abonos: decimal(abonos),
+        saldosFavor: decimal(abonosSaldoFavor),
+        total: decimal(collected),
+        totalAnterior: compare ? decimal(priorCollected) : null,
+        variacionPorcentaje: compare ? percentageChange(collected, priorCollected) : null,
+      },
+      previousDesde: previousFilters?.desde?.toISOString() ?? null,
+      previousHasta: previousFilters?.hasta?.toISOString() ?? null,
     },
+    cobrosAnteriores: ACCOUNT_DESTINATION_ORDER.flatMap((cuentaDestino) =>
+      (["ABONO", "ABONO_SALDO_FAVOR"] as const).map((fuente) => {
+        const sourceNames = fuente === "ABONO"
+          ? ["ABONO", "REVERSO_ABONO"]
+          : ["ABONO_SALDO_FAVOR", "REVERSO_ABONO_SALDO_FAVOR"];
+        const amount = collectionRows
+          .filter((row) => row.cuentaDestino === cuentaDestino && sourceNames.includes(row.fuente))
+          .reduce((sum, row) => sum + Number(row.importe), 0);
+        const priorAmount = priorCollectionRows
+          .filter((row) => row.cuentaDestino === cuentaDestino && sourceNames.includes(row.fuente))
+          .reduce((sum, row) => sum + Number(row.importe), 0);
+        return {
+          cuentaDestino,
+          fuente,
+          importe: decimal(amount),
+          importeAnterior: compare ? decimal(priorAmount) : null,
+          variacionPorcentaje: compare ? percentageChange(amount, priorAmount) : null,
+        };
+      }),
+    ).filter((row) => Number(row.importe) !== 0 || (compare && Number(row.importeAnterior) !== 0)),
     matriz: matrix,
     ivaFacturado: {
       base: decimal(fiscal.rows[0]!.baseFacturada),
@@ -1172,11 +1290,13 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
         ubicacionId: Number(row.ubicacionId), nombreUbicacion: String(row.nombreUbicacion),
         cajaFisica: 0, cuentaFiscal: 0, cuentaNoFiscal: 0, cuentasPorCobrar: 0,
       };
-       const key = row.cuentaDestino as AccountDestination;
-      if (key === "CAJA_FISICA") item.cajaFisica += Number(row.importe);
-      else if (key === "CUENTA_FISCAL") item.cuentaFiscal += Number(row.importe);
-      else if (key === "CUENTA_NO_FISCAL") item.cuentaNoFiscal += Number(row.importe);
-      else item.cuentasPorCobrar += Number(row.importe);
+      const key = row.cuentaDestino as AccountDestination;
+      if (collectionSources.has(row.fuente)) {
+        if (key === "CAJA_FISICA") item.cajaFisica += Number(row.importe);
+        else if (key === "CUENTA_FISCAL") item.cuentaFiscal += Number(row.importe);
+        else if (key === "CUENTA_NO_FISCAL") item.cuentaNoFiscal += Number(row.importe);
+      }
+      if (row.fuente === "CREDITO") item.cuentasPorCobrar += Number(row.importe);
       map.set(item.ubicacionId, item); return map;
     }, new Map<number, { ubicacionId: number; nombreUbicacion: string; cajaFisica: number; cuentaFiscal: number; cuentaNoFiscal: number; cuentasPorCobrar: number }>()).values()]
       .map((row) => ({
@@ -1184,16 +1304,18 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
         cuentaNoFiscal: decimal(row.cuentaNoFiscal), cuentasPorCobrar: decimal(row.cuentasPorCobrar),
          cobrado: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal),
          porCobrar: decimal(row.cuentasPorCobrar),
-         vendido: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
-         total: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
+         vendido: decimal(byStore.rows.filter((item) =>
+           Number(item.ubicacionId) === row.ubicacionId && saleSources.has(item.fuente))
+           .reduce((sum, item) => sum + Number(item.importe), 0)),
+         total: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal),
        }))),
     facturacion: {
-      facturadoTotal: decimal(rows.filter((r) => r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
-      noFacturadoTotal: decimal(rows.filter((r) => !r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
-      facturadoEfectivo: decimal(rows.filter((r) => r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
-      facturadoTransferencia: decimal(rows.filter((r) => r.facturado && matrixPaymentCategory(r.formaPago) === "transferencia").reduce((s, r) => s + Number(r.importe), 0)),
-      noFacturadoEfectivo: decimal(rows.filter((r) => !r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
-      noFacturadoTransferencia: decimal(rows.filter((r) => !r.facturado && matrixPaymentCategory(r.formaPago) === "transferencia").reduce((s, r) => s + Number(r.importe), 0)),
+      facturadoTotal: decimal(saleRows.filter((r) => r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoTotal: decimal(saleRows.filter((r) => !r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
+      facturadoEfectivo: decimal(saleRows.filter((r) => r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
+      facturadoTransferencia: decimal(saleRows.filter((r) => r.facturado && matrixPaymentCategory(r.formaPago) === "transferencia").reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoEfectivo: decimal(saleRows.filter((r) => !r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoTransferencia: decimal(saleRows.filter((r) => !r.facturado && matrixPaymentCategory(r.formaPago) === "transferencia").reduce((s, r) => s + Number(r.importe), 0)),
     },
   };
 }
@@ -1257,13 +1379,14 @@ export function reconcileDestinationMatrix(rows: DestinationAggregateRow[]) {
 
 export async function listDestinationAccountMovements(
   filters: AnalyticsFilters,
-  destination: AccountDestination,
+  destination: AccountDestination | "TODAS",
   page = 1,
   pageSize = 50,
   options: {
     facturado?: boolean;
     formaPago?: "EFECTIVO" | "TRANSFERENCIA" | "POR_COBRAR" | "OTRAS";
     incongruente?: boolean;
+    fuentes?: Array<"POS" | "CREDITO" | "ABONO" | "ABONO_SALDO_FAVOR">;
   } = {},
 ) {
   const values = [
@@ -1280,8 +1403,8 @@ export async function listDestinationAccountMovements(
     JOIN usuarios registrador ON registrador.id=d."registroId"
     LEFT JOIN clientes c ON c.id=d."clienteId"`;
   const filtersSql = [
-    `d."cuentaDestino"=$4`,
-    options.facturado === undefined ? "" : `d.facturado=$7`,
+    `($4::text='TODAS' OR d."cuentaDestino"=$4)`,
+    `($7::boolean IS NULL OR d.facturado=$7)`,
     options.formaPago === undefined ? "" : options.formaPago === "EFECTIVO"
       ? `d."formaPago"='EFECTIVO'`
       : options.formaPago === "TRANSFERENCIA"
@@ -1294,11 +1417,32 @@ export async function listDestinationAccountMovements(
           (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))`
       : `NOT (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
           (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL')))`,
+    `($8::text[] IS NULL OR d.fuente=ANY($8::text[]))`,
   ].filter(Boolean).join(" AND ");
-  const queryValues = options.facturado === undefined
-    ? values
-    : [...values, options.facturado];
-  const [rows, aggregate] = await Promise.all([
+  const rawSources = options.fuentes?.flatMap((source) => {
+    if (source === "ABONO") return ["ABONO", "REVERSO_ABONO"];
+    if (source === "ABONO_SALDO_FAVOR") {
+      return ["ABONO_SALDO_FAVOR", "REVERSO_ABONO_SALDO_FAVOR"];
+    }
+    return [source];
+  });
+  const queryValues = [
+    ...values,
+    options.facturado ?? null,
+    rawSources?.length ? rawSources : null,
+  ];
+  const previousFilters = previousEqualPeriod(filters);
+  const previousValues = [
+    previousFilters.desde!.toISOString(),
+    previousFilters.hasta!.toISOString(),
+    previousFilters.ubicacionId ?? null,
+    destination,
+    pageSize,
+    0,
+    options.facturado ?? null,
+    rawSources?.length ? rawSources : null,
+  ];
+  const [rows, aggregate, previousAggregate] = await Promise.all([
     pool.query(
        `${readModel} SELECT d.id,d.fecha,
          CASE d."cuentaDestino" WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
@@ -1307,7 +1451,7 @@ export async function listDestinationAccountMovements(
          CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN 'CLIENTE' ELSE 'TICKET' END "documentoTipo",d."documentoId",
          CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN ('Cliente #' || d."clienteId"::text) ELSE ('Ticket #' || d.folio::text) END documento,c.nombre cliente,
           d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,d.importe::text monto,
-          d."formaPago",d.facturado,
+           d."formaPago",d.facturado,d.fuente,
           (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
             (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))) incongruente,
          registrador.id "registroId",registrador.nombre registro
@@ -1318,9 +1462,17 @@ export async function listDestinationAccountMovements(
     pool.query(
        `${readModel} SELECT COUNT(*)::int total,COALESCE(SUM(d.importe),0)::text "montoTotal"
          ${joins} WHERE ${filtersSql}`,
-      options.facturado === undefined ? values.slice(0, 4) : queryValues,
+       queryValues,
+    ),
+    pool.query(
+      `${destinationReadModel()}
+       SELECT COUNT(*)::int total,COALESCE(SUM(d.importe),0)::text "montoTotal"
+       ${joins} WHERE ${filtersSql}`,
+      previousValues,
     ),
   ]);
+  const currentAmount = Number(aggregate.rows[0]!.montoTotal);
+  const previousAmount = Number(previousAggregate.rows[0]!.montoTotal);
   return {
     cuentaDestino: destination,
     items: rows.rows.map((row) => ({
@@ -1335,7 +1487,11 @@ export async function listDestinationAccountMovements(
     total: Number(aggregate.rows[0]!.total),
     page,
     pageSize,
-    montoTotal: decimal(aggregate.rows[0]!.montoTotal),
+    montoTotal: decimal(currentAmount),
+    montoTotalAnterior: decimal(previousAmount),
+    variacionPorcentaje: percentageChange(currentAmount, previousAmount),
+    previousDesde: previousFilters.desde!.toISOString(),
+    previousHasta: previousFilters.hasta!.toISOString(),
   };
 }
 

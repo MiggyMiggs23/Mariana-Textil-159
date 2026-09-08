@@ -15,4 +15,9 @@ export interface AdminCuentaDestinoMovimientos {
   page: number;
   pageSize: number;
   montoTotal: string;
+  montoTotalAnterior: string;
+  /** @nullable */
+  variacionPorcentaje: string | null;
+  previousDesde: Date;
+  previousHasta: Date;
 }

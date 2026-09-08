@@ -51,11 +51,9 @@ describe("Cuentas Destino Contract", () => {
 
   it("renders server-owned reconciled values without financial formulas", () => {
     const summary = readPage("./cuentas-destino.tsx");
-    assert.match(summary, /cobradoVariacionPorcentaje/);
-    assert.match(summary, /porCobrarVariacionPorcentaje/);
-    assert.match(summary, /vendidoVariacionPorcentaje/);
-    assert.match(summary, /Ant: \{formatNumber\(row\.importeAnterior, \{ kind: "money" \}\)\}/);
-    assert.match(summary, /formatNumber\(row\.variacionPorcentaje, \{ kind: "percentage", percentageInput: "percent" \}\)/);
+    assert.match(summary, /cobrado.variacionPorcentaje/);
+    assert.match(summary, /porCobrar.variacionPorcentaje/);
+    assert.match(summary, /vendido.variacionPorcentaje/);
     assert.doesNotMatch(summary, /getVariation|cobrado\s*\+\s*porCobrar|reduce\([^)]*importe/);
     assert.match(summary, /data\.matriz\.cierra/);
     assert.match(summary, /overflow-x-auto[\s\S]*data\.matriz\.filas/);
@@ -79,4 +77,32 @@ describe("Cuentas Destino Contract", () => {
     assert.match(detail, /query\.data\.montoTotal/);
     assert.doesNotMatch(detail, /items\.reduce/);
   });
+
+  it("uses wouter search and location hooks for url state with default today and off", () => {
+    const summary = readPage("./cuentas-destino.tsx");
+    assert.match(summary, /useSearch/);
+    assert.match(summary, /useLocation/);
+    assert.match(summary, /searchParams.get\("compare"\) === "true"/);
+    assert.match(summary, /todayStr = format\(new Date\(\), "yyyy-MM-dd"\)/);
+    assert.match(summary, /const desde = searchParams\.get\("desde"\) \|\| todayStr/);
+  });
+
+  it("handles nullable previous display without +100% logic", () => {
+    const summary = readPage("./cuentas-destino.tsx");
+    const detail = readPage("./cuenta-destino-detalle.tsx");
+    assert.match(summary, /- sin periodo anterior/);
+    assert.match(detail, /- sin periodo anterior/);
+  });
+
+  it("includes fuente filter in the links to the detail page", () => {
+    const summary = readPage("./cuentas-destino.tsx");
+    const detail = readPage("./cuenta-destino-detalle.tsx");
+    assert.match(summary, /fuentes: ListAdminCuentaDestinoMovimientosFuenteItem\[\]/);
+    assert.match(summary, /params.append\("fuente", fuente\)/);
+    assert.match(summary, /fuentes=\{\["POS"\]\}/);
+    assert.match(summary, /fuentes=\{\["CREDITO"\]\}/);
+    assert.match(summary, /cobro\.fuente/);
+    assert.match(detail, /inherited\.getAll\("fuente"\)/);
+  });
+
 });

@@ -8,6 +8,7 @@ import {
   comparisonRange,
   parseAnalyticsFilters,
   measureKpi,
+  percentageChange,
   previousEqualPeriod,
   mexicoCityHour,
   reconcileDestinationMatrix,
@@ -89,7 +90,7 @@ test("realtime collected amount and counts use processed non-credit payment evid
   const stores = source.slice(storesStart, storesEnd);
 
   assert.match(summary, /f\.estado='VENDIDO' AND f\.cobrado/);
-  assert.match(summary, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
+  assert.match(summary, /p\.forma_pago <> 'CREDITO'/);
   assert.match(summary, /COUNT\(p\.ticket_id\)::int "ticketsCobrados"/);
   assert.match(stores, /collectedTicketPredicate\("t"\)/);
   assert.match(stores, /p\.forma_pago IN \('EFECTIVO','TRANSFERENCIA','FACTURADO'\)/);
@@ -143,6 +144,10 @@ test("destination movement contract validates account, pagination and real ticke
       ubicacionId: 2,
       sitio: "Centro",
       monto: "125.00",
+      formaPago: "EFECTIVO",
+      facturado: false,
+      fuente: "POS",
+      incongruente: false,
       registroId: 3,
       registro: "Cajero",
     }],
@@ -150,6 +155,10 @@ test("destination movement contract validates account, pagination and real ticke
     page: 1,
     pageSize: 50,
     montoTotal: "125.00",
+    montoTotalAnterior: "100.00",
+    variacionPorcentaje: "25.00",
+    previousDesde: new Date("2025-01-01T06:00:00.000Z").toISOString(),
+    previousHasta: new Date("2025-01-31T05:59:59.999Z").toISOString(),
   }).success, true);
 });
 
@@ -284,7 +293,29 @@ test("equal previous period is adjacent and has identical duration", () => {
   assert.equal(previous.hasta!.getTime() + 1, current.desde!.getTime());
 });
 
-test("four destinations preserve total and percentages/participation sum to 100", () => {
+test("in-progress comparison uses the elapsed span, while a closed period stays full", () => {
+  const current = parseAnalyticsFilters({ desde: "2025-05-01", hasta: "2025-05-31" });
+  const inProgress = previousEqualPeriod(current, new Date("2025-05-10T12:00:00.000Z"));
+  assert.equal(
+    inProgress.hasta!.getTime() - inProgress.desde!.getTime(),
+    new Date("2025-05-10T12:00:00.000Z").getTime() - current.desde!.getTime(),
+  );
+  assert.equal(inProgress.desde!.toISOString(), "2025-04-01T06:00:00.000Z",
+    "a month-to-date comparison starts on the first of the previous month");
+  const closed = previousEqualPeriod(current, new Date("2025-06-10T12:00:00.000Z"));
+  assert.equal(
+    closed.hasta!.getTime() - closed.desde!.getTime(),
+    current.hasta!.getTime() - current.desde!.getTime(),
+  );
+});
+
+test("percentage change is undefined when a nonzero value has no prior base", () => {
+  assert.equal(percentageChange(50, 0), null);
+  assert.equal(percentageChange(0, 0), "0.00");
+  assert.equal(percentageChange(150, 100), "50.00");
+});
+
+test("four destinations preserve collection participation independently of sales", () => {
   const payments = [
     { method: "EFECTIVO" as const, invoiced: false, amount: 100 },
     { method: "TRANSFERENCIA" as const, invoiced: true, amount: 200 },
@@ -302,16 +333,18 @@ test("four destinations preserve total and percentages/participation sum to 100"
   assert.equal([...totals.values()].reduce((sum, value) => sum + value / total * 100, 0), 100);
 });
 
-test("destination fiscal/payment matrix reconciles every row, column, headline and account", () => {
+test("destination sale matrix excludes later collections and reconciles to Vendido", () => {
   const source = [
-    { formaPago: "EFECTIVO", facturado: true, cuentaDestino: "CAJA_FISICA", importe: 100 },
-    { formaPago: "EFECTIVO", facturado: false, cuentaDestino: "CAJA_FISICA", importe: 50 },
-    { formaPago: "TRANSFERENCIA", facturado: false, cuentaDestino: "CUENTA_NO_FISCAL", importe: 200 },
-    { formaPago: "FACTURADO", facturado: true, cuentaDestino: "CUENTA_FISCAL", importe: 75 },
-    { formaPago: "CREDITO", facturado: true, cuentaDestino: "CUENTAS_POR_COBRAR", importe: 300 },
-    { formaPago: "CHEQUE", facturado: false, cuentaDestino: "CUENTA_NO_FISCAL", importe: 25 },
+    { formaPago: "EFECTIVO", facturado: true, cuentaDestino: "CAJA_FISICA", importe: 100, fuente: "POS" },
+    { formaPago: "EFECTIVO", facturado: false, cuentaDestino: "CAJA_FISICA", importe: 50, fuente: "POS" },
+    { formaPago: "TRANSFERENCIA", facturado: false, cuentaDestino: "CUENTA_NO_FISCAL", importe: 200, fuente: "POS" },
+    { formaPago: "FACTURADO", facturado: true, cuentaDestino: "CUENTA_FISCAL", importe: 75, fuente: "POS" },
+    { formaPago: "CREDITO", facturado: true, cuentaDestino: "CUENTAS_POR_COBRAR", importe: 300, fuente: "CREDITO" },
+    { formaPago: "CHEQUE", facturado: false, cuentaDestino: "CUENTA_NO_FISCAL", importe: 25, fuente: "POS" },
+    { formaPago: "TRANSFERENCIA", facturado: true, cuentaDestino: "CUENTA_FISCAL", importe: 90, fuente: "ABONO" },
   ];
-  const matrix = reconcileDestinationMatrix(source);
+  const sales = source.filter((row) => row.fuente === "POS" || row.fuente === "CREDITO");
+  const matrix = reconcileDestinationMatrix(sales);
   const [invoiced, uninvoiced, total] = matrix.filas;
   assert.equal(matrix.cierra, true);
   assert.equal(invoiced!.transferencia.importe, "75.00", "historical FACTURADO is transfer");
@@ -331,12 +364,13 @@ test("destination fiscal/payment matrix reconciles every row, column, headline a
     );
   }
   const vendido = Number(total!.total);
-  const porCobrar = Number(total!.porCobrar.importe);
-  const cobrado = vendido - porCobrar;
   assert.equal(vendido, 750);
-  assert.equal(cobrado + porCobrar, vendido);
-  assert.equal(150 + 75 + 225, cobrado, "three collected accounts equal Cobrado");
-  assert.equal(new Set(source.map((row) => row.formaPago)).size,
+  assert.equal(
+    source.filter((row) => row.fuente === "ABONO").reduce((sum, row) => sum + row.importe, 0),
+    90,
+    "a later collection remains outside the sale matrix",
+  );
+  assert.equal(new Set(sales.map((row) => row.formaPago)).size,
     new Set(matrix.filas[2]!.efectivo.formasPago
       .concat(matrix.filas[2]!.transferencia.formasPago)
       .concat(matrix.filas[2]!.porCobrar.formasPago)

@@ -1,0 +1,142 @@
+# Prompt para Replit Agent — Separar venta de cobranza, y comparación bajo demanda
+
+Trabajo sobre `artifacts/api-server/src/lib/admin-analytics.ts` y `artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx`.
+
+No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`. **No cambies `destinationReadModel()`**: la información que hace falta ya está ahí.
+
+---
+
+# PARTE A — El error de fondo: venta y cobranza se están sumando
+
+## Bloque 1 — Qué está mal
+
+`destinationReadModel()` produce una columna **`fuente`** con cuatro valores: `POS`, `CREDITO`, `ABONO` y `ABONO_SALDO_FAVOR`. Las ventas se filtran por su fecha de venta —`accountedDocumentAt`— y **los abonos se filtran por `m.created_at`, la fecha en que entró el dinero**. Después todo se suma junto, sin distinguir la fuente.
+
+El resultado es que el encabezado calcula `vendido = cobrado + porCobrar`, y eso es falso en cuanto existe un abono. Si un cliente paga hoy una nota de agosto, ese dinero entra a Efectivo de hoy y la pantalla lo reporta como **venta de hoy**. No se vendió nada: se cobró algo ya vendido, que además ya se contó como Por cobrar en agosto. Sumando los dos periodos, ese peso queda contado dos veces.
+
+Hoy la identidad se cumple **únicamente porque la base está recién purgada y no existe ningún abono**. Se romperá con el primer cobro de una nota anterior.
+
+## Bloque 2 — Separar las dos preguntas
+
+Reestructura el encabezado en dos grupos, **usando la columna `fuente` que ya existe**:
+
+**Vendido** — lo vendido en el periodo. Solo las fuentes `POS` y `CREDITO`.
+- **Por cobrar**, con el rótulo **"Por cobrar (notas de crédito al día)"**, porque esa cifra son las notas a crédito **del periodo**, no el saldo de la cartera, y hoy se confunde con eso.
+
+**Cobrado** — el dinero que entró en el periodo, **con su desglose siempre visible**:
+- **De ventas del periodo** — fuente `POS`.
+- **De notas anteriores** — fuente `ABONO`.
+- **A cuenta, sin aplicar** — fuente `ABONO_SALDO_FAVOR`.
+
+Las dos identidades correctas, que sustituyen a la única identidad falsa de hoy:
+
+- **Vendido = Contado + Crédito**
+- **Cobrado = Contado + Abonos + Saldos a favor**
+
+El contado aparece en las dos porque es las dos cosas a la vez: una venta y una cobranza. Eso es correcto. Lo que estaba mal era fingir que había una sola identidad.
+
+**Deja escrito en el código, junto al cálculo, por qué el contado se cuenta en ambos grupos y por qué `Cobrado + Por cobrar` ya no es `Vendido`.** Es lo que va a evitar que alguien "arregle" esto de vuelta dentro de seis meses.
+
+## Bloque 3 — La matriz y las pruebas
+
+**La matriz muestra únicamente las fuentes de venta**, `POS` y `CREDITO`. Sus totales deben cuadrar con **Vendido**, no con Cobrado. Sigue cerrando por renglón y por columna como hasta ahora.
+
+Debajo de la matriz, un renglón aparte con **la cobranza de periodos anteriores**: abonos y saldos a favor, con su importe y a qué cuenta cayeron. Es dinero que entró y tiene que verse, pero no pertenece a la matriz de ventas.
+
+**Hay pruebas que afirman la identidad vieja y van a fallar.** En `admin-analytics.integration.test.ts`, la aserción que compara `encabezado.cobrado + encabezado.porCobrar` contra el vendido ya no es correcta. **No la borres: reescríbela** para que verifique las dos identidades nuevas. Y agrega un caso que no existe hoy:
+
+> Una venta a crédito en un periodo, cobrada en un periodo posterior. Verifica que en el primer periodo aparece en Vendido y en Por cobrar, que en el segundo aparece en Cobrado bajo "de notas anteriores", y que **no vuelve a aparecer en Vendido del segundo periodo**.
+
+Ese caso es el que ninguna prueba cubre y es exactamente el que rompía la cuenta.
+
+## Bloque 3B — Toda cifra lleva a su raíz
+
+**Regla general de esta pantalla: ninguna cifra es un callejón sin salida.** Cualquier número que aparezca tiene que poder abrirse hasta llegar al documento que lo originó. Si el usuario ve un importe y no puede preguntarle de dónde salió, la pantalla lo obliga a confiar en vez de dejarlo verificar.
+
+Eso incluye las cifras nuevas de este trabajo, no solo las que ya son clicables:
+
+- **Vendido**, y sus dos partes: contado y crédito.
+- **Por cobrar (notas de crédito al día)**.
+- **Cobrado**, y sus tres renglones: de ventas del periodo, de notas anteriores, y a cuenta sin aplicar.
+- El renglón de **cobranza de periodos anteriores** que va debajo de la matriz.
+- Las tres tarjetas de cuenta y cada celda de la matriz, que ya lo son y siguen igual.
+
+Todas abren el mismo detalle: `GET /admin/cuentas-destino/{cuentaDestino}/movimientos`. Hoy ese endpoint ya acepta `facturado`, `formaPago` e `incongruente`; **agrégale un filtro por `fuente`** —`POS`, `CREDITO`, `ABONO`, `ABONO_SALDO_FAVOR`— que es lo único que le falta para servir a todas las cifras de arriba. **No crees endpoints paralelos ni recalcules listas en el navegador.**
+
+En la lista de movimientos, **el folio es el único enlace del renglón** y lleva al documento —ticket, nota, entrada o abono—, conforme a la regla de que en toda tabla del sistema el identificador principal es el enlace y no existe una columna de "Ver detalle".
+
+Para cada cifra clicable, **la suma de lo que abre debe cuadrar al centavo con la cifra de la que salió**. Es la prueba objetiva de que ambas leen lo mismo. Compruébalo con números reales, no por lectura del código.
+
+
+---
+
+# PARTE B — La comparación con el periodo anterior
+
+## Bloque 4 — Que sea bajo demanda, no fija
+
+Agrega un interruptor en el encabezado, **"Comparar con periodo anterior"**, apagado por omisión.
+
+- **Uno solo para toda la pantalla**, no uno por tarjeta: si la mitad comparara y la otra no, el tablero sería ilegible.
+- **Arranca apagado en cada visita.** No recuerdes la última elección: si se guardara, volvería a ser fijo para quien lo dejó prendido, que es justo lo que se quiere evitar.
+- El estado viaja **en la dirección**, igual que `desde` y `hasta`, para que un enlace compartido conserve lo que se estaba viendo.
+- **Con el interruptor apagado, el servidor no debe correr la consulta del periodo anterior.** Hoy la ejecuta siempre. Que se pida solo cuando hace falta.
+- **Dentro del detalle de una cuenta o de una celda, la comparación se muestra siempre.** Ahí el usuario ya está investigando y es lo que fue a buscar.
+
+## Bloque 5 — Arrancar en Hoy
+
+El rango por omisión de la pantalla es **`mes`**. Cámbialo a **`hoy`**. Los demás presets no cambian y la elección del usuario manda a partir de ahí.
+
+## Bloque 6 — Comparar tramos iguales
+
+`previousEqualPeriod` recorre el rango completo hacia atrás. Con el preset **Hoy**, eso compara un día a medias contra uno completo: a las once de la mañana la caída se ve enorme y no significa nada.
+
+Cámbialo para que compare **el mismo tramo transcurrido**: hoy hasta esta hora contra ayer hasta la misma hora; la semana hasta este momento contra la semana anterior hasta el mismo día y hora; el mes al día 8 contra el mes anterior hasta su día 8.
+
+Cuando el periodo seleccionado ya está cerrado —un rango pasado completo—, la comparación es contra el periodo anterior completo, como hasta ahora. **La corrección aplica solo a periodos en curso.**
+
+## Bloque 7 — Sin base no hay porcentaje
+
+`admin-analytics.ts:249` hace: si el periodo anterior fue cero y el actual no, devuelve **100**. Un aumento desde cero no tiene porcentaje; es una cifra nueva.
+
+Devuelve **null** en ese caso y que la pantalla muestre **un guion y la leyenda "sin periodo anterior"**, nunca un número inventado. Aplica a las tarjetas del encabezado, a las de cuenta y a cualquier otro lugar que use esa función.
+
+Con la base recién purgada, sin este cambio el primer día de operación mostraría **+100% en todas las tarjetas**, sin importar el monto.
+
+## Bloque 8 — Rótulo que diga contra qué compara
+
+Cuando la comparación esté encendida, en vez de un **"Ant."** mudo, el rótulo debe decir qué periodo es: **"Ayer a esta hora"**, **"Semana pasada al martes"**, **"Agosto al día 8"**. Constrúyelo del rango real que devolvió el servidor, no de una cadena fija.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo.
+2. `pnpm --filter @workspace/api-spec run codegen` si tocaste OpenAPI, sin diferencias pendientes.
+3. Las suites de analytics de administración y caja, incluidas las pruebas reescritas y el caso nuevo del Bloque 3.
+4. Captura una venta a crédito, cámbiale la fecha de cobro a un periodo posterior y recorre las dos vistas: en el primer periodo debe estar en Vendido y en Por cobrar; en el segundo, en Cobrado bajo "de notas anteriores" y **fuera de Vendido**.
+5. Comprueba que **Vendido es igual a Contado más Crédito** y que **Cobrado es igual a Contado más Abonos más Saldos a favor**, con datos que incluyan las cuatro fuentes.
+6. Comprueba que la matriz cuadra con **Vendido** y sigue cerrando por renglón y por columna.
+7. Abre **cada una** de las cifras del Bloque 3B y confirma que la suma de los movimientos que lista cuadra al centavo con la cifra. Ninguna debe quedar sin enlace.
+8. Desde el detalle, entra al documento desde el folio y confirma que llegas al ticket, nota, entrada o abono correcto.
+9. Con el interruptor apagado, confirma en la red que **no se pide la consulta del periodo anterior**. Enciéndelo y confirma que sí.
+10. Confirma que al entrar de nuevo a la pantalla el interruptor vuelve a estar apagado y el rango vuelve a ser Hoy.
+11. Copia la dirección con el interruptor encendido, ábrela en otra pestaña y confirma que conserva el estado.
+12. Con la base sin movimientos del periodo anterior, confirma que aparece el guion con "sin periodo anterior" y **ningún +100%**.
+13. A media jornada, con el preset Hoy, confirma que la comparación es contra el mismo tramo de ayer y no contra el día completo.
+14. Revisa la pantalla en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`, en la sección de Cuentas Destino:
+
+- Que **venta y cobranza son dos preguntas distintas** y no se suman en una sola identidad. Las dos correctas, con la explicación de por qué el contado cuenta en ambas.
+- Que la columna `fuente` de `destinationReadModel()` es lo que las separa, con sus cuatro valores y qué significa cada uno.
+- Que **el cobro de una nota de un periodo anterior es dinero que entra pero no es venta de ese periodo**, que aparece en Cobrado bajo "de notas anteriores", y que contarlo como venta lo duplicaría contra el periodo en que sí se vendió.
+- Que la matriz cubre solo las fuentes de venta y cuadra con Vendido, y que la cobranza de periodos anteriores va en su propio renglón.
+- Que **ninguna cifra de esta pantalla es un callejón sin salida**: toda cifra abre el detalle de sus movimientos y de ahí se llega al documento por su folio, y que la suma del detalle debe cuadrar al centavo con la cifra que lo abrió.
+- Que la comparación con el periodo anterior es **opcional y arranca apagada**, que el rango por omisión es Hoy, y que con el interruptor apagado la consulta del periodo anterior no se ejecuta.
+- Que un periodo en curso se compara **contra el mismo tramo transcurrido**, y por qué comparar medio día contra uno completo engaña.
+- Que **una variación sin base anterior no tiene porcentaje**: se muestra un guion, nunca 100%.
+- Un renglón con la fecha de este cambio y qué se hizo.

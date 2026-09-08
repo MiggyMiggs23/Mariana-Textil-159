@@ -8404,12 +8404,14 @@ export const GetAdminDiferenciasResponse = zod.object({
  */
 export const getAdminCuentasDestinoQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getAdminCuentasDestinoQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-
+export const getAdminCuentasDestinoQueryCompareDefault = false;
 
 export const GetAdminCuentasDestinoQueryParams = zod.object({
   "desde": zod.coerce.string().regex(getAdminCuentasDestinoQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
   "hasta": zod.coerce.string().regex(getAdminCuentasDestinoQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
-  "ubicacionId": zod.coerce.number().optional()
+  "ubicacionId": zod.coerce.number().optional(),
+  "compare": zod.coerce.boolean().default(getAdminCuentasDestinoQueryCompareDefault).describe('Ejecuta la comparación contra un periodo anterior de igual duración. Cuando es false no se consulta el periodo anterior.'),
+  "preset": zod.enum(['hoy', 'semana', 'mes', 'trimestre', 'semestre', 'ano', 'custom']).optional().describe('Identifica el periodo de calendario para comparar tramos en curso equivalentes.')
 })
 
 export const getAdminCuentasDestinoResponseMatrizFilasMin = 3;
@@ -8422,8 +8424,8 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "cuentaDestino": zod.string(),
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'CREDITO']),
   "importe": zod.string(),
-  "importeAnterior": zod.string(),
-  "variacionPorcentaje": zod.string().describe('Porcentaje en unidades; 12.50 significa 12.5%'),
+  "importeAnterior": zod.string().nullable(),
+  "variacionPorcentaje": zod.string().nullable().describe('Porcentaje en unidades; 12.50 significa 12.5%'),
   "porcentaje": zod.string(),
   "operaciones": zod.number(),
   "cajaFisicaFacturado": zod.string().describe('Efectivo facturado; solo es distinto de cero en la tarjeta de caja física.')
@@ -8446,13 +8448,36 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "total": zod.string()
 })),
   "encabezado": zod.object({
-  "cobrado": zod.string(),
-  "porCobrar": zod.string(),
-  "vendido": zod.string(),
-  "cobradoAnterior": zod.string(),
-  "porCobrarAnterior": zod.string(),
-  "vendidoAnterior": zod.string()
+  "vendido": zod.object({
+  "contado": zod.string(),
+  "credito": zod.string(),
+  "total": zod.string(),
+  "totalAnterior": zod.string().nullable(),
+  "variacionPorcentaje": zod.string().nullable()
 }),
+  "porCobrar": zod.object({
+  "periodo": zod.string().describe('Notas de venta a crédito creadas en el periodo; no es saldo de cartera.'),
+  "periodoAnterior": zod.string().nullable(),
+  "variacionPorcentaje": zod.string().nullable()
+}),
+  "cobrado": zod.object({
+  "contado": zod.string().describe('Cobranza POS; también forma parte de Vendido.'),
+  "abonos": zod.string(),
+  "saldosFavor": zod.string(),
+  "total": zod.string(),
+  "totalAnterior": zod.string().nullable(),
+  "variacionPorcentaje": zod.string().nullable()
+}),
+  "previousDesde": zod.coerce.date().nullable(),
+  "previousHasta": zod.coerce.date().nullable()
+}),
+  "cobrosAnteriores": zod.array(zod.object({
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR']),
+  "fuente": zod.enum(['ABONO', 'ABONO_SALDO_FAVOR']),
+  "importe": zod.string(),
+  "importeAnterior": zod.string().nullable(),
+  "variacionPorcentaje": zod.string().nullable()
+})).describe('Abonos y saldos a favor cobrados en el periodo, separados por cuenta destino.'),
   "matriz": zod.object({
   "filas": zod.array(zod.object({
   "facturado": zod.boolean().nullable(),
@@ -8505,7 +8530,7 @@ export const GetAdminCuentasDestinoResponse = zod.object({
  * @summary Lista los movimientos reales de una cuenta destino
  */
 export const ListAdminCuentaDestinoMovimientosParams = zod.object({
-  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR'])
+  "cuentaDestino": zod.enum(['TODAS', 'CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR'])
 })
 
 export const listAdminCuentaDestinoMovimientosQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
@@ -8524,12 +8549,14 @@ export const ListAdminCuentaDestinoMovimientosQueryParams = zod.object({
   "facturado": zod.coerce.boolean().optional(),
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'POR_COBRAR', 'OTRAS']).optional().describe('Categoría reconciliada de la matriz; TRANSFERENCIA incluye la forma histórica FACTURADO.'),
   "incongruente": zod.coerce.boolean().optional().describe('Limita el detalle a abonos cuyo destino contradice la facturación de la venta.'),
+  "fuente": zod.array(zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR'])).optional().describe('Filtra el mismo detalle canónico que alimenta los agregados.'),
+  "preset": zod.enum(['hoy', 'semana', 'mes', 'trimestre', 'semestre', 'ano', 'custom']).optional().describe('Identifica el periodo de calendario para comparar el mismo tramo transcurrido.'),
   "page": zod.coerce.number().int().min(1).default(listAdminCuentaDestinoMovimientosQueryPageDefault),
   "pageSize": zod.coerce.number().int().min(1).max(listAdminCuentaDestinoMovimientosQueryPageSizeMax).default(listAdminCuentaDestinoMovimientosQueryPageSizeDefault)
 })
 
 export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
-  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR']),
+  "cuentaDestino": zod.enum(['TODAS', 'CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL', 'CUENTAS_POR_COBRAR']),
   "items": zod.array(zod.object({
   "id": zod.number(),
   "fecha": zod.coerce.date(),
@@ -8545,12 +8572,17 @@ export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
   "registro": zod.string(),
   "formaPago": zod.string(),
   "facturado": zod.boolean(),
+  "fuente": zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR', 'REVERSO_ABONO', 'REVERSO_ABONO_SALDO_FAVOR']),
   "incongruente": zod.boolean()
 })),
   "total": zod.number(),
   "page": zod.number(),
   "pageSize": zod.number(),
-  "montoTotal": zod.string()
+  "montoTotal": zod.string(),
+  "montoTotalAnterior": zod.string(),
+  "variacionPorcentaje": zod.string().nullable(),
+  "previousDesde": zod.coerce.date(),
+  "previousHasta": zod.coerce.date()
 })
 
 

@@ -8,6 +8,7 @@
 import type { AnalyticsDesdeParameter } from './analyticsDesdeParameter';
 import type { AnalyticsHastaParameter } from './analyticsHastaParameter';
 import type { AnalyticsUbicacionIdParameter } from './analyticsUbicacionIdParameter';
+import type { GetAdminCuentasDestinoPreset } from './getAdminCuentasDestinoPreset';
 
 export type GetAdminCuentasDestinoParams = {
 /**
@@ -21,4 +22,12 @@ desde?: AnalyticsDesdeParameter;
  */
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
+/**
+ * Ejecuta la comparación contra un periodo anterior de igual duración. Cuando es false no se consulta el periodo anterior.
+ */
+compare?: boolean;
+/**
+ * Identifica el periodo de calendario para comparar tramos en curso equivalentes.
+ */
+preset?: GetAdminCuentasDestinoPreset;
 };
