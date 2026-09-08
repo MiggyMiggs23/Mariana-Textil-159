@@ -7302,7 +7302,7 @@ components:
           type: object
           required: [conteo, importe]
           properties:
-            conteo: { type: integer }
+            conteo: { type: number }
             importe: { type: string }
         facturacion:
           type: object

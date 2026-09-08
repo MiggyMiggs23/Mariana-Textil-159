@@ -8485,7 +8485,7 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "iva": zod.string()
 }),
   "incongruencias": zod.object({
-  "conteo": zod.int(),
+  "conteo": zod.number(),
   "importe": zod.string()
 }),
   "facturacion": zod.object({
