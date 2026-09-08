@@ -6,15 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type AdminCuentasDestinoPorTiendaItem = {
-  ubicacionId: number;
-  nombreUbicacion: string;
-  cajaFisica: string;
-  cuentaFiscal: string;
-  cuentaNoFiscal: string;
-  cuentasPorCobrar: string;
+export type AdminCuentasDestinoEncabezado = {
   cobrado: string;
   porCobrar: string;
   vendido: string;
-  total: string;
+  cobradoAnterior: string;
+  porCobrarAnterior: string;
+  vendidoAnterior: string;
 };

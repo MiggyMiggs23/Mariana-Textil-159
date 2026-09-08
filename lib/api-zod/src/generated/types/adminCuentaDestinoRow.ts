@@ -16,4 +16,6 @@ export interface AdminCuentaDestinoRow {
   variacionPorcentaje: string;
   porcentaje: string;
   operaciones: number;
+  /** Efectivo facturado; solo es distinto de cero en la tarjeta de caja física. */
+  cajaFisicaFacturado: string;
 }

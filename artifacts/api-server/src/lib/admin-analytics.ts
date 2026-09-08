@@ -1034,15 +1034,23 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
   const priorCondition = where(previousEqualPeriod(filters), "t", "ACCOUNTED");
   const accountSql = () => `${destinationReadModel()}
     SELECT (fecha AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
-      "formaPago",facturado,"cuentaDestino",SUM(importe)::text importe,COUNT(*)::int operaciones
+      "formaPago",facturado,"cuentaDestino",SUM(importe)::text importe,COUNT(*)::int operaciones,
+      COUNT(DISTINCT (id / 1000000)) FILTER (WHERE fuente='ABONO' AND
+        ((facturado AND "cuentaDestino"='CUENTA_NO_FISCAL') OR
+         (NOT facturado AND "cuentaDestino"='CUENTA_FISCAL')))::int incongruencias,
+      COALESCE(SUM(importe) FILTER (WHERE fuente='ABONO' AND
+        ((facturado AND "cuentaDestino"='CUENTA_NO_FISCAL') OR
+         (NOT facturado AND "cuentaDestino"='CUENTA_FISCAL'))),0)::text "importeIncongruente"
     FROM destination_movements GROUP BY fecha,"formaPago",facturado,"cuentaDestino"`;
   const [result, fiscal, prior, byStore] = await Promise.all([pool.query(
     accountSql(),
     condition.values,
   ), pool.query(
-    `SELECT COALESCE(SUM(t.iva),0)::text iva
+    `SELECT COALESCE(SUM(t.iva),0)::text iva,
+       COALESCE(SUM(t.subtotal) FILTER (WHERE t.facturado),0)::text "baseFacturada",
+       COALESCE(SUM(t.iva) FILTER (WHERE t.facturado),0)::text "ivaFacturado"
      FROM tickets t WHERE ${condition.text}
-       AND t.estado='VENDIDO' AND t.cobrado`,
+       AND ${accountedDocumentPredicate("t")}`,
     condition.values,
    ), pool.query(accountSql(), priorCondition.values),
    pool.query(
@@ -1084,7 +1092,21 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
     current.operaciones += Number(row.operaciones);
     summary.set(row.cuentaDestino, current);
   }
-  const total = [...summary.values()].reduce((sum, row) => sum + row.importe, 0);
+  const sold = [...summary.values()].reduce((sum, row) => sum + row.importe, 0);
+  const receivable = summary.get("CUENTAS_POR_COBRAR")?.importe ?? 0;
+  const collected = sold - receivable;
+  const priorSold = [...priorTotals.values()].reduce((sum, amount) => sum + amount, 0);
+  const priorReceivable = priorTotals.get("CUENTAS_POR_COBRAR") ?? 0;
+  const priorCollected = priorSold - priorReceivable;
+  const matrix = reconcileDestinationMatrix(rows);
+  const incongruenceCount = rows.reduce(
+    (sum, row) => sum + Number(row.incongruencias ?? 0),
+    0,
+  );
+  const incongruenceAmount = rows.reduce(
+    (sum, row) => sum + Number(row.importeIncongruente ?? 0),
+    0,
+  );
   return {
     resumen: [...summary.values()].map((row) => ({
       ...row,
@@ -1094,7 +1116,13 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
         ? (row.importe === 0 ? 0 : 100)
         : ((row.importe - (priorTotals.get(row.cuentaDestino as AccountDestination) ?? 0)) /
           (priorTotals.get(row.cuentaDestino as AccountDestination) ?? 1)) * 100),
-      porcentaje: decimal(total === 0 ? 0 : (row.importe / total) * 100),
+      porcentaje: decimal(row.cuentaDestino === "CUENTAS_POR_COBRAR"
+        ? (sold === 0 ? 0 : (row.importe / sold) * 100)
+        : (collected === 0 ? 0 : (row.importe / collected) * 100)),
+      cajaFisicaFacturado: decimal(row.cuentaDestino === "CAJA_FISICA"
+        ? rows.filter((item) => item.cuentaDestino === "CAJA_FISICA" && item.facturado)
+          .reduce((sum, item) => sum + Number(item.importe), 0)
+        : 0),
     })),
     tendencia: [...rows.reduce((map, row) => {
       const key = `${row.fecha}|${row.cuentaDestino}`;
@@ -1109,7 +1137,25 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
     }, new Map<string, { fecha: string; cuentaDestino: string; importe: number }>()).values()]
       .map((row) => ({ ...row, importe: decimal(row.importe) })),
     ivaCobrado: decimal(fiscal.rows[0]!.iva),
-    totalCobrado: decimal(total),
+    // Backward-compatible field, corrected to match its name: receivables are not cash.
+    totalCobrado: decimal(collected),
+    encabezado: {
+      cobrado: decimal(collected),
+      porCobrar: decimal(receivable),
+      vendido: decimal(sold),
+      cobradoAnterior: decimal(priorCollected),
+      porCobrarAnterior: decimal(priorReceivable),
+      vendidoAnterior: decimal(priorSold),
+    },
+    matriz: matrix,
+    ivaFacturado: {
+      base: decimal(fiscal.rows[0]!.baseFacturada),
+      iva: decimal(fiscal.rows[0]!.ivaFacturado),
+    },
+    incongruencias: {
+      conteo: incongruenceCount,
+      importe: decimal(incongruenceAmount),
+    },
     porTienda: orderStores([...byStore.rows.reduce((map, row) => {
       const item = map.get(Number(row.ubicacionId)) ?? {
         ubicacionId: Number(row.ubicacionId), nombreUbicacion: String(row.nombreUbicacion),
@@ -1125,16 +1171,76 @@ export async function getDestinationAccounts(filters: AnalyticsFilters) {
       .map((row) => ({
         ...row, cajaFisica: decimal(row.cajaFisica), cuentaFiscal: decimal(row.cuentaFiscal),
         cuentaNoFiscal: decimal(row.cuentaNoFiscal), cuentasPorCobrar: decimal(row.cuentasPorCobrar),
-        total: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
+         cobrado: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal),
+         porCobrar: decimal(row.cuentasPorCobrar),
+         vendido: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
+         total: decimal(row.cajaFisica + row.cuentaFiscal + row.cuentaNoFiscal + row.cuentasPorCobrar),
        }))),
     facturacion: {
       facturadoTotal: decimal(rows.filter((r) => r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
       noFacturadoTotal: decimal(rows.filter((r) => !r.facturado).reduce((s, r) => s + Number(r.importe), 0)),
       facturadoEfectivo: decimal(rows.filter((r) => r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
-      facturadoTransferencia: decimal(rows.filter((r) => r.facturado && r.formaPago === "TRANSFERENCIA").reduce((s, r) => s + Number(r.importe), 0)),
+      facturadoTransferencia: decimal(rows.filter((r) => r.facturado && matrixPaymentCategory(r.formaPago) === "transferencia").reduce((s, r) => s + Number(r.importe), 0)),
       noFacturadoEfectivo: decimal(rows.filter((r) => !r.facturado && r.formaPago === "EFECTIVO").reduce((s, r) => s + Number(r.importe), 0)),
-      noFacturadoTransferencia: decimal(rows.filter((r) => !r.facturado && r.formaPago === "TRANSFERENCIA").reduce((s, r) => s + Number(r.importe), 0)),
+      noFacturadoTransferencia: decimal(rows.filter((r) => !r.facturado && matrixPaymentCategory(r.formaPago) === "transferencia").reduce((s, r) => s + Number(r.importe), 0)),
     },
+  };
+}
+
+type DestinationAggregateRow = {
+  formaPago: string;
+  facturado: boolean;
+  cuentaDestino: string;
+  importe: string | number;
+  [key: string]: unknown;
+};
+
+type MatrixCategory = "efectivo" | "transferencia" | "porCobrar" | "otras";
+
+export function matrixPaymentCategory(formaPago: string): MatrixCategory {
+  if (formaPago === "EFECTIVO") return "efectivo";
+  // FACTURADO is a retired historical payment value. Its destination was
+  // always the fiscal bank account, never physical cash.
+  if (formaPago === "TRANSFERENCIA" || formaPago === "FACTURADO") return "transferencia";
+  if (formaPago === "CREDITO") return "porCobrar";
+  return "otras";
+}
+
+/** Pure reconciliation boundary used by the report and its integrity tests. */
+export function reconcileDestinationMatrix(rows: DestinationAggregateRow[]) {
+  const buildRow = (facturado: boolean | null) => {
+    const selected = facturado == null ? rows : rows.filter((row) => row.facturado === facturado);
+    const cells = Object.fromEntries(([
+      "efectivo", "transferencia", "porCobrar", "otras",
+    ] as const).map((category) => {
+      const members = selected.filter((row) => matrixPaymentCategory(row.formaPago) === category);
+      const destinations = [...new Set(members.map((row) => row.cuentaDestino))];
+      return [category, {
+        importe: decimal(members.reduce((sum, row) => sum + Number(row.importe), 0)),
+        cuentaDestino: destinations.length === 1 ? destinations[0] : null,
+        formasPago: [...new Set(members.map((row) => row.formaPago))].sort(),
+      }];
+    })) as Record<MatrixCategory, {
+      importe: string;
+      cuentaDestino: string | null;
+      formasPago: string[];
+    }>;
+    const total = selected.reduce((sum, row) => sum + Number(row.importe), 0);
+    return { facturado, ...cells, total: decimal(total) };
+  };
+  const filas = [buildRow(true), buildRow(false), buildRow(null)];
+  const closes = (row: (typeof filas)[number]) =>
+    decimal(Number(row.efectivo.importe) + Number(row.transferencia.importe) +
+      Number(row.porCobrar.importe) + Number(row.otras.importe)) === row.total;
+  const total = filas[2]!;
+  const columnsClose = (["efectivo", "transferencia", "porCobrar", "otras"] as const)
+    .every((category) => decimal(
+      Number(filas[0]![category].importe) + Number(filas[1]![category].importe),
+    ) === total[category].importe);
+  return {
+    filas,
+    cierra: filas.every(closes) && columnsClose &&
+      decimal(Number(filas[0]!.total) + Number(filas[1]!.total)) === total.total,
   };
 }
 
@@ -1143,6 +1249,11 @@ export async function listDestinationAccountMovements(
   destination: AccountDestination,
   page = 1,
   pageSize = 50,
+  options: {
+    facturado?: boolean;
+    formaPago?: "EFECTIVO" | "TRANSFERENCIA" | "POR_COBRAR" | "OTRAS";
+    incongruente?: boolean;
+  } = {},
 ) {
   const values = [
     filters.desde?.toISOString() ?? null,
@@ -1152,14 +1263,30 @@ export async function listDestinationAccountMovements(
     pageSize,
     (page - 1) * pageSize,
   ];
-  const condition = `($1::timestamptz IS NULL OR t.created_at >= $1)
-    AND ($2::timestamptz IS NULL OR t.created_at <= $2)
-    AND ($3::int IS NULL OR t.ubicacion_id = $3)`;
   const readModel = destinationReadModel();
   const joins = `FROM destination_movements d
     LEFT JOIN ubicaciones u ON u.id=d."ubicacionId"
     JOIN usuarios registrador ON registrador.id=d."registroId"
     LEFT JOIN clientes c ON c.id=d."clienteId"`;
+  const filtersSql = [
+    `d."cuentaDestino"=$4`,
+    options.facturado === undefined ? "" : `d.facturado=$7`,
+    options.formaPago === undefined ? "" : options.formaPago === "EFECTIVO"
+      ? `d."formaPago"='EFECTIVO'`
+      : options.formaPago === "TRANSFERENCIA"
+        ? `d."formaPago" IN ('TRANSFERENCIA','FACTURADO')`
+        : options.formaPago === "POR_COBRAR"
+          ? `d."formaPago"='CREDITO'`
+          : `d."formaPago" NOT IN ('EFECTIVO','TRANSFERENCIA','FACTURADO','CREDITO')`,
+    options.incongruente === undefined ? "" : options.incongruente
+      ? `d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
+          (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))`
+      : `NOT (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
+          (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL')))`,
+  ].filter(Boolean).join(" AND ");
+  const queryValues = options.facturado === undefined
+    ? values
+    : [...values, options.facturado];
   const [rows, aggregate] = await Promise.all([
     pool.query(
        `${readModel} SELECT d.id,d.fecha,
@@ -1168,16 +1295,19 @@ export async function listDestinationAccountMovements(
            WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal' ELSE 'Transferencia no fiscal' END tipo,
          CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN 'CLIENTE' ELSE 'TICKET' END "documentoTipo",d."documentoId",
          CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN ('Cliente #' || d."clienteId"::text) ELSE ('Ticket #' || d.folio::text) END documento,c.nombre cliente,
-         d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,d.importe::text monto,
+          d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,d.importe::text monto,
+          d."formaPago",d.facturado,
+          (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
+            (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))) incongruente,
          registrador.id "registroId",registrador.nombre registro
-        ${joins} WHERE d."cuentaDestino"=$4
+         ${joins} WHERE ${filtersSql}
         ORDER BY d.fecha DESC,d.id DESC LIMIT $5 OFFSET $6`,
-      values,
+      queryValues,
     ),
     pool.query(
        `${readModel} SELECT COUNT(*)::int total,COALESCE(SUM(d.importe),0)::text "montoTotal"
-        ${joins} WHERE d."cuentaDestino"=$4`,
-      values.slice(0, 4),
+         ${joins} WHERE ${filtersSql}`,
+      options.facturado === undefined ? values.slice(0, 4) : queryValues,
     ),
   ]);
   return {

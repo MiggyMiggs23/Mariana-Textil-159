@@ -4500,6 +4500,19 @@ paths:
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
+        - { in: query, name: facturado, schema: { type: boolean } }
+        - {
+            in: query,
+            name: formaPago,
+            description: Categoría reconciliada de la matriz; TRANSFERENCIA incluye la forma histórica FACTURADO.,
+            schema: { type: string, enum: [EFECTIVO, TRANSFERENCIA, POR_COBRAR, OTRAS] },
+          }
+        - {
+            in: query,
+            name: incongruente,
+            description: Limita el detalle a abonos cuyo destino contradice la facturación de la venta.,
+            schema: { type: boolean },
+          }
         - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
         - { in: query, name: pageSize, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
       responses:
@@ -7092,6 +7105,7 @@ components:
           variacionPorcentaje,
           porcentaje,
           operaciones,
+          cajaFisicaFacturado,
         ]
       properties:
         cuentaDestino: { type: string }
@@ -7103,6 +7117,30 @@ components:
           description: Porcentaje en unidades; 12.50 significa 12.5%
         porcentaje: { type: string }
         operaciones: { type: number }
+        cajaFisicaFacturado:
+          type: string
+          description: Efectivo facturado; solo es distinto de cero en la tarjeta de caja física.
+    AdminMatrizDestinoCell:
+      type: object
+      required: [importe, cuentaDestino, formasPago]
+      properties:
+        importe: { type: string }
+        cuentaDestino:
+          type: ["string", "null"]
+          enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL, CUENTAS_POR_COBRAR, null]
+        formasPago:
+          type: array
+          items: { type: string }
+    AdminMatrizDestinoRow:
+      type: object
+      required: [facturado, efectivo, transferencia, porCobrar, otras, total]
+      properties:
+        facturado: { type: ["boolean", "null"] }
+        efectivo: { $ref: "#/components/schemas/AdminMatrizDestinoCell" }
+        transferencia: { $ref: "#/components/schemas/AdminMatrizDestinoCell" }
+        porCobrar: { $ref: "#/components/schemas/AdminMatrizDestinoCell" }
+        otras: { $ref: "#/components/schemas/AdminMatrizDestinoCell" }
+        total: { type: string }
     CuadreFiscalPeriodoInput:
       type: object
       required: [desde, hasta]
@@ -7153,7 +7191,7 @@ components:
     AdminCuentaDestinoMovimiento:
       type: object
       required:
-        [id, fecha, tipo, documentoTipo, documentoId, documento, cliente, ubicacionId, sitio, monto, registroId, registro]
+        [id, fecha, tipo, documentoTipo, documentoId, documento, cliente, ubicacionId, sitio, monto, registroId, registro, formaPago, facturado, incongruente]
       properties:
         id: { type: number }
         fecha: { type: string, format: date-time }
@@ -7167,6 +7205,9 @@ components:
         monto: { type: string }
         registroId: { type: number }
         registro: { type: string }
+        formaPago: { type: string }
+        facturado: { type: boolean }
+        incongruente: { type: boolean }
     AdminCuentaDestinoMovimientos:
       type: object
       required: [cuentaDestino, items, total, page, pageSize, montoTotal]
@@ -7191,7 +7232,7 @@ components:
     AdminCuentasDestino:
       type: object
       required:
-        [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado]
+        [resumen, tendencia, porTienda, facturacion, ivaCobrado, totalCobrado, encabezado, matriz, ivaFacturado, incongruencias]
       properties:
         resumen:
           {
@@ -7215,6 +7256,9 @@ components:
                 cuentaFiscal,
                 cuentaNoFiscal,
                 cuentasPorCobrar,
+                cobrado,
+                porCobrar,
+                vendido,
                 total,
               ]
             properties:
@@ -7224,7 +7268,42 @@ components:
               cuentaFiscal: { type: string }
               cuentaNoFiscal: { type: string }
               cuentasPorCobrar: { type: string }
+              cobrado: { type: string }
+              porCobrar: { type: string }
+              vendido: { type: string }
               total: { type: string }
+        encabezado:
+          type: object
+          required: [cobrado, porCobrar, vendido, cobradoAnterior, porCobrarAnterior, vendidoAnterior]
+          properties:
+            cobrado: { type: string }
+            porCobrar: { type: string }
+            vendido: { type: string }
+            cobradoAnterior: { type: string }
+            porCobrarAnterior: { type: string }
+            vendidoAnterior: { type: string }
+        matriz:
+          type: object
+          required: [filas, cierra]
+          properties:
+            filas:
+              type: array
+              minItems: 3
+              maxItems: 3
+              items: { $ref: "#/components/schemas/AdminMatrizDestinoRow" }
+            cierra: { type: boolean }
+        ivaFacturado:
+          type: object
+          required: [base, iva]
+          properties:
+            base: { type: string }
+            iva: { type: string }
+        incongruencias:
+          type: object
+          required: [conteo, importe]
+          properties:
+            conteo: { type: integer }
+            importe: { type: string }
         facturacion:
           type: object
           required:

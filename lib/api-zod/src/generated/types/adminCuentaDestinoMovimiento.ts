@@ -22,4 +22,7 @@ export interface AdminCuentaDestinoMovimiento {
   monto: string;
   registroId: number;
   registro: string;
+  formaPago: string;
+  facturado: boolean;
+  incongruente: boolean;
 }

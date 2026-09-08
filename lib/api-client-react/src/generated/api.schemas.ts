@@ -1422,6 +1422,38 @@ export interface AdminCuentaDestinoRow {
   variacionPorcentaje: string;
   porcentaje: string;
   operaciones: number;
+  /** Efectivo facturado; solo es distinto de cero en la tarjeta de caja física. */
+  cajaFisicaFacturado: string;
+}
+
+/**
+ * @nullable
+ */
+export type AdminMatrizDestinoCellCuentaDestino = typeof AdminMatrizDestinoCellCuentaDestino[keyof typeof AdminMatrizDestinoCellCuentaDestino] | null;
+
+
+export const AdminMatrizDestinoCellCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTAS_POR_COBRAR: 'CUENTAS_POR_COBRAR',
+} as const;
+
+export interface AdminMatrizDestinoCell {
+  importe: string;
+  /** @nullable */
+  cuentaDestino: AdminMatrizDestinoCellCuentaDestino;
+  formasPago: string[];
+}
+
+export interface AdminMatrizDestinoRow {
+  /** @nullable */
+  facturado: boolean | null;
+  efectivo: AdminMatrizDestinoCell;
+  transferencia: AdminMatrizDestinoCell;
+  porCobrar: AdminMatrizDestinoCell;
+  otras: AdminMatrizDestinoCell;
+  total: string;
 }
 
 export interface CuadreFiscalPeriodoInput {
@@ -1534,6 +1566,9 @@ export interface AdminCuentaDestinoMovimiento {
   monto: string;
   registroId: number;
   registro: string;
+  formaPago: string;
+  facturado: boolean;
+  incongruente: boolean;
 }
 
 export type AdminCuentaDestinoMovimientosCuentaDestino = typeof AdminCuentaDestinoMovimientosCuentaDestino[keyof typeof AdminCuentaDestinoMovimientosCuentaDestino];
@@ -1568,7 +1603,38 @@ export type AdminCuentasDestinoPorTiendaItem = {
   cuentaFiscal: string;
   cuentaNoFiscal: string;
   cuentasPorCobrar: string;
+  cobrado: string;
+  porCobrar: string;
+  vendido: string;
   total: string;
+};
+
+export type AdminCuentasDestinoEncabezado = {
+  cobrado: string;
+  porCobrar: string;
+  vendido: string;
+  cobradoAnterior: string;
+  porCobrarAnterior: string;
+  vendidoAnterior: string;
+};
+
+export type AdminCuentasDestinoMatriz = {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  filas: AdminMatrizDestinoRow[];
+  cierra: boolean;
+};
+
+export type AdminCuentasDestinoIvaFacturado = {
+  base: string;
+  iva: string;
+};
+
+export type AdminCuentasDestinoIncongruencias = {
+  conteo: number;
+  importe: string;
 };
 
 export type AdminCuentasDestinoFacturacion = {
@@ -1584,6 +1650,10 @@ export interface AdminCuentasDestino {
   resumen: AdminCuentaDestinoRow[];
   tendencia: AdminCuentaTrend[];
   porTienda: AdminCuentasDestinoPorTiendaItem[];
+  encabezado: AdminCuentasDestinoEncabezado;
+  matriz: AdminCuentasDestinoMatriz;
+  ivaFacturado: AdminCuentasDestinoIvaFacturado;
+  incongruencias: AdminCuentasDestinoIncongruencias;
   facturacion: AdminCuentasDestinoFacturacion;
   ivaCobrado: string;
   totalCobrado: string;
@@ -6704,6 +6774,15 @@ desde?: AnalyticsDesdeParameter;
  */
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
+facturado?: boolean;
+/**
+ * Categoría reconciliada de la matriz; TRANSFERENCIA incluye la forma histórica FACTURADO.
+ */
+formaPago?: ListAdminCuentaDestinoMovimientosFormaPago;
+/**
+ * Limita el detalle a abonos cuyo destino contradice la facturación de la venta.
+ */
+incongruente?: boolean;
 /**
  * @minimum 1
  */
@@ -6714,6 +6793,16 @@ page?: number;
  */
 pageSize?: number;
 };
+
+export type ListAdminCuentaDestinoMovimientosFormaPago = typeof ListAdminCuentaDestinoMovimientosFormaPago[keyof typeof ListAdminCuentaDestinoMovimientosFormaPago];
+
+
+export const ListAdminCuentaDestinoMovimientosFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  POR_COBRAR: 'POR_COBRAR',
+  OTRAS: 'OTRAS',
+} as const;
 
 export type GetAdminCuadreFiscalParams = {
 /**

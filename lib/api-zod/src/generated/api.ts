@@ -8412,6 +8412,11 @@ export const GetAdminCuentasDestinoQueryParams = zod.object({
   "ubicacionId": zod.coerce.number().optional()
 })
 
+export const getAdminCuentasDestinoResponseMatrizFilasMin = 3;
+export const getAdminCuentasDestinoResponseMatrizFilasMax = 3;
+
+
+
 export const GetAdminCuentasDestinoResponse = zod.object({
   "resumen": zod.array(zod.object({
   "cuentaDestino": zod.string(),
@@ -8420,7 +8425,8 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "importeAnterior": zod.string(),
   "variacionPorcentaje": zod.string().describe('Porcentaje en unidades; 12.50 significa 12.5%'),
   "porcentaje": zod.string(),
-  "operaciones": zod.number()
+  "operaciones": zod.number(),
+  "cajaFisicaFacturado": zod.string().describe('Efectivo facturado; solo es distinto de cero en la tarjeta de caja física.')
 })),
   "tendencia": zod.array(zod.object({
   "fecha": zod.coerce.date(),
@@ -8434,8 +8440,54 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "cuentaFiscal": zod.string(),
   "cuentaNoFiscal": zod.string(),
   "cuentasPorCobrar": zod.string(),
+  "cobrado": zod.string(),
+  "porCobrar": zod.string(),
+  "vendido": zod.string(),
   "total": zod.string()
 })),
+  "encabezado": zod.object({
+  "cobrado": zod.string(),
+  "porCobrar": zod.string(),
+  "vendido": zod.string(),
+  "cobradoAnterior": zod.string(),
+  "porCobrarAnterior": zod.string(),
+  "vendidoAnterior": zod.string()
+}),
+  "matriz": zod.object({
+  "filas": zod.array(zod.object({
+  "facturado": zod.boolean().nullable(),
+  "efectivo": zod.object({
+  "importe": zod.string(),
+  "cuentaDestino": zod.union([zod.literal('CAJA_FISICA'),zod.literal('CUENTA_NO_FISCAL'),zod.literal('CUENTA_FISCAL'),zod.literal('CUENTAS_POR_COBRAR'),zod.literal(null)]).nullable(),
+  "formasPago": zod.array(zod.string())
+}),
+  "transferencia": zod.object({
+  "importe": zod.string(),
+  "cuentaDestino": zod.union([zod.literal('CAJA_FISICA'),zod.literal('CUENTA_NO_FISCAL'),zod.literal('CUENTA_FISCAL'),zod.literal('CUENTAS_POR_COBRAR'),zod.literal(null)]).nullable(),
+  "formasPago": zod.array(zod.string())
+}),
+  "porCobrar": zod.object({
+  "importe": zod.string(),
+  "cuentaDestino": zod.union([zod.literal('CAJA_FISICA'),zod.literal('CUENTA_NO_FISCAL'),zod.literal('CUENTA_FISCAL'),zod.literal('CUENTAS_POR_COBRAR'),zod.literal(null)]).nullable(),
+  "formasPago": zod.array(zod.string())
+}),
+  "otras": zod.object({
+  "importe": zod.string(),
+  "cuentaDestino": zod.union([zod.literal('CAJA_FISICA'),zod.literal('CUENTA_NO_FISCAL'),zod.literal('CUENTA_FISCAL'),zod.literal('CUENTAS_POR_COBRAR'),zod.literal(null)]).nullable(),
+  "formasPago": zod.array(zod.string())
+}),
+  "total": zod.string()
+})).min(getAdminCuentasDestinoResponseMatrizFilasMin).max(getAdminCuentasDestinoResponseMatrizFilasMax),
+  "cierra": zod.boolean()
+}),
+  "ivaFacturado": zod.object({
+  "base": zod.string(),
+  "iva": zod.string()
+}),
+  "incongruencias": zod.object({
+  "conteo": zod.int(),
+  "importe": zod.string()
+}),
   "facturacion": zod.object({
   "facturadoTotal": zod.string(),
   "noFacturadoTotal": zod.string(),
@@ -8469,6 +8521,9 @@ export const ListAdminCuentaDestinoMovimientosQueryParams = zod.object({
   "desde": zod.coerce.string().regex(listAdminCuentaDestinoMovimientosQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
   "hasta": zod.coerce.string().regex(listAdminCuentaDestinoMovimientosQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
   "ubicacionId": zod.coerce.number().optional(),
+  "facturado": zod.coerce.boolean().optional(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'POR_COBRAR', 'OTRAS']).optional().describe('Categoría reconciliada de la matriz; TRANSFERENCIA incluye la forma histórica FACTURADO.'),
+  "incongruente": zod.coerce.boolean().optional().describe('Limita el detalle a abonos cuyo destino contradice la facturación de la venta.'),
   "page": zod.coerce.number().int().min(1).default(listAdminCuentaDestinoMovimientosQueryPageDefault),
   "pageSize": zod.coerce.number().int().min(1).max(listAdminCuentaDestinoMovimientosQueryPageSizeMax).default(listAdminCuentaDestinoMovimientosQueryPageSizeDefault)
 })
@@ -8487,7 +8542,10 @@ export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
   "sitio": zod.string(),
   "monto": zod.string(),
   "registroId": zod.number(),
-  "registro": zod.string()
+  "registro": zod.string(),
+  "formaPago": zod.string(),
+  "facturado": zod.boolean(),
+  "incongruente": zod.boolean()
 })),
   "total": zod.number(),
   "page": zod.number(),

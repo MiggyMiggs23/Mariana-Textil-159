@@ -6,7 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminCuentaDestinoRow } from './adminCuentaDestinoRow';
+import type { AdminCuentasDestinoEncabezado } from './adminCuentasDestinoEncabezado';
 import type { AdminCuentasDestinoFacturacion } from './adminCuentasDestinoFacturacion';
+import type { AdminCuentasDestinoIncongruencias } from './adminCuentasDestinoIncongruencias';
+import type { AdminCuentasDestinoIvaFacturado } from './adminCuentasDestinoIvaFacturado';
+import type { AdminCuentasDestinoMatriz } from './adminCuentasDestinoMatriz';
 import type { AdminCuentasDestinoPorTiendaItem } from './adminCuentasDestinoPorTiendaItem';
 import type { AdminCuentaTrend } from './adminCuentaTrend';
 
@@ -14,6 +18,10 @@ export interface AdminCuentasDestino {
   resumen: AdminCuentaDestinoRow[];
   tendencia: AdminCuentaTrend[];
   porTienda: AdminCuentasDestinoPorTiendaItem[];
+  encabezado: AdminCuentasDestinoEncabezado;
+  matriz: AdminCuentasDestinoMatriz;
+  ivaFacturado: AdminCuentasDestinoIvaFacturado;
+  incongruencias: AdminCuentasDestinoIncongruencias;
   facturacion: AdminCuentasDestinoFacturacion;
   ivaCobrado: string;
   totalCobrado: string;

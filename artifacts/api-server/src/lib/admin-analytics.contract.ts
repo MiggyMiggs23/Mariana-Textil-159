@@ -10,6 +10,7 @@ import {
   measureKpi,
   previousEqualPeriod,
   mexicoCityHour,
+  reconcileDestinationMatrix,
   summarizeRealtimeCredit,
 } from "./admin-analytics";
 import { GetAdminRealtimeDashboardResponse } from "@workspace/api-zod";
@@ -299,6 +300,62 @@ test("four destinations preserve total and percentages/participation sum to 100"
   const total = [...totals.values()].reduce((sum, value) => sum + value, 0);
   assert.equal(total, 1000);
   assert.equal([...totals.values()].reduce((sum, value) => sum + value / total * 100, 0), 100);
+});
+
+test("destination fiscal/payment matrix reconciles every row, column, headline and account", () => {
+  const source = [
+    { formaPago: "EFECTIVO", facturado: true, cuentaDestino: "CAJA_FISICA", importe: 100 },
+    { formaPago: "EFECTIVO", facturado: false, cuentaDestino: "CAJA_FISICA", importe: 50 },
+    { formaPago: "TRANSFERENCIA", facturado: false, cuentaDestino: "CUENTA_NO_FISCAL", importe: 200 },
+    { formaPago: "FACTURADO", facturado: true, cuentaDestino: "CUENTA_FISCAL", importe: 75 },
+    { formaPago: "CREDITO", facturado: true, cuentaDestino: "CUENTAS_POR_COBRAR", importe: 300 },
+    { formaPago: "CHEQUE", facturado: false, cuentaDestino: "CUENTA_NO_FISCAL", importe: 25 },
+  ];
+  const matrix = reconcileDestinationMatrix(source);
+  const [invoiced, uninvoiced, total] = matrix.filas;
+  assert.equal(matrix.cierra, true);
+  assert.equal(invoiced!.transferencia.importe, "75.00", "historical FACTURADO is transfer");
+  assert.equal(total!.otras.importe, "25.00", "unknown methods remain visible");
+  assert.deepEqual(total!.otras.formasPago, ["CHEQUE"]);
+  for (const row of matrix.filas) {
+    assert.equal(
+      Number(row.efectivo.importe) + Number(row.transferencia.importe)
+        + Number(row.porCobrar.importe) + Number(row.otras.importe),
+      Number(row.total),
+    );
+  }
+  for (const column of ["efectivo", "transferencia", "porCobrar", "otras"] as const) {
+    assert.equal(
+      Number(invoiced![column].importe) + Number(uninvoiced![column].importe),
+      Number(total![column].importe),
+    );
+  }
+  const vendido = Number(total!.total);
+  const porCobrar = Number(total!.porCobrar.importe);
+  const cobrado = vendido - porCobrar;
+  assert.equal(vendido, 750);
+  assert.equal(cobrado + porCobrar, vendido);
+  assert.equal(150 + 75 + 225, cobrado, "three collected accounts equal Cobrado");
+  assert.equal(new Set(source.map((row) => row.formaPago)).size,
+    new Set(matrix.filas[2]!.efectivo.formasPago
+      .concat(matrix.filas[2]!.transferencia.formasPago)
+      .concat(matrix.filas[2]!.porCobrar.formasPago)
+      .concat(matrix.filas[2]!.otras.formasPago)).size);
+});
+
+test("destination summary and detail routes enforce resolved read scope", async () => {
+  const route = await readFile(new URL("../routes/admin-analytics.ts", import.meta.url), "utf8");
+  const summary = route.slice(
+    route.indexOf('router.get("/admin/cuentas-destino"'),
+    route.indexOf('router.get("/admin/cuentas-destino/:cuentaDestino/movimientos"'),
+  );
+  const detail = route.slice(
+    route.indexOf('router.get("/admin/cuentas-destino/:cuentaDestino/movimientos"'),
+    route.indexOf("async function fiscalFigures"),
+  );
+  assert.match(summary, /scopedAnalyticsFilters\(req, query, res\)/);
+  assert.match(detail, /scopedAnalyticsFilters\(req, query, res\)/);
+  assert.match(route, /resolveReadScope\(req\.auth!, query\.ubicacionId\)/);
 });
 
 test("every store-grouped caja view uses the shared canonical order", async () => {

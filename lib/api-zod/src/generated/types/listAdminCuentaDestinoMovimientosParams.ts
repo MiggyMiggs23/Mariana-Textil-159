@@ -8,6 +8,7 @@
 import type { AnalyticsDesdeParameter } from './analyticsDesdeParameter';
 import type { AnalyticsHastaParameter } from './analyticsHastaParameter';
 import type { AnalyticsUbicacionIdParameter } from './analyticsUbicacionIdParameter';
+import type { ListAdminCuentaDestinoMovimientosFormaPago } from './listAdminCuentaDestinoMovimientosFormaPago';
 
 export type ListAdminCuentaDestinoMovimientosParams = {
 /**
@@ -21,6 +22,15 @@ desde?: AnalyticsDesdeParameter;
  */
 hasta?: AnalyticsHastaParameter;
 ubicacionId?: AnalyticsUbicacionIdParameter;
+facturado?: boolean;
+/**
+ * Categoría reconciliada de la matriz; TRANSFERENCIA incluye la forma histórica FACTURADO.
+ */
+formaPago?: ListAdminCuentaDestinoMovimientosFormaPago;
+/**
+ * Limita el detalle a abonos cuyo destino contradice la facturación de la venta.
+ */
+incongruente?: boolean;
 /**
  * @minimum 1
  */

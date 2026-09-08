@@ -507,8 +507,39 @@ if (!testUrl) {
       assert.equal(destinations.resumen.length, 4);
       assert.equal(
         destinations.resumen.reduce((sum, row) => sum + Number(row.importe), 0),
-        Number(destinations.totalCobrado),
+         Number(destinations.encabezado.vendido),
       );
+       assert.equal(
+         destinations.resumen
+           .filter((row) => row.cuentaDestino !== "CUENTAS_POR_COBRAR")
+           .reduce((sum, row) => sum + Number(row.importe), 0),
+         Number(destinations.encabezado.cobrado),
+       );
+       assert.equal(
+         Number(destinations.encabezado.cobrado) + Number(destinations.encabezado.porCobrar),
+         Number(destinations.encabezado.vendido),
+       );
+       assert.equal(destinations.totalCobrado, destinations.encabezado.cobrado);
+       assert.equal(destinations.matriz.cierra, true);
+       assert.deepEqual(destinations.incongruencias, {
+         conteo: 2,
+         importe: "40.00",
+       });
+       const [facturado, noFacturado, matrixTotal] = destinations.matriz.filas;
+       for (const row of destinations.matriz.filas) {
+         assert.equal(
+           Number(row.efectivo.importe) + Number(row.transferencia.importe)
+             + Number(row.porCobrar.importe) + Number(row.otras.importe),
+           Number(row.total),
+         );
+       }
+       for (const column of ["efectivo", "transferencia", "porCobrar", "otras"] as const) {
+         assert.equal(
+           Number(facturado![column].importe) + Number(noFacturado![column].importe),
+           Number(matrixTotal![column].importe),
+         );
+       }
+       assert.equal(matrixTotal!.total, destinations.encabezado.vendido);
        assert.equal(
          destinations.ivaCobrado,
          (16 + 32 + 48).toFixed(2),
@@ -612,6 +643,18 @@ if (!testUrl) {
        assert.equal(siteFiscalDetail.total, 3);
        assert.equal(siteFiscalDetail.montoTotal, "10.00");
        assert.equal(siteFiscalDetail.items[0]!.documentoTipo, "TICKET");
+        const incongruentFiscalDetail = await analytics.listDestinationAccountMovements(
+          filters,
+          "CUENTA_FISCAL",
+          1,
+          10,
+          { incongruente: true },
+        );
+        assert.equal(incongruentFiscalDetail.total, 2);
+        assert.equal(incongruentFiscalDetail.montoTotal, "40.00");
+        assert.ok(incongruentFiscalDetail.items.every((item) =>
+          item.incongruente && item.facturado === false),
+        );
        assert.equal(await analytics.getDestinationCollectedAmount(filters, "CUENTA_FISCAL"), "302.00");
        assert.equal(await analytics.getDestinationCollectedAmount(
          { ...filters, ubicacionId: ids.locations[1] },
