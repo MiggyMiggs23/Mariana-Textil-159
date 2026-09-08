@@ -1,0 +1,93 @@
+# Prompt para Replit Agent — Respaldo en Neon y purga de datos operativos
+
+**Este trabajo borra datos y no se puede deshacer sin el respaldo.** Va en dos fases. La Fase 1 crea el respaldo y te pide un inventario de lo que se va a borrar. **La Fase 2 no se ejecuta hasta que yo la autorice por escrito**, después de leer el reporte de la Fase 1.
+
+No cambies ninguna regla de negocio, ningún cálculo ni ninguna pantalla. Este trabajo es solo de datos.
+
+---
+
+# FASE 1 — Respaldo y preflight. **No borres nada en esta fase.**
+
+## Bloque 1 — Respaldo verificado en Neon
+
+1. Crea una **rama de Neon** con el estado actual completo de la base, usando la integración de Neon que ya tiene el proyecto. Ponle un nombre que diga qué es y cuándo se hizo, del estilo `respaldo-antes-de-purga-2026-09-08`.
+2. **Verifica que el respaldo sirve**, no solo que se creó: cuenta los renglones de `tickets`, `movimientos`, `rollos`, `entradas` y `salidas` en la rama nueva y en la base actual, y confirma que coinciden. Un respaldo que nadie comprobó no es un respaldo.
+3. Reporta el nombre exacto de la rama, la hora de creación y la tabla de conteos comparados.
+
+**Si no puedes crear la rama, o si los conteos no coinciden, detente ahí y dilo.** No pases a ninguna otra parte de este trabajo. Sin respaldo verificado no se borra nada, sin excepción.
+
+## Bloque 2 — Preflight: inventario de lo que se borraría
+
+Cuenta los renglones de cada tabla y preséntame el resultado en tres listas separadas. **Solo cuenta; no borres, no vacíes, no reinicies nada.**
+
+### Lista A — Se borraría
+
+**Ventas y crédito:** `tickets`, `ticket_lineas`, `ticket_pagos`, `autorizaciones_nota`, `movimientos_credito`, `aplicaciones_credito`, `notificaciones_credito`
+
+**Caja:** `sesiones_caja`, `sesiones_caja_dias`, `salidas_dinero_caja`
+
+**Salidas y viajes:** `salidas`, `salida_lineas`, `salida_rollos`, `viajes`, `viaje_salidas`, `viaje_tickets`
+
+**Compras y entradas:** `entradas`, `contenedores`, `contenedor_lineas`, `pagos_proveedor`, `aplicaciones_pago_proveedor`
+
+**Inventario operativo:** `movimientos`, `rollos`, `reimpresiones_etiqueta`
+
+**Auditorías físicas de inventario:** `auditorias_inventario`, `auditoria_inventario_escaneos`, `auditoria_inventario_participantes`, `auditoria_inventario_snapshot`
+
+**Otros operativos:** `solicitudes_pago_dirigido`, `notificaciones_sistema`
+
+### Lista B — Se reiniciaría, no se borraría
+
+- Contadores de folio: `ticket_folio` (vuelve a **999**, para que el siguiente ticket sea el 1000), `entrada_folio`, `salida_folio`, `viaje_folio`, `auditoria_inventario_folio`, `series_consecutivo`. Todos a su valor inicial.
+- La secuencia de Postgres de `contenedores.folio`, que es un `serial` y **no un contador en tabla**. Se reinicia de otra forma; identifica su nombre real y repórtalo.
+- `existencias`: **no se borra ni se pone en cero a mano.** Se reconstruye con `reconstruirCacheExistencias()` después de borrar los movimientos. La invariante declarada en `inventario.ts` es `existencias.cantidad_total = SUM(movimientos.cantidad)`; poner ceros a mano la rompería y dejaría el caché diciendo algo distinto al libro.
+
+### Lista C — No se toca, bajo ninguna circunstancia
+
+`productos`, `precio_historial`, `clientes`, `cliente_documentos`, `proveedores`, `usuarios`, `ubicaciones`, `pisos`, `permisos_rol`, `permisos_usuario`, `camionetas`, `choferes`, `sesiones`, y **`auditoria`**.
+
+La bitácora `auditoria` se conserva íntegra por decisión expresa: la regla del proyecto es que nunca se altera. Va a quedar con referencias a tickets y salidas que ya no existen, y eso es aceptable y esperado.
+
+## Bloque 3 — Lo que tengo que revisar antes de autorizar
+
+Junto al conteo, contéstame en el reporte:
+
+1. **¿Hay alguna tabla del esquema que no aparezca en ninguna de las tres listas?** Enumérala y di a cuál pertenece y por qué. No quiero que sobreviva algo operativo por olvido ni que se borre algo de catálogo por descuido.
+2. **¿Qué llaves foráneas van a estorbar?** Dame el orden de borrado que respeta las dependencias, o di si vas a usar borrado en cascada dentro de una transacción.
+3. Confirma que después de la purga **todos los productos quedarán sin costo**, porque el costo se deriva de las entradas, y que eso hará que Precios muestre "Sin costo" y los márgenes en null hasta que se capturen entradas nuevas.
+
+**Termina la Fase 1 aquí y espera mi autorización.**
+
+---
+
+# FASE 2 — Purga. **Solo se ejecuta cuando yo lo autorice explícitamente después de leer el reporte.**
+
+1. Todo el borrado va en **una sola transacción**. Si algo falla, no se borra nada y la base queda como estaba.
+2. Borra únicamente las tablas de la **Lista A**, en el orden de dependencias que reportaste.
+3. Reinicia los contadores y la secuencia de la **Lista B**.
+4. Ejecuta `reconstruirCacheExistencias()` **después** del borrado y **dentro del mismo trabajo**, para que las existencias queden en cero por reconstrucción y no por edición manual.
+5. **No toques nada de la Lista C.**
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. No des ninguno por aprobado sin correrlo.
+
+1. Cada tabla de la Lista A quedó en cero renglones.
+2. Cada tabla de la Lista C conserva **exactamente** el mismo conteo que tenía en el preflight. Compáralos uno por uno y muestra las dos columnas.
+3. `existencias` cumple la invariante: para cada par producto-ubicación, `cantidad_total` es igual a la suma de sus movimientos, que ahora es cero. Verifícalo con una consulta, no por lectura del código.
+4. `pnpm run typecheck` completo y las suites de inventario, POS, caja y analytics.
+5. Crea un ticket de prueba y confirma que **su folio es 1000**. Después bórralo, o déjalo y avísame.
+6. Abre Caja en Tiempo Real y Cuentas Destino y confirma que todas las cifras están en cero y que **ninguna pantalla truena** con la base vacía. Una pantalla que funciona con datos y revienta sin ellos es un error que el piloto encontraría en su primer día.
+7. Abre Precios y confirma que los productos siguen ahí, con sus precios, y marcados "Sin costo".
+8. Abre Clientes y Proveedores y confirma que están completos.
+9. Confirma que la bitácora `auditoria` conserva sus renglones.
+
+## Al terminar
+
+Escribe en `replit.md`, en la sección de limpieza:
+
+- La fecha de esta purga, el nombre de la rama de Neon que quedó como respaldo, y qué se borró y qué se conservó, con las tres listas.
+- Que **existencias no se vacía a mano: se reconstruye**, porque es un caché derivado de los movimientos, y cuál es la invariante que lo obliga.
+- Que los folios usan **dos mecanismos distintos** —contadores en tabla y una secuencia de Postgres en contenedores— y que un reinicio tiene que cubrir los dos.
+- Que la bitácora `auditoria` se conservó íntegra y por tanto contiene referencias a documentos que ya no existen, por decisión expresa.
+- Que esta fue la primera vez que se creó y verificó un respaldo, y que la verificación consistió en comparar conteos entre la rama y la base.
