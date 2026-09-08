@@ -105,4 +105,25 @@ describe("Cuentas Destino Contract", () => {
     assert.match(detail, /inherited\.getAll\("fuente"\)/);
   });
 
+  it("uses the literal collection labels and links credit movements to the exact account row", () => {
+    const summary = readPage("./cuentas-destino.tsx");
+    const detail = readPage("./cuenta-destino-detalle.tsx");
+    const clientTable = readFileSync(
+      new URL("../../components/client-responsive-table.tsx", import.meta.url),
+      "utf8",
+    );
+
+    assert.match(summary, /De ventas del periodo/);
+    assert.match(summary, /De notas anteriores/);
+    assert.match(summary, /A cuenta, sin aplicar/);
+    assert.match(detail, /movement\.documentoTipo === "MOVIMIENTO_CREDITO"/);
+    assert.match(
+      detail,
+      /\/clientes\/\$\{movement\.clienteId\}\?tab=estado&movimientoId=\$\{movement\.documentoId\}/,
+    );
+    assert.match(clientTable, /get\("movimientoId"\)/);
+    assert.match(clientTable, /scrollIntoView\(\{ behavior: "smooth", block: "center" \}\)/);
+    assert.match(clientTable, /data-highlighted=\{highlighted \? "true" : undefined\}/);
+  });
+
 });

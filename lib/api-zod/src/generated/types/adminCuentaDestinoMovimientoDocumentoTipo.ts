@@ -12,4 +12,5 @@ export type AdminCuentaDestinoMovimientoDocumentoTipo = typeof AdminCuentaDestin
 export const AdminCuentaDestinoMovimientoDocumentoTipo = {
   TICKET: 'TICKET',
   CLIENTE: 'CLIENTE',
+  MOVIMIENTO_CREDITO: 'MOVIMIENTO_CREDITO',
 } as const;

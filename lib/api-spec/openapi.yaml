@@ -7220,14 +7220,15 @@ components:
     AdminCuentaDestinoMovimiento:
       type: object
       required:
-         [id, fecha, tipo, documentoTipo, documentoId, documento, cliente, ubicacionId, sitio, monto, registroId, registro, formaPago, facturado, fuente, incongruente]
+         [id, fecha, tipo, documentoTipo, documentoId, documento, clienteId, cliente, ubicacionId, sitio, monto, registroId, registro, formaPago, facturado, fuente, incongruente]
       properties:
         id: { type: number }
         fecha: { type: string, format: date-time }
         tipo: { type: string }
-        documentoTipo: { type: string, enum: [TICKET, CLIENTE] }
+        documentoTipo: { type: string, enum: [TICKET, CLIENTE, MOVIMIENTO_CREDITO] }
         documentoId: { type: number }
         documento: { type: string }
+        clienteId: { type: ["number", "null"] }
         cliente: { type: ["string", "null"] }
         ubicacionId: { type: ["number", "null"] }
         sitio: { type: string }

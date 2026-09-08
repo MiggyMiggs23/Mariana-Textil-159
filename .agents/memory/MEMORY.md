@@ -36,3 +36,4 @@
 - [Enums históricos de solo lectura](historical-read-enums.md) — retirar una opción seleccionable no permite retirarla de respuestas que aún leen registros antiguos.
 - [Enteros OpenAPI con Orval y Zod 3](openapi-orval-zod3-integers.md) — `type: integer` genera `zod.int()` incompatible; validar enteros en el servidor.
 - [Límite de history en Safari](safari-history-write-throttling.md) — deduplicar estado y scroll; Safari bloquea ráfagas de `replaceState` que Chromium tolera.
+- [Rótulos financieros en pantallas estrechas](financial-labels-on-narrow-screens.md) — conservar el texto operativo literal; adaptar tipografía o acomodo, nunca abreviarlo.

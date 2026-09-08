@@ -353,7 +353,11 @@ export default function CuentaDestinoDetalle() {
                         <TableCell>{movement.tipo}</TableCell>
                         <TableCell>
                           <Link
-                            href={movement.documentoTipo === "CLIENTE" ? `/clientes/${movement.documentoId}` : `/tickets/${movement.documentoId}`}
+                             href={movement.documentoTipo === "MOVIMIENTO_CREDITO" && movement.clienteId != null
+                               ? `/clientes/${movement.clienteId}?tab=estado&movimientoId=${movement.documentoId}`
+                               : movement.documentoTipo === "CLIENTE"
+                                 ? `/clientes/${movement.documentoId}?tab=estado`
+                                 : `/tickets/${movement.documentoId}`}
                             className="font-medium text-primary hover:underline"
                             data-testid={`link-documento-${movement.id}`}
                           >

@@ -575,37 +575,52 @@ if (!testUrl) {
         );
        const effectiveAbonoDate = new Date(now.getTime() + 20_000).toISOString();
        const appliedProjection = fiscalDetail.items.find(
-         (item) => item.documentoTipo === "TICKET" && item.documentoId === creditTicket && item.monto === "30.00",
+         (item) =>
+           item.documentoTipo === "MOVIMIENTO_CREDITO" &&
+           item.documentoId === Number(fiscalAbono.id) &&
+           item.monto === "30.00",
        );
        const remainderProjection = fiscalDetail.items.find(
           (item) =>
-            item.documentoTipo === "CLIENTE" &&
-            item.documentoId === ids.clients[0] &&
+            item.documentoTipo === "MOVIMIENTO_CREDITO" &&
+            item.documentoId === Number(fiscalAbono.id) &&
             item.monto === "20.00",
         );
         const reversedRemainderProjection = fiscalDetail.items.find(
           (item) =>
-            item.documentoTipo === "CLIENTE" &&
-            item.documentoId === ids.clients[0] &&
+            item.documentoTipo === "MOVIMIENTO_CREDITO" &&
+            item.documentoId === Number(reversedAbono.id) &&
             item.monto === "-20.00",
        );
        assert.deepEqual(appliedProjection && {
+         documentoTipo: appliedProjection.documentoTipo,
+         documentoId: appliedProjection.documentoId,
+         clienteId: appliedProjection.clienteId,
          monto: appliedProjection.monto,
          fecha: appliedProjection.fecha,
          ubicacionId: appliedProjection.ubicacionId,
          sitio: appliedProjection.sitio,
        }, {
+         documentoTipo: "MOVIMIENTO_CREDITO",
+         documentoId: Number(fiscalAbono.id),
+         clienteId: ids.clients[0],
          monto: "30.00",
          fecha: effectiveAbonoDate,
          ubicacionId: ids.locations[1],
          sitio: `${tag}-Sur`,
        });
        assert.deepEqual(remainderProjection && {
+         documentoTipo: remainderProjection.documentoTipo,
+         documentoId: remainderProjection.documentoId,
+         clienteId: remainderProjection.clienteId,
          monto: remainderProjection.monto,
          fecha: remainderProjection.fecha,
          ubicacionId: remainderProjection.ubicacionId,
          sitio: remainderProjection.sitio,
        }, {
+         documentoTipo: "MOVIMIENTO_CREDITO",
+         documentoId: Number(fiscalAbono.id),
+         clienteId: ids.clients[0],
          monto: "20.00",
          fecha: effectiveAbonoDate,
          ubicacionId: null,
@@ -616,22 +631,33 @@ if (!testUrl) {
          50,
        );
         assert.deepEqual(reversedRemainderProjection && {
+         documentoTipo: reversedRemainderProjection.documentoTipo,
+         documentoId: reversedRemainderProjection.documentoId,
+         clienteId: reversedRemainderProjection.clienteId,
           monto: reversedRemainderProjection.monto,
           fecha: reversedRemainderProjection.fecha,
           ubicacionId: reversedRemainderProjection.ubicacionId,
           sitio: reversedRemainderProjection.sitio,
         }, {
+         documentoTipo: "MOVIMIENTO_CREDITO",
+         documentoId: Number(reversedAbono.id),
+         clienteId: ids.clients[0],
           monto: "-20.00",
           fecha: new Date(now.getTime() + 30_000).toISOString(),
           ubicacionId: null,
           sitio: "Estado de cuenta",
         });
-       assert.equal(fiscalDetail.items.filter((item) => item.documentoTipo === "CLIENTE").length, 3);
+       assert.equal(
+         fiscalDetail.items.filter((item) => item.documentoTipo === "MOVIMIENTO_CREDITO").length,
+         6,
+       );
        assert.ok(!fiscalDetail.items.some((item) =>
          item.documentoTipo === "TICKET" && item.documentoId === cancelledCreditTicket,
        ));
        assert.ok(fiscalDetail.items.some((item) =>
-         item.documentoTipo === "CLIENTE" && item.monto === "60.00" && item.sitio === "Estado de cuenta",
+         item.documentoTipo === "MOVIMIENTO_CREDITO" &&
+         item.monto === "60.00" &&
+         item.sitio === "Estado de cuenta",
        ));
        const siteFiscalDetail = await analytics.listDestinationAccountMovements(
          { ...filters, ubicacionId: ids.locations[1] },
@@ -641,7 +667,7 @@ if (!testUrl) {
        );
        assert.equal(siteFiscalDetail.total, 3);
        assert.equal(siteFiscalDetail.montoTotal, "10.00");
-       assert.equal(siteFiscalDetail.items[0]!.documentoTipo, "TICKET");
+       assert.equal(siteFiscalDetail.items[0]!.documentoTipo, "MOVIMIENTO_CREDITO");
         const incongruentFiscalDetail = await analytics.listDestinationAccountMovements(
           filters,
           "CUENTA_FISCAL",
@@ -706,6 +732,18 @@ if (!testUrl) {
            destinations.encabezado.cobrado.saldosFavor,
          ],
        );
+       const matrixDestination = (value: string | null) => {
+         switch (value) {
+           case "CAJA_FISICA":
+           case "CUENTA_FISCAL":
+           case "CUENTA_NO_FISCAL":
+           case "CUENTAS_POR_COBRAR":
+             return value;
+           default:
+             assert.equal(value, null);
+             return "TODAS";
+         }
+       };
        for (const matrixRow of destinations.matriz.filas) {
          const facturado = matrixRow.facturado == null
            ? {}
@@ -713,28 +751,28 @@ if (!testUrl) {
          const [cash, transfer, credit, other, total] = await Promise.all([
            analytics.listDestinationAccountMovements(
              filters,
-             matrixRow.efectivo.cuentaDestino ?? "TODAS",
+             matrixDestination(matrixRow.efectivo.cuentaDestino),
              1,
              100,
              { ...facturado, formaPago: "EFECTIVO", fuentes: ["POS"] },
            ),
            analytics.listDestinationAccountMovements(
              filters,
-             matrixRow.transferencia.cuentaDestino ?? "TODAS",
+             matrixDestination(matrixRow.transferencia.cuentaDestino),
              1,
              100,
              { ...facturado, formaPago: "TRANSFERENCIA", fuentes: ["POS"] },
            ),
            analytics.listDestinationAccountMovements(
              filters,
-             matrixRow.porCobrar.cuentaDestino ?? "TODAS",
+             matrixDestination(matrixRow.porCobrar.cuentaDestino),
              1,
              100,
              { ...facturado, formaPago: "POR_COBRAR", fuentes: ["CREDITO"] },
            ),
            analytics.listDestinationAccountMovements(
              filters,
-             matrixRow.otras.cuentaDestino ?? "TODAS",
+             matrixDestination(matrixRow.otras.cuentaDestino),
              1,
              100,
              { ...facturado, formaPago: "OTRAS", fuentes: ["POS"] },

@@ -140,6 +140,7 @@ test("destination movement contract validates account, pagination and real ticke
       documentoTipo: "TICKET",
       documentoId: 10,
       documento: "Ticket #100",
+      clienteId: null,
       cliente: null,
       ubicacionId: 2,
       sitio: "Centro",

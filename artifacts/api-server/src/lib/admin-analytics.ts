@@ -126,7 +126,8 @@ function destinationReadModel() {
     SELECT p.id, ${accountedDocumentAt("t")} fecha, p.importe importe, p.forma_pago::text "formaPago",
       CASE WHEN p.forma_pago='EFECTIVO' THEN 'CAJA_FISICA'
         WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END::text "cuentaDestino",
-      t.id "documentoId", t.folio, t.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
+      t.id "documentoId", t.folio, t.cliente_id "clienteId", NULL::bigint "movimientoCreditoId",
+      t.ubicacion_id "ubicacionId",
       p.usuario_id "registroId", t.facturado, 'POS' fuente
     FROM ticket_pagos p JOIN tickets t ON t.id=p.ticket_id
     WHERE ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
@@ -136,7 +137,8 @@ function destinationReadModel() {
     UNION ALL
     SELECT m.id, ${accountedDocumentAt("t")} fecha, m.importe,
       'CREDITO'::text "formaPago", 'CUENTAS_POR_COBRAR'::text "cuentaDestino",
-      t.id "documentoId", t.folio, m.cliente_id "clienteId", t.ubicacion_id "ubicacionId",
+      t.id "documentoId", t.folio, m.cliente_id "clienteId", m.id "movimientoCreditoId",
+      t.ubicacion_id "ubicacionId",
       m.usuario_id "registroId", COALESCE(t.facturado,false) facturado, 'CREDITO' fuente
     FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
     WHERE ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1)
@@ -146,7 +148,8 @@ function destinationReadModel() {
     UNION ALL
     SELECT (m.id * 1000000 + a.id),m.created_at fecha,a.importe,
       COALESCE(m.forma_pago::text,'TRANSFERENCIA') "formaPago",m.cuenta_destino::text "cuentaDestino",
-      sale_ticket.id "documentoId",sale_ticket.folio,m.cliente_id "clienteId",sale_ticket.ubicacion_id "ubicacionId",
+      sale_ticket.id "documentoId",sale_ticket.folio,m.cliente_id "clienteId",m.id "movimientoCreditoId",
+      sale_ticket.ubicacion_id "ubicacionId",
       m.usuario_id "registroId",COALESCE(sale_ticket.facturado,false) facturado,'ABONO' fuente
     FROM movimientos_credito m JOIN aplicaciones_credito a ON a.abono_movimiento_id=m.id
     JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
@@ -159,7 +162,8 @@ function destinationReadModel() {
     SELECT (m.id * 1000000),m.created_at fecha,
       -m.importe-COALESCE(aplicado.importe,0),
       COALESCE(m.forma_pago::text,'TRANSFERENCIA') "formaPago",m.cuenta_destino::text "cuentaDestino",
-      m.cliente_id "documentoId",NULL::bigint folio,m.cliente_id "clienteId",NULL::int "ubicacionId",
+      m.cliente_id "documentoId",NULL::bigint folio,m.cliente_id "clienteId",m.id "movimientoCreditoId",
+      NULL::int "ubicacionId",
       m.usuario_id "registroId",false facturado,'ABONO_SALDO_FAVOR' fuente
     FROM movimientos_credito m LEFT JOIN LATERAL (
       SELECT SUM(a.importe) importe
@@ -176,7 +180,8 @@ function destinationReadModel() {
     UNION ALL
     SELECT (r.id * 1000000 + a.id),r.created_at fecha,-a.importe,
       COALESCE(original.forma_pago::text,'TRANSFERENCIA') "formaPago",original.cuenta_destino::text "cuentaDestino",
-      sale_ticket.id "documentoId",sale_ticket.folio,original.cliente_id "clienteId",sale_ticket.ubicacion_id "ubicacionId",
+      sale_ticket.id "documentoId",sale_ticket.folio,original.cliente_id "clienteId",r.id "movimientoCreditoId",
+      sale_ticket.ubicacion_id "ubicacionId",
       r.usuario_id "registroId",COALESCE(sale_ticket.facturado,false) facturado,'REVERSO_ABONO' fuente
     FROM movimientos_credito r JOIN movimientos_credito original ON original.id=r.movimiento_origen_id
     JOIN aplicaciones_credito a ON a.abono_movimiento_id=original.id
@@ -191,7 +196,8 @@ function destinationReadModel() {
     SELECT (r.id * 1000000),r.created_at fecha,
       -( -original.importe-COALESCE(aplicado.importe,0) ),
       COALESCE(original.forma_pago::text,'TRANSFERENCIA') "formaPago",original.cuenta_destino::text "cuentaDestino",
-      original.cliente_id "documentoId",NULL::bigint folio,original.cliente_id "clienteId",NULL::int "ubicacionId",
+      original.cliente_id "documentoId",NULL::bigint folio,original.cliente_id "clienteId",r.id "movimientoCreditoId",
+      NULL::int "ubicacionId",
       r.usuario_id "registroId",false facturado,'REVERSO_ABONO_SALDO_FAVOR' fuente
     FROM movimientos_credito r JOIN movimientos_credito original ON original.id=r.movimiento_origen_id
     LEFT JOIN LATERAL (
@@ -1449,8 +1455,17 @@ export async function listDestinationAccountMovements(
          CASE d."cuentaDestino" WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
            WHEN 'CUENTAS_POR_COBRAR' THEN 'Venta a crédito'
            WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal' ELSE 'Transferencia no fiscal' END tipo,
-         CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN 'CLIENTE' ELSE 'TICKET' END "documentoTipo",d."documentoId",
-         CASE WHEN d.fuente IN ('ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR') THEN ('Cliente #' || d."clienteId"::text) ELSE ('Ticket #' || d.folio::text) END documento,c.nombre cliente,
+         CASE WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
+           THEN 'MOVIMIENTO_CREDITO' ELSE 'TICKET' END "documentoTipo",
+         CASE WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
+           THEN d."movimientoCreditoId" ELSE d."documentoId" END "documentoId",
+         CASE
+           WHEN d.fuente IN ('REVERSO_ABONO','REVERSO_ABONO_SALDO_FAVOR')
+             THEN ('Reverso de abono #' || d."movimientoCreditoId"::text)
+           WHEN d.fuente IN ('ABONO','ABONO_SALDO_FAVOR')
+             THEN ('Abono #' || d."movimientoCreditoId"::text)
+           ELSE ('Ticket #' || d.folio::text)
+         END documento,d."clienteId",c.nombre cliente,
           d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,d.importe::text monto,
            d."formaPago",d.facturado,d.fuente,
           (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
@@ -1481,6 +1496,7 @@ export async function listDestinationAccountMovements(
       id: Number(row.id),
       fecha: new Date(row.fecha).toISOString(),
       documentoId: Number(row.documentoId),
+       clienteId: row.clienteId == null ? null : Number(row.clienteId),
        ubicacionId: row.ubicacionId == null ? null : Number(row.ubicacionId),
       registroId: Number(row.registroId),
       monto: decimal(row.monto),
