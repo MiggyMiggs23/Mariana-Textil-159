@@ -52,6 +52,7 @@ export * from './adminRealtimeBreakdown';
 export * from './adminRealtimeBreakdownConcepto';
 export * from './adminRealtimeBreakdownItem';
 export * from './adminRealtimeBreakdownItemDocumentoTipo';
+export * from './adminRealtimeCancellationSummary';
 export * from './adminRealtimeCreditSummary';
 export * from './adminRealtimeDashboard';
 export * from './adminRealtimeDashboardFullRefreshSeconds';

@@ -7780,6 +7780,12 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "importe": zod.string(),
   "operaciones": zod.number()
 }).describe('Ventas a crédito calculadas exclusivamente como suma del desglose por tienda.'),
+  "cancelaciones": zod.object({
+  "tickets": zod.number(),
+  "importe": zod.string(),
+  "tasaCancelacion": zod.string().describe('Porcentaje en unidades; 10.00 significa 10%'),
+  "excedeUmbral": zod.boolean().describe('Usa el mismo umbral estricto que la alerta CANCELACIONES_ALTAS.')
+}).describe('Señal operativa de tickets cancelados; queda fuera de todas las identidades financieras.'),
   "pendientes": zod.object({
   "tickets": zod.number(),
   "ticketsSinCobrar": zod.number().optional(),
@@ -7895,7 +7901,7 @@ export const listAdminRealtimeBreakdownQueryPageSizeMax = 100;
 
 
 export const ListAdminRealtimeBreakdownQueryParams = zod.object({
-  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE']),
+  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS']),
   "desde": zod.coerce.string().regex(listAdminRealtimeBreakdownQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
   "hasta": zod.coerce.string().regex(listAdminRealtimeBreakdownQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
   "ubicacionId": zod.coerce.number().optional(),
@@ -7904,7 +7910,7 @@ export const ListAdminRealtimeBreakdownQueryParams = zod.object({
 })
 
 export const ListAdminRealtimeBreakdownResponse = zod.object({
-  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE']),
+  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS']),
   "items": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -7916,7 +7922,10 @@ export const ListAdminRealtimeBreakdownResponse = zod.object({
   "diasPlazo": zod.number().nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "documentoTipo": zod.union([zod.literal('TICKET'),zod.literal('NOTA'),zod.literal(null)]).nullable(),
-  "minutosEspera": zod.number().nullable()
+  "minutosEspera": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "motivoCancelacion": zod.string().nullable()
 })),
   "total": zod.number(),
   "page": zod.number(),

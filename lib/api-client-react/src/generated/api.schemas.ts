@@ -907,6 +907,18 @@ export interface AdminRealtimeCreditSummary {
   operaciones: number;
 }
 
+/**
+ * Señal operativa de tickets cancelados; queda fuera de todas las identidades financieras.
+ */
+export interface AdminRealtimeCancellationSummary {
+  tickets: number;
+  importe: string;
+  /** Porcentaje en unidades; 10.00 significa 10% */
+  tasaCancelacion: string;
+  /** Usa el mismo umbral estricto que la alerta CANCELACIONES_ALTAS. */
+  excedeUmbral: boolean;
+}
+
 export type AdminRealtimeDashboardFullRefreshSeconds = typeof AdminRealtimeDashboardFullRefreshSeconds[keyof typeof AdminRealtimeDashboardFullRefreshSeconds];
 
 
@@ -1014,6 +1026,7 @@ export interface AdminRealtimeDashboard {
   totales: AnalyticsMoneyTotals;
   cantidades: AnalyticsQuantity[];
   ventasCredito: AdminRealtimeCreditSummary;
+  cancelaciones: AdminRealtimeCancellationSummary;
   pendientes: AdminPendingSummary;
   tiendas: AdminRealtimeStore[];
   comparativo: AdminRealtimeStore[];
@@ -1050,6 +1063,12 @@ export interface AdminRealtimeBreakdownItem {
   documentoTipo: AdminRealtimeBreakdownItemDocumentoTipo;
   /** @nullable */
   minutosEspera: number | null;
+  /** @nullable */
+  nombreUsuarioCancelacion: string | null;
+  /** @nullable */
+  canceladoAt: string | null;
+  /** @nullable */
+  motivoCancelacion: string | null;
 }
 
 export type AdminRealtimeBreakdownConcepto = typeof AdminRealtimeBreakdownConcepto[keyof typeof AdminRealtimeBreakdownConcepto];
@@ -1059,6 +1078,7 @@ export const AdminRealtimeBreakdownConcepto = {
   COBRADO: 'COBRADO',
   CREDITO: 'CREDITO',
   PENDIENTE: 'PENDIENTE',
+  CANCELADAS: 'CANCELADAS',
 } as const;
 
 export interface AdminRealtimeBreakdown {
@@ -6732,6 +6752,7 @@ export const ListAdminRealtimeBreakdownConcepto = {
   COBRADO: 'COBRADO',
   CREDITO: 'CREDITO',
   PENDIENTE: 'PENDIENTE',
+  CANCELADAS: 'CANCELADAS',
 } as const;
 
 export type ListCajaTiendaVentasParams = {

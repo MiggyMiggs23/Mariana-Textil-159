@@ -52,6 +52,7 @@ export * from "./generated/types/adminRealtimeBreakdown";
 export * from "./generated/types/adminRealtimeBreakdownConcepto";
 export * from "./generated/types/adminRealtimeBreakdownItem";
 export * from "./generated/types/adminRealtimeBreakdownItemDocumentoTipo";
+export * from "./generated/types/adminRealtimeCancellationSummary";
 export * from "./generated/types/adminRealtimeCreditSummary";
 export * from "./generated/types/adminRealtimeDashboard";
 export * from "./generated/types/adminRealtimeDashboardFullRefreshSeconds";

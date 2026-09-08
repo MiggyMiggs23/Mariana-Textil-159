@@ -13,4 +13,5 @@ export const ListAdminRealtimeBreakdownConcepto = {
   COBRADO: 'COBRADO',
   CREDITO: 'CREDITO',
   PENDIENTE: 'PENDIENTE',
+  CANCELADAS: 'CANCELADAS',
 } as const;

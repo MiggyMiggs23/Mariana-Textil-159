@@ -25,4 +25,10 @@ export interface AdminRealtimeBreakdownItem {
   documentoTipo: AdminRealtimeBreakdownItemDocumentoTipo;
   /** @nullable */
   minutosEspera: number | null;
+  /** @nullable */
+  nombreUsuarioCancelacion: string | null;
+  /** @nullable */
+  canceladoAt: Date | null;
+  /** @nullable */
+  motivoCancelacion: string | null;
 }

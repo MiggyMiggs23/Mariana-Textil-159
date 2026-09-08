@@ -423,6 +423,56 @@ if (!testUrl) {
         "credit tickets must not inflate a store's collected ticket count or average",
       );
 
+      const [southAllSummary, southAllCards, cancelledBreakdown] = await Promise.all([
+        analytics.getSalesSummary({ ubicacionId: ids.locations[1] }),
+        analytics.getRealtimeStores({ ubicacionId: ids.locations[1] }),
+        analytics.listRealtimeBreakdown(southStoreFilters, "CANCELADAS"),
+      ]);
+      const financialBeforeCancellationSummary = {
+        ventas: southAllSummary.ventas,
+        cobrado: southAllSummary.cobrado,
+        margen: southAllSummary.margen,
+      };
+      const cancellationSummary = analytics.summarizeRealtimeCancellations(southAllSummary);
+      assert.deepEqual(
+        {
+          tickets: cancellationSummary.tickets,
+          importe: cancellationSummary.importe,
+          detailTickets: cancelledBreakdown.total,
+          detailImporte: cancelledBreakdown.montoTotal,
+        },
+        {
+          tickets: 2,
+          importe: "1059.00",
+          detailTickets: 2,
+          detailImporte: "1059.00",
+        },
+        "the cancelled card count and amount reconcile exactly with its drilldown",
+      );
+      assert.deepEqual(
+        new Set(cancelledBreakdown.items.map((item) => item.id)),
+        new Set([cancelledCreditTicket, cancelledSouthTicket]),
+      );
+      assert.ok(cancelledBreakdown.items.every((item) =>
+        item.nombreUsuarioCancelacion
+        && item.canceladoAt === now.toISOString()
+        && item.motivoCancelacion === `${tag}-cancel`
+      ));
+      assert.deepEqual(
+        {
+          ventas: southAllSummary.ventas,
+          cobrado: southAllSummary.cobrado,
+          margen: southAllSummary.margen,
+        },
+        financialBeforeCancellationSummary,
+        "deriving the cancellation card does not move Sales, Collected or Profit",
+      );
+      assert.equal(cancellationSummary.excedeUmbral, true);
+      assert.ok(
+        southAllCards.some((card) => card.alertas.includes("CANCELACIONES_ALTAS")),
+        "the card intensity and store alert turn on together from the shared threshold",
+      );
+
       const creditOnlyFilters = {
         desde: new Date(creditAt.getTime() - 1_000),
         hasta: new Date(creditAt.getTime() + 1_000),

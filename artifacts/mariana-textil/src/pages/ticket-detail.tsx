@@ -288,6 +288,15 @@ export default function TicketDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-6 print:m-0 print:max-w-none print:w-full">
+      {ticket.estado === EstadoTicket.CANCELADO && (
+        <div className="no-print w-full bg-destructive text-destructive-foreground px-6 py-4 shadow-md">
+          <div className="font-black text-xl tracking-tight mb-1 uppercase">CANCELADO</div>
+          <div className="text-sm opacity-90 flex flex-col gap-0.5">
+            <span>Por: {ticket.nombreUsuarioCancelacion || "Sistema"} el {ticket.canceladoAt ? new Date(ticket.canceladoAt).toLocaleString("es-MX") : "N/A"}</span>
+            {ticket.motivoCancelacion && <span>Motivo: {ticket.motivoCancelacion}</span>}
+          </div>
+        </div>
+      )}
       <div className="flex flex-col gap-4 no-print sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
@@ -329,7 +338,7 @@ export default function TicketDetailPage() {
       </div>
 
       {/* Visor de Ticket (Pantalla / Carta) */}
-      <Card className="no-print shadow-md">
+      <Card className="no-print shadow-md overflow-hidden">
         <CardHeader className="flex flex-col items-start justify-between gap-4 border-b bg-sidebar/5 sm:flex-row">
           <div>
             <CardTitle>Detalle de Operación</CardTitle>
@@ -346,25 +355,23 @@ export default function TicketDetailPage() {
             </Button>
           </div>
           <div className="text-left sm:text-right">
-            <div
-              className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                ticket.estado === EstadoTicket.CANCELADO
-                  ? "bg-destructive/20 text-destructive"
-                  : ticket.cobrado === true
+            {ticket.estado !== EstadoTicket.CANCELADO && (
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
+                  ticket.cobrado === true
                     ? "bg-emerald-100 text-emerald-700"
                     : ticket.cobrado === false
                       ? "bg-amber-100 text-amber-700"
                       : "bg-primary/10 text-primary"
-              }`}
-            >
-              {ticket.estado === EstadoTicket.CANCELADO
-                ? "CANCELADO"
-                : ticket.cobrado === true
+                }`}
+              >
+                {ticket.cobrado === true
                   ? "PAGADO"
                   : ticket.cobrado === false
                     ? "PENDIENTE"
                     : "REGISTRADO"}
-            </div>
+              </div>
+            )}
             {ticket.clienteId && (
               <div className="mt-2 text-sm text-muted-foreground">
                 Cliente: {ticket.clienteId === 1 ? "VENTA AL PÚBLICO" : ticket.nombreCliente || `Cliente #${ticket.clienteId}`}
@@ -582,6 +589,16 @@ export default function TicketDetailPage() {
       <div ref={thermalPrintRoot} className="hidden print-80mm-only print-ticket-container">
         {(["CLIENTE", "CAJA", "ADMINISTRACIÓN"] as const).map((copyLabel) => (
           <section key={copyLabel} className="ticket-copy" data-thermal-page={copyLabel}>
+            {ticket.estado === EstadoTicket.CANCELADO && (
+              <div className="mb-4 border-y-4 border-black py-2 text-center text-black">
+                <div className="text-xl font-black uppercase">CANCELADO</div>
+                <div className="mt-1 text-[10px] font-bold leading-tight">
+                  {ticket.nombreUsuarioCancelacion || "Sistema"}
+                  <br />
+                  {ticket.canceladoAt ? new Date(ticket.canceladoAt).toLocaleString("es-MX") : ""}
+                </div>
+              </div>
+            )}
             <div className="relative mb-4 text-center">
               <div className="mb-2 border-2 border-black bg-black px-2 py-1 text-sm font-black tracking-[0.18em] text-white">
                 {copyLabel}
@@ -641,17 +658,22 @@ export default function TicketDetailPage() {
               </div>
             </div>
 
-            {ticket.estado === EstadoTicket.CANCELADO && (
-              <div className="text-center mt-4 border border-black p-1 text-xs font-bold uppercase">
-                *** TICKET CANCELADO ***
+            {ticket.estado === EstadoTicket.CANCELADO ? (
+              <div className="mt-4 border-y-4 border-black py-2 text-center text-black">
+                <div className="text-xl font-black uppercase">CANCELADO</div>
+                <div className="mt-1 text-[10px] font-bold leading-tight">
+                  {ticket.nombreUsuarioCancelacion || "Sistema"}
+                  <br />
+                  {ticket.canceladoAt ? new Date(ticket.canceladoAt).toLocaleString("es-MX") : ""}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center mt-6 text-[10px] italic">
+                ¡Gracias por su compra!
+                <br />
+                Revise su mercancía, no hay devoluciones.
               </div>
             )}
-
-            <div className="text-center mt-6 text-[10px] italic">
-              ¡Gracias por su compra!
-              <br />
-              Revise su mercancía, no hay devoluciones.
-            </div>
           </section>
         ))}
 

@@ -13,7 +13,7 @@ import { useLocationScope } from "@/lib/location-scope";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
-import { RefreshCw, Activity, AlertCircle, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";
+import { RefreshCw, Activity, AlertCircle, Ban, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
@@ -26,7 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE";
+type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS";
 type BreakdownItem = {
   id: number;
   folio: number;
@@ -39,6 +39,9 @@ type BreakdownItem = {
   fechaVencimiento: string | null;
   documentoTipo: "TICKET" | "NOTA" | null;
   minutosEspera: number | null;
+  nombreUsuarioCancelacion: string | null;
+  canceladoAt: string | null;
+  motivoCancelacion: string | null;
 };
 type Breakdown = {
   concepto: BreakdownConcept;
@@ -180,7 +183,8 @@ export default function CajaTiempoReal() {
           </div>
         ) : totals ? (
           <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card className="border-sidebar/10 shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas (Total)</CardTitle>
@@ -253,7 +257,9 @@ export default function CajaTiempoReal() {
                   </p>
                 </CardContent>
               </Card>
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card
                 className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
                 role="button"
@@ -280,6 +286,34 @@ export default function CajaTiempoReal() {
                   </p>
                 </CardContent>
               </Card>
+
+              <Card
+                className={`border-red-500/30 bg-red-50/50 dark:bg-red-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.cancelaciones.excedeUmbral ? "ring-2 ring-red-500/50" : ""}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("CANCELADAS")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("CANCELADAS")}
+              >
+                {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
+                {dashboard.cancelaciones.excedeUmbral && (
+                  <div className="absolute top-0 right-0 w-2 h-full bg-red-500/80 animate-pulse" />
+                )}
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-semibold text-red-700 dark:text-red-400 uppercase">
+                    Tickets cancelados
+                  </CardTitle>
+                  <Ban className="h-4 w-4 text-red-600" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-black text-red-700 dark:text-red-400">
+                    {formatNumber(dashboard.cancelaciones.tickets, { kind: "count" })} tickets · {formatNumber(dashboard.cancelaciones.importe, { kind: "money" })}
+                  </div>
+                  <p className="text-xs text-red-700/80 dark:text-red-400/80 mt-1 font-bold">
+                    Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
+                  </p>
+                </CardContent>
+              </Card>
+              </div>
             </div>
             {dashboard && (
               <div className="flex flex-wrap gap-3" data-testid="analytics-quantities">
@@ -511,7 +545,9 @@ export default function CajaTiempoReal() {
                 ? "Cobrado (Caja)"
                 : breakdownConcept === "CREDITO"
                   ? "Ventas a crédito"
-                  : "Ventas pendientes de cobro o autorización"}
+                  : breakdownConcept === "CANCELADAS"
+                    ? "Tickets cancelados"
+                    : "Ventas pendientes de cobro o autorización"}
             </DialogTitle>
             <DialogDescription>
               Documentos que componen la cifra de la tarjeta.
@@ -527,12 +563,13 @@ export default function CajaTiempoReal() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Folio</TableHead>
-                    <TableHead>Hora</TableHead>
-                    <TableHead>Cliente</TableHead>
+                    {breakdownConcept !== "CANCELADAS" && <TableHead>Hora</TableHead>}
+                    {breakdownConcept !== "CANCELADAS" && <TableHead>Cliente</TableHead>}
                     <TableHead className="text-right">Importe</TableHead>
                     {breakdownConcept === "COBRADO" && <><TableHead>Forma de pago</TableHead><TableHead>Facturada</TableHead></>}
                     {breakdownConcept === "CREDITO" && <><TableHead>Plazo</TableHead><TableHead>Vencimiento</TableHead></>}
                     {breakdownConcept === "PENDIENTE" && <><TableHead>Documento</TableHead><TableHead>Espera</TableHead></>}
+                    {breakdownConcept === "CANCELADAS" && <><TableHead>Cancelado por</TableHead><TableHead>Fecha/Hora</TableHead><TableHead>Motivo</TableHead></>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -543,12 +580,19 @@ export default function CajaTiempoReal() {
                           {formatNumber(item.folio, { kind: "identifier" })}
                         </Link>
                       </TableCell>
-                      <TableCell>{format(parseISO(item.hora), "HH:mm")}</TableCell>
-                      <TableCell>{item.cliente}</TableCell>
+                      {breakdownConcept !== "CANCELADAS" && <TableCell>{format(parseISO(item.hora), "HH:mm")}</TableCell>}
+                      {breakdownConcept !== "CANCELADAS" && <TableCell>{item.cliente}</TableCell>}
                       <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
                       {breakdownConcept === "COBRADO" && <><TableCell>{item.formaPago}</TableCell><TableCell>{item.facturado ? "Sí" : "No"}</TableCell></>}
                       {breakdownConcept === "CREDITO" && <><TableCell>{item.diasPlazo} días</TableCell><TableCell>{item.fechaVencimiento}</TableCell></>}
                       {breakdownConcept === "PENDIENTE" && <><TableCell>{item.documentoTipo === "NOTA" ? "Nota" : "Ticket"}</TableCell><TableCell>{item.minutosEspera} min</TableCell></>}
+                      {breakdownConcept === "CANCELADAS" && (
+                        <>
+                          <TableCell>{item.nombreUsuarioCancelacion}</TableCell>
+                          <TableCell>{item.canceladoAt ? format(parseISO(item.canceladoAt), "dd/MM/yyyy HH:mm") : ""}</TableCell>
+                          <TableCell className="max-w-[200px] truncate" title={item.motivoCancelacion || ""}>{item.motivoCancelacion}</TableCell>
+                        </>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

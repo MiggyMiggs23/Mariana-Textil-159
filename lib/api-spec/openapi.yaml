@@ -4277,7 +4277,7 @@ paths:
         - in: query
           name: concepto
           required: true
-          schema: { type: string, enum: [COBRADO, CREDITO, PENDIENTE] }
+          schema: { type: string, enum: [COBRADO, CREDITO, PENDIENTE, CANCELADAS] }
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
@@ -6581,6 +6581,19 @@ components:
       properties:
         importe: { type: string }
         operaciones: { type: number }
+    AdminRealtimeCancellationSummary:
+      type: object
+      description: Señal operativa de tickets cancelados; queda fuera de todas las identidades financieras.
+      required: [tickets, importe, tasaCancelacion, excedeUmbral]
+      properties:
+        tickets: { type: number }
+        importe: { type: string }
+        tasaCancelacion:
+          type: string
+          description: Porcentaje en unidades; 10.00 significa 10%
+        excedeUmbral:
+          type: boolean
+          description: Usa el mismo umbral estricto que la alerta CANCELACIONES_ALTAS.
     AdminRealtimeDashboard:
       type: object
       required:
@@ -6591,6 +6604,7 @@ components:
           totales,
           cantidades,
           ventasCredito,
+          cancelaciones,
           pendientes,
           tiendas,
           comparativo,
@@ -6606,6 +6620,8 @@ components:
           items: { $ref: "#/components/schemas/AnalyticsQuantity" }
         ventasCredito:
           $ref: "#/components/schemas/AdminRealtimeCreditSummary"
+        cancelaciones:
+          $ref: "#/components/schemas/AdminRealtimeCancellationSummary"
         pendientes:
           $ref: "#/components/schemas/AdminPendingSummary"
         tiendas:
@@ -6722,7 +6738,7 @@ components:
     AdminRealtimeBreakdownItem:
       type: object
       required:
-        [id, folio, hora, cliente, importe, formaPago, facturado, diasPlazo, fechaVencimiento, documentoTipo, minutosEspera]
+        [id, folio, hora, cliente, importe, formaPago, facturado, diasPlazo, fechaVencimiento, documentoTipo, minutosEspera, nombreUsuarioCancelacion, canceladoAt, motivoCancelacion]
       properties:
         id: { type: number }
         folio: { type: number }
@@ -6735,11 +6751,14 @@ components:
         fechaVencimiento: { type: ["string", "null"], format: date }
         documentoTipo: { type: ["string", "null"], enum: [TICKET, NOTA, null] }
         minutosEspera: { type: ["number", "null"] }
+        nombreUsuarioCancelacion: { type: ["string", "null"] }
+        canceladoAt: { type: ["string", "null"], format: date-time }
+        motivoCancelacion: { type: ["string", "null"] }
     AdminRealtimeBreakdown:
       type: object
       required: [concepto, items, total, page, pageSize, montoTotal]
       properties:
-        concepto: { type: string, enum: [COBRADO, CREDITO, PENDIENTE] }
+        concepto: { type: string, enum: [COBRADO, CREDITO, PENDIENTE, CANCELADAS] }
         items:
           type: array
           items: { $ref: "#/components/schemas/AdminRealtimeBreakdownItem" }

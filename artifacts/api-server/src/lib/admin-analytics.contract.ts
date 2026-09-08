@@ -6,6 +6,7 @@ import {
   AnalyticsInputError,
   calculateFrozenMargin,
   comparisonRange,
+  CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT,
   parseAnalyticsFilters,
   measureKpi,
   percentageChange,
@@ -13,6 +14,7 @@ import {
   mexicoCityHour,
   reconcileDestinationMatrix,
   summarizeRealtimeCredit,
+  summarizeRealtimeCancellations,
 } from "./admin-analytics";
 import { GetAdminRealtimeDashboardResponse } from "@workspace/api-zod";
 import { requireRole } from "../middlewares/auth";
@@ -31,6 +33,7 @@ import {
   GetAdminDiferenciasResponse,
   GetAdminRealtimeDashboardQueryParams,
   GetAdminRealtimePendingQueryParams,
+  ListAdminRealtimeBreakdownResponse,
   ListAdminCortesQueryParams,
 } from "@workspace/api-zod";
 
@@ -112,10 +115,72 @@ test("realtime dashboard contract requires credit amount and operation count", (
     },
     cantidades: [],
     ventasCredito: { importe: "200.00", operaciones: 3 },
+    cancelaciones: {
+      tickets: 1,
+      importe: "120.00",
+      tasaCancelacion: "10.00",
+      excedeUmbral: false,
+    },
     pendientes: { tickets: 0, importe: "0.00", tiendas: [] },
     tiendas: [],
     comparativo: [],
     ultimosTickets: [],
+  });
+  assert.equal(result.success, true);
+});
+
+test("realtime cancellation summary and store alert share one strict threshold", async () => {
+  assert.equal(CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT, 10);
+  assert.deepEqual(
+    summarizeRealtimeCancellations({
+      tickets: 9,
+      cancelaciones: 1,
+      importeCancelaciones: "120.00",
+    }),
+    {
+      tickets: 1,
+      importe: "120.00",
+      tasaCancelacion: "10.00",
+      excedeUmbral: false,
+    },
+  );
+  assert.equal(
+    summarizeRealtimeCancellations({
+      tickets: 8,
+      cancelaciones: 2,
+      importeCancelaciones: "240.00",
+    }).excedeUmbral,
+    true,
+  );
+
+  const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /cancellationRate\s*>\s*10/);
+  assert.match(source, /cancellationRate > CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT/);
+});
+
+test("cancelled realtime breakdown exposes only operational cancellation evidence", () => {
+  const result = ListAdminRealtimeBreakdownResponse.safeParse({
+    concepto: "CANCELADAS",
+    items: [{
+      id: 1,
+      folio: 123,
+      hora: "2026-09-08T12:00:00.000Z",
+      cliente: "Público general",
+      importe: "120.00",
+      formaPago: null,
+      facturado: null,
+      diasPlazo: null,
+      fechaVencimiento: null,
+      documentoTipo: null,
+      minutosEspera: null,
+      nombreUsuarioCancelacion: "Mariana",
+      canceladoAt: "2026-09-08T12:00:00.000Z",
+      motivoCancelacion: "Captura incorrecta",
+    }],
+    total: 1,
+    page: 1,
+    pageSize: 50,
+    montoTotal: "120.00",
   });
   assert.equal(result.success, true);
 });

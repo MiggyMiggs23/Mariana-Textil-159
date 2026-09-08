@@ -315,6 +315,14 @@ export async function buildTicketDetail(
 
   if (!ticket) return null;
 
+  const [cancellationUser] = ticket.canceladoPor == null
+    ? []
+    : await database
+        .select({ nombre: usuariosTable.nombre })
+        .from(usuariosTable)
+        .where(eq(usuariosTable.id, ticket.canceladoPor))
+        .limit(1);
+
   const lineas = await database
     .select({
       id: ticketLineasTable.id,
@@ -401,7 +409,7 @@ export async function buildTicketDetail(
     viaje: viaje ?? null,
     convertidoANotaPorCobro,
     nombreUsuarioCaja: null,
-    nombreUsuarioCancelacion: null,
+    nombreUsuarioCancelacion: cancellationUser?.nombre ?? null,
     nombreUsuarioAutorizacion: null,
     cobradoAt: ticket.cobradoAt?.toISOString() ?? null,
     createdAt: ticket.createdAt.toISOString(),

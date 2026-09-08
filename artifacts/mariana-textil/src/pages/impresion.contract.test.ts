@@ -337,3 +337,19 @@ test("Viaje isolates one exact letter page for printing", async () => {
   assert.match(css, /body\.print-viaje #root\s*\{[\s\S]*display:\s*none !important;/);
   assert.match(viaje, /createPortal\(/);
 });
+
+test("ticket detail screen band and thermal beginning/end on every copy", async () => {
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+
+  // screen band inside detail view
+  assert.match(detail, /bg-destructive text-destructive-foreground[\s\S]*CANCELADO/);
+
+  // thermal beginning/end on every copy
+  assert.match(detail, /\(\["CLIENTE", "CAJA", "ADMINISTRACIÓN"\] as const\)\.map[\s\S]*ticket\.estado === EstadoTicket\.CANCELADO[\s\S]*border-y-4 border-black[\s\S]*CANCELADO/);
+});
+
+test("unchanged A5 watermark", async () => {
+  const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+  // ensure the huge rotated CANCELADO watermark still exists for Note prints
+  assert.match(detail, /text-9xl font-black text-red-600 rotate-\[-30deg\] tracking-widest/);
+});

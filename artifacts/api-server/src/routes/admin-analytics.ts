@@ -61,6 +61,7 @@ import {
   listRealtimeBreakdown,
   listCuts,
   parseAnalyticsFilters,
+  summarizeRealtimeCancellations,
   summarizeRealtimeCredit,
 } from "../lib/admin-analytics";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
@@ -137,6 +138,7 @@ router.get("/admin/dashboard/realtime", async (req, res, next): Promise<void> =>
       pendingRefreshSeconds: 30,
       totales, cantidades,
       ventasCredito: summarizeRealtimeCredit(tiendas),
+      cancelaciones: summarizeRealtimeCancellations(totales),
       pendientes: {
         ...pendientes,
         tiendas: tiendas.map((store) => ({

@@ -15,6 +15,7 @@ import { parseMexicoDateQuery } from "./mexico-date";
 import { orderStores } from "./store-order";
 
 export const ANALYTICS_TIME_ZONE = "America/Mexico_City";
+export const CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT = 10;
 
 /** Testable timing boundary used by routes to surface KPI query duration. */
 export async function measureKpi<T>(
@@ -389,6 +390,7 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
        COUNT(p.ticket_id)::int "ticketsCobrados",
        (SELECT tickets FROM pending) "ticketsPendientes",
        COUNT(*) FILTER (WHERE f.estado='CANCELADO')::int cancelaciones,
+       COALESCE(SUM(f.total) FILTER (WHERE f.estado='CANCELADO'),0)::text "importeCancelaciones",
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen"
      FROM filtered f
      LEFT JOIN lines l ON l.ticket_id=f.id
@@ -411,6 +413,7 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
     ticketsCobrados: Number(row.ticketsCobrados),
     ticketsPendientes: Number(row.ticketsPendientes),
     cancelaciones: Number(row.cancelaciones),
+    importeCancelaciones: decimal(row.importeCancelaciones),
     lineasExcluidasMargen: Number(row.lineasExcluidasMargen),
   };
 }
@@ -484,6 +487,21 @@ export function summarizeRealtimeCredit(
   return {
     importe: decimal(stores.reduce((sum, store) => sum + Number(store.credito), 0)),
     operaciones: stores.reduce((sum, store) => sum + store.creditoOperaciones, 0),
+  };
+}
+
+export function summarizeRealtimeCancellations(
+  totals: { tickets: number; cancelaciones: number; importeCancelaciones: string },
+) {
+  const denominator = totals.tickets + totals.cancelaciones;
+  const cancellationRate = denominator === 0
+    ? 0
+    : (totals.cancelaciones / denominator) * 100;
+  return {
+    tickets: totals.cancelaciones,
+    importe: decimal(totals.importeCancelaciones),
+    tasaCancelacion: decimal(cancellationRate),
+    excedeUmbral: cancellationRate > CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT,
   };
 }
 
@@ -583,7 +601,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
     const mexicoHour = mexicoCityHour();
     if (row.sesionCajaId == null && mexicoHour >= 10) alerts.push("SIN_CAJA_ABIERTA");
     if (row.margen != null && subtotal > 0 && (Number(row.margen) / subtotal) * 100 < 15) alerts.push("MARGEN_BAJO");
-    if (cancellationRate > 10) alerts.push("CANCELACIONES_ALTAS");
+    if (cancellationRate > CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT) alerts.push("CANCELACIONES_ALTAS");
     return {
       ...row,
       abiertaAt: row.abiertaAt ? new Date(row.abiertaAt).toISOString() : null,
@@ -600,7 +618,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
   }));
 }
 
-export type RealtimeBreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE";
+export type RealtimeBreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS";
 
 /** Paginated rows behind realtime cards; predicates are shared with their aggregates. */
 export async function listRealtimeBreakdown(
@@ -613,8 +631,14 @@ export async function listRealtimeBreakdown(
     ? collectedTicketPredicate("t")
     : concepto === "CREDITO"
       ? authorizedCreditPredicate("t")
-      : pendingTicketPredicate("t");
-  const timestamp = concepto === "PENDIENTE" ? "t.created_at" : accountedDocumentAt("t");
+      : concepto === "CANCELADAS"
+        ? "t.estado='CANCELADO'"
+        : pendingTicketPredicate("t");
+  const timestamp = concepto === "PENDIENTE"
+    ? "t.created_at"
+    : concepto === "CANCELADAS"
+      ? "t.cancelado_at"
+      : accountedDocumentAt("t");
   const creditSource = concepto === "CREDITO"
     ? `JOIN (
         SELECT m.ticket_id,COALESCE(SUM(m.importe),0) importe
@@ -638,6 +662,7 @@ export async function listRealtimeBreakdown(
   const base = `FROM tickets t
     ${creditSource}
     LEFT JOIN clientes c ON c.id=t.cliente_id
+    LEFT JOIN usuarios cancelador ON cancelador.id=t.cancelado_por
     LEFT JOIN LATERAL (
       SELECT array_agg(DISTINCT p.forma_pago::text ORDER BY p.forma_pago::text) formas
       FROM ticket_pagos p WHERE p.ticket_id=t.id
@@ -648,6 +673,8 @@ export async function listRealtimeBreakdown(
       `SELECT t.id,t.folio,${timestamp} hora,COALESCE(c.nombre,'Público general') cliente,
         ${amount}::text importe,t.documento_tipo "documentoTipo",t.facturado,
         t.dias_plazo "diasPlazo",t.fecha_vencimiento "fechaVencimiento",pagos.formas,
+         cancelador.nombre "nombreUsuarioCancelacion",
+         t.cancelado_at "canceladoAt",t.motivo_cancelacion "motivoCancelacion",
         GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (now()-t.created_at))/60))::int "minutosEspera"
        ${base}
        ORDER BY ${timestamp} DESC,t.id DESC LIMIT $4 OFFSET $5`,
@@ -680,6 +707,15 @@ export async function listRealtimeBreakdown(
           : null,
         documentoTipo: concepto === "PENDIENTE" ? row.documentoTipo : null,
         minutosEspera: concepto === "PENDIENTE" ? Number(row.minutosEspera) : null,
+        nombreUsuarioCancelacion: concepto === "CANCELADAS"
+          ? String(row.nombreUsuarioCancelacion ?? "Usuario no disponible")
+          : null,
+        canceladoAt: concepto === "CANCELADAS" && row.canceladoAt
+          ? new Date(row.canceladoAt).toISOString()
+          : null,
+        motivoCancelacion: concepto === "CANCELADAS"
+          ? String(row.motivoCancelacion ?? "")
+          : null,
       };
     }),
     total: Number(aggregate.rows[0]!.total),

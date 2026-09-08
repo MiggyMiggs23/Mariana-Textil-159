@@ -564,13 +564,21 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 ## Caja en Tiempo Real
 
-El orden fijo de las cinco tarjetas, de izquierda a derecha, es: **Ventas (Total) → Cobrado (Caja) → Ventas a crédito → Utilidad → Ventas pendientes de cobro o autorización**. Pendientes va al extremo derecho porque es un indicador operativo fuera de Ventas, no un componente de la identidad contable **Ventas = Cobrado + Ventas a crédito**.
+Las tarjetas se separan en dos filas porque responden preguntas distintas. La fila principal muestra el dinero, en el orden fijo **Ventas (Total) → Cobrado (Caja) → Ventas a crédito → Utilidad**. La fila secundaria muestra lo que pide atención, en el orden fijo **Ventas pendientes de cobro o autorización → Tickets cancelados**. En pantallas estrechas ambas filas se apilan conservando ese orden.
 
 La tarjeta de pendientes cuenta tanto tickets vendidos sin cobrar como notas vendidas sin autorizar. Permanece fuera de Ventas hasta que Caja procese el documento. La alerta de 30 minutos se calcula solo para tickets: un ticket sin cobrar media hora después es un problema de mostrador, mientras una Nota sin autorizar no comparte esa urgencia y su vencimiento se vigila en Cartera. El texto secundario distingue cuántos tickets y cuántas notas están esperando.
 
 **Cobrado (Caja)**, **Ventas a crédito** y **Ventas pendientes de cobro o autorización** son clicables y abren el desglose de los documentos que componen su cifra. Cada desglose reutiliza exactamente el mismo predicado de su tarjeta; con igual rango y ubicación, la suma debe cuadrar al centavo con la cifra mostrada. La respuesta del servidor no envía costo, utilidad ni margen al cliente.
 
 **Ventas (Total)** no es clicable porque ya es exactamente la suma de Cobrado y Ventas a crédito. **Utilidad** tampoco es clicable porque tiene reglas propias de ocultamiento y líneas sin costo que requieren un desglose independiente.
+
+**Un ticket cancelado es una venta que no ocurrió.** No suma ni resta de Ventas, Cobrado, Ventas a crédito o Utilidad, y queda fuera de todas las identidades financieras del tablero. Su tarjeta muestra primero el conteo y después el importe; abre un desglose que cuadra al centavo y expone folio, importe, quién canceló, cuándo y motivo.
+
+El rojo de **Tickets cancelados** significa **“revisa esto”**, no error: cancelar es una operación legítima, pero merece visibilidad porque puede señalar una merma o una cancelación extraordinaria. La tarjeta y la alerta `CANCELACIONES_ALTAS` leen el mismo umbral estricto del 10% desde una sola constante; superarlo intensifica la tarjeta y enciende la alerta al mismo tiempo.
+
+Un ticket cancelado se marca de forma inequívoca en sus tres representaciones: la pantalla abre con una banda roja que muestra quién canceló, cuándo y el motivo; cada copia térmica repite una marca grande al principio y al final con usuario y fecha; la Nota A5 conserva su sello diagonal rojo, rotado y enmarcado.
+
+**Cambio del 2026-09-08:** se separaron las tarjetas financieras y operativas, se añadió la tarjeta y el desglose de tickets cancelados, y se reforzó el marcado en pantalla y en las tres copias térmicas sin modificar el sello A5.
 
 **El plazo de crédito se elige en POS**, al crear la venta, no en el diálogo de cobro: la caja no tiene impresora y la nota con el pagaré se imprime desde el POS. Se precarga de `clientes.diasCredito` y se puede cambiar para esa venta sin modificar el perfil. Un cliente sin plazo obliga a elegirlo.
 
