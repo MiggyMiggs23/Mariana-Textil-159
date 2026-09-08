@@ -1389,13 +1389,11 @@ export async function listDestinationAccountMovements(
     fuentes?: Array<"POS" | "CREDITO" | "ABONO" | "ABONO_SALDO_FAVOR">;
   } = {},
 ) {
-  const values = [
+  const filterValues = [
     filters.desde?.toISOString() ?? null,
     filters.hasta?.toISOString() ?? null,
     filters.ubicacionId ?? null,
     destination,
-    pageSize,
-    (page - 1) * pageSize,
   ];
   const readModel = destinationReadModel();
   const joins = `FROM destination_movements d
@@ -1404,7 +1402,7 @@ export async function listDestinationAccountMovements(
     LEFT JOIN clientes c ON c.id=d."clienteId"`;
   const filtersSql = [
     `($4::text='TODAS' OR d."cuentaDestino"=$4)`,
-    `($7::boolean IS NULL OR d.facturado=$7)`,
+    `($5::boolean IS NULL OR d.facturado=$5)`,
     options.formaPago === undefined ? "" : options.formaPago === "EFECTIVO"
       ? `d."formaPago"='EFECTIVO'`
       : options.formaPago === "TRANSFERENCIA"
@@ -1417,7 +1415,7 @@ export async function listDestinationAccountMovements(
           (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))`
       : `NOT (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
           (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL')))`,
-    `($8::text[] IS NULL OR d.fuente=ANY($8::text[]))`,
+    `($6::text[] IS NULL OR d.fuente=ANY($6::text[]))`,
   ].filter(Boolean).join(" AND ");
   const rawSources = options.fuentes?.flatMap((source) => {
     if (source === "ABONO") return ["ABONO", "REVERSO_ABONO"];
@@ -1426,10 +1424,15 @@ export async function listDestinationAccountMovements(
     }
     return [source];
   });
-  const queryValues = [
-    ...values,
+  const aggregateValues = [
+    ...filterValues,
     options.facturado ?? null,
     rawSources?.length ? rawSources : null,
+  ];
+  const rowValues = [
+    ...aggregateValues,
+    pageSize,
+    (page - 1) * pageSize,
   ];
   const previousFilters = previousEqualPeriod(filters);
   const previousValues = [
@@ -1437,8 +1440,6 @@ export async function listDestinationAccountMovements(
     previousFilters.hasta!.toISOString(),
     previousFilters.ubicacionId ?? null,
     destination,
-    pageSize,
-    0,
     options.facturado ?? null,
     rawSources?.length ? rawSources : null,
   ];
@@ -1456,13 +1457,13 @@ export async function listDestinationAccountMovements(
             (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))) incongruente,
          registrador.id "registroId",registrador.nombre registro
          ${joins} WHERE ${filtersSql}
-        ORDER BY d.fecha DESC,d.id DESC LIMIT $5 OFFSET $6`,
-      queryValues,
+         ORDER BY d.fecha DESC,d.id DESC LIMIT $7 OFFSET $8`,
+      rowValues,
     ),
     pool.query(
        `${readModel} SELECT COUNT(*)::int total,COALESCE(SUM(d.importe),0)::text "montoTotal"
          ${joins} WHERE ${filtersSql}`,
-       queryValues,
+       aggregateValues,
     ),
     pool.query(
       `${destinationReadModel()}

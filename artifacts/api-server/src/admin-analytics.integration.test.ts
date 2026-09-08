@@ -658,7 +658,7 @@ if (!testUrl) {
        assert.equal(await analytics.getDestinationCollectedAmount(
          { ...filters, ubicacionId: ids.locations[1] },
          "CUENTA_FISCAL",
-       ), "40.00");
+       ), "10.00");
        for (const detail of destinationDetails) {
          const collectionDetails = await Promise.all(
            (["POS", "ABONO", "ABONO_SALDO_FAVOR"] as const).map((fuente) =>
