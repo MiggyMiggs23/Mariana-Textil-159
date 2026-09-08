@@ -673,6 +673,128 @@ if (!testUrl) {
            )!.importe),
          );
       }
+       const headerDetails = await Promise.all([
+         analytics.listDestinationAccountMovements(
+           filters, "TODAS", 1, 100, { fuentes: ["POS", "CREDITO"] },
+         ),
+         analytics.listDestinationAccountMovements(
+           filters, "TODAS", 1, 100, { fuentes: ["POS"] },
+         ),
+         analytics.listDestinationAccountMovements(
+           filters, "TODAS", 1, 100, { fuentes: ["CREDITO"] },
+         ),
+         analytics.listDestinationAccountMovements(
+           filters, "TODAS", 1, 100, {
+             fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
+           },
+         ),
+         analytics.listDestinationAccountMovements(
+           filters, "TODAS", 1, 100, { fuentes: ["ABONO"] },
+         ),
+         analytics.listDestinationAccountMovements(
+           filters, "TODAS", 1, 100, { fuentes: ["ABONO_SALDO_FAVOR"] },
+         ),
+       ]);
+       assert.deepEqual(
+         headerDetails.map((detail) => detail.montoTotal),
+         [
+           destinations.encabezado.vendido.total,
+           destinations.encabezado.vendido.contado,
+           destinations.encabezado.vendido.credito,
+           destinations.encabezado.cobrado.total,
+           destinations.encabezado.cobrado.abonos,
+           destinations.encabezado.cobrado.saldosFavor,
+         ],
+       );
+       for (const matrixRow of destinations.matriz.filas) {
+         const facturado = matrixRow.facturado == null
+           ? {}
+           : { facturado: matrixRow.facturado };
+         const [cash, transfer, credit, other, total] = await Promise.all([
+           analytics.listDestinationAccountMovements(
+             filters,
+             matrixRow.efectivo.cuentaDestino ?? "TODAS",
+             1,
+             100,
+             { ...facturado, formaPago: "EFECTIVO", fuentes: ["POS"] },
+           ),
+           analytics.listDestinationAccountMovements(
+             filters,
+             matrixRow.transferencia.cuentaDestino ?? "TODAS",
+             1,
+             100,
+             { ...facturado, formaPago: "TRANSFERENCIA", fuentes: ["POS"] },
+           ),
+           analytics.listDestinationAccountMovements(
+             filters,
+             matrixRow.porCobrar.cuentaDestino ?? "TODAS",
+             1,
+             100,
+             { ...facturado, formaPago: "POR_COBRAR", fuentes: ["CREDITO"] },
+           ),
+           analytics.listDestinationAccountMovements(
+             filters,
+             matrixRow.otras.cuentaDestino ?? "TODAS",
+             1,
+             100,
+             { ...facturado, formaPago: "OTRAS", fuentes: ["POS"] },
+           ),
+           analytics.listDestinationAccountMovements(
+             filters,
+             "TODAS",
+             1,
+             100,
+             { ...facturado, fuentes: ["POS", "CREDITO"] },
+           ),
+         ]);
+         assert.deepEqual(
+           [cash.montoTotal, transfer.montoTotal, credit.montoTotal, other.montoTotal, total.montoTotal],
+           [
+             matrixRow.efectivo.importe,
+             matrixRow.transferencia.importe,
+             matrixRow.porCobrar.importe,
+             matrixRow.otras.importe,
+             matrixRow.total,
+           ],
+         );
+       }
+       for (const priorCollection of destinations.cobrosAnteriores) {
+         const detail = await analytics.listDestinationAccountMovements(
+           filters,
+           priorCollection.cuentaDestino,
+           1,
+           100,
+           { fuentes: [priorCollection.fuente] },
+         );
+         assert.equal(detail.montoTotal, priorCollection.importe);
+       }
+       const [cashInvoicedDetail, incongruenceDetail] = await Promise.all([
+         analytics.listDestinationAccountMovements(
+           filters,
+           "CAJA_FISICA",
+           1,
+           100,
+           {
+             facturado: true,
+             fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
+           },
+         ),
+         analytics.listDestinationAccountMovements(
+           filters,
+           "TODAS",
+           1,
+           100,
+           { incongruente: true },
+         ),
+       ]);
+       assert.equal(
+         cashInvoicedDetail.montoTotal,
+         destinations.resumen.find(
+           (row) => row.cuentaDestino === "CAJA_FISICA",
+         )!.cajaFisicaFacturado,
+       );
+       assert.equal(incongruenceDetail.total, destinations.incongruencias.conteo);
+       assert.equal(incongruenceDetail.montoTotal, destinations.incongruencias.importe);
       assert.equal(
         Math.round(comparison.tiendas.reduce((sum, store) => sum + Number(store.participacion), 0)),
         100,
@@ -731,60 +853,35 @@ if (!testUrl) {
        assert.equal(paymentPeriod.encabezado.cobrado.total, "70.00");
        assert.equal(paymentPeriod.encabezado.cobrado.abonos, "70.00");
 
-       // A partial reversal is a separate immutable movement. Analytics must
-       // subtract the reversal's own amount, never the full original payment.
-       const partialPaymentAt = new Date(now.getTime() + 30 * 86_400_000);
-       const partialReversalAt = new Date(partialPaymentAt.getTime() + 1_000);
-       const partialAbono = await one(
+       // Credit reversals are exact inverse movements. The database rejects
+       // partial reversals before they can become accounting evidence.
+       const rejectionPaymentAt = new Date(now.getTime() + 30 * 86_400_000);
+       const rejectionAbono = await one(
          `INSERT INTO movimientos_credito(cliente_id,tipo,importe,usuario_id,forma_pago,cuenta_destino,created_at)
           VALUES($1,'ABONO',-50,$2,'TRANSFERENCIA','CUENTA_FISCAL',$3) RETURNING id`,
-         [ids.clients[0], ids.users[1], partialPaymentAt],
+         [ids.clients[0], ids.users[1], rejectionPaymentAt],
        );
-       ids.creditMovements.push(Number(partialAbono.id));
-       const partialApplication = await one(
-         `INSERT INTO aplicaciones_credito(abono_movimiento_id,venta_movimiento_id,importe)
-          VALUES($1,$2,30) RETURNING id`,
-         [partialAbono.id, creditSale.id],
-       );
-       ids.creditApplications.push(Number(partialApplication.id));
-       const partialReversal = await one(
-         `INSERT INTO movimientos_credito(
-            cliente_id,tipo,importe,movimiento_origen_id,usuario_id,created_at
-          ) VALUES($1,'REVERSO',20,$2,$3,$4) RETURNING id`,
-         [ids.clients[0], partialAbono.id, ids.users[0], partialReversalAt],
-       );
-       ids.creditMovements.push(Number(partialReversal.id));
-       const partialPeriod = {
-         desde: new Date(partialPaymentAt.getTime() - 1_000),
-         hasta: new Date(partialReversalAt.getTime() + 1_000),
-       };
-       const [partialSummary, partialAbonos, partialCreditBalance] = await Promise.all([
-         analytics.getDestinationAccounts(partialPeriod, false),
-         analytics.listDestinationAccountMovements(
-           partialPeriod,
-           "CUENTA_FISCAL",
-           1,
-           100,
-           { fuentes: ["ABONO"] },
+       ids.creditMovements.push(Number(rejectionAbono.id));
+       await assert.rejects(
+         () => one(
+           `INSERT INTO movimientos_credito(
+              cliente_id,tipo,importe,movimiento_origen_id,usuario_id,created_at
+            ) VALUES($1,'REVERSO',20,$2,$3,$4) RETURNING id`,
+           [
+             ids.clients[0],
+             rejectionAbono.id,
+             ids.users[0],
+             new Date(rejectionPaymentAt.getTime() + 1_000),
+           ],
          ),
-         analytics.listDestinationAccountMovements(
-           partialPeriod,
-           "CUENTA_FISCAL",
-           1,
-           100,
-           { fuentes: ["ABONO_SALDO_FAVOR"] },
-         ),
-       ]);
-       assert.equal(partialSummary.encabezado.vendido.total, "0.00");
-       assert.equal(partialSummary.encabezado.cobrado.total, "30.00");
-       assert.equal(partialSummary.encabezado.cobrado.abonos, "10.00");
-       assert.equal(partialSummary.encabezado.cobrado.saldosFavor, "20.00");
-       assert.equal(partialAbonos.montoTotal, "10.00");
-       assert.equal(partialCreditBalance.montoTotal, "20.00");
-       assert.equal(
-         Number(partialAbonos.montoTotal) + Number(partialCreditBalance.montoTotal),
-         Number(partialSummary.encabezado.cobrado.total),
+         /El reverso de crédito debe tener un origen compatible, del mismo cliente y por el importe exacto/,
        );
+       const rejectedReversal = await one(
+         `SELECT COUNT(*)::int total FROM movimientos_credito
+          WHERE tipo='REVERSO' AND movimiento_origen_id=$1`,
+         [rejectionAbono.id],
+       );
+       assert.equal(rejectedReversal.total, 0);
 
       // The router applies this same literal middleware to every /admin route.
       for (const role of ["CAJA", "TERMINAL"] as const) {
