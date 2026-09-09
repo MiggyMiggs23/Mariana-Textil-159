@@ -44,3 +44,9 @@ Append-only integration suites must not share the same prepared database when th
 **Why:** A report suite left immutable credit evidence that changed a later Caja suite from one expected account-receivable movement to two; deleting the evidence would have violated the production append-only trigger.
 
 **How to apply:** Prepare schema, seed, startup initializers, and `current_database()` verification independently for each suite whose fixtures cannot be rolled back. Sharing the branch is safe; sharing the database is not.
+
+Long database suites launched synchronously through the code-execution sandbox can lose their transport while leaving the test process and pooled sessions alive. Run them as detached processes with separate log and exit-status files.
+
+**Why:** A synchronous inventory suite disconnected twice without returning a result; the second attempt left twelve idle database sessions until they were explicitly terminated.
+
+**How to apply:** Pass the test URL only in the detached process environment, never in command text or files. Monitor a credential-free log plus an explicit status file, and verify or terminate stale sessions before retrying.
