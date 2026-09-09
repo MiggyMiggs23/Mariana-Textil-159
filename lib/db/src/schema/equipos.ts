@@ -17,6 +17,10 @@ import {
 import { ubicacionesTable } from "./locations";
 import { usuariosTable } from "./users";
 
+function sqlTextLiteral(value: string) {
+  return sql.raw(`'${value.replaceAll("'", "''")}'`);
+}
+
 export const equiposTable = pgTable(
   "equipos",
   {
@@ -46,7 +50,7 @@ export const equiposTable = pgTable(
     check(
       "equipos_tipo_check",
       sql`${table.tipo} IN (${sql.join(
-        TIPOS_EQUIPO.map((tipo) => sql`${tipo}`),
+        TIPOS_EQUIPO.map(sqlTextLiteral),
         sql`, `,
       )})`,
     ),
@@ -74,7 +78,7 @@ export const equiposChecklistTable = pgTable(
     check(
       "equipos_checklist_item_key_check",
       sql`${table.itemKey} IN (${sql.join(
-        CHECKLIST_KEYS_EQUIPO.map((key) => sql`${key}`),
+        CHECKLIST_KEYS_EQUIPO.map(sqlTextLiteral),
         sql`, `,
       )})`,
     ),
