@@ -121,6 +121,8 @@ test("realtime dashboard contract requires credit amount and operation count", (
       tasaCancelacion: "10.00",
       excedeUmbral: false,
     },
+    salidasEnTransito: { conteo: 2, importe: "300.00" },
+    salidasCanceladas: { conteo: 1, importe: "75.00" },
     pendientes: { tickets: 0, importe: "0.00", tiendas: [] },
     tiendas: [],
     comparativo: [],
@@ -183,6 +185,43 @@ test("cancelled realtime breakdown exposes only operational cancellation evidenc
     montoTotal: "120.00",
   });
   assert.equal(result.success, true);
+});
+
+test("salida realtime breakdown has a dedicated document row and link", () => {
+  const result = ListAdminRealtimeBreakdownResponse.safeParse({
+    concepto: "SALIDAS_EN_TRANSITO",
+    items: [{
+      salidaId: 42,
+      folio: 123,
+      origenId: 1,
+      origen: "Matriz",
+      destinoId: 2,
+      destino: "Centro",
+      clienteId: null,
+      cliente: null,
+      fecha: "2026-09-08T12:00:00.000Z",
+      importe: "120.00",
+      href: "/salidas/42",
+    }],
+    total: 1,
+    page: 1,
+    pageSize: 50,
+    montoTotal: "120.00",
+  });
+  assert.equal(result.success, true);
+});
+
+test("salida operational metrics use document state and event dates only", async () => {
+  const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  const start = source.indexOf("export async function getRealtimeSalidaSummaries");
+  const end = source.indexOf("/** One read model", start);
+  const summaries = source.slice(start, end);
+  assert.match(summaries, /s\.estado='EN_TRANSITO'/);
+  assert.match(summaries, /s\.estado='CANCELADA'/);
+  assert.match(summaries, /s\.enviada_at >= \$1/);
+  assert.match(summaries, /s\.cancelada_at >= \$1/);
+  assert.match(summaries, /s\.origen_id=\$3/);
+  assert.doesNotMatch(summaries, /movimientos_inventario|kardex/i);
 });
 
 test("destination movement contract validates account, pagination and real ticket links", () => {

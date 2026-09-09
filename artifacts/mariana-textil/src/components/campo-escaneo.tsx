@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import {
   interpretarCodigoEscaneado,
+  normalizarSerieEscaneada,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
 
@@ -141,7 +142,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
         if (!codigo.textoOriginal.trim()) return;
         const scannedValue =
           interpretRollCode && codigo.serie
-            ? codigo.serie
+            ? normalizarSerieEscaneada(codigo)
             : codigo.textoOriginal;
         if (clearOnScan) onChange("");
         try {

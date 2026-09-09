@@ -8636,6 +8636,14 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "tasaCancelacion": zod.string().describe('Porcentaje en unidades; 10.00 significa 10%'),
   "excedeUmbral": zod.boolean().describe('Usa el mismo umbral estricto que la alerta CANCELACIONES_ALTAS.')
 }).describe('Señal operativa de tickets cancelados; queda fuera de todas las identidades financieras.'),
+  "salidasEnTransito": zod.object({
+  "conteo": zod.number(),
+  "importe": zod.string()
+}).describe('Señal operativa derivada del estado del documento de salida; queda fuera de todas las identidades financieras.'),
+  "salidasCanceladas": zod.object({
+  "conteo": zod.number(),
+  "importe": zod.string()
+}).describe('Señal operativa derivada del estado del documento de salida; queda fuera de todas las identidades financieras.'),
   "pendientes": zod.object({
   "tickets": zod.number(),
   "ticketsSinCobrar": zod.number().optional(),
@@ -8751,7 +8759,7 @@ export const listAdminRealtimeBreakdownQueryPageSizeMax = 100;
 
 
 export const ListAdminRealtimeBreakdownQueryParams = zod.object({
-  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS']),
+  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS', 'SALIDAS_EN_TRANSITO', 'SALIDAS_CANCELADAS']),
   "desde": zod.coerce.string().regex(listAdminRealtimeBreakdownQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
   "hasta": zod.coerce.string().regex(listAdminRealtimeBreakdownQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
   "ubicacionId": zod.coerce.number().optional(),
@@ -8760,8 +8768,8 @@ export const ListAdminRealtimeBreakdownQueryParams = zod.object({
 })
 
 export const ListAdminRealtimeBreakdownResponse = zod.object({
-  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS']),
-  "items": zod.array(zod.object({
+  "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS', 'SALIDAS_EN_TRANSITO', 'SALIDAS_CANCELADAS']),
+  "items": zod.array(zod.union([zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "hora": zod.coerce.date(),
@@ -8776,7 +8784,19 @@ export const ListAdminRealtimeBreakdownResponse = zod.object({
   "nombreUsuarioCancelacion": zod.string().nullable(),
   "canceladoAt": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable()
-})),
+}),zod.object({
+  "salidaId": zod.number(),
+  "folio": zod.number(),
+  "origenId": zod.number(),
+  "origen": zod.string(),
+  "destinoId": zod.number().nullable(),
+  "destino": zod.string().nullable(),
+  "clienteId": zod.number().nullable(),
+  "cliente": zod.string().nullable(),
+  "fecha": zod.coerce.date(),
+  "importe": zod.string(),
+  "href": zod.string().describe('Enlace al documento de salida; el cliente lo aplica únicamente al folio.')
+})])),
   "total": zod.number(),
   "page": zod.number(),
   "pageSize": zod.number(),

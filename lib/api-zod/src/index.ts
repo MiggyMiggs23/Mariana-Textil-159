@@ -58,6 +58,8 @@ export * from "./generated/types/adminRealtimeCreditSummary";
 export * from "./generated/types/adminRealtimeDashboard";
 export * from "./generated/types/adminRealtimeDashboardFullRefreshSeconds";
 export * from "./generated/types/adminRealtimeDashboardPendingRefreshSeconds";
+export * from "./generated/types/adminRealtimeSalidaBreakdownItem";
+export * from "./generated/types/adminRealtimeSalidaSummary";
 export * from "./generated/types/adminRealtimeStore";
 export * from "./generated/types/adminRealtimeTicket";
 export * from "./generated/types/adminRealtimeTicketAutorizacionEstado";

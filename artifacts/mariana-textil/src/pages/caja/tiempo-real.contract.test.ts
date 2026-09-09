@@ -10,8 +10,24 @@ describe("Tiempo Real Contract", () => {
     // Principal row: Ventas (Total), Cobrado (Caja), Ventas a crédito, Utilidad
     assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4[\s\S]*Ventas \(Total\)[\s\S]*Cobrado \(Caja\)[\s\S]*Ventas a crédito[\s\S]*Utilidad/);
 
-    // Secondary row reuses the same four-column grid and centers its cards in the two inner columns.
-    assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4[\s\S]*xl:col-start-2[\s\S]*Ventas pendientes de cobro o autorización[\s\S]*Tickets cancelados/);
+    // Secondary row reuses the same four-column grid.
+    assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4[\s\S]*Ventas pendientes de cobro o autorización[\s\S]*Tickets cancelados[\s\S]*Salidas en tránsito[\s\S]*Salidas canceladas/);
+    assert.doesNotMatch(page, /xl:col-start-2/);
+  });
+
+  it("explains color semantics with concise code comments", () => {
+    const page = readPage("./tiempo-real.tsx");
+    assert.match(page, /\{?\/\*.*[Aa]mber.*\*\/\}/i);
+    assert.match(page, /\{?\/\*.*[Rr]ed.*\*\/\}/i);
+  });
+
+  it("SALIDAS drilldown columns/link rule", () => {
+    const page = readPage("./tiempo-real.tsx");
+    assert.match(page, /isSalidaBreakdown \? \(/);
+    assert.match(page, /<TableHead>Origen<\/TableHead>/);
+    assert.match(page, /<TableHead>Destino o Cliente<\/TableHead>/);
+    assert.match(page, /<Link href=\{item\.href\}/);
+    assert.doesNotMatch(page, /href=\{`\/tickets\/\$\{item\.id\}`\}[^>]*>[\s\S]{0,200}item\.(origen|destino)/);
   });
 
   it("CANCELADAS drilldown columns/link rule", () => {

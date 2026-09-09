@@ -84,6 +84,7 @@ import { requestAppSound } from "@/components/notification-audio-controller";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   advertenciaSkuEscaneado,
+  normalizarSerieEscaneada,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
 import {
@@ -631,7 +632,10 @@ export default function PosPage() {
       codigo: CodigoEscaneadoInterpretado,
       source: "scanner" | "manual" | "camera",
     ) => {
-      setSearch(value);
+      const valorBusqueda = codigo.serie
+        ? normalizarSerieEscaneada(codigo)
+        : value;
+      setSearch(valorBusqueda);
       setSkuWarning(null);
       if (
         tipoTicket !== TipoTicket.NORMAL ||

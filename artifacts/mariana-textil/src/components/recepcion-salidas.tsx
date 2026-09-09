@@ -3,6 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   getGetSalidaRecepcionQueryKey,
   getListSalidasRecepcionQueryKey,
+  getGetSalidaQueryKey,
+  getListSalidasQueryKey,
   useGetSalidaRecepcion,
   useListSalidasRecepcion,
   useRecibirSalida,
@@ -75,9 +77,12 @@ export function RecepcionSalidas() {
         setCompleta(true);
         setNota("");
         setPisosAsignados({});
-        await queryClient.invalidateQueries({
-          queryKey: getListSalidasRecepcionQueryKey(),
-        });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: getListSalidasRecepcionQueryKey() }),
+          queryClient.invalidateQueries({ queryKey: getGetSalidaRecepcionQueryKey(received.id) }),
+          queryClient.invalidateQueries({ queryKey: getListSalidasQueryKey() }),
+          queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(received.id) }),
+        ]);
       },
       onError: (error) =>
         toast({

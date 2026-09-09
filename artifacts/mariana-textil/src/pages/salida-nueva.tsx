@@ -13,6 +13,7 @@ import {
   getGetUbicacionesSalidaQueryKey,
   getGetBorradorSalidaQueryKey,
   getListSalidasQueryKey,
+  getListSalidasRecepcionQueryKey,
   SalidaDetail,
   Role,
 } from "@workspace/api-client-react";
@@ -43,6 +44,7 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   advertenciaSkuEscaneado,
   interpretarCodigoEscaneado,
+  normalizarSerieEscaneada,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
 
@@ -139,7 +141,7 @@ export default function SalidaNueva() {
     codigoEntregado?: CodigoEscaneadoInterpretado,
   ) => {
     const codigo = codigoEntregado ?? interpretarCodigoEscaneado(scannedValue);
-    const serie = (codigo.serie ?? scannedValue).trim().toUpperCase();
+    const serie = normalizarSerieEscaneada(codigo);
     if (!serie) return;
 
     if (!origenId || !destinoId) {
@@ -254,6 +256,7 @@ export default function SalidaNueva() {
           { salida: null },
         );
         queryClient.invalidateQueries({ queryKey: getListSalidasQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getListSalidasRecepcionQueryKey() });
         setLocation(`/salidas/${data.id}`);
       },
       onError: (error) => {

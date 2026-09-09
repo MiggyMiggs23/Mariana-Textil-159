@@ -23,6 +23,20 @@ test("realtime breakdown shares card predicates and has stable pagination order"
   assert.doesNotMatch(detail, /\b(costo|utilidad|margen)\b/i);
 });
 
+test("salida breakdown concepts use salida state, stable paging and salida links", () => {
+  const analytics = read("./lib/admin-analytics.ts");
+  const start = analytics.indexOf("async function listRealtimeSalidaBreakdown");
+  const end = analytics.indexOf("\n/** Paginated rows", start);
+  const detail = analytics.slice(start, end);
+  assert.match(detail, /\"EN_TRANSITO\"\s*:\s*\"CANCELADA\"/);
+  assert.match(detail, /s\.enviada_at/);
+  assert.match(detail, /s\.cancelada_at/);
+  assert.match(detail, /s\.origen_id=\$3/);
+  assert.match(detail, /ORDER BY \$\{timestamp\} DESC,s\.id DESC LIMIT \$5 OFFSET \$6/);
+  assert.match(detail, /href: `\/salidas\/\$\{Number\(row\.salidaId\)\}`/);
+  assert.doesNotMatch(detail, /movimientos_inventario|kardex/i);
+});
+
 test("realtime detail route resolves read scope and rejects a requested location outside it", () => {
   const route = read("./routes/admin-analytics.ts");
   const start = route.indexOf('router.get("/admin/dashboard/realtime/desglose"');

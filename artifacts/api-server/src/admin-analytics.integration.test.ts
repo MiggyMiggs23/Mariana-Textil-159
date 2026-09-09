@@ -269,6 +269,49 @@ if (!testUrl) {
        const cancelledSouthTicket =
          await addTicket({ store: 1, session: 6, subtotal: 999, state: "CANCELADO", unit: 1 });
 
+        const addSalida = async (input: {
+          store: 0 | 1;
+          estado: "EN_TRANSITO" | "CANCELADA";
+          cantidad: number;
+          fecha: Date;
+        }) => {
+          const salida = await one(
+            `INSERT INTO salidas(
+               folio,origen_id,destino_id,cliente_id,modalidad,estado,
+               usuario_solicita_id,usuario_envia_id,usuario_cancela_id,
+               enviada_at,cancelada_at,uuid_cliente,created_at,actividad_at
+             ) VALUES($1,$2,$3,$4,$5,$6,$7,$7,$7,$8,$9,$10,$11,$11) RETURNING id`,
+            [
+              folio++, ids.locations[input.store],
+              input.estado === "EN_TRANSITO" ? ids.locations[1] : null,
+              input.estado === "CANCELADA" ? ids.clients[0] : null,
+              input.estado === "EN_TRANSITO" ? "TRASLADO" : "VENTA_CLIENTE",
+              input.estado, ids.users[0],
+              input.estado === "EN_TRANSITO" ? input.fecha : null,
+              input.estado === "CANCELADA" ? input.fecha : null,
+              randomUUID(), input.fecha,
+            ],
+          );
+          const line = await one(
+            `INSERT INTO salida_lineas(
+               salida_id,producto_id,cantidad_solicitada,cantidad_enviada,cantidad_recibida
+             ) VALUES($1,$2,$3,$3,0) RETURNING id`,
+            [salida.id, ids.products[input.store], input.cantidad],
+          );
+          await pool.query(
+            `INSERT INTO salida_rollos(salida_id,linea_id,rollo_id,cantidad_enviada)
+             VALUES($1,$2,$3,$4)`,
+            [salida.id, line.id, ids.rollos[input.store], input.cantidad],
+          );
+          return Number(salida.id);
+        };
+        const transitSalida = await addSalida({
+          store: 0, estado: "EN_TRANSITO", cantidad: 3, fecha: now,
+        });
+        const cancelledSalida = await addSalida({
+          store: 1, estado: "CANCELADA", cantidad: 2, fecha: now,
+        });
+
       const filters = { desde: from, hasta: to };
       const northStoreFilters = { ...filters, ubicacionId: ids.locations[0] };
       const southStoreFilters = { ...filters, ubicacionId: ids.locations[1] };
@@ -450,11 +493,15 @@ if (!testUrl) {
         "the cancelled card count and amount reconcile exactly with its drilldown",
       );
       assert.deepEqual(
-        new Set(cancelledBreakdown.items.map((item) => item.id)),
+        new Set(cancelledBreakdown.items.map((item) => {
+          assert.ok("id" in item, "ticket cancellation uses the ticket breakdown row");
+          return item.id;
+        })),
         new Set([cancelledCreditTicket, cancelledSouthTicket]),
       );
       assert.ok(cancelledBreakdown.items.every((item) =>
-        item.nombreUsuarioCancelacion
+        "nombreUsuarioCancelacion" in item
+        && item.nombreUsuarioCancelacion
         && item.canceladoAt === now.toISOString()
         && item.motivoCancelacion === `${tag}-cancel`
       ));
@@ -472,6 +519,41 @@ if (!testUrl) {
         southAllCards.some((card) => card.alertas.includes("CANCELACIONES_ALTAS")),
         "the card intensity and store alert turn on together from the shared threshold",
       );
+
+      const [salidaSignals, transitBreakdown, cancelledSalidaBreakdown, northSignals] =
+        await Promise.all([
+          analytics.getRealtimeSalidaSummaries(filters),
+          analytics.listRealtimeBreakdown(filters, "SALIDAS_EN_TRANSITO"),
+          analytics.listRealtimeBreakdown(filters, "SALIDAS_CANCELADAS"),
+          analytics.getRealtimeSalidaSummaries(northStoreFilters),
+        ]);
+      assert.deepEqual(salidaSignals, {
+        salidasEnTransito: { conteo: 1, importe: "300.00" },
+        salidasCanceladas: { conteo: 1, importe: "200.00" },
+      });
+      assert.deepEqual(northSignals, {
+        salidasEnTransito: { conteo: 1, importe: "300.00" },
+        salidasCanceladas: { conteo: 0, importe: "0.00" },
+      });
+      assert.deepEqual(
+        transitBreakdown.items.map((item) => ({
+          salidaId: "salidaId" in item ? item.salidaId : null,
+          href: "href" in item ? item.href : null,
+          destino: "destino" in item ? item.destino : null,
+        })),
+        [{ salidaId: transitSalida, href: `/salidas/${transitSalida}`, destino: `${tag}-Sur` }],
+      );
+      assert.deepEqual(
+        cancelledSalidaBreakdown.items.map((item) => ({
+          salidaId: "salidaId" in item ? item.salidaId : null,
+          cliente: "cliente" in item ? item.cliente : null,
+        })),
+        [{ salidaId: cancelledSalida, cliente: `${tag}-Cliente` }],
+      );
+      assert.equal(transitBreakdown.total, salidaSignals.salidasEnTransito.conteo);
+      assert.equal(transitBreakdown.montoTotal, salidaSignals.salidasEnTransito.importe);
+      assert.equal(cancelledSalidaBreakdown.total, salidaSignals.salidasCanceladas.conteo);
+      assert.equal(cancelledSalidaBreakdown.montoTotal, salidaSignals.salidasCanceladas.importe);
 
       const creditOnlyFilters = {
         desde: new Date(creditAt.getTime() - 1_000),

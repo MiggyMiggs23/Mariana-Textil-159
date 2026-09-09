@@ -46,24 +46,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { RecepcionSalidas } from "@/components/recepcion-salidas";
 import { SalidaMostrador } from "@/components/salida-mostrador";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getSalidaEstadoLabel, SalidaEstadoBadge } from "@/components/salida-estado-badge";
 
 import { SalidasExtraordinarias } from "@/components/salidas-extraordinarias";
-
-function EstadoBadge({ estado }: { estado: string }) {
-  const map: Record<string, { label: string; class: string }> = {
-    ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
-    EN_TRANSITO: { label: "En tránsito", class: "bg-amber-100 text-amber-800 border-amber-200" },
-    RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
-    ENTREGADA: { label: "Entregada", class: "bg-emerald-100 text-emerald-800 border-emerald-200" },
-    CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
-  };
-  const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
-  return (
-    <Badge variant="outline" className={`font-medium ${config.class}`}>
-      {config.label}
-    </Badge>
-  );
-}
 
 export default function Salidas() {
   const [, setLocation] = useLocation();
@@ -126,7 +111,9 @@ export default function Salidas() {
   const { data: salidasResult, isLoading, error } = useListSalidas(queryParams, {
     query: {
       placeholderData: keepPreviousData,
-      queryKey: getListSalidasQueryKey(queryParams)
+      queryKey: getListSalidasQueryKey(queryParams),
+      refetchInterval: 30_000,
+      refetchOnWindowFocus: true,
     }
   });
 
@@ -265,7 +252,7 @@ export default function Salidas() {
                   <SelectTrigger className="w-full bg-white"><SelectValue placeholder="Estado (Todos)" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos los estados</SelectItem>
-                    {Object.values(EstadoSalida).map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+                    {Object.values(EstadoSalida).map(e => <SelectItem key={e} value={e}>{getSalidaEstadoLabel(e)}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>}
@@ -394,7 +381,7 @@ export default function Salidas() {
                           <span className="text-right tabular-nums">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
                            <span className="text-right tabular-nums">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</span>
                           <span className="truncate">{salida.transportista || "—"}</span>
-                          <span className={cancelled ? "no-underline" : ""}><EstadoBadge estado={salida.estado} /></span>
+                          <span className={cancelled ? "no-underline" : ""}><SalidaEstadoBadge estado={salida.estado} /></span>
                         </div>
                       );
                     })}
@@ -446,7 +433,7 @@ export default function Salidas() {
                           )}
                         </div>
                         <div className="w-[100px] flex justify-end">
-                          <EstadoBadge estado={salida.estado} />
+                          <SalidaEstadoBadge estado={salida.estado} />
                         </div>
                       </div>
                     </div>

@@ -13,7 +13,7 @@ test("CampoEscaneo keeps keyboard and camera scans on the same delivery path", a
 
   assert.match(source, /const deliver = useCallback/);
   assert.match(source, /interpretarCodigoEscaneado\(rawValue\)/);
-  assert.match(source, /codigo\.serie[\s\S]*\? codigo\.serie[\s\S]*: codigo\.textoOriginal/);
+  assert.match(source, /codigo\.serie[\s\S]*\? normalizarSerieEscaneada\(codigo\)[\s\S]*: codigo\.textoOriginal/);
   assert.match(source, /await onScan\(scannedValue, codigo, source\)/);
   assert.match(source, /const submit = \(\) => \{[\s\S]*deliver\(value, source\)/);
   assert.match(source, /void deliver\(rawValue, "camera"\)/);
@@ -31,6 +31,22 @@ test("CampoEscaneo keeps keyboard and camera scans on the same delivery path", a
   }
   assert.match(source, /Habilita el permiso de cámara.*ajustes del teléfono/s);
   assert.match(source, /cameraCapable &&/);
+});
+
+test("las tres rutas de consumo usan la normalización compartida de series", async () => {
+  const [salida, pos, venta] = await Promise.all([
+    readFile(new URL("artifacts/mariana-textil/src/pages/salida-nueva.tsx", root), "utf8"),
+    readFile(new URL("artifacts/mariana-textil/src/pages/pos.tsx", root), "utf8"),
+    readFile(new URL("artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.tsx", root), "utf8"),
+  ]);
+
+  for (const source of [salida, pos, venta]) {
+    assert.match(source, /normalizarSerieEscaneada/);
+  }
+  assert.match(salida, /normalizarSerieEscaneada\(codigo\)/);
+  assert.match(pos, /normalizarSerieEscaneada\(codigo\)/);
+  assert.match(venta, /normalizarSerieEscaneada\(codigoEntregado \?\? rawValue\)/);
+  assert.doesNotMatch(venta, /interpretRollCode=\{false\}/);
 });
 
 test("CampoEscaneo releases camera resources and every scanning screen uses it", async () => {

@@ -54,6 +54,7 @@ import {
   getPending,
   getQuantities,
   getRealtimeStores,
+  getRealtimeSalidaSummaries,
   getRealtimeTickets,
   getSalesSummary,
   getSessionMargin,
@@ -127,9 +128,9 @@ router.get("/admin/dashboard/realtime", async (req, res, next): Promise<void> =>
     const filters = parseAnalyticsFilters(query);
     const timed = await measureKpi("admin-realtime", async () => Promise.all([
       getSalesSummary(filters), getQuantities(filters), getPending(filters),
-      getRealtimeStores(filters), getRealtimeTickets(filters),
+      getRealtimeStores(filters), getRealtimeTickets(filters), getRealtimeSalidaSummaries(filters),
     ]));
-    const [totales, cantidades, pendientes, tiendas, ultimosTickets] = timed.value;
+    const [totales, cantidades, pendientes, tiendas, ultimosTickets, salidas] = timed.value;
     res.setHeader("Cache-Control", "private, no-store");
     res.setHeader("Server-Timing", `${timed.name};dur=${timed.durationMs.toFixed(1)}`);
     res.json(GetAdminRealtimeDashboardResponse.parse({
@@ -139,6 +140,7 @@ router.get("/admin/dashboard/realtime", async (req, res, next): Promise<void> =>
       totales, cantidades,
       ventasCredito: summarizeRealtimeCredit(tiendas),
       cancelaciones: summarizeRealtimeCancellations(totales),
+      ...salidas,
       pendientes: {
         ...pendientes,
         tiendas: tiendas.map((store) => ({

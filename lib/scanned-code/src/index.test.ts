@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   advertenciaSkuEscaneado,
   interpretarCodigoEscaneado,
+  normalizarSerieEscaneada,
 } from "./index";
 
 const cases = [
@@ -38,4 +39,21 @@ test("la advertencia de SKU informa sin alterar la serie", () => {
     "Esta etiqueta dice TAF-BLA, pero el rollo 1002874 corresponde a GABMET-AZU. Verifica la etiqueta.",
   );
   assert.equal(advertenciaSkuEscaneado(codigo, "TAF-BLA"), null);
+});
+
+test("los tres consumidores normalizan el payload impreso SKU-SERIE a la misma serie", () => {
+  const payloadImpreso = "TAF-BLA-1002874";
+  const codigoEntregado = interpretarCodigoEscaneado(payloadImpreso);
+  const consumidores = {
+    "salida normal": normalizarSerieEscaneada(codigoEntregado),
+    POS: normalizarSerieEscaneada(codigoEntregado),
+    "salida para venta": normalizarSerieEscaneada(codigoEntregado),
+  };
+
+  assert.deepEqual(consumidores, {
+    "salida normal": "1002874",
+    POS: "1002874",
+    "salida para venta": "1002874",
+  });
+  assert.equal(normalizarSerieEscaneada(payloadImpreso), "1002874");
 });

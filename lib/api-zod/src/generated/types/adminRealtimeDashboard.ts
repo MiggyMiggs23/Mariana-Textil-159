@@ -10,6 +10,7 @@ import type { AdminRealtimeCancellationSummary } from './adminRealtimeCancellati
 import type { AdminRealtimeCreditSummary } from './adminRealtimeCreditSummary';
 import type { AdminRealtimeDashboardFullRefreshSeconds } from './adminRealtimeDashboardFullRefreshSeconds';
 import type { AdminRealtimeDashboardPendingRefreshSeconds } from './adminRealtimeDashboardPendingRefreshSeconds';
+import type { AdminRealtimeSalidaSummary } from './adminRealtimeSalidaSummary';
 import type { AdminRealtimeStore } from './adminRealtimeStore';
 import type { AdminRealtimeTicket } from './adminRealtimeTicket';
 import type { AnalyticsMoneyTotals } from './analyticsMoneyTotals';
@@ -23,6 +24,8 @@ export interface AdminRealtimeDashboard {
   cantidades: AnalyticsQuantity[];
   ventasCredito: AdminRealtimeCreditSummary;
   cancelaciones: AdminRealtimeCancellationSummary;
+  salidasEnTransito: AdminRealtimeSalidaSummary;
+  salidasCanceladas: AdminRealtimeSalidaSummary;
   pendientes: AdminPendingSummary;
   tiendas: AdminRealtimeStore[];
   comparativo: AdminRealtimeStore[];

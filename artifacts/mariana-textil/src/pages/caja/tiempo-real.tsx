@@ -26,7 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS";
+type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS" | "SALIDAS_EN_TRANSITO" | "SALIDAS_CANCELADAS";
 type BreakdownItem = {
   id: number;
   folio: number;
@@ -43,9 +43,22 @@ type BreakdownItem = {
   canceladoAt: string | null;
   motivoCancelacion: string | null;
 };
+type SalidaBreakdownItem = {
+  salidaId: number;
+  folio: number;
+  origenId: number;
+  origen: string;
+  destinoId: number | null;
+  destino: string | null;
+  clienteId: number | null;
+  cliente: string | null;
+  fecha: string;
+  importe: string;
+  href: string;
+};
 type Breakdown = {
   concepto: BreakdownConcept;
-  items: BreakdownItem[];
+  items: (BreakdownItem | SalidaBreakdownItem)[];
   total: number;
   page: number;
   pageSize: number;
@@ -136,6 +149,7 @@ export default function CajaTiempoReal() {
     ?? dashboard?.pendientes.notasSinAutorizar
     ?? 0;
   const hasCancellationRateBase = (totals?.tickets ?? 0) > 0;
+  const isSalidaBreakdown = breakdownConcept === "SALIDAS_EN_TRANSITO" || breakdownConcept === "SALIDAS_CANCELADAS";
   const openBreakdown = (concepto: BreakdownConcept) => {
     setBreakdownPage(1);
     setBreakdownConcept(concepto);
@@ -270,23 +284,24 @@ export default function CajaTiempoReal() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card
-                className={`xl:col-start-2 border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
+                className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("PENDIENTE")}
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("PENDIENTE")}
               >
+                {/* Amber indicates pending operational attention, such as items in transit. */}
                 {mergedPendingCount > 0 && (
                   <div className="absolute top-0 right-0 w-2 h-full bg-amber-500/80 animate-pulse" />
                 )}
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-amber-700 dark:text-amber-400 uppercase">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                  <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase line-clamp-2">
                     Ventas pendientes de cobro o autorización
                   </CardTitle>
                   <Clock className="h-4 w-4 text-amber-600" />
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-amber-700 dark:text-amber-400">
+                <CardContent className="p-4 pt-0">
+                  <div className="text-xl font-black text-amber-700 dark:text-amber-400">
                     {formatNumber(mergedPendingAmount, { kind: "money" })}
                   </div>
                   <p className="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1 font-bold">
@@ -307,14 +322,14 @@ export default function CajaTiempoReal() {
                 {dashboard.cancelaciones.excedeUmbral && (
                   <div className="absolute top-0 right-0 w-2 h-full bg-red-400/70 animate-pulse" />
                 )}
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-red-600 dark:text-red-400 uppercase">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                  <CardTitle className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase line-clamp-2">
                     Tickets cancelados
                   </CardTitle>
                   <Ban className="h-4 w-4 text-red-500" />
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-red-600 dark:text-red-400">
+                <CardContent className="p-4 pt-0">
+                  <div className="text-xl font-black text-red-600 dark:text-red-400">
                      {formatCountLabel(dashboard.cancelaciones.tickets, "ticket", "tickets")} · {formatNumber(dashboard.cancelaciones.importe, { kind: "money" })}
                   </div>
                    {hasCancellationRateBase && (
@@ -322,6 +337,51 @@ export default function CajaTiempoReal() {
                        Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
                      </p>
                    )}
+                </CardContent>
+              </Card>
+
+              <Card
+                className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.salidasEnTransito.conteo > 0 ? "ring-2 ring-amber-500/50" : ""}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("SALIDAS_EN_TRANSITO")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("SALIDAS_EN_TRANSITO")}
+              >
+                {/* Amber indicates pending operational attention, such as items in transit. */}
+                {dashboard.salidasEnTransito.conteo > 0 && (
+                  <div className="absolute top-0 right-0 w-2 h-full bg-amber-500/80 animate-pulse" />
+                )}
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                  <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase line-clamp-2">
+                    Salidas en tránsito
+                  </CardTitle>
+                  <Clock className="h-4 w-4 text-amber-600" />
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className="text-xl font-black text-amber-700 dark:text-amber-400">
+                    {formatCountLabel(dashboard.salidasEnTransito.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasEnTransito.importe, { kind: "money" })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card
+                className="border-red-400/25 bg-red-50/30 dark:bg-red-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("SALIDAS_CANCELADAS")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("SALIDAS_CANCELADAS")}
+              >
+                {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                  <CardTitle className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase line-clamp-2">
+                    Salidas canceladas
+                  </CardTitle>
+                  <Ban className="h-4 w-4 text-red-500" />
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className="text-xl font-black text-red-600 dark:text-red-400">
+                    {formatCountLabel(dashboard.salidasCanceladas.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasCanceladas.importe, { kind: "money" })}
+                  </div>
                 </CardContent>
               </Card>
               </div>
@@ -558,7 +618,11 @@ export default function CajaTiempoReal() {
                   ? "Ventas a crédito"
                   : breakdownConcept === "CANCELADAS"
                     ? "Tickets cancelados"
-                    : "Ventas pendientes de cobro o autorización"}
+                    : breakdownConcept === "SALIDAS_EN_TRANSITO"
+                      ? "Salidas en tránsito"
+                      : breakdownConcept === "SALIDAS_CANCELADAS"
+                        ? "Salidas canceladas"
+                        : "Ventas pendientes de cobro o autorización"}
             </DialogTitle>
             <DialogDescription>
               Documentos que componen la cifra de la tarjeta.
@@ -574,8 +638,18 @@ export default function CajaTiempoReal() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Folio</TableHead>
-                    {breakdownConcept !== "CANCELADAS" && <TableHead>Hora</TableHead>}
-                    {breakdownConcept !== "CANCELADAS" && <TableHead>Cliente</TableHead>}
+                    {isSalidaBreakdown ? (
+                      <>
+                        <TableHead>Origen</TableHead>
+                        <TableHead>Destino o Cliente</TableHead>
+                        <TableHead>Fecha</TableHead>
+                      </>
+                    ) : (
+                      <>
+                        {breakdownConcept !== "CANCELADAS" && <TableHead>Hora</TableHead>}
+                        {breakdownConcept !== "CANCELADAS" && <TableHead>Cliente</TableHead>}
+                      </>
+                    )}
                     <TableHead className="text-right">Importe</TableHead>
                     {breakdownConcept === "COBRADO" && <><TableHead>Forma de pago</TableHead><TableHead>Facturada</TableHead></>}
                     {breakdownConcept === "CREDITO" && <><TableHead>Plazo</TableHead><TableHead>Vencimiento</TableHead></>}
@@ -584,36 +658,58 @@ export default function CajaTiempoReal() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {breakdown.data?.items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <Link href={`/tickets/${item.id}`} className="font-semibold text-primary underline-offset-4 hover:underline">
-                          {formatNumber(item.folio, { kind: "identifier" })}
-                        </Link>
-                      </TableCell>
-                      {breakdownConcept !== "CANCELADAS" && <TableCell>{format(parseISO(item.hora), "HH:mm")}</TableCell>}
-                      {breakdownConcept !== "CANCELADAS" && <TableCell>{item.cliente}</TableCell>}
-                      <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
-                      {breakdownConcept === "COBRADO" && <><TableCell>{item.formaPago}</TableCell><TableCell>{item.facturado ? "Sí" : "No"}</TableCell></>}
-                      {breakdownConcept === "CREDITO" && <><TableCell>{item.diasPlazo} días</TableCell><TableCell>{item.fechaVencimiento}</TableCell></>}
-                      {breakdownConcept === "PENDIENTE" && <><TableCell>{item.documentoTipo === "NOTA" ? "Nota" : "Ticket"}</TableCell><TableCell>{item.minutosEspera} min</TableCell></>}
-                      {breakdownConcept === "CANCELADAS" && (
-                        <>
-                          <TableCell>{item.nombreUsuarioCancelacion}</TableCell>
-                          <TableCell>{item.canceladoAt ? format(parseISO(item.canceladoAt), "dd/MM/yyyy HH:mm") : ""}</TableCell>
-                          <TableCell className="max-w-[200px] truncate" title={item.motivoCancelacion || ""}>{item.motivoCancelacion}</TableCell>
-                        </>
-                      )}
-                    </TableRow>
-                  ))}
+                  {breakdown.data?.items.map((rawItem) => {
+                    if (isSalidaBreakdown) {
+                      const item = rawItem as SalidaBreakdownItem;
+                      return (
+                        <TableRow key={item.salidaId}>
+                          <TableCell>
+                            <Link href={item.href} className="font-semibold text-primary underline-offset-4 hover:underline">
+                              {formatNumber(item.folio, { kind: "identifier" })}
+                            </Link>
+                          </TableCell>
+                          <TableCell>{item.origen}</TableCell>
+                          <TableCell>{item.destino || item.cliente || "N/A"}</TableCell>
+                          <TableCell>{format(parseISO(item.fecha), "HH:mm")}</TableCell>
+                          <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
+                        </TableRow>
+                      );
+                    } else {
+                      const item = rawItem as BreakdownItem;
+                      return (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            <Link href={`/tickets/${item.id}`} className="font-semibold text-primary underline-offset-4 hover:underline">
+                              {formatNumber(item.folio, { kind: "identifier" })}
+                            </Link>
+                          </TableCell>
+                          {breakdownConcept !== "CANCELADAS" && <TableCell>{format(parseISO(item.hora), "HH:mm")}</TableCell>}
+                          {breakdownConcept !== "CANCELADAS" && <TableCell>{item.cliente}</TableCell>}
+                          <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
+                          {breakdownConcept === "COBRADO" && <><TableCell>{item.formaPago}</TableCell><TableCell>{item.facturado ? "Sí" : "No"}</TableCell></>}
+                          {breakdownConcept === "CREDITO" && <><TableCell>{item.diasPlazo} días</TableCell><TableCell>{item.fechaVencimiento}</TableCell></>}
+                          {breakdownConcept === "PENDIENTE" && <><TableCell>{item.documentoTipo === "NOTA" ? "Nota" : "Ticket"}</TableCell><TableCell>{item.minutosEspera} min</TableCell></>}
+                          {breakdownConcept === "CANCELADAS" && (
+                            <>
+                              <TableCell>{item.nombreUsuarioCancelacion}</TableCell>
+                              <TableCell>{item.canceladoAt ? format(parseISO(item.canceladoAt), "dd/MM/yyyy HH:mm") : ""}</TableCell>
+                              <TableCell className="max-w-[200px] truncate" title={item.motivoCancelacion || ""}>{item.motivoCancelacion}</TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      );
+                    }
+                  })}
                 </TableBody>
                 <TableFooter>
                   <TableRow>
-                    <TableCell colSpan={3} className="font-semibold">Total ({breakdown.data?.total ?? 0})</TableCell>
+                    <TableCell colSpan={isSalidaBreakdown ? 4 : 3} className="font-semibold">
+                      Total ({breakdown.data?.total ?? 0}) {isSalidaBreakdown ? ((breakdown.data?.total ?? 0) === 1 ? "salida" : "salidas") : ((breakdown.data?.total ?? 0) === 1 ? "documento" : "documentos")}
+                    </TableCell>
                     <TableCell className="text-right font-mono font-bold">
                       {formatNumber(breakdown.data?.montoTotal ?? "0", { kind: "money" })}
                     </TableCell>
-                    <TableCell colSpan={2} />
+                    {!isSalidaBreakdown && <TableCell colSpan={2} />}
                   </TableRow>
                 </TableFooter>
               </Table>

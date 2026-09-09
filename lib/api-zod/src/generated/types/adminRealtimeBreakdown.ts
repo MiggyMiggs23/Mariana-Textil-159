@@ -7,10 +7,11 @@
  */
 import type { AdminRealtimeBreakdownConcepto } from './adminRealtimeBreakdownConcepto';
 import type { AdminRealtimeBreakdownItem } from './adminRealtimeBreakdownItem';
+import type { AdminRealtimeSalidaBreakdownItem } from './adminRealtimeSalidaBreakdownItem';
 
 export interface AdminRealtimeBreakdown {
   concepto: AdminRealtimeBreakdownConcepto;
-  items: AdminRealtimeBreakdownItem[];
+  items: (AdminRealtimeBreakdownItem | AdminRealtimeSalidaBreakdownItem)[];
   total: number;
   page: number;
   pageSize: number;

@@ -58,6 +58,8 @@ export * from './adminRealtimeCreditSummary';
 export * from './adminRealtimeDashboard';
 export * from './adminRealtimeDashboardFullRefreshSeconds';
 export * from './adminRealtimeDashboardPendingRefreshSeconds';
+export * from './adminRealtimeSalidaBreakdownItem';
+export * from './adminRealtimeSalidaSummary';
 export * from './adminRealtimeStore';
 export * from './adminRealtimeTicket';
 export * from './adminRealtimeTicketAutorizacionEstado';

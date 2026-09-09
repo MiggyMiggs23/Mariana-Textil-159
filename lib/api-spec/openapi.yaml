@@ -4495,7 +4495,7 @@ paths:
         - in: query
           name: concepto
           required: true
-          schema: { type: string, enum: [COBRADO, CREDITO, PENDIENTE, CANCELADAS] }
+          schema: { type: string, enum: [COBRADO, CREDITO, PENDIENTE, CANCELADAS, SALIDAS_EN_TRANSITO, SALIDAS_CANCELADAS] }
         - $ref: "#/components/parameters/AnalyticsDesde"
         - $ref: "#/components/parameters/AnalyticsHasta"
         - $ref: "#/components/parameters/AnalyticsUbicacionId"
@@ -6812,6 +6812,13 @@ components:
         excedeUmbral:
           type: boolean
           description: Usa el mismo umbral estricto que la alerta CANCELACIONES_ALTAS.
+    AdminRealtimeSalidaSummary:
+      type: object
+      description: Señal operativa derivada del estado del documento de salida; queda fuera de todas las identidades financieras.
+      required: [conteo, importe]
+      properties:
+        conteo: { type: number }
+        importe: { type: string }
     AdminRealtimeDashboard:
       type: object
       required:
@@ -6823,6 +6830,8 @@ components:
           cantidades,
           ventasCredito,
           cancelaciones,
+          salidasEnTransito,
+          salidasCanceladas,
           pendientes,
           tiendas,
           comparativo,
@@ -6840,6 +6849,10 @@ components:
           $ref: "#/components/schemas/AdminRealtimeCreditSummary"
         cancelaciones:
           $ref: "#/components/schemas/AdminRealtimeCancellationSummary"
+        salidasEnTransito:
+          $ref: "#/components/schemas/AdminRealtimeSalidaSummary"
+        salidasCanceladas:
+          $ref: "#/components/schemas/AdminRealtimeSalidaSummary"
         pendientes:
           $ref: "#/components/schemas/AdminPendingSummary"
         tiendas:
@@ -6972,14 +6985,35 @@ components:
         nombreUsuarioCancelacion: { type: ["string", "null"] }
         canceladoAt: { type: ["string", "null"], format: date-time }
         motivoCancelacion: { type: ["string", "null"] }
+    AdminRealtimeSalidaBreakdownItem:
+      type: object
+      required:
+        [salidaId, folio, origenId, origen, destinoId, destino, clienteId, cliente, fecha, importe, href]
+      properties:
+        salidaId: { type: number }
+        folio: { type: number }
+        origenId: { type: number }
+        origen: { type: string }
+        destinoId: { type: ["number", "null"] }
+        destino: { type: ["string", "null"] }
+        clienteId: { type: ["number", "null"] }
+        cliente: { type: ["string", "null"] }
+        fecha: { type: string, format: date-time }
+        importe: { type: string }
+        href:
+          type: string
+          description: Enlace al documento de salida; el cliente lo aplica únicamente al folio.
     AdminRealtimeBreakdown:
       type: object
       required: [concepto, items, total, page, pageSize, montoTotal]
       properties:
-        concepto: { type: string, enum: [COBRADO, CREDITO, PENDIENTE, CANCELADAS] }
+        concepto: { type: string, enum: [COBRADO, CREDITO, PENDIENTE, CANCELADAS, SALIDAS_EN_TRANSITO, SALIDAS_CANCELADAS] }
         items:
           type: array
-          items: { $ref: "#/components/schemas/AdminRealtimeBreakdownItem" }
+          items:
+            oneOf:
+              - { $ref: "#/components/schemas/AdminRealtimeBreakdownItem" }
+              - { $ref: "#/components/schemas/AdminRealtimeSalidaBreakdownItem" }
         total: { type: number }
         page: { type: number }
         pageSize: { type: number }

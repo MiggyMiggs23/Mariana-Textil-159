@@ -919,6 +919,14 @@ export interface AdminRealtimeCancellationSummary {
   excedeUmbral: boolean;
 }
 
+/**
+ * Señal operativa derivada del estado del documento de salida; queda fuera de todas las identidades financieras.
+ */
+export interface AdminRealtimeSalidaSummary {
+  conteo: number;
+  importe: string;
+}
+
 export type AdminRealtimeDashboardFullRefreshSeconds = typeof AdminRealtimeDashboardFullRefreshSeconds[keyof typeof AdminRealtimeDashboardFullRefreshSeconds];
 
 
@@ -1027,6 +1035,8 @@ export interface AdminRealtimeDashboard {
   cantidades: AnalyticsQuantity[];
   ventasCredito: AdminRealtimeCreditSummary;
   cancelaciones: AdminRealtimeCancellationSummary;
+  salidasEnTransito: AdminRealtimeSalidaSummary;
+  salidasCanceladas: AdminRealtimeSalidaSummary;
   pendientes: AdminPendingSummary;
   tiendas: AdminRealtimeStore[];
   comparativo: AdminRealtimeStore[];
@@ -1071,6 +1081,25 @@ export interface AdminRealtimeBreakdownItem {
   motivoCancelacion: string | null;
 }
 
+export interface AdminRealtimeSalidaBreakdownItem {
+  salidaId: number;
+  folio: number;
+  origenId: number;
+  origen: string;
+  /** @nullable */
+  destinoId: number | null;
+  /** @nullable */
+  destino: string | null;
+  /** @nullable */
+  clienteId: number | null;
+  /** @nullable */
+  cliente: string | null;
+  fecha: string;
+  importe: string;
+  /** Enlace al documento de salida; el cliente lo aplica únicamente al folio. */
+  href: string;
+}
+
 export type AdminRealtimeBreakdownConcepto = typeof AdminRealtimeBreakdownConcepto[keyof typeof AdminRealtimeBreakdownConcepto];
 
 
@@ -1079,11 +1108,13 @@ export const AdminRealtimeBreakdownConcepto = {
   CREDITO: 'CREDITO',
   PENDIENTE: 'PENDIENTE',
   CANCELADAS: 'CANCELADAS',
+  SALIDAS_EN_TRANSITO: 'SALIDAS_EN_TRANSITO',
+  SALIDAS_CANCELADAS: 'SALIDAS_CANCELADAS',
 } as const;
 
 export interface AdminRealtimeBreakdown {
   concepto: AdminRealtimeBreakdownConcepto;
-  items: AdminRealtimeBreakdownItem[];
+  items: (AdminRealtimeBreakdownItem | AdminRealtimeSalidaBreakdownItem)[];
   total: number;
   page: number;
   pageSize: number;
@@ -7109,6 +7140,8 @@ export const ListAdminRealtimeBreakdownConcepto = {
   CREDITO: 'CREDITO',
   PENDIENTE: 'PENDIENTE',
   CANCELADAS: 'CANCELADAS',
+  SALIDAS_EN_TRANSITO: 'SALIDAS_EN_TRANSITO',
+  SALIDAS_CANCELADAS: 'SALIDAS_CANCELADAS',
 } as const;
 
 export type ListCajaTiendaVentasParams = {

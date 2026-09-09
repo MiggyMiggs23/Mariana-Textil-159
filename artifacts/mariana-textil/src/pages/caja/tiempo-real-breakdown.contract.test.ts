@@ -10,12 +10,16 @@ test("realtime cards have fixed order and only the three component cards open de
     "Ventas a crédito",
     "Utilidad",
     "Ventas pendientes de cobro o autorización",
+    "Tickets cancelados",
+    "Salidas en tránsito",
+    "Salidas canceladas",
   ];
   const positions = labels.map((label) => source.indexOf(label));
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
-  assert.equal((source.match(/openBreakdown\("/g) ?? []).length, 6);
-  assert.doesNotMatch(source.slice(source.indexOf("Ventas (Total)"), source.indexOf("Cobrado (Caja)")), /openBreakdown/);
+  assert.equal((source.match(/openBreakdown\("/g) ?? []).length, 12);
+  const ventasCardEnd = source.indexOf("</Card>", source.indexOf("Ventas (Total)"));
+  assert.doesNotMatch(source.slice(source.indexOf("Ventas (Total)"), ventasCardEnd), /openBreakdown/);
 });
 
 test("realtime detail stays in a responsive dialog with folio as its only row link", async () => {
@@ -23,6 +27,7 @@ test("realtime detail stays in a responsive dialog with folio as its only row li
   const dialog = source.slice(source.indexOf("<Dialog"), source.lastIndexOf("</Dialog>"));
   assert.match(dialog, /w-\[calc\(100vw-1rem\)\]/);
   assert.match(dialog, /overflow-auto/);
-  assert.equal((dialog.match(/<Link /g) ?? []).length, 1);
+  assert.equal((dialog.match(/<Link /g) ?? []).length, 2);
   assert.match(dialog, /href=\{`\/tickets\/\$\{item\.id\}`\}/);
+  assert.match(dialog, /href=\{item\.href\}/);
 });

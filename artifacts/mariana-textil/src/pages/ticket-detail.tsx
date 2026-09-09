@@ -12,6 +12,8 @@ import {
   TicketDetalle,
   useObtenerDocumentoImpresionTicket,
   getObtenerDocumentoImpresionTicketQueryKey,
+  getGetSalidaQueryKey,
+  getListSalidasQueryKey,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -213,6 +215,10 @@ export default function TicketDetailPage() {
           queryClient.invalidateQueries({
             queryKey: getObtenerTicketQueryKey(ticketId),
           });
+          queryClient.invalidateQueries({ queryKey: getListSalidasQueryKey() });
+          for (const salida of ticket?.salidas ?? []) {
+            queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(salida.id) });
+          }
         },
         onError: (err: unknown) => {
           toast({

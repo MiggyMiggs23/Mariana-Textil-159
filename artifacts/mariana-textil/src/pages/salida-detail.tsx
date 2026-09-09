@@ -41,6 +41,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import { SalidaEstadoBadge } from "@/components/salida-estado-badge";
 
 import {
   Dialog,
@@ -49,22 +50,6 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-
-function EstadoBadge({ estado }: { estado: string }) {
-  const map: Record<string, { label: string; class: string }> = {
-    ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
-    EN_TRANSITO: { label: "En tránsito", class: "bg-amber-100 text-amber-800 border-amber-200" },
-    RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
-    ENTREGADA: { label: "Entregada", class: "bg-emerald-100 text-emerald-800 border-emerald-200" },
-    CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
-  };
-  const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
-  return (
-    <Badge variant="outline" className={`font-medium ${config.class}`}>
-      {config.label}
-    </Badge>
-  );
-}
 
 export default function SalidaDetail() {
   const [, params] = useRoute("/salidas/:id");
@@ -76,7 +61,9 @@ export default function SalidaDetail() {
   const { data: salida, isLoading, error } = useGetSalida(id, {
     query: {
       enabled: !isNaN(id),
-      queryKey: getGetSalidaQueryKey(id)
+      queryKey: getGetSalidaQueryKey(id),
+      refetchInterval: 30_000,
+      refetchOnWindowFocus: true,
     }
   });
 
@@ -209,7 +196,7 @@ export default function SalidaDetail() {
             <h1 data-testid="salida-folio" className={`text-3xl font-bold tracking-tight ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900'}`}>
               Folio {salida.folioFormateado}
             </h1>
-            <span data-testid={`status-${salida.estado.toLowerCase()}`}><EstadoBadge estado={salida.estado} /></span>
+             <span data-testid={`status-${salida.estado.toLowerCase()}`}><SalidaEstadoBadge estado={salida.estado} /></span>
             {salida.modalidad === "VENTA_CLIENTE" && <Badge variant="outline" className="border-violet-200 bg-violet-50 text-violet-800">Venta a cliente</Badge>}
           </div>
            {salida.modalidad === "VENTA_CLIENTE" && (
@@ -467,7 +454,7 @@ export default function SalidaDetail() {
                 />
                 <p className="text-sm font-medium">Progreso: {seriesEntrega.length} de {salida.rollos.length} rollos esperados</p>
                 <div className="flex flex-wrap gap-2">{salida.rollos.map((rollo) => <Badge key={rollo.id} variant="outline" className={seriesEntrega.includes(rollo.serie) ? "border-emerald-400 bg-emerald-50" : ""}>{rollo.serie}</Badge>)}</div>
-                <Button className="w-full" disabled={!verify.data?.autorizada || !verify.data.salidas.some((linked) => linked.id === salida.id) || seriesEntrega.length !== salida.rollos.length || entregar.isPending} onClick={() => entregar.mutate({ id: salida.id, data: { series: seriesEntrega } }, { onSuccess: () => { toast({ title: "Salida entregada" }); queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) }); }, onError: (error) => toast({ title: "No se pudo entregar", description: <ApiErrorDetails error={error} />, variant: "destructive" }) })}>Marcar ENTREGADA</Button>
+                <Button className="w-full" disabled={!verify.data?.autorizada || !verify.data.salidas.some((linked) => linked.id === salida.id) || seriesEntrega.length !== salida.rollos.length || entregar.isPending} onClick={() => entregar.mutate({ id: salida.id, data: { series: seriesEntrega } }, { onSuccess: () => { toast({ title: "Salida entregada" }); invalidate(); }, onError: (error) => toast({ title: "No se pudo entregar", description: <ApiErrorDetails error={error} />, variant: "destructive" }) })}>Marcar ENTREGADA</Button>
               </CardContent>
             </Card>
           )}

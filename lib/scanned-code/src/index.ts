@@ -27,6 +27,20 @@ export function interpretarCodigoEscaneado(
   return { serie, sku, textoOriginal };
 }
 
+/**
+ * Devuelve el identificador canónico que deben consumir los flujos de rollos.
+ * Acepta el resultado ya interpretado para evitar volver a analizar un escaneo.
+ */
+export function normalizarSerieEscaneada(
+  entrada: string | CodigoEscaneadoInterpretado,
+): string {
+  const codigo =
+    typeof entrada === "string"
+      ? interpretarCodigoEscaneado(entrada)
+      : entrada;
+  return (codigo.serie ?? codigo.textoOriginal).trim().toUpperCase();
+}
+
 export function advertenciaSkuEscaneado(
   codigo: CodigoEscaneadoInterpretado,
   skuRollo: string | null | undefined,
