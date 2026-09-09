@@ -23,16 +23,18 @@ test("realtime breakdown shares card predicates and has stable pagination order"
   assert.doesNotMatch(detail, /\b(costo|utilidad|margen)\b/i);
 });
 
-test("salida breakdown concepts use salida state, stable paging and salida links", () => {
+test("salida breakdown concepts reuse the shared read model with stable paging and links", () => {
   const analytics = read("./lib/admin-analytics.ts");
+  const readModelStart = analytics.indexOf("const REALTIME_SALIDA_DEFINITIONS");
   const start = analytics.indexOf("async function listRealtimeSalidaBreakdown");
   const end = analytics.indexOf("\n/** Paginated rows", start);
+  const readModel = analytics.slice(readModelStart, start);
   const detail = analytics.slice(start, end);
-  assert.match(detail, /\"EN_TRANSITO\"\s*:\s*\"CANCELADA\"/);
-  assert.match(detail, /s\.enviada_at/);
-  assert.match(detail, /s\.cancelada_at/);
-  assert.match(detail, /s\.origen_id=\$3/);
-  assert.match(detail, /ORDER BY \$\{timestamp\} DESC,s\.id DESC LIMIT \$5 OFFSET \$6/);
+  assert.match(readModel, /SALIDAS_EN_TRANSITO:[\s\S]*estado: "EN_TRANSITO"[\s\S]*timestamp: "s\.enviada_at"/);
+  assert.match(readModel, /SALIDAS_CANCELADAS:[\s\S]*estado: "CANCELADA"[\s\S]*timestamp: "s\.cancelada_at"/);
+  assert.match(readModel, /s\.origen_id=\$3/);
+  assert.match(detail, /buildRealtimeSalidaOperationalReadModel\(concepto\)/);
+  assert.match(detail, /ORDER BY \$\{readModel\.timestamp\} DESC,s\.id DESC LIMIT \$4 OFFSET \$5/);
   assert.match(detail, /href: `\/salidas\/\$\{Number\(row\.salidaId\)\}`/);
   assert.doesNotMatch(detail, /movimientos_inventario|kardex/i);
 });
