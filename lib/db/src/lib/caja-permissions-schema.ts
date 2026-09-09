@@ -7,7 +7,7 @@ const MODULES = [
   "proveedores", "proveedores_finanzas", "contenedores", "ubicaciones",
   "usuarios", "permisos", "resumen_caja", "cortes", "cobros_pagos",
   "reportes", "conciliacion", "auditoria", "camionetas", "choferes", "viajes",
-  "salidas_venta",
+  "salidas_venta", "equipos",
 ] as const;
 
 /**

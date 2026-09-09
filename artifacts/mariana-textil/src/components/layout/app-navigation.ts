@@ -89,6 +89,9 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
+      { name: "Camionetas", path: "/directorio/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
+      { name: "Choferes", path: "/directorio/choferes", icon: UserSquare2, module: Modules.CHOFERES, isClickable: true },
+      { name: "Equipos", path: "/equipos", icon: LayoutDashboard, module: Modules.EQUIPOS, isClickable: true },
     ],
   },
   {
@@ -106,8 +109,6 @@ export const NAV_GROUPS: NavGroup[] = [
     hiddenForRoles: ["CONTADOR"],
     items: [
       { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
-      { name: "Camionetas", path: "/configuracion/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
-      { name: "Choferes", path: "/configuracion/choferes", icon: UserSquare2, module: Modules.CHOFERES, isClickable: true },
       { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
       { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
       { name: "Conciliación de Kardex", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },

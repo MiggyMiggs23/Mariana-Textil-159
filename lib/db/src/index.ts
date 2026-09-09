@@ -30,6 +30,15 @@ export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";
 export { ensureSolicitudesPagoDirigidoSchema } from "./lib/solicitudes-pago-dirigido-schema";
 export { ensureNotificacionesSchema } from "./lib/notificaciones-schema";
 export { ensureCamionetasSchema } from "./lib/camionetas-schema";
+export { ensureEquiposSchema } from "./lib/equipos-schema";
+export {
+  DEFINICIONES_EQUIPO,
+  CHECKLIST_KEYS_EQUIPO,
+  TIPOS_EQUIPO,
+  checklistEquipo,
+  esChecklistEquipoValido,
+  type TipoEquipo,
+} from "./lib/equipos-catalog";
 export { ensureChoferesSchema } from "./lib/choferes-schema";
 export { ensureViajesSchema } from "./lib/viajes-schema";
 export { ensureAuditoriaInventarioSchema } from "./lib/auditoria-inventario-schema";

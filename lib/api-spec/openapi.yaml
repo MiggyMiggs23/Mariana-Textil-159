@@ -53,6 +53,8 @@ tags:
     description: Catálogo histórico de choferes para operaciones de transporte
   - name: viajes
     description: Hojas históricas de despacho de documentos
+  - name: equipos
+    description: Registro de equipo del sistema y su configuración por sitio
 paths:
   /pagos-dirigidos:
     get:
@@ -363,6 +365,100 @@ paths:
                   { schema: { $ref: "#/components/schemas/Chofer" } },
               },
           }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /equipos:
+    get:
+      operationId: listEquipos
+      tags: [equipos]
+      summary: Lista equipos dentro del alcance de consulta
+      parameters:
+        - in: query
+          name: ubicacionId
+          schema: { type: number, minimum: 1 }
+      responses:
+        "200":
+          description: Equipos visibles con su configuración canónica
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Equipo" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createEquipo
+      tags: [equipos]
+      summary: Registra equipo del sistema en un sitio permitido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EquipoInput" }
+      responses:
+        "201":
+          description: Equipo registrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Equipo" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /equipos/{id}:
+    patch:
+      operationId: updateEquipo
+      tags: [equipos]
+      summary: Edita equipo sin permitir cambiar manualmente su estado activo
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: number, minimum: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EquipoUpdate" }
+      responses:
+        "200":
+          description: Equipo actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Equipo" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /equipos/{id}/checklist/{itemKey}:
+    patch:
+      operationId: toggleEquipoChecklist
+      tags: [equipos]
+      summary: Palomea o despalomea una casilla canónica
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: number, minimum: 1 }
+        - in: path
+          name: itemKey
+          required: true
+          schema: { type: string, minLength: 1, maxLength: 64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EquipoChecklistUpdate" }
+      responses:
+        "200":
+          description: Equipo con el estado derivado actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Equipo" }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -7727,6 +7823,97 @@ components:
         activa: { type: boolean }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
+    TipoEquipo:
+      type: string
+      enum:
+        - IMPRESORA_TICKETS
+        - IMPRESORA_ETIQUETAS
+        - COMPUTADORA_POS
+        - PISTOLA_ESCANER
+        - SMARTPHONE_ESCANER
+    EquipoChecklistItem:
+      type: object
+      required:
+        [key, label, checked, actorId, actorNombre, checkedAt]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        checked: { type: boolean }
+        actorId: { type: ["number", "null"] }
+        actorNombre: { type: ["string", "null"] }
+        checkedAt: { type: ["string", "null"], format: date-time }
+    Equipo:
+      type: object
+      required:
+        - id
+        - ubicacionId
+        - ubicacionNombre
+        - tipo
+        - tipoLabel
+        - identificador
+        - marca
+        - modelo
+        - numeroSerie
+        - notas
+        - activo
+        - faltantes
+        - checklist
+        - creadoPor
+        - actualizadoPor
+        - createdAt
+        - updatedAt
+      properties:
+        id: { type: number }
+        ubicacionId: { type: number }
+        ubicacionNombre: { type: string }
+        tipo: { $ref: "#/components/schemas/TipoEquipo" }
+        tipoLabel: { type: string }
+        identificador: { type: string }
+        marca: { type: string }
+        modelo: { type: string }
+        numeroSerie: { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        activo:
+          type: boolean
+          description: Derivado; verdadero solamente si no falta ninguna casilla.
+        faltantes: { type: number, minimum: 0 }
+        checklist:
+          type: array
+          items: { $ref: "#/components/schemas/EquipoChecklistItem" }
+        creadoPor: { type: number }
+        actualizadoPor: { type: number }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    EquipoInput:
+      type: object
+      additionalProperties: false
+      required: [ubicacionId, tipo, identificador, marca, modelo]
+      properties:
+        ubicacionId: { type: number, minimum: 1 }
+        tipo: { $ref: "#/components/schemas/TipoEquipo" }
+        identificador: { type: string, minLength: 1, maxLength: 160 }
+        marca: { type: string, minLength: 1, maxLength: 100 }
+        modelo: { type: string, minLength: 1, maxLength: 100 }
+        numeroSerie: { type: ["string", "null"], maxLength: 160 }
+        notas: { type: ["string", "null"], maxLength: 2000 }
+    EquipoUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        ubicacionId: { type: number, minimum: 1 }
+        tipo: { $ref: "#/components/schemas/TipoEquipo" }
+        identificador: { type: string, minLength: 1, maxLength: 160 }
+        marca: { type: string, minLength: 1, maxLength: 100 }
+        modelo: { type: string, minLength: 1, maxLength: 100 }
+        numeroSerie: { type: ["string", "null"], maxLength: 160 }
+        notas: { type: ["string", "null"], maxLength: 2000 }
+    EquipoChecklistUpdate:
+      type: object
+      additionalProperties: false
+      required: [checked]
+      properties:
+        checked: { type: boolean }
     CamionetaInput:
       type: object
       required: [nombre, placas, tipo]

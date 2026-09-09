@@ -384,6 +384,221 @@ export const UpdateChoferResponse = zod.object({
 
 
 /**
+ * @summary Lista equipos dentro del alcance de consulta
+ */
+
+
+
+export const ListEquiposQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional()
+})
+
+export const listEquiposResponseFaltantesMin = 0;
+
+
+
+export const ListEquiposResponseItem = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipoLabel": zod.string(),
+  "identificador": zod.string(),
+  "marca": zod.string(),
+  "modelo": zod.string(),
+  "numeroSerie": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean().describe('Derivado; verdadero solamente si no falta ninguna casilla.'),
+  "faltantes": zod.number().min(listEquiposResponseFaltantesMin),
+  "checklist": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "checked": zod.boolean(),
+  "actorId": zod.number().nullable(),
+  "actorNombre": zod.string().nullable(),
+  "checkedAt": zod.coerce.date().nullable()
+})),
+  "creadoPor": zod.number(),
+  "actualizadoPor": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListEquiposResponse = zod.array(ListEquiposResponseItem)
+
+
+/**
+ * @summary Registra equipo del sistema en un sitio permitido
+ */
+
+export const createEquipoBodyIdentificadorMax = 160;
+
+export const createEquipoBodyMarcaMax = 100;
+
+export const createEquipoBodyModeloMax = 100;
+
+export const createEquipoBodyNumeroSerieMax = 160;
+
+export const createEquipoBodyNotasMax = 2000;
+
+
+
+export const CreateEquipoBody = zod.object({
+  "ubicacionId": zod.number().min(1),
+  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "identificador": zod.string().min(1).max(createEquipoBodyIdentificadorMax),
+  "marca": zod.string().min(1).max(createEquipoBodyMarcaMax),
+  "modelo": zod.string().min(1).max(createEquipoBodyModeloMax),
+  "numeroSerie": zod.string().max(createEquipoBodyNumeroSerieMax).nullish(),
+  "notas": zod.string().max(createEquipoBodyNotasMax).nullish()
+})
+
+export const createEquipoResponseFaltantesMin = 0;
+
+
+
+export const CreateEquipoResponse = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipoLabel": zod.string(),
+  "identificador": zod.string(),
+  "marca": zod.string(),
+  "modelo": zod.string(),
+  "numeroSerie": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean().describe('Derivado; verdadero solamente si no falta ninguna casilla.'),
+  "faltantes": zod.number().min(createEquipoResponseFaltantesMin),
+  "checklist": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "checked": zod.boolean(),
+  "actorId": zod.number().nullable(),
+  "actorNombre": zod.string().nullable(),
+  "checkedAt": zod.coerce.date().nullable()
+})),
+  "creadoPor": zod.number(),
+  "actualizadoPor": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Edita equipo sin permitir cambiar manualmente su estado activo
+ */
+
+
+
+export const UpdateEquipoParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+
+export const updateEquipoBodyIdentificadorMax = 160;
+
+export const updateEquipoBodyMarcaMax = 100;
+
+export const updateEquipoBodyModeloMax = 100;
+
+export const updateEquipoBodyNumeroSerieMax = 160;
+
+export const updateEquipoBodyNotasMax = 2000;
+
+
+
+export const UpdateEquipoBody = zod.object({
+  "ubicacionId": zod.number().min(1).optional(),
+  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']).optional(),
+  "identificador": zod.string().min(1).max(updateEquipoBodyIdentificadorMax).optional(),
+  "marca": zod.string().min(1).max(updateEquipoBodyMarcaMax).optional(),
+  "modelo": zod.string().min(1).max(updateEquipoBodyModeloMax).optional(),
+  "numeroSerie": zod.string().max(updateEquipoBodyNumeroSerieMax).nullish(),
+  "notas": zod.string().max(updateEquipoBodyNotasMax).nullish()
+})
+
+export const updateEquipoResponseFaltantesMin = 0;
+
+
+
+export const UpdateEquipoResponse = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipoLabel": zod.string(),
+  "identificador": zod.string(),
+  "marca": zod.string(),
+  "modelo": zod.string(),
+  "numeroSerie": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean().describe('Derivado; verdadero solamente si no falta ninguna casilla.'),
+  "faltantes": zod.number().min(updateEquipoResponseFaltantesMin),
+  "checklist": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "checked": zod.boolean(),
+  "actorId": zod.number().nullable(),
+  "actorNombre": zod.string().nullable(),
+  "checkedAt": zod.coerce.date().nullable()
+})),
+  "creadoPor": zod.number(),
+  "actualizadoPor": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Palomea o despalomea una casilla canónica
+ */
+
+export const toggleEquipoChecklistPathItemKeyMax = 64;
+
+
+
+export const ToggleEquipoChecklistParams = zod.object({
+  "id": zod.coerce.number().min(1),
+  "itemKey": zod.coerce.string().min(1).max(toggleEquipoChecklistPathItemKeyMax)
+})
+
+export const ToggleEquipoChecklistBody = zod.object({
+  "checked": zod.boolean()
+})
+
+export const toggleEquipoChecklistResponseFaltantesMin = 0;
+
+
+
+export const ToggleEquipoChecklistResponse = zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "ubicacionNombre": zod.string(),
+  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipoLabel": zod.string(),
+  "identificador": zod.string(),
+  "marca": zod.string(),
+  "modelo": zod.string(),
+  "numeroSerie": zod.string().nullable(),
+  "notas": zod.string().nullable(),
+  "activo": zod.boolean().describe('Derivado; verdadero solamente si no falta ninguna casilla.'),
+  "faltantes": zod.number().min(toggleEquipoChecklistResponseFaltantesMin),
+  "checklist": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string(),
+  "checked": zod.boolean(),
+  "actorId": zod.number().nullable(),
+  "actorNombre": zod.string().nullable(),
+  "checkedAt": zod.coerce.date().nullable()
+})),
+  "creadoPor": zod.number(),
+  "actualizadoPor": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({

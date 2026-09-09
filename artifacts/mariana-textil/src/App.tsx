@@ -65,6 +65,8 @@ import ViajeDetail from "@/pages/viaje-detail";
 import ViajeDocumento from "@/pages/viaje-documento";
 import AuditoriasInventario from "@/pages/auditorias-inventario";
 
+import Equipos from "@/pages/equipos";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -632,7 +634,7 @@ function Router() {
           )}
         />
         <Route
-          path="/configuracion/camionetas"
+          path="/directorio/camionetas"
           component={() => (
             <ProtectedRoute
               component={Camionetas}
@@ -641,11 +643,20 @@ function Router() {
           )}
         />
         <Route
-          path="/configuracion/choferes"
+          path="/directorio/choferes"
           component={() => (
             <ProtectedRoute
               component={Choferes}
               allowedModule={Modules.CHOFERES}
+            />
+          )}
+        />
+        <Route
+          path="/equipos"
+          component={() => (
+            <ProtectedRoute
+              component={Equipos}
+              allowedModule={Modules.EQUIPOS}
             />
           )}
         />

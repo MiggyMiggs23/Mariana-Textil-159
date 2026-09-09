@@ -28,6 +28,7 @@ import viajesRouter from "./viajes";
 import auditoriasInventarioRouter from "./auditorias-inventario";
 import purgaRouter from "./purga";
 import cajaVentasRouter from "./caja-ventas";
+import equiposRouter from "./equipos";
 
 const router: IRouter = Router();
 
@@ -59,6 +60,7 @@ router.use(pagosDirigidosRouter);
 router.use(camionetasRouter);
 router.use(choferesRouter);
 router.use(viajesRouter);
+router.use(equiposRouter);
 router.use(purgaRouter);
 
 export default router;

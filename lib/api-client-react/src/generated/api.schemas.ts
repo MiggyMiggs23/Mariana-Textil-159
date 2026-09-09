@@ -1910,6 +1910,119 @@ export interface Camioneta {
   updatedAt: string;
 }
 
+export type TipoEquipo = typeof TipoEquipo[keyof typeof TipoEquipo];
+
+
+export const TipoEquipo = {
+  IMPRESORA_TICKETS: 'IMPRESORA_TICKETS',
+  IMPRESORA_ETIQUETAS: 'IMPRESORA_ETIQUETAS',
+  COMPUTADORA_POS: 'COMPUTADORA_POS',
+  PISTOLA_ESCANER: 'PISTOLA_ESCANER',
+  SMARTPHONE_ESCANER: 'SMARTPHONE_ESCANER',
+} as const;
+
+export interface EquipoChecklistItem {
+  key: string;
+  label: string;
+  checked: boolean;
+  /** @nullable */
+  actorId: number | null;
+  /** @nullable */
+  actorNombre: string | null;
+  /** @nullable */
+  checkedAt: string | null;
+}
+
+export interface Equipo {
+  id: number;
+  ubicacionId: number;
+  ubicacionNombre: string;
+  tipo: TipoEquipo;
+  tipoLabel: string;
+  identificador: string;
+  marca: string;
+  modelo: string;
+  /** @nullable */
+  numeroSerie: string | null;
+  /** @nullable */
+  notas: string | null;
+  /** Derivado; verdadero solamente si no falta ninguna casilla. */
+  activo: boolean;
+  /** @minimum 0 */
+  faltantes: number;
+  checklist: EquipoChecklistItem[];
+  creadoPor: number;
+  actualizadoPor: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EquipoInput {
+  /** @minimum 1 */
+  ubicacionId: number;
+  tipo: TipoEquipo;
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  identificador: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  marca: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  modelo: string;
+  /**
+     * @maxLength 160
+     * @nullable
+     */
+  numeroSerie?: string | null;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  notas?: string | null;
+}
+
+export interface EquipoUpdate {
+  /** @minimum 1 */
+  ubicacionId?: number;
+  tipo?: TipoEquipo;
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  identificador?: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  marca?: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  modelo?: string;
+  /**
+     * @maxLength 160
+     * @nullable
+     */
+  numeroSerie?: string | null;
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  notas?: string | null;
+}
+
+export interface EquipoChecklistUpdate {
+  checked: boolean;
+}
+
 export type CamionetaInputTipo = typeof CamionetaInputTipo[keyof typeof CamionetaInputTipo];
 
 
@@ -6393,6 +6506,13 @@ export const ListChoferesActivo = {
   false: 'false',
   all: 'all',
 } as const;
+
+export type ListEquiposParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId?: number;
+};
 
 export type GetDashboardParams = {
 /**

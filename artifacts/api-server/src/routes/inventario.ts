@@ -188,7 +188,7 @@ export function resolveReadScope(
  *
  * Returns an error message string if the check fails, or null if allowed.
  */
-function checkOperationalScope(
+export function checkOperationalScope(
   auth: AuthContext,
   ubicacionIds: number[],
 ): string | null {

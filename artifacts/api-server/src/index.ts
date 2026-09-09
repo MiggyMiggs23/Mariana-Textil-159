@@ -32,6 +32,7 @@ import {
   ensureCuadreFiscalSchema,
   ensureCajaPermissions,
   ensureSalidasVentaPermissions,
+  ensureEquiposSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
@@ -88,6 +89,7 @@ export async function ensureStartupSchemas(): Promise<void> {
       await initializer("ensureCamionetasSchema", () => ensureCamionetasSchema(startupPool));
       await initializer("ensureChoferesSchema", () => ensureChoferesSchema(startupPool));
       await initializer("ensureViajesSchema", () => ensureViajesSchema(startupPool));
+      await initializer("ensureEquiposSchema", () => ensureEquiposSchema(startupPool));
       await initializer("ensurePagosProveedorSchema", () => ensurePagosProveedorSchema(startupPool));
       await initializer("ensureSolicitudesPagoDirigidoSchema", () => ensureSolicitudesPagoDirigidoSchema(startupPool));
       await initializer("ensureAplicacionesPagoProveedorSchema", () => ensureAplicacionesPagoProveedorSchema(startupPool));

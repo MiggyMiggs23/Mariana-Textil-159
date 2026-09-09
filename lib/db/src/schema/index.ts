@@ -10,6 +10,7 @@ export * from "./contenedores";
 export * from "./contenedor-lineas";
 export * from "./entradas";
 export * from "./etiquetas";
+export * from "./equipos";
 export * from "./enums";
 export * from "./locations";
 export * from "./pagos-proveedor";

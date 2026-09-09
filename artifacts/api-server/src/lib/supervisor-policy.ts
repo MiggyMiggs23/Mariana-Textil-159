@@ -21,6 +21,7 @@ export const SUPERVISOR_PERMISSION_CEILING: Readonly<
   clientes: new Set(["ver", "crear", "editar"]),
   proveedores: new Set(["ver", "crear", "editar"]),
   reportes: new Set(["ver"]),
+  equipos: new Set(["ver", "editar"]),
 };
 
 export function supervisorAllows(

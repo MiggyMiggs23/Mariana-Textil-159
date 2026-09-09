@@ -115,6 +115,10 @@ import type {
   EntradasPendientesCostoResult,
   EntregaSalidaVentaInput,
   EnvioSalidaInput,
+  Equipo,
+  EquipoChecklistUpdate,
+  EquipoInput,
+  EquipoUpdate,
   Error,
   EstadisticasProveedorParams,
   EstadoCuentaProveedorParams,
@@ -179,6 +183,7 @@ import type {
   ListCuentasIncobrablesParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
+  ListEquiposParams,
   ListHistorialComprasProveedoresParams,
   ListKardexFiltersParams,
   ListPreciosParams,
@@ -1247,6 +1252,307 @@ export const useUpdateChofer = <TError = ErrorType<ValidationErrorResponse | Una
         TContext
       > => {
       return useMutation(getUpdateChoferMutationOptions(options));
+    }
+
+export const getListEquiposUrl = (params?: ListEquiposParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/equipos?${stringifiedParams}` : `/api/equipos`
+}
+
+/**
+ * @summary Lista equipos dentro del alcance de consulta
+ */
+export const listEquipos = async (params?: ListEquiposParams, options?: Parameters<typeof customFetch>[1]): Promise<Equipo[]> => {
+
+  return customFetch<Equipo[]>(getListEquiposUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEquiposQueryKey = (params?: ListEquiposParams,) => {
+    return [
+    `/api/equipos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListEquiposQueryOptions = <TData = Awaited<ReturnType<typeof listEquipos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListEquiposParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEquipos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEquiposQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEquipos>>> = ({ signal }) => listEquipos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEquipos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEquiposQueryResult = NonNullable<Awaited<ReturnType<typeof listEquipos>>>
+export type ListEquiposQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista equipos dentro del alcance de consulta
+ */
+
+export function useListEquipos<TData = Awaited<ReturnType<typeof listEquipos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListEquiposParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEquipos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEquiposQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateEquipoUrl = () => {
+
+
+
+
+  return `/api/equipos`
+}
+
+/**
+ * @summary Registra equipo del sistema en un sitio permitido
+ */
+export const createEquipo = async (equipoInput: EquipoInput, options?: Parameters<typeof customFetch>[1]): Promise<Equipo> => {
+
+  return customFetch<Equipo>(getCreateEquipoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(equipoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateEquipoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEquipo>>, TError,{data: BodyType<EquipoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createEquipo>>, TError,{data: BodyType<EquipoInput>}, TContext> => {
+
+const mutationKey = ['createEquipo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEquipo>>, {data: BodyType<EquipoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createEquipo(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateEquipoMutationResult = NonNullable<Awaited<ReturnType<typeof createEquipo>>>
+    export type CreateEquipoMutationBody = BodyType<EquipoInput>
+    export type CreateEquipoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
+
+    /**
+ * @summary Registra equipo del sistema en un sitio permitido
+ */
+export const useCreateEquipo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEquipo>>, TError,{data: BodyType<EquipoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createEquipo>>,
+        TError,
+        {data: BodyType<EquipoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateEquipoMutationOptions(options));
+    }
+
+export const getUpdateEquipoUrl = (id: number,) => {
+
+
+
+
+  return `/api/equipos/${id}`
+}
+
+/**
+ * @summary Edita equipo sin permitir cambiar manualmente su estado activo
+ */
+export const updateEquipo = async (id: number,
+    equipoUpdate: EquipoUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Equipo> => {
+
+  return customFetch<Equipo>(getUpdateEquipoUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(equipoUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateEquipoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateEquipo>>, TError,{id: number;data: BodyType<EquipoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateEquipo>>, TError,{id: number;data: BodyType<EquipoUpdate>}, TContext> => {
+
+const mutationKey = ['updateEquipo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateEquipo>>, {id: number;data: BodyType<EquipoUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateEquipo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateEquipoMutationResult = NonNullable<Awaited<ReturnType<typeof updateEquipo>>>
+    export type UpdateEquipoMutationBody = BodyType<EquipoUpdate>
+    export type UpdateEquipoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Edita equipo sin permitir cambiar manualmente su estado activo
+ */
+export const useUpdateEquipo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateEquipo>>, TError,{id: number;data: BodyType<EquipoUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateEquipo>>,
+        TError,
+        {id: number;data: BodyType<EquipoUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateEquipoMutationOptions(options));
+    }
+
+export const getToggleEquipoChecklistUrl = (id: number,
+    itemKey: string,) => {
+
+
+
+
+  return `/api/equipos/${id}/checklist/${itemKey}`
+}
+
+/**
+ * @summary Palomea o despalomea una casilla canónica
+ */
+export const toggleEquipoChecklist = async (id: number,
+    itemKey: string,
+    equipoChecklistUpdate: EquipoChecklistUpdate, options?: Parameters<typeof customFetch>[1]): Promise<Equipo> => {
+
+  return customFetch<Equipo>(getToggleEquipoChecklistUrl(id,itemKey),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(equipoChecklistUpdate)
+  }
+);}
+
+
+
+
+
+export const getToggleEquipoChecklistMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof toggleEquipoChecklist>>, TError,{id: number;itemKey: string;data: BodyType<EquipoChecklistUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof toggleEquipoChecklist>>, TError,{id: number;itemKey: string;data: BodyType<EquipoChecklistUpdate>}, TContext> => {
+
+const mutationKey = ['toggleEquipoChecklist'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof toggleEquipoChecklist>>, {id: number;itemKey: string;data: BodyType<EquipoChecklistUpdate>}> = (props) => {
+          const {id,itemKey,data} = props ?? {};
+
+          return  toggleEquipoChecklist(id,itemKey,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ToggleEquipoChecklistMutationResult = NonNullable<Awaited<ReturnType<typeof toggleEquipoChecklist>>>
+    export type ToggleEquipoChecklistMutationBody = BodyType<EquipoChecklistUpdate>
+    export type ToggleEquipoChecklistMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Palomea o despalomea una casilla canónica
+ */
+export const useToggleEquipoChecklist = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof toggleEquipoChecklist>>, TError,{id: number;itemKey: string;data: BodyType<EquipoChecklistUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof toggleEquipoChecklist>>,
+        TError,
+        {id: number;itemKey: string;data: BodyType<EquipoChecklistUpdate>},
+        TContext
+      > => {
+      return useMutation(getToggleEquipoChecklistMutationOptions(options));
     }
 
 export const getHealthCheckUrl = () => {
