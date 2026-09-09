@@ -45,6 +45,11 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
               'ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA'
             );
             IF to_regclass('public.salidas') IS NOT NULL THEN
+              -- A partial-index predicate stores an expression typed with the
+              -- current enum. PostgreSQL cannot rewrite that predicate while
+              -- the column is changing to the replacement enum, so remove it
+              -- transactionally and recreate it below after the type swap.
+              DROP INDEX IF EXISTS salidas_borrador_usuario_origen_uidx;
               ALTER TABLE salidas ALTER COLUMN estado DROP DEFAULT;
               ALTER TABLE salidas ALTER COLUMN estado TYPE estado_salida_replacement
                 USING (

@@ -206,3 +206,62 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
   `);
   await ensureSalidasSchema(pool);
 });
+
+await test("El upgrade reemplaza el enum legado aunque exista el índice parcial de borradores", async () => {
+  await ensureSalidasSchema(pool);
+
+  const deliveredRows = await pool.query<{ count: string }>(`
+    SELECT count(*)::text AS count
+    FROM salidas
+    WHERE estado = 'ENTREGADA'
+  `);
+  assert.equal(
+    deliveredRows.rows[0]?.count,
+    "0",
+    "La regresión solo puede preparar el enum legado si no hay salidas ENTREGADA.",
+  );
+
+  await pool.query(`
+    BEGIN;
+    DROP INDEX IF EXISTS salidas_borrador_usuario_origen_uidx;
+    CREATE TYPE estado_salida_legacy AS ENUM (
+      'ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA'
+    );
+    ALTER TABLE salidas ALTER COLUMN estado DROP DEFAULT;
+    ALTER TABLE salidas ALTER COLUMN estado TYPE estado_salida_legacy
+      USING estado::text::estado_salida_legacy;
+    DROP TYPE estado_salida;
+    ALTER TYPE estado_salida_legacy RENAME TO estado_salida;
+    ALTER TABLE salidas ALTER COLUMN estado SET DEFAULT 'ARMANDO';
+    CREATE UNIQUE INDEX salidas_borrador_usuario_origen_uidx
+      ON salidas (usuario_solicita_id, origen_id)
+      WHERE estado = 'ARMANDO'::estado_salida
+        AND modalidad = 'TRASLADO'
+        AND usuario_solicita_id IS NOT NULL;
+    COMMIT;
+  `);
+
+  await ensureSalidasSchema(pool);
+
+  const enumValues = await pool.query<{ enumlabel: string }>(`
+    SELECT enumlabel
+    FROM pg_enum
+    WHERE enumtypid = 'estado_salida'::regtype
+    ORDER BY enumsortorder
+  `);
+  assert.deepEqual(
+    enumValues.rows.map((row) => row.enumlabel),
+    ["ARMANDO", "EN_TRANSITO", "RECIBIDA", "ENTREGADA", "CANCELADA"],
+  );
+
+  const draftIndex = await pool.query<{ indexdef: string }>(`
+    SELECT indexdef
+    FROM pg_indexes
+    WHERE schemaname = 'public'
+      AND indexname = 'salidas_borrador_usuario_origen_uidx'
+  `);
+  assert.match(
+    draftIndex.rows[0]?.indexdef ?? "",
+    /UNIQUE INDEX[\s\S]*estado = 'ARMANDO'::estado_salida/i,
+  );
+});
