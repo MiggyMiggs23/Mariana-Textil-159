@@ -98,7 +98,7 @@ Qué toca números durante el ciclo:
 
 La alerta de venta autorizada no entregada reutiliza `SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS`, el umbral existente de **24 horas**; no existe un segundo umbral para esta modalidad.
 
-El módulo propio `salidas_venta` está negado por omisión y hoy se habilita mediante permiso de ubicación únicamente para Terminal en Mariana. No hay una condición de Mariana en las rutas ni en la interfaz: abrirlo en otro sitio es cambiar ese permiso, no desarrollar otra variante. El catálogo configurable pasó de **30 a 31 módulos**.
+El módulo propio `salidas_venta` está negado por omisión y hoy se habilita mediante permiso de ubicación únicamente para Terminal en Mariana. No hay una condición de Mariana en las rutas ni en la interfaz: abrirlo en otro sitio es cambiar ese permiso, no desarrollar otra variante. `salidas_venta` ocupó el módulo 31; con Equipos, el catálogo configurable vigente contiene **32 módulos**.
 
 Regla de trazabilidad de este flujo:
 
@@ -109,6 +109,20 @@ Regla de trazabilidad de este flujo:
 - Dentro del alcance autorizado, todo error operativo nombra la causa, el cliente o documento relacionado cuando aplica y ofrece un enlace a la raíz; fuera de alcance, un rollo es indistinguible de uno inexistente y no revela serie, estado, reserva, salida ni cliente.
 
 **Cambio del 8 de septiembre de 2026:** se agregó el flujo completo de salidas para venta a cliente, reserva global por serie, agrupación multi-origen en POS, consumo diferido en caja, autorización derivada, entrega escaneada, reversos, alertas y trazabilidad.
+
+## Registro de Equipos por sitio
+
+**Equipos es un directorio operativo, no un inventario general de activos.** Admite exclusivamente impresora térmica de tickets, impresora de etiquetas, computadora POS, pistola escáner y smartphone escáner. Equipos, Camionetas y Choferes viven juntos bajo DIRECTORIO.
+
+La pantalla usa únicamente el selector global de sitio del encabezado. Vista Global representa todos los sitios operativos activos, incluso los que todavía no tienen equipos; elegir un sitio filtra la misma pantalla. No existe ni debe agregarse un segundo filtro local. En global, el conteo de activos de cada sitio abre un detalle que contiene exclusivamente equipos activos.
+
+Cada registro guarda sitio, tipo cerrado, identificador, marca, modelo, serie opcional y notas. No existe endpoint de eliminación. `activo` nunca se captura ni se persiste: se deriva como verdadero solo cuando todas las casillas canónicas del tipo están marcadas. Cada palomeo y despalomeo toma actor y fecha efectiva del servidor, se audita en ambos sentidos y rechaza campos de atribución enviados por el cliente.
+
+El módulo `equipos` es el **32**. Leer exige `equipos/ver`, crear exige `equipos/crear` y editar datos o checklist exige `equipos/editar`. Su catálogo mínimo de sitios está protegido por `equipos/ver` y no depende de permisos de Inventario o Ubicaciones. Para cualquier usuario no ADMIN con alcance PROPIA —incluido SUPERVISOR— pedir explícitamente otro sitio devuelve 403; el recurso fuera de alcance no se revela.
+
+**Verificación del 9 de septiembre de 2026:** una base Neon vacía y desechable aprobó schema push, comprobación estructural, seed, todos los inicializadores y la integración real de Equipos. La integración ejercitó tres sitios, permisos separados, PROPIA, rechazo cross-site, catálogo independiente, checklist, atribución del servidor, activo derivado y despalomeado. Development terminó con ambas tablas, dos constraints de catálogo validados, seis permisos por rol y cero equipos/checklists de prueba. Typecheck y contratos quedaron limpios. Las capturas sin sesión confirmaron el guard de acceso en escritorio y móvil; la revisión responsive de los componentes realmente montados aprobó breakpoints y desbordamientos, sin crear una cuenta o datos de prueba en development.
+
+**DDL canónico sin parámetros:** interpolar un valor con `` sql`${value}` `` dentro de un `CHECK` de Drizzle genera `$1`, pero `drizzle-kit push` ejecuta el DDL sin enlazar parámetros. Las listas del catálogo usadas en DDL se convierten a literales SQL escapados y una regresión exige que ambos `CHECK` compilen con cero parámetros.
 
 ### Aplicación de inicializadores en development — 8 de septiembre de 2026
 
@@ -197,8 +211,8 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** ADMIN tiene acceso total a los 31 módulos sin consultar tablas. Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es: override de usuario (non-null) > permiso de rol personalizado > permiso heredado del sitio > permiso de rol heredado > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
-- **Conteo de módulos:** el catálogo configurable contiene 31 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
+- **Permisos:** ADMIN tiene acceso total a los 32 módulos sin consultar tablas. Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es: override de usuario (non-null) > permiso de rol personalizado > permiso heredado del sitio > permiso de rol heredado > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
+- **Conteo de módulos:** el catálogo configurable contiene 32 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 - **Precios:** `/precios` exige rol ADMIN directamente en el servidor. El costo actual es ponderado por cantidad disponible y unidad; sin costos válidos permanece pendiente (`null`), nunca cero.
@@ -364,9 +378,9 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Entradas: carta vertical 216 × 279 mm. Salidas: A5 horizontal 210 × 148 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida. El tamaño de la Salida está fijado en la sección Formatos de impresión; media carta se descartó por bandeja.
 
 
-## Permission modules (31 total)
+## Permission modules (32 total)
 
-`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`, `salidas_venta`
+`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`, `salidas_venta`, `equipos`
 
 ## Salidas extraordinarias
 

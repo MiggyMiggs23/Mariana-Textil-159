@@ -42,3 +42,4 @@
 - [Restauraciones entre versiones PostgreSQL](cross-version-backup-verification.md) — comparar semántica, no attnum ni la representación versionada de NOT NULL.
 - [Enums usados por índices parciales](enum-partial-index-migrations.md) — retirar predicados tipados al enum viejo antes de reemplazarlo y recrearlos tras el swap.
 - [Entorno de procesos desacoplados](detached-sandbox-environment.md) — declarar PATH y extraer URIs de conectores; el sandbox no hereda todo el entorno del workspace.
+- [Objetos OpenAPI estrictos en Zod](openapi-zod-strict-objects.md) — additionalProperties false puede generarse como strip; las entradas sensibles requieren parser estricto.

@@ -32,6 +32,9 @@ import { checkOperationalScope, resolveReadScope } from "./inventario";
 
 const router: IRouter = Router();
 
+export const StrictToggleEquipoChecklistBody =
+  ToggleEquipoChecklistBody.strict();
+
 type EquipmentRow = typeof equiposTable.$inferSelect & {
   ubicacionNombre: string;
 };
@@ -424,7 +427,7 @@ router.patch(
   requierePermiso("equipos", "editar"),
   async (req, res): Promise<void> => {
     const params = ToggleEquipoChecklistParams.safeParse(req.params);
-    const body = ToggleEquipoChecklistBody.safeParse(req.body);
+    const body = StrictToggleEquipoChecklistBody.safeParse(req.body);
     if (!params.success || !body.success) {
       res.status(400).json({ error: "Casilla de verificación inválida." });
       return;

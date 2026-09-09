@@ -11,6 +11,7 @@ import { MODULOS } from "./lib/permisos";
 import {
   checkEquiposOperationalScope,
   resolveEquiposReadScope,
+  StrictToggleEquipoChecklistBody,
 } from "./routes/equipos";
 
 const route = readFileSync(
@@ -124,6 +125,27 @@ test("active state is derived and checklist changes are audited both ways", () =
   assert.match(route, /checkedAt: body\.data\.checked \? effectiveAt : null/);
   assert.match(route, /effectiveActor/);
   assert.match(route, /clock_timestamp\(\)/);
+});
+
+test("checklist input rejects client-controlled attribution", () => {
+  assert.equal(
+    StrictToggleEquipoChecklistBody.safeParse({ checked: true }).success,
+    true,
+  );
+  assert.equal(
+    StrictToggleEquipoChecklistBody.safeParse({
+      checked: true,
+      actorId: 999,
+    }).success,
+    false,
+  );
+  assert.equal(
+    StrictToggleEquipoChecklistBody.safeParse({
+      checked: true,
+      checkedAt: new Date(0).toISOString(),
+    }).success,
+    false,
+  );
 });
 
 test("initializer reconciles and validates structure from canonical values", () => {
