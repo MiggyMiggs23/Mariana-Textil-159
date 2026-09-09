@@ -7,6 +7,31 @@ type DatabaseClient = {
   ): Promise<{ rows: T[] }>;
 };
 
+export const PREPARED_TEST_DATABASE_TABLES = [
+  "usuarios",
+  "ubicaciones",
+  "clientes",
+  "productos",
+  "rollos",
+  "movimientos",
+  "existencias",
+  "entradas",
+  "tickets",
+  "ticket_lineas",
+  "ticket_pagos",
+  "sesiones_caja",
+  "salidas",
+  "salida_lineas",
+  "salida_rollos",
+  "permisos_rol",
+  "permisos_usuario",
+  "permisos_ubicacion",
+  "auditoria",
+  "notificaciones_sistema",
+  "movimientos_credito",
+  "autorizaciones_nota",
+] as const;
+
 function requireTestEnvironment(
   testDatabaseUrl: string | undefined,
   applicationDatabaseUrl: string | undefined,
@@ -123,4 +148,52 @@ export async function createTestDatabaseGuard(
   };
 
   return { assertIsolated, testDatabaseName };
+}
+
+export async function assertPreparedTestDatabase(
+  testClient: DatabaseClient,
+): Promise<void> {
+  const missingTablesResult = await testClient.query<{ table_name: string }>(
+    `
+      SELECT required.table_name
+      FROM unnest($1::text[]) AS required(table_name)
+      WHERE to_regclass('public.' || quote_ident(required.table_name)) IS NULL
+      ORDER BY required.table_name
+    `,
+    [[...PREPARED_TEST_DATABASE_TABLES]],
+  );
+  const missingTables = missingTablesResult.rows.map((row) => row.table_name);
+
+  let hasCanonicalAdmin = false;
+  if (!missingTables.includes("usuarios")) {
+    const adminResult = await testClient.query<{ present: boolean }>(
+      `
+        SELECT EXISTS (
+          SELECT 1
+          FROM public.usuarios
+          WHERE usuario = 'admin'
+            AND rol = 'ADMIN'
+            AND activo = true
+        ) AS present
+      `,
+    );
+    hasCanonicalAdmin = adminResult.rows[0]?.present === true;
+  }
+
+  const missing: string[] = [];
+  if (missingTables.length > 0) {
+    missing.push(`faltan tablas esperadas: ${missingTables.join(", ")}`);
+  }
+  if (!hasCanonicalAdmin) {
+    missing.push(
+      "falta el ADMIN canónico activo (usuarios.usuario='admin', rol='ADMIN')",
+    );
+  }
+  if (missing.length > 0) {
+    throw new Error(
+      `Base de pruebas incompleta: ${missing.join(
+        "; ",
+      )}. La preparación debe completar schema, seed e inicializadores antes de ejecutar suites.`,
+    );
+  }
 }

@@ -1,7 +1,10 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
-import { assertIsolatedTestDatabaseUrls } from "./lib/test-database-guard";
+import {
+  assertIsolatedTestDatabaseUrls,
+  assertPreparedTestDatabase,
+} from "./lib/test-database-guard";
 export { ensureTicketIvaSchema } from "./lib/ticket-iva-schema";
 export { ensureCashSessionSchema } from "./lib/cash-session-schema";
 export { ensureTicketAuthorizationSchema } from "./lib/ticket-authorization-schema";
@@ -33,7 +36,11 @@ export { ensureAuditoriaInventarioSchema } from "./lib/auditoria-inventario-sche
 export { ensurePisosSchema } from "./lib/pisos-schema";
 export { ensureCuadreFiscalSchema } from "./lib/cuadre-fiscal-schema";
 export { ensureCajaPermissions } from "./lib/caja-permissions-schema";
-export { createTestDatabaseGuard } from "./lib/test-database-guard";
+export {
+  assertPreparedTestDatabase,
+  createTestDatabaseGuard,
+  PREPARED_TEST_DATABASE_TABLES,
+} from "./lib/test-database-guard";
 
 const { Pool } = pg;
 
@@ -109,6 +116,14 @@ export const pool = new Pool({
   statement_timeout: statementTimeoutMillis,
   query_timeout: queryTimeoutMillis,
 });
+if (requiresIsolatedTestDatabase) {
+  try {
+    await assertPreparedTestDatabase(pool);
+  } catch (error) {
+    await pool.end();
+    throw error;
+  }
+}
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";
