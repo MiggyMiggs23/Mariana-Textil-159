@@ -27,6 +27,7 @@ describe("Tiempo Real Contract", () => {
     assert.match(page, /<TableHead>Origen<\/TableHead>/);
     assert.match(page, /<TableHead>Destino o Cliente<\/TableHead>/);
     assert.match(page, /<Link href=\{item\.href\}/);
+    assert.match(page, /format\(parseISO\(item\.fecha\), "dd\/MM\/yyyy HH:mm"\)/);
     assert.doesNotMatch(page, /href=\{`\/tickets\/\$\{item\.id\}`\}[^>]*>[\s\S]{0,200}item\.(origen|destino)/);
   });
 

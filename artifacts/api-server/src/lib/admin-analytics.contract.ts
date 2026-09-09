@@ -211,17 +211,25 @@ test("salida realtime breakdown has a dedicated document row and link", () => {
   assert.equal(result.success, true);
 });
 
-test("salida operational metrics use document state and event dates only", async () => {
+test("salida operational metrics share one document-state read model", async () => {
   const source = await readFile(new URL("./admin-analytics.ts", import.meta.url), "utf8");
+  const readModelStart = source.indexOf("function buildRealtimeSalidaOperationalReadModel");
   const start = source.indexOf("export async function getRealtimeSalidaSummaries");
   const end = source.indexOf("/** One read model", start);
+  const breakdownStart = source.indexOf("async function listRealtimeSalidaBreakdown");
+  const breakdownEnd = source.indexOf("/** Paginated rows", breakdownStart);
+  const readModel = source.slice(readModelStart, start);
   const summaries = source.slice(start, end);
-  assert.match(summaries, /s\.estado='EN_TRANSITO'/);
-  assert.match(summaries, /s\.estado='CANCELADA'/);
-  assert.match(summaries, /s\.enviada_at >= \$1/);
-  assert.match(summaries, /s\.cancelada_at >= \$1/);
-  assert.match(summaries, /s\.origen_id=\$3/);
+  const breakdown = source.slice(breakdownStart, breakdownEnd);
+  assert.match(readModel, /REALTIME_SALIDA_DEFINITIONS\[concepto\]/);
+  assert.match(readModel, /s\.estado='\$\{definition\.estado\}'/);
+  assert.match(readModel, /definition\.timestamp/);
+  assert.match(readModel, /s\.origen_id=\$3/);
+  assert.match(summaries, /buildRealtimeSalidaOperationalReadModel\("SALIDAS_EN_TRANSITO"\)/);
+  assert.match(summaries, /buildRealtimeSalidaOperationalReadModel\("SALIDAS_CANCELADAS"\)/);
+  assert.match(breakdown, /buildRealtimeSalidaOperationalReadModel\(concepto\)/);
   assert.doesNotMatch(summaries, /movimientos_inventario|kardex/i);
+  assert.doesNotMatch(breakdown, /movimientos_inventario|kardex/i);
 });
 
 test("destination movement contract validates account, pagination and real ticket links", () => {

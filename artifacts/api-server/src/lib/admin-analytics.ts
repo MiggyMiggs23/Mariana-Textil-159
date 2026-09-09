@@ -505,12 +505,53 @@ export function summarizeRealtimeCancellations(
   };
 }
 
+type RealtimeSalidaConcept =
+  | "SALIDAS_EN_TRANSITO"
+  | "SALIDAS_CANCELADAS";
+
+const REALTIME_SALIDA_DEFINITIONS = {
+  SALIDAS_EN_TRANSITO: {
+    estado: "EN_TRANSITO",
+    timestamp: "s.enviada_at",
+  },
+  SALIDAS_CANCELADAS: {
+    estado: "CANCELADA",
+    timestamp: "s.cancelada_at",
+  },
+} as const satisfies Record<
+  RealtimeSalidaConcept,
+  { estado: string; timestamp: string }
+>;
+
+const REALTIME_SALIDA_VALUE_JOIN = `LEFT JOIN LATERAL (
+  SELECT COALESCE(SUM(sr.cantidad_enviada * p.precio_sugerido),0) importe
+  FROM salida_rollos sr
+  JOIN rollos r ON r.id=sr.rollo_id
+  JOIN productos p ON p.id=r.producto_id
+  WHERE sr.salida_id=s.id
+) valor ON true`;
+
+function buildRealtimeSalidaOperationalReadModel(
+  concepto: RealtimeSalidaConcept,
+) {
+  const definition = REALTIME_SALIDA_DEFINITIONS[concepto];
+  return {
+    timestamp: definition.timestamp,
+    predicate: `s.estado='${definition.estado}'
+      AND ($1::timestamptz IS NULL OR ${definition.timestamp} >= $1)
+      AND ($2::timestamptz IS NULL OR ${definition.timestamp} <= $2)
+      AND ($3::int IS NULL OR s.origen_id=$3)`,
+  };
+}
+
 /**
  * Operational salida signals are intentionally read from the salida document
  * state, never from inventory movements, and do not participate in financial
  * dashboard identities.
  */
 export async function getRealtimeSalidaSummaries(filters: AnalyticsFilters) {
+  const enTransito = buildRealtimeSalidaOperationalReadModel("SALIDAS_EN_TRANSITO");
+  const canceladas = buildRealtimeSalidaOperationalReadModel("SALIDAS_CANCELADAS");
   const values = [
     filters.desde?.toISOString() ?? null,
     filters.hasta?.toISOString() ?? null,
@@ -519,35 +560,20 @@ export async function getRealtimeSalidaSummaries(filters: AnalyticsFilters) {
   const result = await pool.query(
     `SELECT
        COUNT(*) FILTER (
-         WHERE s.estado='EN_TRANSITO'
-           AND ($1::timestamptz IS NULL OR s.enviada_at >= $1)
-           AND ($2::timestamptz IS NULL OR s.enviada_at <= $2)
+         WHERE ${enTransito.predicate}
        )::int "enTransitoConteo",
        COALESCE(SUM(valor.importe) FILTER (
-         WHERE s.estado='EN_TRANSITO'
-           AND ($1::timestamptz IS NULL OR s.enviada_at >= $1)
-           AND ($2::timestamptz IS NULL OR s.enviada_at <= $2)
+         WHERE ${enTransito.predicate}
        ),0)::text "enTransitoImporte",
        COUNT(*) FILTER (
-         WHERE s.estado='CANCELADA'
-           AND ($1::timestamptz IS NULL OR s.cancelada_at >= $1)
-           AND ($2::timestamptz IS NULL OR s.cancelada_at <= $2)
+         WHERE ${canceladas.predicate}
        )::int "canceladasConteo",
        COALESCE(SUM(valor.importe) FILTER (
-         WHERE s.estado='CANCELADA'
-           AND ($1::timestamptz IS NULL OR s.cancelada_at >= $1)
-           AND ($2::timestamptz IS NULL OR s.cancelada_at <= $2)
+         WHERE ${canceladas.predicate}
        ),0)::text "canceladasImporte"
      FROM salidas s
-     LEFT JOIN LATERAL (
-       SELECT COALESCE(SUM(sr.cantidad_enviada * p.precio_sugerido),0) importe
-       FROM salida_rollos sr
-       JOIN rollos r ON r.id=sr.rollo_id
-       JOIN productos p ON p.id=r.producto_id
-       WHERE sr.salida_id=s.id
-     ) valor ON true
-     WHERE ($3::int IS NULL OR s.origen_id=$3)
-       AND s.estado IN ('EN_TRANSITO','CANCELADA')`,
+     ${REALTIME_SALIDA_VALUE_JOIN}
+     WHERE (${enTransito.predicate}) OR (${canceladas.predicate})`,
     values,
   );
   const row = result.rows[0]!;
@@ -681,53 +707,40 @@ export type RealtimeBreakdownConcept =
   | "CREDITO"
   | "PENDIENTE"
   | "CANCELADAS"
-  | "SALIDAS_EN_TRANSITO"
-  | "SALIDAS_CANCELADAS";
+  | RealtimeSalidaConcept;
 
 async function listRealtimeSalidaBreakdown(
   filters: AnalyticsFilters,
-  concepto: "SALIDAS_EN_TRANSITO" | "SALIDAS_CANCELADAS",
+  concepto: RealtimeSalidaConcept,
   page: number,
   pageSize: number,
 ) {
-  const state = concepto === "SALIDAS_EN_TRANSITO" ? "EN_TRANSITO" : "CANCELADA";
-  const timestamp = concepto === "SALIDAS_EN_TRANSITO" ? "s.enviada_at" : "s.cancelada_at";
+  const readModel = buildRealtimeSalidaOperationalReadModel(concepto);
   const values = [
     filters.desde?.toISOString() ?? null,
     filters.hasta?.toISOString() ?? null,
     filters.ubicacionId ?? null,
-    state,
     pageSize,
     (page - 1) * pageSize,
   ];
-  const condition = `($1::timestamptz IS NULL OR ${timestamp} >= $1)
-    AND ($2::timestamptz IS NULL OR ${timestamp} <= $2)
-    AND ($3::int IS NULL OR s.origen_id=$3)
-    AND s.estado=$4`;
   const base = `FROM salidas s
     JOIN ubicaciones origen ON origen.id=s.origen_id
     LEFT JOIN ubicaciones destino ON destino.id=s.destino_id
     LEFT JOIN clientes c ON c.id=s.cliente_id
-    LEFT JOIN LATERAL (
-      SELECT COALESCE(SUM(sr.cantidad_enviada * p.precio_sugerido),0) importe
-      FROM salida_rollos sr
-      JOIN rollos r ON r.id=sr.rollo_id
-      JOIN productos p ON p.id=r.producto_id
-      WHERE sr.salida_id=s.id
-    ) valor ON true
-    WHERE ${condition}`;
+    ${REALTIME_SALIDA_VALUE_JOIN}
+    WHERE ${readModel.predicate}`;
   const [rows, aggregate] = await Promise.all([
     pool.query(
       `SELECT s.id "salidaId",s.folio,s.origen_id "origenId",origen.nombre origen,
          s.destino_id "destinoId",destino.nombre destino,s.cliente_id "clienteId",
-         c.nombre cliente,${timestamp} fecha,valor.importe::text importe
+         c.nombre cliente,${readModel.timestamp} fecha,valor.importe::text importe
        ${base}
-       ORDER BY ${timestamp} DESC,s.id DESC LIMIT $5 OFFSET $6`,
+       ORDER BY ${readModel.timestamp} DESC,s.id DESC LIMIT $4 OFFSET $5`,
       values,
     ),
     pool.query(
       `SELECT COUNT(*)::int total,COALESCE(SUM(valor.importe),0)::text "montoTotal" ${base}`,
-      values.slice(0, 4),
+      values.slice(0, 3),
     ),
   ]);
   return {

@@ -670,7 +670,7 @@ export default function CajaTiempoReal() {
                           </TableCell>
                           <TableCell>{item.origen}</TableCell>
                           <TableCell>{item.destino || item.cliente || "N/A"}</TableCell>
-                          <TableCell>{format(parseISO(item.fecha), "HH:mm")}</TableCell>
+                          <TableCell>{format(parseISO(item.fecha), "dd/MM/yyyy HH:mm")}</TableCell>
                           <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
                         </TableRow>
                       );
