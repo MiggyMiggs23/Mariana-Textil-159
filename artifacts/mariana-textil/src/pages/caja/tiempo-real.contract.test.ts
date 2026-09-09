@@ -10,8 +10,8 @@ describe("Tiempo Real Contract", () => {
     // Principal row: Ventas (Total), Cobrado (Caja), Ventas a crédito, Utilidad
     assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4[\s\S]*Ventas \(Total\)[\s\S]*Cobrado \(Caja\)[\s\S]*Ventas a crédito[\s\S]*Utilidad/);
 
-    // Secondary row: Ventas pendientes..., Tickets cancelados
-    assert.match(page, /Ventas pendientes de cobro o autorización[\s\S]*Tickets cancelados/);
+    // Secondary row reuses the same four-column grid and centers its cards in the two inner columns.
+    assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4[\s\S]*xl:col-start-2[\s\S]*Ventas pendientes de cobro o autorización[\s\S]*Tickets cancelados/);
   });
 
   it("CANCELADAS drilldown columns/link rule", () => {
@@ -27,5 +27,15 @@ describe("Tiempo Real Contract", () => {
     const page = readPage("./tiempo-real.tsx");
     assert.match(page, /dashboard\.cancelaciones\.excedeUmbral/);
     assert.doesNotMatch(page, /tasaCancelacion\)\s*>\s*10|tasaCancelacion\s*>\s*10/);
+  });
+
+  it("pluralizes dashboard counts and hides a cancellation rate without a sales base", () => {
+    const page = readPage("./tiempo-real.tsx");
+    assert.match(page, /value === 1 \? singular : plural/);
+    assert.match(page, /formatCountLabel\(dashboard\.cancelaciones\.tickets, "ticket", "tickets"\)/);
+    assert.match(page, /formatCountLabel\(pendingTickets, "ticket", "tickets"\)/);
+    assert.match(page, /formatCountLabel\(pendingNotes, "nota", "notas"\)/);
+    assert.match(page, /hasCancellationRateBase = \(totals\?\.tickets \?\? 0\) > 0/);
+    assert.match(page, /\{hasCancellationRateBase && \([\s\S]*Tasa de cancelación:/);
   });
 });

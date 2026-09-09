@@ -52,6 +52,14 @@ type Breakdown = {
   montoTotal: string;
 };
 
+function formatCountLabel(
+  value: number,
+  singular: string,
+  plural: string,
+) {
+  return `${formatNumber(value, { kind: "count" })} ${value === 1 ? singular : plural}`;
+}
+
 async function fetchBreakdown(
   concepto: BreakdownConcept,
   ubicacionId: number | null,
@@ -127,6 +135,7 @@ export default function CajaTiempoReal() {
   const pendingNotes = pending?.notasSinAutorizar
     ?? dashboard?.pendientes.notasSinAutorizar
     ?? 0;
+  const hasCancellationRateBase = (totals?.tickets ?? 0) > 0;
   const openBreakdown = (concepto: BreakdownConcept) => {
     setBreakdownPage(1);
     setBreakdownConcept(concepto);
@@ -195,7 +204,7 @@ export default function CajaTiempoReal() {
                     {formatNumber(totals.ventas, { kind: "money" })}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {formatNumber(totals.tickets, { kind: "count" })} tickets totales
+                     {formatCountLabel(totals.tickets, "ticket total", "tickets totales")}
                   </p>
                 </CardContent>
               </Card>
@@ -216,7 +225,7 @@ export default function CajaTiempoReal() {
                     {formatNumber(totals.cobrado, { kind: "money" })}
                   </div>
                   <p className="text-xs text-green-700/70 dark:text-green-400/70 mt-1 font-medium">
-                    {formatNumber(totals.ticketsCobrados, { kind: "count" })} tickets cobrados
+                     {formatCountLabel(totals.ticketsCobrados, "ticket cobrado", "tickets cobrados")}
                   </p>
                 </CardContent>
               </Card>
@@ -238,7 +247,7 @@ export default function CajaTiempoReal() {
                     {formatNumber(dashboard.ventasCredito.importe, { kind: "money" })}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1 font-medium">
-                    {formatNumber(dashboard.ventasCredito.operaciones, { kind: "count" })} operaciones a crédito
+                     {formatCountLabel(dashboard.ventasCredito.operaciones, "operación a crédito", "operaciones a crédito")}
                   </p>
                 </CardContent>
               </Card>
@@ -259,9 +268,9 @@ export default function CajaTiempoReal() {
               </Card>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card
-                className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
+                className={`xl:col-start-2 border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("PENDIENTE")}
@@ -281,14 +290,14 @@ export default function CajaTiempoReal() {
                     {formatNumber(mergedPendingAmount, { kind: "money" })}
                   </div>
                   <p className="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1 font-bold">
-                    {formatNumber(pendingTickets, { kind: "count" })} tickets ·{" "}
-                    {formatNumber(pendingNotes, { kind: "count" })} notas
+                     {formatCountLabel(pendingTickets, "ticket", "tickets")} ·{" "}
+                     {formatCountLabel(pendingNotes, "nota", "notas")}
                   </p>
                 </CardContent>
               </Card>
 
               <Card
-                className={`border-red-500/30 bg-red-50/50 dark:bg-red-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.cancelaciones.excedeUmbral ? "ring-2 ring-red-500/50" : ""}`}
+                className={`border-red-400/25 bg-red-50/30 dark:bg-red-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.cancelaciones.excedeUmbral ? "ring-2 ring-red-400/40" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("CANCELADAS")}
@@ -296,21 +305,23 @@ export default function CajaTiempoReal() {
               >
                 {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
                 {dashboard.cancelaciones.excedeUmbral && (
-                  <div className="absolute top-0 right-0 w-2 h-full bg-red-500/80 animate-pulse" />
+                  <div className="absolute top-0 right-0 w-2 h-full bg-red-400/70 animate-pulse" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-red-700 dark:text-red-400 uppercase">
+                  <CardTitle className="text-sm font-semibold text-red-600 dark:text-red-400 uppercase">
                     Tickets cancelados
                   </CardTitle>
-                  <Ban className="h-4 w-4 text-red-600" />
+                  <Ban className="h-4 w-4 text-red-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-black text-red-700 dark:text-red-400">
-                    {formatNumber(dashboard.cancelaciones.tickets, { kind: "count" })} tickets · {formatNumber(dashboard.cancelaciones.importe, { kind: "money" })}
+                  <div className="text-2xl font-black text-red-600 dark:text-red-400">
+                     {formatCountLabel(dashboard.cancelaciones.tickets, "ticket", "tickets")} · {formatNumber(dashboard.cancelaciones.importe, { kind: "money" })}
                   </div>
-                  <p className="text-xs text-red-700/80 dark:text-red-400/80 mt-1 font-bold">
-                    Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
-                  </p>
+                   {hasCancellationRateBase && (
+                    <p className="text-xs text-red-600/80 dark:text-red-400/80 mt-1 font-bold">
+                       Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
+                     </p>
+                   )}
                 </CardContent>
               </Card>
               </div>
