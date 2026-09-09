@@ -61,7 +61,9 @@ async function request(
 async function makeUser(
   suffix: string,
   ubicacionId: number,
-  editar: boolean,
+  permissions: { crear?: boolean; editar?: boolean },
+  rol: "BODEGA" | "SUPERVISOR" = "BODEGA",
+  alcanceConsulta: "PROPIA" | "TODAS" = "PROPIA",
 ) {
   const password = "Equipos!test1";
   const [user] = await db
@@ -70,25 +72,27 @@ async function makeUser(
       nombre: `Equipos ${suffix}`,
       usuario: `equipos_${suffix}_${run}`.slice(0, 64).toLowerCase(),
       passwordHash: sql`crypt(${password}, gen_salt('bf', 8))`,
-      rol: "BODEGA",
+      rol,
       ubicacionId,
-      alcanceConsulta: "PROPIA",
+      alcanceConsulta,
     })
     .returning({ id: usuariosTable.id, usuario: usuariosTable.usuario });
   await db.insert(permisosUsuarioTable).values({
     usuarioId: user!.id,
     modulo: "equipos",
     puedeVer: true,
-    puedeEditar: editar,
+    puedeCrear: permissions.crear ?? false,
+    puedeEditar: permissions.editar ?? false,
   });
   return { ...user!, password };
 }
 
 test("equipment scope, derived active state, attribution and edit denial", async () => {
   await ensureEquiposSchema(pool);
+  await ensureEquiposSchema(pool);
   const initials = (suffix: string) =>
     `${suffix}${run.slice(0, 2)}`.toUpperCase().slice(0, 3);
-  const [siteA, siteB] = await db
+  const [siteA, siteB, siteC] = await db
     .insert(ubicacionesTable)
     .values([
       {
@@ -101,10 +105,36 @@ test("equipment scope, derived active state, attribution and edit denial", async
         iniciales: initials("B"),
         tipo: "TIENDA",
       },
+      {
+        nombre: `Equipos C ${run}`,
+        iniciales: initials("C"),
+        tipo: "BODEGA",
+      },
     ])
     .returning({ id: ubicacionesTable.id });
-  const editor = await makeUser("editor", siteA!.id, true);
-  const viewer = await makeUser("viewer", siteA!.id, false);
+  const creator = await makeUser("creator", siteA!.id, { crear: true });
+  const editor = await makeUser("editor", siteA!.id, { editar: true });
+  const viewer = await makeUser("viewer", siteA!.id, {});
+  const supervisor = await makeUser(
+    "supervisor",
+    siteA!.id,
+    { editar: true },
+    "SUPERVISOR",
+  );
+  const creatorB = await makeUser("creator_b", siteB!.id, { crear: true });
+  const creatorC = await makeUser("creator_c", siteC!.id, { crear: true });
+  const catalogUser = await makeUser(
+    "catalog",
+    siteA!.id,
+    {},
+    "BODEGA",
+    "TODAS",
+  );
+  await db.insert(permisosUsuarioTable).values({
+    usuarioId: catalogUser.id,
+    modulo: "inventario",
+    puedeVer: false,
+  });
 
   await new Promise<void>((resolve, reject) => {
     server = createServer(app);
@@ -121,6 +151,10 @@ test("equipment scope, derived active state, attribution and edit denial", async
   });
 
   try {
+    const creatorLogin = await request("POST", "/auth/login", {
+      usuario: creator.usuario,
+      password: creator.password,
+    });
     const editorLogin = await request("POST", "/auth/login", {
       usuario: editor.usuario,
       password: editor.password,
@@ -129,8 +163,56 @@ test("equipment scope, derived active state, attribution and edit denial", async
       usuario: viewer.usuario,
       password: viewer.password,
     });
+    const supervisorLogin = await request("POST", "/auth/login", {
+      usuario: supervisor.usuario,
+      password: supervisor.password,
+    });
+    const creatorBLogin = await request("POST", "/auth/login", {
+      usuario: creatorB.usuario,
+      password: creatorB.password,
+    });
+    const creatorCLogin = await request("POST", "/auth/login", {
+      usuario: creatorC.usuario,
+      password: creatorC.password,
+    });
+    const catalogLogin = await request("POST", "/auth/login", {
+      usuario: catalogUser.usuario,
+      password: catalogUser.password,
+    });
+    assert.equal(creatorLogin.status, 200);
     assert.equal(editorLogin.status, 200);
     assert.equal(viewerLogin.status, 200);
+    assert.equal(supervisorLogin.status, 200);
+    assert.equal(creatorBLogin.status, 200);
+    assert.equal(creatorCLogin.status, 200);
+    assert.equal(catalogLogin.status, 200);
+
+    assert.equal(
+      (
+        await request(
+          "GET",
+          "/inventario/ubicaciones",
+          undefined,
+          catalogLogin.cookie,
+        )
+      ).status,
+      403,
+    );
+    const equipmentLocations = await request(
+      "GET",
+      "/equipos/ubicaciones",
+      undefined,
+      catalogLogin.cookie,
+    );
+    assert.equal(equipmentLocations.status, 200);
+    const visibleLocationIds = new Set(
+      (equipmentLocations.body as unknown as Array<{ id: number }>).map(
+        (location) => location.id,
+      ),
+    );
+    assert.equal(visibleLocationIds.has(siteA!.id), true);
+    assert.equal(visibleLocationIds.has(siteB!.id), true);
+    assert.equal(visibleLocationIds.has(siteC!.id), true);
 
     const created = await request(
       "POST",
@@ -142,12 +224,55 @@ test("equipment scope, derived active state, attribution and edit denial", async
         marca: "Epson",
         modelo: "TM-T20",
       },
-      editorLogin.cookie,
+      creatorLogin.cookie,
     );
     assert.equal(created.status, 201);
     assert.equal(created.body.activo, false);
     assert.equal(created.body.faltantes, 2);
     const id = created.body.id as number;
+    assert.equal(
+      (
+        await request(
+          "POST",
+          "/equipos",
+          {
+            ubicacionId: siteA!.id,
+            tipo: "PISTOLA_ESCANER",
+            identificador: "Sin permiso de alta",
+            marca: "Prueba",
+            modelo: "Prueba",
+          },
+          editorLogin.cookie,
+        )
+      ).status,
+      403,
+    );
+    const createdB = await request(
+      "POST",
+      "/equipos",
+      {
+        ubicacionId: siteB!.id,
+        tipo: "IMPRESORA_ETIQUETAS",
+        identificador: "Etiquetas 1",
+        marca: "Zebra",
+        modelo: "ZD421",
+      },
+      creatorBLogin.cookie,
+    );
+    const createdC = await request(
+      "POST",
+      "/equipos",
+      {
+        ubicacionId: siteC!.id,
+        tipo: "SMARTPHONE_ESCANER",
+        identificador: "Escáner móvil 1",
+        marca: "Samsung",
+        modelo: "A15",
+      },
+      creatorCLogin.cookie,
+    );
+    assert.equal(createdB.status, 201);
+    assert.equal(createdC.status, 201);
 
     assert.equal(
       (
@@ -156,6 +281,28 @@ test("equipment scope, derived active state, attribution and edit denial", async
           `/equipos?ubicacionId=${siteB!.id}`,
           undefined,
           editorLogin.cookie,
+        )
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await request(
+          "GET",
+          `/equipos?ubicacionId=${siteB!.id}`,
+          undefined,
+          supervisorLogin.cookie,
+        )
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await request(
+          "PATCH",
+          `/equipos/${createdB.body.id as number}/checklist/ETIQUETA_REAL`,
+          { checked: true },
+          supervisorLogin.cookie,
         )
       ).status,
       403,

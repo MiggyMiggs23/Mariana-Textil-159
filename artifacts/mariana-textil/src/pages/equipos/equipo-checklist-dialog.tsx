@@ -85,7 +85,7 @@ export function EquipoChecklistDialog({ open, onClose, equipo, canEdit }: Equipo
 
   return (
     <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
-      <DialogContent className="sm:max-w-[500px] flex flex-col max-h-[85vh]">
+      <DialogContent className="flex w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-w-[500px]">
         <DialogHeader>
           <div className="flex items-center justify-between pr-4">
             <DialogTitle className="text-xl">{equipo.identificador}</DialogTitle>
@@ -111,7 +111,7 @@ export function EquipoChecklistDialog({ open, onClose, equipo, canEdit }: Equipo
           )}
         </div>
 
-        <ScrollArea className="flex-1 -mx-6 px-6">
+        <ScrollArea className="-mx-6 min-h-0 flex-1 px-6">
           <div className="space-y-3 pb-4">
             {optimisticChecklist.map((item) => (
               <div 

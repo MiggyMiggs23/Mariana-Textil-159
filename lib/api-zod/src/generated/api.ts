@@ -485,6 +485,18 @@ export const CreateEquipoResponse = zod.object({
 
 
 /**
+ * @summary Lista sitios operativos activos dentro del alcance de Equipos
+ */
+export const ListEquiposLocationsResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
+  "activa": zod.boolean()
+})
+export const ListEquiposLocationsResponse = zod.array(ListEquiposLocationsResponseItem)
+
+
+/**
  * @summary Edita equipo sin permitir cambiar manualmente su estado activo
  */
 

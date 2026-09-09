@@ -8,7 +8,10 @@ import {
   checklistEquipo,
 } from "@workspace/db";
 import { MODULOS } from "./lib/permisos";
-import { resolveReadScope } from "./routes/inventario";
+import {
+  checkEquiposOperationalScope,
+  resolveEquiposReadScope,
+} from "./routes/equipos";
 
 const route = readFileSync(
   new URL("./routes/equipos.ts", import.meta.url),
@@ -42,22 +45,28 @@ test("equipos has one canonical closed type/checklist catalog", () => {
   );
 });
 
-test("equipos is module 32 and mutations require editar", () => {
+test("equipos is module 32 and mutations use create/edit permissions", () => {
   assert.equal(MODULOS.length, 32);
   assert.equal(MODULOS[31], "equipos");
   assert.match(route, /requierePermiso\("equipos", "ver"\)/);
   assert.equal(
+    route.match(/requierePermiso\("equipos", "crear"\)/g)?.length,
+    1,
+  );
+  assert.equal(
     route.match(/requierePermiso\("equipos", "editar"\)/g)?.length,
-    3,
+    2,
   );
   assert.doesNotMatch(route, /req\.body\.(actor|checkedAt|activo)/);
 });
 
 test("equipment reads and writes enforce site scope", () => {
-  assert.match(route, /resolveReadScope\(req\.auth!, requested\)/);
+  assert.match(route, /resolveEquiposReadScope\(req\.auth!, requested\)/);
   assert.match(route, /requested !== scope\.ubicacionId/);
-  assert.ok(route.match(/checkOperationalScope\(req\.auth!/g)?.length! >= 3);
-  const ownScope = resolveReadScope(
+  assert.ok(
+    route.match(/checkEquiposOperationalScope\(req\.auth!/g)?.length! >= 3,
+  );
+  const ownScope = resolveEquiposReadScope(
     {
       sessionId: "test",
       location: null,
@@ -78,6 +87,27 @@ test("equipment reads and writes enforce site scope", () => {
   );
   assert.equal(ownScope.ubicacionId, 7);
   assert.notEqual(9, ownScope.ubicacionId);
+  const ownSupervisor = {
+    sessionId: "test",
+    location: null,
+    user: {
+      id: 2,
+      nombre: "Supervisor",
+      usuario: "supervisor",
+      passwordHash: "",
+      rol: "SUPERVISOR" as const,
+      ubicacionId: 7,
+      activo: true,
+      alcanceConsulta: "PROPIA" as const,
+      ultimoAcceso: null,
+      createdAt: new Date(0),
+    },
+  };
+  assert.equal(resolveEquiposReadScope(ownSupervisor, 9).ubicacionId, 7);
+  assert.match(
+    checkEquiposOperationalScope(ownSupervisor, [9]) ?? "",
+    /ubicación/,
+  );
   assert.match(
     route,
     /requested !== scope\.ubicacionId[\s\S]*?status\(403\)/,
@@ -113,6 +143,7 @@ test("initializer reconciles and validates structure from canonical values", () 
 test("OpenAPI exposes registration, editing and checklist without deletion", () => {
   assert.match(spec, /\/equipos:\n/);
   assert.match(spec, /operationId: listEquipos/);
+  assert.match(spec, /operationId: listEquiposLocations/);
   assert.match(spec, /operationId: createEquipo/);
   assert.match(spec, /operationId: updateEquipo/);
   assert.match(spec, /operationId: toggleEquipoChecklist/);

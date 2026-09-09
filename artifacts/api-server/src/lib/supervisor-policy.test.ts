@@ -42,15 +42,20 @@ assert.equal(supervisorAllows("proveedores", "autorizar"), false);
 assert.equal(supervisorAllows("entradas", "crear"), true);
 assert.equal(supervisorAllows("salidas", "editar"), true);
 assert.equal(supervisorAllows("contenedores", "crear"), true);
+assert.equal(supervisorAllows("equipos", "ver"), true);
+assert.equal(supervisorAllows("equipos", "crear"), false);
+assert.equal(supervisorAllows("equipos", "editar"), true);
 
 assert.deepEqual(
   Object.keys(SUPERVISOR_PERMISSION_CEILING).sort(),
   [
     "ajustes",
+    "auditoria_inventario",
     "clientes",
     "contenedores",
     "dashboard",
     "entradas",
+    "equipos",
     "etiquetas",
     "inventario",
     "movimientos",
@@ -58,5 +63,6 @@ assert.deepEqual(
     "proveedores",
     "reportes",
     "salidas",
+    "viajes",
   ],
 );

@@ -33,7 +33,9 @@ function fakePool(failMigration = false) {
 test("equipment initializer is transactional and repeatable", async () => {
   const fixture = fakePool();
   await ensureEquiposSchema(fixture.pool);
+  await ensureEquiposSchema(fixture.pool);
   assert.equal(fixture.calls[0], "BEGIN");
+  assert.equal(fixture.calls.filter((query) => query === "BEGIN").length, 2);
   assert.ok(fixture.calls.some((query) => query.includes("pg_advisory_xact_lock")));
   assert.ok(
     fixture.calls.some(

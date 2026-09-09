@@ -408,6 +408,21 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "409": { $ref: "#/components/responses/Conflict" }
+  /equipos/ubicaciones:
+    get:
+      operationId: listEquiposLocations
+      tags: [equipos]
+      summary: Lista sitios operativos activos dentro del alcance de Equipos
+      responses:
+        "200":
+          description: Sitios disponibles sin depender del permiso de Inventario
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/UbicacionInventario" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /equipos/{id}:
     patch:
       operationId: updateEquipo

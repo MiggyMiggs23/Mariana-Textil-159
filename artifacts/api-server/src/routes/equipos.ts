@@ -4,6 +4,7 @@ import {
   CreateEquipoBody,
   CreateEquipoResponse,
   ListEquiposQueryParams,
+  ListEquiposLocationsResponse,
   ListEquiposResponse,
   ToggleEquipoChecklistBody,
   ToggleEquipoChecklistParams,
@@ -24,7 +25,7 @@ import {
   DEFINICIONES_EQUIPO,
   type TipoEquipo,
 } from "@workspace/db";
-import { requireSession } from "../middlewares/auth";
+import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { checkOperationalScope, resolveReadScope } from "./inventario";
@@ -34,6 +35,43 @@ const router: IRouter = Router();
 type EquipmentRow = typeof equiposTable.$inferSelect & {
   ubicacionNombre: string;
 };
+
+export function resolveEquiposReadScope(
+  auth: AuthContext,
+  requestedUbicacionId?: number,
+): { ubicacionId: number | null | undefined; scopeError: string | null } {
+  if (
+    auth.user.rol !== "ADMIN" &&
+    auth.user.alcanceConsulta === "PROPIA"
+  ) {
+    return auth.user.ubicacionId == null
+      ? {
+          ubicacionId: null,
+          scopeError: "No tienes una ubicación asignada.",
+        }
+      : { ubicacionId: auth.user.ubicacionId, scopeError: null };
+  }
+  return resolveReadScope(auth, requestedUbicacionId);
+}
+
+export function checkEquiposOperationalScope(
+  auth: AuthContext,
+  ubicacionIds: number[],
+): string | null {
+  if (
+    auth.user.rol !== "ADMIN" &&
+    auth.user.alcanceConsulta === "PROPIA"
+  ) {
+    const assigned = auth.user.ubicacionId;
+    if (assigned == null) {
+      return "No tienes una ubicación asignada.";
+    }
+    return ubicacionIds.every((id) => id === assigned)
+      ? null
+      : "No tienes permiso para operar en esa ubicación.";
+  }
+  return checkOperationalScope(auth, ubicacionIds);
+}
 
 async function loadEquipos(ubicacionId?: number, equipoId?: number) {
   const filter =
@@ -169,7 +207,7 @@ router.get(
       return;
     }
     const requested = query.data.ubicacionId;
-    const scope = resolveReadScope(req.auth!, requested);
+    const scope = resolveEquiposReadScope(req.auth!, requested);
     if (
       scope.scopeError ||
       (requested !== undefined &&
@@ -193,16 +231,46 @@ router.get(
   },
 );
 
+router.get(
+  "/equipos/ubicaciones",
+  requierePermiso("equipos", "ver"),
+  async (req, res): Promise<void> => {
+    const scope = resolveEquiposReadScope(req.auth!);
+    if (scope.scopeError) {
+      res.status(403).json({ error: scope.scopeError });
+      return;
+    }
+    const filter =
+      scope.ubicacionId == null
+        ? eq(ubicacionesTable.activa, true)
+        : and(
+            eq(ubicacionesTable.activa, true),
+            eq(ubicacionesTable.id, scope.ubicacionId),
+          );
+    const locations = await db
+      .select({
+        id: ubicacionesTable.id,
+        nombre: ubicacionesTable.nombre,
+        tipo: ubicacionesTable.tipo,
+        activa: ubicacionesTable.activa,
+      })
+      .from(ubicacionesTable)
+      .where(filter)
+      .orderBy(ubicacionesTable.nombre);
+    res.json(ListEquiposLocationsResponse.parse(locations));
+  },
+);
+
 router.post(
   "/equipos",
-  requierePermiso("equipos", "editar"),
+  requierePermiso("equipos", "crear"),
   async (req, res, next): Promise<void> => {
     const body = CreateEquipoBody.safeParse(req.body);
     if (!body.success) {
       res.status(400).json({ error: "Datos del equipo inválidos." });
       return;
     }
-    const scopeError = checkOperationalScope(req.auth!, [
+    const scopeError = checkEquiposOperationalScope(req.auth!, [
       body.data.ubicacionId,
     ]);
     if (scopeError) {
@@ -277,7 +345,7 @@ router.patch(
           .limit(1);
         if (!before) throw new Error("NOT_FOUND");
         const targetSite = body.data.ubicacionId ?? before.ubicacionId;
-        const scopeError = checkOperationalScope(req.auth!, [
+        const scopeError = checkEquiposOperationalScope(req.auth!, [
           before.ubicacionId,
           targetSite,
         ]);
@@ -372,7 +440,7 @@ router.patch(
           .where(eq(equiposTable.id, params.data.id))
           .limit(1);
         if (!equipment) throw new Error("NOT_FOUND");
-        const scopeError = checkOperationalScope(req.auth!, [
+        const scopeError = checkEquiposOperationalScope(req.auth!, [
           equipment.ubicacionId,
         ]);
         if (scopeError) throw new Error(`SCOPE:${scopeError}`);

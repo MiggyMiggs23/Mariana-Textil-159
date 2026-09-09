@@ -12,8 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { 
   Equipo, 
-  Location, 
   TipoEquipo, 
+  UbicacionInventario,
   useCreateEquipo, 
   useUpdateEquipo, 
   getListEquiposQueryKey 
@@ -35,7 +35,7 @@ interface EquipoFormDialogProps {
   open: boolean;
   onClose: () => void;
   equipo: Equipo | null;
-  locations: Location[];
+  locations: UbicacionInventario[];
   defaultLocationId: number | null;
 }
 
@@ -129,7 +129,7 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
 
   return (
     <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>{equipo ? "Editar Equipo" : "Nuevo Equipo"}</DialogTitle>
           <DialogDescription>
@@ -139,7 +139,7 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="ubicacionId"
@@ -149,7 +149,6 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
                     <Select 
                       onValueChange={(val) => field.onChange(Number(val))} 
                       value={field.value ? String(field.value) : undefined}
-                      disabled={!!equipo} // Generally we don't change locations of physical equipment, but if we do, remove this
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -157,7 +156,7 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {locations.filter(l => l.activa).map(loc => (
+                        {locations.map(loc => (
                           <SelectItem key={loc.id} value={String(loc.id)}>
                             {loc.nombre}
                           </SelectItem>
@@ -186,8 +185,8 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="COMPUTADORA_POS">Computadora POS</SelectItem>
-                        <SelectItem value="IMPRESORA_TICKETS">Impresora de Tickets</SelectItem>
-                        <SelectItem value="IMPRESORA_ETIQUETAS">Impresora de Etiquetas</SelectItem>
+                        <SelectItem value="IMPRESORA_ETIQUETAS">Impresora de etiquetas</SelectItem>
+                        <SelectItem value="IMPRESORA_TICKETS">Impresora térmica de tickets</SelectItem>
                         <SelectItem value="PISTOLA_ESCANER">Pistola Escáner</SelectItem>
                         <SelectItem value="SMARTPHONE_ESCANER">Smartphone Escáner</SelectItem>
                       </SelectContent>
@@ -212,7 +211,7 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="marca"

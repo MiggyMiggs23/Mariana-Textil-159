@@ -1409,6 +1409,83 @@ export const useCreateEquipo = <TError = ErrorType<ValidationErrorResponse | Una
       return useMutation(getCreateEquipoMutationOptions(options));
     }
 
+export const getListEquiposLocationsUrl = () => {
+
+
+
+
+  return `/api/equipos/ubicaciones`
+}
+
+/**
+ * @summary Lista sitios operativos activos dentro del alcance de Equipos
+ */
+export const listEquiposLocations = async ( options?: Parameters<typeof customFetch>[1]): Promise<UbicacionInventario[]> => {
+
+  return customFetch<UbicacionInventario[]>(getListEquiposLocationsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEquiposLocationsQueryKey = () => {
+    return [
+    `/api/equipos/ubicaciones`
+    ] as const;
+    }
+
+
+export const getListEquiposLocationsQueryOptions = <TData = Awaited<ReturnType<typeof listEquiposLocations>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEquiposLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEquiposLocationsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEquiposLocations>>> = ({ signal }) => listEquiposLocations({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEquiposLocations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEquiposLocationsQueryResult = NonNullable<Awaited<ReturnType<typeof listEquiposLocations>>>
+export type ListEquiposLocationsQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista sitios operativos activos dentro del alcance de Equipos
+ */
+
+export function useListEquiposLocations<TData = Awaited<ReturnType<typeof listEquiposLocations>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEquiposLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEquiposLocationsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getUpdateEquipoUrl = (id: number,) => {
 
 
