@@ -37,3 +37,4 @@
 - [Enteros OpenAPI con Orval y Zod 3](openapi-orval-zod3-integers.md) — `type: integer` genera `zod.int()` incompatible; validar enteros en el servidor.
 - [Límite de history en Safari](safari-history-write-throttling.md) — deduplicar estado y scroll; Safari bloquea ráfagas de `replaceState` que Chromium tolera.
 - [Rótulos financieros en pantallas estrechas](financial-labels-on-narrow-screens.md) — conservar el texto operativo literal; adaptar tipografía o acomodo, nunca abreviarlo.
+- [Preparación DB sin verdes falsos](test-database-preparation-failures.md) — validar salida y estructura; algunos CLI devuelven 0 tras errores y ADD COLUMN no reconcilia constraints.

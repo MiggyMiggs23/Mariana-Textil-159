@@ -41,22 +41,38 @@ import {
   withSchemaStartupLock,
 } from "./lib/server-lifecycle";
 
-const rawPort = process.env["PORT"];
-
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
-}
-
-const port = Number(rawPort);
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
+function requireServerPort(): number {
+  const rawPort = process.env["PORT"];
+  if (!rawPort) {
+    throw new Error(
+      "PORT environment variable is required but was not provided.",
+    );
+  }
+  const port = Number(rawPort);
+  if (Number.isNaN(port) || port <= 0) {
+    throw new Error(`Invalid PORT value: "${rawPort}"`);
+  }
+  return port;
 }
 
 export async function ensureStartupSchemas(): Promise<void> {
   const startedAt = performance.now();
+  const initializer = async <T>(
+    name: string,
+    operation: () => Promise<T>,
+  ): Promise<T> => {
+    const initializerStartedAt = performance.now();
+    try {
+      const result = await operation();
+      logger.info(
+        { durationMs: Math.round(performance.now() - initializerStartedAt) },
+        `Schema initializer complete: ${name}`,
+      );
+      return result;
+    } catch (error) {
+      throw new Error(`Schema initializer failed: ${name}`, { cause: error });
+    }
+  };
   // Session locks belong to a connection. Holding this client until every
   // migration finishes prevents two API instances from interleaving DDL.
   const phase = async (name: string, operation: () => Promise<unknown>) => {
@@ -67,30 +83,48 @@ export async function ensureStartupSchemas(): Promise<void> {
   await withSchemaStartupLock(pool, async (executor) => {
     const startupPool = executor as unknown as typeof pool;
     await phase("audit and logistics", async () => {
-      await ensureAuditSchema(startupPool); await ensureNotificacionesSchema(startupPool); await ensureCamionetasSchema(startupPool); await ensureChoferesSchema(startupPool);
-      await ensureViajesSchema(startupPool); await ensurePagosProveedorSchema(startupPool);
-      await ensureSolicitudesPagoDirigidoSchema(startupPool); await ensureAplicacionesPagoProveedorSchema(startupPool);
+      await initializer("ensureAuditSchema", () => ensureAuditSchema(startupPool));
+      await initializer("ensureNotificacionesSchema", () => ensureNotificacionesSchema(startupPool));
+      await initializer("ensureCamionetasSchema", () => ensureCamionetasSchema(startupPool));
+      await initializer("ensureChoferesSchema", () => ensureChoferesSchema(startupPool));
+      await initializer("ensureViajesSchema", () => ensureViajesSchema(startupPool));
+      await initializer("ensurePagosProveedorSchema", () => ensurePagosProveedorSchema(startupPool));
+      await initializer("ensureSolicitudesPagoDirigidoSchema", () => ensureSolicitudesPagoDirigidoSchema(startupPool));
+      await initializer("ensureAplicacionesPagoProveedorSchema", () => ensureAplicacionesPagoProveedorSchema(startupPool));
     });
     await phase("inventory and products", async () => {
-      await ensureEstadoRolloSchema(startupPool); await ensureExtraordinaryExitsSchema(startupPool); await ensureProductUnitSchema(startupPool); await ensureProductMeterSchema(startupPool);
-      await ensureProductPricingSchema(startupPool); await ensureProductColorSchema(startupPool); await ensureProductSpecificationsSchema(startupPool);
+      await initializer("ensureEstadoRolloSchema", () => ensureEstadoRolloSchema(startupPool));
+      await initializer("ensureExtraordinaryExitsSchema", () => ensureExtraordinaryExitsSchema(startupPool));
+      await initializer("ensureProductUnitSchema", () => ensureProductUnitSchema(startupPool));
+      await initializer("ensureProductMeterSchema", () => ensureProductMeterSchema(startupPool));
+      await initializer("ensureProductPricingSchema", () => ensureProductPricingSchema(startupPool));
+      await initializer("ensureProductColorSchema", () => ensureProductColorSchema(startupPool));
+      await initializer("ensureProductSpecificationsSchema", () => ensureProductSpecificationsSchema(startupPool));
     });
     await phase("roles and inventory audit", async () => {
-      const migratedSupportUsers = await ensureSupervisorRole(startupPool);
-      await ensureAuditoriaInventarioSchema(startupPool); await ensurePisosSchema(startupPool);
+      const migratedSupportUsers = await initializer("ensureSupervisorRole", () => ensureSupervisorRole(startupPool));
+      await initializer("ensureAuditoriaInventarioSchema", () => ensureAuditoriaInventarioSchema(startupPool));
+      await initializer("ensurePisosSchema", () => ensurePisosSchema(startupPool));
       logger.info({ migratedSupportUsers }, "Roles SUPERVISOR, SISTEMAS y CONTADOR verificados");
     });
     await phase("customers and tickets", async () => {
-      await ensureClientesSchema(startupPool); await ensureTicketIvaSchema(startupPool); await ensureCashSessionSchema(startupPool); await ensureTicketAuthorizationSchema(startupPool);
-      await ensureTicketLineTypesSchema(startupPool); await ensureSalidasSchema(startupPool); await ensureDocumentFoliosSchema(startupPool);
+      await initializer("ensureClientesSchema", () => ensureClientesSchema(startupPool));
+      await initializer("ensureTicketIvaSchema", () => ensureTicketIvaSchema(startupPool));
+      await initializer("ensureCashSessionSchema", () => ensureCashSessionSchema(startupPool));
+      await initializer("ensureTicketAuthorizationSchema", () => ensureTicketAuthorizationSchema(startupPool));
+      await initializer("ensureTicketLineTypesSchema", () => ensureTicketLineTypesSchema(startupPool));
+      await initializer("ensureSalidasSchema", () => ensureSalidasSchema(startupPool));
+      await initializer("ensureDocumentFoliosSchema", () => ensureDocumentFoliosSchema(startupPool));
     });
     await phase("reporting and labels", async () => {
-      await ensurePendingCostsSchema(startupPool); await ensureAdminAnalyticsSchema(startupPool);
-      await ensureCuadreFiscalSchema(startupPool); await ensureEtiquetasSchema(startupPool);
+      await initializer("ensurePendingCostsSchema", () => ensurePendingCostsSchema(startupPool));
+      await initializer("ensureAdminAnalyticsSchema", () => ensureAdminAnalyticsSchema(startupPool));
+      await initializer("ensureCuadreFiscalSchema", () => ensureCuadreFiscalSchema(startupPool));
+      await initializer("ensureEtiquetasSchema", () => ensureEtiquetasSchema(startupPool));
       // Run after module-specific migrations, some of which maintain legacy
       // defaults, so the strict inherited CAJA baseline is the final state.
-      await ensureCajaPermissions(startupPool);
-      await ensureSalidasVentaPermissions(startupPool);
+      await initializer("ensureCajaPermissions", () => ensureCajaPermissions(startupPool));
+      await initializer("ensureSalidasVentaPermissions", () => ensureSalidasVentaPermissions(startupPool));
     });
     logger.info({ durationMs: Math.round(performance.now() - startedAt) }, "Schema startup complete");
   });
@@ -98,6 +132,7 @@ export async function ensureStartupSchemas(): Promise<void> {
 
 export async function startServer() {
   await ensureStartupSchemas();
+  const port = requireServerPort();
   const server = app.listen(port);
   server.on("error", async (err) => {
     logger.error({ err }, "Error listening on port");

@@ -116,7 +116,10 @@ export const pool = new Pool({
   statement_timeout: statementTimeoutMillis,
   query_timeout: queryTimeoutMillis,
 });
-if (requiresIsolatedTestDatabase) {
+if (
+  requiresIsolatedTestDatabase &&
+  process.env.TEST_DATABASE_PREPARATION_PHASE !== "initializers"
+) {
   try {
     await assertPreparedTestDatabase(pool);
   } catch (error) {

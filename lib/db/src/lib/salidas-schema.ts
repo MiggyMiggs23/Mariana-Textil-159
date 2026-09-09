@@ -119,7 +119,26 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       ALTER TABLE salidas DROP CONSTRAINT IF EXISTS salidas_venta_cliente_shape_check;
       ALTER TABLE salidas ADD CONSTRAINT salidas_venta_cliente_shape_check
         CHECK (modalidad <> 'VENTA_CLIENTE' OR (cliente_id IS NOT NULL AND destino_id IS NULL));
-      ALTER TABLE movimientos ADD COLUMN IF NOT EXISTS salida_id integer REFERENCES salidas(id);
+      ALTER TABLE movimientos ADD COLUMN IF NOT EXISTS salida_id integer;
+      DO $migration$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1
+          FROM pg_constraint AS constraint_definition
+          JOIN pg_attribute AS constrained_column
+            ON constrained_column.attrelid = constraint_definition.conrelid
+           AND constrained_column.attnum = ANY(constraint_definition.conkey)
+          WHERE constraint_definition.contype = 'f'
+            AND constraint_definition.conrelid = 'public.movimientos'::regclass
+            AND constraint_definition.confrelid = 'public.salidas'::regclass
+            AND constrained_column.attname = 'salida_id'
+        ) THEN
+          ALTER TABLE movimientos
+            ADD CONSTRAINT movimientos_salida_id_salidas_id_fk
+            FOREIGN KEY (salida_id) REFERENCES salidas(id);
+        END IF;
+      END
+      $migration$;
       CREATE INDEX IF NOT EXISTS movimientos_salida_idx ON movimientos (salida_id);
 
       UPDATE salidas
@@ -308,6 +327,57 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         END IF;
       END $$;
     `);
+
+    const structure = await client.query<{
+      has_column: boolean;
+      has_foreign_key: boolean;
+      has_index: boolean;
+    }>(`
+      SELECT
+        EXISTS (
+          SELECT 1
+          FROM information_schema.columns
+          WHERE table_schema = 'public'
+            AND table_name = 'movimientos'
+            AND column_name = 'salida_id'
+            AND data_type = 'integer'
+            AND is_nullable = 'YES'
+        ) AS has_column,
+        EXISTS (
+          SELECT 1
+          FROM pg_constraint AS constraint_definition
+          JOIN pg_attribute AS constrained_column
+            ON constrained_column.attrelid = constraint_definition.conrelid
+           AND constrained_column.attnum = ANY(constraint_definition.conkey)
+          WHERE constraint_definition.contype = 'f'
+            AND constraint_definition.conrelid = 'public.movimientos'::regclass
+            AND constraint_definition.confrelid = 'public.salidas'::regclass
+            AND constrained_column.attname = 'salida_id'
+        ) AS has_foreign_key,
+        EXISTS (
+          SELECT 1
+          FROM pg_index AS index_definition
+          JOIN pg_attribute AS indexed_column
+            ON indexed_column.attrelid = index_definition.indrelid
+           AND indexed_column.attnum = ANY(index_definition.indkey)
+          WHERE index_definition.indrelid = 'public.movimientos'::regclass
+            AND indexed_column.attname = 'salida_id'
+            AND index_definition.indisvalid
+        ) AS has_index
+    `);
+    const applied = structure.rows[0];
+    const missing = [
+      !applied?.has_column ? "columna movimientos.salida_id" : null,
+      !applied?.has_foreign_key
+        ? "FK movimientos.salida_id → salidas.id"
+        : null,
+      !applied?.has_index ? "índice sobre movimientos(salida_id)" : null,
+    ].filter((item): item is string => item !== null);
+    if (missing.length > 0) {
+      throw new Error(
+        `Inicializador de Salidas incompleto; faltan: ${missing.join(", ")}.`,
+      );
+    }
 
     await client.query("COMMIT");
   } catch (error) {

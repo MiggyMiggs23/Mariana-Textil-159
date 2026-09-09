@@ -8,6 +8,8 @@ import {
 function clientWithReadiness(input: {
   missingTables?: string[];
   hasCanonicalAdmin?: boolean;
+  hasSalidaForeignKey?: boolean;
+  hasSalidaIndex?: boolean;
 }): Parameters<typeof assertPreparedTestDatabase>[0] {
   return {
     async query<T extends Record<string, unknown>>(
@@ -24,6 +26,16 @@ function clientWithReadiness(input: {
         return {
           rows: [
             { present: input.hasCanonicalAdmin ?? true },
+          ] as unknown as T[],
+        };
+      }
+      if (text.includes("has_salida_foreign_key")) {
+        return {
+          rows: [
+            {
+              has_salida_foreign_key: input.hasSalidaForeignKey ?? true,
+              has_salida_index: input.hasSalidaIndex ?? true,
+            },
           ] as unknown as T[],
         };
       }
@@ -72,6 +84,29 @@ test("prepared database reports the missing canonical ADMIN without foreign-key 
         /falta el ADMIN canónico activo \(usuarios\.usuario='admin', rol='ADMIN'\)/,
       );
       assert.doesNotMatch(error.message, /foreign key|23503/i);
+      return true;
+    },
+  );
+});
+
+test("prepared database reports missing Salidas runtime structures by name", async () => {
+  await assert.rejects(
+    assertPreparedTestDatabase(
+      clientWithReadiness({
+        hasSalidaForeignKey: false,
+        hasSalidaIndex: false,
+      }),
+    ),
+    (error: unknown) => {
+      assert.ok(error instanceof Error);
+      assert.match(
+        error.message,
+        /falta la FK movimientos\.salida_id → salidas\.id/,
+      );
+      assert.match(
+        error.message,
+        /falta un índice válido sobre movimientos\(salida_id\)/,
+      );
       return true;
     },
   );

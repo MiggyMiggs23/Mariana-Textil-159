@@ -150,12 +150,42 @@ await test("El upgrade de Salidas migra el alias transferencias sin perder su co
     draftIndex.rows[0]?.indexdef ?? "",
     /UNIQUE INDEX[\s\S]*usuario_solicita_id[\s\S]*origen_id[\s\S]*ARMANDO/i,
   );
+  const movementLink = await pool.query<{
+    has_foreign_key: boolean;
+    has_index: boolean;
+  }>(`
+    SELECT
+      EXISTS (
+        SELECT 1
+        FROM pg_constraint AS constraint_definition
+        JOIN pg_attribute AS constrained_column
+          ON constrained_column.attrelid = constraint_definition.conrelid
+         AND constrained_column.attnum = ANY(constraint_definition.conkey)
+        WHERE constraint_definition.contype = 'f'
+          AND constraint_definition.conrelid = 'public.movimientos'::regclass
+          AND constraint_definition.confrelid = 'public.salidas'::regclass
+          AND constrained_column.attname = 'salida_id'
+      ) AS has_foreign_key,
+      EXISTS (
+        SELECT 1
+        FROM pg_index AS index_definition
+        JOIN pg_attribute AS indexed_column
+          ON indexed_column.attrelid = index_definition.indrelid
+         AND indexed_column.attnum = ANY(index_definition.indkey)
+        WHERE index_definition.indrelid = 'public.movimientos'::regclass
+          AND indexed_column.attname = 'salida_id'
+          AND index_definition.indisvalid
+      ) AS has_index
+  `);
+  assert.deepEqual(movementLink.rows, [
+    { has_foreign_key: true, has_index: true },
+  ]);
   const enumValues = await pool.query<{ enumlabel: string }>(`
     SELECT enumlabel FROM pg_enum WHERE enumtypid = 'estado_salida'::regtype
   `);
   assert.deepEqual(
     enumValues.rows.map((row) => row.enumlabel),
-    ["ARMANDO", "EN_TRANSITO", "RECIBIDA", "CANCELADA"],
+    ["ARMANDO", "EN_TRANSITO", "RECIBIDA", "ENTREGADA", "CANCELADA"],
   );
 
   const folio = await pool.query<{ ultimo_folio: number }>(

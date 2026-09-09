@@ -189,6 +189,44 @@ export async function assertPreparedTestDatabase(
       "falta el ADMIN canónico activo (usuarios.usuario='admin', rol='ADMIN')",
     );
   }
+  if (
+    !missingTables.includes("movimientos") &&
+    !missingTables.includes("salidas")
+  ) {
+    const runtimeResult = await testClient.query<{
+      has_salida_foreign_key: boolean;
+      has_salida_index: boolean;
+    }>(`
+      SELECT
+        EXISTS (
+          SELECT 1
+          FROM pg_constraint AS constraint_definition
+          JOIN pg_attribute AS constrained_column
+            ON constrained_column.attrelid = constraint_definition.conrelid
+           AND constrained_column.attnum = ANY(constraint_definition.conkey)
+          WHERE constraint_definition.contype = 'f'
+            AND constraint_definition.conrelid = 'public.movimientos'::regclass
+            AND constraint_definition.confrelid = 'public.salidas'::regclass
+            AND constrained_column.attname = 'salida_id'
+        ) AS has_salida_foreign_key,
+        EXISTS (
+          SELECT 1
+          FROM pg_index AS index_definition
+          JOIN pg_attribute AS indexed_column
+            ON indexed_column.attrelid = index_definition.indrelid
+           AND indexed_column.attnum = ANY(index_definition.indkey)
+          WHERE index_definition.indrelid = 'public.movimientos'::regclass
+            AND indexed_column.attname = 'salida_id'
+            AND index_definition.indisvalid
+        ) AS has_salida_index
+    `);
+    if (runtimeResult.rows[0]?.has_salida_foreign_key !== true) {
+      missing.push("falta la FK movimientos.salida_id → salidas.id");
+    }
+    if (runtimeResult.rows[0]?.has_salida_index !== true) {
+      missing.push("falta un índice válido sobre movimientos(salida_id)");
+    }
+  }
   if (missing.length > 0) {
     throw new Error(
       `Base de pruebas incompleta: ${missing.join(
