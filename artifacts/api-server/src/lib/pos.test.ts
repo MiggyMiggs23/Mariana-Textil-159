@@ -13,6 +13,9 @@ import {
   productosTable,
   pool,
   rollosTable,
+  salidaLineasTable,
+  salidaRollosTable,
+  salidasTable,
   sesionesCajaTable,
   ticketFolioTable,
   ticketLineasTable,
@@ -564,6 +567,63 @@ await test("POS-02B validación anticipada conserva alcance del rollo", async ()
       return true;
     },
   );
+
+  const clienteId = await makeClient();
+  const [salida] = await db
+    .insert(salidasTable)
+    .values({
+      folio: 980_000 + ++seq,
+      origenId: ubicacionId,
+      clienteId,
+      modalidad: "VENTA_CLIENTE",
+      estado: "EN_TRANSITO",
+      usuarioSolicitaId: USER_ID,
+      enviadaAt: new Date(),
+      uuidCliente: randomUUID(),
+    })
+    .returning({ id: salidasTable.id });
+  const [salidaLinea] = await db
+    .insert(salidaLineasTable)
+    .values({
+      salidaId: salida!.id,
+      productoId,
+      cantidadSolicitada: rollo.cantidadActual,
+      cantidadEnviada: rollo.cantidadActual,
+    })
+    .returning({ id: salidaLineasTable.id });
+  await db.insert(salidaRollosTable).values({
+    salidaId: salida!.id,
+    lineaId: salidaLinea!.id,
+    rolloId: rollo.id,
+    cantidadEnviada: rollo.cantidadActual,
+  });
+  try {
+    await assert.rejects(
+      () =>
+        sale({
+          ubicacionId: otraUbicacionId,
+          productoId,
+          rolloId: rollo.id,
+          cantidad: "10",
+          precio: "75",
+        }),
+      (error: unknown) => {
+        assert.ok(error instanceof PosError);
+        assert.equal(error.code, "ROLLO_NOT_FOUND");
+        assert.equal(error.message.includes(rollo.serie), false);
+        assert.equal("details" in error, false);
+        return true;
+      },
+    );
+  } finally {
+    await db
+      .delete(salidaRollosTable)
+      .where(eq(salidaRollosTable.salidaId, salida!.id));
+    await db
+      .delete(salidaLineasTable)
+      .where(eq(salidaLineasTable.salidaId, salida!.id));
+    await db.delete(salidasTable).where(eq(salidasTable.id, salida!.id));
+  }
 });
 
 await test("POS-20 rollo legado sin costo falla anticipada y definitivamente con mensaje seguro", async () => {

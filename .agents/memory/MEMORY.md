@@ -20,6 +20,7 @@
 - [Sobrantes concurrentes de auditoría](inventory-audit-concurrent-surplus.md) — si el rollo ya cambió al sitio auditado, resolver manualmente; nunca marcar aplicado sin movimiento trazable.
 - [Destinos financieros desde el ledger](financial-destination-ledger.md) — combinar pagos POS, abonos, aplicaciones, saldos a favor y reversos con su fecha efectiva.
 - [Lectura global sin operación global](cross-location-read-authorization.md) — no ampliar helpers operativos para habilitar consultas multi-sitio; autorizar la lectura en handlers dedicados.
+- [Secreto de rollos fuera de alcance](operational-roll-scope-secrecy.md) — comprobar ubicación autorizada antes de estado o reservas; fuera de alcance equivale a inexistente.
 - [Ventas completas frente a consumo FIFO](normal-vs-fifo-locking.md) — bloquear y validar unidades completas antes de permitir consumo parcial concurrente.
 - [Revalidación de candidatos tras prebloqueo](prelock-candidate-revalidation.md) — releer sin candados de fila y bloquear solo candidatos estables para no usar pares obsoletos.
 - [Cursor visual en PDFs automatizados](automated-pdf-cursor.md) — distinguir una hoja del controlador visual del desbordamiento real mediante objetos y texto del PDF.

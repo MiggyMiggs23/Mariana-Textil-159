@@ -723,6 +723,10 @@ export async function crearTicket(
   const nombreDestinatario = input.nombreDestinatario?.trim() || null;
   const direccionEntregaSnapshot =
     input.direccionEntregaSnapshot?.trim() || null;
+  const lineLocation = (linea: CrearTicketLineaInput) =>
+    input.deferInventory
+      ? (linea.ubicacionId ?? input.ubicacionId)
+      : input.ubicacionId;
 
   // Acquire the complete, globally ordered inventory lock set before creating
   // any ticket row or locking individual rolls. Internal engine calls are
@@ -731,7 +735,7 @@ export async function crearTicket(
     tx,
     input.lineas.map((linea) => ({
       productoId: linea.productoId,
-      ubicacionId: linea.ubicacionId ?? input.ubicacionId,
+      ubicacionId: lineLocation(linea),
     })),
   );
 
@@ -741,11 +745,6 @@ export async function crearTicket(
     (linea.tipo ?? input.tipo) === "NORMAL" && linea.rolloId != null
       ? [linea.rolloId]
       : [],
-  );
-  await assertNoActiveVentaClienteReservation(
-    tx,
-    rolloIds,
-    input.deferInventory ? (input.owningSalidaIds ?? []) : [],
   );
   if (new Set(rolloIds).size !== rolloIds.length) {
     throw new PosError(
@@ -782,6 +781,23 @@ export async function crearTicket(
           .orderBy(asc(rollosTable.createdAt), asc(rollosTable.id))
           .for("update");
   const rolloMap = new Map(rollos.map((rollo) => [rollo.id, rollo]));
+  for (const linea of input.lineas) {
+    if (
+      (linea.tipo ?? input.tipo) !== "NORMAL" ||
+      linea.rolloId == null
+    ) {
+      continue;
+    }
+    const rollo = rolloMap.get(linea.rolloId);
+    if (!rollo || rollo.ubicacionId !== lineLocation(linea)) {
+      throw new PosError("Rollo no encontrado.", "ROLLO_NOT_FOUND", 404);
+    }
+  }
+  await assertNoActiveVentaClienteReservation(
+    tx,
+    rolloIds,
+    input.deferInventory ? (input.owningSalidaIds ?? []) : [],
+  );
 
   const productoIds = [
     ...new Set(input.lineas.map((linea) => linea.productoId)),
@@ -896,12 +912,9 @@ export async function crearTicket(
       throw new PosError("Rollo no encontrado.", "ROLLO_NOT_FOUND", 404);
     }
     if (rollo) {
-      if (
-        rollo.productoId !== linea.productoId ||
-        rollo.ubicacionId !== (linea.ubicacionId ?? input.ubicacionId)
-      ) {
+      if (rollo.productoId !== linea.productoId) {
         throw new PosError(
-          `El rollo serie ${rollo.serie} no pertenece al producto o ubicación seleccionados.`,
+          `El rollo serie ${rollo.serie} no pertenece al producto seleccionado.`,
           "ROLLO_SCOPE",
         );
       }
