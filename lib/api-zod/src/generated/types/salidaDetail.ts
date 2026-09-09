@@ -41,6 +41,12 @@ export type SalidaDetail = SalidaResumen & ({
   fechaCancelacion: Date | null;
   /** @nullable */
   motivoCancelacion: string | null;
+  /** @nullable */
+  entregadoPorId?: number | null;
+  /** @nullable */
+  nombreEntregadoPor?: string | null;
+  /** @nullable */
+  fechaEntrega?: Date | null;
   lineas: SalidaLinea[];
   rollos: SalidaRollo[];
 });

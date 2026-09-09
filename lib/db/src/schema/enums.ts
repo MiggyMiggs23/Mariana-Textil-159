@@ -119,6 +119,7 @@ export const estadoSalidaEnum = pgEnum("estado_salida", [
   "ARMANDO",
   "EN_TRANSITO",
   "RECIBIDA",
+  "ENTREGADA",
   "CANCELADA",
 ]);
 

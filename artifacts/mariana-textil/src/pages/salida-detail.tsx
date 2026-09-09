@@ -10,6 +10,9 @@ import {
   getGetCurrentUserQueryKey,
   Role,
   getListSalidasQueryKey,
+  useVerificarAutorizacionVentaSalidas,
+  getVerificarAutorizacionVentaSalidasQueryKey,
+  useEntregarSalidaVentaCliente,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -31,12 +34,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { CampoEscaneo } from "@/components/campo-escaneo";
 
 import {
   Dialog,
@@ -51,6 +55,7 @@ function EstadoBadge({ estado }: { estado: string }) {
     ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
     EN_TRANSITO: { label: "En tránsito", class: "bg-amber-100 text-amber-800 border-amber-200" },
     RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
+    ENTREGADA: { label: "Entregada", class: "bg-emerald-100 text-emerald-800 border-emerald-200" },
     CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
   };
   const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
@@ -84,6 +89,14 @@ export default function SalidaDetail() {
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
+  const [folioBusqueda, setFolioBusqueda] = useState("");
+  const [folioVerificado, setFolioVerificado] = useState<number | null>(null);
+  const [seriesEntrega, setSeriesEntrega] = useState<string[]>([]);
+  const verify = useVerificarAutorizacionVentaSalidas(
+    { folio: folioVerificado ?? 0 },
+    { query: { enabled: folioVerificado != null, queryKey: getVerificarAutorizacionVentaSalidasQueryKey({ folio: folioVerificado ?? 0 }), retry: false } },
+  );
+  const entregar = useEntregarSalidaVentaCliente();
 
   if (isLoading) {
     return (
@@ -143,8 +156,10 @@ export default function SalidaDetail() {
         return acc;
       }, new Map<number, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
 
-  const canCancel = !isCaja && salida.estado === 'ARMANDO' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
-  const canPrint = salida.estado === 'EN_TRANSITO' || salida.estado === 'RECIBIDA';
+  const canCancel = !isCaja && salida.modalidad === "VENTA_CLIENTE"
+    ? salida.estado !== "ENTREGADA" && salida.estado !== "CANCELADA" && (isAdmin || (canAuthorize && atOrigin))
+    : salida.estado === 'ARMANDO' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
+  const canPrint = salida.estado === 'EN_TRANSITO' || salida.estado === 'RECIBIDA' || salida.estado === 'ENTREGADA';
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) });
@@ -165,7 +180,12 @@ export default function SalidaDetail() {
       }
     }, {
       onSuccess: () => {
-        toast({ title: "Salida cancelada" });
+        toast({
+          title: salida.documentoVenta ? "Documento y salidas vinculadas cancelados" : "Salida cancelada",
+          description: salida.documentoVenta
+            ? "La operación atómica canceló el documento completo y todas sus salidas agrupadas."
+            : undefined,
+        });
         setAdminPassword("");
         setDialogState({ type: null });
         invalidate();
@@ -190,7 +210,21 @@ export default function SalidaDetail() {
               Folio {salida.folioFormateado}
             </h1>
             <span data-testid={`status-${salida.estado.toLowerCase()}`}><EstadoBadge estado={salida.estado} /></span>
+            {salida.modalidad === "VENTA_CLIENTE" && <Badge variant="outline" className="border-violet-200 bg-violet-50 text-violet-800">Venta a cliente</Badge>}
           </div>
+           {salida.modalidad === "VENTA_CLIENTE" && (
+             <div className="mt-3 rounded-md border border-violet-200 bg-violet-50 p-3 text-sm">
+               <strong>Cliente:</strong> {salida.nombreCliente || `Cliente #${salida.clienteId}`}
+               <span className="mx-2">·</span>
+               <strong>Mercancía:</strong> permanece en el origen para recolección del cliente.
+               {salida.documentoVenta && (
+                 <div className="mt-2">
+                   Documento de venta: <Link className="text-primary underline" href={salida.documentoVenta.href.startsWith("/api") ? `/tickets/${salida.documentoVenta.id}` : salida.documentoVenta.href}>Folio {salida.documentoVenta.folio}</Link>
+                   <span className="ml-2">{salida.autorizada ? "AUTORIZADA" : "Pendiente de autorización"}</span>
+                 </div>
+               )}
+             </div>
+           )}
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500">
             <span className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
@@ -351,7 +385,7 @@ export default function SalidaDetail() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-slate-500 tracking-wider">DESTINO</p>
-                  <p className="font-bold text-slate-900">{salida.nombreDestino}</p>
+                   <p className="font-bold text-slate-900">{salida.modalidad === "VENTA_CLIENTE" ? "Sin destino: cliente recoge en origen" : salida.nombreDestino}</p>
                 </div>
               </div>
 
@@ -400,6 +434,44 @@ export default function SalidaDetail() {
             </Card>
           )}
 
+          {salida.modalidad === "VENTA_CLIENTE" && salida.estado !== "ENTREGADA" && salida.estado !== "CANCELADA" && (
+            <Card className="border-violet-200 bg-violet-50/40">
+              <CardHeader><CardTitle className="text-base">Verificar autorización y entregar</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">Busca el folio del documento de venta y después escanea exactamente cada serie esperada en este origen.</p>
+                <div className="flex gap-2">
+                  <Input value={folioBusqueda} onChange={(event) => setFolioBusqueda(event.target.value)} inputMode="numeric" placeholder="Folio de venta" aria-label="Folio de venta" />
+                  <Button onClick={() => setFolioVerificado(Number(folioBusqueda))} disabled={!/^\d+$/.test(folioBusqueda)}>Verificar</Button>
+                </div>
+                {verify.data && (
+                  <div className={`rounded border p-3 text-sm ${verify.data.autorizada ? "border-emerald-300 bg-emerald-50" : "border-amber-300 bg-amber-50"}`}>
+                    <strong>{verify.data.autorizada && verify.data.salidas.some((linked) => linked.id === salida.id) ? "AUTORIZADA" : verify.data.estado}</strong>
+                    <Link className="ml-2 text-primary underline" href={verify.data.documentoHref}>Documento {verify.data.folioFormateado}</Link>
+                    <div className="mt-2">Salidas vinculadas: {verify.data.salidas.map((linked) => <Link key={linked.id} className="mr-2 text-primary underline" href={linked.href.startsWith("/api") ? `/salidas/${linked.id}` : linked.href}>{linked.folioFormateado} · {linked.nombreOrigen}</Link>)}</div>
+                  </div>
+                )}
+                <CampoEscaneo
+                  value=""
+                  onChange={() => undefined}
+                  onScan={(value) => {
+                    const normalized = value.trim().toUpperCase();
+                    if (!salida.rollos.some((rollo) => rollo.serie === normalized)) {
+                      toast({ title: "SERIE NO PERTENECE A ESTA SALIDA", description: `La serie ${normalized} pertenece a otra salida o no está autorizada.`, variant: "destructive" });
+                      return;
+                    }
+                    setSeriesEntrega((current) => current.includes(normalized) ? current : [...current, normalized]);
+                  }}
+                  interpretRollCode={false}
+                  placeholder="Escanea una serie exacta"
+                  aria-label="Serie exacta para entregar"
+                />
+                <p className="text-sm font-medium">Progreso: {seriesEntrega.length} de {salida.rollos.length} rollos esperados</p>
+                <div className="flex flex-wrap gap-2">{salida.rollos.map((rollo) => <Badge key={rollo.id} variant="outline" className={seriesEntrega.includes(rollo.serie) ? "border-emerald-400 bg-emerald-50" : ""}>{rollo.serie}</Badge>)}</div>
+                <Button className="w-full" disabled={!verify.data?.autorizada || !verify.data.salidas.some((linked) => linked.id === salida.id) || seriesEntrega.length !== salida.rollos.length || entregar.isPending} onClick={() => entregar.mutate({ id: salida.id, data: { series: seriesEntrega } }, { onSuccess: () => { toast({ title: "Salida entregada" }); queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) }); }, onError: (error) => toast({ title: "No se pudo entregar", description: <ApiErrorDetails error={error} />, variant: "destructive" }) })}>Marcar ENTREGADA</Button>
+              </CardContent>
+            </Card>
+          )}
+
           {salida.estado === 'CANCELADA' && (
             <Card className="shadow-sm border-red-200 bg-red-50/50">
               <CardContent className="p-4">
@@ -427,9 +499,13 @@ export default function SalidaDetail() {
         }
       }}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Cancelar Salida</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{salida.documentoVenta ? "Cancelar documento y salidas vinculadas" : "Cancelar Salida"}</DialogTitle></DialogHeader>
           <div className="space-y-4 pt-4">
-            <p className="text-sm text-slate-500">¿Estás seguro de cancelar esta salida? Los rollos seguirán disponibles en el origen.</p>
+             <p className="text-sm text-slate-500">
+               {salida.documentoVenta
+                 ? "Esta operación es atómica: cancelará el documento de venta completo y todas las salidas agrupadas vinculadas, no únicamente esta salida. Se liberarán los bloqueos en cada origen y el documento dejará de autorizar entregas. La cancelación no borra el historial."
+                 : `¿Estás seguro de cancelar esta salida? ${salida.modalidad === "VENTA_CLIENTE" ? "Se liberará el bloqueo en el origen; la cancelación no borra el historial." : "Los rollos seguirán disponibles en el origen."}`}
+             </p>
             <Textarea data-testid="input-cancel-motivo" placeholder="Motivo de la cancelación (Mínimo 10 caracteres)..." value={motivo} onChange={e => setMotivo(e.target.value)} />
 
             {!isAdmin && (
@@ -461,7 +537,7 @@ export default function SalidaDetail() {
             <Button variant="outline" onClick={() => { setAdminPassword(""); setPasswordVisibilityResetKey((current) => current + 1); setDialogState({ type: null }); }}>Cerrar</Button>
             <Button data-testid="btn-submit-cancel" variant="destructive" onClick={onCancel} disabled={cancelMutation.isPending || motivo.length < 10 || (!isAdmin && (!adminUsername || !adminPassword))}>
               {cancelMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Confirmar Cancelación
+               {salida.documentoVenta ? "Cancelar documento y todas sus salidas" : "Confirmar Cancelación"}
             </Button>
           </DialogFooter>
         </DialogContent>

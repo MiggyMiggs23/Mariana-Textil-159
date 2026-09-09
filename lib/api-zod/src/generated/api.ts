@@ -4868,6 +4868,13 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number()
 }).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -5476,6 +5483,13 @@ export const CrearTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number()
 }).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -5729,6 +5743,13 @@ export const ObtenerTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number()
 }).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -5927,6 +5948,13 @@ export const CancelarTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number()
 }).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -6033,6 +6061,13 @@ export const CobrarTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number()
 }).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -6144,6 +6179,13 @@ export const AutorizarNotaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number()
 }).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "ticketId": zod.number(),
@@ -6623,12 +6665,21 @@ export const ListSalidasResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -6667,12 +6718,21 @@ export const GetBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -6716,6 +6776,9 @@ export const GetBorradorSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -6771,12 +6834,21 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -6820,6 +6892,9 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -6878,12 +6953,21 @@ export const CrearSalidaMostradorResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -6927,6 +7011,9 @@ export const CrearSalidaMostradorResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -6964,88 +7051,45 @@ export const CrearSalidaMostradorResponse = zod.object({
 
 
 /**
- * @summary Exporta el historial de salidas
+ * Requiere salidas/crear. El origen conserva físicamente la mercancía; destinoId siempre es null.
+ * @summary Crea y envía una salida para venta con rollos identificados
  */
-export const ExportarSalidasQueryParams = zod.object({
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
-  "origenId": zod.coerce.number().optional(),
-  "destinoId": zod.coerce.number().optional(),
-  "productoId": zod.coerce.number().optional(),
-  "usuarioId": zod.coerce.number().optional(),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']).optional(),
-  "search": zod.coerce.string().optional().describe('Folio exacto o serie de rollo exacta\/parcial')
+export const crearEnviarSalidaVentaClienteBodyUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
+
+
+
+export const crearEnviarSalidaVentaClienteBodyNotaMax = 2000;
+
+
+
+export const CrearEnviarSalidaVentaClienteBody = zod.object({
+  "uuidCliente": zod.string().regex(crearEnviarSalidaVentaClienteBodyUuidClienteRegExp),
+  "origenId": zod.number().min(1),
+  "clienteId": zod.number().min(1),
+  "series": zod.array(zod.string().min(1)).min(1),
+  "nota": zod.string().max(crearEnviarSalidaVentaClienteBodyNotaMax).nullish()
 })
 
-export const ExportarSalidasResponse = zod.unknown()
-
-
-/**
- * Requiere salidas/ver. No concede acceso al módulo administrativo de ubicaciones.
- * @summary Ubicaciones operativas activas para crear y consultar salidas
- */
-export const GetUbicacionesSalidaResponseItem = zod.object({
-  "id": zod.number(),
-  "nombre": zod.string(),
-  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
-  "activa": zod.boolean()
-})
-export const GetUbicacionesSalidaResponse = zod.array(GetUbicacionesSalidaResponseItem)
-
-
-/**
- * @summary Lista salidas en tránsito que el usuario puede recibir en su sitio
- */
-export const ListSalidasRecepcionResponseItem = zod.object({
+export const CrearEnviarSalidaVentaClienteResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
-  "armadoPorId": zod.number(),
-  "nombreArmadoPor": zod.string(),
-  "fechaArmado": zod.coerce.date(),
-  "totalProductos": zod.number(),
-  "totalCantidadSolicitada": zod.string(),
-  "totalCantidadEnviada": zod.string(),
-  "totalCantidadRecibida": zod.string(),
-  "totalRollos": zod.number().optional(),
-  "totalMetros": zod.string().optional(),
-  "totalKilos": zod.string().optional(),
-  "totalBolsas": zod.string().optional(),
-  "totalPiezas": zod.string().optional(),
-  "usuarioId": zod.number().nullish(),
-  "nombreUsuario": zod.string().nullish(),
-  "transportista": zod.string().nullish(),
-  "observaciones": zod.string().nullish(),
-  "diferenciasPendientes": zod.boolean(),
-  "createdAt": zod.coerce.date(),
-  "updatedAt": zod.coerce.date()
-})
-export const ListSalidasRecepcionResponse = zod.array(ListSalidasRecepcionResponseItem)
-
-
-/**
- * @summary Obtiene por id interno una salida en tránsito que el usuario puede recibir
- */
-export const GetSalidaRecepcionParams = zod.object({
-  "id": zod.coerce.number()
-})
-
-export const GetSalidaRecepcionResponse = zod.object({
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
   "id": zod.number(),
   "folio": zod.number(),
-  "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
-  "origenId": zod.number(),
-  "nombreOrigen": zod.string(),
-  "destinoId": zod.number().nullable(),
-  "nombreDestino": zod.string(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7089,6 +7133,393 @@ export const GetSalidaRecepcionResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "cantidadSolicitada": zod.string(),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string(),
+  "rollosSolicitados": zod.number().nullable(),
+  "rollosEnviados": zod.number(),
+  "rollosRecibidos": zod.number(),
+  "nota": zod.string().nullish()
+})),
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "lineaId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string().nullish(),
+  "recibido": zod.boolean().nullable(),
+  "diferencia": zod.string().nullable(),
+  "notaDiferencia": zod.string().nullish(),
+  "cantidadActual": zod.string().optional(),
+  "productoId": zod.number().optional(),
+  "sku": zod.string().optional(),
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
+}))
+}))
+
+
+/**
+ * Requiere salidas_venta/ver y devuelve cada salida seleccionada por omisión para permitir excluirla.
+ * @summary Lista salidas pendientes de cobro agrupadas por cliente
+ */
+export const listSalidasVentaPendientesPorClienteResponseSalidasItemSeleccionadaDefault = true;
+
+
+
+export const ListSalidasVentaPendientesPorClienteResponseItem = zod.object({
+  "clienteId": zod.number(),
+  "nombreCliente": zod.string(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "seleccionada": zod.boolean().default(listSalidasVentaPendientesPorClienteResponseSalidasItemSeleccionadaDefault),
+  "createdAt": zod.coerce.date(),
+  "lineas": zod.array(zod.object({
+  "salidaRolloId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
+  "cantidad": zod.string(),
+  "precioSugerido": zod.string().nullable()
+})).min(1)
+})).min(1)
+})
+export const ListSalidasVentaPendientesPorClienteResponse = zod.array(ListSalidasVentaPendientesPorClienteResponseItem)
+
+
+/**
+ * Requiere salidas_venta/crear. Los precios son editables; NOTA exige plazo de crédito.
+ * @summary Genera un TICKET o NOTA existente desde salidas seleccionadas
+ */
+export const generarVentaDesdeSalidasBodyOneOneUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
+
+
+
+export const generarVentaDesdeSalidasBodyOneOnePreciosItemPrecioUnitarioExclusiveMin = 0;
+
+
+export const generarVentaDesdeSalidasBodyTwoOneUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
+
+
+
+export const generarVentaDesdeSalidasBodyTwoOnePreciosItemPrecioUnitarioExclusiveMin = 0;
+
+
+
+
+export const GenerarVentaDesdeSalidasBody = zod.union([zod.object({
+  "uuidCliente": zod.string().regex(generarVentaDesdeSalidasBodyOneOneUuidClienteRegExp),
+  "clienteId": zod.number().min(1),
+  "salidaIds": zod.array(zod.number().min(1)).min(1),
+  "precios": zod.array(zod.object({
+  "salidaRolloId": zod.number().min(1),
+  "precioUnitario": zod.number().gt(generarVentaDesdeSalidasBodyOneOnePreciosItemPrecioUnitarioExclusiveMin)
+})).min(1)
+}).and(zod.object({
+  "documentoTipo": zod.literal("TICKET")
+})),zod.object({
+  "uuidCliente": zod.string().regex(generarVentaDesdeSalidasBodyTwoOneUuidClienteRegExp),
+  "clienteId": zod.number().min(1),
+  "salidaIds": zod.array(zod.number().min(1)).min(1),
+  "precios": zod.array(zod.object({
+  "salidaRolloId": zod.number().min(1),
+  "precioUnitario": zod.number().gt(generarVentaDesdeSalidasBodyTwoOnePreciosItemPrecioUnitarioExclusiveMin)
+})).min(1)
+}).and(zod.object({
+  "documentoTipo": zod.literal("NOTA"),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)])
+}))])
+
+export const GenerarVentaDesdeSalidasResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "usuarioTerminalId": zod.number(),
+  "nombreUsuarioTerminal": zod.string(),
+  "clienteId": zod.number().nullable(),
+  "nombreCliente": zod.string().nullable(),
+  "notaSinPrecios": zod.boolean(),
+  "direccionEntregaEfectiva": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "iva": zod.string().describe('IVA aplicado al ticket; es 0.00 si no fue facturado'),
+  "tasaIva": zod.string().describe('Tasa de IVA vigente al crear el ticket'),
+  "total": zod.string(),
+  "estado": zod.enum(['VENDIDO', 'CANCELADO']),
+  "lineasCount": zod.number().optional(),
+  "cobrado": zod.boolean().optional(),
+  "cobradoAt": zod.coerce.date().nullish(),
+  "usuarioCajaId": zod.number().nullish(),
+  "nombreUsuarioCaja": zod.string().nullish(),
+  "facturado": zod.boolean(),
+  "sesionCajaId": zod.number().nullish(),
+  "uuidCliente": zod.string().describe('Identificador UUID generado por la terminal'),
+  "createdAt": zod.coerce.date(),
+  "canceladoAt": zod.coerce.date().nullable(),
+  "canceladoPor": zod.number().nullable(),
+  "nombreUsuarioCancelacion": zod.string().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "autorizadoPor": zod.number().nullable(),
+  "nombreUsuarioAutorizacion": zod.string().nullable()
+}).and(zod.object({
+  "esCredito": zod.boolean(),
+  "importeCredito": zod.string(),
+  "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
+  "fechaVencimiento": zod.coerce.date().nullable(),
+  "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "telefonoCliente": zod.string().nullable(),
+  "correoCliente": zod.string().nullable(),
+  "direccionCliente": zod.string().nullable()
+}).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "nombreDestinatario": zod.string().nullish(),
+  "direccionEntregaSnapshot": zod.string().nullish(),
+  "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
+  "diasCreditoCliente": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish().describe('Plazo habitual permitido del cliente; null cuando no está configurado.'),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number()
+}).nullish(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+})).optional().describe('Salidas para venta que originaron este documento.'),
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "rolloId": zod.number().nullable(),
+  "productoId": zod.number(),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "cantidad": zod.string(),
+  "precioUnitario": zod.string(),
+  "precioSugerido": zod.string(),
+  "importe": zod.string(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
+  "serieRollo": zod.string().nullable(),
+  "nombreUbicacion": zod.string(),
+  "costoUnitarioCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoTotalCongelado": zod.string().nullish().describe('Dato administrativo; puede omitirse para TERMINAL'),
+  "costoFuente": zod.union([zod.literal('EXACT_ROLL'),zod.literal('AVERAGE_12_MONTHS'),zod.literal('STALE_LAST_KNOWN'),zod.literal('NO_COST'),zod.literal(null)]).nullish().describe('Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico'),
+  "margen": zod.string().nullish().describe('Dato administrativo calculado; puede omitirse para TERMINAL')
+})),
+  "pagos": zod.array(zod.object({
+  "id": zod.number(),
+  "ticketId": zod.number(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CREDITO']).describe('FACTURADO, EFECTIVO y TRANSFERENCIA son seleccionables; CREDITO se conserva solo para leer registros históricos.'),
+  "importe": zod.string(),
+  "referencia": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string()
+})).optional()
+}))
+
+
+/**
+ * @summary Verifica por folio si un documento de venta está autorizado
+ */
+
+
+
+export const VerificarAutorizacionVentaSalidasQueryParams = zod.object({
+  "folio": zod.coerce.number().min(1)
+})
+
+export const VerificarAutorizacionVentaSalidasResponse = zod.object({
+  "ticketId": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizada": zod.boolean(),
+  "estado": zod.enum(['PENDIENTE_COBRO', 'PENDIENTE_AUTORIZACION', 'AUTORIZADA', 'CANCELADA']),
+  "autorizadoAt": zod.coerce.date().nullish(),
+  "documentoHref": zod.string(),
+  "salidas": zod.array(zod.object({
+  "id": zod.number(),
+  "folioFormateado": zod.string(),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "href": zod.string()
+}))
+})
+
+
+/**
+ * @summary Exporta el historial de salidas
+ */
+export const ExportarSalidasQueryParams = zod.object({
+  "fechaDesde": zod.date().optional(),
+  "fechaHasta": zod.date().optional(),
+  "origenId": zod.coerce.number().optional(),
+  "destinoId": zod.coerce.number().optional(),
+  "productoId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']).optional(),
+  "search": zod.coerce.string().optional().describe('Folio exacto o serie de rollo exacta\/parcial')
+})
+
+export const ExportarSalidasResponse = zod.unknown()
+
+
+/**
+ * Requiere salidas/ver. No concede acceso al módulo administrativo de ubicaciones.
+ * @summary Ubicaciones operativas activas para crear y consultar salidas
+ */
+export const GetUbicacionesSalidaResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "tipo": zod.enum(['TIENDA', 'BODEGA', 'TRANSITO', 'EXTERNO']),
+  "activa": zod.boolean()
+})
+export const GetUbicacionesSalidaResponse = zod.array(GetUbicacionesSalidaResponseItem)
+
+
+/**
+ * @summary Lista salidas en tránsito que el usuario puede recibir en su sitio
+ */
+export const ListSalidasRecepcionResponseItem = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number().nullable(),
+  "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
+  "armadoPorId": zod.number(),
+  "nombreArmadoPor": zod.string(),
+  "fechaArmado": zod.coerce.date(),
+  "totalProductos": zod.number(),
+  "totalCantidadSolicitada": zod.string(),
+  "totalCantidadEnviada": zod.string(),
+  "totalCantidadRecibida": zod.string(),
+  "totalRollos": zod.number().optional(),
+  "totalMetros": zod.string().optional(),
+  "totalKilos": zod.string().optional(),
+  "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
+  "usuarioId": zod.number().nullish(),
+  "nombreUsuario": zod.string().nullish(),
+  "transportista": zod.string().nullish(),
+  "observaciones": zod.string().nullish(),
+  "diferenciasPendientes": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListSalidasRecepcionResponse = zod.array(ListSalidasRecepcionResponseItem)
+
+
+/**
+ * @summary Obtiene por id interno una salida en tránsito que el usuario puede recibir
+ */
+export const GetSalidaRecepcionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetSalidaRecepcionResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number().nullable(),
+  "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
+  "armadoPorId": zod.number(),
+  "nombreArmadoPor": zod.string(),
+  "fechaArmado": zod.coerce.date(),
+  "totalProductos": zod.number(),
+  "totalCantidadSolicitada": zod.string(),
+  "totalCantidadEnviada": zod.string(),
+  "totalCantidadRecibida": zod.string(),
+  "totalRollos": zod.number().optional(),
+  "totalMetros": zod.string().optional(),
+  "totalKilos": zod.string().optional(),
+  "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
+  "usuarioId": zod.number().nullish(),
+  "nombreUsuario": zod.string().nullish(),
+  "transportista": zod.string().nullable(),
+  "observaciones": zod.string().nullish(),
+  "diferenciasPendientes": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}).and(zod.object({
+  "uuidCliente": zod.string(),
+  "enviadoPorId": zod.number().nullable(),
+  "nombreEnviadoPor": zod.string().nullable(),
+  "fechaEnvio": zod.coerce.date().nullable(),
+  "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
+  "notaEnvio": zod.string().nullable(),
+  "recibidoPorId": zod.number().nullable(),
+  "nombreRecibidoPor": zod.string().nullable(),
+  "fechaRecepcion": zod.coerce.date().nullable(),
+  "notaRecepcion": zod.string().nullable(),
+  "canceladoPorId": zod.number().nullable(),
+  "nombreCanceladoPor": zod.string().nullable(),
+  "fechaCancelacion": zod.coerce.date().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -7136,12 +7567,21 @@ export const GetSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7185,6 +7625,9 @@ export const GetSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -7232,12 +7675,21 @@ export const GetDocumentoSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7281,6 +7733,9 @@ export const GetDocumentoSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -7329,12 +7784,21 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7378,6 +7842,9 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -7435,12 +7902,21 @@ export const CancelarSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7484,6 +7960,9 @@ export const CancelarSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -7539,12 +8018,21 @@ export const EnviarSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7588,6 +8076,9 @@ export const EnviarSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -7649,12 +8140,21 @@ export const RecibirSalidaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "folioFormateado": zod.string(),
-  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR']),
-  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
   "origenId": zod.number(),
   "nombreOrigen": zod.string(),
   "destinoId": zod.number().nullable(),
   "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
   "armadoPorId": zod.number(),
   "nombreArmadoPor": zod.string(),
   "fechaArmado": zod.coerce.date(),
@@ -7698,6 +8198,129 @@ export const RecibirSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
+  "lineas": zod.array(zod.object({
+  "id": zod.number(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string(),
+  "cantidadSolicitada": zod.string(),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string(),
+  "rollosSolicitados": zod.number().nullable(),
+  "rollosEnviados": zod.number(),
+  "rollosRecibidos": zod.number(),
+  "nota": zod.string().nullish()
+})),
+  "rollos": zod.array(zod.object({
+  "id": zod.number(),
+  "lineaId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']),
+  "cantidadEnviada": zod.string(),
+  "cantidadRecibida": zod.string().nullish(),
+  "recibido": zod.boolean().nullable(),
+  "diferencia": zod.string().nullable(),
+  "notaDiferencia": zod.string().nullish(),
+  "cantidadActual": zod.string().optional(),
+  "productoId": zod.number().optional(),
+  "sku": zod.string().optional(),
+  "tela": zod.string().optional(),
+  "color": zod.string().optional(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']).optional()
+}))
+}))
+
+
+/**
+ * Requiere ADMIN o usuario asignado al sitio de origen con salidas/ver (o salidas/editar), y un documento de venta autorizado.
+ * @summary Marca entregada una salida para venta después de validar sus series
+ */
+export const EntregarSalidaVentaClienteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+export const entregarSalidaVentaClienteBodyNotaMax = 2000;
+
+
+
+export const EntregarSalidaVentaClienteBody = zod.object({
+  "series": zod.array(zod.string().min(1)).min(1),
+  "nota": zod.string().max(entregarSalidaVentaClienteBodyNotaMax).nullish()
+})
+
+export const EntregarSalidaVentaClienteResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "modalidad": zod.enum(['TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE']),
+  "estado": zod.enum(['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA']),
+  "origenId": zod.number(),
+  "nombreOrigen": zod.string(),
+  "destinoId": zod.number().nullable(),
+  "nombreDestino": zod.string(),
+  "clienteId": zod.number().nullish(),
+  "nombreCliente": zod.string().nullish(),
+  "documentoVenta": zod.union([zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "href": zod.string()
+}),zod.null()]).optional(),
+  "autorizada": zod.boolean().nullish().describe('Derivada exclusivamente del cobro o autorización del documento ligado.'),
+  "armadoPorId": zod.number(),
+  "nombreArmadoPor": zod.string(),
+  "fechaArmado": zod.coerce.date(),
+  "totalProductos": zod.number(),
+  "totalCantidadSolicitada": zod.string(),
+  "totalCantidadEnviada": zod.string(),
+  "totalCantidadRecibida": zod.string(),
+  "totalRollos": zod.number().optional(),
+  "totalMetros": zod.string().optional(),
+  "totalKilos": zod.string().optional(),
+  "totalBolsas": zod.string().optional(),
+  "totalPiezas": zod.string().optional(),
+  "usuarioId": zod.number().nullish(),
+  "nombreUsuario": zod.string().nullish(),
+  "transportista": zod.string().nullable(),
+  "observaciones": zod.string().nullish(),
+  "diferenciasPendientes": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}).and(zod.object({
+  "uuidCliente": zod.string(),
+  "enviadoPorId": zod.number().nullable(),
+  "nombreEnviadoPor": zod.string().nullable(),
+  "fechaEnvio": zod.coerce.date().nullable(),
+  "transportista": zod.string().nullable(),
+  "transporteEfectivo": zod.string().nullish(),
+  "viaje": zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "nombreCamioneta": zod.string(),
+  "placasCamioneta": zod.string(),
+  "nombreChofer": zod.string(),
+  "telefonoChofer": zod.string()
+}).nullish(),
+  "notaEnvio": zod.string().nullable(),
+  "recibidoPorId": zod.number().nullable(),
+  "nombreRecibidoPor": zod.string().nullable(),
+  "fechaRecepcion": zod.coerce.date().nullable(),
+  "notaRecepcion": zod.string().nullable(),
+  "canceladoPorId": zod.number().nullable(),
+  "nombreCanceladoPor": zod.string().nullable(),
+  "fechaCancelacion": zod.coerce.date().nullable(),
+  "motivoCancelacion": zod.string().nullable(),
+  "entregadoPorId": zod.number().nullish(),
+  "nombreEntregadoPor": zod.string().nullish(),
+  "fechaEntrega": zod.coerce.date().nullish(),
   "lineas": zod.array(zod.object({
   "id": zod.number(),
   "productoId": zod.number(),
@@ -8115,7 +8738,16 @@ export const GetAdminAlertasResponse = zod.object({
   "nombreOrigen": zod.string(),
   "destinoId": zod.number(),
   "nombreDestino": zod.string()
-})).describe('Salidas EN_TRANSITO que superan el umbral operativo sin recepción.')
+})).describe('Salidas EN_TRANSITO que superan el umbral operativo sin recepción.'),
+  "ventasAutorizadasSinEntregar": zod.array(zod.object({
+  "ticketId": zod.number(),
+  "ticketFolio": zod.number(),
+  "salidaId": zod.number(),
+  "salidaFolio": zod.number(),
+  "horasSinEntregar": zod.number(),
+  "ticketHref": zod.string(),
+  "salidaHref": zod.string()
+})).describe('Ventas autorizadas cuya salida aún no fue entregada.')
 })
 
 

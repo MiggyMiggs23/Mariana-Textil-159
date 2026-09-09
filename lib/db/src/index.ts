@@ -7,6 +7,7 @@ export { ensureCashSessionSchema } from "./lib/cash-session-schema";
 export { ensureTicketAuthorizationSchema } from "./lib/ticket-authorization-schema";
 export { ensureTicketLineTypesSchema } from "./lib/ticket-line-types-schema";
 export { ensureSalidasSchema } from "./lib/salidas-schema";
+export { ensureSalidasVentaPermissions } from "./lib/salidas-venta-permissions-schema";
 export { ensurePendingCostsSchema } from "./lib/pending-costs-schema";
 export { ensureClientesSchema } from "./lib/clientes-schema";
 export { ensureAdminAnalyticsSchema } from "./lib/admin-analytics-schema";

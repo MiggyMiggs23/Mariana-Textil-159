@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { DocumentoVentaLink } from './documentoVentaLink';
 import type { EstadoSalida } from './estadoSalida';
 import type { ModalidadSalida } from './modalidadSalida';
 
@@ -19,6 +20,16 @@ export interface SalidaResumen {
   /** @nullable */
   destinoId: number | null;
   nombreDestino: string;
+  /** @nullable */
+  clienteId?: number | null;
+  /** @nullable */
+  nombreCliente?: string | null;
+  documentoVenta?: DocumentoVentaLink | null;
+  /**
+     * Derivada exclusivamente del cobro o autorización del documento ligado.
+     * @nullable
+     */
+  autorizada?: boolean | null;
   armadoPorId: number;
   nombreArmadoPor: string;
   fechaArmado: Date;

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { z } from "zod";
 import ExcelJS from "exceljs";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import {
@@ -28,22 +29,38 @@ import {
   RecibirSalidaBody,
   RecibirSalidaParams,
   RecibirSalidaResponse,
+  CrearEnviarSalidaVentaClienteBody,
+  CrearEnviarSalidaVentaClienteResponse,
+  ListSalidasVentaPendientesPorClienteResponse,
+  GenerarVentaDesdeSalidasBody,
+  GenerarVentaDesdeSalidasResponse,
+  EntregarSalidaVentaClienteParams,
+  EntregarSalidaVentaClienteBody,
+  EntregarSalidaVentaClienteResponse,
+  VerificarAutorizacionVentaSalidasResponse,
 } from "@workspace/api-zod";
-import { db, salidasTable, ubicacionesTable, usuariosTable, viajeSalidasTable, type EstadoSalida } from "@workspace/db";
+import { db, salidasTable, ubicacionesTable, usuariosTable, viajeSalidasTable, salidaRollosTable, rollosTable, productosTable, clientesTable, ticketsTable, ticketLineasTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
-import { requierePermiso } from "../lib/permisos";
+import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { InventarioError } from "../lib/inventario";
+import { canDeliverVenta, canReadLinkedVentaTrace } from "../lib/venta-trace-access";
 import {
   agregarRolloBorradorSalida,
   buildSalidaDetail,
   cancelarSalida,
+  cancelarSalidaODocumentoLigado,
   crearSalidaMostrador,
   enviarSalida,
   listarSalidas,
   obtenerBorradorSalida,
   quitarRolloBorradorSalida,
   recibirSalida,
+  crearEnviarSalidaVentaCliente,
+  entregarSalidaVenta,
+  prepararVentaDesdeSalidas,
+  validarORecuperarGeneracionVenta,
 } from "../lib/salidas";
+import { buildTicketDetail, cancelarTicket, crearTicket } from "../lib/pos";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   EXCEL_NUMBER_FORMAT,
@@ -52,13 +69,96 @@ import {
 import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 
 const router = Router();
+const SerieEntregaInvalidaErrorSchema = z.object({
+  error: z.string(),
+  code: z.literal("SERIE_ENTREGA_INVALIDA"),
+  details: z.array(z.object({
+    serieEscaneada: z.string(),
+    razon: z.enum(["FALTANTE", "DUPLICADA", "NO_RESERVADA", "PERTENECE_A_OTRA_SALIDA"]),
+    clienteId: z.number().nullable().optional(),
+    nombreCliente: z.string().nullable().optional(),
+    rolloId: z.number().nullable().optional(),
+    productoId: z.number().nullable().optional(),
+    ubicacionId: z.number().nullable().optional(),
+    salida: z.object({ id: z.number(), folioFormateado: z.string(), origenId: z.number(), nombreOrigen: z.string(), href: z.string() }).nullable(),
+    documentoVenta: z.object({ id: z.number(), folio: z.number(), documentoTipo: z.enum(["TICKET", "NOTA"]), href: z.string() }).nullable(),
+  })).min(1),
+});
 
 const ESTADOS: EstadoSalida[] = [
   "ARMANDO",
   "EN_TRANSITO",
   "RECIBIDA",
+  "ENTREGADA",
   "CANCELADA",
 ];
+
+router.post("/salidas/venta-cliente", requireSession, requierePermiso("salidas", "crear"), async (req, res, next) => {
+  try {
+    const body = CrearEnviarSalidaVentaClienteBody.parse(req.body);
+    if (req.auth!.user.rol !== "ADMIN" && req.auth!.user.ubicacionId !== body.origenId) throw new InventarioError("No puedes operar desde ese origen.", "SALIDA_LOCATION_FORBIDDEN");
+    const result = await db.transaction(tx => crearEnviarSalidaVentaCliente(tx, { ...body, usuarioId: req.auth!.user.id, series: body.series }));
+    res.status(201).json(CrearEnviarSalidaVentaClienteResponse.parse(result));
+  } catch (e) { if (!sendError(e, res)) next(e); }
+});
+
+router.get("/salidas/venta-cliente/pendientes", requireSession, requierePermiso("salidas_venta", "ver"), async (_req, res, next) => {
+  try {
+    const rows = await db.select({ clienteId: salidasTable.clienteId, nombreCliente: clientesTable.nombre, id: salidasTable.id, folio: salidasTable.folio, origenId: salidasTable.origenId, nombreOrigen: ubicacionesTable.nombre, createdAt: salidasTable.createdAt, salidaRolloId: salidaRollosTable.id, rolloId: rollosTable.id, serie: rollosTable.serie, productoId: productosTable.id, sku: productosTable.sku, tela: productosTable.tela, color: productosTable.color, unidad: productosTable.unidad, cantidad: salidaRollosTable.cantidadEnviada, precioSugerido: productosTable.precioSugerido })
+      .from(salidasTable).innerJoin(clientesTable, eq(salidasTable.clienteId, clientesTable.id)).innerJoin(ubicacionesTable, eq(salidasTable.origenId, ubicacionesTable.id)).innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id)).innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id)).innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+      .where(and(eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "EN_TRANSITO"))).orderBy(asc(salidasTable.id), asc(salidaRollosTable.id));
+    const groups = new Map<number, any>();
+    for (const r of rows) {
+      let g = groups.get(r.clienteId!); if (!g) { g = { clienteId: r.clienteId, nombreCliente: r.nombreCliente, salidas: [] }; groups.set(r.clienteId!, g); }
+      let s = g.salidas.find((x: any) => x.id === r.id); if (!s) { s = { id: r.id, folio: r.folio, folioFormateado: `${r.nombreOrigen}-${String(r.folio).padStart(6, "0")}`, origenId: r.origenId, nombreOrigen: r.nombreOrigen, seleccionada: true, createdAt: r.createdAt, lineas: [] }; g.salidas.push(s); }
+      s.lineas.push({ salidaRolloId: r.salidaRolloId, rolloId: r.rolloId, serie: r.serie, productoId: r.productoId, sku: r.sku, tela: r.tela, color: r.color, unidad: r.unidad, cantidad: r.cantidad, precioSugerido: r.precioSugerido });
+    }
+    res.json(ListSalidasVentaPendientesPorClienteResponse.parse([...groups.values()]));
+  } catch (e) { if (!sendError(e, res)) next(e); }
+});
+
+router.post("/salidas/venta-cliente/generar-venta", requireSession, requierePermiso("salidas_venta", "crear"), async (req, res, next) => {
+  try {
+    const body = GenerarVentaDesdeSalidasBody.parse(req.body);
+    const result = await db.transaction(async tx => {
+      const existingTicketId = await validarORecuperarGeneracionVenta(tx, {
+        uuidCliente: body.uuidCliente,
+        salidaIds: body.salidaIds,
+        clienteId: body.clienteId,
+        documentoTipo: body.documentoTipo,
+        diasPlazo: body.documentoTipo === "NOTA" ? body.diasPlazo : null,
+        precios: body.precios,
+      });
+      if (existingTicketId != null) return buildTicketDetail(tx, existingTicketId, true);
+      const lockedLines = await prepararVentaDesdeSalidas(tx, { salidaIds: body.salidaIds, clienteId: body.clienteId });
+      const price = new Map(body.precios.map(p => [p.salidaRolloId, String(p.precioUnitario)]));
+      const selectedRolloIds = new Set(lockedLines.map((line) => line.salidaRolloId));
+      if (price.size !== body.precios.length || price.size !== selectedRolloIds.size || [...price.keys()].some(id => !selectedRolloIds.has(id))) {
+        throw new InventarioError("Debe enviarse exactamente un precio por cada rollo seleccionado, sin extras.", "INVALID_PRICE_SET");
+      }
+      const ticket = await crearTicket(tx, {
+        ubicacionId: req.auth!.user.ubicacionId!,
+        usuarioTerminalId: req.auth!.user.id,
+        clienteId: body.clienteId,
+        documentoTipo: body.documentoTipo,
+        facturado: false,
+        diasPlazo: body.documentoTipo === "NOTA" ? body.diasPlazo : null,
+        uuidCliente: body.uuidCliente,
+        deferInventory: true,
+        owningSalidaIds: body.salidaIds,
+        lineas: lockedLines.map((l: any) => ({
+          rolloId: l.rolloId, productoId: l.productoId, ubicacionId: l.origenId, tipo: "NORMAL",
+          cantidad: l.cantidad,
+          precioUnitario: price.get(l.salidaRolloId) ?? String(l.precio ?? "0"),
+        })),
+        ip: req.ip ?? "desconocida",
+      }, true);
+      await tx.update(salidasTable).set({ ticketId: ticket!.id, estado: "RECIBIDA", recibidaAt: new Date(), usuarioRecibeId: req.auth!.user.id, actividadAt: new Date() }).where(inArray(salidasTable.id, body.salidaIds));
+      return buildTicketDetail(tx, ticket!.id, true);
+    });
+    res.status(201).json(GenerarVentaDesdeSalidasResponse.parse(result));
+  } catch (e) { if (!sendError(e, res)) next(e); }
+});
 
 router.get(
   "/salidas/ubicaciones",
@@ -87,6 +187,49 @@ router.get(
     }
   },
 );
+
+router.get("/salidas/venta-cliente/verificar-autorizacion", requireSession, async (req, res, next) => {
+  try {
+    const folio = Number(req.query.folio);
+    const [row] = await db.select({ id: salidasTable.id, folio: ticketsTable.folio, origenId: salidasTable.origenId, ticketId: salidasTable.ticketId, ticketEstado: ticketsTable.estado, documentoTipo: ticketsTable.documentoTipo, cobrado: ticketsTable.cobrado, autorizacionEstado: ticketsTable.autorizacionEstado, autorizadoAt: ticketsTable.autorizadoAt })
+      .from(salidasTable).innerJoin(ticketsTable, eq(salidasTable.ticketId, ticketsTable.id)).where(eq(ticketsTable.folio, folio)).limit(1);
+    if (!row || row.ticketId == null) throw new InventarioError("Salida o documento de venta no encontrado.", "SALIDA_NOT_FOUND");
+    const autorizada = row.ticketEstado === "VENDIDO" && (row.documentoTipo === "TICKET" ? row.cobrado : row.autorizacionEstado === "AUTORIZADA");
+    const estado = row.ticketEstado === "CANCELADO" ? "CANCELADA" : autorizada ? "AUTORIZADA" : row.documentoTipo === "TICKET" ? "PENDIENTE_COBRO" : "PENDIENTE_AUTORIZACION";
+    const linked = await db.select({ id: salidasTable.id, folio: salidasTable.folio, origenId: salidasTable.origenId, nombreOrigen: ubicacionesTable.nombre, iniciales: ubicacionesTable.iniciales }).from(salidasTable).innerJoin(ubicacionesTable, eq(salidasTable.origenId, ubicacionesTable.id)).where(eq(salidasTable.ticketId, row.ticketId));
+    const auth = req.auth!;
+    const [ventaPermiso, salidaPermiso] = await Promise.all([
+      resolvePermiso(auth.user.id, auth.user.rol, "salidas_venta"),
+      resolvePermiso(auth.user.id, auth.user.rol, "salidas"),
+    ]);
+    const allowed = canReadLinkedVentaTrace({
+      rol: auth.user.rol, ubicacionId: auth.user.ubicacionId,
+      puedeVerSalidas: salidaPermiso?.puedeVer === true,
+      puedeVerSalidasVenta: ventaPermiso?.puedeVer === true,
+      linkedOrigins: linked.map(s => s.origenId),
+    });
+    if (!allowed) throw new InventarioError("No tienes permiso para verificar este documento.", "SALIDA_LOCATION_FORBIDDEN");
+    res.json(VerificarAutorizacionVentaSalidasResponse.parse({ ticketId: row.ticketId, folio: row.folio, folioFormateado: `${row.documentoTipo}-${String(row.folio).padStart(6, "0")}`, documentoTipo: row.documentoTipo, autorizada, estado, autorizadoAt: row.autorizadoAt, documentoHref: `/tickets/${row.ticketId}`, salidas: linked.map(s => ({ id: s.id, folioFormateado: `${s.iniciales}-${String(s.folio).padStart(6, "0")}`, origenId: s.origenId, nombreOrigen: s.nombreOrigen, href: `/salidas/${s.id}` })) }));
+  } catch (e) { if (!sendError(e, res)) next(e); }
+});
+
+router.post("/salidas/:id/entregar", requireSession, async (req, res, next) => {
+  try {
+    const { id } = EntregarSalidaVentaClienteParams.parse(req.params);
+    const body = EntregarSalidaVentaClienteBody.parse(req.body);
+    const header = await loadHeader(id);
+    if (!header || header.modalidad !== "VENTA_CLIENTE") throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+    const auth = req.auth!;
+    const permiso = await resolvePermiso(auth.user.id, auth.user.rol, "salidas");
+    if (!canDeliverVenta({
+      rol: auth.user.rol, assignedLocationId: auth.user.ubicacionId,
+      originId: header.origenId, puedeVerSalidas: permiso?.puedeVer === true,
+      puedeEditarSalidas: permiso?.puedeEditar === true,
+    })) throw new InventarioError("Solo el origen autorizado puede entregar esta salida.", "SALIDA_LOCATION_FORBIDDEN");
+    const result = await db.transaction(tx => entregarSalidaVenta(tx, id, req.auth!.user.id, body.series, body.nota));
+    res.json(EntregarSalidaVentaClienteResponse.parse(result));
+  } catch (e) { if (!sendError(e, res)) next(e); }
+});
 
 async function loadHeader(id: number) {
   const [salida] = await db
@@ -178,6 +321,7 @@ function errorStatus(error: InventarioError): number {
       "DRAFT_DESTINATION_MISMATCH",
       "DRAFT_ROLL_CHANGED",
       "SALIDA_HAS_MOVEMENTS",
+      "UUID_CONFLICT",
     ].includes(error.code)
   ) {
     return 409;
@@ -188,7 +332,8 @@ function errorStatus(error: InventarioError): number {
 
 function sendError(error: unknown, res: Parameters<Parameters<typeof router.get>[1]>[1]): boolean {
   if (!(error instanceof InventarioError)) return false;
-  res.status(errorStatus(error)).json({ error: error.message, code: error.code });
+  const payload = { error: error.message, code: error.code, ...(error.details === undefined ? {} : { details: error.details }) };
+  res.status(errorStatus(error)).json(error.code === "SERIE_ENTREGA_INVALIDA" ? SerieEntregaInvalidaErrorSchema.parse(payload) : payload);
   return true;
 }
 
@@ -488,11 +633,21 @@ router.get(
 router.get(
   "/salidas/:id",
   requireSession,
-  requierePermiso("salidas", "ver"),
   async (req, res, next) => {
     try {
       const { id } = GetSalidaParams.parse(req.params);
-      await requireSalidaAccess(req.auth!, id, "read");
+      const header = await loadHeader(id);
+      if (!header) throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+      const auth = req.auth!;
+      const [salidaPermiso, ventaPermiso] = await Promise.all([
+        resolvePermiso(auth.user.id, auth.user.rol, "salidas"),
+        resolvePermiso(auth.user.id, auth.user.rol, "salidas_venta"),
+      ]);
+      const relationRead = header.modalidad === "VENTA_CLIENTE" && ventaPermiso?.puedeVer === true;
+      if (!relationRead) {
+        if (salidaPermiso?.puedeVer !== true) throw new InventarioError("No tienes permiso para consultar esta salida.", "SALIDA_LOCATION_FORBIDDEN");
+        await requireSalidaAccess(auth, id, "read");
+      }
       const detail = await buildSalidaDetail(db, id);
       res.json(detail);
     } catch (error) {
@@ -634,7 +789,23 @@ router.post(
           if (!admin) throw new InventarioError("Credenciales de administrador inválidas.", "ADMIN_AUTH_INVALID");
           autorizadoPorId = admin.id;
         }
-        const detail = await cancelarSalida(tx, id, auth.user.id, body.motivo);
+        const [header] = await tx.select({ salidaId: salidasTable.id, modalidad: salidasTable.modalidad, ticketId: salidasTable.ticketId })
+          .from(salidasTable).where(eq(salidasTable.id, id)).limit(1);
+        if (!header) throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+        const detail = await cancelarSalidaODocumentoLigado(header, {
+          cancelarDocumento: async (ticketId, requestedSalidaId) => {
+              await cancelarTicket(tx, {
+                ticketId,
+                requestedSalidaId,
+                usuarioId: auth.user.id,
+                autorizadoPor: autorizadoPorId ?? auth.user.id,
+                motivo: body.motivo,
+                ip: req.ip || req.socket.remoteAddress || "desconocida",
+              }, false);
+          },
+          buildSalida: () => buildSalidaDetail(tx, id),
+          cancelarSalida: () => cancelarSalida(tx, id, auth.user.id, body.motivo),
+        });
         if (autorizadoPorId != null) {
           await tx.update(salidasTable).set({ autorizadoPorId }).where(eq(salidasTable.id, id));
         }

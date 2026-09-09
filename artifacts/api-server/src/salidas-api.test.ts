@@ -40,7 +40,7 @@ test("Salida capture persists its draft roll-by-roll and finalizes in one action
   assert.doesNotMatch(spec, /operationId: escanearRolloSalida/);
   assert.doesNotMatch(spec, /operationId: (aceptarSalida|rechazarSalida|prepararSalida|cerrarSalida|getSalidasPendientesCount)/);
   assert.match(spec, /operationId: enviarSalida/);
-  assert.match(spec, /enum: \[ARMANDO, EN_TRANSITO, RECIBIDA, CANCELADA\]/);
+  assert.match(spec, /enum: \[ARMANDO, EN_TRANSITO, RECIBIDA, ENTREGADA, CANCELADA\]/);
   for (const obsolete of ["SalidaLineaInput", "PrepararSalidaInput", "PrepararSalidaLineaInput", "RecibirSalidaRolloInput", "PendientesCount"]) {
     assert.doesNotMatch(spec, new RegExp(`^    ${obsolete}:`, "m"));
   }
@@ -119,7 +119,7 @@ test("Block 1 counter exit is one-step, site-scoped, persisted and printable", a
   assert.match(spec, /operationId: crearSalidaMostrador/);
   assert.doesNotMatch(spec, /\/inventario\/rollos\/\{id\}\/salida-mostrador:/);
   assert.doesNotMatch(inventoryRoute, /"\/rollos\/:id\/salida-mostrador"/);
-  assert.match(spec, /enum: \[TRASLADO, MOSTRADOR\]/);
+  assert.match(spec, /enum: \[TRASLADO, MOSTRADOR, VENTA_CLIENTE\]/);
   assert.match(route, /requierePermiso\("salidas", "crear"\)/);
   assert.match(route, /auth\.user\.rol === "ADMIN"/);
   assert.match(route, /auth\.user\.ubicacionId === body\.origenId/);

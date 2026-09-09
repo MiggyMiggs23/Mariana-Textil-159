@@ -12,4 +12,5 @@ export type ModalidadSalida = typeof ModalidadSalida[keyof typeof ModalidadSalid
 export const ModalidadSalida = {
   TRASLADO: 'TRASLADO',
   MOSTRADOR: 'MOSTRADOR',
+  VENTA_CLIENTE: 'VENTA_CLIENTE',
 } as const;

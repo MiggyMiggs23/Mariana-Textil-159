@@ -19,6 +19,7 @@ import {
   ChevronUp,
   ArrowLeft,
   FileText,
+  PackageCheck,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -64,13 +65,15 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 import {
   hasCapturedSuggestedPrice,
   PRODUCT_WITHOUT_PRICE_DESCRIPTION,
   PRODUCT_WITHOUT_PRICE_TITLE,
 } from "@/lib/pos-product-price";
 import { ClientSelector } from "@/components/client-selector";
+import { SalidasPendientesCobro } from "@/components/salidas-pendientes-cobro";
+import { hasPermission, Modules } from "@/lib/permisos";
 import {
   allowedCreditTerm,
   CREDIT_TERMS,
@@ -480,6 +483,9 @@ export default function PosPage() {
   const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
   const [documentoTipo, setDocumentoTipo] =
     useHistoryEntryState<"TICKET" | "NOTA" | null>("pos.document-type", null);
+  const [showSalidasVenta, setShowSalidasVenta] = useState(
+    () => new URLSearchParams(window.location.search).has("salidaClienteId"),
+  );
   const [notaSinPrecios, setNotaSinPrecios] = useState(false);
   useEffect(() => {
     if (documentoTipo !== "NOTA") {
@@ -669,10 +675,7 @@ export default function PosPage() {
         requestAppSound("ALERTA");
         toast({
           title: "No se pudo verificar el rollo",
-          description: getApiErrorMessage(
-            error,
-            "Revisa la conexión e intenta escanear de nuevo.",
-          ),
+          description: <ApiErrorDetails error={error} />,
           variant: "destructive",
         });
       }
@@ -953,7 +956,7 @@ export default function PosPage() {
           );
           toast({
             title: "Error al crear ticket",
-            description: message,
+            description: <ApiErrorDetails error={err} />,
             variant: "destructive",
           });
           const data =
@@ -1037,9 +1040,12 @@ export default function PosPage() {
   }
 
   if (!documentoTipo) {
+    if (showSalidasVenta && hasPermission(currentUser, Modules.SALIDAS_VENTA, "ver")) {
+      return <SalidasPendientesCobro onBack={() => setShowSalidasVenta(false)} />;
+    }
     return (
       <div className="flex h-[calc(100dvh-8rem)] items-center justify-center animate-in fade-in zoom-in-95 duration-200">
-        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
           <button
             onClick={() => setDocumentoTipo("TICKET")}
             className="flex flex-col items-center justify-center p-16 bg-card border-2 border-border rounded-xl hover:border-primary hover:bg-primary/5 transition-all shadow-sm group"
@@ -1054,6 +1060,17 @@ export default function PosPage() {
             <FileText className="h-24 w-24 text-muted-foreground group-hover:text-primary mb-6 transition-colors" />
             <span className="text-4xl font-black tracking-tight text-sidebar group-hover:text-primary transition-colors">Notas (Crédito)</span>
           </button>
+          {hasPermission(currentUser, Modules.SALIDAS_VENTA, "ver") && (
+            <button
+              type="button"
+              data-testid="card-salidas-pendientes-cobro"
+              onClick={() => setShowSalidasVenta(true)}
+              className="flex flex-col items-center justify-center p-10 bg-card border-2 border-border rounded-xl hover:border-primary hover:bg-primary/5 transition-all shadow-sm group"
+            >
+              <PackageCheck className="h-20 w-20 text-muted-foreground group-hover:text-primary mb-6 transition-colors" />
+              <span className="text-3xl font-black tracking-tight text-sidebar group-hover:text-primary transition-colors text-center">Salidas pendientes a cobro</span>
+            </button>
+          )}
         </div>
       </div>
     );
@@ -1148,10 +1165,7 @@ export default function PosPage() {
                 className="h-full flex items-center justify-center text-center text-destructive"
                 role="alert"
               >
-                {getApiErrorMessage(
-                  searchError,
-                  "No se pudo realizar la búsqueda. Intenta de nuevo.",
-                )}
+                <ApiErrorDetails error={searchError} />
               </div>
             ) : !searchResults ||
               (searchResults.rollos.length === 0 &&

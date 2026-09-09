@@ -51,6 +51,7 @@ import {
   formatQuantityThousandths,
   quantityToThousandths,
 } from "./quantity-comparison";
+import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
 
 // ── Drizzle transaction type ──────────────────────────────────────────────────
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -75,7 +76,7 @@ export async function lockInventoryPairs(
     ).values(),
   ).sort(
     (a, b) =>
-      a.productoId - b.productoId || a.ubicacionId - b.ubicacionId,
+      a.ubicacionId - b.ubicacionId || a.productoId - b.productoId,
   );
 
   for (const pair of ordered) {
@@ -152,6 +153,7 @@ export class InventarioError extends Error {
   constructor(
     message: string,
     public readonly code: string,
+    public readonly details?: unknown,
   ) {
     super(message);
     this.name = "InventarioError";
@@ -311,6 +313,7 @@ type InsertMovimientoArgs = {
   revisado?: boolean;
   documentoTipo?: string | null;
   documentoId?: string | null;
+  salidaId?: number | null;
   movimientoOrigenId?: number | null;
   uuidCliente?: string | null;
 };
@@ -354,6 +357,7 @@ async function insertMovimientoWithDependencies(
       revisado: args.revisado ?? true,
       documentoTipo: args.documentoTipo ?? null,
       documentoId: args.documentoId ?? null,
+      salidaId: args.salidaId ?? null,
       movimientoOrigenId: args.movimientoOrigenId ?? null,
       uuidCliente: args.uuidCliente ?? null,
     })
@@ -1357,6 +1361,7 @@ export type MoverRolloInput = {
   justificacion?: string | null;
   documentoTipo?: string | null;
   documentoId?: string | null;
+  salidaId?: number | null;
   uuidCliente?: string | null;
 };
 
@@ -1508,6 +1513,7 @@ export async function moverRollo(
     .where(eq(rollosTable.id, input.rolloId))
     .for("update")
     .limit(1);
+  await assertNoActiveVentaClienteReservation(tx, [input.rolloId]);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
   if (rollo.ubicacionId !== input.ubicacionOrigenId) {
@@ -1536,6 +1542,7 @@ export async function moverRollo(
     justificacion: input.justificacion ?? null,
     documentoTipo: input.documentoTipo ?? null,
     documentoId: input.documentoId ?? null,
+    salidaId: input.salidaId ?? null,
     uuidCliente: salidaUuid,
   });
 
@@ -1721,6 +1728,7 @@ export async function salidaMostrador(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await assertNoActiveVentaClienteReservation(tx, [input.rolloId]);
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, input.uuidCliente);
     if (dup) {
@@ -1769,8 +1777,11 @@ export type VenderRolloInput = {
   uuidCliente?: string | null;
   documentoTipo?: string | null;
   documentoId?: string | null;
+  salidaId?: number | null;
   /** Discrete BOLSA/PIEZA records physically become empty when sold whole. */
   vaciarCantidadActual?: boolean;
+  /** Server-owned bypass for the exact linked customer-sale reservation. */
+  owningSalidaIds?: number[];
 };
 
 export const DOCUMENTO_TICKET_BOLSA_NORMAL = "TICKET_BOLSA_NORMAL";
@@ -1800,6 +1811,7 @@ export async function venderRollo(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await assertNoActiveVentaClienteReservation(tx, [input.rolloId], input.owningSalidaIds ?? []);
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, input.uuidCliente);
     if (dup) {
@@ -1834,6 +1846,7 @@ export async function venderRollo(
     justificacion: input.justificacion ?? null,
     documentoTipo: input.documentoTipo ?? null,
     documentoId: input.documentoId ?? null,
+    salidaId: input.salidaId ?? null,
     uuidCliente: input.uuidCliente ?? null,
   });
 
@@ -1889,6 +1902,7 @@ export async function consumirBolsasFifo(
     )
     .orderBy(rollosTable.id)
     .for("update");
+  await assertNoActiveVentaClienteReservation(tx, cajas.map(caja => caja.id));
 
   const disponibles = cajas.reduce(
     (total, caja) => total + quantityToThousandthsBigInt(caja.cantidadActual),
@@ -1987,6 +2001,7 @@ export async function ajustarRollo(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await assertNoActiveVentaClienteReservation(tx, [input.rolloId]);
   if (input.uuidCliente) {
     const dup = await checkUuidCliente(tx, input.uuidCliente);
     if (dup) {
@@ -2152,6 +2167,7 @@ export async function crearSalidaExtraordinaria(
   if (!rollo) {
     throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
   }
+  await assertNoActiveVentaClienteReservation(tx, [input.rolloId]);
   if (
     rollo.productoId !== revalidated.productoId ||
     rollo.ubicacionId !== revalidated.ubicacionId ||
@@ -2383,6 +2399,9 @@ export async function revertirMovimiento(
     usuarioId: input.usuarioId,
     justificacion,
     movimientoOrigenId: input.movimientoOrigenId,
+    documentoTipo: orig.documentoTipo,
+    documentoId: orig.documentoId,
+    salidaId: orig.salidaId,
     uuidCliente: input.uuidCliente ?? null,
   });
 

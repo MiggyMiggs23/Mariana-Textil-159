@@ -64,16 +64,32 @@ export async function getAdminAlertas() {
       m.notas AS nota,t.folio AS "ticketFolio" FROM clientes c JOIN movimientos_credito m ON m.cliente_id=c.id
       LEFT JOIN tickets t ON t.id=m.ticket_id WHERE m.tipo IN ('VENTA_CREDITO','AJUSTE')`),
     pool.query(`
-      SELECT s.id, s.folio, s.enviada_at AS "enviadaAt",
-        FLOOR(EXTRACT(EPOCH FROM (now() - s.enviada_at)) / 3600)::int
+       SELECT s.id, s.folio,
+         CASE WHEN s.modalidad = 'VENTA_CLIENTE'
+           THEN CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END
+           ELSE s.enviada_at END AS "enviadaAt",
+        FLOOR(EXTRACT(EPOCH FROM (now() - CASE WHEN s.modalidad = 'VENTA_CLIENTE'
+          THEN CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END
+          ELSE s.enviada_at END)) / 3600)::int
           AS "horasEnTransito",
         origen.id AS "origenId", origen.nombre AS "nombreOrigen",
-        destino.id AS "destinoId", destino.nombre AS "nombreDestino"
-      FROM salidas s
+         destino.id AS "destinoId", destino.nombre AS "nombreDestino",
+         s.ticket_id AS "ticketId", t.folio AS "ticketFolio", s.folio AS "salidaFolio",
+         ('/salidas/' || s.id) AS "salidaHref",
+         CASE WHEN s.ticket_id IS NULL THEN NULL ELSE ('/tickets/' || s.ticket_id) END AS "ticketHref"
+       FROM salidas s
       JOIN ubicaciones origen ON origen.id = s.origen_id
-      JOIN ubicaciones destino ON destino.id = s.destino_id
-      WHERE s.estado = 'EN_TRANSITO'
-        AND s.enviada_at < now() - ($1::int * interval '1 hour')
+       LEFT JOIN ubicaciones destino ON destino.id = s.destino_id
+       LEFT JOIN tickets t ON t.id = s.ticket_id
+       WHERE (
+          (s.modalidad <> 'VENTA_CLIENTE' AND s.estado = 'EN_TRANSITO' AND s.enviada_at < now() - ($1::int * interval '1 hour'))
+         OR
+         (s.modalidad = 'VENTA_CLIENTE' AND s.estado = 'RECIBIDA'
+          AND (CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END)
+              < now() - ($1::int * interval '1 hour')
+           AND t.estado <> 'CANCELADO'
+           AND (t.cobrado = true OR t.autorizacion_estado = 'AUTORIZADA'))
+       )
       ORDER BY s.enviada_at ASC, s.id ASC
     `, [SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS]),
   ]);
@@ -119,21 +135,36 @@ export async function getAdminAlertas() {
       a.fechaVencimiento.localeCompare(b.fechaVencimiento) ||
       a.movimientoId - b.movimientoId,
     );
-  const salidasEnTransito = transitResult.rows.map((row) => ({
+  const salidasEnTransito = transitResult.rows.filter((row) => row.ticketId == null).map((row) => ({
     ...row,
     id: Number(row.id),
     folio: Number(row.folio),
     enviadaAt: new Date(row.enviadaAt).toISOString(),
     horasEnTransito: Number(row.horasEnTransito),
     origenId: Number(row.origenId),
-    destinoId: Number(row.destinoId),
+    destinoId: row.destinoId == null ? null : Number(row.destinoId),
+    ticketId: row.ticketId == null ? null : Number(row.ticketId),
+    salidaHref: row.salidaHref,
+    ticketHref: row.ticketHref,
   }));
+  const ventasAutorizadasSinEntregar = transitResult.rows
+    .filter((row) => row.ticketId != null && row.salidaHref != null)
+    .map((row) => ({
+      ticketId: Number(row.ticketId),
+      ticketFolio: Number(row.ticketFolio),
+      salidaId: Number(row.id),
+      salidaFolio: Number(row.salidaFolio),
+      horasSinEntregar: Number(row.horasEnTransito),
+      ticketHref: row.ticketHref,
+      salidaHref: row.salidaHref,
+    }));
 
   return {
     generatedAt: new Date().toISOString(),
-    total: ticketsPendientes.length + creditos.length + salidasEnTransito.length,
+    total: ticketsPendientes.length + creditos.length + salidasEnTransito.length + ventasAutorizadasSinEntregar.length,
     ticketsPendientes,
     creditos,
     salidasEnTransito,
+    ventasAutorizadasSinEntregar,
   };
 }

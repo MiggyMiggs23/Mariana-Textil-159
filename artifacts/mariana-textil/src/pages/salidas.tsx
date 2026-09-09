@@ -54,6 +54,7 @@ function EstadoBadge({ estado }: { estado: string }) {
     ARMANDO: { label: "Armando", class: "bg-blue-100 text-blue-800 border-blue-200" },
     EN_TRANSITO: { label: "En tránsito", class: "bg-amber-100 text-amber-800 border-amber-200" },
     RECIBIDA: { label: "Recibida", class: "bg-cyan-100 text-cyan-800 border-cyan-200" },
+    ENTREGADA: { label: "Entregada", class: "bg-emerald-100 text-emerald-800 border-emerald-200" },
     CANCELADA: { label: "Cancelada", class: "bg-slate-200 text-slate-800 border-slate-300" },
   };
   const config = map[estado] || { label: estado, class: "bg-slate-100 text-slate-800 border-slate-200" };
@@ -210,12 +211,10 @@ export default function Salidas() {
               Excel
             </Button>}
             {canCreate && (
-              <Link href="/salidas/nueva">
-                <Button data-testid="btn-create-salida" className="gap-2 shadow-sm h-10 px-5">
-                  <Plus className="w-4 h-4" />
-                  Nueva Salida
-                </Button>
-              </Link>
+              <div className="flex flex-wrap gap-2">
+                <Link href="/salidas/nueva"><Button data-testid="btn-create-salida" className="gap-2 shadow-sm h-10 px-5"><Plus className="w-4 h-4" />Nueva Salida</Button></Link>
+                <Link href="/salidas/nueva?modalidad=VENTA_CLIENTE"><Button data-testid="btn-create-salida-venta" variant="outline" className="gap-2 shadow-sm h-10 px-5">Nueva salida para venta a cliente</Button></Link>
+              </div>
             )}
           </div>
         </div>
@@ -421,6 +420,11 @@ export default function Salidas() {
                           <ArrowRight className="w-4 h-4 text-slate-300 shrink-0" />
                           <p className="font-medium text-slate-900 truncate">{salida.nombreDestino}</p>
                         </div>
+                         <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-600">
+                           <span className="font-semibold">{salida.modalidad === "VENTA_CLIENTE" ? "Venta a cliente" : "Traslado"}</span>
+                           {salida.modalidad === "VENTA_CLIENTE" && <span>Cliente: {salida.nombreCliente || `#${salida.clienteId}`}</span>}
+                           {salida.documentoVenta && <Link className="text-primary underline" href={salida.documentoVenta.href}>Documento {salida.documentoVenta.folio}</Link>}
+                         </div>
                         <div className="flex items-center gap-3 text-xs text-slate-500">
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />

@@ -51,6 +51,9 @@ export default function Alertas() {
   const visibleTransitExits = typeFilter === "tickets" || typeFilter === "creditos"
     ? []
     : alertas?.salidasEnTransito ?? [];
+  const authorizedUndelivered = typeFilter === "tickets" || typeFilter === "creditos"
+    ? []
+    : alertas?.ventasAutorizadasSinEntregar ?? [];
 
   return (
     <AppLayout>
@@ -281,6 +284,22 @@ export default function Alertas() {
                 </div>
               )}
             </div>}
+            {typeFilter !== "tickets" && typeFilter !== "creditos" && (
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold text-sidebar">Ventas autorizadas sin entregar (&gt;24 h) <span className="ml-2 rounded-full bg-destructive/10 px-2 py-0.5 text-xs text-destructive">{authorizedUndelivered.length}</span></h2>
+                {authorizedUndelivered.map((alert) => (
+                  <Card key={alert.salidaId} className="border-l-4 border-l-destructive">
+                    <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
+                      <span>Venta autorizada · Hace {alert.horasSinEntregar} h</span>
+                      <div className="flex flex-wrap gap-3">
+                        <Link className="text-primary underline" href={alert.ticketHref.startsWith("/api") ? `/tickets/${alert.ticketId}` : alert.ticketHref}>Venta #{alert.ticketFolio}</Link>
+                        <Link className="text-primary underline" href={alert.salidaHref.startsWith("/api") ? `/salidas/${alert.salidaId}` : alert.salidaHref}>Salida #{alert.salidaFolio}</Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

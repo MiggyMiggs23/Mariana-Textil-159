@@ -113,6 +113,7 @@ import type {
   EntradaInput,
   EntradaListResult,
   EntradasPendientesCostoResult,
+  EntregaSalidaVentaInput,
   EnvioSalidaInput,
   Error,
   EstadisticasProveedorParams,
@@ -134,6 +135,7 @@ import type {
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
   ForbiddenResponse,
+  GenerarVentaDesdeSalidasInput,
   GetAdminComparacionTiendasParams,
   GetAdminCuadreFiscalParams,
   GetAdminCuentasDestinoParams,
@@ -260,6 +262,7 @@ import type {
   ReversoSalidaExtraordinariaInput,
   RevertirMovimientoInput,
   Role,
+  RolloBloqueadoError,
   RolloDetail,
   RolloEtiqueta,
   RolloListResult,
@@ -274,8 +277,11 @@ import type {
   SalidaListResult,
   SalidaMostradorDocumentoInput,
   SalidaResumen,
+  SalidaVentaClienteInput,
   SalidasDineroCajaResponse,
   SalidasExtraordinariasResult,
+  SalidasVentaPendientesCliente,
+  SerieEntregaInvalidaError,
   ServerTime,
   SesionCaja,
   SesionCajaActual,
@@ -301,6 +307,8 @@ import type {
   UserUpdate,
   ValidationErrorResponse,
   VenderRolloInput,
+  VerificacionAutorizacionVenta,
+  VerificarAutorizacionVentaSalidasParams,
   ViajeDetail,
   ViajeInput,
   ViajeSummary,
@@ -13572,6 +13580,312 @@ export const useCrearSalidaMostrador = <TError = ErrorType<ValidationErrorRespon
       return useMutation(getCrearSalidaMostradorMutationOptions(options));
     }
 
+export const getCrearEnviarSalidaVentaClienteUrl = () => {
+
+
+
+
+  return `/api/salidas/venta-cliente`
+}
+
+/**
+ * Requiere salidas/crear. El origen conserva físicamente la mercancía; destinoId siempre es null.
+ * @summary Crea y envía una salida para venta con rollos identificados
+ */
+export const crearEnviarSalidaVentaCliente = async (salidaVentaClienteInput: SalidaVentaClienteInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetail> => {
+
+  return customFetch<SalidaDetail>(getCrearEnviarSalidaVentaClienteUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(salidaVentaClienteInput)
+  }
+);}
+
+
+
+
+
+export const getCrearEnviarSalidaVentaClienteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | RolloBloqueadoError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearEnviarSalidaVentaCliente>>, TError,{data: BodyType<SalidaVentaClienteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof crearEnviarSalidaVentaCliente>>, TError,{data: BodyType<SalidaVentaClienteInput>}, TContext> => {
+
+const mutationKey = ['crearEnviarSalidaVentaCliente'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crearEnviarSalidaVentaCliente>>, {data: BodyType<SalidaVentaClienteInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  crearEnviarSalidaVentaCliente(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrearEnviarSalidaVentaClienteMutationResult = NonNullable<Awaited<ReturnType<typeof crearEnviarSalidaVentaCliente>>>
+    export type CrearEnviarSalidaVentaClienteMutationBody = BodyType<SalidaVentaClienteInput>
+    export type CrearEnviarSalidaVentaClienteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | RolloBloqueadoError>
+
+    /**
+ * @summary Crea y envía una salida para venta con rollos identificados
+ */
+export const useCrearEnviarSalidaVentaCliente = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | RolloBloqueadoError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearEnviarSalidaVentaCliente>>, TError,{data: BodyType<SalidaVentaClienteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof crearEnviarSalidaVentaCliente>>,
+        TError,
+        {data: BodyType<SalidaVentaClienteInput>},
+        TContext
+      > => {
+      return useMutation(getCrearEnviarSalidaVentaClienteMutationOptions(options));
+    }
+
+export const getListSalidasVentaPendientesPorClienteUrl = () => {
+
+
+
+
+  return `/api/salidas/venta-cliente/pendientes`
+}
+
+/**
+ * Requiere salidas_venta/ver y devuelve cada salida seleccionada por omisión para permitir excluirla.
+ * @summary Lista salidas pendientes de cobro agrupadas por cliente
+ */
+export const listSalidasVentaPendientesPorCliente = async ( options?: Parameters<typeof customFetch>[1]): Promise<SalidasVentaPendientesCliente[]> => {
+
+  return customFetch<SalidasVentaPendientesCliente[]>(getListSalidasVentaPendientesPorClienteUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSalidasVentaPendientesPorClienteQueryKey = () => {
+    return [
+    `/api/salidas/venta-cliente/pendientes`
+    ] as const;
+    }
+
+
+export const getListSalidasVentaPendientesPorClienteQueryOptions = <TData = Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSalidasVentaPendientesPorClienteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>> = ({ signal }) => listSalidasVentaPendientesPorCliente({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSalidasVentaPendientesPorClienteQueryResult = NonNullable<Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>>
+export type ListSalidasVentaPendientesPorClienteQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista salidas pendientes de cobro agrupadas por cliente
+ */
+
+export function useListSalidasVentaPendientesPorCliente<TData = Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSalidasVentaPendientesPorCliente>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSalidasVentaPendientesPorClienteQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGenerarVentaDesdeSalidasUrl = () => {
+
+
+
+
+  return `/api/salidas/venta-cliente/generar-venta`
+}
+
+/**
+ * Requiere salidas_venta/crear. Los precios son editables; NOTA exige plazo de crédito.
+ * @summary Genera un TICKET o NOTA existente desde salidas seleccionadas
+ */
+export const generarVentaDesdeSalidas = async (generarVentaDesdeSalidasInput: GenerarVentaDesdeSalidasInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+
+  return customFetch<TicketDetalle>(getGenerarVentaDesdeSalidasUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(generarVentaDesdeSalidasInput)
+  }
+);}
+
+
+
+
+
+export const getGenerarVentaDesdeSalidasMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generarVentaDesdeSalidas>>, TError,{data: BodyType<GenerarVentaDesdeSalidasInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generarVentaDesdeSalidas>>, TError,{data: BodyType<GenerarVentaDesdeSalidasInput>}, TContext> => {
+
+const mutationKey = ['generarVentaDesdeSalidas'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generarVentaDesdeSalidas>>, {data: BodyType<GenerarVentaDesdeSalidasInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generarVentaDesdeSalidas(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerarVentaDesdeSalidasMutationResult = NonNullable<Awaited<ReturnType<typeof generarVentaDesdeSalidas>>>
+    export type GenerarVentaDesdeSalidasMutationBody = BodyType<GenerarVentaDesdeSalidasInput>
+    export type GenerarVentaDesdeSalidasMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary Genera un TICKET o NOTA existente desde salidas seleccionadas
+ */
+export const useGenerarVentaDesdeSalidas = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generarVentaDesdeSalidas>>, TError,{data: BodyType<GenerarVentaDesdeSalidasInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generarVentaDesdeSalidas>>,
+        TError,
+        {data: BodyType<GenerarVentaDesdeSalidasInput>},
+        TContext
+      > => {
+      return useMutation(getGenerarVentaDesdeSalidasMutationOptions(options));
+    }
+
+export const getVerificarAutorizacionVentaSalidasUrl = (params: VerificarAutorizacionVentaSalidasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/salidas/venta-cliente/verificar-autorizacion?${stringifiedParams}` : `/api/salidas/venta-cliente/verificar-autorizacion`
+}
+
+/**
+ * @summary Verifica por folio si un documento de venta está autorizado
+ */
+export const verificarAutorizacionVentaSalidas = async (params: VerificarAutorizacionVentaSalidasParams, options?: Parameters<typeof customFetch>[1]): Promise<VerificacionAutorizacionVenta> => {
+
+  return customFetch<VerificacionAutorizacionVenta>(getVerificarAutorizacionVentaSalidasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getVerificarAutorizacionVentaSalidasQueryKey = (params?: VerificarAutorizacionVentaSalidasParams,) => {
+    return [
+    `/api/salidas/venta-cliente/verificar-autorizacion`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getVerificarAutorizacionVentaSalidasQueryOptions = <TData = Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(params: VerificarAutorizacionVentaSalidasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getVerificarAutorizacionVentaSalidasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>> = ({ signal }) => verificarAutorizacionVentaSalidas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type VerificarAutorizacionVentaSalidasQueryResult = NonNullable<Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>>
+export type VerificarAutorizacionVentaSalidasQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Verifica por folio si un documento de venta está autorizado
+ */
+
+export function useVerificarAutorizacionVentaSalidas<TData = Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ params: VerificarAutorizacionVentaSalidasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof verificarAutorizacionVentaSalidas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getVerificarAutorizacionVentaSalidasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getExportarSalidasUrl = (params?: ExportarSalidasParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -14329,6 +14643,79 @@ export const useRecibirSalida = <TError = ErrorType<ValidationErrorResponse | Un
         TContext
       > => {
       return useMutation(getRecibirSalidaMutationOptions(options));
+    }
+
+export const getEntregarSalidaVentaClienteUrl = (id: number,) => {
+
+
+
+
+  return `/api/salidas/${id}/entregar`
+}
+
+/**
+ * Requiere ADMIN o usuario asignado al sitio de origen con salidas/ver (o salidas/editar), y un documento de venta autorizado.
+ * @summary Marca entregada una salida para venta después de validar sus series
+ */
+export const entregarSalidaVentaCliente = async (id: number,
+    entregaSalidaVentaInput: EntregaSalidaVentaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDetailResponseResponse> => {
+
+  return customFetch<SalidaDetailResponseResponse>(getEntregarSalidaVentaClienteUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(entregaSalidaVentaInput)
+  }
+);}
+
+
+
+
+
+export const getEntregarSalidaVentaClienteMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | SerieEntregaInvalidaError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof entregarSalidaVentaCliente>>, TError,{id: number;data: BodyType<EntregaSalidaVentaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof entregarSalidaVentaCliente>>, TError,{id: number;data: BodyType<EntregaSalidaVentaInput>}, TContext> => {
+
+const mutationKey = ['entregarSalidaVentaCliente'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof entregarSalidaVentaCliente>>, {id: number;data: BodyType<EntregaSalidaVentaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  entregarSalidaVentaCliente(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EntregarSalidaVentaClienteMutationResult = NonNullable<Awaited<ReturnType<typeof entregarSalidaVentaCliente>>>
+    export type EntregarSalidaVentaClienteMutationBody = BodyType<EntregaSalidaVentaInput>
+    export type EntregarSalidaVentaClienteMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | SerieEntregaInvalidaError>
+
+    /**
+ * @summary Marca entregada una salida para venta después de validar sus series
+ */
+export const useEntregarSalidaVentaCliente = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | SerieEntregaInvalidaError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof entregarSalidaVentaCliente>>, TError,{id: number;data: BodyType<EntregaSalidaVentaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof entregarSalidaVentaCliente>>,
+        TError,
+        {id: number;data: BodyType<EntregaSalidaVentaInput>},
+        TContext
+      > => {
+      return useMutation(getEntregarSalidaVentaClienteMutationOptions(options));
     }
 
 export const getGetAdminRealtimeDashboardUrl = (params?: GetAdminRealtimeDashboardParams,) => {

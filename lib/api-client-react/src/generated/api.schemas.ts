@@ -1132,6 +1132,16 @@ export interface AdminAlertaSalida {
   nombreDestino: string;
 }
 
+export type AdminAlertasVentasAutorizadasSinEntregarItem = {
+  ticketId: number;
+  ticketFolio: number;
+  salidaId: number;
+  salidaFolio: number;
+  horasSinEntregar: number;
+  ticketHref: string;
+  salidaHref: string;
+};
+
 export interface AdminAlertas {
   generatedAt: string;
   /** Suma de ticketsPendientes, creditos y salidasEnTransito. */
@@ -1140,6 +1150,8 @@ export interface AdminAlertas {
   creditos: AdminAlertaCredito[];
   /** Salidas EN_TRANSITO que superan el umbral operativo sin recepción. */
   salidasEnTransito: AdminAlertaSalida[];
+  /** Ventas autorizadas cuya salida aún no fue entregada. */
+  ventasAutorizadasSinEntregar: AdminAlertasVentasAutorizadasSinEntregarItem[];
 }
 
 export type AdminCorteRowEstado = typeof AdminCorteRowEstado[keyof typeof AdminCorteRowEstado];
@@ -2805,6 +2817,14 @@ export type ViajeTicketLink = {
   folio: number;
 } | null;
 
+export interface SalidaVentaLink {
+  id: number;
+  folioFormateado: string;
+  origenId: number;
+  nombreOrigen: string;
+  href: string;
+}
+
 /**
  * Proveniencia congelada del costo; dato administrativo que se omite sin acceso económico
  * @nullable
@@ -2898,6 +2918,8 @@ export type TicketDetalle = TicketResumen & TicketCredito & ({
      */
   diasCreditoCliente?: TicketDetalleDiasCreditoCliente;
   viaje?: ViajeTicketLink | null;
+  /** Salidas para venta que originaron este documento. */
+  salidas?: SalidaVentaLink[];
   lineas: TicketLinea[];
   pagos?: TicketPago[];
 });
@@ -4488,6 +4510,7 @@ export const EstadoSalida = {
   ARMANDO: 'ARMANDO',
   EN_TRANSITO: 'EN_TRANSITO',
   RECIBIDA: 'RECIBIDA',
+  ENTREGADA: 'ENTREGADA',
   CANCELADA: 'CANCELADA',
 } as const;
 
@@ -4497,7 +4520,197 @@ export type ModalidadSalida = typeof ModalidadSalida[keyof typeof ModalidadSalid
 export const ModalidadSalida = {
   TRASLADO: 'TRASLADO',
   MOSTRADOR: 'MOSTRADOR',
+  VENTA_CLIENTE: 'VENTA_CLIENTE',
 } as const;
+
+export interface SalidaVentaClienteInput {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+  /** @minimum 1 */
+  origenId: number;
+  /** @minimum 1 */
+  clienteId: number;
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  series: string[];
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  nota?: string | null;
+}
+
+export interface SalidaVentaPendienteLinea {
+  salidaRolloId: number;
+  rolloId: number;
+  serie: string;
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: UnidadProducto;
+  cantidad: string;
+  /** @nullable */
+  precioSugerido: string | null;
+}
+
+export interface SalidaVentaPendiente {
+  id: number;
+  folio: number;
+  folioFormateado: string;
+  origenId: number;
+  nombreOrigen: string;
+  seleccionada: boolean;
+  createdAt: string;
+  /** @minItems 1 */
+  lineas: SalidaVentaPendienteLinea[];
+}
+
+export interface SalidasVentaPendientesCliente {
+  clienteId: number;
+  nombreCliente: string;
+  /** @minItems 1 */
+  salidas: SalidaVentaPendiente[];
+}
+
+export interface PrecioVentaSalidaInput {
+  /** @minimum 1 */
+  salidaRolloId: number;
+  /** @exclusiveMinimum 0 */
+  precioUnitario: number;
+}
+
+export interface GenerarVentaDesdeSalidasCommonInput {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+  /** @minimum 1 */
+  clienteId: number;
+  /**
+     * @minItems 1
+     * @items.minimum 1
+     */
+  salidaIds: number[];
+  /** @minItems 1 */
+  precios: PrecioVentaSalidaInput[];
+}
+
+export type GenerarVentaDesdeSalidasTicketInput = GenerarVentaDesdeSalidasCommonInput & {
+  documentoTipo: 'TICKET';
+};
+
+export type GenerarVentaDesdeSalidasNotaInputDiasPlazo = typeof GenerarVentaDesdeSalidasNotaInputDiasPlazo[keyof typeof GenerarVentaDesdeSalidasNotaInputDiasPlazo];
+
+
+export const GenerarVentaDesdeSalidasNotaInputDiasPlazo = {
+  NUMBER_7: 7,
+  NUMBER_15: 15,
+  NUMBER_30: 30,
+  NUMBER_60: 60,
+} as const;
+
+export type GenerarVentaDesdeSalidasNotaInput = GenerarVentaDesdeSalidasCommonInput & {
+  documentoTipo: 'NOTA';
+  diasPlazo: GenerarVentaDesdeSalidasNotaInputDiasPlazo;
+};
+
+export type GenerarVentaDesdeSalidasInput = GenerarVentaDesdeSalidasTicketInput | GenerarVentaDesdeSalidasNotaInput;
+
+export interface EntregaSalidaVentaInput {
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  series: string[];
+  /**
+     * @maxLength 2000
+     * @nullable
+     */
+  nota?: string | null;
+}
+
+export interface DocumentoVentaLink {
+  id: number;
+  folio: number;
+  documentoTipo: DocumentoTipoTicket;
+  href: string;
+}
+
+export type VerificacionAutorizacionVentaEstado = typeof VerificacionAutorizacionVentaEstado[keyof typeof VerificacionAutorizacionVentaEstado];
+
+
+export const VerificacionAutorizacionVentaEstado = {
+  PENDIENTE_COBRO: 'PENDIENTE_COBRO',
+  PENDIENTE_AUTORIZACION: 'PENDIENTE_AUTORIZACION',
+  AUTORIZADA: 'AUTORIZADA',
+  CANCELADA: 'CANCELADA',
+} as const;
+
+export interface VerificacionAutorizacionVenta {
+  ticketId: number;
+  folio: number;
+  folioFormateado: string;
+  documentoTipo: DocumentoTipoTicket;
+  autorizada: boolean;
+  estado: VerificacionAutorizacionVentaEstado;
+  /** @nullable */
+  autorizadoAt?: string | null;
+  documentoHref: string;
+  salidas: SalidaVentaLink[];
+}
+
+export interface RolloBloqueadoDetalle {
+  rolloId: number;
+  serie: string;
+  salidaId: number;
+  salidaFolio: string;
+  clienteId: number;
+  nombreCliente: string;
+  bloqueadoDesde: string;
+  salidaHref: string;
+}
+
+export interface RolloBloqueadoError {
+  error: string;
+  code: 'ROLLO_BLOQUEADO';
+  /** @minItems 1 */
+  details: RolloBloqueadoDetalle[];
+}
+
+export type SerieEntregaInvalidaErrorDetailsItemRazon = typeof SerieEntregaInvalidaErrorDetailsItemRazon[keyof typeof SerieEntregaInvalidaErrorDetailsItemRazon];
+
+
+export const SerieEntregaInvalidaErrorDetailsItemRazon = {
+  FALTANTE: 'FALTANTE',
+  DUPLICADA: 'DUPLICADA',
+  NO_RESERVADA: 'NO_RESERVADA',
+  PERTENECE_A_OTRA_SALIDA: 'PERTENECE_A_OTRA_SALIDA',
+} as const;
+
+export type SerieEntregaInvalidaErrorDetailsItem = {
+  serieEscaneada: string;
+  razon: SerieEntregaInvalidaErrorDetailsItemRazon;
+  /** @nullable */
+  clienteId?: number | null;
+  /** @nullable */
+  nombreCliente?: string | null;
+  /** @nullable */
+  rolloId?: number | null;
+  /** @nullable */
+  productoId?: number | null;
+  /** @nullable */
+  ubicacionId?: number | null;
+  salida: SalidaVentaLink | null;
+  documentoVenta: DocumentoVentaLink | null;
+};
+
+export interface SerieEntregaInvalidaError {
+  error: string;
+  code: 'SERIE_ENTREGA_INVALIDA';
+  /** @minItems 1 */
+  details: SerieEntregaInvalidaErrorDetailsItem[];
+}
 
 export interface SalidaMostradorDocumentoInput {
   /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
@@ -4547,6 +4760,16 @@ export interface SalidaResumen {
   /** @nullable */
   destinoId: number | null;
   nombreDestino: string;
+  /** @nullable */
+  clienteId?: number | null;
+  /** @nullable */
+  nombreCliente?: string | null;
+  documentoVenta?: DocumentoVentaLink | null;
+  /**
+     * Derivada exclusivamente del cobro o autorización del documento ligado.
+     * @nullable
+     */
+  autorizada?: boolean | null;
   armadoPorId: number;
   nombreArmadoPor: string;
   fechaArmado: string;
@@ -4656,6 +4879,12 @@ export type SalidaDetail = SalidaResumen & ({
   fechaCancelacion: string | null;
   /** @nullable */
   motivoCancelacion: string | null;
+  /** @nullable */
+  entregadoPorId?: number | null;
+  /** @nullable */
+  nombreEntregadoPor?: string | null;
+  /** @nullable */
+  fechaEntrega?: string | null;
   lineas: SalidaLinea[];
   rollos: SalidaRollo[];
 });
@@ -6677,6 +6906,13 @@ pageSize?: number;
 
 export type GetBorradorSalidaParams = {
 origenId: number;
+};
+
+export type VerificarAutorizacionVentaSalidasParams = {
+/**
+ * @minimum 1
+ */
+folio: number;
 };
 
 export type ExportarSalidasParams = {

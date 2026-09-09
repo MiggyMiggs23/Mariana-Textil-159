@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails } from "@/lib/api-error";
 import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
@@ -76,7 +76,7 @@ export function SalidaMostrador() {
     } catch (error) {
       toast({
         title: "No se pudo confirmar la salida",
-        description: getApiErrorMessage(error),
+        description: <ApiErrorDetails error={error} />,
         variant: "destructive",
       });
       inputRef.current?.focus();

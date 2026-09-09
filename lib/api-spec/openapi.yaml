@@ -4005,6 +4005,89 @@ paths:
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
+  /salidas/venta-cliente:
+    post:
+      operationId: crearEnviarSalidaVentaCliente
+      tags: [salidas, pos]
+      summary: Crea y envía una salida para venta con rollos identificados
+      description: Requiere salidas/crear. El origen conserva físicamente la mercancía; destinoId siempre es null.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SalidaVentaClienteInput" }
+      responses:
+        "201":
+          description: Salida creada en EN_TRANSITO con sus rollos bloqueados
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SalidaDetail" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Un rollo ya está bloqueado por otra salida
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RolloBloqueadoError" }
+  /salidas/venta-cliente/pendientes:
+    get:
+      operationId: listSalidasVentaPendientesPorCliente
+      tags: [salidas, pos]
+      summary: Lista salidas pendientes de cobro agrupadas por cliente
+      description: Requiere salidas_venta/ver y devuelve cada salida seleccionada por omisión para permitir excluirla.
+      responses:
+        "200":
+          description: Grupos pendientes con orígenes, salidas y líneas constituyentes
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SalidasVentaPendientesCliente" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /salidas/venta-cliente/generar-venta:
+    post:
+      operationId: generarVentaDesdeSalidas
+      tags: [salidas, pos]
+      summary: Genera un TICKET o NOTA existente desde salidas seleccionadas
+      description: Requiere salidas_venta/crear. Los precios son editables; NOTA exige plazo de crédito.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GenerarVentaDesdeSalidasInput" }
+      responses:
+        "201":
+          description: Documento de venta generado y salidas ligadas en RECIBIDA
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TicketDetalle" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /salidas/venta-cliente/verificar-autorizacion:
+    get:
+      operationId: verificarAutorizacionVentaSalidas
+      tags: [salidas, pos]
+      summary: Verifica por folio si un documento de venta está autorizado
+      parameters:
+        - in: query
+          name: folio
+          required: true
+          schema: { type: number, minimum: 1 }
+      responses:
+        "200":
+          description: Estado de autorización derivado del documento de venta
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VerificacionAutorizacionVenta" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /salidas/exportar:
     get:
       operationId: exportarSalidas
@@ -4234,6 +4317,30 @@ paths:
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
+  /salidas/{id}/entregar:
+    post:
+      operationId: entregarSalidaVentaCliente
+      tags: [salidas]
+      summary: Marca entregada una salida para venta después de validar sus series
+      description: Requiere ADMIN o usuario asignado al sitio de origen con salidas/ver (o salidas/editar), y un documento de venta autorizado.
+      parameters:
+        - $ref: "#/components/parameters/SalidaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EntregaSalidaVentaInput" }
+      responses:
+        "200": { $ref: "#/components/responses/SalidaDetailResponse" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Una serie escaneada no pertenece a esta salida o su documento autorizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SerieEntregaInvalidaError" }
   /admin/dashboard/realtime:
     get:
       operationId: getAdminRealtimeDashboard
@@ -6849,7 +6956,7 @@ components:
     AdminAlertas:
       type: object
       required:
-        [generatedAt, total, ticketsPendientes, creditos, salidasEnTransito]
+        [generatedAt, total, ticketsPendientes, creditos, salidasEnTransito, ventasAutorizadasSinEntregar]
       properties:
         generatedAt: { type: string, format: date-time }
         total:
@@ -6865,6 +6972,20 @@ components:
           type: array
           description: Salidas EN_TRANSITO que superan el umbral operativo sin recepción.
           items: { $ref: "#/components/schemas/AdminAlertaSalida" }
+        ventasAutorizadasSinEntregar:
+          type: array
+          description: Ventas autorizadas cuya salida aún no fue entregada.
+          items:
+            type: object
+            required: [ticketId, ticketFolio, salidaId, salidaFolio, horasSinEntregar, ticketHref, salidaHref]
+            properties:
+              ticketId: { type: number }
+              ticketFolio: { type: number }
+              salidaId: { type: number }
+              salidaFolio: { type: number }
+              horasSinEntregar: { type: number }
+              ticketHref: { type: string }
+              salidaHref: { type: string }
     AdminCorteRow:
       type: object
       required:
@@ -10005,10 +10126,209 @@ components:
         pageSize: { type: number }
     EstadoSalida:
       type: string
-      enum: [ARMANDO, EN_TRANSITO, RECIBIDA, CANCELADA]
+      enum: [ARMANDO, EN_TRANSITO, RECIBIDA, ENTREGADA, CANCELADA]
     ModalidadSalida:
       type: string
-      enum: [TRASLADO, MOSTRADOR]
+      enum: [TRASLADO, MOSTRADOR, VENTA_CLIENTE]
+    SalidaVentaClienteInput:
+      type: object
+      required: [uuidCliente, origenId, clienteId, series]
+      properties:
+        uuidCliente:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        origenId: { type: number, minimum: 1 }
+        clienteId: { type: number, minimum: 1 }
+        series:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, minLength: 1 }
+        nota: { type: ["string", "null"], maxLength: 2000 }
+    SalidaVentaPendienteLinea:
+      type: object
+      required:
+        [salidaRolloId, rolloId, serie, productoId, sku, tela, color, unidad, cantidad, precioSugerido]
+      properties:
+        salidaRolloId: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { $ref: "#/components/schemas/UnidadProducto" }
+        cantidad: { type: string }
+        precioSugerido: { type: ["string", "null"] }
+    SalidaVentaPendiente:
+      type: object
+      required:
+        [id, folio, folioFormateado, origenId, nombreOrigen, seleccionada, createdAt, lineas]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        folioFormateado: { type: string }
+        origenId: { type: number }
+        nombreOrigen: { type: string }
+        seleccionada: { type: boolean, default: true }
+        createdAt: { type: string, format: date-time }
+        lineas:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/SalidaVentaPendienteLinea" }
+    SalidasVentaPendientesCliente:
+      type: object
+      required: [clienteId, nombreCliente, salidas]
+      properties:
+        clienteId: { type: number }
+        nombreCliente: { type: string }
+        salidas:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/SalidaVentaPendiente" }
+    PrecioVentaSalidaInput:
+      type: object
+      required: [salidaRolloId, precioUnitario]
+      properties:
+        salidaRolloId: { type: number, minimum: 1 }
+        precioUnitario: { type: number, exclusiveMinimum: 0 }
+    GenerarVentaDesdeSalidasCommonInput:
+      type: object
+      required: [uuidCliente, clienteId, salidaIds, precios]
+      properties:
+        uuidCliente:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        clienteId: { type: number, minimum: 1 }
+        salidaIds:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: number, minimum: 1 }
+        precios:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/PrecioVentaSalidaInput" }
+    GenerarVentaDesdeSalidasTicketInput:
+      allOf:
+        - $ref: "#/components/schemas/GenerarVentaDesdeSalidasCommonInput"
+        - type: object
+          required: [documentoTipo]
+          properties:
+            documentoTipo: { const: TICKET }
+          not:
+            required: [diasPlazo]
+    GenerarVentaDesdeSalidasNotaInput:
+      allOf:
+        - $ref: "#/components/schemas/GenerarVentaDesdeSalidasCommonInput"
+        - type: object
+          required: [documentoTipo, diasPlazo]
+          properties:
+            documentoTipo: { const: NOTA }
+            diasPlazo:
+              type: integer
+              enum: [7, 15, 30, 60]
+    GenerarVentaDesdeSalidasInput:
+      oneOf:
+        - $ref: "#/components/schemas/GenerarVentaDesdeSalidasTicketInput"
+        - $ref: "#/components/schemas/GenerarVentaDesdeSalidasNotaInput"
+    EntregaSalidaVentaInput:
+      type: object
+      required: [series]
+      properties:
+        series:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, minLength: 1 }
+        nota: { type: ["string", "null"], maxLength: 2000 }
+    SalidaVentaLink:
+      type: object
+      required: [id, folioFormateado, origenId, nombreOrigen, href]
+      properties:
+        id: { type: number }
+        folioFormateado: { type: string }
+        origenId: { type: number }
+        nombreOrigen: { type: string }
+        href: { type: string }
+    DocumentoVentaLink:
+      type: object
+      required: [id, folio, documentoTipo, href]
+      properties:
+        id: { type: number }
+        folio: { type: number }
+        documentoTipo: { $ref: "#/components/schemas/DocumentoTipoTicket" }
+        href: { type: string }
+    VerificacionAutorizacionVenta:
+      type: object
+      required: [ticketId, folio, folioFormateado, documentoTipo, autorizada, estado, documentoHref, salidas]
+      properties:
+        ticketId: { type: number }
+        folio: { type: number }
+        folioFormateado: { type: string, example: TICKET-000001 }
+        documentoTipo: { $ref: "#/components/schemas/DocumentoTipoTicket" }
+        autorizada: { type: boolean }
+        estado:
+          type: string
+          enum: [PENDIENTE_COBRO, PENDIENTE_AUTORIZACION, AUTORIZADA, CANCELADA]
+        autorizadoAt: { type: ["string", "null"], format: date-time }
+        documentoHref: { type: string }
+        salidas:
+          type: array
+          items: { $ref: "#/components/schemas/SalidaVentaLink" }
+    RolloBloqueadoDetalle:
+      type: object
+      required:
+        [rolloId, serie, salidaId, salidaFolio, clienteId, nombreCliente, bloqueadoDesde, salidaHref]
+      properties:
+        rolloId: { type: number }
+        serie: { type: string }
+        salidaId: { type: number }
+        salidaFolio: { type: string }
+        clienteId: { type: number }
+        nombreCliente: { type: string }
+        bloqueadoDesde: { type: string, format: date-time }
+        salidaHref: { type: string }
+    RolloBloqueadoError:
+      type: object
+      required: [error, code, details]
+      properties:
+        error: { type: string, example: ROLLO BLOQUEADO }
+        code: { type: string, const: ROLLO_BLOQUEADO }
+        details:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/RolloBloqueadoDetalle" }
+    SerieEntregaInvalidaError:
+      type: object
+      required: [error, code, details]
+      properties:
+        error: { type: string }
+        code: { type: string, const: SERIE_ENTREGA_INVALIDA }
+        details:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [serieEscaneada, razon, salida, documentoVenta]
+            properties:
+              serieEscaneada: { type: string }
+              razon:
+                type: string
+                enum: [FALTANTE, DUPLICADA, NO_RESERVADA, PERTENECE_A_OTRA_SALIDA]
+              clienteId: { type: ["number", "null"] }
+              nombreCliente: { type: ["string", "null"] }
+              rolloId: { type: ["number", "null"] }
+              productoId: { type: ["number", "null"] }
+              ubicacionId: { type: ["number", "null"] }
+              salida:
+                oneOf:
+                  - $ref: "#/components/schemas/SalidaVentaLink"
+                  - type: "null"
+              documentoVenta:
+                oneOf:
+                  - $ref: "#/components/schemas/DocumentoVentaLink"
+                  - type: "null"
     SalidaMostradorDocumentoInput:
       type: object
       required: [uuidCliente, origenId, series]
@@ -10114,6 +10434,15 @@ components:
         nombreOrigen: { type: string }
         destinoId: { type: ["number", "null"] }
         nombreDestino: { type: string }
+        clienteId: { type: ["number", "null"] }
+        nombreCliente: { type: ["string", "null"] }
+        documentoVenta:
+          oneOf:
+            - $ref: "#/components/schemas/DocumentoVentaLink"
+            - type: "null"
+        autorizada:
+          type: ["boolean", "null"]
+          description: Derivada exclusivamente del cobro o autorización del documento ligado.
         armadoPorId: { type: number }
         nombreArmadoPor: { type: string }
         fechaArmado: { type: string, format: date-time }
@@ -10246,6 +10575,9 @@ components:
             nombreCanceladoPor: { type: ["string", "null"] }
             fechaCancelacion: { type: ["string", "null"], format: date-time }
             motivoCancelacion: { type: ["string", "null"] }
+            entregadoPorId: { type: ["number", "null"] }
+            nombreEntregadoPor: { type: ["string", "null"] }
+            fechaEntrega: { type: ["string", "null"], format: date-time }
             lineas:
               type: array
               items:
@@ -11389,6 +11721,10 @@ components:
               enum: [7, 15, 30, 60]
               description: Plazo habitual permitido del cliente; null cuando no está configurado.
             viaje: { $ref: "#/components/schemas/ViajeTicketLink" }
+            salidas:
+              type: array
+              description: Salidas para venta que originaron este documento.
+              items: { $ref: "#/components/schemas/SalidaVentaLink" }
             lineas:
               type: array
               items:

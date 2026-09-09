@@ -12,6 +12,7 @@ import {
   rollosTable,
   sesionesCajaTable,
   sesionesCajaDiasTable,
+  salidasTable,
   salidasDineroCajaTable,
   proveedoresTable,
   ticketFolioTable,
@@ -65,6 +66,8 @@ import {
 } from "@workspace/db/advisory-locks";
 import { meteredReferenceCost } from "./metered-reference-cost";
 import { IVA_RATE_BASIS_POINTS } from "./iva";
+import { consumirRollosSalidaVenta } from "./salidas";
+import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
 
 const FOLIO_ROW_ID = 1;
 
@@ -88,6 +91,7 @@ export type CrearTicketLineaInput = {
   tipo?: "NORMAL" | "METREADO";
   cantidad: string;
   precioUnitario: string;
+  ubicacionId?: number;
 };
 
 export type CrearTicketInput = {
@@ -106,6 +110,9 @@ export type CrearTicketInput = {
   uuidCliente: string;
   lineas: CrearTicketLineaInput[];
   ip: string;
+  /** Used by customer-sale exits: inventory is consumed when the document is paid/authorized. */
+  deferInventory?: boolean;
+  owningSalidaIds?: number[];
 };
 
 export type PagoTicketInput = {
@@ -402,11 +409,14 @@ export async function buildTicketDetail(
   const [viaje] = await database.select({ id: viajesTable.id, folio: viajesTable.folio })
     .from(viajeTicketsTable).innerJoin(viajesTable, eq(viajeTicketsTable.viajeId, viajesTable.id))
     .where(eq(viajeTicketsTable.ticketId, ticketId)).limit(1);
+  const salidas = await database.select({ id: salidasTable.id, folio: salidasTable.folio, origenId: salidasTable.origenId, nombreOrigen: ubicacionesTable.nombre, iniciales: ubicacionesTable.iniciales, href: sql<string>`('/salidas/' || ${salidasTable.id})` })
+    .from(salidasTable).innerJoin(ubicacionesTable, eq(salidasTable.origenId, ubicacionesTable.id)).where(eq(salidasTable.ticketId, ticketId));
 
   return {
     ...ticket,
     ...credit,
     viaje: viaje ?? null,
+    salidas: salidas.map((s) => ({ id: s.id, folioFormateado: `${s.iniciales}-${String(s.folio).padStart(6, "0")}`, origenId: s.origenId, nombreOrigen: s.nombreOrigen, href: s.href })),
     convertidoANotaPorCobro,
     nombreUsuarioCaja: null,
     nombreUsuarioCancelacion: cancellationUser?.nombre ?? null,
@@ -721,7 +731,7 @@ export async function crearTicket(
     tx,
     input.lineas.map((linea) => ({
       productoId: linea.productoId,
-      ubicacionId: input.ubicacionId,
+      ubicacionId: linea.ubicacionId ?? input.ubicacionId,
     })),
   );
 
@@ -731,6 +741,11 @@ export async function crearTicket(
     (linea.tipo ?? input.tipo) === "NORMAL" && linea.rolloId != null
       ? [linea.rolloId]
       : [],
+  );
+  await assertNoActiveVentaClienteReservation(
+    tx,
+    rolloIds,
+    input.deferInventory ? (input.owningSalidaIds ?? []) : [],
   );
   if (new Set(rolloIds).size !== rolloIds.length) {
     throw new PosError(
@@ -762,7 +777,6 @@ export async function crearTicket(
           .where(
             and(
               inArray(rollosTable.id, rolloIds),
-              eq(rollosTable.ubicacionId, input.ubicacionId),
             ),
           )
           .orderBy(asc(rollosTable.createdAt), asc(rollosTable.id))
@@ -884,7 +898,7 @@ export async function crearTicket(
     if (rollo) {
       if (
         rollo.productoId !== linea.productoId ||
-        rollo.ubicacionId !== input.ubicacionId
+        rollo.ubicacionId !== (linea.ubicacionId ?? input.ubicacionId)
       ) {
         throw new PosError(
           `El rollo serie ${rollo.serie} no pertenece al producto o ubicación seleccionados.`,
@@ -1002,7 +1016,7 @@ export async function crearTicket(
 
   // Sell every explicitly selected roll/box first. This prevents a FIFO BOLSA
   // line in the same ticket from consuming a box also selected as NORMAL.
-  for (const linea of lineasPreparadas) {
+  for (const linea of input.deferInventory ? [] : lineasPreparadas) {
     const producto = productoMap.get(linea.productoId)!;
     if (linea.tipo === "NORMAL" && linea.rolloId != null) {
       await venderRollo(tx, {
@@ -1021,7 +1035,7 @@ export async function crearTicket(
       });
     }
   }
-  for (const linea of lineasPreparadas) {
+  for (const linea of input.deferInventory ? [] : lineasPreparadas) {
     const producto = productoMap.get(linea.productoId)!;
     if (linea.tipo === "METREADO" && producto.unidad === "BOLSA") {
       try {
@@ -1085,6 +1099,7 @@ export async function cancelarTicket(
   tx: Tx,
   input: {
     ticketId: number;
+    requestedSalidaId?: number;
     usuarioId: number;
     autorizadoPor: number;
     motivo: string;
@@ -1115,6 +1130,19 @@ export async function cancelarTicket(
       409,
     );
   }
+  const linkedSalidas = await tx.select({ id: salidasTable.id, estado: salidasTable.estado })
+    .from(salidasTable)
+    .where(and(eq(salidasTable.ticketId, ticket.id), eq(salidasTable.modalidad, "VENTA_CLIENTE")))
+    .orderBy(asc(salidasTable.id))
+    .for("update");
+  if (input.requestedSalidaId != null && !linkedSalidas.some(salida => salida.id === input.requestedSalidaId)) {
+    throw new PosError(
+      `La salida /salidas/${input.requestedSalidaId} ya no pertenece al documento /tickets/${ticket.id}.`,
+      "LINKED_SALIDA_CHANGED",
+      409,
+    );
+  }
+  assertNoDeliveredLinkedSalida(ticket.id, linkedSalidas);
   // Serialize customer-credit cancellation with authorization before any
   // inventory or ledger work is performed.
   if (ticket.credito) {
@@ -1133,6 +1161,7 @@ export async function cancelarTicket(
         eq(movimientosTable.tipo, "VENTA"),
         or(
           eq(movimientosTable.documentoTipo, "TICKET"),
+          eq(movimientosTable.documentoTipo, "NOTA"),
           eq(
             movimientosTable.documentoTipo,
             DOCUMENTO_TICKET_BOLSA_NORMAL,
@@ -1249,6 +1278,15 @@ export async function cancelarTicket(
       autorizadoPor: input.autorizadoPor,
     })
     .where(eq(ticketsTable.id, ticket.id));
+  if (linkedSalidas.length) {
+    await tx.update(salidasTable).set({
+      estado: "CANCELADA",
+      canceladaAt: now,
+      usuarioCancelaId: input.usuarioId,
+      motivoCancelacion: motivo,
+      actividadAt: now,
+    }).where(and(eq(salidasTable.ticketId, ticket.id), eq(salidasTable.modalidad, "VENTA_CLIENTE")));
+  }
   await tx.insert(auditoriaTable).values({
     usuarioId: input.usuarioId,
     accion: "CANCELAR",
@@ -1267,6 +1305,16 @@ export async function cancelarTicket(
     ip: input.ip,
   });
   return buildTicketDetail(tx, ticket.id, includeCosts);
+}
+
+export function assertNoDeliveredLinkedSalida(ticketId: number, linkedSalidas: ReadonlyArray<{ id: number; estado: string }>): void {
+  const delivered = linkedSalidas.find((salida) => salida.estado === "ENTREGADA");
+  if (!delivered) return;
+  throw new PosError(
+    `No se puede cancelar: la salida entregada /salidas/${delivered.id} pertenece a /tickets/${ticketId}.`,
+    "LINKED_SALIDA_ALREADY_DELIVERED",
+    409,
+  );
 }
 
 export async function abrirSesionCaja(
@@ -1543,6 +1591,7 @@ export async function cobrarTicket(
       sesionCajaId: sesion.id,
     })
     .where(eq(ticketsTable.id, ticket.id));
+  await consumirRollosSalidaVenta(tx, ticket.id, input.usuarioId);
   await tx.insert(auditoriaTable).values({
     usuarioId: input.usuarioId,
     accion: "COBRAR",
@@ -1603,6 +1652,7 @@ export async function autorizarNota(
     diasPlazo: ticket.diasPlazo, fechaVencimiento: ticket.fechaVencimiento!,
   }).returning();
   const now = new Date();
+  await consumirRollosSalidaVenta(tx, ticket.id, input.usuarioId);
   await tx.insert(autorizacionesNotaTable).values({
     ticketId: ticket.id, sesionCajaId: sesion.id, usuarioId: input.usuarioId,
     movimientoCreditoId: movement!.id, createdAt: now,

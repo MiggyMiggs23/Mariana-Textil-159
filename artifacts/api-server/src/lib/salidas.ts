@@ -18,9 +18,12 @@ import {
 import {
   db,
   auditoriaTable,
+  clientesTable,
   movimientosTable,
   notificacionesSistemaTable,
   productosTable,
+  ticketLineasTable,
+  ticketsTable,
   rollosTable,
   salidaFolioTable,
   salidaLineasTable,
@@ -43,9 +46,13 @@ import {
   lockInventoryPairs,
   moverRollo,
   recibirTransferencia,
+  revertirMovimiento,
   salidaMostrador,
+  venderRollo,
   type Tx,
 } from "./inventario";
+export { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
+import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
 
 export const salidasConcurrencyTestSeam: {
   afterReceiveCandidateRead?: (
@@ -68,6 +75,219 @@ export type CrearSalidaInput = {
   observaciones?: string | null;
   rolloIds?: number[];
 };
+
+export type CrearSalidaVentaClienteInput = {
+  origenId: number;
+  clienteId: number;
+  usuarioId: number;
+  uuidCliente: string;
+  series: string[];
+  nota?: string | null;
+};
+
+export async function cancelarSalidaODocumentoLigado<T>(
+  header: { salidaId: number; modalidad: string; ticketId: number | null },
+  actions: { cancelarDocumento: (ticketId: number, requestedSalidaId: number) => Promise<void>; cancelarSalida: () => Promise<T>; buildSalida: () => Promise<T> },
+): Promise<T> {
+  if (header.modalidad !== "VENTA_CLIENTE" || header.ticketId == null) return actions.cancelarSalida();
+  await actions.cancelarDocumento(header.ticketId, header.salidaId);
+  return actions.buildSalida();
+}
+
+export async function prepararVentaDesdeSalidas(
+  tx: Tx,
+  input: { salidaIds: number[]; clienteId: number },
+) {
+  const rows = await tx.select({ salidaRolloId: salidaRollosTable.id, salidaId: salidasTable.id, origenId: salidasTable.origenId, rolloId: salidaRollosTable.rolloId, productoId: rollosTable.productoId })
+    .from(salidasTable).innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id)).innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+    .where(and(inArray(salidasTable.id, input.salidaIds), eq(salidasTable.clienteId, input.clienteId), eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "EN_TRANSITO")));
+  if (!rows.length || new Set(rows.map(r => r.salidaId)).size !== input.salidaIds.length) throw new InventarioError("Las salidas seleccionadas no son pendientes del mismo cliente.", "SALIDA_SELECTION_CHANGED");
+  await lockInventoryPairs(tx, rows.map(r => ({ productoId: r.productoId, ubicacionId: r.origenId })));
+  const locked = await tx.select({ salidaRolloId: salidaRollosTable.id, salidaId: salidasTable.id, origenId: salidasTable.origenId, rolloId: salidaRollosTable.rolloId, productoId: rollosTable.productoId, cantidad: rollosTable.cantidadActual, precio: productosTable.precioSugerido })
+    .from(salidasTable).innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id)).innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id)).innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+    .where(and(inArray(salidasTable.id, input.salidaIds), eq(salidasTable.clienteId, input.clienteId), eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "EN_TRANSITO"))).for("update");
+  const tuple = (r: { salidaRolloId: number; salidaId: number; rolloId: number; productoId: number; origenId: number }) => `${r.salidaRolloId}:${r.salidaId}:${r.rolloId}:${r.productoId}:${r.origenId}`;
+  if (locked.length !== rows.length || locked.map(tuple).sort().join("|") !== rows.map(tuple).sort().join("|")) throw new InventarioError("Las salidas seleccionadas cambiaron; vuelve a cargar pendientes.", "SALIDA_SELECTION_CHANGED");
+  return locked;
+}
+
+export async function validarORecuperarGeneracionVenta(
+  tx: Tx,
+  input: {
+    uuidCliente: string;
+    salidaIds: number[];
+    clienteId: number;
+    documentoTipo: "TICKET" | "NOTA";
+    diasPlazo: number | null;
+    precios: Array<{ salidaRolloId: number; precioUnitario: string | number }>;
+  },
+): Promise<number | null> {
+  await transactionAdvisoryLock(tx, ADVISORY_LOCK_NAMESPACES.POS_TICKET_IDEMPOTENCY, input.uuidCliente);
+  const [ticket] = await tx.select({
+    id: ticketsTable.id, clienteId: ticketsTable.clienteId,
+    documentoTipo: ticketsTable.documentoTipo, diasPlazo: ticketsTable.diasPlazo,
+  }).from(ticketsTable).where(eq(ticketsTable.uuidCliente, input.uuidCliente)).limit(1);
+  if (!ticket) return null;
+
+  const persisted = await tx.select({
+    salidaId: salidasTable.id, salidaRolloId: salidaRollosTable.id,
+    rolloId: salidaRollosTable.rolloId, lineaRolloId: ticketLineasTable.rolloId,
+    precioUnitario: ticketLineasTable.precioUnitario,
+  }).from(salidasTable)
+    .innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id))
+    .leftJoin(ticketLineasTable, and(eq(ticketLineasTable.ticketId, ticket.id), eq(ticketLineasTable.rolloId, salidaRollosTable.rolloId)))
+    .where(eq(salidasTable.ticketId, ticket.id));
+  const [{ totalLineas }] = await tx.select({ totalLineas: count() }).from(ticketLineasTable).where(eq(ticketLineasTable.ticketId, ticket.id));
+  const exact = generacionVentaCoincide(ticket, persisted, input, Number(totalLineas));
+  if (!exact) {
+    throw new InventarioError("El UUID ya pertenece a una operación de venta distinta.", "UUID_CONFLICT", {
+      ticketId: ticket.id, ticketHref: `/tickets/${ticket.id}`,
+    });
+  }
+  return ticket.id;
+}
+
+export function generacionVentaCoincide(
+  ticket: { clienteId: number; documentoTipo: string; diasPlazo: number | null },
+  persisted: Array<{ salidaId: number; salidaRolloId: number; rolloId: number; lineaRolloId: number | null; precioUnitario: string | null }>,
+  input: { salidaIds: number[]; clienteId: number; documentoTipo: "TICKET" | "NOTA"; diasPlazo: number | null; precios: Array<{ salidaRolloId: number; precioUnitario: string | number }> },
+  totalTicketLines = persisted.length,
+): boolean {
+  const requestedSalidas = [...new Set(input.salidaIds)].sort((a, b) => a - b);
+  const persistedSalidas = [...new Set(persisted.map(row => row.salidaId))].sort((a, b) => a - b);
+  const requestedPrices = new Map(input.precios.map(row => [row.salidaRolloId, Number(row.precioUnitario).toFixed(2)]));
+  return ticket.clienteId === input.clienteId &&
+    ticket.documentoTipo === input.documentoTipo &&
+    (ticket.diasPlazo ?? null) === (input.diasPlazo ?? null) &&
+    requestedSalidas.length === input.salidaIds.length &&
+    requestedSalidas.join(",") === persistedSalidas.join(",") &&
+    requestedPrices.size === input.precios.length &&
+    totalTicketLines === persisted.length &&
+    persisted.length === requestedPrices.size &&
+    persisted.every(row => row.lineaRolloId === row.rolloId && row.precioUnitario != null && requestedPrices.get(row.salidaRolloId) === Number(row.precioUnitario).toFixed(2));
+}
+
+/** Create a customer-sale exit. It reserves series, but deliberately does not
+ * create inventory movements: payment/authorization is the sale boundary. */
+export async function crearEnviarSalidaVentaCliente(tx: Tx, input: CrearSalidaVentaClienteInput) {
+  await transactionAdvisoryLock(tx, ADVISORY_LOCK_NAMESPACES.OUTBOUND_IDEMPOTENCY, input.uuidCliente);
+  const [dup] = await tx.select({ id: salidasTable.id }).from(salidasTable)
+    .where(eq(salidasTable.uuidCliente, input.uuidCliente)).limit(1);
+  if (dup) return requireSalidaDetail(tx, dup.id);
+  const [cliente] = await tx.select().from(clientesTable).where(eq(clientesTable.id, input.clienteId)).for("update").limit(1);
+  if (!cliente?.activo || cliente.esSistema) throw new InventarioError("El cliente no existe, está inactivo o es Venta a Público.", "INVALID_CLIENT");
+  const series = input.series.map((s) => s.trim().toUpperCase());
+  if (!series.length || new Set(series).size !== series.length) throw new InventarioError("La salida para venta requiere series identificadas sin repetir.", "ROLLS_REQUIRED");
+  const candidates = await tx.select().from(rollosTable).where(inArray(rollosTable.serie, series));
+  if (candidates.length !== series.length) throw new InventarioError("Una de las series no existe.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, candidates.map((r) => ({ productoId: r.productoId, ubicacionId: r.ubicacionId })));
+  const rollos = await tx.select().from(rollosTable).where(inArray(rollosTable.serie, series)).orderBy(asc(rollosTable.id)).for("update");
+  await assertNoActiveVentaClienteReservation(tx, rollos.map(r => r.id));
+  for (const r of rollos) {
+    if (r.ubicacionId !== input.origenId) throw new InventarioError(`La serie ${r.serie} está en otra ubicación.`, "LOCATION_MISMATCH");
+    if (r.estado !== "DISPONIBLE") throw new InventarioError(`ROLLO BLOQUEADO: ${r.serie} no está disponible; revisa la salida que lo reserva.`, "ROLLO_RESERVED");
+  }
+  const reserved = await tx.select({ id: salidasTable.id, folio: salidasTable.folio, clienteId: salidasTable.clienteId })
+    .from(salidaRollosTable).innerJoin(salidasTable, eq(salidaRollosTable.salidaId, salidasTable.id))
+    .where(and(inArray(salidaRollosTable.rolloId, rollos.map(r => r.id)), inArray(salidasTable.estado, ["ARMANDO", "EN_TRANSITO", "RECIBIDA"]))).limit(1);
+  if (reserved.length) throw new InventarioError(`ROLLO BLOQUEADO por la salida ${reserved[0]!.id} para el cliente ${reserved[0]!.clienteId}; abre el documento para resolverlo.`, "ROLLO_RESERVED");
+  const folio = await reserveSalidaFolio(tx, input.origenId);
+  const now = new Date();
+  const [salida] = await tx.insert(salidasTable).values({
+    folio, origenId: input.origenId, destinoId: null, clienteId: input.clienteId,
+    modalidad: "VENTA_CLIENTE", estado: "EN_TRANSITO", usuarioSolicitaId: input.usuarioId,
+    usuarioEnviaId: input.usuarioId, solicitadaAt: now, enviadaAt: now,
+    notaSolicitud: input.nota?.trim() || null, uuidCliente: input.uuidCliente, actividadAt: now,
+  }).returning({ id: salidasTable.id });
+  const groups = new Map<number, typeof rollos>();
+  for (const r of rollos) groups.set(r.productoId, [...(groups.get(r.productoId) ?? []), r]);
+  const lineas = await tx.insert(salidaLineasTable).values([...groups].map(([productoId, rs]) => ({
+    salidaId: salida!.id, productoId, cantidadSolicitada: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3),
+    cantidadEnviada: rs.reduce((n, r) => n + Number(r.cantidadActual), 0).toFixed(3), cantidadRecibida: "0", rollosSolicitados: rs.length,
+  }))).returning();
+  const byProduct = new Map(lineas.map(l => [l.productoId, l.id]));
+  await tx.insert(salidaRollosTable).values(rollos.map(r => ({ salidaId: salida!.id, lineaId: byProduct.get(r.productoId)!, rolloId: r.id, cantidadEnviada: r.cantidadActual, cantidadRecibida: null, recibido: false })));
+  return requireSalidaDetail(tx, salida!.id);
+}
+
+/** Consume the rolls linked to a deferred customer-sale document. */
+export async function consumirRollosSalidaVenta(tx: Tx, ticketId: number, usuarioId: number) {
+  const [ticket] = await tx.select({ documentoTipo: ticketsTable.documentoTipo }).from(ticketsTable).where(eq(ticketsTable.id, ticketId)).limit(1);
+  const rows = await tx.select({ salidaId: salidasTable.id, rolloId: salidaRollosTable.rolloId, productoId: rollosTable.productoId, origenId: salidasTable.origenId })
+    .from(salidasTable).innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id))
+    .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+    .where(and(eq(salidasTable.ticketId, ticketId), eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "RECIBIDA"))).orderBy(asc(salidasTable.origenId), asc(salidaRollosTable.rolloId));
+  if (!rows.length) return;
+  await lockInventoryPairs(tx, rows.map(r => ({ productoId: r.productoId, ubicacionId: r.origenId })));
+  for (const r of rows) await venderRollo(tx, { rolloId: r.rolloId, usuarioId, justificacion: `Venta salida para cliente ticket ${ticketId}`, documentoTipo: ticket?.documentoTipo ?? "TICKET", documentoId: String(ticketId), salidaId: r.salidaId, vaciarCantidadActual: true, owningSalidaIds: [r.salidaId] });
+}
+
+export async function entregarSalidaVenta(tx: Tx, salidaId: number, usuarioId: number, series: string[], nota?: string | null) {
+  const salida = await getSalidaForUpdate(tx, salidaId);
+  if (salida.modalidad !== "VENTA_CLIENTE" || salida.estado !== "RECIBIDA") throw new InventarioError("La salida debe estar RECIBIDA antes de entregar.", "INVALID_SALIDA_STATE");
+  const [ticket] = await tx.select({ id: ticketsTable.id, estado: ticketsTable.estado, documentoTipo: ticketsTable.documentoTipo, cobrado: ticketsTable.cobrado, autorizacionEstado: ticketsTable.autorizacionEstado, folio: ticketsTable.folio })
+    .from(ticketsTable).where(eq(ticketsTable.id, salida.ticketId!)).limit(1);
+  const autorizada = ticket?.estado === "VENDIDO" && (ticket.documentoTipo === "TICKET" ? ticket.cobrado : ticket.autorizacionEstado === "AUTORIZADA");
+  if (!autorizada) throw new InventarioError("El documento ligado aún no está autorizado; verifica el ticket o nota.", "VENTA_NOT_AUTHORIZED");
+  const expected = await tx.select({ serie: rollosTable.serie }).from(salidaRollosTable).innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id)).where(eq(salidaRollosTable.salidaId, salidaId));
+  const normalized = series.map(s => s.trim().toUpperCase());
+  const exp = new Set(expected.map(r => r.serie)); const got = new Set(normalized);
+  const [origin] = await tx.select({ nombre: ubicacionesTable.nombre, iniciales: ubicacionesTable.iniciales }).from(ubicacionesTable).where(eq(ubicacionesTable.id, salida.origenId)).limit(1);
+  const ownLink = { id: salida.id, folioFormateado: `${origin?.iniciales ?? ""}-${String(salida.folio).padStart(6, "0")}`, origenId: salida.origenId, nombreOrigen: origin?.nombre ?? "", href: `/salidas/${salida.id}` };
+  const documentLink = ticket ? { id: ticket.id, folio: ticket.folio, documentoTipo: ticket.documentoTipo, href: `/tickets/${ticket.id}` } : null;
+  const extras = [...got].filter(s => !exp.has(s));
+  const foreignRows = extras.length ? await tx.select({
+    serie: rollosTable.serie, rolloId: rollosTable.id, productoId: rollosTable.productoId,
+    ubicacionId: rollosTable.ubicacionId, salidaId: salidasTable.id,
+    salidaEstado: salidasTable.estado,
+    salidaFolio: salidasTable.folio, origenId: salidasTable.origenId,
+    clienteId: clientesTable.id, nombreCliente: clientesTable.nombre,
+    ticketId: ticketsTable.id, ticketFolio: ticketsTable.folio,
+    documentoTipo: ticketsTable.documentoTipo,
+    origenNombre: sql<string | null>`(SELECT nombre FROM ubicaciones WHERE id = ${salidasTable.origenId})`,
+    origenIniciales: sql<string | null>`(SELECT iniciales FROM ubicaciones WHERE id = ${salidasTable.origenId})`,
+  }).from(rollosTable)
+    .leftJoin(salidaRollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+    .leftJoin(salidasTable, and(eq(salidaRollosTable.salidaId, salidasTable.id), eq(salidasTable.modalidad, "VENTA_CLIENTE"), inArray(salidasTable.estado, ["EN_TRANSITO", "RECIBIDA", "ENTREGADA"])))
+    .leftJoin(clientesTable, eq(salidasTable.clienteId, clientesTable.id))
+    .leftJoin(ticketsTable, eq(salidasTable.ticketId, ticketsTable.id))
+    .where(inArray(rollosTable.serie, extras)) : [];
+  const foreignBySerie = new Map<string, typeof foreignRows[number]>();
+  for (const row of foreignRows) {
+    const current = foreignBySerie.get(row.serie);
+    const active = row.salidaEstado === "EN_TRANSITO" || row.salidaEstado === "RECIBIDA";
+    const currentActive = current?.salidaEstado === "EN_TRANSITO" || current?.salidaEstado === "RECIBIDA";
+    if (!current || (active && !currentActive) || (row.salidaId != null && current.salidaId == null)) foreignBySerie.set(row.serie, row);
+  }
+  const foreignDetail = (serieEscaneada: string) => {
+    const row = foreignBySerie.get(serieEscaneada);
+    const owner = row?.salidaId == null ? null : {
+      id: row.salidaId,
+      folioFormateado: `${row.origenIniciales ?? ""}-${String(row.salidaFolio).padStart(6, "0")}`,
+      origenId: row.origenId!, nombreOrigen: row.origenNombre ?? "",
+      href: `/salidas/${row.salidaId}`,
+    };
+    const document = row?.ticketId == null ? null : {
+      id: row.ticketId, folio: row.ticketFolio!, documentoTipo: row.documentoTipo!,
+      href: `/tickets/${row.ticketId}`,
+    };
+    return {
+      serieEscaneada,
+      razon: owner ? "PERTENECE_A_OTRA_SALIDA" as const : "NO_RESERVADA" as const,
+      clienteId: row?.clienteId ?? null, nombreCliente: row?.nombreCliente ?? null,
+      rolloId: row?.rolloId ?? null, productoId: row?.productoId ?? null,
+      ubicacionId: row?.ubicacionId ?? null, salida: owner, documentoVenta: document,
+    };
+  };
+  const details = [
+    ...(normalized.length !== got.size ? normalized.filter((s, i) => normalized.indexOf(s) !== i).map(serieEscaneada => ({ serieEscaneada, razon: "DUPLICADA" as const, clienteId: salida.clienteId, nombreCliente: null, rolloId: null, productoId: null, ubicacionId: salida.origenId, salida: ownLink, documentoVenta: documentLink })) : []),
+    ...[...exp].filter(s => !got.has(s)).map(serieEscaneada => ({ serieEscaneada, razon: "FALTANTE" as const, clienteId: salida.clienteId, nombreCliente: null, rolloId: null, productoId: null, ubicacionId: salida.origenId, salida: ownLink, documentoVenta: documentLink })),
+    ...extras.map(foreignDetail),
+  ];
+  if (details.length) throw new InventarioError(`Serie escaneada inválida para la salida ${salidaId}; revisa el documento ligado.`, "SERIE_ENTREGA_INVALIDA", details);
+  await tx.update(salidasTable).set({ estado: "ENTREGADA", usuarioEntregaId: usuarioId, entregadaAt: new Date(), notaRecepcion: nota?.trim() || null, actividadAt: new Date() }).where(eq(salidasTable.id, salidaId));
+  return requireSalidaDetail(tx, salidaId);
+}
 
 export type CrearSalidaMostradorInput = {
   origenId: number;
@@ -255,6 +475,10 @@ export async function buildSalidaDetail(
       .where(eq(salidaRollosTable.salidaId, salida.id))
       .orderBy(salidaRollosTable.id),
   ]);
+  const [cliente, ticket] = await Promise.all([
+    salida.clienteId == null ? Promise.resolve(null) : database.select({ id: clientesTable.id, nombre: clientesTable.nombre }).from(clientesTable).where(eq(clientesTable.id, salida.clienteId)).limit(1).then(rows => rows[0] ?? null),
+    salida.ticketId == null ? Promise.resolve(null) : database.select({ id: ticketsTable.id, folio: ticketsTable.folio, documentoTipo: ticketsTable.documentoTipo, cobrado: ticketsTable.cobrado, autorizacionEstado: ticketsTable.autorizacionEstado, autorizadoAt: ticketsTable.autorizadoAt }).from(ticketsTable).where(eq(ticketsTable.id, salida.ticketId)).limit(1).then(rows => rows[0] ?? null),
+  ]);
   const [viaje] = await database.select({
     id: viajesTable.id, folio: viajesTable.folio, nombreCamioneta: camionetasTable.nombre,
     placasCamioneta: camionetasTable.placas, nombreChofer: choferesTable.nombreCompleto,
@@ -303,7 +527,13 @@ export async function buildSalidaDetail(
     nombreDestino:
       salida.modalidad === "MOSTRADOR"
         ? "Mostrador"
+        : salida.modalidad === "VENTA_CLIENTE"
+          ? cliente?.nombre ?? "Cliente"
         : locations.get(salida.destinoId!)?.nombre ?? "Ubicación eliminada",
+    clienteId: salida.clienteId ?? null,
+    nombreCliente: cliente?.nombre ?? null,
+    documentoVenta: ticket ? { id: ticket.id, folio: ticket.folio, documentoTipo: ticket.documentoTipo, href: `/tickets/${ticket.id}` } : null,
+    autorizada: ticket ? (ticket.documentoTipo === "TICKET" ? ticket.cobrado : ticket.autorizacionEstado === "AUTORIZADA") : null,
     estado: salida.estado,
     armadoPorId: requestedById,
     nombreArmadoPor: users.get(requestedById) ?? "Usuario eliminado",
@@ -317,6 +547,8 @@ export async function buildSalidaDetail(
     canceladoPorId: salida.usuarioCancelaId ?? null,
     nombreCanceladoPor: salida.usuarioCancelaId ? (users.get(salida.usuarioCancelaId) ?? null) : null,
     fechaCancelacion: iso(salida.canceladaAt),
+    entregadoPorId: salida.usuarioEntregaId ?? null,
+    fechaEntrega: iso(salida.entregadaAt),
     motivoCancelacion: salida.motivoCancelacion ?? null,
     notaEnvio: salida.notaEnvio ?? null,
     notaRecepcion: salida.notaRecepcion ?? null,
@@ -434,6 +666,7 @@ export async function crearSalida(tx: Tx, input: CrearSalidaInput) {
     throw new InventarioError("El origen o destino no es una ubicación operativa activa.", "INVALID_LOCATION");
   }
   if (rollos.length !== rolloIds.length) throw new InventarioError("Uno de los rollos no existe.", "ROLLO_NOT_FOUND");
+  await assertNoActiveVentaClienteReservation(tx, rolloIds);
   for (const rollo of rollos) {
     if (rollo.ubicacionId !== input.origenId) {
       throw new InventarioError(`El rollo ${rollo.serie} está en otra ubicación.`, "LOCATION_MISMATCH");
@@ -578,6 +811,7 @@ export async function crearSalidaMostrador(
     .where(inArray(rollosTable.serie, series))
     .orderBy(asc(rollosTable.id))
     .for("update");
+  await assertNoActiveVentaClienteReservation(tx, rollos.map(r => r.id));
   if (
     rollos.length !== rolloCandidates.length ||
     rollos.some((rollo) =>
@@ -800,6 +1034,7 @@ export async function agregarRolloBorradorSalida(
       "ROLLO_UNAVAILABLE",
     );
   }
+  await assertNoActiveVentaClienteReservation(tx, [rollo.id]);
 
   let [salida] = await tx
     .select()
@@ -1262,25 +1497,29 @@ export async function cancelarSalida(
   motivo: string,
 ) {
   const salida = await getSalidaForUpdate(tx, salidaId);
-  requireState(salida, ["ARMANDO"], "cancelar");
+  requireState(salida, salida.modalidad === "VENTA_CLIENTE" ? ["EN_TRANSITO", "RECIBIDA"] : ["ARMANDO"], "cancelar");
   if (motivo.trim().length < 10) {
     throw new InventarioError("El motivo de cancelación debe tener al menos 10 caracteres.", "REASON_REQUIRED");
+  }
+  if (salida.modalidad === "VENTA_CLIENTE" && salida.ticketId != null) {
+    throw new InventarioError(`La salida pertenece al documento ${salida.ticketId}; cancela el documento completo para conservar inventario y contabilidad.`, "LINKED_DOCUMENT_CANCELLATION_REQUIRED", { ticketId: salida.ticketId, ticketHref: `/tickets/${salida.ticketId}`, salidaHref: `/salidas/${salida.id}` });
   }
   const [movement] = await tx
     .select({ id: movimientosTable.id })
     .from(movimientosTable)
     .where(
       and(
-        eq(movimientosTable.documentoTipo, "SALIDA"),
-        eq(movimientosTable.documentoId, String(salida.id)),
+        salida.modalidad === "VENTA_CLIENTE"
+          ? and(inArray(movimientosTable.documentoTipo, ["TICKET", "NOTA"]), eq(movimientosTable.documentoId, String(salida.ticketId)), eq(movimientosTable.salidaId, salida.id))
+          : and(eq(movimientosTable.documentoTipo, "SALIDA"), eq(movimientosTable.documentoId, String(salida.id))),
       ),
     )
     .limit(1);
   if (movement) {
-    throw new InventarioError(
-      "No se puede cancelar un borrador con movimientos de inventario.",
-      "SALIDA_HAS_MOVEMENTS",
-    );
+    if (salida.modalidad !== "VENTA_CLIENTE") throw new InventarioError("No se puede cancelar un borrador con movimientos de inventario.", "SALIDA_HAS_MOVEMENTS");
+    const movements = await tx.select({ id: movimientosTable.id }).from(movimientosTable)
+      .where(and(eq(movimientosTable.documentoId, String(salida.ticketId)), eq(movimientosTable.salidaId, salida.id), inArray(movimientosTable.documentoTipo, ["TICKET", "NOTA"])));
+    for (const item of movements) await revertirMovimiento(tx, { movimientoOrigenId: item.id, usuarioId, justificacion: `Cancelación de salida para venta ${salida.id}: ${motivo}` });
   }
   await tx
     .update(salidasTable)

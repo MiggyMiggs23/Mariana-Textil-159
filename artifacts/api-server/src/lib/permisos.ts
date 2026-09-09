@@ -4,8 +4,10 @@
  * Resolution order:
  *  1. ADMIN receives full access without reading permission tables.
  *  2. permisos_usuario row for (usuario_id, modulo) with a non-null value
- *  3. permisos_rol row for (rol, modulo)
- *  4. Deny (no row = deny by default)
+ *  3. explicitly customized permisos_rol row for (rol, modulo)
+ *  4. permisos_ubicacion inherited row for the user's site
+ *  5. inherited permisos_rol row
+ *  6. Deny (no row = deny by default)
  */
 
 import type { NextFunction, Request, Response } from "express";
@@ -13,7 +15,9 @@ import { and, eq, isNotNull, or, sql } from "drizzle-orm";
 import {
   db,
   permisosRolTable,
+  permisosUbicacionTable,
   permisosUsuarioTable,
+  usuariosTable,
   type RolUsuario,
 } from "@workspace/db";
 import {
@@ -42,6 +46,34 @@ export interface PermissionMatrix {
 }
 
 type PermissionReader = Pick<typeof db, "select">;
+
+type PermissionValues = {
+  puedeVer: boolean | null;
+  puedeCrear: boolean | null;
+  puedeEditar: boolean | null;
+  puedeAutorizar: boolean | null;
+};
+
+export function mergePermissionValues(
+  modulo: string,
+  userRow: PermissionValues | undefined,
+  rolRow:
+    | (PermissionValues & { updatedPor: number | null })
+    | undefined,
+  locationRow: PermissionValues | undefined,
+): ModulePermission {
+  const inherited = rolRow?.updatedPor
+    ? rolRow
+    : (locationRow ?? rolRow);
+  return {
+    modulo,
+    puedeVer: userRow?.puedeVer ?? inherited?.puedeVer ?? false,
+    puedeCrear: userRow?.puedeCrear ?? inherited?.puedeCrear ?? false,
+    puedeEditar: userRow?.puedeEditar ?? inherited?.puedeEditar ?? false,
+    puedeAutorizar:
+      userRow?.puedeAutorizar ?? inherited?.puedeAutorizar ?? false,
+  };
+}
 
 /** All configurable module identifiers. */
 export const MODULOS = [
@@ -75,6 +107,7 @@ export const MODULOS = [
   "camionetas",
   "choferes",
   "viajes",
+  "salidas_venta",
 ] as const;
 
 export type ModuloId = (typeof MODULOS)[number];
@@ -141,36 +174,35 @@ export async function resolvePermiso(
     )
     .limit(1);
 
-  if (!userRow && !rolRow) return null;
+  const [locationRow] = await database
+    .select({
+      puedeVer: permisosUbicacionTable.puedeVer,
+      puedeCrear: permisosUbicacionTable.puedeCrear,
+      puedeEditar: permisosUbicacionTable.puedeEditar,
+      puedeAutorizar: permisosUbicacionTable.puedeAutorizar,
+    })
+    .from(permisosUbicacionTable)
+    .innerJoin(
+      usuariosTable,
+      eq(usuariosTable.ubicacionId, permisosUbicacionTable.ubicacionId),
+    )
+    .where(
+      and(
+        eq(usuariosTable.id, userId),
+        eq(permisosUbicacionTable.rol, rol),
+        eq(permisosUbicacionTable.modulo, modulo),
+      ),
+    )
+    .limit(1);
 
-  // Merge: user override wins for non-null values
-  const puedeVer =
-    userRow?.puedeVer !== null && userRow?.puedeVer !== undefined
-      ? userRow.puedeVer
-      : (rolRow?.puedeVer ?? false);
+  if (!userRow && !rolRow && !locationRow) return null;
 
-  const puedeCrear =
-    userRow?.puedeCrear !== null && userRow?.puedeCrear !== undefined
-      ? userRow.puedeCrear
-      : (rolRow?.puedeCrear ?? false);
-
-  const puedeEditar =
-    userRow?.puedeEditar !== null && userRow?.puedeEditar !== undefined
-      ? userRow.puedeEditar
-      : (rolRow?.puedeEditar ?? false);
-
-  const puedeAutorizar =
-    userRow?.puedeAutorizar !== null && userRow?.puedeAutorizar !== undefined
-      ? userRow.puedeAutorizar
-      : (rolRow?.puedeAutorizar ?? false);
-
-  const permission = {
+  const permission = mergePermissionValues(
     modulo,
-    puedeVer,
-    puedeCrear,
-    puedeEditar,
-    puedeAutorizar,
-  };
+    userRow,
+    rolRow,
+    locationRow,
+  );
   return rol === "SUPERVISOR" ? applySupervisorCeiling(permission) : permission;
 }
 
@@ -201,42 +233,41 @@ export async function buildPermissionMatrix(
     .from(permisosUsuarioTable)
     .where(eq(permisosUsuarioTable.usuarioId, userId));
 
+  const locationRows = await database
+    .select({
+      modulo: permisosUbicacionTable.modulo,
+      puedeVer: permisosUbicacionTable.puedeVer,
+      puedeCrear: permisosUbicacionTable.puedeCrear,
+      puedeEditar: permisosUbicacionTable.puedeEditar,
+      puedeAutorizar: permisosUbicacionTable.puedeAutorizar,
+    })
+    .from(permisosUbicacionTable)
+    .innerJoin(
+      usuariosTable,
+      eq(usuariosTable.ubicacionId, permisosUbicacionTable.ubicacionId),
+    )
+    .where(
+      and(
+        eq(usuariosTable.id, userId),
+        eq(permisosUbicacionTable.rol, rol),
+      ),
+    );
+
   const rolMap = new Map(rolRows.map((r) => [r.modulo, r]));
   const userMap = new Map(userRows.map((r) => [r.modulo, r]));
+  const locationMap = new Map(locationRows.map((r) => [r.modulo, r]));
 
   const matrix: PermissionMatrix = {};
 
   for (const modulo of MODULOS) {
     const rolRow = rolMap.get(modulo);
     const userRow = userMap.get(modulo);
-
-    const puedeVer =
-      userRow?.puedeVer !== null && userRow?.puedeVer !== undefined
-        ? userRow.puedeVer
-        : (rolRow?.puedeVer ?? false);
-
-    const puedeCrear =
-      userRow?.puedeCrear !== null && userRow?.puedeCrear !== undefined
-        ? userRow.puedeCrear
-        : (rolRow?.puedeCrear ?? false);
-
-    const puedeEditar =
-      userRow?.puedeEditar !== null && userRow?.puedeEditar !== undefined
-        ? userRow.puedeEditar
-        : (rolRow?.puedeEditar ?? false);
-
-    const puedeAutorizar =
-      userRow?.puedeAutorizar !== null && userRow?.puedeAutorizar !== undefined
-        ? userRow.puedeAutorizar
-        : (rolRow?.puedeAutorizar ?? false);
-
-    const permission = {
+    const permission = mergePermissionValues(
       modulo,
-      puedeVer,
-      puedeCrear,
-      puedeEditar,
-      puedeAutorizar,
-    };
+      userRow,
+      rolRow,
+      locationMap.get(modulo),
+    );
     matrix[modulo] =
       rol === "SUPERVISOR" ? applySupervisorCeiling(permission) : permission;
   }

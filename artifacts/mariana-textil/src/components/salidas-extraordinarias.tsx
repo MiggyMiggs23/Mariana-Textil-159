@@ -33,7 +33,7 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { interpretarCodigoEscaneado, type CodigoEscaneadoInterpretado, advertenciaSkuEscaneado } from "@workspace/scanned-code";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
@@ -139,7 +139,7 @@ export function SalidasExtraordinarias() {
       onError: (err: any) => {
         toast({
           title: "Error al registrar",
-          description: getApiErrorMessage(err),
+          description: <ApiErrorDetails error={err} />,
           variant: "destructive"
         });
         setConfirmationOpen(false);

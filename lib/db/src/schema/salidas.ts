@@ -12,12 +12,14 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { estadoSalidaEnum } from "./enums";
+import { clientesTable } from "./clientes";
 import { ubicacionesTable } from "./locations";
+import { ticketsTable } from "./pos";
 import { productosTable } from "./productos";
 import { rollosTable } from "./rollos";
 import { usuariosTable } from "./users";
 
-export type ModalidadSalida = "TRASLADO" | "MOSTRADOR";
+export type ModalidadSalida = "TRASLADO" | "MOSTRADOR" | "VENTA_CLIENTE";
 
 /**
  * Inventory exit document. Transfers have a physical destination; counter
@@ -32,6 +34,8 @@ export const salidasTable = pgTable(
       .notNull()
       .references(() => ubicacionesTable.id),
     destinoId: integer("destino_id").references(() => ubicacionesTable.id),
+    clienteId: integer("cliente_id").references(() => clientesTable.id),
+    ticketId: integer("ticket_id").references(() => ticketsTable.id),
     modalidad: text("modalidad")
       .$type<ModalidadSalida>()
       .notNull()
@@ -58,6 +62,9 @@ export const salidasTable = pgTable(
     usuarioCancelaId: integer("usuario_cancela_id").references(
       () => usuariosTable.id,
     ),
+    usuarioEntregaId: integer("usuario_entrega_id").references(
+      () => usuariosTable.id,
+    ),
     autorizadoPorId: integer("autorizado_por_id").references(
       () => usuariosTable.id,
     ),
@@ -68,6 +75,7 @@ export const salidasTable = pgTable(
     recibidaAt: timestamp("recibida_at", { withTimezone: true }),
     cerradaAt: timestamp("cerrada_at", { withTimezone: true }),
     canceladaAt: timestamp("cancelada_at", { withTimezone: true }),
+    entregadaAt: timestamp("entregada_at", { withTimezone: true }),
     motivoRechazo: text("motivo_rechazo"),
     motivoCancelacion: text("motivo_cancelacion"),
     notaSolicitud: text("nota_solicitud"),
@@ -86,6 +94,8 @@ export const salidasTable = pgTable(
     index("salidas_origen_estado_idx").on(table.origenId, table.estado),
     uniqueIndex("salidas_origen_folio_uidx").on(table.origenId, table.folio),
     index("salidas_destino_estado_idx").on(table.destinoId, table.estado),
+    index("salidas_cliente_estado_idx").on(table.clienteId, table.estado),
+    index("salidas_ticket_idx").on(table.ticketId),
     index("salidas_estado_idx").on(table.estado),
     index("salidas_folio_idx").on(table.folio),
     index("salidas_created_at_idx").on(table.createdAt),

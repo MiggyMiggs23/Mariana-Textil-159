@@ -570,7 +570,7 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={TicketDetail}
-              allowedAnyModules={[Modules.COBROS_PAGOS, Modules.POS]}
+              allowedAnyModules={[Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS]}
               allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}

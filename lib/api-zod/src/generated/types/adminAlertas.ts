@@ -7,6 +7,7 @@
  */
 import type { AdminAlertaCredito } from './adminAlertaCredito';
 import type { AdminAlertaSalida } from './adminAlertaSalida';
+import type { AdminAlertasVentasAutorizadasSinEntregarItem } from './adminAlertasVentasAutorizadasSinEntregarItem';
 import type { AdminAlertaTicket } from './adminAlertaTicket';
 
 export interface AdminAlertas {
@@ -17,4 +18,6 @@ export interface AdminAlertas {
   creditos: AdminAlertaCredito[];
   /** Salidas EN_TRANSITO que superan el umbral operativo sin recepción. */
   salidasEnTransito: AdminAlertaSalida[];
+  /** Ventas autorizadas cuya salida aún no fue entregada. */
+  ventasAutorizadasSinEntregar: AdminAlertasVentasAutorizadasSinEntregarItem[];
 }

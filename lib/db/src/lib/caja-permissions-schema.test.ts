@@ -18,5 +18,5 @@ test("startup repairs only inherited CAJA role rows", async () => {
   assert.match(calls[0].text, /modulo = 'cobros_pagos'/);
   assert.match(calls[0].text, /WHERE permisos_rol\.updated_por IS NULL/);
   assert.doesNotMatch(calls[0].text, /permisos_usuario/);
-  assert.equal((calls[0].values?.[0] as string[]).length, 30);
+  assert.equal((calls[0].values?.[0] as string[]).length, 31);
 });

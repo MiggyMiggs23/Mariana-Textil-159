@@ -31,6 +31,7 @@ export const Modules = {
   CAMIONETAS: "camionetas",
   CHOFERES: "choferes",
   VIAJES: "viajes",
+  SALIDAS_VENTA: "salidas_venta",
 } as const;
 
 export type Module = (typeof Modules)[keyof typeof Modules];

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { DocumentoTipoTicket } from './documentoTipoTicket';
+import type { SalidaVentaLink } from './salidaVentaLink';
 import type { TicketCredito } from './ticketCredito';
 import type { TicketDetalleDiasCreditoCliente } from './ticketDetalleDiasCreditoCliente';
 import type { TicketLinea } from './ticketLinea';
@@ -27,6 +28,8 @@ export type TicketDetalle = TicketResumen & TicketCredito & ({
      */
   diasCreditoCliente?: TicketDetalleDiasCreditoCliente;
   viaje?: ViajeTicketLink | null;
+  /** Salidas para venta que originaron este documento. */
+  salidas?: SalidaVentaLink[];
   lineas: TicketLinea[];
   pagos?: TicketPago[];
 });

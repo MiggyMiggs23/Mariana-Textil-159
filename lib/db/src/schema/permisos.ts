@@ -8,6 +8,7 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { rolUsuarioEnum } from "./enums";
+import { ubicacionesTable } from "./locations";
 import { usuariosTable } from "./users";
 
 /**
@@ -61,5 +62,39 @@ export const permisosUsuarioTable = pgTable(
   ],
 );
 
+/**
+ * Site-level defaults for modules whose availability is operationally scoped
+ * to a location. Explicit user and customized role permissions remain the
+ * higher-precedence authorities.
+ */
+export const permisosUbicacionTable = pgTable(
+  "permisos_ubicacion",
+  {
+    id: serial("id").primaryKey(),
+    ubicacionId: integer("ubicacion_id")
+      .notNull()
+      .references(() => ubicacionesTable.id),
+    rol: rolUsuarioEnum("rol").notNull(),
+    modulo: text("modulo").notNull(),
+    puedeVer: boolean("puede_ver").notNull().default(false),
+    puedeCrear: boolean("puede_crear").notNull().default(false),
+    puedeEditar: boolean("puede_editar").notNull().default(false),
+    puedeAutorizar: boolean("puede_autorizar").notNull().default(false),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    updatedPor: integer("updated_por").references(() => usuariosTable.id),
+  },
+  (t) => [
+    unique("permisos_ubicacion_ubicacion_rol_modulo_unique").on(
+      t.ubicacionId,
+      t.rol,
+      t.modulo,
+    ),
+  ],
+);
+
 export type PermisosRol = typeof permisosRolTable.$inferSelect;
 export type PermisosUsuario = typeof permisosUsuarioTable.$inferSelect;
+export type PermisosUbicacion = typeof permisosUbicacionTable.$inferSelect;

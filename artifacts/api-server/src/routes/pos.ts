@@ -50,6 +50,7 @@ import {
   clientesTable,
   db,
   sesionesCajaTable,
+  salidasTable,
   ticketLineasTable,
   ticketPagosTable,
   ticketsTable,
@@ -64,6 +65,7 @@ import {
   type ModuloId,
 } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { canReadLinkedVentaTrace } from "../lib/venta-trace-access";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
 import {
   abrirSesionCaja,
@@ -103,10 +105,10 @@ function handlePosError(
   }
   if (isInventoryError(error)) {
     const status =
-      error.code === "INVALID_TRANSITION" || error.code === "ALREADY_CANCELLED"
+      error.code === "INVALID_TRANSITION" || error.code === "ALREADY_CANCELLED" || error.code === "ROLLO_BLOQUEADO"
         ? 409
         : 400;
-    res.status(status).json({ error: error.message, code: error.code });
+    res.status(status).json({ error: error.message, code: error.code, ...(error.details === undefined ? {} : { details: error.details }) });
     return;
   }
   next(error);
@@ -622,7 +624,6 @@ router.get(
 
 router.get(
   "/tickets/:id",
-  requiereLecturaTicket,
   async (req, res, next): Promise<void> => {
     try {
       const params = ObtenerTicketParams.parse(req.params);
@@ -632,7 +633,25 @@ router.get(
         res.status(404).json({ error: "Ticket no encontrado." });
         return;
       }
-      assertTicketReadLocation(req, ticket.ubicacionId);
+      const auth = req.auth!;
+      const [posPermiso, cobrosPermiso, ventaPermiso, salidaPermiso, linked] = await Promise.all([
+        resolvePermiso(auth.user.id, auth.user.rol, "pos"),
+        resolvePermiso(auth.user.id, auth.user.rol, "cobros_pagos"),
+        resolvePermiso(auth.user.id, auth.user.rol, "salidas_venta"),
+        resolvePermiso(auth.user.id, auth.user.rol, "salidas"),
+        db.select({ origenId: salidasTable.origenId }).from(salidasTable)
+          .where(and(eq(salidasTable.ticketId, params.id), eq(salidasTable.modalidad, "VENTA_CLIENTE"))),
+      ]);
+      const privileged = ["ADMIN", "CONTADOR", "SISTEMAS"].includes(auth.user.rol);
+      const ordinaryTicketRead = posPermiso?.puedeVer === true || cobrosPermiso?.puedeVer === true;
+      const relationRead = canReadLinkedVentaTrace({
+        rol: auth.user.rol, ubicacionId: auth.user.ubicacionId,
+        puedeVerSalidas: salidaPermiso?.puedeVer === true,
+        puedeVerSalidasVenta: ventaPermiso?.puedeVer === true,
+        linkedOrigins: linked.map(s => s.origenId),
+      });
+      if (!privileged && !ordinaryTicketRead && !relationRead) throw new PosError("No tienes permiso para consultar este ticket.", "FORBIDDEN", 403);
+      if (!relationRead) assertTicketReadLocation(req, ticket.ubicacionId);
       const parsed = ObtenerTicketResponse.parse(ticket);
       res.json(
         omitTerminalTicketSensitiveFields(

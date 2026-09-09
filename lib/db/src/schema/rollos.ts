@@ -119,6 +119,7 @@ export const movimientosTable = pgTable(
     documentoTipo: text("documento_tipo"),
     /** Reference document identifier */
     documentoId: text("documento_id"),
+    salidaId: integer("salida_id"),
     /** Self-FK: the movement this one cancels/reverses */
     movimientoOrigenId: integer("movimiento_origen_id"),
     /** Non-null: every movement must be attributed */

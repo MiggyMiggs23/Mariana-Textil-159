@@ -17,7 +17,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         current_values text[];
       BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_salida') THEN
-          CREATE TYPE estado_salida AS ENUM ('ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA');
+          CREATE TYPE estado_salida AS ENUM ('ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA');
         ELSE
           SELECT array_agg(e.enumlabel ORDER BY e.enumsortorder)
             INTO current_values
@@ -25,14 +25,14 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
             JOIN pg_type t ON t.oid = e.enumtypid
            WHERE t.typname = 'estado_salida';
 
-          IF current_values <> ARRAY['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA'] THEN
+          IF current_values <> ARRAY['ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA'] THEN
             IF to_regclass('public.salidas') IS NOT NULL THEN
               SELECT estado::text INTO unknown_state
                 FROM salidas
                WHERE estado::text NOT IN (
                  'REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'PREPARADA',
                  'ENVIADA', 'RECIBIDA', 'CERRADA', 'RECHAZADA', 'CANCELADA',
-                 'ARMANDO', 'EN_TRANSITO'
+                  'ARMANDO', 'EN_TRANSITO', 'ENTREGADA'
                )
                LIMIT 1;
               IF unknown_state IS NOT NULL THEN
@@ -42,7 +42,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
 
             DROP TYPE IF EXISTS estado_salida_replacement;
             CREATE TYPE estado_salida_replacement AS ENUM (
-              'ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA'
+              'ARMANDO', 'EN_TRANSITO', 'RECIBIDA', 'ENTREGADA', 'CANCELADA'
             );
             IF to_regclass('public.salidas') IS NOT NULL THEN
               ALTER TABLE salidas ALTER COLUMN estado DROP DEFAULT;
@@ -52,6 +52,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
                     WHEN estado::text IN ('REGISTRADA', 'SOLICITADA', 'ACEPTADA', 'PREPARADA', 'ARMANDO') THEN 'ARMANDO'
                     WHEN estado::text IN ('ENVIADA', 'EN_TRANSITO') THEN 'EN_TRANSITO'
                     WHEN estado::text IN ('RECIBIDA', 'CERRADA') THEN 'RECIBIDA'
+                    WHEN estado::text = 'ENTREGADA' THEN 'ENTREGADA'
                     WHEN estado::text IN ('RECHAZADA', 'CANCELADA') THEN 'CANCELADA'
                   END
                 )::estado_salida_replacement;
@@ -68,6 +69,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
          folio integer NOT NULL,
         origen_id integer NOT NULL REFERENCES ubicaciones(id),
         destino_id integer REFERENCES ubicaciones(id),
+        cliente_id integer REFERENCES clientes(id),
+        ticket_id integer REFERENCES tickets(id),
         modalidad text NOT NULL DEFAULT 'TRASLADO',
         estado estado_salida NOT NULL DEFAULT 'ARMANDO',
         usuario_solicita_id integer REFERENCES usuarios(id),
@@ -77,6 +80,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         usuario_recibe_id integer REFERENCES usuarios(id),
         usuario_cierra_id integer REFERENCES usuarios(id),
         usuario_cancela_id integer REFERENCES usuarios(id),
+        usuario_entrega_id integer REFERENCES usuarios(id),
         solicitada_at timestamptz,
         aceptada_at timestamptz,
         preparada_at timestamptz,
@@ -84,6 +88,7 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
         recibida_at timestamptz,
         cerrada_at timestamptz,
         cancelada_at timestamptz,
+        entregada_at timestamptz,
         motivo_rechazo text,
         motivo_cancelacion text,
         nota_solicitud text,
@@ -98,15 +103,24 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
       ALTER TABLE salidas
         ALTER COLUMN estado SET DEFAULT 'ARMANDO',
         ADD COLUMN IF NOT EXISTS modalidad text NOT NULL DEFAULT 'TRASLADO',
+        ADD COLUMN IF NOT EXISTS cliente_id integer REFERENCES clientes(id),
+        ADD COLUMN IF NOT EXISTS ticket_id integer REFERENCES tickets(id),
         ADD COLUMN IF NOT EXISTS usuario_cancela_id integer REFERENCES usuarios(id),
+        ADD COLUMN IF NOT EXISTS usuario_entrega_id integer REFERENCES usuarios(id),
         ADD COLUMN IF NOT EXISTS cancelada_at timestamptz,
+        ADD COLUMN IF NOT EXISTS entregada_at timestamptz,
         ADD COLUMN IF NOT EXISTS autorizado_por_id integer REFERENCES usuarios(id),
         ADD COLUMN IF NOT EXISTS actividad_at timestamptz;
 
       ALTER TABLE salidas ALTER COLUMN destino_id DROP NOT NULL;
       ALTER TABLE salidas DROP CONSTRAINT IF EXISTS salidas_modalidad_check;
       ALTER TABLE salidas ADD CONSTRAINT salidas_modalidad_check
-        CHECK (modalidad IN ('TRASLADO', 'MOSTRADOR'));
+        CHECK (modalidad IN ('TRASLADO', 'MOSTRADOR', 'VENTA_CLIENTE'));
+      ALTER TABLE salidas DROP CONSTRAINT IF EXISTS salidas_venta_cliente_shape_check;
+      ALTER TABLE salidas ADD CONSTRAINT salidas_venta_cliente_shape_check
+        CHECK (modalidad <> 'VENTA_CLIENTE' OR (cliente_id IS NOT NULL AND destino_id IS NULL));
+      ALTER TABLE movimientos ADD COLUMN IF NOT EXISTS salida_id integer REFERENCES salidas(id);
+      CREATE INDEX IF NOT EXISTS movimientos_salida_idx ON movimientos (salida_id);
 
       UPDATE salidas
          SET actividad_at = COALESCE(
@@ -186,6 +200,8 @@ export async function ensureSalidasSchema(pool: Pool): Promise<void> {
 
       CREATE INDEX IF NOT EXISTS salidas_origen_estado_idx ON salidas (origen_id, estado);
       CREATE INDEX IF NOT EXISTS salidas_destino_estado_idx ON salidas (destino_id, estado);
+      CREATE INDEX IF NOT EXISTS salidas_cliente_estado_idx ON salidas (cliente_id, estado);
+      CREATE INDEX IF NOT EXISTS salidas_ticket_idx ON salidas (ticket_id);
       CREATE INDEX IF NOT EXISTS salidas_estado_idx ON salidas (estado);
       CREATE INDEX IF NOT EXISTS salidas_folio_idx ON salidas (folio);
       CREATE INDEX IF NOT EXISTS salidas_created_at_idx ON salidas (created_at);

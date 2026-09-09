@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 
 function idFromScanUrl(raw: string): number | null {
   const value = raw.trim();
@@ -82,7 +82,7 @@ export function RecepcionSalidas() {
       onError: (error) =>
         toast({
           title: "No se pudo recibir la salida",
-          description: getApiErrorMessage(error),
+          description: <ApiErrorDetails error={error} />,
           variant: "destructive",
         }),
     },

@@ -40,7 +40,8 @@ export default function SalidaDocumento() {
   }
 
   const dateObj = new Date(salida.createdAt);
-  const qrUrl = absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
+  const isVentaCliente = salida.modalidad === "VENTA_CLIENTE";
+  const qrUrl = isVentaCliente ? undefined : absoluteAppUrl(`/salidas?tab=recepcion&id=${salida.id}`);
 
   // PDF de Chromium en A5: los bordes de 0.35mm hacen que cada renglón rasterizado
   // ocupe ~20px efectivos. 154px encabezado + 52px datos + 22px cabecera +
@@ -120,8 +121,13 @@ export default function SalidaDocumento() {
                 </div>
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Destino:</span>
-                   <span className="text-[10px] truncate font-medium text-black" data-testid="doc-destination-name">{salida.nombreDestino}</span>
+                   <span className="text-[10px] truncate font-medium text-black" data-testid="doc-destination-name">{isVentaCliente ? "Cliente recoge en origen" : salida.nombreDestino}</span>
                 </div>
+             {isVentaCliente && (
+               <div className="mx-2 border-2 border-amber-600 bg-amber-50 px-2 py-1 text-center text-[10px] font-black uppercase text-amber-900">
+                 MERCANCÍA PERMANECE EN EL ORIGEN · EL CLIENTE RECOGE EN ESTE SITIO
+               </div>
+             )}
                 <div className="col-span-2 flex items-center gap-1 min-w-0">
                   <span className="text-[10px] uppercase font-bold text-gray-600 shrink-0">Fecha:</span>
                   <span className="text-[10px] truncate font-medium text-black">{dateObj ? format(dateObj, "dd/MM/yyyy HH:mm") : "N/A"}</span>

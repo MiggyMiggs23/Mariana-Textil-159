@@ -69,6 +69,47 @@ La revisión del flujo encontró además un panel de validación y un bloqueo de
 
 En la lista de Caja, una venta con `facturado=true` se identifica como **VENTA FACTURADA** en rojo y con su folio, sin llamarla Ticket ni Nota. El rojo significa exclusivamente que la venta lleva factura; no representa un error.
 
+## Salidas para venta a cliente
+
+**Caso de negocio:** un cliente compra en Mariana, pero los rollos están en otra tienda o bodega. La modalidad `VENTA_CLIENTE` permite apartarlos por serie, cobrar o autorizar la venta en Mariana y entregarlos directamente en el sitio que ya los tiene, sin hacer un traslado físico.
+
+El flujo completo tiene seis pasos:
+
+1. El sitio de origen arma una salida para un cliente existente con rollos identificados. Al pasar a `EN_TRANSITO`, las series quedan bloqueadas.
+2. El documento impreso de la salida llega a Mariana, pero **la mercancía no viaja**: permanece apartada en el origen para que el cliente la recoja ahí.
+3. Mariana abre **Salidas pendientes a cobro** en POS, revisa las salidas agrupadas por cliente, puede excluir alguna y genera un Ticket de contado o una Nota de crédito.
+4. Caja cobra el Ticket o autoriza la Nota.
+5. Después del cobro o autorización se imprime el formato existente —80 mm para Ticket o A5 vertical para Nota— con sello **AUTORIZADA**.
+6. El cliente presenta el documento en el origen; el operador verifica el folio en el sistema, escanea las series, entrega y marca `ENTREGADA`.
+
+**La mercancía no viaja y el sitio que vende no es el sitio que la tiene.** Por eso todo candado consultivo de inventario se toma sobre el par producto–ubicación de **origen**, y cuando hay varios orígenes se ordena determinísticamente por ubicación. Tomar el candado sobre Mariana, que emite el documento, dejaría sin serializar el saldo real de la bodega y permitiría vender el mismo rollo dos veces.
+
+Esta modalidad admite exclusivamente rollos identificados. Sin una serie física no existe una identidad concreta que reservar, bloquear, verificar al entregar ni rastrear en caso de conflicto; nunca se aparta solo una cantidad.
+
+**AUTORIZADA no es un estado de la salida.** Se deriva del documento ligado: Ticket cobrado o Nota autorizada. No se guarda una segunda bandera en `salidas`, porque dos verdades persistidas sobre el mismo hecho pueden divergir. El ciclo propio de la salida es `ARMANDO → EN_TRANSITO → RECIBIDA → ENTREGADA`, más `CANCELADA` antes de la entrega.
+
+Qué toca números durante el ciclo:
+
+- `EN_TRANSITO` reserva las series; no mueve inventario, dinero, Ventas ni tablero.
+- `RECIBIDA` liga las salidas seleccionadas a un único documento; todavía no mueve inventario ni cuenta como venta.
+- El cobro del Ticket o la autorización de la Nota cuenta la venta y consume cada rollo en su ubicación de origen mediante movimientos trazables.
+- `ENTREGADA` solo cierra el ciclo y apaga la alerta; no mueve dinero ni inventario.
+- La cancelación nunca borra: cancela el documento agrupado y sus salidas de forma atómica y, si ya hubo consumo, usa movimientos inversos. Si cualquier salida ya fue entregada, exige un flujo físico de devolución en vez de restaurar inventario automáticamente.
+
+La alerta de venta autorizada no entregada reutiliza `SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS`, el umbral existente de **24 horas**; no existe un segundo umbral para esta modalidad.
+
+El módulo propio `salidas_venta` está negado por omisión y hoy se habilita mediante permiso de ubicación únicamente para Terminal en Mariana. No hay una condición de Mariana en las rutas ni en la interfaz: abrirlo en otro sitio es cambiar ese permiso, no desarrollar otra variante. El catálogo configurable pasó de **30 a 31 módulos**.
+
+Regla de trazabilidad de este flujo:
+
+- Del error `ROLLO BLOQUEADO` se abre la salida que reservó la serie.
+- De la salida se abre el Ticket o la Nota que generó, y del documento se regresa a cada salida que lo compone.
+- De la alerta de no entregado se abren tanto la venta como sus salidas.
+- Del cliente se abren sus salidas pendientes.
+- Todo error operativo nombra la causa, el cliente o documento relacionado cuando aplica y ofrece un enlace a la raíz; ninguna pantalla deja un folio sin camino al detalle.
+
+**Cambio del 8 de septiembre de 2026:** se agregó el flujo completo de salidas para venta a cliente, reserva global por serie, agrupación multi-origen en POS, consumo diferido en caja, autorización derivada, entrega escaneada, reversos, alertas y trazabilidad.
+
 ## Corrección — Bloque 4: Tabulares
 
 **Tabulares:** casilla opcional al cobrar, sin marcar por omisión. Genera **una tira por color** en 80 mm, con los metrajes de los rollos de ese color, su total y el folio del ticket. Son adicionales al ticket, nunca lo sustituyen, y no tocan el registro de la venta.
@@ -141,8 +182,8 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Toda operación de inventario usa una transacción SQL con bloqueo de fila.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
-- **Permisos:** ADMIN tiene acceso total a los 30 módulos sin consultar tablas. Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es: override de usuario (non-null) > permiso de rol > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
-- **Conteo de módulos:** el catálogo configurable contiene 30 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
+- **Permisos:** ADMIN tiene acceso total a los 31 módulos sin consultar tablas. Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es: override de usuario (non-null) > permiso de rol personalizado > permiso heredado del sitio > permiso de rol heredado > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
+- **Conteo de módulos:** el catálogo configurable contiene 31 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Invariantes ADMIN:** ADMIN no participa en la matriz ni acepta overrides; siempre tiene acceso total. Un usuario no puede modificar sus propios permisos.
 - **Precios:** `/precios` exige rol ADMIN directamente en el servidor. El costo actual es ponderado por cantidad disponible y unidad; sin costos válidos permanece pendiente (`null`), nunca cero.
@@ -308,9 +349,9 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Entradas: carta vertical 216 × 279 mm. Salidas: A5 horizontal 210 × 148 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida. El tamaño de la Salida está fijado en la sección Formatos de impresión; media carta se descartó por bandeja.
 
 
-## Permission modules (30 total)
+## Permission modules (31 total)
 
-`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`
+`dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`, `salidas_venta`
 
 ## Salidas extraordinarias
 

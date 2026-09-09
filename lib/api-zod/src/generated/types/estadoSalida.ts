@@ -13,5 +13,6 @@ export const EstadoSalida = {
   ARMANDO: 'ARMANDO',
   EN_TRANSITO: 'EN_TRANSITO',
   RECIBIDA: 'RECIBIDA',
+  ENTREGADA: 'ENTREGADA',
   CANCELADA: 'CANCELADA',
 } as const;

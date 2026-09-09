@@ -16,6 +16,7 @@ import {
   SalidaDetail,
   Role,
 } from "@workspace/api-client-react";
+import { SalidaVentaClienteNueva } from "@/components/salida-venta-cliente-nueva";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -35,7 +36,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber, formatUnit } from "@workspace/number-format";
@@ -46,6 +47,9 @@ import {
 } from "@workspace/scanned-code";
 
 export default function SalidaNueva() {
+  if (new URLSearchParams(window.location.search).get("modalidad") === "VENTA_CLIENTE") {
+    return <SalidaVentaClienteNueva />;
+  }
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -189,7 +193,7 @@ export default function SalidaNueva() {
       playSound('error');
       toast({
         title: "Error al escanear",
-        description: getApiErrorMessage(error),
+        description: <ApiErrorDetails error={error} />,
         variant: "destructive"
       });
       setSerieInput("");
@@ -214,7 +218,7 @@ export default function SalidaNueva() {
     } catch (error) {
       toast({
         title: "No se pudo quitar el rollo",
-        description: getApiErrorMessage(error),
+         description: <ApiErrorDetails error={error} />,
         variant: "destructive",
       });
     } finally {
@@ -253,7 +257,7 @@ export default function SalidaNueva() {
         setLocation(`/salidas/${data.id}`);
       },
       onError: (error) => {
-        toast({ title: "Error al registrar", description: getApiErrorMessage(error), variant: "destructive" });
+        toast({ title: "Error al registrar", description: <ApiErrorDetails error={error} />, variant: "destructive" });
       }
     });
   };
