@@ -38,7 +38,12 @@ test("encabezado, rótulos y columnas respetan el contrato operativo", () => {
   assert.match(page, />Generó:</);
   assert.match(page, />Entregó:</);
   assert.match(page, /data-testid="doc-origin-name">\{salida\.nombreOrigen\}/);
-  assert.match(page, /data-testid="doc-destination-name">\{salida\.nombreDestino\}/);
+  assert.match(
+    page,
+    /data-testid="doc-destination-name">\{isVentaCliente \? "Cliente recoge en origen" : salida\.nombreDestino\}/,
+  );
+  assert.match(page, /isVentaCliente \? "Cliente recoge en origen"/);
+  assert.match(page, /: salida\.nombreDestino\}/);
   for (const heading of [
     "Producto",
     "Color",

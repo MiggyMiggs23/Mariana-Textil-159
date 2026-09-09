@@ -54,7 +54,10 @@ test("Salida page specifies A5 landscape and has correct control signatures", as
   assert.match(salida, /<h1[^>]*>Salida<\/h1>/);
   assert.doesNotMatch(salida, /doc-origin-initials|salida\.inicialesSitio/);
   assert.match(salida, /data-testid="doc-origin-name">\{salida\.nombreOrigen\}/);
-  assert.match(salida, /data-testid="doc-destination-name">\{salida\.nombreDestino\}/);
+  assert.match(
+    salida,
+    /data-testid="doc-destination-name">\{isVentaCliente \? "Cliente recoge en origen" : salida\.nombreDestino\}/,
+  );
   assert.doesNotMatch(salida, /data-print-palette="monochrome"|logoVariant="monochrome"/);
   assert.doesNotMatch(css, /filter:\s*grayscale\(1\)/);
   assert.match(salida, /bg-\[#1e3a8a\]/);
@@ -248,7 +251,20 @@ test("Thermal ticket renders vertical product blocks with unit-safe quantities",
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
   assert.match(detail, /VENTA: \{modality\}/);
   assert.match(detail, /modality === "POR ROLLO"/);
-  assert.match(detail, /line\.unidadProducto === "METRO" \? "Metros"[\s\S]*"KILO" \? "Kilos" : "Bolsas"/);
+  // This contract predated the customer-sale work and had already become stale
+  // when PIEZA was added: protect every known label plus the unknown-unit fallback.
+  for (const [unit, label] of [
+    ["METRO", "Metros"],
+    ["KILO", "Kilos"],
+    ["BOLSA", "Bolsas"],
+    ["PIEZA", "Piezas"],
+  ]) {
+    assert.match(
+      detail,
+      new RegExp(`line\\.unidadProducto === "${unit}" \\? "${label}"`),
+    );
+  }
+  assert.match(detail, /: formatUnit\(line\.unidadProducto\)/);
   assert.match(detail, /<span>Precio:<\/span>/);
   assert.match(detail, /<span>Importe:<\/span>/);
   assert.match(detail, /Total de rollos:/);
