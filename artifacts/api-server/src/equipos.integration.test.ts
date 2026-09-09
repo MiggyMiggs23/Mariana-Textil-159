@@ -90,24 +90,37 @@ async function makeUser(
 test("equipment scope, derived active state, attribution and edit denial", async () => {
   await ensureEquiposSchema(pool);
   await ensureEquiposSchema(pool);
-  const initials = (suffix: string) =>
-    `${suffix}${run.slice(0, 2)}`.toUpperCase().slice(0, 3);
+  const runLetters = [...run.slice(0, 2)]
+    .map((character) =>
+      String.fromCharCode("A".charCodeAt(0) + Number.parseInt(character, 16)),
+    )
+    .join("");
+  const [siteAInitials, siteBInitials, siteCInitials] = ["A", "B", "C"].map(
+    (suffix) => `${suffix}${runLetters}`,
+  );
+  for (const value of [siteAInitials, siteBInitials, siteCInitials]) {
+    assert.match(value, /^[A-Z]{3}$/);
+  }
+  assert.equal(
+    new Set([siteAInitials, siteBInitials, siteCInitials]).size,
+    3,
+  );
   const [siteA, siteB, siteC] = await db
     .insert(ubicacionesTable)
     .values([
       {
         nombre: `Equipos A ${run}`,
-        iniciales: initials("A"),
+        iniciales: siteAInitials,
         tipo: "TIENDA",
       },
       {
         nombre: `Equipos B ${run}`,
-        iniciales: initials("B"),
+        iniciales: siteBInitials,
         tipo: "TIENDA",
       },
       {
         nombre: `Equipos C ${run}`,
-        iniciales: initials("C"),
+        iniciales: siteCInitials,
         tipo: "BODEGA",
       },
     ])
