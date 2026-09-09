@@ -1,0 +1,98 @@
+# Prompt para Replit Agent — Tres correcciones: escaneo de series, estado en historial y tarjetas de Tiempo Real
+
+No cambies ninguna regla de negocio ni ningún cálculo. No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+---
+
+## Bloque 1 — El escaneo de QR falla solo en la salida para venta
+
+**Síntoma:** al escanear el QR de un rollo para armar una **salida para venta**, el sistema responde que la serie no existe. El mismo rollo, escaneado en una **salida normal** o en una venta de POS, se encuentra sin problema.
+
+**Diagnóstico previo:** revisé las dos rutas del servidor y hacen lo mismo. `crearEnviarSalidaVentaCliente` en `salidas.ts:181` y la validación de la salida normal alrededor de `salidas.ts:785` consultan igual, con `inArray(rollosTable.serie, series)`. La diferencia no parece estar ahí.
+
+**Dónde buscar:** en el cliente. La pantalla de salida normal y la de venta a POS **normalizan el valor escaneado antes de mandarlo**, y la pantalla nueva probablemente no.
+
+1. Averigua **exactamente qué contiene el QR** que se imprime en la etiqueta de rollo: si es la serie a secas, una URL, un identificador con prefijo o un valor con separadores. Repórtamelo.
+2. Compara **las tres rutas del cliente** —salida normal, venta en POS y salida para venta— y encuentra qué transformación aplican las dos que funcionan y no aplica la que falla.
+3. **Extrae esa normalización a una sola función compartida** y haz que las tres la usen. No la copies en la pantalla nueva: tres copias del mismo parseo divergen en silencio, y este bug es exactamente eso.
+4. Agrega una prueba que verifique que el valor real del QR, tal como lo emite la etiqueta, resuelve a la misma serie por las tres rutas.
+
+**Si resulta que la causa está en el servidor y no en el cliente, detente y repórtalo antes de corregir.** No quiero que ajustes el cliente para tapar un problema del servidor.
+
+Además, `crearEnviarSalidaVentaCliente` hace `s.trim().toUpperCase()` sobre las series. Confirma que esa transformación no rompe ningún formato de serie vigente y que las otras rutas hacen lo mismo o no lo necesitan.
+
+## Bloque 2 — El historial de salidas muestra estados distintos en PC y en teléfono
+
+**Síntoma:** la misma salida se ve **"En tránsito"** en el historial desde el teléfono y aparece ya como **recibida** en la vista de escritorio.
+
+1. **Averigua si son dos implementaciones distintas leyendo campos distintos**, o si una de las dos está mostrando datos en caché sin refrescar. Repórtame cuál de las dos es antes de corregir.
+2. Si son dos implementaciones: **unifícalas en un solo componente** que derive el estado de la misma fuente. Dos maneras de pintar el mismo estado terminan divergiendo, y esto ya es la prueba.
+3. El historial debe distinguir claramente los momentos del ciclo: **enviada, en tránsito, recibida, entregada y cancelada**, con el mismo criterio en las dos vistas.
+4. Verifica que el estado que se muestra corresponde al estado real de la salida en la base, no a uno derivado de los movimientos de inventario. Son cosas distintas: los movimientos cuentan lo que pasó con la mercancía, el estado cuenta dónde va el documento.
+
+Comprueba la corrección abriendo **la misma salida** en escritorio y en teléfono, uno al lado del otro, y confirmando que dicen lo mismo.
+
+## Bloque 3 — Dos tarjetas nuevas en Caja en Tiempo Real
+
+La segunda fila pasa de dos tarjetas a cuatro:
+
+`Ventas pendientes de cobro o autorización` → `Tickets cancelados` → `Salidas en tránsito` → `Salidas canceladas`
+
+### Tamaño
+
+**Las cuatro tarjetas de la segunda fila van más chicas que las de la primera**: menor altura y menor tamaño de cifra. La primera fila es el negocio y debe llevarse la atención; la segunda son señales operativas que se consultan, no se miran todo el tiempo.
+
+### Colores
+
+Respeta el código de color que ya existe en el sistema y no inventes tonos nuevos:
+
+- Pendientes de cobro: **ámbar**, como está.
+- Tickets cancelados: **rojo**, como está.
+- Salidas en tránsito: **ámbar**, el mismo que ya usa la insignia "En tránsito" en el historial de salidas. Es la misma idea: algo en curso que todavía no cierra.
+- Salidas canceladas: **rojo**, por la misma razón que los tickets cancelados.
+
+Deja el significado de cada color escrito en un comentario, conforme a la regla de que todo color del sistema significa algo y debe poder explicarse en una frase.
+
+### Qué muestran
+
+Las dos nuevas, con **el conteo primero y el importe después**, igual que la de cancelados. Singulariza correctamente: "1 salida", "2 salidas".
+
+**Salidas en tránsito** cuenta las salidas enviadas que todavía no se reciben, del periodo y sitio seleccionados.
+
+**Salidas canceladas** cuenta las canceladas en el periodo.
+
+### Reglas que estas cifras deben respetar
+
+1. **Ninguna de las dos toca las identidades del tablero.** Una salida en tránsito es mercancía en movimiento, no una venta; una cancelada no ocurrió. Verifica que agregarlas **no mueva ni un peso** de Ventas, Cobrado, Ventas a crédito ni Utilidad.
+2. **Las dos abren su raíz**, como toda cifra de este sistema: el listado de las salidas que las componen, con folio, origen, destino o cliente, y fecha. El folio es el único enlace del renglón y lleva a la salida.
+3. La suma y el conteo del detalle deben cuadrar con la tarjeta.
+
+En pantalla angosta las filas se apilan conservando el orden.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de salidas, POS, caja y analytics de administración.
+3. Escanea el QR de un rollo real en las tres rutas —salida normal, venta en POS y salida para venta— y confirma que las tres resuelven a la misma serie.
+4. Confirma que la normalización del valor escaneado vive en **una sola función** usada por las tres.
+5. Abre la misma salida en escritorio y en teléfono y confirma que muestran el mismo estado.
+6. Recorre el ciclo completo de una salida y confirma que las dos vistas reflejan cada cambio de estado igual: enviada, en tránsito, recibida, entregada.
+7. Confirma que las cuatro tarjetas de la segunda fila son visiblemente más chicas que las de la primera y conservan sus colores.
+8. Con salidas en tránsito y canceladas en el periodo, confirma que **Ventas, Cobrado, Ventas a crédito y Utilidad no cambiaron**.
+9. Abre el detalle de las dos tarjetas nuevas y confirma que el conteo cuadra y que el folio lleva a la salida.
+10. Revisa el tablero en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Qué contiene el QR de la etiqueta de rollo y que **su normalización vive en una sola función compartida** por las tres rutas de escaneo. Deja anotado que la duplicación de ese parseo fue la causa de este error.
+- Que el estado de una salida se deriva de **una sola fuente** y se pinta con **un solo componente** en escritorio y en teléfono, y que el estado del documento no es lo mismo que los movimientos de inventario.
+- El orden y el tamaño de las dos filas de tarjetas de Caja en Tiempo Real, y por qué la segunda va más chica.
+- Que **salidas en tránsito y salidas canceladas quedan fuera de todas las identidades del tablero**, con la razón.
+- El color de cada tarjeta y qué significa.
+- Un renglón con la fecha y qué se hizo.
