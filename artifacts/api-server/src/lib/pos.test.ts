@@ -38,6 +38,7 @@ import {
   quantityTimesMoneyCents,
   validarPrecioPos,
 } from "./pos";
+import { formatErrorWithCauses } from "./postgres-errors";
 
 const RUN = `POS${Date.now()}`;
 const [testUser] = await db
@@ -69,7 +70,7 @@ async function test(name: string, fn: () => Promise<void>) {
     passed += 1;
   } catch (error) {
     process.stdout.write(
-      `  ✗ ${name}\n    ${(error as Error).stack ?? String(error)}\n`,
+      `  ✗ ${name}\n${formatErrorWithCauses(error)}\n`,
     );
     failed += 1;
   }

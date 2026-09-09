@@ -82,6 +82,7 @@ import { isSupervisorSensitiveKey } from "./lib/sensitive-data";
 import { ABSOLUTE_SESSION_MS, INACTIVITY_MS } from "./middlewares/auth";
 import app from "./app";
 import { crearEntrada, crearRollo } from "./lib/inventario";
+import { formatErrorWithCauses } from "./lib/postgres-errors";
 import ExcelJS from "exceljs";
 
 // ─── Test Harness ──────────────────────────────────────────────────────────────
@@ -98,7 +99,7 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
     process.stdout.write(`  ✓ ${name}\n`);
     passed++;
   } catch (err) {
-    const msg = (err as Error).stack ?? (err as Error).message;
+    const msg = formatErrorWithCauses(err);
     process.stdout.write(`  ✗ ${name}\n    ${msg}\n`);
     failures.push(`${name}: ${msg}`);
     failed++;

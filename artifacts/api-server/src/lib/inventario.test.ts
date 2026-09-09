@@ -41,6 +41,7 @@ import {
   InventarioError,
   type Tx,
 } from "./inventario";
+import { formatErrorWithCauses } from "./postgres-errors";
 
 await ensureExtraordinaryExitsSchema(pool);
 
@@ -60,7 +61,7 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
     process.stdout.write(`  ✓ ${name}\n`);
     passed++;
   } catch (err) {
-    process.stdout.write(`  ✗ ${name}\n    ${(err as Error).stack ?? (err as Error).message}\n`);
+    process.stdout.write(`  ✗ ${name}\n${formatErrorWithCauses(err)}\n`);
     failed++;
   }
 }
@@ -1674,7 +1675,7 @@ try {
   });
   process.stdout.write(`Cleanup: OK\n`);
 } catch (cleanErr) {
-  process.stderr.write(`Cleanup ERROR: ${(cleanErr as Error).message}\n`);
+  process.stderr.write(`Cleanup ERROR:\n${formatErrorWithCauses(cleanErr)}\n`);
 }
 
 process.exit(failed > 0 ? 1 : 0);

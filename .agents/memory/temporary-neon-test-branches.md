@@ -9,11 +9,11 @@ The Neon project used for isolated tests may not mirror the application’s deve
 
 **How to apply:** Never run database tests against the app database. Use a temporary branch, prepare it with the current schema and seed, run tests with `TEST_DATABASE_URL`, and delete the branch after the suite finishes.
 
-The development seed must run with `NODE_ENV=development` even when its `DATABASE_URL` points to the disposable test database; switch back to `NODE_ENV=test` for the suites.
+The current seed always requires its admin bootstrap secret, regardless of `NODE_ENV`. Verify that the secret is available before treating schema preparation as complete.
 
-**Why:** The seed intentionally requires an admin password outside development, while isolated test preparation relies on its non-production bootstrap path.
+**Why:** Schema push succeeded but seed exited immediately for a missing bootstrap secret; the table-only database then produced misleading foreign-key failures because the expected seeded user did not exist.
 
-**How to apply:** Scope `NODE_ENV=development` only to the seed command. Keep the temporary database URL explicit throughout, then run tests with `NODE_ENV=test`.
+**How to apply:** Check secret availability through the secure environment flow before creating the test database. Fail preparation immediately if seed fails, and never run suites against a database that only completed schema push.
 
 If a Neon operation's response is blocked by Replit's security scanner, do not assume it had no effect. Verify the branch/database state through the already-authorized test connection before retrying or choosing a recovery action.
 

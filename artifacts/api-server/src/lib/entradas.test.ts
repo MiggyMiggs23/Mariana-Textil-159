@@ -31,6 +31,7 @@ import {
   crearEntrada,
   InventarioError,
 } from "./inventario";
+import { formatErrorWithCauses } from "./postgres-errors";
 
 // ── Test harness ──────────────────────────────────────────────────────────────
 
@@ -51,7 +52,7 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
     passed++;
   } catch (err) {
     process.stdout.write(
-      `  ✗ ${name}\n    ${(err as Error).stack ?? (err as Error).message}\n`,
+      `  ✗ ${name}\n${formatErrorWithCauses(err)}\n`,
     );
     failed++;
   }

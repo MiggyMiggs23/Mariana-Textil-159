@@ -42,6 +42,7 @@ import {
   resumenProveedores,
 } from "./compras-proveedor";
 import { parseMexicoDateQuery } from "./mexico-date";
+import { formatErrorWithCauses } from "./postgres-errors";
 
 if (
   process.env.NODE_ENV !== "test" ||
@@ -72,7 +73,7 @@ async function test(name: string, fn: () => Promise<void>): Promise<void> {
     passed++;
   } catch (err) {
     process.stdout.write(
-      `  ✗ ${name}\n    ${(err as Error).stack ?? (err as Error).message}\n`,
+      `  ✗ ${name}\n${formatErrorWithCauses(err)}\n`,
     );
     failed++;
   }
@@ -680,7 +681,7 @@ try {
   });
   process.stdout.write(`Cleanup: OK\n`);
 } catch (cleanErr) {
-  process.stderr.write(`Cleanup ERROR: ${(cleanErr as Error).message}\n`);
+  process.stderr.write(`Cleanup ERROR:\n${formatErrorWithCauses(cleanErr)}\n`);
 }
 }
 
