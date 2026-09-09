@@ -1,0 +1,107 @@
+# Prompt para Replit Agent — Registro de Equipos por sitio
+
+Trabajo nuevo y acotado. No toca inventario, ni dinero, ni ninguna regla existente. No toques la base de datos por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+## Para qué es
+
+Registrar el equipo que hace funcionar este software en cada sitio, y saber de un vistazo cuál ya está configurado y en uso. **Solo equipo del sistema**: impresoras, computadoras de punto de venta y escáneres. No es un inventario de activos de la empresa.
+
+## Bloque 1 — La pantalla
+
+Se llama **Equipos** y va en la sección **DIRECTORIO** del menú lateral, junto a Camionetas y Choferes, que ya son registros de cosas físicas por sitio.
+
+**Una sola pantalla, no dos pestañas.** El sistema ya tiene el selector de sitio en el encabezado con **Vista Global** entre sus opciones: es el mismo control de Precios y de Caja en Tiempo Real. Vista Global muestra el listado completo de los siete sitios; elegir un sitio lo filtra. **No agregues un filtro de sitio propio**: dos formas distintas de filtrar por sitio en la misma aplicación es exactamente la clase de inconsistencia que ya estamos limpiando.
+
+Aplica `resolveReadScope` en el servidor: quien tenga alcance PROPIA ve solo su sitio, y pedir otro por la dirección se rechaza.
+
+## Bloque 2 — Qué se registra
+
+Por cada equipo:
+
+- **Tipo**, de una **lista cerrada**, no texto libre: impresora térmica de tickets, impresora de etiquetas, computadora POS, pistola escáner, smartphone escáner. Cerrada a propósito: con texto libre acabarías con "Zebra", "zebra" y "Zebra ZD621" como tres tipos distintos, que es justo el problema que hoy tienes con los nombres de las telas.
+- **Sitio.**
+- **Identificador**, el nombre con que la gente lo llama: "Caja 1", "Mostrador", "Trastienda".
+- **Marca y modelo.**
+- **Número de serie**, opcional.
+- **Notas**, opcional.
+- **Activo**, con foco verde, según el Bloque 3.
+
+El listado ordena por sitio y luego por tipo, con el ordenamiento en español que ya usa el sistema. En Vista Global se agrupa por sitio.
+
+## Bloque 3 — La lista de verificación de configuración
+
+El foco verde **no se enciende a mano**. Cada tipo de equipo tiene su lista de verificación, y el equipo aparece como activo solo cuando **todas** sus casillas están palomeadas. Mientras falte una, se muestra en gris con el conteo de lo que falta.
+
+Un registro que solo dice "sí, está puesto" no sirve de nada. Lo que hace falta saber es **qué configuración se le aplicó**, porque es lo que se olvida al instalar el siguiente sitio.
+
+Las listas iniciales, por tipo:
+
+**Computadora POS**
+- Tamaño de papel del navegador en Roll Paper 80 mm para la impresora de tickets
+- Márgenes del navegador en Ninguno
+- Escala en Tamaño real
+- Impresora de tickets predeterminada correcta
+
+**Impresora térmica de tickets**
+- Instalada y probada con un ticket real
+- Papel de 80 mm cargado
+
+**Impresora de etiquetas**
+- Instalada y probada con una etiqueta real
+- Medida de etiqueta 100 × 70 mm configurada
+
+**Pistola escáner**
+- Configurada a teclado español
+- Probada leyendo un QR de rollo del sistema
+
+**Smartphone escáner**
+- Sesión iniciada y permisos de cámara concedidos
+- Probado leyendo un QR de rollo del sistema
+
+Las casillas y sus textos deben vivir **en un solo lugar del código**, no repartidos por la interfaz, para que agregar una casilla sea editar una lista y no cazar cadenas.
+
+Cada casilla guarda **quién la palomeó y cuándo**. Es lo que permite preguntar después por qué una terminal quedó mal configurada.
+
+## Bloque 4 — Permisos
+
+Es un **módulo de permisos nuevo**. Los módulos pasan de 30 a 31: actualiza el conteo en la matriz del seed y en `replit.md`, donde el número está escrito.
+
+Ver el registro puede tenerlo cualquier rol operativo; editarlo y palomear casillas, solo quien tenga permiso de editar en ese módulo.
+
+## Bloque 5 — Que lleve a su raíz
+
+Aplica aquí también la regla de trazabilidad: **ninguna cifra ni estado se queda sin explicación.**
+
+- El conteo de equipos activos de un sitio abre la lista de esos equipos.
+- Un equipo en gris muestra **cuáles casillas le faltan**, no solo que está incompleto.
+- Cada casilla palomeada muestra quién y cuándo, al pasar el cursor o al abrir el detalle.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de permisos y las de contrato que toquen el conteo de módulos.
+3. Registra equipos en tres sitios distintos y confirma que Vista Global los muestra agrupados por sitio, y que elegir un sitio filtra correctamente.
+4. Confirma que **no existe un filtro de sitio propio** en la pantalla: el único es el del encabezado.
+5. Con un usuario de alcance PROPIA, confirma que solo ve su sitio y que pedir otro por la dirección se rechaza en el servidor.
+6. Deja un equipo con una casilla sin palomear y confirma que **no aparece como activo** y que dice cuál le falta.
+7. Palomea la última casilla y confirma que el foco se pone verde solo.
+8. Confirma que cada casilla guarda quién y cuándo, y que se ve.
+9. Confirma que un usuario sin permiso de editar puede ver pero no palomear, y que el endpoint lo rechaza aunque se llame por la dirección.
+10. Confirma que el tipo de equipo es una lista cerrada y no admite texto libre.
+11. Revisa la pantalla en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`, en una sección nueva sobre Equipos:
+
+- Para qué es el registro y que **solo cubre equipo del sistema**, no activos de la empresa.
+- Que usa **el selector de sitio del encabezado** y no tiene filtro propio, y por qué.
+- Que el tipo es una **lista cerrada**, y por qué: con texto libre el catálogo se parte solo.
+- Que **el foco verde no se pone a mano**: se deriva de la lista de verificación completa, y que cada casilla guarda quién y cuándo.
+- Las listas de verificación por tipo, tal como quedaron, y que viven en un solo lugar del código.
+- Que los módulos de permisos pasaron a 31.
+- Un renglón con la fecha y qué se hizo.
