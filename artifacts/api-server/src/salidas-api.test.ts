@@ -140,14 +140,18 @@ test("Block 1 counter exit is one-step, site-scoped, persisted and printable", a
 });
 
 test("Frontend finalizes from Salida Nueva and detail has no second send action", async () => {
-  const [listPage, detailPage, createPage] = await Promise.all([
+  const [listPage, detailPage, createPage, statusPresentation] = await Promise.all([
     readFile(listPageFile, "utf8"),
     readFile(detailPageFile, "utf8"),
     readFile(createPageFile, "utf8"),
+    readFile(new URL("../../mariana-textil/src/components/salida-estado-badge.tsx", import.meta.url), "utf8"),
   ]);
-  for (const source of [listPage, detailPage]) {
-    assert.match(source, /ARMANDO/);
-    assert.match(source, /EN_TRANSITO/);
+  assert.match(listPage, /<SalidaEstadoBadge estado=\{salida\.estado\}/);
+  assert.match(statusPresentation, /ARMANDO:\s*\{\s*label:\s*"Armando"/);
+  assert.match(statusPresentation, /EN_TRANSITO:\s*\{\s*label:\s*"En tránsito"/);
+  assert.match(detailPage, /ARMANDO/);
+  assert.match(detailPage, /EN_TRANSITO/);
+  for (const source of [listPage, detailPage, statusPresentation]) {
     assert.doesNotMatch(source, /SOLICITADA|ACEPTADA|RECHAZADA|PREPARADA|ENVIADA|CERRADA/);
   }
   assert.doesNotMatch(detailPage, /useEnviarSalida|Enviar salida|btn-action-send/);

@@ -80,13 +80,17 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
       ?.items.map((item) => item.name),
     [
       "Sitios",
-      "Camionetas",
-      "Choferes",
       "Usuarios",
       "Permisos",
       "Conciliación de Kardex",
       "Bitácora",
     ],
+  );
+  assert.deepEqual(
+    groups
+      .find((group) => group.title === "DIRECTORIO")
+      ?.items.map((item) => item.name),
+    ["Clientes", "Proveedores", "Camionetas", "Choferes", "Equipos"],
   );
 });
 
@@ -199,13 +203,16 @@ test("ticket detail preserves POS/Cobros readers and explicit fiscal reviewers",
   const app = await readFile(new URL("../App.tsx", import.meta.url), "utf8");
   assert.match(
     app,
-    /path="\/tickets\/:id"[\s\S]*allowedAnyModules=\{\[Modules\.COBROS_PAGOS, Modules\.POS\]\}[\s\S]*allowedRoles=\{\["ADMIN", "CONTADOR", "SISTEMAS"\]\}/,
+    /path="\/tickets\/:id"[\s\S]*allowedAnyModules=\{\[Modules\.COBROS_PAGOS, Modules\.POS, Modules\.SALIDAS\]\}[\s\S]*allowedRoles=\{\["ADMIN", "CONTADOR", "SISTEMAS"\]\}/,
   );
   assert.ok(
-    hasReadableModule(user("TERMINAL", [Modules.POS]), [Modules.COBROS_PAGOS, Modules.POS]),
+    hasReadableModule(user("TERMINAL", [Modules.POS]), [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS]),
   );
   assert.ok(
-    hasReadableModule(user("CAJA", [Modules.COBROS_PAGOS]), [Modules.COBROS_PAGOS, Modules.POS]),
+    hasReadableModule(user("CAJA", [Modules.COBROS_PAGOS]), [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS]),
+  );
+  assert.ok(
+    hasReadableModule(user("BODEGA", [Modules.SALIDAS]), [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS]),
   );
   assert.ok(["ADMIN", "CONTADOR", "SISTEMAS"].includes(user("SISTEMAS", []).rol));
 });

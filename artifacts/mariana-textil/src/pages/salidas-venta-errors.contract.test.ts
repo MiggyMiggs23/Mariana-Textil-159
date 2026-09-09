@@ -35,10 +35,12 @@ test("POS and salida scan/creation workflows render structured API details", asy
 test("ENTREGADA is present in salida maps, generated state filter, and closed-detail behavior", async () => {
   const list = await readFile(new URL("./salidas.tsx", import.meta.url), "utf8");
   const detail = await readFile(new URL("./salida-detail.tsx", import.meta.url), "utf8");
+  const presentation = await readFile(new URL("../components/salida-estado-badge.tsx", import.meta.url), "utf8");
 
-  assert.match(list, /ENTREGADA:\s*\{\s*label:\s*"Entregada"/);
+  assert.match(presentation, /ENTREGADA:\s*\{\s*label:\s*"Entregada"/);
   assert.match(list, /Object\.values\(EstadoSalida\)/);
-  assert.match(detail, /ENTREGADA:\s*\{\s*label:\s*"Entregada"/);
+  assert.match(list, /<SalidaEstadoBadge estado=\{salida\.estado\}/);
+  assert.match(detail, /<SalidaEstadoBadge estado=\{salida\.estado\}/);
   assert.match(detail, /salida\.estado === 'ENTREGADA'/);
   assert.match(detail, /salida\.estado !== "ENTREGADA"/);
 });
