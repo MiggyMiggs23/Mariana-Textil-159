@@ -4163,7 +4163,7 @@ paths:
       operationId: generarVentaDesdeSalidas
       tags: [salidas, pos]
       summary: Genera un TICKET o NOTA existente desde salidas seleccionadas
-      description: Requiere salidas_venta/crear. Los precios son editables; NOTA exige plazo de crédito.
+      description: Requiere salidas_venta/crear y una tienda operativa explícita. Los precios son editables; NOTA exige plazo de crédito.
       requestBody:
         required: true
         content:
@@ -10430,11 +10430,15 @@ components:
         precioUnitario: { type: number, exclusiveMinimum: 0 }
     GenerarVentaDesdeSalidasCommonInput:
       type: object
-      required: [uuidCliente, clienteId, salidaIds, precios]
+      required: [uuidCliente, ubicacionId, clienteId, salidaIds, precios]
       properties:
         uuidCliente:
           type: string
           pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        ubicacionId:
+          type: number
+          minimum: 1
+          description: Tienda activa desde la que se emite el documento de venta.
         clienteId: { type: number, minimum: 1 }
         salidaIds:
           type: array

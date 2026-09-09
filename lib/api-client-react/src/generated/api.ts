@@ -14122,7 +14122,7 @@ export const getGenerarVentaDesdeSalidasUrl = () => {
 }
 
 /**
- * Requiere salidas_venta/crear. Los precios son editables; NOTA exige plazo de crédito.
+ * Requiere salidas_venta/crear y una tienda operativa explícita. Los precios son editables; NOTA exige plazo de crédito.
  * @summary Genera un TICKET o NOTA existente desde salidas seleccionadas
  */
 export const generarVentaDesdeSalidas = async (generarVentaDesdeSalidasInput: GenerarVentaDesdeSalidasInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {

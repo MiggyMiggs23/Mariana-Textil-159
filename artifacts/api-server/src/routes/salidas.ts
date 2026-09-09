@@ -60,7 +60,7 @@ import {
   prepararVentaDesdeSalidas,
   validarORecuperarGeneracionVenta,
 } from "../lib/salidas";
-import { buildTicketDetail, cancelarTicket, crearTicket } from "../lib/pos";
+import { buildTicketDetail, cancelarTicket, crearTicket, PosError } from "../lib/pos";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   EXCEL_NUMBER_FORMAT,
@@ -119,7 +119,38 @@ router.get("/salidas/venta-cliente/pendientes", requireSession, requierePermiso(
 
 router.post("/salidas/venta-cliente/generar-venta", requireSession, requierePermiso("salidas_venta", "crear"), async (req, res, next) => {
   try {
+    const requestedLocationId =
+      req.body !== null && typeof req.body === "object"
+        ? (req.body as Record<string, unknown>).ubicacionId
+        : undefined;
+    if (!Number.isInteger(requestedLocationId) || Number(requestedLocationId) <= 0) {
+      throw new PosError(
+        "Selecciona la tienda activa desde la que se emitirá la venta.",
+        "SALE_LOCATION_REQUIRED",
+      );
+    }
     const body = GenerarVentaDesdeSalidasBody.parse(req.body);
+    if (!canOperate(req.auth!, body.ubicacionId)) {
+      throw new InventarioError(
+        "No tienes permiso para emitir ventas desde la tienda seleccionada.",
+        "SALE_LOCATION_FORBIDDEN",
+      );
+    }
+    const [saleLocation] = await db
+      .select({
+        id: ubicacionesTable.id,
+        activa: ubicacionesTable.activa,
+        tipo: ubicacionesTable.tipo,
+      })
+      .from(ubicacionesTable)
+      .where(eq(ubicacionesTable.id, body.ubicacionId))
+      .limit(1);
+    if (!saleLocation || !saleLocation.activa || saleLocation.tipo !== "TIENDA") {
+      throw new PosError(
+        "La tienda seleccionada no está activa o no es una tienda operativa. Selecciona otra tienda.",
+        "INVALID_LOCATION",
+      );
+    }
     const result = await db.transaction(async tx => {
       const existingTicketId = await validarORecuperarGeneracionVenta(tx, {
         uuidCliente: body.uuidCliente,
@@ -137,7 +168,7 @@ router.post("/salidas/venta-cliente/generar-venta", requireSession, requierePerm
         throw new InventarioError("Debe enviarse exactamente un precio por cada rollo seleccionado, sin extras.", "INVALID_PRICE_SET");
       }
       const ticket = await crearTicket(tx, {
-        ubicacionId: req.auth!.user.ubicacionId!,
+        ubicacionId: body.ubicacionId,
         usuarioTerminalId: req.auth!.user.id,
         clienteId: body.clienteId,
         documentoTipo: body.documentoTipo,
@@ -310,13 +341,15 @@ async function requireSalidaAccess(
 
 function errorStatus(error: InventarioError): number {
   if (error.code === "SALIDA_NOT_FOUND") return 404;
-  if (error.code === "SALIDA_LOCATION_FORBIDDEN") return 403;
+  if (["SALIDA_LOCATION_FORBIDDEN", "SALE_LOCATION_FORBIDDEN"].includes(error.code)) return 403;
   if (
     [
       "INVALID_SALIDA_STATE",
+      "SALIDA_SELECTION_CHANGED",
       "ROLLO_UNAVAILABLE",
       "ROLLO_RESERVED",
       "ROLLO_NOT_PENDING",
+      "ROLLO_BLOQUEADO",
       "PENDING_ROLLOS",
       "DRAFT_DESTINATION_MISMATCH",
       "DRAFT_ROLL_CHANGED",
@@ -331,10 +364,23 @@ function errorStatus(error: InventarioError): number {
 }
 
 function sendError(error: unknown, res: Parameters<Parameters<typeof router.get>[1]>[1]): boolean {
-  if (!(error instanceof InventarioError)) return false;
-  const payload = { error: error.message, code: error.code, ...(error.details === undefined ? {} : { details: error.details }) };
-  res.status(errorStatus(error)).json(error.code === "SERIE_ENTREGA_INVALIDA" ? SerieEntregaInvalidaErrorSchema.parse(payload) : payload);
-  return true;
+  if (error instanceof PosError) {
+    res.status(error.status).json({ error: error.message, code: error.code });
+    return true;
+  }
+  if (error instanceof InventarioError) {
+    const payload = { error: error.message, code: error.code, ...(error.details === undefined ? {} : { details: error.details }) };
+    res.status(errorStatus(error)).json(error.code === "SERIE_ENTREGA_INVALIDA" ? SerieEntregaInvalidaErrorSchema.parse(payload) : payload);
+    return true;
+  }
+  if (error instanceof z.ZodError) {
+    res.status(400).json({
+      error: "Los datos de la operación no son válidos. Revisa cliente, salidas, precios, tipo de documento y plazo.",
+      code: "INVALID_REQUEST",
+    });
+    return true;
+  }
+  return false;
 }
 
 router.get(

@@ -4729,6 +4729,11 @@ export interface PrecioVentaSalidaInput {
 export interface GenerarVentaDesdeSalidasCommonInput {
   /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
   uuidCliente: string;
+  /**
+     * Tienda activa desde la que se emite el documento de venta.
+     * @minimum 1
+     */
+  ubicacionId: number;
   /** @minimum 1 */
   clienteId: number;
   /**

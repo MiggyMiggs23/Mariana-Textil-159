@@ -18,6 +18,20 @@ test("pending-sale client context is nullable and opens the POS mode", async () 
   assert.match(pos, /showSalidasVenta && hasPermission\(currentUser, Modules\.SALIDAS_VENTA, "ver"\)/);
 });
 
+test("pending-sale generation requires an active issuing store in the request", async () => {
+  const pending = await readFile(
+    new URL("../components/salidas-pendientes-cobro.tsx", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(pending, /currentUser\?\.ubicacion\?\.activa === true/);
+  assert.match(pending, /currentUser\.ubicacion\.tipo === "TIENDA"/);
+  assert.match(pending, /location\.activa && location\.tipo === "TIENDA"/);
+  assert.match(pending, /Selecciona una tienda activa/);
+  assert.match(pending, /ubicacionId: saleLocationId/g);
+  assert.match(pending, /disabled=\{generate\.isPending \|\| totalSelected === 0 \|\| saleLocationId === null\}/);
+});
+
 test("linked-sale printing waits for authoritative authorization and cancellation wins", async () => {
   const detail = await readFile(new URL("./ticket-detail.tsx", import.meta.url), "utf8");
 

@@ -25,6 +25,7 @@ test("POS and salida scan/creation workflows render structured API details", asy
     "../components/salida-mostrador.tsx",
     "../components/salidas-extraordinarias.tsx",
     "../components/recepcion-salidas.tsx",
+    "../components/salidas-pendientes-cobro.tsx",
   ];
   for (const path of paths) {
     const source = await readFile(new URL(path, import.meta.url), "utf8");

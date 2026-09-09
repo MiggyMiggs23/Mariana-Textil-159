@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
+  getGetCurrentUserQueryKey,
+  getGetUbicacionesSalidaQueryKey,
   getListSalidasVentaPendientesPorClienteQueryKey,
+  useGetCurrentUser,
+  useGetUbicacionesSalida,
   useGenerarVentaDesdeSalidas,
   useListSalidasVentaPendientesPorCliente,
   type SalidasVentaPendientesCliente,
@@ -32,12 +36,31 @@ export function SalidasPendientesCobro({ onBack }: { onBack: () => void }) {
   const query = useListSalidasVentaPendientesPorCliente({
     query: { queryKey: getListSalidasVentaPendientesPorClienteQueryKey(), refetchInterval: 30_000 },
   });
+  const { data: currentUser } = useGetCurrentUser({
+    query: { queryKey: getGetCurrentUserQueryKey() },
+  });
+  const assignedStore =
+    currentUser?.ubicacion?.activa === true && currentUser.ubicacion.tipo === "TIENDA"
+      ? currentUser.ubicacion
+      : null;
+  const locationsQuery = useGetUbicacionesSalida({
+    query: {
+      enabled: currentUser !== undefined && assignedStore === null,
+      queryKey: getGetUbicacionesSalidaQueryKey(),
+    },
+  });
   const [selected, setSelected] = useState<Record<number, boolean>>({});
   const [prices, setPrices] = useState<Record<number, number>>({});
   const [documentoTipo, setDocumentoTipo] = useState<"TICKET" | "NOTA">("TICKET");
   const [diasPlazo, setDiasPlazo] = useState<CreditTerm | null>(null);
+  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
   const generate = useGenerarVentaDesdeSalidas();
 
+  const activeStores = (locationsQuery.data ?? []).filter(
+    (location) => location.activa && location.tipo === "TIENDA",
+  );
+  const selectedStore = activeStores.find((location) => location.id === selectedStoreId) ?? null;
+  const saleLocationId = assignedStore?.id ?? selectedStore?.id ?? null;
   const groups = (query.data ?? []).filter((group) => clientContext === null || group.clienteId === clientContext);
   const groupState = (group: SalidasVentaPendientesCliente) => {
     const enabled = group.salidas.filter((s) => selected[s.id] !== false);
@@ -47,6 +70,14 @@ export function SalidasPendientesCobro({ onBack }: { onBack: () => void }) {
   const toggleSalida = (id: number, value: boolean) => setSelected((current) => ({ ...current, [id]: value }));
 
   const confirm = (group: SalidasVentaPendientesCliente) => {
+    if (saleLocationId === null) {
+      toast({
+        title: "Selecciona una tienda activa",
+        description: "Indica la tienda desde la que se emitirá el documento de venta.",
+        variant: "destructive",
+      });
+      return;
+    }
     const salidas = group.salidas.filter((s) => selected[s.id] !== false);
     if (!salidas.length) {
       toast({ title: "Selecciona al menos una salida", variant: "destructive" });
@@ -59,6 +90,7 @@ export function SalidasPendientesCobro({ onBack }: { onBack: () => void }) {
     const lineas = salidas.flatMap((s) => s.lineas);
     const data = documentoTipo === "NOTA" ? {
         uuidCliente: crypto.randomUUID(),
+        ubicacionId: saleLocationId,
         clienteId: group.clienteId,
         salidaIds: salidas.map((s) => s.id),
         precios: lineas.map((line) => ({
@@ -69,6 +101,7 @@ export function SalidasPendientesCobro({ onBack }: { onBack: () => void }) {
         diasPlazo: diasPlazo!,
       } : {
         uuidCliente: crypto.randomUUID(),
+        ubicacionId: saleLocationId,
         clienteId: group.clienteId,
         salidaIds: salidas.map((s) => s.id),
         precios: lineas.map((line) => ({
@@ -114,10 +147,39 @@ export function SalidasPendientesCobro({ onBack }: { onBack: () => void }) {
                 ))}
               </div>
             ))}
-            <div className="grid gap-3 border-t pt-4 sm:grid-cols-3">
+            <div className="grid gap-3 border-t pt-4 sm:grid-cols-4">
+              <div>
+                <Label>Tienda emisora</Label>
+                {assignedStore ? (
+                  <div className="flex h-10 items-center rounded-md border bg-muted px-3 text-sm" data-testid="assigned-sale-store">
+                    {assignedStore.nombre}
+                  </div>
+                ) : (
+                  <Select
+                    value={selectedStoreId === null ? "" : String(selectedStoreId)}
+                    onValueChange={(value) => setSelectedStoreId(Number(value))}
+                    disabled={locationsQuery.isLoading || activeStores.length === 0}
+                  >
+                    <SelectTrigger aria-label="Tienda emisora">
+                      <SelectValue placeholder={locationsQuery.isLoading ? "Cargando tiendas…" : "Seleccionar tienda"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeStores.map((store) => (
+                        <SelectItem key={store.id} value={String(store.id)}>{store.nombre}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+                {locationsQuery.error && (
+                  <p className="mt-1 text-xs text-destructive">{getApiErrorMessage(locationsQuery.error)}</p>
+                )}
+                {!assignedStore && !locationsQuery.isLoading && !locationsQuery.error && activeStores.length === 0 && (
+                  <p className="mt-1 text-xs text-destructive">No hay una tienda activa disponible para emitir la venta.</p>
+                )}
+              </div>
               <div><Label>Tipo de documento</Label><Select value={documentoTipo} onValueChange={(v) => setDocumentoTipo(v as "TICKET" | "NOTA")}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="TICKET">TICKET (Contado)</SelectItem><SelectItem value="NOTA">NOTA (Crédito)</SelectItem></SelectContent></Select></div>
               {documentoTipo === "NOTA" && <div><Label>Plazo de crédito</Label><Select value={diasPlazo ? String(diasPlazo) : ""} onValueChange={(v) => setDiasPlazo(Number(v) as CreditTerm)}><SelectTrigger><SelectValue placeholder="Seleccionar plazo" /></SelectTrigger><SelectContent>{CREDIT_TERMS.map((term) => <SelectItem key={term} value={String(term)}>{term} días</SelectItem>)}</SelectContent></Select></div>}
-              <Button className="self-end" disabled={generate.isPending || totalSelected === 0} onClick={() => confirm(group)}><PackageCheck className="mr-2 h-4 w-4" />{generate.isPending ? "Generando venta…" : "Recibir y generar venta"}</Button>
+              <Button className="self-end" disabled={generate.isPending || totalSelected === 0 || saleLocationId === null} onClick={() => confirm(group)}><PackageCheck className="mr-2 h-4 w-4" />{generate.isPending ? "Generando venta…" : "Recibir y generar venta"}</Button>
             </div>
           </CardContent>
         </Card>

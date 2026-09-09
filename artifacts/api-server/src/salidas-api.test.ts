@@ -170,6 +170,40 @@ test("Frontend finalizes from Salida Nueva and detail has no second send action"
   assert.doesNotMatch(createPage, /Guardar armado/);
 });
 
+test("Pending-sale generation requires an explicit authorized store and preserves business error codes", async () => {
+  const pendingSalePageFile = new URL(
+    "artifacts/mariana-textil/src/components/salidas-pendientes-cobro.tsx",
+    root,
+  );
+  const [route, spec, pendingSalePage] = await Promise.all([
+    readFile(routeFile, "utf8"),
+    readFile(specFile, "utf8"),
+    readFile(pendingSalePageFile, "utf8"),
+  ]);
+  const endpoint = route.slice(
+    route.indexOf('router.post("/salidas/venta-cliente/generar-venta"'),
+    route.indexOf('router.get("/salidas/ubicaciones"', route.indexOf('router.post("/salidas/venta-cliente/generar-venta"')),
+  );
+  const input = spec.slice(
+    spec.indexOf("    GenerarVentaDesdeSalidasCommonInput:"),
+    spec.indexOf("    GenerarVentaDesdeSalidasTicketInput:"),
+  );
+
+  assert.match(input, /required: \[uuidCliente, ubicacionId, clienteId, salidaIds, precios\]/);
+  assert.match(endpoint, /SALE_LOCATION_REQUIRED/);
+  assert.match(endpoint, /canOperate\(req\.auth!, body\.ubicacionId\)/);
+  assert.match(endpoint, /saleLocation\.tipo !== "TIENDA"/);
+  assert.match(endpoint, /ubicacionId: body\.ubicacionId/);
+  assert.doesNotMatch(endpoint, /ubicacionId: req\.auth!\.user\.ubicacionId!/);
+  assert.match(route, /error instanceof PosError/);
+  assert.match(route, /res\.status\(error\.status\)\.json\(\{ error: error\.message, code: error\.code \}\)/);
+  assert.match(route, /"SALIDA_SELECTION_CHANGED"/);
+  assert.match(route, /"ROLLO_BLOQUEADO"/);
+  assert.match(pendingSalePage, /location\.activa && location\.tipo === "TIENDA"/);
+  assert.match(pendingSalePage, /ubicacionId: saleLocationId/);
+  assert.match(pendingSalePage, /saleLocationId === null/);
+});
+
 test("schema migration replaces the PostgreSQL enum with the exact four states", async () => {
   const source = await readFile(schemaUpgradeFile, "utf8");
   const createType = source.indexOf("CREATE TYPE estado_salida AS ENUM");

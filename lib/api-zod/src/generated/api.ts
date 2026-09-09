@@ -7436,10 +7436,11 @@ export const ListSalidasVentaPendientesPorClienteResponse = zod.array(ListSalida
 
 
 /**
- * Requiere salidas_venta/crear. Los precios son editables; NOTA exige plazo de crédito.
+ * Requiere salidas_venta/crear y una tienda operativa explícita. Los precios son editables; NOTA exige plazo de crédito.
  * @summary Genera un TICKET o NOTA existente desde salidas seleccionadas
  */
 export const generarVentaDesdeSalidasBodyOneOneUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
 
 
 
@@ -7452,6 +7453,7 @@ export const generarVentaDesdeSalidasBodyTwoOneUuidClienteRegExp = new RegExp('^
 
 
 
+
 export const generarVentaDesdeSalidasBodyTwoOnePreciosItemPrecioUnitarioExclusiveMin = 0;
 
 
@@ -7459,6 +7461,7 @@ export const generarVentaDesdeSalidasBodyTwoOnePreciosItemPrecioUnitarioExclusiv
 
 export const GenerarVentaDesdeSalidasBody = zod.union([zod.object({
   "uuidCliente": zod.string().regex(generarVentaDesdeSalidasBodyOneOneUuidClienteRegExp),
+  "ubicacionId": zod.number().min(1).describe('Tienda activa desde la que se emite el documento de venta.'),
   "clienteId": zod.number().min(1),
   "salidaIds": zod.array(zod.number().min(1)).min(1),
   "precios": zod.array(zod.object({
@@ -7469,6 +7472,7 @@ export const GenerarVentaDesdeSalidasBody = zod.union([zod.object({
   "documentoTipo": zod.literal("TICKET")
 })),zod.object({
   "uuidCliente": zod.string().regex(generarVentaDesdeSalidasBodyTwoOneUuidClienteRegExp),
+  "ubicacionId": zod.number().min(1).describe('Tienda activa desde la que se emite el documento de venta.'),
   "clienteId": zod.number().min(1),
   "salidaIds": zod.array(zod.number().min(1)).min(1),
   "precios": zod.array(zod.object({
