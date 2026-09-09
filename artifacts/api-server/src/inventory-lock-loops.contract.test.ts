@@ -26,7 +26,9 @@ const EXPECTED = new Set([
   "lib/pos.ts:venderRollo",
   "lib/salidas.ts:moverRollo",
   "lib/salidas.ts:recibirTransferencia",
+  "lib/salidas.ts:revertirMovimiento",
   "lib/salidas.ts:salidaMostrador",
+  "lib/salidas.ts:venderRollo",
 ]);
 
 type LoopCall = {

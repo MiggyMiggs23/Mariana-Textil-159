@@ -1517,8 +1517,22 @@ export async function cancelarSalida(
     .limit(1);
   if (movement) {
     if (salida.modalidad !== "VENTA_CLIENTE") throw new InventarioError("No se puede cancelar un borrador con movimientos de inventario.", "SALIDA_HAS_MOVEMENTS");
-    const movements = await tx.select({ id: movimientosTable.id }).from(movimientosTable)
-      .where(and(eq(movimientosTable.documentoId, String(salida.ticketId)), eq(movimientosTable.salidaId, salida.id), inArray(movimientosTable.documentoTipo, ["TICKET", "NOTA"])));
+    const movements = await tx
+      .select({
+        id: movimientosTable.id,
+        productoId: movimientosTable.productoId,
+        ubicacionId: movimientosTable.ubicacionId,
+      })
+      .from(movimientosTable)
+      .where(and(eq(movimientosTable.documentoId, String(salida.ticketId)), eq(movimientosTable.salidaId, salida.id), inArray(movimientosTable.documentoTipo, ["TICKET", "NOTA"])))
+      .orderBy(asc(movimientosTable.productoId), asc(movimientosTable.ubicacionId), asc(movimientosTable.id));
+    await lockInventoryPairs(
+      tx,
+      movements.map((item) => ({
+        productoId: item.productoId,
+        ubicacionId: item.ubicacionId,
+      })),
+    );
     for (const item of movements) await revertirMovimiento(tx, { movimientoOrigenId: item.id, usuarioId, justificacion: `Cancelación de salida para venta ${salida.id}: ${motivo}` });
   }
   await tx

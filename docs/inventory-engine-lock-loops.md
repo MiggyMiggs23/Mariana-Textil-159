@@ -9,6 +9,8 @@ una sola llamada antes del ciclo.
 | Crear ticket, líneas normales | `venderRollo` | Completo: producto + ubicación del ticket |
 | Crear ticket, bolsas metreadas | `consumirBolsasFifo` | Completo: producto + ubicación del ticket |
 | Cancelar ticket | `revertirMovimiento` | Completo: pares producto + ubicación leídos de todas las ventas |
+| Cobrar o autorizar salidas para venta a cliente | `venderRollo` | Completo: producto + ubicación de origen de cada salida, no la ubicación del ticket; al agrupar salidas de varios orígenes, ordena determinísticamente por origen y rollo antes de bloquear todos los pares |
+| Cancelar salida para venta a cliente con movimientos | `revertirMovimiento` | Completo: producto + ubicación leídos del propio movimiento; orden determinista por producto, ubicación y movimiento, con todos los pares bloqueados en una sola llamada antes del ciclo |
 | Salida directa a mostrador | `salidaMostrador` | Completo: pares reales de todos los rollos antes de bloquear filas |
 | Enviar salida | `moverRollo` | Completo: origen + tránsito para cada producto |
 | Recibir salida | `recibirTransferencia` | Completo: ubicación real de tránsito + destino; relectura estable antes de `FOR UPDATE` |
