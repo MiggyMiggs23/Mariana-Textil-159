@@ -102,13 +102,28 @@ El módulo propio `salidas_venta` está negado por omisión y hoy se habilita me
 
 Regla de trazabilidad de este flujo:
 
-- Del error `ROLLO BLOQUEADO` se abre la salida que reservó la serie.
+- Dentro del alcance operativo autorizado, del error `ROLLO BLOQUEADO` se abre la salida que reservó la serie.
 - De la salida se abre el Ticket o la Nota que generó, y del documento se regresa a cada salida que lo compone.
 - De la alerta de no entregado se abren tanto la venta como sus salidas.
 - Del cliente se abren sus salidas pendientes.
-- Todo error operativo nombra la causa, el cliente o documento relacionado cuando aplica y ofrece un enlace a la raíz; ninguna pantalla deja un folio sin camino al detalle.
+- Dentro del alcance autorizado, todo error operativo nombra la causa, el cliente o documento relacionado cuando aplica y ofrece un enlace a la raíz; fuera de alcance, un rollo es indistinguible de uno inexistente y no revela serie, estado, reserva, salida ni cliente.
 
 **Cambio del 8 de septiembre de 2026:** se agregó el flujo completo de salidas para venta a cliente, reserva global por serie, agrupación multi-origen en POS, consumo diferido en caja, autorización derivada, entrega escaneada, reversos, alertas y trazabilidad.
+
+### Aplicación de inicializadores en development — 8 de septiembre de 2026
+
+Antes de modificar development se creó un respaldo privado de código y base, se restauró en una base desechable y se verificaron tablas, conteos, columnas, restricciones e índices. Con esa recuperación comprobada, se ejecutaron los inicializadores sobre development.
+
+El primer intento de `ensureSalidasSchema` sobre development abortó al reemplazar `estado_salida`: el índice parcial `salidas_borrador_usuario_origen_uidx` conservaba una constante tipada al enum anterior. La transacción propia del inicializador hizo rollback y no dejó cambios parciales. Se corrigió el orden para retirar ese índice antes del cambio de tipo y recrearlo después; la corrección se probó primero sobre una réplica desechable de development y luego se aplicó correctamente.
+
+El catálogo real de development confirmó:
+
+- La columna nullable `movimientos.salida_id integer`, sin default ni backfill.
+- La llave foránea `movimientos_salida_id_salidas_id_fk`, de `movimientos.salida_id` a `salidas.id`.
+- El índice `movimientos_salida_idx` sobre `movimientos(salida_id)`.
+- El valor `ENTREGADA` en `estado_salida`, cuyo orden quedó `ARMANDO`, `EN_TRANSITO`, `RECIBIDA`, `ENTREGADA`, `CANCELADA`.
+
+Como cierre de la comprobación pendiente desde la purga, se consultaron todos los triggers no internos: salieron exactamente **once renglones** y los once quedaron con `tgenabled = 'O'`. Quedaron activas las garantías de inmutabilidad y validación de `aplicaciones_credito`, `aplicaciones_pago_proveedor`, `auditoria`, `movimientos_credito`, `pagos_proveedor`, `reimpresiones_etiqueta` y `ticket_pagos`.
 
 ## Corrección — Bloque 4: Tabulares
 
@@ -518,6 +533,9 @@ El piloto se realizará en Cruces. La carga inicial de inventario es el bloqueo 
 - **Decimales:** las cantidades se **guardan** en `DECIMAL(10,3)` y se **muestran** con dos decimales. La precisión de la base y la aritmética del motor —que convierte cantidad × precio a milésimas enteras— no dependen de cuántos decimales vea el usuario y nunca se modifican por un cambio de presentación. Los totales se calculan sobre los valores guardados y se redondean al final; sumar lo que se muestra hace que el documento se contradiga a sí mismo.
 - **La etiqueta es la excepción:** conserva tres decimales, porque va pegada al rollo físico y es donde se verifica el metraje exacto.
 - **Ajuste de fuente en la etiqueta:** el nombre del producto y el metraje usan el tamaño más grande con el que quepan completos, en escalones discretos, con un mínimo legible por debajo del cual no bajan. Nunca se cortan. Una fuente fija que haga caber al nombre más largo del catálogo —36 caracteres— dejaría ilegible al más corto —11—, y la etiqueta se lee de lejos entre los rollos. Cualquier cambio a esta lógica se valida generando las etiquetas de todo el catálogo vigente, no contra dos ejemplos ni contra un conteo fijo.
+- **`drizzle-kit push --force` puede dar un verde falso:** en ejecución no interactiva puede imprimir un error y aun así devolver código 0. Nunca se declara preparada una base solo por el exit code; se capturan y revisan stdout/stderr y después se verifica en el catálogo que existan las tablas, columnas y restricciones esperadas antes de ejecutar seed o pruebas.
+- **Una columna existente no completa su `REFERENCES`:** `ADD COLUMN IF NOT EXISTS ... REFERENCES ...` omite toda la definición cuando la columna ya existe, por lo que no crea después la llave foránea faltante. Columna, restricción e índice se reconcilian y validan por separado, cada uno de forma idempotente.
+- **Alcance antes que estado:** antes de consultar producto, estado, costo, reservas o cualquier detalle de un rollo se confirma que su ubicación está dentro del alcance operativo del usuario. Fuera de alcance responde como inexistente. Los mensajes informativos —incluido `ROLLO_BLOQUEADO` con salida, cliente, serie o enlace— solo se construyen para inventario ya autorizado.
 - Ejecuta `codegen` después de cada cambio en OpenAPI.
 - Ejecuta `push` y luego `NODE_ENV=development pnpm --filter @workspace/db run seed` al preparar la base de desarrollo.
 - Ejecuta `pnpm run db:verify` antes y después de cualquier cambio de esquema; debe identificar la misma base que el proceso de la API.
