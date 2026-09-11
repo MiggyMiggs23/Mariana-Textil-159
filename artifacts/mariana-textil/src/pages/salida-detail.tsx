@@ -196,7 +196,7 @@ export default function SalidaDetail() {
             <h1 data-testid="salida-folio" className={`text-3xl font-bold tracking-tight ${salida.estado === 'CANCELADA' ? 'line-through text-slate-500' : 'text-slate-900'}`}>
               Folio {salida.folioFormateado}
             </h1>
-             <span data-testid={`status-${salida.estado.toLowerCase()}`}><SalidaEstadoBadge estado={salida.estado} /></span>
+             <span data-testid={`status-${salida.estado.toLowerCase()}`}><SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} /></span>
             {salida.modalidad === "VENTA_CLIENTE" && <Badge variant="outline" className="border-violet-200 bg-violet-50 text-violet-800">Venta a cliente</Badge>}
           </div>
            {salida.modalidad === "VENTA_CLIENTE" && (

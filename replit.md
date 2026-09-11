@@ -77,16 +77,30 @@ El flujo completo tiene seis pasos:
 
 1. El sitio de origen arma una salida para un cliente existente con rollos identificados. Al pasar a `EN_TRANSITO`, las series quedan bloqueadas.
 2. El documento impreso de la salida llega a Mariana, pero **la mercancía no viaja**: permanece apartada en el origen para que el cliente la recoja ahí.
-3. Mariana abre **Salidas pendientes a cobro** en POS, revisa las salidas agrupadas por cliente, puede excluir alguna y genera un Ticket de contado o una Nota de crédito.
-4. Caja cobra el Ticket o autoriza la Nota.
-5. Después del cobro o autorización se imprime el formato existente —80 mm para Ticket o A5 vertical para Nota— con sello **AUTORIZADA**.
-6. El cliente presenta el documento en el origen; el operador verifica el folio en el sistema, escanea las series, entrega y marca `ENTREGADA`.
+3. Mariana abre **Salidas pendientes a cobro** en POS, revisa las salidas agrupadas por cliente, puede excluir alguna y genera un Ticket de contado o una Nota de crédito. POS imprime la nota al generarla, sin esperar autorización: ese papel es el que el cliente lleva a caja.
+4. Caja cobra el Ticket o autoriza la Nota en el sistema y pone el sello físico con tinta sobre el papel. El sistema no imprime ningún sello de autorización.
+5. El cliente lleva el papel sellado al sitio de origen. Se conserva el formato existente —80 mm para Ticket o A5 vertical para Nota— y el resto de sus datos.
+6. Antes de entregar, el operador comprueba ambas cosas juntas: el sello físico en el papel y el estado autorizado en el sistema. Cualquiera puede imprimir una nota; solo caja tiene el sello y solo caja cambia la autorización. Verifica el folio, escanea las series, entrega y marca `ENTREGADA`.
 
 **La mercancía no viaja y el sitio que vende no es el sitio que la tiene.** Por eso todo candado consultivo de inventario se toma sobre el par producto–ubicación de **origen**, y cuando hay varios orígenes se ordena determinísticamente por ubicación. Tomar el candado sobre Mariana, que emite el documento, dejaría sin serializar el saldo real de la bodega y permitiría vender el mismo rollo dos veces.
 
 Esta modalidad admite exclusivamente rollos identificados. Sin una serie física no existe una identidad concreta que reservar, bloquear, verificar al entregar ni rastrear en caso de conflicto; nunca se aparta solo una cantidad.
 
 **AUTORIZADA no es un estado de la salida.** Se deriva del documento ligado: Ticket cobrado o Nota autorizada. No se guarda una segunda bandera en `salidas`, porque dos verdades persistidas sobre el mismo hecho pueden divergir. El ciclo propio de la salida es `ARMANDO → EN_TRANSITO → RECIBIDA → ENTREGADA`, más `CANCELADA` antes de la entrega.
+
+Etiquetas del historial de venta a cliente, derivadas de los cinco estados existentes más el documento ligado, mediante una sola función compartida por todas las vistas (escritorio, teléfono y cualquier reporte que presente ese estado); no se agregan valores al enum:
+
+| Momento | Etiqueta |
+|---|---|
+| Se creó la salida para venta | En curso |
+| POS recibió y generó el documento | Por autorizar |
+| Caja cobró el Ticket o autorizó la Nota | Autorizada |
+| El origen entregó | Entregada |
+| Se canceló | Cancelada |
+
+Los traslados normales conservan sus etiquetas actuales. Todo movimiento de venta debe llevar su documento y permitir enlazarlo: un movimiento sin documento de origen rompe la trazabilidad del inventario. Las referencias `NOTA` y `TICKET` se resuelven hacia el detalle del documento en Movimientos.
+
+2026-09-11: retirados el bloqueo de impresión por autorización y el sello impreso; unificadas las etiquetas de venta a cliente y agregada resolución de notas en Movimientos, sin cambios al enum ni a las reglas de reserva, cobro o entrega. La revisión detectó pendientes: la generación desde Salidas aún no solicita impresión automática, la búsqueda por folio de cancelaciones heredadas no incluye NOTA y dos contratos de interfaz fallan. La validación integral queda pendiente; no se consideran aprobados esos puntos.
 
 Qué toca números durante el ciclo:
 
@@ -205,7 +219,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - **Casing de texto capturado:** los campos de texto humano (por ejemplo nombres, países, telas, colores, marcas y modelos) conservan exactamente mayúsculas/minúsculas y acentos capturados por la persona; al persistir solo se recortan los extremos. Nunca se aplica `toUpperCase()` por tecla ni Title Case irreversible. La normalización sigue siendo obligatoria para identificadores (SKU, placas, iniciales de sitio, RFC/IDs fiscales, folios), enums/estados/unidades, color hexadecimal y claves canónicas usadas únicamente para comparar o validar unicidad sin distinguir mayúsculas.
 - El kardex es la fuente de verdad del inventario: toda alteración inserta movimientos con cantidades firmadas.
 - El QR de la etiqueta contiene `SKU-SERIE`. La serie son los últimos 7 dígitos. Las tres rutas que consumen rollos —Salida normal, POS y Salida para venta— pasan por una sola función compartida, `normalizarSerieEscaneada`, apoyada en `interpretarCodigoEscaneado`. La serie manda; el SKU solo verifica y genera advertencia si no coincide. Duplicar esta normalización en cada pantalla hizo que Salida para venta enviara el payload compuesto sin extraer la serie y fue la causa del fallo.
-- El estado visible de una Salida proviene exclusivamente de `salidas.estado` y conserva cinco valores reales: `ARMANDO`, `EN_TRANSITO`, `RECIBIDA`, `ENTREGADA` y `CANCELADA`. Escritorio y teléfono lo presentan mediante el mismo componente y la misma consulta con refresco; nunca se deriva de movimientos de inventario, porque el estado del documento y el movimiento de la mercancía son conceptos distintos.
+- Una Salida conserva cinco estados reales: `ARMANDO`, `EN_TRANSITO`, `RECIBIDA`, `ENTREGADA` y `CANCELADA`. La etiqueta visible de venta a cliente se deriva de ese estado y del documento ligado mediante una sola función compartida; los traslados normales conservan sus etiquetas. Escritorio y teléfono usan la misma consulta con refresco. Nunca se deduce el estado de movimientos de inventario.
 - Las tablas operativas no usan DELETE; las correcciones son movimientos inversos que referencian el original.
 - Toda operación que modifica datos registra usuario, entidad y valores antes/después en `auditoria`.
 - Cantidades usan `DECIMAL(10,3)` y dinero `DECIMAL(12,2)`; nunca float.
@@ -306,13 +320,13 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 
 ## Parte 1.5, Bloque 2 — Estados de Salidas
 
-- Estados vigentes: `ARMANDO`, `EN_TRANSITO`, `RECIBIDA`, `CANCELADA`.
-- Transiciones permitidas: `ARMANDO → EN_TRANSITO`, `ARMANDO → CANCELADA` y `EN_TRANSITO → RECIBIDA`. No se permite cancelar una salida en tránsito.
+- Estados vigentes: `ARMANDO`, `EN_TRANSITO`, `RECIBIDA`, `ENTREGADA`, `CANCELADA`.
+- En traslado normal: `ARMANDO → EN_TRANSITO`, `ARMANDO → CANCELADA` y `EN_TRANSITO → RECIBIDA`; no se cancela en tránsito. En venta a cliente se aplican el ciclo, cancelación y comprobaciones de entrega descritos en «Salidas para venta a cliente».
 - Conteo previo en development (consulta con encabezado y cero filas): `REGISTRADA=0`, `SOLICITADA=0`, `ACEPTADA=0`, `RECHAZADA=0`, `PREPARADA=0`, `ENVIADA=0`, `RECIBIDA=0`, `CERRADA=0`, `CANCELADA=0`.
 - Mapeo aplicado sin borrar filas: `REGISTRADA|SOLICITADA|ACEPTADA|PREPARADA → ARMANDO`; `ENVIADA → EN_TRANSITO`; `RECIBIDA|CERRADA → RECIBIDA`; `RECHAZADA|CANCELADA → CANCELADA`.
-- Crear una salida solo reserva sus rollos en el documento y no altera inventario. Enviar ejecuta origen → ubicación `TRANSITO` mediante `moverRollo`; la recepción conserva `recibirTransferencia`.
+- Crear una salida solo reserva sus rollos en el documento y no altera inventario. En traslado normal, enviar ejecuta origen → ubicación `TRANSITO` mediante `moverRollo`; la recepción conserva `recibirTransferencia`. En venta a cliente la mercancía permanece en el origen, aunque el estado almacenado sea `EN_TRANSITO`.
 - Se conservaron `transportista` y `notaEnvio`. Las columnas históricas del esquema físico se mantienen para no destruir metadatos de instalaciones con filas migradas, pero se retiraron del contrato y del flujo activo.
-- Decisión conservadora: el endpoint de recepción no se expone todavía; su interfaz y reglas de sitio pertenecen al Bloque 3. El núcleo existente queda adaptado a `EN_TRANSITO → RECIBIDA`.
+- La recepción por QR y sus reglas de sitio se describen en el Bloque 3 siguiente.
 
 ## Parte 1.5, Bloque 3 — Recepción por QR
 

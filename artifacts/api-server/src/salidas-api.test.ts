@@ -140,15 +140,17 @@ test("Block 1 counter exit is one-step, site-scoped, persisted and printable", a
 });
 
 test("Frontend finalizes from Salida Nueva and detail has no second send action", async () => {
-  const [listPage, detailPage, createPage, statusPresentation] = await Promise.all([
+  const [listPage, detailPage, createPage, statusPresentation, route] = await Promise.all([
     readFile(listPageFile, "utf8"),
     readFile(detailPageFile, "utf8"),
     readFile(createPageFile, "utf8"),
-    readFile(new URL("../../mariana-textil/src/components/salida-estado-badge.tsx", import.meta.url), "utf8"),
+     readFile(new URL("../../../lib/api-zod/src/salida-estado-presentation.ts", import.meta.url), "utf8"),
+    readFile(routeFile, "utf8"),
   ]);
   assert.match(listPage, /<SalidaEstadoBadge estado=\{salida\.estado\}/);
-  assert.match(statusPresentation, /ARMANDO:\s*\{\s*label:\s*"Armando"/);
-  assert.match(statusPresentation, /EN_TRANSITO:\s*\{\s*label:\s*"En tránsito"/);
+   assert.match(statusPresentation, /ARMANDO:\s*"Armando"/);
+   assert.match(statusPresentation, /EN_TRANSITO:\s*"En tránsito"/);
+  assert.match(route, /getSalidaEstadoPresentation\(\{[\s\S]*documentoVenta: item\.documentoVenta[\s\S]*autorizada: item\.autorizada/);
   assert.match(detailPage, /ARMANDO/);
   assert.match(detailPage, /EN_TRANSITO/);
   for (const source of [listPage, detailPage, statusPresentation]) {

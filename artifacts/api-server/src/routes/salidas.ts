@@ -38,6 +38,7 @@ import {
   EntregarSalidaVentaClienteBody,
   EntregarSalidaVentaClienteResponse,
   VerificarAutorizacionVentaSalidasResponse,
+  getSalidaEstadoPresentation,
 } from "@workspace/api-zod";
 import { db, salidasTable, ubicacionesTable, usuariosTable, viajeSalidasTable, salidaRollosTable, rollosTable, productosTable, clientesTable, ticketsTable, ticketLineasTable, type EstadoSalida } from "@workspace/db";
 import { requireSession, type AuthContext } from "../middlewares/auth";
@@ -600,7 +601,14 @@ router.get(
         { header: "Transportista", key: "transportista", width: 24 }, { header: "Observaciones", key: "observaciones", width: 35 },
       ];
       for (const item of result.items) sheet.addRow({
-        folio: item.folioFormateado, estado: item.estado, origen: item.nombreOrigen, destino: item.nombreDestino,
+        folio: item.folioFormateado,
+        estado: getSalidaEstadoPresentation({
+          estado: item.estado,
+          modalidad: item.modalidad,
+          documentoVenta: item.documentoVenta,
+          autorizada: item.autorizada,
+        }).label,
+        origen: item.nombreOrigen, destino: item.nombreDestino,
         usuario: item.nombreUsuario, rollos: toExcelNumber(item.totalRollos), metros: toExcelNumber(item.totalMetros), kilos: toExcelNumber(item.totalKilos), bolsas: toExcelNumber(item.totalBolsas), piezas: toExcelNumber(item.totalPiezas),
         transportista: item.transportista, observaciones: item.observaciones,
       });

@@ -698,3 +698,5 @@ export type { ListCajaTiendaVentasParams as ListCajaTiendaVentasClientParams } f
 export type { ListComprasProveedorParams as ListComprasProveedorQueryParams } from "./generated/types/listComprasProveedorParams";
 export type { ListProveedorPagosParams as ListProveedorPagosQueryParams } from "./generated/types/listProveedorPagosParams";
 export type { ObtenerDocumentoImpresionTicketParams as ObtenerDocumentoImpresionTicketClientParams } from "./generated/types/obtenerDocumentoImpresionTicketParams";
+
+export * from "./salida-estado-presentation";

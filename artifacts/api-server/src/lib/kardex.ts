@@ -98,7 +98,7 @@ function whereConditions(filters: KardexFiltersInput): SQL[] {
         sql`exists (
           select 1
           from tickets kardex_ticket
-          where ${movimientosTable.documentoTipo} = 'TICKET'
+          where ${movimientosTable.documentoTipo} in ('TICKET', 'NOTA')
             and kardex_ticket.id = case
               when ${movimientosTable.documentoId} ~ '^[0-9]+$'
               then ${movimientosTable.documentoId}::integer
@@ -267,7 +267,7 @@ async function enrichDocuments(rows: JoinedMovement[]) {
     }),
   );
   const ticketIds = references
-    .filter((reference) => reference.tipo === "TICKET" && reference.id)
+    .filter((reference) => (reference.tipo === "TICKET" || reference.tipo === "NOTA") && reference.id)
     .map((reference) => Number(reference.id))
     .filter(Number.isSafeInteger);
   const salidaIds = references
@@ -334,7 +334,7 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       (reference.tipo === "SALIDA" || reference.tipo === "RECEPCION_SALIDA") &&
       (row.tipo === "TRANSFERENCIA_SALIDA" || row.tipo === "TRANSFERENCIA_ENTRADA");
     const referencedTicketId =
-      reference.tipo === "TICKET" &&
+      (reference.tipo === "TICKET" || reference.tipo === "NOTA") &&
       reference.id &&
       ticketMap.has(Number(reference.id))
         ? Number(reference.id)
@@ -384,12 +384,12 @@ function resolveDocument(
           route: `/entradas/${entry.id}/documento`,
         };
   }
-  if (reference.tipo === "TICKET") {
+  if (reference.tipo === "TICKET" || reference.tipo === "NOTA") {
     const ticketId = Number(reference.id);
     const folio = ticketMap.get(ticketId);
     if (folio == null) return { label: null, route: null };
     return {
-      label: `Ticket ${folio}`,
+      label: `${reference.tipo === "NOTA" ? "Nota" : "Ticket"} ${folio}`,
       route: `/tickets/${ticketId}`,
     };
   }

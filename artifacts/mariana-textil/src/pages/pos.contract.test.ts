@@ -33,6 +33,25 @@ test("tabular printing is unchecked client-only state and does not change Ticket
   assert.match(page, /\?print=3\$\{imprimirTabulares \? "&tabulares=1" : ""\}/);
 });
 
+test("POS sends generated notes directly to the printable ticket detail", async () => {
+  const page = await readFile(new URL("./pos.tsx", import.meta.url), "utf8");
+  const detail = await readFile(new URL("./ticket-detail.tsx", import.meta.url), "utf8");
+
+  assert.match(page, /documentoTipo: documentoTipo as "TICKET" \| "NOTA"/);
+  assert.match(
+    page,
+    /crearTicket\.mutate\([\s\S]*onSuccess: \(ticket\) => \{[\s\S]*setLocation\(\s*`\/tickets\/\$\{ticket\.id\}\?print=3/,
+  );
+  assert.match(
+    detail,
+    /new URLSearchParams\(window\.location\.search\)\.get\("print"\) !== "3"/,
+  );
+  assert.match(
+    detail,
+    /const printPromise = isNota[\s\S]*printWhenReady\("print-credito"\)/,
+  );
+});
+
 test("scanner auto-add is limited to exact available roll scans", async () => {
   const page = await readFile(new URL("./pos.tsx", import.meta.url), "utf8");
 

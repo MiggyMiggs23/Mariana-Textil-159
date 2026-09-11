@@ -122,16 +122,9 @@ export default function TicketDetailPage() {
     (user != null && hasPermission(user, Modules.POS, "crear"));
 
   useEffect(() => {
-    const isSaleLinked = (ticket?.salidas?.length ?? 0) > 0;
-    const salePrintAuthorized = ticket?.estado !== EstadoTicket.CANCELADO && (
-      ticket?.documentoTipo === "TICKET"
-        ? ticket.cobrado === true
-        : ticket?.autorizadoPor != null
-    );
     if (
       !ticket ||
       !isPrintReady ||
-      (isSaleLinked && !salePrintAuthorized) ||
       autoPrintStarted.current ||
       new URLSearchParams(window.location.search).get("print") !== "3"
     )
@@ -158,14 +151,13 @@ export default function TicketDetailPage() {
   }, [ticket, isPrintReady, isNota, printTabulares]);
 
   const handlePrint80mm = () => {
-    if (isSaleLinked && !ventaAutorizada) return;
     if (thermalPrintRoot.current) {
       void printThermalTicket(thermalPrintRoot.current);
     }
   };
 
   const handlePrintNota = () => {
-    if (!isPrintReady || (isSaleLinked && !ventaAutorizada)) return;
+    if (!isPrintReady) return;
     if (ticket?.clienteId && (ticket as TicketDetalle).esCredito) {
       reimprimirNota.mutate({ id: ticket.clienteId, ticketId }, {
         onSuccess: () => {
@@ -291,12 +283,6 @@ export default function TicketDetailPage() {
     ticket.clienteId === 1 || !ticket.clienteId
       ? "VENTA AL PÚBLICO"
       : ticket.nombreCliente || `Cliente #${ticket.clienteId}`;
-  const isSaleLinked = (ticket.salidas?.length ?? 0) > 0;
-  const ventaAutorizada = isSaleLinked && ticket.estado !== EstadoTicket.CANCELADO && (
-    ticket.documentoTipo === "TICKET"
-      ? ticket.cobrado === true
-      : ticket.autorizadoPor != null
-  );
   const createdAt = new Date(ticket.createdAt);
   const formattedDate = createdAt.toLocaleDateString("es-MX");
   const formattedTime = createdAt.toLocaleTimeString("es-MX", {
@@ -347,20 +333,15 @@ export default function TicketDetailPage() {
             </Button>
           )}
           {isNota ? (
-            <Button className="w-full sm:w-auto" onClick={handlePrintNota} disabled={!isPrintReady || printInternaLoading || printClienteLoading || (isSaleLinked && !ventaAutorizada)}>
+            <Button className="w-full sm:w-auto" onClick={handlePrintNota} disabled={!isPrintReady || printInternaLoading || printClienteLoading}>
               <FileText className="h-4 w-4 mr-2" /> Imprimir Nota
             </Button>
           ) : (
-            <Button className="w-full sm:w-auto" onClick={handlePrint80mm} disabled={isSaleLinked && !ventaAutorizada}>
+            <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
               <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
             </Button>
           )}
         </div>
-        {isSaleLinked && !ventaAutorizada && ticket.estado !== EstadoTicket.CANCELADO && (
-          <p className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm font-medium text-amber-900 no-print" role="status">
-            Impresión pendiente de autorización: {isNota ? "la nota debe estar AUTORIZADA" : "el ticket debe estar cobrado"} antes de imprimir la salida para entrega.
-          </p>
-        )}
       </div>
 
       {/* Visor de Ticket (Pantalla / Carta) */}
@@ -645,7 +626,6 @@ export default function TicketDetailPage() {
                 <div><span className="font-semibold">Cliente:</span> {customerName}</div>
               </div>
               {ticket.facturado && <p className="text-xs font-bold">FACTURADO</p>}
-              {ventaAutorizada && <div className="mt-2 border-2 border-black py-1 text-center text-base font-black tracking-widest">AUTORIZADA</div>}
               {ticket.direccionEntregaEfectiva && (
                 <div className="text-left text-[10px] mt-1">
                   <span className="font-semibold">Entrega:</span> {ticket.direccionEntregaEfectiva}
@@ -826,10 +806,6 @@ export default function TicketDetailPage() {
                   </div>
                 </div>
               </PrintableDocumentHeader>
-              {ventaAutorizada && (
-                <div className="mx-6 mt-2 border-4 border-black py-2 text-center text-xl font-black tracking-[0.3em]">AUTORIZADA</div>
-              )}
-
               {/* Info section */}
               <div className="px-6 py-2 shrink-0 bg-gray-50/50">
                 <div className="grid grid-cols-2 auto-rows-min gap-x-12 gap-y-1.5">

@@ -32,16 +32,16 @@ test("pending-sale generation requires an active issuing store in the request", 
   assert.match(pending, /disabled=\{generate\.isPending \|\| totalSelected === 0 \|\| saleLocationId === null\}/);
 });
 
-test("linked-sale printing waits for authoritative authorization and cancellation wins", async () => {
+test("linked-sale printing is immediate and does not print an authorization stamp", async () => {
   const detail = await readFile(new URL("./ticket-detail.tsx", import.meta.url), "utf8");
 
-  assert.match(detail, /const isSaleLinked = \(ticket\.salidas\?\.length \?\? 0\) > 0/);
-  assert.match(detail, /ticket\.estado !== EstadoTicket\.CANCELADO/);
-  assert.match(detail, /ticket\.documentoTipo === "TICKET"[\s\S]*ticket\.cobrado === true[\s\S]*ticket\.autorizadoPor != null/);
-  assert.match(detail, /disabled=\{isSaleLinked && !ventaAutorizada\}/);
-  assert.match(detail, /disabled=\{!isPrintReady[\s\S]*\(isSaleLinked && !ventaAutorizada\)\}/);
-  assert.match(detail, /Impresión pendiente de autorización/);
-  assert.equal((detail.match(/\{ventaAutorizada &&/g) ?? []).length, 2);
+  assert.match(detail, /const isPrintReady = !isNota \|\| \(!!printInterna && !!printCliente\)/);
+  assert.match(detail, /if \(!isPrintReady\) return;/);
+  assert.match(detail, /disabled=\{!isPrintReady \|\| printInternaLoading \|\| printClienteLoading\}/);
+  assert.match(detail, /onClick=\{handlePrint80mm\}/);
+  assert.doesNotMatch(detail, /salePrintAuthorized|ventaAutorizada/);
+  assert.doesNotMatch(detail, /Impresión pendiente de autorización/);
+  assert.doesNotMatch(detail, />AUTORIZADA</);
   assert.doesNotMatch(detail, /autorizacionEstado\?: string/);
 });
 

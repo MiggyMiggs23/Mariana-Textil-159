@@ -381,7 +381,7 @@ export default function Salidas() {
                           <span className="text-right tabular-nums">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
                            <span className="text-right tabular-nums">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</span>
                           <span className="truncate">{salida.transportista || "—"}</span>
-                          <span className={cancelled ? "no-underline" : ""}><SalidaEstadoBadge estado={salida.estado} /></span>
+                           <span className={cancelled ? "no-underline" : ""}><SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} /></span>
                         </div>
                       );
                     })}
@@ -433,7 +433,7 @@ export default function Salidas() {
                           )}
                         </div>
                         <div className="w-[100px] flex justify-end">
-                          <SalidaEstadoBadge estado={salida.estado} />
+                           <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} />
                         </div>
                       </div>
                     </div>
