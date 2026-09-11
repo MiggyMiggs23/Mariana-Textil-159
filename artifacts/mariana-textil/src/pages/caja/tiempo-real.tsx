@@ -282,9 +282,9 @@ export default function CajaTiempoReal() {
               </Card>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 saturate-[0.60]">
               <Card
-                className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-2 ring-amber-500/50" : ""}`}
+                className={`border-amber-300/25 bg-amber-50/30 dark:bg-amber-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-1 ring-amber-300/30" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("PENDIENTE")}
@@ -292,7 +292,7 @@ export default function CajaTiempoReal() {
               >
                 {/* Amber indicates pending operational attention, such as items in transit. */}
                 {mergedPendingCount > 0 && (
-                  <div className="absolute top-0 right-0 w-2 h-full bg-amber-500/80 animate-pulse" />
+                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-300/50" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
                   <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase line-clamp-2">
@@ -312,7 +312,7 @@ export default function CajaTiempoReal() {
               </Card>
 
               <Card
-                className={`border-red-400/25 bg-red-50/30 dark:bg-red-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.cancelaciones.excedeUmbral ? "ring-2 ring-red-400/40" : ""}`}
+                className={`border-red-200/30 bg-red-50/20 dark:bg-red-950/5 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.cancelaciones.excedeUmbral ? "ring-1 ring-red-200/30" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("CANCELADAS")}
@@ -320,7 +320,7 @@ export default function CajaTiempoReal() {
               >
                 {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
                 {dashboard.cancelaciones.excedeUmbral && (
-                  <div className="absolute top-0 right-0 w-2 h-full bg-red-400/70 animate-pulse" />
+                  <div className="absolute top-0 right-0 w-1 h-full bg-red-200/50" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
                   <CardTitle className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase line-clamp-2">
@@ -341,7 +341,7 @@ export default function CajaTiempoReal() {
               </Card>
 
               <Card
-                className={`border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.salidasEnTransito.conteo > 0 ? "ring-2 ring-amber-500/50" : ""}`}
+                className={`border-amber-300/25 bg-amber-50/30 dark:bg-amber-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.salidasEnTransito.conteo > 0 ? "ring-1 ring-amber-300/30" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("SALIDAS_EN_TRANSITO")}
@@ -349,7 +349,7 @@ export default function CajaTiempoReal() {
               >
                 {/* Amber indicates pending operational attention, such as items in transit. */}
                 {dashboard.salidasEnTransito.conteo > 0 && (
-                  <div className="absolute top-0 right-0 w-2 h-full bg-amber-500/80 animate-pulse" />
+                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-300/50" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
                   <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase line-clamp-2">
@@ -365,7 +365,7 @@ export default function CajaTiempoReal() {
               </Card>
 
               <Card
-                className="border-red-400/25 bg-red-50/30 dark:bg-red-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="border-red-200/30 bg-red-50/20 dark:bg-red-950/5 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("SALIDAS_CANCELADAS")}
