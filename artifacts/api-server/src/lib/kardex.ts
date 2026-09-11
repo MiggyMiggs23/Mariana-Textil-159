@@ -125,7 +125,7 @@ function whereConditions(filters: KardexFiltersInput): SQL[] {
             end
           where ${movimientosTable.tipo} = 'CANCELACION'
             and kardex_origen.id = ${movimientosTable.movimientoOrigenId}
-            and kardex_origen.documento_tipo = 'TICKET'
+            and kardex_origen.documento_tipo in ('TICKET', 'NOTA')
             and kardex_ticket.folio::text ilike ${pattern}
         )`,
         sql`exists (

@@ -34,7 +34,11 @@ test("pending-sale generation requires an active issuing store in the request", 
 
 test("linked-sale printing is immediate and does not print an authorization stamp", async () => {
   const detail = await readFile(new URL("./ticket-detail.tsx", import.meta.url), "utf8");
+  const pendingSale = await readFile(new URL("../components/salidas-pendientes-cobro.tsx", import.meta.url), "utf8");
 
+  const generationSuccess = pendingSale.slice(pendingSale.indexOf("onSuccess: (ticket)"), pendingSale.indexOf("onError: (error)"));
+  assert.match(generationSuccess, /setLocation\(`\/tickets\/\$\{ticket\.id\}\?print=3`\)/);
+  assert.match(detail, /new URLSearchParams\(window\.location\.search\)\.get\("print"\) !== "3"/);
   assert.match(detail, /const isPrintReady = !isNota \|\| \(!!printInterna && !!printCliente\)/);
   assert.match(detail, /if \(!isPrintReady\) return;/);
   assert.match(detail, /disabled=\{!isPrintReady \|\| printInternaLoading \|\| printClienteLoading\}/);

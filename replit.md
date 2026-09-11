@@ -100,7 +100,7 @@ Etiquetas del historial de venta a cliente, derivadas de los cinco estados exist
 
 Los traslados normales conservan sus etiquetas actuales. Todo movimiento de venta debe llevar su documento y permitir enlazarlo: un movimiento sin documento de origen rompe la trazabilidad del inventario. Las referencias `NOTA` y `TICKET` se resuelven hacia el detalle del documento en Movimientos.
 
-2026-09-11: retirados el bloqueo de impresión por autorización y el sello impreso; unificadas las etiquetas de venta a cliente y agregada resolución de notas en Movimientos, sin cambios al enum ni a las reglas de reserva, cobro o entrega. La revisión detectó pendientes: la generación desde Salidas aún no solicita impresión automática, la búsqueda por folio de cancelaciones heredadas no incluye NOTA y dos contratos de interfaz fallan. La validación integral queda pendiente; no se consideran aprobados esos puntos.
+2026-09-11: retirados el bloqueo de impresión por autorización y el sello impreso; unificadas las etiquetas de venta a cliente y agregada resolución de notas en Movimientos, sin cambios al enum ni a las reglas de reserva, cobro o entrega. Corregida también la apertura con impresión automática desde Salidas pendientes a cobro y la búsqueda por folio de cancelaciones heredadas de NOTA. Los contratos comprueban el componente real de generación, el enum de unidades y la función compartida de etiquetas, no cadenas duplicadas. Las comprobaciones de código no sustituyen la validación del ciclo real, las reservas y las cifras; estos puntos solo se aprueban tras ejecutarlos.
 
 Qué toca números durante el ciclo:
 

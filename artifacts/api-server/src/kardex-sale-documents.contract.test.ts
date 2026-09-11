@@ -23,6 +23,7 @@ test("existing movement document resolver links both sale document types", () =>
 
 test("note IDs are loaded and searchable, and the sale writer supplies traceability fields", () => {
   assert.match(source, /documentoTipo\} in \('TICKET', 'NOTA'\)/);
+  assert.match(source, /kardex_origen\.documento_tipo in \('TICKET', 'NOTA'\)/);
   assert.match(source, /\.filter\(\(reference\) => \(reference\.tipo === "TICKET" \|\| reference\.tipo === "NOTA"\) && reference\.id\)/);
   assert.match(source, /const referencedTicketId =\s*\(reference\.tipo === "TICKET" \|\| reference\.tipo === "NOTA"\)/);
   assert.match(salidas, /documentoTipo: ticket\?\.documentoTipo \?\? "TICKET", documentoId: String\(ticketId\), salidaId: r\.salidaId/);

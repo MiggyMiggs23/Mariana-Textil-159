@@ -251,20 +251,14 @@ test("Thermal ticket renders vertical product blocks with unit-safe quantities",
   const detail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
   assert.match(detail, /VENTA: \{modality\}/);
   assert.match(detail, /modality === "POR ROLLO"/);
-  // This contract predated the customer-sale work and had already become stale
-  // when PIEZA was added: protect every known label plus the unknown-unit fallback.
-  for (const [unit, label] of [
-    ["METRO", "Metros"],
-    ["KILO", "Kilos"],
-    ["BOLSA", "Bolsas"],
-    ["PIEZA", "Piezas"],
-  ]) {
-    assert.match(
-      detail,
-      new RegExp(`line\\.unidadProducto === "${unit}" \\? "${label}"`),
-    );
-  }
-  assert.match(detail, /: formatUnit\(line\.unidadProducto\)/);
+  // Protect the shared sources, not a frozen list of units or display words.
+  assert.match(detail, /import\s*\{[^}]*\bUnidadProducto\b[^}]*\}\s*from\s*"@workspace\/api-client-react"/s);
+  assert.match(detail, /Object\.values\(UnidadProducto\)\.map\(\(unidad\)/);
+  assert.match(detail, /group\.totales\[unidad\]/);
+  assert.match(detail, /formatUnit\(unidad\)/);
+  assert.match(detail, /import\s*\{[^}]*\bformatUnit\b[^}]*\}\s*from\s*"@workspace\/number-format"/s);
+  assert.match(detail, /formatUnit\(line\.unidadProducto\)/);
+  assert.doesNotMatch(detail, /line\.unidadProducto\s*===/);
   assert.match(detail, /<span>Precio:<\/span>/);
   assert.match(detail, /<span>Importe:<\/span>/);
   assert.match(detail, /Total de rollos:/);

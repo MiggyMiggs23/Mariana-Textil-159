@@ -113,7 +113,7 @@ export function SalidasPendientesCobro({ onBack }: { onBack: () => void }) {
     generate.mutate({ data }, {
       onSuccess: (ticket) => {
         void queryClient.invalidateQueries({ queryKey: getListSalidasVentaPendientesPorClienteQueryKey() });
-        setLocation(`/tickets/${ticket.id}`);
+        setLocation(`/tickets/${ticket.id}?print=3`);
       },
       onError: (error) => toast({ title: "No se pudo generar la venta", description: <ApiErrorDetails error={error} />, variant: "destructive" }),
     });

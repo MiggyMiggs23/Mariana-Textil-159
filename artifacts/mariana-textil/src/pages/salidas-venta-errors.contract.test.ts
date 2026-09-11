@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { getSalidaEstadoPresentation, SALIDA_ESTADO_LABELS } from "@workspace/api-zod";
 
 test("structured roll and delivery errors retain safe clickable ownership links", async () => {
   const errors = await readFile(new URL("../lib/api-error.ts", import.meta.url), "utf8");
@@ -38,7 +39,13 @@ test("ENTREGADA is present in salida maps, generated state filter, and closed-de
   const detail = await readFile(new URL("./salida-detail.tsx", import.meta.url), "utf8");
   const presentation = await readFile(new URL("../components/salida-estado-badge.tsx", import.meta.url), "utf8");
 
-  assert.match(presentation, /ENTREGADA:\s*\{\s*label:\s*"Entregada"/);
+  assert.match(presentation, /import\s*\{[^}]*getSalidaEstadoPresentation[^}]*\}\s*from\s*"@workspace\/api-zod"/s);
+  assert.match(presentation, /const presentation = getSalidaEstadoPresentation\(props\)/);
+  assert.match(presentation, /\{presentation\.label\}/);
+  assert.equal(
+    getSalidaEstadoPresentation({ estado: "ENTREGADA", modalidad: "VENTA_CLIENTE" }).label,
+    SALIDA_ESTADO_LABELS.ENTREGADA,
+  );
   assert.match(list, /Object\.values\(EstadoSalida\)/);
   assert.match(list, /<SalidaEstadoBadge estado=\{salida\.estado\}/);
   assert.match(detail, /<SalidaEstadoBadge estado=\{salida\.estado\}/);

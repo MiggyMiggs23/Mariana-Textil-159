@@ -43,3 +43,4 @@
 - [Enums usados por índices parciales](enum-partial-index-migrations.md) — retirar predicados tipados al enum viejo antes de reemplazarlo y recrearlos tras el swap.
 - [Entorno de procesos desacoplados](detached-sandbox-environment.md) — declarar PATH y extraer URIs de conectores; el sandbox no hereda todo el entorno del workspace.
 - [Objetos OpenAPI estrictos en Zod](openapi-zod-strict-objects.md) — additionalProperties false puede generarse como strip; las entradas sensibles requieren parser estricto.
+- [Argumentos del MCP Neon](neon-mcp-argument-names.md) — si la firma documentada falla, usar los nombres snake_case exigidos por el proveedor.
