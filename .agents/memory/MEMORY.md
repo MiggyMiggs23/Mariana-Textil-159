@@ -44,3 +44,4 @@
 - [Entorno de procesos desacoplados](detached-sandbox-environment.md) — declarar PATH y extraer URIs de conectores; el sandbox no hereda todo el entorno del workspace.
 - [Objetos OpenAPI estrictos en Zod](openapi-zod-strict-objects.md) — additionalProperties false puede generarse como strip; las entradas sensibles requieren parser estricto.
 - [Argumentos del MCP Neon](neon-mcp-argument-names.md) — si la firma documentada falla, usar los nombres snake_case exigidos por el proveedor.
+- [Sitio operativo y consultas](operational-site-vs-query-scope.md) — PROPIA usa asignación; ADMIN global conserva selección; resolver sitio no autoriza acciones.

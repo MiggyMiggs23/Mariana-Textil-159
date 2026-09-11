@@ -6,6 +6,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
+import type { AuthContext } from "./middlewares/auth";
+import {
+  canAccessSalidaStage,
+  canOperate,
+  canRead,
+  resolvePendingVentaClienteOriginId,
+} from "./routes/salidas";
 
 const root = new URL("../../..", import.meta.url);
 const routeFile = new URL("artifacts/api-server/src/routes/salidas.ts", root);
@@ -18,6 +25,28 @@ const detailPageFile = new URL("artifacts/mariana-textil/src/pages/salida-detail
 const createPageFile = new URL("artifacts/mariana-textil/src/pages/salida-nueva.tsx", root);
 const counterPageFile = new URL("artifacts/mariana-textil/src/components/salida-mostrador.tsx", root);
 const salidaSchemaFile = new URL("lib/db/src/schema/salidas.ts", root);
+
+function auth(
+  overrides: Partial<AuthContext["user"]> = {},
+): AuthContext {
+  return {
+    sessionId: "contract-test",
+    location: null,
+    user: {
+      id: 1,
+      nombre: "Contract test",
+      usuario: "contract-test",
+      passwordHash: "",
+      rol: "BODEGA",
+      ubicacionId: 7,
+      activo: true,
+      alcanceConsulta: "PROPIA",
+      ultimoAcceso: null,
+      createdAt: new Date(0),
+      ...overrides,
+    },
+  };
+}
 
 test("Salida capture persists its draft roll-by-roll and finalizes in one action", async () => {
   const [route, spec] = await Promise.all([readFile(routeFile, "utf8"), readFile(specFile, "utf8")]);
@@ -204,6 +233,137 @@ test("Pending-sale generation requires an explicit authorized store and preserve
   assert.match(pendingSalePage, /location\.activa && location\.tipo === "TIENDA"/);
   assert.match(pendingSalePage, /ubicacionId: saleLocationId/);
   assert.match(pendingSalePage, /saleLocationId === null/);
+});
+
+test("pending-sale reads scope the actual query to an assigned origin and fail closed", async () => {
+  const route = await readFile(routeFile, "utf8");
+  const endpointStart = route.indexOf(
+    'router.get("/salidas/venta-cliente/pendientes"',
+  );
+  const endpointEnd = route.indexOf(
+    'router.post("/salidas/venta-cliente/generar-venta"',
+    endpointStart,
+  );
+  const endpoint = route.slice(endpointStart, endpointEnd);
+
+  assert.equal(
+    resolvePendingVentaClienteOriginId(auth({ ubicacionId: 7 })),
+    7,
+  );
+  assert.throws(
+    () =>
+      resolvePendingVentaClienteOriginId(
+        auth({ ubicacionId: null, alcanceConsulta: "PROPIA" }),
+      ),
+    /ubicación asignada/,
+  );
+  assert.equal(
+    resolvePendingVentaClienteOriginId(
+      auth({ rol: "ADMIN", ubicacionId: null }),
+    ),
+    undefined,
+  );
+  assert.equal(
+    resolvePendingVentaClienteOriginId(
+      auth({ rol: "ADMIN", ubicacionId: 7, alcanceConsulta: "TODAS" }),
+    ),
+    undefined,
+  );
+  assert.equal(
+    resolvePendingVentaClienteOriginId(
+      auth({ ubicacionId: null, alcanceConsulta: "TODAS" }),
+    ),
+    undefined,
+  );
+  assert.equal(
+    resolvePendingVentaClienteOriginId(
+      auth({ rol: "CAJA", ubicacionId: 7, alcanceConsulta: "TODAS" }),
+    ),
+    7,
+  );
+  assert.throws(
+    () =>
+      resolvePendingVentaClienteOriginId(
+        auth({ rol: "CAJA", ubicacionId: null, alcanceConsulta: "TODAS" }),
+      ),
+    /ubicación asignada/,
+  );
+
+  assert.match(
+    endpoint,
+    /requireSession,\s*requierePermiso\("salidas_venta", "ver"\)/,
+  );
+  assert.match(
+    endpoint,
+    /resolvePendingVentaClienteOriginId\(req\.auth!\)/,
+  );
+  assert.match(endpoint, /eq\(salidasTable\.origenId, visibleOriginId\)/);
+  assert.match(endpoint, /\.where\(and\(\.\.\.pendingConditions\)\)/);
+});
+
+test("supervisors operate only on their own origin or destination while read scope stays unchanged", () => {
+  const supervisor = auth({ rol: "SUPERVISOR", ubicacionId: 7 });
+  const salida = { origenId: 7, destinoId: 11 };
+  const originOtherSite = { origenId: 9, destinoId: 11 };
+  const destinationOtherSite = { origenId: 9, destinoId: 12 };
+
+  assert.equal(canOperate(supervisor, 7), true);
+  assert.equal(canOperate(supervisor, 9), false);
+  assert.equal(canAccessSalidaStage(supervisor, salida, "origin"), true);
+  assert.equal(
+    canAccessSalidaStage(supervisor, destinationOtherSite, "origin"),
+    false,
+  );
+  assert.equal(
+    canAccessSalidaStage(
+      supervisor,
+      { origenId: 9, destinoId: 7 },
+      "destination",
+    ),
+    true,
+  );
+  assert.equal(
+    canAccessSalidaStage(supervisor, destinationOtherSite, "destination"),
+    false,
+  );
+  assert.equal(
+    canAccessSalidaStage(supervisor, originOtherSite, "either"),
+    false,
+  );
+  assert.equal(
+    canAccessSalidaStage(supervisor, { origenId: 9, destinoId: 7 }, "either"),
+    true,
+  );
+  assert.equal(
+    canAccessSalidaStage(
+      auth({ rol: "SUPERVISOR", ubicacionId: null }),
+      { origenId: 9, destinoId: null },
+      "either",
+    ),
+    false,
+  );
+
+  // Keep the existing document-read policy distinct from operational scope.
+  assert.equal(canRead(supervisor, 99, null), true);
+  assert.equal(canRead(auth({ ubicacionId: 7 }), 7, 99), true);
+  assert.equal(canRead(auth({ ubicacionId: 7 }), 99, 11), false);
+});
+
+test("ADMIN retains origin, destination and either-stage access", () => {
+  const admin = auth({
+    rol: "ADMIN",
+    ubicacionId: null,
+    alcanceConsulta: "TODAS",
+  });
+  const salida = { origenId: 7, destinoId: 11 };
+
+  for (const stage of ["origin", "destination", "either"] as const) {
+    assert.equal(canAccessSalidaStage(admin, salida, stage), true, stage);
+  }
+  assert.equal(
+    canAccessSalidaStage(admin, { origenId: 7, destinoId: null }, "either"),
+    true,
+  );
 });
 
 test("schema migration replaces the PostgreSQL enum with the exact four states", async () => {

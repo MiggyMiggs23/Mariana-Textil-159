@@ -103,11 +103,19 @@ router.post("/salidas/venta-cliente", requireSession, requierePermiso("salidas",
   } catch (e) { if (!sendError(e, res)) next(e); }
 });
 
-router.get("/salidas/venta-cliente/pendientes", requireSession, requierePermiso("salidas_venta", "ver"), async (_req, res, next) => {
+router.get("/salidas/venta-cliente/pendientes", requireSession, requierePermiso("salidas_venta", "ver"), async (req, res, next) => {
   try {
+    const visibleOriginId = resolvePendingVentaClienteOriginId(req.auth!);
+    const pendingConditions = [
+      eq(salidasTable.modalidad, "VENTA_CLIENTE"),
+      eq(salidasTable.estado, "EN_TRANSITO"),
+      ...(visibleOriginId === undefined
+        ? []
+        : [eq(salidasTable.origenId, visibleOriginId)]),
+    ];
     const rows = await db.select({ clienteId: salidasTable.clienteId, nombreCliente: clientesTable.nombre, id: salidasTable.id, folio: salidasTable.folio, origenId: salidasTable.origenId, nombreOrigen: ubicacionesTable.nombre, createdAt: salidasTable.createdAt, salidaRolloId: salidaRollosTable.id, rolloId: rollosTable.id, serie: rollosTable.serie, productoId: productosTable.id, sku: productosTable.sku, tela: productosTable.tela, color: productosTable.color, unidad: productosTable.unidad, cantidad: salidaRollosTable.cantidadEnviada, precioSugerido: productosTable.precioSugerido })
       .from(salidasTable).innerJoin(clientesTable, eq(salidasTable.clienteId, clientesTable.id)).innerJoin(ubicacionesTable, eq(salidasTable.origenId, ubicacionesTable.id)).innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id)).innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id)).innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
-      .where(and(eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "EN_TRANSITO"))).orderBy(asc(salidasTable.id), asc(salidaRollosTable.id));
+      .where(and(...pendingConditions)).orderBy(asc(salidasTable.id), asc(salidaRollosTable.id));
     const groups = new Map<number, any>();
     for (const r of rows) {
       let g = groups.get(r.clienteId!); if (!g) { g = { clienteId: r.clienteId, nombreCliente: r.nombreCliente, salidas: [] }; groups.set(r.clienteId!, g); }
@@ -272,7 +280,33 @@ async function loadHeader(id: number) {
   return salida ?? null;
 }
 
-function canRead(auth: AuthContext, origenId: number, destinoId: number | null): boolean {
+export function resolvePendingVentaClienteOriginId(
+  auth: AuthContext,
+): number | undefined {
+  // CAJA remains destination/site scoped even when a legacy or customized
+  // record still says alcanceConsulta=TODAS.
+  if (auth.user.rol === "CAJA") {
+    if (auth.user.ubicacionId == null) {
+      throw new InventarioError(
+        "No tienes una ubicación asignada.",
+        "SALIDA_LOCATION_FORBIDDEN",
+      );
+    }
+    return auth.user.ubicacionId;
+  }
+  if (auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS") {
+    return undefined;
+  }
+  if (auth.user.ubicacionId == null) {
+    throw new InventarioError(
+      "No tienes una ubicación asignada.",
+      "SALIDA_LOCATION_FORBIDDEN",
+    );
+  }
+  return auth.user.ubicacionId;
+}
+
+export function canRead(auth: AuthContext, origenId: number, destinoId: number | null): boolean {
   if (auth.user.rol === "CAJA") {
     return auth.user.ubicacionId != null && auth.user.ubicacionId === destinoId;
   }
@@ -288,10 +322,9 @@ function rejectCajaMutation(auth: AuthContext): boolean {
   return auth.user.rol === "CAJA";
 }
 
-function canOperate(auth: AuthContext, ubicacionId: number): boolean {
+export function canOperate(auth: AuthContext, ubicacionId: number): boolean {
   return (
     auth.user.rol === "ADMIN" ||
-    auth.user.rol === "SUPERVISOR" ||
     auth.user.ubicacionId === ubicacionId
   );
 }
@@ -313,6 +346,31 @@ function requireReceivingSite(auth: AuthContext, destinoId: number): void {
   );
 }
 
+type SalidaAccessHeader = {
+  origenId: number;
+  destinoId: number | null;
+};
+
+export function canAccessSalidaStage(
+  auth: AuthContext,
+  salida: SalidaAccessHeader,
+  stage: "read" | "origin" | "destination" | "either",
+): boolean {
+  if (stage === "read") {
+    return canRead(auth, salida.origenId, salida.destinoId);
+  }
+  if (stage === "origin") {
+    return canOperate(auth, salida.origenId);
+  }
+  if (stage === "destination") {
+    return salida.destinoId != null && canOperate(auth, salida.destinoId);
+  }
+  return (
+    canOperate(auth, salida.origenId) ||
+    (salida.destinoId != null && canOperate(auth, salida.destinoId))
+  );
+}
+
 async function requireSalidaAccess(
   auth: AuthContext,
   id: number,
@@ -320,17 +378,7 @@ async function requireSalidaAccess(
 ) {
   const salida = await loadHeader(id);
   if (!salida) throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
-  const allowed =
-    stage === "read"
-      ? canRead(auth, salida.origenId, salida.destinoId)
-      : stage === "origin"
-        ? canOperate(auth, salida.origenId)
-        : stage === "destination"
-          ? salida.destinoId != null && canOperate(auth, salida.destinoId)
-           : auth.user.rol === "ADMIN" ||
-             auth.user.rol === "SUPERVISOR" ||
-            auth.user.ubicacionId === salida.origenId ||
-            auth.user.ubicacionId === salida.destinoId;
+  const allowed = canAccessSalidaStage(auth, salida, stage);
   if (!allowed) {
     throw new InventarioError(
       "No tienes permiso para operar esta salida desde tu ubicación.",
