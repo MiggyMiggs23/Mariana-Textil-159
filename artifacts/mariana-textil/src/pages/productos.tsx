@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
+import { catalogColorOptions, normalizeCatalogColor } from "@/lib/catalog-colors";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Link } from "wouter";
 import {
@@ -105,6 +106,16 @@ export default function Productos() {
   const { data: productos, isLoading } = useListProductos(queryParams, {
     query: { queryKey: getListProductosQueryKey(queryParams) }
   });
+  // Keep the color catalog independent of the stock filter.
+  const catalogParams = useMemo(() => ({ existencia: undefined }), []);
+  const { data: catalogProducts } = useListProductos(catalogParams, {
+    query: { queryKey: getListProductosQueryKey(catalogParams) }
+  });
+  const colorOptions = useMemo(() => catalogColorOptions(catalogProducts ?? []), [catalogProducts]);
+  const [filterColor, setFilterColor] = useHistoryEntryState("productos.color", "ALL");
+  const [colorSearch, setColorSearch] = useState("");
+  const visibleColors = useMemo(() => colorOptions.filter(({ key }) =>
+    key.includes(normalizeCatalogColor(colorSearch))), [colorOptions, colorSearch]);
 
   const [searchTerm, setSearchTerm] = useHistoryEntryState("productos.search", "");
   const [filterUnidad, setFilterUnidad] = useHistoryEntryState("productos.unidad", "ALL");
@@ -143,9 +154,10 @@ export default function Productos() {
         p.sku.toLowerCase().includes(search);
       const matchUnidad = filterUnidad === "ALL" || p.unidad === filterUnidad;
       const matchEstado = filterEstado === "ALL" || (filterEstado === "ACTIVE" ? p.activo : !p.activo);
-      return matchSearch && matchUnidad && matchEstado;
+      const matchColor = filterColor === "ALL" || normalizeCatalogColor(p.color) === filterColor.slice(6);
+      return matchSearch && matchUnidad && matchEstado && matchColor;
     });
-  }, [productos, searchTerm, filterUnidad, filterEstado]);
+  }, [productos, searchTerm, filterUnidad, filterEstado, filterColor]);
 
   const grouped = useMemo(() => {
     const groups: Record<string, Producto[]> = {};
@@ -170,7 +182,7 @@ export default function Productos() {
 
   // Search auto-expand
   useEffect(() => {
-    if (searchTerm.length >= 2) {
+    if (searchTerm.length >= 2 || filterColor !== "ALL" || filterUnidad !== "ALL" || filterEstado !== "ACTIVE" || filterExistencia !== "TODOS") {
       setExpandedTelas(prev => {
         const next = new Set(prev);
         let changed = false;
@@ -183,7 +195,7 @@ export default function Productos() {
         return changed ? next : prev;
       });
     }
-  }, [searchTerm, grouped]);
+  }, [searchTerm, grouped, filterColor, filterUnidad, filterEstado, filterExistencia]);
 
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -244,6 +256,33 @@ export default function Productos() {
                   <SelectItem value={ListProductosExistencia.TODOS}>Todos los prod.</SelectItem>
                   <SelectItem value={ListProductosExistencia.CON_EXISTENCIA}>Con existencia</SelectItem>
                   <SelectItem value={ListProductosExistencia.AGOTADOS}>Agotados</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={filterColor} onValueChange={setFilterColor} onOpenChange={() => setColorSearch("")}>
+                <SelectTrigger className="w-[180px] bg-background" aria-label="Filtrar por color" data-testid="select-filter-color">
+                  <SelectValue placeholder="Color">
+                    {filterColor === "ALL" ? "Todos los colores" : colorOptions.find(c => `color:${c.key}` === filterColor)?.label ?? filterColor.slice(6)}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <div className="sticky top-0 z-10 bg-popover p-1">
+                    <Input
+                      aria-label="Buscar color"
+                      placeholder="Buscar color..."
+                      value={colorSearch}
+                      onChange={e => setColorSearch(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key !== "Escape" && e.key !== "Tab") e.stopPropagation();
+                      }}
+                      onPointerMove={e => e.stopPropagation()}
+                      data-testid="input-search-color"
+                    />
+                  </div>
+                  <SelectItem value="ALL">Todos los colores</SelectItem>
+                  {visibleColors.map(({ key, label }) => (
+                    <SelectItem key={key} value={`color:${key}`}>{label}</SelectItem>
+                  ))}
+                  {visibleColors.length === 0 && <div className="p-2 text-sm text-muted-foreground">Sin coincidencias</div>}
                 </SelectContent>
               </Select>
               <Select value={filterUnidad} onValueChange={setFilterUnidad}>
