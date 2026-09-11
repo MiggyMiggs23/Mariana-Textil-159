@@ -201,7 +201,7 @@ export default function Salidas() {
             {canCreate && (
               <div className="flex flex-wrap gap-2">
                 <Link href="/salidas/nueva"><Button data-testid="btn-create-salida" className="gap-2 shadow-sm h-10 px-5"><Plus className="w-4 h-4" />Nueva Salida</Button></Link>
-                <Link href="/salidas/nueva?modalidad=VENTA_CLIENTE"><Button data-testid="btn-create-salida-venta" variant="outline" className="sale-action-button gap-2 shadow-sm h-10 px-5"><Plus className="w-4 h-4" />Nueva salida para venta a cliente</Button></Link>
+                <Link href="/salidas/nueva?modalidad=VENTA_CLIENTE"><Button data-testid="btn-create-salida-venta" className="gap-2 shadow-sm h-10 px-5 bg-sale-action text-sale-action-foreground hover:bg-sale-action/90"><Plus className="w-4 h-4" />Nueva salida para venta a cliente</Button></Link>
               </div>
             )}
           </div>

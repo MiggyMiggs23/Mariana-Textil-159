@@ -222,19 +222,6 @@
   }
 }
 
-@layer components {
-  .sale-action-button {
-    background-color: hsl(var(--sale-action));
-    color: hsl(var(--sale-action-foreground));
-    border-color: hsl(var(--sale-action));
-  }
-
-  .sale-action-button:hover {
-    background-color: hsl(var(--sale-action) / 0.9);
-    color: hsl(var(--sale-action-foreground));
-  }
-}
-
 .print-only {
   display: none;
 }
