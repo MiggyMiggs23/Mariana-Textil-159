@@ -31,7 +31,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
 
-// Keep the UI buildable while the generated client is being refreshed with PIEZA.
 function physicalCountLabel(unidad: string): string {
   if (unidad === UnidadProducto.BOLSA) return "cajas";
   if (unidad === "PIEZA") return "piezas";
@@ -253,10 +252,9 @@ export default function Productos() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ALL">Todas las unid.</SelectItem>
-                  <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
-                  <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
-                  <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
-                  <SelectItem value={UnidadProducto.PIEZA}>{formatUnit(UnidadProducto.PIEZA)}</SelectItem>
+                  {Object.values(UnidadProducto).map((unidad) => (
+                    <SelectItem key={unidad} value={unidad}>{formatUnit(unidad)}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Select value={filterEstado} onValueChange={setFilterEstado}>
@@ -598,10 +596,9 @@ function CreateProductDialog({ open, onClose, initialTela, existingProducts, can
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
-                  <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
-                  <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
-                  <SelectItem value={UnidadProducto.PIEZA}>{formatUnit(UnidadProducto.PIEZA)}</SelectItem>
+                  {Object.values(UnidadProducto).map((unidad) => (
+                    <SelectItem key={unidad} value={unidad}>{formatUnit(unidad)}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

@@ -6,6 +6,7 @@ import {
   getObtenerTicketQueryKey,
   useCancelarTicket,
   EstadoTicket,
+  UnidadProducto,
   Role,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
@@ -663,7 +664,7 @@ export default function TicketDetailPage() {
                     <div className="flex justify-between gap-3"><span>Rollos:</span><span className="font-semibold">{line.rollos}</span></div>
                   )}
                   <div className="flex justify-between gap-3">
-                    <span>{line.unidadProducto === "METRO" ? "Metros" : line.unidadProducto === "KILO" ? "Kilos" : line.unidadProducto === "BOLSA" ? "Bolsas" : line.unidadProducto === "PIEZA" ? "Piezas" : formatUnit(line.unidadProducto)}:</span>
+                    <span>{formatUnit(line.unidadProducto)}:</span>
                     <span className="font-semibold">{formatNumber(line.cantidad, { kind: "quantity" })} {formatUnit(line.unidadProducto)}</span>
                   </div>
                   <div className="flex justify-between gap-3">
@@ -740,7 +741,7 @@ export default function TicketDetailPage() {
                 ))}
               </ul>
               <div className="mt-2 border-t border-black pt-2 font-bold">
-                {(["METRO", "KILO", "BOLSA", "PIEZA"] as const).map((unidad) =>
+                {Object.values(UnidadProducto).map((unidad) =>
                   group.totales[unidad] == null ? null : (
                     <div key={unidad} className="flex justify-between">
                       <span>TOTAL {formatUnit(unidad)}:</span>

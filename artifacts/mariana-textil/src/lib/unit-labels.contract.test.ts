@@ -5,6 +5,22 @@ import { formatPackageQuantityLabel, formatUnit } from "@workspace/number-format
 
 const root = new URL("../../../../", import.meta.url);
 
+test("product selectors and ticket totals derive units from the generated enum", async () => {
+  const read = (page: string) => readFile(new URL(`../pages/${page}.tsx`, import.meta.url), "utf8");
+  const [detail, products, ticket] = await Promise.all([
+    read("producto-detail"), read("productos"), read("ticket-detail"),
+  ]);
+  for (const source of [detail, products, ticket]) {
+    assert.match(source, /Object\.values\(UnidadProducto\)\.map/);
+    assert.doesNotMatch(source, /<SelectItem value=\{UnidadProducto\./);
+  }
+  assert.equal((products.match(/Object\.values\(UnidadProducto\)\.map/g) ?? []).length, 2);
+  assert.doesNotMatch(products, /while the generated client is being refreshed/);
+  assert.doesNotMatch(ticket, /\["METRO", "KILO", "BOLSA", "PIEZA"\]/);
+  assert.doesNotMatch(ticket, /line\.unidadProducto === "METRO" \?/);
+  assert.match(detail, /isEditing && !product\.unidadBloqueada/);
+});
+
 const visibleUnitSurfaces = [
   "artifacts/mariana-textil/src/components/label-print.tsx",
   "artifacts/mariana-textil/src/components/recepcion-salidas.tsx",

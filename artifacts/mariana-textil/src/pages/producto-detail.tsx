@@ -340,9 +340,9 @@ export default function ProductoDetail() {
                     <Select value={formData.unidad} onValueChange={(v: UnidadProducto) => setFormData({...formData, unidad: v})}>
                       <SelectTrigger data-testid="input-edit-unidad"><SelectValue/></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={UnidadProducto.METRO}>{formatUnit(UnidadProducto.METRO)}</SelectItem>
-                        <SelectItem value={UnidadProducto.KILO}>{formatUnit(UnidadProducto.KILO)}</SelectItem>
-                        <SelectItem value={UnidadProducto.BOLSA}>{formatUnit(UnidadProducto.BOLSA)}</SelectItem>
+                        {Object.values(UnidadProducto).map((unidad) => (
+                          <SelectItem key={unidad} value={unidad}>{formatUnit(unidad)}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   ) : (
