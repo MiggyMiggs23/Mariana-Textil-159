@@ -47,6 +47,7 @@ import { RecepcionSalidas } from "@/components/recepcion-salidas";
 import { SalidaMostrador } from "@/components/salida-mostrador";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSalidaEstadoLabel, SalidaEstadoBadge } from "@/components/salida-estado-badge";
+import { SalidaVentaEntrega } from "@/components/salida-venta-entrega";
 
 import { SalidasExtraordinarias } from "@/components/salidas-extraordinarias";
 
@@ -200,7 +201,7 @@ export default function Salidas() {
             {canCreate && (
               <div className="flex flex-wrap gap-2">
                 <Link href="/salidas/nueva"><Button data-testid="btn-create-salida" className="gap-2 shadow-sm h-10 px-5"><Plus className="w-4 h-4" />Nueva Salida</Button></Link>
-                <Link href="/salidas/nueva?modalidad=VENTA_CLIENTE"><Button data-testid="btn-create-salida-venta" variant="outline" className="gap-2 shadow-sm h-10 px-5">Nueva salida para venta a cliente</Button></Link>
+                <Link href="/salidas/nueva?modalidad=VENTA_CLIENTE"><Button data-testid="btn-create-salida-venta" variant="outline" className="sale-action-button gap-2 shadow-sm h-10 px-5"><Plus className="w-4 h-4" />Nueva salida para venta a cliente</Button></Link>
               </div>
             )}
           </div>
@@ -353,7 +354,7 @@ export default function Salidas() {
             ) : (
               isCaja ? (
                 <div className="overflow-x-auto">
-                  <div className="grid min-w-[1150px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                   <div className="grid min-w-[1280px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px_130px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                     <span>Folio</span>
                     <span>Fecha y hora</span>
                     <span>Origen</span>
@@ -363,6 +364,7 @@ export default function Salidas() {
                     <span className="text-right">{formatUnit("BOLSA")}</span>
                     <span>Transportista</span>
                     <span>Estado</span>
+                     <span className="text-right">Acción</span>
                   </div>
                   <div className="divide-y divide-slate-100">
                     {displayItems.map((salida) => {
@@ -371,7 +373,7 @@ export default function Salidas() {
                         <div
                           key={salida.id}
                           data-testid={`row-salida-${salida.id}`}
-                          className={`grid min-w-[1150px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
+                           className={`grid min-w-[1280px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px_130px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
                         >
                           <Link href={`/salidas/${salida.id}`} className="font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" data-testid={`link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
                           <span className="text-sm">{format(new Date(salida.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
@@ -382,6 +384,11 @@ export default function Salidas() {
                            <span className="text-right tabular-nums">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</span>
                           <span className="truncate">{salida.transportista || "—"}</span>
                            <span className={cancelled ? "no-underline" : ""}><SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} /></span>
+                            <span className="flex justify-end no-underline">
+                              {salida.modalidad === "VENTA_CLIENTE" && (
+                                <SalidaVentaEntrega salidaId={salida.id} estado={salida.estado} />
+                              )}
+                            </span>
                         </div>
                       );
                     })}
@@ -432,8 +439,11 @@ export default function Salidas() {
                              <p className="text-xs text-amber-600 mt-0.5">{formatNumber(salida.totalCantidadEnviada, { kind: "quantity" })} enviada</p>
                           )}
                         </div>
-                        <div className="w-[100px] flex justify-end">
-                           <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} />
+                         <div className="flex items-center justify-end gap-2 sm:min-w-[180px]">
+                            <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} />
+                            {salida.modalidad === "VENTA_CLIENTE" && (
+                              <SalidaVentaEntrega salidaId={salida.id} estado={salida.estado} />
+                            )}
                         </div>
                       </div>
                     </div>

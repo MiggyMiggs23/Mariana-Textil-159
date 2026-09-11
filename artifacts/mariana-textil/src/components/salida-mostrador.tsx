@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ApiErrorDetails } from "@/lib/api-error";
-import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
+import { interpretarCodigoEscaneado, normalizarSerieEscaneada } from "@workspace/scanned-code";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 export function SalidaMostrador() {
@@ -41,7 +41,7 @@ export function SalidaMostrador() {
 
   const addSeries = (raw: string) => {
     const code = interpretarCodigoEscaneado(raw);
-    const serie = (code.serie ?? code.textoOriginal).trim().toUpperCase();
+    const serie = normalizarSerieEscaneada(code);
     if (!serie) return;
     if (series.includes(serie)) {
       toast({

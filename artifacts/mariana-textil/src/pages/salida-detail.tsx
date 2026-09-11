@@ -10,9 +10,6 @@ import {
   getGetCurrentUserQueryKey,
   Role,
   getListSalidasQueryKey,
-  useVerificarAutorizacionVentaSalidas,
-  getVerificarAutorizacionVentaSalidasQueryKey,
-  useEntregarSalidaVentaCliente,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -34,13 +31,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
+import { getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
-import { CampoEscaneo } from "@/components/campo-escaneo";
 import { SalidaEstadoBadge } from "@/components/salida-estado-badge";
 
 import {
@@ -76,14 +72,6 @@ export default function SalidaDetail() {
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
-  const [folioBusqueda, setFolioBusqueda] = useState("");
-  const [folioVerificado, setFolioVerificado] = useState<number | null>(null);
-  const [seriesEntrega, setSeriesEntrega] = useState<string[]>([]);
-  const verify = useVerificarAutorizacionVentaSalidas(
-    { folio: folioVerificado ?? 0 },
-    { query: { enabled: folioVerificado != null, queryKey: getVerificarAutorizacionVentaSalidasQueryKey({ folio: folioVerificado ?? 0 }), retry: false } },
-  );
-  const entregar = useEntregarSalidaVentaCliente();
 
   if (isLoading) {
     return (
@@ -417,44 +405,6 @@ export default function SalidaDetail() {
                 <Button data-testid="btn-action-cancel" onClick={() => { setMotivo(""); setAdminUsername(""); setAdminPassword(""); setPasswordVisibilityResetKey((current) => current + 1); setDialogState({ type: 'cancel' }); }} variant="outline" className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 bg-white">
                   <XSquare className="w-4 h-4 mr-2" /> Cancelar Salida
                 </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {salida.modalidad === "VENTA_CLIENTE" && salida.estado !== "ENTREGADA" && salida.estado !== "CANCELADA" && (
-            <Card className="border-violet-200 bg-violet-50/40">
-              <CardHeader><CardTitle className="text-base">Verificar autorización y entregar</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">Busca el folio del documento de venta y después escanea exactamente cada serie esperada en este origen.</p>
-                <div className="flex gap-2">
-                  <Input value={folioBusqueda} onChange={(event) => setFolioBusqueda(event.target.value)} inputMode="numeric" placeholder="Folio de venta" aria-label="Folio de venta" />
-                  <Button onClick={() => setFolioVerificado(Number(folioBusqueda))} disabled={!/^\d+$/.test(folioBusqueda)}>Verificar</Button>
-                </div>
-                {verify.data && (
-                  <div className={`rounded border p-3 text-sm ${verify.data.autorizada ? "border-emerald-300 bg-emerald-50" : "border-amber-300 bg-amber-50"}`}>
-                    <strong>{verify.data.autorizada && verify.data.salidas.some((linked) => linked.id === salida.id) ? "AUTORIZADA" : verify.data.estado}</strong>
-                    <Link className="ml-2 text-primary underline" href={verify.data.documentoHref}>Documento {verify.data.folioFormateado}</Link>
-                    <div className="mt-2">Salidas vinculadas: {verify.data.salidas.map((linked) => <Link key={linked.id} className="mr-2 text-primary underline" href={linked.href.startsWith("/api") ? `/salidas/${linked.id}` : linked.href}>{linked.folioFormateado} · {linked.nombreOrigen}</Link>)}</div>
-                  </div>
-                )}
-                <CampoEscaneo
-                  value=""
-                  onChange={() => undefined}
-                  onScan={(value) => {
-                    const normalized = value.trim().toUpperCase();
-                    if (!salida.rollos.some((rollo) => rollo.serie === normalized)) {
-                      toast({ title: "SERIE NO PERTENECE A ESTA SALIDA", description: `La serie ${normalized} pertenece a otra salida o no está autorizada.`, variant: "destructive" });
-                      return;
-                    }
-                    setSeriesEntrega((current) => current.includes(normalized) ? current : [...current, normalized]);
-                  }}
-                  interpretRollCode={false}
-                  placeholder="Escanea una serie exacta"
-                  aria-label="Serie exacta para entregar"
-                />
-                <p className="text-sm font-medium">Progreso: {seriesEntrega.length} de {salida.rollos.length} rollos esperados</p>
-                <div className="flex flex-wrap gap-2">{salida.rollos.map((rollo) => <Badge key={rollo.id} variant="outline" className={seriesEntrega.includes(rollo.serie) ? "border-emerald-400 bg-emerald-50" : ""}>{rollo.serie}</Badge>)}</div>
-                <Button className="w-full" disabled={!verify.data?.autorizada || !verify.data.salidas.some((linked) => linked.id === salida.id) || seriesEntrega.length !== salida.rollos.length || entregar.isPending} onClick={() => entregar.mutate({ id: salida.id, data: { series: seriesEntrega } }, { onSuccess: () => { toast({ title: "Salida entregada" }); invalidate(); }, onError: (error) => toast({ title: "No se pudo entregar", description: <ApiErrorDetails error={error} />, variant: "destructive" }) })}>Marcar ENTREGADA</Button>
               </CardContent>
             </Card>
           )}

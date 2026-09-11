@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import {
-  interpretarCodigoEscaneado,
-  normalizarSerieEscaneada,
+  despacharCodigoEscaneado,
+  type ModoEscaneo,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
 
@@ -57,6 +57,12 @@ export type CampoEscaneoProps = Omit<
     source: "scanner" | "manual" | "camera",
   ) => void | Promise<void>;
   clearOnScan?: boolean;
+  /**
+   * Series are the safe default. Use `raw` only for document/quantity inputs
+   * whose callback must receive the scanned text unchanged.
+   */
+  scanMode?: ModoEscaneo;
+  /** @deprecated Prefer scanMode. Kept for existing raw document/quantity fields. */
   interpretRollCode?: boolean;
   containerClassName?: string;
 };
@@ -68,6 +74,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
       onChange,
       onScan,
       clearOnScan = true,
+      scanMode,
       interpretRollCode = true,
       containerClassName,
       disabled,
@@ -138,12 +145,13 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
         rawValue: string,
         source: "scanner" | "manual" | "camera",
       ) => {
-        const codigo = interpretarCodigoEscaneado(rawValue);
+        const modo: ModoEscaneo =
+          scanMode ?? (interpretRollCode ? "serie" : "raw");
+        const { codigo, valor: scannedValue } = despacharCodigoEscaneado(
+          rawValue,
+          modo,
+        );
         if (!codigo.textoOriginal.trim()) return;
-        const scannedValue =
-          interpretRollCode && codigo.serie
-            ? normalizarSerieEscaneada(codigo)
-            : codigo.textoOriginal;
         if (clearOnScan) onChange("");
         try {
           await onScan(scannedValue, codigo, source);
@@ -151,7 +159,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
           window.setTimeout(() => inputRef.current?.focus(), 0);
         }
       },
-      [clearOnScan, interpretRollCode, onChange, onScan],
+      [clearOnScan, interpretRollCode, onChange, onScan, scanMode],
     );
 
     useEffect(() => {

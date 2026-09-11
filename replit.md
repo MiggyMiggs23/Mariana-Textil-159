@@ -82,6 +82,8 @@ El flujo completo tiene seis pasos:
 5. El cliente lleva el papel sellado al sitio de origen. Se conserva el formato existente —80 mm para Ticket o A5 vertical para Nota— y el resto de sus datos.
 6. Antes de entregar, el operador comprueba ambas cosas juntas: el sello físico en el papel y el estado autorizado en el sistema. Cualquiera puede imprimir una nota; solo caja tiene el sello y solo caja cambia la autorización. Verifica el folio, escanea las series, entrega y marca `ENTREGADA`.
 
+En el historial, el botón naranja con el icono `+` **Nueva salida para venta a cliente** representa únicamente la acción de crear una salida de esta modalidad. El naranja no significa autorizado, pagado ni entregado; esos estados se muestran por separado en la etiqueta derivada de la salida y su documento.
+
 **La mercancía no viaja y el sitio que vende no es el sitio que la tiene.** Por eso todo candado consultivo de inventario se toma sobre el par producto–ubicación de **origen**, y cuando hay varios orígenes se ordena determinísticamente por ubicación. Tomar el candado sobre Mariana, que emite el documento, dejaría sin serializar el saldo real de la bodega y permitiría vender el mismo rollo dos veces.
 
 Esta modalidad admite exclusivamente rollos identificados. Sin una serie física no existe una identidad concreta que reservar, bloquear, verificar al entregar ni rastrear en caso de conflicto; nunca se aparta solo una cantidad.

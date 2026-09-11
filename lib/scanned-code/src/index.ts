@@ -4,6 +4,8 @@ export type CodigoEscaneadoInterpretado = {
   textoOriginal: string;
 };
 
+export type ModoEscaneo = "serie" | "raw";
+
 const SERIE_AL_FINAL = /(?:^|\D)(\d{7})$/;
 
 /**
@@ -39,6 +41,30 @@ export function normalizarSerieEscaneada(
       ? interpretarCodigoEscaneado(entrada)
       : entrada;
   return (codigo.serie ?? codigo.textoOriginal).trim().toUpperCase();
+}
+
+/**
+ * Prepara un valor para el callback de CampoEscaneo.
+ *
+ * Todos los lectores (teclado y cámara) deben pasar por esta función. Los
+ * campos de series reciben el identificador canónico de la serie cuando el
+ * código trae SKU-SERIE; los campos de documentos/cantidades conservan el
+ * texto original mediante el modo `raw`.
+ */
+export function despacharCodigoEscaneado(
+  textoOriginal: string,
+  modo: ModoEscaneo = "serie",
+): {
+  valor: string;
+  codigo: CodigoEscaneadoInterpretado;
+} {
+  const codigo = interpretarCodigoEscaneado(textoOriginal);
+  const valor =
+    modo === "serie" && codigo.serie
+      ? normalizarSerieEscaneada(codigo)
+      : codigo.textoOriginal;
+
+  return { valor, codigo };
 }
 
 export function advertenciaSkuEscaneado(

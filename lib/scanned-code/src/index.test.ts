@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   advertenciaSkuEscaneado,
+  despacharCodigoEscaneado,
   interpretarCodigoEscaneado,
   normalizarSerieEscaneada,
 } from "./index";
@@ -41,19 +42,40 @@ test("la advertencia de SKU informa sin alterar la serie", () => {
   assert.equal(advertenciaSkuEscaneado(codigo, "TAF-BLA"), null);
 });
 
-test("los tres consumidores normalizan el payload impreso SKU-SERIE a la misma serie", () => {
+test("el dispatcher normaliza el payload impreso SKU-SERIE a la misma serie", () => {
   const payloadImpreso = "TAF-BLA-1002874";
-  const codigoEntregado = interpretarCodigoEscaneado(payloadImpreso);
-  const consumidores = {
-    "salida normal": normalizarSerieEscaneada(codigoEntregado),
-    POS: normalizarSerieEscaneada(codigoEntregado),
-    "salida para venta": normalizarSerieEscaneada(codigoEntregado),
-  };
+  const entregado = despacharCodigoEscaneado(payloadImpreso, "serie");
 
-  assert.deepEqual(consumidores, {
-    "salida normal": "1002874",
-    POS: "1002874",
-    "salida para venta": "1002874",
-  });
+  assert.equal(entregado.valor, "1002874");
+  assert.deepEqual(entregado.codigo, interpretarCodigoEscaneado(payloadImpreso));
   assert.equal(normalizarSerieEscaneada(payloadImpreso), "1002874");
+});
+
+test("normaliza el mismo QR SKU-SERIE sin importar mayúsculas o espacios", () => {
+  const payloads = [
+    "TAF-BLA-1002874",
+    "taf-bla-1002874",
+    "  taf-bla-1002874  ",
+    "\ttaf-bla-1002874\n",
+  ];
+
+  for (const payload of payloads) {
+    assert.equal(normalizarSerieEscaneada(payload), "1002874");
+  }
+});
+
+test("el dispatcher compartido conserva la ruta de series y la ruta raw", () => {
+  const payload = "  taf-bla-1002874  ";
+  const serie = despacharCodigoEscaneado(payload, "serie");
+  const raw = despacharCodigoEscaneado(payload, "raw");
+
+  assert.equal(serie.valor, "1002874");
+  assert.deepEqual(serie.codigo, {
+    serie: "1002874",
+    sku: "TAF-BLA",
+    textoOriginal: payload,
+  });
+  assert.equal(raw.valor, payload);
+  assert.deepEqual(raw.codigo, serie.codigo);
+  assert.equal(despacharCodigoEscaneado(payload).valor, "1002874");
 });

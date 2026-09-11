@@ -35,7 +35,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 import { CampoEscaneo } from "@/components/campo-escaneo";
-import { interpretarCodigoEscaneado, type CodigoEscaneadoInterpretado, advertenciaSkuEscaneado } from "@workspace/scanned-code";
+import { interpretarCodigoEscaneado, normalizarSerieEscaneada, type CodigoEscaneadoInterpretado, advertenciaSkuEscaneado } from "@workspace/scanned-code";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 
 export function SalidasExtraordinarias() {
@@ -64,7 +64,7 @@ export function SalidasExtraordinarias() {
 
   const handleScan = (rawValue: string, codigoEntregado?: CodigoEscaneadoInterpretado) => {
     const codigo = codigoEntregado ?? interpretarCodigoEscaneado(rawValue);
-    const serie = (codigo.serie ?? rawValue).trim().toUpperCase();
+    const serie = normalizarSerieEscaneada(codigo);
     if (!serie) return;
 
     if (serie === scannedSerie && rollo) {
