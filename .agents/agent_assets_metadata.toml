@@ -392,3 +392,17 @@ mtime_ms = 1788563255117
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e25312d6-ad79-4556-acc3-58c5c6531592/48eea1c3-8bce-4e47-b67c-03fb34da6b11"
 storage_version_token = "1788563312693237"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "8UYSOS0fZpqlynOlYdAmq"
+uri = "file://reports/restricciones-por-rol.html"
+type = "text"
+title = "Inventario de restricciones por rol"
+description = "Restricciones restantes en API e interfaz: archivo, línea, rol y efecto. Incluye apéndice de código; ninguna de estas restricciones fue modificada."
+logical_id = "2d4c368d-6ecf-4551-bf65-4ba0e140cbea"
+content_hash = "sha256:c09395b9c021ae34d23e41cb6c7f1ffa51e59a1fce27d9321b1d34da3f093282"
+size = 72720
+mtime_ms = 1789172927172
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2d4c368d-6ecf-4551-bf65-4ba0e140cbea/d470c83f-b6e8-4bea-95a6-f9b27fc3b229"
+storage_version_token = "1789172991547365"
+content_type = "text/html"

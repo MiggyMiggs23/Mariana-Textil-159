@@ -1,0 +1,441 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Restricciones por rol</title><style>body{font:15px/1.5 system-ui;margin:32px auto;padding:0 20px;max-width:1300px;color:#172433}h1,h2{color:#143463}h2{margin-top:40px}.table{overflow:auto}table{border-collapse:collapse;width:100%}td{border:1px solid #ccd5df;padding:10px;vertical-align:top}tr:first-child{font-weight:bold;background:#eaf0f8}code{font-size:12px;overflow-wrap:anywhere}pre{white-space:pre-wrap;font-size:12px}summary{cursor:pointer;font-size:20px;font-weight:600}</style><h1>Inventario de gates de rol restantes (runtime)</h1><p>Fuente: código runtime de <code>artifacts/api-server/src</code> y <code>artifacts/mariana-textil/src</code>. Excluidos tests/fixtures/seeds y únicamente la política retirada <code>applySupervisorCeiling</code>. No es afirmación de configuración aprobada. Los números son actuales y pueden cambiar al retirar el cap principal. El apéndice de coincidencias de código acompaña este informe.</p><h2>API — veto de acción y allowlists literales</h2><div class="table"><table><tr><td>Archivo:línea</td><td>Rol</td><td>Restricción efectiva</td><td>Categoría</td></tr><tr><td><code>artifacts/api-server/src/middlewares/auth.ts:119-121</code></td><td>roles indicados por cada ruta</td><td><code>requireRole(...roles)</code> responde 403 si la sesión falta o el rol no pertenece a la lista literal</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/clientes-admin.ts:24</code></td><td>ADMIN</td><td>entrada al router clientes-admin limitada a ADMIN</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/clientes-admin.ts:63-67</code></td><td>SUPERVISOR</td><td><code>POST /clientes/:id/baja</code> devuelve 403; no puede dar de baja clientes aunque tenga <code>clientes:editar</code></td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/clientes-admin.ts:217-221</code></td><td>SUPERVISOR</td><td><code>POST /clientes/:id/reactivar</code> devuelve 403; no puede reactivar clientes aunque tenga <code>clientes:editar</code></td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/clientes.ts:308-317</code></td><td>SUPERVISOR</td><td><code>POST /clientes</code> devuelve 403 si envía <code>diasCredito</code> o <code>limiteCredito</code>; no puede capturar términos financieros</td><td>veto de acción/dato sensible</td></tr><tr><td><code>artifacts/api-server/src/routes/admin-alertas.ts:11</code></td><td>ADMIN</td><td><code>/admin/alertas</code> solo se ejecuta para ADMIN</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/cliente-documentos.ts:43,67,155-156</code></td><td>ADMIN</td><td>administración, ver y descargar documentos requieren ADMIN; ver/descargar además <code>clientes:ver</code></td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/pagos-dirigidos.ts:269,304</code></td><td>ADMIN</td><td>aprobar o rechazar pago dirigido</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/purga.ts:20</code></td><td>ADMIN</td><td>todo <code>/purga</code> requiere sesión y ADMIN</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/admin-analytics.ts:79,82,331,360-362</code></td><td>ADMIN/CONTADOR/SISTEMAS; ADMIN</td><td>allowlists distintas para analytics, cuadre fiscal, confirmaciones/diferencias y resolver diferencias</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/permisos.ts:83,106</code></td><td>cualquier otro rol</td><td>rol enviado debe estar en <code>validRoles</code>; valores no válidos se rechazan</td><td>veto/invariante</td></tr><tr><td><code>artifacts/api-server/src/routes/permisos.ts:136</code></td><td>SISTEMAS</td><td>no puede modificar los permisos del rol SISTEMAS</td><td>veto/invariante</td></tr><tr><td><code>artifacts/api-server/src/lib/permisos.ts:307</code></td><td>no ADMIN</td><td>operación protegida de permisos se rechaza</td><td>veto de acción</td></tr></table></div><h2>API — inventario: permiso por acción y alcance operativo</h2><div class="table"><table><tr><td>Archivo:línea</td><td>Rol</td><td>Restricción efectiva</td><td>Categoría</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:147-179</code></td><td>ADMIN/SUPERVISOR</td><td><code>resolveReadScope</code> permite filtro solicitado (la rama SUPERVISOR es independiente del cap retirado)</td><td>alcance territorial</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:159-165</code></td><td>CAJA</td><td>lectura siempre queda en <code>ubicacionId</code> asignada; sin ubicación responde error</td><td>alcance territorial/veto</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:167-179</code></td><td>no ADMIN/CAJA</td><td><code>TODAS</code> honra filtro; <code>PROPIA</code> fuerza ubicación asignada; sin ubicación produce error</td><td>alcance territorial</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:191-207</code></td><td>no ADMIN</td><td><code>checkOperationalScope</code> solo permite mutar ubicaciones propias; otra ubicación devuelve 403 antes del helper</td><td>veto de acción/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:395-396</code></td><td>cualquier rol</td><td>listar salidas exige permiso <code>salidas:ver</code> y <code>requiereAdmin</code></td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:498-499</code></td><td>cualquier rol</td><td>crear salida extraordinaria exige <code>salidas:crear</code> y ADMIN</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:537-538</code></td><td>cualquier rol</td><td>editar/revertir salida exige <code>salidas:editar</code> y ADMIN</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:627,637-643</code></td><td>no ADMIN</td><td>crear entrada exige <code>entradas:crear</code>; ubicación de entrada se valida con <code>checkOperationalScope</code></td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:1090,1184,1204</code></td><td>cualquier rol</td><td>acciones de entrada requieren <code>entradas:editar</code>; operar un rollo fuera de sitio devuelve 403</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:1243,1270</code></td><td>cualquier rol</td><td>vender rollo exige <code>pos:crear</code> y ubicación del rollo debe estar en scope</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:1308,1328</code></td><td>cualquier rol</td><td>ajustar rollo exige <code>ajustes:crear</code> y scope territorial</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:1367,1402</code></td><td>cualquier rol</td><td>autorizar ajuste exige <code>ajustes:autorizar</code> y scope del movimiento</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:1485,1494</code></td><td>cualquier rol</td><td>editar piso exige <code>inventario:editar</code> y ubicación propia/permitida</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:2084,2138</code></td><td>cualquier rol</td><td>autorizar ajuste pendiente exige permiso y scope del movimiento</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:2178,2209,2217</code></td><td>cualquier rol</td><td>ver/autorizar conciliación exige permiso y la ubicación concreta debe pasar scope</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:829,964,1004,1025,1130,1444,1529,1656,1691,1791,1917,1956,1988</code></td><td>cualquier rol</td><td>cada endpoint requiere el permiso de módulo/acción literal mostrado (<code>entradas</code>, <code>inventario</code>, <code>movimientos</code>, etc.)</td><td>veto de acción</td></tr></table></div><h2>API — POS/caja y allowlists adicionales</h2><div class="table"><table><tr><td>Archivo:línea</td><td>Rol</td><td>Restricción efectiva</td><td>Categoría</td></tr><tr><td><code>artifacts/api-server/src/routes/pos.ts:117-145</code></td><td>ADMIN vs no ADMIN</td><td><code>scopedLocation</code> permite ubicación solicitada solo a ADMIN; los demás quedan en ubicación propia y fuera de ella reciben <code>LOCATION_FORBIDDEN</code></td><td>alcance/veto</td></tr><tr><td><code>artifacts/api-server/src/routes/pos.ts:152-166</code></td><td>ADMIN/CONTADOR/SISTEMAS</td><td>solo estos roles pasan la allowlist de operación protegida; los demás no</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/pos.ts:181-202</code></td><td>ADMIN vs otros</td><td>ADMIN puede bypass de permiso; el resto debe tener <code>puedeVer</code>/<code>puedeCrear</code> del módulo</td><td>veto de acción</td></tr><tr><td><code>artifacts/api-server/src/routes/caja-ventas.ts:33-50,71-88</code></td><td>no ADMIN/SUPERVISOR</td><td><code>resolveReadScope</code> aplica ubicación y las respuestas/acciones usan permiso; ADMIN/SUPERVISOR tienen rama de alcance explícita</td><td>alcance/veto</td></tr><tr><td><code>artifacts/api-server/src/routes/salidas.ts:100,460-486,625-637</code></td><td>no ADMIN; CAJA; ADMIN/SUPERVISOR</td><td>origen/destino fuera de ubicación, operación CAJA y ramas de salida extraordinaria se rechazan o fuerzan a sitio propio</td><td>veto/alcance</td></tr><tr><td><code>artifacts/api-server/src/routes/salidas.ts:748-750</code></td><td>cualquier rol sin permiso</td><td>consulta de salida cliente-venta exige permiso <code>salidas:ver</code></td><td>veto de acción</td></tr></table></div><h2>API — datos sensibles, credenciales e invariantes</h2><div class="table"><table><tr><td>Archivo:línea</td><td>Rol</td><td>Restricción efectiva</td><td>Categoría</td></tr><tr><td><code>artifacts/api-server/src/app.ts:43-51</code></td><td>SUPERVISOR</td><td>hook global envuelve cada <code>res.json</code> con <code>omitSupervisorSensitiveFields(body, rol===SUPERVISOR)</code>; elimina campos sensibles de respuestas para SUPERVISOR</td><td>redacción sensible global</td></tr><tr><td><code>artifacts/api-server/src/lib/sensitive-data.ts</code></td><td>TERMINAL</td><td><code>omitTerminalSensitiveFields</code> elimina campos sensibles para respuestas terminales; usado desde inventario</td><td>redacción sensible</td></tr><tr><td><code>artifacts/api-server/src/routes/inventario.ts:96, ...</code></td><td>TERMINAL</td><td>rutas que aplican <code>omitTerminalSensitiveFields</code> no entregan campos sensibles a TERMINAL</td><td>redacción sensible</td></tr><tr><td><code>artifacts/api-server/src/routes/contenedores.ts:221,344</code></td><td>no ADMIN</td><td><code>redactEconomicData</code> elimina valores económicos; ADMIN recibe resumen completo</td><td>redacción sensible</td></tr><tr><td><code>artifacts/api-server/src/lib/contenedores-helpers.ts:48-53</code></td><td>no ADMIN</td><td>elimina recursivamente claves de <code>ECONOMIC_KEYS</code></td><td>redacción sensible</td></tr><tr><td><code>artifacts/api-server/src/lib/reportes.ts:103-117,153,197</code></td><td>no autorizado económicamente</td><td>reportes sustituyen/omiten valores económicos; rama autorizada conserva reporte</td><td>redacción sensible</td></tr><tr><td><code>artifacts/api-server/src/routes/salidas.ts:873,882-889</code></td><td>no ADMIN</td><td>cancelar requiere usuario/password de un ADMIN activo; sesión ADMIN no necesita credenciales adicionales</td><td>credencial ADMIN</td></tr><tr><td><code>artifacts/api-server/src/routes/etiquetas.ts:202-219</code></td><td>ADMIN/BODEGA/SUPERVISOR</td><td>acción inicial permite esos roles; no ADMIN debe presentar credenciales ADMIN activas. No equivale a “solo ADMIN puede reimprimir”</td><td>credencial ADMIN</td></tr><tr><td><code>artifacts/api-server/src/lib/purga-catalogos.ts:400-433</code></td><td>ADMIN</td><td>purga exige credenciales de ADMIN activo con alcance <code>TODAS</code></td><td>credencial ADMIN/invariante</td></tr><tr><td><code>artifacts/api-server/src/routes/permisos.ts:196-200,399-403,416,529,559</code></td><td>ADMIN</td><td>cambios no pueden dejar al sistema sin ADMIN activo con acceso completo; usuarios ADMIN reciben protección especial</td><td>invariante ADMIN</td></tr></table></div><h2>Frontend — rutas, navegación y acciones concretas</h2><div class="table"><table><tr><td>Archivo:línea</td><td>Rol/allowlist</td><td>Restricción efectiva</td><td>Categoría</td></tr><tr><td><code>artifacts/mariana-textil/src/App.tsx:149,163,182</code></td><td>valores <code>requiredRoles</code>, <code>adminOnly</code>, <code>allowedRoles</code> de cada ruta</td><td>router no renderiza/permite la ruta cuando el rol no coincide</td><td>veto de ruta</td></tr><tr><td><code>artifacts/mariana-textil/src/App.tsx</code> (configuración de rutas; buscar <code>requiredRoles</code>, <code>allowedRoles</code>, <code>adminOnly</code>)</td><td>allowlists literales por ruta</td><td>cada entrada de configuración contiene los roles concretos; no es solo la implementación genérica del guard</td><td>veto de ruta</td></tr><tr><td><code>artifacts/mariana-textil/src/components/layout/app-navigation.ts:81</code></td><td>ADMIN/CONTADOR/SISTEMAS</td><td>“Cuentas” se muestra solo a esos roles</td><td>ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/components/layout/app-navigation.ts:84</code></td><td>ADMIN</td><td>“Alertas” se muestra solo a ADMIN</td><td>ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/components/layout/app-navigation.ts:122-126</code></td><td><code>hiddenForRoles</code>/<code>allowedRoles</code> literales</td><td>filtra cada elemento de navegación antes de mostrarlo</td><td>ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/salidas.tsx:215,219</code></td><td>ADMIN</td><td>pestaña/componente de salidas extraordinarias no se muestra ni activa para otros</td><td>ocultamiento/veto</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx:316,322</code></td><td>ADMIN</td><td>query habilitada y página permitida solo a ADMIN</td><td>veto</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:67,221,265</code></td><td>ADMIN/SISTEMAS; ADMIN</td><td>catálogo puede gestionarse por ADMIN/SISTEMAS; acciones sobre chofer inactivo solo ADMIN</td><td>veto/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/auditorias-inventario.tsx:317</code></td><td>ADMIN</td><td>acción de cerrar auditoría solo se muestra a ADMIN</td><td>ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.tsx:26,61</code></td><td>ADMIN vs demás</td><td>ADMIN elige origen; demás quedan con origen propio y selector deshabilitado</td><td>alcance/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/ticket-detail.tsx:420-559</code></td><td>CAJA/ADMIN</td><td>columnas/bloques económicos y de pagos solo aparecen para CAJA o ADMIN</td><td>redacción/presentación sensible</td></tr><tr><td><code>artifacts/mariana-textil/src/components/solicitud-pago-dirigido-dialog.tsx:310</code></td><td>ADMIN vs demás</td><td>ADMIN ve “Aplicar pago dirigido”; otros “Enviar solicitud”</td><td>veto/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/entradas.tsx:88,103,201,787,800,943</code></td><td>ADMIN vs no ADMIN</td><td>costos/query y selección de ubicaciones se restringen; no ADMIN queda en sitio propio</td><td>sensible/alcance/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/proveedor-detail.tsx:139</code></td><td>ADMIN</td><td>activar/desactivar proveedor solo ADMIN</td><td>veto</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/proveedor-detail.tsx:142</code></td><td>SUPERVISOR</td><td>finanzas de proveedor requiere permiso **y excluye SUPERVISOR**</td><td>sensible/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/proveedores.tsx:86,234,300</code></td><td>SUPERVISOR; ADMIN</td><td>finanzas excluidas para SUPERVISOR; columnas/acciones administrativas solo ADMIN</td><td>sensible/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/cliente-detail.tsx:103-105,326</code></td><td>SUPERVISOR; ADMIN</td><td>crédito, precios y finanzas requieren permiso **y excluyen SUPERVISOR**; acciones administrativas solo ADMIN</td><td>sensible/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/pages/ticket-detail.tsx:119,121,182,197,1000</code></td><td>CAJA/ADMIN</td><td>redirección, controles y acciones cambian por rol; controles ADMIN no se muestran a otros</td><td>veto/ocultamiento</td></tr><tr><td><code>artifacts/mariana-textil/src/components/layout/app-layout.tsx:68,75,91-92,126,338,375</code></td><td>ADMIN/CAJA/TERMINAL</td><td>queries ADMIN, navegación CAJA/TERMINAL y campana admin se habilitan/ocultan por rol</td><td>presentación/acción</td></tr></table></div><h2>Correcciones de interpretación</h2><p>- <code>isAdmin</code> en <code>reprint-labels-dialog.tsx:82</code> no se reporta como “imprimir solo ADMIN”: la reimpresión no-ADMIN puede continuar mediante credenciales ADMIN; solo se incluye el gate real de credenciales en <code>etiquetas.ts</code>.</p><p>- <code>requireRole</code> es un gate hardcodeado independiente de permisos/matriz; no se etiqueta como “restricción de matriz”.</p><p>- No se tratan declaraciones booleanas aisladas como restricciones: cada fila anterior sigue el uso que produce 403, fuerza scope, omite campos o cambia una acción/render.</p><p>- Las exclusiones SUPERVISOR de clientes/proveedores anteriores son independientes y se conservan expresamente.</p><details><summary>Apéndice: coincidencias de código revisadas</summary><pre># Inventory
+## API explicit role gates
+artifacts/api-server/src/app.ts:49:        req.auth?.user.rol === "SUPERVISOR",
+artifacts/api-server/src/middlewares/auth.ts:119:export function requireRole(...roles: RolUsuario[]) {
+artifacts/api-server/src/middlewares/auth.ts:121:    if (!req.auth || !roles.includes(req.auth.user.rol)) {
+artifacts/api-server/src/routes/salidas.ts:100:    if (req.auth!.user.rol !== "ADMIN" &amp;&amp; req.auth!.user.ubicacionId !== body.origenId) throw new InventarioError("No puedes operar desde ese origen.", "SALIDA_LOCATION_FORBIDDEN");
+artifacts/api-server/src/routes/salidas.ts:288:  if (auth.user.rol === "CAJA") {
+artifacts/api-server/src/routes/salidas.ts:297:  if (auth.user.rol === "ADMIN" || auth.user.alcanceConsulta === "TODAS") {
+artifacts/api-server/src/routes/salidas.ts:310:  if (auth.user.rol === "CAJA") {
+artifacts/api-server/src/routes/salidas.ts:314:    auth.user.rol === "ADMIN" ||
+artifacts/api-server/src/routes/salidas.ts:315:    auth.user.rol === "SUPERVISOR" ||
+artifacts/api-server/src/routes/salidas.ts:322:  return auth.user.rol === "CAJA";
+artifacts/api-server/src/routes/salidas.ts:327:    auth.user.rol === "ADMIN" ||
+artifacts/api-server/src/routes/salidas.ts:334:    (auth.user.rol === "ADMIN" &amp;&amp; auth.user.alcanceConsulta === "TODAS") ||
+artifacts/api-server/src/routes/salidas.ts:460:        auth.user.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/salidas.ts:461:        auth.user.rol !== "SUPERVISOR" &amp;&amp;
+artifacts/api-server/src/routes/salidas.ts:468:        auth.user.rol === "ADMIN" ||
+artifacts/api-server/src/routes/salidas.ts:469:        auth.user.rol === "SUPERVISOR" ||
+artifacts/api-server/src/routes/salidas.ts:486:          auth.user.rol === "CAJA"
+artifacts/api-server/src/routes/salidas.ts:543:      if (auth.user.rol === "CAJA") {
+artifacts/api-server/src/routes/salidas.ts:548:        auth.user.rol === "ADMIN" ||
+artifacts/api-server/src/routes/salidas.ts:625:        auth.user.rol === "ADMIN" ||
+artifacts/api-server/src/routes/salidas.ts:626:        auth.user.rol === "SUPERVISOR" ||
+artifacts/api-server/src/routes/salidas.ts:631:        auth.user.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/salidas.ts:632:        auth.user.rol !== "SUPERVISOR"
+artifacts/api-server/src/routes/salidas.ts:637:        destinoId: auth.user.rol === "CAJA" ? auth.user.ubicacionId! : query.destinoId,
+artifacts/api-server/src/routes/salidas.ts:681:        auth.user.rol === "ADMIN" &amp;&amp; auth.user.alcanceConsulta === "TODAS";
+artifacts/api-server/src/routes/salidas.ts:873:      const body = CancelarSalidaBody.parse(req.body) as { motivo: string; adminUsuario?: string; adminPassword?: string };
+artifacts/api-server/src/routes/salidas.ts:882:        if (auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/salidas.ts:883:          if (!body.adminUsuario || !body.adminPassword) {
+artifacts/api-server/src/routes/salidas.ts:887:            eq(usuariosTable.usuario, normalizeUsername(body.adminUsuario)),
+artifacts/api-server/src/routes/salidas.ts:889:            sql`${usuariosTable.passwordHash} = crypt(${body.adminPassword}, ${usuariosTable.passwordHash})`,
+artifacts/api-server/src/routes/contenedores.ts:41:  redactEconomicData,
+artifacts/api-server/src/routes/contenedores.ts:51:    admin: user.rol === "ADMIN",
+artifacts/api-server/src/routes/contenedores.ts:52:    sitioId: user.rol === "BODEGA" ? (user.ubicacionId ?? -1) : undefined,
+artifacts/api-server/src/routes/contenedores.ts:57:  if (req.auth!.user.rol !== "BODEGA" || req.auth!.user.ubicacionId != null) {
+artifacts/api-server/src/routes/contenedores.ts:102:        user.rol === "BODEGA" &amp;&amp; user.ubicacionId != null
+artifacts/api-server/src/routes/contenedores.ts:221:      const output = ownScope.admin ? summary : redactEconomicData(summary);
+artifacts/api-server/src/routes/contenedores.ts:240:        user.rol === "ADMIN" || user.rol === "SUPERVISOR";
+artifacts/api-server/src/routes/contenedores.ts:344:  return scope(req).admin ? summary : redactEconomicData(summary);
+artifacts/api-server/src/routes/etiquetas.ts:42:  adminUsuario: z.string().trim().min(1).optional(),
+artifacts/api-server/src/routes/etiquetas.ts:43:  adminPassword: z.string().min(1).optional(),
+artifacts/api-server/src/routes/etiquetas.ts:50:    auth.user.rol === "ADMIN" ||
+artifacts/api-server/src/routes/etiquetas.ts:51:    auth.user.rol === "SUPERVISOR" ||
+artifacts/api-server/src/routes/etiquetas.ts:202:      if (!["ADMIN", "BODEGA", "SUPERVISOR"].includes(auth.user.rol)) {
+artifacts/api-server/src/routes/etiquetas.ts:206:      if (auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/etiquetas.ts:207:        if (!body.adminUsuario || !body.adminPassword) {
+artifacts/api-server/src/routes/etiquetas.ts:212:          WHERE usuario=${normalizeUsername(body.adminUsuario)} AND activo=true AND rol='ADMIN'
+artifacts/api-server/src/routes/etiquetas.ts:213:            AND password_hash=crypt(${body.adminPassword}, password_hash)
+artifacts/api-server/src/routes/etiquetas.ts:240:            auth.user.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/etiquetas.ts:241:            auth.user.rol !== "SUPERVISOR" &amp;&amp;
+artifacts/api-server/src/routes/etiquetas.ts:313:    if (req.auth!.user.rol !== "ADMIN") { res.status(403).json({ error: "El historial requiere rol ADMIN." }); return; }
+artifacts/api-server/src/routes/etiquetas.ts:342:    if (req.auth!.user.rol !== "ADMIN") { res.status(403).json({ error: "La exportación requiere rol ADMIN." }); return; }
+artifacts/api-server/src/routes/etiquetas.ts:372:    if (req.auth!.user.rol !== "ADMIN") { res.status(403).json({ error: "Las alertas requieren rol ADMIN." }); return; }
+artifacts/api-server/src/routes/admin-analytics.ts:69:import { resolveReadScope } from "./inventario";
+artifacts/api-server/src/routes/admin-analytics.ts:79:    requireRole("ADMIN", "CONTADOR", "SISTEMAS")(req, res, next);
+artifacts/api-server/src/routes/admin-analytics.ts:82:  requireRole("ADMIN")(req, res, next);
+artifacts/api-server/src/routes/admin-analytics.ts:96:  const scope = resolveReadScope(req.auth!, query.ubicacionId);
+artifacts/api-server/src/routes/admin-analytics.ts:185:    const scope = resolveReadScope(req.auth!, query.ubicacionId);
+artifacts/api-server/src/routes/admin-analytics.ts:331:router.get("/admin/cuadre-fiscal", requireRole("ADMIN", "CONTADOR", "SISTEMAS"), async (req, res, next): Promise&lt;void&gt; =&gt; {
+artifacts/api-server/src/routes/admin-analytics.ts:360:router.post("/admin/cuadre-fiscal/confirmaciones", requireRole("ADMIN", "CONTADOR"), async (req, res, next): Promise&lt;void&gt; =&gt; { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalConfirmacionBody.parse(req.body),"CONFIRMACION"); } catch(error) { if(!badInput(error,res)) next(error); } });
+artifacts/api-server/src/routes/admin-analytics.ts:361:router.post("/admin/cuadre-fiscal/diferencias", requireRole("ADMIN", "CONTADOR"), async (req, res, next): Promise&lt;void&gt; =&gt; { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalDiferenciaBody.parse(req.body),"DIFERENCIA"); } catch(error) { if(!badInput(error,res)) next(error); } });
+artifacts/api-server/src/routes/admin-analytics.ts:362:router.post("/admin/cuadre-fiscal/diferencias/:id/resolver", requireRole("ADMIN"), async (req, res, next): Promise&lt;void&gt; =&gt; {
+artifacts/api-server/src/routes/cliente-documentos.ts:43:  requireRole("ADMIN"),
+artifacts/api-server/src/routes/cliente-documentos.ts:67:  requireRole("ADMIN"),
+artifacts/api-server/src/routes/cliente-documentos.ts:155:router.get("/cliente-documentos/:publicId/ver", requierePermiso("clientes", "ver"), requireRole("ADMIN"), (req, res, next) =&gt; void serve(req, res, next, false));
+artifacts/api-server/src/routes/cliente-documentos.ts:156:router.get("/cliente-documentos/:publicId/descargar", requierePermiso("clientes", "ver"), requireRole("ADMIN"), (req, res, next) =&gt; void serve(req, res, next, true));
+artifacts/api-server/src/routes/caja-ventas.ts:19:import { resolveReadScope } from "./inventario";
+artifacts/api-server/src/routes/caja-ventas.ts:33:      const { ubicacionId, scopeError } = resolveReadScope(req.auth!, requestedUbicacionId);
+artifacts/api-server/src/routes/caja-ventas.ts:50:        req.auth!.user.rol === "SUPERVISOR",
+artifacts/api-server/src/routes/caja-ventas.ts:71:      const { ubicacionId, scopeError } = resolveReadScope(req.auth!, requestedUbicacionId);
+artifacts/api-server/src/routes/caja-ventas.ts:88:        req.auth!.user.rol === "SUPERVISOR",
+artifacts/api-server/src/routes/admin-alertas.ts:11:  requireRole("ADMIN"),
+artifacts/api-server/src/routes/equipos.ts:31:import { checkOperationalScope, resolveReadScope } from "./inventario";
+artifacts/api-server/src/routes/equipos.ts:47:    auth.user.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/equipos.ts:57:  return resolveReadScope(auth, requestedUbicacionId);
+artifacts/api-server/src/routes/equipos.ts:65:    auth.user.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/equipos.ts:76:  return checkOperationalScope(auth, ubicacionIds);
+artifacts/api-server/src/routes/auditorias-inventario.ts:41:const ROLES = new Set(["ADMIN", "SUPERVISOR", "BODEGA", "SISTEMAS"]);
+artifacts/api-server/src/routes/auditorias-inventario.ts:57:  if (user.rol !== "BODEGA") return null;
+artifacts/api-server/src/routes/auditorias-inventario.ts:106:        req.auth!.user.rol === "BODEGA"
+artifacts/api-server/src/routes/auditorias-inventario.ts:130:      if (req.auth!.user.rol === "BODEGA") {
+artifacts/api-server/src/routes/auditorias-inventario.ts:282:      if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/locations.ts:175:    .where(and(eq(pisosTable.ubicacionId, site.id), req.auth!.user.rol === "ADMIN" ? undefined : eq(pisosTable.activo, true)))
+artifacts/api-server/src/routes/locations.ts:181:  if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/locations.ts:210:  if (req.auth!.user.rol !== "ADMIN") { res.status(403).json({ error: "Solo ADMIN administra pisos." }); return; }
+artifacts/api-server/src/routes/users.ts:129:  if (role === "ADMIN" &amp;&amp; req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/users.ts:230:    actor.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/users.ts:231:    beforeRow.user.rol === "ADMIN"
+artifacts/api-server/src/routes/users.ts:245:    actor.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/users.ts:262:    body.data.rol !== undefined &amp;&amp;
+artifacts/api-server/src/routes/users.ts:303:  if (body.data.rol !== undefined) updates.rol = finalRole;
+artifacts/api-server/src/routes/reportes.ts:11:import { resolveReadScope } from "./inventario";
+artifacts/api-server/src/routes/reportes.ts:17:  const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+artifacts/api-server/src/routes/reportes.ts:36:  return buildReport(params.seccion, query, scopedLocations(req), req.auth!.user.rol === "ADMIN");
+artifacts/api-server/src/routes/reportes.ts:50:      req.auth!.user.rol === "ADMIN",
+artifacts/api-server/src/routes/inventario.ts:147:export function resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:155:  if (auth.user.rol === "ADMIN" || auth.user.rol === "SUPERVISOR") {
+artifacts/api-server/src/routes/inventario.ts:161:  if (auth.user.rol === "CAJA") {
+artifacts/api-server/src/routes/inventario.ts:191:export function checkOperationalScope(
+artifacts/api-server/src/routes/inventario.ts:195:  if (auth.user.rol === "ADMIN" || auth.user.rol === "SUPERVISOR") return null;
+artifacts/api-server/src/routes/inventario.ts:637:      const scopeErr = checkOperationalScope(auth, [ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:643:      // checkOperationalScope passed (assigned === body.ubicacionId).
+artifacts/api-server/src/routes/inventario.ts:645:        auth.user.rol !== "ADMIN" &amp;&amp;
+artifacts/api-server/src/routes/inventario.ts:646:        auth.user.rol !== "SUPERVISOR" &amp;&amp;
+artifacts/api-server/src/routes/inventario.ts:676:          auth.user.rol !== "BODEGA" &amp;&amp;
+artifacts/api-server/src/routes/inventario.ts:677:          auth.user.rol !== "SUPERVISOR" &amp;&amp;
+artifacts/api-server/src/routes/inventario.ts:776:                auth.user.rol === "BODEGA" ||
+artifacts/api-server/src/routes/inventario.ts:777:                auth.user.rol === "SUPERVISOR"
+artifacts/api-server/src/routes/inventario.ts:784:              auth.user.rol === "BODEGA" ||
+artifacts/api-server/src/routes/inventario.ts:785:              auth.user.rol === "SUPERVISOR",
+artifacts/api-server/src/routes/inventario.ts:792:        .json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+artifacts/api-server/src/routes/inventario.ts:840:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:948:           auth.user.rol !== "ADMIN",
+artifacts/api-server/src/routes/inventario.ts:1007:      if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:1028:      if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:1093:      if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:1150:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(auth);
+artifacts/api-server/src/routes/inventario.ts:1167:      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+artifacts/api-server/src/routes/inventario.ts:1204:      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:1226:      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+artifacts/api-server/src/routes/inventario.ts:1250:      if (auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:1270:      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:1328:      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:1350:      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+artifacts/api-server/src/routes/inventario.ts:1394:        auth.user.rol !== "ADMIN"
+artifacts/api-server/src/routes/inventario.ts:1402:      const scopeErr = checkOperationalScope(auth, [movCheck.ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:1423:      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+artifacts/api-server/src/routes/inventario.ts:1457:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(auth);
+artifacts/api-server/src/routes/inventario.ts:1471:          auth.user.rol !== "ADMIN" &amp;&amp; auth.user.rol !== "CAJA",
+artifacts/api-server/src/routes/inventario.ts:1494:        const scopeError = checkOperationalScope(req.auth!, [rollo.ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:1539:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:1639:          auth.user.rol !== "ADMIN" &amp;&amp; auth.user.rol !== "CAJA",
+artifacts/api-server/src/routes/inventario.ts:1660:      if (auth.user.rol === "CAJA" &amp;&amp; auth.user.ubicacionId == null) {
+artifacts/api-server/src/routes/inventario.ts:1673:          auth.user.rol === "CAJA"
+artifacts/api-server/src/routes/inventario.ts:1695:      const { ubicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:1798:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:1855:          auth.user.rol !== "ADMIN",
+artifacts/api-server/src/routes/inventario.ts:1922:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:1930:      if (q.incluirUbicacionesInactivas &amp;&amp; auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:1963:      if (q.incluirUbicacionesInactivas &amp;&amp; auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:1969:      const { ubicacionId, scopeError } = resolveReadScope(auth);
+artifacts/api-server/src/routes/inventario.ts:1995:      const { ubicacionId, scopeError } = resolveReadScope(auth, q.ubicacionId);
+artifacts/api-server/src/routes/inventario.ts:2000:      if (q.incluirUbicacionesInactivas &amp;&amp; auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/inventario.ts:2087:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:2138:      const scopeError = checkOperationalScope(req.auth!, [mov.ubicacionId]);
+artifacts/api-server/src/routes/inventario.ts:2185:      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+artifacts/api-server/src/routes/inventario.ts:2217:      const scopeErr = checkOperationalScope(auth, [body.ubicacionId]);
+artifacts/api-server/src/routes/clientes-admin.ts:24:  requireRole("ADMIN"),
+artifacts/api-server/src/routes/clientes-admin.ts:63:    if (req.auth!.user.rol === "SUPERVISOR") {
+artifacts/api-server/src/routes/clientes-admin.ts:146:      const { adminUsuario, adminPassword } = (req.body ?? {}) as Record&lt;string, unknown&gt;;
+artifacts/api-server/src/routes/clientes-admin.ts:148:      if (typeof adminUsuario !== "string" || typeof adminPassword !== "string") {
+artifacts/api-server/src/routes/clientes-admin.ts:172:        [normalizeUsername(adminUsuario), adminPassword],
+artifacts/api-server/src/routes/clientes-admin.ts:217:    if (req.auth!.user.rol === "SUPERVISOR") {
+artifacts/api-server/src/routes/camionetas.ts:40:      if (req.auth?.user.rol !== "ADMIN" &amp;&amp; req.auth?.user.rol !== "SISTEMAS") {
+artifacts/api-server/src/routes/clientes.ts:273:      if (req.auth!.user.rol !== "ADMIN" &amp;&amp; !permiso?.puedeVer) {
+artifacts/api-server/src/routes/clientes.ts:309:        req.auth!.user.rol === "SUPERVISOR" &amp;&amp;
+artifacts/api-server/src/routes/clientes.ts:697:      if (req.auth!.user.rol !== "ADMIN" &amp;&amp; !permiso?.puedeVer) {
+artifacts/api-server/src/routes/pos.ts:118:  if (req.auth!.user.rol === "ADMIN") {
+artifacts/api-server/src/routes/pos.ts:141:  if (req.auth!.user.rol === "ADMIN") return;
+artifacts/api-server/src/routes/pos.ts:152:  if (["ADMIN", "CONTADOR", "SISTEMAS"].includes(req.auth!.user.rol)) return;
+artifacts/api-server/src/routes/pos.ts:162:  if (["ADMIN", "CONTADOR", "SISTEMAS"].includes(req.auth!.user.rol)) {
+artifacts/api-server/src/routes/pos.ts:181:    if (auth.user.rol === "ADMIN") {
+artifacts/api-server/src/routes/pos.ts:392:      const includeCosts = req.auth!.user.rol !== "TERMINAL";
+artifacts/api-server/src/routes/pos.ts:426:            req.auth!.user.rol === "TERMINAL",
+artifacts/api-server/src/routes/pos.ts:518:      const terminal = req.auth!.user.rol === "TERMINAL";
+artifacts/api-server/src/routes/pos.ts:554:      const terminal = req.auth!.user.rol === "TERMINAL";
+artifacts/api-server/src/routes/pos.ts:630:      const terminal = req.auth!.user.rol === "TERMINAL";
+artifacts/api-server/src/routes/pos.ts:645:      const privileged = ["ADMIN", "CONTADOR", "SISTEMAS"].includes(auth.user.rol);
+artifacts/api-server/src/routes/pos.ts:679:      if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/pos.ts:696:      const terminal = req.auth!.user.rol === "TERMINAL";
+artifacts/api-server/src/routes/pos.ts:897:      if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/proveedores.ts:57:import { resolveReadScope } from "./inventario";
+artifacts/api-server/src/routes/proveedores.ts:189:      const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+artifacts/api-server/src/routes/proveedores.ts:386:      if (body.data.activo !== undefined &amp;&amp; req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/proveedores.ts:483:      const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+artifacts/api-server/src/routes/proveedores.ts:828:      const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+artifacts/api-server/src/routes/pagos-dirigidos.ts:194:    if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/pagos-dirigidos.ts:206:      ${req.auth!.user.rol === "ADMIN" ? sql`` : sql`AND solicitante_id=${req.auth!.user.id}`}
+artifacts/api-server/src/routes/pagos-dirigidos.ts:216:    if (req.auth!.user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/pagos-dirigidos.ts:227:      const isAdmin = req.auth!.user.rol === "ADMIN";
+artifacts/api-server/src/routes/pagos-dirigidos.ts:269:router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, res, next): Promise&lt;void&gt; =&gt; {
+artifacts/api-server/src/routes/pagos-dirigidos.ts:304:router.post("/pagos-dirigidos/:id/rechazar", requireRole("ADMIN"), async (req, res, next): Promise&lt;void&gt; =&gt; {
+artifacts/api-server/src/routes/notificaciones.ts:29:  return user.rol === "ADMIN"
+artifacts/api-server/src/routes/notificaciones.ts:114:  if (user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/notificaciones.ts:188:    const cajaTicketsPromise = user.rol === "CAJA" &amp;&amp; user.ubicacionId != null
+artifacts/api-server/src/routes/notificaciones.ts:250:    if (user.rol === "ADMIN") {
+artifacts/api-server/src/routes/notificaciones.ts:352:      user.rol === "ADMIN" ? db
+artifacts/api-server/src/routes/notificaciones.ts:362:    if (user.rol !== "ADMIN") {
+artifacts/api-server/src/routes/notificaciones.ts:486:      const credit = user.rol === "ADMIN" ? await tx
+artifacts/api-server/src/routes/notificaciones.ts:513:      ? user.rol === "ADMIN"
+artifacts/api-server/src/routes/productos.ts:41:import { resolveReadScope } from "./inventario";
+artifacts/api-server/src/routes/productos.ts:310:  const { ubicacionId, scopeError } = resolveReadScope(req.auth!, query.data.ubicacionId);
+artifacts/api-server/src/routes/productos.ts:337:      req.auth!.user.rol === "TERMINAL",
+artifacts/api-server/src/routes/productos.ts:676:  const { ubicacionId, scopeError } = resolveReadScope(req.auth!);
+artifacts/api-server/src/routes/productos.ts:759:      req.auth!.user.rol === "TERMINAL",
+artifacts/api-server/src/routes/purga.ts:20:router.use("/purga", requireSession, requireRole("ADMIN"));
+artifacts/api-server/src/routes/purga.ts:66:            adminUsuario: confirmation.usuario,
+artifacts/api-server/src/routes/purga.ts:67:            adminPassword: confirmation.password,
+artifacts/api-server/src/routes/dashboard.ts:30:      user.rol === "ADMIN" || user.rol === "SUPERVISOR";
+artifacts/api-server/src/routes/dashboard.ts:136:        user.rol === "TERMINAL",
+artifacts/api-server/src/lib/venta-trace-access.ts:8:  return input.rol === "ADMIN" ||
+artifacts/api-server/src/lib/venta-trace-access.ts:20:  return input.rol === "ADMIN" ||
+artifacts/api-server/src/lib/contenedores.ts:18:  redactEconomicData,
+artifacts/api-server/src/lib/contenedores.ts:29:  redactEconomicData,
+artifacts/api-server/src/lib/contenedores-helpers.ts:48:export function redactEconomicData&lt;T&gt;(value: T): T {
+artifacts/api-server/src/lib/contenedores-helpers.ts:49:  if (Array.isArray(value)) return value.map(redactEconomicData) as T;
+artifacts/api-server/src/lib/contenedores-helpers.ts:53:      if (!ECONOMIC_KEYS.has(key)) output[key] = redactEconomicData(child);
+artifacts/api-server/src/lib/inventario.ts:2025:  if (!["DISPONIBLE", "EN_TRANSITO"].includes(rollo.estado)) {
+artifacts/api-server/src/lib/permisos.ts:334:  if (req.auth.user.rol !== "ADMIN") {
+artifacts/api-server/src/lib/purga-catalogos.ts:371:  adminUsuario?: string;
+artifacts/api-server/src/lib/purga-catalogos.ts:372:  adminPassword?: string;
+artifacts/api-server/src/lib/purga-catalogos.ts:417:      if (!input.adminUsuario || !input.adminPassword) {
+artifacts/api-server/src/lib/purga-catalogos.ts:429:              normalizeUsername(input.adminUsuario),
+artifacts/api-server/src/lib/purga-catalogos.ts:433:            sql`${usuariosTable.passwordHash} = crypt(${input.adminPassword}, ${usuariosTable.passwordHash})`,
+artifacts/api-server/src/lib/reportes.ts:103:export function redactEconomic(report: Report): Report {
+artifacts/api-server/src/lib/reportes.ts:197:  return economic ? report : redactEconomic(report);
+artifacts/api-server/src/routes/permisos.ts:106:      if (!validRoles.includes(rol as RolUsuario)) {
+artifacts/api-server/src/routes/permisos.ts:136:      if (req.auth!.user.rol === "SISTEMAS" &amp;&amp; rol === "SISTEMAS") {
+artifacts/api-server/src/routes/permisos.ts:285:      if (user.rol === "ADMIN") {
+artifacts/api-server/src/routes/permisos.ts:352:      if (user.rol === "ADMIN") {
+artifacts/api-server/src/routes/permisos.ts:416:        if (lockedUser?.rol === "ADMIN") {
+artifacts/api-server/src/routes/permisos.ts:529:      if (user.rol === "ADMIN") {
+artifacts/api-server/src/routes/permisos.ts:559:        if (lockedUser?.rol === "ADMIN") {
+artifacts/api-server/src/routes/choferes.ts:42:      if (req.auth?.user.rol !== "ADMIN" &amp;&amp; req.auth?.user.rol !== "SISTEMAS") {
+## Frontend role gates
+artifacts/mariana-textil/src/App.tsx:60:import { Modules, hasPermission } from "@/lib/permisos";
+artifacts/mariana-textil/src/App.tsx:103:  adminOnly,
+artifacts/mariana-textil/src/App.tsx:104:  allowedRoles,
+artifacts/mariana-textil/src/App.tsx:106:  requiredRoles,
+artifacts/mariana-textil/src/App.tsx:111:  adminOnly?: boolean;
+artifacts/mariana-textil/src/App.tsx:112:  allowedRoles?: string[];
+artifacts/mariana-textil/src/App.tsx:114:  requiredRoles?: string[];
+artifacts/mariana-textil/src/App.tsx:149:  if (requiredRoles &amp;&amp; !requiredRoles.includes(user.rol)) {
+artifacts/mariana-textil/src/App.tsx:163:  if (adminOnly &amp;&amp; user.rol !== "ADMIN") {
+artifacts/mariana-textil/src/App.tsx:182:  const rolePermitted = allowedRoles?.includes(user.rol) ?? false;
+artifacts/mariana-textil/src/App.tsx:185:    ? allowedAnyModules.some((module) =&gt; hasPermission(user, module, allowedAction))
+artifacts/mariana-textil/src/App.tsx:186:    : allowedModule ? hasPermission(user, allowedModule, allowedAction) : true;
+artifacts/mariana-textil/src/App.tsx:187:  if ((allowedModule || allowedAnyModules) &amp;&amp; !rolePermitted &amp;&amp; !modulePermitted) {
+artifacts/mariana-textil/src/App.tsx:514:              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+artifacts/mariana-textil/src/App.tsx:515:              requiredRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+artifacts/mariana-textil/src/App.tsx:525:              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+artifacts/mariana-textil/src/App.tsx:526:              requiredRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+artifacts/mariana-textil/src/App.tsx:542:            &lt;ProtectedRoute component={Alertas} adminOnly /&gt;
+artifacts/mariana-textil/src/App.tsx:548:            &lt;ProtectedRoute component={Notificaciones} adminOnly /&gt;
+artifacts/mariana-textil/src/App.tsx:576:              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+artifacts/mariana-textil/src/components/reprint-labels-dialog.tsx:34:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/components/reprint-labels-dialog.tsx:82:  const isAdmin = user?.rol === "ADMIN";
+artifacts/mariana-textil/src/components/reprint-labels-dialog.tsx:83:  const canPrint = hasPermission(user, Modules.ETIQUETAS, "crear");
+artifacts/mariana-textil/src/lib/permisos.ts:40:export function hasPermission(
+artifacts/mariana-textil/src/lib/permisos.ts:46:  if (user.rol === "ADMIN") return true;
+artifacts/mariana-textil/src/components/salida-mostrador.tsx:36:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/lib/home-route.ts:2:import { hasPermission, Modules } from "./permisos";
+artifacts/mariana-textil/src/lib/home-route.ts:5:  if (user.rol === "TERMINAL") return "/pos";
+artifacts/mariana-textil/src/lib/home-route.ts:6:  if (user.rol === "CAJA") return "/cobros";
+artifacts/mariana-textil/src/lib/home-route.ts:7:  if (user.rol === "ADMIN") return "/caja/tiempo-real";
+artifacts/mariana-textil/src/lib/home-route.ts:8:  if (hasPermission(user, Modules.DASHBOARD, "ver")) {
+artifacts/mariana-textil/src/lib/home-route.ts:11:  if (hasPermission(user, Modules.POS, "ver")) return "/pos";
+artifacts/mariana-textil/src/lib/home-route.ts:12:  if (hasPermission(user, Modules.COBROS_PAGOS, "ver")) return "/cobros";
+artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.tsx:26:  const [origenId, setOrigenId] = useState&lt;number | null&gt;(user?.rol === Role.ADMIN ? null : user?.ubicacion?.id ?? null);
+artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.tsx:61:      &lt;div&gt;&lt;label className="text-sm font-medium"&gt;Origen&lt;/label&gt;&lt;Select value={origenId ? String(origenId) : ""} onValueChange={(value) =&gt; setOrigenId(Number(value))} disabled={user?.rol !== Role.ADMIN}&gt;&lt;SelectTrigger&gt;&lt;SelectValue placeholder="Seleccionar origen" /&gt;&lt;/SelectTrigger&gt;&lt;SelectContent&gt;{originOptions.map((location) =&gt; &lt;SelectItem key={location.id} value={String(location.id)}&gt;{location.nombre}&lt;/SelectItem&gt;)}&lt;/SelectContent&gt;&lt;/Select&gt;&lt;/div&gt;
+artifacts/mariana-textil/src/lib/location-scope.tsx:31:        user.rol === "TERMINAL" ||
+artifacts/mariana-textil/src/lib/location-scope.tsx:32:        user.rol === "CAJA")
+artifacts/mariana-textil/src/components/solicitud-pago-dirigido-dialog.tsx:310:                 {currentUser?.rol === Role.ADMIN ? "Aplicar pago dirigido" : "Enviar solicitud"}
+artifacts/mariana-textil/src/components/client-selector.tsx:23:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/components/client-selector.tsx:58:  const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
+artifacts/mariana-textil/src/components/cliente-nota-credito.tsx:17:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/components/cliente-nota-credito.tsx:178:                          ) : hasPermission(user, Modules.CLIENTES_FINANZAS, 'autorizar') &amp;&amp; (
+artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx:15:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx:122:                              {!asig.revertido &amp;&amp; hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'autorizar') &amp;&amp; (
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:17:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:61:      enabled: hasPermission(user, Modules.AJUSTES, "autorizar"),
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:68:      enabled: user?.rol === Role.ADMIN,
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:75:    enabled: user?.rol === Role.ADMIN,
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:91:  const isCaja = user?.rol === Role.CAJA;
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:92:  const isTerminal = user?.rol === Role.TERMINAL;
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:126:    user.rol === Role.ADMIN
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:297:        role={user.rol}
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:338:              &lt;NotificationsBell isAdmin={user.rol === Role.ADMIN} mobile /&gt;
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:364:                {user.rol} · {userBlockLocation}
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:375:          &lt;NotificationsBell isAdmin={user.rol === Role.ADMIN} /&gt;
+artifacts/mariana-textil/src/components/layout/app-layout.tsx:382:              &lt;p className="text-xs text-muted-foreground"&gt;{user.rol}&lt;/p&gt;
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:26:import { hasPermission, Modules, type Module } from "@/lib/permisos";
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:34:  allowedRoles?: CurrentUser["rol"][];
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:41:  hiddenForRoles?: CurrentUser["rol"][];
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:81:      { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN", "CONTADOR", "SISTEMAS"], isClickable: true },
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:84:      { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN"], isClickable: true },
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:109:    hiddenForRoles: ["CONTADOR"],
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:122:    if (group.hiddenForRoles?.includes(user.rol)) return [];
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:125:      item.allowedRoles
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:126:        ? item.allowedRoles.includes(user.rol)
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:130:              hasPermission(user, module, "ver") ||
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:131:              hasPermission(user, module, "crear"),
+artifacts/mariana-textil/src/components/layout/app-navigation.ts:133:        : hasPermission(user, item.module, "ver")),
+artifacts/mariana-textil/src/pages/salida-nueva.tsx:73:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/clientes.tsx:34:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/clientes.tsx:51:  const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/clientes.tsx:52:  const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver") &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/clientes.tsx:53:  const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
+artifacts/mariana-textil/src/pages/clientes.tsx:111:            {user?.rol === "ADMIN" &amp;&amp; &lt;TabsTrigger value="incobrables" data-testid="tab-incobrables"&gt;Incobrables&lt;/TabsTrigger&gt;}
+artifacts/mariana-textil/src/pages/clientes.tsx:143:                    &lt;TableHeader&gt;&lt;TableRow&gt;&lt;TableHead&gt;Cliente&lt;/TableHead&gt;&lt;TableHead&gt;Contacto&lt;/TableHead&gt;&lt;TableHead&gt;RFC&lt;/TableHead&gt;&lt;TableHead&gt;Estado&lt;/TableHead&gt;{canCredit &amp;&amp; &lt;&gt;&lt;TableHead className="text-right"&gt;Saldo&lt;/TableHead&gt;&lt;TableHead className="text-right"&gt;Disponible&lt;/TableHead&gt;&lt;/&gt;}{user?.rol === "ADMIN" &amp;&amp; &lt;TableHead className="text-right"&gt;Acciones&lt;/TableHead&gt;}&lt;/TableRow&gt;&lt;/TableHeader&gt;
+artifacts/mariana-textil/src/pages/clientes.tsx:160:                        {user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/clientes.tsx:230:          {user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/pos.tsx:76:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/pos.tsx:439:  const canChooseLocation = currentUser?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/pos.tsx:1047:    if (showSalidasVenta &amp;&amp; hasPermission(currentUser, Modules.SALIDAS_VENTA, "ver")) {
+artifacts/mariana-textil/src/pages/pos.tsx:1067:          {hasPermission(currentUser, Modules.SALIDAS_VENTA, "ver") &amp;&amp; (
+artifacts/mariana-textil/src/pages/dashboard.tsx:12:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/entradas.tsx:88:  const showCost = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/entradas.tsx:103:      enabled: user?.rol === Role.ADMIN,
+artifacts/mariana-textil/src/pages/entradas.tsx:201:    if (user &amp;&amp; user.rol !== Role.ADMIN &amp;&amp; user.ubicacion) {
+artifacts/mariana-textil/src/pages/entradas.tsx:787:          {user?.rol === Role.ADMIN &amp;&amp; (
+artifacts/mariana-textil/src/pages/entradas.tsx:800:          (user?.rol === Role.ADMIN &amp;&amp; ubicacionesFailed)) &amp;&amp; (
+artifacts/mariana-textil/src/pages/entradas.tsx:943:                  {user?.rol === Role.ADMIN ? (
+artifacts/mariana-textil/src/pages/cobros.tsx:85:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/cobros.tsx:106:  const canViewFinances = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");
+artifacts/mariana-textil/src/pages/cobros.tsx:107:  const canCreatePayment = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "crear");
+artifacts/mariana-textil/src/pages/cobros.tsx:1144:  const canViewCashManagement = hasPermission(currentUser, Modules.CORTES, "ver");
+artifacts/mariana-textil/src/pages/cobros.tsx:1148:    hasPermission(currentUser, Modules.CORTES, "crear");
+artifacts/mariana-textil/src/pages/cobros.tsx:1780:  const isAdmin = currentUser?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/cobros.tsx:1781:  const canUseCartera = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");
+artifacts/mariana-textil/src/pages/usuarios.tsx:26:import { Modules, hasPermission } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/usuarios.tsx:44:  const canCreate = hasPermission(currentUser, Modules.USUARIOS, "crear");
+artifacts/mariana-textil/src/pages/usuarios.tsx:45:  const canEdit = hasPermission(currentUser, Modules.USUARIOS, "editar");
+artifacts/mariana-textil/src/pages/usuarios.tsx:46:  const isAdmin = currentUser?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/usuarios.tsx:91:      rol: user.rol,
+artifacts/mariana-textil/src/pages/usuarios.tsx:253:                        {user.rol}
+artifacts/mariana-textil/src/pages/usuarios.tsx:270:                      {canEdit &amp;&amp; (isAdmin || user.rol !== Role.ADMIN) &amp;&amp; (
+artifacts/mariana-textil/src/pages/equipos/index.tsx:14:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/equipos/index.tsx:60:  const canCreate = hasPermission(user, Modules.EQUIPOS, "crear") || user?.rol === "ADMIN";
+artifacts/mariana-textil/src/pages/equipos/index.tsx:61:  const canEdit = hasPermission(user, Modules.EQUIPOS, "editar") || user?.rol === "ADMIN";
+artifacts/mariana-textil/src/pages/movimientos.tsx:4:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/movimientos.tsx:149:  const showLocationFilter = user?.rol === "ADMIN" || user?.alcanceConsulta === "TODAS";
+artifacts/mariana-textil/src/pages/movimientos.tsx:151:    user?.rol === "ADMIN" ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:152:    user?.rol === "CONTADOR" ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:153:    user?.rol === "SISTEMAS" ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:154:    ((hasPermission(user, Modules.COBROS_PAGOS, "ver") ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:155:      hasPermission(user, Modules.POS, "ver")) &amp;&amp;
+artifacts/mariana-textil/src/pages/movimientos.tsx:159:    (user?.rol === "ADMIN" ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:160:      user?.rol === "CONTADOR" ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:161:      user?.rol === "SISTEMAS" ||
+artifacts/mariana-textil/src/pages/movimientos.tsx:432:              {user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:43:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:103:  const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver") &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:104:  const canPrices = hasPermission(user, Modules.CLIENTES_PRECIOS, "ver") &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:105:  const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:106:  const canViewSaleExits = hasPermission(user, Modules.SALIDAS_VENTA, "ver");
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:107:  const canCreatePayment = hasPermission(user, Modules.CLIENTES_FINANZAS, "crear");
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:108:  const canAdjust = hasPermission(user, Modules.CLIENTES_FINANZAS, "autorizar");
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:109:  const canEditCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "editar");
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:110:  const canEditClient = hasPermission(user, Modules.CLIENTES, "editar");
+artifacts/mariana-textil/src/pages/cliente-detail.tsx:326:            {user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:42:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:138:  const canEdit = hasPermission(user, Modules.PROVEEDORES, 'editar');
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:139:  const canToggleActive = user?.rol === Role.ADMIN; // Admins only for active status? Or keep based on rule
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:140:  const canVerFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, "ver");
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:141:  const canCrearFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, "crear");
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:142:  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:334:                  {estadoCuenta &amp;&amp; parseFloat(estadoCuenta.saldoActual) &gt; 0 &amp;&amp; hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') &amp;&amp; (
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:516:                      {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') &amp;&amp; &lt;TableHead className="w-[100px] text-right no-print"&gt;Acciones&lt;/TableHead&gt;}
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:521:                      &lt;TableRow&gt;&lt;TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className="text-center h-24"&gt;Cargando compras...&lt;/TableCell&gt;&lt;/TableRow&gt;
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:523:                      &lt;TableRow&gt;&lt;TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className="text-center h-24 text-muted-foreground"&gt;No hay compras registradas para este estado.&lt;/TableCell&gt;&lt;/TableRow&gt;
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:570:                          {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') &amp;&amp; (
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:596:                      &lt;TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 4 : 3} className="text-right text-xs text-muted-foreground"&gt;
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx:608:              {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') &amp;&amp; (
+artifacts/mariana-textil/src/pages/salidas.tsx:39:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/salidas.tsx:65:  const isCaja = user?.rol === "CAJA";
+artifacts/mariana-textil/src/pages/salidas.tsx:121:  const canCreate = !isCaja &amp;&amp; user ? hasPermission(user, Modules.SALIDAS, 'crear') : false;
+artifacts/mariana-textil/src/pages/salidas.tsx:215:            {user?.rol === "ADMIN" &amp;&amp; &lt;TabsTrigger value="extraordinarias"&gt;Extraordinarias&lt;/TabsTrigger&gt;}
+artifacts/mariana-textil/src/pages/salidas.tsx:219:        {activeTab === "recepcion" ? &lt;RecepcionSalidas /&gt; : activeTab === "mostrador" &amp;&amp; canCreate ? &lt;SalidaMostrador /&gt; : activeTab === "extraordinarias" &amp;&amp; user?.rol === "ADMIN" ? &lt;SalidasExtraordinarias /&gt; : (
+artifacts/mariana-textil/src/pages/rollo-detail.tsx:20:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/rollo-detail.tsx:32:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/rollo-detail.tsx:33:  const canEdit = hasPermission(user, Modules.INVENTARIO, "editar");
+artifacts/mariana-textil/src/pages/rollo-detail.tsx:34:  const canViewLabels = hasPermission(user, Modules.ETIQUETAS, "ver");
+artifacts/mariana-textil/src/pages/rollo-detail.tsx:35:  const canPrintLabels = hasPermission(user, Modules.ETIQUETAS, "crear");
+artifacts/mariana-textil/src/pages/salida-detail.tsx:35:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/salida-detail.tsx:100:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/salida-detail.tsx:101:  const isCaja = user?.rol === Role.CAJA;
+artifacts/mariana-textil/src/pages/salida-detail.tsx:102:  const canAuthorize = hasPermission(user, Modules.SALIDAS, 'autorizar');
+artifacts/mariana-textil/src/pages/etiquetas.tsx:26:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/etiquetas.tsx:58:  const isAdmin = user?.rol === "ADMIN";
+artifacts/mariana-textil/src/pages/etiquetas.tsx:59:  const canPrint = hasPermission(user, Modules.ETIQUETAS, "crear");
+artifacts/mariana-textil/src/pages/proveedores.tsx:30:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/proveedores.tsx:85:  const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');
+artifacts/mariana-textil/src/pages/proveedores.tsx:86:  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') &amp;&amp; user?.rol !== "SUPERVISOR";
+artifacts/mariana-textil/src/pages/proveedores.tsx:234:                    {user?.rol === "ADMIN" &amp;&amp; &lt;TableHead className="text-right"&gt;Acciones&lt;/TableHead&gt;}
+artifacts/mariana-textil/src/pages/proveedores.tsx:300:                        {user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:42:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:119:    : user?.rol === Role.CAJA ? "/cobros" : "/pos";
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:121:    user?.rol === Role.ADMIN ||
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:122:    (user != null &amp;&amp; hasPermission(user, Modules.POS, "crear"));
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:182:    if (user?.rol !== Role.ADMIN) {
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:197:      user?.rol === Role.ADMIN
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:420:                {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) &amp;&amp; (
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:435:                  &lt;td colSpan={(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) ? 7 : 5} className="bg-muted/20 px-4 py-2 font-bold text-foreground"&gt;
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:468:                    {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) &amp;&amp; (
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:491:                  {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) &amp;&amp; (
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:503:                  &lt;td colSpan={(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) ? 7 : 5} className="bg-muted/20 px-4 py-2 font-bold text-foreground"&gt;
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:536:                    {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) &amp;&amp; (
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:559:                  {(user?.rol === Role.CAJA || user?.rol === Role.ADMIN) &amp;&amp; (
+artifacts/mariana-textil/src/pages/ticket-detail.tsx:1000:            {user?.rol !== Role.ADMIN &amp;&amp; (
+artifacts/mariana-textil/src/pages/inventario.tsx:31:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/inventario.tsx:39:  const isCaja = user?.rol === Role.CAJA;
+artifacts/mariana-textil/src/pages/inventario.tsx:138:  const canPrintLabels = hasPermission(user, Modules.ETIQUETAS, "crear");
+artifacts/mariana-textil/src/pages/productos.tsx:33:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/productos.tsx:210:  const canCreate = hasPermission(user, Modules.PRODUCTOS, "crear");
+artifacts/mariana-textil/src/pages/productos.tsx:211:  const isSupervisor = user?.rol === "SUPERVISOR";
+artifacts/mariana-textil/src/pages/productos.tsx:415:                                   {user?.rol === "ADMIN" &amp;&amp; &lt;TableHead className="text-right"&gt;Acciones&lt;/TableHead&gt;}
+artifacts/mariana-textil/src/pages/productos.tsx:458:                                     {user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/auditorias-inventario.tsx:50:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/auditorias-inventario.tsx:91:  const canCreateProduct = hasPermission(user, Modules.PRODUCTOS, "crear");
+artifacts/mariana-textil/src/pages/auditorias-inventario.tsx:317:                      {detail.data.estado === "CERRADA" &amp;&amp; user?.rol === "ADMIN" &amp;&amp; (
+artifacts/mariana-textil/src/pages/producto-detail.tsx:37:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/producto-detail.tsx:173:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/producto-detail.tsx:174:  const canEditProduct = hasPermission(user, Modules.PRODUCTOS, "editar");
+artifacts/mariana-textil/src/pages/producto-detail.tsx:175:  const isSupervisor = user?.rol === Role.SUPERVISOR;
+artifacts/mariana-textil/src/pages/producto-detail.tsx:176:  const canViewPurchaseCosts = user != null &amp;&amp; user.rol !== Role.TERMINAL &amp;&amp; !isSupervisor;
+artifacts/mariana-textil/src/pages/contenedores/detail.tsx:178:  const isAdmin = user?.rol === "ADMIN";
+artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx:316:      enabled: user?.rol === Role.ADMIN,
+artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx:322:  if (!userLoading &amp;&amp; user?.rol !== Role.ADMIN) {
+artifacts/mariana-textil/src/pages/reportes.tsx:48:  const isAdmin = user?.rol === "ADMIN";
+artifacts/mariana-textil/src/pages/contenedores/index.tsx:40:  const isAdmin = user?.rol === "ADMIN";
+artifacts/mariana-textil/src/pages/caja/cuenta-destino-detalle.tsx:407:              {(currentUser?.rol === "CONTADOR" || currentUser?.rol === "ADMIN") &amp;&amp; &lt;div className="flex flex-wrap gap-2"&gt;
+artifacts/mariana-textil/src/pages/caja/cuenta-destino-detalle.tsx:414:              &lt;div&gt;&lt;h3 className="mb-2 font-semibold"&gt;Histórico&lt;/h3&gt;{fiscalQuery.data.historial.length === 0 ? &lt;p className="text-sm text-muted-foreground"&gt;Sin confirmaciones ni diferencias.&lt;/p&gt; : &lt;div className="space-y-2"&gt;{fiscalQuery.data.historial.map((item) =&gt; &lt;div key={item.id} className="rounded border p-3 text-sm" data-testid={`fiscal-registro-${item.id}`}&gt;&lt;b&gt;{item.tipo}&lt;/b&gt; · {item.desde} a {item.hasta} · Facturado congelado {formatNumber(item.facturadoCongelado, { kind: "money" })} · {item.actor} · {item.estado}{item.direccion ? ` · ${item.direccion} ${formatNumber(item.monto, { kind: "money" })}` : ""}{item.descripcion ? ` · ${item.descripcion}` : ""}{item.notaResolucion ? ` · Resolución: ${item.notaResolucion}` : ""}{currentUser?.rol === "ADMIN" &amp;&amp; item.tipo === "DIFERENCIA" &amp;&amp; item.estado === "PENDIENTE" &amp;&amp; &lt;div className="mt-2 flex gap-2"&gt;&lt;Input value={resolutionNotes[item.id] ?? ""} onChange={(e) =&gt; setResolutionNotes((notes) =&gt; ({ ...notes, [item.id]: e.target.value }))} placeholder="Nota de resolución" data-testid={`input-resolucion-${item.id}`} /&gt;&lt;Button size="sm" disabled={!resolutionNotes[item.id]?.trim() || resolve.isPending} onClick={() =&gt; resolve.mutate({ id: item.id, data: { nota: resolutionNotes[item.id]! } }, { onSuccess: refreshFiscal })} data-testid={`button-resolver-${item.id}`}&gt;Resolver&lt;/Button&gt;&lt;/div&gt;}&lt;/div&gt;)}&lt;/div&gt;}&lt;/div&gt;
+artifacts/mariana-textil/src/pages/ajustes.tsx:43:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/pagos-dirigidos.tsx:45:  const isAdmin = user?.rol === Role.ADMIN;
+artifacts/mariana-textil/src/pages/ubicaciones.tsx:27:import { Modules, hasPermission } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/ubicaciones.tsx:149:  const canCreate = hasPermission(user, Modules.UBICACIONES, "crear");
+artifacts/mariana-textil/src/pages/ubicaciones.tsx:150:  const canEdit = hasPermission(user, Modules.UBICACIONES, "editar");
+artifacts/mariana-textil/src/pages/viajes.tsx:8:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/viajes.tsx:14:  const canCreate = hasPermission(user, Modules.VIAJES, "crear");
+artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:37:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:67:  const isCatalogManager = user?.rol === "ADMIN" || user?.rol === "SISTEMAS";
+artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:69:    isCatalogManager &amp;&amp; hasPermission(user, Modules.CHOFERES, "crear");
+artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:71:    isCatalogManager &amp;&amp; hasPermission(user, Modules.CHOFERES, "editar");
+artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:221:                                {user?.rol === "ADMIN" &amp;&amp; !chofer.activo &amp;&amp; (
+artifacts/mariana-textil/src/pages/configuracion/choferes.tsx:265:                            {user?.rol === "ADMIN" &amp;&amp; !chofer.activo &amp;&amp; (
+artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx:24:import { hasPermission, Modules } from "@/lib/permisos";
+artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx:58:  const canEdit = hasPermission(user, Modules.CAMIONETAS, 'crear');
+artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx:59:  const isAdmin = user?.rol === "ADMIN";
+</pre></details></html>

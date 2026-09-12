@@ -1,0 +1,122 @@
+# Prompt para Replit Agent — Motor de stock mínimo y reporte "Qué comprar"
+
+Trabajo nuevo. Toca inventario solo para leer; **no cambia ninguna regla del motor de inventario ni ningún cálculo de dinero**. No toques la base por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+## Para qué es
+
+Hoy no hay forma de saber que un color se está acabando hasta que alguien lo nota en el anaquel, ni de saber qué se vende mes con mes para decidir qué pedir. Este trabajo resuelve las dos cosas y las liga: el mínimo avisa, y el reporte dice si ese mínimo tiene sentido.
+
+---
+
+# PARTE A — Motor de stock mínimo
+
+## Bloque 1 — Dónde vive el mínimo
+
+El stock mínimo es **por producto y por ubicación**. El mismo color no necesita el mismo piso en la matriz que en una bodega de paso.
+
+**No lo guardes en la tabla `existencias`.** Esa tabla es un caché derivado que se reconstruye desde los movimientos con `reconstruirCacheExistencias` —se hizo en la purga del 6 de septiembre— y una reconstrucción se llevaría la configuración por delante. El mínimo es configuración, no dato calculado: **va en su propia tabla**, con su par producto-ubicación, su cantidad y quién y cuándo lo puso.
+
+## Bloque 2 — El interruptor
+
+La función se activa **por sitio**, apagada por omisión.
+
+**Con el interruptor apagado, el motor no existe para ese sitio:** no calcula, no alerta, no muestra nada y no toca ningún producto. Es el requisito central de este bloque — un sitio sin la función encendida debe comportarse exactamente como hoy.
+
+Al encenderlo, se abre la pantalla para capturar mínimos de ese sitio: listado de sus productos con existencia, el mínimo de cada uno y la posibilidad de dejarlo vacío. **Un producto sin mínimo capturado no alerta**; el mínimo es opcional producto por producto, como pidió el usuario.
+
+Reutiliza el selector de sitio del encabezado y `resolveReadScope`, como el resto del sistema. No agregues un filtro de sitio propio.
+
+## Bloque 3 — La alerta
+
+Cuando la existencia de un par producto-ubicación cae por debajo de su mínimo, se genera alerta para **ADMIN, el encargado del sitio y SUPERVISOR**.
+
+Usa el sistema de alertas que ya existe; no construyas uno paralelo. La alerta enlaza al producto en ese sitio, y dice el mínimo, la existencia actual y la diferencia.
+
+**No repitas la alerta mientras la condición siga igual.** Una alerta que se repite todos los días deja de leerse.
+
+## Bloque 4 — El consumo
+
+El consumo de un par producto-ubicación es **lo que salió de ahí: ventas más salidas**. Un traslado a otra tienda cuenta como consumo del origen, porque ese sitio efectivamente se quedó sin ese rollo.
+
+**Esta cifra no se suma entre sitios.** Un traslado de bodega a Cruces cuenta como consumo de la bodega y luego como venta en Cruces; sumarlos contaría lo mismo dos veces. El consumo sirve para poner mínimos por sitio, no para saber cuánto se vendió en total. **Deja esa advertencia escrita en el código y en la pantalla**, donde el usuario la vea.
+
+Para saber qué comprar se usa **la venta real al cliente**, que es otra cifra y vive en la Parte B.
+
+---
+
+# PARTE B — Reporte "Qué comprar"
+
+Una sección nueva en Reportes. **Contesta una sola pregunta: qué pedir este mes y cuánto.**
+
+## Bloque 5 — Qué contiene
+
+Un renglón por producto y sitio, con:
+
+- **Consumo mes a mes**, en columnas, para ver tendencia y estacionalidad de un vistazo. Esta es la dimensión que hoy no existe en ningún reporte: los actuales muestran el periodo seleccionado, no doce meses en un renglón.
+- **Venta real al cliente**, separada del consumo y con su nombre distinto, porque es la que sirve para decidir compras.
+- **Existencia actual, mínimo capturado y días de cobertura** que ese mínimo representa al ritmo de consumo observado.
+- **Meses de historia** con que cuenta ese renglón.
+- Señalamiento de lo que **no se ha movido** en el periodo y de lo que **está bajo el mínimo**.
+
+Incluye el mapa de calor de **meses contra colores**, que aquí sí significa algo: es la estacionalidad que decide las compras.
+
+## Bloque 6 — Sugerencias: solo con historia suficiente
+
+Define **una sola constante** con el mínimo de historia requerido, hoy **tres meses**, con su nombre claro y un comentario que explique por qué: con menos historia, una semana atípica distorsiona la proyección y produce números que parecen análisis y son casualidad. Cambiar el umbral debe ser editar esa línea y nada más.
+
+**El resto del reporte no espera a esa historia.** Desde el primer día muestra consumo, venta, existencia, mínimo y días de cobertura: eso es medición, no proyección, y es cierto siempre.
+
+Lo único que espera son las **sugerencias**, y el corte es **por renglón, no por pantalla**: un color con cuatro meses de historia recibe sugerencia aunque el de junto se haya dado de alta ayer. Un producto nuevo nunca debe silenciar el reporte entero.
+
+Donde no alcance la historia, el renglón dice **"Sin información suficiente"** e indica cuántos meses lleva.
+
+Las sugerencias, cuando hay historia, son **hechos observados y nunca un plazo de reposición inventado** —ese dato no existe en el sistema y no debe suponerse—:
+
+- Tu mínimo cubre X días al ritmo actual.
+- Este color no se ha movido en N meses y tiene mínimo puesto.
+- Te quedaste bajo el mínimo N veces en el periodo.
+- Este color se consume X veces más que hace un trimestre.
+
+Cada sugerencia debe poder **abrirse hasta los movimientos que la sustentan**, conforme a la regla de que ninguna cifra del sistema es un callejón sin salida.
+
+## Bloque 7 — Sin duplicar información
+
+El usuario fue explícito: **no quiere ver dos veces lo mismo en distintas pestañas.**
+
+1. **Revisa qué tablas de "Análisis de Color", "Inventario y Rotación", "Mapas de Calor" y "Compras" quedan cubiertas por este reporte nuevo**, y repórtame la lista antes de tocar nada.
+2. Cuando te la apruebe, **retira de esas pestañas las tablas duplicadas**, no las dupliques aquí. Si una pestaña se queda sin contenido propio, dímelo y decido si se retira.
+3. **No toques** Ventas, Utilidad y Márgenes, Clientes y Crédito, Pagos Dirigidos, Diferencias de Caja ni Comparativo entre Sitios en este trabajo.
+
+**Detente después del punto 1 y espera mi aprobación** antes de retirar nada.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de inventario, reportes, alertas y permisos.
+3. Con el interruptor **apagado** en un sitio, confirma que ese sitio se comporta **exactamente como antes**: sin alertas, sin cálculos, sin cambios en ningún producto ni en ninguna cifra del tablero.
+4. Enciéndelo, captura mínimos en algunos productos y deja otros vacíos. Confirma que **solo alertan los que tienen mínimo capturado**.
+5. Baja la existencia de uno por debajo de su mínimo y confirma que la alerta llega a ADMIN, al encargado del sitio y a SUPERVISOR, con enlace.
+6. Confirma que la alerta **no se repite** mientras la condición no cambia.
+7. **Ejecuta `reconstruirCacheExistencias` y confirma que los mínimos capturados siguen ahí.** Es la prueba de que no quedaron en un caché derivado.
+8. En el reporte, confirma que un producto con poca historia muestra "Sin información suficiente" **sin apagar el resto de los renglones**.
+9. Confirma que consumo y venta real aparecen **como cifras distintas y con nombres distintos**, y que la advertencia de no sumar consumo entre sitios está visible.
+10. Abre una sugerencia hasta sus movimientos y confirma que cuadra.
+11. Confirma que el umbral de historia está en **una sola constante** y que cambiarla mueve todo el reporte.
+12. Revisa el reporte en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Que el stock mínimo es **por producto y ubicación**, vive en su propia tabla y **nunca en `existencias`**, porque ese caché se reconstruye desde los movimientos y se llevaría la configuración.
+- Que la función se activa **por sitio** y que, apagada, el motor no toca nada de ese sitio.
+- Que el mínimo es **opcional por producto** y que sin mínimo no hay alerta.
+- Que el consumo por sitio es **ventas más salidas**, y que **no se suma entre sitios** porque contaría dos veces un traslado. Que para decidir compras se usa la **venta real al cliente**, que es otra cifra.
+- Que el umbral de historia para sugerencias es **una sola constante, hoy tres meses**, por qué son tres, y que el resto del reporte no espera a ese umbral.
+- Que las sugerencias son **hechos observados** y que el sistema **no supone plazos de reposición**, porque ese dato no existe: los contenedores tienen fecha de pedido pero la mayoría de las compras entran sin ella.
+- La lista de tablas retiradas de otras pestañas por quedar duplicadas.
+- Un renglón con la fecha y qué se hizo.

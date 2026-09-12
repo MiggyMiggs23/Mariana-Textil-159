@@ -1,14 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { SUPERVISOR_PERMISSION_CEILING } from "./lib/supervisor-policy";
-
-test("el módulo mantiene operación sin autorización para SUPERVISOR", () => {
-  assert.deepEqual(
-    [...(SUPERVISOR_PERMISSION_CEILING.auditoria_inventario ?? [])],
-    ["ver", "crear", "editar"],
-  );
-});
 
 test("las rutas exigen módulo separado y confirmación ADMIN", async () => {
   const source = await readFile(

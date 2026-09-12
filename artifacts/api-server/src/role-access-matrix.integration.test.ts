@@ -2,8 +2,8 @@
  * Task 54 / Block 6: HTTP verification of every configurable role.
  *
  * This deliberately exercises the real Express application.  The seed matrix
- * is only a default: route middleware and role ceilings remain the authority
- * that this test verifies.
+ * is only a default: route middleware and explicit role guards remain the
+ * authority that this test verifies.
  */
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -236,7 +236,8 @@ test("Task 54 Block 6: configurable roles have real HTTP access boundaries", asy
       // Terminal and Bodega can consult stock, but neither may see its value.
       { role: "TERMINAL", allowed: { method: "GET", path: `/inventario/rollos?serie=${rollSerie}` }, denied: { method: "GET", path: "/proveedores" }, mustHideMoney: true },
       { role: "CAJA", allowed: { method: "GET", path: "/caja/tickets" }, denied: { method: "GET", path: "/inventario/rollos" }, mustHideMoney: false },
-      // The server ceiling must keep SUPERVISOR out of financial supplier data.
+      // The configured matrix grants operational supplier reads but denies
+      // the separate financial supplier module.
       { role: "SUPERVISOR", allowed: { method: "GET", path: "/proveedores" }, denied: { method: "GET", path: "/proveedores/resumen" }, mustHideMoney: true },
       { role: "BODEGA", allowed: { method: "GET", path: `/inventario/rollos?serie=${rollSerie}` }, denied: { method: "GET", path: "/proveedores" }, mustHideMoney: true },
       { role: "SISTEMAS", allowed: { method: "GET", path: "/users" }, denied: { method: "POST", path: "/pos/validar-precio" }, mustHideMoney: false },

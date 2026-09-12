@@ -229,6 +229,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - Las operaciones reciben un UUID del cliente para garantizar idempotencia.
 - El filtrado por ubicación siempre se aplica en el servidor, no solo en la interfaz.
 - **Permisos:** ADMIN tiene acceso total a los 32 módulos sin consultar tablas. Para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR la resolución es: override de usuario (non-null) > permiso de rol personalizado > permiso heredado del sitio > permiso de rol heredado > denegar. La base de CAJA es estricta: únicamente `cobros_pagos` (`ver` y `crear`) y en la interfaz solo Caja > Cobros; dentro de esa pantalla CAJA únicamente ejecuta Cobrar. Toda escritura de gestión de caja (abrir/cerrar sesión y salidas) requiere conjuntamente `cortes.ver` y `cortes.crear`; las consultas de corte permanecen disponibles con solo `cortes.ver`.
+- **Matriz y alcance son responsabilidades separadas:** la matriz decide **qué acción** puede realizar el usuario; el alcance decide **dónde** puede ejecutarla. No debe existir una tercera capa de constantes o listas por rol que vete permisos concedidos por ADMIN. Las restricciones de acciones por rol se configuran en la matriz, no como techos inmutables en código. Los permisos iniciales son valores configurables, no límites permanentes. Las comprobaciones heredadas por rol en endpoints e interfaz se documentan en un inventario para revisión del dueño; no se eliminan ni se consideran autorizadas por esta regla automáticamente. Se conservan las validaciones de integridad de datos, estado del documento y alcance territorial.
 - **Conteo de módulos:** el catálogo configurable contiene 32 módulos y debe mantenerse alineado con la lista canónica del servidor y el seed de permisos.
 - **Separación financiera:** clientes y proveedores tienen módulos separados para operativo vs. financiero. Los campos financieros no se envían al cliente cuando falta el permiso.
 - **Alcance de Salidas:** SUPERVISOR no tiene una excepción operativa entre sitios: las acciones deben validar su sitio asignado además del permiso. El listado de pendientes de venta debe filtrar por origen para alcance PROPIA y para CAJA, incluso si CAJA conserva un alcance TODAS histórico; sin asignación, denegar. Las consultas globales autorizadas se conservan.
@@ -449,7 +450,7 @@ Mientras esta decisión siga pendiente, continúa vigente el procedimiento de ra
 
 ## Cierre del plan de cinco partes
 
-La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. El SUPERVISOR opera clientes y proveedores pero solo lee productos, porque editar un producto toca el precio.
+La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. Las acciones de SUPERVISOR sobre clientes, proveedores y productos se resuelven desde la matriz configurada; una descripción general del rol no justifica un techo adicional.
 
 ## Parte 10 — Catálogo por tela y unidad BOLSA
 
@@ -710,7 +711,7 @@ Las **ventas a crédito cuentan** como ventas y los **cancelados no**. La utilid
 
 `DEVOLUCION` existe únicamente como valor de `tipoMovimientoEnum` y como etiqueta y color en `movimientos.tsx`; no hay ruta, servicio ni prueba que lo genere.
 
-**SUPERVISOR y Ventas por tienda:** el techo de permisos actual niega `resumen_caja`, incluso con un permiso individual. La omisión recursiva de campos de utilidad/costo queda aplicada como defensa adicional si ese techo cambia; no se amplían permisos para mostrar este reporte.
+**SUPERVISOR y Ventas por tienda:** `resumen_caja` se resuelve desde los permisos configurados, sin un techo adicional por rol. La omisión recursiva existente de campos de utilidad/costo y los controles explícitos del endpoint son comprobaciones independientes, reportadas para revisión; no se modifican al retirar el techo ni se reescriben los permisos guardados.
 
 ## Formatos de impresión
 

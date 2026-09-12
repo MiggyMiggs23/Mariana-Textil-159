@@ -26,8 +26,8 @@
  *   S-08  SUPERVISOR GET /proveedores → 200, response has no financial JSON keys
  *   S-09  BODEGA operational entry catalogs allowed; direct catalogs denied
  *   S-10  Financial proveedor routes denied for SUPERVISOR (proveedores_finanzas)
- *   S-11  Malicious SUPERVISOR finance override remains denied by role ceiling
- *   S-12  ADMIN user-override deny removed → SUPERVISOR inherits role (still denied)
+ *   S-11  SUPERVISOR finance override is honored by the permission matrix
+ *   S-12  Explicit false deny, then DELETE → SUPERVISOR inherits matrix role deny
  *   S-13  User override (true) beats role (false): BODEGA clientes 403 → override → 200
  *   S-14  DELETE override → BODEGA clientes reverts to 403
  *   S-15  Deny-by-default: remove BODEGA inventario rol row → 403; restore → 200
@@ -1179,7 +1179,7 @@ await test("S-08AA: SUPERVISOR creates and edits clients/providers without sensi
   assertNoSupervisorSensitiveKeys(proveedorEditado.body, "PATCH /proveedores/:id");
 });
 
-await test("S-08AB: raw DB grants cannot exceed the SUPERVISOR ceiling", async () => {
+await test("S-08AB: SUPERVISOR role-matrix grants flow into the effective matrix", async () => {
   const modules = ["productos", "clientes", "proveedores"] as const;
   const originals = await Promise.all(
     modules.map(async (modulo) => {
@@ -1225,20 +1225,22 @@ await test("S-08AB: raw DB grants cannot exceed the SUPERVISOR ceiling", async (
     >;
     for (const modulo of modules) {
       const permiso = permisos.find((item) => item.modulo === modulo);
-      assert.equal(permiso?.puedeAutorizar, false, `${modulo}.autorizar`);
+      assert.deepEqual(
+        {
+          puedeVer: permiso?.puedeVer,
+          puedeCrear: permiso?.puedeCrear,
+          puedeEditar: permiso?.puedeEditar,
+          puedeAutorizar: permiso?.puedeAutorizar,
+        },
+        {
+          puedeVer: true,
+          puedeCrear: true,
+          puedeEditar: true,
+          puedeAutorizar: true,
+        },
+        `${modulo} must preserve its configured matrix grant`,
+      );
     }
-    const producto = permisos.find((item) => item.modulo === "productos");
-    assert.equal(producto?.puedeCrear, false, "productos.crear must be capped");
-    assert.equal(producto?.puedeEditar, false, "productos.editar must be capped");
-
-    const productPatch = await api(
-      "PATCH",
-      `/productos/${sharedProductoId}`,
-      { tela: `Cambio denegado ${RUN}` },
-      loginR.cookie,
-    );
-    assert.equal(productPatch.status, 403, JSON.stringify(productPatch.body));
-    assertNoSupervisorSensitiveKeys(productPatch.body, "PATCH /productos/:id");
   } finally {
     for (const row of originals) {
       await db
@@ -1607,37 +1609,8 @@ await test("S-09B: CAJA only lists and opens outputs received at its assigned st
   assert.equal(forbiddenCancel.status, 403, JSON.stringify(forbiddenCancel.body));
 });
 
-// S-10: Financial proveedor routes denied for SUPERVISOR (no proveedores_finanzas)
-await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied)", async () => {
-  const maliciousModules = [
-    "pos",
-    "ubicaciones",
-    "usuarios",
-    "permisos",
-    "resumen_caja",
-    "cortes",
-    "cobros_pagos",
-    "conciliacion",
-    "auditoria",
-    "clientes_credito",
-    "clientes_precios",
-    "clientes_finanzas",
-    "productos",
-  ];
-  const overrides = await db
-    .insert(permisosUsuarioTable)
-    .values(
-      maliciousModules.map((modulo) => ({
-        usuarioId: testSupervisor.id,
-        modulo,
-        puedeVer: true,
-        puedeCrear: true,
-        puedeEditar: true,
-        puedeAutorizar: true,
-      })),
-    )
-    .returning({ id: permisosUsuarioTable.id });
-  createdPermisosUsuarioIds.push(...overrides.map((row) => row.id));
+// S-10: Financial proveedor routes denied by the SUPERVISOR matrix
+await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied by matrix)", async () => {
   const login_r = await login(testSupervisor.usuario, testSupervisor.password);
   const forbidden: Array<[string, string]> = [
     ["GET", "/proveedores/resumen"],
@@ -1657,9 +1630,8 @@ await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finan
     ["GET", "/pos/buscar"],
     ["GET", "/tickets/1"],
     ["GET", "/caja/tickets"],
-    // SUPERVISOR cannot reach this financial route even with an explicit
-    // resumen_caja grant, so its sensitive utilidad field has no reachable
-    // SUPERVISOR response to redact.
+    // The default SUPERVISOR matrix denies resumen_caja, independently of
+    // sensitive-field redaction.
     ["GET", `/caja/tiendas/${seedTienda.id}/ventas`],
     ["GET", "/sesiones-caja/actual"],
     ["GET", "/precios"],
@@ -1687,7 +1659,7 @@ await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finan
   }
 });
 
-await test("S-10A: SUPERVISOR ceiling keeps store-sales route unreachable despite resumen_caja grant", async () => {
+await test("S-10A: SUPERVISOR matrix denies store-sales without resumen_caja grant", async () => {
   const supervisorLogin = await login(testSupervisor.usuario, testSupervisor.password);
   assert.equal(supervisorLogin.status, 200);
   const me = await api("GET", "/auth/me", undefined, supervisorLogin.cookie);
@@ -1698,7 +1670,7 @@ await test("S-10A: SUPERVISOR ceiling keeps store-sales route unreachable despit
   assert.equal(
     resumenCaja?.puedeVer,
     false,
-    "SUPERVISOR ceiling must override the explicit resumen_caja.ver grant",
+    "SUPERVISOR matrix must deny the unconfigured resumen_caja.ver action",
   );
 
   const sales = await api(
@@ -1714,8 +1686,8 @@ await test("S-10A: SUPERVISOR ceiling keeps store-sales route unreachable despit
   );
 });
 
-// S-11: a malicious permissive override cannot exceed the SUPERVISOR ceiling
-await test("S-11: SUPERVISOR finance override remains denied by immutable ceiling", async () => {
+// S-11: a permissive user override is honored by the matrix
+await test("S-11: SUPERVISOR finance override is honored by the matrix", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
   assert.equal(adminLogin.status, 200);
 
@@ -1730,10 +1702,10 @@ await test("S-11: SUPERVISOR finance override remains denied by immutable ceilin
   const overrideRow = putR.body as Record<string, unknown>;
   createdPermisosUsuarioIds.push(overrideRow.id as number);
 
-  // The raw override exists, but the effective policy must still deny access.
+  // The explicit user override must grant access over the role default deny.
   const login_r = await login(testSupervisor.usuario, testSupervisor.password);
   const r = await api("GET", "/proveedores/resumen", undefined, login_r.cookie);
-  assert.equal(r.status, 403, `Expected 403 after malicious override, got ${r.status}: ${JSON.stringify(r.body)}`);
+  assert.equal(r.status, 200, `Expected 200 after explicit grant, got ${r.status}: ${JSON.stringify(r.body)}`);
 
   // Verify matrix via /auth/me
   const me = await api("GET", "/auth/me", undefined, login_r.cookie);
@@ -1741,16 +1713,35 @@ await test("S-11: SUPERVISOR finance override remains denied by immutable ceilin
   const finanzasEntry = permisos.find((p) => p.modulo === "proveedores_finanzas");
   assert.equal(
     finanzasEntry?.puedeVer,
-    false,
-    "Effective matrix must apply the SUPERVISOR ceiling",
+    true,
+    "Effective matrix must preserve the explicit user grant",
   );
 });
 
-// S-12: Remove override (DELETE) → SUPERVISOR reverts to role (still denied)
-await test("S-12: DELETE override → SUPERVISOR reverts to role default (403)", async () => {
+// S-12: An explicit false override denies, then DELETE restores the role deny.
+await test("S-12: false override denies and DELETE restores the matrix role default", async () => {
   const adminLogin = await login(testAdmin.usuario, testAdmin.password);
 
-  // Remove the override created in S-11
+  const denyR = await api(
+    "PUT",
+    `/permisos/usuarios/${testSupervisor.id}/proveedores_finanzas`,
+    { puedeVer: false, puedeCrear: false, puedeEditar: false, puedeAutorizar: false },
+    adminLogin.cookie,
+  );
+  assert.equal(denyR.status, 200, `Override deny PUT failed: ${JSON.stringify(denyR.body)}`);
+
+  const deniedLogin = await login(testSupervisor.usuario, testSupervisor.password);
+  const denied = await api("GET", "/proveedores/resumen", undefined, deniedLogin.cookie);
+  assert.equal(denied.status, 403, `Expected 403 after explicit deny, got ${denied.status}`);
+  const deniedMe = await api("GET", "/auth/me", undefined, deniedLogin.cookie);
+  const deniedPermisos = (deniedMe.body as Record<string, unknown>).permisos as Array<Record<string, unknown>>;
+  assert.equal(
+    deniedPermisos.find((p) => p.modulo === "proveedores_finanzas")?.puedeVer,
+    false,
+    "Effective matrix must preserve the explicit user deny",
+  );
+
+  // Remove the override created in S-11/S-12.
   const delR = await api(
     "DELETE",
     `/permisos/usuarios/${testSupervisor.id}/proveedores_finanzas`,

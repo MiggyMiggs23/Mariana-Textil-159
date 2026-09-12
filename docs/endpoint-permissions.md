@@ -2,39 +2,20 @@
 
 Every non-public endpoint requires authentication (`requireSession`) **and** a specific module + action via `requierePermiso(modulo, accion)`.
 
-## SUPERVISOR: authoritative ceiling and redaction
+## SUPERVISOR: matrix permissions and redaction
 
-`SUPERVISOR` has a server-side permission ceiling applied after role rows and
-`permisos_usuario` overrides. An override can restrict this role, but can never
-grant access outside this inventory:
+`SUPERVISOR` permissions use the same matrix resolution as other configurable
+roles. A non-null `permisos_usuario` action overrides the role and inherited
+site values, so an administrator can explicitly grant or deny a module action.
+The default role matrix is documented below.
 
-- Read: `dashboard`, `inventario`, `productos`, `entradas`, `salidas`,
-  `movimientos`, `ajustes`, `etiquetas`, `contenedores`, `clientes`,
-  `proveedores`, `reportes`.
-- Mutations are limited to the configured operational actions for `entradas`,
-  `salidas`, `ajustes`, `etiquetas`, `contenedores`, `clientes` and
-  `proveedores`. Products are always read-only.
-- All operational reads and mutations above use all real locations; the
-  assigned user location and `alcanceConsulta` do not restrict SUPERVISOR.
+Sensitive financial fields are still omitted server-side from SUPERVISOR
+responses. Explicit non-configurable role guards and location checks remain
+independent of the permission matrix.
 
-The following endpoint families are an absolute 403 for SUPERVISOR, including
-when a role row or user override says `true`:
-
-- `/api/pos/**`, `/api/tickets/**`, `/api/caja/**` (POS, tickets, payments,
-  collections, cash sessions, summaries and cuts).
-- `/api/precios/**`.
-- `/api/locations/**`, `/api/users/**`, `/api/permisos/**`.
-- `/api/inventario/conciliacion/**`, `/api/admin/**`, `/api/auditoria/**`.
-- Every route protected by `clientes_credito`, `clientes_precios`,
-  `clientes_finanzas` or `proveedores_finanzas`, including their JSON, XLSX and
-  PDF exports.
-- `/api/cliente-documentos/**` and operational customer routes that manage
-  credit terms, documents or INE.
-- `/api/inventario/entradas/pendientes-costo/**` and
-  `/api/inventario/entradas/:id/costos`.
-
-Exact forbidden route inventory (all supported HTTP methods on each listed
-path are forbidden):
+Under the default SUPERVISOR matrix, the following restricted-route inventory
+is denied (explicit matrix grants can change permission middleware results;
+non-configurable role guards remain enforced):
 
 - POS/tickets/caja: `/api/pos/buscar`, `/api/pos/validar-precio`,
   `/api/tickets`, `/api/tickets/pendientes`, `/api/tickets/:id`,
@@ -283,8 +264,6 @@ Inventory routes enforce the following effective permissions on the server:
 1. ADMIN bypasses tables with full access.
 2. `permisos_usuario` row for (usuario_id, modulo) with non-null value wins.
 3. Otherwise use `permisos_rol`; no row means deny.
-4. Apply the immutable SUPERVISOR ceiling last. This final step can only
-   remove access and therefore defeats permissive role rows and overrides.
 
 ## Protected Invariants
 

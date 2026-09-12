@@ -214,7 +214,7 @@ test("store sales global reports isolated sold-line hierarchy and enforces scope
       await login(String(propia.usuario)))).status, 403);
     const supervisorResult = await get(`/caja/tiendas/${store.id}/ventas/global?desde=2025-01-10&hasta=2025-01-10`,
       await login(String(supervisor.usuario)));
-    assert.equal(supervisorResult.status, 403, "SUPERVISOR permission ceiling denies resumen_caja");
+    assert.equal(supervisorResult.status, 403, "SUPERVISOR matrix denies resumen_caja");
     const redacted = omitSupervisorSensitiveFields(global.body, true);
     assertNoFinancialKeys(redacted);
   } finally {
