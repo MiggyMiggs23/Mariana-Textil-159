@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { evaluateStockMinimum } from "./stock-minimos-engine";
+import {
+  classifyStockMinimumEpisodeCause,
+  configurationTriggerApplies,
+  evaluateStockMinimum,
+} from "./stock-minimos-engine";
 
 type FakeUser = {
   id: number;
@@ -150,6 +154,84 @@ test("strictly below includes zero existence and computes the positive differenc
   });
 });
 
+test("episode provenance distinguishes a proven movement crossing from a configuration breach", () => {
+  const crossing = {
+    id: 71,
+    cantidad: "-2",
+    saldoPosterior: "4",
+  };
+  assert.equal(
+    classifyStockMinimumEpisodeCause({
+      minimo: 5,
+      movement: crossing,
+      configurationTriggered: false,
+    }),
+    "MOVIMIENTO",
+  );
+  assert.equal(
+    classifyStockMinimumEpisodeCause({
+      minimo: 5,
+      movement: crossing,
+      configurationTriggered: true,
+    }),
+    "CONFIGURACION",
+  );
+  assert.equal(
+    classifyStockMinimumEpisodeCause({
+      minimo: 5,
+      movement: { ...crossing, cantidad: "1", saldoPosterior: "4" },
+      configurationTriggered: false,
+    }),
+    "SNAPSHOT",
+  );
+});
+
+test("individual minimum edits scope configuration provenance to the changed product", () => {
+  const trigger = { kind: "PRODUCT" as const, productoId: 10 };
+  const products = [
+    {
+      productoId: 10,
+      movement: { id: 81, cantidad: "-2", saldoPosterior: "4" },
+    },
+    {
+      productoId: 11,
+      movement: { id: 82, cantidad: "-2", saldoPosterior: "4" },
+    },
+  ];
+  const causes = products.map((product) =>
+    classifyStockMinimumEpisodeCause({
+      minimo: 5,
+      movement: product.movement,
+      configurationTriggered: configurationTriggerApplies(
+        trigger,
+        product.productoId,
+      ),
+    }),
+  );
+
+  assert.deepEqual(causes, ["CONFIGURACION", "MOVIMIENTO"]);
+  assert.equal(configurationTriggerApplies({ kind: "SITE" }, 11), true);
+});
+
+test("snapshot movement provenance never claims a historic crossing", () => {
+  assert.equal(
+    classifyStockMinimumEpisodeCause({
+      minimo: 5,
+      movement: { id: 72, cantidad: "-1", saldoPosterior: "4" },
+      configurationTriggered: false,
+    }),
+    "MOVIMIENTO",
+  );
+  assert.equal(
+    classifyStockMinimumEpisodeCause({
+      minimo: 5,
+      movement: { id: 73, cantidad: "-1", saldoPosterior: "3" },
+      configurationTriggered: false,
+    }),
+    "SNAPSHOT",
+  );
+});
+
 test("recipients include active assigned users plus active ADMIN/SUPERVISOR once", () => {
   const site = fakeSite({
     usuarios: [
@@ -206,6 +288,8 @@ test("minimum CRUD keeps own-site writes and read matrix permissions explicit", 
   assert.match(route, /user\.ubicacionId !== ubicacionId/);
   assert.match(route, /resolveReadScope\(req\.auth!, requested/);
   assert.match(route, /minimo: z\.union\(\[minimumValue, z\.null\(\)\]\)/);
+  assert.match(route, /SITE_DISABLED/);
+  assert.match(route, /\? 409/);
 
   const writeMatrix = [
     { rol: "ADMIN", asignada: null, destino: 2, permitido: true },
@@ -220,6 +304,18 @@ test("minimum CRUD keeps own-site writes and read matrix permissions explicit", 
       (row.asignada != null && row.asignada === row.destino);
     assert.equal(permitido, row.permitido, `${row.rol}:${row.destino}`);
   }
+});
+
+test("disabled minimum writes lock configuration before product/minimum/audit writes", async () => {
+  const service = await readFile(
+    new URL("./stock-minimos.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(service, /lockSiteConfiguration\(tx, input\.ubicacionId, false\)/);
+  assert.match(service, /if \(!site\.habilitado\)/);
+  assert.match(service, /throw new StockMinimumError\([\s\S]*SITE_DISABLED/);
+  assert.match(service, /causa/);
+  assert.match(service, /movimientoId: movement\?\.id \?\? null/);
 });
 
 test("stock-minimum list accepts the optional buscar query", async () => {

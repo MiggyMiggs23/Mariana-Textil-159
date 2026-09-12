@@ -24,7 +24,7 @@ test("notification feed is session scoped and publishes three sound families", (
   assert.match(route, /router\.get\("\/notificaciones\/feed"/);
   assert.match(route, /user\.rol === "CAJA" && user\.ubicacionId != null/);
   assert.match(route, /t\.ubicacion_id=\$1/);
-  assert.match(route, /t\.estado='VENDIDO' AND NOT t\.cobrado/);
+  assert.match(route, /pendingTicketPredicate\("t"\)/);
   assert.match(route, /where\(eq\(solicitudesPagoDirigidoTable\.estado, "PENDIENTE"\)\)/);
   assert.match(route, /id: `ticket-ready:\$\{ticketId\}`/);
   assert.match(route, /id: `directed-payment:\$\{id\}`/);
@@ -32,13 +32,18 @@ test("notification feed is session scoped and publishes three sound families", (
   assert.match(route, /family: "ALERTA"/);
   assert.match(
     route,
-    /family: row\.tipo\.startsWith\("SOLICITUD_"\) \? "SOLICITUD" : row\.tipo\.includes\("INCOMPLETA"\) \? "ALERTA" : "AVISO"/,
+    /family: row\.tipo\.startsWith\("SOLICITUD_"\)[\s\S]*row\.tipo\.includes\("INCOMPLETA"\) \|\| row\.tipo === "STOCK_MINIMO"[\s\S]*"ALERTA"/,
     "Los tipos SOLICITUD_* deben activar la familia de sonido SOLICITUD.",
   );
   assert.match(
     route,
-    /row\.tipo\.includes\("INCOMPLETA"\) \? "ALERTA" : "AVISO"/,
-    "Las notificaciones INCOMPLETA siguen siendo ALERTA y los demás tipos AVISO.",
+    /row\.tipo === "STOCK_MINIMO"/,
+    "Las notificaciones de stock mínimo siguen siendo ALERTA.",
+  );
+  assert.match(
+    route,
+    /\/inventario\/stock-minimos\?ubicacionId=\$\{encodeURIComponent\(String\(systemRow\.episodioUbicacionId\)\)\}&productoId=\$\{encodeURIComponent\(String\(systemRow\.episodioProductoId\)\)\}/,
+    "Las alertas de stock mínimo deben conservar sitio y producto en el enlace.",
   );
   assert.match(spec, /enum: \[AVISO, SOLICITUD, ALERTA\]/);
   assert.match(spec, /\/notificaciones\/feed:/);
@@ -48,7 +53,11 @@ test("resolved directed payments leave the derived feed immediately and use a pe
   assert.doesNotMatch(route, /RESOLVED_DIRECTED_PAYMENT_VISIBILITY_DAYS/);
   assert.match(route, /eq\(solicitudesPagoDirigidoTable\.estado, "PENDIENTE"\)/);
   assert.match(route, /visibleSystemNotifications\(user\)/);
-  assert.match(route, /row\.entidad === "solicitudes_pago_dirigido" \? "\/pagos-dirigidos"/);
+  assert.match(
+    route,
+    /row\.entidad === "solicitudes_pago_dirigido"[\s\S]*?\?\s*"\/pagos-dirigidos"/,
+    "Las notificaciones persistidas de pagos dirigidos deben conservar su destino.",
+  );
   assert.match(directedPayments, /notifyRequesterResolved\(tx,/);
   assert.match(directedPayments, /destinatarioUsuarioId: request\.solicitanteId/);
   assert.match(directedPayments, /\.onConflictDoNothing\(\)/);

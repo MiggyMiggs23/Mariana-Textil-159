@@ -1,8 +1,9 @@
-import { and, asc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
 import {
   auditoriaTable,
   db,
   existenciasTable,
+  movimientosTable,
   notificacionesSistemaTable,
   productosTable,
   stockMinimoEpisodiosTable,
@@ -15,7 +16,13 @@ import {
   ADVISORY_LOCK_NAMESPACES,
   transactionAdvisoryLock,
 } from "@workspace/db/advisory-locks";
-import { evaluateStockMinimum } from "./stock-minimos-engine";
+import {
+  classifyStockMinimumEpisodeCause,
+  configurationTriggerApplies,
+  evaluateStockMinimum,
+  type StockMinimumEpisodeCause,
+  type StockMinimumConfigurationTrigger,
+} from "./stock-minimos-engine";
 
 export const STOCK_MINIMUM_POLL_INTERVAL_MS = 30_000;
 export const STOCK_MINIMUM_NOTIFICATION_TYPE = "STOCK_MINIMO";
@@ -29,6 +36,7 @@ export class StockMinimumError extends Error {
     readonly code:
       | "LOCATION_NOT_FOUND"
       | "PRODUCT_NOT_FOUND"
+      | "SITE_DISABLED"
       | "INVALID_CONFIGURATION",
   ) {
     super(message);
@@ -155,6 +163,39 @@ async function activeRecipients(tx: Tx, ubicacionId: number): Promise<number[]> 
   return [...new Set(rows.map((row) => row.id))];
 }
 
+async function latestMovementSnapshot(
+  tx: Tx,
+  productoId: number,
+  ubicacionId: number,
+): Promise<{
+  id: number;
+  cantidad: string;
+  saldoPosterior: string;
+} | null> {
+  const [movement] = await tx
+    .select({
+      id: movimientosTable.id,
+      cantidad: movimientosTable.cantidad,
+      saldoPosterior: movimientosTable.saldoPosterior,
+    })
+    .from(movimientosTable)
+    .where(
+      and(
+        eq(movimientosTable.productoId, productoId),
+        eq(movimientosTable.ubicacionId, ubicacionId),
+      ),
+    )
+    .orderBy(desc(movimientosTable.createdAt), desc(movimientosTable.id))
+    .limit(1);
+  return movement
+    ? {
+        id: Number(movement.id),
+        cantidad: String(movement.cantidad),
+        saldoPosterior: String(movement.saldoPosterior),
+      }
+    : null;
+}
+
 async function notifyEpisode(
   tx: Tx,
   values: {
@@ -198,11 +239,13 @@ async function notifyEpisode(
 
 /**
  * Evaluates one already-locked enabled site. It reads only the product
- * catalog, the derived existence cache, and the minimum/episode ledgers.
+ * catalog, the derived existence cache, minimum/episode ledgers, and the
+ * latest product/site movement snapshot.
  */
 async function evaluateLockedSite(
   tx: Tx,
   ubicacionId: number,
+  configurationTrigger: StockMinimumConfigurationTrigger = null,
 ): Promise<void> {
   const [location] = await tx
     .select({ id: ubicacionesTable.id, nombre: ubicacionesTable.nombre })
@@ -293,6 +336,15 @@ async function evaluateLockedSite(
       continue;
     }
 
+    const movement = await latestMovementSnapshot(tx, row.productoId, ubicacionId);
+    const causa: StockMinimumEpisodeCause = classifyStockMinimumEpisodeCause({
+      minimo,
+      movement,
+      configurationTriggered: configurationTriggerApplies(
+        configurationTrigger,
+        row.productoId,
+      ),
+    });
     const [episode] = await tx
       .insert(stockMinimoEpisodiosTable)
       .values({
@@ -301,6 +353,10 @@ async function evaluateLockedSite(
         minimo: quantityText(minimo),
         existencia: quantityText(existencia),
         diferencia: quantityText(diferencia),
+        causa,
+        // This movement is provenance for the observation. `causa` is the
+        // only field that can establish whether it proved a threshold cross.
+        movimientoId: movement?.id ?? null,
       })
       .returning({ id: stockMinimoEpisodiosTable.id });
     if (!episode) throw new Error("No se pudo abrir el episodio de stock mínimo.");
@@ -429,7 +485,7 @@ export async function setStockMinimumSiteEnabled(input: {
     if (!updated) throw new Error("No se pudo actualizar la configuración.");
 
     if (input.habilitado) {
-      await evaluateLockedSite(tx, input.ubicacionId);
+      await evaluateLockedSite(tx, input.ubicacionId, { kind: "SITE" });
     } else {
       // Do not read products or the inventory cache when disabling a site.
       await tx
@@ -467,9 +523,34 @@ export async function setStockMinimum(input: {
 }): Promise<void> {
   assertMinimumValue(input.minimo);
   await db.transaction(async (tx) => {
-    // Minimums may be prepared while the site switch is off. They remain
-    // invisible and unevaluated until the switch is enabled.
-    const site = await lockSiteConfiguration(tx, input.ubicacionId, true);
+    // Serialize against the site switch and reject before reading or writing
+    // product/minimum/audit rows while the site is off. A missing config row
+    // is the same as an explicitly disabled site, but does not need to be
+    // created just to reject this write.
+    const site = await lockSiteConfiguration(tx, input.ubicacionId, false);
+    if (!site) {
+      const [location] = await tx
+        .select({ id: ubicacionesTable.id, activa: ubicacionesTable.activa })
+        .from(ubicacionesTable)
+        .where(eq(ubicacionesTable.id, input.ubicacionId))
+        .limit(1);
+      if (!location || !location.activa) {
+        throw new StockMinimumError(
+          "La ubicación no existe o está inactiva.",
+          "LOCATION_NOT_FOUND",
+        );
+      }
+      throw new StockMinimumError(
+        "El stock mínimo está apagado en esa ubicación; actívalo antes de capturar mínimos.",
+        "SITE_DISABLED",
+      );
+    }
+    if (!site.habilitado) {
+      throw new StockMinimumError(
+        "El stock mínimo está apagado en esa ubicación; actívalo antes de capturar mínimos.",
+        "SITE_DISABLED",
+      );
+    }
 
     const [product] = await tx
       .select({ id: productosTable.id, activo: productosTable.activo })
@@ -514,9 +595,10 @@ export async function setStockMinimum(input: {
       });
     }
 
-    if (site?.habilitado) {
-      await evaluateLockedSite(tx, input.ubicacionId);
-    }
+    await evaluateLockedSite(tx, input.ubicacionId, {
+      kind: "PRODUCT",
+      productoId: input.productoId,
+    });
     await tx.insert(auditoriaTable).values({
       usuarioId: input.usuarioId,
       sitioId: input.ubicacionId,

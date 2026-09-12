@@ -62,8 +62,26 @@ export async function ensureStockMinimosSchema(
       diferencia numeric(18,3) NOT NULL CHECK (diferencia >= 0),
       abierto_at timestamptz NOT NULL DEFAULT now(),
       cerrado_at timestamptz,
+      causa text NOT NULL DEFAULT 'SNAPSHOT'
+        CHECK (causa IN ('MOVIMIENTO','CONFIGURACION','SNAPSHOT')),
       movimiento_id bigint REFERENCES movimientos(id)
     );
+    ALTER TABLE stock_minimo_episodios
+      ADD COLUMN IF NOT EXISTS causa text NOT NULL DEFAULT 'SNAPSHOT';
+    DO $stock_minimos_episode_cause$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conrelid = 'stock_minimo_episodios'::regclass
+          AND conname = 'stock_minimo_episodios_causa_check'
+      ) THEN
+        ALTER TABLE stock_minimo_episodios
+          ADD CONSTRAINT stock_minimo_episodios_causa_check
+          CHECK (causa IN ('MOVIMIENTO','CONFIGURACION','SNAPSHOT'));
+      END IF;
+    END
+    $stock_minimos_episode_cause$;
     CREATE INDEX IF NOT EXISTS stock_minimo_episodios_ubicacion_abierto_idx
       ON stock_minimo_episodios(ubicacion_id, cerrado_at);
     CREATE UNIQUE INDEX IF NOT EXISTS stock_minimo_episodios_activo_uidx

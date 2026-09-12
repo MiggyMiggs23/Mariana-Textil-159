@@ -7,6 +7,7 @@ import {
   numeric,
   pgTable,
   serial,
+  text,
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -83,6 +84,14 @@ export const stockMinimoEpisodiosTable = pgTable(
       .notNull()
       .defaultNow(),
     cerradoAt: timestamp("cerrado_at", { withTimezone: true }),
+    /**
+     * Evidence for why this episode was opened. A movement id below is a
+     * snapshot unless this field explicitly says MOVIMIENTO.
+     */
+    causa: text("causa")
+      .$type<"MOVIMIENTO" | "CONFIGURACION" | "SNAPSHOT">()
+      .notNull()
+      .default("SNAPSHOT"),
     movimientoId: bigint("movimiento_id", { mode: "number" }).references(
       () => movimientosTable.id,
     ),

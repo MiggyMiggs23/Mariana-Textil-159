@@ -17,7 +17,22 @@ const ACTUAL_EXIT_TYPES = new Set([
   "SALIDA_MOSTRADOR",
   "TRANSFERENCIA_SALIDA",
 ]);
-const CUSTOMER_SALE_TYPES = new Set(["VENTA", "SALIDA_MOSTRADOR"]);
+/**
+ * Inventory and sale documents are deliberately separate concepts.  A
+ * SALIDA_MOSTRADOR is the terminal physical-removal path used by
+ * /salidas/mostrador (its document is SALIDA/<id>); it is not evidence that a
+ * customer bought anything.  Customer-sale evidence is produced by the POS
+ * paths as a VENTA tied to a ticket/nota, including the three unit-specific
+ * ticket document types used by FIFO consumption.
+ */
+const CUSTOMER_SALE_DOCUMENT_TYPES = new Set([
+  "TICKET",
+  "NOTA",
+  "TICKET_BOLSA_NORMAL",
+  "TICKET_BOLSA_METREADO",
+  "TICKET_PIEZA_NORMAL",
+]);
+const QUARTER_MONTHS = 3;
 
 type Primitive = string | number | boolean | null;
 type Row = Record<string, Primitive>;
@@ -44,6 +59,9 @@ export type QueComprarEpisode = {
   openedAt: string | Date;
   closedAt?: string | Date | null;
   movementId?: number | null;
+  causa?: "MOVIMIENTO" | "CONFIGURACION" | "SNAPSHOT";
+  /** Context-only episode that was already open at the requested start. */
+  carriedIntoPeriod?: boolean;
 };
 
 export type QueComprarProductSite = {
@@ -105,6 +123,20 @@ export function monthKey(value: string | Date): string {
   return `${parts.find((part) => part.type === "year")?.value}-${parts.find((part) => part.type === "month")?.value}`;
 }
 
+function mexicoDateKey(value: Date): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(value);
+  return [
+    parts.find((part) => part.type === "year")?.value,
+    parts.find((part) => part.type === "month")?.value,
+    parts.find((part) => part.type === "day")?.value,
+  ].join("-");
+}
+
 function monthDate(month: string): Date {
   return new Date(`${month}-01T00:00:00.000Z`);
 }
@@ -121,20 +153,67 @@ export function monthSeries(end: string | Date, count = MONTH_COUNT): string[] {
   return result;
 }
 
-function monthDistance(from: string, to: string): number {
-  const [fromYear, fromMonth] = from.split("-").map(Number);
-  const [toYear, toMonth] = to.split("-").map(Number);
-  return (toYear - fromYear) * 12 + toMonth - fromMonth;
+function mexicoCalendarParts(value: Date): {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
+  millisecond: number;
+} {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(value);
+  const numberPart = (type: string) =>
+    Number(parts.find((part) => part.type === type)?.value ?? 0);
+  return {
+    year: numberPart("year"),
+    month: numberPart("month"),
+    day: numberPart("day"),
+    hour: numberPart("hour"),
+    minute: numberPart("minute"),
+    second: numberPart("second"),
+    // Milliseconds are not exposed by Intl, but they are invariant when
+    // comparing two instants in the same timezone.
+    millisecond: value.getUTCMilliseconds(),
+  };
+}
+
+function mexicoCalendarDate(value: Date): Date {
+  const parts = mexicoCalendarParts(value);
+  return new Date(Date.UTC(
+    parts.year,
+    parts.month - 1,
+    parts.day,
+    parts.hour,
+    parts.minute,
+    parts.second,
+    parts.millisecond,
+  ));
 }
 
 /** Full elapsed calendar months, not the number of month buckets touched. */
 function elapsedMonths(from: Date | null, to: Date): number {
-  if (!from || from > to) return 0;
-  let result = (to.getUTCFullYear() - from.getUTCFullYear()) * 12 +
-    to.getUTCMonth() - from.getUTCMonth();
-  const anniversary = new Date(from);
+  if (!from || !Number.isFinite(from.getTime()) || !Number.isFinite(to.getTime())) return 0;
+  const localFrom = mexicoCalendarDate(from);
+  const localTo = mexicoCalendarDate(to);
+  if (localFrom > localTo) return 0;
+  let result = (localTo.getUTCFullYear() - localFrom.getUTCFullYear()) * 12 +
+    localTo.getUTCMonth() - localFrom.getUTCMonth();
+  // setUTCMonth intentionally retains JavaScript's end-of-month overflow
+  // semantics: Jan 31 + 3 months is May 1, so Jan 31 -> Apr 30 is two
+  // complete calendar months rather than three touched buckets.
+  const anniversary = new Date(localFrom);
   anniversary.setUTCMonth(anniversary.getUTCMonth() + result);
-  if (anniversary > to) result -= 1;
+  if (anniversary > localTo) result -= 1;
   return Math.max(0, result);
 }
 
@@ -151,34 +230,45 @@ function periodDays(from: Date | null, to: Date): number {
 export function aggregateLedgerEvidence(
   movements: QueComprarMovement[],
 ): QueComprarAggregation {
+  // A ledger row is one fact.  De-duplicate by its immutable movement id
+  // before deriving either consumption or customer-sale facts.
+  const uniqueMovements = [...new Map(movements.map((movement) => [movement.id, movement])).values()];
   const cancelledOrigins = new Set(
-    movements
+    uniqueMovements
       .filter((movement) => movement.type === "CANCELACION" && movement.movementOriginId != null)
-      .map((movement) => Number(movement.movementOriginId)),
+      .map((movement) => String(movement.movementOriginId)),
   );
-  const actual = movements.filter((movement) =>
+  const actual = uniqueMovements.filter((movement) =>
     ACTUAL_EXIT_TYPES.has(movement.type) &&
-    !cancelledOrigins.has(Number(movement.id)) &&
+    !cancelledOrigins.has(String(movement.id)) &&
     finiteNumber(movement.quantity) < 0,
   );
   const consumptionMovements = actual;
-  const saleMovements = actual.filter((movement) => CUSTOMER_SALE_TYPES.has(movement.type));
+  const saleMovements = actual.filter(isCustomerSaleMovement);
   const consumptionByMonth = new Map<string, number>();
   const salesByMonth = new Map<string, number>();
   let earliestObservation: Date | null = null;
+  for (const movement of uniqueMovements) {
+    const date = dateValue(movement.date);
+    if (!Number.isFinite(date.getTime())) continue;
+    // A cancellation is an accounting event, not a new observation of stock
+    // at this product/site pair.  Every other ledger movement, including
+    // receipts and transfer entries, establishes that the pair was observed.
+    if (movement.type === "CANCELACION") continue;
+    if (!earliestObservation || date < earliestObservation) earliestObservation = date;
+  }
   for (const movement of actual) {
     const date = dateValue(movement.date);
     if (!Number.isFinite(date.getTime())) continue;
-    if (!earliestObservation || date < earliestObservation) earliestObservation = date;
     const quantity = Math.abs(finiteNumber(movement.quantity));
     const month = monthKey(date);
     consumptionByMonth.set(month, (consumptionByMonth.get(month) ?? 0) + quantity);
-    if (CUSTOMER_SALE_TYPES.has(movement.type)) {
+    if (isCustomerSaleMovement(movement)) {
       salesByMonth.set(month, (salesByMonth.get(month) ?? 0) + quantity);
     }
   }
   return {
-    movements,
+    movements: uniqueMovements,
     consumptionMovements,
     saleMovements,
     consumptionByMonth,
@@ -189,6 +279,36 @@ export function aggregateLedgerEvidence(
     ),
     earliestObservation,
   };
+}
+
+export function isCustomerSaleMovement(movement: QueComprarMovement): boolean {
+  return movement.type === "VENTA" &&
+    movement.documentId != null &&
+    String(movement.documentId).trim() !== "" &&
+    movement.documentType != null &&
+    CUSTOMER_SALE_DOCUMENT_TYPES.has(String(movement.documentType).trim().toUpperCase());
+}
+
+export function splitEpisodesByRequestedPeriod(
+  episodes: QueComprarEpisode[],
+  desde: Date,
+  hasta: Date,
+): { period: QueComprarEpisode[]; carried: QueComprarEpisode[] } {
+  const period: QueComprarEpisode[] = [];
+  const carried: QueComprarEpisode[] = [];
+  for (const episode of episodes) {
+    const openedAt = dateValue(episode.openedAt);
+    if (!Number.isFinite(openedAt.getTime()) || openedAt > hasta) continue;
+    if (openedAt >= desde) {
+      period.push({ ...episode, carriedIntoPeriod: false });
+      continue;
+    }
+    const closedAt = episode.closedAt == null ? null : dateValue(episode.closedAt);
+    if (closedAt == null || (Number.isFinite(closedAt.getTime()) && closedAt >= desde)) {
+      carried.push({ ...episode, carriedIntoPeriod: true });
+    }
+  }
+  return { period, carried };
 }
 
 function trailingNoMovementMonths(months: string[], values: Map<string, number>, firstMonth: string | null): number {
@@ -243,13 +363,15 @@ function suggestionText(input: {
   if (input.episodes > 0) {
     suggestions.push(`Te quedaste bajo el mínimo ${input.episodes} veces desde que el motor tiene historial.`);
   }
-  if (input.firstMonth && elapsedMonths(input.firstObservation, input.end) >= HISTORY_MIN_MONTHS * 2) {
-    const recent = input.months.slice(-HISTORY_MIN_MONTHS)
+  if (input.firstMonth && elapsedMonths(input.firstObservation, input.end) >= QUARTER_MONTHS * 2) {
+    // This comparison is a fixed quarter-over-quarter observation.  It must
+    // not change when the history threshold is edited.
+    const recent = input.months.slice(-QUARTER_MONTHS)
       .reduce((sum, month) => sum + (input.consumptionByMonth.get(month) ?? 0), 0);
-    const prior = input.months.slice(-(HISTORY_MIN_MONTHS * 2), -HISTORY_MIN_MONTHS)
+    const prior = input.months.slice(-(QUARTER_MONTHS * 2), -QUARTER_MONTHS)
       .reduce((sum, month) => sum + (input.consumptionByMonth.get(month) ?? 0), 0);
-    const recentStart = monthDate(input.months[input.months.length - HISTORY_MIN_MONTHS]!);
-    const priorStart = monthDate(input.months[input.months.length - (HISTORY_MIN_MONTHS * 2)]!);
+    const recentStart = monthDate(input.months[input.months.length - QUARTER_MONTHS]!);
+    const priorStart = monthDate(input.months[input.months.length - (QUARTER_MONTHS * 2)]!);
     const recentDays = periodDays(recentStart, input.end);
     const priorDays = Math.max(1, Math.floor((recentStart.getTime() - priorStart.getTime()) / 86400000));
     const recentRate = recent / recentDays;
@@ -271,7 +393,6 @@ export function buildQueComprarRow(input: {
 }): QueComprarRow {
   const aggregation = aggregateLedgerEvidence(input.movements);
   const firstMonth = aggregation.earliestObservation ? monthKey(aggregation.earliestObservation) : null;
-  const latestMonth = input.months[input.months.length - 1]!;
   const historyMonths = elapsedMonths(aggregation.earliestObservation, input.end);
   const consumptionPeriodDays = periodDays(aggregation.earliestObservation, input.end);
   const averageDailyConsumption = consumptionPeriodDays > 0
@@ -335,6 +456,12 @@ export function buildQueComprarRow(input: {
 export function buildEvidenceReconciliation(
   enabled: boolean,
   movements: QueComprarMovement[],
+  expected?: {
+    row?: QueComprarRow;
+    episodes?: QueComprarEpisode[];
+    months?: string[];
+    end?: Date;
+  },
 ): {
   enabled: boolean;
   movementIds: number[];
@@ -342,6 +469,13 @@ export function buildEvidenceReconciliation(
   movementQuantity: number;
   difference: number;
   matches: boolean;
+  monthlyQuantitiesMatch?: boolean;
+  customerSaleMatch?: boolean;
+  coverageMatch?: boolean;
+  episodeCountMatch?: boolean;
+  historyMatch?: boolean;
+  rowEpisodeCount?: number;
+  ledgerEpisodeCount?: number;
 } {
   if (!enabled) {
     return {
@@ -354,17 +488,102 @@ export function buildEvidenceReconciliation(
     };
   }
   const aggregation = aggregateLedgerEvidence(movements);
-  const movementQuantity = aggregation.consumptionMovements.reduce(
-    (sum, movement) => sum + Math.abs(finiteNumber(movement.quantity)),
-    0,
-  );
+  const movementQuantity = aggregation.consumptionQuantity;
+  const row = expected?.row;
+  // Keep the two sides independent: the row-side quantity comes from the
+  // displayed equation while the movement-side quantity comes from the
+  // ledger once.  The old response names are retained for the evidence UI.
+  const rowConsumptionQuantity = row
+    ? finiteNumber(row.consumoPromedioDiario) * finiteNumber(row.periodoConsumoDias)
+    : movementQuantity;
+  const difference = rowConsumptionQuantity - movementQuantity;
+  let monthlyQuantitiesMatch: boolean | undefined;
+  let customerSaleMatch: boolean | undefined;
+  let coverageMatch: boolean | undefined;
+  let episodeCountMatch: boolean | undefined;
+  let historyMatch: boolean | undefined;
+
+  if (row && expected?.months && expected.end) {
+    const firstMonth = aggregation.earliestObservation
+      ? monthKey(aggregation.earliestObservation)
+      : null;
+    monthlyQuantitiesMatch = expected.months.every((month, index) => {
+      const key = `consumoMes${String(index + 1).padStart(2, "0")}`;
+      const expectedValue = firstMonth && month >= firstMonth
+        ? aggregation.consumptionByMonth.get(month) ?? 0
+        : null;
+      const actualValue = row[key];
+      return expectedValue == null
+        ? actualValue == null
+        : actualValue != null && Math.abs(finiteNumber(actualValue) - expectedValue) <= 0.001;
+    });
+    const expectedSale = expected.months.reduce(
+      (sum, month) => sum + (aggregation.salesByMonth.get(month) ?? 0),
+      0,
+    );
+    customerSaleMatch = Math.abs(finiteNumber(row.ventaRealCliente) - expectedSale) <= 0.001;
+
+    const period = periodDays(aggregation.earliestObservation, expected.end);
+    const average = period > 0 ? movementQuantity / period : 0;
+    const expectedMinimumCoverage =
+      row.minimoCapturado != null && average > 0
+        ? finiteNumber(row.minimoCapturado) / average
+        : null;
+    const expectedExistenceCoverage =
+      average > 0 ? finiteNumber(row.existenciaActual) / average : null;
+    const minimumCoverageMatch =
+      expectedMinimumCoverage == null
+        ? row.coberturaDiasMinimo == null
+        : row.coberturaDiasMinimo != null &&
+          Math.abs(finiteNumber(row.coberturaDiasMinimo) - expectedMinimumCoverage) <= 0.001;
+    const existenceCoverageMatch =
+      expectedExistenceCoverage == null
+        ? row.coberturaDiasExistencia == null
+        : row.coberturaDiasExistencia != null &&
+          Math.abs(finiteNumber(row.coberturaDiasExistencia) - expectedExistenceCoverage) <= 0.001;
+    coverageMatch =
+      Math.abs(finiteNumber(row.periodoConsumoDias) - period) <= 0.001 &&
+      Math.abs(finiteNumber(row.consumoPromedioDiario) - average) <= 0.001 &&
+      minimumCoverageMatch &&
+      existenceCoverageMatch;
+    historyMatch =
+      Math.abs(finiteNumber(row.mesesHistoria) -
+        elapsedMonths(aggregation.earliestObservation, expected.end)) <= 0.001;
+  }
+
+  if (row && expected?.episodes) {
+    // Episodes and episodeEvents are two views of the same episode facts;
+    // count the persisted episode rows exactly once.
+    const ledgerEpisodeCount = expected.episodes.length;
+    episodeCountMatch = finiteNumber(row.episodiosBajoMinimo) === ledgerEpisodeCount;
+  }
+
+  const checks = [
+    Math.abs(difference) <= 0.001,
+    monthlyQuantitiesMatch,
+    customerSaleMatch,
+    coverageMatch,
+    episodeCountMatch,
+    historyMatch,
+  ].filter((value): value is boolean => value !== undefined);
   return {
     enabled: true,
     movementIds: aggregation.consumptionMovements.map((movement) => movement.id),
-    consumptionQuantity: aggregation.consumptionQuantity,
+    consumptionQuantity: rowConsumptionQuantity,
     movementQuantity,
-    difference: aggregation.consumptionQuantity - movementQuantity,
-    matches: Math.abs(aggregation.consumptionQuantity - movementQuantity) <= 0.001,
+    difference,
+    matches: checks.every(Boolean),
+    monthlyQuantitiesMatch,
+    customerSaleMatch,
+    coverageMatch,
+    episodeCountMatch,
+    historyMatch,
+    ...(row && expected?.episodes
+      ? {
+          rowEpisodeCount: finiteNumber(row.episodiosBajoMinimo),
+          ledgerEpisodeCount: expected.episodes.length,
+        }
+      : {}),
   };
 }
 
@@ -506,7 +725,6 @@ export async function buildQueComprarReport(ctx: DomainReportContext) {
   }
 
   const months = monthSeries(ctx.range.hasta);
-  const monthlyStart = monthDate(months[0]!);
   const baseCte = activeSitesCte();
   const productScope = reportFilters(ctx);
   const until = ctx.range.hasta;
@@ -544,13 +762,14 @@ export async function buildQueComprarReport(ctx: DomainReportContext) {
       ),
       pool.query(
         `SELECT se.id,se.producto_id,se.ubicacion_id,se.minimo,se.existencia,
-                se.diferencia,se.abierto_at,se.cerrado_at,se.movimiento_id
+                se.diferencia,se.abierto_at,se.cerrado_at,se.movimiento_id,se.causa
            FROM stock_minimo_episodios se
            JOIN productos p ON p.id=se.producto_id AND p.activo=true
            JOIN ${baseCte} a ON a.ubicacion_id=se.ubicacion_id
-          WHERE se.abierto_at <= $1
-            AND ${withOffset(productScope.text.replace(/ss\.ubicacion_id/g, "se.ubicacion_id"), 1)}`,
-        [until, ...productScope.values],
+           WHERE se.abierto_at >= $2
+             AND se.abierto_at <= $1
+             AND ${withOffset(productScope.text.replace(/ss\.ubicacion_id/g, "se.ubicacion_id"), 2)}`,
+        [until, ctx.range.desde, ...productScope.values],
       ),
     ]);
 
@@ -589,17 +808,7 @@ export async function buildQueComprarReport(ctx: DomainReportContext) {
     }
     const movementByPair = new Map<string, QueComprarMovement[]>();
     for (const row of movementResult.rows) {
-      const movement: QueComprarMovement = {
-        id: Number(row.id),
-        productoId: Number(row.producto_id),
-        ubicacionId: Number(row.ubicacion_id),
-        date: new Date(row.created_at).toISOString(),
-        type: String(row.tipo),
-        quantity: finiteNumber(row.cantidad),
-        documentType: row.documento_tipo == null ? null : String(row.documento_tipo),
-        documentId: row.documento_id == null ? null : String(row.documento_id),
-        movementOriginId: row.movimiento_origen_id == null ? null : Number(row.movimiento_origen_id),
-      };
+      const movement = asMovement(row as Record<string, unknown>);
       const pair = key(movement.productoId, movement.ubicacionId);
       const current = movementByPair.get(pair) ?? [];
       current.push(movement);
@@ -635,6 +844,9 @@ export async function buildQueComprarReport(ctx: DomainReportContext) {
         openedAt: new Date(row.abierto_at).toISOString(),
         closedAt: row.cerrado_at == null ? null : new Date(row.cerrado_at).toISOString(),
         movementId: row.movimiento_id == null ? null : Number(row.movimiento_id),
+        causa: row.causa == null
+          ? "SNAPSHOT"
+          : String(row.causa) as QueComprarEpisode["causa"],
       };
       const pair = key(episode.productoId, episode.ubicacionId);
       const current = episodesByPair.get(pair) ?? [];
@@ -653,21 +865,13 @@ export async function buildQueComprarReport(ctx: DomainReportContext) {
       .map((product) => {
         const pair = key(product.productoId, product.ubicacionId);
         const pairMovements = movementByPair.get(pair) ?? [];
-        const firstObserved = aggregateLedgerEvidence(pairMovements).earliestObservation;
-        const firstEpisode = (episodesByPair.get(pair) ?? [])
-          .map((episode) => dateValue(episode.openedAt))
-          .filter((date) => Number.isFinite(date.getTime()))
-          .sort((left, right) => left.getTime() - right.getTime())[0] ?? null;
-        const evidenceStart = firstObserved && firstEpisode
-          ? (firstObserved < firstEpisode ? firstObserved : firstEpisode)
-          : firstObserved ?? firstEpisode ?? monthlyStart;
         const query = new URLSearchParams({
           productoId: String(product.productoId),
           ubicacionId: String(product.ubicacionId),
-          // The evidence endpoint must see the same observed history as the
-          // row.  A 12-month display bucket is not a history cutoff.
-          desde: evidenceStart.toISOString().slice(0, 10),
-          hasta: ctx.range.hasta.toISOString().slice(0, 10),
+          // Episodes are counted in the selected report period.  The
+          // evidence endpoint receives the identical local-date bounds.
+          desde: mexicoDateKey(ctx.range.desde),
+          hasta: mexicoDateKey(ctx.range.hasta),
         });
         return buildQueComprarRow({
           productSite: {
@@ -745,10 +949,11 @@ export async function buildQueComprarReport(ctx: DomainReportContext) {
       )],
       warnings: [
         "El consumo por producto y sitio suma salidas de venta y traslado desde el ledger real. No se suma entre sitios: un traslado contaría dos veces.",
-        "La venta real al cliente es una cifra separada y usa VENTA y SALIDA_MOSTRADOR del ledger; no se mezclan unidades.",
+         "La venta real al cliente es una cifra separada y usa únicamente VENTA con documento POS de ticket o nota; una SALIDA_MOSTRADOR solo acredita remoción física.",
         "La cobertura de existencia actual y la cobertura que representa el mínimo son medidas distintas. El déficit observado contra mínimo no es una cantidad a pedir.",
         "Las sugerencias son observaciones sustentadas en movimientos y episodios; el sistema no supone plazo de reposición ni recomienda cantidades inventadas.",
         "Los episodios bajo mínimo se cuentan desde que el motor tiene historial; no se afirma que existieran antes.",
+         "El movimiento asociado a un episodio es una fotografía del último movimiento del producto y sitio al abrirlo. Solo causa MOVIMIENTO prueba un cruce observado; SNAPSHOT no permite inferir un cruce histórico.",
       ],
     };
   } catch (error) {
@@ -795,6 +1000,7 @@ export type QueComprarEvidenceResponse = {
     includedInCustomerSale: boolean;
   }>;
   episodes: QueComprarEpisode[];
+  carriedEpisodes: QueComprarEpisode[];
   episodeEvents: Array<{
     episodeId: number;
     movementId: number | null | undefined;
@@ -804,6 +1010,8 @@ export type QueComprarEvidenceResponse = {
     minimum: number;
     existence: number;
     difference: number;
+    causa: "MOVIMIENTO" | "CONFIGURACION" | "SNAPSHOT";
+    carriedIntoPeriod: boolean;
   }>;
   reconciliation: ReturnType<typeof buildEvidenceReconciliation>;
   row: QueComprarRow;
@@ -849,32 +1057,44 @@ export async function getQueComprarEvidence(input: EvidenceInput): Promise<QueCo
             documento_tipo,documento_id,movimiento_origen_id
        FROM movimientos
       WHERE producto_id=$1 AND ubicacion_id=$2
-        AND created_at >= $3 AND created_at <= $4
+        AND created_at <= $3
       ORDER BY created_at,id`,
-    [input.productoId, input.ubicacionId, input.desde, input.hasta],
+    [input.productoId, input.ubicacionId, input.hasta],
   );
   const episodesResult = await pool.query(
     `SELECT id,producto_id,ubicacion_id,minimo,existencia,diferencia,
-            abierto_at,cerrado_at,movimiento_id
+            abierto_at,cerrado_at,movimiento_id,causa
        FROM stock_minimo_episodios
-      WHERE producto_id=$1 AND ubicacion_id=$2
-        AND abierto_at <= $4
-        AND (cerrado_at IS NULL OR cerrado_at >= $3)
+       WHERE producto_id=$1 AND ubicacion_id=$2
+         AND abierto_at <= $4
+         AND (cerrado_at IS NULL OR cerrado_at >= $3)
       ORDER BY abierto_at,id`,
     [input.productoId, input.ubicacionId, input.desde, input.hasta],
   );
   const movements = movementsResult.rows.map((row) => asMovement(row as Record<string, unknown>));
-  const episodes = episodesResult.rows.map((row) => ({
-    id: Number(row.id),
-    productoId: Number(row.producto_id),
-    ubicacionId: Number(row.ubicacion_id),
-    minimum: finiteNumber(row.minimo),
-    existence: finiteNumber(row.existencia),
-    difference: finiteNumber(row.diferencia),
-    openedAt: new Date(row.abierto_at).toISOString(),
-    closedAt: row.cerrado_at == null ? null : new Date(row.cerrado_at).toISOString(),
-    movementId: row.movimiento_id == null ? null : Number(row.movimiento_id),
-  }));
+  const episodes = episodesResult.rows.map((row) => {
+    const openedAt = new Date(row.abierto_at);
+    return {
+      id: Number(row.id),
+      productoId: Number(row.producto_id),
+      ubicacionId: Number(row.ubicacion_id),
+      minimum: finiteNumber(row.minimo),
+      existence: finiteNumber(row.existencia),
+      difference: finiteNumber(row.diferencia),
+      openedAt: openedAt.toISOString(),
+      closedAt: row.cerrado_at == null ? null : new Date(row.cerrado_at).toISOString(),
+      movementId: row.movimiento_id == null ? null : Number(row.movimiento_id),
+      causa: row.causa == null
+        ? "SNAPSHOT"
+        : String(row.causa) as QueComprarEpisode["causa"],
+      // The query keeps overlapping rows so an already-open episode can be
+      // useful context, but it must not inflate the period's count.
+      carriedIntoPeriod: openedAt < input.desde,
+    };
+  });
+  const episodePeriod = splitEpisodesByRequestedPeriod(episodes, input.desde, input.hasta);
+  const periodEpisodes = episodePeriod.period;
+  const carriedEpisodes = episodePeriod.carried;
   const row = buildQueComprarRow({
     productSite: {
       productoId: input.productoId,
@@ -888,7 +1108,7 @@ export async function getQueComprarEvidence(input: EvidenceInput): Promise<QueCo
       minimoCapturado: product.minimo == null ? null : finiteNumber(product.minimo),
     },
     movements,
-    episodes,
+    episodes: periodEpisodes,
     months: monthSeries(input.hasta),
     end: input.hasta,
   });
@@ -920,7 +1140,8 @@ export async function getQueComprarEvidence(input: EvidenceInput): Promise<QueCo
       includedInConsumption: aggregation.consumptionMovements.some((item) => item.id === movement.id),
       includedInCustomerSale: aggregation.saleMovements.some((item) => item.id === movement.id),
     })),
-    episodes,
+    episodes: periodEpisodes,
+    carriedEpisodes,
     episodeEvents: episodes.map((episode) => ({
       episodeId: episode.id,
       movementId: episode.movementId,
@@ -930,8 +1151,15 @@ export async function getQueComprarEvidence(input: EvidenceInput): Promise<QueCo
       minimum: episode.minimum,
       existence: episode.existence,
       difference: episode.difference,
+      causa: episode.causa ?? "SNAPSHOT",
+      carriedIntoPeriod: episode.carriedIntoPeriod === true,
     })),
-    reconciliation: buildEvidenceReconciliation(true, movements),
+    reconciliation: buildEvidenceReconciliation(true, movements, {
+      row,
+      episodes: periodEpisodes,
+      months: monthSeries(input.hasta),
+      end: input.hasta,
+    }),
     row,
   };
 }

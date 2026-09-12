@@ -1,61 +1,52 @@
-# Stock mínimo y «Qué comprar»: verificación del 2026-09-11
+# Stock mínimo y «Qué comprar»: verificación corregida
 
-## Estado
+Fecha: 2026-09-11. Las correcciones de los ocho hallazgos fueron autorizadas por el dueño. No se activó la función en ningún sitio durante esta verificación.
 
-**No aprobado para operación.** Se implementó la primera versión y se detectaron fallos. Se conserva sin corregir esos fallos por instrucción expresa del dueño. No se activó la función en ningún sitio mediante esta verificación.
+## Resultado
 
-Se ejecutó la migración aditiva mediante el arranque habitual de la API; el registro confirma `ensureStockMinimosSchema` terminado. No se ejecutaron consultas manuales contra la base, no se crearon usuarios ni administradores temporales y no se modificó el motor de inventario.
+Corregidos los hallazgos de historia, periodo, venta real, conciliación, procedencia de episodios, señal de inmovilidad, enlaces y captura con sitio apagado. Pruebas focalizadas: reporte 10 aprobadas; motor 12 aprobadas y 1 omitida; notificaciones 4 aprobadas; interfaz 6 aprobadas. Total focalizado: 32 aprobadas y 1 omisión explícita de reconstrucción real. Typecheck completo aprobado después de las últimas correcciones.
 
-## Resultado de los doce puntos solicitados
+No se ejecutaron SQL manual, usuarios temporales, modificaciones del motor de inventario ni cambios de reglas monetarias. La ampliación de esquema se aplica mediante la migración aditiva habitual. No se presenta una prueba simulada como entrega o persistencia real.
 
-| Punto | Resultado | Evidencia y límite |
+## Los doce puntos solicitados
+
+| Punto | Resultado | Alcance comprobado |
 |---|---|---|
-| 1. Typecheck completo y codegen sin diferencias | Aprobado | `pnpm run typecheck` terminó con código 0. Codegen terminó con código 0; comparación SHA-256 de archivos generados antes/después idéntica. |
-| 2. Suites de inventario, reportes, alertas y permisos | Parcial, con fallos | La tanda segura sin DB produjo 59 aprobadas, 2 fallidas y 1 omitida. La suite nueva del motor produjo 8 aprobadas y 1 omitida. Total: 67 aprobadas, 2 fallidas y 2 omitidas. No se ejecutaron las suites de integración que requieren base aislada o crean usuarios. |
-| 3. Sitio apagado idéntico al anterior | Parcial; no aprobado completo | Navegador con API simulada: no consulta productos ni muestra sus valores, también al cambiar de sitio. Pruebas del motor verifican el cortocircuito. No se comparó el tablero real ni todas las cifras reales. La revisión encontró que PUT permite guardar configuración de mínimos cuando el sitio está apagado. |
-| 4. Encender, capturar mínimos y dejar otros vacíos | Parcial | Navegador: PATCH de habilitación, PUT numérico y PUT con null correctos; mínimo vacío se muestra como «Sin mínimo». El fixture de lectura era estático: no verifica persistencia real. Evaluación pura sin mínimo no abre alerta. |
-| 5. Bajar existencia y entregar alerta a destinatarios con enlace | No aprobado completo | Pruebas sintéticas de destinatarios: activos asignados al sitio más ADMIN/SUPERVISOR, sin duplicados. No se redujo inventario real ni se verificó entrega real. Se detectó enlace que no aplica sitio/producto en la pantalla destino. |
-| 6. No repetir la alerta | Parcial | Prueba sintética de episodio estable y reapertura después de recuperación aprobada. No se verificó concurrencia ni persistencia de notificaciones en PostgreSQL. |
-| 7. Ejecutar reconstruirCacheExistencias y conservar mínimos | No ejecutado | Se verificó separación de tablas en código. La prueba de reconstrucción real fue omitida expresamente: no se ejecutó la función contra la base ni se presenta el análisis del código como sustituto. |
-| 8. Poca historia no apaga otros renglones | Parcial | Navegador con dos renglones sintéticos mostró sugerencia en uno e información insuficiente en otro. Las pruebas de umbral pasaron. La historia real calculada desde salidas omite productos sin consumo y requiere corrección. |
-| 9. Consumo y venta distintos, advertencia visible | Parcial | Navegador confirma nombres y valores separados y advertencia de no sumar consumo entre sitios. Falta acreditar la clasificación de SALIDA_MOSTRADOR como venta real; la revisión la señala como riesgo de sobreconteo. |
-| 10. Abrir sugerencia y comprobar movimientos | No aprobado completo | El diálogo abre y muestra ecuación, movimientos, episodios y conciliación con datos sintéticos. La conciliación del servidor compara dos sumas del mismo conjunto; no demuestra independientemente cada cifra de la fila. Los episodios no guardan el movimiento desencadenante. |
-| 11. Una constante y cambio de umbral | Aprobado con alcance limitado | Se confirmó una constante HISTORY_MIN_MONTHS=3. En dos copias del módulo cargadas en memoria se cambió 3→4: la misma fila pasó a «Sin información suficiente» sin alterar venta, existencia, mínimo, cobertura ni meses de historia. El archivo original no se modificó. No se acepta por ello el cálculo de historia de filas sin salidas. |
-| 12. Teléfono | Parcial | Reporte revisado a 390×844 con tabla desplazable. No se completó el flujo móvil de captura de mínimos ni la interacción móvil de evidencia. |
+| 1. Typecheck y codegen | Aprobado | Typecheck completo final con salida 0. La regeneración sin diferencias se comprobó en la primera implementación; estas correcciones no cambiaron OpenAPI ni archivos generados. |
+| 2. Suites | Aprobadas las focalizadas; integración pendiente | 32 pruebas focalizadas aprobadas y una omitida. Las pruebas generales seguras previas siguen sin cambios ajenos; no se ejecutaron suites que requieren DB aislada o crean usuarios. |
+| 3. Sitio apagado | Parcial | Cortocircuito y rechazo de PUT con SITE_DISABLED/409 probados sin DB. Navegador: no solicita lista ni muestra productos. No se compararon todas las cifras de un tablero real. |
+| 4. Captura y mínimo vacío | Aprobado con API simulada | Interruptor, PUT numérico y borrado con null; mock con estado reflejó el nuevo mínimo y déficit tras guardar. Esto no acredita persistencia real. |
+| 5. Destinatarios y enlace | Parcial | Activos asignados más ADMIN/SUPERVISOR, sin duplicados, en pruebas sintéticas. En navegador el enlace eligió el sitio del encabezado y destacó el producto; PROPIA no pudo sobrepasar su alcance. No se bajó inventario ni se entregó una alerta real. |
+| 6. No repetir | Parcial | Episodio estable y reapertura tras recuperación aprobados con datos sintéticos. Concurrencia y persistencia real pendientes. |
+| 7. Reconstruir caché | No ejecutado | Se conserva la separación de tablas y el motor no fue modificado. No se ejecutó reconstruirCacheExistencias contra PostgreSQL. |
+| 8. Historia individual | Aprobado sin DB | Recepciones establecen historia aunque no haya salidas; límites de meses en Ciudad de México probados. En navegador una fila insuficiente no apagó otra con historia. |
+| 9. Consumo y venta real | Aprobado sin DB | Consumo conserva salidas físicas; venta real exige VENTA con documento de venta reconocido. SALIDA_MOSTRADOR no basta. Advertencia visible y sin suma entre sitios. |
+| 10. Evidencia | Aprobado con datos sintéticos | Prueba que invoca el reporte y su endpoint de evidencia con el mismo pool simulado, incluyendo movimientos anteriores al periodo: historia, cobertura, venta y meses coinciden. La conciliación detecta filas alteradas. Episodios anteriores se muestran separados y no incrementan el conteo del periodo. |
+| 11. Constante de historia | Aprobado con alcance limitado | Una constante HISTORY_MIN_MONTHS controla elegibilidad; la prueba anterior cambió 3 a 4 solo en memoria y mantuvo las mediciones. La comparación trimestral usa un trimestre fijo y no cambia con ese umbral. |
+| 12. Teléfono | Aprobado con API simulada | A 390×844 se revisaron captura, controles, desplazamiento horizontal, apertura/desplazamiento/cierre del diálogo de evidencia. La sección añadida posteriormente de episodios anteriores se verificó por contrato y typecheck. |
 
-## Fallos de pruebas
+## Correcciones y regresiones relevantes
 
-Archivo: `artifacts/api-server/src/notification-feed.contract.test.ts`.
+- Primera observación desde entradas o salidas del par, no únicamente desde consumo.
+- Meses de historia evaluados en el calendario de Ciudad de México; datos previos a observación no se rellenan con ceros ficticios.
+- Venta real documentada separada de salidas físicas; cancelaciones excluidas y movimientos deduplicados.
+- Caídas bajo mínimo contadas por aperturas dentro del periodo. Texto: «en el periodo». Episodios arrastrados son contexto separado.
+- Reporte y evidencia cargan el mismo historial hasta la fecha final y comparten normalización y cálculo. Una prueba invoca ambas funciones públicas con movimientos anteriores a la fecha inicial.
+- Conciliación contrasta celdas mensuales, venta, cobertura, historia y episodios contra los datos base; se prueba detección de alteraciones.
+- Procedencia del episodio: MOVIMIENTO cuando hay cruce demostrable; CONFIGURACION solo para el producto editado, o para el sitio habilitado; SNAPSHOT cuando no hay causa demostrable. No se inventa un movimiento histórico.
+- PUT con sitio apagado rechaza antes de consultar producto o escribir mínimo/auditoría.
+- Enlace de alerta consume sitio/producto mediante el selector del encabezado respetando alcance; muestra existencia, mínimo y déficit.
+- noMovimiento se interpreta con su nombre canónico. Los contratos de notificaciones conservan el destino de pagos dirigidos y la familia ALERTA de stock mínimo.
 
-1. `notification feed is session scoped and publishes three sound families`.
-2. `resolved directed payments leave the derived feed immediately and use a persisted notice`.
+## Incidencias durante la corrección
 
-Son aserciones sobre el código fuente que no coinciden con la implementación actual. No equivalen por sí solas a demostrar una entrega errónea de notificaciones en ejecución. No se modificaron las aserciones ni el código para hacerlas pasar.
+La primera tanda de esta corrección tuvo dos fallos: la expectativa de un límite de historia y una expresión regular antigua del enlace de pagos dirigidos. Se revisó el calendario local y se corrigió la prueba de límite; el contrato ahora admite saltos de línea sin dejar de exigir el destino correcto. Ambas suites pasaron después. La revisión adicional detectó diferencias de ventana de historial y atribución de causa a otros productos; también fueron corregidas dentro de la autorización y cubiertas por regresiones. No se corrigieron reglas ajenas.
 
-## Hallazgos funcionales de la revisión
+## Pendientes reales
 
-- **Historia sin consumo:** `aggregateLedgerEvidence`, en `artifacts/api-server/src/lib/reportes-que-comprar.ts`, determina la primera observación a partir de salidas. Un producto recibido hace meses y sin salidas queda con cero meses de historia. La lógica de meses transcurridos usa componentes UTC en lugar del calendario local.
-- **Faltantes fuera del periodo:** la consulta de episodios solo limita la fecha superior; el conteo puede incluir episodios anteriores al periodo.
-- **Venta real:** `CUSTOMER_SALE_TYPES` incluye `SALIDA_MOSTRADOR`. Ese movimiento acredita salida física; falta demostrar su correspondencia con venta efectiva al cliente, sin doble conteo.
-- **Conciliación no independiente:** `buildEvidenceReconciliation` calcula ambos lados desde el mismo conjunto de movimientos. No contrasta de forma independiente meses, venta real, cobertura y episodios mostrados.
-- **Episodios sin movimiento origen:** `artifacts/api-server/src/lib/stock-minimos.ts` inserta episodios sin `movimiento_id`; falta la trazabilidad pedida hasta el movimiento desencadenante.
-- **Señal de inmovilidad:** el servidor entrega `noMovimiento`; el componente `artifacts/mariana-textil/src/components/reportes/que-comprar-report.tsx` interpreta otras claves. La señal no aparece correctamente.
-- **Enlace de alerta:** `artifacts/api-server/src/routes/notificaciones.ts` enlaza a `/inventario?ubicacionId=…&productoId=…`, pero Inventario no aplica esos parámetros al selector del encabezado y al producto.
-- **Captura con sitio apagado:** el servicio admite PUT de mínimo aun con la función apagada. La interfaz oculta la captura, pero falta la restricción equivalente en el servidor.
+- Entrega real de alertas, recuperación y concurrencia en PostgreSQL.
+- Persistencia después de reconstruirCacheExistencias.
+- Integraciones que necesitan una base de pruebas autorizada sin creación de usuarios temporales.
+- Evaluación audible de notificaciones, no realizada por el navegador automatizado.
 
-No se corrigieron estos hallazgos automáticamente.
-
-## Alcance preservado
-
-- Destinatarios confirmados por el dueño: todos los activos asignados al sitio, más ADMIN y SUPERVISOR.
-- No se creó campo de encargado. La posible designación de responsable quedó pendiente en `replit.md`.
-- Se trasladó solo el mapa Mes × color. No se retiraron tablas ni pestañas.
-- El archivo del motor de inventario permanece sin cambios.
-- No se añadieron cálculos monetarios ni plazos de reposición inventados.
-- No se considera la igualdad de una respuesta simulada una prueba de persistencia o de exactitud de datos reales.
-
-## Ejecuciones adicionales
-
-La API y la interfaz arrancan. La captura no autenticada muestra el acceso de sesión, sin fallo de renderizado. Las pruebas de navegador usaron exclusivamente interceptaciones de API y datos sintéticos.
-
-Una invocación inicial de pruebas desde la raíz no encontró `tsx` y no ejecutó pruebas; se utilizó el comando correcto dentro de `@workspace/api-server`. No hubo cambios de aplicación para resolver ese error de invocación.
+No se creó responsable/encargado. Esa posibilidad permanece como decisión futura en replit.md. Se trasladó únicamente Mes × color; ninguna tabla ni pestaña fue retirada.

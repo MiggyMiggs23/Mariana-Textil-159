@@ -93,7 +93,9 @@ function sendStockError(res: {
   const status =
     error.code === "LOCATION_NOT_FOUND" || error.code === "PRODUCT_NOT_FOUND"
       ? 404
-      : 400;
+      : error.code === "SITE_DISABLED"
+        ? 409
+        : 400;
   res.status(status).json({ error: error.message, code: error.code });
 }
 

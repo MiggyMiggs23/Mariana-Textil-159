@@ -159,31 +159,23 @@ function payloadMonths(
 }
 
 function rowProductId(row: Record<string, unknown>) {
-  return numberValue(firstValue(row, ["productoId", "productId", "id"]));
+  return numberValue(row.productoId);
 }
 
 function rowLocationId(row: Record<string, unknown>, fallback?: number | null) {
-  return numberValue(
-    firstValue(row, ["ubicacionId", "locationId", "sitioId"]) ?? fallback,
-  );
+  return numberValue(row.ubicacionId ?? fallback);
 }
 
 function rowLabel(row: Record<string, unknown>) {
-  const product = textValue(firstValue(row, ["producto", "nombre"]));
-  const tela = textValue(firstValue(row, ["tela"]), "");
-  const color = textValue(firstValue(row, ["color"]), "");
-  if (product !== "—") return product;
+  const tela = textValue(row.tela, "");
+  const color = textValue(row.color, "");
   return [tela, color].filter(Boolean).join(" / ") || "Producto";
 }
 
 function rowSuggestion(row: Record<string, unknown>) {
-  const value = firstValue(row, [
-    "sugerencia",
-    "suggestion",
-    "recomendacion",
-    "recomendación",
-    "sugerencias",
-  ]);
+  // The report API has one canonical observation field. Do not silently
+  // interpret stale aliases as a suggestion: that hides a contract mismatch.
+  const value = row.sugerencia;
   if (value === undefined || value === null || value === "") return null;
   return textValue(value);
 }
@@ -198,6 +190,152 @@ function renderEvidenceValue(value: unknown) {
   if (value === null || value === undefined || value === "") return "—";
   if (typeof value !== "object") return String(value);
   return JSON.stringify(value, null, 2);
+}
+
+function episodeCauseLabel(value: unknown) {
+  if (value === "MOVIMIENTO") return "Movimiento: cruce observado";
+  if (value === "CONFIGURACION") return "Configuración: brecha expuesta";
+  return "Snapshot: no infiere cruce histórico";
+}
+
+function episodePeriodLabel(carriedIntoPeriod: unknown) {
+  return carriedIntoPeriod === true
+    ? "Anterior al periodo (contexto)"
+    : "Apertura en el periodo (contabilizada)";
+}
+
+function EpisodeTable({
+  episodes,
+  title,
+  emptyMessage,
+  ariaLabel,
+}: {
+  episodes: Array<Record<string, unknown>>;
+  title: string;
+  emptyMessage: string;
+  ariaLabel: string;
+}) {
+  return (
+    <Card>
+      <CardHeader className="py-3">
+        <CardTitle className="text-base">{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        {episodes.length === 0 ? (
+          <p className="px-4 pb-4 text-sm text-muted-foreground">{emptyMessage}</p>
+        ) : (
+          <div
+            className="overflow-x-auto overscroll-x-contain"
+            role="region"
+            tabIndex={0}
+            aria-label={ariaLabel}
+          >
+            <Table className="min-w-[780px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Abierto</TableHead>
+                  <TableHead>Cerrado</TableHead>
+                  <TableHead className="text-right">Mínimo</TableHead>
+                  <TableHead className="text-right">Existencia</TableHead>
+                  <TableHead className="text-right">Diferencia</TableHead>
+                  <TableHead>Proveniencia de apertura</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {episodes.map((episode, index) => (
+                  <TableRow key={String(episode.id ?? index)}>
+                    <TableCell>{textValue(episode.openedAt)}</TableCell>
+                    <TableCell>{textValue(episode.closedAt)}</TableCell>
+                    <TableCell className="text-right font-mono">
+                      {renderNumeric(episode.minimum)}
+                    </TableCell>
+                    <TableCell className="text-right font-mono">
+                      {renderNumeric(episode.existence)}
+                    </TableCell>
+                    <TableCell className="text-right font-mono">
+                      {renderNumeric(episode.difference)}
+                    </TableCell>
+                    <TableCell className="font-mono text-sm">
+                      <div>{episodeCauseLabel(episode.causa)}</div>
+                      <div className="text-xs text-muted-foreground">
+                        Movimiento snapshot: {textValue(episode.movementId)}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function EpisodeEventsCard({
+  episodeEvents,
+}: {
+  episodeEvents: Array<Record<string, unknown>>;
+}) {
+  return (
+    <Card>
+      <CardHeader className="py-3">
+        <CardTitle className="text-base">
+          Eventos de episodios ({episodeEvents.length})
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        {episodeEvents.length === 0 ? (
+          <p className="px-4 pb-4 text-sm text-muted-foreground">
+            No se recibieron eventos de episodios para este detalle.
+          </p>
+        ) : (
+          <div
+            className="overflow-x-auto overscroll-x-contain"
+            role="region"
+            tabIndex={0}
+            aria-label="Eventos de episodios; desplázate horizontalmente para ver el detalle"
+          >
+            <Table className="min-w-[940px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Alcance</TableHead>
+                  <TableHead>Abierto</TableHead>
+                  <TableHead>Cerrado</TableHead>
+                  <TableHead>Causa</TableHead>
+                  <TableHead>Episodio</TableHead>
+                  <TableHead>Movimiento asociado</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {episodeEvents.map((event, index) => {
+                  const carriedIntoPeriod = event.carriedIntoPeriod === true;
+                  return (
+                    <TableRow key={String(event.episodeId ?? index)}>
+                      <TableCell>
+                        <Badge variant={carriedIntoPeriod ? "secondary" : "outline"}>
+                          {episodePeriodLabel(event.carriedIntoPeriod)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{textValue(event.openedAt)}</TableCell>
+                      <TableCell>{textValue(event.closedAt)}</TableCell>
+                      <TableCell>{episodeCauseLabel(event.causa)}</TableCell>
+                      <TableCell className="font-mono">
+                        {textValue(event.episodeId)}
+                      </TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {textValue(event.movementId)}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 export function QueComprarReport({
@@ -316,7 +454,7 @@ export function QueComprarReport({
     const productoId = rowProductId(row);
     const rowUbicacionId = rowLocationId(row, ubicacionId);
     if (productoId === null || rowUbicacionId === null) return;
-    const evidenceUrl = firstValue(row, ["evidenceUrl", "evidenciaUrl"]);
+    const evidenceUrl = row.evidenceUrl;
     setEvidenceTarget({
       productoId,
       ubicacionId: rowUbicacionId,
@@ -387,7 +525,12 @@ export function QueComprarReport({
               </p>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="w-full overflow-x-auto">
+              <div
+                className="w-full overflow-x-auto overscroll-x-contain"
+                role="region"
+                tabIndex={0}
+                aria-label="Renglones de qué comprar; desplázate horizontalmente para ver todas las columnas"
+              >
                 <Table className="min-w-[1250px]">
                   <TableHeader className="bg-muted/30">
                     <TableRow>
@@ -402,6 +545,7 @@ export function QueComprarReport({
                       <TableHead className="text-right">Existencia</TableHead>
                       <TableHead className="text-right">Mínimo</TableHead>
                       <TableHead className="text-right">Días de cobertura</TableHead>
+                      <TableHead className="text-right">Déficit contra mínimo</TableHead>
                       <TableHead className="text-right">Venta real al cliente</TableHead>
                       <TableHead className="text-right">Meses de historia</TableHead>
                       <TableHead>Estado</TableHead>
@@ -414,28 +558,24 @@ export function QueComprarReport({
                       const suggestion = rowSuggestion(row);
                       const productId = rowProductId(row);
                       const rowSiteId = rowLocationId(row, ubicacionId);
-                      const evidenceUrl = firstValue(row, ["evidenceUrl", "evidenciaUrl"]);
-                      const notMoved = Boolean(
-                        firstValue(row, ["sinMovimiento", "noSeHaMovido", "notMoved"]),
-                      );
-                      const underMinimum = Boolean(
-                        firstValue(row, ["bajoMinimo", "underMinimum", "debajoDelMinimo"]),
-                      );
+                      const evidenceUrl = row.evidenceUrl;
+                      const notMoved = row.noMovimiento === true;
+                      const underMinimum = row.bajoMinimo === true;
                       return (
                         <TableRow key={String(row.id ?? `${productId ?? "row"}-${index}`)}>
                           <TableCell>
                             <div className="font-medium">{rowLabel(row)}</div>
-                            {textValue(firstValue(row, ["ubicacion", "sitio", "nombreUbicacion"]), "") && (
+                            {textValue(row.sitio, "") && (
                               <div className="text-xs text-muted-foreground">
-                                {textValue(firstValue(row, ["ubicacion", "sitio", "nombreUbicacion"]))}
+                                {textValue(row.sitio)}
                               </div>
                             )}
                           </TableCell>
                           <TableCell className="font-mono text-sm">
-                            {textValue(firstValue(row, ["sku"]))}
+                            {textValue(row.sku)}
                           </TableCell>
                           <TableCell>
-                            {formatUnit(textValue(firstValue(row, ["unidad"]), ""))}
+                            {formatUnit(textValue(row.unidad, ""))}
                           </TableCell>
                           {consumptionColumns.map((column) => (
                             <TableCell key={column.key} className="text-right font-mono">
@@ -443,36 +583,22 @@ export function QueComprarReport({
                             </TableCell>
                           ))}
                           <TableCell className="text-right font-mono">
-                            {renderNumeric(firstValue(row, ["existencia", "existenciaActual"]))}
+                            {renderNumeric(row.existenciaActual)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            {renderNumeric(firstValue(row, ["minimo", "mínimo", "minimoCapturado"]))}
+                            {renderNumeric(row.minimoCapturado)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            {renderNumeric(
-                              firstValue(row, [
-                                "diasCobertura",
-                                "coberturaDias",
-                                "coberturaDiasMinimo",
-                              ]),
-                              "days",
-                            )}
+                            {renderNumeric(row.coberturaDiasMinimo, "days")}
+                          </TableCell>
+                           <TableCell className="text-right font-mono">
+                             {renderNumeric(row.deficitMinimoObservado)}
+                           </TableCell>
+                          <TableCell className="text-right font-mono">
+                            {renderNumeric(row.ventaRealCliente)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            {renderNumeric(
-                              firstValue(row, [
-                                "ventaRealCliente",
-                                "ventaCliente",
-                                "ventasCliente",
-                                "ventaReal",
-                              ]),
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right font-mono">
-                            {renderNumeric(
-                              firstValue(row, ["mesesHistoria", "historyMonths", "historiaMeses"]),
-                              "count",
-                            )}
+                            {renderNumeric(row.mesesHistoria, "count")}
                           </TableCell>
                           <TableCell>
                             <div className="flex max-w-[180px] flex-wrap gap-1">
@@ -493,11 +619,13 @@ export function QueComprarReport({
                           <TableCell>
                             {suggestion ? (
                               <Button
+                                 type="button"
                                 size="sm"
                                 variant="outline"
                                 disabled={productId === null || rowSiteId === null}
                                 onClick={() => openEvidence(row)}
                                 data-testid={`que-comprar-evidence-${productId ?? index}`}
+                                 aria-label={`Ver evidencia de ${rowLabel(row)}`}
                                 title={
                                   evidenceUrl
                                     ? "Abrir movimientos que sustentan la sugerencia"
@@ -517,7 +645,7 @@ export function QueComprarReport({
                     })}
                     {rows.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={11 + consumptionColumns.length} className="h-28 text-center text-muted-foreground">
+                        <TableCell colSpan={12 + consumptionColumns.length} className="h-28 text-center text-muted-foreground">
                           No hay renglones para este rango.
                         </TableCell>
                       </TableRow>
@@ -603,7 +731,7 @@ export function QueComprarReport({
           if (!open) setEvidenceTarget(null);
         }}
       >
-        <DialogContent className="max-h-[90vh] max-w-4xl overflow-hidden">
+        <DialogContent className="flex max-h-[90vh] max-h-[90dvh] w-[calc(100vw-2rem)] max-w-4xl flex-col overflow-hidden p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Evidencia de la sugerencia</DialogTitle>
             <DialogDescription>
@@ -611,7 +739,7 @@ export function QueComprarReport({
               reales que alimentan la cifra.
             </DialogDescription>
           </DialogHeader>
-          <div className="min-h-0 overflow-y-auto pr-1">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
             {evidenceQuery.isLoading ? (
               <div className="flex items-center justify-center gap-3 py-12 text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -645,13 +773,15 @@ function EvidenceContents({ evidence }: { evidence: QueComprarEvidence }) {
       ? value.map((entry) => ({ group: key, entry }))
       : [];
   });
-  const eventEntries = Array.isArray(evidence.eventos)
-    ? evidence.eventos
-    : Array.isArray(evidence.episodeEvents)
-      ? evidence.episodeEvents
-      : [];
+  const eventEntries = Array.isArray(evidence.eventos) ? evidence.eventos : [];
+  const episodeEvents = Array.isArray(evidence.episodeEvents)
+    ? evidence.episodeEvents
+    : [];
   const equation = evidence.ecuacion ?? evidence.inputs;
   const episodes = Array.isArray(evidence.episodes) ? evidence.episodes : [];
+  const carriedEpisodes = Array.isArray(evidence.carriedEpisodes)
+    ? evidence.carriedEpisodes
+    : [];
   const reconciliation: Record<string, unknown> | null =
     evidence.reconciliation && typeof evidence.reconciliation === "object"
       ? evidence.reconciliation as Record<string, unknown>
@@ -705,7 +835,12 @@ function EvidenceContents({ evidence }: { evidence: QueComprarEvidence }) {
               No se recibieron movimientos para este detalle.
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <div
+              className="overflow-x-auto overscroll-x-contain"
+              role="region"
+              tabIndex={0}
+              aria-label="Movimientos de evidencia; desplázate horizontalmente para ver el detalle"
+            >
               <Table className="min-w-[650px]">
                 <TableHeader>
                   <TableRow>
@@ -730,55 +865,19 @@ function EvidenceContents({ evidence }: { evidence: QueComprarEvidence }) {
           )}
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="py-3">
-          <CardTitle className="text-base">
-            Episodios bajo mínimo ({episodes.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {episodes.length === 0 ? (
-            <p className="px-4 pb-4 text-sm text-muted-foreground">
-              No hay episodios bajo mínimo en el rango.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table className="min-w-[780px]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Abierto</TableHead>
-                    <TableHead>Cerrado</TableHead>
-                    <TableHead className="text-right">Mínimo</TableHead>
-                    <TableHead className="text-right">Existencia</TableHead>
-                    <TableHead className="text-right">Diferencia</TableHead>
-                    <TableHead>Movimiento</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {episodes.map((episode, index) => (
-                    <TableRow key={String(episode.id ?? index)}>
-                      <TableCell>{textValue(episode.openedAt)}</TableCell>
-                      <TableCell>{textValue(episode.closedAt)}</TableCell>
-                      <TableCell className="text-right font-mono">
-                        {renderNumeric(episode.minimum)}
-                      </TableCell>
-                      <TableCell className="text-right font-mono">
-                        {renderNumeric(episode.existence)}
-                      </TableCell>
-                      <TableCell className="text-right font-mono">
-                        {renderNumeric(episode.difference)}
-                      </TableCell>
-                      <TableCell className="font-mono text-sm">
-                        {textValue(episode.movementId)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <EpisodeTable
+        episodes={episodes}
+        title={`Episodios bajo mínimo en el periodo (${episodes.length})`}
+        emptyMessage="No hay episodios bajo mínimo en el periodo."
+        ariaLabel="Episodios bajo mínimo del periodo; desplázate horizontalmente para ver el detalle"
+      />
+      <EpisodeTable
+        episodes={carriedEpisodes}
+        title={`Episodios anteriores al periodo (no incluidos en conteo) (${carriedEpisodes.length})`}
+        emptyMessage="No hay episodios abiertos antes del periodo seleccionado."
+        ariaLabel="Episodios anteriores al periodo; desplázate horizontalmente para ver el detalle"
+      />
+      <EpisodeEventsCard episodeEvents={episodeEvents} />
       <Card>
         <CardHeader className="py-3">
           <CardTitle className="text-base">

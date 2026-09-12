@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
@@ -36,6 +36,7 @@ import {
 } from "@/lib/stock-minimos-api";
 import { useGetCurrentUser } from "@workspace/api-client-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { Link, useSearch } from "wouter";
 
 function errorMessage(error: unknown) {
   return error instanceof Error
@@ -48,20 +49,67 @@ function displayQuantity(value: number | string | null | undefined) {
   return formatNumber(value, { kind: "quantity" });
 }
 
+function positiveQueryId(value: string | null) {
+  if (value === null || value.trim() === "") return null;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
+function minimumDeficit(producto: StockMinimoProducto) {
+  if (producto.minimo === null) return null;
+  return Math.max(0, Number(producto.minimo) - Number(producto.existencia));
+}
+
 export default function StockMinimos() {
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser();
-  const { selectedLocationId } = useLocationScope();
+  const searchString = useSearch();
+  const { selectedLocationId, setSelectedLocationId } = useLocationScope();
   const [search, setSearch] = useState("");
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [rowError, setRowError] = useState<Record<number, string>>({});
   const [pageError, setPageError] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 300);
 
+  const deepLink = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    return {
+      ubicacionId: positiveQueryId(params.get("ubicacionId")),
+      productoId: positiveQueryId(params.get("productoId")),
+    };
+  }, [searchString]);
+  const canSelectDeepLinkedLocation =
+    user?.rol !== "CAJA" &&
+    user?.rol !== "TERMINAL" &&
+    (user?.rol === "ADMIN" ||
+      (user?.rol === "SUPERVISOR" && user?.alcanceConsulta === "TODAS") ||
+      user?.alcanceConsulta === "TODAS");
+  const deepLinkedLocationId =
+    canSelectDeepLinkedLocation ? deepLink.ubicacionId : null;
+
+  useEffect(() => {
+    // The notification URL may request a site only for users whose existing
+    // read scope allows it. PROPIA/CAJA/TERMINAL users stay on the provider's
+    // operational location and never receive a local scope override.
+    if (
+      deepLinkedLocationId !== null &&
+      selectedLocationId !== deepLinkedLocationId
+    ) {
+      setSelectedLocationId(deepLinkedLocationId);
+    }
+  }, [deepLinkedLocationId, selectedLocationId, setSelectedLocationId]);
+
   // A global header selection is required. A user limited to one site already
   // receives that site from the scope provider. Never use a local site picker.
-  const ubicacionId = selectedLocationId ?? user?.ubicacion?.id ?? null;
-  const canEdit = hasPermission(user, Modules.INVENTARIO, "editar");
+  // A permitted deep link is applied to that same provider selection above,
+  // rather than sending a second, hidden site scope to the API.
+  const ubicacionId =
+    deepLinkedLocationId ?? selectedLocationId ?? user?.ubicacion?.id ?? null;
+  const canEdit =
+    hasPermission(user, Modules.INVENTARIO, "editar") &&
+    (user?.rol === "ADMIN" || user?.ubicacion?.id === ubicacionId);
+  const canViewProductDetails = hasPermission(user, Modules.PRODUCTOS, "ver");
+  const selectedProductRef = useRef<HTMLTableRowElement>(null);
 
   const configQuery = useQuery({
     queryKey: ["stock-minimos", "config", ubicacionId],
@@ -135,10 +183,34 @@ export default function StockMinimos() {
   }, [ubicacionId]);
 
   const products = productsQuery.data?.productos ?? [];
+  const selectedProduct = useMemo(
+    () =>
+      deepLink.productoId === null
+        ? null
+        : products.find((producto) => producto.productoId === deepLink.productoId) ??
+          null,
+    [deepLink.productoId, products],
+  );
+  const visibleProducts = useMemo(
+    () =>
+      deepLink.productoId === null
+        ? products
+        : products.filter((producto) => producto.productoId === deepLink.productoId),
+    [deepLink.productoId, products],
+  );
   const hasUnsavedValues = useMemo(
     () => Object.keys(drafts).length > 0,
     [drafts],
   );
+
+  useEffect(() => {
+    if (selectedProductRef.current?.scrollIntoView) {
+      selectedProductRef.current.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [selectedProduct?.productoId]);
 
   const setDraft = (producto: StockMinimoProducto, value: string) => {
     setRowError((current) => {
@@ -240,7 +312,7 @@ export default function StockMinimos() {
                         por producto.
                       </CardDescription>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <Badge variant={configQuery.data?.habilitado ? "default" : "secondary"}>
                         {configQuery.data?.habilitado ? "Activo" : "Apagado"}
                       </Badge>
@@ -295,6 +367,47 @@ export default function StockMinimos() {
                   )}
                 </CardHeader>
                 <CardContent className="p-0">
+                  {deepLink.productoId !== null && selectedProduct && (
+                    <Alert
+                      className="m-4 border-primary/40 bg-primary/5"
+                      data-testid="stock-minimos-deep-link-selection"
+                    >
+                      <Info className="h-4 w-4" />
+                      <AlertTitle>Producto seleccionado desde la alerta</AlertTitle>
+                      <AlertDescription>
+                        <span className="font-medium">
+                          {selectedProduct.tela} · {selectedProduct.color}
+                        </span>
+                        {" · "}
+                        Existencia:{" "}
+                        <span className="font-mono">
+                          {displayQuantity(selectedProduct.existencia)}
+                        </span>
+                        {" · "}
+                        Mínimo:{" "}
+                        <span className="font-mono">
+                          {displayQuantity(selectedProduct.minimo)}
+                        </span>
+                        {" · "}
+                        Déficit:{" "}
+                        <span className="font-mono">
+                          {displayQuantity(minimumDeficit(selectedProduct))}
+                        </span>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {deepLink.productoId !== null &&
+                    !productsQuery.isLoading &&
+                    !selectedProduct && (
+                      <Alert className="m-4" data-testid="stock-minimos-product-not-found">
+                        <Info className="h-4 w-4" />
+                        <AlertTitle>Producto no encontrado en este sitio</AlertTitle>
+                        <AlertDescription>
+                          El producto de la alerta no está disponible en el sitio
+                          operativo actual o no tienes acceso a él.
+                        </AlertDescription>
+                      </Alert>
+                    )}
                   {productsQuery.isLoading ? (
                     <div className="flex items-center justify-center gap-3 py-12 text-muted-foreground">
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -307,8 +420,13 @@ export default function StockMinimos() {
                       <AlertDescription>{errorMessage(productsQuery.error)}</AlertDescription>
                     </Alert>
                   ) : (
-                    <div className="overflow-x-auto">
-                      <Table className="min-w-[760px]">
+                    <div
+                      className="overflow-x-auto overscroll-x-contain"
+                      role="region"
+                      tabIndex={0}
+                      aria-label="Productos y mínimos del sitio; desplázate horizontalmente para ver todas las columnas"
+                    >
+                      <Table className="min-w-[900px]">
                         <TableHeader className="bg-muted/30">
                           <TableRow>
                             <TableHead>Producto</TableHead>
@@ -316,20 +434,47 @@ export default function StockMinimos() {
                             <TableHead>Unidad</TableHead>
                             <TableHead className="text-right">Existencia</TableHead>
                             <TableHead className="min-w-[190px]">Mínimo</TableHead>
+                            <TableHead className="text-right">Déficit</TableHead>
                             <TableHead className="w-28 text-right">Acción</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {products.map((producto) => {
+                          {visibleProducts.map((producto) => {
                             const value =
                               drafts[producto.productoId] ??
                               (producto.minimo === null ? "" : String(producto.minimo));
                             const hasDraft = drafts[producto.productoId] !== undefined;
                             const hasError = rowError[producto.productoId];
                             return (
-                              <TableRow key={producto.productoId}>
+                              <TableRow
+                                key={producto.productoId}
+                                ref={
+                                  producto.productoId === deepLink.productoId
+                                    ? selectedProductRef
+                                    : undefined
+                                }
+                                className={
+                                  producto.productoId === deepLink.productoId
+                                    ? "bg-primary/5 ring-1 ring-inset ring-primary/30"
+                                    : undefined
+                                }
+                                data-testid={
+                                  producto.productoId === deepLink.productoId
+                                    ? "stock-minimos-selected-product"
+                                    : undefined
+                                }
+                              >
                                 <TableCell>
-                                  <div className="font-medium">{producto.tela}</div>
+                                  {canViewProductDetails ? (
+                                    <Link
+                                      href={`/productos/${producto.productoId}`}
+                                      className="font-medium text-primary hover:underline"
+                                    >
+                                      {producto.tela}
+                                    </Link>
+                                  ) : (
+                                    <div className="font-medium">{producto.tela}</div>
+                                  )}
                                   <div className="text-sm text-muted-foreground">{producto.color}</div>
                                 </TableCell>
                                 <TableCell className="font-mono text-sm">{producto.sku}</TableCell>
@@ -357,6 +502,9 @@ export default function StockMinimos() {
                                     <p className="mt-1 text-xs text-destructive">{hasError}</p>
                                   )}
                                 </TableCell>
+                                <TableCell className="text-right font-mono">
+                                  {displayQuantity(minimumDeficit(producto))}
+                                </TableCell>
                                 <TableCell className="text-right">
                                   <Button
                                     size="sm"
@@ -375,10 +523,20 @@ export default function StockMinimos() {
                           {products.length === 0 && (
                             <TableRow>
                               <TableCell
-                                colSpan={6}
+                                colSpan={7}
                                 className="h-28 text-center text-muted-foreground"
                               >
                                 No hay productos para este sitio con esa búsqueda.
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {products.length > 0 && visibleProducts.length === 0 && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={7}
+                                className="h-28 text-center text-muted-foreground"
+                              >
+                                El producto seleccionado no pertenece a este sitio.
                               </TableCell>
                             </TableRow>
                           )}

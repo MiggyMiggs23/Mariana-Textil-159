@@ -286,13 +286,14 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
             : "AVISO",
         title: row.titulo,
         message: row.mensaje,
-        // The episode id is the durable notification identity. The existing
-        // inventory route accepts both header site and product query filters.
+        // The episode id is the durable notification identity. The stock
+        // minimum screen validates the site against the header scope and
+        // focuses the product from these query parameters.
         href:
           row.tipo === "STOCK_MINIMO" &&
           systemRow.episodioProductoId != null &&
           systemRow.episodioUbicacionId != null
-            ? `/inventario?ubicacionId=${encodeURIComponent(String(systemRow.episodioUbicacionId))}&productoId=${encodeURIComponent(String(systemRow.episodioProductoId))}`
+            ? `/inventario/stock-minimos?ubicacionId=${encodeURIComponent(String(systemRow.episodioUbicacionId))}&productoId=${encodeURIComponent(String(systemRow.episodioProductoId))}`
             : row.entidad === "solicitudes_pago_dirigido"
               ? "/pagos-dirigidos"
               : "/notificaciones",
