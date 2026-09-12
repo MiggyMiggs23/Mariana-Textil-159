@@ -13,6 +13,7 @@ import {
   Package,
   Settings,
   Shield,
+  ShieldAlert,
   Ship,
   ShoppingCart,
   Tags,
@@ -58,6 +59,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { name: "Productos", path: "/productos", icon: Package, module: Modules.PRODUCTOS, isClickable: true },
       { name: "Inventario", path: "/inventario", icon: Boxes, module: Modules.INVENTARIO, isClickable: true },
+      { name: "Stock mínimo", path: "/inventario/stock-minimos", icon: ShieldAlert, module: Modules.INVENTARIO, isClickable: true },
       { name: "Vista Global", path: "/inventario/vista-global", icon: LayoutDashboard, module: Modules.DASHBOARD, isClickable: true },
       { name: "Ajustes", path: "/inventario/ajustes", icon: FileBarChart, module: Modules.AJUSTES, isClickable: true },
       { name: "Auditorías", path: "/inventario/auditorias", icon: ClipboardCheck, module: Modules.AUDITORIA_INVENTARIO, isClickable: true },

@@ -29,6 +29,7 @@ import auditoriasInventarioRouter from "./auditorias-inventario";
 import purgaRouter from "./purga";
 import cajaVentasRouter from "./caja-ventas";
 import equiposRouter from "./equipos";
+import stockMinimosRouter from "./stock-minimos";
 
 const router: IRouter = Router();
 
@@ -61,6 +62,7 @@ router.use(camionetasRouter);
 router.use(choferesRouter);
 router.use(viajesRouter);
 router.use(equiposRouter);
+router.use(stockMinimosRouter);
 router.use(purgaRouter);
 
 export default router;

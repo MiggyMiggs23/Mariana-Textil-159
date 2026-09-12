@@ -1,14 +1,16 @@
 import { Router, type IRouter } from "express";
 import {
   GetReporteSeccionParams, GetReporteSeccionQueryParams, GetReporteSeccionResponse,
-  GetReportesCatalogosResponse,
+  GetReportesCatalogosResponse, GetReporteQueComprarEvidenciaQueryParams,
+  GetReporteQueComprarEvidenciaResponse,
 } from "@workspace/api-zod";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { createTextPdf } from "../lib/pdf";
-import { buildReport, getCatalogs, parseReportBooleanQuery, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
+import { buildReport, getCatalogs, parseReportBooleanQuery, reportRange, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
 import { createReportWorkbook, normalizeExportTables } from "../lib/report-export";
 import { resolveReadScope } from "./inventario";
+import { getQueComprarEvidence } from "../lib/reportes-que-comprar";
 
 const router: IRouter = Router();
 router.use("/reportes", requireSession, requierePermiso("reportes", "ver"));
@@ -26,7 +28,9 @@ function reportKpis(report: Report) {
   return report.kpis as Array<{ label: string; value: string | number; kind: string }>;
 }
 async function report(req: any) {
-  const params = GetReporteSeccionParams.parse(req.params);
+  const params = req.params.seccion === "que-comprar"
+    ? { seccion: "que-comprar" as const }
+    : GetReporteSeccionParams.parse(req.params);
   const { facturado: rawFacturado, ...rawQuery } = req.query;
   const facturado = parseReportBooleanQuery(rawFacturado);
   const query = {
@@ -53,6 +57,42 @@ router.get("/reportes/catalogos", async (req, res, next): Promise<void> => {
     res.json(GetReportesCatalogosResponse.parse(catalogs));
   }
   catch (e) { if (!error(e, res)) next(e); }
+});
+/**
+ * Drill-down for the Qué comprar report.  This route intentionally has a
+ * stable read-only evidence response: the report rows carry this URL and the
+ * payload exposes the exact filters, ledger rows, episodes, and reconciliation.
+ */
+router.get("/reportes/que-comprar/evidencia", async (req, res, next): Promise<void> => {
+  try {
+    const evidenceQuery = GetReporteQueComprarEvidenciaQueryParams.parse(req.query);
+    const productoId = evidenceQuery.productoId;
+    const requestedUbicacionId = evidenceQuery.ubicacionId;
+    const scope = resolveReadScope(req.auth!, requestedUbicacionId);
+    if (scope.scopeError) {
+      res.status(403).json({ error: scope.scopeError });
+      return;
+    }
+    if (scope.ubicacionId == null) {
+      res.status(403).json({ error: "No tienes una ubicación asignada." });
+      return;
+    }
+    const range = reportRange(evidenceQuery);
+    const evidence = await getQueComprarEvidence({
+      productoId,
+      ubicacionId: scope.ubicacionId,
+      desde: range.desde,
+      hasta: range.hasta,
+    });
+    if (!evidence) {
+      res.status(404).json({ error: "No existe evidencia habilitada para ese producto y sitio." });
+      return;
+    }
+    res.setHeader("Cache-Control", "private, no-store");
+    res.json(GetReporteQueComprarEvidenciaResponse.parse(evidence));
+  } catch (e) {
+    if (!error(e, res)) next(e);
+  }
 });
 router.get("/reportes/:seccion", async (req, res, next): Promise<void> => {
   const started = performance.now();

@@ -214,7 +214,7 @@ export async function buildInventoryReport(section: "inventario" | "mapas-calor"
         formatColumnLabel: formatMonthLabel,
       }),
     });
-    return { kpis: [{ id: "meses", label: "Meses analizados", value: buckets.length, kind: "count" }], charts: [make("mes-producto", "sku"), make("mes-color", "color"), make("mes-tela", "tela"), make("mes-sitio", "sitio")], tables: [], warnings };
+    return { kpis: [{ id: "meses", label: "Meses analizados", value: buckets.length, kind: "count" }], charts: [make("mes-producto", "sku"), make("mes-tela", "tela"), make("mes-sitio", "sitio")], tables: [], warnings };
   }
   if (section === "color") {
     warnings.push("Las ventas del análisis de color respetan el filtro de modalidad aplicado en el servidor; la tabla sin movimiento no tiene modalidad.");

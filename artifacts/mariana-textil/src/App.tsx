@@ -32,6 +32,7 @@ import SalidaDocumento from "@/pages/salida-documento";
 import Movimientos from "@/pages/movimientos";
 import Etiquetas from "@/pages/etiquetas";
 import Inventario from "@/pages/inventario";
+import StockMinimos from "@/pages/stock-minimos";
 import RolloDetail from "@/pages/rollo-detail";
 import RolloEtiqueta from "@/pages/rollo-etiqueta";
 import Pos from "@/pages/pos";
@@ -383,6 +384,15 @@ function Router() {
           component={() => (
             <ProtectedRoute
               component={Inventario}
+              allowedModule={Modules.INVENTARIO}
+            />
+          )}
+        />
+        <Route
+          path="/inventario/stock-minimos"
+          component={() => (
+            <ProtectedRoute
+              component={StockMinimos}
               allowedModule={Modules.INVENTARIO}
             />
           )}

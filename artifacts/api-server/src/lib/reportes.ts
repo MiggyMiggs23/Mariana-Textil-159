@@ -3,6 +3,7 @@ import { accountedDocumentPredicate } from "./accounted-document";
 import { parseMexicoDateQuery } from "./mexico-date";
 import { buildCommercialReport } from "./reportes-commercial";
 import { buildInventoryReport } from "./reportes-inventory";
+import { buildQueComprarReport } from "./reportes-que-comprar";
 import { buildSalesReport } from "./reportes-sales";
 
 export const REPORT_SECTIONS = [
@@ -14,6 +15,7 @@ export const REPORT_SECTIONS = [
   "compras",
   "clientes",
   "pagos-dirigidos",
+  "que-comprar",
 ] as const;
 
 export type ReportSection = (typeof REPORT_SECTIONS)[number];
@@ -174,6 +176,8 @@ export async function buildReport(
     ? await buildSalesReport(section, context)
     : section === "inventario" || section === "mapas-calor" || section === "color"
       ? await buildInventoryReport(section, context)
+      : section === "que-comprar"
+        ? await buildQueComprarReport(context)
       : await buildCommercialReport(section, context);
   const activeFilters = Object.entries(reportInput)
     .filter(([, value]) => value !== undefined && value !== "")

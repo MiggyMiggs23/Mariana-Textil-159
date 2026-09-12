@@ -733,6 +733,20 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 
 **Un renglón de producto es indivisible**: o cabe entero en la hoja o pasa completo a la siguiente, nunca se parte a la mitad. En los documentos impresos por hoja, los renglones se miden contando el renglón completo más todo lo que va debajo de la tabla —totales, leyenda y firma—; cada formato tiene su propia capacidad.
 
+## Stock mínimo y reporte «Qué comprar»
+
+**Estado al 2026-09-11:** implementación inicial, no aceptada como terminada. La verificación detectó fallos de contrato de notificaciones y problemas funcionales de historia, periodo, evidencia y enlaces. Por instrucción del dueño, se reportan sin corregirlos automáticamente. No activar en operación hasta revisar los resultados.
+
+- El mínimo es configuración **por producto y ubicación**, en `stock_minimos`, con cantidad, autor y fecha. Nunca se guarda en `existencias`: ese caché se reconstruye desde los movimientos y no puede ser propietario de configuración.
+- La función se activa **por sitio**, apagada por omisión. Regla obligatoria: apagada no calcula faltantes, no alerta, no muestra análisis ni modifica productos de ese sitio. La captura usa el selector del encabezado, sin un selector de sitio paralelo. La aceptación del bloqueo de escrituras directas mientras está apagada sigue pendiente.
+- El mínimo es **opcional por producto**. Vacío significa sin mínimo; no genera alerta. Una existencia estrictamente menor al mínimo abre un episodio; no se repite la notificación mientras siga el mismo episodio. La entrega y concurrencia reales todavía requieren verificación.
+- Los destinatarios solicitados son **todos los usuarios activos asignados al sitio, además de ADMIN y SUPERVISOR**, sin duplicar destinatarios. «Encargado» no es un campo ni un rol especial. **Pendiente de decisión futura:** si se requiere designar un responsable por sitio, deberá autorizarse como un campo nuevo; no se implementa en este trabajo.
+- El consumo por sitio es **ventas más salidas**, incluidos los traslados en el origen. **No se suma entre sitios**, porque un traslado y su venta posterior contarían dos veces la misma cantidad. Para compras se usa la **venta real al cliente**, distinta del consumo. La clasificación de movimientos para esta última requiere resolver los hallazgos de la revisión antes de aceptarla.
+- Las sugerencias dependen de **una sola constante**, `HISTORY_MIN_MONTHS`, hoy **3 meses**: con menos historia una semana atípica puede distorsionar la interpretación. El umbral es por renglón. Consumo, venta, existencia, mínimo y cobertura son mediciones y no esperan al umbral. La historia de productos sin salidas aún no satisface esta regla.
+- Las sugerencias deben ser **hechos observados**, con acceso a sus movimientos y cálculo verificable. No se suponen plazos de reposición: no existen de forma general en el sistema; los contenedores tienen fecha de pedido, pero muchas compras entran sin ella. No convertir un faltante medido en una orden o proyección inventada.
+- **Retiro autorizado:** se trasladó únicamente el mapa **Mes × color** desde Mapas de Calor a Qué comprar. **Tablas retiradas: ninguna. Pestañas retiradas: ninguna.** Las tablas parcialmente coincidentes conservan información propia. No se alteran Ventas, Utilidad y Márgenes, Clientes y Crédito, Pagos Dirigidos, Diferencias de Caja ni Comparativo entre Sitios.
+- **2026-09-11:** se implementaron configuración separada, migración aditiva, evaluación periódica y avisos en el sistema existente, pantalla de mínimos, reporte mensual y consulta de evidencia; aceptación pendiente de corregir hallazgos con autorización y completar las pruebas no ejecutadas.
+
 ## Higiene de la documentación
 
 - Este archivo se deriva del código en rutas, conteos y roles. Toda ruta citada aquí debe existir textualmente en `lib/api-spec/openapi.yaml`.

@@ -24,6 +24,7 @@ import {
   ensurePagosProveedorSchema,
   ensureSolicitudesPagoDirigidoSchema,
   ensureNotificacionesSchema,
+  ensureStockMinimosSchema,
   ensureCamionetasSchema,
   ensureChoferesSchema,
   ensureViajesSchema,
@@ -36,6 +37,9 @@ import {
 } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { backfillCompras } from "./lib/compras-proveedor";
+import {
+  runStockMinimumPoller,
+} from "./lib/stock-minimos";
 import {
   installGracefulShutdown,
   observeBackgroundTask,
@@ -86,6 +90,7 @@ export async function ensureStartupSchemas(): Promise<void> {
     await phase("audit and logistics", async () => {
       await initializer("ensureAuditSchema", () => ensureAuditSchema(startupPool));
       await initializer("ensureNotificacionesSchema", () => ensureNotificacionesSchema(startupPool));
+      await initializer("ensureStockMinimosSchema", () => ensureStockMinimosSchema(startupPool));
       await initializer("ensureCamionetasSchema", () => ensureCamionetasSchema(startupPool));
       await initializer("ensureChoferesSchema", () => ensureChoferesSchema(startupPool));
       await initializer("ensureViajesSchema", () => ensureViajesSchema(startupPool));
@@ -160,12 +165,36 @@ export async function startServer() {
       },
     },
   );
+  const stockMinimumController = new AbortController();
+  const stockMinimumPromise = observeBackgroundTask(
+    runStockMinimumPoller({
+      signal: stockMinimumController.signal,
+      onError(error) {
+        logger.error({ err: error }, "No se pudo evaluar stock mínimo");
+      },
+    }),
+    {
+      onFulfilled() {
+        logger.info("Evaluador de stock mínimo detenido");
+      },
+      onRejected(err) {
+        logger.error({ err }, "No se pudo iniciar el evaluador de stock mínimo");
+      },
+    },
+  );
+  const backgroundTasks = {
+    promise: Promise.all([backfillPromise, stockMinimumPromise]).then(() => undefined),
+    abort() {
+      backfillController.abort();
+      stockMinimumController.abort();
+    },
+  };
   installGracefulShutdown({
     app,
     server,
     pool,
     drain: requestDrain,
-    backfill: { promise: backfillPromise, abort: () => backfillController.abort() },
+    backfill: backgroundTasks,
     logger,
   });
 }

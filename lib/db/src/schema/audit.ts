@@ -75,6 +75,9 @@ export const notificacionesSistemaTable = pgTable(
     uniqueIndex("notificaciones_sistema_pago_dirigido_resuelto_uidx")
       .on(table.entidad, table.entidadId, table.destinatarioUsuarioId)
       .where(sql`${table.tipo} = 'PAGO_DIRIGIDO_RESUELTO'`),
+    uniqueIndex("notificaciones_sistema_stock_minimo_episode_recipient_uidx")
+      .on(table.entidad, table.entidadId, table.destinatarioUsuarioId)
+      .where(sql`${table.tipo} = 'STOCK_MINIMO'`),
   ],
 );
 

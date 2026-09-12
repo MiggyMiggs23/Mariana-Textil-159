@@ -12,10 +12,12 @@ import { ReportKpis } from "@/components/reportes/report-kpis";
 import { ReportWarnings } from "@/components/reportes/report-warnings";
 import { ReportCharts } from "@/components/reportes/report-charts";
 import { ReportTable } from "@/components/reportes/report-table";
+import QueComprarReport from "@/components/reportes/que-comprar-report";
 import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
 import { toast } from "sonner";
+import { useLocationScope } from "@/lib/location-scope";
 
 const TABS = [
   { id: "ventas", label: "Ventas" },
@@ -24,6 +26,7 @@ const TABS = [
   { id: "mapas-calor", label: "Mapas de Calor" },
   { id: "color", label: "Análisis de Color" },
   { id: "compras", label: "Compras" },
+  { id: "que-comprar", label: "Qué comprar" },
   { id: "clientes", label: "Clientes y Crédito" },
   { id: "pagos-dirigidos", label: "Pagos Dirigidos" },
   { id: "comparativo", label: "Comparativo entre Sitios" },
@@ -48,6 +51,7 @@ export default function Reportes() {
   const isAdmin = user?.rol === "ADMIN";
   const [location, setLocation] = useLocation();
   const searchString = useSearch();
+  const { selectedLocationId } = useLocationScope();
 
   const allowedTabs = TABS.filter(tab => {
     if (!isAdmin) {
@@ -132,6 +136,7 @@ export default function Reportes() {
   };
 
   const isCajaTab = activeTab === "comparativo" || activeTab === "diferencias";
+  const isQueComprar = activeTab === "que-comprar";
   const isDateRangeValid = hasValidDateRange(filters);
 
   // Catalogos
@@ -270,6 +275,12 @@ export default function Reportes() {
                 <div className="rounded-lg border bg-muted/30 px-4 py-8 text-center text-sm text-muted-foreground" data-testid="report-date-range-prompt">
                   Selecciona un rango entre 1900 y 2999, de hasta 100 años, para generar el reporte.
                 </div>
+              ) : isQueComprar ? (
+                <QueComprarReport
+                  params={apiParams as any}
+                  dateRangeValid={isDateRangeValid}
+                  ubicacionId={selectedLocationId}
+                />
               ) : isLoading ? (
                 <div className="h-[400px] flex items-center justify-center bg-card rounded-lg border shadow-sm" data-testid="report-loading">
                   <div className="flex flex-col items-center gap-3">

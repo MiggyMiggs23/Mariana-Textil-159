@@ -616,6 +616,50 @@ export interface ContenedorResumen {
   diferencias: ContenedorDiferenciaResumen[];
 }
 
+export interface StockMinimoConfig {
+  /** @minimum 1 */
+  ubicacionId: number;
+  habilitado: boolean;
+}
+
+export interface StockMinimoConfigUpdate {
+  habilitado: boolean;
+}
+
+export interface StockMinimoProducto {
+  /** @minimum 1 */
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: string;
+  existencia: number;
+  /** @nullable */
+  minimo: number | null;
+  /** @nullable */
+  updatedAt: string | null;
+}
+
+export interface StockMinimoList {
+  /** @minimum 1 */
+  ubicacionId: number;
+  habilitado: boolean;
+  productos: StockMinimoProducto[];
+}
+
+export interface StockMinimoUpdate {
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  minimo: number | null;
+}
+
+/**
+ * Evidencia data-driven whose exact fields follow the report builder. Keep this open until the runtime report evidence payload is finalized.
+ */
+export interface ReporteQueComprarEvidencia { [key: string]: unknown }
+
 export type ReportePrimitive = string | number | boolean | null;
 
 export type ReporteKpiKind = typeof ReporteKpiKind[keyof typeof ReporteKpiKind];
@@ -6869,6 +6913,35 @@ search?: string;
 includeSinExistencia?: boolean;
 };
 
+export type GetStockMinimoConfigParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+};
+
+export type UpdateStockMinimoConfigParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+};
+
+export type GetStockMinimosParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+buscar?: string;
+};
+
+export type UpdateStockMinimoParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+};
+
 export type GetKardexParams = {
 /**
  * Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.
@@ -7551,6 +7624,28 @@ productoId?: number;
 export type ContarAlertasEtiquetas200 = {
   count: number;
   threshold: 3;
+};
+
+export type GetReporteQueComprarEvidenciaParams = {
+/**
+ * @minimum 1
+ */
+productoId: number;
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+periodo?: ReportePeriodoParameter;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
 };
 
 export type GetReporteSeccionParams = {

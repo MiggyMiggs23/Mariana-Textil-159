@@ -406,3 +406,17 @@ mtime_ms = 1789172927172
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2d4c368d-6ecf-4551-bf65-4ba0e140cbea/d470c83f-b6e8-4bea-95a6-f9b27fc3b229"
 storage_version_token = "1789172991547365"
 content_type = "text/html"
+
+[[outputs]]
+id = "r0IPP1SWeWL0Gg2QOto63"
+uri = "file://reports/stock-minimos-verificacion.html"
+type = "text"
+title = "Stock mínimo: resultados de los 12 puntos"
+description = "Informe de verificación con resultados aprobados, fallos y pruebas no ejecutadas. La implementación no está aprobada para operación."
+logical_id = "1f2d6036-f6c4-4562-a968-3ee24a98cd38"
+content_hash = "sha256:1137922475f7d1018f32a1764f09cbc24d807d06b158c3900ed95f27ab88a4d6"
+size = 8989
+mtime_ms = 1789174678497
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/1f2d6036-f6c4-4562-a968-3ee24a98cd38/c1f6a3de-8b39-46a8-9beb-a0da332671c7"
+storage_version_token = "1789174678959987"
+content_type = "text/html"

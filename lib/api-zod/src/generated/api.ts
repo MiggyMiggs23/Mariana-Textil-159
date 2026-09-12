@@ -4200,6 +4200,113 @@ export const GetExistenciasAgrupadasResponse = zod.array(GetExistenciasAgrupadas
 
 
 /**
+ * @summary Consulta si el motor de stock mínimo está habilitado para una ubicación
+ */
+
+
+
+export const GetStockMinimoConfigQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1)
+})
+
+
+
+
+export const GetStockMinimoConfigResponse = zod.object({
+  "ubicacionId": zod.number().min(1),
+  "habilitado": zod.boolean()
+})
+
+
+/**
+ * @summary Habilita o deshabilita el motor de stock mínimo para una ubicación
+ */
+
+
+
+export const UpdateStockMinimoConfigQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1)
+})
+
+export const UpdateStockMinimoConfigBody = zod.object({
+  "habilitado": zod.boolean()
+})
+
+
+
+
+export const UpdateStockMinimoConfigResponse = zod.object({
+  "ubicacionId": zod.number().min(1),
+  "habilitado": zod.boolean()
+})
+
+
+/**
+ * @summary Lista los mínimos y la existencia actual de los productos de una ubicación
+ */
+
+
+
+export const GetStockMinimosQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1),
+  "buscar": zod.coerce.string().optional()
+})
+
+
+
+
+
+export const GetStockMinimosResponse = zod.object({
+  "ubicacionId": zod.number().min(1),
+  "habilitado": zod.boolean(),
+  "productos": zod.array(zod.object({
+  "productoId": zod.number().min(1),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.string(),
+  "existencia": zod.number(),
+  "minimo": zod.number().nullable(),
+  "updatedAt": zod.coerce.date().nullable()
+}))
+})
+
+
+/**
+ * @summary Captura o elimina el mínimo de un producto en una ubicación
+ */
+
+
+
+export const UpdateStockMinimoParams = zod.object({
+  "productoId": zod.coerce.number().min(1)
+})
+
+
+
+
+export const UpdateStockMinimoQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1)
+})
+
+export const updateStockMinimoBodyMinimoMin = 0;
+
+
+
+export const UpdateStockMinimoBody = zod.object({
+  "minimo": zod.number().min(updateStockMinimoBodyMinimoMin).nullable()
+})
+
+
+
+
+export const UpdateStockMinimoResponse = zod.object({
+  "ubicacionId": zod.number().min(1),
+  "habilitado": zod.boolean()
+})
+
+
+/**
  * @summary Historial completo de movimientos, filtrable y paginado
  */
 export const getKardexQueryIncluirUbicacionesInactivasDefault = false;
@@ -10011,10 +10118,31 @@ export const GetReportesCatalogosResponse = zod.object({
 
 
 /**
+ * @summary Obtiene la evidencia de movimientos de una fila de Qué comprar
+ */
+
+
+export const getReporteQueComprarEvidenciaQueryPeriodoDefault = `mensual`;
+export const getReporteQueComprarEvidenciaQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getReporteQueComprarEvidenciaQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+
+
+export const GetReporteQueComprarEvidenciaQueryParams = zod.object({
+  "productoId": zod.coerce.number().min(1),
+  "ubicacionId": zod.coerce.number().min(1),
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']).default(getReporteQueComprarEvidenciaQueryPeriodoDefault),
+  "desde": zod.coerce.string().regex(getReporteQueComprarEvidenciaQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(getReporteQueComprarEvidenciaQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City')
+})
+
+export const GetReporteQueComprarEvidenciaResponse = zod.record(zod.string(), zod.unknown()).describe('Evidencia data-driven whose exact fields follow the report builder. Keep this open until the runtime report evidence payload is finalized.\n')
+
+
+/**
  * @summary Reporte analítico de sólo lectura
  */
 export const GetReporteSeccionParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar'])
 })
 
 export const getReporteSeccionQueryPeriodoDefault = `mensual`;
@@ -10108,7 +10236,7 @@ export const GetReporteSeccionResponse = zod.object({
  * @summary Exporta un reporte a XLSX
  */
 export const ExportReporteSeccionXlsxParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar'])
 })
 
 export const exportReporteSeccionXlsxQueryPeriodoDefault = `mensual`;
@@ -10150,7 +10278,7 @@ export const ExportReporteSeccionXlsxResponse = zod.unknown()
  * @summary Exporta un reporte a PDF
  */
 export const ExportReporteSeccionPdfParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar'])
 })
 
 export const exportReporteSeccionPdfQueryPeriodoDefault = `mensual`;

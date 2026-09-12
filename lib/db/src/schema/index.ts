@@ -23,6 +23,7 @@ export * from "./rollos";
 export * from "./salidas";
 export * from "./series";
 export * from "./sessions";
+export * from "./stock-minimos";
 export * from "./solicitudes-pago-dirigido";
 export * from "./users";
 export * from "./viajes";

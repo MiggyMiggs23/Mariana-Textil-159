@@ -15,6 +15,7 @@ import {
   notificacionesSistemaTable,
   pool,
   solicitudesPagoDirigidoTable,
+  stockMinimoEpisodiosTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { getAdminAlertas } from "../lib/admin-alertas";
@@ -32,6 +33,26 @@ function visibleSystemNotifications(user: { id: number; rol: string }) {
         eq(notificacionesSistemaTable.destinatarioUsuarioId, user.id),
       )
     : eq(notificacionesSistemaTable.destinatarioUsuarioId, user.id);
+}
+
+/**
+ * Low-stock events are pending only while their episode remains open and the
+ * site switch is enabled. Resolved/disabled events stay durable for audit.
+ */
+function activeStockMinimumNotification() {
+  return or(
+    sql`${notificacionesSistemaTable.tipo} <> 'STOCK_MINIMO'`,
+    sql`EXISTS (
+      SELECT 1
+      FROM stock_minimo_episodios sme
+      JOIN stock_minimo_sitios sms ON sms.ubicacion_id = sme.ubicacion_id
+      WHERE notificaciones_sistema.tipo = 'STOCK_MINIMO'
+        AND notificaciones_sistema.entidad = 'stock_minimo_episodios'
+        AND notificaciones_sistema.entidad_id = sme.id::text
+        AND sme.cerrado_at IS NULL
+        AND sms.habilitado = true
+    )`,
+  );
 }
 
 function present(row: typeof notificacionesCreditoTable.$inferSelect) {
@@ -124,6 +145,7 @@ export async function countActiveEvents(user: { id: number; rol: string }): Prom
         .where(and(
           visibleSystemNotifications(user),
           isNull(notificacionesSistemaTable.leidaAt),
+          activeStockMinimumNotification(),
         )),
     ]);
     return Math.min(100, (pending?.count ?? 0) + (system?.count ?? 0));
@@ -154,6 +176,7 @@ export async function countActiveEvents(user: { id: number; rol: string }): Prom
         .where(and(
           visibleSystemNotifications(user),
           isNull(notificacionesSistemaTable.leidaAt),
+          activeStockMinimumNotification(),
         )),
     ]);
   const directedIds = new Set([
@@ -199,11 +222,29 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
       : Promise.resolve({ rows: [] });
 
     const systemNotificationsPromise = db
-      .select()
+      .select({
+        notification: notificacionesSistemaTable,
+        episodioProductoId: stockMinimoEpisodiosTable.productoId,
+        episodioUbicacionId: stockMinimoEpisodiosTable.ubicacionId,
+      })
       .from(notificacionesSistemaTable)
+      .leftJoin(
+        stockMinimoEpisodiosTable,
+        and(
+          eq(
+            notificacionesSistemaTable.entidad,
+            "stock_minimo_episodios",
+          ),
+          eq(
+            notificacionesSistemaTable.entidadId,
+            sql`${stockMinimoEpisodiosTable.id}::text`,
+          ),
+        ),
+      )
       .where(and(
         visibleSystemNotifications(user),
         isNull(notificacionesSistemaTable.leidaAt),
+        activeStockMinimumNotification(),
       ))
       .orderBy(desc(notificacionesSistemaTable.createdAt))
       .limit(50);
@@ -233,16 +274,30 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
       };
       events.set(event.id, event);
     }
-    for (const row of visibleSystem) {
+    for (const systemRow of visibleSystem) {
+      const row = systemRow.notification;
       events.set(`system:${row.id}`, {
         id: `system:${row.id}`,
         kind: "SYSTEM",
-        family: row.tipo.startsWith("SOLICITUD_") ? "SOLICITUD" : row.tipo.includes("INCOMPLETA") ? "ALERTA" : "AVISO",
+        family: row.tipo.startsWith("SOLICITUD_")
+          ? "SOLICITUD"
+          : row.tipo.includes("INCOMPLETA") || row.tipo === "STOCK_MINIMO"
+            ? "ALERTA"
+            : "AVISO",
         title: row.titulo,
         message: row.mensaje,
-        href: row.entidad === "solicitudes_pago_dirigido" ? "/pagos-dirigidos" : "/notificaciones",
+        // The episode id is the durable notification identity. The existing
+        // inventory route accepts both header site and product query filters.
+        href:
+          row.tipo === "STOCK_MINIMO" &&
+          systemRow.episodioProductoId != null &&
+          systemRow.episodioUbicacionId != null
+            ? `/inventario?ubicacionId=${encodeURIComponent(String(systemRow.episodioUbicacionId))}&productoId=${encodeURIComponent(String(systemRow.episodioProductoId))}`
+            : row.entidad === "solicitudes_pago_dirigido"
+              ? "/pagos-dirigidos"
+              : "/notificaciones",
         updatedAt: row.createdAt.toISOString(),
-        siteId: null,
+        siteId: systemRow.episodioUbicacionId ?? null,
         action: null,
       });
     }
@@ -356,7 +411,10 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
       db
         .select()
         .from(notificacionesSistemaTable)
-        .where(visibleSystemNotifications(user))
+        .where(and(
+          visibleSystemNotifications(user),
+          activeStockMinimumNotification(),
+        ))
         .orderBy(asc(notificacionesSistemaTable.leidaAt), desc(notificacionesSistemaTable.createdAt)),
     ]);
     if (user.rol !== "ADMIN") {
@@ -494,6 +552,7 @@ router.post("/notificaciones/leer-todas", async (req, res, next): Promise<void> 
         .where(and(
           visibleSystemNotifications(user),
           isNull(notificacionesSistemaTable.leidaAt),
+          activeStockMinimumNotification(),
         ))
         .returning({ id: notificacionesSistemaTable.id });
       return credit.length + system.length;

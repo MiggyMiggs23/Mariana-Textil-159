@@ -29,6 +29,10 @@ export { ensureAplicacionesPagoProveedorSchema } from "./lib/aplicaciones-pago-p
 export { ensurePagosProveedorSchema } from "./lib/pagos-proveedor-schema";
 export { ensureSolicitudesPagoDirigidoSchema } from "./lib/solicitudes-pago-dirigido-schema";
 export { ensureNotificacionesSchema } from "./lib/notificaciones-schema";
+export {
+  ensureStockMinimosSchema,
+  STOCK_MINIMOS_SCHEMA_VERSION,
+} from "./lib/stock-minimos-schema";
 export { ensureCamionetasSchema } from "./lib/camionetas-schema";
 export { ensureEquiposSchema } from "./lib/equipos-schema";
 export {

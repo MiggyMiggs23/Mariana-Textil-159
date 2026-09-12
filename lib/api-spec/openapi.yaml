@@ -29,6 +29,8 @@ tags:
     description: Administración de permisos por rol y por usuario
   - name: inventario
     description: Inventario de rollos, kardex, ajustes y conciliación
+  - name: stock-minimos
+    description: Configuración de mínimos de inventario por producto y ubicación
   - name: auditoria-inventario
     description: Conteos físicos de rollos por sitio
   - name: pos
@@ -2341,6 +2343,99 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /stock-minimos/config:
+    get:
+      operationId: getStockMinimoConfig
+      tags: [stock-minimos]
+      summary: Consulta si el motor de stock mínimo está habilitado para una ubicación
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+      responses:
+        "200":
+          description: Configuración del motor para la ubicación
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StockMinimoConfig" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    patch:
+      operationId: updateStockMinimoConfig
+      tags: [stock-minimos]
+      summary: Habilita o deshabilita el motor de stock mínimo para una ubicación
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/StockMinimoConfigUpdate" }
+      responses:
+        "200":
+          description: Configuración actualizada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StockMinimoConfig" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /stock-minimos:
+    get:
+      operationId: getStockMinimos
+      tags: [stock-minimos]
+      summary: Lista los mínimos y la existencia actual de los productos de una ubicación
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+        - name: buscar
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Productos configurables para la ubicación
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StockMinimoList" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /stock-minimos/{productoId}:
+    put:
+      operationId: updateStockMinimo
+      tags: [stock-minimos]
+      summary: Captura o elimina el mínimo de un producto en una ubicación
+      parameters:
+        - name: productoId
+          in: path
+          required: true
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/StockMinimoUpdate" }
+      responses:
+        "200":
+          description: Mínimo actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StockMinimoConfig" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /inventario/kardex:
     get:
       operationId: getKardex
@@ -5173,6 +5268,34 @@ paths:
               schema: { $ref: "#/components/schemas/ReportesCatalogos" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/que-comprar/evidencia:
+    get:
+      operationId: getReporteQueComprarEvidencia
+      tags: [reportes]
+      summary: Obtiene la evidencia de movimientos de una fila de Qué comprar
+      parameters:
+        - name: productoId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionId
+          in: query
+          required: true
+          schema: { type: number, minimum: 1 }
+        - $ref: "#/components/parameters/ReportePeriodo"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+      responses:
+        "200":
+          description: Evidencia dinámica de los movimientos que sustentan la fila
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReporteQueComprarEvidencia"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /reportes/{seccion}:
     get:
       operationId: getReporteSeccion
@@ -5195,6 +5318,7 @@ paths:
                   compras,
                   clientes,
                   pagos-dirigidos,
+                  que-comprar,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -5249,6 +5373,7 @@ paths:
                   compras,
                   clientes,
                   pagos-dirigidos,
+                  que-comprar,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -5304,6 +5429,7 @@ paths:
                   compras,
                   clientes,
                   pagos-dirigidos,
+                  que-comprar,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -6428,6 +6554,61 @@ components:
             type: array,
             items: { $ref: "#/components/schemas/ContenedorDiferenciaResumen" },
           }
+    StockMinimoConfig:
+      type: object
+      required: [ubicacionId, habilitado]
+      properties:
+        ubicacionId: { type: number, minimum: 1 }
+        habilitado: { type: boolean }
+    StockMinimoConfigUpdate:
+      type: object
+      required: [habilitado]
+      properties:
+        habilitado: { type: boolean }
+    StockMinimoProducto:
+      type: object
+      required:
+        [
+          productoId,
+          sku,
+          tela,
+          color,
+          unidad,
+          existencia,
+          minimo,
+          updatedAt,
+        ]
+      properties:
+        productoId: { type: number, minimum: 1 }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string }
+        existencia: { type: number }
+        minimo: { type: [number, "null"] }
+        updatedAt:
+          type: [string, "null"]
+          format: date-time
+    StockMinimoList:
+      type: object
+      required: [ubicacionId, habilitado, productos]
+      properties:
+        ubicacionId: { type: number, minimum: 1 }
+        habilitado: { type: boolean }
+        productos:
+          type: array
+          items: { $ref: "#/components/schemas/StockMinimoProducto" }
+    StockMinimoUpdate:
+      type: object
+      required: [minimo]
+      properties:
+        minimo: { type: [number, "null"], minimum: 0 }
+    ReporteQueComprarEvidencia:
+      type: object
+      description: >
+        Evidencia data-driven whose exact fields follow the report builder. Keep
+        this open until the runtime report evidence payload is finalized.
+      additionalProperties: true
     ReportePrimitive:
       oneOf:
         [

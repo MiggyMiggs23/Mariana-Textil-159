@@ -158,8 +158,11 @@ import type {
   GetExistenciasParams,
   GetKardexParams,
   GetPosClienteCreditoDisponibleParams,
+  GetReporteQueComprarEvidenciaParams,
   GetReporteSeccionParams,
   GetResumenContenedoresParams,
+  GetStockMinimoConfigParams,
+  GetStockMinimosParams,
   HealthStatus,
   HistorialComprasProveedoresResult,
   ImportConfirmInput,
@@ -262,6 +265,7 @@ import type {
   RecalcularInput,
   RecepcionSalidaInput,
   ReimpresionClienteNota,
+  ReporteQueComprarEvidencia,
   ReporteSeccion,
   ReportesCatalogos,
   ReversoSalidaExtraordinariaInput,
@@ -297,6 +301,10 @@ import type {
   SolicitudPagoDirigidoAplicada,
   SolicitudPagoDirigidoInput,
   SolicitudesPagoDirigidoResult,
+  StockMinimoConfig,
+  StockMinimoConfigUpdate,
+  StockMinimoList,
+  StockMinimoUpdate,
   TicketCajaResumen,
   TicketCancelacionInput,
   TicketCobroInput,
@@ -307,6 +315,8 @@ import type {
   UbicacionInventario,
   UnauthorizedResponse,
   UpdateClienteCredito200,
+  UpdateStockMinimoConfigParams,
+  UpdateStockMinimoParams,
   User,
   UserInput,
   UserUpdate,
@@ -7835,6 +7845,334 @@ export function useGetExistenciasAgrupadas<TData = Awaited<ReturnType<typeof get
 
 
 
+
+export const getGetStockMinimoConfigUrl = (params: GetStockMinimoConfigParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/stock-minimos/config?${stringifiedParams}` : `/api/stock-minimos/config`
+}
+
+/**
+ * @summary Consulta si el motor de stock mínimo está habilitado para una ubicación
+ */
+export const getStockMinimoConfig = async (params: GetStockMinimoConfigParams, options?: Parameters<typeof customFetch>[1]): Promise<StockMinimoConfig> => {
+
+  return customFetch<StockMinimoConfig>(getGetStockMinimoConfigUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetStockMinimoConfigQueryKey = (params?: GetStockMinimoConfigParams,) => {
+    return [
+    `/api/stock-minimos/config`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetStockMinimoConfigQueryOptions = <TData = Awaited<ReturnType<typeof getStockMinimoConfig>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: GetStockMinimoConfigParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStockMinimoConfig>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetStockMinimoConfigQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getStockMinimoConfig>>> = ({ signal }) => getStockMinimoConfig(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getStockMinimoConfig>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetStockMinimoConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getStockMinimoConfig>>>
+export type GetStockMinimoConfigQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Consulta si el motor de stock mínimo está habilitado para una ubicación
+ */
+
+export function useGetStockMinimoConfig<TData = Awaited<ReturnType<typeof getStockMinimoConfig>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: GetStockMinimoConfigParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStockMinimoConfig>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetStockMinimoConfigQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateStockMinimoConfigUrl = (params: UpdateStockMinimoConfigParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/stock-minimos/config?${stringifiedParams}` : `/api/stock-minimos/config`
+}
+
+/**
+ * @summary Habilita o deshabilita el motor de stock mínimo para una ubicación
+ */
+export const updateStockMinimoConfig = async (stockMinimoConfigUpdate: StockMinimoConfigUpdate,
+    params: UpdateStockMinimoConfigParams, options?: Parameters<typeof customFetch>[1]): Promise<StockMinimoConfig> => {
+
+  return customFetch<StockMinimoConfig>(getUpdateStockMinimoConfigUrl(params),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(stockMinimoConfigUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateStockMinimoConfigMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateStockMinimoConfig>>, TError,{data: BodyType<StockMinimoConfigUpdate>;params: UpdateStockMinimoConfigParams}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateStockMinimoConfig>>, TError,{data: BodyType<StockMinimoConfigUpdate>;params: UpdateStockMinimoConfigParams}, TContext> => {
+
+const mutationKey = ['updateStockMinimoConfig'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateStockMinimoConfig>>, {data: BodyType<StockMinimoConfigUpdate>;params: UpdateStockMinimoConfigParams}> = (props) => {
+          const {data,params} = props ?? {};
+
+          return  updateStockMinimoConfig(data,params,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateStockMinimoConfigMutationResult = NonNullable<Awaited<ReturnType<typeof updateStockMinimoConfig>>>
+    export type UpdateStockMinimoConfigMutationBody = BodyType<StockMinimoConfigUpdate>
+    export type UpdateStockMinimoConfigMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+    /**
+ * @summary Habilita o deshabilita el motor de stock mínimo para una ubicación
+ */
+export const useUpdateStockMinimoConfig = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateStockMinimoConfig>>, TError,{data: BodyType<StockMinimoConfigUpdate>;params: UpdateStockMinimoConfigParams}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateStockMinimoConfig>>,
+        TError,
+        {data: BodyType<StockMinimoConfigUpdate>;params: UpdateStockMinimoConfigParams},
+        TContext
+      > => {
+      return useMutation(getUpdateStockMinimoConfigMutationOptions(options));
+    }
+
+export const getGetStockMinimosUrl = (params: GetStockMinimosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/stock-minimos?${stringifiedParams}` : `/api/stock-minimos`
+}
+
+/**
+ * @summary Lista los mínimos y la existencia actual de los productos de una ubicación
+ */
+export const getStockMinimos = async (params: GetStockMinimosParams, options?: Parameters<typeof customFetch>[1]): Promise<StockMinimoList> => {
+
+  return customFetch<StockMinimoList>(getGetStockMinimosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetStockMinimosQueryKey = (params?: GetStockMinimosParams,) => {
+    return [
+    `/api/stock-minimos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetStockMinimosQueryOptions = <TData = Awaited<ReturnType<typeof getStockMinimos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: GetStockMinimosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStockMinimos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetStockMinimosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getStockMinimos>>> = ({ signal }) => getStockMinimos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getStockMinimos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetStockMinimosQueryResult = NonNullable<Awaited<ReturnType<typeof getStockMinimos>>>
+export type GetStockMinimosQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Lista los mínimos y la existencia actual de los productos de una ubicación
+ */
+
+export function useGetStockMinimos<TData = Awaited<ReturnType<typeof getStockMinimos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: GetStockMinimosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStockMinimos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetStockMinimosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateStockMinimoUrl = (productoId: number,
+    params: UpdateStockMinimoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/stock-minimos/${productoId}?${stringifiedParams}` : `/api/stock-minimos/${productoId}`
+}
+
+/**
+ * @summary Captura o elimina el mínimo de un producto en una ubicación
+ */
+export const updateStockMinimo = async (productoId: number,
+    stockMinimoUpdate: StockMinimoUpdate,
+    params: UpdateStockMinimoParams, options?: Parameters<typeof customFetch>[1]): Promise<StockMinimoConfig> => {
+
+  return customFetch<StockMinimoConfig>(getUpdateStockMinimoUrl(productoId,params),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(stockMinimoUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateStockMinimoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateStockMinimo>>, TError,{productoId: number;data: BodyType<StockMinimoUpdate>;params: UpdateStockMinimoParams}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateStockMinimo>>, TError,{productoId: number;data: BodyType<StockMinimoUpdate>;params: UpdateStockMinimoParams}, TContext> => {
+
+const mutationKey = ['updateStockMinimo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateStockMinimo>>, {productoId: number;data: BodyType<StockMinimoUpdate>;params: UpdateStockMinimoParams}> = (props) => {
+          const {productoId,data,params} = props ?? {};
+
+          return  updateStockMinimo(productoId,data,params,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateStockMinimoMutationResult = NonNullable<Awaited<ReturnType<typeof updateStockMinimo>>>
+    export type UpdateStockMinimoMutationBody = BodyType<StockMinimoUpdate>
+    export type UpdateStockMinimoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+    /**
+ * @summary Captura o elimina el mínimo de un producto en una ubicación
+ */
+export const useUpdateStockMinimo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateStockMinimo>>, TError,{productoId: number;data: BodyType<StockMinimoUpdate>;params: UpdateStockMinimoParams}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateStockMinimo>>,
+        TError,
+        {productoId: number;data: BodyType<StockMinimoUpdate>;params: UpdateStockMinimoParams},
+        TContext
+      > => {
+      return useMutation(getUpdateStockMinimoMutationOptions(options));
+    }
 
 export const getGetKardexUrl = (params?: GetKardexParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -17550,7 +17888,91 @@ export function useGetReportesCatalogos<TData = Awaited<ReturnType<typeof getRep
 
 
 
-export const getGetReporteSeccionUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getGetReporteQueComprarEvidenciaUrl = (params: GetReporteQueComprarEvidenciaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reportes/que-comprar/evidencia?${stringifiedParams}` : `/api/reportes/que-comprar/evidencia`
+}
+
+/**
+ * @summary Obtiene la evidencia de movimientos de una fila de Qué comprar
+ */
+export const getReporteQueComprarEvidencia = async (params: GetReporteQueComprarEvidenciaParams, options?: Parameters<typeof customFetch>[1]): Promise<ReporteQueComprarEvidencia> => {
+
+  return customFetch<ReporteQueComprarEvidencia>(getGetReporteQueComprarEvidenciaUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetReporteQueComprarEvidenciaQueryKey = (params?: GetReporteQueComprarEvidenciaParams,) => {
+    return [
+    `/api/reportes/que-comprar/evidencia`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetReporteQueComprarEvidenciaQueryOptions = <TData = Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(params: GetReporteQueComprarEvidenciaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReporteQueComprarEvidenciaQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>> = ({ signal }) => getReporteQueComprarEvidencia(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReporteQueComprarEvidenciaQueryResult = NonNullable<Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>>
+export type GetReporteQueComprarEvidenciaQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene la evidencia de movimientos de una fila de Qué comprar
+ */
+
+export function useGetReporteQueComprarEvidencia<TData = Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ params: GetReporteQueComprarEvidenciaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReporteQueComprarEvidencia>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetReporteQueComprarEvidenciaQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetReporteSeccionUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: GetReporteSeccionParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -17569,7 +17991,7 @@ export const getGetReporteSeccionUrl = (seccion: 'ventas' | 'utilidad' | 'invent
 /**
  * @summary Reporte analítico de sólo lectura
  */
-export const getReporteSeccion = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getReporteSeccion = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: GetReporteSeccionParams, options?: Parameters<typeof customFetch>[1]): Promise<ReporteSeccion> => {
 
   return customFetch<ReporteSeccion>(getGetReporteSeccionUrl(seccion,params),
@@ -17585,7 +18007,7 @@ export const getReporteSeccion = async (seccion: 'ventas' | 'utilidad' | 'invent
 
 
 
-export const getGetReporteSeccionQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getGetReporteSeccionQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: GetReporteSeccionParams,) => {
     return [
     `/api/reportes/${seccion}`, ...(params ? [params] : [])
@@ -17593,7 +18015,7 @@ export const getGetReporteSeccionQueryKey = (seccion: 'ventas' | 'utilidad' | 'i
     }
 
 
-export const getGetReporteSeccionQueryOptions = <TData = Awaited<ReturnType<typeof getReporteSeccion>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getGetReporteSeccionQueryOptions = <TData = Awaited<ReturnType<typeof getReporteSeccion>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: GetReporteSeccionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReporteSeccion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -17621,7 +18043,7 @@ export type GetReporteSeccionQueryError = ErrorType<ValidationErrorResponse | Un
  */
 
 export function useGetReporteSeccion<TData = Awaited<ReturnType<typeof getReporteSeccion>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
- seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+ seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: GetReporteSeccionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReporteSeccion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -17639,7 +18061,7 @@ export function useGetReporteSeccion<TData = Awaited<ReturnType<typeof getReport
 
 
 
-export const getExportReporteSeccionXlsxUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getExportReporteSeccionXlsxUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionXlsxParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -17658,7 +18080,7 @@ export const getExportReporteSeccionXlsxUrl = (seccion: 'ventas' | 'utilidad' | 
 /**
  * @summary Exporta un reporte a XLSX
  */
-export const exportReporteSeccionXlsx = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const exportReporteSeccionXlsx = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
   return customFetch<Blob>(getExportReporteSeccionXlsxUrl(seccion,params),
@@ -17674,7 +18096,7 @@ export const exportReporteSeccionXlsx = async (seccion: 'ventas' | 'utilidad' | 
 
 
 
-export const getExportReporteSeccionXlsxQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getExportReporteSeccionXlsxQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionXlsxParams,) => {
     return [
     `/api/reportes/${seccion}/export.xlsx`, ...(params ? [params] : [])
@@ -17682,7 +18104,7 @@ export const getExportReporteSeccionXlsxQueryKey = (seccion: 'ventas' | 'utilida
     }
 
 
-export const getExportReporteSeccionXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getExportReporteSeccionXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -17710,7 +18132,7 @@ export type ExportReporteSeccionXlsxQueryError = ErrorType<UnauthorizedResponse 
  */
 
 export function useExportReporteSeccionXlsx<TData = Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
- seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+ seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -17728,7 +18150,7 @@ export function useExportReporteSeccionXlsx<TData = Awaited<ReturnType<typeof ex
 
 
 
-export const getExportReporteSeccionPdfUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getExportReporteSeccionPdfUrl = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionPdfParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -17747,7 +18169,7 @@ export const getExportReporteSeccionPdfUrl = (seccion: 'ventas' | 'utilidad' | '
 /**
  * @summary Exporta un reporte a PDF
  */
-export const exportReporteSeccionPdf = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const exportReporteSeccionPdf = async (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
   return customFetch<Blob>(getExportReporteSeccionPdfUrl(seccion,params),
@@ -17763,7 +18185,7 @@ export const exportReporteSeccionPdf = async (seccion: 'ventas' | 'utilidad' | '
 
 
 
-export const getExportReporteSeccionPdfQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getExportReporteSeccionPdfQueryKey = (seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionPdfParams,) => {
     return [
     `/api/reportes/${seccion}/export.pdf`, ...(params ? [params] : [])
@@ -17771,7 +18193,7 @@ export const getExportReporteSeccionPdfQueryKey = (seccion: 'ventas' | 'utilidad
     }
 
 
-export const getExportReporteSeccionPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+export const getExportReporteSeccionPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -17799,7 +18221,7 @@ export type ExportReporteSeccionPdfQueryError = ErrorType<UnauthorizedResponse |
  */
 
 export function useExportReporteSeccionPdf<TData = Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
- seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos',
+ seccion: 'ventas' | 'utilidad' | 'inventario' | 'mapas-calor' | 'color' | 'compras' | 'clientes' | 'pagos-dirigidos' | 'que-comprar',
     params?: ExportReporteSeccionPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteSeccionPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
