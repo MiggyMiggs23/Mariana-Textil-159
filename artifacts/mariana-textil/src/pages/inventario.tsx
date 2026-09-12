@@ -9,7 +9,8 @@ import {
   getGetExistenciasAgrupadasQueryKey,
   useListPisosLocation,
   Role,
-  ListRollosEstado
+  ListRollosEstado,
+  type RolloSummary,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,13 +19,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useLocationScope } from "@/lib/location-scope";
-import { Search, Boxes, Filter, ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
+import { Search, Boxes, Filter, ArrowRight, ChevronDown, ChevronRight, Printer } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { calculateGroupedInventoryTotals } from "@/lib/inventory-global-totals";
+import { toast } from "@/hooks/use-toast";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { toggleLabelSelection, updateVisibleLabelSelection } from "@/lib/label-selection";
+import { ReprintLabelsDialog } from "@/components/reprint-labels-dialog";
 
 export default function Inventario() {
   const [, setLocation] = useLocation();
@@ -128,6 +134,78 @@ export default function Inventario() {
     page: 1,
     pageSize: 100
   });
+
+  const canPrintLabels = hasPermission(user, Modules.ETIQUETAS, "crear");
+  const [selectedRollos, setSelectedRollos] = useState<Map<number, RolloSummary>>(new Map());
+  const [reprintDialogOpen, setReprintDialogOpen] = useState(false);
+  const visibleRollos = rollosRes?.items ?? [];
+  const selectedVisibleRollos = visibleRollos.filter((rollo) => selectedRollos.has(rollo.id));
+  const allVisibleRollosSelected =
+    visibleRollos.length > 0 && selectedVisibleRollos.length === visibleRollos.length;
+  const someVisibleRollosSelected =
+    selectedVisibleRollos.length > 0 && !allVisibleRollosSelected;
+  const visibleRolloIds = visibleRollos
+    .map((rollo) => rollo.id)
+    .sort((a, b) => a - b)
+    .join(",");
+
+  // A changed filter/tab invalidates the current operation. This is deliberately
+  // keyed by filter state rather than query data so an identical refetch preserves
+  // the user's selection.
+  useEffect(() => {
+    setSelectedRollos((current) => current.size > 0 ? new Map() : current);
+    setReprintDialogOpen(false);
+  }, [search, estadoFilter, pisoFilter, activeTab, effectiveUbicacionId]);
+
+  // If a refresh changes which rollos are actually visible, never retain an item
+  // that could no longer be printed from this filtered view.
+  useEffect(() => {
+    if (!selectedRollos.size) return;
+    const visibleIds = new Set(visibleRollos.map((rollo) => rollo.id));
+    setSelectedRollos((current) => {
+      const next = new Map<number, RolloSummary>();
+      current.forEach((rollo, id) => {
+        if (visibleIds.has(id)) next.set(id, rollo);
+      });
+      return next.size === current.size ? current : next;
+    });
+  }, [visibleRolloIds, selectedRollos.size]);
+
+  const toggleRolloSelection = (rollo: RolloSummary) => {
+    if (!selectedRollos.has(rollo.id) && selectedRollos.size >= 50) {
+      toast({
+        title: "Límite alcanzado",
+        description: "Puedes reimprimir un máximo de 50 etiquetas por operación.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setSelectedRollos((current) => toggleLabelSelection(current, rollo, 50));
+  };
+
+  const selectVisibleRollos = (checked: boolean) => {
+    if (!checked) {
+      setSelectedRollos((current) =>
+        updateVisibleLabelSelection(current, visibleRollos, false, 50),
+      );
+      return;
+    }
+
+    const notSelected = visibleRollos.filter((rollo) => !selectedRollos.has(rollo.id)).length;
+    const available = Math.max(0, 50 - selectedVisibleRollos.length);
+    if (notSelected > available) {
+      toast({
+        title: "Selección limitada a 50",
+        description: available === 0
+          ? "Ya tienes 50 rollos seleccionados. Desmarca alguno para seleccionar otros."
+          : `Solo se seleccionaron ${available} de ${notSelected} rollos visibles; el máximo por operación es 50.`,
+        variant: "destructive",
+      });
+    }
+    setSelectedRollos((current) =>
+      updateVisibleLabelSelection(current, visibleRollos, true, 50),
+    );
+  };
 
   return (
     <AppLayout>
@@ -309,6 +387,33 @@ export default function Inventario() {
               )}
             </div>
 
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border bg-card px-3 py-2">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="select-visible-rollos"
+                  checked={allVisibleRollosSelected ? true : someVisibleRollosSelected ? "indeterminate" : false}
+                  onCheckedChange={(checked) => selectVisibleRollos(checked === true)}
+                  disabled={visibleRollos.length === 0}
+                  aria-label="Seleccionar todos los rollos visibles"
+                />
+                <Label htmlFor="select-visible-rollos" className="cursor-pointer text-sm">
+                  Seleccionar todos los visibles
+                </Label>
+                <span className="text-sm text-muted-foreground">
+                  {selectedVisibleRollos.length}/50 seleccionados
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                disabled={!canPrintLabels || selectedVisibleRollos.length === 0}
+                onClick={() => setReprintDialogOpen(true)}
+                data-testid="reprint-selected-rollos"
+              >
+                <Printer className="mr-2 h-4 w-4" />
+                Reimprimir etiquetas ({selectedVisibleRollos.length})
+              </Button>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {loadingRollos ? (
                 <div className="col-span-full h-32 flex items-center justify-center text-muted-foreground">Cargando rollos...</div>
@@ -318,17 +423,29 @@ export default function Inventario() {
                   No se encontraron rollos con estos filtros
                 </div>
               ) : (
-                rollosRes?.items.map(rollo => (
+                visibleRollos.map(rollo => (
                   <Card
                     key={rollo.id}
-                    className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group flex flex-col"
+                    data-state={selectedRollos.has(rollo.id) ? "selected" : undefined}
+                    className={`hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group flex flex-col ${
+                      selectedRollos.has(rollo.id) ? "border-primary ring-1 ring-primary/30" : ""
+                    }`}
                     onClick={() => setLocation(`/inventario/rollos/${rollo.id}`)}
                   >
                     <CardHeader className="p-4 pb-2 border-b bg-muted/10">
-                      <div className="flex justify-between items-start">
-                        <span className="font-mono font-bold text-lg tracking-tight group-hover:text-primary transition-colors">
-                          {rollo.serie}
-                        </span>
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Checkbox
+                            checked={selectedRollos.has(rollo.id)}
+                            onCheckedChange={() => toggleRolloSelection(rollo)}
+                            onPointerDown={(event) => event.stopPropagation()}
+                            onClick={(event) => event.stopPropagation()}
+                            aria-label={`Seleccionar rollo ${rollo.serie}`}
+                          />
+                          <span className="font-mono font-bold text-lg tracking-tight group-hover:text-primary transition-colors truncate">
+                            {rollo.serie}
+                          </span>
+                        </div>
                         <Badge variant={rollo.estado === 'DISPONIBLE' ? 'default' : rollo.estado === 'MOSTRADOR' ? 'secondary' : 'outline'}>
                           {rollo.estado}
                         </Badge>
@@ -387,8 +504,15 @@ export default function Inventario() {
                 Mostrando los primeros {rollosRes.items.length} rollos. Utilice la búsqueda para encontrar rollos específicos.
               </div>
             )}
+
           </TabsContent>
         </Tabs>
+        <ReprintLabelsDialog
+          rolloIds={selectedVisibleRollos.map((rollo) => rollo.id)}
+          open={reprintDialogOpen}
+          onOpenChange={setReprintDialogOpen}
+          onSuccess={() => setSelectedRollos(new Map())}
+        />
       </div>
     </AppLayout>
   );

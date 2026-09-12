@@ -18,6 +18,7 @@ import { useGetCurrentUser, getGetCurrentUserQueryKey, Role } from "@workspace/a
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { ReprintLabelsDialog } from "@/components/reprint-labels-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +32,7 @@ export default function RolloDetail() {
   const isAdmin = user?.rol === Role.ADMIN;
   const canEdit = hasPermission(user, Modules.INVENTARIO, "editar");
   const canViewLabels = hasPermission(user, Modules.ETIQUETAS, "ver");
+  const canPrintLabels = hasPermission(user, Modules.ETIQUETAS, "crear");
   const queryClient = useQueryClient();
 
   const { data: rollo, isLoading } = useGetRollo(Number(id), {
@@ -75,6 +77,7 @@ export default function RolloDetail() {
   const [revertingMovimientoId, setRevertingMovimientoId] = useState<number | null>(null);
   const [revertJustificacion, setRevertJustificacion] = useState("");
   const [revertConfirmText, setRevertConfirmText] = useState("");
+  const [reprintDialogOpen, setReprintDialogOpen] = useState(false);
   const uuidClienteRef = useRef<string>(crypto.randomUUID());
 
   const handleRevert = (movimientoId: number, justificacion: string) => {
@@ -246,11 +249,15 @@ export default function RolloDetail() {
               <div className="font-mono text-xl tracking-widest font-bold text-black mb-4">
                 {rollo.serie}
               </div>
-              {canViewLabels && <Button asChild className="w-full" variant="outline">
-                <Link href={`/inventario/rollos/${rollo.id}/etiqueta`}>
-                  <Printer className="w-4 h-4 mr-2" />
-                  Reimprimir Etiqueta
-                </Link>
+              {canViewLabels && <Button
+                className="w-full"
+                variant="outline"
+                disabled={!canPrintLabels}
+                onClick={() => setReprintDialogOpen(true)}
+                data-testid={`button-reprint-label-${rollo.id}`}
+              >
+                <Printer className="w-4 h-4 mr-2" />
+                Reimprimir Etiqueta
               </Button>}
               {reimpresiones && reimpresiones.count > 0 && (
                 <div className="mt-4 w-full rounded-md border border-amber-200 bg-amber-50 p-3 text-center text-sm text-amber-900">
@@ -420,6 +427,17 @@ export default function RolloDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ReprintLabelsDialog
+        rolloIds={[rollo.id]}
+        open={reprintDialogOpen}
+        onOpenChange={setReprintDialogOpen}
+        onSuccess={() => {
+          queryClient.invalidateQueries({
+            queryKey: ["etiquetas", "rollo", rollo.id, "resumen"],
+          });
+        }}
+      />
     </AppLayout>
   );
 }

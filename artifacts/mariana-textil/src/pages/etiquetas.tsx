@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { Link } from "wouter";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Download, Filter, History, Loader2, Printer, Search, Tags, X } from "lucide-react";
 import {
   getGetCurrentUserQueryKey, getListLocationsQueryKey, getListProductosQueryKey, getListUsersQueryKey,
@@ -10,21 +9,19 @@ import {
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { AppLayout } from "@/components/layout/app-layout";
 import { LabelPrint } from "@/components/label-print";
+import { ReprintLabelsDialog } from "@/components/reprint-labels-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { printWhenReady } from "@/lib/print";
 import { etiquetasApi, type EtiquetaRollo, type HistorialReimpresion } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { CampoEscaneo } from "@/components/campo-escaneo";
@@ -38,8 +35,6 @@ import {
 } from "@/lib/label-selection";
 
 const ESTADOS = ["DISPONIBLE", "VENDIDO", "MOSTRADOR", "EN_TRANSITO", "BAJA", "PROGRAMADO"];
-const MOTIVOS = ["Etiqueta dañada", "Etiqueta despegada", "Etiqueta ilegible", "Etiqueta mojada", "Otro"];
-
 const estadoClass: Record<string, string> = {
   DISPONIBLE: "bg-emerald-100 text-emerald-800 border-emerald-200",
   VENDIDO: "bg-slate-100 text-slate-700 border-slate-200",
@@ -80,13 +75,6 @@ export default function Etiquetas() {
   const [folioEntrada, setFolioEntrada] = useState("");
   const [selected, setSelected] = useState<Map<number, EtiquetaRollo>>(new Map());
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [motivoOption, setMotivoOption] = useState("");
-  const [otroMotivo, setOtroMotivo] = useState("");
-  const [adminUsuario, setAdminUsuario] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
-  const [printMode, setPrintMode] = useState<"thermal" | "sheet">("thermal");
-  const [printData, setPrintData] = useState<{ rollos: EtiquetaRollo[]; createdAt: string } | null>(null);
-  const [pendingPrint, setPendingPrint] = useState(false);
 
   const [hDesde, setHDesde] = useState("");
   const [hHasta, setHHasta] = useState("");
@@ -189,37 +177,6 @@ export default function Etiquetas() {
     return [...selected.values()];
   }, [selected]);
 
-  const mutation = useMutation({
-    mutationFn: etiquetasApi.reimprimir,
-    onSuccess: (result) => {
-      const printable = result.rollos?.length ? result.rollos : selectedRollos;
-      setPrintData({ rollos: printable, createdAt: result.createdAt || new Date().toISOString() });
-      setDialogOpen(false);
-      setSelected(new Map());
-      queryClient.invalidateQueries({ queryKey: ["etiquetas"] });
-      toast({ title: "Reimpresión autorizada", description: `${printable.length} etiqueta(s) registradas. Revisa la vista antes de imprimir.` });
-      setPendingPrint(true);
-    },
-    onError: (error) => toast({ title: "No se pudo autorizar la reimpresión", description: getApiErrorMessage(error), variant: "destructive" }),
-  });
-
-  const effectiveReason = motivoOption === "Otro" ? otroMotivo.trim() : motivoOption;
-  const submit = () => {
-    if (effectiveReason.length < 10) {
-      toast({ title: "Motivo incompleto", description: "El motivo debe tener al menos 10 caracteres.", variant: "destructive" });
-      return;
-    }
-    if (!isAdmin && (!adminUsuario.trim() || !adminPassword)) {
-      toast({ title: "Autorización requerida", description: "Ingresa usuario y contraseña de un ADMIN.", variant: "destructive" });
-      return;
-    }
-    mutation.mutate({
-      rolloIds: selectedRollos.map((item) => item.id),
-      motivo: effectiveReason,
-      ...(isAdmin ? {} : { adminUsuario: adminUsuario.trim(), adminPassword }),
-    });
-  };
-
   const toggle = (id: number) => {
     const item = rollosQuery.data?.items.find((rollo) => rollo.id === id);
     if (!item) {
@@ -235,14 +192,6 @@ export default function Etiquetas() {
 
   const openPrintDialog = (rollo?: EtiquetaRollo) => {
     if (rollo) setSelected(new Map([[rollo.id, rollo]]));
-    if (!canPrint) {
-      toast({ title: "Sin permiso", description: "Reimprimir requiere el permiso etiquetas.crear.", variant: "destructive" });
-      return;
-    }
-    setMotivoOption("");
-    setOtroMotivo("");
-    setAdminUsuario("");
-    setAdminPassword("");
     setDialogOpen(true);
   };
 
@@ -261,14 +210,6 @@ export default function Etiquetas() {
     setSitioId("todos"); setEstado("todos"); setProductoId("todos");
     setFechaDesde(""); setFechaHasta(""); setFolioEntrada("");
   };
-
-  useEffect(() => {
-    if (!pendingPrint || !printData) return;
-    setPendingPrint(false);
-    void printWhenReady(
-      printMode === "thermal" ? "printing-labels" : "printing-label-sheet",
-    );
-  }, [pendingPrint, printData, printMode]);
 
   if (fitReportEnabled && products) {
     return <CatalogLabelFitReport products={products} />;
@@ -389,45 +330,15 @@ export default function Etiquetas() {
         </Tabs>
       </div>
 
-      {printData && createPortal(
-        <div className={`print-only etiquetas-print ${printMode === "sheet" ? "etiquetas-sheet-print" : ""}`}>
-          {printData.rollos.map((rollo) => <LabelPrint key={rollo.id} data={{
-            sku: rollo.sku, serie: rollo.serie, tela: rollo.tela || rollo.producto || "Producto",
-            color: rollo.color, cantidad: rollo.cantidad, unidad: rollo.unidad, reimpresaEn: printData.createdAt,
-          }} className={printMode === "sheet" ? "sheet-label" : ""} />)}
-          {printMode === "sheet" && <div className="print-only label-sheet-note">Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm</div>}
-        </div>,
-        document.body,
-      )}
-
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader><DialogTitle>Autorizar reimpresión</DialogTitle><DialogDescription>
-            Se registrará una reimpresión permanente para {selectedRollos.length} rollo(s). La serie no cambiará.
-          </DialogDescription></DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2"><Label>Motivo *</Label>
-              <Select value={motivoOption} onValueChange={setMotivoOption}><SelectTrigger><SelectValue placeholder="Selecciona un motivo" /></SelectTrigger><SelectContent>{MOTIVOS.map((motivo) => <SelectItem key={motivo} value={motivo}>{motivo}</SelectItem>)}</SelectContent></Select>
-            </div>
-            {motivoOption === "Otro" && <div className="space-y-2"><Label>Describe el motivo *</Label><Textarea value={otroMotivo} onChange={(e) => setOtroMotivo(e.target.value)} placeholder="Mínimo 10 caracteres" /></div>}
-            {motivoOption && motivoOption !== "Otro" && <p className="text-xs text-muted-foreground">Motivo: {motivoOption} ({motivoOption.length} caracteres)</p>}
-            <div className="space-y-2"><Label>Formato de impresión</Label>
-              <Select value={printMode} onValueChange={(value: "thermal" | "sheet") => setPrintMode(value)}>
-                <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
-                  <SelectItem value="thermal">Térmica 100 × 70 mm</SelectItem>
-                  <SelectItem value="sheet">Hoja carta múltiple (hasta 6 por hoja)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {!isAdmin && <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <div><p className="font-semibold text-amber-900">Credenciales de ADMIN</p><p className="text-xs text-amber-800">El administrador presente debe autorizar esta operación.</p></div>
-              <div className="space-y-1.5"><Label htmlFor="admin-user">Usuario</Label><Input id="admin-user" value={adminUsuario} onChange={(e) => setAdminUsuario(e.target.value)} autoComplete="off" /></div>
-              <div className="space-y-1.5"><Label htmlFor="admin-password">Contraseña</Label><Input id="admin-password" type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} autoComplete="new-password" /></div>
-            </div>}
-          </div>
-          <DialogFooter><Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button><Button onClick={submit} disabled={mutation.isPending || selectedRollos.length === 0}>{mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Autorizar y generar</Button></DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ReprintLabelsDialog
+        rolloIds={selectedRollos.map((rollo) => rollo.id)}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSuccess={() => {
+          setSelected(new Map());
+          queryClient.invalidateQueries({ queryKey: ["etiquetas"] });
+        }}
+      />
     </AppLayout>
   );
 }

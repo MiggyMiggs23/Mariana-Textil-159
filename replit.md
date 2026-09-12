@@ -394,6 +394,7 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 
 - El folio de entradas y salidas es por sitio, no global. La identidad de un documento es ubicación + folio, y se presenta como `INICIALES-FOLIO` con 6 dígitos y sin comas. Cada sitio tiene un campo `iniciales` único que asigna ADMIN a mano.
 - Entradas: carta vertical 216 × 279 mm. Salidas: A5 horizontal 210 × 148 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida. El tamaño de la Salida está fijado en la sección Formatos de impresión; media carta se descartó por bandeja.
+- **Reimpresión múltiple desde Inventario:** Detalle de Rollos reutiliza las casillas y los helpers de selección de Etiquetas. Seleccionar todos opera solo sobre los resultados visibles, nunca sobre el total del catálogo, con máximo 50 etiquetas por tanda y aviso si los visibles superan ese límite. Los cambios de filtros limpian la selección. Individual y múltiple comparten motivo obligatorio de al menos 10 caracteres, autorización y el mismo formato de 100 × 70 mm. Antes de imprimir se consultan los contadores actuales y se exige confirmación explícita de cada serie con tres o más reimpresiones. El servidor conserva un registro en `reimpresiones_etiqueta` y su auditoría por rollo, con el mismo solicitante y motivo; nunca se sustituye por un registro de tanda. El umbral de alerta sigue siendo tres por rollo.
 
 
 ## Permission modules (32 total)
