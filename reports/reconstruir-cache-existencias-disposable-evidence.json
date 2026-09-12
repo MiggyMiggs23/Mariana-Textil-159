@@ -1,0 +1,404 @@
+{
+  "status": "PASS",
+  "operation": "reconstruirCacheExistencias",
+  "execution": {
+    "real_export_invoked": true,
+    "mocked_db": false,
+    "transaction_function_source": "artifacts/api-server/src/lib/inventario.ts",
+    "function_source_line": 2615,
+    "current_database_before": "disposable_inventory_rebuild",
+    "current_database_after": "disposable_inventory_rebuild",
+    "current_user_before": "runner",
+    "current_user_after": "runner",
+    "data_directory_before": "/tmp/rebuild-cache-pg-1789182009-1765",
+    "data_directory_after": "/tmp/rebuild-cache-pg-1789182009-1765",
+    "server_addr_before": "127.0.0.1/32",
+    "server_addr_after": "127.0.0.1/32",
+    "server_port_before": 55440,
+    "server_port_after": 55440
+  },
+  "actor_policy": {
+    "users_created": false,
+    "admins_created": false,
+    "inherited_actor_restored_from_captured_dump": true,
+    "inherited_non_user_initializer_baseline_restored": true,
+    "restored_actor_record_inserted_into_disposable_db": true,
+    "new_test_account_created": false,
+    "new_credentials_created": false,
+    "operational_accounts_touched": false,
+    "policy_note": "Se copió un solo registro de actor existente del respaldo local capturado únicamente a la BD descartable para satisfacer la FK de movimientos.usuario_id. El INSERT fue una restauración, no la creación de una cuenta o credenciales de prueba; no se tocaron cuentas operativas.",
+    "actor_identity_nonsecret": {
+      "id": 1,
+      "rol": "ADMIN",
+      "activo": true
+    }
+  },
+  "startup": {
+    "full_current_schema_applied": true,
+    "startup_initializers_and_migrations_applied": true,
+    "seed_script_executed": false
+  },
+  "fixture_scope": {
+    "products": [
+      "REBUILD-P1",
+      "REBUILD-P2"
+    ],
+    "sites": [
+      "RA",
+      "RB"
+    ],
+    "ledger_validity": "Each movement references a fixture roll/product/site and the signed sums equal physical current quantities by pair.",
+    "minima": "Two numeric minima (5.125, 0.000) and two null/no-minimum pairs; both sites enabled."
+  },
+  "identity_pre_database_create": {
+    "current_database": "postgres",
+    "current_user": "runner",
+    "data_directory": "/tmp/rebuild-cache-pg-1789182009-1765",
+    "server_addr": null,
+    "server_port": null
+  },
+  "target_identity_before_mutations": {
+    "current_database": "disposable_inventory_rebuild",
+    "current_user": "runner",
+    "data_directory": "/tmp/rebuild-cache-pg-1789182009-1765",
+    "server_addr": null,
+    "server_port": null
+  },
+  "before": {
+    "counts": {
+      "existencias": 4,
+      "movimientos": 9,
+      "rollos": 5,
+      "stock_minimos": 2,
+      "stock_minimo_sitios": 2
+    },
+    "cache": [
+      {
+        "producto_id": 1,
+        "ubicacion_id": 1,
+        "cantidad_total": "99.999",
+        "rollos_count": 99,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      },
+      {
+        "producto_id": 1,
+        "ubicacion_id": 2,
+        "cantidad_total": "88.888",
+        "rollos_count": 88,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 1,
+        "cantidad_total": "77.777",
+        "rollos_count": 77,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 2,
+        "cantidad_total": "66.666",
+        "rollos_count": 66,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      }
+    ],
+    "ledger": [
+      {
+        "producto_id": 1,
+        "ubicacion_id": 1,
+        "cantidad_total": "8.000",
+        "movimientos": 2,
+        "rollos_con_movimiento": 1
+      },
+      {
+        "producto_id": 1,
+        "ubicacion_id": 2,
+        "cantidad_total": "7.000",
+        "movimientos": 1,
+        "rollos_con_movimiento": 1
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 1,
+        "cantidad_total": "2.250",
+        "movimientos": 4,
+        "rollos_con_movimiento": 2
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 2,
+        "cantidad_total": "0.000",
+        "movimientos": 2,
+        "rollos_con_movimiento": 1
+      }
+    ],
+    "rolls": [
+      {
+        "producto_id": 1,
+        "ubicacion_id": 1,
+        "disponibles": 1,
+        "rollos_total": 1
+      },
+      {
+        "producto_id": 1,
+        "ubicacion_id": 2,
+        "disponibles": 1,
+        "rollos_total": 1
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 1,
+        "disponibles": 1,
+        "rollos_total": 2
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 2,
+        "disponibles": 0,
+        "rollos_total": 1
+      }
+    ],
+    "minimums": [
+      {
+        "sku": "REBUILD-P1",
+        "sitio": "RA",
+        "minimo": "5.125",
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": "2026-01-02T03:06:07.000Z",
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:04:05.000Z"
+      },
+      {
+        "sku": "REBUILD-P1",
+        "sitio": "RB",
+        "minimo": null,
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": null,
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:05:06.000Z"
+      },
+      {
+        "sku": "REBUILD-P2",
+        "sitio": "RA",
+        "minimo": "0.000",
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": "2026-01-02T03:07:08.000Z",
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:04:05.000Z"
+      },
+      {
+        "sku": "REBUILD-P2",
+        "sitio": "RB",
+        "minimo": null,
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": null,
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:05:06.000Z"
+      }
+    ]
+  },
+  "after": {
+    "counts": {
+      "existencias": 4,
+      "movimientos": 9,
+      "rollos": 5,
+      "stock_minimos": 2,
+      "stock_minimo_sitios": 2
+    },
+    "cache": [
+      {
+        "producto_id": 1,
+        "ubicacion_id": 1,
+        "cantidad_total": "8.000",
+        "rollos_count": 1,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      },
+      {
+        "producto_id": 1,
+        "ubicacion_id": 2,
+        "cantidad_total": "7.000",
+        "rollos_count": 1,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 1,
+        "cantidad_total": "2.250",
+        "rollos_count": 1,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 2,
+        "cantidad_total": "0.000",
+        "rollos_count": 0,
+        "updated_at": "2026-09-12T03:00:18.695Z"
+      }
+    ],
+    "ledger": [
+      {
+        "producto_id": 1,
+        "ubicacion_id": 1,
+        "cantidad_total": "8.000",
+        "movimientos": 2,
+        "rollos_con_movimiento": 1
+      },
+      {
+        "producto_id": 1,
+        "ubicacion_id": 2,
+        "cantidad_total": "7.000",
+        "movimientos": 1,
+        "rollos_con_movimiento": 1
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 1,
+        "cantidad_total": "2.250",
+        "movimientos": 4,
+        "rollos_con_movimiento": 2
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 2,
+        "cantidad_total": "0.000",
+        "movimientos": 2,
+        "rollos_con_movimiento": 1
+      }
+    ],
+    "rolls": [
+      {
+        "producto_id": 1,
+        "ubicacion_id": 1,
+        "disponibles": 1,
+        "rollos_total": 1
+      },
+      {
+        "producto_id": 1,
+        "ubicacion_id": 2,
+        "disponibles": 1,
+        "rollos_total": 1
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 1,
+        "disponibles": 1,
+        "rollos_total": 2
+      },
+      {
+        "producto_id": 2,
+        "ubicacion_id": 2,
+        "disponibles": 0,
+        "rollos_total": 1
+      }
+    ],
+    "minimums": [
+      {
+        "sku": "REBUILD-P1",
+        "sitio": "RA",
+        "minimo": "5.125",
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": "2026-01-02T03:06:07.000Z",
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:04:05.000Z"
+      },
+      {
+        "sku": "REBUILD-P1",
+        "sitio": "RB",
+        "minimo": null,
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": null,
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:05:06.000Z"
+      },
+      {
+        "sku": "REBUILD-P2",
+        "sitio": "RA",
+        "minimo": "0.000",
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": "2026-01-02T03:07:08.000Z",
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:04:05.000Z"
+      },
+      {
+        "sku": "REBUILD-P2",
+        "sitio": "RB",
+        "minimo": null,
+        "habilitado": true,
+        "minimo_updated_by": null,
+        "minimo_updated_at": null,
+        "sitio_updated_by": null,
+        "sitio_updated_at": "2026-01-02T03:05:06.000Z"
+      }
+    ]
+  },
+  "expected_cache_after": [
+    {
+      "producto_id": 1,
+      "ubicacion_id": 1,
+      "cantidad_total": "8.000",
+      "rollos_count": 1
+    },
+    {
+      "producto_id": 1,
+      "ubicacion_id": 2,
+      "cantidad_total": "7.000",
+      "rollos_count": 1
+    },
+    {
+      "producto_id": 2,
+      "ubicacion_id": 1,
+      "cantidad_total": "2.250",
+      "rollos_count": 1
+    },
+    {
+      "producto_id": 2,
+      "ubicacion_id": 2,
+      "cantidad_total": "0.000",
+      "rollos_count": 0
+    }
+  ],
+  "assertions": {
+    "cache_after_equals_ledger_sum_and_available_roll_count": true,
+    "cache_before_was_stale": true,
+    "row_counts_before_after_equal": true,
+    "minimum_configuration_deep_equal_before_after": true,
+    "minimum_numeric_and_null_coverage": true,
+    "site_settings_enabled_and_unchanged": true,
+    "ledger_fixture_references_physical_rolls": true
+  },
+  "tests": {
+    "standalone_verification_assertions": "PASS",
+    "repository_test_suites_run": [],
+    "repository_test_suites_skipped": [
+      "Application workflows and unrelated test suites were not run per delegated disposable-DB scope."
+    ],
+    "retained_sanitized_guarded_script": "scripts/src/reconstruir-cache-existencias-disposable-verification.mts",
+    "retained_script_rerun": false,
+    "workflow_logs_checked": false,
+    "application_preview_started": false
+  },
+  "executed_commands_sanitized": [
+    "initdb -D <temporary-local-data-dir> --auth=trust --no-locale --encoding=UTF8",
+    "pg_ctl -D <temporary-local-data-dir> ... -k <temporary-local-socket> -p <temporary-local-port> start",
+    "createdb -h <temporary-local-socket> -p <temporary-local-port> <disposable-db>",
+    "pnpm --filter @workspace/db run push-force (DATABASE_URL=<disposable-local-url>)",
+    "pg_restore --data-only --table=usuarios <captured-dump> (only inherited actor id=1 restored; no seed script)",
+    "pg_restore --data-only --table=clientes <captured-dump> (inherited non-user initializer baseline only; no seed script)",
+    "pnpm --filter @workspace/api-server exec tsx <startup-initializers-script>",
+    "psql <fixture-sql> (2 products x 2 sites, minima/config, ledger, stale cache)",
+    "pnpm --filter @workspace/api-server exec tsx <real-function-verification-script>"
+  ],
+  "cleanup": {
+    "disposable_data_directory_removed": true,
+    "disposable_socket_directory_removed": true,
+    "created_resources_only": true,
+    "operational_database_touched": false
+  }
+}

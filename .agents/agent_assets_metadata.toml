@@ -397,14 +397,14 @@ content_type = "text/markdown"
 id = "8UYSOS0fZpqlynOlYdAmq"
 uri = "file://reports/restricciones-por-rol.html"
 type = "text"
-title = "Inventario de restricciones por rol"
-description = "Restricciones restantes en API e interfaz: archivo, línea, rol y efecto. Incluye apéndice de código; ninguna de estas restricciones fue modificada."
+title = "Informe completo de restricciones por rol"
+description = "130 referencias con archivo y línea: vetos, alcance, ocultamiento de datos, autorizaciones ADMIN y notificaciones. Ninguna restricción modificada."
 logical_id = "2d4c368d-6ecf-4551-bf65-4ba0e140cbea"
-content_hash = "sha256:c09395b9c021ae34d23e41cb6c7f1ffa51e59a1fce27d9321b1d34da3f093282"
-size = 72720
-mtime_ms = 1789172927172
-storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2d4c368d-6ecf-4551-bf65-4ba0e140cbea/d470c83f-b6e8-4bea-95a6-f9b27fc3b229"
-storage_version_token = "1789172991547365"
+content_hash = "sha256:e9948d642ca3a4828f6df80a8794bf18d1f0038434652f0d8444369656deb159"
+size = 39823
+mtime_ms = 1789182591290
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2d4c368d-6ecf-4551-bf65-4ba0e140cbea/737735f1-037e-4455-8758-19c3795f6f6b"
+storage_version_token = "1789182652960100"
 content_type = "text/html"
 
 [[outputs]]
@@ -419,4 +419,32 @@ size = 7428
 mtime_ms = 1789175707084
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/1f2d6036-f6c4-4562-a968-3ee24a98cd38/5a8055fc-f0b1-4386-be4e-d1d35a5189f6"
 storage_version_token = "1789175731363806"
+content_type = "text/html"
+
+[[outputs]]
+id = "wnv-ZhMbFr64PUbfio3Ym"
+uri = "file://reports/reconstruir-cache-existencias-disposable-evidence.html"
+type = "text"
+title = "Reconstrucción real: evidencia antes y después"
+description = "PostgreSQL desechable: 2 mínimos antes y 2 después, valores preservados y cuatro existencias realmente reconstruidas."
+logical_id = "816a1784-f7eb-4e35-ad64-92ece81ac35f"
+content_hash = "sha256:35b89ffbbfdf2d546364d9e288b6b7dd9213474e1da9c01b68aa388d7e3b02c2"
+size = 8085
+mtime_ms = 1789182344046
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/816a1784-f7eb-4e35-ad64-92ece81ac35f/4234a85e-7687-4177-ae4f-cc8f825a2c84"
+storage_version_token = "1789182652454805"
+content_type = "text/html"
+
+[[outputs]]
+id = "DCNb_1gHiRzkntA9VmfyS"
+uri = "file://reports/bloque-7-duplicidades.html"
+type = "text"
+title = "Bloque 7: comparación completa de reportes"
+description = "Análisis de Color, Rotación, Mapas de Calor y Compras: coincidencias, diferencias y recomendaciones sin ejecutar retiros adicionales."
+logical_id = "53790503-64ba-48b2-8596-d854d20b2f96"
+content_hash = "sha256:0eadc1a98b3e672d271507f47c211c300e74d5d8faea6123d7d018c9f4cc1ac5"
+size = 19038
+mtime_ms = 1789181860822
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/53790503-64ba-48b2-8596-d854d20b2f96/e8bd1c5d-5156-4836-a07b-df3a8c5d4c67"
+storage_version_token = "1789182653395357"
 content_type = "text/html"

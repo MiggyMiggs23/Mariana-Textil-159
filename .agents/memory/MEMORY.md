@@ -45,3 +45,4 @@
 - [Objetos OpenAPI estrictos en Zod](openapi-zod-strict-objects.md) — additionalProperties false puede generarse como strip; las entradas sensibles requieren parser estricto.
 - [Argumentos del MCP Neon](neon-mcp-argument-names.md) — si la firma documentada falla, usar los nombres snake_case exigidos por el proveedor.
 - [Sitio operativo y consultas](operational-site-vs-query-scope.md) — PROPIA usa asignación; ADMIN global conserva selección; resolver sitio no autoriza acciones.
+- [Preservación al reconstruir cachés](cache-rebuild-preservation.md) — ejecutar la función real en DB desechable; probar que cambió el caché y conservó exactamente la configuración.

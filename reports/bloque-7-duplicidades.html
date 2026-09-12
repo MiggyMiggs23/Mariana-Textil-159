@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bloque 7 — Comparación de duplicidades</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5c667a;
+      --navy: #172a46;
+      --blue: #eaf1f9;
+      --line: #cbd5e1;
+      --full: #d9f3e5;
+      --partial: #fff2cc;
+      --none: #edf1f5;
+      --warn: #fff7df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      color: var(--ink);
+      font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1500px; margin: 0 auto; padding: 32px 22px 56px; }
+    h1, h2, h3 { color: var(--navy); line-height: 1.2; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 40px); }
+    h2 { margin-top: 34px; border-bottom: 2px solid var(--line); padding-bottom: 8px; }
+    h3 { margin-top: 26px; }
+    p { max-width: 1050px; }
+    .meta, .callout, .legend {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+    .callout { background: var(--warn); border-left: 6px solid #d19a00; }
+    .status {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      white-space: nowrap;
+    }
+    .full { background: var(--full); color: #115b35; }
+    .partial { background: var(--partial); color: #765500; }
+    .none { background: var(--none); color: #455064; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .table-wrap { overflow-x: auto; margin: 12px 0 22px; background: white; border: 1px solid var(--line); border-radius: 10px; }
+    table { width: 100%; min-width: 1080px; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 11px; text-align: left; vertical-align: top; }
+    th { background: var(--navy); color: white; font-size: 13px; position: sticky; top: 0; z-index: 1; }
+    tr:last-child td { border-bottom: 0; }
+    tr:nth-child(even) td { background: #fafbfd; }
+    code { background: #eef2f7; border-radius: 4px; padding: 1px 4px; font: 0.92em ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .small { color: var(--muted); font-size: 13px; }
+    ul { max-width: 1050px; }
+    footer { color: var(--muted); border-top: 1px solid var(--line); margin-top: 40px; padding-top: 16px; font-size: 13px; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Bloque 7 — Comparación de duplicidades</h1>
+    <p class="small">Informe de lectura del código · corte <code>HEAD 76d9c58</code> · 2026-09-12 01:15:43 UTC</p>
+  </header>
+
+  <section class="callout">
+    <strong>Decisión vigente:</strong> la conversación anterior autorizó únicamente el movimiento de
+    <strong>Mes × color</strong>. Este documento entrega la comparación que faltaba, pero no autoriza
+    ni ejecuta retiros adicionales. No se modificó código, no se retiró ninguna tabla y no se retiró
+    ninguna pestaña.
+  </section>
+
+  <section class="meta">
+    <h2>Estado del informe previo</h2>
+    <p><strong>No se encontró un reporte comparativo completo anterior de Bloque 7.</strong>
+      Sí existen <code>docs/stock-minimos-verificacion.md</code> y
+      <code>reports/stock-minimos-verificacion.html</code>, que verifican el motor de stock mínimo,
+      Qué comprar y su evidencia. También existe un resumen en <code>replit.md:749</code> que
+      registra “únicamente” el traslado de Mes × color y ninguna tabla o pestaña retirada. Ese
+      resumen es antecedente; no es la matriz original vs. Qué comprar que este informe ahora entrega
+      ni una aprobación retroactiva de otros cambios.</p>
+    <p>La solicitud original está en
+      <code>attached_assets/Pasted--Prompt-para-Replit-Agent-Motor-de-stock-m-nimo-y-repor_1789172788993.txt</code>,
+      Bloque 7, líneas 82–90: comparar primero y esperar aprobación antes de retirar. El informe se
+      limita a Análisis de Color, Inventario y Rotación, Mapas de Calor, Compras y Qué comprar; no
+      analiza las pestañas expresamente excluidas por ese prompt.</p>
+  </section>
+
+  <section>
+    <h2>Resumen</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Resultado</th><th>Hallazgo</th><th>Acción propuesta</th></tr></thead>
+        <tbody>
+          <tr><td><span class="status full">FULL</span></td><td>Solo Mes × color: mismo cruce visual y propósito de estacionalidad por color. Ya fue movido.</td><td>Mantener en Qué comprar; no crear otra copia.</td></tr>
+          <tr><td><span class="status partial">PARTIAL</span></td><td>Dimensiones o señales compartidas, pero grano, periodo, fuente, modalidad, sitio o significado distintos.</td><td>Conservar ambas vistas hasta autorización específica.</td></tr>
+          <tr><td><span class="status none">NONE</span></td><td>No existe el mismo resultado; costos, proveedores, pérdidas extraordinarias y cierres diarios permanecen propios.</td><td>No mover ni retirar.</td></tr>
+          <tr><td>Tablas retiradas</td><td><strong>Ninguna.</strong></td><td>Preservar.</td></tr>
+          <tr><td>Pestañas retiradas</td><td><strong>Ninguna.</strong></td><td>Preservar.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Criterio</h2>
+    <div class="legend">
+      <span><b class="status full">FULL</b> mismo artefacto, ejes/grano y propósito</span>
+      <span><b class="status partial">PARTIAL</b> señal o dimensión compartida, pero no los mismos hechos</span>
+      <span><b class="status none">NONE</b> sin el mismo resultado</span>
+    </div>
+    <p>Un campo compartido como SKU, color o cantidad no convierte dos vistas en duplicadas. En
+      coincidencias parciales, quitar una tabla perdería información o cambiaría el significado de
+      la cifra; la recomendación es conservarla.</p>
+  </section>
+
+  <section>
+    <h2>Qué comprar: inventario de campos y evidencia</h2>
+    <p>El backend define un renglón por producto y sitio con identidad, doce columnas de consumo
+      mensual, venta real al cliente, existencia, mínimo, coberturas, déficit observado, historia,
+      inmovilidad, bajo mínimo, episodios, observación y evidencia
+      (<code>artifacts/api-server/src/lib/reportes-que-comprar.ts:386-453, 914-949</code>).
+      La UI muestra ese grano y esas columnas en
+      <code>artifacts/mariana-textil/src/components/reportes/que-comprar-report.tsx:518-554</code>.
+      La advertencia visible separa consumo de venta real
+      (<code>.../que-comprar-report.tsx:466-476</code>).</p>
+    <p>La evidencia de cada sugerencia conserva entradas de la ecuación, filtros, movimientos,
+      episodios del periodo, episodios anteriores, eventos y conciliación
+      (<code>reportes-que-comprar.ts:969-1018, 1117-1163</code>;
+      UI <code>que-comprar-report.tsx:768-905</code>). Esa trazabilidad no reemplaza el detalle
+      propio de compras, rotación, cierres o pérdidas.</p>
+  </section>
+
+  <section>
+    <h2>Análisis de Color</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Original</th><th>Original vs. Qué comprar</th><th>Estado</th><th>Diferencia y propuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>color-tela</code> · gráfico Color × tela</td>
+            <td><code>reportes-inventory.ts:219-231</code>; matriz color/tela, cantidad, ventas y tablas de color.</td>
+            <td><span class="status partial">PARTIAL</span></td>
+            <td>Qué comprar conserva tela/color por producto-sitio y tiene mes × color, pero no matriz tela × color. Conservar ambos.</td>
+          </tr>
+          <tr>
+            <td><code>ranking-color</code></td>
+            <td><code>reportes-inventory.ts:222-230</code>; color, tela, modalidad, unidad, cantidad, ventas vs. campos por producto-sitio, consumo mensual y venta real.</td>
+            <td><span class="status partial">PARTIAL</span></td>
+            <td>No hay ranking agregado por color ni modalidad en Qué comprar; consumo puede incluir traslado. No retirar.</td>
+          </tr>
+          <tr>
+            <td><code>color-sitio</code></td>
+            <td><code>reportes-inventory.ts:227-231</code>; agregado color/sitio/modalidad/unidad vs. filas producto-sitio con mínimo y cobertura.</td>
+            <td><span class="status partial">PARTIAL</span></td>
+            <td>Distinto grano y propósito. Conservar la tabla original.</td>
+          </tr>
+          <tr>
+            <td><code>sin-movimiento-90</code></td>
+            <td><code>reportes-inventory.ts:225-231</code>; último movimiento y corte de 90 días vs. <code>noMovimiento</code> y meses finales por producto-sitio (<code>reportes-que-comprar.ts:314-323, 407-430</code>).</td>
+            <td><span class="status partial">PARTIAL</span></td>
+            <td>Fecha/banda y señal mensual no son intercambiables. Conservar ambos.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inventario y Rotación</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Original</th><th>Original vs. Qué comprar</th><th>Estado</th><th>Diferencia y propuesta</th></tr></thead>
+        <tbody>
+          <tr><td><code>existencia-producto</code> · treemap</td><td><code>reportes-inventory.ts:359-362</code>; existencia por SKU vs. columna <code>existenciaActual</code> por producto-sitio.</td><td><span class="status partial">PARTIAL</span></td><td>Un campo no sustituye el gráfico ni su lectura visual. Conservar treemap y columna.</td></tr>
+          <tr><td><code>cierres-diarios</code> · línea</td><td><code>reportes-inventory.ts:261-274, 362</code>; cierre diario y conciliación. Qué comprar no reconstruye días.</td><td><span class="status none">NONE</span></td><td>No hay eje diario ni cierre en Qué comprar. No mover.</td></tr>
+          <tr><td><code>existencia-actual</code></td><td><code>reportes-inventory.ts:233-254, 363</code>; cantidad, rollos, valor, salidas por modalidad, coberturas y pérdidas vs. existencia, mínimo, cobertura y consumo mensual.</td><td><span class="status partial">PARTIAL</span></td><td>Qué comprar no tiene valor, rollos, clasificaciones ROLLOS/METRAJE ni estimaciones de venta perdida. Conservar ambas.</td></tr>
+          <tr><td><code>perdidas-extraordinarias</code></td><td><code>reportes-inventory.ts:292-320, 364</code>; motivo, ajuste, cantidad y costo vs. ningún campo de pérdida en Qué comprar.</td><td><span class="status none">NONE</span></td><td>Auditoría distinta. No retirar.</td></tr>
+          <tr><td><code>comprado-vendido</code></td><td><code>reportes-inventory.ts:282-290, 365</code>; comprado/vendido/ajuste vs. consumo/venta real, sin comprado, diferencia ni relación.</td><td><span class="status partial">PARTIAL</span></td><td>Contrastar entradas no es calcular reposición. Conservar.</td></tr>
+          <tr><td><code>sin-movimiento</code></td><td><code>reportes-inventory.ts:321-324, 366</code>; fecha y banda de antigüedad vs. meses finales sin consumo.</td><td><span class="status partial">PARTIAL</span></td><td>El original conserva la fecha y bandas 30/60/90/180; Qué comprar no las sustituye. No borrar.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mapas de Calor</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Original</th><th>Original vs. Qué comprar</th><th>Estado</th><th>Diferencia y propuesta</th></tr></thead>
+        <tbody>
+          <tr><td><code>mes-producto</code> · Mes × SKU</td><td>El padre de <code>9fc5517</code>, líneas 194–217, lo generaba; el árbol actual lo conserva en <code>reportes-inventory.ts:194-217</code>. Qué comprar tiene consumo mensual en tabla, no heatmap por SKU.</td><td><span class="status partial">PARTIAL</span></td><td>Comparte tendencia y producto, pero cambia de gráfico agregado a fila producto-sitio y de tickets a consumo de ledger. Conservar.</td></tr>
+          <tr><td><code>mes-color</code> · Mes × color</td><td>Antes: <code>git show 9fc5517^:artifacts/api-server/src/lib/reportes-inventory.ts:194-217</code>. Ahora: <code>reportes-que-comprar.ts:889-913</code> y UI <code>que-comprar-report.tsx:666-674</code>.</td><td><span class="status full">FULL · MOVED</span></td><td>Mismo cruce y propósito. Cambia deliberadamente a venta real documentada. Mantener el movimiento ya autorizado; no duplicar.</td></tr>
+          <tr><td><code>mes-tela</code> · Mes × tela</td><td><code>reportes-inventory.ts:194-217</code> conserva el heatmap. Qué comprar tiene tela como atributo y consumo mensual, no heatmap agregado por tela.</td><td><span class="status partial">PARTIAL</span></td><td>El atributo no sustituye la serie agregada. Conservar.</td></tr>
+          <tr><td><code>mes-sitio</code> · Mes × sitio</td><td><code>reportes-inventory.ts:194-217</code> conserva el heatmap. Qué comprar es producto-sitio, no tendencia agregada del sitio.</td><td><span class="status partial">PARTIAL</span></td><td>Distinto grano y alcance de sitios habilitados. Conservar.</td></tr>
+          <tr><td>Tablas de Mapas</td><td>La rama devuelve <code>tables: []</code> (<code>reportes-inventory.ts:194-217</code>).</td><td><span class="status none">NONE</span></td><td>No existe tabla original que retirar.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Compras</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Original</th><th>Original vs. Qué comprar</th><th>Estado</th><th>Diferencia y propuesta</th></tr></thead>
+        <tbody>
+          <tr><td><code>costo-por-rollo</code> y <code>compras-por-rollo</code></td><td><code>reportes-commercial.ts:99-119, 155-157</code>; folio, fecha, proveedor, rollo, cantidad y costos. Qué comprar no lleva costos, folios, proveedores ni series.</td><td><span class="status none">NONE</span></td><td>Recepción y costo no son consumo/cobertura. No retirar.</td></tr>
+          <tr><td><code>proveedores</code></td><td><code>reportes-commercial.ts:107-109, 158</code>; proveedor, rollos, costo y concentración.</td><td><span class="status none">NONE</span></td><td>No hay proveedor, rollos recibidos ni concentración. No mover.</td></tr>
+          <tr><td><code>productos</code></td><td><code>reportes-commercial.ts:110-111, 159</code>; recibido, rollos, costo y referencia metreada vs. identidad y salidas de Qué comprar.</td><td><span class="status partial">PARTIAL</span></td><td>Identidad coincide, hecho económico no: entrada vs. salida/venta. Conservar ambas.</td></tr>
+          <tr><td><code>telas</code></td><td><code>reportes-commercial.ts:112, 160</code>; cantidad, rollos y costo de recepción por tela.</td><td><span class="status none">NONE</span></td><td>Qué comprar no agrega compras por tela. No retirar.</td></tr>
+          <tr><td><code>colores</code></td><td><code>reportes-commercial.ts:113, 161</code>; cantidad, rollos y costo recibidos por color/unidad.</td><td><span class="status partial">PARTIAL</span></td><td>Solo coincide identidad; cantidad entrante no es consumo saliente. Conservar.</td></tr>
+          <tr><td><code>incrementos</code></td><td><code>reportes-commercial.ts:114-117, 162</code>; costo anterior/actual e incremento.</td><td><span class="status none">NONE</span></td><td>No hay precio ni incremento en Qué comprar. No retirar.</td></tr>
+          <tr><td><code>alternativas-proveedor</code></td><td><code>reportes-commercial.ts:120-125, 163</code>; proveedor, costo y ahorro potencial.</td><td><span class="status none">NONE</span></td><td>No hay proveedor, costo ni ahorro. No mover.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mes × color: auditoría de movimiento</h2>
+    <ol>
+      <li><strong>Antes:</strong> el padre de <code>9fc5517</code> devolvía cuatro heatmaps, incluido <code>make("mes-color", "color")</code>, con meses, color y cantidad.</li>
+      <li><strong>Cambio exacto:</strong> el commit <code>9fc5517</code> quitó únicamente ese elemento del arreglo de Mapas. No quitó tablas, consultas de Color, Inventario ni Compras.</li>
+      <li><strong>Destino:</strong> <code>reportes-que-comprar.ts:889-913</code> crea el heatmap con color/mes y venta real documentada; la UI lo muestra en <code>que-comprar-report.tsx:666-674</code>.</li>
+      <li><strong>Semántica:</strong> el mapa original sumaba <code>ticket_lineas.cantidad</code> dentro de ventas; el nuevo parte del ledger y solo acredita <code>VENTA</code> con documento POS reconocido. <code>SALIDA_MOSTRADOR</code> queda como remoción física, no venta al cliente (<code>reportes-que-comprar.ts:20-34, 284-290</code>).</li>
+      <li><strong>Estado real:</strong> no se retiró ninguna tabla ni pestaña. La navegación aún enumera Mapas, Color, Compras y Qué comprar en <code>artifacts/mariana-textil/src/pages/reportes.tsx:22-34</code>.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Acciones recomendadas, sin ejecutar</h2>
+    <ol>
+      <li>Mantener Mes × color únicamente en Qué comprar.</li>
+      <li>Conservar todas las tablas y gráficos marcados <span class="status partial">PARTIAL</span>; no son duplicados completos.</li>
+      <li>Conservar todos los artefactos <span class="status none">NONE</span>; contienen hechos propios.</li>
+      <li>No retirar ninguna pestaña: todas mantienen contenido propio.</li>
+      <li>Para cualquier ronda posterior, aprobar artefactos uno por uno con el archivo, líneas, commit y autorización explícita. Una aprobación genérica de Qué comprar no autoriza borrar Compras, Rotación o Análisis de Color.</li>
+      <li>Preservar el déficit como observación, no como orden: el backend lo llama “Déficit observado contra mínimo (no pedido)” en <code>reportes-que-comprar.ts:939</code>.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Veredicto</h2>
+    <p><strong>Un solo FULL, ya movido y autorizado: Mes × color.</strong> El resto es
+      <span class="status partial">PARTIAL</span> o <span class="status none">NONE</span>.
+      No hay base para retirar tablas o pestañas. La comparación completa estaba pendiente; este
+      informe la entrega sin ejecutar ni retroaprobar retiros distintos del movimiento autorizado.</p>
+  </section>
+
+  <footer>
+    Fuentes principales: prompt original
+    <code>attached_assets/Pasted--Prompt-para-Replit-Agent-Motor-de-stock-m-nimo-y-repor_1789172788993.txt:82-90</code>;
+    <code>replit.md:736-750</code>; backend de inventario, compras y Qué comprar; UI de Reportes;
+    historia Git de <code>9fc5517</code> y <code>76d9c58</code>. Documento autocontenido para revisión
+    y aprobación; no representa una ejecución de pruebas.
+  </footer>
+</main>
+</body>
+</html>

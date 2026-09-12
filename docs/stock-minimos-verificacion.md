@@ -18,7 +18,7 @@ No se ejecutaron SQL manual, usuarios temporales, modificaciones del motor de in
 | 4. Captura y mínimo vacío | Aprobado con API simulada | Interruptor, PUT numérico y borrado con null; mock con estado reflejó el nuevo mínimo y déficit tras guardar. Esto no acredita persistencia real. |
 | 5. Destinatarios y enlace | Parcial | Activos asignados más ADMIN/SUPERVISOR, sin duplicados, en pruebas sintéticas. En navegador el enlace eligió el sitio del encabezado y destacó el producto; PROPIA no pudo sobrepasar su alcance. No se bajó inventario ni se entregó una alerta real. |
 | 6. No repetir | Parcial | Episodio estable y reapertura tras recuperación aprobados con datos sintéticos. Concurrencia y persistencia real pendientes. |
-| 7. Reconstruir caché | No ejecutado | Se conserva la separación de tablas y el motor no fue modificado. No se ejecutó reconstruirCacheExistencias contra PostgreSQL. |
+| 7. Reconstruir caché | Aprobado en PostgreSQL desechable | Se ejecutó la función real: mínimos 2→2 y configuraciones de sitio 2→2, con igualdad exacta de valores/fechas/autores. Las 4 existencias deliberadamente incorrectas se reconstruyeron según movimientos y rollos. Evidencia completa en reports/reconstruir-cache-existencias-disposable-evidence.md. Base local desechable eliminada; no se usó la base operativa. |
 | 8. Historia individual | Aprobado sin DB | Recepciones establecen historia aunque no haya salidas; límites de meses en Ciudad de México probados. En navegador una fila insuficiente no apagó otra con historia. |
 | 9. Consumo y venta real | Aprobado sin DB | Consumo conserva salidas físicas; venta real exige VENTA con documento de venta reconocido. SALIDA_MOSTRADOR no basta. Advertencia visible y sin suma entre sitios. |
 | 10. Evidencia | Aprobado con datos sintéticos | Prueba que invoca el reporte y su endpoint de evidencia con el mismo pool simulado, incluyendo movimientos anteriores al periodo: historia, cobertura, venta y meses coinciden. La conciliación detecta filas alteradas. Episodios anteriores se muestran separados y no incrementan el conteo del periodo. |
@@ -45,7 +45,7 @@ La primera tanda de esta corrección tuvo dos fallos: la expectativa de un lími
 ## Pendientes reales
 
 - Entrega real de alertas, recuperación y concurrencia en PostgreSQL.
-- Persistencia después de reconstruirCacheExistencias.
+- Persistencia después de reconstruirCacheExistencias: verificada en PostgreSQL local desechable; ya no está pendiente. Se copiaron de un respaldo local un actor existente y el baseline requerido por inicializadores, únicamente a la base desechable; no se crearon identidades de prueba ni se tocaron cuentas operativas.
 - Integraciones que necesitan una base de pruebas autorizada sin creación de usuarios temporales.
 - Evaluación audible de notificaciones, no realizada por el navegador automatizado.
 

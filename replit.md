@@ -735,7 +735,7 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 
 ## Stock mínimo y reporte «Qué comprar»
 
-**Estado al 2026-09-11:** corregidos con autorización los hallazgos de historia, periodo, evidencia, enlaces y notificaciones; verificados con pruebas sin DB y navegador con API simulada. La entrega real de alertas, concurrencia y reconstrucción real del caché siguen pendientes; no presentar esas verificaciones como realizadas.
+**Estado al 2026-09-11:** corregidos con autorización los hallazgos de historia, periodo, evidencia, enlaces y notificaciones; verificados con pruebas sin DB y navegador con API simulada. La reconstrucción real del caché se ejecutó en PostgreSQL local desechable: los 2 mínimos y las 2 configuraciones de sitio conservaron conteos y valores mientras se corrigieron las 4 existencias de prueba. La entrega real de alertas y la concurrencia siguen pendientes; no presentarlas como realizadas. Evidencia: `reports/reconstruir-cache-existencias-disposable-evidence.md`.
 
 - El mínimo es configuración **por producto y ubicación**, en `stock_minimos`, con cantidad, autor y fecha. Nunca se guarda en `existencias`: ese caché se reconstruye desde los movimientos y no puede ser propietario de configuración.
 - La función se activa **por sitio**, apagada por omisión. Regla obligatoria: apagada no calcula faltantes, no alerta, no muestra análisis ni modifica productos de ese sitio. La captura usa el selector del encabezado, sin un selector de sitio paralelo. El servidor rechaza capturas directas de mínimos con el sitio apagado antes de consultar productos o escribir configuración/auditoría.
